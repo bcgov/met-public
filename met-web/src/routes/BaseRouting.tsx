@@ -1,9 +1,12 @@
-import { useSelector } from "react-redux";
+import React from "react";
 import AuthenticatedRoutes from "./AuthenticatedRoutes";
 import UnauthenticatedRoutes from "./UnauthenticatedRoutes";
+import { useAppSelector } from "../hooks";
 
 const BaseRouting = () => {
-  const authenticated = useSelector((state) => state.user.isAuthenticated);
+  const authenticated = useAppSelector(
+    (state) => state.user.authentication.authenticated
+  );
 
   if (!authenticated) {
     return <UnauthenticatedRoutes />;

@@ -7,21 +7,20 @@ import {
   userAuthorization,
   userAuthentication,
 } from "./userSlice";
+import { Dispatch } from "redux";
 
 const KeycloakData = _kc;
 /**
  * Initializes Keycloak instance.
  */
-const initKeycloak = (dispatch) => {
-  _kc
-    .init({
-      onLoad: "check-sso",
-      promiseType: "native",
-      silentCheckSsoRedirectUri:
-        window.location.origin + "/silent-check-sso.html",
-      pkceMethod: "S256",
-      checkLoginIframe: false,
-    })
+const initKeycloak = (dispatch: Dispatch<any>) => {
+  KeycloakData.init({
+    onLoad: "check-sso",
+    silentCheckSsoRedirectUri:
+      window.location.origin + "/silent-check-sso.html",
+    pkceMethod: "S256",
+    checkLoginIframe: false,
+  })
     .then((authenticated) => {
       if (!authenticated) {
         console.warn("not authenticated!");
@@ -29,7 +28,10 @@ const initKeycloak = (dispatch) => {
         return;
       }
 
-      if (!KeycloakData.resourceAccess[Keycloak_Client]) {
+      if (
+        !KeycloakData.resourceAccess ||
+        !KeycloakData.resourceAccess[Keycloak_Client]
+      ) {
         doLogout();
         return;
       }
@@ -39,7 +41,7 @@ const initKeycloak = (dispatch) => {
         dispatch(userRoles(UserRoles));
         dispatch(userToken(KeycloakData.token));
 
-        KeycloakData.loadUserInfo().then((res) => {
+        KeycloakData.loadUserInfo().then((res: UserDetail) => {
           dispatch(userDetails(res));
           dispatch(userAuthorization(true));
         });
@@ -48,12 +50,13 @@ const initKeycloak = (dispatch) => {
       }
     })
     .catch((error) => {
+      dispatch(userAuthentication(false));
       console.log(error);
     });
 };
 
-let refreshInterval;
-const refreshToken = (dispatch) => {
+let refreshInterval: NodeJS.Timer;
+const refreshToken = (dispatch: Dispatch<any>) => {
   refreshInterval = setInterval(() => {
     KeycloakData &&
       KeycloakData.updateToken(3000)
@@ -87,9 +90,7 @@ const getToken = () => KeycloakData.token;
 
 const isLoggedIn = () => !!KeycloakData.token;
 
-const getUsername = () => KeycloakData.tokenParsed?.preferred_username;
-
-const hasRole = (roles) =>
+const hasRole = (roles: string[]) =>
   roles.some((role) => KeycloakData.hasRealmRole(role));
 
 const UserService = {
@@ -98,7 +99,6 @@ const UserService = {
   doLogout,
   isLoggedIn,
   getToken,
-  getUsername,
   hasRole,
 };
 

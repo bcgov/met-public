@@ -7,7 +7,7 @@ import Container from "@mui/material/Container";
 const Header = () => {
   return (
     <AppBar position="static">
-      <Container maxWidth="l">
+      <Container maxWidth="lg">
         <Toolbar disableGutters>
           <Typography variant="h6" noWrap component="div" sx={{ mr: 2 }}>
             MET

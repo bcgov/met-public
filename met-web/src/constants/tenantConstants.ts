@@ -6,10 +6,12 @@ import {
 import Keycloak from "keycloak-js";
 
 //TODO get from api
-export const tenantDetail = {
+export const tenantDetail: ITenantDetail = {
   realm: KEYCLOAK_REALM,
   url: KEYCLOAK_AUTH_URL,
   clientId: Keycloak_Client,
 };
 
-export const _kc = new Keycloak(tenantDetail);
+export const _kc: Keycloak.KeycloakInstance = new (Keycloak as any)(
+  tenantDetail
+);
