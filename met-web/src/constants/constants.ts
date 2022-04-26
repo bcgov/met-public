@@ -1,7 +1,7 @@
-const getFromEnv = (key, defaultValue = "") => {
+const getFromEnv = (key: string, defaultValue: string = "") => {
   if (!key) return "";
 
-  return window._env_?.[key] || process.env[key] || defaultValue;
+  return process.env[key] || defaultValue;
 };
 
 //keycloak

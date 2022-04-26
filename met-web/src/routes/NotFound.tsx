@@ -1,7 +1,7 @@
 import React from "react";
 
 const NotFound = React.memo(
-  ({ errorMessage = "Page Not Found", errorCode = "404" }) => {
+  ({ errorMessage = "Page Not Found", errorCode = "404" }: IProps) => {
     return (
       <section>
         <div>

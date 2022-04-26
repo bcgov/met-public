@@ -2,21 +2,23 @@ import "./App.css";
 import React, { useEffect } from "react";
 import Header from "./components/layout/Header";
 import { BrowserRouter as Router } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import BaseRouting from "./components/Routing/BaseRouting";
+import BaseRouting from "./routes/BaseRouting";
 import { CircularProgress, Grid } from "@mui/material";
 import UserService from "./services/UserServices";
+import { useAppSelector, useAppDispatch } from "./hooks";
 
 const App = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const authenticated = useSelector((state) => state.user.isAuthenticated);
+  const authenticationLoading = useAppSelector(
+    (state) => state.user.authentication.loading
+  );
 
   useEffect(() => {
     UserService.initKeycloak(dispatch);
   }, [dispatch]);
 
-  if (authenticated === null) {
+  if (authenticationLoading) {
     return (
       <Grid
         container
