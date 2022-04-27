@@ -35,12 +35,10 @@ const App = () => {
   }
 
   return (
-    <>
-      <Router>
-        <Header />
-        <BaseRouting />
-      </Router>
-    </>
+    <Router>
+      <Header />
+      <BaseRouting />
+    </Router>
   );
 };
 

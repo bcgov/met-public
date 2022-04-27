@@ -11,4 +11,6 @@ export const KEYCLOAK_URL = getFromEnv("REACT_APP_KEYCLOAK_URL");
 
 export const KEYCLOAK_REALM = getFromEnv("REACT_APP_KEYCLOAK_REALM");
 
+export const ADMIN_ROLE = "admin";
+
 export const KEYCLOAK_AUTH_URL = `${KEYCLOAK_URL}`;

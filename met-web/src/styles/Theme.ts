@@ -1,32 +1,27 @@
 import { createTheme } from "@mui/material";
 
-const Colors = {
-  primary: "#0052cc",
-  secondary: "#edf2ff",
-  success: "",
-  info: "",
-  danger: "",
-  warning: "",
-  dark: "",
-  light: "",
-  muted: "",
-  border: "",
-  inverse: "",
-  shaft: "",
-  dove_gray: "",
-  body_bg: "",
-  white: "",
-  black: "",
-};
-
-const Theme = createTheme({
+export const BaseTheme = createTheme({
   palette: {
     primary: {
-      main: Colors.primary,
+      main: "#003366",
+      light: "#385989",
+      dark: "#000C3B",
     },
     secondary: {
-      main: Colors.secondary,
+      main: "#FFC107",
+      dark: "#FFAB00",
+      light: "#FFE082",
     },
+    text: {
+      primary: "#494949",
+    },
+    action: {
+      active: "#1A5A96",
+    },
+  },
+
+  typography: {
+    h3: {},
   },
   components: {
     MuiButton: {
@@ -34,6 +29,20 @@ const Theme = createTheme({
         disableRipple: true,
       },
     },
+    MuiLink: {
+      defaultProps: {
+        color: "#1A5A96",
+      },
+    },
   },
 });
-export default Theme;
+
+export const PublicTheme = createTheme(BaseTheme, {
+  palette: {
+    primary: {
+      main: "#CFD8DC",
+      dark: "#455A64",
+      light: "#ECF2F5",
+    },
+  },
+});
