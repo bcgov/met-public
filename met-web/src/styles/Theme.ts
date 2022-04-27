@@ -19,10 +19,6 @@ export const BaseTheme = createTheme({
       active: "#1A5A96",
     },
   },
-
-  typography: {
-    h3: {},
-  },
   components: {
     MuiButton: {
       defaultProps: {
