@@ -6,7 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 # DEFINE THE ENGINE (CONNECTION OBJECT)
-engine = db.create_engine('postgresql+psycopg2://postgres:Nunespider_111@localhost:9999/flask_db')
+engine = db.create_engine('postgresql+psycopg2://postgres:test@localhost:9999/flask_db')
 
 
 # CREATE THE TABLE MODEL TO USE IT FOR QUERYING
@@ -34,7 +34,7 @@ session = Session()
 result = session.query(Engagements.title)
 print("Query 1:", result)
 
-# SELECT title, last_name, course
+# SELECT title, description, start_date
 # FROM engagements
 result = result.add_columns(Engagements.description,
 							Engagements.start_date)
