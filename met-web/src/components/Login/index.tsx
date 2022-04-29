@@ -1,6 +1,7 @@
 import React from "react";
 import UserService from "../../services/UserServices";
 import { Grid } from "@mui/material";
+import Button from "@mui/material/Button";
 
 const Login = () => {
   return (
@@ -13,12 +14,13 @@ const Login = () => {
       padding="2em"
     >
       <Grid item>
-        <button
+        <Button
+          variant="contained"
           className="btn btn-lg btn-warning"
           onClick={() => UserService.doLogin()}
         >
           Login
-        </button>
+        </Button>
       </Grid>
     </Grid>
   );

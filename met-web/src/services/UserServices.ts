@@ -1,5 +1,5 @@
 import { _kc } from "../constants/tenantConstants";
-import { Keycloak_Client } from "../constants/constants";
+import { Keycloak_Client, ADMIN_ROLE } from "../constants/constants";
 import {
   userToken,
   userRoles,
@@ -90,8 +90,9 @@ const getToken = () => KeycloakData.token;
 
 const isLoggedIn = () => !!KeycloakData.token;
 
-const hasRole = (roles: string[]) =>
-  roles.some((role) => KeycloakData.hasRealmRole(role));
+const hasRole = (role: string) => KeycloakData.hasResourceRole(role);
+
+const hasAdminRole = () => KeycloakData.hasResourceRole(ADMIN_ROLE);
 
 const UserService = {
   initKeycloak,
@@ -100,6 +101,7 @@ const UserService = {
   isLoggedIn,
   getToken,
   hasRole,
+  hasAdminRole,
 };
 
 export default UserService;
