@@ -6,38 +6,40 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 # DEFINE THE ENGINE (CONNECTION OBJECT)
-engine = db.create_engine(
-	"engine = create_engine('postgresql+psycopg2://postgres:Nunespider_111@localhost/flask_db')")
+engine = db.create_engine('postgresql+psycopg2://postgres:Nunespider_111@localhost:9999/flask_db')
+
 
 # CREATE THE TABLE MODEL TO USE IT FOR QUERYING
-class Students(Base):
-
-	__tablename__ = 'students'
-
-	first_name = db.Column(db.String(50),
+class Engagements(Base):
+    
+	__tablename__ = 'Engagements'
+ 
+	title = db.Column(db.String(50),
 						primary_key=True)
-	last_name = db.Column(db.String(50),
+	description = db.Column(db.String(50),
 						primary_key=True)
-	course = db.Column(db.String(50),
-					primary_key=True)
-	score = db.Column(db.Float)
-
+	start_date = db.Column(db.String(50),
+					primary_key=True),
+	end_date = db.Column(db.String(50),primary_key=True)
+ 
+ 
+ 
 
 # CREATE A SESSION OBJECT TO INITIATE QUERY
 # IN DATABASE
 Session = sessionmaker(bind=engine)
 session = Session()
 
-# SELECT first_name FROM students
-result = session.query(Students.first_name)
+# SELECT title FROM engagements
+result = session.query(Engagements.title)
 print("Query 1:", result)
 
-# SELECT first_name, last_name, course
-# FROM students
-result = result.add_columns(Students.last_name,
-							Students.course)
+# SELECT title, last_name, course
+# FROM engagements
+result = result.add_columns(Engagements.description,
+							Engagements.start_date)
 print("Query 2:", result)
 
 # VIEW THE ENTRIES IN THE RESULT
 for r in result:
-	print(r.first_name, "|", r.last_name, "|", r.course)
+	print(r.title, "|", r.description, "|", r.end_date)
