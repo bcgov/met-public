@@ -6,7 +6,12 @@ import { store } from "./store";
 import { Provider } from "react-redux";
 import { ThemeProvider } from "@mui/material/styles";
 import { BaseTheme } from "./styles/Theme";
+import { Formio } from "@formio/react";
+import { AppConfig } from "./config";
 // import reportWebVitals from './reportWebVitals';
+
+Formio.setProjectUrl(AppConfig.projectUrl);
+Formio.setBaseUrl(AppConfig.apiUrl);
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 root.render(

@@ -1,5 +1,10 @@
 import { _kc } from "../constants/tenantConstants";
-import { Keycloak_Client, ADMIN_ROLE } from "../constants/constants";
+import {
+  Keycloak_Client,
+  ADMIN_ROLE,
+  USER_RESOURCE_FORM_ID,
+  FORMIO_JWT_SECRET,
+} from "../constants/constants";
 import {
   userToken,
   userRoles,
@@ -8,6 +13,7 @@ import {
   userAuthentication,
 } from "./userSlice";
 import { Dispatch } from "redux";
+import jwt from "jsonwebtoken";
 
 const KeycloakData = _kc;
 /**
@@ -47,6 +53,7 @@ const initKeycloak = (dispatch: Dispatch<any>) => {
         });
         dispatch(userAuthentication(authenticated));
         refreshToken(dispatch);
+        authenticateFormio("Anonymous", [1]);
       }
     })
     .catch((error) => {
@@ -70,6 +77,24 @@ const refreshToken = (dispatch: Dispatch<any>) => {
           userLogout();
         });
   }, 60000);
+};
+
+const authenticateFormio = async (user: string, roles: number[]) => {
+  const FORMIO_TOKEN = jwt.sign(
+    {
+      external: true,
+      form: {
+        _id: USER_RESOURCE_FORM_ID, // form.io form Id of user resource
+      },
+      user: {
+        _id: user, // keep it like that
+        roles: roles,
+      },
+    },
+    FORMIO_JWT_SECRET
+  ); // TODO Move JWT secret key to COME From ENV
+
+  localStorage.setItem("formioToken", FORMIO_TOKEN);
 };
 
 /**
