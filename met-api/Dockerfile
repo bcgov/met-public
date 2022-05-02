@@ -1,13 +1,16 @@
-#Setup FLask Environment
-FROM python:2.7
-ADD . /code
-WORKDIR /code
-RUN pip install -r requirements.txt
-CMD python app.py
+# pull official base image
+FROM python:3.8-slim-buster
 
-#Connect to PostGresSQL
-CMD initPS.py
+# set working directory
+WORKDIR /app
 
+# install app dependencies
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
 
-#Connect to MongoDB
-CMD mongodbdtest.py
+# add app files
+COPY . ./
+
+# start app
+CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"] 
+

@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String
-from orm import Engagements
+from postgresDB.orm import Engagements
 from dotenv import load_dotenv
-from fetchEnv import POSTGRES_USERNAME,POSTGRES_PASSWORD,POSTGRES_DB,POSTGRES_PORT,POSTGRES_HOST
+from app.fetchEnv import POSTGRES_USERNAME,POSTGRES_PASSWORD,POSTGRES_DB,POSTGRES_PORT,POSTGRES_HOST
 
 #Connect to postgres database
 engine = create_engine(f'postgresql+psycopg2://{POSTGRES_USERNAME}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}',echo=True)

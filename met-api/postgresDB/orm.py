@@ -1,7 +1,7 @@
 from sqlalchemy.orm import sessionmaker
 import sqlalchemy as db
 from sqlalchemy.ext.declarative import declarative_base
-from fetchEnv import POSTGRES_USERNAME,POSTGRES_PASSWORD,POSTGRES_DB,POSTGRES_PORT
+from app.fetchEnv import POSTGRES_USERNAME,POSTGRES_PASSWORD,POSTGRES_DB,POSTGRES_PORT
 # from dotenv import load_dotenv
 
 Base = declarative_base()
