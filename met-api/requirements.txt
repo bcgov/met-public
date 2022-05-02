@@ -1,0 +1,5 @@
+flask
+pymongo
+sqlalchemy
+psycopg2
+python-dotenv

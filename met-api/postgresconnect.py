@@ -1,15 +1,11 @@
-import os
 import psycopg2
-from dotenv import load_dotenv
+from fetchEnv import POSTGRES_USERNAME,POSTGRES_PASSWORD,POSTGRES_PORT,POSTGRES_DB,POSTGRES_HOST    
 
-load_dotenv()
-POSTGRES_USERNAME = os.getenv('POSTGRES_USERNAME')
-POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
 
 conn = psycopg2.connect(
-        host="localhost",
-        database="postgres",
-        port=9999,
+        host=POSTGRES_HOST,
+        database=POSTGRES_DB,
+        port=POSTGRES_PORT,
         user=POSTGRES_USERNAME,
         password=POSTGRES_PASSWORD)
 
