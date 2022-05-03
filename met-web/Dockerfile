@@ -5,8 +5,9 @@ FROM node:13.12.0-alpine
 WORKDIR /app
 
 # set user permissions to app folder
-RUN chgrp -R 0 /app && \
-    chmod -R g=u /app 
+# TODO: replace with correct permissions/user, the current solution just gives it access to everything
+RUN set -x \
+	&& chmod -R 777 /app/
 
 # add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH
