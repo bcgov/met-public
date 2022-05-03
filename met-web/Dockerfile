@@ -4,11 +4,6 @@ FROM node:13.12.0-alpine
 # set working directory
 WORKDIR /app
 
-# set user permissions to app folder
-# TODO: replace with correct permissions/user, the current solution just gives it access to everything
-RUN set -x \
-	&& chmod -R 777 /app/
-
 # add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH
 
@@ -18,6 +13,9 @@ COPY package-lock.json ./
 
 RUN npm install --silent
 RUN npm install react-scripts@3.4.1 -g --silent
+
+# create and set user permissions to app folder
+RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
 
 # add app files
 COPY . ./
