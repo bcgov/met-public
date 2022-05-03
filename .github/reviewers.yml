@@ -1,0 +1,14 @@
+reviewers:
+  # The default reviewers
+  defaults:
+    - tiagograf-aot # username
+    - nikhila-aot # username
+    - jadmsaadaot # username
+    - djnunez-aot # username
+    - saravanpa-aot # username
+
+options:
+  ignore_draft: true
+  ignored_keywords:
+    - DO NOT REVIEW
+  enable_group_assignment: false
