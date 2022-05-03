@@ -19,4 +19,9 @@ export const USER_RESOURCE_FORM_ID = getFromEnv(
 
 export const FORMIO_JWT_SECRET = getFromEnv("REACT_APP_FORMIO_JWT_SECRET");
 
+export const FORM_ID = getFromEnv("REACT_APP_FORM_ID");
+
 export const KEYCLOAK_AUTH_URL = `${KEYCLOAK_URL}`;
+
+export const ANONYMOUS_ID = getFromEnv("REACT_APP_ANONYMOUS_ID");
+export const ANONYMOUS_USER = "anonymous";

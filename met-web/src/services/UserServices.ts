@@ -4,6 +4,8 @@ import {
   ADMIN_ROLE,
   USER_RESOURCE_FORM_ID,
   FORMIO_JWT_SECRET,
+  ANONYMOUS_ID,
+  ANONYMOUS_USER,
 } from "../constants/constants";
 import {
   userToken,
@@ -27,7 +29,7 @@ const initKeycloak = (dispatch: Dispatch<any>) => {
     pkceMethod: "S256",
     checkLoginIframe: false,
   })
-    .then((authenticated) => {
+    .then(async (authenticated) => {
       if (!authenticated) {
         console.warn("not authenticated!");
         dispatch(userAuthentication(authenticated));
@@ -53,7 +55,10 @@ const initKeycloak = (dispatch: Dispatch<any>) => {
         });
         dispatch(userAuthentication(authenticated));
         refreshToken(dispatch);
-        authenticateFormio("Anonymous", [1]);
+        /* 
+          To do: uncomment when we have FORMIO_JWT_SECRET and USER_RESOURCE_FORM_ID 
+          authenticateAnonymouslyOnFormio();
+        */
       }
     })
     .catch((error) => {
@@ -79,7 +84,13 @@ const refreshToken = (dispatch: Dispatch<any>) => {
   }, 60000);
 };
 
-const authenticateFormio = async (user: string, roles: number[]) => {
+const authenticateAnonymouslyOnFormio = () => {
+  const user = ANONYMOUS_USER;
+  const roles = [ANONYMOUS_ID];
+  authenticateFormio(user, roles);
+};
+
+const authenticateFormio = async (user: string, roles: string[]) => {
   const FORMIO_TOKEN = jwt.sign(
     {
       external: true,

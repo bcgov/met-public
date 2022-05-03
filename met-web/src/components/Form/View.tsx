@@ -8,8 +8,8 @@ import {
 } from "@formio/react";
 import { CircularProgress, Container } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import { FORM_ID } from "../../constants/constants";
 
-const FORM_ID = "62683aa51f8acb248638ad69";
 const View = () => {
   const dispatch = useDispatch();
   const { form, isActive } = useSelector((state) => selectRoot("form", state));
