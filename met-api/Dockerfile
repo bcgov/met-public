@@ -1,12 +1,15 @@
 # pull official base image
-FROM python:3.8-slim-buster
+FROM python:3.8-alpine
 
 # set working directory
 WORKDIR /app
 
 # install app dependencies
 COPY requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt
+RUN \
+ apk add --no-cache postgresql-libs && \
+ apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev && \
+ pip3 install -r requirements.txt
 
 # add app files
 COPY . ./
