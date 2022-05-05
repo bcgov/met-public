@@ -1,5 +1,12 @@
 import { _kc } from "../constants/tenantConstants";
-import { Keycloak_Client, ADMIN_ROLE } from "../constants/constants";
+import {
+  Keycloak_Client,
+  ADMIN_ROLE,
+  USER_RESOURCE_FORM_ID,
+  FORMIO_JWT_SECRET,
+  ANONYMOUS_ID,
+  ANONYMOUS_USER,
+} from "../constants/constants";
 import {
   userToken,
   userRoles,
@@ -8,6 +15,7 @@ import {
   userAuthentication,
 } from "./userSlice";
 import { Dispatch } from "redux";
+import jwt from "jsonwebtoken";
 
 const KeycloakData = _kc;
 /**
@@ -21,7 +29,7 @@ const initKeycloak = (dispatch: Dispatch<any>) => {
     pkceMethod: "S256",
     checkLoginIframe: false,
   })
-    .then((authenticated) => {
+    .then(async (authenticated) => {
       if (!authenticated) {
         console.warn("not authenticated!");
         dispatch(userAuthentication(authenticated));
@@ -47,6 +55,10 @@ const initKeycloak = (dispatch: Dispatch<any>) => {
         });
         dispatch(userAuthentication(authenticated));
         refreshToken(dispatch);
+        /* 
+          To do: uncomment when we have FORMIO_JWT_SECRET and USER_RESOURCE_FORM_ID 
+          authenticateAnonymouslyOnFormio();
+        */
       }
     })
     .catch((error) => {
@@ -70,6 +82,30 @@ const refreshToken = (dispatch: Dispatch<any>) => {
           userLogout();
         });
   }, 60000);
+};
+
+const authenticateAnonymouslyOnFormio = () => {
+  const user = ANONYMOUS_USER;
+  const roles = [ANONYMOUS_ID];
+  authenticateFormio(user, roles);
+};
+
+const authenticateFormio = async (user: string, roles: string[]) => {
+  const FORMIO_TOKEN = jwt.sign(
+    {
+      external: true,
+      form: {
+        _id: USER_RESOURCE_FORM_ID, // form.io form Id of user resource
+      },
+      user: {
+        _id: user, // keep it like that
+        roles: roles,
+      },
+    },
+    FORMIO_JWT_SECRET
+  ); // TODO Move JWT secret key to COME From ENV
+
+  localStorage.setItem("formioToken", FORMIO_TOKEN);
 };
 
 /**
