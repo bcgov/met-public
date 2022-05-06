@@ -14,12 +14,12 @@ class Engagement(db.Model):
     end_date = db.Column(db.DateTime)
     status_id = db.Column(db.Integer, ForeignKey('engagement_status.id', ondelete='CASCADE')),
     created_by = db.Column(db.Integer, ForeignKey('user.id', ondelete='CASCADE')),
-    created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    updated_date = db.Column(db.DateTime, onupdate=datetime.datetime.utcnow)
+    created_date = db.Column(db.DateTime, default=datetime.utcnow())
+    updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow())
     published_date = db.Column(db.DateTime, nullable=True)
 
-    user = relationship('User', foreign_keys='Engagement.created_by')
-    engagement_status = relationship('EngagementStatus', foreign_keys='Engagement.status_id')
+    # user = relationship('User', foreign_keys='Engagement.created_by')
+    # engagement_status = relationship('EngagementStatus', foreign_keys='Engagement.status_id')
         
     @classmethod
     def get_engagement(cls,engagement_id):   
