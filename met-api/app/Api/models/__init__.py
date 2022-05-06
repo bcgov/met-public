@@ -22,5 +22,7 @@
 
 from .db import db, migrate, ma
 
-from .Engagement import Engagement
+from .engagement import Engagement
+from .engagement_status import EngagementStatus
+from .citizen import Citizen
 #event.listen(Engine, 'before_cursor_execute', DBTracing.query_tracing)

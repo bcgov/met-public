@@ -7,13 +7,18 @@ from sqlalchemy import text
 
 class Engagement(db.Model):
     # Name of the table in our database
-    __tablename__ = 'Engagements'
+    __tablename__ = 'engagement'
     
-    engagement_id= db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id= db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(50))
     description = db.Column(db.String(50))
     start_date = db.Column(db.DateTime)
     end_date = db.Column(db.DateTime)
+    status_id = db.Column(db.Integer)
+    created_by = db.Column(db.String(50))
+    created_date = db.Column(db.DateTime, onupdate=datetime.datetime.now)
+    updated_date = db.Column(db.DateTime, onupdate=datetime.datetime.now)
+    published_date = db.Column(db.DateTime, nullable=True)
         
     @classmethod
     def get_engagement(cls,engagement_id):   
