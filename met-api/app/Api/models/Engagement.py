@@ -4,6 +4,7 @@ from .db import  db, ma
 from datetime import datetime
 from sqlalchemy.orm import relationship
 from sqlalchemy import text
+import datetime
 
 class Engagement(db.Model):
     # Name of the table in our database
@@ -14,11 +15,14 @@ class Engagement(db.Model):
     description = db.Column(db.String(50))
     start_date = db.Column(db.DateTime)
     end_date = db.Column(db.DateTime)
-    status_id = db.Column(db.Integer)
-    created_by = db.Column(db.String(50))
-    created_date = db.Column(db.DateTime, onupdate=datetime.datetime.now)
-    updated_date = db.Column(db.DateTime, onupdate=datetime.datetime.now)
+    status_id = db.Column(db.Integer, ForeignKey('engagement_status.id', ondelete='CASCADE')),
+    created_by = db.Column(db.Integer, ForeignKey('user.id', ondelete='CASCADE')),
+    created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    updated_date = db.Column(db.DateTime, onupdate=datetime.datetime.utcnow)
     published_date = db.Column(db.DateTime, nullable=True)
+
+    user = relationship('User', foreign_keys='Engagement.created_by')
+    engagement_status = relationship('EngagementStatus', foreign_keys='Engagement.status_id')
         
     @classmethod
     def get_engagement(cls,engagement_id):   

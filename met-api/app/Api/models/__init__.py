@@ -24,5 +24,5 @@ from .db import db, migrate, ma
 
 from .engagement import Engagement
 from .engagement_status import EngagementStatus
-from .citizen import Citizen
+from .user import User
 #event.listen(Engine, 'before_cursor_execute', DBTracing.query_tracing)
