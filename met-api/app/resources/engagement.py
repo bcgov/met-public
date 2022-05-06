@@ -15,7 +15,7 @@
 
 
 from flask_restx import Namespace, Resource
-from App.services.engagement_service import engagement_service
+from app.services.engagement_service import engagement_service
 
 API = Namespace('Engagement', description='Endpoints for Engagements Management')
 """Custom exception messages

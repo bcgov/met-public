@@ -1,7 +1,7 @@
 from flask import Flask
-from App.models import db, migrate, ma
-from App.resources import API_BLUEPRINT
-from App.config import get_named_config
+from app.models import db, migrate, ma
+from app.resources import API_BLUEPRINT
+from app.config import get_named_config
 import os
 
 # All Apps routes are registered here
