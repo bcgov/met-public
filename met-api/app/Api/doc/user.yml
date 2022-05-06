@@ -1,0 +1,30 @@
+summary: "User Data"
+description: "This is a simple API to get all users list."
+consumes:
+- "application/json"
+produces:
+- "application/json"
+security:
+- APIKeyHeader: [ 'Authorization' ]
+responses:
+  200:
+    description: "Success"
+    schema:
+      type: "object"
+      properties:
+        data:
+          type: "object"
+          example: [{
+            "id": "integer",
+            "firstName": "string",
+            "lastName": "string",
+            "userName": "string",
+            "email": "string",
+            "isActive": "boolean",
+            "isVerify": "boolean",
+            "updatedOn": "string"
+          }]
+        status:
+          type: "string"
+        message:
+          type: "string"

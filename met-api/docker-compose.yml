@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    command: flask run
+    volumes:
+      - .:/app
+    ports:
+      - "5000:5000"
+  met-db:
+    image: postgres
+    container_name: met-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin

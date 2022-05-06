@@ -1,0 +1,37 @@
+summary: "User Login"
+description: "This is a simple API to user login."
+consumes:
+- "application/json"
+produces:
+- "application/json"
+parameters:
+- in: "body"
+  name: "body"
+  description: "Accepts a input dictionary of user details"
+  required: "true"
+  schema:
+    type: "object"
+    properties:
+      data:
+        type: "object"
+    example: {
+      "email": "string",
+      "password": "string"
+    }
+
+responses:
+  200:
+    description: "Success"
+    schema:
+      type: "object"
+      properties:
+        data:
+          type: "object"
+          example: {
+              "accessToken": "string",
+              "refreshToken": "string"
+          }
+        status:
+          type: "string"
+        message:
+          type: "string"
