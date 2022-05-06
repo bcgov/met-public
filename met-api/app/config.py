@@ -1,22 +1,3 @@
-# import os
-
-# # Configuration keys are set here
-# SECRET_KEY = os.environ.get('SECRET_KEY')
-
-# # SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
-# SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-SQLALCHEMY_DATABASE_URI = 'postgresql://{user}:{password}@{host}:{port}/{name}'.format(
-        user="admin",
-        password="admin",
-        host="met-db",
-        port=int("5432"),
-        name="admin",
-)
-
-# # CELERY_BACKEND = os.environ.get('CELERY_BACKEND')
-# # CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
-
 # Copyright © 2021 Province of British Columbia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,13 +20,27 @@ rather than reading environment variables directly or by accessing this configur
 """
 
 import os
-import sys
-
 from dotenv import find_dotenv, load_dotenv
-
 
 # this will load all the envars from a .env file located in the project root (api)
 load_dotenv(find_dotenv())
+
+def get_named_config(config_name: str = 'development'):
+    """Return the configuration object based on the name.
+
+    :raise: KeyError: if an unknown configuration is requested
+    """
+    if config_name in ['production', 'staging', 'default']:
+        config = ProdConfig()
+    elif config_name == 'testing':
+        config = TestConfig()
+    elif config_name == 'development':
+        config = DevConfig()
+    elif config_name == 'docker':
+        config = DockerConfig()
+    else:
+        raise KeyError("Unknown configuration '{config_name}'")
+    return config
 
 class _Config():  # pylint: disable=too-few-public-methods
     """Base class configuration that should set reasonable defaults for all the other configurations."""
@@ -62,17 +57,59 @@ class _Config():  # pylint: disable=too-few-public-methods
     SKIPPED_MIGRATIONS = ['authorizations_view']
 
     # POSTGRESQL
-    DB_USER = os.getenv('DATABASE_USERNAME', '')
-    DB_PASSWORD = os.getenv('DATABASE_PASSWORD', '')
-    DB_NAME = os.getenv('DATABASE_NAME', '')
-    DB_HOST = os.getenv('DATABASE_HOST', '')
-    DB_PORT = os.getenv('DATABASE_PORT', '5432')
-    SQLALCHEMY_DATABASE_URI = 'postgresql://{user}:{password}@{host}:{port}/{name}'.format(
-        user="admin",
-        password="admin",
-        host="localhost",
-        port=int("5432"),
-        name="admin",
+    DB_USER = os.getenv('DATABASE_USERNAME')
+    DB_PASSWORD = os.getenv('DATABASE_PASSWORD')
+    DB_NAME = os.getenv('DATABASE_NAME')
+    DB_HOST = os.getenv('DATABASE_HOST')
+    DB_PORT = os.getenv('DATABASE_PORT')
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://{user}:{password}@{host}:{port}/{name}'.format(
+        user=DB_USER,
+        password=DB_PASSWORD,
+        host=DB_HOST,
+        port=int(DB_PORT),
+        name=DB_NAME,
     )
+    
+    print('SQLAlchemy URL (_Config): ')
+    
+class DevConfig(_Config):  # pylint: disable=too-few-public-methods
+    """Dev Config."""
+
+    TESTING = False
+    DEBUG = True
+    print('SQLAlchemy URL (DevConfig): ')
+    
+
+class TestConfig(_Config):  # pylint: disable=too-few-public-methods
+    """In support of testing only.used by the py.test suite."""
+
+    DEBUG = True
+    TESTING = True
+    print('SQLAlchemy URL (TestConfig): ')
+    
+class DockerConfig(_Config):  # pylint: disable=too-few-public-methods
+    """In support of testing only.used by the py.test suite."""
+    # POSTGRESQL
+    DB_USER = os.getenv('DATABASE_DOCKER_USERNAME')
+    DB_PASSWORD = os.getenv('DATABASE_DOCKER_PASSWORD')
+    DB_NAME = os.getenv('DATABASE_DOCKER_NAME')
+    DB_HOST = os.getenv('DATABASE_DOCKER_HOST')
+    DB_PORT = os.getenv('DATABASE_DOCKER_PORT')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_DOCKER_URL',
+                                        'postgresql+psycopg2://{user}:{password}@{host}:{port}/{name}'.format(
+                                            user=DB_USER,
+                                            password=DB_PASSWORD,
+                                            host=DB_HOST,
+                                            port=int(DB_PORT),
+                                            name=DB_NAME,
+                                        ))
+    
+    print('SQLAlchemy URL (Docker): {}'.format(SQLALCHEMY_DATABASE_URI))
+    
+class ProdConfig(_Config):  # pylint: disable=too-few-public-methods
+    # production config       
+    print('SQLAlchemy URL (ProdConfig): ')
+    pass
+
 
     

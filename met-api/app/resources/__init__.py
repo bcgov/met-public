@@ -22,17 +22,12 @@ That are used to expose operational health information about the service, and me
 """
 
 from flask import Blueprint
-# from sbc_common_components.exception_handling.exception_handler import ExceptionHandler
 
 from .apihelper import Api
 
 from .engagement import API as ENGAGEMENT_API
 
 __all__ = ('API_BLUEPRINT')
-
-# This will add the Authorize button to the swagger docs
-# TODO oauth2 & openid may not yet be supported by restplus <- check on this
-#AUTHORIZATIONS = {'apikey': {'type': 'apiKey', 'in': 'header', 'name': 'Authorization'}}
 
 API_BLUEPRINT = Blueprint('API', __name__ )
 

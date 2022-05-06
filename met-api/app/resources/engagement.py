@@ -14,25 +14,17 @@
 """API endpoints for managing a FOI Requests resource."""
 
 
-from sqlalchemy.log import Identified
-from flask import g, request
-from flask_restx import Namespace, Resource, cors
-from App.Api.services.engagement_service import engagement_service
-
-import json
-
+from flask_restx import Namespace, Resource
+from App.services.engagement_service import engagement_service
 
 API = Namespace('Engagement', description='Endpoints for Engagements Management')
-# TRACER = Tracer.get_instance()
 """Custom exception messages
 """
-# EXCEPTION_MESSAGE_BAD_REQUEST='Bad Request'
 
 # @cors_preflight('GET,OPTIONS')
 @API.route('/engagement/<engagement_id>')
 class GetFOIExtension(Resource):
     """Resource for managing Engagements."""
-
        
     # @TRACER.trace()
     # @cross_origin(origins=allowedorigins())
@@ -40,10 +32,9 @@ class GetFOIExtension(Resource):
     @staticmethod
     def get(engagement_id):
         try:
-            engagement_record = engagement_service().get_engagement(engagement_id)            
+            engagement_record = engagement_service().get_engagement(engagement_id)    
             return engagement_record, 200
         except KeyError as err:
             return {'status': False, 'message':err.messages}, 400
         except ValueError as err:
             return {'status': False, 'message':err.messages}, 400
-        

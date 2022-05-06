@@ -1,16 +1,16 @@
 from flask import Flask
-from App.Api.models import db, migrate, ma
-from App.Api.resources import API_BLUEPRINT
-# from App.Api.routerr import api
-
+from App.models import db, migrate, ma
+from App.resources import API_BLUEPRINT
+from App.config import get_named_config
+import os
 
 # All Apps routes are registered here
-def create_app(config_file="config.py"):
+def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
     # Flask app initialize
     app = Flask(__name__)
 
     # All configuration are in config file
-    app.config.from_pyfile(config_file)
+    app.config.from_object(get_named_config(run_mode))
 
     # Register blueprints
     app.register_blueprint(API_BLUEPRINT)
@@ -26,7 +26,3 @@ def create_app(config_file="config.py"):
 
     # Return App for run in run.py file
     return app
-
-
-# if __name__ == "__main__":
-#     create_app().run(debug=True, host='0.0.0.0', port=5000)

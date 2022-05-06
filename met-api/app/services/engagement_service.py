@@ -1,9 +1,4 @@
-from os import stat
-from re import VERBOSE
-
-from App.Api.models.Engagement import Engagement
-from datetime import datetime
-import json
+from App.models.engagement import Engagement
 
 class engagement_service:
     """ Engagement management service
@@ -17,7 +12,7 @@ class engagement_service:
     
     def __create_engagement_object(self, request_engagement):
         engagement = {
-            "engagement_id": request_engagement["engagement_id"],
+            "id": request_engagement["id"],
             "title": request_engagement["title"],
             "description": request_engagement["description"],
             "start_date": request_engagement["start_date"],
