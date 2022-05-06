@@ -1,8 +1,12 @@
+
+
 const getFromEnv = (key: string, defaultValue: string = "") => {
   if (!key) return "";
 
   return process.env[key] || defaultValue;
 };
+
+console.log(process.env)
 
 //keycloak
 export const Keycloak_Client = getFromEnv("REACT_APP_KEYCLOAK_CLIENT");

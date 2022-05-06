@@ -29,7 +29,6 @@ const View = () => {
         submissionToSave,
         FORM_ID,
         (err: any, sentSubmission: any) => {
-          console.log(sentSubmission);
           if (!err) {
             dispatch(resetSubmissions("submission"));
           }
