@@ -22,12 +22,12 @@ class Engagement(db.Model):
     # engagement_status = relationship('EngagementStatus', foreign_keys='Engagement.status_id')
         
     @classmethod
-    def get_engagement(cls,engagement_id):   
+    def get_engagement(cls,engagement_id):
         engagement_schema = EngagementSchema()            
-        request = db.session.query(Engagement).filter_by(engagement_id=engagement_id).first()
+        request = db.session.query(Engagement).filter_by(id=engagement_id).first()
         return engagement_schema.dump(request)
     
 class EngagementSchema(ma.Schema):
     class Meta:
-        fields = ('engagement_id', 'title', 'description', 'start_date', 'end_date', 'status_id', 'created_by', 'updated_date', 'published_date')
+        fields = ('id', 'title', 'description', 'start_date', 'end_date', 'status_id', 'created_by', 'updated_date', 'published_date')
     

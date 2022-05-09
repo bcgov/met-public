@@ -35,6 +35,8 @@ class GetFOIExtension(Resource):
             engagement_record = engagement_service().get_engagement(engagement_id)    
             return engagement_record, 200
         except KeyError as err:
-            return {'status': False, 'message':err.messages}, 400
+            print("here")
+            print(err)
+            return {'status': False, 'message': "Engagement was not found"}, 400
         except ValueError as err:
             return {'status': False, 'message':err.messages}, 400
