@@ -6,6 +6,7 @@ import BaseRouting from "./routes/BaseRouting";
 import { CircularProgress, Grid } from "@mui/material";
 import UserService from "./services/UserServices";
 import { useAppSelector, useAppDispatch } from "./hooks";
+import TemporaryDrawer from "./components/layout/Drawer";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -38,8 +39,11 @@ const App = () => {
 
   return (
     <Router>
+     
       <Header />
+      
       <BaseRouting />
+      {/* <TemporaryDrawer/> */}
     </Router>
   );
 };

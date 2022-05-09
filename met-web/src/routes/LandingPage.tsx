@@ -3,6 +3,7 @@ import EnhancedTable from "../components/layout/Table";
 import styled from "@emotion/styled";
 import Button from "@mui/material/Button";
 import sx from "mui-sx";
+import TemporaryDrawer from "../components/layout/Drawer";
 
 const PageContainer = styled.div`
   display: flex;
@@ -58,7 +59,7 @@ function LandingPage() {
           <SearchContainer></SearchContainer>
           <EngagementContainer>
             <Button
-              style={{background: "#003366"}}
+              style={{ background: "#003366" }}
               variant="contained"
               className="btn"
             >
@@ -68,6 +69,7 @@ function LandingPage() {
         </TopContainer>
         <EnhancedTable />
       </TableContainer>
+     
     </PageContainer>
   );
 }

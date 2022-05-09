@@ -8,11 +8,13 @@ const BaseRouting = () => {
   const authenticated = useAppSelector(
     (state) => state.user.authentication.authenticated
   );
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     setIsLoggedIn(UserService.isLoggedIn);
   });
+
 
   if (!isLoggedIn) {
     return <UnauthenticatedRoutes />;
