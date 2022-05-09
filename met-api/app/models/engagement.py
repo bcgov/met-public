@@ -2,6 +2,8 @@ from .db import  db, ma
 from datetime import datetime
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
+from sqlalchemy.sql.expression import distinct
+
 
 class Engagement(db.Model):
     # Name of the table in our database
@@ -25,7 +27,13 @@ class Engagement(db.Model):
     def get_engagement(cls,engagement_id):
         engagement_schema = EngagementSchema()            
         request = db.session.query(Engagement).filter_by(id=engagement_id).first()
-        return engagement_schema.dump(request)
+        return engagement_schema.dump(request) 
+        
+    @classmethod
+    def get_all_engagements(cls):
+        engagements_schema = EngagementSchema(many=True)
+        query = db.session.query(Engagement).order_by(Engagement.id.asc()).all()
+        return engagements_schema.dump(query)
     
 class EngagementSchema(ma.Schema):
     class Meta:

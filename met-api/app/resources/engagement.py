@@ -23,8 +23,8 @@ API = Namespace('Engagement', description='Endpoints for Engagements Management'
 
 # @cors_preflight('GET,OPTIONS')
 @API.route('/engagement/<engagement_id>')
-class GetFOIExtension(Resource):
-    """Resource for managing Engagements."""
+class GetEngagement(Resource):
+    """Resource for managing a single engagmenet."""
        
     # @TRACER.trace()
     # @cross_origin(origins=allowedorigins())
@@ -35,8 +35,22 @@ class GetFOIExtension(Resource):
             engagement_record = engagement_service().get_engagement(engagement_id)    
             return engagement_record, 200
         except KeyError as err:
-            print("here")
-            print(err)
             return {'status': False, 'message': "Engagement was not found"}, 400
+        except ValueError as err:
+            return {'status': False, 'message':err.messages}, 400
+
+# @cors_preflight('GET,OPTIONS')
+@API.route('/engagements')
+class GetEngagements(Resource):
+    """Resource for managing engagements."""
+       
+    # @TRACER.trace()
+    # @cross_origin(origins=allowedorigins())
+    # @auth.require
+    @staticmethod
+    def get():
+        try:
+            engagement_records = engagement_service().get_all_engagements()    
+            return engagement_records, 200
         except ValueError as err:
             return {'status': False, 'message':err.messages}, 400
