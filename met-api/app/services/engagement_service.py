@@ -23,4 +23,8 @@ class engagement_service:
             "start_date": request_engagement["start_date"],
             "end_date": request_engagement["end_date"],
         }
-        return engagement
+        return engagement   
+    
+
+    def create_engagement(self, data):  
+        return Engagement.save_engagement(data)
