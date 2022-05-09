@@ -1,4 +1,3 @@
-from turtle import title
 from .db import  db, ma
 from datetime import datetime
 from sqlalchemy.orm import relationship
