@@ -2,16 +2,17 @@ from app.models.engagement import Engagement
 
 class engagement_service:
     """ Engagement management service
-    """
+    """        
+        
     otherdateformat = '%Y-%m-%d'
 
     def get_engagement(self, engagement_id):
-        request_engagement = Engagement().get_engagement(engagement_id)
+        request_engagement = Engagement.get_engagement(engagement_id)
         extension = self.__create_engagement_object(request_engagement)
         return extension
     
     def get_all_engagements(self):
-        engagements_requests = Engagement().get_all_engagements()        
+        engagements_requests = Engagement.get_all_engagements()        
         return [self.__create_engagement_object(engagement) for engagement in engagements_requests]
             
     
