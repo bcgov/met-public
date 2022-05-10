@@ -16,7 +16,6 @@ const DrawerContainer = styled.div`
   height: 90vh;
   align-items: center;
   justify-content: center;
-  border: 2px solid red;
 `;
 
 const TableContainer = styled.div`
@@ -32,7 +31,7 @@ const TopContainer = styled.div`
   display: flex;
   flex: 1;
   width: 100%;
-  justify-content: space-around;
+  justify-content: flex-end;
   padding: 10px;
   align-items: flex-end;
   margin: 10px;
@@ -45,15 +44,16 @@ const SearchContainer = styled.div`
 
 const EngagementContainer = styled.div`
   flex: 1;
-  margin: 10px;
+  margin-top: 10px;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
+
 `;
 
 function LandingPage() {
   return (
-    <PageContainer>
+    <PageContainer className="font-BCBold">
       <TableContainer>
         <TopContainer>
           <SearchContainer></SearchContainer>
@@ -61,7 +61,7 @@ function LandingPage() {
             <Button
               style={{ background: "#003366" }}
               variant="contained"
-              className="btn"
+              className="btn btn-lg btn-warning"
             >
               + Create An Engagement
             </Button>
@@ -69,7 +69,6 @@ function LandingPage() {
         </TopContainer>
         <EnhancedTable />
       </TableContainer>
-     
     </PageContainer>
   );
 }

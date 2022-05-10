@@ -17,11 +17,13 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-// import DeleteIcon from '@mui/icons-material/Delete';
-// import FilterListIcon from '@mui/icons-material/FilterList';
+import { API_URL } from "../../constants/constants";
 import { visuallyHidden } from "@mui/utils";
 
-const API_URL = "https://jsonplaceholder.typicode.com/posts";
+// import DeleteIcon from '@mui/icons-material/Delete';
+// import FilterListIcon from '@mui/icons-material/FilterList';
+
+
 
 interface Data {
   name: string;
@@ -214,7 +216,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   }, []);
 
   return (
-    <TableHead >
+    <TableHead>
       <TableRow>
         <TableCell>
           {/* <Checkbox
@@ -333,14 +335,13 @@ function EnhancedTable() {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <Box sx={{ width: "90%" }}>
+    <Box sx={{ width: "90vw" }}>
       <Paper elevation={0} sx={{ width: "100%", mb: 2 }}>
         <TableContainer>
           <Table
-        
             sx={{ minWidth: "100%" }}
             aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
+            size={dense ? "small" : "small"}
           >
             <EnhancedTableHead
               numSelected={selected.length}
@@ -378,24 +379,27 @@ function EnhancedTable() {
                         /> */}
                       </TableCell>
                       <TableCell
-                  
-                        align={
-                          "left"
-                        }
+                        align={"left"}
                         component="th"
                         id={labelId}
                         scope="row"
                         padding="none"
                       >
-                        {row.name}
+                        <a href="https://www.britannica.com/place/Fraser-River" target="_blank" rel="noopener noreferrer">{row.name}</a>
                       </TableCell>
                       <TableCell align="left">{row.dateCreated}</TableCell>
                       <TableCell align="left">{row.status}</TableCell>
                       <TableCell align="left">{row.datePublished}</TableCell>
                       <TableCell align="left">{row.phase}</TableCell>
-                      <TableCell align="left">{row.survey}</TableCell>
-                      <TableCell align="left">{row.comments}</TableCell>
-                      <TableCell align="left">{row.reporting}</TableCell>
+                      <TableCell align="left">
+                        <a href="https://www.britannica.com/place/Fraser-River" target="_blank" rel="noopener noreferrer">{row.survey}</a>
+                      </TableCell>
+                      <TableCell align="left">
+                        <a href="https://www.britannica.com/place/Fraser-Riverm" target="_blank" rel="noopener noreferrer">{row.comments}</a>
+                      </TableCell>
+                      <TableCell align="left">
+                      <a href="https://www.britannica.com/place/Fraser-River" target="_blank" rel="noopener noreferrer" >{row.reporting}</a>
+                      </TableCell> 
                     </TableRow>
                   );
                 })}

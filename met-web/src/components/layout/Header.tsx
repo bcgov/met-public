@@ -39,19 +39,27 @@ const Header = () => {
     display: flex;
     flex-direction: row;
     flex: 3;
-    align-items: center;
+    align-items: flex-end;
     justify-content: flex-start;
   `;
 
   const LogoutContainer = styled.div`
     display: flex;
     flex: 1;
+    align-items: center;
+    justify-content: center;
   `;
 
   return (
     <AppBar
+      className="font-BCBold"
       position="static"
-      style={{ backgroundColor: "#f2f2f2",height: "10vh", display: "flex", flexDirection: "row" }}
+      style={{
+        backgroundColor: "#f2f2f2",
+        height: "10vh",
+        display: "flex",
+        flexDirection: "row",
+      }}
       sx={sx({
         condition: authenticated,
         sx: sxLight,
@@ -72,10 +80,10 @@ const Header = () => {
         <Toolbar disableGutters>
           <Typography
             style={{
-              fontSize: "55px",
+              fontSize: "6vh",
               margin: "5px",
               fontWeight: "bold",
-              color: "#494949"
+              color: "#494949",
             }}
             variant="h3"
             noWrap
@@ -89,16 +97,15 @@ const Header = () => {
       <LogoutContainer>
         {isLoggedIn ? (
           <Button
-            style={{ position: "absolute", top: "2%", left: "95%" }}
             variant="contained"
             className="btn btn-lg btn-warning"
+            style={{ marginRight: "10px" }}
             onClick={() => UserService.doLogout()}
           >
             Logout
           </Button>
         ) : (
           <Button
-            style={{ position: "absolute", top: "2%", left: "95%" }}
             variant="contained"
             className="btn btn-lg btn-warning"
             onClick={() => UserService.doLogin()}
