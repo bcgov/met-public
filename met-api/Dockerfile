@@ -1,19 +1,10 @@
-# pull official base image
-FROM python:3.8-alpine
-
-# set working directory
+# syntax=docker/dockerfile:1
+FROM python:3.8.2
+ENV PYTHONUNBUFFERED=1
 WORKDIR /app
+COPY requirements.txt /app/
+RUN pip install -r requirements.txt
+COPY . /app/
 
-# install app dependencies
-COPY requirements.txt requirements.txt
-RUN \
- apk add --no-cache postgresql-libs && \
- apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev && \
- pip3 install -r requirements.txt
-
-# add app files
-COPY . ./
-
-# start app
-CMD [ "python3", "./app/app.py", "-m" , "flask", "run", "--host=0.0.0.0"] 
-
+RUN chmod u+x /app/entrypoint.sh
+ENTRYPOINT ["/bin/sh", "/app/entrypoint.sh"]
