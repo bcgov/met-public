@@ -16,6 +16,8 @@
 
 from flask_restx import Namespace, Resource
 from app.services.engagement_service import engagement_service
+from app.schemas.Engagement import EngagementSchema
+from flask import g, request
 
 API = Namespace('engagement', description='Endpoints for Engagements Management')
 """Custom exception messages
@@ -38,7 +40,7 @@ class GetEngagement(Resource):
         except KeyError as err:
             return {'status': False, 'message': "Engagement was not found"}, 400
         except ValueError as err:
-            return {'status': False, 'message':err.messages}, 400
+            return {'status': False, 'message': err.messages}, 400
 
 # @cors_preflight('GET,OPTIONS')
 @API.route('/')
@@ -55,4 +57,23 @@ class GetEngagements(Resource):
             engagement_records = engagement_service().get_all_engagements()    
             return engagement_records, 200
         except ValueError as err:
-            return {'status': False, 'message':err.messages}, 400
+            return {'status': False, 'message': err.messages}, 400      
+        
+# @cors_preflight('POST,OPTIONS')
+@API.route('/engagement/create')
+class CreateEngagement(Resource):
+    """Creates engagement request."""
+
+     
+    @staticmethod
+    # @TRACER.trace()
+    # @cross_origin(origins=allowedorigins())
+    # @auth.require
+    def post():      
+        try:
+            requestjson = request.get_json() 
+            engagment_schema = EngagementSchema().load(requestjson)  
+            result = engagement_service().create_engagement(engagment_schema)
+            return {'status': result.success, 'message': result.message,'id': result.identifier} , 200
+        except KeyError as err:
+            return {'status': False, 'message': err.messages}, 400
