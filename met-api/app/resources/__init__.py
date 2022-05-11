@@ -40,4 +40,4 @@ API = Api(
 
 # HANDLER = ExceptionHandler(API)
 
-API.add_namespace(ENGAGEMENT_API, path="/api")
+API.add_namespace(ENGAGEMENT_API)
