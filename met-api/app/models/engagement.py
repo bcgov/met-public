@@ -3,6 +3,7 @@ from datetime import datetime
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.expression import distinct
+from .default_method_result import DefaultMethodResult
 
 
 class Engagement(db.Model):
@@ -14,15 +15,12 @@ class Engagement(db.Model):
     description = db.Column(db.String(50))
     start_date = db.Column(db.DateTime)
     end_date = db.Column(db.DateTime)
-    status_id = db.Column(db.Integer, ForeignKey('engagement_status.id', ondelete='CASCADE')),
-    created_by = db.Column(db.Integer, ForeignKey('user.id', ondelete='CASCADE')),
+    status_id = db.Column(db.Integer, ForeignKey('engagement_status.id', ondelete='CASCADE'))
     created_date = db.Column(db.DateTime, default=datetime.utcnow())
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow())
     published_date = db.Column(db.DateTime, nullable=True)
+    user_id = db.Column(db.Integer, ForeignKey('user.id', ondelete='CASCADE'))
 
-    # user = relationship('User', foreign_keys='Engagement.created_by')
-    # engagement_status = relationship('EngagementStatus', foreign_keys='Engagement.status_id')
-        
     @classmethod
     def get_engagement(cls,engagement_id):
         engagement_schema = EngagementSchema()            
@@ -33,9 +31,26 @@ class Engagement(db.Model):
     def get_all_engagements(cls):
         engagements_schema = EngagementSchema(many=True)
         query = db.session.query(Engagement).order_by(Engagement.id.asc()).all()
-        return engagements_schema.dump(query)
+        return engagements_schema.dump(query)  
+
+    @classmethod
+    def save_engagement(cls, engagement) -> DefaultMethodResult: 
+        new_engagement = Engagement(
+            title=engagement["title"], 
+            description=engagement['description'],
+            start_date=engagement['start_date'], 
+            end_date=engagement['end_date'], 
+            status_id=1, 
+            user_id=1, 
+            updated_date= datetime.utcnow(), 
+            published_date=engagement['published_date']
+        )
+        db.session.add(new_engagement)
+        db.session.commit()
+        
+        return DefaultMethodResult(True, 'Engagement Added', new_engagement.id)
     
 class EngagementSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'title', 'description', 'start_date', 'end_date', 'status_id', 'created_by', 'updated_date', 'published_date')
+        fields = ('id', 'title', 'description', 'start_date', 'end_date', 'status_id', 'user_id', 'updated_date', 'published_date')
     
