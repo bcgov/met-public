@@ -7,7 +7,7 @@ import os
 # All Apps routes are registered here
 def create_app(
         run_mode=os.getenv('FLASK_ENV', 'development'),
-        url_prefix=os.getenv('URL_PREFIX', '/')
+        url_prefix=os.getenv('URL_PREFIX', '/api/')
     ):
     # Flask app initialize
     app = Flask(__name__)
