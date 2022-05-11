@@ -22,20 +22,19 @@ That are used to expose operational health information about the service, and me
 """
 
 from flask import Blueprint
-
 from .apihelper import Api
-
 from .engagement import API as ENGAGEMENT_API
 
 __all__ = ('API_BLUEPRINT')
 
-API_BLUEPRINT = Blueprint('API', __name__ )
+URL_PREFIX = '/api/'
+API_BLUEPRINT = Blueprint('API', __name__, url_prefix=URL_PREFIX)
 
 API = Api(
     API_BLUEPRINT,
     title='MET API',
     version='1.0',
-    description='The Core API for MET',
+    description='The Core API for MET'
 )
 
 # HANDLER = ExceptionHandler(API)
