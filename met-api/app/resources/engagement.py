@@ -58,18 +58,13 @@ class GetEngagements(Resource):
             return engagement_records, 200
         except ValueError as err:
             return {'status': False, 'message': err.messages}, 400      
-        
-# @cors_preflight('POST,OPTIONS')
-@API.route('/engagement/create')
-class CreateEngagement(Resource):
-    """Creates engagement request."""
-
-     
+             
     @staticmethod
     # @TRACER.trace()
     # @cross_origin(origins=allowedorigins())
     # @auth.require
     def post():      
+        """Creates a new engagement."""
         try:
             requestjson = request.get_json() 
             engagment_schema = EngagementSchema().load(requestjson)  
