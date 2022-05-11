@@ -16,7 +16,8 @@
 to support swagger on http
 """
 from flask import url_for
-from flask_restx import Api as BaseApi, apidoc 
+from flask_restx import Api as BaseApi 
+from flask_restx.apidoc import apidoc 
 
 
 class Api(BaseApi):
