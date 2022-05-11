@@ -6,8 +6,7 @@ import os
 
 # All Apps routes are registered here
 def create_app(
-        run_mode=os.getenv('FLASK_ENV', 'development'),
-        url_prefix=os.getenv('URL_PREFIX', '/api/')
+        run_mode=os.getenv('FLASK_ENV', 'development')
     ):
     # Flask app initialize
     app = Flask(__name__)
@@ -16,7 +15,7 @@ def create_app(
     app.config.from_object(get_named_config(run_mode))
 
     # Register blueprints
-    app.register_blueprint(API_BLUEPRINT, url_prefix=url_prefix)
+    app.register_blueprint(API_BLUEPRINT)
 
     # Database connection initialize
     db.init_app(app)

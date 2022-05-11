@@ -17,20 +17,21 @@
 from flask_restx import Namespace, Resource
 from app.services.engagement_service import engagement_service
 
-API = Namespace('Engagement', description='Endpoints for Engagements Management')
+API = Namespace('engagement', description='Endpoints for Engagements Management')
 """Custom exception messages
 """
 
 # @cors_preflight('GET,OPTIONS')
-@API.route('/engagement/<engagement_id>')
+@API.route('/<engagement_id>')
 class GetEngagement(Resource):
-    """Resource for managing a single engagmenet."""
+    """Resource for managing a single engagement."""
        
     # @TRACER.trace()
     # @cross_origin(origins=allowedorigins())
     # @auth.require
     @staticmethod
     def get(engagement_id):
+        """Fetches a single engagement matching the provided id."""
         try:
             engagement_record = engagement_service().get_engagement(engagement_id)    
             return engagement_record, 200
@@ -40,15 +41,16 @@ class GetEngagement(Resource):
             return {'status': False, 'message':err.messages}, 400
 
 # @cors_preflight('GET,OPTIONS')
-@API.route('/engagements')
+@API.route('/')
 class GetEngagements(Resource):
-    """Resource for managing engagements."""
+    """Resource for managing all engagements."""
        
     # @TRACER.trace()
     # @cross_origin(origins=allowedorigins())
     # @auth.require
     @staticmethod
     def get():
+        """Fetches all engagements."""
         try:
             engagement_records = engagement_service().get_all_engagements()    
             return engagement_records, 200
