@@ -5,7 +5,9 @@ from app.config import get_named_config
 import os
 
 # All Apps routes are registered here
-def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
+def create_app(
+        run_mode=os.getenv('FLASK_ENV', 'development')
+    ):
     # Flask app initialize
     app = Flask(__name__)
 

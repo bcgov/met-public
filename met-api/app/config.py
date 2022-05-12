@@ -61,7 +61,7 @@ class _Config():  # pylint: disable=too-few-public-methods
     DB_PASSWORD = os.getenv('DATABASE_PASSWORD')
     DB_NAME = os.getenv('DATABASE_NAME')
     DB_HOST = os.getenv('DATABASE_HOST')
-    DB_PORT = os.getenv('DATABASE_PORT') or "5432"
+    DB_PORT = os.getenv('DATABASE_PORT', '5432')
     SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://{user}:{password}@{host}:{port}/{name}'.format(
         user=DB_USER,
         password=DB_PASSWORD,
@@ -94,7 +94,7 @@ class DockerConfig(_Config):  # pylint: disable=too-few-public-methods
     DB_PASSWORD = os.getenv('DATABASE_DOCKER_PASSWORD')
     DB_NAME = os.getenv('DATABASE_DOCKER_NAME')
     DB_HOST = os.getenv('DATABASE_DOCKER_HOST')
-    DB_PORT = os.getenv('DATABASE_DOCKER_PORT') or "5432"
+    DB_PORT = os.getenv('DATABASE_DOCKER_PORT', '5432')
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_DOCKER_URL',
                                         'postgresql+psycopg2://{user}:{password}@{host}:{port}/{name}'.format(
                                             user=DB_USER,
