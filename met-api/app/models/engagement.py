@@ -22,7 +22,7 @@ class Engagement(db.Model):
     user_id = db.Column(db.Integer, ForeignKey('user.id', ondelete='CASCADE'))
 
     @classmethod
-    def get_engagement(cls,engagement_id):
+    def get_engagement(cls,engagement_id):  
         engagement_schema = EngagementSchema()            
         request = db.session.query(Engagement).filter_by(id=engagement_id).first()
         return engagement_schema.dump(request) 

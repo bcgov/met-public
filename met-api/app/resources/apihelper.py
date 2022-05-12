@@ -16,7 +16,8 @@
 to support swagger on http
 """
 from flask import url_for
-from flask_restx import Api as BaseApi
+from flask_restx import Api as BaseApi 
+from flask_restx.apidoc import apidoc 
 
 
 class Api(BaseApi):
@@ -27,3 +28,8 @@ class Api(BaseApi):
         """Return URL for endpoint."""
         scheme = 'http' if '5000' in self.base_url else 'https'
         return url_for(self.endpoint('specs'), _external=True, _scheme=scheme)
+
+
+# Make a global change setting the URL prefix for the swaggerui at the module level
+# This solves the issue where the swaggerui does not pick up the url prefix
+apidoc.url_prefix = '/api/'
