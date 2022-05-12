@@ -19,20 +19,21 @@ from app.services.engagement_service import engagement_service
 from app.schemas.Engagement import EngagementSchema
 from flask import g, request
 
-API = Namespace('Engagement', description='Endpoints for Engagements Management')
+API = Namespace('engagement', description='Endpoints for Engagements Management')
 """Custom exception messages
 """
 
 # @cors_preflight('GET,OPTIONS')
-@API.route('/engagement/<engagement_id>')
+@API.route('/<engagement_id>')
 class GetEngagement(Resource):
-    """Resource for managing a single engagmenet."""
+    """Resource for managing a single engagement."""
        
     # @TRACER.trace()
     # @cross_origin(origins=allowedorigins())
     # @auth.require
     @staticmethod
     def get(engagement_id):
+        """Fetches a single engagement matching the provided id."""
         try:
             engagement_record = engagement_service().get_engagement(engagement_id)    
             return engagement_record, 200
@@ -42,32 +43,28 @@ class GetEngagement(Resource):
             return {'status': False, 'message': err.messages}, 400
 
 # @cors_preflight('GET,OPTIONS')
-@API.route('/engagements')
+@API.route('/')
 class GetEngagements(Resource):
-    """Resource for managing engagements."""
+    """Resource for managing all engagements."""
        
     # @TRACER.trace()
     # @cross_origin(origins=allowedorigins())
     # @auth.require
     @staticmethod
     def get():
+        """Fetches all engagements."""
         try:
             engagement_records = engagement_service().get_all_engagements()    
             return engagement_records, 200
         except ValueError as err:
             return {'status': False, 'message': err.messages}, 400      
-        
-# @cors_preflight('POST,OPTIONS')
-@API.route('/engagement/create')
-class CreateEngagement(Resource):
-    """Creates engagement request."""
-
-     
+             
     @staticmethod
     # @TRACER.trace()
     # @cross_origin(origins=allowedorigins())
     # @auth.require
     def post():      
+        """Creates a new engagement."""
         try:
             requestjson = request.get_json() 
             engagment_schema = EngagementSchema().load(requestjson)  
