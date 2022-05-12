@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
@@ -17,74 +17,12 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-import { API_URL } from "../../constants/constants";
 import { visuallyHidden } from "@mui/utils";
+import EngagementService from "../../services/EngagementService";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 
 // import DeleteIcon from '@mui/icons-material/Delete';
 // import FilterListIcon from '@mui/icons-material/FilterList';
-
-
-
-interface Data {
-  name: string;
-  dateCreated: string;
-  status: string;
-  datePublished: string;
-  phase: string;
-  survey: string;
-  comments: string;
-  reporting: string;
-}
-
-function createData(
-  name: string,
-  dateCreated: string,
-  status: string,
-  datePublished: string,
-  phase: string,
-  survey: string,
-  comments: string,
-  reporting: string
-): Data {
-  return {
-    name,
-    dateCreated,
-    status,
-    datePublished,
-    phase,
-    survey,
-    comments,
-    reporting,
-  };
-}
-
-function fetchEngagementData() {
-  let engagementData: Data[] = [];
-
-  fetch(API_URL)
-    .then((response) => response.json())
-    .then((data) =>
-      data.forEach((json: any) => {
-        engagementData.push(
-          createData(
-            json.id,
-            json.id,
-            json.title,
-            json.body,
-            json.id,
-            json.id,
-            json.title,
-            json.body
-          )
-        );
-      })
-    );
-
-  return engagementData;
-}
-
-//TODO: SEND DATABASE DATA TO THIS ARRAY
-const rows = fetchEngagementData();
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -129,59 +67,41 @@ function stableSort<T>(
 
 interface HeadCell {
   disablePadding: boolean;
-  id: keyof Data;
+  id: keyof Engagement;
   label: string;
   numeric: boolean;
 }
 
 const headCells: readonly HeadCell[] = [
   {
-    id: "name",
+    id: "title",
     numeric: false,
     disablePadding: true,
     label: "Engagement Name",
   },
   {
-    id: "dateCreated",
+    id: "description",
+    numeric: true,
+    disablePadding: false,
+    label: "Description",
+  },
+  {
+    id: "created_date",
     numeric: true,
     disablePadding: false,
     label: "Date Created",
   },
   {
-    id: "status",
+    id: "status_id",
     numeric: true,
     disablePadding: false,
     label: "Status",
   },
   {
-    id: "datePublished",
+    id: "published_date",
     numeric: true,
     disablePadding: false,
     label: "Date Published",
-  },
-  {
-    id: "phase",
-    numeric: true,
-    disablePadding: false,
-    label: "Phase",
-  },
-  {
-    id: "survey",
-    numeric: true,
-    disablePadding: false,
-    label: "Survey",
-  },
-  {
-    id: "comments",
-    numeric: true,
-    disablePadding: false,
-    label: "Comments",
-  },
-  {
-    id: "reporting",
-    numeric: true,
-    disablePadding: false,
-    label: "Reporting",
   },
 ];
 
@@ -189,7 +109,7 @@ interface EnhancedTableProps {
   numSelected: number;
   onRequestSort: (
     event: React.MouseEvent<unknown>,
-    property: keyof Data
+    property: keyof Engagement
   ) => void;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   order: Order;
@@ -207,13 +127,9 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     onRequestSort,
   } = props;
   const createSortHandler =
-    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+    (property: keyof Engagement) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
     };
-
-  React.useEffect(() => {
-    fetchEngagementData();
-  }, []);
 
   return (
     <TableHead>
@@ -268,16 +184,26 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 };
 
 function EnhancedTable() {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    EngagementService.fetchAll(dispatch);
+  }, [dispatch]);
+
+  const rows = useAppSelector(
+    (state) => state.engagement.allEngagements
+  );  
+  console.log(rows);
   const [order, setOrder] = React.useState<Order>("asc");
-  const [orderBy, setOrderBy] = React.useState<keyof Data>("dateCreated");
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
+  const [orderBy, setOrderBy] = React.useState<keyof Engagement>("created_date");
+  const [selected, setSelected] = React.useState<readonly number[]>([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
-    property: keyof Data
+    property: keyof Engagement
   ) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -286,19 +212,19 @@ function EnhancedTable() {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = rows.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected: readonly string[] = [];
+  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+    const selectedIndex = selected.indexOf(id);
+    let newSelected: readonly number[] = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -328,7 +254,7 @@ function EnhancedTable() {
     setDense(event.target.checked);
   };
 
-  const isSelected = (name: string) => selected.indexOf(name) !== -1;
+  const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -357,16 +283,16 @@ function EnhancedTable() {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
+                      onClick={(event) => handleClick(event, row.id)}
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row.id}
                       selected={isItemSelected}
                     >
                       <TableCell>
@@ -385,21 +311,12 @@ function EnhancedTable() {
                         scope="row"
                         padding="none"
                       >
-                        <a href="https://www.britannica.com/place/Fraser-River" target="_blank" rel="noopener noreferrer">{row.name}</a>
+                        {row.title}
                       </TableCell>
-                      <TableCell align="left">{row.dateCreated}</TableCell>
-                      <TableCell align="left">{row.status}</TableCell>
-                      <TableCell align="left">{row.datePublished}</TableCell>
-                      <TableCell align="left">{row.phase}</TableCell>
-                      <TableCell align="left">
-                        <a href="https://www.britannica.com/place/Fraser-River" target="_blank" rel="noopener noreferrer">{row.survey}</a>
-                      </TableCell>
-                      <TableCell align="left">
-                        <a href="https://www.britannica.com/place/Fraser-Riverm" target="_blank" rel="noopener noreferrer">{row.comments}</a>
-                      </TableCell>
-                      <TableCell align="left">
-                      <a href="https://www.britannica.com/place/Fraser-River" target="_blank" rel="noopener noreferrer" >{row.reporting}</a>
-                      </TableCell> 
+                      <TableCell align="left">{row.description}</TableCell>
+                      <TableCell align="left">{row.created_date}</TableCell>
+                      <TableCell align="left">{row.status_id}</TableCell>
+                      <TableCell align="left">{row.published_date}</TableCell>
                     </TableRow>
                   );
                 })}

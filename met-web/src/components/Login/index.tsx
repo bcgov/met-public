@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import UserService from "../../services/UserServices";
 import { Grid } from "@mui/material";
 import Button from "@mui/material/Button";
-import { useAppSelector, useAppDispatch } from "../../hooks";
 
 const Login = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
