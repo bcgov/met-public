@@ -69,6 +69,11 @@ class _Config():  # pylint: disable=too-few-public-methods
         port=int(DB_PORT),
         name=DB_NAME,
     )
+
+    # JWT_OIDC Settings
+    JWT_OIDC_WELL_KNOWN_CONFIG = os.getenv('JWT_OIDC_WELL_KNOWN_CONFIG')
+    JWT_OIDC_AUDIENCE = os.getenv('JWT_OIDC_AUDIENCE')
+    JWT_OIDC_CLIENT_SECRET = os.getenv('JWT_OIDC_CLIENT_SECRET')
     
     print('SQLAlchemy URL (_Config): ')
     

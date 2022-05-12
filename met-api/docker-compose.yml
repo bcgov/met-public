@@ -10,6 +10,7 @@ services:
       - "5000:5000"
     environment:
       - FLASK_ENV=docker
+      - CORS_ORIGIN=${CORS_ORIGIN}
   met-db:
     image: postgres
     container_name: met-db
