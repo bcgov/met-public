@@ -30,7 +30,7 @@ API = Namespace('engagement', description='Endpoints for Engagements Management'
 @API.route('/<engagement_id>')
 class GetEngagement(Resource):
     """Resource for managing a single engagement."""
-       
+
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
@@ -38,7 +38,7 @@ class GetEngagement(Resource):
     def get(engagement_id):
         """Fetches a single engagement matching the provided id."""
         try:
-            engagement_record = engagement_service.get_engagement(engagement_id)    
+            engagement_record = engagement_service().get_engagement(engagement_id)    
             return engagement_record, 200
         except KeyError as err:
             return {'status': False, 'message': "Engagement was not found"}, 400
@@ -52,26 +52,26 @@ class GetEngagements(Resource):
        
     @staticmethod
     # @TRACER.trace()
-    # @cross_origin(origins=allowedorigins())
-    # @auth.require
+    @cross_origin(origins=allowedorigins())
+    @auth.require
     def get():
         """Fetches all engagements."""
         try:
-            engagement_records = engagement_service.get_all_engagements()    
+            engagement_records = engagement_service().get_all_engagements()    
             return engagement_records, 200
         except ValueError as err:
             return {'status': False, 'message': err.messages}, 400      
              
     @staticmethod
     # @TRACER.trace()
-    # @cross_origin(origins=allowedorigins())
-    # @auth.require
+    @cross_origin(origins=allowedorigins())
+    @auth.require
     def post():      
         """Creates a new engagement."""
         try:
             requestjson = request.get_json() 
-            engagment_schema = EngagementSchema.load(requestjson)  
-            result = engagement_service.create_engagement(engagment_schema)
+            engagment_schema = EngagementSchema().load(requestjson)  
+            result = engagement_service().create_engagement(engagment_schema)
             return {'status': result.success, 'message': result.message,'id': result.identifier} , 200
         except KeyError as err:
             return {'status': False, 'message': err.messages}, 400

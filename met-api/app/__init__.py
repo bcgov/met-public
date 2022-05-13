@@ -4,6 +4,7 @@ from app.resources import API_BLUEPRINT
 from app.config import get_named_config
 import os
 from app.auth import jwt
+from flask_cors import CORS
 import secure
 
 # Flask app initialize
@@ -46,8 +47,12 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
     # Register blueprints
     app.register_blueprint(API_BLUEPRINT)
 
-    # setup jwt for keycloak
-    setup_jwt_manager(app, jwt)
+    # Setup jwt for keycloak
+    if os.getenv('FLASK_ENV', 'production') != 'testing':
+        print("JWTSET DONE!!!!!!!!!!!!!!!!")
+        setup_jwt_manager(app, jwt)
+    
+    CORS(app, supports_credentials=True)
 
     # Database connection initialize
     db.init_app(app)

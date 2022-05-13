@@ -12,7 +12,7 @@ class engagement_service:
         return extension
     
     def get_all_engagements(self):
-        engagements_requests = Engagement.get_all_engagements()        
+        engagements_requests = Engagement().get_all_engagements()        
         return [self.__create_engagement_object(engagement) for engagement in engagements_requests]
             
     
@@ -28,4 +28,4 @@ class engagement_service:
     
 
     def create_engagement(self, data):  
-        return Engagement.save_engagement(data)
+        return Engagement().save_engagement(data)
