@@ -21,6 +21,7 @@ from flask_cors import cross_origin
 from flask import g, request
 from app.auth import auth
 from app.utils.util import allowedorigins, cors_preflight
+import json
 
 API = Namespace('engagement', description='Endpoints for Engagements Management')
 """Custom exception messages
@@ -45,7 +46,7 @@ class GetEngagement(Resource):
         except ValueError as err:
             return {'status': False, 'message': err.messages}, 400
 
-# @cors_preflight('GET,OPTIONS')
+@cors_preflight('GET, POST, OPTIONS')
 @API.route('/')
 class GetEngagements(Resource):
     """Resource for managing all engagements."""
@@ -57,8 +58,8 @@ class GetEngagements(Resource):
     def get():
         """Fetches all engagements."""
         try:
-            engagement_records = engagement_service().get_all_engagements()    
-            return engagement_records, 200
+            engagement_records = engagement_service().get_all_engagements()
+            return json.dumps(engagement_records), 200
         except ValueError as err:
             return {'status': False, 'message': err.messages}, 400      
              
