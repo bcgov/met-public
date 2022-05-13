@@ -1,12 +1,12 @@
 import "./App.css";
 import React, { useEffect } from "react";
-import Header from "./components/layout/Header";
+import Header from "./components/layout/Header/Header";
 import { BrowserRouter as Router } from "react-router-dom";
 import BaseRouting from "./routes/BaseRouting";
 import { CircularProgress, Grid } from "@mui/material";
 import UserService from "./services/UserServices";
 import { useAppSelector, useAppDispatch } from "./hooks";
-import TemporaryDrawer from "./components/layout/Drawer";
+import TemporaryDrawer from "./components/layout/Drawer/Drawer";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -17,8 +17,8 @@ const App = () => {
 
   const user = useAppSelector((state) => state.user);
 
-
   useEffect(() => {
+    console.log("DISPATCH:::::::");
     UserService.initKeycloak(dispatch);
   }, [dispatch]);
 
@@ -40,9 +40,8 @@ const App = () => {
 
   return (
     <Router>
-     
-      <Header  />
-      
+      <Header />
+
       <BaseRouting />
       {/* <TemporaryDrawer/> */}
     </Router>

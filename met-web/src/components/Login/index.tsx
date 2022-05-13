@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import UserService from "../../services/UserServices";
 import { Grid } from "@mui/material";
 import Button from "@mui/material/Button";
+import { useAppSelector } from "../../hooks";
 
 const Login = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-
-  useEffect(() => {
-    setIsLoggedIn(UserService.isLoggedIn);
-  });
+  const isLoggedIn = useAppSelector(
+    (state) => state.user.authentication.authenticated
+  );
 
   return (
     <Grid
@@ -19,10 +18,8 @@ const Login = () => {
       spacing={2}
       padding="2em"
     >
-      {/* <Grid item> */}
       {isLoggedIn ? (
         <Button
-          style={{ position: "absolute", top: "2%", left: "95%" }}
           variant="contained"
           className="btn btn-lg btn-warning"
           onClick={() => UserService.doLogout()}
@@ -31,7 +28,6 @@ const Login = () => {
         </Button>
       ) : (
         <Button
-          style={{ position: "absolute", top: "2%", left: "95%" }}
           variant="contained"
           className="btn btn-lg btn-warning"
           onClick={() => UserService.doLogin()}
@@ -39,8 +35,6 @@ const Login = () => {
           Login
         </Button>
       )}
-
-      {/* </Grid> */}
     </Grid>
   );
 };

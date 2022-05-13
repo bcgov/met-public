@@ -22,8 +22,8 @@ const KeycloakData = _kc;
 /**
  * Initializes Keycloak instance.
  */
-
 const initKeycloak = (dispatch: Dispatch<any>) => {
+  console.log("INIT:::");
   KeycloakData.init({
     onLoad: "check-sso",
     silentCheckSsoRedirectUri:
@@ -45,7 +45,8 @@ const initKeycloak = (dispatch: Dispatch<any>) => {
       }
 
       if (authenticated) {
-        const UserRoles = KeycloakData.resourceAccess[Keycloak_Client].roles;
+        console.log(KeycloakData.resourceAccess.account.roles);
+        const UserRoles = KeycloakData.resourceAccess.account.roles;
         dispatch(userRoles(UserRoles));
 
         dispatch(userToken(KeycloakData.token));

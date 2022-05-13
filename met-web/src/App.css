@@ -30,4 +30,17 @@
   #main {
     margin-top: 10px;
   }
+
+
+  .font-BCBold {
+    font-family: "BCSans-Bold";
+   }
+
+  .font-BCRegular {
+    font-family: "BCSans-Regular";
+   }
+
+  .font-BCItalic {
+    font-family: "BCSans-Italic";
+   }
   
