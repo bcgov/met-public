@@ -4,7 +4,7 @@ from app.resources import API_BLUEPRINT
 from app.config import get_named_config
 import os
 
-# All Apps routes are registered here
+# All Apps routes are registered here - testing
 def create_app(
         run_mode=os.getenv('FLASK_ENV', 'development')
     ):
