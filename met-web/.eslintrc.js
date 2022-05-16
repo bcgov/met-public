@@ -1,27 +1,23 @@
-module.exports = {
-    env: {
-      es6: true,
-      node: true,
-      jest: true,
+module.exports =  {
+    parser:  '@typescript-eslint/parser',  // Specifies the ESLint parser
+    extends:  [
+        'plugin:@typescript-eslint/recommended',  // Uses the recommended rules from the @typescript-eslint/eslint-plugin
+        'plugin:prettier/recommended',  // Enables eslint-plugin-prettier and displays prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
+    ],
+    parserOptions:  {
+    ecmaVersion:  2018,  // Allows for the parsing of modern ECMAScript features
+    sourceType:  'module',  // Allows for the use of imports
+    ecmaFeatures:  {
+      jsx:  true,  // Allows for the parsing of JSX
     },
-    extends: "eslint:recommended",
-    parser: "@typescript-eslint/parser",
-    plugins: ["@typescript-eslint"],
-    parserOptions: {
-      ecmaVersion: 2017,
-      sourceType: "module",
     },
-    rules: {
-      indent: ["error", 2],
-      "linebreak-style": ["error", "unix"],
-      quotes: ["error", "single"],
-      "no-console": "warn",
-      "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        { vars: "all", args: "after-used", ignoreRestSiblings: false },
-      ],
-      "@typescript-eslint/explicit-function-return-type": "warn", // Consider using explicit annotations for object literals and function return types even when they can be inferred.
-      "no-empty": "warn",
+    rules:  {
+      // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
+      // e.g. "@typescript-eslint/explicit-function-return-type": "off",
+    },
+    settings:  {
+      react:  {
+        version:  'detect',  // Tells eslint-plugin-react to automatically detect the version of React to use
+      },
     },
   };
