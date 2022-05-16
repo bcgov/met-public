@@ -1,8 +1,8 @@
-import { Button as MuiButton } from "@mui/material";
-import styled from "@emotion/styled";
+import { Button as MuiButton } from '@mui/material';
+import styled from '@emotion/styled';
 
 export const RoundedButton = styled(MuiButton)(() => ({
-  borderRadius: "23px",
+  borderRadius: '23px',
 }));
 
 export const Row = styled.div`

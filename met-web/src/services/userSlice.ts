@@ -1,23 +1,23 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: UserState = {
-  bearerToken: "",
+  bearerToken: '',
   roles: [],
   userDetail: {
-    sub: "",
+    sub: '',
     email_verified: false,
-    preferred_username: "",
+    preferred_username: '',
   },
   authentication: {
     authenticated: false,
     loading: true,
   },
-  currentPage: "",
+  currentPage: '',
   isAuthorized: false,
 };
 
 export const userSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState,
   reducers: {
     userToken: (state, action: PayloadAction<string | undefined>) => {

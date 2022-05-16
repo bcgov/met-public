@@ -2,8 +2,8 @@ import {
   Keycloak_Client,
   KEYCLOAK_AUTH_URL,
   KEYCLOAK_REALM,
-} from "./constants";
-import Keycloak from "keycloak-js";
+} from './constants';
+import Keycloak from 'keycloak-js';
 
 //TODO get from api
 export const tenantDetail: ITenantDetail = {

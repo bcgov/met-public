@@ -1,11 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   authorized: false,
 };
 
 export const loginSlice = createSlice({
-  name: "login",
+  name: 'login',
   initialState,
   reducers: {
     authorize: (state) => {

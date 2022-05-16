@@ -19,6 +19,7 @@ function LandingPage() {
           <SearchContainer></SearchContainer>
           <EngagementContainer>
             <Button
+              href="/engagement"
               style={{ background: "#003366" }}
               variant="contained"
               className="btn btn-lg btn-warning"

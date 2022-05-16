@@ -1,22 +1,22 @@
-import { createTheme } from "@mui/material";
+import { createTheme } from '@mui/material';
 
 export const BaseTheme = createTheme({
   palette: {
     primary: {
-      main: "#003366",
-      light: "#385989",
-      dark: "#000C3B",
+      main: '#003366',
+      light: '#385989',
+      dark: '#000C3B',
     },
     secondary: {
-      main: "#FFC107",
-      dark: "#FFAB00",
-      light: "#FFE082",
+      main: '#FFC107',
+      dark: '#FFAB00',
+      light: '#FFE082',
     },
     text: {
-      primary: "#494949",
+      primary: '#494949',
     },
     action: {
-      active: "#1A5A96",
+      active: '#1A5A96',
     },
   },
   components: {
@@ -27,7 +27,7 @@ export const BaseTheme = createTheme({
     },
     MuiLink: {
       defaultProps: {
-        color: "#1A5A96",
+        color: '#1A5A96',
       },
     },
   },
@@ -36,9 +36,9 @@ export const BaseTheme = createTheme({
 export const PublicTheme = createTheme(BaseTheme, {
   palette: {
     primary: {
-      main: "#CFD8DC",
-      dark: "#455A64",
-      light: "#ECF2F5",
+      main: '#CFD8DC',
+      dark: '#455A64',
+      light: '#ECF2F5',
     },
   },
 });

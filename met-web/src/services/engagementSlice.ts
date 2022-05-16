@@ -1,11 +1,11 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: EngagementState = {
   allEngagements: [],
 };
 
 export const engagementSlice = createSlice({
-  name: "engagement",
+  name: 'engagement',
   initialState,
   reducers: {
     setEngagements: (state, action: PayloadAction<Engagement[]>) => {

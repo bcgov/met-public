@@ -1,4 +1,4 @@
-import { _kc } from "../constants/tenantConstants";
+import { _kc } from '../constants/tenantConstants';
 import {
   Keycloak_Client,
   ADMIN_ROLE,
@@ -6,16 +6,16 @@ import {
   FORMIO_JWT_SECRET,
   ANONYMOUS_ID,
   ANONYMOUS_USER,
-} from "../constants/constants";
+} from '../constants/constants';
 import {
   userToken,
   userRoles,
   userDetails,
   userAuthorization,
   userAuthentication,
-} from "./userSlice";
-import { Dispatch } from "redux";
-import jwt from "jsonwebtoken";
+} from './userSlice';
+import { Dispatch } from 'redux';
+import jwt from 'jsonwebtoken';
 
 const KeycloakData = _kc;
 
@@ -23,17 +23,17 @@ const KeycloakData = _kc;
  * Initializes Keycloak instance.
  */
 const initKeycloak = (dispatch: Dispatch<any>) => {
-  console.log("INIT:::");
+  console.log('INIT:::');
   KeycloakData.init({
-    onLoad: "check-sso",
+    onLoad: 'check-sso',
     silentCheckSsoRedirectUri:
-      window.location.origin + "/silent-check-sso.html",
-    pkceMethod: "S256",
+      window.location.origin + '/silent-check-sso.html',
+    pkceMethod: 'S256',
     checkLoginIframe: false,
   })
     .then(async (authenticated) => {
       if (!authenticated) {
-        console.warn("not authenticated!");
+        console.warn('not authenticated!');
         dispatch(userAuthentication(authenticated));
         return;
       }
@@ -106,7 +106,7 @@ const authenticateFormio = async (user: string, roles: string[]) => {
     FORMIO_JWT_SECRET
   ); // TODO Move JWT secret key to COME From ENV
 
-  localStorage.setItem("formioToken", FORMIO_TOKEN);
+  localStorage.setItem('formioToken', FORMIO_TOKEN);
 };
 
 /**
