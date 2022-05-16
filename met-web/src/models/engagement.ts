@@ -9,5 +9,4 @@ interface Engagement {
     user_id: string;
     created_date: string;
     updated_date: string;
-  }
-  
+}

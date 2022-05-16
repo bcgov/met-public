@@ -1,7 +1,7 @@
-const getFromEnv = (key: string, defaultValue: string = '') => {
-  if (!key) return '';
+const getFromEnv = (key: string, defaultValue = '') => {
+    if (!key) return '';
 
-  return process.env[key] || defaultValue;
+    return process.env[key] || defaultValue;
 };
 
 //keycloak
@@ -15,9 +15,7 @@ export const ADMIN_ROLE = 'admin';
 
 export const API_URL = getFromEnv('REACT_APP_API_URL');
 
-export const USER_RESOURCE_FORM_ID = getFromEnv(
-  'REACT_APP_USER_RESOURCE_FORM_ID'
-);
+export const USER_RESOURCE_FORM_ID = getFromEnv('REACT_APP_USER_RESOURCE_FORM_ID');
 
 export const FORMIO_JWT_SECRET = getFromEnv('REACT_APP_FORMIO_JWT_SECRET');
 
