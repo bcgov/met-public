@@ -33,3 +33,4 @@ Werkzeug==2.0.1
 flask_mail==0.9.1
 flask_restx
 flask_cors
+pylint==2.13.9
