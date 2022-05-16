@@ -36,17 +36,17 @@ const initKeycloak = (dispatch: Dispatch<any>) => {
         return;
       }
 
-      if (
-        !KeycloakData.resourceAccess ||
-        !KeycloakData.resourceAccess[Keycloak_Client]
-      ) {
-        doLogout();
-        return;
-      }
+      // if (
+      //   !KeycloakData.resourceAccess ||
+      //   !KeycloakData.resourceAccess[Keycloak_Client]
+      // ) {
+      //   doLogout();
+      //   return;
+      // }
 
       if (authenticated) {
-        const UserRoles = KeycloakData.resourceAccess[Keycloak_Client].roles;
-        dispatch(userRoles(UserRoles));
+        // const UserRoles = KeycloakData.resourceAccess[Keycloak_Client].roles;
+        // dispatch(userRoles(UserRoles));
         dispatch(userToken(KeycloakData.token));
 
         KeycloakData.loadUserInfo().then((res: UserDetail) => {

@@ -5,6 +5,7 @@ import { ThemeProvider } from "@mui/system";
 import { BaseTheme, PublicTheme } from "../styles/Theme";
 import UserService from "../services/UserServices";
 import View from "../components/Form/View";
+import { CreateEngagement } from "../components/engagement/CreateEngagement";
 
 const AuthenticatedRoutes = () => {
   const adminRole = UserService.hasAdminRole();
@@ -14,6 +15,7 @@ const AuthenticatedRoutes = () => {
       <Routes>
         <Route path="/" element={<h1>App</h1>} />
         <Route path="/survey" element={<View />} />
+        <Route path="/engagement/create" element={<CreateEngagement />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </ThemeProvider>
