@@ -13,8 +13,7 @@ class engagement_service:
     
     def get_all_engagements(self):
         engagements_requests = Engagement.get_all_engagements()        
-        return [self.__create_engagement_object(engagement) for engagement in engagements_requests]
-            
+        return [self.__create_engagement_object(engagement) for engagement in engagements_requests]            
     
     def __create_engagement_object(self, request_engagement):
         engagement = {
@@ -24,8 +23,7 @@ class engagement_service:
             "start_date": request_engagement["start_date"],
             "end_date": request_engagement["end_date"],
         }
-        return engagement   
-    
+        return engagement    
 
     def create_engagement(self, data):  
-        return Engagement.save_engagement(data)
+        return Engagement().save_engagement(data)

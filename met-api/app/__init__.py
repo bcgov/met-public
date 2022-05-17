@@ -4,22 +4,58 @@ from app.models import db, migrate, ma
 from app.resources import API_BLUEPRINT
 from app.config import get_named_config
 import os
+from app.auth import jwt
+from flask_cors import CORS
+import secure
+
+# Flask app initialize
+app = Flask(__name__)
+    
+# Security Response headers
+csp = (
+    secure.ContentSecurityPolicy()
+    .default_src("'self'")
+    .script_src("'self'")
+    .object_src('self')
+    .connect_src('self')
+)
+hsts = secure.StrictTransportSecurity().include_subdomains().preload().max_age(31536000)
+referrer = secure.ReferrerPolicy().no_referrer()
+cache_value = secure.CacheControl().no_store().max_age(0)
+xfo_value = secure.XFrameOptions().deny()
+secure_headers = secure.Secure(
+    csp=csp,
+    hsts=hsts,
+    referrer=referrer,
+    cache=cache_value,
+    xfo=xfo_value
+)
+
+@app.after_request
+def set_secure_headers(response):
+    secure_headers.framework.flask(response)
+    response.headers.add('Cross-Origin-Resource-Policy','same-origin')
+    response.headers['Cross-Origin-Opener-Policy'] = 'same-origin'
+    response.headers['Cross-Origin-Embedder-Policy'] = 'unsafe-none'
+    return response
+
 
 # All Apps routes are registered here
-def create_app(
-        run_mode=os.getenv('FLASK_ENV', 'development')
-    ):
-    # Flask app initialize
-    app = Flask(__name__)
+def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
 
-    # TODO: Replace with more restrictive CORS, this currently allows any origins to hit the API
-    CORS(app)
     
     # All configuration are in config file
     app.config.from_object(get_named_config(run_mode))
 
     # Register blueprints
     app.register_blueprint(API_BLUEPRINT)
+
+    # Setup jwt for keycloak
+    if os.getenv('FLASK_ENV', 'production') != 'testing':
+        print("JWTSET DONE!!!!!!!!!!!!!!!!")
+        setup_jwt_manager(app, jwt)
+    
+    CORS(app, supports_credentials=True)
 
     # Database connection initialize
     db.init_app(app)
@@ -32,3 +68,13 @@ def create_app(
 
     # Return App for run in run.py file
     return app
+
+def setup_jwt_manager(app, jwt_manager):
+    """Use flask app to configure the JWTManager to work for a particular Realm."""
+
+    def get_roles(a_dict):
+        return a_dict['realm_access']['roles']  # pragma: no cover
+
+    app.config['JWT_ROLE_CALLBACK'] = get_roles
+    
+    jwt_manager.init_app(app)
