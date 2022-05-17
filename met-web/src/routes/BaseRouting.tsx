@@ -5,16 +5,10 @@ import { useAppSelector } from "../hooks";
 import UserService from "../services/UserServices";
 
 const BaseRouting = () => {
-  const authenticated = useAppSelector(
+
+  const isLoggedIn = useAppSelector(
     (state) => state.user.authentication.authenticated
   );
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    setIsLoggedIn(UserService.isLoggedIn);
-  });
-
 
   if (!isLoggedIn) {
     return <UnauthenticatedRoutes />;

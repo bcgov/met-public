@@ -9,20 +9,12 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
+import { Link } from "./TableElements";
+import { API_URL } from "../../../constants/constants";
 import { visuallyHidden } from "@mui/utils";
-import EngagementService from "../../services/EngagementService";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-
-// import DeleteIcon from '@mui/icons-material/Delete';
-// import FilterListIcon from '@mui/icons-material/FilterList';
+import { useAppDispatch, useAppSelector } from "../../../hooks";
+import EngagementService from "../../../services/EngagementService";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -134,17 +126,6 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell>
-          {/* <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              'aria-label': 'select all desserts',
-            }}
-          /> */}
-        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -154,7 +135,13 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
-              style={{ fontWeight: "bold", fontSize: "16px" }}
+              style={{
+                width: "100%",
+                height: "100%",
+                fontWeight: "bold",
+                fontSize: "16px",
+                flexWrap: "nowrap",
+              }}
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
@@ -173,16 +160,6 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   );
 }
 
-interface EnhancedTableToolbarProps {
-  numSelected: number;
-}
-
-const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
-  const { numSelected } = props;
-
-  return <></>;
-};
-
 function EnhancedTable() {
   const dispatch = useAppDispatch();
 
@@ -190,12 +167,11 @@ function EnhancedTable() {
     EngagementService.fetchAll(dispatch);
   }, [dispatch]);
 
-  const rows = useAppSelector(
-    (state) => state.engagement.allEngagements
-  );  
+  const rows = useAppSelector((state) => state.engagement.allEngagements);
   console.log(rows);
   const [order, setOrder] = React.useState<Order>("asc");
-  const [orderBy, setOrderBy] = React.useState<keyof Engagement>("created_date");
+  const [orderBy, setOrderBy] =
+    React.useState<keyof Engagement>("created_date");
   const [selected, setSelected] = React.useState<readonly number[]>([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
@@ -261,7 +237,7 @@ function EnhancedTable() {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <Box sx={{ width: "90vw" }}>
+    <Box >
       <Paper elevation={0} sx={{ width: "100%", mb: 2 }}>
         <TableContainer>
           <Table
@@ -278,8 +254,6 @@ function EnhancedTable() {
               rowCount={rows.length}
             />
             <TableBody>
-              {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-              rows.slice().sort(getComparator(order, orderBy)) */}
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
@@ -295,21 +269,14 @@ function EnhancedTable() {
                       key={row.id}
                       selected={isItemSelected}
                     >
-                      <TableCell>
-                        {/* <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            'aria-labelledby': labelId,
-                          }}
-                        /> */}
-                      </TableCell>
                       <TableCell
                         align={"left"}
                         component="th"
                         id={labelId}
                         scope="row"
-                        padding="none"
+                        padding="normal"
+                        size="small"
+                        style={{ paddingLeft: "10px", marginLeft: "10px" }}
                       >
                         {row.title}
                       </TableCell>
@@ -342,10 +309,6 @@ function EnhancedTable() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      {/* <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      /> */}
     </Box>
   );
 }

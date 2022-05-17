@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: EngagementState = {
-    allEngagements: [],
+  allEngagements: [],
 };
 
 export const engagementSlice = createSlice({
@@ -15,8 +15,6 @@ export const engagementSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const {
-    setEngagements,
-} = engagementSlice.actions;
+export const { setEngagements } = engagementSlice.actions;
 
 export default engagementSlice.reducer;

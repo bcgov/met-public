@@ -22,8 +22,8 @@ const KeycloakData = _kc;
 /**
  * Initializes Keycloak instance.
  */
-
 const initKeycloak = (dispatch: Dispatch<any>) => {
+  console.log("INIT:::");
   KeycloakData.init({
     onLoad: "check-sso",
     silentCheckSsoRedirectUri:
