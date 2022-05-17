@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import NotFound from "./NotFound";
+import LandingPage from "./LandingPage";
 import { ThemeProvider } from "@mui/system";
 import { BaseTheme, PublicTheme } from "../styles/Theme";
 import UserService from "../services/UserServices";
@@ -13,7 +14,7 @@ const AuthenticatedRoutes = () => {
   return (
     <ThemeProvider theme={adminRole ? BaseTheme : PublicTheme}>
       <Routes>
-        <Route path="/" element={<h1>App</h1>} />
+        <Route path="/" element={<LandingPage/>} />
         <Route path="/survey" element={<View />} />
         <Route path="/engagement/create" element={<CreateEngagement />} />
         <Route path="*" element={<NotFound />} />

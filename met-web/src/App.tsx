@@ -6,6 +6,7 @@ import BaseRouting from "./routes/BaseRouting";
 import { CircularProgress, Grid } from "@mui/material";
 import UserService from "./services/UserServices";
 import { useAppSelector, useAppDispatch } from "./hooks";
+import TemporaryDrawer from "./components/layout/Drawer";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -13,6 +14,9 @@ const App = () => {
   const authenticationLoading = useAppSelector(
     (state) => state.user.authentication.loading
   );
+
+  const user = useAppSelector((state) => state.user);
+
 
   useEffect(() => {
     UserService.initKeycloak(dispatch);
@@ -36,8 +40,11 @@ const App = () => {
 
   return (
     <Router>
-      <Header />
+     
+      <Header  />
+      
       <BaseRouting />
+      {/* <TemporaryDrawer/> */}
     </Router>
   );
 };

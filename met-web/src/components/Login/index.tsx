@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import UserService from "../../services/UserServices";
 import { Grid } from "@mui/material";
 import Button from "@mui/material/Button";
 
 const Login = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsLoggedIn(UserService.isLoggedIn);
+  });
+
   return (
     <Grid
       container
@@ -13,15 +19,28 @@ const Login = () => {
       spacing={2}
       padding="2em"
     >
-      <Grid item>
+      {/* <Grid item> */}
+      {isLoggedIn ? (
         <Button
+          style={{ position: "absolute", top: "2%", left: "95%" }}
+          variant="contained"
+          className="btn btn-lg btn-warning"
+          onClick={() => UserService.doLogout()}
+        >
+          Logout
+        </Button>
+      ) : (
+        <Button
+          style={{ position: "absolute", top: "2%", left: "95%" }}
           variant="contained"
           className="btn btn-lg btn-warning"
           onClick={() => UserService.doLogin()}
         >
           Login
         </Button>
-      </Grid>
+      )}
+
+      {/* </Grid> */}
     </Grid>
   );
 };

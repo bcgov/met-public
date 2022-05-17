@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from app.models import db, migrate, ma
 from app.resources import API_BLUEPRINT
 from app.config import get_named_config
@@ -11,6 +12,9 @@ def create_app(
     # Flask app initialize
     app = Flask(__name__)
 
+    # TODO: Replace with more restrictive CORS, this currently allows any origins to hit the API
+    CORS(app)
+    
     # All configuration are in config file
     app.config.from_object(get_named_config(run_mode))
 

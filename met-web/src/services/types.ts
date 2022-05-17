@@ -17,3 +17,12 @@ interface UserState {
   currentPage: string;
   isAuthorized: boolean;
 }
+
+interface EngagementState {
+  allEngagements: Engagement[];
+}
+
+interface IRootState {
+  user: UserState;
+  engagement: EngagementState;
+}

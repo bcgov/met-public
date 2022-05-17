@@ -32,3 +32,4 @@ SQLAlchemy==1.4.17
 Werkzeug==2.0.1
 flask_mail==0.9.1
 flask_restx
+flask_cors
