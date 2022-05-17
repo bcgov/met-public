@@ -13,8 +13,8 @@ const LandingPage =()=> {
     <Container sx={{ paddingTop: "5em" }}>
       <Grid
         direction="row"
-        justifyContent="flex-start"
-        alignItems="flex-start"
+        justifyContent="center"
+        alignItems="center"
         container
         spacing={2}
       >
