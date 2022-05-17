@@ -11,7 +11,7 @@ const AuthenticatedRoutes = () => {
   const adminRole = UserService.hasAdminRole();
 
   return (
-    <ThemeProvider theme={adminRole ? BaseTheme : PublicTheme}>
+    <ThemeProvider theme={BaseTheme}>
       <Routes>
         <Route path="/" element={<LandingPage/>} />
         <Route path="/survey" element={<View />} />
