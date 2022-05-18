@@ -17,21 +17,25 @@
 from flask_restx import Namespace, Resource
 from app.services.engagement_service import engagement_service
 from app.schemas.Engagement import EngagementSchema
+from flask_cors import cross_origin
 from flask import g, request
+from app.auth import auth
+from app.utils.util import allowedorigins, cors_preflight
+import json
 
 API = Namespace('engagement', description='Endpoints for Engagements Management')
 """Custom exception messages
 """
 
-# @cors_preflight('GET,OPTIONS')
+@cors_preflight('GET,OPTIONS')
 @API.route('/<engagement_id>')
 class GetEngagement(Resource):
     """Resource for managing a single engagement."""
-       
-    # @TRACER.trace()
-    # @cross_origin(origins=allowedorigins())
-    # @auth.require
+
     @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    @auth.require
     def get(engagement_id):
         """Fetches a single engagement matching the provided id."""
         try:
@@ -42,27 +46,27 @@ class GetEngagement(Resource):
         except ValueError as err:
             return {'status': False, 'message': err.messages}, 400
 
-# @cors_preflight('GET,OPTIONS')
+@cors_preflight('GET, POST, OPTIONS')
 @API.route('/')
 class GetEngagements(Resource):
     """Resource for managing all engagements."""
        
-    # @TRACER.trace()
-    # @cross_origin(origins=allowedorigins())
-    # @auth.require
     @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    @auth.require
     def get():
         """Fetches all engagements."""
         try:
-            engagement_records = engagement_service().get_all_engagements()    
-            return engagement_records, 200
+            engagement_records = engagement_service().get_all_engagements()
+            return json.dumps(engagement_records), 200
         except ValueError as err:
             return {'status': False, 'message': err.messages}, 400      
              
     @staticmethod
     # @TRACER.trace()
-    # @cross_origin(origins=allowedorigins())
-    # @auth.require
+    @cross_origin(origins=allowedorigins())
+    @auth.require
     def post():      
         """Creates a new engagement."""
         try:
