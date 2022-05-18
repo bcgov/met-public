@@ -14,7 +14,7 @@ import { Link } from "./TableElements";
 import { API_URL } from "../../../constants/constants";
 import { visuallyHidden } from "@mui/utils";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
-import EngagementService from "../../../services/EngagementService";
+import { fetchAll } from "../../../services/EngagementService";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -66,7 +66,7 @@ interface HeadCell {
 
 const headCells: readonly HeadCell[] = [
   {
-    id: "title",
+    id: "name",
     numeric: false,
     disablePadding: true,
     label: "Engagement Name",
@@ -164,7 +164,7 @@ function EnhancedTable() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    EngagementService.fetchAll(dispatch);
+    fetchAll(dispatch);
   }, [dispatch]);
 
   const rows = useAppSelector((state) => state.engagement.allEngagements);
@@ -237,7 +237,7 @@ function EnhancedTable() {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <Box >
+    <Box>
       <Paper elevation={0} sx={{ width: "100%", mb: 2 }}>
         <TableContainer>
           <Table
@@ -278,7 +278,7 @@ function EnhancedTable() {
                         size="small"
                         style={{ paddingLeft: "10px", marginLeft: "10px" }}
                       >
-                        {row.title}
+                        {row.name}
                       </TableCell>
                       <TableCell align="left">{row.description}</TableCell>
                       <TableCell align="left">{row.created_date}</TableCell>

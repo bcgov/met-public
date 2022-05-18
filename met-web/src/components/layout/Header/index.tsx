@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import { useAppSelector } from "../../../hooks";
 import UserService from "../../../services/UserServices";
-import Button from "@mui/material/Button";
 import { buttonClass,LogoContainer, LogoutContainer, TitleContainer, sxLight,AuthButton, HeaderText} from './HeaderElements';
 import sx from "mui-sx";
 
@@ -43,11 +40,7 @@ const Header = () => {
 
       <TitleContainer>
         <Toolbar disableGutters>
-          <HeaderText
-            variant="h3"
-            noWrap
-            sx={{ mr: 2 }}
-          >
+          <HeaderText variant="h3" noWrap sx={{ mr: 2 }}>
             MET
           </HeaderText>
         </Toolbar>
@@ -56,17 +49,12 @@ const Header = () => {
         {isLoggedIn ? (
           <AuthButton
             variant="contained"
-            className={buttonClass}
             onClick={() => UserService.doLogout()}
           >
             Logout
           </AuthButton>
         ) : (
-          <AuthButton
-            variant="contained"
-            className={buttonClass}
-            onClick={() => UserService.doLogin()}
-          >
+          <AuthButton variant="contained" onClick={() => UserService.doLogin()}>
             Login
           </AuthButton>
         )}

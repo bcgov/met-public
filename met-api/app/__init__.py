@@ -39,10 +39,8 @@ def set_secure_headers(response):
     response.headers['Cross-Origin-Embedder-Policy'] = 'unsafe-none'
     return response
 
-
 # All Apps routes are registered here
 def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
-
     
     # All configuration are in config file
     app.config.from_object(get_named_config(run_mode))
