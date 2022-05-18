@@ -14,6 +14,8 @@ const App = () => {
     (state) => state.user.authentication.loading
   );
 
+  const user = useAppSelector((state) => state.user);
+
   useEffect(() => {
     UserService.initKeycloak(dispatch);
   }, [dispatch]);
@@ -36,8 +38,11 @@ const App = () => {
 
   return (
     <Router>
-      <Header />
+     
+      <Header/>
+      
       <BaseRouting />
+      {/* <TemporaryDrawer/> */}
     </Router>
   );
 };

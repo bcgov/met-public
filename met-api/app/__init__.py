@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from app.models import db, migrate, ma
 from app.resources import API_BLUEPRINT
 from app.config import get_named_config

@@ -18,10 +18,12 @@ import { Dispatch } from "redux";
 import jwt from "jsonwebtoken";
 
 const KeycloakData = _kc;
+
 /**
  * Initializes Keycloak instance.
  */
 const initKeycloak = (dispatch: Dispatch<any>) => {
+  console.log("INIT:::");
   KeycloakData.init({
     onLoad: "check-sso",
     silentCheckSsoRedirectUri:
@@ -36,34 +38,32 @@ const initKeycloak = (dispatch: Dispatch<any>) => {
         return;
       }
 
-      if (
-        !KeycloakData.resourceAccess ||
-        !KeycloakData.resourceAccess[Keycloak_Client]
-      ) {
-        doLogout();
-        return;
-      }
+      // if (
+      //   !KeycloakData.resourceAccess ||
+      //   !KeycloakData.resourceAccess[Keycloak_Client]
+      // ) {
+      //   doLogout();
+      //   return;
+      // }
 
-      if (authenticated) {
-        const UserRoles = KeycloakData.resourceAccess[Keycloak_Client].roles;
-        dispatch(userRoles(UserRoles));
-        dispatch(userToken(KeycloakData.token));
+      // const UserRoles = KeycloakData.resourceAccess[Keycloak_Client].roles;
+      // dispatch(userRoles(UserRoles));
 
-        KeycloakData.loadUserInfo().then((res: UserDetail) => {
-          dispatch(userDetails(res));
-          dispatch(userAuthorization(true));
-        });
-        dispatch(userAuthentication(authenticated));
-        refreshToken(dispatch);
-        /* 
-          To do: uncomment when we have FORMIO_JWT_SECRET and USER_RESOURCE_FORM_ID 
-          authenticateAnonymouslyOnFormio();
-        */
-      }
+      dispatch(userToken(KeycloakData.token));
+      KeycloakData.loadUserInfo().then((res: UserDetail) => {
+        dispatch(userDetails(res));
+        dispatch(userAuthorization(true));
+      });
+
+      dispatch(userAuthentication(KeycloakData.authenticated ? true : false));
+      refreshToken(dispatch);
+      /* 
+        To do: uncomment when we have FORMIO_JWT_SECRET and USER_RESOURCE_FORM_ID 
+        authenticateAnonymouslyOnFormio();
+      */
     })
     .catch((error) => {
       dispatch(userAuthentication(false));
-      console.log(error);
     });
 };
 
@@ -78,7 +78,6 @@ const refreshToken = (dispatch: Dispatch<any>) => {
           }
         })
         .catch((error) => {
-          console.log(error);
           userLogout();
         });
   }, 60000);

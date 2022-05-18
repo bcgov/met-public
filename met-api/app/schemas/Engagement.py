@@ -14,7 +14,7 @@ class EngagementSchema(Schema):
         unknown = EXCLUDE
         
     id = fields.Int(data_key="id")
-    title = fields.Str(data_key="title")
+    name = fields.Str(data_key="name")
     description = fields.Str(data_key="description")
     start_date = fields.Str(data_key="start_date")
     end_date = fields.Str(data_key="end_date")

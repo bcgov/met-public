@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import UserService from "../../services/UserServices";
 import { Grid } from "@mui/material";
 import Button from "@mui/material/Button";
+import { useAppSelector } from "../../hooks";
 
 const Login = () => {
+  const isLoggedIn = useAppSelector(
+    (state) => state.user.authentication.authenticated
+  );
+
   return (
     <Grid
       container
@@ -13,7 +18,15 @@ const Login = () => {
       spacing={2}
       padding="2em"
     >
-      <Grid item>
+      {isLoggedIn ? (
+        <Button
+          variant="contained"
+          className="btn btn-lg btn-warning"
+          onClick={() => UserService.doLogout()}
+        >
+          Logout
+        </Button>
+      ) : (
         <Button
           variant="contained"
           className="btn btn-lg btn-warning"
@@ -21,7 +34,7 @@ const Login = () => {
         >
           Login
         </Button>
-      </Grid>
+      )}
     </Grid>
   );
 };

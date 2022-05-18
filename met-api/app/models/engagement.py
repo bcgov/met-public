@@ -11,7 +11,7 @@ class Engagement(db.Model):
     __tablename__ = 'engagement'
     
     id= db.Column(db.Integer, primary_key=True, autoincrement=True)
-    title = db.Column(db.String(50))
+    name = db.Column(db.String(50))
     description = db.Column(db.String(50))
     start_date = db.Column(db.DateTime)
     end_date = db.Column(db.DateTime)
@@ -36,14 +36,15 @@ class Engagement(db.Model):
     @classmethod
     def save_engagement(cls, engagement) -> DefaultMethodResult: 
         new_engagement = Engagement(
-            title=engagement["title"], 
+            name=engagement["name"], 
             description=engagement['description'],
             start_date=engagement['start_date'], 
             end_date=engagement['end_date'], 
             status_id=1, 
-            user_id=1, 
+            user_id=1,
+            created_date= datetime.utcnow(),
             updated_date= datetime.utcnow(), 
-            published_date=engagement['published_date']
+            published_date=None
         )
         db.session.add(new_engagement)
         db.session.commit()
@@ -52,5 +53,5 @@ class Engagement(db.Model):
     
 class EngagementSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'title', 'description', 'start_date', 'end_date', 'status_id', 'user_id', 'updated_date', 'published_date')
+        fields = ('id', 'name', 'description', 'start_date', 'end_date', 'status_id', 'user_id', 'updated_date', 'published_date')
     

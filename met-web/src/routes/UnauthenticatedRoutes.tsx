@@ -5,7 +5,7 @@ import Login from "../components/Login";
 const UnauthenticatedRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
+      <Route path="/" element={<></>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
