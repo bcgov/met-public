@@ -46,23 +46,21 @@ const initKeycloak = (dispatch: Dispatch<any>) => {
       //   return;
       // }
 
-      if (authenticated) {
-        // const UserRoles = KeycloakData.resourceAccess[Keycloak_Client].roles;
-        // dispatch(userRoles(UserRoles));
-        dispatch(userToken(KeycloakData.token));
+      // const UserRoles = KeycloakData.resourceAccess[Keycloak_Client].roles;
+      // dispatch(userRoles(UserRoles));
 
-        KeycloakData.loadUserInfo().then((res: UserDetail) => {
-          dispatch(userDetails(res));
-          dispatch(userAuthorization(true));
-        });
+      dispatch(userToken(KeycloakData.token));
+      KeycloakData.loadUserInfo().then((res: UserDetail) => {
+        dispatch(userDetails(res));
+        dispatch(userAuthorization(true));
+      });
 
-        dispatch(userAuthentication(KeycloakData.authenticated ? true : false));
-        refreshToken(dispatch);
-        /* 
-          To do: uncomment when we have FORMIO_JWT_SECRET and USER_RESOURCE_FORM_ID 
-          authenticateAnonymouslyOnFormio();
-        */
-      }
+      dispatch(userAuthentication(KeycloakData.authenticated ? true : false));
+      refreshToken(dispatch);
+      /* 
+        To do: uncomment when we have FORMIO_JWT_SECRET and USER_RESOURCE_FORM_ID 
+        authenticateAnonymouslyOnFormio();
+      */
     })
     .catch((error) => {
       dispatch(userAuthentication(false));

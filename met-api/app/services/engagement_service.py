@@ -19,7 +19,7 @@ class engagement_service:
     def __create_engagement_object(self, request_engagement):
         engagement = {
             "id": request_engagement["id"],
-            "title": request_engagement["title"],
+            "name": request_engagement["name"],
             "description": request_engagement["description"],
             "start_date": request_engagement["start_date"],
             "end_date": request_engagement["end_date"],

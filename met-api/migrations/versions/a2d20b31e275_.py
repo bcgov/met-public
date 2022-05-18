@@ -32,7 +32,7 @@ def upgrade():
     
     op.create_table('engagement',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('title', sa.String(length=50), nullable=True),
+    sa.Column('name', sa.String(length=50), nullable=True),
     sa.Column('description', sa.String(length=50), nullable=True),
     sa.Column('start_date', sa.DateTime(), nullable=True),
     sa.Column('end_date', sa.DateTime(), nullable=True),

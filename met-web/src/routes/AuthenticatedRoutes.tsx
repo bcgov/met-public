@@ -6,17 +6,21 @@ import { ThemeProvider } from "@mui/system";
 import { BaseTheme, PublicTheme } from "../styles/Theme";
 import UserService from "../services/UserServices";
 import View from "../components/Form/View";
-import { CreateEngagement } from "../components/engagement/CreateEngagement";
+import CreateEngagementForm from "../components/engagement/CreateEngagementForm";
+import Engagement from "../components/engagement";
 
 const AuthenticatedRoutes = () => {
-  const adminRole = UserService.hasAdminRole();
+  let adminRole = UserService.hasAdminRole();
+
+  //ToDO: remove when roles are defined in keycloak
+  adminRole = true;
 
   return (
     <ThemeProvider theme={BaseTheme}>
       <Routes>
-        <Route path="/" element={<LandingPage/>} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/survey" element={<View />} />
-        <Route path="/engagement/create" element={<CreateEngagement />} />
+        <Route path="/engagement/create" element={<Engagement />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </ThemeProvider>

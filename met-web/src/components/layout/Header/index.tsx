@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import { useAppSelector } from "../../../hooks";
 import UserService from "../../../services/UserServices";
-import Button from "@mui/material/Button";
 import { buttonClass,LogoContainer, LogoutContainer, TitleContainer, sxLight,AuthButton, HeaderText} from './HeaderElements';
 import sx from "mui-sx";
 

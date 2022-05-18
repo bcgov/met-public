@@ -1,0 +1,13 @@
+.DraftEditor-root {
+    height: 10em;
+    overflow-y: hidden;
+}
+
+.DraftEditor-root .public-DraftEditor-content {
+    height: 100%;
+  }
+
+.DraftEditor-root .DraftEditor-editorContainer{
+    margin:1em;
+    height: 100;
+  }
