@@ -24,8 +24,12 @@ class engagement_service:
             "start_date": request_engagement["start_date"],
             "end_date": request_engagement["end_date"],
         }
-        return engagement   
-    
+        return engagement    
 
     def create_engagement(self, data):  
+        empty_fields = [not data[field] for field in ['name', 'description', 'start_date', 'end_date']]
+        
+        if any(empty_fields):
+            raise ValueError("Some required fields are empty")
+        
         return Engagement.save_engagement(data)

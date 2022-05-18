@@ -6,8 +6,6 @@ import {
   Button,
   Container,
   CircularProgress,
-  FormControl,
-  FormHelperText,
 } from "@mui/material";
 import { MetBox } from "../common";
 import RichTextEditor from "./RichTextEditor";
@@ -24,11 +22,12 @@ const CreateEngagementForm = () => {
   });
 
   const [engagementFormError, setEngagementFormError] = useState({
-    name: true,
-    fromDate: true,
-    toDate: true,
-    description: true,
+    name: false,
+    fromDate: false,
+    toDate: false,
+    description: false,
   });
+
   const handleChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
@@ -36,15 +35,45 @@ const CreateEngagementForm = () => {
       ...engagementFormData,
       [e.target.name]: e.target.value,
     });
+    setEngagementFormError({
+      ...engagementFormError,
+      [e.target.name]: false,
+    });
   };
   const handleDescriptionChange = (rawText: string) => {
     setEngagementFormData({
       ...engagementFormData,
       description: rawText,
     });
+
+    setEngagementFormError({
+      ...engagementFormError,
+      description: false,
+    });
   };
 
-  const { name, fromDate, toDate } = engagementFormData;
+  const { name, fromDate, toDate, description } = engagementFormData;
+
+  const validateForm = () => {
+    const errors = {
+      name: !name,
+      fromDate: !fromDate,
+      toDate: !toDate,
+      description: !description,
+    };
+
+    setEngagementFormError(errors);
+
+    return Object.values(errors).some((isError) => isError);
+  };
+  const handleCreateEngagement = () => {
+    const errorExists = validateForm();
+
+    if (!errorExists) {
+      saveEngagement(engagementFormData);
+    }
+  };
+
   return (
     <Container sx={{ paddingTop: "5em" }}>
       <Typography variant="h4">Engagement Details</Typography>
@@ -73,6 +102,7 @@ const CreateEngagementForm = () => {
               value={name}
               onChange={handleChange}
               error={engagementFormError.name}
+              helperText={engagementFormError.name && "Name must be specified"}
             />
           </Grid>
           <Grid item md={6} xs={0}></Grid>
@@ -108,6 +138,9 @@ const CreateEngagementForm = () => {
                 value={fromDate}
                 onChange={handleChange}
                 error={engagementFormError.fromDate}
+                helperText={
+                  engagementFormError.fromDate && "From Date must be specified"
+                }
               />
             </Grid>
 
@@ -128,6 +161,9 @@ const CreateEngagementForm = () => {
                 value={toDate}
                 onChange={handleChange}
                 error={engagementFormError.toDate}
+                helperText={
+                  engagementFormError.toDate && "To Date must be specified"
+                }
               />
             </Grid>
           </Grid>
@@ -145,7 +181,7 @@ const CreateEngagementForm = () => {
             <Button
               fullWidth
               variant="contained"
-              onClick={() => saveEngagement(engagementFormData)}
+              onClick={() => handleCreateEngagement()}
               disabled={saving}
             >
               Create Engagement Draft

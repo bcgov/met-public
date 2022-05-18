@@ -12,26 +12,23 @@ import { MetBox } from "../common";
 const toolbarPlugin = createToolbarPlugin();
 const { Toolbar } = toolbarPlugin;
 
-// let timer = null;
 const RichTextEditor = ({
   setRawText = (rawText: string) => {},
   error = false,
   helperText = "Field cannot be empty",
 }: any) => {
-  const cntxt = useContext(ActionContext);
-
-  console.log(cntxt.handleEditorStateChange);
+  const { handleEditorStateChange, rawEditorState } = useContext(ActionContext);
 
   const getEditorState = (rawTextToConvert: string) => {
-    return EditorState.createEmpty();
-    const rawContentFromStore = convertFromRaw(JSON.parse("/{}/"));
+    if (!rawTextToConvert) {
+      return EditorState.createEmpty();
+    }
+    const rawContentFromStore = convertFromRaw(JSON.parse(rawTextToConvert));
     return EditorState.createWithContent(rawContentFromStore);
   };
 
   const [editorState, setEditorState] = React.useState(
-    !cntxt.rawEditorState
-      ? EditorState.createEmpty()
-      : getEditorState(cntxt.rawEditorState)
+    getEditorState(rawEditorState)
   );
 
   const handleChange = (newEditorState: EditorState) => {
@@ -41,13 +38,13 @@ const RichTextEditor = ({
     const _editorstateinJSON = JSON.stringify(
       convertToRaw(newEditorState.getCurrentContent())
     );
-    // setRawEditorState(_editorstateinJSON);
+    handleEditorStateChange(_editorstateinJSON);
     setRawText(plainText);
   };
 
   return (
     <FormControl fullWidth>
-      <MetBox style={{ borderColor: `${error && "#d32f2f"}` }}>
+      <MetBox style={{ borderColor: `${error ? "#d32f2f" : "#606060"}` }}>
         <form>
           <Toolbar />
           <Editor

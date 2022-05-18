@@ -71,4 +71,6 @@ class GetEngagements(Resource):
             result = engagement_service().create_engagement(engagment_schema)
             return {'status': result.success, 'message': result.message,'id': result.identifier} , 200
         except KeyError as err:
-            return {'status': False, 'message': err.messages}, 400
+            return {'status': False, 'message': str(err)}, 400
+        except ValueError as err:
+            return {'status': False, 'message': str(err)}, 400

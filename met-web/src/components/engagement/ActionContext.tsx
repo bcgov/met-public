@@ -19,7 +19,7 @@ export const ActionProvider = ({ children }: { children: any }) => {
   const navigate = useNavigate();
 
   //should be saved in DB and given to Rich Text Editor for update engagement operation
-  const [rawEditorState, setRawEditorState] = useState({});
+  const [rawEditorState, setRawEditorState] = useState(null);
   const [saving, setSaving] = useState(false);
 
   const handleEditorStateChange = (newState: any) => {
