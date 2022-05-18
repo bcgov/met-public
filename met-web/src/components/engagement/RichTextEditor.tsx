@@ -54,7 +54,7 @@ const RichTextEditor = ({
           />
         </form>
       </MetBox>
-      <FormHelperText error={error}>{error && helperText}</FormHelperText>
+      <FormHelperText error={error}>{error ? helperText : " "}</FormHelperText>
     </FormControl>
   );
 };

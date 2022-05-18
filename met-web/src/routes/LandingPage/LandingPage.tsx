@@ -21,11 +21,7 @@ const LandingPage = () => {
         </Grid>
         <Grid item xs={3}>
           <Link to="/engagement/create">
-            <Button
-              variant="contained"
-              className="btn btn-lg btn-warning"
-              fullWidth
-            >
+            <Button variant="contained" fullWidth>
               + Create An Engagement
             </Button>
           </Link>

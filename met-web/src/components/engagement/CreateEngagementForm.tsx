@@ -102,7 +102,9 @@ const CreateEngagementForm = () => {
               value={name}
               onChange={handleChange}
               error={engagementFormError.name}
-              helperText={engagementFormError.name && "Name must be specified"}
+              helperText={
+                engagementFormError.name ? "Name must be specified" : " "
+              }
             />
           </Grid>
           <Grid item md={6} xs={0}></Grid>
@@ -139,7 +141,9 @@ const CreateEngagementForm = () => {
                 onChange={handleChange}
                 error={engagementFormError.fromDate}
                 helperText={
-                  engagementFormError.fromDate && "From Date must be specified"
+                  engagementFormError.fromDate
+                    ? "From Date must be specified"
+                    : ""
                 }
               />
             </Grid>
@@ -162,7 +166,7 @@ const CreateEngagementForm = () => {
                 onChange={handleChange}
                 error={engagementFormError.toDate}
                 helperText={
-                  engagementFormError.toDate && "To Date must be specified"
+                  engagementFormError.toDate ? "To Date must be specified" : ""
                 }
               />
             </Grid>

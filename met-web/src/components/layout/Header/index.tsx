@@ -40,11 +40,7 @@ const Header = () => {
 
       <TitleContainer>
         <Toolbar disableGutters>
-          <HeaderText
-            variant="h3"
-            noWrap
-            sx={{ mr: 2 }}
-          >
+          <HeaderText variant="h3" noWrap sx={{ mr: 2 }}>
             MET
           </HeaderText>
         </Toolbar>
@@ -53,17 +49,12 @@ const Header = () => {
         {isLoggedIn ? (
           <AuthButton
             variant="contained"
-            className={buttonClass}
             onClick={() => UserService.doLogout()}
           >
             Logout
           </AuthButton>
         ) : (
-          <AuthButton
-            variant="contained"
-            className={buttonClass}
-            onClick={() => UserService.doLogin()}
-          >
+          <AuthButton variant="contained" onClick={() => UserService.doLogin()}>
             Login
           </AuthButton>
         )}
