@@ -16,6 +16,26 @@ export const fetchAll = async (
   return responseData.data;
 };
 
+export const getEngagement = async (
+  engagementId: number,
+  successCallback: Function
+) => {
+  if (!engagementId) {
+    throw new Error("Invalid Engagement Id " + engagementId);
+  }
+
+  const responseData = await http.get<Engagement>(
+    `/engagement/${engagementId}`,
+    {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${UserService.getToken()}`,
+      },
+    }
+  );
+  successCallback(responseData.data);
+};
+
 export const postEngagement = async (data: any): Promise<any> => {
   const response = await http.post("/engagement/", data, {
     headers: {

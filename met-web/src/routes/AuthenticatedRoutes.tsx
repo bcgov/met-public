@@ -20,7 +20,7 @@ const AuthenticatedRoutes = () => {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/survey" element={<View />} />
-        <Route path="/engagement/create" element={<Engagement />} />
+        <Route path="/engagement/:engagementId" element={<Engagement />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </ThemeProvider>

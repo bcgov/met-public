@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   Typography,
   Grid,
@@ -12,14 +12,24 @@ import RichTextEditor from "./RichTextEditor";
 import { ActionContext } from "./ActionContext";
 
 const CreateEngagementForm = () => {
-  const { saveEngagement, saving } = useContext(ActionContext);
+  const { saveEngagement, saving, savedEngagement } = useContext(ActionContext);
+  console.log(savedEngagement);
 
   const [engagementFormData, setEngagementFormData] = useState({
-    name: "",
-    fromDate: "",
-    toDate: "",
-    description: "",
+    name: savedEngagement?.name || "",
+    fromDate: savedEngagement?.start_date || "",
+    toDate: savedEngagement?.end_date || "",
+    description: savedEngagement?.description || "",
   });
+
+  useEffect(() => {
+    setEngagementFormData({
+      name: savedEngagement?.name || "",
+      fromDate: savedEngagement?.start_date || "",
+      toDate: savedEngagement?.end_date || "",
+      description: savedEngagement?.description || "",
+    });
+  }, [savedEngagement]);
 
   const [engagementFormError, setEngagementFormError] = useState({
     name: false,
