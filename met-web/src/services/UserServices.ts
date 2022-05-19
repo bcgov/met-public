@@ -1,22 +1,22 @@
 import { _kc } from '../constants/tenantConstants';
 import {
-    Keycloak_Client,
     ADMIN_ROLE,
     USER_RESOURCE_FORM_ID,
     FORMIO_JWT_SECRET,
     ANONYMOUS_ID,
     ANONYMOUS_USER,
 } from '../constants/constants';
-import { userToken, userRoles, userDetails, userAuthorization, userAuthentication } from './userSlice';
-import { Dispatch } from 'redux';
+import { userToken, userDetails, userAuthorization, userAuthentication } from './userSlice';
+import { Action, Dispatch } from 'redux';
 import jwt from 'jsonwebtoken';
+import { UserDetail } from './types';
 
 const KeycloakData = _kc;
 
 /**
  * Initializes Keycloak instance.
  */
-const initKeycloak = (dispatch: Dispatch<any>) => {
+const initKeycloak = (dispatch: Dispatch<Action>) => {
     console.log('INIT:::');
     KeycloakData.init({
         onLoad: 'check-sso',
@@ -56,12 +56,13 @@ const initKeycloak = (dispatch: Dispatch<any>) => {
       */
         })
         .catch((error) => {
+            console.log(error);
             dispatch(userAuthentication(false));
         });
 };
 
 let refreshInterval: NodeJS.Timer;
-const refreshToken = (dispatch: Dispatch<any>) => {
+const refreshToken = (dispatch: Dispatch<Action>) => {
     refreshInterval = setInterval(() => {
         KeycloakData &&
             KeycloakData.updateToken(3000)
@@ -71,6 +72,7 @@ const refreshToken = (dispatch: Dispatch<any>) => {
                     }
                 })
                 .catch((error) => {
+                    console.log(error);
                     userLogout();
                 });
     }, 60000);
