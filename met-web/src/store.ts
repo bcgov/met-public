@@ -1,17 +1,17 @@
-import { configureStore } from "@reduxjs/toolkit";
-import loginReducer from "./components/Login/loginSlice";
-import userSlice from "./services/userSlice";
-import { form, submission } from "@formio/react";
-import engagementSlice from "./services/engagementSlice";
+import { configureStore } from '@reduxjs/toolkit';
+import loginReducer from './components/Login/loginSlice';
+import userSlice from './services/userSlice';
+import { form, submission } from '@formio/react';
+import engagementSlice from './services/engagementSlice';
 
 export const store = configureStore({
-  reducer: {
-    auth: loginReducer,
-    user: userSlice,
-    engagement: engagementSlice,
-    form: form({ name: "form" }),
-    submission: submission({ name: "submission" }),
-  },
+    reducer: {
+        auth: loginReducer,
+        user: userSlice,
+        engagement: engagementSlice,
+        form: form({ name: 'form' }),
+        submission: submission({ name: 'submission' }),
+    },
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
