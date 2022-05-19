@@ -20,10 +20,13 @@ rather than reading environment variables directly or by accessing this configur
 """
 
 import os
+
 from dotenv import find_dotenv, load_dotenv
+
 
 # this will load all the envars from a .env file located in the project root (api)
 load_dotenv(find_dotenv())
+
 
 def get_named_config(config_name: str = 'development'):
     """Return the configuration object based on the name.
@@ -41,6 +44,7 @@ def get_named_config(config_name: str = 'development'):
     else:
         raise KeyError("Unknown configuration '{config_name}'")
     return config
+
 
 class _Config():  # pylint: disable=too-few-public-methods
     """Base class configuration that should set reasonable defaults for all the other configurations."""
@@ -70,7 +74,7 @@ class _Config():  # pylint: disable=too-few-public-methods
         name=DB_NAME,
     )
 
-   # JWT_OIDC Settings
+    # JWT_OIDC Settings
     JWT_OIDC_WELL_KNOWN_CONFIG = os.getenv('JWT_OIDC_WELL_KNOWN_CONFIG')
     JWT_OIDC_ALGORITHMS = os.getenv('JWT_OIDC_ALGORITHMS')
     JWT_OIDC_JWKS_URI = os.getenv('JWT_OIDC_JWKS_URI')
@@ -78,16 +82,17 @@ class _Config():  # pylint: disable=too-few-public-methods
     JWT_OIDC_AUDIENCE = os.getenv('JWT_OIDC_AUDIENCE')
     JWT_OIDC_CACHING_ENABLED = os.getenv('JWT_OIDC_CACHING_ENABLED')
     JWT_OIDC_JWKS_CACHE_TIMEOUT = 300
-    
+
     print('SQLAlchemy URL (_Config): ')
-    
+
+
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
     """Dev Config."""
 
     TESTING = False
     DEBUG = True
     print('SQLAlchemy URL (DevConfig): ')
-    
+
 
 class TestConfig(_Config):  # pylint: disable=too-few-public-methods
     """In support of testing only.used by the py.test suite."""
@@ -95,7 +100,8 @@ class TestConfig(_Config):  # pylint: disable=too-few-public-methods
     DEBUG = True
     TESTING = True
     print('SQLAlchemy URL (TestConfig): ')
-    
+
+
 class DockerConfig(_Config):  # pylint: disable=too-few-public-methods
     """In support of testing only.used by the py.test suite."""
     # POSTGRESQL
@@ -112,13 +118,11 @@ class DockerConfig(_Config):  # pylint: disable=too-few-public-methods
                                             port=int(DB_PORT),
                                             name=DB_NAME,
                                         ))
-    
+
     print('SQLAlchemy URL (Docker): {}'.format(SQLALCHEMY_DATABASE_URI))
-    
+
+
 class ProdConfig(_Config):  # pylint: disable=too-few-public-methods
     # production config       
     print('SQLAlchemy URL (ProdConfig): ')
     pass
-
-
-    

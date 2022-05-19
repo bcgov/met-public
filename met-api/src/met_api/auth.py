@@ -13,11 +13,10 @@
 # limitations under the License.
 """Bring in the common JWT Manager."""
 from functools import wraps
-from http import HTTPStatus
 
 from flask import g, request
 from flask_jwt_oidc import JwtManager
-from jose import jwt as josejwt
+
 
 jwt = (
     JwtManager()
@@ -39,7 +38,8 @@ class Auth:
             return f(*args, **kwargs)
 
         return decorated
-    
+
+
 auth = (
     Auth()
 )
