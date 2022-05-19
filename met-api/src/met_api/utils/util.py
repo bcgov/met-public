@@ -18,16 +18,16 @@ A simple decorator to add the options method to a Request Class.
 """
 
 import base64
+import os
 import re
 import urllib
 from functools import wraps
 
-from humps.main import camelize, decamelize
-from flask import request, g
-from sqlalchemy.sql.expression import false
-from app.auth import jwt as _authjwt
 import jwt
-import os
+from met_api.auth import jwt as _authjwt
+from flask import g, request
+from humps.main import camelize, decamelize
+from sqlalchemy.sql.expression import false
 
 
 def cors_preflight(methods):
