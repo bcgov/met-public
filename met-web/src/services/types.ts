@@ -1,15 +1,15 @@
-interface UserDetail {
+export interface UserDetail {
     sub?: string;
     email_verified?: boolean;
     preferred_username?: string;
 }
 
-interface UserAuthentication {
+export interface UserAuthentication {
     authenticated: boolean;
     loading: boolean;
 }
 
-interface UserState {
+export interface UserState {
     bearerToken: string | undefined;
     roles: string[];
     userDetail: UserDetail;
@@ -18,11 +18,11 @@ interface UserState {
     isAuthorized: boolean;
 }
 
-interface EngagementState {
+export interface EngagementState {
     allEngagements: Engagement[];
 }
 
-interface IRootState {
+export interface IRootState {
     user: UserState;
     engagement: EngagementState;
 }
