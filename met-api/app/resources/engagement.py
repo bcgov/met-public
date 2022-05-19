@@ -35,7 +35,7 @@ class GetEngagement(Resource):
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    # @auth.require
     def get(engagement_id):
         """Fetches a single engagement matching the provided id."""
         try:
@@ -46,7 +46,7 @@ class GetEngagement(Resource):
         except ValueError as err:
             return {'status': False, 'message': err.messages}, 400
 
-@cors_preflight('GET, POST, OPTIONS')
+@cors_preflight('GET, POST, PUT, OPTIONS')
 @API.route('/')
 class GetEngagements(Resource):
     """Resource for managing all engagements."""
@@ -54,25 +54,41 @@ class GetEngagements(Resource):
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    # @auth.require
     def get():
         """Fetches all engagements."""
         try:
             engagement_records = engagement_service().get_all_engagements()
             return json.dumps(engagement_records), 200
         except ValueError as err:
-            return {'status': False, 'message': err.messages}, 400      
+            return {'status': False, 'message': err.messages}, 400
              
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    # @auth.require
     def post():      
         """Creates a new engagement."""
         try:
             requestjson = request.get_json() 
             engagment_schema = EngagementSchema().load(requestjson)  
             result = engagement_service().create_engagement(engagment_schema)
+            return {'status': result.success, 'message': result.message,'id': result.identifier} , 200
+        except KeyError as err:
+            return {'status': False, 'message': str(err)}, 400
+        except ValueError as err:
+            return {'status': False, 'message': str(err)}, 400
+             
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    # @auth.require
+    def put():      
+        """updates an engagement."""
+        try:
+            requestjson = request.get_json() 
+            engagment_schema = EngagementSchema().load(requestjson)  
+            result = engagement_service().update_engagement(engagment_schema)
             return {'status': result.success, 'message': result.message,'id': result.identifier} , 200
         except KeyError as err:
             return {'status': False, 'message': str(err)}, 400

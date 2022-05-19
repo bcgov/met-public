@@ -1,10 +1,7 @@
 from .db import  db, ma
 from datetime import datetime
-from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
-from sqlalchemy.sql.expression import distinct
 from .default_method_result import DefaultMethodResult
-
 
 class Engagement(db.Model):
     # Name of the table in our database
@@ -34,7 +31,7 @@ class Engagement(db.Model):
         return engagements_schema.dump(query)  
 
     @classmethod
-    def save_engagement(cls, engagement) -> DefaultMethodResult: 
+    def create_engagement(cls, engagement) -> DefaultMethodResult:
         new_engagement = Engagement(
             name=engagement["name"], 
             description=engagement['description'],
@@ -44,12 +41,25 @@ class Engagement(db.Model):
             user_id=1,
             created_date= datetime.utcnow(),
             updated_date= datetime.utcnow(), 
-            published_date=None
-        )
+            published_date=None)
         db.session.add(new_engagement)
         db.session.commit()
         
         return DefaultMethodResult(True, 'Engagement Added', new_engagement.id)
+    
+    @classmethod
+    def update_engagement(cls, engagement) -> DefaultMethodResult:
+        updated_fields = dict(
+            name=engagement["name"], 
+            description=engagement['description'],
+            start_date=engagement['start_date'], 
+            end_date=engagement['end_date'], 
+            updated_date= datetime.utcnow(),
+        )
+        Engagement.query.filter_by(id=engagement['id']).update(updated_fields)
+        db.session.commit()
+
+        return DefaultMethodResult(True, 'Engagement Updated', engagement['id'])        
     
 class EngagementSchema(ma.Schema):
     class Meta:
