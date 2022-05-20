@@ -9,10 +9,10 @@ import secure
 from flask import Flask
 from flask_cors import CORS
 
-from src.met_api.auth import jwt
-from src.met_api.config import get_named_config
-from src.met_api.models import db, ma, migrate
-from src.met_api.resources import API_BLUEPRINT
+from met_api.auth import jwt
+from met_api.config import get_named_config
+from met_api.models import db, ma, migrate
+from met_api.resources import API_BLUEPRINT
 
 # Flask app initialize
 app = Flask(__name__)

@@ -24,7 +24,7 @@ import urllib
 from functools import wraps
 
 import jwt
-from src.met_api.auth import jwt as _authjwt
+from met_api.auth import jwt as _authjwt
 from flask import g, request
 from humps.main import camelize, decamelize
 from sqlalchemy.sql.expression import false

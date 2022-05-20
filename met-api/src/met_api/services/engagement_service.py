@@ -1,4 +1,4 @@
-from src.met_api.models.engagement import Engagement
+from met_api.models.engagement import Engagement
 
 
 class engagement_service:
