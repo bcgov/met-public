@@ -19,10 +19,10 @@ from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
-from met_api.auth import auth
-from met_api.schemas.Engagement import EngagementSchema
-from met_api.services.engagement_service import engagement_service
-from met_api.utils.util import allowedorigins, cors_preflight
+from src.met_api.auth import auth
+from src.met_api.schemas.Engagement import EngagementSchema
+from src.met_api.services.engagement_service import engagement_service
+from src.met_api.utils.util import allowedorigins, cors_preflight
 
 
 API = Namespace('engagement', description='Endpoints for Engagements Management')

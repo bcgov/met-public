@@ -1,4 +1,4 @@
-from met_api import create_app
+from src.met_api import create_app
 
 app = create_app()
 
