@@ -1,3 +1,5 @@
+"""Flask initiation"""
+
 import os
 
 import secure
