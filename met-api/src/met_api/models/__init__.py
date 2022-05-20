@@ -20,9 +20,10 @@
 #from sqlalchemy.engine import Engine  # noqa: I001, I003, I004
 
 
-from .db import db, migrate, ma
-
+from .db import db, ma, migrate
 from .engagement import Engagement
 from .engagement_status import EngagementStatus
 from .user import User
+
+
 #event.listen(Engine, 'before_cursor_execute', DBTracing.query_tracing)
