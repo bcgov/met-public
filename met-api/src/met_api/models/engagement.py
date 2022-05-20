@@ -12,7 +12,7 @@ from .default_method_result import DefaultMethodResult
 
 
 class Engagement(db.Model):
-    """ Name of the table in our database """
+    """Definition of the Engagement entity"""
     __tablename__ = 'engagement'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

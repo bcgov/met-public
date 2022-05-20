@@ -21,6 +21,7 @@ csp = (
         .object_src('self')
         .connect_src('self')
 )
+
 hsts = secure.StrictTransportSecurity().include_subdomains().preload().max_age(31536000)
 referrer = secure.ReferrerPolicy().no_referrer()
 cache_value = secure.CacheControl().no_store().max_age(0)
@@ -33,18 +34,19 @@ secure_headers = secure.Secure(
     xfo=xfo_value
 )
 
-
 @app.after_request
 def set_secure_headers(response):
+    """Set CORS headers for security."""
     secure_headers.framework.flask(response)
     response.headers.add('Cross-Origin-Resource-Policy', 'same-origin')
     response.headers['Cross-Origin-Opener-Policy'] = 'same-origin'
     response.headers['Cross-Origin-Embedder-Policy'] = 'unsafe-none'
     return response
 
-
 # All Apps routes are registered here
 def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
+    """Creating flask app."""
+
     # All configuration are in config file
     app.config.from_object(get_named_config(run_mode))
 
@@ -70,7 +72,6 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
     # Return App for run in run.py file
     return app
 
-
 def setup_jwt_manager(app, jwt_manager):
     """Use flask app to configure the JWTManager to work for a particular Realm."""
 
@@ -80,3 +81,4 @@ def setup_jwt_manager(app, jwt_manager):
     app.config['JWT_ROLE_CALLBACK'] = get_roles
 
     jwt_manager.init_app(app)
+    

@@ -1,10 +1,14 @@
+"""Engagement Status model class
+
+Manages the engagement status
+"""
 from datetime import datetime
 
 from .db import db, ma
 
 
 class EngagementStatus(db.Model):
-    # Name of the table in our database
+    """Definition of the Engagement Status entity"""
     __tablename__ = 'engagement_status'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

@@ -1,10 +1,14 @@
+"""User model class
+
+Manages the user
+"""
 import datetime
 
 from .db import db, ma
 
 
 class User(db.Model):
-    # Name of the table in our database
+    """Definition of the User entity"""
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
