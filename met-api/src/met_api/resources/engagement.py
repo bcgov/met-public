@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""API endpoints for managing a FOI Requests resource."""
+"""API endpoints for managing an engagement resource."""
 
 import json
 
@@ -44,10 +44,10 @@ class GetEngagement(Resource):
         try:
             engagement_record = engagement_service().get_engagement(engagement_id)
             return engagement_record, 200
-        except KeyError as err:
+        except KeyError:
             return {'status': False, 'message': "Engagement was not found"}, 400
         except ValueError as err:
-            return {'status': False, 'message': err.messages}, 400
+            return {'status': False, 'message': str(err)}, 400
 
 
 @cors_preflight('GET, POST, OPTIONS')
@@ -65,7 +65,7 @@ class GetEngagements(Resource):
             engagement_records = engagement_service().get_all_engagements()
             return json.dumps(engagement_records), 200
         except ValueError as err:
-            return {'status': False, 'message': err.messages}, 400
+            return {'status': False, 'message': str(err)}, 400
 
     @staticmethod
     # @TRACER.trace()
