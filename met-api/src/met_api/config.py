@@ -66,13 +66,7 @@ class _Config():  # pylint: disable=too-few-public-methods
     DB_NAME = os.getenv('DATABASE_NAME')
     DB_HOST = os.getenv('DATABASE_HOST')
     DB_PORT = os.getenv('DATABASE_PORT', '5432')
-    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://{user}:{password}@{host}:{port}/{name}'.format(
-        user=DB_USER,
-        password=DB_PASSWORD,
-        host=DB_HOST,
-        port=int(DB_PORT),
-        name=DB_NAME,
-    )
+    SQLALCHEMY_DATABASE_URI = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}"
 
     # JWT_OIDC Settings
     JWT_OIDC_WELL_KNOWN_CONFIG = os.getenv('JWT_OIDC_WELL_KNOWN_CONFIG')
@@ -111,18 +105,12 @@ class DockerConfig(_Config):  # pylint: disable=too-few-public-methods
     DB_HOST = os.getenv('DATABASE_DOCKER_HOST')
     DB_PORT = os.getenv('DATABASE_DOCKER_PORT', '5432')
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_DOCKER_URL',
-                                        'postgresql+psycopg2://{user}:{password}@{host}:{port}/{name}'.format(
-                                            user=DB_USER,
-                                            password=DB_PASSWORD,
-                                            host=DB_HOST,
-                                            port=int(DB_PORT),
-                                            name=DB_NAME,
-                                        ))
+                                        f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}")
 
-    print('SQLAlchemy URL (Docker): {}'.format(SQLALCHEMY_DATABASE_URI))
+    print(f'SQLAlchemy URL (Docker): {SQLALCHEMY_DATABASE_URI}')
 
 
 class ProdConfig(_Config):  # pylint: disable=too-few-public-methods
-    # production config       
+    # production config
     print('SQLAlchemy URL (ProdConfig): ')
     pass

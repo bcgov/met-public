@@ -1,3 +1,7 @@
+
+"""Initilizations for db, migration and marshmallow.
+"""
+
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
@@ -13,4 +17,3 @@ migrate = Migrate()
 
 # Marshmallow for database model schema
 ma = Marshmallow()
-

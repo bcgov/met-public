@@ -26,7 +26,6 @@ from flask import Blueprint
 from .apihelper import Api
 from .engagement import API as ENGAGEMENT_API
 
-
 __all__ = ('API_BLUEPRINT')
 
 URL_PREFIX = '/api/'
