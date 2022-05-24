@@ -1,5 +1,6 @@
 from marshmallow import EXCLUDE, Schema, fields
 
+
 """
 This class  consolidates schemas of extension operations.
 

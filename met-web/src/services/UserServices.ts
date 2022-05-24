@@ -1,21 +1,15 @@
-import { _kc } from "../constants/tenantConstants";
+import { _kc } from '../constants/tenantConstants';
 import {
-  Keycloak_Client,
-  ADMIN_ROLE,
-  USER_RESOURCE_FORM_ID,
-  FORMIO_JWT_SECRET,
-  ANONYMOUS_ID,
-  ANONYMOUS_USER,
-} from "../constants/constants";
-import {
-  userToken,
-  userRoles,
-  userDetails,
-  userAuthorization,
-  userAuthentication,
-} from "./userSlice";
-import { Dispatch } from "redux";
-import jwt from "jsonwebtoken";
+    ADMIN_ROLE,
+    USER_RESOURCE_FORM_ID,
+    FORMIO_JWT_SECRET,
+    ANONYMOUS_ID,
+    ANONYMOUS_USER,
+} from '../constants/constants';
+import { userToken, userDetails, userAuthorization, userAuthentication } from './userSlice';
+import { Action, Dispatch } from 'redux';
+import jwt from 'jsonwebtoken';
+import { UserDetail } from './types';
 
 const KeycloakData = _kc;
 
@@ -37,83 +31,85 @@ const initKeycloak = (dispatch: Dispatch<any>) => {
         return;
       }
 
-      // if (
-      //   !KeycloakData.resourceAccess ||
-      //   !KeycloakData.resourceAccess[Keycloak_Client]
-      // ) {
-      //   doLogout();
-      //   return;
-      // }
+            // if (
+            //   !KeycloakData.resourceAccess ||
+            //   !KeycloakData.resourceAccess[Keycloak_Client]
+            // ) {
+            //   doLogout();
+            //   return;
+            // }
 
-      // const UserRoles = KeycloakData.resourceAccess[Keycloak_Client].roles;
-      // dispatch(userRoles(UserRoles));
+            // const UserRoles = KeycloakData.resourceAccess[Keycloak_Client].roles;
+            // dispatch(userRoles(UserRoles));
 
-      dispatch(userToken(KeycloakData.token));
-      KeycloakData.loadUserInfo().then((res: UserDetail) => {
-        dispatch(userDetails(res));
-        dispatch(userAuthorization(true));
-      });
+            dispatch(userToken(KeycloakData.token));
+            KeycloakData.loadUserInfo().then((res: UserDetail) => {
+                dispatch(userDetails(res));
+                dispatch(userAuthorization(true));
+            });
 
-      dispatch(userAuthentication(KeycloakData.authenticated ? true : false));
-      refreshToken(dispatch);
-      /* 
+            dispatch(userAuthentication(KeycloakData.authenticated ? true : false));
+            refreshToken(dispatch);
+            /* 
         To do: uncomment when we have FORMIO_JWT_SECRET and USER_RESOURCE_FORM_ID 
         authenticateAnonymouslyOnFormio();
       */
-    })
-    .catch((error) => {
-      dispatch(userAuthentication(false));
-    });
+        })
+        .catch((error) => {
+            console.log(error);
+            dispatch(userAuthentication(false));
+        });
 };
 
 let refreshInterval: NodeJS.Timer;
-const refreshToken = (dispatch: Dispatch<any>) => {
-  refreshInterval = setInterval(() => {
-    KeycloakData &&
-      KeycloakData.updateToken(3000)
-        .then((refreshed) => {
-          if (refreshed) {
-            dispatch(userToken(KeycloakData.token));
-          }
-        })
-        .catch((error) => {
-          userLogout();
-        });
-  }, 60000);
+const refreshToken = (dispatch: Dispatch<Action>) => {
+    refreshInterval = setInterval(() => {
+        KeycloakData &&
+            KeycloakData.updateToken(3000)
+                .then((refreshed) => {
+                    if (refreshed) {
+                        dispatch(userToken(KeycloakData.token));
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    userLogout();
+                });
+    }, 60000);
 };
 
 const authenticateAnonymouslyOnFormio = () => {
-  const user = ANONYMOUS_USER;
-  const roles = [ANONYMOUS_ID];
-  authenticateFormio(user, roles);
+    const user = ANONYMOUS_USER;
+    const roles = [ANONYMOUS_ID];
+    authenticateFormio(user, roles);
 };
 
 const authenticateFormio = async (user: string, roles: string[]) => {
-  const FORMIO_TOKEN = jwt.sign(
-    {
-      external: true,
-      form: {
-        _id: USER_RESOURCE_FORM_ID, // form.io form Id of user resource
-      },
-      user: {
-        _id: user, // keep it like that
-        roles: roles,
-      },
-    },
-    FORMIO_JWT_SECRET
-  ); // TODO Move JWT secret key to COME From ENV
+    const FORMIO_TOKEN = jwt.sign(
+        {
+            external: true,
+            form: {
+                _id: USER_RESOURCE_FORM_ID, // form.io form Id of user resource
+            },
+            user: {
+                _id: user, // keep it like that
+                roles: roles,
+            },
+        },
+        FORMIO_JWT_SECRET,
+    ); // TODO Move JWT secret key to COME From ENV
 
-  localStorage.setItem("formioToken", FORMIO_TOKEN);
+    localStorage.setItem('formioToken', FORMIO_TOKEN);
 };
 
 /**
  * Logout function
  */
 const userLogout = () => {
-  localStorage.clear();
-  sessionStorage.clear();
-  clearInterval(refreshInterval);
-  doLogout();
+    localStorage.clear();
+    sessionStorage.clear();
+    clearInterval(refreshInterval);
+    doLogout();
 };
 
 const doLogin = KeycloakData.login;
@@ -129,13 +125,13 @@ const hasRole = (role: string) => KeycloakData.hasResourceRole(role);
 const hasAdminRole = () => KeycloakData.hasResourceRole(ADMIN_ROLE);
 
 const UserService = {
-  initKeycloak,
-  doLogin,
-  doLogout,
-  isLoggedIn,
-  getToken,
-  hasRole,
-  hasAdminRole,
+    initKeycloak,
+    doLogin,
+    doLogout,
+    isLoggedIn,
+    getToken,
+    hasRole,
+    hasAdminRole,
 };
 
 export default UserService;

@@ -1,17 +1,19 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Engagement } from '../models/engagement';
+import { EngagementState } from './types';
 
 const initialState: EngagementState = {
-  allEngagements: [],
+    allEngagements: [],
 };
 
 export const engagementSlice = createSlice({
-  name: "engagement",
-  initialState,
-  reducers: {
-    setEngagements: (state, action: PayloadAction<Engagement[]>) => {
-      state.allEngagements = action.payload;
+    name: 'engagement',
+    initialState,
+    reducers: {
+        setEngagements: (state, action: PayloadAction<Engagement[]>) => {
+            state.allEngagements = action.payload;
+        },
     },
-  },
 });
 
 // Action creators are generated for each case reducer function

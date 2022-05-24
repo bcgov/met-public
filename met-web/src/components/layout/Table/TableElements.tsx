@@ -1,5 +1,5 @@
-import styled from "@emotion/styled";
+import styled from '@emotion/styled';
 
 export const Link = styled.a`
-  color: #4c81af;
+    color: #4c81af;
 `;

@@ -43,19 +43,19 @@ export const ActionProvider = ({ children }: { children: any }) => {
     setRawEditorState(newState);
   };
 
-  const saveEngagements = async (engagement: any) => {
-    setSaving(true);
-    const response = await postEngagement({
-      name: engagement.name,
-      start_date: engagement.fromDate,
-      end_date: engagement.toDate,
-      description: engagement.description,
-    });
-    setSaving(false);
-    if (response.status) {
-      navigate("/");
-    }
-  };
+    const saveEngagements = async (engagement: any) => {
+        setSaving(true);
+        const response = await postEngagement({
+            name: engagement.name,
+            start_date: engagement.fromDate,
+            end_date: engagement.toDate,
+            description: engagement.description,
+        });
+        setSaving(false);
+        if (response.status) {
+            navigate('/');
+        }
+    };
 
   return (
     <ActionContext.Provider

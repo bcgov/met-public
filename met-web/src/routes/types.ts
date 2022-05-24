@@ -1,4 +1,4 @@
-interface IProps {
-  errorMessage?: string;
-  errorCode?: string;
+export interface IProps {
+    errorMessage?: string;
+    errorCode?: string;
 }
