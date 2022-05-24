@@ -9,7 +9,7 @@ class engagement_service:
 
     def get_engagement(self, engagement_id):
         request_engagement = Engagement.get_engagement(engagement_id)
-        extension = self.__create_engagement_object(request_engagement)
+        extension = self.__create_engagement_object(request_engagement). kdkl
         return extension
     
     def get_all_engagements(self):
