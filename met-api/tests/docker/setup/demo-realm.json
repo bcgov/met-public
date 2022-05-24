@@ -279,8 +279,8 @@
           "containerId": "9e254d9e-9aa8-4357-b86e-4762544c8dce"
         }
       ],
-      "sbc-auth-web": [],
-      "sbc-auth-admin": []
+      "met-web": [],
+      "met-admin": []
     }
   },
   "groups": [
@@ -436,7 +436,7 @@
       }
     },
     {
-      "clientId": "sbc-auth-web",
+      "clientId": "met-web",
       "rootUrl": "http://localhost:8080/*",
       "adminUrl": "/",
       "baseUrl": "/*",
@@ -601,7 +601,7 @@
           "protocolMapper": "oidc-audience-mapper",
           "consentRequired": false,
           "config": {
-            "included.client.audience": "sbc-auth-web",
+            "included.client.audience": "met-web",
             "id.token.claim": "false",
             "access.token.claim": "true",
             "userinfo.token.claim": "false"
@@ -622,7 +622,7 @@
       }
     },
     {
-      "clientId": "sbc-auth-admin",
+      "clientId": "met-admin",
       "surrogateAuthRequired": false,
       "enabled": true,
       "clientAuthenticatorType": "client-secret",
@@ -676,7 +676,7 @@
           "protocolMapper": "oidc-audience-mapper",
           "consentRequired": false,
           "config": {
-            "included.client.audience": "sbc-auth-web",
+            "included.client.audience": "met-web",
             "id.token.claim": "false",
             "access.token.claim": "true"
           }
@@ -687,7 +687,7 @@
           "protocolMapper": "oidc-hardcoded-claim-mapper",
           "consentRequired": false,
           "config": {
-            "claim.value": "sbc-auth-admin",
+            "claim.value": "met-admin",
             "userinfo.token.claim": "true",
             "id.token.claim": "true",
             "access.token.claim": "true",
@@ -793,7 +793,7 @@
           "protocolMapper": "oidc-hardcoded-claim-mapper",
           "consentRequired": false,
           "config": {
-            "claim.value": "sbc-auth",
+            "claim.value": "met",
             "userinfo.token.claim": "true",
             "id.token.claim": "true",
             "access.token.claim": "true",
@@ -877,12 +877,12 @@
       ]
     },
     {
-      "username": "service-account-sbc-auth-admin",
+      "username": "service-account-met-admin",
       "enabled": true,
       "totp": false,
       "emailVerified": false,
-      "email": "service-account-sbc-auth-admin@placeholder.org",
-      "serviceAccountClientId": "sbc-auth-admin",
+      "email": "service-account-met-admin@placeholder.org",
+      "serviceAccountClientId": "met-admin",
       "credentials": [],
       "disableableCredentialTypes": [],
       "requiredActions": [],

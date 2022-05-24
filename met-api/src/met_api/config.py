@@ -113,7 +113,7 @@ class TestConfig(_Config):  # pylint: disable=too-few-public-methods
     JWT_OIDC_TEST_KEYS = {
         'keys': [
             {
-                'kid': 'sbc-auth-web',
+                'kid': 'met-web',
                 'kty': 'RSA',
                 'alg': 'RS256',
                 'use': 'sig',
@@ -127,7 +127,7 @@ class TestConfig(_Config):  # pylint: disable=too-few-public-methods
     JWT_OIDC_TEST_PRIVATE_KEY_JWKS = {
         'keys': [
             {
-                'kid': 'sbc-auth-web',
+                'kid': 'met-web',
                 'kty': 'RSA',
                 'alg': 'RS256',
                 'use': 'sig',
@@ -185,23 +185,6 @@ class TestConfig(_Config):  # pylint: disable=too-few-public-methods
     # If any value is present in this flag, starts up a keycloak docker
     USE_TEST_KEYCLOAK_DOCKER = os.getenv('USE_TEST_KEYCLOAK_DOCKER', None)
     USE_DOCKER_MOCK = os.getenv('USE_DOCKER_MOCK', None)
-    MAX_NUMBER_OF_ORGS = 3
-
-    BCOL_ACCOUNT_LINK_CHECK = True
-
-    # Minio variables
-    MINIO_ENDPOINT = 'localhost:9000'
-    MINIO_ACCESS_KEY = 'minio'
-    MINIO_ACCESS_SECRET = 'minio123'
-    MINIO_BUCKET_ACCOUNTS = 'accounts'
-    MINIO_SECURE = False
-
-    STAFF_ADMIN_EMAIL = 'test@test.com'
-    NATS_MAILER_CLIENT_NAME = 'account.mailer.worker'
-
-    API_GW_CONSUMERS_API_URL = 'https://bcregistry-bcregistry-mock.apigee.net/mockTarget'
-    API_GW_CONSUMERS_SANDBOX_API_URL = 'https://bcregistry-bcregistry-mock.apigee.net/mockTarget'
-    API_GW_CONSUMER_EMAIL = 'test.all.mc@gov.bc.ca'
 
 
 class DockerConfig(_Config):  # pylint: disable=too-few-public-methods
