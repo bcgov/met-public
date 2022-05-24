@@ -5,13 +5,18 @@ import Grid from '@mui/material/Grid';
 import { SearchContainer } from './LandingPageElements';
 import { Container } from '@mui/material';
 import { Link } from 'react-router-dom';
+import TextField from '@mui/material/TextField';
 
 const LandingPage = () => {
     return (
         <Container sx={{ paddingTop: '5em' }}>
             <Grid direction="row" justifyContent="center" alignItems="center" container spacing={2}>
                 <Grid item xs={9}>
-                    <SearchContainer></SearchContainer>
+                    <SearchContainer>
+                        <TextField
+                        sx={{width: '30%',fontSize: '40px'}}
+                        placeholder={'Search Engagements by name...'}/>
+                    </SearchContainer>
                 </Grid>
                 <Grid item xs={3}>
                     <Link to="/engagement/create">

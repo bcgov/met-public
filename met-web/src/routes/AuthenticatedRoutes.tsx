@@ -8,6 +8,7 @@ import UserService from '../services/UserServices';
 import View from '../components/Form/View';
 import CreateEngagementForm from '../components/engagement/CreateEngagementForm';
 import Engagement from '../components/engagement';
+import Drawer from '../components/layout/Drawer/CustomDrawer';
 
 const AuthenticatedRoutes = () => {
     let adminRole = UserService.hasAdminRole();
@@ -17,6 +18,7 @@ const AuthenticatedRoutes = () => {
 
     return (
         <ThemeProvider theme={BaseTheme}>
+            <Drawer />
             <Routes>
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/survey" element={<View />} />
