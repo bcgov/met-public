@@ -1,7 +1,7 @@
 from app.models.engagement import Engagement
 
 class engagement_service:
-    """ Engagement management service
+    """ Engagement management services
     """        
         
     otherdateformat = '%Y-%m-%d'
