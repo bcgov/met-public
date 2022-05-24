@@ -7,7 +7,7 @@ class engagement_service:
         
     otherdateformat = '%Y-%m-%d'
 
-    def get_engagement(self, engagement_id):
+    def get_engagement(self, engagement_ids):
         request_engagement = Engagement.get_engagement(engagement_id)
         extension = self.__create_engagement_object(request_engagement)
         return extension
