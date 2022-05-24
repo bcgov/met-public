@@ -20,7 +20,7 @@ from flask_jwt_oidc import JwtManager
 
 jwt = (
     JwtManager()
-)  # pylint: disable=invalid-name; lower case name as used by convention in most Flask apps
+)  # pylint: disable=invalid-name; lower case name as used by conve ntion in most Flask apps
 
 
 class Auth:
