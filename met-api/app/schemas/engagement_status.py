@@ -17,4 +17,4 @@ class EngagementStatusSchema(Schema):
     status_name = fields.Str(data_key="status_name")
     description = fields.Str(data_key="description")
     created_date = fields.Str(data_key="created_date")
-    updated_date = fields.Str(data_key="updated_date")
+    updated_date = fields.Str(data_key="updated_date") 
