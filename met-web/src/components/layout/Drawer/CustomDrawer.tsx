@@ -3,41 +3,24 @@ import AppBar from '@mui/material/AppBar';
 import { Grid, ListItemButton, List, ListItem, ListItemText, Box } from '@mui/material';
 import { useAppSelector } from '../../../hooks';
 import UserService from '../../../services/UserServices';
+import { useNavigate } from 'react-router-dom';
 
+const Routes = [
+    { name: 'Engagements', path: '/' },
+    { name: 'Surveys', path: '/survey' },
+    { name: 'Calendar', path: '/calendar' },
+    { name: 'Reporting', path: '/reporting' },
+];
 
-const list = () => (
-    <Box
-        sx={{
-            background: '#003366',
-            height: '100%',
-            color: 'white',
-            width: 'auto',
-            justifyContent: 'center',
-            alignItems: 'center',
-        }}
-        role="presentation"
-    >
+const list = (navigate) => (
+    <Box role="presentation">
         <List>
-            {['Engagements', 'Surveys', 'Calendar', 'Reporting'].map((text, index) => (
-                <ListItem key={text}>
-                    <ListItemButton
-                        sx={{
-                            fontWeight: 'bold',
-                            width: '100%',
-                            height: '100%',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
-                    >
+            {Routes.map((route, index) => (
+                <ListItem key={route.name}>
+                    <ListItemButton onClick={() => navigate(route.path)}>
                         <ListItemText
-                            sx={{
-                                fontWeight: 'bold',
-                                width: '100%',
-                                height: '100%',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                            primary={text}
+                            primaryTypographyProps={{ variant: 'h6', sx: { fontWeight: 'bold' } }}
+                            primary={route.name}
                         />
                     </ListItemButton>
                 </ListItem>
@@ -47,21 +30,19 @@ const list = () => (
 );
 
 const Drawer = () => {
+    const navigate = useNavigate();
     return (
         <AppBar
             className="font-BCBold"
             position="absolute"
             style={{
-                backgroundColor: '#003366',
                 height: '90vh',
                 top: '10%',
                 left: '0%',
                 width: '13%',
-                display: 'flex',
-                flexDirection: 'column',
             }}
         >
-            {list()}
+            {list(navigate)}
         </AppBar>
     );
 };
