@@ -18,10 +18,7 @@ Test-Suite to ensure that the version utilities are working as expected.
 """
 from met_api.utils import run_version
 from met_api.version import __version__
-from tests import skip_in_pod
 
-
-@skip_in_pod
 def test_get_version():
     """Assert thatThe version is returned correctly."""
     rv = run_version.get_run_version()

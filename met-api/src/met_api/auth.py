@@ -34,6 +34,7 @@ class Auth:
         @wraps(f)
         def decorated(*args, **kwargs):
             g.authorization_header = request.headers.get("Authorization", None)
+            
             g.token_info = g.jwt_oidc_token_info
             return f(*args, **kwargs)
 
