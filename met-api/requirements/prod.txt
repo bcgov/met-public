@@ -27,3 +27,4 @@ asyncio-nats-client
 asyncio-nats-streaming
 sqlalchemy<1.4
 secure
+python-dotenv

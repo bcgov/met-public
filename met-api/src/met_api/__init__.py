@@ -37,7 +37,7 @@ secure_headers = secure.Secure(
     xfo=xfo_value
 )
 
-@app.after_request
+#@app.after_request
 def set_secure_headers(response):
     """Set CORS headers for security."""
     secure_headers.framework.flask(response)
