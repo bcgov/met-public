@@ -6,8 +6,10 @@ import BaseRouting from './routes/BaseRouting';
 import { CircularProgress, Grid } from '@mui/material';
 import UserService from './services/UserServices';
 import { useAppSelector, useAppDispatch } from './hooks';
-import Drawer from './components/layout/Drawer/CustomDrawer';
+
+
 const App = () => {
+
     const dispatch = useAppDispatch();
 
     const authenticationLoading = useAppSelector((state) => state.user.authentication.loading);
@@ -30,10 +32,8 @@ const App = () => {
 
     return (
         <Router>
-            <Header />
-         
+            <Header /> 
             <BaseRouting />
-          
         </Router>
     );
 };

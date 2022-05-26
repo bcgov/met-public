@@ -8,17 +8,18 @@ import UserService from '../services/UserServices';
 import View from '../components/Form/View';
 import CreateEngagementForm from '../components/engagement/CreateEngagementForm';
 import Engagement from '../components/engagement';
-import Drawer from '../components/layout/Drawer/CustomDrawer';
+import SideNav from '../components/layout/SideNav/SideNav';
 
 const AuthenticatedRoutes = () => {
     let adminRole = UserService.hasAdminRole();
-
+    let width = screen.width;
     //ToDO: remove when roles are defined in keycloak
     adminRole = true;
 
     return (
         <ThemeProvider theme={BaseTheme}>
-            <Drawer />
+            {width > 1350 ? <SideNav /> : <></>}
+            <div style={{height: '10vh'}}></div>
             <Routes>
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/survey" element={<View />} />

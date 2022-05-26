@@ -1,0 +1,76 @@
+import React, { useState, useEffect } from 'react';
+import AppBar from '@mui/material/AppBar';
+import { ListItemButton, List, ListItem, ListItemText, Box, Drawer } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Routes } from './SideNavElements';
+
+const DrawerBox = ({ navigate }) => {
+    const [activeLink, setActiveLink] = useState('/');
+
+    function navigation(path) {
+        setActiveLink(path);
+        navigate(path);
+    }
+
+    return (
+        <Box sx={{ height: '100%', width: '100%', background: '#003366' }} role="presentation">
+            <List sx={{ top: '10%' }}>
+                {Routes.map((route) => (
+                    <ListItem sx={{ height: '50%' }} key={route.name}>
+                        <ListItemButton onClick={() => navigation(route.path)}>
+                            <ListItemText
+                                primaryTypographyProps={{
+                                    variant: 'h6',
+                                    sx: { fontWeight: 'bold', color: activeLink == route.path ? '#ffc107' : '#fafafa' },
+                                }}
+                                primary={route.name}
+                            />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+        </Box>
+    );
+};
+
+const SideNav = ({ open }) => {
+    const navigate = useNavigate();
+    let width = screen.width;
+
+    useEffect(() => {
+        console.log('OPEN CHANGED::' + JSON.stringify(open));
+    }, [open]);
+
+    return (
+        <>
+            {width > 1350 ? (
+                <Drawer
+                    sx={{
+                        width: '13%',
+                        background: '#003366',
+                    }}
+                    PaperProps={{ sx: { width: '15%' } }}
+                    anchor={'left'}
+                    open={true}
+                    hideBackdrop={true}
+                >
+                    <DrawerBox navigate={navigate} />
+                </Drawer>
+            ) : (
+                <Drawer
+                    sx={{
+                        width: '15%',
+                        background: '#003366',
+                    }}
+                    anchor={'left'}
+                    open={open}
+                    ModalProps={{ BackdropProps: { open: !open } }}
+                >
+                    <DrawerBox navigate={navigate} />
+                </Drawer>
+            )}
+        </>
+    );
+};
+
+export default SideNav;
