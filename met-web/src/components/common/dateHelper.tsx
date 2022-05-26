@@ -11,7 +11,6 @@ const formatInTimeZone = (date: string, fmt: string, tz: string) =>
     format(utcToZonedTime(date, tz), fmt, { timeZone: tz });
 
 export const formatDate = (d: string, formatString = 'yyyy-MM-dd') => {
-    console.log('d', d);
     if (d) {
         return formatInTimeZone(d, formatString, 'UTC');
     } else {

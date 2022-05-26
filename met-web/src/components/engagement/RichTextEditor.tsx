@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { EditorState, convertFromRaw, convertToRaw } from 'draft-js';
 import createToolbarPlugin from '@draft-js-plugins/static-toolbar';
 import 'draft-js/dist/Draft.css';
@@ -16,11 +16,13 @@ const RichTextEditor = ({
     setRawText = (rawText: string) => {
         // Empty method
     },
+    handleEditorStateChange = (stringifiedEditorState: string) => {
+        //Empty method
+    },
+    initialRawEditorState = '',
     error = false,
     helperText = 'Field cannot be empty',
-}: any) => {
-    const { handleEditorStateChange, rawEditorState } = useContext(ActionContext);
-
+}) => {
     const getEditorState = (rawTextToConvert: string) => {
         if (!rawTextToConvert) {
             return EditorState.createEmpty();
@@ -29,7 +31,7 @@ const RichTextEditor = ({
         return EditorState.createWithContent(rawContentFromStore);
     };
 
-    const [editorState, setEditorState] = React.useState(getEditorState(rawEditorState));
+    const [editorState, setEditorState] = React.useState(getEditorState(initialRawEditorState));
 
     const handleChange = (newEditorState: EditorState) => {
         const plainText = newEditorState.getCurrentContent().getPlainText();
@@ -39,6 +41,10 @@ const RichTextEditor = ({
         handleEditorStateChange(_editorstateinJSON);
         setRawText(plainText);
     };
+
+    useEffect(() => {
+        setEditorState(getEditorState(initialRawEditorState));
+    }, [initialRawEditorState]);
 
     return (
         <FormControl fullWidth>

@@ -1,24 +1,24 @@
 import React, { createContext, useState, useEffect } from "react";
-import { postEngagement } from "../../services/EngagementService";
-import { useNavigate, useParams } from "react-router-dom";
-import { getEngagement } from "../../services/EngagementService";
+import { postEngagement, putEngagement } from '../../services/EngagementService';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getEngagement } from '../../services/EngagementService';
 
 interface EngagementContext {
-    rawEditorState: any;
-    handleEditorStateChange: any;
-    handleSaveEngagement: any;
+    handleCreateEngagementRequest: Function;
+    handleUpdateEngagementRequest: Function;
     saving: boolean;
     savedEngagement: Engagement;
+    engagementId: string | undefined;
 }
 export const ActionContext = createContext<EngagementContext>({
-    rawEditorState: {},
-    handleEditorStateChange: (newState: any) => {},
-    handleSaveEngagement: (engagement: any) => {},
+    handleCreateEngagementRequest: (engagement: any) => {},
+    handleUpdateEngagementRequest: (engagement: any) => {},
     saving: false,
     savedEngagement: {
         id: 0,
         name: '',
         description: '',
+        rich_text_state: '',
         status_id: '',
         start_date: '',
         end_date: '',
@@ -27,6 +27,7 @@ export const ActionContext = createContext<EngagementContext>({
         created_date: '',
         updated_date: '',
     },
+    engagementId: 'create',
 });
 
 type EngagementParams = {
@@ -37,13 +38,12 @@ export const ActionProvider = ({ children }: { children: any }) => {
     const { engagementId } = useParams<EngagementParams>();
     const navigate = useNavigate();
 
-    //should be saved in DB and given to Rich Text Editor for update engagement operation
-    const [rawEditorState, setRawEditorState] = useState(null);
     const [saving, setSaving] = useState(false);
     const [savedEngagement, setSavedEngagement] = useState<Engagement>({
         id: 0,
         name: '',
         description: '',
+        rich_text_state: '',
         status_id: '',
         start_date: '',
         end_date: '',
@@ -54,40 +54,70 @@ export const ActionProvider = ({ children }: { children: any }) => {
     });
 
     useEffect(() => {
+        if (engagementId !== 'create' && isNaN(Number(engagementId))) {
+            navigate('/engagement/create');
+        }
+
         if (engagementId !== 'create') {
             getEngagement(Number(engagementId), (result: Engagement) => {
-                console.log('result', result);
                 setSavedEngagement({ ...result });
             });
         }
     }, [engagementId]);
 
-    const handleEditorStateChange = (newState: any) => {
-        setRawEditorState(newState);
+    const handleCreateEngagementRequest = (engagement: any) => {
+        setSaving(true);
+        postEngagement(
+            {
+                name: engagement.name,
+                start_date: engagement.fromDate,
+                end_date: engagement.toDate,
+                description: engagement.description,
+                rich_text_state: engagement.rawEditorState,
+            },
+            () => {
+                setSaving(false);
+                navigate('/');
+            },
+            (errorMessage: string) => {
+                setSaving(false);
+                //TODO: Error message in notification module
+                console.log(errorMessage);
+            },
+        );
     };
 
-    const handleSaveEngagement = async (engagement: any) => {
+    const handleUpdateEngagementRequest = (engagement: any) => {
         setSaving(true);
-        const response = await postEngagement({
-            name: engagement.name,
-            start_date: engagement.fromDate,
-            end_date: engagement.toDate,
-            description: engagement.description,
-        });
-        setSaving(false);
-        if (response.status) {
-            navigate('/');
-        }
+        putEngagement(
+            {
+                id: engagementId,
+                name: engagement.name,
+                start_date: engagement.fromDate,
+                end_date: engagement.toDate,
+                description: engagement.description,
+                rich_text_state: engagement.rawEditorState,
+            },
+            () => {
+                setSaving(false);
+                navigate('/');
+            },
+            (errorMessage: string) => {
+                setSaving(false);
+                //TODO: Error message in notification module
+                console.log(errorMessage);
+            },
+        );
     };
 
     return (
         <ActionContext.Provider
             value={{
-                rawEditorState,
-                handleEditorStateChange,
-                handleSaveEngagement,
+                handleCreateEngagementRequest,
+                handleUpdateEngagementRequest,
                 saving,
                 savedEngagement,
+                engagementId,
             }}
         >
             {children}

@@ -34,12 +34,42 @@ export const getEngagement = async (
   successCallback(responseData.data);
 };
 
-export const postEngagement = async (data: any): Promise<any> => {
-    const response = await http.post('/engagement/', data, {
-        headers: {
-            'Content-type': 'application/json',
-            Authorization: `Bearer ${UserService.getToken()}`,
-        },
-    });
-    return response.data;
+export const postEngagement = async (data: any, successCallback: Function, errorCallback: Function): Promise<any> => {
+    try {
+        await http.post('/engagement/', data, {
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${UserService.getToken()}`,
+            },
+        });
+        successCallback();
+    } catch (e: unknown) {
+        let errorMessage = '';
+        if (typeof e === 'string') {
+            errorMessage = e.toUpperCase();
+        } else if (e instanceof Error) {
+            errorMessage = e.message;
+        }
+        errorCallback(errorMessage);
+    }
+};
+
+export const putEngagement = async (data: any, successCallback: Function, errorCallback: Function): Promise<any> => {
+    try {
+        const response = await http.put('/engagement/', data, {
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${UserService.getToken()}`,
+            },
+        });
+        successCallback(response.data);
+    } catch (e: unknown) {
+        let errorMessage = '';
+        if (typeof e === 'string') {
+            errorMessage = e.toUpperCase();
+        } else if (e instanceof Error) {
+            errorMessage = e.message;
+        }
+        errorCallback(errorMessage);
+    }
 };

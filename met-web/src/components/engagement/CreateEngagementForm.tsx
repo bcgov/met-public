@@ -13,14 +13,18 @@ import { ActionContext } from "./ActionContext";
 import { formatDate } from '../common/dateHelper';
 
 const CreateEngagementForm = () => {
-    const { handleSaveEngagement, saving, savedEngagement } = useContext(ActionContext);
+    const { handleCreateEngagementRequest, handleUpdateEngagementRequest, saving, savedEngagement, engagementId } =
+        useContext(ActionContext);
+
+    const creatingNewEngagement = engagementId === 'create';
 
     const [engagementFormData, setEngagementFormData] = useState({
-        name: savedEngagement?.name || '',
-        fromDate: savedEngagement.start_date ? formatDate(savedEngagement.start_date) : '',
-        toDate: savedEngagement.end_date ? formatDate(savedEngagement.end_date) : '',
-        description: savedEngagement?.description || '',
+        name: '',
+        fromDate: '',
+        toDate: '',
+        description: '',
     });
+    const [rawEditorState, setRawEditorState] = useState('');
 
     useEffect(() => {
         setEngagementFormData({
@@ -29,6 +33,7 @@ const CreateEngagementForm = () => {
             toDate: formatDate(savedEngagement.end_date),
             description: savedEngagement?.description || '',
         });
+        setRawEditorState(savedEngagement?.rich_text_state || '');
     }, [savedEngagement]);
 
     const [engagementFormError, setEngagementFormError] = useState({
@@ -60,6 +65,10 @@ const CreateEngagementForm = () => {
         });
     };
 
+    const handleEditorStateChange = (newState: any) => {
+        setRawEditorState(newState);
+    };
+
     const { name, fromDate, toDate, description } = engagementFormData;
 
     const validateForm = () => {
@@ -78,7 +87,21 @@ const CreateEngagementForm = () => {
         const errorExists = validateForm();
 
         if (!errorExists) {
-            handleSaveEngagement(engagementFormData);
+            handleCreateEngagementRequest({
+                ...engagementFormData,
+                rawEditorState: rawEditorState,
+            });
+        }
+    };
+
+    const handleUpdateEngagement = () => {
+        const errorExists = validateForm();
+
+        if (!errorExists) {
+            handleUpdateEngagementRequest({
+                ...engagementFormData,
+                rawEditorState: rawEditorState,
+            });
         }
     };
 
@@ -177,20 +200,34 @@ const CreateEngagementForm = () => {
                         </Typography>
                         <RichTextEditor
                             setRawText={handleDescriptionChange}
+                            handleEditorStateChange={handleEditorStateChange}
+                            initialRawEditorState={savedEngagement.rich_text_state || ''}
                             error={engagementFormError.description}
                             helperText="Description cannot be empty"
                         />
                     </Grid>
                     <Grid item xs={12} md={5}>
-                        <Button
-                            fullWidth
-                            variant="contained"
-                            onClick={() => handleCreateEngagement()}
-                            disabled={saving}
-                        >
-                            Create Engagement Draft
-                            {saving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
-                        </Button>
+                        {creatingNewEngagement ? (
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                onClick={() => handleCreateEngagement()}
+                                disabled={saving}
+                            >
+                                Create Engagement Draft
+                                {saving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
+                            </Button>
+                        ) : (
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                onClick={() => handleUpdateEngagement()}
+                                disabled={saving}
+                            >
+                                Update Engagement Draft
+                                {saving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
+                            </Button>
+                        )}
                     </Grid>
                 </Grid>
             </MetBox>

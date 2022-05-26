@@ -47,6 +47,7 @@ class Engagement(db.Model):
         new_engagement = Engagement(
             name=engagement["name"],
             description=engagement['description'],
+            rich_text_state=engagement['rich_text_state'],
             start_date=engagement['start_date'],
             end_date=engagement['end_date'],
             status_id=1,
@@ -66,6 +67,7 @@ class Engagement(db.Model):
         update_fields = dict(
             name=engagement["name"],
             description=engagement['description'],
+            rich_text_state=engagement['rich_text_state'],
             start_date=engagement['start_date'],
             end_date=engagement['end_date'],
             updated_date= datetime.utcnow()
