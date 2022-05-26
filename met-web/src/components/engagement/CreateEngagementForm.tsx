@@ -10,41 +10,26 @@ import {
 import { MetBox } from "../common";
 import RichTextEditor from "./RichTextEditor";
 import { ActionContext } from "./ActionContext";
+import { formatDate } from '../common/dateHelper';
 
 const CreateEngagementForm = () => {
-  const { saveEngagement, saving, savedEngagement } = useContext(ActionContext);
-  console.log(savedEngagement);
+    const { handleSaveEngagement, saving, savedEngagement } = useContext(ActionContext);
 
-  const [engagementFormData, setEngagementFormData] = useState({
-    name: savedEngagement?.name || "",
-    fromDate: savedEngagement?.start_date || "",
-    toDate: savedEngagement?.end_date || "",
-    description: savedEngagement?.description || "",
-  });
-
-  useEffect(() => {
-    setEngagementFormData({
-      name: savedEngagement?.name || "",
-      fromDate: savedEngagement?.start_date || "",
-      toDate: savedEngagement?.end_date || "",
-      description: savedEngagement?.description || "",
+    const [engagementFormData, setEngagementFormData] = useState({
+        name: savedEngagement?.name || '',
+        fromDate: savedEngagement.start_date ? formatDate(savedEngagement.start_date) : '',
+        toDate: savedEngagement.end_date ? formatDate(savedEngagement.end_date) : '',
+        description: savedEngagement?.description || '',
     });
-  }, [savedEngagement]);
 
-  const [engagementFormError, setEngagementFormError] = useState({
-    name: false,
-    fromDate: false,
-    toDate: false,
-    description: false,
-  });
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
-    setEngagementFormData({
-      ...engagementFormData,
-      [e.target.name]: e.target.value,
-    });
+    useEffect(() => {
+        setEngagementFormData({
+            name: savedEngagement?.name || '',
+            fromDate: formatDate(savedEngagement.start_date),
+            toDate: formatDate(savedEngagement.end_date),
+            description: savedEngagement?.description || '',
+        });
+    }, [savedEngagement]);
 
     const [engagementFormError, setEngagementFormError] = useState({
         name: false,
@@ -93,7 +78,7 @@ const CreateEngagementForm = () => {
         const errorExists = validateForm();
 
         if (!errorExists) {
-            saveEngagement(engagementFormData);
+            handleSaveEngagement(engagementFormData);
         }
     };
 

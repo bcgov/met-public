@@ -50,7 +50,7 @@ class GetEngagement(Resource):
             return {'status': False, 'message': str(err)}, 400
 
 
-@cors_preflight('GET, POST, OPTIONS')
+@cors_preflight('GET, POST, PUT, OPTIONS')
 @API.route('/')
 class GetEngagements(Resource):
     """Resource for managing all engagements."""
@@ -77,6 +77,22 @@ class GetEngagements(Resource):
             requestjson = request.get_json()
             engagment_schema = EngagementSchema().load(requestjson)
             result = engagement_service().create_engagement(engagment_schema)
+            return {'status': result.success, 'message': result.message, 'id': result.identifier}, 200
+        except KeyError as err:
+            return {'status': False, 'message': str(err)}, 400
+        except ValueError as err:
+            return {'status': False, 'message': str(err)}, 400
+
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def put():
+        """Creates a new engagement."""
+        try:
+            requestjson = request.get_json()
+            engagment_schema = EngagementSchema().load(requestjson)
+            result = engagement_service().update_engagement(engagment_schema)
             return {'status': result.success, 'message': result.message, 'id': result.identifier}, 200
         except KeyError as err:
             return {'status': False, 'message': str(err)}, 400

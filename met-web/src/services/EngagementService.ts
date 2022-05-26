@@ -2,7 +2,6 @@ import { setEngagements } from './engagementSlice';
 import http from '../components/common/http-common.ts';
 import { Dispatch } from 'redux';
 import UserService from './UserServices';
-import { Engagement } from '../models/engagement';
 
 export const fetchAll = async (dispatch: Dispatch<any>): Promise<Engagement[]> => {
     const responseData = await http.get<Engagement[]>('/engagement/', {

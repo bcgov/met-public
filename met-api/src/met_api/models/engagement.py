@@ -9,7 +9,7 @@ from sqlalchemy.sql.schema import ForeignKey
 
 from .db import db, ma
 from .default_method_result import DefaultMethodResult
-
+from sqlalchemy.dialects.postgresql import JSON, UUID
 
 class Engagement(db.Model):
     """Definition of the Engagement entity"""
@@ -17,7 +17,8 @@ class Engagement(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50))
-    description = db.Column(db.String(50))
+    description = db.Column(db.Text, unique=False, nullable=False)
+    rich_text_state = db.Column(JSON, unique=False, nullable=False)
     start_date = db.Column(db.DateTime)
     end_date = db.Column(db.DateTime)
     status_id = db.Column(db.Integer, ForeignKey('engagement_status.id', ondelete='CASCADE'))
@@ -41,8 +42,8 @@ class Engagement(db.Model):
         return engagements_schema.dump(query)
 
     @classmethod
-    def save_engagement(cls, engagement) -> DefaultMethodResult:
-        """Save engagements."""
+    def create_engagement(cls, engagement) -> DefaultMethodResult:
+        """Save engagement."""
         new_engagement = Engagement(
             name=engagement["name"],
             description=engagement['description'],
@@ -58,10 +59,24 @@ class Engagement(db.Model):
         db.session.commit()
 
         return DefaultMethodResult(True, 'Engagement Added', new_engagement.id)
+    
+    @classmethod
+    def update_engagement(cls, engagement) -> DefaultMethodResult:
+        """Update engagement."""
+        update_fields = dict(
+            name=engagement["name"],
+            description=engagement['description'],
+            start_date=engagement['start_date'],
+            end_date=engagement['end_date'],
+            updated_date= datetime.utcnow()
+        )
+        Engagement.query.filter_by(id=engagement['id']).update(update_fields)
+        db.session.commit()
+        return DefaultMethodResult(True, 'Engagement Updated', engagement['id'])
 
 
 class EngagementSchema(ma.Schema):
     class Meta:
         fields = (
-            'id', 'name', 'description', 'start_date', 'end_date', 'status_id', 'user_id', 'updated_date',
+            'id', 'name', 'description','rich_text_state', 'start_date', 'end_date', 'status_id', 'user_id', 'updated_date',
             'published_date')
