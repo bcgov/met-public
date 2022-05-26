@@ -8,6 +8,7 @@ interface EngagementContext {
     saveEngagement: any;
     saving: boolean;
 }
+
 export const ActionContext = createContext<EngagementContext>({
     rawEditorState: {},
     handleEditorStateChange: (newState: any) => {
