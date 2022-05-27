@@ -2,7 +2,7 @@ from met_api.models.engagement import Engagement
 
 
 class EngagementService:
-    """ Engagement management service
+    """ Engagement management service. 
     """        
         
     otherdateformat = '%Y-%m-%d'
