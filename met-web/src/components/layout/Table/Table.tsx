@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { alpha } from '@mui/material/styles';
+import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,12 +9,9 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Paper from '@mui/material/Paper';
-import { Link } from './TableElements';
-import { API_URL } from '../../../constants/constants';
 import { visuallyHidden } from '@mui/utils';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
-import { fetchAll } from '../../../services/EngagementService';
-import { Engagement } from '../../../models/engagement';
+import { fetchAll } from '../../../services/engagementService';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
@@ -205,7 +201,7 @@ function EnhancedTable() {
         setDense(event.target.checked);
     };
 
-    const isSelected = (id: number) => selected.indexOf(id) !== -1;
+    const isSelected = (id: number) => selected.indexOf(Number(id)) !== -1;
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
@@ -227,13 +223,13 @@ function EnhancedTable() {
                             {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
-                                    const isItemSelected = isSelected(row.id);
+                                    const isItemSelected = isSelected(Number(row.id));
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={(event) => handleClick(event, row.id)}
+                                            onClick={(event) => handleClick(event, Number(row.id))}
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
                                             key={row.id}

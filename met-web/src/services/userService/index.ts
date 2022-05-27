@@ -1,23 +1,21 @@
-import { _kc } from '../constants/tenantConstants';
+import { _kc } from '../../constants/tenantConstants';
 import {
     ADMIN_ROLE,
     USER_RESOURCE_FORM_ID,
     FORMIO_JWT_SECRET,
     ANONYMOUS_ID,
     ANONYMOUS_USER,
-} from '../constants/constants';
+} from '../../constants/constants';
 import { userToken, userDetails, userAuthorization, userAuthentication } from './userSlice';
 import { Action, Dispatch } from 'redux';
 import jwt from 'jsonwebtoken';
-import { UserDetail } from './types';
 
 const KeycloakData = _kc;
 
 /**
  * Initializes Keycloak instance.
  */
-const initKeycloak = (dispatch: Dispatch<Action>) => {
-    console.log('INIT:::');
+const initKeycloak = (dispatch: Dispatch<any>) => {
     KeycloakData.init({
         onLoad: 'check-sso',
         silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html',
