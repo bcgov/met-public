@@ -17,7 +17,7 @@ class EngagementSchema(Schema):
     id = fields.Int(data_key="id")
     name = fields.Str(data_key="name")
     description = fields.Str(data_key="description")
-    rich_text_state = fields.Str(data_key="rich_text_state")
+    rich_description = fields.Str(data_key="rich_description")
     start_date = fields.Str(data_key="start_date")
     end_date = fields.Str(data_key="end_date")
     status_id = fields.Int(data_key="status_id")

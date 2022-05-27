@@ -18,7 +18,7 @@ class Engagement(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50))
     description = db.Column(db.Text, unique=False, nullable=False)
-    rich_text_state = db.Column(JSON, unique=False, nullable=False)
+    rich_description = db.Column(JSON, unique=False, nullable=False)
     start_date = db.Column(db.DateTime)
     end_date = db.Column(db.DateTime)
     status_id = db.Column(db.Integer, ForeignKey('engagement_status.id', ondelete='CASCADE'))
@@ -45,11 +45,11 @@ class Engagement(db.Model):
     def create_engagement(cls, engagement) -> DefaultMethodResult:
         """Save engagement."""
         new_engagement = Engagement(
-            name=engagement["name"],
-            description=engagement['description'],
-            rich_text_state=engagement['rich_text_state'],
-            start_date=engagement['start_date'],
-            end_date=engagement['end_date'],
+            name=engagement.get('name', None),
+            description=engagement.get('description', None),
+            rich_description=engagement.get('rich_description', None),
+            start_date=engagement.get('start_date', None),
+            end_date=engagement.get('end_date', None),
             status_id=1,
             user_id=1,
             created_date=datetime.utcnow(),
@@ -65,14 +65,14 @@ class Engagement(db.Model):
     def update_engagement(cls, engagement) -> DefaultMethodResult:
         """Update engagement."""
         update_fields = dict(
-            name=engagement["name"],
-            description=engagement['description'],
-            rich_text_state=engagement['rich_text_state'],
-            start_date=engagement['start_date'],
-            end_date=engagement['end_date'],
+            name=engagement.get('name', None),
+            description=engagement.get('description', None),
+            rich_description=engagement.get('rich_description', None),
+            start_date=engagement.get('start_date', None),
+            end_date=engagement.get('end_date', None),
             updated_date= datetime.utcnow()
         )
-        Engagement.query.filter_by(id=engagement['id']).update(update_fields)
+        Engagement.query.filter_by(id=engagement.get('id', None)).update(update_fields)
         db.session.commit()
         return DefaultMethodResult(True, 'Engagement Updated', engagement['id'])
 
@@ -80,5 +80,5 @@ class Engagement(db.Model):
 class EngagementSchema(ma.Schema):
     class Meta:
         fields = (
-            'id', 'name', 'description','rich_text_state', 'start_date', 'end_date', 'status_id', 'user_id', 'updated_date',
+            'id', 'name', 'description','rich_description', 'start_date', 'end_date', 'status_id', 'user_id', 'updated_date',
             'published_date')

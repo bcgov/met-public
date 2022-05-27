@@ -1,19 +1,12 @@
 import React, { createContext, useState, useEffect } from "react";
-import { postEngagement, putEngagement, getEngagement } from '../../services/EngagementService';
+import { postEngagement, putEngagement, getEngagement } from '../../services/engagementService';
 import { useNavigate, useParams } from 'react-router-dom';
 
-interface EngagementContext {
-    handleCreateEngagementRequest: Function;
-    handleUpdateEngagementRequest: Function;
-    saving: boolean;
-    savedEngagement: Engagement;
-    engagementId: string | undefined;
-}
 export const ActionContext = createContext<EngagementContext>({
-    handleCreateEngagementRequest: (_engagement: any) => {
+    handleCreateEngagementRequest: (_engagement: EngagementForm) => {
         /* empty default method  */
     },
-    handleUpdateEngagementRequest: (_engagement: any) => {
+    handleUpdateEngagementRequest: (_engagement: EngagementForm) => {
         /* empty default method  */
     },
     saving: false,
@@ -21,7 +14,7 @@ export const ActionContext = createContext<EngagementContext>({
         id: 0,
         name: '',
         description: '',
-        rich_text_state: '',
+        rich_description: '',
         status_id: '',
         start_date: '',
         end_date: '',
@@ -33,11 +26,7 @@ export const ActionContext = createContext<EngagementContext>({
     engagementId: 'create',
 });
 
-type EngagementParams = {
-    engagementId: string;
-};
-
-export const ActionProvider = ({ children }: { children: any }) => {
+export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const { engagementId } = useParams<EngagementParams>();
     const navigate = useNavigate();
 
@@ -46,7 +35,7 @@ export const ActionProvider = ({ children }: { children: any }) => {
         id: 0,
         name: '',
         description: '',
-        rich_text_state: '',
+        rich_description: '',
         status_id: '',
         start_date: '',
         end_date: '',
@@ -68,7 +57,7 @@ export const ActionProvider = ({ children }: { children: any }) => {
         }
     }, [engagementId]);
 
-    const handleCreateEngagementRequest = (engagement: any) => {
+    const handleCreateEngagementRequest = (engagement: EngagementForm) => {
         setSaving(true);
         postEngagement(
             {
@@ -76,7 +65,7 @@ export const ActionProvider = ({ children }: { children: any }) => {
                 start_date: engagement.fromDate,
                 end_date: engagement.toDate,
                 description: engagement.description,
-                rich_text_state: engagement.rawEditorState,
+                rich_description: engagement.richDescription,
             },
             () => {
                 //TODO engagement created success message in notification module
@@ -84,23 +73,23 @@ export const ActionProvider = ({ children }: { children: any }) => {
                 navigate('/');
             },
             (errorMessage: string) => {
-                setSaving(false);
                 //TODO:engagement create error message in notification module
+                setSaving(false);
                 console.log(errorMessage);
             },
         );
     };
 
-    const handleUpdateEngagementRequest = (engagement: any) => {
+    const handleUpdateEngagementRequest = (engagement: EngagementForm) => {
         setSaving(true);
         putEngagement(
             {
-                id: engagementId,
+                id: Number(engagementId),
                 name: engagement.name,
                 start_date: engagement.fromDate,
                 end_date: engagement.toDate,
                 description: engagement.description,
-                rich_text_state: engagement.rawEditorState,
+                rich_description: engagement.richDescription,
             },
             () => {
                 //TODO engagement update success message in notification module
@@ -108,8 +97,8 @@ export const ActionProvider = ({ children }: { children: any }) => {
                 navigate('/');
             },
             (errorMessage: string) => {
-                setSaving(false);
                 //TODO: engagement update error message in notification module
+                setSaving(false);
                 console.log(errorMessage);
             },
         );

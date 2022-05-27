@@ -1,7 +1,7 @@
 import { setEngagements } from './engagementSlice';
-import http from '../components/common/http-common.ts';
+import http from '../../components/common/http-common.ts';
 import { Dispatch } from 'redux';
-import UserService from './UserServices';
+import UserService from '../userService';
 
 export const fetchAll = async (dispatch: Dispatch<any>): Promise<Engagement[]> => {
     const responseData = await http.get<Engagement[]>('/engagement/', {
@@ -14,27 +14,25 @@ export const fetchAll = async (dispatch: Dispatch<any>): Promise<Engagement[]> =
     return responseData.data;
 };
 
-export const getEngagement = async (
-  engagementId: number,
-  successCallback: Function
-) => {
-  if (!engagementId) {
-    throw new Error("Invalid Engagement Id " + engagementId);
-  }
-
-  const responseData = await http.get<Engagement>(
-    `/engagement/${engagementId}`,
-    {
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${UserService.getToken()}`,
-      },
+export const getEngagement = async (engagementId: number, successCallback: Function) => {
+    if (!engagementId) {
+        throw new Error('Invalid Engagement Id ' + engagementId);
     }
-  );
-  successCallback(responseData.data);
+
+    const responseData = await http.get<Engagement>(`/engagement/${engagementId}`, {
+        headers: {
+            'Content-type': 'application/json',
+            Authorization: `Bearer ${UserService.getToken()}`,
+        },
+    });
+    successCallback(responseData.data);
 };
 
-export const postEngagement = async (data: any, successCallback: Function, errorCallback: Function): Promise<any> => {
+export const postEngagement = async (
+    data: PostEngagementRequest,
+    successCallback: Function,
+    errorCallback: Function,
+) => {
     try {
         await http.post('/engagement/', data, {
             headers: {
@@ -54,7 +52,7 @@ export const postEngagement = async (data: any, successCallback: Function, error
     }
 };
 
-export const putEngagement = async (data: any, successCallback: Function, errorCallback: Function): Promise<any> => {
+export const putEngagement = async (data: PutEngagementRequest, successCallback: Function, errorCallback: Function) => {
     try {
         const response = await http.put('/engagement/', data, {
             headers: {

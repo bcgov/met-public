@@ -24,7 +24,7 @@ const CreateEngagementForm = () => {
         toDate: '',
         description: '',
     });
-    const [rawEditorState, setRawEditorState] = useState('');
+    const [richDescription, setRawEditorState] = useState('');
 
     useEffect(() => {
         setEngagementFormData({
@@ -33,7 +33,7 @@ const CreateEngagementForm = () => {
             toDate: formatDate(savedEngagement.end_date),
             description: savedEngagement?.description || '',
         });
-        setRawEditorState(savedEngagement?.rich_text_state || '');
+        setRawEditorState(savedEngagement?.rich_description || '');
     }, [savedEngagement]);
 
     const [engagementFormError, setEngagementFormError] = useState({
@@ -65,7 +65,7 @@ const CreateEngagementForm = () => {
         });
     };
 
-    const handleEditorStateChange = (newState: any) => {
+    const handleEditorStateChange = (newState: string) => {
         setRawEditorState(newState);
     };
 
@@ -89,7 +89,7 @@ const CreateEngagementForm = () => {
         if (!errorExists) {
             handleCreateEngagementRequest({
                 ...engagementFormData,
-                rawEditorState: rawEditorState,
+                richDescription: richDescription,
             });
         }
     };
@@ -100,7 +100,7 @@ const CreateEngagementForm = () => {
         if (!errorExists) {
             handleUpdateEngagementRequest({
                 ...engagementFormData,
-                rawEditorState: rawEditorState,
+                richDescription: richDescription,
             });
         }
     };
@@ -201,7 +201,7 @@ const CreateEngagementForm = () => {
                         <RichTextEditor
                             setRawText={handleDescriptionChange}
                             handleEditorStateChange={handleEditorStateChange}
-                            initialRawEditorState={savedEngagement.rich_text_state || ''}
+                            initialRawEditorState={savedEngagement.rich_description || ''}
                             error={engagementFormError.description}
                             helperText="Description cannot be empty"
                         />

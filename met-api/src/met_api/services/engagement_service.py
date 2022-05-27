@@ -21,7 +21,7 @@ class engagement_service:
             "id": request_engagement["id"],
             "name": request_engagement["name"],
             "description": request_engagement["description"],
-            "rich_text_state": request_engagement['rich_text_state'],
+            "rich_description": request_engagement['rich_description'],
             "start_date": request_engagement["start_date"],
             "end_date": request_engagement["end_date"],
         }
@@ -39,7 +39,7 @@ class engagement_service:
 
 
     def validated_fields(self, data):
-        empty_fields = [not data[field] for field in ['name', 'description', 'rich_text_state', 'start_date', 'end_date']]
+        empty_fields = [not data[field] for field in ['name', 'description', 'rich_description', 'start_date', 'end_date']]
         
         if any(empty_fields):
             raise ValueError("Some required fields are empty")

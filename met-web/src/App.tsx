@@ -4,15 +4,13 @@ import Header from './components/layout/Header';
 import { BrowserRouter as Router } from 'react-router-dom';
 import BaseRouting from './routes/BaseRouting';
 import { CircularProgress, Grid } from '@mui/material';
-import UserService from './services/UserServices';
+import UserService from './services/userService';
 import { useAppSelector, useAppDispatch } from './hooks';
 
 const App = () => {
     const dispatch = useAppDispatch();
 
     const authenticationLoading = useAppSelector((state) => state.user.authentication.loading);
-
-    const user = useAppSelector((state) => state.user);
 
     useEffect(() => {
         UserService.initKeycloak(dispatch);
@@ -31,9 +29,7 @@ const App = () => {
     return (
         <Router>
             <Header />
-
             <BaseRouting />
-            {/* <TemporaryDrawer/> */}
         </Router>
     );
 };

@@ -2,16 +2,8 @@ import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import { useAppSelector } from '../../../hooks';
-import UserService from '../../../services/UserServices';
-import {
-    buttonClass,
-    LogoContainer,
-    LogoutContainer,
-    TitleContainer,
-    sxLight,
-    AuthButton,
-    HeaderText,
-} from './HeaderElements';
+import UserService from '../../../services/userService';
+import { LogoContainer, LogoutContainer, TitleContainer, sxLight, AuthButton, HeaderText } from './HeaderElements';
 import sx from 'mui-sx';
 
 const Header = () => {
