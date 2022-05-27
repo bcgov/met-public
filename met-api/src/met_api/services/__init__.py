@@ -11,5 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""The Test Suites to ensure that the service is built and operating correctly."""
+"""Exposes all of the Services used in the API."""
 
+from .engagement_service import EngagementService

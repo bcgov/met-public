@@ -1,7 +1,7 @@
 from met_api.models.engagement import Engagement
 
 
-class engagement_service:
+class EngagementService:
     """ Engagement management service
     """        
         
