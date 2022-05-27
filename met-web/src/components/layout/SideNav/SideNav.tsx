@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import AppBar from '@mui/material/AppBar';
-import { ListItemButton, List, ListItem, ListItemText, Box, Drawer } from '@mui/material';
+import { ListItemButton, List, ListItem, ListItemText, Box, Drawer, Toolbar } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Routes } from './SideNavElements';
 
@@ -33,17 +32,12 @@ const DrawerBox = ({ navigate }) => {
     );
 };
 
-const SideNav = ({ open }) => {
+const SideNav = ({ open, screenWidth }) => {
     const navigate = useNavigate();
-    let width = screen.width;
-
-    useEffect(() => {
-        console.log('OPEN CHANGED::' + JSON.stringify(open));
-    }, [open]);
 
     return (
         <>
-            {width > 1350 ? (
+            {screenWidth > 1350 ? (
                 <Drawer
                     sx={{
                         width: '13%',
@@ -64,7 +58,7 @@ const SideNav = ({ open }) => {
                     }}
                     anchor={'left'}
                     open={open}
-                    ModalProps={{ BackdropProps: { open: !open } }}
+                    hideBackdrop={!open}
                 >
                     <DrawerBox navigate={navigate} />
                 </Drawer>

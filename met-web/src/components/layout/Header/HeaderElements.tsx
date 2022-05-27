@@ -9,13 +9,6 @@ export const sxLight = {
     boxShadow: '0px 5px 9px #29',
 };
 
-export const headerSx = {
-    zIndex: (theme:any) => theme.zIndex.drawer + 1,
-    color: '#494949',
-    backgroundColor: '#f2f2f2',
-    boxShadow: '0px 5px 9px #29',
-};
-
 export const PageContainer = styled(Row)``;
 
 export const LogoContainer = styled(Row)`

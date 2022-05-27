@@ -4,16 +4,7 @@ import Toolbar from '@mui/material/Toolbar';
 import { useAppSelector } from '../../../hooks';
 import { IconButton, Button } from '@mui/material';
 import UserService from '../../../services/UserServices';
-import {
-    buttonClass,
-    LogoContainer,
-    LogoutContainer,
-    TitleContainer,
-    sxLight,
-    AuthButton,
-    HeaderText,
-    headerSx,
-} from './HeaderElements';
+import { buttonClass, LogoContainer, LogoutContainer, TitleContainer, AuthButton, HeaderText } from './HeaderElements';
 import sx from 'mui-sx';
 import SideNav from '../SideNav/SideNav';
 
@@ -21,29 +12,29 @@ const Header = () => {
     //states
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const [open, setOpen] = useState(false);
-    let width = screen.width;
+    const [width, setWidth] = useState(window.innerWidth);
+
+    function handleResize() {
+        setWidth(window.innerWidth);
+    }
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+    }, []);
 
     return (
         <>
             <AppBar
                 className="font-BCBold"
                 position="fixed"
-                style={{
+                sx={{
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
                     backgroundColor: '#f2f2f2',
                     height: '10vh',
                     display: 'flex',
                     flexDirection: 'row',
                 }}
-                sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
             >
-                {width > 1350 ? (
-                    <></>
-                ) : (
-                    <IconButton aria-label="delete">
-                        <Button onClick={() => setOpen(!open)} variant="contained" fullWidth />
-                        <SideNav open={open} />
-                    </IconButton>
-                )}
                 <LogoContainer>
                     <img
                         src={'https://marketplacebc.ca/wp-content/themes/sbbc-marketplace/images/bc-logo.svg'}
@@ -72,6 +63,17 @@ const Header = () => {
                     )}
                 </LogoutContainer>
             </AppBar>
+            {width > 1350 ? (
+                <>
+                    <SideNav screenWidth={width} open={true} />
+                </>
+            ) : (
+                <IconButton aria-label="delete">
+                    <Button onClick={() => setOpen(!open)} variant="contained" fullWidth />
+                    <SideNav open={open} />
+                </IconButton>
+            )}
+            <Toolbar />
         </>
     );
 };
