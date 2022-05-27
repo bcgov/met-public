@@ -61,7 +61,7 @@ def snake2camelback(snake_dict: dict):
 def allowedorigins():
     _allowedcors = os.getenv('CORS_ORIGIN')
     allowedcors = []
-    if ',' in _allowedcors:
+    if _allowedcors and ',' in _allowedcors:
         for entry in re.split(",", _allowedcors):
             allowedcors.append(entry)
     return allowedcors
