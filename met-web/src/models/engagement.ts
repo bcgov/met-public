@@ -1,7 +1,8 @@
-export interface Engagement {
+interface Engagement {
     id: number;
     name: string;
     description: string;
+    rich_description: string;
     status_id: string;
     start_date: string;
     end_date: string;

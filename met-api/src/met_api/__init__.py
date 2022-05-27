@@ -1,4 +1,7 @@
-"""Flask initiation"""
+"""The App Initiation file.
+
+This module is for the initiation of the flask app.
+"""
 
 import os
 

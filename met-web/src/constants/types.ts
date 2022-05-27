@@ -1,4 +1,4 @@
-export interface ITenantDetail {
+interface ITenantDetail {
     realm: string;
     url: string;
     clientId: string;
