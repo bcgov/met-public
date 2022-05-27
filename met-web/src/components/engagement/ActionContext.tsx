@@ -1,7 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
-import { postEngagement, putEngagement } from '../../services/EngagementService';
+import { postEngagement, putEngagement, getEngagement } from '../../services/EngagementService';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getEngagement } from '../../services/EngagementService';
 
 interface EngagementContext {
     handleCreateEngagementRequest: Function;
@@ -11,8 +10,12 @@ interface EngagementContext {
     engagementId: string | undefined;
 }
 export const ActionContext = createContext<EngagementContext>({
-    handleCreateEngagementRequest: (engagement: any) => {},
-    handleUpdateEngagementRequest: (engagement: any) => {},
+    handleCreateEngagementRequest: (_engagement: any) => {
+        /* empty default method  */
+    },
+    handleUpdateEngagementRequest: (_engagement: any) => {
+        /* empty default method  */
+    },
     saving: false,
     savedEngagement: {
         id: 0,
@@ -76,6 +79,7 @@ export const ActionProvider = ({ children }: { children: any }) => {
                 rich_text_state: engagement.rawEditorState,
             },
             () => {
+                //TODO engagement created success message in notification module
                 setSaving(false);
                 navigate('/');
             },
@@ -99,6 +103,7 @@ export const ActionProvider = ({ children }: { children: any }) => {
                 rich_text_state: engagement.rawEditorState,
             },
             () => {
+                //TODO engagement update success message in notification module
                 setSaving(false);
                 navigate('/');
             },

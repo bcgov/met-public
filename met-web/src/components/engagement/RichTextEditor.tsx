@@ -1,11 +1,10 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { EditorState, convertFromRaw, convertToRaw } from 'draft-js';
 import createToolbarPlugin from '@draft-js-plugins/static-toolbar';
 import 'draft-js/dist/Draft.css';
 import '@draft-js-plugins/static-toolbar/lib/plugin.css';
 import './RichTextEditor.css';
 import Editor from '@draft-js-plugins/editor';
-import { ActionContext } from './ActionContext';
 import { FormControl, FormHelperText } from '@mui/material';
 import { MetBox } from '../common';
 
@@ -13,11 +12,11 @@ const toolbarPlugin = createToolbarPlugin();
 const { Toolbar } = toolbarPlugin;
 
 const RichTextEditor = ({
-    setRawText = (rawText: string) => {
-        // Empty method
+    setRawText = (_rawText: string) => {
+        /* empty default method  */
     },
-    handleEditorStateChange = (stringifiedEditorState: string) => {
-        //Empty method
+    handleEditorStateChange = (_stringifiedEditorState: string) => {
+        /* empty default method  */
     },
     initialRawEditorState = '',
     error = false,
@@ -37,8 +36,8 @@ const RichTextEditor = ({
         const plainText = newEditorState.getCurrentContent().getPlainText();
 
         setEditorState(newEditorState);
-        const _editorstateinJSON = JSON.stringify(convertToRaw(newEditorState.getCurrentContent()));
-        handleEditorStateChange(_editorstateinJSON);
+        const stringifiedEditorState = JSON.stringify(convertToRaw(newEditorState.getCurrentContent()));
+        handleEditorStateChange(stringifiedEditorState);
         setRawText(plainText);
     };
 
