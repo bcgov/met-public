@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
+import { TableCell } from '@mui/material';
 
-export const Link = styled.a`
-    color: #4c81af;
-`;
+export const EngagementTableCell = styled(TableCell)(() => ({
+    border: `none`,
+}));

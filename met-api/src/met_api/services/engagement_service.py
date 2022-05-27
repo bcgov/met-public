@@ -17,13 +17,16 @@ class engagement_service:
         return [self.__create_engagement_object(engagement) for engagement in engagements_requests]            
     
     def __create_engagement_object(self, request_engagement):
+        print(request_engagement)
         engagement = {
-            "id": request_engagement["id"],
-            "name": request_engagement["name"],
-            "description": request_engagement["description"],
-            "rich_description": request_engagement['rich_description'],
-            "start_date": request_engagement["start_date"],
-            "end_date": request_engagement["end_date"],
+            "id": request_engagement.get("id", None),
+            "name": request_engagement.get("name", None),
+            "description": request_engagement.get("description", None),
+            "rich_description": request_engagement.get("rich_description", None),
+            "start_date": request_engagement.get("start_date", None),
+            "end_date": request_engagement.get("end_date", None),
+            "created_date": request_engagement['created_date'],
+            "published_date": request_engagement.get("published_date", None),
         }
         return engagement
 

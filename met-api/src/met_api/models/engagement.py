@@ -81,4 +81,4 @@ class EngagementSchema(ma.Schema):
     class Meta:
         fields = (
             'id', 'name', 'description','rich_description', 'start_date', 'end_date', 'status_id', 'user_id', 'updated_date',
-            'published_date')
+            'published_date', 'created_date')
