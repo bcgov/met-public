@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField';
 const LandingPage = () => {
     return (
         <Container sx={{ paddingTop: '5em' }}>
-            <Grid direction="row" justifyContent="flex-start" alignItems="flex-start" container spacing={2}>
+            <Grid direction="row" justifyContent="center" alignItems="center" container spacing={2}>
                 <Grid item xs={9}>
                     <TextField sx={{ width: '30%', fontSize: '40px' }} placeholder={'Search Engagements by name...'} />
                 </Grid>
