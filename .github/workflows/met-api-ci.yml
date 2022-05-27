@@ -16,7 +16,7 @@ jobs:
   setup-job:
     runs-on: ubuntu-20.04
 
-    if: github.repository == 'saravanpa/met-public'
+    if: github.repository == 'bcgov/met-public'
 
     steps:
       - uses: actions/checkout@v2
