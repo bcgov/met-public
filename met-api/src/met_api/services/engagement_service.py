@@ -1,7 +1,7 @@
 from met_api.models.engagement import Engagement
 
 
-class engagement_service:
+class EngagementService:
     """ Engagement management service
     """        
         
@@ -21,15 +21,25 @@ class engagement_service:
             "id": request_engagement["id"],
             "name": request_engagement["name"],
             "description": request_engagement["description"],
+            "rich_description": request_engagement['rich_description'],
             "start_date": request_engagement["start_date"],
             "end_date": request_engagement["end_date"],
         }
-        return engagement    
+        return engagement
 
     def create_engagement(self, data):  
-        empty_fields = [not data[field] for field in ['name', 'description', 'start_date', 'end_date']]
+        self.validated_fields(data)
+        
+        return Engagement.create_engagement(data)
+
+    def update_engagement(self, data):  
+        self.validated_fields(data)
+        
+        return Engagement.update_engagement(data)
+
+
+    def validated_fields(self, data):
+        empty_fields = [not data[field] for field in ['name', 'description', 'rich_description', 'start_date', 'end_date']]
         
         if any(empty_fields):
             raise ValueError("Some required fields are empty")
-        
-        return Engagement.save_engagement(data)

@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""API endpoints for managing a FOI Requests resource."""
+"""API endpoints for managing an engagement resource."""
 
 import json
 
@@ -21,7 +21,7 @@ from flask_restx import Namespace, Resource
 
 from met_api.auth import auth
 from met_api.schemas.Engagement import EngagementSchema
-from met_api.services.engagement_service import engagement_service
+from met_api.services.engagement_service import EngagementService
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
@@ -42,15 +42,15 @@ class GetEngagement(Resource):
     def get(engagement_id):
         """Fetches a single engagement matching the provided id."""
         try:
-            engagement_record = engagement_service().get_engagement(engagement_id)
+            engagement_record = EngagementService().get_engagement(engagement_id)
             return engagement_record, 200
-        except KeyError as err:
+        except KeyError:
             return {'status': False, 'message': "Engagement was not found"}, 400
         except ValueError as err:
-            return {'status': False, 'message': err.messages}, 400
+            return {'status': False, 'message': str(err)}, 400
 
 
-@cors_preflight('GET, POST, OPTIONS')
+@cors_preflight('GET, POST, PUT, OPTIONS')
 @API.route('/')
 class GetEngagements(Resource):
     """Resource for managing all engagements."""
@@ -62,10 +62,10 @@ class GetEngagements(Resource):
     def get():
         """Fetches all engagements."""
         try:
-            engagement_records = engagement_service().get_all_engagements()
+            engagement_records = EngagementService().get_all_engagements()
             return json.dumps(engagement_records), 200
         except ValueError as err:
-            return {'status': False, 'message': err.messages}, 400
+            return {'status': False, 'message': str(err)}, 400
 
     @staticmethod
     # @TRACER.trace()
@@ -75,8 +75,25 @@ class GetEngagements(Resource):
         """Creates a new engagement."""
         try:
             requestjson = request.get_json()
+            print('-------------',requestjson)
             engagment_schema = EngagementSchema().load(requestjson)
-            result = engagement_service().create_engagement(engagment_schema)
+            result = EngagementService().create_engagement(engagment_schema)
+            return {'status': result.success, 'message': result.message, 'id': result.identifier}, 200
+        except KeyError as err:
+            return {'status': False, 'message': str(err)}, 400
+        except ValueError as err:
+            return {'status': False, 'message': str(err)}, 400
+
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def put():
+        """Creates a new engagement."""
+        try:
+            requestjson = request.get_json()
+            engagment_schema = EngagementSchema().load(requestjson)
+            result = engagement_service().update_engagement(engagment_schema)
             return {'status': result.success, 'message': result.message, 'id': result.identifier}, 200
         except KeyError as err:
             return {'status': False, 'message': str(err)}, 400

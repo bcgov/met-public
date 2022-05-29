@@ -1,10 +1,16 @@
+"""User model class
+
+Manages the user
+"""
 import datetime
 
 from .db import db, ma
 
 
 class User(db.Model):
-    # Name of the table in our database
+
+    """Definition of the User entity"""
+
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -17,8 +23,15 @@ class User(db.Model):
     updated_date = db.Column(db.DateTime, onupdate=datetime.datetime.utcnow)
     engagement_id = db.relationship('Engagement', backref='user', cascade="all, delete")
 
+    @classmethod
+    def find_by_id(cls, id):
+        """Return the first user with the provided username."""
+        return cls.query.filter_by(id=id).first()
+
 
 class UserSchema(ma.Schema):
+    """This class represents the UserSchema table."""
     class Meta:
-        fields = (
-        'id', 'first_name', 'middle_name', 'last_name', 'email_id', 'contact_number', 'created_date', 'updated_date')
+        """Meta class for UserSchema."""
+        fields = ('id', 'first_name', 'middle_name', 'last_name', 'email_id', 'contact_number', 
+            'created_date', 'updated_date')

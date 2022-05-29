@@ -37,7 +37,7 @@ def cors_preflight(methods):
         def options(self, *args, **kwargs):  # pylint: disable=unused-argument
             return {'Allow': 'GET, DELETE, PUT, POST'}, 200, \
                    {
-                    #'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': methods,
                     'Access-Control-Allow-Headers': 'Authorization, Content-Type, registries-trace-id, '
                                                     'invitation_token'}
@@ -61,7 +61,7 @@ def snake2camelback(snake_dict: dict):
 def allowedorigins():
     _allowedcors = os.getenv('CORS_ORIGIN')
     allowedcors = []
-    if ',' in _allowedcors:
+    if _allowedcors and ',' in _allowedcors:
         for entry in re.split(",", _allowedcors):
             allowedcors.append(entry)
     return allowedcors

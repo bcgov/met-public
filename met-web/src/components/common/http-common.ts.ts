@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_URL } from '../../constants/constants';
-import UserService from '../../services/UserServices';
+import UserService from '../../services/userService';
 
 export default axios.create({
     baseURL: API_URL,
