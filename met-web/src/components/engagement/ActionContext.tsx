@@ -11,10 +11,10 @@ interface EngagementContext {
 
 export const ActionContext = createContext<EngagementContext>({
     rawEditorState: {},
-    handleEditorStateChange: (newState: any) => {
+    handleEditorStateChange: (_newState: any) => {
         // Empty method
     },
-    saveEngagement: (engagement: any) => {
+    saveEngagement: (_engagement: any) => {
         // Empty method
     },
     saving: false,
@@ -27,17 +27,17 @@ export const ActionProvider = ({ children }: { children: any }) => {
     const [rawEditorState, setRawEditorState] = useState(null);
     const [saving, setSaving] = useState(false);
 
-    const handleEditorStateChange = (newState: any) => {
-        setRawEditorState(newState);
+    const handleEditorStateChange = (_newState: any) => {
+        setRawEditorState(_newState);
     };
 
-    const saveEngagements = async (engagement: any) => {
+    const saveEngagements = async (_engagement: any) => {
         setSaving(true);
         const response = await postEngagement({
-            name: engagement.name,
-            start_date: engagement.fromDate,
-            end_date: engagement.toDate,
-            description: engagement.description,
+            name: _engagement.name,
+            start_date: _engagement.fromDate,
+            end_date: _engagement.toDate,
+            description: _engagement.description,
         });
         setSaving(false);
         if (response.status) {

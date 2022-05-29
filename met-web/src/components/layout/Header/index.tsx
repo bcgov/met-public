@@ -4,7 +4,7 @@ import Toolbar from '@mui/material/Toolbar';
 import { useAppSelector } from '../../../hooks';
 import { IconButton, Button } from '@mui/material';
 import UserService from '../../../services/UserServices';
-import { buttonClass, LogoContainer, LogoutContainer, TitleContainer, AuthButton, HeaderText } from './HeaderElements';
+import { LogoContainer, LogoutContainer, TitleContainer, AuthButton, HeaderText } from './HeaderElements';
 import sx from 'mui-sx';
 import SideNav from '../SideNav/SideNav';
 
@@ -35,12 +35,19 @@ const Header = () => {
                     flexDirection: 'row',
                 }}
             >
+                {width > 1350 || !isLoggedIn ? (
+                    <></>
+                ) : (
+                    <IconButton aria-label="delete">
+                        <Button onClick={() => setOpen(!open)} variant="contained" fullWidth />
+                    </IconButton>
+                )}
                 <LogoContainer>
                     <img
                         src={'https://marketplacebc.ca/wp-content/themes/sbbc-marketplace/images/bc-logo.svg'}
                         width="100%"
                         height="100%"
-                        alt="bc_gov_logo"
+                        alt="bc_Pgov_logo"
                     />
                 </LogoContainer>
 
@@ -53,9 +60,12 @@ const Header = () => {
                 </TitleContainer>
                 <LogoutContainer>
                     {isLoggedIn ? (
-                        <AuthButton variant="contained" onClick={() => UserService.doLogout()}>
-                            Logout
-                        </AuthButton>
+                        <>
+                            <AuthButton variant="contained" onClick={() => UserService.doLogout()}>
+                                Logout
+                            </AuthButton>
+                            <SideNav screenWidth={width} open={open} />
+                        </>
                     ) : (
                         <AuthButton variant="contained" onClick={() => UserService.doLogin()}>
                             Login
@@ -63,16 +73,7 @@ const Header = () => {
                     )}
                 </LogoutContainer>
             </AppBar>
-            {width > 1350 ? (
-                <>
-                    <SideNav screenWidth={width} open={true} />
-                </>
-            ) : (
-                <IconButton aria-label="delete">
-                    <Button onClick={() => setOpen(!open)} variant="contained" fullWidth />
-                    <SideNav open={open} />
-                </IconButton>
-            )}
+
             <Toolbar />
         </>
     );

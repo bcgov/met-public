@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { alpha } from '@mui/material/styles';
+import React, { useEffect} from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,8 +9,6 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Paper from '@mui/material/Paper';
-import { Link } from './TableElements';
-import { API_URL } from '../../../constants/constants';
 import { visuallyHidden } from '@mui/utils';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { fetchAll } from '../../../services/EngagementService';

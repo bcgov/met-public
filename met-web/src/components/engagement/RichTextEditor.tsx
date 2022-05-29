@@ -13,7 +13,7 @@ const toolbarPlugin = createToolbarPlugin();
 const { Toolbar } = toolbarPlugin;
 
 const RichTextEditor = ({
-    setRawText = (rawText: string) => {
+    setRawText = (_rawText: string) => {
         // Empty method
     },
     error = false,

@@ -31,17 +31,6 @@ const initKeycloak = (dispatch: Dispatch<Action>) => {
                 return;
             }
 
-            // if (
-            //   !KeycloakData.resourceAccess ||
-            //   !KeycloakData.resourceAccess[Keycloak_Client]
-            // ) {
-            //   doLogout();
-            //   return;
-            // }
-
-            // const UserRoles = KeycloakData.resourceAccess[Keycloak_Client].roles;
-            // dispatch(userRoles(UserRoles));
-
             dispatch(userToken(KeycloakData.token));
             KeycloakData.loadUserInfo().then((res: UserDetail) => {
                 dispatch(userDetails(res));

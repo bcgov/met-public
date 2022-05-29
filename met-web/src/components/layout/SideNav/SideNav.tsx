@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ListItemButton, List, ListItem, ListItemText, Box, Drawer, Toolbar } from '@mui/material';
+import React, { useState } from 'react';
+import { ListItemButton, List, ListItem, ListItemText, Box, Drawer } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Routes } from './SideNavElements';
 

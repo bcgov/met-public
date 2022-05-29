@@ -14,8 +14,6 @@ const App = () => {
 
     const authenticationLoading = useAppSelector((state) => state.user.authentication.loading);
 
-    const user = useAppSelector((state) => state.user);
-
     useEffect(() => {
         UserService.initKeycloak(dispatch);
     }, [dispatch]);
