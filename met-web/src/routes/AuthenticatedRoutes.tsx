@@ -3,11 +3,14 @@ import { Route, Routes } from 'react-router-dom';
 import NotFound from './NotFound';
 import LandingPage from './LandingPage/LandingPage';
 import { ThemeProvider } from '@mui/system';
-import { BaseTheme} from '../styles/Theme';
+import { BaseTheme } from '../styles/Theme';
 import View from '../components/Form/View';
 import Engagement from '../components/engagement';
+import UserService from '../services/UserServices';
 
 const AuthenticatedRoutes = () => {
+    
+    let adminRole = UserService.hasAdminRole();
 
     return (
         <ThemeProvider theme={BaseTheme}>

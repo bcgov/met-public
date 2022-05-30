@@ -11,7 +11,7 @@ const LandingPage = () => {
         <Container sx={{ paddingTop: '5em' }}>
             <Grid direction="row" justifyContent="center" alignItems="center" container spacing={2}>
                 <Grid item xs={9}>
-                    <TextField sx={{ fontSize: '40px' }} placeholder={'Search Engagements by name...'} />
+                    <TextField placeholder={'Search Engagements by name...'} />
                 </Grid>
                 <Grid item xs={3}>
                     <Link to="/engagement/create">

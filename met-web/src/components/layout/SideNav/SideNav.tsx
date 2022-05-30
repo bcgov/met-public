@@ -6,10 +6,10 @@ import { Routes } from './SideNavElements';
 const DrawerBox = ({ navigate }) => {
     const [activeLink, setActiveLink] = useState('/');
 
-    function navigation(path) {
+    const navigation = (path) => {
         setActiveLink(path);
         navigate(path);
-    }
+    };
 
     return (
         <Box sx={{ height: '100%', width: '100%', background: '#003366' }} role="presentation">
@@ -20,7 +20,10 @@ const DrawerBox = ({ navigate }) => {
                             <ListItemText
                                 primaryTypographyProps={{
                                     variant: 'h6',
-                                    sx: { fontWeight: 'bold', color: activeLink == route.path ? '#ffc107' : '#fafafa' },
+                                    sx: {
+                                        fontWeight: 'bold',
+                                        color: activeLink === route.path ? '#ffc107' : '#fafafa',
+                                    },
                                 }}
                                 primary={route.name}
                             />
@@ -32,12 +35,12 @@ const DrawerBox = ({ navigate }) => {
     );
 };
 
-const SideNav = ({ open, desktopScreen }) => {
+const SideNav = ({ open, isMediumScreen }) => {
     const navigate = useNavigate();
 
     return (
         <>
-            {desktopScreen ? (
+            {isMediumScreen ? (
                 <Drawer
                     sx={{
                         width: '13%',

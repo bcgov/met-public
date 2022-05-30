@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import { useAppSelector } from '../../../hooks';
@@ -11,7 +11,7 @@ import SideNav from '../SideNav/SideNav';
 const Header = () => {
     //states
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
-    const matches = useMediaQuery((theme) => theme.breakpoints.up('md'));
+    const isMediumScreen = useMediaQuery((theme) => theme.breakpoints.up('md'));
     const [open, setOpen] = useState(false);
 
     return (
@@ -27,7 +27,7 @@ const Header = () => {
                     flexDirection: 'row',
                 }}
             >
-                {matches || !isLoggedIn ? (
+                {isMediumScreen || !isLoggedIn ? (
                     <></>
                 ) : (
                     <IconButton aria-label="delete">
@@ -56,7 +56,7 @@ const Header = () => {
                             <AuthButton variant="contained" onClick={() => UserService.doLogout()}>
                                 Logout
                             </AuthButton>
-                            <SideNav desktopScreen={matches} open={open} />
+                            <SideNav isMediumScreen={isMediumScreen} open={open} />
                         </>
                     ) : (
                         <AuthButton variant="contained" onClick={() => UserService.doLogin()}>
