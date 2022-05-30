@@ -110,7 +110,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        align={headCell.numeric ? 'left' : 'left'}
+                        align={'left'}
                         padding={headCell.disablePadding ? 'none' : 'normal'}
                         style={{ borderBottom: '1.5px solid gray' }}
                         sortDirection={orderBy === headCell.id ? order : false}
@@ -157,7 +157,7 @@ function EnhancedTable() {
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-    const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Engagement) => {
+    const handleRequestSort = (_event: React.MouseEvent<unknown>, property: keyof Engagement) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
@@ -172,7 +172,7 @@ function EnhancedTable() {
         setSelected([]);
     };
 
-    const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+    const handleClick = (_event: React.MouseEvent<unknown>, id: number) => {
         const selectedIndex = selected.indexOf(id);
         let newSelected: readonly number[] = [];
 
@@ -189,17 +189,13 @@ function EnhancedTable() {
         setSelected(newSelected);
     };
 
-    const handleChangePage = (event: unknown, newPage: number) => {
+    const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);
     };
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
-    };
-
-    const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setDense(event.target.checked);
     };
 
     const isSelected = (id: number) => selected.indexOf(id) !== -1;
@@ -211,14 +207,11 @@ function EnhancedTable() {
         <Box>
             <Paper elevation={0} sx={{ width: '100%', mb: 2 }}>
                 <TableContainer>
-                    <Table sx={{ minWidth: '100%' }} aria-labelledby="tableTitle" size={dense ? 'small' : 'small'}>
+                    <Table sx={{ minWidth: '100%' }} aria-labelledby="tableTitle" size={'small'}>
                         <EnhancedTableHead
-                            numSelected={selected.length}
                             order={order}
                             orderBy={orderBy}
-                            onSelectAllClick={handleSelectAllClick}
                             onRequestSort={handleRequestSort}
-                            rowCount={rows.length}
                         />
                         <TableBody>
                             {stableSort(rows, getComparator(order, orderBy))

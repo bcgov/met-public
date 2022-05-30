@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import { useAppSelector } from '../../../hooks';
@@ -11,9 +11,8 @@ import SideNav from '../SideNav/SideNav';
 const Header = () => {
     //states
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
-    const [open, setOpen] = useState(false);
-    const [width, setWidth] = useState(window.innerWidth);
     const matches = useMediaQuery((theme) => theme.breakpoints.up('md'));
+    const [open, setOpen] = useState(false);
 
     return (
         <>

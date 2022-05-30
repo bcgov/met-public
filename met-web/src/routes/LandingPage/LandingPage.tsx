@@ -2,7 +2,7 @@ import React from 'react';
 import EnhancedTable from '../../components/layout/Table/Table';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import { Container} from '@mui/material';
+import { Container } from '@mui/material';
 import { Link } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 
@@ -11,7 +11,7 @@ const LandingPage = () => {
         <Container sx={{ paddingTop: '5em' }}>
             <Grid direction="row" justifyContent="center" alignItems="center" container spacing={2}>
                 <Grid item xs={9}>
-                    <TextField sx={{ width: '30%', fontSize: '40px' }} placeholder={'Search Engagements by name...'} />
+                    <TextField sx={{ fontSize: '40px' }} placeholder={'Search Engagements by name...'} />
                 </Grid>
                 <Grid item xs={3}>
                     <Link to="/engagement/create">
