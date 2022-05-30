@@ -4,6 +4,7 @@ interface EngagementContext {
     saving: boolean;
     savedEngagement: Engagement;
     engagementId: string | undefined;
+    loadingSavedEngagement: boolean;
 }
 
 interface EngagementForm {
