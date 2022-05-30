@@ -6,10 +6,10 @@ Manages the engagement
 from datetime import datetime
 
 from sqlalchemy.sql.schema import ForeignKey
+from sqlalchemy.dialects.postgresql import JSON
 
 from .db import db, ma
 from .default_method_result import DefaultMethodResult
-from sqlalchemy.dialects.postgresql import JSON, UUID
 
 class Engagement(db.Model):
     """Definition of the Engagement entity"""
@@ -60,7 +60,7 @@ class Engagement(db.Model):
         db.session.commit()
 
         return DefaultMethodResult(True, 'Engagement Added', new_engagement.id)
-    
+
     @classmethod
     def update_engagement(cls, engagement) -> DefaultMethodResult:
         """Update engagement."""

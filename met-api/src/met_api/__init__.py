@@ -4,21 +4,16 @@ This module is for the initiation of the flask app.
 """
 
 import os
-
 import secure
-
 from flask import Flask
 from flask_cors import CORS
-from met_api.models import db, migrate, ma
+from met_api.models import db, ma, migrate
 from met_api.config import get_named_config
-import os
 from met_api.auth import jwt
-from flask_cors import CORS
-import secure
 
 # Flask app initialize
 app = Flask(__name__)
-    
+
 # Security Response headers
 csp = (
     secure.ContentSecurityPolicy()
@@ -53,7 +48,7 @@ def set_secure_headers(response):
 def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
 
     """Creating flask app."""
-    
+
     from met_api.resources import API_BLUEPRINT  # pylint: disable=import-outside-toplevel
 
 
@@ -67,7 +62,7 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
     if os.getenv('FLASK_ENV', 'production') != 'testing':
         print("JWTSET DONE!!!!!!!!!!!!!!!!")
         setup_jwt_manager(app, jwt)
-    
+
     CORS(app, supports_credentials=True)
 
     # Database connection initialize

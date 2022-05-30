@@ -201,9 +201,8 @@ class DockerConfig(_Config):  # pylint: disable=too-few-public-methods
 
 
 class ProdConfig(_Config):  # pylint: disable=too-few-public-methods
+    """Production Config."""
 
-    # production config       
-    
     SECRET_KEY = os.getenv('SECRET_KEY', None)
 
     if not SECRET_KEY:
@@ -212,4 +211,3 @@ class ProdConfig(_Config):  # pylint: disable=too-few-public-methods
 
     TESTING = False
     DEBUG = False
-
