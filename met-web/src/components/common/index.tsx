@@ -1,4 +1,5 @@
-import { Button as MuiButton, Paper as MuiPaper } from '@mui/material';
+import React from 'react';
+import { Button as MuiButton, Paper as MuiPaper, Grid, CircularProgress } from '@mui/material';
 import styled from '@emotion/styled';
 
 export const RoundedButton = styled(MuiButton)(() => ({
@@ -23,3 +24,11 @@ export const Column = styled.div`
     justify-content: center;
     align-items: center;
 `;
+
+export const MidScreenLoader = () => (
+    <Grid container direction="row" justifyContent="center" alignItems="center" sx={{ minHeight: '90vh' }}>
+        <Grid item>
+            <CircularProgress />
+        </Grid>
+    </Grid>
+);

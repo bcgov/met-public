@@ -29,7 +29,7 @@ const View = () => {
     }
 
     return (
-        <Container>
+        <Container className="formioStyle">
             <Form form={form} url={url} onSubmit={onSubmit} submission={submission} />
         </Container>
     );

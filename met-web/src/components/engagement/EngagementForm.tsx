@@ -1,20 +1,19 @@
-import React, { useContext, useState, useEffect } from "react";
-import {
-  Typography,
-  Grid,
-  TextField,
-  Button,
-  Container,
-  CircularProgress,
-} from "@mui/material";
-import { MetBox } from "../common";
-import RichTextEditor from "./RichTextEditor";
-import { ActionContext } from "./ActionContext";
+import React, { useContext, useState, useEffect } from 'react';
+import { Typography, Grid, TextField, Button, Container, CircularProgress } from '@mui/material';
+import { MetBox, MidScreenLoader } from '../common';
+import RichTextEditor from './RichTextEditor';
+import { ActionContext } from './ActionContext';
 import { formatDate } from '../common/dateHelper';
 
-const CreateEngagementForm = () => {
-    const { handleCreateEngagementRequest, handleUpdateEngagementRequest, saving, savedEngagement, engagementId } =
-        useContext(ActionContext);
+const EngagementForm = () => {
+    const {
+        handleCreateEngagementRequest,
+        handleUpdateEngagementRequest,
+        saving,
+        savedEngagement,
+        engagementId,
+        loadingSavedEngagement,
+    } = useContext(ActionContext);
 
     const creatingNewEngagement = engagementId === 'create';
 
@@ -104,6 +103,10 @@ const CreateEngagementForm = () => {
             });
         }
     };
+
+    if (loadingSavedEngagement) {
+        return <MidScreenLoader />;
+    }
 
     return (
         <Container sx={{ paddingTop: '5em' }}>
@@ -235,4 +238,4 @@ const CreateEngagementForm = () => {
     );
 };
 
-export default CreateEngagementForm;
+export default EngagementForm;
