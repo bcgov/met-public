@@ -7,12 +7,11 @@ import { BaseTheme, PublicTheme } from '../styles/Theme';
 import UserService from '../services/userService';
 import View from '../components/Form/View';
 import Engagement from '../components/engagement';
+import UserService from '../services/UserServices';
 
 const AuthenticatedRoutes = () => {
+    
     let adminRole = UserService.hasAdminRole();
-
-    //ToDO: remove when roles are defined in keycloak
-    adminRole = true;
 
     return (
         <ThemeProvider theme={adminRole ? BaseTheme : PublicTheme}>

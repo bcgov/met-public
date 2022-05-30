@@ -7,7 +7,9 @@ import UserService from './services/userService';
 import { useAppSelector, useAppDispatch } from './hooks';
 import { MidScreenLoader } from './components/common';
 
+
 const App = () => {
+
     const dispatch = useAppDispatch();
 
     const authenticationLoading = useAppSelector((state) => state.user.authentication.loading);
@@ -22,7 +24,7 @@ const App = () => {
 
     return (
         <Router>
-            <Header />
+            <Header /> 
             <BaseRouting />
         </Router>
     );
