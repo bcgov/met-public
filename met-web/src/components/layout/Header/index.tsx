@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import { useAppSelector } from '../../../hooks';
-import { IconButton, Button } from '@mui/material';
+import { IconButton, Button, useMediaQuery } from '@mui/material';
 import UserService from '../../../services/UserServices';
 import { LogoContainer, LogoutContainer, TitleContainer, AuthButton, HeaderText } from './HeaderElements';
 import sx from 'mui-sx';
@@ -13,14 +13,7 @@ const Header = () => {
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const [open, setOpen] = useState(false);
     const [width, setWidth] = useState(window.innerWidth);
-
-    function handleResize() {
-        setWidth(window.innerWidth);
-    }
-
-    useEffect(() => {
-        window.addEventListener('resize', handleResize);
-    }, []);
+    const matches = useMediaQuery((theme) => theme.breakpoints.up('md'));
 
     return (
         <>
@@ -35,7 +28,7 @@ const Header = () => {
                     flexDirection: 'row',
                 }}
             >
-                {width > 1350 || !isLoggedIn ? (
+                {matches || !isLoggedIn ? (
                     <></>
                 ) : (
                     <IconButton aria-label="delete">
@@ -64,7 +57,7 @@ const Header = () => {
                             <AuthButton variant="contained" onClick={() => UserService.doLogout()}>
                                 Logout
                             </AuthButton>
-                            <SideNav screenWidth={width} open={open} />
+                            <SideNav desktopScreen={matches} open={open} />
                         </>
                     ) : (
                         <AuthButton variant="contained" onClick={() => UserService.doLogin()}>

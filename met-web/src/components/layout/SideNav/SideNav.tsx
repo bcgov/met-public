@@ -32,12 +32,12 @@ const DrawerBox = ({ navigate }) => {
     );
 };
 
-const SideNav = ({ open, screenWidth }) => {
+const SideNav = ({ open, desktopScreen }) => {
     const navigate = useNavigate();
 
     return (
         <>
-            {screenWidth > 1350 ? (
+            {desktopScreen ? (
                 <Drawer
                     sx={{
                         width: '13%',
