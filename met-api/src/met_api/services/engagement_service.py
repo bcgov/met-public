@@ -15,10 +15,11 @@ class EngagementService:
         return extension
 
     def get_all_engagements(self):
-        engagements_requests = Engagement.get_all_engagements()     
+        engagements_requests = Engagement.get_all_engagements()
         return [self.__create_engagement_object(engagement) for engagement in engagements_requests]
 
-    def __create_engagement_object(self, request_engagement):
+    @staticmethod
+    def __create_engagement_object(request_engagement):
         print(request_engagement)
         engagement = {
             "id": request_engagement.get("id", None),
@@ -42,8 +43,8 @@ class EngagementService:
 
         return Engagement.update_engagement(data)
 
-
-    def validated_fields(self, data):
+    @staticmethod
+    def validated_fields(data):
         empty_fields = [not data[field] for field in ['name', 'description', 'rich_description', 'start_date', 'end_date']]
 
         if any(empty_fields):
