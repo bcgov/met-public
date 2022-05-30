@@ -3,15 +3,14 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import { useAppSelector } from '../../../hooks';
 import { IconButton, Button, useMediaQuery } from '@mui/material';
-import UserService from '../../../services/UserServices';
+import UserService from '../../../services/userService';
 import { LogoContainer, LogoutContainer, TitleContainer, AuthButton, HeaderText } from './HeaderElements';
-import sx from 'mui-sx';
 import SideNav from '../SideNav/SideNav';
 
 const Header = () => {
     //states
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
-    const isMediumScreen = useMediaQuery((theme) => theme.breakpoints.up('md'));
+    const isMediumScreen: boolean = useMediaQuery((theme: any) => theme.breakpoints.up('md'));
     const [open, setOpen] = useState(false);
 
     return (
@@ -56,7 +55,6 @@ const Header = () => {
                             <AuthButton variant="contained" onClick={() => UserService.doLogout()}>
                                 Logout
                             </AuthButton>
-                            <SideNav isMediumScreen={isMediumScreen} open={open} />
                         </>
                     ) : (
                         <AuthButton variant="contained" onClick={() => UserService.doLogin()}>
@@ -66,7 +64,7 @@ const Header = () => {
                 </LogoutContainer>
             </AppBar>
 
-            <Toolbar />
+            <SideNav isMediumScreen={isMediumScreen} open={open} />
         </>
     );
 };

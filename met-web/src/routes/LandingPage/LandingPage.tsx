@@ -4,15 +4,12 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import { Container } from '@mui/material';
 import { Link } from 'react-router-dom';
-import TextField from '@mui/material/TextField';
 
 const LandingPage = () => {
     return (
-        <Container sx={{ paddingTop: '5em' }}>
+        <Container>
             <Grid direction="row" justifyContent="center" alignItems="center" container spacing={2}>
-                <Grid item xs={9}>
-                    <TextField placeholder={'Search Engagements by name...'} />
-                </Grid>
+                <Grid item xs={9}></Grid>
                 <Grid item xs={3}>
                     <Link to="/engagement/create">
                         <Button variant="contained" fullWidth>
