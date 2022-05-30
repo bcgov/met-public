@@ -64,6 +64,7 @@ export default function TemporaryDrawer() {
             {(['left'] as const).map((anchor) => (
                 <React.Fragment key={anchor}>
                     <Drawer
+                        color="main"
                         variant={'permanent'}
                         anchor={anchor}
                         elevation={-1}

@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+/* 
+
+Needed for formio, but we need to import these only for formio pages since they interfere with material UI styling
+
 @import url(https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap);
 
 @import url(https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css);
@@ -8,7 +12,9 @@
 
 @import url(https://cdn.jsdelivr.net/npm/formiojs@4.13.1/dist/formio.full.min.css);
 
-@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css);
+@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css); 
+
+*/
 
 .logo {
     height: 1.9em;

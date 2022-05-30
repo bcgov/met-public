@@ -24,14 +24,14 @@ class User(db.Model):
     engagement_id = db.relationship('Engagement', backref='user', cascade="all, delete")
 
     @classmethod
-    def find_by_id(cls, id):
+    def find_by_id(cls, _id):
         """Return the first user with the provided username."""
-        return cls.query.filter_by(id=id).first()
+        return cls.query.filter_by(id=_id).first()
 
 
 class UserSchema(ma.Schema):
     """This class represents the UserSchema table."""
     class Meta:
         """Meta class for UserSchema."""
-        fields = ('id', 'first_name', 'middle_name', 'last_name', 'email_id', 'contact_number', 
+        fields = ('id', 'first_name', 'middle_name', 'last_name', 'email_id', 'contact_number',
             'created_date', 'updated_date')

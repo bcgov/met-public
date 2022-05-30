@@ -14,18 +14,28 @@ export const fetchAll = async (dispatch: Dispatch<any>): Promise<Engagement[]> =
     return responseData.data;
 };
 
-export const getEngagement = async (engagementId: number, successCallback: Function) => {
-    if (!engagementId) {
-        throw new Error('Invalid Engagement Id ' + engagementId);
-    }
+export const getEngagement = async (engagementId: number, successCallback: Function, errorCallback: Function) => {
+    try {
+        if (!engagementId || isNaN(Number(engagementId))) {
+            throw new Error('Invalid Engagement Id ' + engagementId);
+        }
 
-    const responseData = await http.get<Engagement>(`/engagement/${engagementId}`, {
-        headers: {
-            'Content-type': 'application/json',
-            Authorization: `Bearer ${UserService.getToken()}`,
-        },
-    });
-    successCallback(responseData.data);
+        const responseData = await http.get<Engagement>(`/engagement/${engagementId}`, {
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${UserService.getToken()}`,
+            },
+        });
+        successCallback(responseData.data);
+    } catch (e: unknown) {
+        let errorMessage = '';
+        if (typeof e === 'string') {
+            errorMessage = e.toUpperCase();
+        } else if (e instanceof Error) {
+            errorMessage = e.message;
+        }
+        errorCallback(errorMessage);
+    }
 };
 
 export const postEngagement = async (

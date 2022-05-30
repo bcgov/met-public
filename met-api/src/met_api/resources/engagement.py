@@ -75,7 +75,6 @@ class GetEngagements(Resource):
         """Creates a new engagement."""
         try:
             requestjson = request.get_json()
-            print('-------------',requestjson)
             engagment_schema = EngagementSchema().load(requestjson)
             result = EngagementService().create_engagement(engagment_schema)
             return {'status': result.success, 'message': result.message, 'id': result.identifier}, 200
@@ -89,11 +88,11 @@ class GetEngagements(Resource):
     @cross_origin(origins=allowedorigins())
     @auth.require
     def put():
-        """Creates a new engagement."""
+        """Updates saved engagement."""
         try:
             requestjson = request.get_json()
             engagment_schema = EngagementSchema().load(requestjson)
-            result = engagement_service().update_engagement(engagment_schema)
+            result = EngagementService().update_engagement(engagment_schema)
             return {'status': result.success, 'message': result.message, 'id': result.identifier}, 200
         except KeyError as err:
             return {'status': False, 'message': str(err)}, 400

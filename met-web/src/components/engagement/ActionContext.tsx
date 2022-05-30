@@ -24,6 +24,7 @@ export const ActionContext = createContext<EngagementContext>({
         updated_date: '',
     },
     engagementId: 'create',
+    loadingSavedEngagement: true,
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
@@ -31,6 +32,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const navigate = useNavigate();
 
     const [saving, setSaving] = useState(false);
+    const [loadingSavedEngagement, setLoadingSavedEngagement] = useState(true);
+
     const [savedEngagement, setSavedEngagement] = useState<Engagement>({
         id: 0,
         name: '',
@@ -51,9 +54,21 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
 
         if (engagementId !== 'create') {
-            getEngagement(Number(engagementId), (result: Engagement) => {
-                setSavedEngagement({ ...result });
-            });
+            setLoadingSavedEngagement(true);
+            getEngagement(
+                Number(engagementId),
+                (result: Engagement) => {
+                    setSavedEngagement({ ...result });
+                    setLoadingSavedEngagement(false);
+                },
+                (errorMessage: string) => {
+                    //TODO engagement created success message in notification module
+                    console.log(errorMessage);
+                    navigate('/');
+                },
+            );
+        } else {
+            setLoadingSavedEngagement(false);
         }
     }, [engagementId]);
 
@@ -112,6 +127,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 saving,
                 savedEngagement,
                 engagementId,
+                loadingSavedEngagement,
             }}
         >
             {children}
