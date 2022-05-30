@@ -7,11 +7,12 @@ import { BaseTheme, PublicTheme } from '../styles/Theme';
 import UserService from '../services/userService';
 import View from '../components/Form/View';
 import Engagement from '../components/engagement';
-import UserService from '../services/UserServices';
 
 const AuthenticatedRoutes = () => {
-    
     let adminRole = UserService.hasAdminRole();
+
+    //TODO: Remove when we setup roles
+    adminRole = true;
 
     return (
         <ThemeProvider theme={adminRole ? BaseTheme : PublicTheme}>

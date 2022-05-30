@@ -174,6 +174,7 @@ function EnhancedTable() {
                             order={order}
                             orderBy={orderBy}
                             onRequestSort={handleRequestSort}
+                            rowCount={rows.length}
                         />
                         <TableBody>
                             {stableSort(rows, getComparator(order, orderBy))
