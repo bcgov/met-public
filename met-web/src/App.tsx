@@ -27,7 +27,6 @@ const App = () => {
                 <Header />
                 <Box
                     sx={{
-                        width: '100%',
                         paddingTop: '15vh',
                         paddingLeft: '1em',
                     }}
