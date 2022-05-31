@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { ListItemButton, List, ListItem, ListItemText, Box, Drawer } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Routes } from './SideNavElements';
-
-const DrawerBox = ({ navigate }: DrawerBoxProps) => {
+import { Palette } from '../../../styles/Theme';
+const DrawerBox = ({ navigate, isMediumScreen }: DrawerBoxProps) => {
     const [activeLink, setActiveLink] = useState('/');
 
     const navigation = (path: string) => {
@@ -12,8 +12,15 @@ const DrawerBox = ({ navigate }: DrawerBoxProps) => {
     };
 
     return (
-        <Box sx={{ overflow: 'auto', height: '100%', background: '#003366' }} role="presentation">
-            <List>
+        <Box
+            sx={{
+                overflow: 'auto',
+                height: '100%',
+                background: Palette.primary.main,
+            }}
+            role="presentation"
+        >
+            <List sx={isMediumScreen ? { top: '10%', position: 'fixed' } : { top: '10%' }}>
                 {Routes.map((route) => (
                     <ListItem key={route.name}>
                         <ListItemButton onClick={() => navigation(route.path)}>
@@ -41,19 +48,19 @@ const SideNav = ({ open, isMediumScreen }: SideNavProps) => {
         <>
             {isMediumScreen ? (
                 <Box sx={{ paddingTop: '10vh', height: '100vh', width: 240 }}>
-                    <DrawerBox navigate={navigate} />
+                    <DrawerBox isMediumScreen={isMediumScreen} navigate={navigate} />
                 </Box>
             ) : (
                 <Drawer
                     sx={{
                         width: '15%',
-                        background: '#003366',
+                        background: Palette.primary.main,
                     }}
                     anchor={'left'}
                     open={open}
                     hideBackdrop={!open}
                 >
-                    <DrawerBox navigate={navigate} />
+                    <DrawerBox isMediumScreen={isMediumScreen} navigate={navigate} />
                 </Drawer>
             )}
         </>
