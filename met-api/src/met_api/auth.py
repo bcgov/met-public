@@ -17,13 +17,12 @@ from functools import wraps
 from flask import g, request
 from flask_jwt_oidc import JwtManager
 
-
 jwt = (
     JwtManager()
 )  # pylint: disable=invalid-name; lower case name as used by convention in most Flask apps
 
 
-class Auth:
+class Auth:  # pylint: disable=too-few-public-methods
     """Extending JwtManager to include additional functionalities."""
 
     @classmethod
@@ -33,7 +32,7 @@ class Auth:
         @jwt.requires_auth
         @wraps(f)
         def decorated(*args, **kwargs):
-            g.authorization_header = request.headers.get("Authorization", None)
+            g.authorization_header = request.headers.get('Authorization', None)
             g.token_info = g.jwt_oidc_token_info
             return f(*args, **kwargs)
 

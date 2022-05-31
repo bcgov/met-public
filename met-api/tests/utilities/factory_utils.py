@@ -16,10 +16,10 @@
 Test Utility for creating model factory.
 """
 
-
-from tests.utilities.factory_scenarios import (TestEngagemntInfo)
-from met_api.models.engagement import Engagement
 from met_api.config import get_named_config
+from met_api.models.engagement import Engagement
+from tests.utilities.factory_scenarios import TestEngagemntInfo
+
 
 CONFIG = get_named_config('testing')
 
@@ -29,6 +29,7 @@ JWT_HEADER = {
     'kid': CONFIG.JWT_OIDC_TEST_AUDIENCE
 }
 
+
 def factory_engagement_model(eng_info: dict = TestEngagemntInfo.engagement1):
     """Produce a engagement model."""
     engagement_model = Engagement(
@@ -37,6 +38,7 @@ def factory_engagement_model(eng_info: dict = TestEngagemntInfo.engagement1):
 
     engagement_model.save()
     return engagement_model
+
 
 def factory_auth_header(jwt, claims):
     """Produce JWT tokens for use in tests."""

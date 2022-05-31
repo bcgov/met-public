@@ -57,7 +57,7 @@ class _Config():  # pylint: disable=too-few-public-methods
     TESTING = False
     DEBUG = False
 
-     # POSTGRESQL
+    # POSTGRESQL
     DB_USER = os.getenv('DATABASE_USERNAME', '')
     DB_PASSWORD = os.getenv('DATABASE_PASSWORD', '')
     DB_NAME = os.getenv('DATABASE_NAME', '')
@@ -189,6 +189,7 @@ class TestConfig(_Config):  # pylint: disable=too-few-public-methods
 
 class DockerConfig(_Config):  # pylint: disable=too-few-public-methods
     """In support of testing only.used by the py.test suite."""
+
     # POSTGRESQL
     DB_USER = os.getenv('DATABASE_DOCKER_USERNAME')
     DB_PASSWORD = os.getenv('DATABASE_DOCKER_PASSWORD')
