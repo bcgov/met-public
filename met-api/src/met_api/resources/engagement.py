@@ -40,12 +40,12 @@ class GetEngagement(Resource):
     @cross_origin(origins=allowedorigins())
     @auth.require
     def get(engagement_id):
-        """Fetches a single engagement matching the provided id."""
+        """Fetch a single engagement matching the provided id."""
         try:
             engagement_record = EngagementService().get_engagement(engagement_id)
             return engagement_record, 200
         except KeyError:
-            return {'status': False, 'message': "Engagement was not found"}, 400
+            return {'status': False, 'message': 'Engagement was not found'}, 400
         except ValueError as err:
             return {'status': False, 'message': str(err)}, 400
 
@@ -60,7 +60,7 @@ class GetEngagements(Resource):
     @cross_origin(origins=allowedorigins())
     @auth.require
     def get():
-        """Fetches all engagements."""
+        """Fetch all engagements."""
         try:
             engagement_records = EngagementService().get_all_engagements()
             return json.dumps(engagement_records), 200
@@ -72,7 +72,7 @@ class GetEngagements(Resource):
     @cross_origin(origins=allowedorigins())
     @auth.require
     def post():
-        """Creates a new engagement."""
+        """Create a new engagement."""
         try:
             requestjson = request.get_json()
             engagment_schema = EngagementSchema().load(requestjson)
@@ -88,7 +88,7 @@ class GetEngagements(Resource):
     @cross_origin(origins=allowedorigins())
     @auth.require
     def put():
-        """Updates saved engagement."""
+        """Update saved engagement."""
         try:
             requestjson = request.get_json()
             engagment_schema = EngagementSchema().load(requestjson)

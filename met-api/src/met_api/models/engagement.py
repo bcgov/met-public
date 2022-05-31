@@ -1,4 +1,4 @@
-"""Engagement model class
+"""Engagement model class.
 
 Manages the engagement
 """
@@ -13,7 +13,8 @@ from .default_method_result import DefaultMethodResult
 
 
 class Engagement(db.Model):
-    """Definition of the Engagement entity"""
+    """Definition of the Engagement entity."""
+
     __tablename__ = 'engagement'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -79,7 +80,11 @@ class Engagement(db.Model):
 
 
 class EngagementSchema(ma.Schema):
+    """Engagement Schema."""
+
     class Meta:  # pylint: disable=too-few-public-methods
+        """Meta class."""
+
         fields = (
             'id', 'name', 'description', 'rich_description', 'start_date', 'end_date', 'status_id', 'user_id',
             'updated_date',
