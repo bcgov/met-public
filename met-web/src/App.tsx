@@ -22,8 +22,18 @@ const App = () => {
 
     return (
         <Router>
-            <Header />
-            <BaseRouting />
+            <Box sx={{ display: 'flex' }}>
+                <Header />
+                <Box
+                    sx={{
+                        width: '100%',
+                        paddingTop: '15vh',
+                        paddingLeft: '1em',
+                    }}
+                >
+                    <BaseRouting />
+                </Box>
+            </Box>
         </Router>
     );
 };
