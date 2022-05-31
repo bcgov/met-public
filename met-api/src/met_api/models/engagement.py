@@ -11,6 +11,7 @@ from sqlalchemy.dialects.postgresql import JSON
 from .db import db, ma
 from .default_method_result import DefaultMethodResult
 
+
 class Engagement(db.Model):
     """Definition of the Engagement entity"""
     __tablename__ = 'engagement'
@@ -70,7 +71,7 @@ class Engagement(db.Model):
             rich_description=engagement.get('rich_description', None),
             start_date=engagement.get('start_date', None),
             end_date=engagement.get('end_date', None),
-            updated_date= datetime.utcnow()
+            updated_date=datetime.utcnow()
         )
         Engagement.query.filter_by(id=engagement.get('id', None)).update(update_fields)
         db.session.commit()
@@ -78,7 +79,8 @@ class Engagement(db.Model):
 
 
 class EngagementSchema(ma.Schema):
-    class Meta:
+    class Meta:  # pylint: disable=too-few-public-methods
         fields = (
-            'id', 'name', 'description','rich_description', 'start_date', 'end_date', 'status_id', 'user_id', 'updated_date',
+            'id', 'name', 'description', 'rich_description', 'start_date', 'end_date', 'status_id', 'user_id',
+            'updated_date',
             'published_date', 'created_date')

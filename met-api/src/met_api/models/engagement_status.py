@@ -7,7 +7,7 @@ from datetime import datetime
 from .db import db, ma
 
 
-class EngagementStatus(db.Model):
+class EngagementStatus(db.Model):  # pylint: disable=too-few-public-methods
     """Definition of the Engagement Status entity"""
     __tablename__ = 'engagement_status'
 
@@ -20,5 +20,5 @@ class EngagementStatus(db.Model):
 
 
 class EngagementStatusSchema(ma.Schema):
-    class Meta:
+    class Meta:  # pylint: disable=too-few-public-methods
         fields = ('id', 'status_name', 'description', 'created_date', 'updated_date')

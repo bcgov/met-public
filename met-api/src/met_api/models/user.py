@@ -7,7 +7,7 @@ import datetime
 from .db import db, ma
 
 
-class User(db.Model):
+class User(db.Model):  # pylint: disable=too-few-public-methods
 
     """Definition of the User entity"""
 
@@ -31,7 +31,8 @@ class User(db.Model):
 
 class UserSchema(ma.Schema):
     """This class represents the UserSchema table."""
-    class Meta:
+
+    class Meta:  # pylint: disable=too-few-public-methods
         """Meta class for UserSchema."""
         fields = ('id', 'first_name', 'middle_name', 'last_name', 'email_id', 'contact_number',
-            'created_date', 'updated_date')
+                  'created_date', 'updated_date')

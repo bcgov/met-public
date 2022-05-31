@@ -1,9 +1,9 @@
-
 """An object to return db operation result.
 """
 
+
 # models\defaultMethodResult.py
-class DefaultMethodResult():
+class DefaultMethodResult:  # pylint: disable=too-few-public-methods
     success = False
     message = ''
     identifier = ''
