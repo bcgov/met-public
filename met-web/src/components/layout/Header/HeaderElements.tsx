@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { Palette } from '../../../styles/Theme';
 import { Row, Column } from '../../common';
 //styles
 export const sxLight = {
-    color: '#494949',
+    color: Palette.text.primary,
     backgroundColor: '#f2f2f2',
     boxShadow: '0px 5px 9px #29',
 };

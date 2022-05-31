@@ -64,7 +64,13 @@ const Header = () => {
                 </LogoutContainer>
             </AppBar>
 
-            <SideNav isMediumScreen={isMediumScreen} open={open} />
+            {isLoggedIn ? (
+                <>
+                    <SideNav isMediumScreen={isMediumScreen} open={open} />
+                </>
+            ) : (
+                <></>
+            )}
         </>
     );
 };
