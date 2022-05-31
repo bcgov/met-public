@@ -14,7 +14,11 @@ export const fetchAll = async (dispatch: Dispatch<any>): Promise<Engagement[]> =
     return responseData.data;
 };
 
-export const getEngagement = async (engagementId: number, successCallback: Function, errorCallback: Function) => {
+export const getEngagement = async (
+    engagementId: number,
+    successCallback: (data: any) => void,
+    errorCallback: (errorMessage: string) => void,
+) => {
     try {
         if (!engagementId || isNaN(Number(engagementId))) {
             throw new Error('Invalid Engagement Id ' + engagementId);
@@ -40,8 +44,8 @@ export const getEngagement = async (engagementId: number, successCallback: Funct
 
 export const postEngagement = async (
     data: PostEngagementRequest,
-    successCallback: Function,
-    errorCallback: Function,
+    successCallback: () => void,
+    errorCallback: (errorMessage: string) => void,
 ) => {
     try {
         await http.post('/engagement/', data, {
@@ -62,7 +66,11 @@ export const postEngagement = async (
     }
 };
 
-export const putEngagement = async (data: PutEngagementRequest, successCallback: Function, errorCallback: Function) => {
+export const putEngagement = async (
+    data: PutEngagementRequest,
+    successCallback: (data: any) => void,
+    errorCallback: (errorMessage: string) => void,
+) => {
     try {
         const response = await http.put('/engagement/', data, {
             headers: {
