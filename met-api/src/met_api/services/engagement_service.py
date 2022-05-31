@@ -21,7 +21,6 @@ class EngagementService:
 
     @staticmethod
     def __create_engagement_object(request_engagement):
-        print(request_engagement)
         engagement = {
             'id': request_engagement.get('id', None),
             'name': request_engagement.get('name', None),

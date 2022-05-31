@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -15,7 +15,8 @@ import { fetchAll } from '../../../services/engagementService';
 import { Link } from 'react-router-dom';
 import { Link as MuiLink } from '@mui/material';
 import { EngagementTableCell } from './TableElements';
-import { formatDate } from '../../common/dateHelper';
+import { formatDate } from '../../../components/common/dateHelper';
+import { hasKey } from '../../../utils';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
@@ -134,7 +135,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     );
 }
 
-function EnhancedTable() {
+function EnhancedTable({ filter = { key: '', value: '' } }) {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -142,10 +143,28 @@ function EnhancedTable() {
     }, [dispatch]);
 
     const rows = useAppSelector<Engagement[]>((state) => state.engagement.allEngagements);
-    const [order, setOrder] = React.useState<Order>('asc');
-    const [orderBy, setOrderBy] = React.useState<keyof Engagement>('created_date');
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+    const [filteredRows, setFilteredRows] = useState<Engagement[]>(rows);
+    const [order, setOrder] = useState<Order>('asc');
+    const [orderBy, setOrderBy] = useState<keyof Engagement>('created_date');
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+
+    useEffect(() => {
+        if (!filter.key || !filter.value) {
+            setFilteredRows(rows);
+            return;
+        }
+
+        const rowsFilteredResults = rows.filter((row: Engagement) => {
+            if (!hasKey(row, filter.key)) {
+                return false;
+            }
+            // filter by rows who have the specified field in filter.key matching the search filter value
+            return String(row[filter.key]).match(`${filter.value}.*`);
+        });
+        setFilteredRows(rowsFilteredResults);
+    }, [rows, filter]);
 
     const handleRequestSort = (_event: React.MouseEvent<unknown>, property: keyof Engagement) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -162,8 +181,8 @@ function EnhancedTable() {
         setPage(0);
     };
 
-    // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    // Avoid a layout jump when reaching the last page with empty filteredRows.
+    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredRows.length) : 0;
 
     return (
         <Box>
@@ -174,10 +193,10 @@ function EnhancedTable() {
                             order={order}
                             orderBy={orderBy}
                             onRequestSort={handleRequestSort}
-                            rowCount={rows.length}
+                            rowCount={filteredRows.length}
                         />
                         <TableBody>
-                            {stableSort(rows, getComparator(order, orderBy))
+                            {stableSort(filteredRows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => {
                                     return (
@@ -213,7 +232,7 @@ function EnhancedTable() {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={rows.length}
+                    count={filteredRows.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
