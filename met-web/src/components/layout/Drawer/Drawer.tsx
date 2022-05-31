@@ -7,6 +7,7 @@ import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import styled from '@emotion/styled';
+import { Palette } from '../../../styles/Theme';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
@@ -39,7 +40,7 @@ export default function TemporaryDrawer() {
         <Box
             sx={{
                 top: '80%',
-                background: '#003366',
+                background: Palette.primary.main,
                 height: '100%',
                 color: 'white',
                 border: '2px solid red',

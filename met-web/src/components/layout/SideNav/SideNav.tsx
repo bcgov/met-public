@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ListItemButton, List, ListItem, ListItemText, Box, Drawer } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Routes } from './SideNavElements';
-
+import { Palette } from '../../../styles/Theme';
 const DrawerBox = ({ navigate, isMediumScreen }: DrawerBoxProps) => {
     const [activeLink, setActiveLink] = useState('/');
 
@@ -16,7 +16,7 @@ const DrawerBox = ({ navigate, isMediumScreen }: DrawerBoxProps) => {
             sx={{
                 overflow: 'auto',
                 height: '100%',
-                background: '#003366',
+                background: Palette.primary.main,
             }}
             role="presentation"
         >
@@ -54,7 +54,7 @@ const SideNav = ({ open, isMediumScreen }: SideNavProps) => {
                 <Drawer
                     sx={{
                         width: '15%',
-                        background: '#003366',
+                        background: Palette.primary.main,
                     }}
                     anchor={'left'}
                     open={open}
