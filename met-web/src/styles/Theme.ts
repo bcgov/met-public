@@ -1,22 +1,41 @@
 import { createTheme } from '@mui/material';
 
+export const Palette = {
+    primary: {
+        main: '#003366',
+        light: '#385989',
+        dark: '#000C3B',
+    },
+    secondary: {
+        main: '#FFC107',
+        dark: '#FFAB00',
+        light: '#FFE082',
+    },
+    text: {
+        primary: '#494949',
+    },
+    action: {
+        active: '#1A5A96',
+    },
+};
+
 export const BaseTheme = createTheme({
     palette: {
         primary: {
-            main: '#003366',
-            light: '#385989',
-            dark: '#000C3B',
+            main: Palette.primary.main,
+            light: Palette.primary.light,
+            dark: Palette.primary.dark,
         },
         secondary: {
-            main: '#FFC107',
-            dark: '#FFAB00',
-            light: '#FFE082',
+            main: Palette.secondary.main,
+            dark: Palette.secondary.dark,
+            light: Palette.secondary.light,
         },
         text: {
-            primary: '#494949',
+            primary: Palette.text.primary,
         },
         action: {
-            active: '#1A5A96',
+            active: Palette.action.active,
         },
     },
     components: {
@@ -27,7 +46,7 @@ export const BaseTheme = createTheme({
         },
         MuiLink: {
             defaultProps: {
-                color: '#1A5A96',
+                color: Palette.action.active,
             },
         },
     },
