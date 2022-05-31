@@ -17,10 +17,11 @@
 Test-Suite to ensure that the /Engagement endpoint is working as expected.
 """
 import json
+
 import pytest
 
-from tests.utilities.factory_scenarios import (TestJwtClaims,TestEngagemntInfo)
-from tests.utilities.factory_utils import (factory_auth_header)
+from tests.utilities.factory_scenarios import TestEngagemntInfo, TestJwtClaims
+from tests.utilities.factory_utils import factory_auth_header
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagemntInfo.engagement1])

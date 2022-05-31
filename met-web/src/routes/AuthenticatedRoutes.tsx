@@ -11,7 +11,7 @@ import Engagement from '../components/engagement';
 const AuthenticatedRoutes = () => {
     let adminRole = UserService.hasAdminRole();
 
-    //ToDO: remove when roles are defined in keycloak
+    //TODO: Remove when we setup roles
     adminRole = true;
 
     return (

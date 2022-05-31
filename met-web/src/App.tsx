@@ -6,6 +6,7 @@ import BaseRouting from './routes/BaseRouting';
 import UserService from './services/userService';
 import { useAppSelector, useAppDispatch } from './hooks';
 import { MidScreenLoader } from './components/common';
+import { Box } from '@mui/material';
 
 const App = () => {
     const dispatch = useAppDispatch();
