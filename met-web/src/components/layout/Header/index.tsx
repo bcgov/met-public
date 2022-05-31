@@ -51,8 +51,45 @@ const Header = () => {
                         Login
                     </AuthButton>
                 )}
-            </LogoutContainer>
-        </AppBar>
+                <LogoContainer>
+                    <img
+                        src={'https://marketplacebc.ca/wp-content/themes/sbbc-marketplace/images/bc-logo.svg'}
+                        width="100%"
+                        height="100%"
+                        alt="bc_Pgov_logo"
+                    />
+                </LogoContainer>
+
+                <TitleContainer>
+                    <Toolbar disableGutters>
+                        <HeaderText variant="h3" noWrap sx={{ mr: 2 }}>
+                            MET
+                        </HeaderText>
+                    </Toolbar>
+                </TitleContainer>
+                <LogoutContainer>
+                    {isLoggedIn ? (
+                        <>
+                            <AuthButton variant="contained" onClick={() => UserService.doLogout()}>
+                                Logout
+                            </AuthButton>
+                        </>
+                    ) : (
+                        <AuthButton variant="contained" onClick={() => UserService.doLogin()}>
+                            Login
+                        </AuthButton>
+                    )}
+                </LogoutContainer>
+            </AppBar>
+
+            {isLoggedIn ? (
+                <>
+                    <SideNav isMediumScreen={isMediumScreen} open={open} />
+                </>
+            ) : (
+                <></>
+            )}
+        </>
     );
 };
 export default Header;
