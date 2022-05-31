@@ -22,6 +22,7 @@ import datetime
 from faker import Faker
 
 from met_api.config import get_named_config
+
 fake = Faker()
 
 CONFIG = get_named_config('testing')
@@ -31,10 +32,11 @@ class TestEngagemntInfo(dict, Enum):
     """Test scenarios of engagement."""
 
     engagement1 = {
-        'name': 'My Test Engagement', 
-        'description':'My Test Engagement Description' ,
-        'start_date':datetime.datetime.now().strftime('%m/%d/%Y, %H:%M:%S'),
-        'end_date':datetime.datetime.now().strftime('%m/%d/%Y, %H:%M:%S')
+        'name': 'My Test Engagement',
+        'description': 'My Test Engagement Description',
+        'start_date': datetime.datetime.now().strftime('%m/%d/%Y, %H:%M:%S'),
+        'end_date': datetime.datetime.now().strftime('%m/%d/%Y, %H:%M:%S'),
+        'rich_description': 'Rich Description Sample'
     }
 
 

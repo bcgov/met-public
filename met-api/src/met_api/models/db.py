@@ -1,6 +1,5 @@
 
-"""Initilizations for db, migration and marshmallow.
-"""
+"""Initilizations for db, migration and marshmallow."""
 
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate

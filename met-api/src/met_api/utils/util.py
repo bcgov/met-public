@@ -21,27 +21,21 @@ import base64
 import os
 import re
 import urllib
-from functools import wraps
 
-import jwt
-from met_api.auth import jwt as _authjwt
-from flask import g, request
 from humps.main import camelize, decamelize
-from sqlalchemy.sql.expression import false
 
 
 def cors_preflight(methods):
-   #Render an option method on the class.
+    """Render an option method on the class."""
 
     def wrapper(f):
         def options(self, *args, **kwargs):  # pylint: disable=unused-argument
             return {'Allow': 'GET, DELETE, PUT, POST'}, 200, \
                    {
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Methods': methods,
-                    'Access-Control-Allow-Headers': 'Authorization, Content-Type, registries-trace-id, '
-                                                    'invitation_token'}
-                   
+                       'Access-Control-Allow-Origin': '*',
+                       'Access-Control-Allow-Methods': methods,
+                       'Access-Control-Allow-Headers': 'Authorization, Content-Type, registries-trace-id, '
+                                                       'invitation_token'}
 
         setattr(f, 'options', options)
         return f
@@ -58,13 +52,16 @@ def snake2camelback(snake_dict: dict):
     """Convert the passed dictionary's keys from snake_case to camelBack case."""
     return camelize(snake_dict)
 
+
 def allowedorigins():
+    """Return allowed origin."""
     _allowedcors = os.getenv('CORS_ORIGIN')
     allowedcors = []
     if _allowedcors and ',' in _allowedcors:
-        for entry in re.split(",", _allowedcors):
+        for entry in re.split(',', _allowedcors):
             allowedcors.append(entry)
     return allowedcors
+
 
 class Singleton(type):
     """Singleton meta."""
@@ -88,5 +85,3 @@ def escape_wam_friendly_url(param):
     base64_org_name = base64.b64encode(bytes(param, encoding='utf-8')).decode('utf-8')
     encode_org_name = urllib.parse.quote(base64_org_name, safe='')
     return encode_org_name
-
-

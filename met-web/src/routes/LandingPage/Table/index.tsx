@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -12,6 +12,11 @@ import Paper from '@mui/material/Paper';
 import { visuallyHidden } from '@mui/utils';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { fetchAll } from '../../../services/engagementService';
+import { Link } from 'react-router-dom';
+import { Link as MuiLink } from '@mui/material';
+import { EngagementTableCell } from './TableElements';
+import { formatDate } from '../../../components/common/dateHelper';
+import { hasKey } from '../../../utils';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
@@ -89,16 +94,14 @@ const headCells: readonly HeadCell[] = [
 ];
 
 interface EnhancedTableProps {
-    numSelected: number;
     onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Engagement) => void;
-    onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
     order: Order;
     orderBy: string;
     rowCount: number;
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+    const { order, orderBy, onRequestSort } = props;
     const createSortHandler = (property: keyof Engagement) => (event: React.MouseEvent<unknown>) => {
         onRequestSort(event, property);
     };
@@ -109,29 +112,21 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        align={headCell.numeric ? 'left' : 'left'}
-                        padding={headCell.disablePadding ? 'none' : 'normal'}
-                        style={{ borderBottom: '1.5px solid gray' }}
+                        align={'left'}
                         sortDirection={orderBy === headCell.id ? order : false}
+                        sx={{ borderBottom: '1.5px solid gray' }}
                     >
                         <TableSortLabel
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                                fontWeight: 'bold',
-                                fontSize: '16px',
-                                flexWrap: 'nowrap',
-                            }}
                             active={orderBy === headCell.id}
                             direction={orderBy === headCell.id ? order : 'asc'}
                             onClick={createSortHandler(headCell.id)}
                         >
                             {headCell.label}
-                            {orderBy === headCell.id ? (
+                            {orderBy === headCell.id && (
                                 <Box component="span" sx={visuallyHidden}>
                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                                 </Box>
-                            ) : null}
+                            )}
                         </TableSortLabel>
                     </TableCell>
                 ))}
@@ -140,7 +135,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     );
 }
 
-function EnhancedTable() {
+function EnhancedTable({ filter = { key: '', value: '' } }) {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -148,47 +143,36 @@ function EnhancedTable() {
     }, [dispatch]);
 
     const rows = useAppSelector<Engagement[]>((state) => state.engagement.allEngagements);
-    console.log(rows);
-    const [order, setOrder] = React.useState<Order>('asc');
-    const [orderBy, setOrderBy] = React.useState<keyof Engagement>('created_date');
-    const [selected, setSelected] = React.useState<readonly number[]>([]);
-    const [page, setPage] = React.useState(0);
-    const [dense, setDense] = React.useState(false);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-    const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Engagement) => {
+    const [filteredRows, setFilteredRows] = useState<Engagement[]>(rows);
+    const [order, setOrder] = useState<Order>('asc');
+    const [orderBy, setOrderBy] = useState<keyof Engagement>('created_date');
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+
+    useEffect(() => {
+        if (!filter.key || !filter.value) {
+            setFilteredRows(rows);
+            return;
+        }
+
+        const rowsFilteredResults = rows.filter((row: Engagement) => {
+            if (!hasKey(row, filter.key)) {
+                return false;
+            }
+            // filter by rows who have the specified field in filter.key matching the search filter value
+            return String(row[filter.key]).match(`${filter.value}.*`);
+        });
+        setFilteredRows(rowsFilteredResults);
+    }, [rows, filter]);
+
+    const handleRequestSort = (_event: React.MouseEvent<unknown>, property: keyof Engagement) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
     };
 
-    const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.checked) {
-            const newSelecteds = rows.map((n) => n.id);
-            setSelected(newSelecteds);
-            return;
-        }
-        setSelected([]);
-    };
-
-    const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
-        const selectedIndex = selected.indexOf(id);
-        let newSelected: readonly number[] = [];
-
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, id);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-        }
-
-        setSelected(newSelected);
-    };
-
-    const handleChangePage = (event: unknown, newPage: number) => {
+    const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);
     };
 
@@ -197,66 +181,46 @@ function EnhancedTable() {
         setPage(0);
     };
 
-    const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setDense(event.target.checked);
-    };
-
-    const isSelected = (id: number) => selected.indexOf(Number(id)) !== -1;
-
-    // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    // Avoid a layout jump when reaching the last page with empty filteredRows.
+    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredRows.length) : 0;
 
     return (
         <Box>
-            <Paper elevation={0} sx={{ width: '100%', mb: 2 }}>
+            <Paper sx={{ width: '100%', mb: 2 }} elevation={0}>
                 <TableContainer>
-                    <Table sx={{ minWidth: '100%' }} aria-labelledby="tableTitle" size={dense ? 'small' : 'small'}>
+                    <Table aria-labelledby="Engagements">
                         <EnhancedTableHead
-                            numSelected={selected.length}
                             order={order}
                             orderBy={orderBy}
-                            onSelectAllClick={handleSelectAllClick}
                             onRequestSort={handleRequestSort}
-                            rowCount={rows.length}
+                            rowCount={filteredRows.length}
                         />
                         <TableBody>
-                            {stableSort(rows, getComparator(order, orderBy))
+                            {stableSort(filteredRows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((row, index) => {
-                                    const isItemSelected = isSelected(Number(row.id));
-                                    const labelId = `enhanced-table-checkbox-${index}`;
-
+                                .map((row) => {
                                     return (
-                                        <TableRow
-                                            hover
-                                            onClick={(event) => handleClick(event, Number(row.id))}
-                                            aria-checked={isItemSelected}
-                                            tabIndex={-1}
-                                            key={row.id}
-                                            selected={isItemSelected}
-                                        >
-                                            <TableCell
-                                                align={'left'}
-                                                component="th"
-                                                id={labelId}
-                                                scope="row"
-                                                padding="normal"
-                                                size="small"
-                                                style={{ paddingLeft: '10px', marginLeft: '10px' }}
-                                            >
-                                                {row.name}
-                                            </TableCell>
-                                            <TableCell align="left">{row.description}</TableCell>
-                                            <TableCell align="left">{row.created_date}</TableCell>
-                                            <TableCell align="left">{row.status_id}</TableCell>
-                                            <TableCell align="left">{row.published_date}</TableCell>
+                                        <TableRow hover tabIndex={-1} key={row.id}>
+                                            <EngagementTableCell align="left">
+                                                <MuiLink component={Link} to={`/engagement/${Number(row.id)}`}>
+                                                    {row.name}
+                                                </MuiLink>
+                                            </EngagementTableCell>
+                                            <EngagementTableCell align="left">{row.description}</EngagementTableCell>
+                                            <EngagementTableCell align="left">
+                                                {formatDate(row.created_date)}
+                                            </EngagementTableCell>
+                                            <EngagementTableCell align="left">{row.status_id}</EngagementTableCell>
+                                            <EngagementTableCell align="left">
+                                                {formatDate(row.published_date)}
+                                            </EngagementTableCell>
                                         </TableRow>
                                     );
                                 })}
                             {emptyRows > 0 && (
                                 <TableRow
                                     style={{
-                                        height: (dense ? 33 : 53) * emptyRows,
+                                        height: 53 * emptyRows,
                                     }}
                                 >
                                     <TableCell colSpan={6} />
@@ -268,7 +232,7 @@ function EnhancedTable() {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={rows.length}
+                    count={filteredRows.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}

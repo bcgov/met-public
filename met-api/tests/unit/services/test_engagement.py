@@ -17,7 +17,7 @@ Test suite to ensure that the Engagement service routines are working as expecte
 """
 
 from met_api.services.engagement_service import EngagementService
-from tests.utilities.factory_scenarios import (TestEngagemntInfo)
+from tests.utilities.factory_scenarios import TestEngagemntInfo
 
 
 def test_create_engagement(session):  # pylint:disable=unused-argument
@@ -27,7 +27,7 @@ def test_create_engagement(session):  # pylint:disable=unused-argument
     # fetch the engagement with id and assert
     fetched_engagement = EngagementService().get_engagement(saved_engagament.identifier)
     assert fetched_engagement.get('id') == saved_engagament.identifier
-    assert fetched_engagement.get('name') ==engagement_data.get('name')
+    assert fetched_engagement.get('name') == engagement_data.get('name')
     assert fetched_engagement.get('description') == engagement_data.get('description')
-    assert fetched_engagement.get('start_date') # TODO address date format and assert
+    assert fetched_engagement.get('start_date')  # TODO address date format and assert
     assert fetched_engagement.get('end_date')
