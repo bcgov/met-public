@@ -1,6 +1,5 @@
 export interface DrawerBoxProps {
     navigate: (path: string) => void;
-    isMediumScreen: boolean;
 }
 
 export interface SideNavProps {

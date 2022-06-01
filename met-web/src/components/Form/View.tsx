@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useEffect } from 'react';
 import { getForm, selectRoot, Form, saveSubmission, resetSubmissions } from '@formio/react';
-import { CircularProgress, Container } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { FORM_ID } from '../../constants/constants';
 

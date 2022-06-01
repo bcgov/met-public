@@ -5,7 +5,7 @@ import { Routes } from './SideNavElements';
 import { Palette } from '../../../styles/Theme';
 import { DrawerBoxProps, SideNavProps } from './types';
 
-const DrawerBox = ({ navigate, isMediumScreen }: DrawerBoxProps) => {
+const DrawerBox = ({ navigate }: DrawerBoxProps) => {
     const [activeLink, setActiveLink] = useState('/');
 
     const navigation = (path: string) => {
@@ -57,7 +57,7 @@ const SideNav = ({ open, isMediumScreen, drawerWidth = 240 }: SideNavProps) => {
                     }}
                 >
                     <Toolbar />
-                    <DrawerBox isMediumScreen={isMediumScreen} navigate={navigate} />
+                    <DrawerBox navigate={navigate} />
                 </Drawer>
             ) : (
                 <Drawer
@@ -70,7 +70,7 @@ const SideNav = ({ open, isMediumScreen, drawerWidth = 240 }: SideNavProps) => {
                     hideBackdrop={!open}
                 >
                     <Toolbar />
-                    <DrawerBox isMediumScreen={isMediumScreen} navigate={navigate} />
+                    <DrawerBox navigate={navigate} />
                 </Drawer>
             )}
         </>

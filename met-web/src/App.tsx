@@ -2,15 +2,13 @@ import './App.css';
 import React, { useEffect } from 'react';
 import LoggedOutHeader from './components/layout/Header/LoggedOutHeader';
 import { BrowserRouter as Router } from 'react-router-dom';
-import BaseRouting from './routes/BaseRouting';
 import UserService from './services/userService';
 import { useAppSelector, useAppDispatch } from './hooks';
 import { MidScreenLoader } from './components/common';
-import { Box, Container } from '@mui/material';
+import { Box, Container, useMediaQuery, Toolbar } from '@mui/material';
 import LoggedInHeader from './components/layout/Header/LoggedInHeader';
 import UnauthenticatedRoutes from './routes/UnauthenticatedRoutes';
 import AuthenticatedRoutes from './routes/AuthenticatedRoutes';
-import { useMediaQuery, Toolbar, Grid } from '@mui/material';
 
 const App = () => {
     const drawerWidth = 240;
