@@ -15,14 +15,20 @@ class EngagementService:
         return extension
 
     def get_all_engagements(self):
-        """Get all engagements."""
+        """Get all engagements.
+        
+        
+        
+        
+        """
         engagements_requests = Engagement.get_all_engagements()
         return [self.__create_engagement_object(engagement) for engagement in engagements_requests]
 
     @staticmethod
     def __create_engagement_object(request_engagement):
         engagement = {
-            'id': request_engagement.get('id', None),
+            'id': request_engagement.
+            get('id', None),
             'name': request_engagement.get('name', None),
             'description': request_engagement.get('description', None),
             'rich_description': request_engagement.get('rich_description', None),
@@ -39,7 +45,7 @@ class EngagementService:
 
         return Engagement.create_engagement(data)
 
-    def update_engagement(self, data):
+        def update_engagement(self, data):
         """Update all engagement."""
         self.validated_fields(data)
 
@@ -48,8 +54,10 @@ class EngagementService:
     @staticmethod
     def validated_fields(data):
         """Validate all fields."""
-        empty_fields = [not data[field] for field in ['name', 'description', 'rich_description',
-                                                      'start_date', 'end_date']]
+        empty_fields = [not data[field] for field in 
+                        ['name', 'description', 'rich_description',
+                                                      
+                         'start_date', 'end_date']]
 
         if any(empty_fields):
             raise ValueError('Some required fields are empty')
