@@ -1,5 +1,5 @@
 
-"""Service for engagement management."""
+"""Service for new engagement management."""
 from met_api.models.engagement import Engagement
 
 
