@@ -25,7 +25,12 @@ const App = () => {
         <Router>
             <Box sx={{ display: 'flex' }}>
                 <Header />
-                <Box sx={{ paddingTop: '15vh', paddingLeft: '1em' }}>
+                <Box
+                    sx={{
+                        paddingTop: '15vh',
+                        paddingLeft: '1em',
+                    }}
+                >
                     <BaseRouting />
                 </Box>
             </Box>
