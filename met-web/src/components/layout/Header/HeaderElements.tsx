@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Palette } from '../../../styles/Theme';
-import { Row, Column } from '../../common';
+import { Row } from '../../common';
 //styles
 export const sxLight = {
     color: Palette.text.primary,

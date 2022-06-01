@@ -17,6 +17,7 @@ import { Link as MuiLink } from '@mui/material';
 import { EngagementTableCell } from './TableElements';
 import { formatDate } from '../../../components/common/dateHelper';
 import { hasKey } from '../../../utils';
+import { Engagement } from '../../../models/engagement';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
@@ -30,6 +31,7 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 
 type Order = 'asc' | 'desc';
 
+// eslint-disable-next-line
 function getComparator<Key extends keyof any>(
     order: Order,
     orderBy: Key,

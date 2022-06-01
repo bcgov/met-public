@@ -1,8 +1,10 @@
-interface EngagementState {
+import { Engagement } from "../../models/engagement";
+
+export interface EngagementState {
     allEngagements: Engagement[];
 }
 
-interface PostEngagementRequest {
+export interface PostEngagementRequest {
     name: string;
     start_date: string;
     end_date: string;
@@ -10,7 +12,7 @@ interface PostEngagementRequest {
     rich_description: string;
 }
 
-interface PutEngagementRequest {
+export interface PutEngagementRequest {
     id: number;
     name: string;
     start_date: string;

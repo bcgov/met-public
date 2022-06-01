@@ -1,6 +1,8 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { postEngagement, putEngagement, getEngagement } from '../../services/engagementService';
 import { useNavigate, useParams } from 'react-router-dom';
+import { EngagementContext, EngagementForm, EngagementParams } from './types';
+import { Engagement } from '../../models/engagement';
 
 export const ActionContext = createContext<EngagementContext>({
     handleCreateEngagementRequest: (_engagement: EngagementForm) => {

@@ -1,9 +1,9 @@
-interface DrawerBoxProps {
+export interface DrawerBoxProps {
     navigate: (path: string) => void;
     isMediumScreen: boolean;
 }
 
-interface SideNavProps {
+export interface SideNavProps {
     open: boolean;
     isMediumScreen: boolean;
 }
