@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import { useAppSelector } from '../../../hooks';
-import { IconButton, Button, useMediaQuery } from '@mui/material';
+import { IconButton, Button, useMediaQuery, Theme } from '@mui/material';
 import UserService from '../../../services/userService';
 import { LogoContainer, LogoutContainer, TitleContainer, AuthButton, HeaderText } from './HeaderElements';
 import SideNav from '../SideNav/SideNav';
@@ -10,7 +10,7 @@ import SideNav from '../SideNav/SideNav';
 const Header = () => {
     //states
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
-    const isMediumScreen: boolean = useMediaQuery((theme: any) => theme.breakpoints.up('md'));
+    const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const [open, setOpen] = useState(false);
 
     return (

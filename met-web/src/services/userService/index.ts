@@ -7,15 +7,16 @@ import {
     ANONYMOUS_USER,
 } from '../../constants/constants';
 import { userToken, userDetails, userAuthorization, userAuthentication } from './userSlice';
-import { Action, Dispatch } from 'redux';
+import { Action, AnyAction, Dispatch } from 'redux';
 import jwt from 'jsonwebtoken';
+import { UserDetail } from './types';
 
 const KeycloakData = _kc;
 
 /**
  * Initializes Keycloak instance.
  */
-const initKeycloak = (dispatch: Dispatch<any>) => {
+const initKeycloak = (dispatch: Dispatch<AnyAction>) => {
     KeycloakData.init({
         onLoad: 'check-sso',
         silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html',
@@ -65,6 +66,7 @@ const refreshToken = (dispatch: Dispatch<Action>) => {
     }, 60000);
 };
 
+// eslint-disable-next-line
 const authenticateAnonymouslyOnFormio = () => {
     const user = ANONYMOUS_USER;
     const roles = [ANONYMOUS_ID];
