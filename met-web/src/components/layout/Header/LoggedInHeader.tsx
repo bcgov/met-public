@@ -5,12 +5,12 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import UserService from '../../../services/userService';
-import { useMediaQuery } from '@mui/material';
+import { useMediaQuery, Theme } from '@mui/material';
 import SideNav from '../SideNav/SideNav';
 import CssBaseline from '@mui/material/CssBaseline';
 
 const LoggedInHeader = ({ drawerWidth = 240 }) => {
-    const isMediumScreen: boolean = useMediaQuery((theme: any) => theme.breakpoints.up('md'));
+    const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     return (
         <>
             <AppBar

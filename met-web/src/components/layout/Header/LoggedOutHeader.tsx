@@ -5,10 +5,10 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import UserService from '../../../services/userService';
-import { useMediaQuery } from '@mui/material';
+import { useMediaQuery, Theme } from '@mui/material';
 
 const LoggedOutHeader = () => {
-    const isMediumScreen: boolean = useMediaQuery((theme: any) => theme.breakpoints.up('md'));
+    const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">

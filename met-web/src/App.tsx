@@ -5,14 +5,14 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import UserService from './services/userService';
 import { useAppSelector, useAppDispatch } from './hooks';
 import { MidScreenLoader } from './components/common';
-import { Box, Container, useMediaQuery, Toolbar } from '@mui/material';
+import { Box, Container, useMediaQuery, Toolbar, Theme } from '@mui/material';
 import LoggedInHeader from './components/layout/Header/LoggedInHeader';
 import UnauthenticatedRoutes from './routes/UnauthenticatedRoutes';
 import AuthenticatedRoutes from './routes/AuthenticatedRoutes';
 
 const App = () => {
     const drawerWidth = 240;
-    const isMediumScreen: boolean = useMediaQuery((theme: any) => theme.breakpoints.up('md'));
+    const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const dispatch = useAppDispatch();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
 
