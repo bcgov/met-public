@@ -1,6 +1,6 @@
 interface EngagementContext {
-    handleCreateEngagementRequest: Function;
-    handleUpdateEngagementRequest: Function;
+    handleCreateEngagementRequest: (_engagement: EngagementForm) => void;
+    handleUpdateEngagementRequest: (_engagement: EngagementForm) => void;
     saving: boolean;
     savedEngagement: Engagement;
     engagementId: string | undefined;
