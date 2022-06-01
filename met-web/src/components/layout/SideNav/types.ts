@@ -1,5 +1,6 @@
 interface DrawerBoxProps {
     navigate: Function;
+    isMediumScreen: boolean;
 }
 
 interface SideNavProps {
