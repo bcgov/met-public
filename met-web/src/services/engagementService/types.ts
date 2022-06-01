@@ -1,4 +1,4 @@
-import { Engagement } from "../../models/engagement";
+import { Engagement } from '../../models/engagement';
 
 export interface EngagementState {
     allEngagements: Engagement[];
