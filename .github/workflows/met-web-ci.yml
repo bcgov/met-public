@@ -81,10 +81,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: |
-          npm install --production;
-      - name: Install react scripts
-        run: |
-          npm install react-scripts@3.4.1 -g
+          npm install
       - name: build to check strictness
         id: build
         run: |
