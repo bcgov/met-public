@@ -13,6 +13,6 @@ export const formatDate = (d: string, formatString = 'yyyy-MM-dd') => {
     if (d) {
         return formatInTimeZone(d, formatString, 'UTC');
     } else {
-        return '';
+        return ''; // empty date
     }
 };
