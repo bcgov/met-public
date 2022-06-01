@@ -44,30 +44,29 @@ jobs:
         run: |
           npm run lint
 
-  # testing:
-  #   needs: setup-job
-  #   runs-on: ubuntu-20.04
+  testing:
+    needs: setup-job
+    runs-on: ubuntu-20.04
 
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Use Node.js ${{ matrix.node-version }}
-  #       uses: actions/setup-node@v1
-  #       with:
-  #         node-version: ${{ matrix.node-version }}
-  #     - name: Install dependencies
-  #       run: |
-  #         npm install
-  #     - name: Test with jest
-  #       id: test
-  #       run: |
-  #         npm run test
-  #     - name: Upload coverage to Codecov
-  #       uses: codecov/codecov-action@v1
-  #       with:
-  #         file: ./met-web/coverage.xml
-  #         flags: metweb
-  #         name: codecov-met-web
-  #         fail_ci_if_error: true    
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: |
+          npm install
+      - name: Test with jest
+        id: test
+        run: |
+          npm test -- --coverage
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          flags: metweb
+          name: codecov-met-web
+          fail_ci_if_error: true    
 
   build-check:
     needs: setup-job
