@@ -3,6 +3,7 @@ import { ListItemButton, List, ListItem, ListItemText, Box, Drawer, Toolbar } fr
 import { useNavigate } from 'react-router-dom';
 import { Routes } from './SideNavElements';
 import { Palette } from '../../../styles/Theme';
+import { DrawerBoxProps, SideNavProps } from './types';
 
 const DrawerBox = ({ navigate, isMediumScreen }: DrawerBoxProps) => {
     const [activeLink, setActiveLink] = useState('/');

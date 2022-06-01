@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect } from 'react';
 import { getForm, selectRoot, Form, saveSubmission, resetSubmissions } from '@formio/react';
 import { CircularProgress, Container } from '@mui/material';

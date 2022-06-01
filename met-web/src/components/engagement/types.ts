@@ -1,13 +1,15 @@
-interface EngagementContext {
-    handleCreateEngagementRequest: Function;
-    handleUpdateEngagementRequest: Function;
+import { Engagement } from '../../models/engagement';
+
+export interface EngagementContext {
+    handleCreateEngagementRequest: (_engagement: EngagementForm) => void;
+    handleUpdateEngagementRequest: (_engagement: EngagementForm) => void;
     saving: boolean;
     savedEngagement: Engagement;
     engagementId: string | undefined;
     loadingSavedEngagement: boolean;
 }
 
-interface EngagementForm {
+export interface EngagementForm {
     name: string;
     description: string;
     richDescription: string;
@@ -16,6 +18,6 @@ interface EngagementForm {
     toDate: string;
 }
 
-type EngagementParams = {
+export type EngagementParams = {
     engagementId: string;
 };
