@@ -1,0 +1,84 @@
+name: MET WEB CI
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "met-web/**"
+
+defaults:
+  run:
+    shell: bash
+    working-directory: ./met-web
+
+jobs:
+  setup-job:
+    runs-on: ubuntu-20.04
+
+    # if: github.repository == 'bcgov/met-public'
+
+    steps:
+      - uses: actions/checkout@v2
+      - run: "true"
+
+  linting:
+    needs: setup-job
+    runs-on: ubuntu-20.04
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: |
+          npm install
+      - name: Lint
+        id: lint
+        run: |
+          npm run lint
+
+  # testing:
+  #   needs: setup-job
+  #   runs-on: ubuntu-20.04
+
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Use Node.js ${{ matrix.node-version }}
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: ${{ matrix.node-version }}
+  #     - name: Install dependencies
+  #       run: |
+  #         npm install
+  #     - name: Test with jest
+  #       id: test
+  #       run: |
+  #         npm run test
+  #     - name: Upload coverage to Codecov
+  #       uses: codecov/codecov-action@v1
+  #       with:
+  #         file: ./met-web/coverage.xml
+  #         flags: metweb
+  #         name: codecov-met-web
+  #         fail_ci_if_error: true    
+
+  build-check:
+    needs: setup-job
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          npm install --production
+      - name: build to check strictness
+        id: build
+        run: |
+          npm run build
