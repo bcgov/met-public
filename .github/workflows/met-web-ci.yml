@@ -39,6 +39,7 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
+          npm install react-scripts@3.4.1 -g
       - name: Lint
         id: lint
         run: |
@@ -75,9 +76,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: |
           npm install --production
+          npm install react-scripts@3.4.1 -g
       - name: build to check strictness
         id: build
         run: |
