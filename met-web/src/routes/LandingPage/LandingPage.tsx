@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import EnhancedTable from './Table';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import { Container } from '@mui/material';
+import { Container, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { SearchBar } from './SearchBar';
 
@@ -19,24 +19,29 @@ const LandingPage = () => {
         });
     };
     return (
-        <Container>
-            <Grid direction="row" justifyContent="flex-start" alignItems="center" container spacing={2}>
-                <Grid item xs={4}>
-                    <SearchBar onClick={handleSearchBarClick} />
-                </Grid>
-                <Grid item xs={5}></Grid>
-                <Grid item xs={3}>
-                    <Link to="/engagement/create">
-                        <Button variant="contained" fullWidth>
-                            + Create An Engagement
-                        </Button>
-                    </Link>
-                </Grid>
-                <Grid item xs={12}>
-                    <EnhancedTable filter={searchFilter} />
-                </Grid>
+        <Grid
+            direction="row"
+            justifyContent="flex-start"
+            alignItems="flex-start"
+            container
+            columnSpacing={2}
+            rowSpacing={1}
+        >
+            <Grid item xs={12} md={4} lg={3}>
+                <SearchBar onClick={handleSearchBarClick} />
             </Grid>
-        </Container>
+            <Grid item xs={0} md={4} lg={4}></Grid>
+            <Grid item xs={12} md={4} lg={3}>
+                <Link to="/engagement/create">
+                    <Button variant="contained" fullWidth>
+                        + Create An Engagement
+                    </Button>
+                </Link>
+            </Grid>
+            <Grid item xs={12} lg={10}>
+                <EnhancedTable filter={searchFilter} />
+            </Grid>
+        </Grid>
     );
 };
 

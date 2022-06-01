@@ -66,7 +66,7 @@ const Header = () => {
 
             {isLoggedIn ? (
                 <>
-                    <SideNav isMediumScreen={isMediumScreen} open={open} />
+                    <SideNav isMediumScreen={isMediumScreen} open={open} drawerWidth={240} />
                 </>
             ) : (
                 <></>

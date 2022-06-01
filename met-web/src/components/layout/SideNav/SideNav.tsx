@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { ListItemButton, List, ListItem, ListItemText, Box, Drawer } from '@mui/material';
+import { ListItemButton, List, ListItem, ListItemText, Box, Drawer, Toolbar } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Routes } from './SideNavElements';
 import { Palette } from '../../../styles/Theme';
+
 const DrawerBox = ({ navigate, isMediumScreen }: DrawerBoxProps) => {
     const [activeLink, setActiveLink] = useState('/');
 
@@ -18,9 +19,8 @@ const DrawerBox = ({ navigate, isMediumScreen }: DrawerBoxProps) => {
                 height: '100%',
                 background: Palette.primary.main,
             }}
-            role="presentation"
         >
-            <List sx={isMediumScreen ? { top: '10%', position: 'fixed' } : { top: '10%' }}>
+            <List sx={{ paddingTop: '2em' }}>
                 {Routes.map((route) => (
                     <ListItem key={route.name}>
                         <ListItemButton onClick={() => navigation(route.path)}>
@@ -41,15 +41,23 @@ const DrawerBox = ({ navigate, isMediumScreen }: DrawerBoxProps) => {
     );
 };
 
-const SideNav = ({ open, isMediumScreen }: SideNavProps) => {
+const SideNav = ({ open, isMediumScreen, drawerWidth = 240 }: SideNavProps) => {
     const navigate = useNavigate();
 
     return (
         <>
             {isMediumScreen ? (
-                <Box sx={{ paddingTop: '10vh', height: '100vh', width: 240 }}>
+                <Drawer
+                    variant="permanent"
+                    sx={{
+                        width: drawerWidth,
+                        flexShrink: 0,
+                        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+                    }}
+                >
+                    <Toolbar />
                     <DrawerBox isMediumScreen={isMediumScreen} navigate={navigate} />
-                </Box>
+                </Drawer>
             ) : (
                 <Drawer
                     sx={{
@@ -60,6 +68,7 @@ const SideNav = ({ open, isMediumScreen }: SideNavProps) => {
                     open={open}
                     hideBackdrop={!open}
                 >
+                    <Toolbar />
                     <DrawerBox isMediumScreen={isMediumScreen} navigate={navigate} />
                 </Drawer>
             )}

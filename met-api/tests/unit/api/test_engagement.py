@@ -23,7 +23,6 @@ import pytest
 from tests.utilities.factory_scenarios import TestEngagemntInfo, TestJwtClaims
 from tests.utilities.factory_utils import factory_auth_header
 
-
 @pytest.mark.parametrize('engagement_info', [TestEngagemntInfo.engagement1])
 def test_add_engagements(client, jwt, session, engagement_info):  # pylint:disable=unused-argument
     """Assert that an org can be POSTed."""

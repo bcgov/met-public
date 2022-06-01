@@ -28,11 +28,7 @@ const View = () => {
         return <CircularProgress />;
     }
 
-    return (
-        <Container className="formioStyle">
-            <Form form={form} url={url} onSubmit={onSubmit} submission={submission} />
-        </Container>
-    );
+    return <Form form={form} url={url} onSubmit={onSubmit} submission={submission} />;
 };
 
 export default View;
