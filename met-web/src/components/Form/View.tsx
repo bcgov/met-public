@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useEffect } from 'react';
 import { getForm, selectRoot, Form, saveSubmission, resetSubmissions } from '@formio/react';
-import { CircularProgress, Container } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { FORM_ID } from '../../constants/constants';
 
@@ -29,11 +29,7 @@ const View = () => {
         return <CircularProgress />;
     }
 
-    return (
-        <Container className="formioStyle">
-            <Form form={form} url={url} onSubmit={onSubmit} submission={submission} />
-        </Container>
-    );
+    return <Form form={form} url={url} onSubmit={onSubmit} submission={submission} />;
 };
 
 export default View;
