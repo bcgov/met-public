@@ -1,5 +1,5 @@
 interface DrawerBoxProps {
-    navigate: Function;
+    navigate: (path: string) => void;
 }
 
 interface SideNavProps {
