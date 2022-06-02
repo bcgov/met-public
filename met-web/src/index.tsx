@@ -13,6 +13,7 @@ import { AppConfig } from './config';
 Formio.setProjectUrl(AppConfig.projectUrl);
 Formio.setBaseUrl(AppConfig.apiUrl);
 
+// eslint-disable-next-line
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
     // <React.StrictMode>

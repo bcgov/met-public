@@ -1,8 +1,7 @@
 import dayjs from 'dayjs';
 import { format, utcToZonedTime } from 'date-fns-tz';
-
-const utc = require('dayjs/plugin/utc');
-const timezone = require('dayjs/plugin/timezone');
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

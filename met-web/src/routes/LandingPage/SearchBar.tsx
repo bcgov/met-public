@@ -4,7 +4,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
 
 interface SearchBarProps {
-    onClick: Function;
+    onClick: (text: string) => void;
 }
 export const SearchBar = ({ onClick }: SearchBarProps) => {
     const [searchText, setSearchText] = useState('');

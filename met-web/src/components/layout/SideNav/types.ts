@@ -1,8 +1,9 @@
-interface DrawerBoxProps {
-    navigate: Function;
+export interface DrawerBoxProps {
+    navigate: (path: string) => void;
 }
 
-interface SideNavProps {
+export interface SideNavProps {
     open: boolean;
     isMediumScreen: boolean;
+    drawerWidth: number;
 }
