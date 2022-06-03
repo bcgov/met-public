@@ -1,5 +1,9 @@
 import React, { useContext, useState, useEffect } from 'react';
+<<<<<<< Updated upstream
 import { Typography, Grid, TextField, Button, Container, CircularProgress } from '@mui/material';
+=======
+import { Typography, Grid, TextField, Button, CircularProgress, Container } from '@mui/material';
+>>>>>>> Stashed changes
 import { MetBox, MidScreenLoader } from '../common';
 import RichTextEditor from './RichTextEditor';
 import { ActionContext } from './ActionContext';
@@ -109,6 +113,7 @@ const EngagementForm = () => {
     }
 
     return (
+<<<<<<< Updated upstream
         <Container>
             <Typography variant="h4">Engagement Details</Typography>
             <MetBox>
@@ -141,6 +146,15 @@ const EngagementForm = () => {
                     </Grid>
                     <Grid item md={6} xs={0}></Grid>
 
+=======
+        <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2}>
+            <Grid item xs={12}>
+                <Typography variant="h4">Engagement Details</Typography>
+            </Grid>
+
+            <Grid item xs={8}>
+                <MetBox>
+>>>>>>> Stashed changes
                     <Grid
                         item
                         md={6}
@@ -197,6 +211,7 @@ const EngagementForm = () => {
                             />
                         </Grid>
                     </Grid>
+<<<<<<< Updated upstream
                     <Grid item xs={12}>
                         <Typography variant="h6" sx={{ marginBottom: '2px' }}>
                             Engagement Description
@@ -235,6 +250,17 @@ const EngagementForm = () => {
                 </Grid>
             </MetBox>
         </Container>
+=======
+                </MetBox>
+            </Grid>
+            <Grid item xs={4}>
+                <Typography variant="h4">Widgets</Typography>
+                <MetBox sx={{ justifyContent: 'flex-end', padding: '10px', display: 'flex', flexDirection: 'row' }}>
+                    <Button variant="outlined">Add Widget</Button>
+                </MetBox>
+            </Grid>
+        </Grid>
+>>>>>>> Stashed changes
     );
 };
 

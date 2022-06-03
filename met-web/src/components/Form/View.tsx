@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import './Form.scss';
 import { getForm, selectRoot, Form, saveSubmission, resetSubmissions } from '@formio/react';
 import { CircularProgress, Container } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,11 +29,15 @@ const View = () => {
         return <CircularProgress />;
     }
 
+<<<<<<< Updated upstream
     return (
         <Container className="formioStyle">
             <Form form={form} url={url} onSubmit={onSubmit} submission={submission} />
         </Container>
     );
+=======
+    return <Form className="FormIO" form={form} url={url} onSubmit={onSubmit} submission={submission} />;
+>>>>>>> Stashed changes
 };
 
 export default View;
