@@ -1,4 +1,7 @@
-@charset "UTF-8";
+.FormIO{
+    @use "FormStyles.scss";
+}
+
 
 /* 
 
@@ -15,38 +18,3 @@ Needed for formio, but we need to import these only for formio pages since they 
 @import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css); 
 
 */
-
-.logo {
-    height: 1.9em;
-  }
-  
-  .text-blue {
-    color: #127ABF;
-  }
-  
-  .text-green {
-    color: #449414;
-  }
-  
-  .hero-image {
-    display: inline;
-    height: 2em;
-  }
-  
-  #main {
-    margin-top: 10px;
-  }
-
-
-  .font-BCBold {
-    font-family: "BCSans-Bold";
-   }
-
-  .font-BCRegular {
-    font-family: "BCSans-Regular";
-   }
-
-  .font-BCItalic {
-    font-family: "BCSans-Italic";
-   }
-  
