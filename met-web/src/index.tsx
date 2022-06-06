@@ -12,7 +12,19 @@ import { AppConfig } from './config';
 
 Formio.setProjectUrl(AppConfig.projectUrl);
 Formio.setBaseUrl(AppConfig.apiUrl);
-
+/* Uncomment this and the editForm of textfield will be completely overridden with only the components below to show
+Formio.Components.components.textfield.editForm = function () {
+    return {
+        components: [
+            {
+                type: 'textfield',
+                key: 'label',
+                label: 'Label',
+            },
+        ],
+    };
+};
+*/
 // eslint-disable-next-line
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(

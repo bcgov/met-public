@@ -40,7 +40,7 @@ const LoggedInHeader = ({ drawerWidth = 240 }) => {
                     </Button>
                 </Toolbar>
             </AppBar>
-            <SideNav isMediumScreen={isMediumScreen} open={true} drawerWidth={drawerWidth} />
+            <SideNav isMediumScreen={isMediumScreen} open={false} drawerWidth={drawerWidth} />
         </>
     );
 };

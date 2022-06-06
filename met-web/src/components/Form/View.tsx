@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useEffect } from 'react';
 import { getForm, selectRoot, Form, saveSubmission, resetSubmissions } from '@formio/react';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { FORM_ID } from '../../constants/constants';
 
@@ -29,7 +29,13 @@ const View = () => {
         return <CircularProgress />;
     }
 
-    return <Form form={form} url={url} onSubmit={onSubmit} submission={submission} />;
+    return (
+        <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2}>
+            <Grid item xs={4}>
+                <Form form={form} url={url} onSubmit={onSubmit} submission={submission} />
+            </Grid>
+        </Grid>
+    );
 };
 
 export default View;
