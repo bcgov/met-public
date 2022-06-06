@@ -359,18 +359,15 @@ export const formioOptions = {
     },
     editForm: {
         textfield: [
+            //Way 1 to customize display tab
             {
                 key: 'display',
                 components: defaultEditFormComponentsIgnored,
                 //change to false to display
                 ignore: true,
             },
-            {
-                key: 'data',
-                //change to false to display
-                ignore: true,
-            },
             //Adding custom tab in the edit form
+            //Way 2 to customize display tab (create our own)
             {
                 //Tab that has more weight will appear on the right
                 weight: 0,
@@ -393,6 +390,11 @@ export const formioOptions = {
                         },
                     },
                 ],
+            },
+            {
+                key: 'data',
+                //change to false to display
+                ignore: true,
             },
         ],
         //We can do same as above for the textarea component
