@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button as MuiButton, Paper as MuiPaper, Container, Grid, CircularProgress } from '@mui/material';
+import { Button as MuiButton, Container, Grid, CircularProgress } from '@mui/material';
 import styled from '@emotion/styled';
 
 export const RoundedButton = styled(MuiButton)(() => ({
