@@ -1,15 +1,10 @@
 import React, { useEffect } from 'react';
 import { EditorState, convertFromRaw, convertToRaw } from 'draft-js';
-import createToolbarPlugin from '@draft-js-plugins/static-toolbar';
-import 'draft-js/dist/Draft.css';
-import '@draft-js-plugins/static-toolbar/lib/plugin.css';
-import './RichTextEditor.css';
-import Editor from '@draft-js-plugins/editor';
+import { Editor } from 'react-draft-wysiwyg';
 import { FormControl, FormHelperText } from '@mui/material';
 import { MetBox } from '../common';
-
-const toolbarPlugin = createToolbarPlugin();
-const { Toolbar } = toolbarPlugin;
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import './RichEditorStyles.css';
 
 const RichTextEditor = ({
     setRawText = (_rawText: string) => {
@@ -49,8 +44,14 @@ const RichTextEditor = ({
         <FormControl fullWidth>
             <MetBox style={{ borderColor: `${error ? '#d32f2f' : '#606060'}` }}>
                 <form>
-                    <Toolbar />
-                    <Editor editorState={editorState} onChange={handleChange} plugins={[toolbarPlugin]} />
+                    <Editor
+                        editorState={editorState}
+                        onEditorStateChange={handleChange}
+                        editorStyle={{
+                            height: '10em',
+                            margin: '1em',
+                        }}
+                    />
                 </form>
             </MetBox>
             <FormHelperText error={error}>{error ? helperText : ' '}</FormHelperText>
