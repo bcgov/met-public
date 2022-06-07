@@ -95,7 +95,7 @@ objects:
         - ${APP}
         from:
           kind: ImageStreamTag
-          name: ${APP}:latest
+          name: ${APP}:${IMAGE_TAG}
           namespace: ${IMAGE_NAMESPACE}
       type: ImageChange
 - apiVersion: v1
@@ -162,5 +162,7 @@ parameters:
   - name: DB_APP_NAME
     description: "The postgresql application name"
     value: postgresql-met
-
+  - name: IMAGE_TAG
+    description: "The image tag to deploy"
+    value: latest
     

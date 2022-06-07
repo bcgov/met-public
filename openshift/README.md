@@ -95,6 +95,10 @@ oc process -f ./api.dc.yml -p ENV=test -p KC_DOMAIN=met-oidc-test.apps.gold.devo
 
 ```
 
+```
+... -p IMAGE_TAG=test ...
+```
+
 ### Additional NetworkPolicies
 
 Allows the connections between pods whithin the realm (API pods can connect to the database pods):
