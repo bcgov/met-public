@@ -4,11 +4,16 @@ Commands and notes to deploy MET to a Openshift environment.
 
 ## Build Configuration
 
-In the tools namespace use the following:
+In the tools namespace use the following to create the build configurations:
 
 ```
     oc process -f ./web.bc.yml | oc create -f -
 ```
+
+```
+    oc process -f ./api.bc.yml | oc create -f -
+```
+
 
 Allow image pullers from the other namespaces to pull images from tools namespace:
 
