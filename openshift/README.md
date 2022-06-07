@@ -41,7 +41,28 @@ roleRef:
 
 ## Keycloak Configuration
 
-TODO
+Create an instance of a postgresql database:
+
+```
+oc new-app --template=postgresql-persistent -p POSTGRESQL_DATABASE=keycloak -p DATABASE_SERVICE_NAME=postgresql-keycloak
+```
+
+In each environment namespace (dev, test, prod) use the following:
+
+Deploy the web application:
+```
+oc process -f ./keycloak.dc.yml -p ENV=test | oc create -f -
+```
+
+The create the initial credentials use port forwarding to access the url as localhost:8080
+```
+oc port-forward keycloak-<PODNAME> 8080:8080
+```
+
+In the keycloak app:
+1. create a new realm and click import json, select the file "keycloak-realm-export.json"
+1. Request a new client configuration in sso-requests (https://bcgov.github.io/sso-requests/)
+1. Update the identity provider client secret and url domains.
 
 ## Formio Configuration
 
@@ -70,7 +91,8 @@ oc process -f ./web.dc.yml -p ENV=test | oc create -f -
 
 Deploy the api application:
 ```
-oc process -f ./api.dc.yml -p ENV=test | oc create -f -
+oc process -f ./api.dc.yml -p ENV=test -p KC_DOMAIN=met-oidc-test.apps.gold.devops.gov.bc.ca | oc create -f -
+
 ```
 
 ### Additional NetworkPolicies
