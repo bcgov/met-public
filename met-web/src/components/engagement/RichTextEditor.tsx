@@ -45,6 +45,7 @@ const RichTextEditor = ({
             <MetBox style={{ borderColor: `${error ? '#d32f2f' : '#606060'}` }}>
                 <form>
                     <Editor
+                        spellCheck
                         editorState={editorState}
                         onEditorStateChange={handleChange}
                         editorStyle={{
