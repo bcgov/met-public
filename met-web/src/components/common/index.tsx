@@ -7,7 +7,7 @@ export const RoundedButton = styled(MuiButton)(() => ({
 }));
 
 export const MetBox = styled(MuiPaper)(() => ({
-    border: `1.5px solid #606060`,
+    border: `1px solid #606060`,
     borderRadius: '4px',
 }));
 

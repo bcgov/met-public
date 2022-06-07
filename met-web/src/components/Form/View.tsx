@@ -1,6 +1,5 @@
 /* eslint-disable */
 import React, { useEffect } from 'react';
-import './Form.scss';
 import { getForm, selectRoot, Form, saveSubmission, resetSubmissions } from '@formio/react';
 import { CircularProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,7 +30,7 @@ const View = () => {
     }
 
 
-    return <Form className="FormIO" form={form} url={url} onSubmit={onSubmit} submission={submission} />;
+    return <Form form={form} url={url} onSubmit={onSubmit} submission={submission} />;
 
 };
 
