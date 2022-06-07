@@ -49,18 +49,16 @@ const App = () => {
 
     return (
         <Router>
-            <StyledEngineProvider injectFirst>
-                <Box sx={{ display: 'flex' }}>
-                    <LoggedInHeader drawerWidth={drawerWidth} />
-                    <Box
-                        component="main"
-                        sx={{ flexGrow: 1, p: 3, width: `calc(100% - ${drawerWidth}px)`, marginTop: '2em' }}
-                    >
-                        <Toolbar />
-                        <AuthenticatedRoutes />
-                    </Box>
+            <Box sx={{ display: 'flex' }}>
+                <LoggedInHeader drawerWidth={drawerWidth} />
+                <Box
+                    component="main"
+                    sx={{ flexGrow: 1, p: 3, width: `calc(100% - ${drawerWidth}px)`, marginTop: '2em' }}
+                >
+                    <Toolbar />
+                    <AuthenticatedRoutes />
                 </Box>
-            </StyledEngineProvider>
+            </Box>
         </Router>
     );
 };

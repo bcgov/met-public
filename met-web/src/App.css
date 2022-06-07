@@ -36,7 +36,3 @@ Needed for formio, but we need to import these only for formio pages since they 
 #main {
     margin-top: 10px;
 }
-
-.MuiButton-root {
-    text-transform: none;
-}

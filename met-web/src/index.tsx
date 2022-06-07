@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import './index.css';
+import './index.scss';
 import { store } from './store';
 import { Provider } from 'react-redux';
-import { ThemeProvider } from '@mui/material/styles';
+import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { BaseTheme } from './styles/Theme';
 import { Formio } from '@formio/react';
 import { AppConfig } from './config';
@@ -19,7 +19,9 @@ root.render(
     // <React.StrictMode>
     <Provider store={store}>
         <ThemeProvider theme={BaseTheme}>
-            <App />
+            <StyledEngineProvider injectFirst>
+                <App />
+            </StyledEngineProvider>
         </ThemeProvider>
     </Provider>,
     // </React.StrictMode>
