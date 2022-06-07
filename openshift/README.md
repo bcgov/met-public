@@ -95,6 +95,12 @@ oc process -f ./api.dc.yml -p ENV=test -p KC_DOMAIN=met-oidc-test.apps.gold.devo
 
 ```
 
+Deployment configurations are currently using the image tag "latest", update the used tag as needed by setting the parameters:
+
+```
+... -p IMAGE_TAG=test ...
+```
+
 ### Additional NetworkPolicies
 
 Allows the connections between pods whithin the realm (API pods can connect to the database pods):
