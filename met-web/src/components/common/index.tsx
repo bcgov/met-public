@@ -1,12 +1,12 @@
 import React from 'react';
-import { Button as MuiButton, Container, Grid, CircularProgress } from '@mui/material';
+import { Button as MuiButton, Paper as MuiPaper, CircularProgress } from '@mui/material';
 import styled from '@emotion/styled';
 
 export const RoundedButton = styled(MuiButton)(() => ({
     borderRadius: '23px',
 }));
 
-export const MetBox = styled(Container)(() => ({
+export const MetBox = styled(MuiPaper)(() => ({
     border: `1.5px solid #606060`,
     borderRadius: '4px',
 }));
