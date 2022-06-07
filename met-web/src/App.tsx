@@ -5,7 +5,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import UserService from './services/userService';
 import { useAppSelector, useAppDispatch } from './hooks';
 import { MidScreenLoader } from './components/common';
-import { Box, Container, useMediaQuery, Toolbar, Theme } from '@mui/material';
+import { Box, Container, useMediaQuery, Toolbar, Theme, StyledEngineProvider } from '@mui/material';
 import LoggedInHeader from './components/layout/Header/LoggedInHeader';
 import UnauthenticatedRoutes from './routes/UnauthenticatedRoutes';
 import AuthenticatedRoutes from './routes/AuthenticatedRoutes';
@@ -49,17 +49,18 @@ const App = () => {
 
     return (
         <Router>
-            <Box sx={{ display: 'flex' }}>
-                <LoggedInHeader drawerWidth={drawerWidth} />
-
-                <Box
-                    component="main"
-                    sx={{ flexGrow: 1, p: 3, width: `calc(100% - ${drawerWidth}px)`, marginTop: '2em' }}
-                >
-                    <Toolbar />
-                    <AuthenticatedRoutes />
+            <StyledEngineProvider injectFirst>
+                <Box sx={{ display: 'flex' }}>
+                    <LoggedInHeader drawerWidth={drawerWidth} />
+                    <Box
+                        component="main"
+                        sx={{ flexGrow: 1, p: 3, width: `calc(100% - ${drawerWidth}px)`, marginTop: '2em' }}
+                    >
+                        <Toolbar />
+                        <AuthenticatedRoutes />
+                    </Box>
                 </Box>
-            </Box>
+            </StyledEngineProvider>
         </Router>
     );
 };

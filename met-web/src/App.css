@@ -18,35 +18,25 @@ Needed for formio, but we need to import these only for formio pages since they 
 
 .logo {
     height: 1.9em;
-  }
-  
-  .text-blue {
-    color: #127ABF;
-  }
-  
-  .text-green {
+}
+
+.text-blue {
+    color: #127abf;
+}
+
+.text-green {
     color: #449414;
-  }
-  
-  .hero-image {
+}
+
+.hero-image {
     display: inline;
     height: 2em;
-  }
-  
-  #main {
+}
+
+#main {
     margin-top: 10px;
-  }
+}
 
-
-  .font-BCBold {
-    font-family: "BCSans-Bold";
-   }
-
-  .font-BCRegular {
-    font-family: "BCSans-Regular";
-   }
-
-  .font-BCItalic {
-    font-family: "BCSans-Italic";
-   }
-  
+.MuiButton-root {
+    text-transform: none;
+}
