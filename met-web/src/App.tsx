@@ -5,7 +5,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import UserService from './services/userService';
 import { useAppSelector, useAppDispatch } from './hooks';
 import { MidScreenLoader } from './components/common';
-import { Box, Container, useMediaQuery, Toolbar, Theme, StyledEngineProvider } from '@mui/material';
+import { Box, Container, useMediaQuery, Toolbar, Theme } from '@mui/material';
 import LoggedInHeader from './components/layout/Header/LoggedInHeader';
 import UnauthenticatedRoutes from './routes/UnauthenticatedRoutes';
 import AuthenticatedRoutes from './routes/AuthenticatedRoutes';
