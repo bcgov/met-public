@@ -165,5 +165,4 @@ parameters:
   - name: IMAGE_TAG
     description: "The image tag to deploy"
     value: latest
-
     
