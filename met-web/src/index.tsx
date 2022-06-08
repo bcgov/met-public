@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import './index.css';
+import './index.scss';
 import { store } from './store';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from '@mui/material/styles';
@@ -10,7 +10,7 @@ import { Formio } from '@formio/react';
 import { AppConfig } from './config';
 // import reportWebVitals from './reportWebVitals';
 
-Formio.setProjectUrl(AppConfig.projectUrl);
+Formio.setProjectUrl(AppConfig.formio.projectUrl);
 Formio.setBaseUrl(AppConfig.apiUrl);
 
 // eslint-disable-next-line
