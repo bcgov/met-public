@@ -10,7 +10,7 @@ import { Formio } from '@formio/react';
 import { AppConfig } from './config';
 // import reportWebVitals from './reportWebVitals';
 
-Formio.setProjectUrl(AppConfig.projectUrl);
+Formio.setProjectUrl(AppConfig.formio.projectUrl);
 Formio.setBaseUrl(AppConfig.apiUrl);
 
 // eslint-disable-next-line
