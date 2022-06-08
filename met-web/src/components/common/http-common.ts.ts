@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { API_URL } from '../../constants/constants';
+import { AppConfig } from '../../config';
 import UserService from '../../services/userService';
 
 export default axios.create({
-    baseURL: API_URL,
+    baseURL: AppConfig.apiUrl,
     headers: {
         'Content-type': 'application/json',
         Authorization: `Bearer ${UserService.getToken()}`,
