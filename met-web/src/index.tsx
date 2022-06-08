@@ -11,7 +11,7 @@ import { AppConfig } from './config';
 // import reportWebVitals from './reportWebVitals';
 
 Formio.setProjectUrl(AppConfig.formio.projectUrl);
-Formio.setBaseUrl(AppConfig.formio.apiUrl);
+Formio.setBaseUrl(AppConfig.apiUrl);
 
 // eslint-disable-next-line
 const root = ReactDOM.createRoot(document.getElementById('root')!);
