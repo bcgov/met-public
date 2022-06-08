@@ -1,10 +1,24 @@
-# syntax=docker/dockerfile:1
-FROM python:3.8.2
-ENV PYTHONUNBUFFERED=1
-WORKDIR /app
-COPY requirements.txt /app/
-RUN pip install -r requirements.txt
-COPY . /app/
+FROM python:3.8.5-buster
 
-RUN chmod u+x /app/entrypoint.sh
-ENTRYPOINT ["/bin/sh", "/app/entrypoint.sh"]
+USER root
+
+# Create working directory
+RUN mkdir /opt/app-root && chmod 755 /opt/app-root
+WORKDIR /opt/app-root
+
+# Install the requirements
+COPY ./requirements.txt .
+
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+RUN pip install .
+
+USER 1001
+
+# Set Python path
+ENV PYTHONPATH=/opt/app-root/src
+
+ENTRYPOINT ["bash", "docker-entrypoint.sh"]

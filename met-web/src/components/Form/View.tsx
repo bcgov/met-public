@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { getForm, selectRoot, Form, saveSubmission, resetSubmissions } from '@formio/react';
 import { CircularProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { FORM_ID } from '../../constants/constants';
+import { AppConfig } from '../../config';
 
 const View = () => {
     const dispatch = useDispatch();
@@ -12,12 +12,12 @@ const View = () => {
     const { submission, url } = useSelector((state) => selectRoot('submission', state));
 
     useEffect(() => {
-        dispatch(getForm('form', FORM_ID));
+        dispatch(getForm('form', AppConfig.formio.formId));
     }, [dispatch]);
 
     const onSubmit = (submissionToSave: any) => {
         dispatch(
-            saveSubmission('submission', submissionToSave, FORM_ID, (err: any, sentSubmission: any) => {
+            saveSubmission('submission', submissionToSave, AppConfig.formio.formId, (err: any, sentSubmission: any) => {
                 if (!err) {
                     dispatch(resetSubmissions('submission'));
                 }

@@ -11,9 +11,6 @@ from met_api.models import db, ma, migrate
 from met_api.config import get_named_config
 from met_api.auth import jwt
 
-# Flask app initialize
-app = Flask(__name__)
-
 # Security Response headers
 csp = (
     secure.ContentSecurityPolicy()
@@ -50,6 +47,9 @@ def set_secure_headers(response):
 def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
     """Create flask app."""
     from met_api.resources import API_BLUEPRINT  # pylint: disable=import-outside-toplevel
+
+    # Flask app initialize
+    app = Flask(__name__)
 
     # All configuration are in config file
     app.config.from_object(get_named_config(run_mode))
