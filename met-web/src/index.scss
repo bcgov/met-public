@@ -1,4 +1,5 @@
 body {
+<<<<<<< HEAD
     margin: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -10,4 +11,14 @@ code {
 
 .MuiButton-root {
     text-transform: none;
+=======
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+>>>>>>> main
 }
