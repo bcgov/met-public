@@ -15,17 +15,13 @@ const App = () => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const dispatch = useAppDispatch();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
-
     const authenticationLoading = useAppSelector((state) => state.user.authentication.loading);
-
     useEffect(() => {
         UserService.initKeycloak(dispatch);
     }, [dispatch]);
-
     if (authenticationLoading) {
         return <MidScreenLoader />;
     }
-
     if (!isLoggedIn) {
         return (
             <Router>
@@ -34,7 +30,6 @@ const App = () => {
             </Router>
         );
     }
-
     if (!isMediumScreen) {
         return (
             <Router>
@@ -49,17 +44,16 @@ const App = () => {
 
     return (
         <Router>
-                <Box sx={{ display: 'flex' }}>
-                    <LoggedInHeader drawerWidth={drawerWidth} />
-
-                    <Box
-                        component="main"
-                        sx={{ flexGrow: 1, p: 3, width: `calc(100% - ${drawerWidth}px)`, marginTop: '2em' }}
-                    >
-                        <Toolbar />
-                        <AuthenticatedRoutes />
-                    </Box>
+            <Box sx={{ display: 'flex' }}>
+                <LoggedInHeader drawerWidth={drawerWidth} />
+                <Box
+                    component="main"
+                    sx={{ flexGrow: 1, p: 3, width: `calc(100% - ${drawerWidth}px)`, marginTop: '2em' }}
+                >
+                    <Toolbar />
+                    <AuthenticatedRoutes />
                 </Box>
+            </Box>
         </Router>
     );
 };
