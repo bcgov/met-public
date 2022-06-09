@@ -6,10 +6,18 @@ export const RoundedButton = styled(MuiButton)(() => ({
     borderRadius: '23px',
 }));
 
-export const MetBox = styled(MuiPaper)(() => ({
+export const StyledPaper = styled(MuiPaper)(() => ({
     border: `1px solid #606060`,
     borderRadius: '4px',
 }));
+
+export const MetPaper = ({ children, ...rest }: { children: JSX.Element[] | JSX.Element; [prop: string]: unknown }) => {
+    return (
+        <StyledPaper elevation={0} {...rest}>
+            {children}
+        </StyledPaper>
+    );
+};
 
 export const Row = styled.div`
     display: flex;
