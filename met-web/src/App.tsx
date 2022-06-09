@@ -1,4 +1,4 @@
-import './App.css';
+import './App.scss';
 import React, { useEffect } from 'react';
 import LoggedOutHeader from './components/layout/Header/LoggedOutHeader';
 import { BrowserRouter as Router } from 'react-router-dom';
