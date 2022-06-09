@@ -41,7 +41,6 @@ const App = () => {
             </Router>
         );
     }
-
     return (
         <Router>
             <Box sx={{ display: 'flex' }}>
@@ -57,5 +56,4 @@ const App = () => {
         </Router>
     );
 };
-
 export default App;
