@@ -17,6 +17,7 @@ const LandingPage = () => {
             value: engagementNameFilter,
         });
     };
+
     return (
         <Grid
             direction="row"

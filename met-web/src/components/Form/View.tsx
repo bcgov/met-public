@@ -29,7 +29,9 @@ const View = () => {
         return <CircularProgress />;
     }
 
+
     return <Form form={form} url={url} onSubmit={onSubmit} submission={submission} />;
+
 };
 
 export default View;
