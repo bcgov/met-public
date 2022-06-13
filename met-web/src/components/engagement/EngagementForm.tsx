@@ -22,7 +22,7 @@ const EngagementForm = () => {
         fromDate: '',
         toDate: '',
         description: '',
-        status_id: '',
+        status_id: 'Draft',
     });
     const [richDescription, setRawEditorState] = useState('');
 
@@ -32,7 +32,7 @@ const EngagementForm = () => {
             fromDate: formatDate(savedEngagement.start_date),
             toDate: formatDate(savedEngagement.end_date),
             description: savedEngagement?.description || '',
-            status_id: savedEngagement?.status_id || '',
+            status_id: savedEngagement?.status_id || 'Draft',
         });
         setRawEditorState(savedEngagement?.rich_description || '');
     }, [savedEngagement]);
@@ -70,7 +70,7 @@ const EngagementForm = () => {
         setRawEditorState(newState);
     };
 
-    const { name, fromDate, toDate, description } = engagementFormData;
+    const { name, fromDate, toDate, description, status_id } = engagementFormData;
 
     const validateForm = () => {
         const errors = {

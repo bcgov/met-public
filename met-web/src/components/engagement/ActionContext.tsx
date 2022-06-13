@@ -80,6 +80,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             {
                 name: engagement.name,
                 start_date: engagement.fromDate,
+                status_id: engagement.status_id,
                 end_date: engagement.toDate,
                 description: engagement.description,
                 rich_description: engagement.richDescription,
@@ -104,6 +105,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 id: Number(engagementId),
                 name: engagement.name,
                 start_date: engagement.fromDate,
+                status_id: engagement.status_id,
                 end_date: engagement.toDate,
                 description: engagement.description,
                 rich_description: engagement.richDescription,
