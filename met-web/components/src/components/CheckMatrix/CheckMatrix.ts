@@ -25,15 +25,15 @@ export default class CheckMatrix extends (FieldComponent as any) {
   static schema() {
     return FieldComponent.schema({
       type: 'checkmatrix',
-      numRows: 3,
-      numCols: 3
+      numRows: 10,
+      numCols: 10
     });
   }
 
   public static editForm = editForm;
 
   static builderInfo = {
-    title: 'Check Matrix',
+    title: 'Check Matrix MET',
     group: 'basic',
     icon: 'fa fa-table',
     weight: 70,

@@ -1,0 +1,36 @@
+/* tslint:disable */
+import { Components } from 'formiojs';
+const ParentComponent = (Components as any).components.time;
+import editForm from './Component.form';
+
+
+const ID = 'simpletime';
+const DISPLAY = 'TimeNEW';
+
+const defaultDataFormat = 'HH:mm:ss';
+
+export default class Component extends (ParentComponent as any) {
+    static schema(...extend) {
+        return ParentComponent.schema({
+            type: ID,
+            label: DISPLAY,
+            key: ID,
+            inputType: 'time',
+            format: 'HH:mm',
+            dataFormat: defaultDataFormat,
+        }, ...extend);
+    }
+
+    public static editForm = editForm;
+
+    static get builderInfo() {
+        return {
+            title: DISPLAY,
+            group: 'simple',
+            icon: 'clock-o',
+            weight: 22,
+            documentation: '',
+            schema: Component.schema()
+        };
+    }
+}

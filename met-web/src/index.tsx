@@ -8,13 +8,12 @@ import { ThemeProvider } from '@mui/material/styles';
 import { BaseTheme } from './styles/Theme';
 import { Formio } from '@formio/react';
 import { AppConfig } from './config';
-import BcGovFormioComponents from '@/formio/lib';
-
+import FormioContrib from '@bcgov/formio';
 // import reportWebVitals from './reportWebVitals';
 
 Formio.setProjectUrl(AppConfig.projectUrl);
 Formio.setBaseUrl(AppConfig.apiUrl);
-Formio.use(BcGovFormioComponents);
+Formio.use(FormioContrib);
 /* Uncomment this and the editForm of textfield will be completely overridden with only the components below to show
 Formio.Components.components.textfield.editForm = function () {
     return {
