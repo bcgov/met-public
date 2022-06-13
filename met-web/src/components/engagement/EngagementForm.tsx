@@ -70,7 +70,7 @@ const EngagementForm = () => {
         setRawEditorState(newState);
     };
 
-    const { name, fromDate, toDate, description, status_id } = engagementFormData;
+    const { name, fromDate, toDate, description } = engagementFormData;
 
     const validateForm = () => {
         const errors = {

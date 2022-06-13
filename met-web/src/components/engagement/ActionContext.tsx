@@ -41,7 +41,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         name: '',
         description: '',
         rich_description: '',
-        status_id: '',
+        status_id: 'Draft',
         start_date: '',
         end_date: '',
         published_date: '',
