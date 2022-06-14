@@ -50,7 +50,6 @@
     "eject": "react-scripts eject",
     "lint": "eslint '*/**/*.{ts,tsx}'",
     "lint:fix": "eslint '*/**/*.{ts,tsx}' --fix",
-    "prebuild": "node ./component-update.js",
     "build:formio": "node ./component-update.js build"
   },
   "eslintConfig": {
