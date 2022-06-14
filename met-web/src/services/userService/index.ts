@@ -1,15 +1,9 @@
 import { _kc } from '../../constants/tenantConstants';
-import {
-    ADMIN_ROLE,
-    USER_RESOURCE_FORM_ID,
-    FORMIO_JWT_SECRET,
-    ANONYMOUS_ID,
-    ANONYMOUS_USER,
-} from '../../constants/constants';
 import { userToken, userDetails, userAuthorization, userAuthentication } from './userSlice';
 import { Action, AnyAction, Dispatch } from 'redux';
 import jwt from 'jsonwebtoken';
 import { UserDetail } from './types';
+import { AppConfig } from '../../config';
 
 const KeycloakData = _kc;
 
@@ -68,8 +62,8 @@ const refreshToken = (dispatch: Dispatch<Action>) => {
 
 // eslint-disable-next-line
 const authenticateAnonymouslyOnFormio = () => {
-    const user = ANONYMOUS_USER;
-    const roles = [ANONYMOUS_ID];
+    const user = AppConfig.formio.anonymousUser;
+    const roles = [AppConfig.formio.anonymousId];
     authenticateFormio(user, roles);
 };
 
@@ -78,14 +72,14 @@ const authenticateFormio = async (user: string, roles: string[]) => {
         {
             external: true,
             form: {
-                _id: USER_RESOURCE_FORM_ID, // form.io form Id of user resource
+                _id: AppConfig.formio.userResourceFormId, // form.io form Id of user resource
             },
             user: {
                 _id: user, // keep it like that
                 roles: roles,
             },
         },
-        FORMIO_JWT_SECRET,
+        AppConfig.formio.jwtSecret,
     ); // TODO Move JWT secret key to COME From ENV
 
     localStorage.setItem('formioToken', FORMIO_TOKEN);
@@ -111,7 +105,7 @@ const isLoggedIn = () => !!KeycloakData.token;
 
 const hasRole = (role: string) => KeycloakData.hasResourceRole(role);
 
-const hasAdminRole = () => KeycloakData.hasResourceRole(ADMIN_ROLE);
+const hasAdminRole = () => KeycloakData.hasResourceRole(AppConfig.keycloak.adminRole);
 
 const UserService = {
     initKeycloak,

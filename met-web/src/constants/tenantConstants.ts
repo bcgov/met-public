@@ -1,12 +1,12 @@
-import { Keycloak_Client, KEYCLOAK_AUTH_URL, KEYCLOAK_REALM } from './constants';
+import { AppConfig } from '../config';
 import Keycloak from 'keycloak-js';
 import { ITenantDetail } from './types';
 
 //TODO get from api
 export const tenantDetail: ITenantDetail = {
-    realm: KEYCLOAK_REALM,
-    url: KEYCLOAK_AUTH_URL,
-    clientId: Keycloak_Client,
+    realm: AppConfig.keycloak.realm,
+    url: AppConfig.keycloak.url,
+    clientId: AppConfig.keycloak.clientId,
 };
 
 // eslint-disable-next-line

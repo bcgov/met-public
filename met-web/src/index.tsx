@@ -1,17 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import './index.css';
+import './index.scss';
 import { store } from './store';
 import { Provider } from 'react-redux';
-import { ThemeProvider } from '@mui/material/styles';
+import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { BaseTheme } from './styles/Theme';
 import { Formio } from '@formio/react';
 import { AppConfig } from './config';
 import FormioContrib from '@bcgov/formio';
 // import reportWebVitals from './reportWebVitals';
 
-Formio.setProjectUrl(AppConfig.projectUrl);
+Formio.setProjectUrl(AppConfig.formio.projectUrl);
 Formio.setBaseUrl(AppConfig.apiUrl);
 Formio.use(FormioContrib);
 /* Uncomment this and the editForm of textfield will be completely overridden with only the components below to show
@@ -33,7 +33,9 @@ root.render(
     // <React.StrictMode>
     <Provider store={store}>
         <ThemeProvider theme={BaseTheme}>
-            <App />
+            <StyledEngineProvider injectFirst>
+                <App />
+            </StyledEngineProvider>
         </ThemeProvider>
     </Provider>,
     // </React.StrictMode>

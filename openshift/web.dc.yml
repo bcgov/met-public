@@ -1,0 +1,162 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: web-deploy-template
+  annotations:
+    description: "Deployment Configuration Template for the MET WEB Project"
+    tags: "met, web, reactjs, typescript, jest"
+objects:
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: ${APP}
+    labels:
+      app: ${APP}
+  data:
+    config.js: |-
+      window["_env_"] = {
+        "NODE_ENV": "production",
+        "REACT_APP_API_URL": "https://${APP}-${ENV}.apps.gold.devops.gov.bc.ca/api/",
+        // Formio
+        "REACT_APP_API_PROJECT_URL": "https://formio-e903c2-${ENV}.apps.gold.devops.gov.bc.ca",
+        "REACT_APP_FORM_ID": "",
+        "REACT_APP_FORMIO_JWT_SECRET": "",
+        "REACT_APP_USER_RESOURCE_FORM_ID": "",
+        "REACT_APP_ANONYMOUS_ID": "",
+        // Keycloak
+        "REACT_APP_KEYCLOAK_URL": "https://met-oidc-${ENV}.apps.gold.devops.gov.bc.ca/auth",
+        "REACT_APP_KEYCLOAK_CLIENT": "${KC_CLIENT}",
+        "REACT_APP_KEYCLOAK_REALM": "${KC_REALM}"
+      }
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: ${APP}
+    name: ${APP}
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      app: ${APP}
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: ${APP}
+          environment: ${ENV}
+      spec:
+        containers:
+          imagePullPolicy: Always
+          name: ${APP}
+          ports:
+          - containerPort: 3000
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 300m
+              memory: 1Gi
+            requests:
+              cpu: 150m
+              memory: 250Mi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          stdin: true
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          tty: true
+          volumeMounts:
+          - mountPath: /usr/share/nginx/html/config/
+            name: ${APP}-config
+            readOnly: true
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: ${APP}
+          name: ${APP}-config
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ${APP}
+        from:
+          kind: ImageStreamTag
+          name: ${APP}:${IMAGE_TAG}
+          namespace: ${IMAGE_NAMESPACE}
+      type: ImageChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: ${APP}
+    name: ${APP}
+  spec:
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: ${APP}
+    sessionAffinity: None
+    type: ClusterIP
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    labels:
+      app: ${APP}    
+    name: ${APP}
+  spec:
+    host: ${APP}-${ENV}.apps.gold.devops.gov.bc.ca
+    tls:
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
+    to:
+      kind: Service
+      name: ${APP}
+      weight: 100
+    wildcardPolicy: None
+parameters:
+  - name: APP
+    description: "The application name"
+    value: met-web
+  - name: IMAGE_NAMESPACE
+    description: "The image stream location namespace"
+    value: e903c2-tools
+  - name: ENV
+    description: "The selected environment (dev, test, prod)"
+    value: dev
+  - name: KC_CLIENT
+    description: "The keycloak client id"
+    value: met-web
+  - name: KC_REALM
+    description: "The keycloak realm"
+    value: met
+  - name: IMAGE_TAG
+    description: "The image tag to deploy"
+    value: latest
+    

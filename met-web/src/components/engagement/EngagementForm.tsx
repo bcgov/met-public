@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Typography, Grid, TextField, Button, CircularProgress } from '@mui/material';
-import { MetBox, MidScreenLoader } from '../common';
+import { MetPaper, MidScreenLoader } from '../common';
 import RichTextEditor from './RichTextEditor';
 import { ActionContext } from './ActionContext';
 import { formatDate } from '../common/dateHelper';
@@ -116,7 +116,7 @@ const EngagementForm = () => {
                 <Typography variant="h4">Engagement Details</Typography>
             </Grid>
             <Grid item xs={8}>
-                <MetBox>
+                <MetPaper elevation={1}>
                     <Grid
                         container
                         direction="row"
@@ -238,7 +238,7 @@ const EngagementForm = () => {
                             )}
                         </Grid>
                     </Grid>
-                </MetBox>
+                </MetPaper>
             </Grid>
         </Grid>
     );

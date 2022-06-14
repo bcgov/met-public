@@ -1,0 +1,56 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: api-build-template
+  annotations:
+    description: "Build Configuration Template for the MET API Project"
+    tags: "met, api, python"
+objects:
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    metadata:
+      name: ${APP}
+    spec:
+      lookupPolicy:
+        local: false
+  - apiVersion: build.openshift.io/v1
+    kind: BuildConfig
+    metadata:
+      name: ${APP}
+      labels:
+        app: ${APP}
+    spec:
+      nodeSelector: null
+      output:
+        to:
+          kind: ImageStreamTag
+          name: '${APP}:latest'
+      resources: {}
+      successfulBuildsHistoryLimit: 5
+      failedBuildsHistoryLimit: 5
+      strategy:
+        type: Docker
+        dockerStrategy:
+          dockerfilePath: Dockerfile
+      postCommit: {}
+      source:
+        type: Git
+        git:
+          uri: ${GITHUB_REPO}
+          ref: main
+        contextDir: ${GITHUB_CONTEXT_DIR}
+      triggers:
+        - type: ConfigChange
+      runPolicy: Serial
+parameters:
+  - name: APP
+    description: "The application name"
+    value: met-api
+  - name: GITHUB_REPO
+    description: "The github repo uri"
+    value: 'https://github.com/bcgov/met-public.git'
+  - name: GITHUB_CONTEXT_DIR
+    description: "The repository folder context"
+    value: /met-api
+  - name: GITHUB_WEBOOK_SECRET
+    description: "The webook secret for build triggers"
