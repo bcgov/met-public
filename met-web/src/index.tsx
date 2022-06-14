@@ -8,7 +8,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import { BaseTheme } from './styles/Theme';
 import { Formio } from '@formio/react';
 import { AppConfig } from './config';
-import BcGovFormioComponents from '@/formio/lib';
+import BcGovFormioComponents from '@bcgov/formio';
+// import FormioContrib from '@formio/contrib';
 
 // import reportWebVitals from './reportWebVitals';
 
