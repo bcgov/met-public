@@ -53,7 +53,7 @@ export default function (...extend) {
                 components: EditValidation,
             },
             {
-                label: 'Advanced Conditions',
+                label: 'Conditions',
                 key: 'customConditional',
                 weight: 40,
                 components: SimpleConditional,

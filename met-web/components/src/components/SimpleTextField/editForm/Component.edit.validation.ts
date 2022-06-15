@@ -19,27 +19,4 @@ export default [
         tooltip: 'The maximum length requirement this field must meet.',
         input: true,
     },
-    {
-        weight: 0,
-        type: 'select',
-        key: 'validateOn',
-        defaultValue: 'change',
-        input: true,
-        ignore: true,
-        label: 'Validate On',
-        tooltip: 'Determines when this component should trigger front-end validation.',
-        dataSrc: 'values',
-        data: {
-            values: [
-                {
-                    label: 'Change',
-                    value: 'change',
-                },
-                {
-                    label: 'Blur',
-                    value: 'blur',
-                },
-            ],
-        },
-    },
 ];
