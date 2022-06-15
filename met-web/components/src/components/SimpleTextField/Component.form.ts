@@ -36,6 +36,10 @@ export default function (...extend) {
                 ignore: true,
             },
             {
+                key: 'addons',
+                ignore: true,
+            },
+            {
                 label: 'Data',
                 ignore: true,
                 key: 'customData',
@@ -47,12 +51,6 @@ export default function (...extend) {
                 key: 'customValidation',
                 weight: 20,
                 components: EditValidation,
-            },
-            {
-                label: 'API',
-                key: 'customAPI',
-                weight: 30,
-                components: SimpleApi,
             },
             {
                 label: 'Advanced Conditions',
