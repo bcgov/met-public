@@ -2,17 +2,8 @@ import axios from 'axios';
 import { AppConfig } from '../../config';
 import UserService from '../../services/userService';
 
-export default axios.create({
-    baseURL: AppConfig.apiUrl,
-    headers: {
-        'Content-type': 'application/json',
-        Authorization: `Bearer ${UserService.getToken()}`,
-    },
-});
-
 export const httpGETRequest = (url: string, params = {}) => {
-    const fullUrl = AppConfig.apiUrl + url;
-    return axios.get(fullUrl, {
+    return axios.get(url, {
         params: params,
         headers: {
             'Content-type': 'application/json',
@@ -22,8 +13,7 @@ export const httpGETRequest = (url: string, params = {}) => {
 };
 
 export const httpPOSTRequest = (url: string, data = {}) => {
-    const fullUrl = AppConfig.apiUrl + url;
-    return axios.post(fullUrl, data, {
+    return axios.post(url, data, {
         headers: {
             'Content-type': 'application/json',
             Authorization: `Bearer ${UserService.getToken()}`,
@@ -32,8 +22,7 @@ export const httpPOSTRequest = (url: string, data = {}) => {
 };
 
 export const httpPUTRequest = (url: string, data = {}) => {
-    const fullUrl = AppConfig.apiUrl + url;
-    return axios.put(fullUrl, data, {
+    return axios.put(url, data, {
         headers: {
             'Content-type': 'application/json',
             Authorization: `Bearer ${UserService.getToken()}`,
