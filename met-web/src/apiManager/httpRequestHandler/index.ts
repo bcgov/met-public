@@ -1,7 +1,7 @@
 import axios from 'axios';
 import UserService from '../../services/userService';
 
-export const httpGETRequest = (url: string, params = {}) => {
+const GetRequest = (url: string, params = {}) => {
     return axios.get(url, {
         params: params,
         headers: {
@@ -11,7 +11,7 @@ export const httpGETRequest = (url: string, params = {}) => {
     });
 };
 
-export const httpPOSTRequest = (url: string, data = {}) => {
+const PostRequest = (url: string, data = {}) => {
     return axios.post(url, data, {
         headers: {
             'Content-type': 'application/json',
@@ -20,11 +20,17 @@ export const httpPOSTRequest = (url: string, data = {}) => {
     });
 };
 
-export const httpPUTRequest = (url: string, data = {}) => {
+const PutRequest = (url: string, data = {}) => {
     return axios.put(url, data, {
         headers: {
             'Content-type': 'application/json',
             Authorization: `Bearer ${UserService.getToken()}`,
         },
     });
+};
+
+export default {
+    GetRequest,
+    PostRequest,
+    PutRequest,
 };

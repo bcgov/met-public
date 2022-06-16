@@ -1,5 +1,5 @@
 import { setEngagements } from './engagementSlice';
-import { httpGETRequest, httpPOSTRequest, httpPUTRequest } from '../../apiManager/httpRequestHandler';
+import http from '../../apiManager/httpRequestHandler';
 import { AnyAction, Dispatch } from 'redux';
 import { Engagement } from '../../models/engagement';
 import { PostEngagementRequest, PutEngagementRequest } from './types';
@@ -7,7 +7,7 @@ import API from '../../apiManager/endpoints';
 import { replaceUrl } from '../../helper';
 
 export const fetchAll = async (dispatch: Dispatch<AnyAction>): Promise<Engagement[]> => {
-    const responseData = await httpGETRequest(API.MET_GET_ENGAGEMENTS);
+    const responseData = await http.GetRequest(API.GET_ENGAGEMENTS);
     dispatch(setEngagements(responseData.data));
     return responseData.data;
 };
@@ -18,11 +18,11 @@ export const getEngagement = async (
     errorCallback: (errorMessage: string) => void,
 ) => {
     try {
-        const url = replaceUrl(API.MET_GET_ENGAGEMENT, '<engagement_id>', String(engagementId));
+        const url = replaceUrl(API.GET_ENGAGEMENT, '<engagement_id>', String(engagementId));
         if (!engagementId || isNaN(Number(engagementId))) {
             throw new Error('Invalid Engagement Id ' + engagementId);
         }
-        const responseData = await httpGETRequest(url);
+        const responseData = await http.GetRequest(url);
         successCallback(responseData.data);
     } catch (e: unknown) {
         let errorMessage = '';
@@ -41,7 +41,7 @@ export const postEngagement = async (
     errorCallback: (errorMessage: string) => void,
 ) => {
     try {
-        await httpPOSTRequest(API.MET_CREATE_ENGAGEMENT, data);
+        await http.PostRequest(API.CREATE_ENGAGEMENT, data);
         successCallback();
     } catch (e: unknown) {
         let errorMessage = '';
@@ -60,7 +60,7 @@ export const putEngagement = async (
     errorCallback: (errorMessage: string) => void,
 ) => {
     try {
-        const response = await httpPUTRequest(API.MET_UPDATE_ENGAGEMENT, data);
+        const response = await http.PutRequest(API.UPDATE_ENGAGEMENT, data);
         successCallback(response.data);
     } catch (e: unknown) {
         let errorMessage = '';
