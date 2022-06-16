@@ -1,5 +1,5 @@
 import { setEngagements } from './engagementSlice';
-import { httpGETRequest, httpPOSTRequest, httpPUTRequest } from '../../components/common/http-common.ts';
+import { httpGETRequest, httpPOSTRequest, httpPUTRequest } from '../../apiManager/httpRequestHandler';
 import { AnyAction, Dispatch } from 'redux';
 import { Engagement } from '../../models/engagement';
 import { PostEngagementRequest, PutEngagementRequest } from './types';
