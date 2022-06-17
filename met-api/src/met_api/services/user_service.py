@@ -40,19 +40,18 @@ class UserService:
         self.validated_fields(data)
 
         db_user = User.get_user_by_external_id(data.get('external_id'))
-        if (db_user == None):
+        if db_user is None:
             return User.create_user(data)
-        else:
-            return User.update_user(db_user.id, data)
+        return User.update_user(db_user.id, data)
 
     @staticmethod
     def validated_fields(data: UserSchema):
         """Validate all fields."""
         empty_fields = [not data[field] for field in [
-            'first_name', 
-            'last_name', 
+            'first_name',
+            'last_name',
             'email_id',
-            'external_id', 
+            'external_id',
         ]]
 
         if any(empty_fields):

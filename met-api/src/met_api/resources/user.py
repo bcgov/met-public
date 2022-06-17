@@ -13,7 +13,7 @@
 # limitations under the License.
 """API endpoints for managing an user resource."""
 
-from flask import g, request
+from flask import g
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
@@ -31,6 +31,7 @@ API = Namespace('user', description='Endpoints for User Management')
 @cors_preflight('PUT')
 @API.route('/')
 class UserController(Resource):
+    """User controller class."""
 
     @staticmethod
     # @TRACER.trace()
@@ -41,12 +42,13 @@ class UserController(Resource):
         try:
             token_info = g.token_info
             user_data = {
-                "external_id": token_info.get('sub', None),
-                "first_name": token_info.get('given_name', None),
-                "last_name": token_info.get('family_name', None),
-                "email_id": token_info.get('email', None)
+                'external_id': token_info.get('sub', None),
+                'first_name': token_info.get('given_name', None),
+                'last_name': token_info.get('family_name', None),
+                'email_id': token_info.get('email', None)
             }
-            user_schema =  UserSchema().load(user_data)
+
+            user_schema = UserSchema().load(user_data)
             result = UserService().create_or_update_user(user_schema)
             return {'status': result.success, 'message': result.message, 'id': result.identifier}, 200
         except KeyError as err:
