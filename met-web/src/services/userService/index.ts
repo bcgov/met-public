@@ -4,6 +4,7 @@ import { Action, AnyAction, Dispatch } from 'redux';
 import jwt from 'jsonwebtoken';
 import { UserDetail } from './types';
 import { AppConfig } from '../../config';
+import axios from 'axios';
 
 const KeycloakData = _kc;
 
@@ -26,6 +27,7 @@ const initKeycloak = (dispatch: Dispatch<AnyAction>) => {
 
             dispatch(userToken(KeycloakData.token));
             KeycloakData.loadUserInfo().then((res: UserDetail) => {
+                updateUser();
                 dispatch(userDetails(res));
                 dispatch(userAuthorization(true));
             });
@@ -107,8 +109,26 @@ const hasRole = (role: string) => KeycloakData.hasResourceRole(role);
 
 const hasAdminRole = () => KeycloakData.hasResourceRole(AppConfig.keycloak.adminRole);
 
+const updateUser = async () => {
+    try {
+        await axios.put(
+            `${AppConfig.apiUrl}/user/`,
+            {},
+            {
+                headers: {
+                    'Content-type': 'application/json',
+                    Authorization: `Bearer ${getToken()}`,
+                },
+            },
+        );
+    } catch (e: unknown) {
+        console.error(e);
+    }
+};
+
 const UserService = {
     initKeycloak,
+    updateUser,
     doLogin,
     doLogout,
     isLoggedIn,
