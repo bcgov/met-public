@@ -70,12 +70,6 @@ const headCells: readonly HeadCell[] = [
         label: 'Engagement Name',
     },
     {
-        id: 'description',
-        numeric: true,
-        disablePadding: false,
-        label: 'Description',
-    },
-    {
         id: 'created_date',
         numeric: true,
         disablePadding: false,
@@ -208,7 +202,6 @@ function EnhancedTable({ filter = { key: '', value: '' } }) {
                                                     {row.name}
                                                 </MuiLink>
                                             </EngagementTableCell>
-                                            <EngagementTableCell align="left">{row.description}</EngagementTableCell>
                                             <EngagementTableCell align="left">
                                                 {formatDate(row.created_date)}
                                             </EngagementTableCell>
