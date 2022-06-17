@@ -4,7 +4,8 @@ import { Action, AnyAction, Dispatch } from 'redux';
 import jwt from 'jsonwebtoken';
 import { UserDetail } from './types';
 import { AppConfig } from '../../config';
-import axios from 'axios';
+import Endpoints from '../../apiManager/endpoints';
+import http from '../../apiManager/httpRequestHandler';
 
 const KeycloakData = _kc;
 
@@ -111,16 +112,8 @@ const hasAdminRole = () => KeycloakData.hasResourceRole(AppConfig.keycloak.admin
 
 const updateUser = async () => {
     try {
-        await axios.put(
-            `${AppConfig.apiUrl}/user/`,
-            {},
-            {
-                headers: {
-                    'Content-type': 'application/json',
-                    Authorization: `Bearer ${getToken()}`,
-                },
-            },
-        );
+        await http.PutRequest(Endpoints.User.CREATE_UPDATE);
+        // TODO: update store with current user info.
     } catch (e: unknown) {
         console.error(e);
     }

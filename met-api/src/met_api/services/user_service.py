@@ -38,7 +38,7 @@ class UserService:
     def create_or_update_user(self, data: UserSchema):
         """Create or update a user."""
         self.validated_fields(data)
-        print (data)
+
         db_user = User.get_user_by_external_id(data.get('external_id'))
         if (db_user == None):
             return User.create_user(data)
