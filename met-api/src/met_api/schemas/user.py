@@ -18,6 +18,7 @@ class UserSchema(Schema):
     first_name = fields.Str(data_key='first_name')
     middle_name = fields.Str(data_key='description')
     last_name = fields.Str(data_key='last_name')
+    status_name = fields.Str(data_key="status_name")
     email_id = fields.Int(data_key='email_id')
     contact_number = fields.Str(data_key='contact_number')
     created_date = fields.Str(data_key='created_date')
