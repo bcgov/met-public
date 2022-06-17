@@ -45,10 +45,7 @@ const App = () => {
         <Router>
             <Box sx={{ display: 'flex' }}>
                 <LoggedInHeader drawerWidth={drawerWidth} />
-                <Box
-                    component="main"
-                    sx={{ flexGrow: 1, p: 3, width: `calc(100% - ${drawerWidth}px)`, marginTop: '2em' }}
-                >
+                <Box component="main" sx={{ flexGrow: 1, width: `calc(100% - ${drawerWidth}px)`, marginTop: '17px' }}>
                     <Toolbar />
                     <AuthenticatedRoutes />
                 </Box>

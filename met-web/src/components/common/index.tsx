@@ -40,3 +40,7 @@ export const MidScreenLoader = () => (
         </Grid>
     </Grid>
 );
+
+export const MetPageGridContainer = styled(Grid)(() => ({
+    padding: '3em',
+}));

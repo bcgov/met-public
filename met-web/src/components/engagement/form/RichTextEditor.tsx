@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { EditorState, convertFromRaw, convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import { FormControl, FormHelperText } from '@mui/material';
-import { MetPaper } from '../common';
+import { MetPaper } from '../../common';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './RichEditorStyles.css';
 

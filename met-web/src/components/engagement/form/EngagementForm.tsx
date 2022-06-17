@@ -1,9 +1,9 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Typography, Grid, TextField, Button, CircularProgress } from '@mui/material';
-import { MetPaper, MidScreenLoader } from '../common';
+import { MetPaper, MidScreenLoader, MetPageGridContainer } from '../../common';
 import RichTextEditor from './RichTextEditor';
 import { ActionContext } from './ActionContext';
-import { formatDate } from '../common/dateHelper';
+import { formatDate } from '../../common/dateHelper';
 
 const EngagementForm = () => {
     const {
@@ -111,7 +111,7 @@ const EngagementForm = () => {
     }
 
     return (
-        <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2}>
+        <MetPageGridContainer container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2}>
             <Grid item xs={12}>
                 <Typography variant="h4">Engagement Details</Typography>
             </Grid>
@@ -240,7 +240,7 @@ const EngagementForm = () => {
                     </Grid>
                 </MetPaper>
             </Grid>
-        </Grid>
+        </MetPageGridContainer>
     );
 };
 
