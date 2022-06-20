@@ -30,7 +30,7 @@ class Engagement(db.Model):
     user_id = db.Column(db.Integer, ForeignKey('user.id', ondelete='CASCADE'))
     content = db.Column(db.Text, unique=False, nullable=False)
     rich_content = db.Column(JSON, unique=False, nullable=False)
-    image_link = db.Column(db.String(), unique=False, nullable=True)
+    banner_image_link = db.Column(db.String(), unique=False, nullable=True)
 
     @classmethod
     def get_engagement(cls, engagement_id):
