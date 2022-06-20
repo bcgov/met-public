@@ -32,7 +32,7 @@ class EngagementService:
             'published_date': request_engagement.get('published_date', None),
             'content': request_engagement.get('content', None),
             'rich_content': request_engagement.get('rich_content', None),
-            'image_link': request_engagement.get('image_link', None),
+            'banner_image_link': request_engagement.get('banner_image_link', None),
         }
         return engagement
 
