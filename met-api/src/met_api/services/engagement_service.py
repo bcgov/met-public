@@ -30,6 +30,9 @@ class EngagementService:
             'end_date': request_engagement.get('end_date', None),
             'created_date': request_engagement['created_date'],
             'published_date': request_engagement.get('published_date', None),
+            'content': request_engagement.get('content', None),
+            'rich_content': request_engagement.get('rich_content', None),
+            'image_link': request_engagement.get('image_link', None),
         }
         return engagement
 
