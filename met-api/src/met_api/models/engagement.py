@@ -30,7 +30,7 @@ class Engagement(db.Model):
     user_id = db.Column(db.Integer, ForeignKey('user.id', ondelete='CASCADE'))
     content = db.Column(db.Text, unique=False, nullable=False)
     rich_content = db.Column(JSON, unique=False, nullable=False)
-    banner_image_link = db.Column(db.String(), unique=False, nullable=True)
+    banner_url = db.Column(db.String(), unique=False, nullable=True)
 
     @classmethod
     def get_engagement(cls, engagement_id):
@@ -60,7 +60,7 @@ class Engagement(db.Model):
             created_date=datetime.utcnow(),
             updated_date=datetime.utcnow(),
             published_date=None,
-            banner_image_link=engagement.get('banner_image_link', None),
+            banner_url=engagement.get('banner_url', None),
             content=engagement.get('content', None),
             rich_content=engagement.get('rich_content', None)
         )
@@ -79,7 +79,7 @@ class Engagement(db.Model):
             start_date=engagement.get('start_date', None),
             end_date=engagement.get('end_date', None),
             updated_date=datetime.utcnow(),
-            banner_image_link=engagement.get('banner_image_link', None),
+            banner_url=engagement.get('banner_url', None),
             content=engagement.get('content', None),
             rich_content=engagement.get('rich_content', None),
         )
@@ -96,4 +96,4 @@ class EngagementSchema(ma.Schema):
 
         fields = (
             'id', 'name', 'description', 'rich_description', 'start_date', 'end_date', 'status_id', 'user_id',
-            'updated_date', 'published_date', 'created_date', 'content', 'rich_content', 'banner_image_link')
+            'updated_date', 'published_date', 'created_date', 'content', 'rich_content', 'banner_url')
