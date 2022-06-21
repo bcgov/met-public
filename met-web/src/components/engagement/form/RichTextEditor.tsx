@@ -50,7 +50,8 @@ const RichTextEditor = ({
                         onEditorStateChange={handleChange}
                         editorStyle={{
                             height: '10em',
-                            margin: '1em',
+                            padding: '1em',
+                            resize: 'vertical',
                         }}
                     />
                 </form>

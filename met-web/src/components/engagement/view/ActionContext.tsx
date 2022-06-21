@@ -25,6 +25,9 @@ export const ActionContext = createContext<EngagementViewContext>({
         user_id: '',
         created_date: '',
         updated_date: '',
+        banner_image_link: '',
+        content: '',
+        rich_content: '',
     },
     engagementLoading: true,
 });
@@ -45,6 +48,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         user_id: '',
         created_date: '',
         updated_date: '',
+        banner_image_link: '',
+        content: '',
+        rich_content: '',
     });
     const [engagementLoading, setEngagementLoading] = useState(true);
 
