@@ -22,8 +22,7 @@ const EngagementForm = () => {
         fromDate: '',
         toDate: '',
         description: '',
-        status_id: 0,
-        status_name: '',
+        status_id: '',
     });
     const [richDescription, setRawEditorState] = useState('');
 
