@@ -25,9 +25,9 @@ fake = Faker()
 def test_user_creation(session):
     """Assert that an user can be created and fetched."""
     name = fake.name()
-    user = User(id=2, first_name=name)
+    user = User(id=2, first_name=name, external_id='2')
     session.add(user)
     session.commit()
     assert user.id is not None
-    user_in_db = User.find_by_id(user.id)
+    user_in_db = User.get_user(user.id)
     assert user_in_db.first_name == name
