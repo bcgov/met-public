@@ -1,8 +1,10 @@
 import React, { useContext } from 'react';
 import { MetPaper, MetPageGridContainer } from '../../common';
-import { Editor, EditorState, convertFromRaw } from 'draft-js';
+import { EditorState, convertFromRaw } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
 import { ActionContext } from './ActionContext';
 import { Grid } from '@mui/material';
+import './EngagementContent.scss';
 
 export const EngagementContent = () => {
     const { savedEngagement } = useContext(ActionContext);
@@ -33,6 +35,7 @@ export const EngagementContent = () => {
                         onChange={() => {
                             //do nothing because this is read only
                         }}
+                        toolbarClassName="hide-toolbar"
                     />
                 </MetPaper>
             </Grid>
