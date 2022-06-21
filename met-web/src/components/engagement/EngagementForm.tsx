@@ -33,7 +33,7 @@ const EngagementForm = () => {
             fromDate: formatDate(savedEngagement.start_date),
             toDate: formatDate(savedEngagement.end_date),
             description: savedEngagement?.description || '',
-            status_id: savedEngagement?.status_id || 0,
+            status_id: savedEngagement?.status_id || '',
         });
         setRawEditorState(savedEngagement?.rich_description || '');
     }, [savedEngagement]);
