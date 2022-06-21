@@ -36,7 +36,10 @@ class TestEngagemntInfo(dict, Enum):
         'description': 'My Test Engagement Description',
         'start_date': datetime.datetime.now().strftime('%m/%d/%Y, %H:%M:%S'),
         'end_date': datetime.datetime.now().strftime('%m/%d/%Y, %H:%M:%S'),
-        'rich_description': 'Rich Description Sample'
+        'rich_description': 'Rich Description Sample',
+        'content': 'Content Sample',
+        'rich_content': 'Rich Content Sample',
+        'banner_image_link': 'Rich Content Sample'
     }
 
 
