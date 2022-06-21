@@ -11,8 +11,19 @@ const Engagement = () => {
                 <Grid item xs={12}>
                     <EngagementBanner />
                 </Grid>
-                <Grid item xs={12}>
-                    <EngagementContent />
+                <Grid
+                    container
+                    item
+                    xs={12}
+                    direction="row"
+                    justifyContent={'flex-start'}
+                    alignItems="flex-start"
+                    sx={{ margin: '1em 2em 1em 3em' }}
+                    spacing={1}
+                >
+                    <Grid item xs={8}>
+                        <EngagementContent />
+                    </Grid>
                 </Grid>
             </Grid>
         </ActionProvider>
