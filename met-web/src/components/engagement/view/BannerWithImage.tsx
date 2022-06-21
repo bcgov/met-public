@@ -7,7 +7,7 @@ import BannerWithoutImage from './BannerWithoutImage';
 const BannerWithImage = () => {
     const { savedEngagement } = useContext(ActionContext);
 
-    const { description, name, start_date, end_date, banner_image_link } = savedEngagement;
+    const { description, name, start_date, end_date, banner_url } = savedEngagement;
     const [imageError, setImageError] = useState(false);
 
     if (imageError) {
@@ -24,7 +24,7 @@ const BannerWithImage = () => {
                 }}
             >
                 <img
-                    src={banner_image_link}
+                    src={banner_url}
                     style={{
                         objectFit: 'cover',
                         height: '20em',

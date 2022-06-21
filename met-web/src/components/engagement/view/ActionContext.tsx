@@ -25,7 +25,7 @@ export const ActionContext = createContext<EngagementViewContext>({
         user_id: '',
         created_date: '',
         updated_date: '',
-        banner_image_link: '',
+        banner_url: '',
         content: '',
         rich_content: '',
     },
@@ -48,7 +48,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         user_id: '',
         created_date: '',
         updated_date: '',
-        banner_image_link: '',
+        banner_url: '',
         content: '',
         rich_content: '',
     });

@@ -12,5 +12,5 @@ export interface Engagement {
     updated_date: string;
     content: string;
     rich_content: string;
-    banner_image_link: string;
+    banner_url: string;
 }
