@@ -89,6 +89,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 end_date: engagement.toDate,
                 description: engagement.description,
                 rich_description: engagement.richDescription,
+                content: engagement.content,
+                rich_content: engagement.richContent,
             },
             () => {
                 //TODO engagement created success message in notification module
@@ -113,6 +115,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 end_date: engagement.toDate,
                 description: engagement.description,
                 rich_description: engagement.richDescription,
+                content: engagement.content,
+                rich_content: engagement.richContent,
             },
             () => {
                 //TODO engagement update success message in notification module
