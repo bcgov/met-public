@@ -4,6 +4,8 @@ import { Action, AnyAction, Dispatch } from 'redux';
 import jwt from 'jsonwebtoken';
 import { UserDetail } from './types';
 import { AppConfig } from '../../config';
+import Endpoints from '../../apiManager/endpoints';
+import http from '../../apiManager/httpRequestHandler';
 
 const KeycloakData = _kc;
 
@@ -26,6 +28,7 @@ const initKeycloak = (dispatch: Dispatch<AnyAction>) => {
 
             dispatch(userToken(KeycloakData.token));
             KeycloakData.loadUserInfo().then((res: UserDetail) => {
+                updateUser();
                 dispatch(userDetails(res));
                 dispatch(userAuthorization(true));
             });
@@ -107,8 +110,18 @@ const hasRole = (role: string) => KeycloakData.hasResourceRole(role);
 
 const hasAdminRole = () => KeycloakData.hasResourceRole(AppConfig.keycloak.adminRole);
 
+const updateUser = async () => {
+    try {
+        await http.PutRequest(Endpoints.User.CREATE_UPDATE);
+        // TODO: update store with current user info.
+    } catch (e: unknown) {
+        console.error(e);
+    }
+};
+
 const UserService = {
     initKeycloak,
+    updateUser,
     doLogin,
     doLogout,
     isLoggedIn,
