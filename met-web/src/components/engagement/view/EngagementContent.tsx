@@ -1,14 +1,13 @@
 import React, { useContext } from 'react';
-import { MetPaper } from '../../common';
+import { MetPaper, MetPageGridContainer } from '../../common';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import { ActionContext } from './ActionContext';
 import { Grid } from '@mui/material';
-import { MetPageGridContainer } from '../../common';
 
 export const EngagementContent = () => {
     const { savedEngagement } = useContext(ActionContext);
 
-    const { rich_description } = savedEngagement;
+    const { rich_content } = savedEngagement;
 
     const getEditorState = (rawTextToConvert: string) => {
         if (!rawTextToConvert) {
@@ -29,10 +28,10 @@ export const EngagementContent = () => {
             <Grid item xs={8}>
                 <MetPaper elevation={1} sx={{ padding: '2em', minHeight: '30em' }}>
                     <Editor
-                        editorState={getEditorState(rich_description)}
+                        editorState={getEditorState(rich_content)}
                         readOnly={true}
                         onChange={() => {
-                            //do nothing
+                            //do nothing because this is read only
                         }}
                     />
                 </MetPaper>

@@ -24,6 +24,9 @@ export const ActionContext = createContext<EngagementContext>({
         user_id: '',
         created_date: '',
         updated_date: '',
+        banner_image_link: '',
+        content: '',
+        rich_content: '',
     },
     engagementId: 'create',
     loadingSavedEngagement: true,
@@ -48,6 +51,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         user_id: '',
         created_date: '',
         updated_date: '',
+        banner_image_link: '',
+        content: '',
+        rich_content: '',
     });
 
     useEffect(() => {

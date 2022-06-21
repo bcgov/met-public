@@ -11,13 +11,13 @@ const BannerWithImage = () => {
 
     const { savedEngagement } = useContext(ActionContext);
 
-    const { description, name, start_date, end_date } = savedEngagement;
+    const { description, name, start_date, end_date, banner_image_link } = savedEngagement;
     return (
         <Box
             sx={{
                 height: imageHeight,
                 width: '100%',
-                background: ` url(${imageLink}) no-repeat`,
+                background: ` url(${banner_image_link}) no-repeat`,
                 backgroundSize: `cover`,
             }}
         >
