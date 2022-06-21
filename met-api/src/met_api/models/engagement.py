@@ -4,10 +4,10 @@ Manages the engagement
 """
 
 from datetime import datetime
-
+from sqlalchemy import join
 from sqlalchemy.sql.schema import ForeignKey
+from sqlalchemy.sql import select
 from sqlalchemy.dialects.postgresql import JSON
-
 from .db import db, ma
 from .default_method_result import DefaultMethodResult
 
@@ -34,8 +34,9 @@ class Engagement(db.Model):
         """Get an engagement."""
         engagement_schema = EngagementSchema()
         request = db.session.query(Engagement).filter_by(id=engagement_id).first()
+        request.join(db.session.query(EngagementStatus).filter(id=engagement_id)).first();
         return engagement_schema.dump(request)
-
+    
     @classmethod
     def get_all_engagements(cls):
         """Get all engagements."""
@@ -78,7 +79,6 @@ class Engagement(db.Model):
         Engagement.query.filter_by(id=engagement.get('id', None)).update(update_fields)
         db.session.commit()
         return DefaultMethodResult(True, 'Engagement Updated', engagement['id'])
-
 
 class EngagementSchema(ma.Schema):
     """Engagement Schema."""
