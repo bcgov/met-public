@@ -39,7 +39,7 @@ class TestEngagemntInfo(dict, Enum):
         'rich_description': 'Rich Description Sample',
         'content': 'Content Sample',
         'rich_content': 'Rich Content Sample',
-        'banner_image_link': 'Rich Content Sample'
+        'banner_url': 'Rich Content Sample'
     }
 
 
