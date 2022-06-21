@@ -1,9 +1,9 @@
-import { _kc } from '../../constants/tenantConstants';
+import { _kc } from 'constants/tenantConstants';
 import { userToken, userDetails, userAuthorization, userAuthentication } from './userSlice';
 import { Action, AnyAction, Dispatch } from 'redux';
 import jwt from 'jsonwebtoken';
 import { UserDetail } from './types';
-import { AppConfig } from '../../config';
+import { AppConfig } from 'config';
 
 const KeycloakData = _kc;
 

@@ -1,4 +1,4 @@
-import { AppConfig } from '../../config';
+import { AppConfig } from 'config';
 
 const API = {
     GET_ENGAGEMENTS: `${AppConfig.apiUrl}/engagement/`,

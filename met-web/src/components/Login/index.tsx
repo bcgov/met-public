@@ -1,8 +1,8 @@
 import React from 'react';
-import UserService from '../../services/userService';
+import UserService from 'services/userService';
 import { Grid } from '@mui/material';
 import Button from '@mui/material/Button';
-import { useAppSelector } from '../../hooks';
+import { useAppSelector } from 'hooks';
 
 const Login = () => {
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);

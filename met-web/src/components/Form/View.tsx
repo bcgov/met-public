@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { getForm, selectRoot, Form, saveSubmission, resetSubmissions } from '@formio/react';
 import { CircularProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppConfig } from '../../config';
+import { AppConfig } from 'config';
 
 const View = () => {
     const dispatch = useDispatch();
@@ -29,9 +29,7 @@ const View = () => {
         return <CircularProgress />;
     }
 
-
     return <Form form={form} url={url} onSubmit={onSubmit} submission={submission} />;
-
 };
 
 export default View;

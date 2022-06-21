@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import loginReducer from './components/Login/loginSlice';
-import userSlice from './services/userService/userSlice';
+import loginReducer from 'components/Login/loginSlice';
+import userSlice from 'services/userService/userSlice';
 import { form, submission } from '@formio/react';
-import engagementSlice from './services/engagementService/engagementSlice';
+import engagementSlice from 'services/engagementService/engagementSlice';
 
 export const store = configureStore({
     reducer: {
