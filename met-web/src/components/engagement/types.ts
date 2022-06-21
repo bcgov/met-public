@@ -13,8 +13,7 @@ export interface EngagementForm {
     name: string;
     description: string;
     richDescription: string;
-    status_id: number;
-    status_name: string;
+    status_id: string;
     fromDate: string;
     toDate: string;
 }
