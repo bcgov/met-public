@@ -53,7 +53,6 @@ class Engagement(db.Model):
             start_date=engagement.get('start_date', None),
             end_date=engagement.get('end_date', None),
             status_id=1,
-            status_draft="draft",
             user_id=1,
             created_date=datetime.utcnow(),
             updated_date=datetime.utcnow(),
@@ -87,6 +86,6 @@ class EngagementSchema(ma.Schema):
         """Meta class."""
 
         fields = (
-            'id', 'name', 'description', 'rich_description', 'start_date', 'end_date', 'status_id', 'status_name','user_id',
+            'id', 'name', 'description', 'rich_description', 'start_date', 'end_date', 'status_id', 'user_id',
             'updated_date',
             'published_date', 'created_date')
