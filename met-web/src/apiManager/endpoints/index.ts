@@ -1,9 +1,15 @@
 import { AppConfig } from '../../config';
 
-const API = {
-    GET_ENGAGEMENTS: `${AppConfig.apiUrl}/engagement/`,
-    CREATE_ENGAGEMENT: `${AppConfig.apiUrl}/engagement/`,
-    UPDATE_ENGAGEMENT: `${AppConfig.apiUrl}/engagement/`,
-    GET_ENGAGEMENT: `${AppConfig.apiUrl}/engagement/<engagement_id>`,
+const Endpoints = {
+    Engagement: {
+        GET_ALL: `${AppConfig.apiUrl}/engagement/`,
+        CREATE: `${AppConfig.apiUrl}/engagement/`,
+        UPDATE: `${AppConfig.apiUrl}/engagement/`,
+        GET: `${AppConfig.apiUrl}/engagement/<engagement_id>`,
+    },
+    User: {
+        CREATE_UPDATE: `${AppConfig.apiUrl}/user/`,
+    },
 };
-export default API;
+
+export default Endpoints;
