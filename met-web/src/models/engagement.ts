@@ -3,8 +3,7 @@ export interface Engagement {
     name: string;
     description: string;
     rich_description: string;
-    status_id: number;
-    status: string;
+    status_id: string;
     start_date: string;
     end_date: string;
     published_date: string;
