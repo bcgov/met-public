@@ -38,7 +38,6 @@ class GetEngagement(Resource):
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
-    @auth.require
     def get(engagement_id):
         """Fetch a single engagement matching the provided id."""
         try:
@@ -58,7 +57,6 @@ class GetEngagements(Resource):
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
-    @auth.require
     def get():
         """Fetch all engagements."""
         try:
