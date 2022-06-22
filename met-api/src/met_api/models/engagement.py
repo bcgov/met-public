@@ -28,6 +28,9 @@ class Engagement(db.Model):
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow())
     published_date = db.Column(db.DateTime, nullable=True)
     user_id = db.Column(db.Integer, ForeignKey('user.id', ondelete='CASCADE'))
+    content = db.Column(db.Text, unique=False, nullable=False)
+    rich_content = db.Column(JSON, unique=False, nullable=False)
+    banner_url = db.Column(db.String(), unique=False, nullable=True)
 
     @classmethod
     def get_engagement(cls, engagement_id):
@@ -56,7 +59,10 @@ class Engagement(db.Model):
             user_id=1,
             created_date=datetime.utcnow(),
             updated_date=datetime.utcnow(),
-            published_date=None
+            published_date=None,
+            banner_url=engagement.get('banner_url', None),
+            content=engagement.get('content', None),
+            rich_content=engagement.get('rich_content', None)
         )
         db.session.add(new_engagement)
         db.session.commit()
@@ -72,7 +78,10 @@ class Engagement(db.Model):
             rich_description=engagement.get('rich_description', None),
             start_date=engagement.get('start_date', None),
             end_date=engagement.get('end_date', None),
-            updated_date=datetime.utcnow()
+            updated_date=datetime.utcnow(),
+            banner_url=engagement.get('banner_url', None),
+            content=engagement.get('content', None),
+            rich_content=engagement.get('rich_content', None),
         )
         Engagement.query.filter_by(id=engagement.get('id', None)).update(update_fields)
         db.session.commit()
@@ -87,5 +96,4 @@ class EngagementSchema(ma.Schema):
 
         fields = (
             'id', 'name', 'description', 'rich_description', 'start_date', 'end_date', 'status_id', 'user_id',
-            'updated_date',
-            'published_date', 'created_date')
+            'updated_date', 'published_date', 'created_date', 'content', 'rich_content', 'banner_url')
