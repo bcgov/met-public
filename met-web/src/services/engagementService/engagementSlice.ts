@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Engagement } from '../../models/engagement';
+import { Engagement } from 'models/engagement';
 import { EngagementState } from './types';
 
 const initialState: EngagementState = {

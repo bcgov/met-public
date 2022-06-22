@@ -1,5 +1,5 @@
 import axios from 'axios';
-import UserService from '../../services/userService';
+import UserService from 'services/userService';
 
 const GetRequest = (url: string, params = {}) => {
     return axios.get(url, {
