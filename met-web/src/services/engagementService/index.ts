@@ -3,11 +3,11 @@ import http from '../../apiManager/httpRequestHandler';
 import { AnyAction, Dispatch } from 'redux';
 import { Engagement } from '../../models/engagement';
 import { PostEngagementRequest, PutEngagementRequest } from './types';
-import API from '../../apiManager/endpoints';
+import Endpoints from '../../apiManager/endpoints';
 import { replaceUrl } from '../../helper';
 
 export const fetchAll = async (dispatch: Dispatch<AnyAction>): Promise<Engagement[]> => {
-    const responseData = await http.GetRequest(API.GET_ENGAGEMENTS);
+    const responseData = await http.GetRequest(Endpoints.Engagement.GET_ALL);
     dispatch(setEngagements(responseData.data));
     return responseData.data;
 };
@@ -18,7 +18,7 @@ export const getEngagement = async (
     errorCallback: (errorMessage: string) => void,
 ) => {
     try {
-        const url = replaceUrl(API.GET_ENGAGEMENT, '<engagement_id>', String(engagementId));
+        const url = replaceUrl(Endpoints.Engagement.GET, '<engagement_id>', String(engagementId));
         if (!engagementId || isNaN(Number(engagementId))) {
             throw new Error('Invalid Engagement Id ' + engagementId);
         }
@@ -41,7 +41,7 @@ export const postEngagement = async (
     errorCallback: (errorMessage: string) => void,
 ) => {
     try {
-        await http.PostRequest(API.CREATE_ENGAGEMENT, data);
+        await http.PostRequest(Endpoints.Engagement.CREATE, data);
         successCallback();
     } catch (e: unknown) {
         let errorMessage = '';
@@ -60,7 +60,7 @@ export const putEngagement = async (
     errorCallback: (errorMessage: string) => void,
 ) => {
     try {
-        const response = await http.PutRequest(API.UPDATE_ENGAGEMENT, data);
+        const response = await http.PutRequest(Endpoints.Engagement.UPDATE, data);
         successCallback(response.data);
     } catch (e: unknown) {
         let errorMessage = '';
