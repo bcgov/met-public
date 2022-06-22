@@ -25,3 +25,6 @@ class EngagementSchema(Schema):
     created_date = fields.Str(data_key='created_date')
     updated_date = fields.Str(data_key='updated_date')
     published_date = fields.Str(data_key='published_date')
+    content = fields.Str(data_key='content')
+    rich_content = fields.Str(data_key='rich_content')
+    banner_url = fields.Str(data_key='banner_url')
