@@ -76,7 +76,7 @@ class _Config():  # pylint: disable=too-few-public-methods
     JWT_OIDC_CACHING_ENABLED = os.getenv('JWT_OIDC_CACHING_ENABLED', 'True')
     JWT_OIDC_JWKS_CACHE_TIMEOUT = 300
 
-    print(f'SQLAlchemy URL (_Config): {_Config.SQLALCHEMY_DATABASE_URI}')
+    print(f'SQLAlchemy URL (_Config): {SQLALCHEMY_DATABASE_URI}')
 
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
