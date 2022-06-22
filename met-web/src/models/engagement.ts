@@ -1,3 +1,5 @@
+import { Survey } from "./survey";
+
 export interface Engagement {
     id: number;
     name: string;
@@ -10,4 +12,6 @@ export interface Engagement {
     user_id: string;
     created_date: string;
     updated_date: string;
+
+    survey?: Survey;
 }

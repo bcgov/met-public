@@ -1,3 +1,5 @@
 {
-    "makefile.extensionOutputFolder": "./.vscode"
+    "makefile.extensionOutputFolder": "./.vscode",
+    "python.pythonPath": "met-api/venv/bin/python",
+    "python.envFile": "${workspaceFolder}/met-api/.env"
 }
