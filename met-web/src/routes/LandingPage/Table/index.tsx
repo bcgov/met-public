@@ -13,7 +13,7 @@ import { visuallyHidden } from '@mui/utils';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { fetchAll } from '../../../services/engagementService';
 import { Link } from 'react-router-dom';
-import { fabClasses, Link as MuiLink } from '@mui/material';
+import { Link as MuiLink } from '@mui/material';
 import { EngagementTableCell } from './TableElements';
 import { formatDate } from '../../../components/common/dateHelper';
 import { hasKey } from '../../../utils';
