@@ -105,7 +105,7 @@ const EngagementForm = () => {
 
         setEngagementFormError(errors);
 
-        return Object.values(errors).some((isError) => isError);
+        return Object.values(errors).some((isError: unknown) => isError);
     };
     const handleCreateEngagement = () => {
         const errorExists = validateForm();
@@ -262,7 +262,7 @@ const EngagementForm = () => {
                                             handleEditorStateChange={handleRichContentChange}
                                             initialRawEditorState={savedEngagement.rich_content || ''}
                                             error={engagementFormError.content}
-                                            helperText="Description cannot be empty"
+                                            helperText="Content cannot be empty"
                                         />
                                     </Grid>
                                 </Grid>
