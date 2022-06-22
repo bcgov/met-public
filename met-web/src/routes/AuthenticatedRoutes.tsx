@@ -3,10 +3,10 @@ import { Route, Routes } from 'react-router-dom';
 import NotFound from './NotFound';
 import LandingPage from './LandingPage/LandingPage';
 import { ThemeProvider } from '@mui/system';
-import { BaseTheme, PublicTheme } from '../styles/Theme';
-import UserService from '../services/userService';
-import View from '../components/Form/View';
-import Engagement from '../components/engagement';
+import { BaseTheme, PublicTheme } from 'styles/Theme';
+import UserService from 'services/userService';
+import View from 'components/Form/View';
+import Engagement from 'components/engagement';
 
 const AuthenticatedRoutes = () => {
     let adminRole = UserService.hasAdminRole();
