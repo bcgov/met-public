@@ -10,14 +10,14 @@ import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Paper from '@mui/material/Paper';
 import { visuallyHidden } from '@mui/utils';
-import { useAppDispatch, useAppSelector } from '../../../hooks';
-import { fetchAll } from '../../../services/engagementService';
+import { useAppDispatch, useAppSelector } from 'hooks';
+import { fetchAll } from 'services/engagementService';
 import { Link } from 'react-router-dom';
 import { Link as MuiLink } from '@mui/material';
 import { EngagementTableCell } from './TableElements';
-import { formatDate } from '../../../components/common/dateHelper';
-import { hasKey } from '../../../utils';
-import { Engagement } from '../../../models/engagement';
+import { formatDate } from 'components/common/dateHelper';
+import { hasKey } from 'utils';
+import { Engagement } from 'models/engagement';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
@@ -225,7 +225,7 @@ function EnhancedTable({ filter = { key: '', value: '' } }) {
                                     return (
                                         <TableRow hover tabIndex={-1} key={row.id}>
                                             <EngagementTableCell align="left">
-                                                <MuiLink component={Link} to={`/engagement/${Number(row.id)}`}>
+                                                <MuiLink component={Link} to={`/engagement/form/${Number(row.id)}`}>
                                                     {row.name}
                                                 </MuiLink>
                                             </EngagementTableCell>

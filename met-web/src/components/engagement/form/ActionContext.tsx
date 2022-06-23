@@ -1,8 +1,8 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { postEngagement, putEngagement, getEngagement } from '../../services/engagementService';
+import { postEngagement, putEngagement, getEngagement } from '../../../services/engagementService';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EngagementContext, EngagementForm, EngagementParams } from './types';
-import { Engagement } from '../../models/engagement';
+import { Engagement } from '../../../models/engagement';
 
 export const ActionContext = createContext<EngagementContext>({
     handleCreateEngagementRequest: (_engagement: EngagementForm) => {
@@ -24,6 +24,9 @@ export const ActionContext = createContext<EngagementContext>({
         user_id: '',
         created_date: '',
         updated_date: '',
+        banner_url: '',
+        content: '',
+        rich_content: '',
     },
     engagementId: 'create',
     loadingSavedEngagement: true,
@@ -48,6 +51,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         user_id: '',
         created_date: '',
         updated_date: '',
+        banner_url: '',
+        content: '',
+        rich_content: '',
     });
 
     useEffect(() => {
@@ -83,6 +89,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 end_date: engagement.toDate,
                 description: engagement.description,
                 rich_description: engagement.richDescription,
+                content: engagement.content,
+                rich_content: engagement.richContent,
             },
             () => {
                 //TODO engagement created success message in notification module
@@ -107,6 +115,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 end_date: engagement.toDate,
                 description: engagement.description,
                 rich_description: engagement.richDescription,
+                content: engagement.content,
+                rich_content: engagement.richContent,
             },
             () => {
                 //TODO engagement update success message in notification module

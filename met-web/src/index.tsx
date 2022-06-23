@@ -5,9 +5,9 @@ import './index.scss';
 import { store } from './store';
 import { Provider } from 'react-redux';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
-import { BaseTheme } from './styles/Theme';
+import { BaseTheme } from 'styles/Theme';
 import { Formio } from '@formio/react';
-import { AppConfig } from './config';
+import { AppConfig } from 'config';
 // import reportWebVitals from './reportWebVitals';
 
 Formio.setProjectUrl(AppConfig.formio.projectUrl);

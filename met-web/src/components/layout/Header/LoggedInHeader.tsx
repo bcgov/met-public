@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import UserService from '../../../services/userService';
+import UserService from 'services/userService';
 import { useMediaQuery, Theme } from '@mui/material';
 import SideNav from '../SideNav/SideNav';
 import CssBaseline from '@mui/material/CssBaseline';

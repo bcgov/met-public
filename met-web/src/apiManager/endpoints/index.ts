@@ -1,4 +1,4 @@
-import { AppConfig } from '../../config';
+import { AppConfig } from 'config';
 
 const Endpoints = {
     Engagement: {

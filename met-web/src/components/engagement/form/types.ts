@@ -1,4 +1,4 @@
-import { Engagement } from '../../models/engagement';
+import { Engagement } from '../../../models/engagement';
 
 export interface EngagementContext {
     handleCreateEngagementRequest: (_engagement: EngagementForm) => void;
@@ -16,6 +16,8 @@ export interface EngagementForm {
     status_id: string;
     fromDate: string;
     toDate: string;
+    content: string;
+    richContent: string;
 }
 
 export type EngagementParams = {

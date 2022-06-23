@@ -1,10 +1,10 @@
 import { setEngagements } from './engagementSlice';
-import http from '../../apiManager/httpRequestHandler';
+import http from 'apiManager/httpRequestHandler';
 import { AnyAction, Dispatch } from 'redux';
-import { Engagement } from '../../models/engagement';
+import { Engagement } from 'models/engagement';
 import { PostEngagementRequest, PutEngagementRequest } from './types';
-import Endpoints from '../../apiManager/endpoints';
-import { replaceUrl } from '../../helper';
+import Endpoints from 'apiManager/endpoints';
+import { replaceUrl } from 'helper';
 
 export const fetchAll = async (dispatch: Dispatch<AnyAction>): Promise<Engagement[]> => {
     const responseData = await http.GetRequest(Endpoints.Engagement.GET_ALL);
