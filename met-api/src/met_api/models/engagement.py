@@ -52,6 +52,8 @@ class Engagement(db.Model):
             rich_description=engagement.get('rich_description', None),
             start_date=engagement.get('start_date', None),
             end_date=engagement.get('end_date', None),
+            status_id=1,
+            user_id=1,
             created_date=datetime.utcnow(),
             updated_date=datetime.utcnow(),
             published_date=None
