@@ -35,15 +35,13 @@ class TestEngagemntInfo(dict, Enum):
         'name': 'My Test Engagement',
         'start_date': datetime.datetime.now().strftime('%m/%d/%Y, %H:%M:%S'),
         'end_date': datetime.datetime.now().strftime('%m/%d/%Y, %H:%M:%S'),
+        'banner_url': '',
+        'description': 'My Test Engagement Description',
+        'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\"type\":\"unstyled\",\
+        \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
         'content': 'Content Sample',
-        'description': 'My Test Engagement Description',        
-        'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\
-            \"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\
-            \"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',        
-        'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\
-            \"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\
-            \"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',        
-        'banner_url': ''
+        'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\"type\":\"unstyled\",\"depth\":0,\
+        \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"'
     }
 
 
