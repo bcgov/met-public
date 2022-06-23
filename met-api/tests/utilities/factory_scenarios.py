@@ -33,13 +33,13 @@ class TestEngagemntInfo(dict, Enum):
 
     engagement1 = {
         'name': 'My Test Engagement',
-        'description': 'My Test Engagement Description',
         'start_date': datetime.datetime.now().strftime('%m/%d/%Y, %H:%M:%S'),
         'end_date': datetime.datetime.now().strftime('%m/%d/%Y, %H:%M:%S'),
-        'rich_description': 'Rich Description Sample',
         'content': 'Content Sample',
-        'rich_content': 'Rich Content Sample',
-        'banner_url': 'Rich Content Sample'
+        'description': 'My Test Engagement Description',
+        'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
+        'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
+        'banner_url': ''
     }
 
 
