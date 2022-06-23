@@ -44,23 +44,23 @@ objects:
         containers:
         - env:
           - name: FLASK_ENV
-            value: docker
-          - name: DATABASE_DOCKER_USERNAME
+            value: production
+          - name: DATABASE_USERNAME
             valueFrom:
               secretKeyRef:
                 key: database-user
                 name: ${DB_APP_NAME}
-          - name: DATABASE_DOCKER_PASSWORD
+          - name: DATABASE_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: database-password
                 name: ${DB_APP_NAME}
-          - name: DATABASE_DOCKER_NAME
+          - name: DATABASE_NAME
             valueFrom:
               secretKeyRef:
                 key: database-name
                 name: ${DB_APP_NAME}
-          - name: DATABASE_DOCKER_HOST
+          - name: DATABASE_HOST
             value: ${DB_APP_NAME}
           envFrom:
           - configMapRef:

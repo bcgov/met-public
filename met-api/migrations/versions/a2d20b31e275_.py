@@ -53,14 +53,20 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     
+    conn = op.get_bind()
+
     op.bulk_insert(engagement_status_table, [
         {'id': 1, 'status_name': 'draft', 'description': 'Test Description', 'created_date': datetime.utcnow(), 'updated_date': datetime.utcnow()}
     ])
+    
+    conn.execute('SELECT setval(\'engagement_status_id_seq\', 1);')
     
     op.bulk_insert(user_table, [
         {'id': 1, 'first_name': 'A', 'middle_name': 'B', 'last_name': 'C', 'email_id': 1, 'contact_number': 1, 'created_date': datetime.utcnow(), 'updated_date': datetime.utcnow()}
     ])
     
+    conn.execute('SELECT setval(\'user_id_seq\', 1);')
+
     # ### end Alembic commands ###
 
 

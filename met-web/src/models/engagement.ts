@@ -1,3 +1,5 @@
+import { Survey } from './survey';
+
 export interface Engagement {
     id: number;
     name: string;
@@ -13,4 +15,6 @@ export interface Engagement {
     content: string;
     rich_content: string;
     banner_url: string;
+
+    survey?: Survey;
 }

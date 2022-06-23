@@ -62,7 +62,7 @@ class _Config():  # pylint: disable=too-few-public-methods
     DB_PASSWORD = os.getenv('DATABASE_PASSWORD', '')
     DB_NAME = os.getenv('DATABASE_NAME', '')
     DB_HOST = os.getenv('DATABASE_HOST', '')
-    DB_PORT = os.getenv('DATABASE_PORT', '54332')
+    DB_PORT = os.getenv('DATABASE_PORT', '5432')
     SQLALCHEMY_DATABASE_URI = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}'
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -76,7 +76,7 @@ class _Config():  # pylint: disable=too-few-public-methods
     JWT_OIDC_CACHING_ENABLED = os.getenv('JWT_OIDC_CACHING_ENABLED', 'True')
     JWT_OIDC_JWKS_CACHE_TIMEOUT = 300
 
-    print('SQLAlchemy URL (_Config): ')
+    print(f'SQLAlchemy URL (_Config): {SQLALCHEMY_DATABASE_URI}')
 
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
@@ -84,7 +84,7 @@ class DevConfig(_Config):  # pylint: disable=too-few-public-methods
 
     TESTING = False
     DEBUG = True
-    print('SQLAlchemy URL (DevConfig): ')
+    print(f'SQLAlchemy URL (DevConfig): {_Config.SQLALCHEMY_DATABASE_URI}')
 
 
 class TestConfig(_Config):  # pylint: disable=too-few-public-methods
