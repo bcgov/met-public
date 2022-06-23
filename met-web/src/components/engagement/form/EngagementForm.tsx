@@ -1,9 +1,9 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Typography, Grid, TextField, Button, CircularProgress } from '@mui/material';
-import { MetPaper, MidScreenLoader } from '../common';
+import { MetPaper, MidScreenLoader, MetPageGridContainer } from '../../common';
 import RichTextEditor from './RichTextEditor';
 import { ActionContext } from './ActionContext';
-import { formatDate } from '../common/dateHelper';
+import { formatDate } from '../../common/dateHelper';
 
 const EngagementForm = () => {
     const {
@@ -23,8 +23,10 @@ const EngagementForm = () => {
         toDate: '',
         description: '',
         status_id: '',
+        content: '',
     });
-    const [richDescription, setRawEditorState] = useState('');
+    const [richDescription, setRichDescription] = useState('');
+    const [richContent, setRichContent] = useState('');
 
     useEffect(() => {
         setEngagementFormData({
@@ -33,8 +35,10 @@ const EngagementForm = () => {
             toDate: formatDate(savedEngagement.end_date),
             description: savedEngagement?.description || '',
             status_id: savedEngagement?.status_id || '',
+            content: savedEngagement?.content || '',
         });
-        setRawEditorState(savedEngagement?.rich_description || '');
+        setRichDescription(savedEngagement?.rich_description || '');
+        setRichContent(savedEngagement?.rich_content || '');
     }, [savedEngagement]);
 
     const [engagementFormError, setEngagementFormError] = useState({
@@ -42,6 +46,7 @@ const EngagementForm = () => {
         fromDate: false,
         toDate: false,
         description: false,
+        content: false,
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -54,6 +59,7 @@ const EngagementForm = () => {
             [e.target.name]: false,
         });
     };
+
     const handleDescriptionChange = (rawText: string) => {
         setEngagementFormData({
             ...engagementFormData,
@@ -66,11 +72,27 @@ const EngagementForm = () => {
         });
     };
 
-    const handleEditorStateChange = (newState: string) => {
-        setRawEditorState(newState);
+    const handleContentChange = (rawText: string) => {
+        setEngagementFormData({
+            ...engagementFormData,
+            content: rawText,
+        });
+
+        setEngagementFormError({
+            ...engagementFormError,
+            content: false,
+        });
     };
 
-    const { name, fromDate, toDate, description } = engagementFormData;
+    const handleRichDescriptionChange = (newState: string) => {
+        setRichDescription(newState);
+    };
+
+    const handleRichContentChange = (newState: string) => {
+        setRichContent(newState);
+    };
+
+    const { name, fromDate, toDate, description, content } = engagementFormData;
 
     const validateForm = () => {
         const errors = {
@@ -78,11 +100,12 @@ const EngagementForm = () => {
             fromDate: !fromDate,
             toDate: !toDate,
             description: !description,
+            content: !content,
         };
 
         setEngagementFormError(errors);
 
-        return Object.values(errors).some((isError) => isError);
+        return Object.values(errors).some((isError: unknown) => isError);
     };
     const handleCreateEngagement = () => {
         const errorExists = validateForm();
@@ -91,6 +114,7 @@ const EngagementForm = () => {
             handleCreateEngagementRequest({
                 ...engagementFormData,
                 richDescription: richDescription,
+                richContent: richContent,
             });
         }
     };
@@ -102,6 +126,7 @@ const EngagementForm = () => {
             handleUpdateEngagementRequest({
                 ...engagementFormData,
                 richDescription: richDescription,
+                richContent: richContent,
             });
         }
     };
@@ -111,7 +136,7 @@ const EngagementForm = () => {
     }
 
     return (
-        <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2}>
+        <MetPageGridContainer container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2}>
             <Grid item xs={12}>
                 <Typography variant="h4">Engagement Details</Typography>
             </Grid>
@@ -208,12 +233,42 @@ const EngagementForm = () => {
                             </Typography>
                             <RichTextEditor
                                 setRawText={handleDescriptionChange}
-                                handleEditorStateChange={handleEditorStateChange}
+                                handleEditorStateChange={handleRichDescriptionChange}
                                 initialRawEditorState={savedEngagement.rich_description || ''}
                                 error={engagementFormError.description}
                                 helperText="Description cannot be empty"
                             />
                         </Grid>
+
+                        <Grid item xs={12}>
+                            <Typography variant="h6" sx={{ marginBottom: '2px' }}>
+                                Content Block
+                            </Typography>
+                            <MetPaper>
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="flex-start"
+                                    spacing={2}
+                                    sx={{ padding: '1em' }}
+                                >
+                                    <Grid item xs={12}>
+                                        <Typography variant="h6" sx={{ marginBottom: '2px' }}>
+                                            Engagement Content
+                                        </Typography>
+                                        <RichTextEditor
+                                            setRawText={handleContentChange}
+                                            handleEditorStateChange={handleRichContentChange}
+                                            initialRawEditorState={savedEngagement.rich_content || ''}
+                                            error={engagementFormError.content}
+                                            helperText="Content cannot be empty"
+                                        />
+                                    </Grid>
+                                </Grid>
+                            </MetPaper>
+                        </Grid>
+
                         <Grid item xs={12} md={5}>
                             {creatingNewEngagement ? (
                                 <Button
@@ -240,7 +295,7 @@ const EngagementForm = () => {
                     </Grid>
                 </MetPaper>
             </Grid>
-        </Grid>
+        </MetPageGridContainer>
     );
 };
 

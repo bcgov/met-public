@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
 import { SearchBar } from './SearchBar';
+import { MetPageGridContainer } from '../../components/common';
 
 const LandingPage = () => {
     const [searchFilter, setSearchFilter] = useState({
@@ -19,7 +20,7 @@ const LandingPage = () => {
     };
 
     return (
-        <Grid
+        <MetPageGridContainer
             direction="row"
             justifyContent="flex-start"
             alignItems="flex-start"
@@ -32,7 +33,7 @@ const LandingPage = () => {
             </Grid>
             <Grid item xs={0} md={4} lg={4}></Grid>
             <Grid item xs={12} md={4} lg={3}>
-                <Link to="/engagement/create">
+                <Link to="/engagement/form/create">
                     <Button variant="contained" fullWidth>
                         + Create An Engagement
                     </Button>
@@ -41,7 +42,7 @@ const LandingPage = () => {
             <Grid item xs={12} lg={10}>
                 <EnhancedTable filter={searchFilter} />
             </Grid>
-        </Grid>
+        </MetPageGridContainer>
     );
 };
 

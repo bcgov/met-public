@@ -10,6 +10,8 @@ export interface PostEngagementRequest {
     end_date: string;
     description: string;
     rich_description: string;
+    content: string;
+    rich_content: string;
 }
 
 export interface PutEngagementRequest {
@@ -19,4 +21,6 @@ export interface PutEngagementRequest {
     end_date: string;
     description: string;
     rich_description: string;
+    content: string;
+    rich_content: string;
 }

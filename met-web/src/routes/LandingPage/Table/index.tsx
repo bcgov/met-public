@@ -198,7 +198,7 @@ function EnhancedTable({ filter = { key: '', value: '' } }) {
                                     return (
                                         <TableRow hover tabIndex={-1} key={row.id}>
                                             <EngagementTableCell align="left">
-                                                <MuiLink component={Link} to={`/engagement/${Number(row.id)}`}>
+                                                <MuiLink component={Link} to={`/engagement/form/${Number(row.id)}`}>
                                                     {row.name}
                                                 </MuiLink>
                                             </EngagementTableCell>
