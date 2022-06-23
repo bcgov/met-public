@@ -36,16 +36,13 @@ class TestEngagemntInfo(dict, Enum):
         'start_date': datetime.datetime.now().strftime('%m/%d/%Y, %H:%M:%S'),
         'end_date': datetime.datetime.now().strftime('%m/%d/%Y, %H:%M:%S'),
         'content': 'Content Sample',
-        'description': 'My Test Engagement Description',
-        
+        'description': 'My Test Engagement Description',        
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\
-        \"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\
-        \"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
-        
+            \"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\
+            \"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',        
         'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\
-        \"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\
-        \"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
-        
+            \"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\
+            \"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',        
         'banner_url': ''
     }
 
