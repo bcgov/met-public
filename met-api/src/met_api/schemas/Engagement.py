@@ -4,7 +4,7 @@ Manages the engagement
 """
 
 from marshmallow import EXCLUDE, Schema, fields
-
+from .engagement_status import EngagementStatusSchema
 
 class EngagementSchema(Schema):
     """Schema for engagement."""
@@ -21,8 +21,9 @@ class EngagementSchema(Schema):
     start_date = fields.Str(data_key='start_date')
     end_date = fields.Str(data_key='end_date')
     status_id = fields.Int(data_key='status_id')
-    status_name = fields.Str(data_key="status_name")
     user_id = fields.Int(data_key='user_id')
     created_date = fields.Str(data_key='created_date')
     updated_date = fields.Str(data_key='updated_date')
     published_date = fields.Str(data_key='published_date')
+    engagement_status = fields.Nested(EngagementStatusSchema)
+

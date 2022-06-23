@@ -4,11 +4,11 @@ export interface Engagement {
     description: string;
     rich_description: string;
     status_id: number;
-    status_name: string;
     start_date: string;
     end_date: string;
     published_date: string;
     user_id: string;
     created_date: string;
     updated_date: string;
+    status: object;
 }

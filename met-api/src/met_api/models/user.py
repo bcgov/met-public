@@ -24,7 +24,6 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
     engagement_id = db.relationship('Engagement', backref='user', cascade='all, delete')
-
     @classmethod
     def get_user(cls, _id):
         """Get a user with the provided id."""
@@ -47,6 +46,8 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
             external_id=user.get('external_id', None),
             created_date=datetime.utcnow(),
             updated_date=datetime.utcnow(),
+            status_id=1,
+            user_id=1,
         )
         db.session.add(new_user)
         db.session.commit()

@@ -24,13 +24,13 @@ class EngagementService:
         engagement = {
             'id': request_engagement.get('id', None),
             'name': request_engagement.get('name', None),
-            'status_name': request_engagement.get('status_name',None),
             'description': request_engagement.get('description', None),
             'rich_description': request_engagement.get('rich_description', None),
             'start_date': request_engagement.get('start_date', None),
             'end_date': request_engagement.get('end_date', None),
             'created_date': request_engagement['created_date'],
             'published_date': request_engagement.get('published_date', None),
+            'status' : request_engagement.get('engagement_status',None),
         }
         return engagement
 

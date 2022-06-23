@@ -14,9 +14,9 @@ export interface EngagementForm {
     description: string;
     richDescription: string;
     status_id: number;
-    status_name: string;
     fromDate: string;
     toDate: string;
+    status: object;
 }
 
 export type EngagementParams = {
