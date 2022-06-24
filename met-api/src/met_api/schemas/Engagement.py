@@ -4,6 +4,7 @@ Manages the engagement
 """
 
 from marshmallow import EXCLUDE, Schema, fields
+from .engagement_status import EngagementStatusSchema
 
 
 class EngagementSchema(Schema):
@@ -28,3 +29,4 @@ class EngagementSchema(Schema):
     content = fields.Str(data_key='content')
     rich_content = fields.Str(data_key='rich_content')
     banner_url = fields.Str(data_key='banner_url')
+    engagement_status = fields.Nested(EngagementStatusSchema)

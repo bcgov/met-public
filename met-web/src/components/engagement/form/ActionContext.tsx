@@ -17,7 +17,7 @@ export const ActionContext = createContext<EngagementContext>({
         name: '',
         description: '',
         rich_description: '',
-        status_id: '',
+        status_id: 0,
         start_date: '',
         end_date: '',
         published_date: '',
@@ -27,6 +27,7 @@ export const ActionContext = createContext<EngagementContext>({
         banner_url: '',
         content: '',
         rich_content: '',
+        status: { status_name: '' },
     },
     engagementId: 'create',
     loadingSavedEngagement: true,
@@ -44,7 +45,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         name: '',
         description: '',
         rich_description: '',
-        status_id: '',
+        status_id: 0,
         start_date: '',
         end_date: '',
         published_date: '',
@@ -54,6 +55,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         banner_url: '',
         content: '',
         rich_content: '',
+        status: { status_name: '' },
     });
 
     useEffect(() => {
@@ -86,6 +88,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             {
                 name: engagement.name,
                 start_date: engagement.fromDate,
+                status_id: engagement.status_id,
                 end_date: engagement.toDate,
                 description: engagement.description,
                 rich_description: engagement.richDescription,
@@ -112,6 +115,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 id: Number(engagementId),
                 name: engagement.name,
                 start_date: engagement.fromDate,
+                status_id: engagement.status_id,
                 end_date: engagement.toDate,
                 description: engagement.description,
                 rich_description: engagement.richDescription,

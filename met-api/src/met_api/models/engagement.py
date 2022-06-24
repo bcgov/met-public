@@ -2,13 +2,12 @@
 
 Manages the engagement
 """
-
 from datetime import datetime
-
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.dialects.postgresql import JSON
-
-from .db import db, ma
+from met_api.schemas.Engagement import EngagementSchema
+from .engagement_status import EngagementStatus
+from .db import db
 from .default_method_result import DefaultMethodResult
 
 
@@ -16,7 +15,6 @@ class Engagement(db.Model):
     """Definition of the Engagement entity."""
 
     __tablename__ = 'engagement'
-
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50))
     description = db.Column(db.Text, unique=False, nullable=False)
@@ -36,15 +34,15 @@ class Engagement(db.Model):
     def get_engagement(cls, engagement_id):
         """Get an engagement."""
         engagement_schema = EngagementSchema()
-        request = db.session.query(Engagement).filter_by(id=engagement_id).first()
-        return engagement_schema.dump(request)
+        data = db.session.query(Engagement).filter_by(id=engagement_id).first()
+        return engagement_schema.dump(data)
 
     @classmethod
     def get_all_engagements(cls):
         """Get all engagements."""
         engagements_schema = EngagementSchema(many=True)
-        query = db.session.query(Engagement).order_by(Engagement.id.asc()).all()
-        return engagements_schema.dump(query)
+        data = db.session.query(Engagement).join(EngagementStatus).order_by(Engagement.id.asc()).all()
+        return engagements_schema.dump(data)
 
     @classmethod
     def create_engagement(cls, engagement) -> DefaultMethodResult:
@@ -66,7 +64,6 @@ class Engagement(db.Model):
         )
         db.session.add(new_engagement)
         db.session.commit()
-
         return DefaultMethodResult(True, 'Engagement Added', new_engagement.id)
 
     @classmethod
@@ -86,14 +83,3 @@ class Engagement(db.Model):
         Engagement.query.filter_by(id=engagement.get('id', None)).update(update_fields)
         db.session.commit()
         return DefaultMethodResult(True, 'Engagement Updated', engagement['id'])
-
-
-class EngagementSchema(ma.Schema):
-    """Engagement Schema."""
-
-    class Meta:  # pylint: disable=too-few-public-methods
-        """Meta class."""
-
-        fields = (
-            'id', 'name', 'description', 'rich_description', 'start_date', 'end_date', 'status_id', 'user_id',
-            'updated_date', 'published_date', 'created_date', 'content', 'rich_content', 'banner_url')

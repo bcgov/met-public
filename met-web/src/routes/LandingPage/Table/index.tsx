@@ -232,7 +232,9 @@ function EnhancedTable({ filter = { key: '', value: '' } }) {
                                             <EngagementTableCell align="left">
                                                 {formatDate(row.created_date)}
                                             </EngagementTableCell>
-                                            <EngagementTableCell align="left">{row.status_id}</EngagementTableCell>
+                                            <EngagementTableCell align="left">
+                                                {row.status.status_name}
+                                            </EngagementTableCell>
                                             <EngagementTableCell align="left">
                                                 {formatDate(row.published_date)}
                                             </EngagementTableCell>

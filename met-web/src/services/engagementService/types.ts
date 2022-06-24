@@ -7,6 +7,7 @@ export interface EngagementState {
 export interface PostEngagementRequest {
     name: string;
     start_date: string;
+    status_id: number;
     end_date: string;
     description: string;
     rich_description: string;
@@ -18,6 +19,7 @@ export interface PutEngagementRequest {
     id: number;
     name: string;
     start_date: string;
+    status_id: number;
     end_date: string;
     description: string;
     rich_description: string;

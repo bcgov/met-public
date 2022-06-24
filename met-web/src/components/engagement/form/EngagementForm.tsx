@@ -22,8 +22,9 @@ const EngagementForm = () => {
         fromDate: '',
         toDate: '',
         description: '',
-        status_id: '',
         content: '',
+        status_id: 0,
+        status: { status_name: '' },
     });
     const [richDescription, setRichDescription] = useState('');
     const [richContent, setRichContent] = useState('');
@@ -34,8 +35,9 @@ const EngagementForm = () => {
             fromDate: formatDate(savedEngagement.start_date),
             toDate: formatDate(savedEngagement.end_date),
             description: savedEngagement?.description || '',
-            status_id: savedEngagement?.status_id || '',
             content: savedEngagement?.content || '',
+            status_id: savedEngagement?.status_id || 0,
+            status: savedEngagement?.status || {},
         });
         setRichDescription(savedEngagement?.rich_description || '');
         setRichContent(savedEngagement?.rich_content || '');
