@@ -167,7 +167,7 @@ function EnhancedTable({ filter = { key: '', value: '' } }) {
 
     const rows = useAppSelector<Engagement[]>((state) => state.engagement.allEngagements);
 
-    const [filteredRows, setFilteredRows] = useState<any[]>(rows);
+    const [filteredRows, setFilteredRows] = useState<Engagement[]>(rows);
     const [order, setOrder] = useState<Order>('asc');
     const [orderBy, setOrderBy] = useState<keyof Engagement>('created_date');
     const [page, setPage] = useState(0);
