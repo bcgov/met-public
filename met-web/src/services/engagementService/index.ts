@@ -5,7 +5,6 @@ import { Engagement } from 'models/engagement';
 import { PostEngagementRequest, PutEngagementRequest } from './types';
 import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
-import { ApiResponse } from 'apiManager/httpRequestHandler/types';
 
 export const fetchAll = async (dispatch: Dispatch<AnyAction>): Promise<Engagement[]> => {
     const responseData = await http.GetRequest<Engagement[]>(Endpoints.Engagement.GET_ALL);
@@ -25,7 +24,11 @@ export const getEngagement = async (
             throw new Error('Invalid Engagement Id ' + engagementId);
         }
         const responseData = await http.GetRequest<Engagement>(url);
-        successCallback(responseData.data.result!);
+        if (responseData.data.result) {
+            successCallback(responseData.data.result);
+        } else {
+            errorCallback('Missing engagement object');
+        }
     } catch (e: unknown) {
         let errorMessage = '';
         if (typeof e === 'string') {

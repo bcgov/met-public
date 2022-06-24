@@ -23,6 +23,7 @@ from met_api.auth import auth
 from met_api.schemas.Engagement import EngagementSchema
 from met_api.services.engagement_service import EngagementService
 from met_api.utils.action_result import ActionResult
+from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
@@ -73,8 +74,11 @@ class GetEngagements(Resource):
     def post():
         """Create a new engagement."""
         try:
+            user_id = TokenInfo.get_id()
             requestjson = request.get_json()
             engagment_schema = EngagementSchema().load(requestjson)
+            engagment_schema['created_by'] = user_id
+            engagment_schema['updated_by'] = user_id
             result = EngagementService().create_engagement(engagment_schema)
             return ActionResult.success(result.identifier, engagment_schema)
         except KeyError as err:
@@ -91,6 +95,8 @@ class GetEngagements(Resource):
         try:
             requestjson = request.get_json()
             engagment_schema = EngagementSchema().load(requestjson)
+            user_id = TokenInfo.get_id()
+            engagment_schema['updated_by'] = user_id
             result = EngagementService().update_engagement(engagment_schema)
             return ActionResult.success(result.identifier, engagment_schema)
         except KeyError as err:

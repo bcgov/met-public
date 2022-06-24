@@ -30,11 +30,15 @@ const initKeycloak = (dispatch: Dispatch<AnyAction>) => {
             dispatch(userToken(KeycloakData.token));
             KeycloakData.loadUserInfo().then((userDetail: UserDetail) => {
                 updateUser().then((updateUserResponse) => {
-                    userDetail.user = updateUserResponse.data.result!;
-                    dispatch(userDetails(userDetail));
-                    console.log(userDetail);
+                    if (updateUserResponse.data.result) {
+                        userDetail.user = updateUserResponse.data.result;
+                        dispatch(userDetails(userDetail));
+                        dispatch(userAuthorization(true));
+                    } else {
+                        console.error('Missing user object');
+                        dispatch(userAuthentication(false));
+                    }
                 });
-                dispatch(userAuthorization(true));
             });
 
             dispatch(userAuthentication(KeycloakData.authenticated ? true : false));
@@ -45,7 +49,7 @@ const initKeycloak = (dispatch: Dispatch<AnyAction>) => {
       */
         })
         .catch((error) => {
-            console.log(error);
+            console.error(error);
             dispatch(userAuthentication(false));
         });
 };
