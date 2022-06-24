@@ -10,7 +10,9 @@ from .engagement_status import EngagementStatus
 from .db import db
 from .default_method_result import DefaultMethodResult
 
+
 class Engagement(db.Model):
+
     """Definition of the Engagement entity."""
     __tablename__ = 'engagement'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
