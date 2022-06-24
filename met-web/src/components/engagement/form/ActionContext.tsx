@@ -3,6 +3,7 @@ import { postEngagement, putEngagement, getEngagement } from '../../../services/
 import { useNavigate, useParams } from 'react-router-dom';
 import { EngagementContext, EngagementForm, EngagementParams } from './types';
 import { Engagement } from '../../../models/engagement';
+import { Notification } from 'components/common/notification';
 
 export const ActionContext = createContext<EngagementContext>({
     handleCreateEngagementRequest: (_engagement: EngagementForm) => {
@@ -36,8 +37,9 @@ export const ActionContext = createContext<EngagementContext>({
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const { engagementId } = useParams<EngagementParams>();
     const navigate = useNavigate();
-
+    const [success, setSuccess] = useState(false);
     const [saving, setSaving] = useState(false);
+    const [open, setOpen] = useState(false);
     const [loadingSavedEngagement, setLoadingSavedEngagement] = useState(true);
 
     const [savedEngagement, setSavedEngagement] = useState<Engagement>({
@@ -97,11 +99,15 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             },
             () => {
                 //TODO engagement created success message in notification module
+                setOpen(true);
+                setSuccess(true);
                 setSaving(false);
                 navigate('/');
             },
             (errorMessage: string) => {
                 //TODO:engagement create error message in notification module
+                setOpen(true);
+                setSuccess(false);
                 setSaving(false);
                 console.log(errorMessage);
             },
@@ -124,11 +130,15 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             },
             () => {
                 //TODO engagement update success message in notification module
+                setOpen(true);
+                setSuccess(true);
                 setSaving(false);
                 navigate('/');
             },
             (errorMessage: string) => {
                 //TODO: engagement update error message in notification module
+                setOpen(true);
+                setSuccess(false);
                 setSaving(false);
                 console.log(errorMessage);
             },
@@ -147,6 +157,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             }}
         >
             {children}
+            <Notification open={open} text={'Engagement Created Successfully'} setOpen={setOpen} success={success} />
         </ActionContext.Provider>
     );
 };
