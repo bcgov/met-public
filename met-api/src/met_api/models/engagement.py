@@ -12,8 +12,8 @@ from .default_method_result import DefaultMethodResult
 
 
 class Engagement(db.Model):
-
     """Definition of the Engagement entity."""
+
     __tablename__ = 'engagement'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50))
