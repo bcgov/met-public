@@ -13,8 +13,6 @@
 # limitations under the License.
 """API endpoints for managing an engagement resource."""
 
-import json
-
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
@@ -22,6 +20,8 @@ from flask_restx import Namespace, Resource
 from met_api.auth import auth
 from met_api.schemas.Engagement import EngagementSchema
 from met_api.services.engagement_service import EngagementService
+from met_api.utils.action_result import ActionResult
+from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
@@ -42,11 +42,11 @@ class GetEngagement(Resource):
         """Fetch a single engagement matching the provided id."""
         try:
             engagement_record = EngagementService().get_engagement(engagement_id)
-            return engagement_record, 200
+            return ActionResult.success(engagement_id, engagement_record)
         except KeyError:
-            return {'status': False, 'message': 'Engagement was not found'}, 400
+            return ActionResult.error('Engagement was not found')
         except ValueError as err:
-            return {'status': False, 'message': str(err)}, 400
+            return ActionResult.error(str(err))
 
 
 @cors_preflight('GET, POST, PUT, OPTIONS')
@@ -61,9 +61,9 @@ class GetEngagements(Resource):
         """Fetch all engagements."""
         try:
             engagement_records = EngagementService().get_all_engagements()
-            return json.dumps(engagement_records), 200
+            return ActionResult.success(result=engagement_records)
         except ValueError as err:
-            return {'status': False, 'message': str(err)}, 400
+            return ActionResult.error(str(err))
 
     @staticmethod
     # @TRACER.trace()
@@ -72,14 +72,17 @@ class GetEngagements(Resource):
     def post():
         """Create a new engagement."""
         try:
+            user_id = TokenInfo.get_id()
             requestjson = request.get_json()
             engagment_schema = EngagementSchema().load(requestjson)
+            engagment_schema['created_by'] = user_id
+            engagment_schema['updated_by'] = user_id
             result = EngagementService().create_engagement(engagment_schema)
-            return {'status': result.success, 'message': result.message, 'id': result.identifier}, 200
+            return ActionResult.success(result.identifier, engagment_schema)
         except KeyError as err:
-            return {'status': False, 'message': str(err)}, 400
+            return ActionResult.error(str(err))
         except ValueError as err:
-            return {'status': False, 'message': str(err)}, 400
+            return ActionResult.error(str(err))
 
     @staticmethod
     # @TRACER.trace()
@@ -90,9 +93,11 @@ class GetEngagements(Resource):
         try:
             requestjson = request.get_json()
             engagment_schema = EngagementSchema().load(requestjson)
+            user_id = TokenInfo.get_id()
+            engagment_schema['updated_by'] = user_id
             result = EngagementService().update_engagement(engagment_schema)
-            return {'status': result.success, 'message': result.message, 'id': result.identifier}, 200
+            return ActionResult.success(result.identifier, engagment_schema)
         except KeyError as err:
-            return {'status': False, 'message': str(err)}, 400
+            return ActionResult.error(str(err))
         except ValueError as err:
-            return {'status': False, 'message': str(err)}, 400
+            return ActionResult.error(str(err))

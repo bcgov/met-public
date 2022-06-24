@@ -13,13 +13,14 @@
 # limitations under the License.
 """API endpoints for managing an user resource."""
 
-from flask import g
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
 from met_api.auth import auth
 from met_api.schemas.user import UserSchema
 from met_api.services.user_service import UserService
+from met_api.utils.action_result import ActionResult
+from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
@@ -40,18 +41,12 @@ class UserController(Resource):
     def put():
         """Update or create a user."""
         try:
-            token_info = g.token_info
-            user_data = {
-                'external_id': token_info.get('sub', None),
-                'first_name': token_info.get('given_name', None),
-                'last_name': token_info.get('family_name', None),
-                'email_id': token_info.get('email', None)
-            }
-
+            user_data = TokenInfo.get_user_data()
             user_schema = UserSchema().load(user_data)
             result = UserService().create_or_update_user(user_schema)
-            return {'status': result.success, 'message': result.message, 'id': result.identifier}, 200
+            user_schema['id'] = result.identifier
+            return ActionResult.success(result.identifier, user_schema)
         except KeyError as err:
-            return {'status': False, 'message': str(err)}, 400
+            return ActionResult.error(str(err))
         except ValueError as err:
-            return {'status': False, 'message': str(err)}, 400
+            return ActionResult.error(str(err))

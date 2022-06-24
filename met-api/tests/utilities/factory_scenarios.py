@@ -36,6 +36,8 @@ class TestEngagemntInfo(dict, Enum):
         'start_date': datetime.datetime.now().strftime('%m/%d/%Y, %H:%M:%S'),
         'end_date': datetime.datetime.now().strftime('%m/%d/%Y, %H:%M:%S'),
         'banner_url': '',
+        'created_by': '123',
+        'updated_by': '123',
         'description': 'My Test Engagement Description',
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\"type\":\"unstyled\",\
         \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',

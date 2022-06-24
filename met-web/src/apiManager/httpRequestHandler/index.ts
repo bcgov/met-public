@@ -1,8 +1,9 @@
 import axios from 'axios';
 import UserService from 'services/userService';
+import { ApiResponse } from './types';
 
-const GetRequest = (url: string, params = {}) => {
-    return axios.get(url, {
+const GetRequest = <T>(url: string, params = {}) => {
+    return axios.get<ApiResponse<T>>(url, {
         params: params,
         headers: {
             'Content-type': 'application/json',
@@ -11,8 +12,8 @@ const GetRequest = (url: string, params = {}) => {
     });
 };
 
-const PostRequest = (url: string, data = {}) => {
-    return axios.post(url, data, {
+const PostRequest = <T>(url: string, data = {}) => {
+    return axios.post<ApiResponse<T>>(url, data, {
         headers: {
             'Content-type': 'application/json',
             Authorization: `Bearer ${UserService.getToken()}`,
@@ -20,8 +21,8 @@ const PostRequest = (url: string, data = {}) => {
     });
 };
 
-const PutRequest = (url: string, data = {}) => {
-    return axios.put(url, data, {
+const PutRequest = <T>(url: string, data = {}) => {
+    return axios.put<ApiResponse<T>>(url, data, {
         headers: {
             'Content-type': 'application/json',
             Authorization: `Bearer ${UserService.getToken()}`,
