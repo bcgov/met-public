@@ -54,7 +54,7 @@ class Engagement(db.Model):
             rich_description=engagement.get('rich_description', None),
             start_date=engagement.get('start_date', None),
             end_date=engagement.get('end_date', None),
-            status_id=1, # Draft status
+            status_id=1,  # Draft status
             created_by=engagement.get('created_by', None),
             created_date=datetime.utcnow(),
             updated_by=engagement.get('updated_by', None),

@@ -61,7 +61,7 @@ class GetEngagements(Resource):
         """Fetch all engagements."""
         try:
             engagement_records = EngagementService().get_all_engagements()
-            return ActionResult.success(result = engagement_records)
+            return ActionResult.success(result=engagement_records)
         except ValueError as err:
             return ActionResult.error(str(err))
 

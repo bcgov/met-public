@@ -31,4 +31,4 @@ def test_add_engagements(client, jwt, session, engagement_info):  # pylint:disab
     rv = client.post('/api/engagement/', data=json.dumps(engagement_info),
                      headers=headers, content_type='application/json')
     assert rv.status_code == 200
-    assert rv.json.get('status') == True
+    assert rv.json.get('status') is True

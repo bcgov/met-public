@@ -4,7 +4,6 @@ Manages the engagement
 """
 
 from marshmallow import EXCLUDE, Schema, fields
-from met_api.utils.token_info import TokenInfo
 from .engagement_status import EngagementStatusSchema
 
 
