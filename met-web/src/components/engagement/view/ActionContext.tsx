@@ -18,7 +18,7 @@ export const ActionContext = createContext<EngagementViewContext>({
         name: '',
         description: '',
         rich_description: '',
-        status_id: '',
+        status_id: 0,
         start_date: '',
         end_date: '',
         published_date: '',
@@ -28,6 +28,7 @@ export const ActionContext = createContext<EngagementViewContext>({
         banner_url: '',
         content: '',
         rich_content: '',
+        status: { status_name: '' },
     },
     engagementLoading: true,
 });
@@ -41,7 +42,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         name: '',
         description: '',
         rich_description: '',
-        status_id: '',
+        status_id: 0,
         start_date: '',
         end_date: '',
         published_date: '',
@@ -51,6 +52,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         banner_url: '',
         content: '',
         rich_content: '',
+        status: { status_name: '' },
     });
     const [engagementLoading, setEngagementLoading] = useState(true);
 

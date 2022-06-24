@@ -24,7 +24,7 @@ const EngagementForm = () => {
         description: '',
         content: '',
         status_id: 0,
-        status_name: '',
+        status: { status_name: '' },
     });
     const [richDescription, setRichDescription] = useState('');
     const [richContent, setRichContent] = useState('');
@@ -37,7 +37,7 @@ const EngagementForm = () => {
             description: savedEngagement?.description || '',
             content: savedEngagement?.content || '',
             status_id: savedEngagement?.status_id || 0,
-            status_name: savedEngagement?.status_name || 'draft',
+            status: savedEngagement?.status || {},
         });
         setRichDescription(savedEngagement?.rich_description || '');
         setRichContent(savedEngagement?.rich_content || '');

@@ -1,4 +1,5 @@
 import { Survey } from './survey';
+import { Status } from './status';
 
 export interface Engagement {
     id: number;
@@ -16,5 +17,5 @@ export interface Engagement {
     rich_content: string;
     banner_url: string;
     survey?: Survey;
-    status: object;
+    status: Status;
 }

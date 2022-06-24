@@ -27,7 +27,7 @@ export const ActionContext = createContext<EngagementContext>({
         banner_url: '',
         content: '',
         rich_content: '',
-        status: {},
+        status: { status_name: '' },
     },
     engagementId: 'create',
     loadingSavedEngagement: true,
@@ -55,7 +55,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         banner_url: '',
         content: '',
         rich_content: '',
-        status: {},
+        status: { status_name: '' },
     });
 
     useEffect(() => {
