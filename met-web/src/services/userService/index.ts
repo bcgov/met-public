@@ -6,6 +6,7 @@ import { UserDetail } from './types';
 import { AppConfig } from 'config';
 import Endpoints from 'apiManager/endpoints';
 import http from 'apiManager/httpRequestHandler';
+import { User } from 'models/user';
 
 const KeycloakData = _kc;
 
@@ -27,9 +28,12 @@ const initKeycloak = (dispatch: Dispatch<AnyAction>) => {
             }
 
             dispatch(userToken(KeycloakData.token));
-            KeycloakData.loadUserInfo().then((res: UserDetail) => {
-                updateUser();
-                dispatch(userDetails(res));
+            KeycloakData.loadUserInfo().then((userDetail: UserDetail) => {
+                updateUser().then((updateUserResponse) => {
+                    userDetail.user = updateUserResponse.data.result!;
+                    dispatch(userDetails(userDetail));
+                    console.log(userDetail);
+                });
                 dispatch(userAuthorization(true));
             });
 
@@ -112,10 +116,10 @@ const hasAdminRole = () => KeycloakData.hasResourceRole(AppConfig.keycloak.admin
 
 const updateUser = async () => {
     try {
-        await http.PutRequest(Endpoints.User.CREATE_UPDATE);
-        // TODO: update store with current user info.
+        return await http.PutRequest<User>(Endpoints.User.CREATE_UPDATE);
     } catch (e: unknown) {
         console.error(e);
+        return Promise.reject(e);
     }
 };
 

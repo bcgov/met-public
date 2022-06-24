@@ -5,11 +5,13 @@ import { Engagement } from 'models/engagement';
 import { PostEngagementRequest, PutEngagementRequest } from './types';
 import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
+import { ApiResponse } from 'apiManager/httpRequestHandler/types';
 
 export const fetchAll = async (dispatch: Dispatch<AnyAction>): Promise<Engagement[]> => {
-    const responseData = await http.GetRequest(Endpoints.Engagement.GET_ALL);
-    dispatch(setEngagements(responseData.data));
-    return responseData.data;
+    const responseData = await http.GetRequest<Engagement[]>(Endpoints.Engagement.GET_ALL);
+    const engagements = responseData.data.result ?? [];
+    dispatch(setEngagements(engagements));
+    return engagements;
 };
 
 export const getEngagement = async (
@@ -22,8 +24,8 @@ export const getEngagement = async (
         if (!engagementId || isNaN(Number(engagementId))) {
             throw new Error('Invalid Engagement Id ' + engagementId);
         }
-        const responseData = await http.GetRequest(url);
-        successCallback(responseData.data);
+        const responseData = await http.GetRequest<Engagement>(url);
+        successCallback(responseData.data.result!);
     } catch (e: unknown) {
         let errorMessage = '';
         if (typeof e === 'string') {
@@ -56,12 +58,12 @@ export const postEngagement = async (
 
 export const putEngagement = async (
     data: PutEngagementRequest,
-    successCallback: (data: Engagement) => void,
+    successCallback: () => void,
     errorCallback: (errorMessage: string) => void,
 ) => {
     try {
-        const response = await http.PutRequest(Endpoints.Engagement.UPDATE, data);
-        successCallback(response.data);
+        await http.PutRequest(Endpoints.Engagement.UPDATE, data);
+        successCallback();
     } catch (e: unknown) {
         let errorMessage = '';
         if (typeof e === 'string') {

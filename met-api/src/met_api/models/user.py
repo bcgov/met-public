@@ -23,7 +23,6 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
     external_id = db.Column(db.String(50), nullable=False, unique=True)
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
-    engagement_id = db.relationship('Engagement', backref='user', cascade='all, delete')
 
     @classmethod
     def get_user(cls, _id):

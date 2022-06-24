@@ -1,6 +1,8 @@
 
 """Service for engagement management."""
 from met_api.models.engagement import Engagement
+from met_api.schemas.Engagement import EngagementSchema
+from met_api.utils.token_info import TokenInfo
 
 
 class EngagementService:
@@ -37,16 +39,20 @@ class EngagementService:
         }
         return engagement
 
-    def create_engagement(self, data):
+    def create_engagement(self, data: EngagementSchema):
         """Create engagement."""
         self.validated_fields(data)
-
+        user_id = TokenInfo.get_id()
+        data['created_by'] = user_id
+        data['updated_by'] = user_id
         return Engagement.create_engagement(data)
 
-    def update_engagement(self, data):
+    def update_engagement(self, data: EngagementSchema):
         """Update all engagement."""
         self.validated_fields(data)
 
+        user_id = TokenInfo.get_id()
+        data['updated_by'] = user_id
         return Engagement.update_engagement(data)
 
     @staticmethod
