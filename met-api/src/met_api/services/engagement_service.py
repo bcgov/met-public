@@ -33,7 +33,7 @@ class EngagementService:
             'content': request_engagement.get('content', None),
             'rich_content': request_engagement.get('rich_content', None),
             'banner_url': request_engagement.get('banner_url', None),
-            'status' : request_engagement.get('engagement_status',None),
+            'status': request_engagement.get('engagement_status',None),
         }
         return engagement
 

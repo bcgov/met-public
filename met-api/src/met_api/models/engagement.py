@@ -2,21 +2,17 @@
 
 Manages the engagement
 """
-from .engagement_status import EngagementStatus
-from met_api.schemas.Engagement import EngagementSchema
 from datetime import datetime
-from sqlalchemy import join
 from sqlalchemy.sql.schema import ForeignKey
-from sqlalchemy.sql import select
 from sqlalchemy.dialects.postgresql import JSON
-from .db import db, ma
+from met_api.schemas.Engagement import EngagementSchema
+from .engagement_status import EngagementStatus
+from .db import db
 from .default_method_result import DefaultMethodResult
 
 class Engagement(db.Model):
     """Definition of the Engagement entity."""
-
     __tablename__ = 'engagement'
-
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50))
     description = db.Column(db.Text, unique=False, nullable=False)
@@ -85,4 +81,3 @@ class Engagement(db.Model):
         Engagement.query.filter_by(id=engagement.get('id', None)).update(update_fields)
         db.session.commit()
         return DefaultMethodResult(True, 'Engagement Updated', engagement['id'])
-
