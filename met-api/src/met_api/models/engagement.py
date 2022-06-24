@@ -2,15 +2,15 @@
 
 Manages the engagement
 """
-
+from .engagement_status import EngagementStatus
+from met_api.schemas.Engagement import EngagementSchema
 from datetime import datetime
-
+from sqlalchemy import join
 from sqlalchemy.sql.schema import ForeignKey
+from sqlalchemy.sql import select
 from sqlalchemy.dialects.postgresql import JSON
-
 from .db import db, ma
 from .default_method_result import DefaultMethodResult
-
 
 class Engagement(db.Model):
     """Definition of the Engagement entity."""
@@ -36,15 +36,15 @@ class Engagement(db.Model):
     def get_engagement(cls, engagement_id):
         """Get an engagement."""
         engagement_schema = EngagementSchema()
-        request = db.session.query(Engagement).filter_by(id=engagement_id).first()
-        return engagement_schema.dump(request)
+        data = db.session.query(Engagement).filter_by(id=engagement_id).first()
+        return engagement_schema.dump(data)
 
     @classmethod
     def get_all_engagements(cls):
         """Get all engagements."""
         engagements_schema = EngagementSchema(many=True)
-        query = db.session.query(Engagement).order_by(Engagement.id.asc()).all()
-        return engagements_schema.dump(query)
+        data = db.session.query(Engagement).join(EngagementStatus).order_by(Engagement.id.asc()).all()
+        return engagements_schema.dump(data)
 
     @classmethod
     def create_engagement(cls, engagement) -> DefaultMethodResult:
@@ -66,7 +66,6 @@ class Engagement(db.Model):
         )
         db.session.add(new_engagement)
         db.session.commit()
-
         return DefaultMethodResult(True, 'Engagement Added', new_engagement.id)
 
     @classmethod
@@ -87,13 +86,3 @@ class Engagement(db.Model):
         db.session.commit()
         return DefaultMethodResult(True, 'Engagement Updated', engagement['id'])
 
-
-class EngagementSchema(ma.Schema):
-    """Engagement Schema."""
-
-    class Meta:  # pylint: disable=too-few-public-methods
-        """Meta class."""
-
-        fields = (
-            'id', 'name', 'description', 'rich_description', 'start_date', 'end_date', 'status_id', 'user_id',
-            'updated_date', 'published_date', 'created_date', 'content', 'rich_content', 'banner_url')

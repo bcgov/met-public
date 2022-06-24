@@ -5,7 +5,7 @@ export interface Engagement {
     name: string;
     description: string;
     rich_description: string;
-    status_id: string;
+    status_id: number;
     start_date: string;
     end_date: string;
     published_date: string;
@@ -15,6 +15,6 @@ export interface Engagement {
     content: string;
     rich_content: string;
     banner_url: string;
-
     survey?: Survey;
+    status: object;
 }

@@ -167,7 +167,7 @@ function EnhancedTable({ filter = { key: '', value: '' } }) {
 
     const rows = useAppSelector<Engagement[]>((state) => state.engagement.allEngagements);
 
-    const [filteredRows, setFilteredRows] = useState<Engagement[]>(rows);
+    const [filteredRows, setFilteredRows] = useState<any[]>(rows);
     const [order, setOrder] = useState<Order>('asc');
     const [orderBy, setOrderBy] = useState<keyof Engagement>('created_date');
     const [page, setPage] = useState(0);
@@ -232,7 +232,9 @@ function EnhancedTable({ filter = { key: '', value: '' } }) {
                                             <EngagementTableCell align="left">
                                                 {formatDate(row.created_date)}
                                             </EngagementTableCell>
-                                            <EngagementTableCell align="left">{row.status_id}</EngagementTableCell>
+                                            <EngagementTableCell align="left">
+                                                {row.status.status_name}
+                                            </EngagementTableCell>
                                             <EngagementTableCell align="left">
                                                 {formatDate(row.published_date)}
                                             </EngagementTableCell>

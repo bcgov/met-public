@@ -13,11 +13,12 @@ export interface EngagementForm {
     name: string;
     description: string;
     richDescription: string;
-    status_id: string;
+    status_id: number;
     fromDate: string;
     toDate: string;
     content: string;
     richContent: string;
+    status: object;
 }
 
 export type EngagementParams = {
