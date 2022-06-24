@@ -13,8 +13,6 @@
 # limitations under the License.
 """API endpoints for managing an engagement resource."""
 
-import json
-
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
