@@ -28,3 +28,5 @@ asyncio-nats-streaming
 sqlalchemy<1.4
 secure
 python-dotenv
+aws-requests-auth
+requests

@@ -13,11 +13,6 @@
 # limitations under the License.
 """API endpoints for managing a FOI Requests resource."""
 
-from flask import request
-from flask_restx import Namespace, Resource
-from flask_cors import cross_origin
-from met_api.auth import auth
-from aws_requests_auth.aws_auth import AWSRequestsAuth
 
 
 
@@ -30,6 +25,8 @@ from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from met_api.utils.util import allowedorigins, cors_preflight
 from met_api.utils.action_result import ActionResult
+from met_api.auth import auth
+from aws_requests_auth.aws_auth import AWSRequestsAuth
 
 
 API = Namespace('engagement', description='Endpoints for Engagements Management')

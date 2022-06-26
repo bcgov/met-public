@@ -22,3 +22,5 @@ pydocstyle
 FreezeGun
 lovely-pytest-docker
 Faker
+aws-requests-auth
+requests
