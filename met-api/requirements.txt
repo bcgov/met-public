@@ -37,3 +37,5 @@ flask-cors==3.0.10
 flask_jwt_oidc==0.3.0
 pyhumps==1.6.1
 pylint==2.13.9
+aws-requests-auth
+requests

@@ -10,7 +10,7 @@ const BannerWithImage = () => {
     const { description, name, start_date, end_date, banner_url } = savedEngagement;
     const [imageError, setImageError] = useState(false);
 
-    if (imageError) {
+    if (imageError) { 
         return <BannerWithoutImage />;
     }
 
@@ -30,7 +30,10 @@ const BannerWithImage = () => {
                         height: '20em',
                         width: '100%',
                     }}
-                    onError={() => setImageError(true)}
+                    onError={(e) => {
+                        console.log(e);
+                        setImageError(true);
+                    }}
                 />
 
                 <Grid
