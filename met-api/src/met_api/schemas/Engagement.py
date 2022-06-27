@@ -29,5 +29,5 @@ class EngagementSchema(Schema):
     published_date = fields.Str(data_key='published_date')
     content = fields.Str(data_key='content')
     rich_content = fields.Str(data_key='rich_content')
-    banner_url = fields.Str(data_key='banner_url')
+    banner_filename = fields.Str(data_key='banner_filename')
     engagement_status = fields.Nested(EngagementStatusSchema)

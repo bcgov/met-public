@@ -2,6 +2,7 @@
 """Service for engagement management."""
 from met_api.models.engagement import Engagement
 from met_api.schemas.Engagement import EngagementSchema
+from met_api.services.object_storage_service import ObjectStorageService
 
 
 class EngagementService:
@@ -33,7 +34,8 @@ class EngagementService:
             'published_date': request_engagement.get('published_date', None),
             'content': request_engagement.get('content', None),
             'rich_content': request_engagement.get('rich_content', None),
-            'banner_url': request_engagement.get('banner_url', None),
+            'banner_filename': request_engagement.get('banner_filename', None),
+            'banner_url': ObjectStorageService.get_url(request_engagement.get('banner_filename', None)),
             'status': request_engagement.get('engagement_status', None),
         }
         return engagement

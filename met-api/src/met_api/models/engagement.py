@@ -29,7 +29,7 @@ class Engagement(db.Model):
     published_date = db.Column(db.DateTime, nullable=True)
     content = db.Column(db.Text, unique=False, nullable=False)
     rich_content = db.Column(JSON, unique=False, nullable=False)
-    banner_url = db.Column(db.String(), unique=False, nullable=True)
+    banner_filename = db.Column(db.String(), unique=False, nullable=True)
 
     @classmethod
     def get_engagement(cls, engagement_id):

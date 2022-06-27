@@ -14,39 +14,34 @@
 """API endpoints for managing a FOI Requests resource."""
 
 
-
-
 import json
-from met_api.schemas.document import Document
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
+from met_api.schemas.document import Document
 from met_api.services.object_storage_service import ObjectStorageService
 from met_api.utils.util import allowedorigins, cors_preflight
 from met_api.utils.action_result import ActionResult
-from met_api.auth import auth
 
 
 API = Namespace('document', description='Endpoints for Document Storage Management')
-"""Custom exception messages
-"""
+"""Custom exception messages"""
+
 
 @cors_preflight('GET,OPTIONS')
 @API.route('/')
 class DocumentStorage(Resource):
-    """Document storage resource controller.
-    """
+    """Document storage resource controller."""
+
     @staticmethod
     @cross_origin(origins=allowedorigins())
     #  @auth.require
     def post():
-        """Retrieves authentication properties for document storage.
-        """
+        """Retrieve authentication properties for document storage."""
         try:
             requestfilejson = request.get_json()
             documents = Document().load(requestfilejson, many=True)
-            
-            return json.dumps(ObjectStorageService().get_auth_headers(documents)) , 200
+            return ActionResult.success(result=json.dumps(ObjectStorageService().get_auth_headers(documents)))
         except KeyError as err:
             return ActionResult.error(str(err))
         except ValueError as err:
