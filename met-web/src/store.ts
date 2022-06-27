@@ -3,12 +3,14 @@ import loginReducer from 'components/Login/loginSlice';
 import userSlice from 'services/userService/userSlice';
 import { form, submission } from '@formio/react';
 import engagementSlice from 'services/engagementService/engagementSlice';
+import notificationSlice from 'services/notificationService/notificationSlice';
 
 export const store = configureStore({
     reducer: {
         auth: loginReducer,
         user: userSlice,
         engagement: engagementSlice,
+        notification: notificationSlice,
         form: form({ name: 'form' }),
         submission: submission({ name: 'submission' }),
     },

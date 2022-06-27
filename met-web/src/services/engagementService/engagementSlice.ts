@@ -10,7 +10,7 @@ export const engagementSlice = createSlice({
     name: 'engagement',
     initialState,
     reducers: {
-        setEngagements: (state, action: PayloadAction<Engagement[]>) => {
+        setEngagements: (state: EngagementState, action: PayloadAction<Engagement[]>) => {
             state.allEngagements = action.payload;
         },
     },
