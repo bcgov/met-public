@@ -1,7 +1,10 @@
+import { User } from 'models/user';
+
 export interface UserDetail {
     sub?: string;
     email_verified?: boolean;
     preferred_username?: string;
+    user?: User;
 }
 
 export interface UserAuthentication {

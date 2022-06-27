@@ -23,9 +23,10 @@ class Engagement(db.Model):
     end_date = db.Column(db.DateTime)
     status_id = db.Column(db.Integer, ForeignKey('engagement_status.id', ondelete='CASCADE'))
     created_date = db.Column(db.DateTime, default=datetime.utcnow())
+    created_by = db.Column(db.String(50), nullable=False)
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow())
+    updated_by = db.Column(db.String(50), nullable=False)
     published_date = db.Column(db.DateTime, nullable=True)
-    user_id = db.Column(db.Integer, ForeignKey('user.id', ondelete='CASCADE'))
     content = db.Column(db.Text, unique=False, nullable=False)
     rich_content = db.Column(JSON, unique=False, nullable=False)
     banner_url = db.Column(db.String(), unique=False, nullable=True)
@@ -45,7 +46,7 @@ class Engagement(db.Model):
         return engagements_schema.dump(data)
 
     @classmethod
-    def create_engagement(cls, engagement) -> DefaultMethodResult:
+    def create_engagement(cls, engagement: EngagementSchema) -> DefaultMethodResult:
         """Save engagement."""
         new_engagement = Engagement(
             name=engagement.get('name', None),
@@ -53,9 +54,10 @@ class Engagement(db.Model):
             rich_description=engagement.get('rich_description', None),
             start_date=engagement.get('start_date', None),
             end_date=engagement.get('end_date', None),
-            status_id=1,
-            user_id=1,
+            status_id=1,  # Draft status
+            created_by=engagement.get('created_by', None),
             created_date=datetime.utcnow(),
+            updated_by=engagement.get('updated_by', None),
             updated_date=datetime.utcnow(),
             published_date=None,
             banner_url=engagement.get('banner_url', None),
@@ -67,7 +69,7 @@ class Engagement(db.Model):
         return DefaultMethodResult(True, 'Engagement Added', new_engagement.id)
 
     @classmethod
-    def update_engagement(cls, engagement) -> DefaultMethodResult:
+    def update_engagement(cls, engagement: EngagementSchema) -> DefaultMethodResult:
         """Update engagement."""
         update_fields = dict(
             name=engagement.get('name', None),
@@ -76,6 +78,7 @@ class Engagement(db.Model):
             start_date=engagement.get('start_date', None),
             end_date=engagement.get('end_date', None),
             updated_date=datetime.utcnow(),
+            updated_by=engagement.get('updated_by', None),
             banner_url=engagement.get('banner_url', None),
             content=engagement.get('content', None),
             rich_content=engagement.get('rich_content', None),
