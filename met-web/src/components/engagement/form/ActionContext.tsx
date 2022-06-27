@@ -103,7 +103,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                     openNotification({ open: true, severity: 'success', text: 'Engagement Created Successfully' }),
                 );
                 setSaving(false);
-                // navigate('/');
             },
             (errorMessage: string) => {
                 //TODO:engagement create error message in notification module
@@ -134,7 +133,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                     openNotification({ open: true, severity: 'success', text: 'Engagement Updated Successfully' }),
                 );
                 setSaving(false);
-                // navigate('/');
             },
             (errorMessage: string) => {
                 //TODO: engagement update error message in notification module
