@@ -113,7 +113,6 @@ const hasAdminRole = () => KeycloakData.hasResourceRole(AppConfig.keycloak.admin
 const updateUser = async () => {
     try {
         await http.PutRequest(Endpoints.User.CREATE_UPDATE);
-        // TODO update store with current user info.
     } catch (e: unknown) {
         console.error(e);
     }
