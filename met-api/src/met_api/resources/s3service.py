@@ -75,7 +75,6 @@ class FOIFlowDocumentStorage(Resource):
                 
                 response = requests.put(s3uri,data=None,auth=auth) if s3sourceuri is None  else requests.get(s3uri,auth=auth)
 
-
                 file['filepath']=s3uri
                 file['authheader']=response.request.headers['Authorization']
                 file['amzdate']=response.request.headers['x-amz-date']

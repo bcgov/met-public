@@ -10,7 +10,7 @@ const BannerWithImage = () => {
     const { description, name, start_date, end_date, banner_url } = savedEngagement;
     const [imageError, setImageError] = useState(false);
 
-    if (imageError) { 
+    if (imageError) {
         return <BannerWithoutImage />;
     }
 
