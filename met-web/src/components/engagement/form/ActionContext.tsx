@@ -3,6 +3,8 @@ import { postEngagement, putEngagement, getEngagement } from '../../../services/
 import { useNavigate, useParams } from 'react-router-dom';
 import { EngagementContext, EngagementForm, EngagementParams } from './types';
 import { Engagement } from '../../../models/engagement';
+import { openNotification } from 'services/notificationService/notificationSlice';
+import { useAppDispatch } from 'hooks';
 
 export const ActionContext = createContext<EngagementContext>({
     handleCreateEngagementRequest: (_engagement: EngagementForm) => {
@@ -36,7 +38,7 @@ export const ActionContext = createContext<EngagementContext>({
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const { engagementId } = useParams<EngagementParams>();
     const navigate = useNavigate();
-
+    const dispatch = useAppDispatch();
     const [saving, setSaving] = useState(false);
     const [loadingSavedEngagement, setLoadingSavedEngagement] = useState(true);
 
@@ -97,11 +99,15 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             },
             () => {
                 //TODO engagement created success message in notification module
+                dispatch(
+                    openNotification({ open: true, severity: 'success', text: 'Engagement Created Successfully' }),
+                );
                 setSaving(false);
                 navigate('/');
             },
             (errorMessage: string) => {
                 //TODO:engagement create error message in notification module
+                dispatch(openNotification({ open: true, severity: 'error', text: 'Error Creating Engagement' }));
                 setSaving(false);
                 console.log(errorMessage);
             },
@@ -124,11 +130,15 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             },
             () => {
                 //TODO engagement update success message in notification module
+                dispatch(
+                    openNotification({ open: true, severity: 'success', text: 'Engagement Updated Successfully' }),
+                );
                 setSaving(false);
                 navigate('/');
             },
             (errorMessage: string) => {
                 //TODO: engagement update error message in notification module
+                dispatch(openNotification({ open: true, severity: 'error', text: 'Error Updating Engagement' }));
                 setSaving(false);
                 console.log(errorMessage);
             },

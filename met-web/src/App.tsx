@@ -9,6 +9,7 @@ import { Box, Container, useMediaQuery, Toolbar, Theme } from '@mui/material';
 import LoggedInHeader from './components/layout/Header/LoggedInHeader';
 import UnauthenticatedRoutes from './routes/UnauthenticatedRoutes';
 import AuthenticatedRoutes from './routes/AuthenticatedRoutes';
+import { Notification } from 'components/common/notification';
 
 const App = () => {
     const drawerWidth = 240;
@@ -16,9 +17,11 @@ const App = () => {
     const dispatch = useAppDispatch();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const authenticationLoading = useAppSelector((state) => state.user.authentication.loading);
+
     useEffect(() => {
         UserService.initKeycloak(dispatch);
     }, [dispatch]);
+
     if (authenticationLoading) {
         return <MidScreenLoader />;
     }
@@ -45,6 +48,7 @@ const App = () => {
         <Router>
             <Box sx={{ display: 'flex' }}>
                 <LoggedInHeader drawerWidth={drawerWidth} />
+                <Notification />
                 <Box component="main" sx={{ flexGrow: 1, width: `calc(100% - ${drawerWidth}px)`, marginTop: '17px' }}>
                     <Toolbar />
                     <AuthenticatedRoutes />
