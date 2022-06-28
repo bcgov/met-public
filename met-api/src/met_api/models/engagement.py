@@ -60,7 +60,7 @@ class Engagement(db.Model):
             updated_by=engagement.get('updated_by', None),
             updated_date=datetime.utcnow(),
             published_date=None,
-            banner_url=engagement.get('banner_url', None),
+            banner_filename=engagement.get('banner_filename', None),
             content=engagement.get('content', None),
             rich_content=engagement.get('rich_content', None)
         )

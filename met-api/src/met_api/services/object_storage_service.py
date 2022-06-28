@@ -16,7 +16,7 @@ class ObjectStorageService:
     @staticmethod
     def get_url(filename: string):
         """Get the object url."""
-        return f'https://{_Config.OSS_S3_HOST}/{_Config.OSS_S3_BUCKET}/{filename}' if filename is not None else ''
+        return f'https://{_Config.OSS_S3_HOST}/{_Config.OSS_S3_BUCKET}/{filename}' if filename else ''
 
     def get_auth_headers(self, documents: List[Document]):
         """Get the s3 auth headers or the provided documents."""

@@ -13,6 +13,7 @@ export interface PostEngagementRequest {
     rich_description: string;
     content: string;
     rich_content: string;
+    banner_filename?: string;
 }
 
 export interface PutEngagementRequest {

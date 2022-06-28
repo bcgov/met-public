@@ -50,11 +50,12 @@ export const saveFileToS3 = async (headerDetails: S3HeaderDetails, file: File) =
 
 export const saveDocument = async (file: File, fileDetails: S3FileDetails) => {
     try {
-        const response = await getOSSHeaderDetails(fileDetails);
-        if (!response.data.result) {
+        const fileDetailsResponse = await getOSSHeaderDetails(fileDetails);
+        if (!fileDetailsResponse.data.result) {
             throw Error('Error occurred while fetching document from S3');
         }
-        return await saveFileToS3(response.data.result[0], file);
+        await saveFileToS3(fileDetailsResponse.data.result[0], file);
+        return fileDetailsResponse.data.result[0];
     } catch (error) {
         console.log('A.error', error);
     }

@@ -92,39 +92,42 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     }, [engagementId]);
 
     const handleCreateEngagementRequest = async (engagement: EngagementForm) => {
-        await handleUploadBannerImage();
-        // setSaving(true);
-        // postEngagement(
-        //     {
-        //         name: engagement.name,
-        //         start_date: engagement.fromDate,
-        //         status_id: engagement.status_id,
-        //         end_date: engagement.toDate,
-        //         description: engagement.description,
-        //         rich_description: engagement.richDescription,
-        //         content: engagement.content,
-        //         rich_content: engagement.richContent,
-        //     },
-        //     () => {
-        //         //TODO engagement created success message in notification module
-        //         setSaving(false);
-        //         navigate('/');
-        //     },
-        //     (errorMessage: string) => {
-        //         //TODO:engagement create error message in notification module
-        //         setSaving(false);
-        //         console.log(errorMessage);
-        //     },
-        // );
+        setSaving(true);
+        const uploadedFileDetails = await handleUploadBannerImage();
+        postEngagement(
+            {
+                name: engagement.name,
+                start_date: engagement.fromDate,
+                status_id: engagement.status_id,
+                end_date: engagement.toDate,
+                description: engagement.description,
+                rich_description: engagement.richDescription,
+                content: engagement.content,
+                rich_content: engagement.richContent,
+                banner_filename: uploadedFileDetails?.uniquefilename || '',
+            },
+            () => {
+                //TODO engagement created success message in notification module
+                setSaving(false);
+                navigate('/');
+            },
+            (errorMessage: string) => {
+                //TODO:engagement create error message in notification module
+                setSaving(false);
+                console.log(errorMessage);
+            },
+        );
     };
 
     const handleUploadBannerImage = async () => {
         if (!bannerImage) {
             return;
         }
-
-        const response = await saveDocument(bannerImage, { filename: bannerImage.name });
-        console.log(response);
+        try {
+            return await saveDocument(bannerImage, { filename: bannerImage.name });
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const handleUpdateEngagementRequest = (engagement: EngagementForm) => {
