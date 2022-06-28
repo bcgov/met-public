@@ -3,7 +3,7 @@ import { postEngagement, putEngagement, getEngagement } from '../../../services/
 import { useNavigate, useParams } from 'react-router-dom';
 import { EngagementContext, EngagementForm, EngagementParams } from './types';
 import { Engagement } from '../../../models/engagement';
-import { saveDocument } from 'services/s3service/s3service';
+import { saveDocument } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
 

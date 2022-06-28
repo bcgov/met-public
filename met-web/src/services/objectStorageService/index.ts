@@ -1,17 +1,17 @@
 import http from 'apiManager/httpRequestHandler';
 import API from 'apiManager/endpoints';
-import { S3FileDetails, S3HeaderDetails } from './types';
+import { ObjectStorageFileDetails, ObjectStorageHeaderDetails } from './types';
 
-export const getOSSHeaderDetails = async (data: S3FileDetails) => {
+const getOSSHeaderDetails = async (data: ObjectStorageFileDetails) => {
     try {
-        return await http.PostRequest<S3HeaderDetails[]>(API.s3.OSS_HEADER, [data]);
+        return await http.PostRequest<ObjectStorageHeaderDetails[]>(API.Document.OSS_HEADER, [data]);
     } catch (error) {
         console.log(error);
         return Promise.reject(error);
     }
 };
 
-export const getFileFromS3 = async (headerDetails: S3HeaderDetails) => {
+const getFile = async (headerDetails: ObjectStorageHeaderDetails) => {
     try {
         return await http.OSSGetRequest(headerDetails.filepath, {
             amzDate: headerDetails.amzdate,
@@ -23,19 +23,7 @@ export const getFileFromS3 = async (headerDetails: S3HeaderDetails) => {
     }
 };
 
-export const downloadDocument = async (file: S3FileDetails) => {
-    try {
-        const response = await getOSSHeaderDetails(file);
-        if (!response.data.result) {
-            throw Error('Error occurred while fetching document from S3');
-        }
-        return await getFileFromS3(response.data.result[0]);
-    } catch (error) {
-        console.log(error);
-    }
-};
-
-export const saveFileToS3 = async (headerDetails: S3HeaderDetails, file: File) => {
+const saveFile = async (headerDetails: ObjectStorageHeaderDetails, file: File) => {
     console.log('B');
     try {
         return await http.OSSPutRequest(headerDetails.filepath, file, {
@@ -48,13 +36,25 @@ export const saveFileToS3 = async (headerDetails: S3HeaderDetails, file: File) =
     }
 };
 
-export const saveDocument = async (file: File, fileDetails: S3FileDetails) => {
+export const downloadDocument = async (file: ObjectStorageFileDetails) => {
+    try {
+        const response = await getOSSHeaderDetails(file);
+        if (!response.data.result) {
+            throw Error('Error occurred while fetching document from the object storage');
+        }
+        return await getFile(response.data.result[0]);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const saveDocument = async (file: File, fileDetails: ObjectStorageFileDetails) => {
     try {
         const fileDetailsResponse = await getOSSHeaderDetails(fileDetails);
         if (!fileDetailsResponse.data.result) {
-            throw Error('Error occurred while fetching document from S3');
+            throw Error('Error occurred while fetching document from the object storage');
         }
-        await saveFileToS3(fileDetailsResponse.data.result[0], file);
+        await saveFile(fileDetailsResponse.data.result[0], file);
         return fileDetailsResponse.data.result[0];
     } catch (error) {
         console.log('A.error', error);

@@ -10,7 +10,7 @@ const Endpoints = {
     User: {
         CREATE_UPDATE: `${AppConfig.apiUrl}/user/`,
     },
-    s3: {
+    Document: {
         OSS_HEADER: `${AppConfig.apiUrl}/document/`,
     },
 };

@@ -1,4 +1,4 @@
-export interface S3HeaderDetails {
+export interface ObjectStorageHeaderDetails {
     filename: string;
     filepath: string;
     authheader: string;
@@ -6,6 +6,6 @@ export interface S3HeaderDetails {
     uniquefilename: string;
 }
 
-export interface S3FileDetails {
+export interface ObjectStorageFileDetails {
     filename: string;
 }
