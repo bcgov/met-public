@@ -26,6 +26,7 @@ export const ActionContext = createContext<EngagementContext>({
         created_date: '',
         updated_date: '',
         banner_url: '',
+        banner_filename: '',
         content: '',
         rich_content: '',
         status: { status_name: '' },
@@ -57,15 +58,23 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         created_date: '',
         updated_date: '',
         banner_url: '',
+        banner_filename: '',
         content: '',
         rich_content: '',
         status: { status_name: '' },
     });
 
-    const [bannerImage, setBannerImage] = useState<File | null>(null);
+    const [bannerImage, setBannerImage] = useState<File | null>();
+    const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
 
     const handleAddBannerImage = (files: File[]) => {
-        setBannerImage(files[0]);
+        if (files.length > 0) {
+            setBannerImage(files[0]);
+            return;
+        }
+
+        setBannerImage(null);
+        setSavedBannerImageFileName('');
     };
     useEffect(() => {
         if (engagementId !== 'create' && isNaN(Number(engagementId))) {
@@ -78,6 +87,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 Number(engagementId),
                 (result: Engagement) => {
                     setSavedEngagement({ ...result });
+                    setSavedBannerImageFileName(result.banner_filename);
                     setLoadingSavedEngagement(false);
                 },
                 (errorMessage: string) => {
@@ -93,7 +103,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     const handleCreateEngagementRequest = async (engagement: EngagementForm) => {
         setSaving(true);
-        const uploadedFileDetails = await handleUploadBannerImage();
+        const uploadedBannerImageFileName = await handleUploadBannerImage();
         postEngagement(
             {
                 name: engagement.name,
@@ -104,7 +114,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 rich_description: engagement.richDescription,
                 content: engagement.content,
                 rich_content: engagement.richContent,
-                banner_filename: uploadedFileDetails?.uniquefilename || '',
+                banner_filename: uploadedBannerImageFileName,
             },
             () => {
                 //TODO engagement created success message in notification module
@@ -121,17 +131,19 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     const handleUploadBannerImage = async () => {
         if (!bannerImage) {
-            return;
+            return savedBannerImageFileName;
         }
         try {
-            return await saveDocument(bannerImage, { filename: bannerImage.name });
+            const savedDocumentDetails = await saveDocument(bannerImage, { filename: bannerImage.name });
+            return savedDocumentDetails?.uniquefilename || '';
         } catch (error) {
             console.log(error);
         }
     };
 
-    const handleUpdateEngagementRequest = (engagement: EngagementForm) => {
+    const handleUpdateEngagementRequest = async (engagement: EngagementForm) => {
         setSaving(true);
+        const uploadedBannerImageFileName = await handleUploadBannerImage();
         putEngagement(
             {
                 id: Number(engagementId),
@@ -143,6 +155,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 rich_description: engagement.richDescription,
                 content: engagement.content,
                 rich_content: engagement.richContent,
+                banner_filename: uploadedBannerImageFileName,
             },
             () => {
                 //TODO engagement update success message in notification module

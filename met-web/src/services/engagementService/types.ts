@@ -26,4 +26,5 @@ export interface PutEngagementRequest {
     rich_description: string;
     content: string;
     rich_content: string;
+    banner_filename?: string;
 }

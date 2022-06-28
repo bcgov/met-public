@@ -4,9 +4,11 @@ import Dropzone from 'react-dropzone';
 
 interface ImageUploadProps {
     handleAddFile: (_files: File[]) => void;
+    savedImageUrl?: string;
 }
-const ImageUpload = ({ handleAddFile }: ImageUploadProps) => {
+const ImageUpload = ({ handleAddFile, savedImageUrl = '' }: ImageUploadProps) => {
     const [objectUrl, setObjectUrl] = useState('');
+    const [existingImageUrl, setExistingImageURL] = useState(savedImageUrl);
 
     useEffect(() => {
         return () => {
@@ -16,7 +18,7 @@ const ImageUpload = ({ handleAddFile }: ImageUploadProps) => {
         };
     }, []);
 
-    if (objectUrl) {
+    if (objectUrl || existingImageUrl) {
         return (
             <Grid container alignItems="flex-start" justifyContent={'flex-end'} direction="row" spacing={1}>
                 <Grid
@@ -28,11 +30,16 @@ const ImageUpload = ({ handleAddFile }: ImageUploadProps) => {
                     }}
                 >
                     <img
-                        src={objectUrl}
+                        src={objectUrl || existingImageUrl}
                         style={{
                             objectFit: 'cover',
                             width: '100%',
                             height: '100%',
+                        }}
+                        onError={() => {
+                            URL.revokeObjectURL(objectUrl);
+                            setExistingImageURL('');
+                            setObjectUrl('');
                         }}
                     />
                 </Grid>
@@ -41,6 +48,7 @@ const ImageUpload = ({ handleAddFile }: ImageUploadProps) => {
                         onClick={() => {
                             URL.revokeObjectURL(objectUrl);
                             handleAddFile([]);
+                            setExistingImageURL('');
                         }}
                     >
                         Remove Image
@@ -52,8 +60,9 @@ const ImageUpload = ({ handleAddFile }: ImageUploadProps) => {
     return (
         <Dropzone
             onDrop={(acceptedFiles) => {
+                const createdObjectURL = URL.createObjectURL(acceptedFiles[0]);
                 handleAddFile(acceptedFiles);
-                setObjectUrl(URL.createObjectURL(acceptedFiles[0]));
+                setObjectUrl(createdObjectURL);
             }}
         >
             {({ getRootProps, getInputProps }) => (

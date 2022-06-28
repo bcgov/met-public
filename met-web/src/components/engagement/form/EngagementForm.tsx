@@ -155,7 +155,10 @@ const EngagementForm = () => {
                         sx={{ padding: '2em' }}
                     >
                         <Grid item xs={12}>
-                            <ImageUpload handleAddFile={handleAddBannerImage} />
+                            <ImageUpload
+                                handleAddFile={handleAddBannerImage}
+                                savedImageUrl={savedEngagement.banner_url}
+                            />
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <Typography variant="h6" sx={{ marginBottom: '2px' }}>
