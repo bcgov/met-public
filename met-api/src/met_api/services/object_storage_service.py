@@ -16,14 +16,14 @@ class ObjectStorageService:
     @staticmethod
     def get_url(filename: string):
         """Get the object url."""
-        return f'https://{_Config.OSS_S3_HOST}/{_Config.OSS_S3_BUCKET}/{filename}' if filename else ''
+        return f'https://{_Config.S3_HOST}/{_Config.S3_BUCKET}/{filename}' if filename else ''
 
     def get_auth_headers(self, documents: List[Document]):
         """Get the s3 auth headers or the provided documents."""
-        if(_Config.OSS_S3_ACCESS_KEY_ID is None or
-            _Config.OSS_S3_SECRET_ACCESS_KEY is None or
-            _Config.OSS_S3_HOST is None or
-            _Config.OSS_S3_BUCKET is None
+        if(_Config.S3_ACCESS_KEY_ID is None or
+            _Config.S3_SECRET_ACCESS_KEY is None or
+            _Config.S3_HOST is None or
+            _Config.S3_BUCKET is None
            ):
             return {'status': 'Configuration Issue',
                     'message': 'accesskey is None or secretkey is None or S3 host is None or formsbucket is None'}, 500
@@ -33,11 +33,11 @@ class ObjectStorageService:
             filenamesplittext = os.path.splitext(file.get('filename'))
             uniquefilename = f'{uuid.uuid4()}{filenamesplittext[1]}'
             auth = AWSRequestsAuth(
-                    aws_access_key=_Config.OSS_S3_ACCESS_KEY_ID,
-                    aws_secret_access_key=_Config.OSS_S3_SECRET_ACCESS_KEY,
-                    aws_host=_Config.OSS_S3_HOST,
-                    aws_region=_Config.OSS_S3_REGION,
-                    aws_service=_Config.OSS_S3_SERVICE)
+                    aws_access_key=_Config.S3_ACCESS_KEY_ID,
+                    aws_secret_access_key=_Config.S3_SECRET_ACCESS_KEY,
+                    aws_host=_Config.S3_HOST,
+                    aws_region=_Config.S3_REGION,
+                    aws_service=_Config.S3_SERVICE)
 
             s3uri = s3sourceuri if s3sourceuri is not None else self.get_url(uniquefilename)
             response = requests.put(
