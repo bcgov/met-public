@@ -41,7 +41,7 @@ class DocumentStorage(Resource):
         try:
             requestfilejson = request.get_json()
             documents = Document().load(requestfilejson, many=True)
-            return ActionResult.success(result=json.dumps(ObjectStorageService().get_auth_headers(documents)))
+            return ActionResult.success(result=ObjectStorageService().get_auth_headers(documents))
         except KeyError as err:
             return ActionResult.error(str(err))
         except ValueError as err:

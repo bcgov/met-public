@@ -11,7 +11,7 @@ const Endpoints = {
         CREATE_UPDATE: `${AppConfig.apiUrl}/user/`,
     },
     s3: {
-        OSS_HEADER: `${AppConfig.apiUrl}/oss/authheader`,
+        OSS_HEADER: `${AppConfig.apiUrl}/document/`,
     },
 };
 

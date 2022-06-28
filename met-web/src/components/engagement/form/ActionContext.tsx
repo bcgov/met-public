@@ -3,6 +3,7 @@ import { postEngagement, putEngagement, getEngagement } from '../../../services/
 import { useNavigate, useParams } from 'react-router-dom';
 import { EngagementContext, EngagementForm, EngagementParams } from './types';
 import { Engagement } from '../../../models/engagement';
+import { saveDocument } from 'services/s3service/s3service';
 
 export const ActionContext = createContext<EngagementContext>({
     handleCreateEngagementRequest: (_engagement: EngagementForm) => {
@@ -90,30 +91,40 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
     }, [engagementId]);
 
-    const handleCreateEngagementRequest = (engagement: EngagementForm) => {
-        setSaving(true);
-        postEngagement(
-            {
-                name: engagement.name,
-                start_date: engagement.fromDate,
-                status_id: engagement.status_id,
-                end_date: engagement.toDate,
-                description: engagement.description,
-                rich_description: engagement.richDescription,
-                content: engagement.content,
-                rich_content: engagement.richContent,
-            },
-            () => {
-                //TODO engagement created success message in notification module
-                setSaving(false);
-                navigate('/');
-            },
-            (errorMessage: string) => {
-                //TODO:engagement create error message in notification module
-                setSaving(false);
-                console.log(errorMessage);
-            },
-        );
+    const handleCreateEngagementRequest = async (engagement: EngagementForm) => {
+        await handleUploadBannerImage();
+        // setSaving(true);
+        // postEngagement(
+        //     {
+        //         name: engagement.name,
+        //         start_date: engagement.fromDate,
+        //         status_id: engagement.status_id,
+        //         end_date: engagement.toDate,
+        //         description: engagement.description,
+        //         rich_description: engagement.richDescription,
+        //         content: engagement.content,
+        //         rich_content: engagement.richContent,
+        //     },
+        //     () => {
+        //         //TODO engagement created success message in notification module
+        //         setSaving(false);
+        //         navigate('/');
+        //     },
+        //     (errorMessage: string) => {
+        //         //TODO:engagement create error message in notification module
+        //         setSaving(false);
+        //         console.log(errorMessage);
+        //     },
+        // );
+    };
+
+    const handleUploadBannerImage = async () => {
+        if (!bannerImage) {
+            return;
+        }
+
+        const response = await saveDocument(bannerImage, { filename: bannerImage.name });
+        console.log(response);
     };
 
     const handleUpdateEngagementRequest = (engagement: EngagementForm) => {

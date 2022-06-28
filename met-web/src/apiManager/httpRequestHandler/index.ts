@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 import UserService from 'services/userService';
 import { ApiResponse } from './types';
 
@@ -30,7 +30,11 @@ const PutRequest = <T>(url: string, data = {}) => {
     });
 };
 
-export const OSSGetRequest = <T>(url: string, requestOptions: { amzDate: string; authHeader: string }) => {
+interface OSSRequestOptions {
+    amzDate: string;
+    authHeader: string;
+}
+export const OSSGetRequest = <T>(url: string, requestOptions: OSSRequestOptions) => {
     return axios.get<ApiResponse<T>>(url, {
         headers: {
             'X-Amz-Date': requestOptions.amzDate,
@@ -40,9 +44,18 @@ export const OSSGetRequest = <T>(url: string, requestOptions: { amzDate: string;
     });
 };
 
+export const OSSPutRequest = <T>(url: string, data: File, requestOptions: OSSRequestOptions) => {
+    return axios.put<ApiResponse<T>>(url, data, {
+        headers: {
+            'X-Amz-Date': requestOptions.amzDate,
+            Authorization: requestOptions.authHeader,
+        },
+    });
+};
 export default {
     GetRequest,
     PostRequest,
     PutRequest,
     OSSGetRequest,
+    OSSPutRequest,
 };

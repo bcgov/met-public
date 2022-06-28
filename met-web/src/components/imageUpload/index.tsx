@@ -20,6 +20,7 @@ const ImageUpload = ({ handleAddFile }: ImageUploadProps) => {
         return (
             <Grid container alignItems="flex-start" justifyContent={'flex-end'} direction="row" spacing={1}>
                 <Grid
+                    item
                     xs={12}
                     style={{
                         border: '1px dashed #606060',

@@ -2,23 +2,9 @@ import http from 'apiManager/httpRequestHandler';
 import API from 'apiManager/endpoints';
 import { S3FileDetails, S3HeaderDetails } from './types';
 
-// {
-//     ministrycode: "Misc",
-//     requestnumber: `U-00${requestId}`,
-//     filestatustransition: file.category,
-//     filename: file.filename,
-//     s3sourceuri: file.documentpath
-//   },
-
-interface ApiResponse {
-    status: boolean;
-    message: string;
-    id?: string;
-    result?: S3HeaderDetails;
-}
 export const getOSSHeaderDetails = async (data: S3FileDetails) => {
     try {
-        return await http.PostRequest<S3HeaderDetails>(API.s3.OSS_HEADER, data);
+        return await http.PostRequest<S3HeaderDetails[]>(API.s3.OSS_HEADER, [data]);
     } catch (error) {
         console.log(error);
         return Promise.reject(error);
@@ -27,7 +13,10 @@ export const getOSSHeaderDetails = async (data: S3FileDetails) => {
 
 export const getFileFromS3 = async (headerDetails: S3HeaderDetails) => {
     try {
-        return await http.OSSGetRequest(headerDetails.filePath, headerDetails.headers);
+        return await http.OSSGetRequest(headerDetails.filepath, {
+            amzDate: headerDetails.amzdate,
+            authHeader: headerDetails.authheader,
+        });
     } catch (error) {
         console.log(error);
         return Promise.reject(error);
@@ -40,8 +29,33 @@ export const downloadDocument = async (file: S3FileDetails) => {
         if (!response.data.result) {
             throw Error('Error occurred while fetching document from S3');
         }
-        return await getFileFromS3(response.data.result);
+        return await getFileFromS3(response.data.result[0]);
     } catch (error) {
         console.log(error);
+    }
+};
+
+export const saveFileToS3 = async (headerDetails: S3HeaderDetails, file: File) => {
+    console.log('B');
+    try {
+        return await http.OSSPutRequest(headerDetails.filepath, file, {
+            amzDate: headerDetails.amzdate,
+            authHeader: headerDetails.authheader,
+        });
+    } catch (error) {
+        console.log('B.error', error);
+        return Promise.reject(error);
+    }
+};
+
+export const saveDocument = async (file: File, fileDetails: S3FileDetails) => {
+    try {
+        const response = await getOSSHeaderDetails(fileDetails);
+        if (!response.data.result) {
+            throw Error('Error occurred while fetching document from S3');
+        }
+        return await saveFileToS3(response.data.result[0], file);
+    } catch (error) {
+        console.log('A.error', error);
     }
 };
