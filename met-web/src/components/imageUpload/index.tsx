@@ -46,9 +46,10 @@ const ImageUpload = ({ handleAddFile, savedImageUrl = '' }: ImageUploadProps) =>
                 <Grid>
                     <Button
                         onClick={() => {
-                            URL.revokeObjectURL(objectUrl);
-                            handleAddFile([]);
+                            setObjectUrl('');
                             setExistingImageURL('');
+                            handleAddFile([]);
+                            URL.revokeObjectURL(objectUrl);
                         }}
                     >
                         Remove Image
