@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Grid, Button } from '@mui/material';
 import Dropzone from 'react-dropzone';
 
-const ImageUpload = () => {
-    const [files, setFiles] = useState<File[]>([]);
+interface ImageUploadProps {
+    handleAddFile: (_files: File[]) => void;
+}
+const ImageUpload = ({ handleAddFile }: ImageUploadProps) => {
     const [objectUrl, setObjectUrl] = useState('');
 
     useEffect(() => {
@@ -14,7 +16,7 @@ const ImageUpload = () => {
         };
     }, []);
 
-    if (files.length > 0) {
+    if (objectUrl) {
         return (
             <Grid container alignItems="flex-start" justifyContent={'flex-end'} direction="row" spacing={1}>
                 <Grid
@@ -37,7 +39,7 @@ const ImageUpload = () => {
                     <Button
                         onClick={() => {
                             URL.revokeObjectURL(objectUrl);
-                            setFiles([]);
+                            handleAddFile([]);
                         }}
                     >
                         Remove Image
@@ -49,9 +51,8 @@ const ImageUpload = () => {
     return (
         <Dropzone
             onDrop={(acceptedFiles) => {
-                setFiles(acceptedFiles);
+                handleAddFile(acceptedFiles);
                 setObjectUrl(URL.createObjectURL(acceptedFiles[0]));
-                console.log(acceptedFiles);
             }}
         >
             {({ getRootProps, getInputProps }) => (

@@ -31,6 +31,9 @@ export const ActionContext = createContext<EngagementContext>({
     },
     engagementId: 'create',
     loadingSavedEngagement: true,
+    handleAddBannerImage: (_files: File[]) => {
+        /* empty default method  */
+    },
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
@@ -58,6 +61,11 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         status: { status_name: '' },
     });
 
+    const [bannerImage, setBannerImage] = useState<File | null>(null);
+
+    const handleAddBannerImage = (files: File[]) => {
+        setBannerImage(files[0]);
+    };
     useEffect(() => {
         if (engagementId !== 'create' && isNaN(Number(engagementId))) {
             navigate('/engagement/create');
@@ -144,6 +152,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 savedEngagement,
                 engagementId,
                 loadingSavedEngagement,
+                handleAddBannerImage,
             }}
         >
             {children}

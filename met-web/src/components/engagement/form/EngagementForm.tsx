@@ -14,6 +14,7 @@ const EngagementForm = () => {
         savedEngagement,
         engagementId,
         loadingSavedEngagement,
+        handleAddBannerImage,
     } = useContext(ActionContext);
 
     const creatingNewEngagement = engagementId === 'create';
@@ -154,7 +155,7 @@ const EngagementForm = () => {
                         sx={{ padding: '2em' }}
                     >
                         <Grid item xs={12}>
-                            <ImageUpload />
+                            <ImageUpload handleAddFile={handleAddBannerImage} />
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <Typography variant="h6" sx={{ marginBottom: '2px' }}>
