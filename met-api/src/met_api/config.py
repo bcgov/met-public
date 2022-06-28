@@ -76,6 +76,13 @@ class _Config():  # pylint: disable=too-few-public-methods
     JWT_OIDC_CACHING_ENABLED = os.getenv('JWT_OIDC_CACHING_ENABLED', 'True')
     JWT_OIDC_JWKS_CACHE_TIMEOUT = 300
 
+    S3_BUCKET = os.getenv('S3_BUCKET')
+    S3_ACCESS_KEY_ID = os.getenv('S3_ACCESS_KEY_ID')
+    S3_SECRET_ACCESS_KEY = os.getenv('S3_SECRET_ACCESS_KEY')
+    S3_HOST = os.getenv('S3_HOST')
+    S3_REGION = os.getenv('S3_REGION')
+    S3_SERVICE = os.getenv('S3_SERVICE')
+
     print(f'SQLAlchemy URL (_Config): {SQLALCHEMY_DATABASE_URI}')
 
 

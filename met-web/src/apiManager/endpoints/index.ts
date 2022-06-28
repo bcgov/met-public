@@ -10,6 +10,9 @@ const Endpoints = {
     User: {
         CREATE_UPDATE: `${AppConfig.apiUrl}/user/`,
     },
+    Document: {
+        OSS_HEADER: `${AppConfig.apiUrl}/document/`,
+    },
 };
 
 export default Endpoints;

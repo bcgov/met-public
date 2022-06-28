@@ -29,7 +29,7 @@ class Engagement(db.Model):
     published_date = db.Column(db.DateTime, nullable=True)
     content = db.Column(db.Text, unique=False, nullable=False)
     rich_content = db.Column(JSON, unique=False, nullable=False)
-    banner_url = db.Column(db.String(), unique=False, nullable=True)
+    banner_filename = db.Column(db.String(), unique=False, nullable=True)
 
     @classmethod
     def get_engagement(cls, engagement_id):
@@ -60,7 +60,7 @@ class Engagement(db.Model):
             updated_by=engagement.get('updated_by', None),
             updated_date=datetime.utcnow(),
             published_date=None,
-            banner_url=engagement.get('banner_url', None),
+            banner_filename=engagement.get('banner_filename', None),
             content=engagement.get('content', None),
             rich_content=engagement.get('rich_content', None)
         )
@@ -79,7 +79,7 @@ class Engagement(db.Model):
             end_date=engagement.get('end_date', None),
             updated_date=datetime.utcnow(),
             updated_by=engagement.get('updated_by', None),
-            banner_url=engagement.get('banner_url', None),
+            banner_filename=engagement.get('banner_filename', None),
             content=engagement.get('content', None),
             rich_content=engagement.get('rich_content', None),
         )

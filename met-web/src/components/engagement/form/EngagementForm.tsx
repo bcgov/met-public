@@ -4,6 +4,7 @@ import { MetPaper, MidScreenLoader, MetPageGridContainer } from '../../common';
 import RichTextEditor from './RichTextEditor';
 import { ActionContext } from './ActionContext';
 import { formatDate } from '../../common/dateHelper';
+import ImageUpload from 'components/imageUpload';
 
 const EngagementForm = () => {
     const {
@@ -13,6 +14,7 @@ const EngagementForm = () => {
         savedEngagement,
         engagementId,
         loadingSavedEngagement,
+        handleAddBannerImage,
     } = useContext(ActionContext);
 
     const creatingNewEngagement = engagementId === 'create';
@@ -152,6 +154,12 @@ const EngagementForm = () => {
                         spacing={2}
                         sx={{ padding: '2em' }}
                     >
+                        <Grid item xs={12}>
+                            <ImageUpload
+                                handleAddFile={handleAddBannerImage}
+                                savedImageUrl={savedEngagement.banner_url}
+                            />
+                        </Grid>
                         <Grid item xs={12} md={6}>
                             <Typography variant="h6" sx={{ marginBottom: '2px' }}>
                                 Engagement Name

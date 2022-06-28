@@ -3,6 +3,7 @@ import { postEngagement, putEngagement, getEngagement } from '../../../services/
 import { useNavigate, useParams } from 'react-router-dom';
 import { EngagementContext, EngagementForm, EngagementParams } from './types';
 import { Engagement } from '../../../models/engagement';
+import { saveDocument } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
 
@@ -27,12 +28,16 @@ export const ActionContext = createContext<EngagementContext>({
         created_date: '',
         updated_date: '',
         banner_url: '',
+        banner_filename: '',
         content: '',
         rich_content: '',
         status: { status_name: '' },
     },
     engagementId: 'create',
     loadingSavedEngagement: true,
+    handleAddBannerImage: (_files: File[]) => {
+        /* empty default method  */
+    },
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
@@ -55,11 +60,24 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         created_date: '',
         updated_date: '',
         banner_url: '',
+        banner_filename: '',
         content: '',
         rich_content: '',
         status: { status_name: '' },
     });
 
+    const [bannerImage, setBannerImage] = useState<File | null>();
+    const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
+
+    const handleAddBannerImage = (files: File[]) => {
+        if (files.length > 0) {
+            setBannerImage(files[0]);
+            return;
+        }
+
+        setBannerImage(null);
+        setSavedBannerImageFileName('');
+    };
     useEffect(() => {
         if (engagementId !== 'create' && isNaN(Number(engagementId))) {
             navigate('/engagement/create');
@@ -71,6 +89,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 Number(engagementId),
                 (result: Engagement) => {
                     setSavedEngagement({ ...result });
+                    setSavedBannerImageFileName(result.banner_filename);
                     setLoadingSavedEngagement(false);
                 },
                 (errorMessage: string) => {
@@ -84,8 +103,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
     }, [engagementId]);
 
-    const handleCreateEngagementRequest = (engagement: EngagementForm) => {
+    const handleCreateEngagementRequest = async (engagement: EngagementForm) => {
         setSaving(true);
+        const uploadedBannerImageFileName = await handleUploadBannerImage();
         postEngagement(
             {
                 name: engagement.name,
@@ -96,6 +116,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 rich_description: engagement.richDescription,
                 content: engagement.content,
                 rich_content: engagement.richContent,
+                banner_filename: uploadedBannerImageFileName,
             },
             () => {
                 //TODO engagement created success message in notification module
@@ -113,8 +134,21 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         );
     };
 
-    const handleUpdateEngagementRequest = (engagement: EngagementForm) => {
+    const handleUploadBannerImage = async () => {
+        if (!bannerImage) {
+            return savedBannerImageFileName;
+        }
+        try {
+            const savedDocumentDetails = await saveDocument(bannerImage, { filename: bannerImage.name });
+            return savedDocumentDetails?.uniquefilename || '';
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleUpdateEngagementRequest = async (engagement: EngagementForm) => {
         setSaving(true);
+        const uploadedBannerImageFileName = await handleUploadBannerImage();
         putEngagement(
             {
                 id: Number(engagementId),
@@ -126,6 +160,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 rich_description: engagement.richDescription,
                 content: engagement.content,
                 rich_content: engagement.richContent,
+                banner_filename: uploadedBannerImageFileName,
             },
             () => {
                 //TODO engagement update success message in notification module
@@ -152,6 +187,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 savedEngagement,
                 engagementId,
                 loadingSavedEngagement,
+                handleAddBannerImage,
             }}
         >
             {children}

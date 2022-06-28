@@ -30,8 +30,32 @@ const PutRequest = <T>(url: string, data = {}) => {
     });
 };
 
+interface OSSRequestOptions {
+    amzDate: string;
+    authHeader: string;
+}
+export const OSSGetRequest = <T>(url: string, requestOptions: OSSRequestOptions) => {
+    return axios.get<ApiResponse<T>>(url, {
+        headers: {
+            'X-Amz-Date': requestOptions.amzDate,
+            Authorization: requestOptions.authHeader,
+        },
+        responseType: 'blob',
+    });
+};
+
+export const OSSPutRequest = <T>(url: string, data: File, requestOptions: OSSRequestOptions) => {
+    return axios.put<ApiResponse<T>>(url, data, {
+        headers: {
+            'X-Amz-Date': requestOptions.amzDate,
+            Authorization: requestOptions.authHeader,
+        },
+    });
+};
 export default {
     GetRequest,
     PostRequest,
     PutRequest,
+    OSSGetRequest,
+    OSSPutRequest,
 };

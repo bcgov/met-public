@@ -26,6 +26,7 @@ from flask import Blueprint
 from .apihelper import Api
 from .engagement import API as ENGAGEMENT_API
 from .user import API as USER_API
+from .document import API as DOCUMENT_API
 
 __all__ = ('API_BLUEPRINT',)
 
@@ -43,3 +44,4 @@ API = Api(
 
 API.add_namespace(ENGAGEMENT_API)
 API.add_namespace(USER_API)
+API.add_namespace(DOCUMENT_API)

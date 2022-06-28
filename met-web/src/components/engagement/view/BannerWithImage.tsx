@@ -30,7 +30,10 @@ const BannerWithImage = () => {
                         height: '20em',
                         width: '100%',
                     }}
-                    onError={() => setImageError(true)}
+                    onError={(e) => {
+                        console.log(e);
+                        setImageError(true);
+                    }}
                 />
 
                 <Grid

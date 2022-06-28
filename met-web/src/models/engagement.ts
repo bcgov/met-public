@@ -16,6 +16,7 @@ export interface Engagement {
     content: string;
     rich_content: string;
     banner_url: string;
+    banner_filename: string;
     survey?: Survey;
     status: Status;
 }
