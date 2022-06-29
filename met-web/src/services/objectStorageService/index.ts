@@ -24,14 +24,12 @@ const getFile = async (headerDetails: ObjectStorageHeaderDetails) => {
 };
 
 const saveFile = async (headerDetails: ObjectStorageHeaderDetails, file: File) => {
-    console.log('B');
     try {
         return await http.OSSPutRequest(headerDetails.filepath, file, {
             amzDate: headerDetails.amzdate,
             authHeader: headerDetails.authheader,
         });
     } catch (error) {
-        console.log('B.error', error);
         return Promise.reject(error);
     }
 };
@@ -45,6 +43,7 @@ export const downloadDocument = async (file: ObjectStorageFileDetails) => {
         return await getFile(response.data.result[0]);
     } catch (error) {
         console.log(error);
+        return Promise.reject(error);
     }
 };
 
@@ -57,6 +56,7 @@ export const saveDocument = async (file: File, fileDetails: ObjectStorageFileDet
         await saveFile(fileDetailsResponse.data.result[0], file);
         return fileDetailsResponse.data.result[0];
     } catch (error) {
-        console.log('A.error', error);
+        console.log(error);
+        return Promise.reject(error);
     }
 };
