@@ -59,20 +59,22 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const [engagementLoading, setEngagementLoading] = useState(true);
 
     useEffect(() => {
-        if (isNaN(Number(engagementId))) {
-            navigate('/');
-            return;
-        }
-        getEngagement(Number(engagementId))
-            .then((result: Engagement) => {
+        const fetchEngagement = async () => {
+            if (isNaN(Number(engagementId))) {
+                navigate('/');
+                return;
+            }
+            try {
+                const result = await getEngagement(Number(engagementId));
                 setSavedEngagement({ ...result });
                 setEngagementLoading(false);
-            })
-            .catch((errorMessage: string) => {
+            } catch (error) {
                 //TODO engagement created success message in notification module
-                console.log(errorMessage);
+                console.log(error);
                 navigate('/');
-            });
+            }
+        };
+        fetchEngagement();
     }, [engagementId]);
 
     return (

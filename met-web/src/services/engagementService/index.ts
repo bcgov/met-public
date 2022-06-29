@@ -14,51 +14,41 @@ export const fetchAll = async (dispatch: Dispatch<AnyAction>): Promise<Engagemen
 };
 
 export const getEngagement = async (engagementId: number): Promise<Engagement> => {
-    return new Promise((resolve, reject) => {
-        const url = replaceUrl(Endpoints.Engagement.GET, '<engagement_id>', String(engagementId));
-        if (!engagementId || isNaN(Number(engagementId))) {
-            reject('Invalid Engagement Id ' + engagementId);
+    const url = replaceUrl(Endpoints.Engagement.GET, '<engagement_id>', String(engagementId));
+    if (!engagementId || isNaN(Number(engagementId))) {
+        return Promise.reject('Invalid Engagement Id ' + engagementId);
+    }
+    try {
+        const response = await http.GetRequest<Engagement>(url);
+        if (response.data.result) {
+            return Promise.resolve(response.data.result);
         }
-        http.GetRequest<Engagement>(url)
-            .then((response) => {
-                if (response.data.result) {
-                    resolve(response.data.result);
-                } else {
-                    reject(response.data.message ?? 'Failed to fetch engagement');
-                }
-            })
-            .catch((err) => {
-                reject(err);
-            });
-    });
+        return Promise.reject(response.data.message ?? 'Failed to fetch engagement');
+    } catch (err) {
+        return Promise.reject(err);
+    }
 };
 
 export const postEngagement = async (data: PostEngagementRequest): Promise<Engagement> => {
-    return new Promise((resolve, reject) => {
-        http.PostRequest<Engagement>(Endpoints.Engagement.CREATE, data)
-            .then((response) => {
-                if (response.data.status && response.data.result) {
-                    resolve(response.data.result);
-                }
-                reject(response.data.message ?? 'Failed to create engagement');
-            })
-            .catch((err) => {
-                reject(err);
-            });
-    });
+    try {
+        const response = await http.PostRequest<Engagement>(Endpoints.Engagement.CREATE, data);
+        if (response.data.status && response.data.result) {
+            return Promise.resolve(response.data.result);
+        }
+        return Promise.reject(response.data.message ?? 'Failed to create engagement');
+    } catch (err) {
+        return Promise.reject(err);
+    }
 };
 
-export const putEngagement = (data: PutEngagementRequest): Promise<Engagement> => {
-    return new Promise((resolve, reject) => {
-        http.PutRequest<Engagement>(Endpoints.Engagement.UPDATE, data)
-            .then((response) => {
-                if (response.data.status && response.data.result) {
-                    resolve(response.data.result);
-                }
-                reject(response.data.message ?? 'Failed to update engagement');
-            })
-            .catch((err) => {
-                reject(err);
-            });
-    });
+export const putEngagement = async (data: PutEngagementRequest): Promise<Engagement> => {
+    try {
+        const response = await http.PutRequest<Engagement>(Endpoints.Engagement.UPDATE, data);
+        if (response.data.status && response.data.result) {
+            return Promise.resolve(response.data.result);
+        }
+        return Promise.reject(response.data.message ?? 'Failed to update engagement');
+    } catch (err) {
+        return Promise.reject(err);
+    }
 };

@@ -115,34 +115,34 @@ const EngagementForm = () => {
         return Object.values(errors).some((isError: unknown) => isError);
     };
 
-    const handleSaveEngagement = (isPreview: boolean) => {
+    const handleSaveEngagement = async (isPreview: boolean) => {
         const hasErrors = validateForm();
 
         if (hasErrors) {
             return Promise.reject('Validation Errors');
         }
         if (isNewEngagement) {
-            handleCreateEngagementRequest({
+            const engagement = await handleCreateEngagementRequest({
                 ...engagementFormData,
                 richDescription: richDescription,
                 richContent: richContent,
-            }).then((engagement) => {
-                if (isPreview) {
-                    navigate(`/engagement/view/${engagement.id}`);
-                } else {
-                    navigate(`/engagement/form/${engagement.id}`);
-                }
             });
+
+            if (isPreview) {
+                navigate(`/engagement/view/${engagement.id}`);
+            } else {
+                navigate(`/engagement/form/${engagement.id}`);
+            }
         } else {
-            handleUpdateEngagementRequest({
+            const engagement = await handleUpdateEngagementRequest({
                 ...engagementFormData,
                 richDescription: richDescription,
                 richContent: richContent,
-            }).then((engagement) => {
-                if (isPreview) {
-                    navigate(`/engagement/view/${engagement.id}`);
-                }
             });
+
+            if (isPreview) {
+                navigate(`/engagement/view/${engagement.id}`);
+            }
         }
     };
 
