@@ -63,18 +63,16 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
             navigate('/');
             return;
         }
-        getEngagement(
-            Number(engagementId),
-            (result: Engagement) => {
+        getEngagement(Number(engagementId))
+            .then((result: Engagement) => {
                 setSavedEngagement({ ...result });
                 setEngagementLoading(false);
-            },
-            (errorMessage: string) => {
+            })
+            .catch((errorMessage: string) => {
                 //TODO engagement created success message in notification module
                 console.log(errorMessage);
                 navigate('/');
-            },
-        );
+            });
     }, [engagementId]);
 
     return (

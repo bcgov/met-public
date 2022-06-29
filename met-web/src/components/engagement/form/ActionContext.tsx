@@ -8,13 +8,13 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { useAppDispatch } from 'hooks';
 
 export const ActionContext = createContext<EngagementContext>({
-    handleCreateEngagementRequest: (_engagement: EngagementForm) => {
-        /* empty default method  */
+    handleCreateEngagementRequest: (_engagement: EngagementForm): Promise<Engagement> => {
+        return Promise.reject();
     },
-    handleUpdateEngagementRequest: (_engagement: EngagementForm) => {
-        /* empty default method  */
+    handleUpdateEngagementRequest: (_engagement: EngagementForm): Promise<Engagement> => {
+        return Promise.reject();
     },
-    saving: false,
+    isSaving: false,
     savedEngagement: {
         id: 0,
         name: '',
@@ -44,7 +44,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const { engagementId } = useParams<EngagementParams>();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const [saving, setSaving] = useState(false);
+    const [isSaving, setSaving] = useState(false);
     const [loadingSavedEngagement, setLoadingSavedEngagement] = useState(true);
 
     const [savedEngagement, setSavedEngagement] = useState<Engagement>({
@@ -85,29 +85,27 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
         if (engagementId !== 'create') {
             setLoadingSavedEngagement(true);
-            getEngagement(
-                Number(engagementId),
-                (result: Engagement) => {
+            getEngagement(Number(engagementId))
+                .then((result: Engagement) => {
                     setSavedEngagement({ ...result });
                     setSavedBannerImageFileName(result.banner_filename);
                     setLoadingSavedEngagement(false);
-                },
-                (errorMessage: string) => {
+                })
+                .catch((errorMessage: string) => {
                     console.log(errorMessage);
                     dispatch(openNotification({ open: true, severity: 'error', text: 'Error Fetching Engagement' }));
                     navigate('/');
-                },
-            );
+                });
         } else {
             setLoadingSavedEngagement(false);
         }
     }, [engagementId]);
 
-    const handleCreateEngagementRequest = async (engagement: EngagementForm) => {
+    const handleCreateEngagementRequest = async (engagement: EngagementForm): Promise<Engagement> => {
         setSaving(true);
         const uploadedBannerImageFileName = await handleUploadBannerImage();
-        postEngagement(
-            {
+        return new Promise((resolve, reject) => {
+            postEngagement({
                 name: engagement.name,
                 start_date: engagement.fromDate,
                 status_id: engagement.status_id,
@@ -117,21 +115,23 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 content: engagement.content,
                 rich_content: engagement.richContent,
                 banner_filename: uploadedBannerImageFileName,
-            },
-            () => {
-                //TODO engagement created success message in notification module
-                dispatch(
-                    openNotification({ open: true, severity: 'success', text: 'Engagement Created Successfully' }),
-                );
-                setSaving(false);
-            },
-            (errorMessage: string) => {
-                //TODO:engagement create error message in notification module
-                dispatch(openNotification({ open: true, severity: 'error', text: 'Error Creating Engagement' }));
-                setSaving(false);
-                console.log(errorMessage);
-            },
-        );
+            })
+                .then((engagement) => {
+                    //TODO engagement created success message in notification module
+                    dispatch(
+                        openNotification({ open: true, severity: 'success', text: 'Engagement Created Successfully' }),
+                    );
+                    setSaving(false);
+                    return resolve(engagement);
+                })
+                .catch((errorMessage: string) => {
+                    //TODO:engagement create error message in notification module
+                    dispatch(openNotification({ open: true, severity: 'error', text: 'Error Creating Engagement' }));
+                    setSaving(false);
+                    console.log(errorMessage);
+                    return reject(errorMessage);
+                });
+        });
     };
 
     const handleUploadBannerImage = async () => {
@@ -146,11 +146,11 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
     };
 
-    const handleUpdateEngagementRequest = async (engagement: EngagementForm) => {
+    const handleUpdateEngagementRequest = async (engagement: EngagementForm): Promise<Engagement> => {
         setSaving(true);
         const uploadedBannerImageFileName = await handleUploadBannerImage();
-        putEngagement(
-            {
+        return new Promise((resolve, reject) => {
+            putEngagement({
                 id: Number(engagementId),
                 name: engagement.name,
                 start_date: engagement.fromDate,
@@ -161,21 +161,23 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 content: engagement.content,
                 rich_content: engagement.richContent,
                 banner_filename: uploadedBannerImageFileName,
-            },
-            () => {
-                //TODO engagement update success message in notification module
-                dispatch(
-                    openNotification({ open: true, severity: 'success', text: 'Engagement Updated Successfully' }),
-                );
-                setSaving(false);
-            },
-            (errorMessage: string) => {
-                //TODO: engagement update error message in notification module
-                dispatch(openNotification({ open: true, severity: 'error', text: 'Error Updating Engagement' }));
-                setSaving(false);
-                console.log(errorMessage);
-            },
-        );
+            })
+                .then((engagement) => {
+                    //TODO engagement update success message in notification module
+                    dispatch(
+                        openNotification({ open: true, severity: 'success', text: 'Engagement Updated Successfully' }),
+                    );
+                    setSaving(false);
+                    return resolve(engagement);
+                })
+                .catch((errorMessage: string) => {
+                    //TODO: engagement update error message in notification module
+                    dispatch(openNotification({ open: true, severity: 'error', text: 'Error Updating Engagement' }));
+                    setSaving(false);
+                    console.log(errorMessage);
+                    return reject(errorMessage);
+                });
+        });
     };
 
     return (
@@ -183,7 +185,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             value={{
                 handleCreateEngagementRequest,
                 handleUpdateEngagementRequest,
-                saving,
+                isSaving,
                 savedEngagement,
                 engagementId,
                 loadingSavedEngagement,

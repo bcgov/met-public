@@ -5,19 +5,22 @@ import RichTextEditor from './RichTextEditor';
 import { ActionContext } from './ActionContext';
 import { formatDate } from '../../common/dateHelper';
 import ImageUpload from 'components/imageUpload';
+import { useNavigate } from 'react-router-dom';
 
 const EngagementForm = () => {
     const {
         handleCreateEngagementRequest,
         handleUpdateEngagementRequest,
-        saving,
+        isSaving,
         savedEngagement,
         engagementId,
         loadingSavedEngagement,
         handleAddBannerImage,
     } = useContext(ActionContext);
 
-    const creatingNewEngagement = engagementId === 'create';
+    const navigate = useNavigate();
+
+    const isNewEngagement = engagementId === 'create';
 
     const [engagementFormData, setEngagementFormData] = useState({
         name: '',
@@ -111,26 +114,34 @@ const EngagementForm = () => {
 
         return Object.values(errors).some((isError: unknown) => isError);
     };
-    const handleCreateEngagement = () => {
-        const errorExists = validateForm();
 
-        if (!errorExists) {
+    const handleSaveEngagement = (isPreview: boolean) => {
+        const hasErrors = validateForm();
+
+        if (hasErrors) {
+            return Promise.reject('Validation Errors');
+        }
+        if (isNewEngagement) {
             handleCreateEngagementRequest({
                 ...engagementFormData,
                 richDescription: richDescription,
                 richContent: richContent,
+            }).then((engagement) => {
+                if (isPreview) {
+                    navigate(`/engagement/view/${engagement.id}`);
+                } else {
+                    navigate(`/engagement/form/${engagement.id}`);
+                }
             });
-        }
-    };
-
-    const handleUpdateEngagement = () => {
-        const errorExists = validateForm();
-
-        if (!errorExists) {
+        } else {
             handleUpdateEngagementRequest({
                 ...engagementFormData,
                 richDescription: richDescription,
                 richContent: richContent,
+            }).then((engagement) => {
+                if (isPreview) {
+                    navigate(`/engagement/view/${engagement.id}`);
+                }
             });
         }
     };
@@ -279,28 +290,19 @@ const EngagementForm = () => {
                             </MetPaper>
                         </Grid>
 
-                        <Grid item xs={12} md={5}>
-                            {creatingNewEngagement ? (
-                                <Button
-                                    fullWidth
-                                    variant="contained"
-                                    onClick={() => handleCreateEngagement()}
-                                    disabled={saving}
-                                >
-                                    Create Engagement Draft
-                                    {saving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
-                                </Button>
-                            ) : (
-                                <Button
-                                    fullWidth
-                                    variant="contained"
-                                    onClick={() => handleUpdateEngagement()}
-                                    disabled={saving}
-                                >
-                                    Update Engagement Draft
-                                    {saving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
-                                </Button>
-                            )}
+                        <Grid item xs={12}>
+                            <Button
+                                variant="contained"
+                                sx={{ marginRight: 1 }}
+                                onClick={() => handleSaveEngagement(false)}
+                                disabled={isSaving}
+                            >
+                                {isNewEngagement ? 'Create Engagement Draft' : 'Update Engagement Draft'}
+                                {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
+                            </Button>
+                            <Button variant="outlined" onClick={() => handleSaveEngagement(true)} disabled={isSaving}>
+                                Save & Preview Engagement
+                            </Button>
                         </Grid>
                     </Grid>
                 </MetPaper>

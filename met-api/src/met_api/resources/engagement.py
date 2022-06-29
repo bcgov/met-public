@@ -78,6 +78,7 @@ class GetEngagements(Resource):
             engagment_schema['created_by'] = user_id
             engagment_schema['updated_by'] = user_id
             result = EngagementService().create_engagement(engagment_schema)
+            engagment_schema['id'] = result.identifier
             return ActionResult.success(result.identifier, engagment_schema)
         except KeyError as err:
             return ActionResult.error(str(err))

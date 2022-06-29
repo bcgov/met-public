@@ -13,67 +13,52 @@ export const fetchAll = async (dispatch: Dispatch<AnyAction>): Promise<Engagemen
     return engagements;
 };
 
-export const getEngagement = async (
-    engagementId: number,
-    successCallback: (data: Engagement) => void,
-    errorCallback: (errorMessage: string) => void,
-) => {
-    try {
+export const getEngagement = async (engagementId: number): Promise<Engagement> => {
+    return new Promise((resolve, reject) => {
         const url = replaceUrl(Endpoints.Engagement.GET, '<engagement_id>', String(engagementId));
         if (!engagementId || isNaN(Number(engagementId))) {
-            throw new Error('Invalid Engagement Id ' + engagementId);
+            reject('Invalid Engagement Id ' + engagementId);
         }
-        const responseData = await http.GetRequest<Engagement>(url);
-        if (responseData.data.result) {
-            successCallback(responseData.data.result);
-        } else {
-            errorCallback('Missing engagement object');
-        }
-    } catch (e: unknown) {
-        let errorMessage = '';
-        if (typeof e === 'string') {
-            errorMessage = e.toUpperCase();
-        } else if (e instanceof Error) {
-            errorMessage = e.message;
-        }
-        errorCallback(errorMessage);
-    }
+        http.GetRequest<Engagement>(url)
+            .then((response) => {
+                if (response.data.result) {
+                    resolve(response.data.result);
+                } else {
+                    reject(response.data.message ?? 'Failed to fetch engagement');
+                }
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
 };
 
-export const postEngagement = async (
-    data: PostEngagementRequest,
-    successCallback: () => void,
-    errorCallback: (errorMessage: string) => void,
-) => {
-    try {
-        await http.PostRequest(Endpoints.Engagement.CREATE, data);
-        successCallback();
-    } catch (e: unknown) {
-        let errorMessage = '';
-        if (typeof e === 'string') {
-            errorMessage = e.toUpperCase();
-        } else if (e instanceof Error) {
-            errorMessage = e.message;
-        }
-        errorCallback(errorMessage);
-    }
+export const postEngagement = async (data: PostEngagementRequest): Promise<Engagement> => {
+    return new Promise((resolve, reject) => {
+        http.PostRequest<Engagement>(Endpoints.Engagement.CREATE, data)
+            .then((response) => {
+                if (response.data.status && response.data.result) {
+                    resolve(response.data.result);
+                }
+                reject(response.data.message ?? 'Failed to create engagement');
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
 };
 
-export const putEngagement = async (
-    data: PutEngagementRequest,
-    successCallback: () => void,
-    errorCallback: (errorMessage: string) => void,
-) => {
-    try {
-        await http.PutRequest(Endpoints.Engagement.UPDATE, data);
-        successCallback();
-    } catch (e: unknown) {
-        let errorMessage = '';
-        if (typeof e === 'string') {
-            errorMessage = e.toUpperCase();
-        } else if (e instanceof Error) {
-            errorMessage = e.message;
-        }
-        errorCallback(errorMessage);
-    }
+export const putEngagement = (data: PutEngagementRequest): Promise<Engagement> => {
+    return new Promise((resolve, reject) => {
+        http.PutRequest<Engagement>(Endpoints.Engagement.UPDATE, data)
+            .then((response) => {
+                if (response.data.status && response.data.result) {
+                    resolve(response.data.result);
+                }
+                reject(response.data.message ?? 'Failed to update engagement');
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
 };
