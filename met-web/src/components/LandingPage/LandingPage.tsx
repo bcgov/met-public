@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
 import { SearchBar } from './SearchBar';
-import { MetPageGridContainer } from '../../components/common';
+import { MetPageGridContainer } from '../common';
 
 const LandingPage = () => {
     const [searchFilter, setSearchFilter] = useState({
