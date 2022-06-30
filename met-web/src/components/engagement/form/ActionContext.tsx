@@ -6,6 +6,7 @@ import { Engagement } from '../../../models/engagement';
 import { saveDocument } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
+import { getErrorMessage } from 'utils';
 
 export const ActionContext = createContext<EngagementContext>({
     handleCreateEngagementRequest: (_engagement: EngagementForm) => {
@@ -94,7 +95,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 },
                 (errorMessage: string) => {
                     console.log(errorMessage);
-                    dispatch(openNotification({ open: true, severity: 'error', text: 'Error Fetching Engagement' }));
+                    dispatch(openNotification({ severity: 'error', text: 'Error Fetching Engagement' }));
                     navigate('/');
                 },
             );
@@ -105,33 +106,38 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     const handleCreateEngagementRequest = async (engagement: EngagementForm) => {
         setSaving(true);
-        const uploadedBannerImageFileName = await handleUploadBannerImage();
-        postEngagement(
-            {
-                name: engagement.name,
-                start_date: engagement.fromDate,
-                status_id: engagement.status_id,
-                end_date: engagement.toDate,
-                description: engagement.description,
-                rich_description: engagement.richDescription,
-                content: engagement.content,
-                rich_content: engagement.richContent,
-                banner_filename: uploadedBannerImageFileName,
-            },
-            () => {
-                //TODO engagement created success message in notification module
-                dispatch(
-                    openNotification({ open: true, severity: 'success', text: 'Engagement Created Successfully' }),
-                );
-                setSaving(false);
-            },
-            (errorMessage: string) => {
-                //TODO:engagement create error message in notification module
-                dispatch(openNotification({ open: true, severity: 'error', text: 'Error Creating Engagement' }));
-                setSaving(false);
-                console.log(errorMessage);
-            },
-        );
+        try {
+            const uploadedBannerImageFileName = await handleUploadBannerImage();
+            postEngagement(
+                {
+                    name: engagement.name,
+                    start_date: engagement.fromDate,
+                    status_id: engagement.status_id,
+                    end_date: engagement.toDate,
+                    description: engagement.description,
+                    rich_description: engagement.richDescription,
+                    content: engagement.content,
+                    rich_content: engagement.richContent,
+                    banner_filename: uploadedBannerImageFileName,
+                },
+                () => {
+                    //TODO engagement created success message in notification module
+                    dispatch(openNotification({ severity: 'success', text: 'Engagement Created Successfully' }));
+                    setSaving(false);
+                },
+                (errorMessage: string) => {
+                    //TODO:engagement create error message in notification module
+                    dispatch(openNotification({ severity: 'error', text: 'Error Creating Engagement' }));
+                    setSaving(false);
+                    console.log(errorMessage);
+                },
+            );
+        } catch (error) {
+            dispatch(
+                openNotification({ severity: 'error', text: getErrorMessage(error) || 'Error Creating Engagement' }),
+            );
+            setSaving(false);
+        }
     };
 
     const handleUploadBannerImage = async () => {
@@ -143,6 +149,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             return savedDocumentDetails?.uniquefilename || '';
         } catch (error) {
             console.log(error);
+            throw new Error('Error occurred during banner image upload');
         }
     };
 
@@ -164,14 +171,12 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             },
             () => {
                 //TODO engagement update success message in notification module
-                dispatch(
-                    openNotification({ open: true, severity: 'success', text: 'Engagement Updated Successfully' }),
-                );
+                dispatch(openNotification({ severity: 'success', text: 'Engagement Updated Successfully' }));
                 setSaving(false);
             },
             (errorMessage: string) => {
                 //TODO: engagement update error message in notification module
-                dispatch(openNotification({ open: true, severity: 'error', text: 'Error Updating Engagement' }));
+                dispatch(openNotification({ severity: 'error', text: 'Error Updating Engagement' }));
                 setSaving(false);
                 console.log(errorMessage);
             },

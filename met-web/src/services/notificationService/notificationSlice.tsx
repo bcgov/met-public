@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { NotificationState } from './types';
+import { NotificationState, OpenNotificationProps } from './types';
 
 const initialState: NotificationState = {
     open: false,
@@ -11,8 +11,8 @@ export const notificationSlice = createSlice({
     name: 'notification',
     initialState,
     reducers: {
-        openNotification: (state: NotificationState, action: PayloadAction<NotificationState>) => {
-            state.open = action.payload.open;
+        openNotification: (state: NotificationState, action: PayloadAction<OpenNotificationProps>) => {
+            state.open = true;
             state.severity = action.payload.severity;
             state.text = action.payload.text;
         },
