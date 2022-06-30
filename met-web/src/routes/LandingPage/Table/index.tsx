@@ -184,9 +184,10 @@ function EnhancedTable({ filter = { key: '', value: '' } }) {
                 return false;
             }
             // filter by rows who have the specified field in filter.key matching the search filter value
-            return String(row[filter.key]).match(`${filter.value}.*`);
+            return String(row[filter.key]).toLowerCase().match(`${filter.value.toLowerCase()}.*`);
         });
         setFilteredRows(rowsFilteredResults);
+        setPage(0);
     }, [rows, filter]);
 
     const handleRequestSort = (_event: React.MouseEvent<unknown>, property: keyof Engagement) => {
