@@ -18,6 +18,7 @@ import { EngagementTableCell } from './TableElements';
 import { formatDate } from 'components/common/dateHelper';
 import { hasKey } from 'utils';
 import { Engagement } from 'models/engagement';
+import { HeadCell } from '../types';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
@@ -32,10 +33,7 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 type Order = 'asc' | 'desc';
 
 // eslint-disable-next-line
-function getComparator<Key extends keyof Engagement>(
-    order: Order,
-    orderBy: Key,
-): (a: Engagement, b: Engagement) => number {
+function getComparator<T>(order: Order, orderBy: keyof T): (a: T, b: T) => number {
     return order === 'desc'
         ? (a, b) => descendingComparator(a, b, orderBy)
         : (a, b) => -descendingComparator(a, b, orderBy);
@@ -55,76 +53,18 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
     return stabilizedThis.map((el) => el[0]);
 }
 
-interface HeadCell {
-    disablePadding: boolean;
-    id: keyof Engagement;
-    label: string;
-    numeric: boolean;
-    allowSort: boolean;
-}
-
-const headCells: readonly HeadCell[] = [
-    {
-        id: 'name',
-        numeric: false,
-        disablePadding: true,
-        label: 'Engagement Name',
-        allowSort: true,
-    },
-    {
-        id: 'created_date',
-        numeric: true,
-        disablePadding: false,
-        label: 'Date Created',
-        allowSort: true,
-    },
-    {
-        id: 'status_id',
-        numeric: true,
-        disablePadding: false,
-        label: 'Status',
-        allowSort: true,
-    },
-    {
-        id: 'published_date',
-        numeric: true,
-        disablePadding: false,
-        label: 'Date Published',
-        allowSort: true,
-    },
-    {
-        id: 'survey',
-        numeric: false,
-        disablePadding: false,
-        label: 'Survey',
-        allowSort: false,
-    },
-    {
-        id: 'survey',
-        numeric: true,
-        disablePadding: false,
-        label: 'Responses',
-        allowSort: false,
-    },
-    {
-        id: 'survey',
-        numeric: true,
-        disablePadding: false,
-        label: 'Reporting',
-        allowSort: false,
-    },
-];
-
-interface EnhancedTableProps {
-    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Engagement) => void;
+interface EnhancedTableHeadProps<T> {
+    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof T) => void;
     order: Order;
-    orderBy: string;
+    orderBy: keyof T;
     rowCount: number;
+    headCells: HeadCell<T>[];
 }
 
-function EnhancedTableHead(props: EnhancedTableProps) {
-    const { order, orderBy, onRequestSort } = props;
-    const createSortHandler = (property: keyof Engagement) => (event: React.MouseEvent<unknown>) => {
+function EnhancedTableHead<T>(props: EnhancedTableHeadProps<T>) {
+    const { order, orderBy, onRequestSort, headCells } = props;
+
+    const createSortHandler = (property: keyof T) => (event: React.MouseEvent<unknown>) => {
         onRequestSort(event, property);
     };
 
@@ -133,19 +73,19 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             <TableRow>
                 {headCells.map((headCell, index) => (
                     <TableCell
-                        key={`${headCell.id}${index}`}
+                        key={`${String(headCell.key)}${index}`}
                         align={'left'}
-                        sortDirection={orderBy === headCell.id ? order : false}
+                        sortDirection={orderBy === headCell.key ? order : false}
                         sx={{ borderBottom: '1.5px solid gray' }}
                     >
                         <TableSortLabel
                             disabled={!headCell.allowSort}
-                            active={orderBy === headCell.id}
-                            direction={orderBy === headCell.id ? order : 'asc'}
-                            onClick={createSortHandler(headCell.id)}
+                            active={orderBy === headCell.key}
+                            direction={orderBy === headCell.key ? order : 'asc'}
+                            onClick={createSortHandler(headCell.key)}
                         >
                             {headCell.label}
-                            {orderBy === headCell.id && (
+                            {orderBy === headCell.key && (
                                 <Box component="span" sx={visuallyHidden}>
                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                                 </Box>
@@ -158,18 +98,30 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     );
 }
 
-function EnhancedTable({ filter = { key: '', value: '' } }) {
+interface EnhancedTableProps<T> {
+    filter: {
+        key: string;
+        value: string;
+    };
+    headCells: HeadCell<T>[];
+    defaultSort: keyof T;
+    rows: T[];
+}
+function EnhancedTable<T>({
+    filter = { key: '', value: '' },
+    headCells = [],
+    defaultSort,
+    rows = [],
+}: EnhancedTableProps<T>) {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         fetchAll(dispatch);
     }, [dispatch]);
 
-    const rows = useAppSelector<Engagement[]>((state) => state.engagement.allEngagements);
-
-    const [filteredRows, setFilteredRows] = useState<Engagement[]>(rows);
+    const [filteredRows, setFilteredRows] = useState<T[]>(rows);
     const [order, setOrder] = useState<Order>('asc');
-    const [orderBy, setOrderBy] = useState<keyof Engagement>('created_date');
+    const [orderBy, setOrderBy] = useState(defaultSort);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -179,7 +131,7 @@ function EnhancedTable({ filter = { key: '', value: '' } }) {
             return;
         }
 
-        const rowsFilteredResults = rows.filter((row: Engagement) => {
+        const rowsFilteredResults = rows.filter((row: T) => {
             if (!hasKey(row, filter.key)) {
                 return false;
             }
@@ -189,7 +141,7 @@ function EnhancedTable({ filter = { key: '', value: '' } }) {
         setFilteredRows(rowsFilteredResults);
     }, [rows, filter]);
 
-    const handleRequestSort = (_event: React.MouseEvent<unknown>, property: keyof Engagement) => {
+    const handleRequestSort = (_event: React.MouseEvent<unknown>, property: keyof T) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
@@ -217,48 +169,19 @@ function EnhancedTable({ filter = { key: '', value: '' } }) {
                             orderBy={orderBy}
                             onRequestSort={handleRequestSort}
                             rowCount={filteredRows.length}
+                            headCells={headCells}
                         />
                         <TableBody>
-                            {stableSort<Engagement>(filteredRows, getComparator(order, orderBy))
+                            {stableSort<T>(filteredRows, getComparator<T>(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((row) => {
+                                .map((row, rowIndex) => {
                                     return (
-                                        <TableRow hover tabIndex={-1} key={row.id}>
-                                            <EngagementTableCell align="left">
-                                                <MuiLink component={Link} to={`/engagement/form/${Number(row.id)}`}>
-                                                    {row.name}
-                                                </MuiLink>
-                                            </EngagementTableCell>
-                                            <EngagementTableCell align="left">
-                                                {formatDate(row.created_date)}
-                                            </EngagementTableCell>
-                                            <EngagementTableCell align="left">
-                                                {row.status.status_name}
-                                            </EngagementTableCell>
-                                            <EngagementTableCell align="left">
-                                                {formatDate(row.published_date)}
-                                            </EngagementTableCell>
-                                            <EngagementTableCell align="left">
-                                                {!row.survey && 'No Survey'}
-                                                <MuiLink component={Link} to={`/survey/${Number(row.survey?.id)}`}>
-                                                    {row.survey?.name}
-                                                </MuiLink>
-                                            </EngagementTableCell>
-                                            <EngagementTableCell align="left">
-                                                {!row.survey && 'N/A'}
-                                                {row.survey?.responseCount}
-                                            </EngagementTableCell>
-                                            <EngagementTableCell align="left">
-                                                {!row.survey && 'N/A'}
-                                                {row.survey && (
-                                                    <MuiLink
-                                                        component={Link}
-                                                        to={`/survey/${Number(row.survey?.id)}/results`}
-                                                    >
-                                                        View Report
-                                                    </MuiLink>
-                                                )}
-                                            </EngagementTableCell>
+                                        <TableRow hover tabIndex={-1} key={`row-${rowIndex}`}>
+                                            {headCells.map((cell, cellIndex) => (
+                                                <EngagementTableCell key={`row-${rowIndex}-${cellIndex}`}>
+                                                    {cell.getValue ? cell.getValue(row) : String(row[cell.key])}
+                                                </EngagementTableCell>
+                                            ))}
                                         </TableRow>
                                     );
                                 })}
