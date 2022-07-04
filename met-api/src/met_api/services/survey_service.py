@@ -36,7 +36,7 @@ class SurveyService:
         #return Survey.create_survey(data)
 
     def update(self, data: SurveySchema):
-        """Update all engagement."""
+        """Update survey."""
         self.validated_fields(data)
         #return Survey.update_survey(data)
 
