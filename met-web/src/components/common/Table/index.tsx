@@ -10,7 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Paper from '@mui/material/Paper';
 import { visuallyHidden } from '@mui/utils';
-import { EngagementTableCell } from './TableElements';
+import { MetTableCell } from './TableElements';
 import { HeadCell } from 'components/common/Table/types';
 import { hasKey } from 'utils';
 
@@ -47,7 +47,7 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
     return stabilizedThis.map((el) => el[0]);
 }
 
-interface EnhancedTableHeadProps<T> {
+interface MetTableHeadProps<T> {
     onRequestSort: (event: React.MouseEvent<unknown>, property: keyof T) => void;
     order: Order;
     orderBy: keyof T;
@@ -55,7 +55,7 @@ interface EnhancedTableHeadProps<T> {
     headCells: HeadCell<T>[];
 }
 
-function EnhancedTableHead<T>(props: EnhancedTableHeadProps<T>) {
+function MetTableHead<T>(props: MetTableHeadProps<T>) {
     const { order, orderBy, onRequestSort, headCells } = props;
 
     const createSortHandler = (property: keyof T) => (event: React.MouseEvent<unknown>) => {
@@ -92,7 +92,7 @@ function EnhancedTableHead<T>(props: EnhancedTableHeadProps<T>) {
     );
 }
 
-interface EnhancedTableProps<T> {
+interface MetTableProps<T> {
     filter?: {
         key: string;
         value: string;
@@ -101,12 +101,7 @@ interface EnhancedTableProps<T> {
     defaultSort: keyof T;
     rows: T[];
 }
-function EnhancedTable<T>({
-    filter = { key: '', value: '' },
-    headCells = [],
-    defaultSort,
-    rows = [],
-}: EnhancedTableProps<T>) {
+function MetTable<T>({ filter = { key: '', value: '' }, headCells = [], defaultSort, rows = [] }: MetTableProps<T>) {
     const [filteredRows, setFilteredRows] = useState<T[]>(rows);
     const [order, setOrder] = useState<Order>('asc');
     const [orderBy, setOrderBy] = useState(defaultSort);
@@ -152,7 +147,7 @@ function EnhancedTable<T>({
             <Paper sx={{ width: '100%', mb: 2 }} elevation={0}>
                 <TableContainer>
                     <Table aria-labelledby="Engagements">
-                        <EnhancedTableHead
+                        <MetTableHead
                             order={order}
                             orderBy={orderBy}
                             onRequestSort={handleRequestSort}
@@ -166,9 +161,9 @@ function EnhancedTable<T>({
                                     return (
                                         <TableRow hover tabIndex={-1} key={`row-${rowIndex}`}>
                                             {headCells.map((cell, cellIndex) => (
-                                                <EngagementTableCell key={`row-${rowIndex}-${cellIndex}`}>
+                                                <MetTableCell key={`row-${rowIndex}-${cellIndex}`}>
                                                     {cell.getValue ? cell.getValue(row) : String(row[cell.key])}
-                                                </EngagementTableCell>
+                                                </MetTableCell>
                                             ))}
                                         </TableRow>
                                     );
@@ -199,4 +194,4 @@ function EnhancedTable<T>({
     );
 }
 
-export default EnhancedTable;
+export default MetTable;

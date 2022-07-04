@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import EnhancedTable from '../common/Table';
+import MetTable from '../common/Table';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
@@ -154,7 +154,7 @@ const LandingPage = () => {
                 </Link>
             </Grid>
             <Grid item xs={12} lg={10}>
-                <EnhancedTable filter={searchFilter} headCells={headCells} rows={rows} defaultSort={'created_date'} />
+                <MetTable filter={searchFilter} headCells={headCells} rows={rows} defaultSort={'created_date'} />
             </Grid>
         </MetPageGridContainer>
     );

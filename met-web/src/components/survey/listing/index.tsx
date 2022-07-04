@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import EnhancedTable from 'components/common/Table';
+import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
 import { MetPageGridContainer } from 'components/common';
@@ -136,7 +136,7 @@ const SurveyListing = () => {
                 </Link>
             </Grid>
             <Grid item xs={12} lg={10}>
-                <EnhancedTable headCells={headCells} rows={surveys} defaultSort={'created_date'} />
+                <MetTable headCells={headCells} rows={surveys} defaultSort={'created_date'} />
             </Grid>
         </MetPageGridContainer>
     );
