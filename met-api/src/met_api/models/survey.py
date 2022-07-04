@@ -5,6 +5,7 @@ Manages the Survey
 from datetime import datetime
 from .db import db, ma
 from sqlalchemy.dialects import postgresql
+from sqlalchemy.dialects.postgresql import UUID
 import uuid 
 
 
@@ -13,9 +14,9 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
 
     __tablename__ = 'survey'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(UUID(as_uuid=True))
     name = db.Column(db.String(50))
-    formJSON = db.Column(postgresql.JSON(astext_type=sa.Text()), nullable=False, server_default="{}")
+    formJSON = db.Column(postgresql.JSON(astext_type=db.Text()), nullable=False, server_default="{}")
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
     created_by = db.Column(db.String(50))
