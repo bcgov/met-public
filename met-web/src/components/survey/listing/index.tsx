@@ -27,14 +27,14 @@ const SurveyListing = () => {
 
     const callFetchSurveys = async () => {
         try {
-            const surveys = fetchAllSurveys();
-            return surveys;
+            const fetchedSurveys = await fetchAllSurveys();
+            setSurveys(fetchedSurveys);
         } catch (error) {
-            // dispatch(openNotification({severity: 'error', text: "Error occurred while fetching surveys"}))
+            dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching surveys' }));
         }
     };
     useEffect(() => {
-        // setSurveys()
+        callFetchSurveys();
     }, []);
 
     const handleSearchBarClick = (engagementNameFilter: string) => {
@@ -66,19 +66,20 @@ const SurveyListing = () => {
             getValue: (row: Survey) => formatDate(row.created_date),
         },
         {
-            key: 'status',
+            key: 'engagement',
             numeric: true,
             disablePadding: false,
             label: 'Status',
             allowSort: true,
+            getValue: (row: Survey) => row.engagement?.status.status_name || 'draft',
         },
         {
-            key: 'published_date',
+            key: 'engagement',
             numeric: true,
             disablePadding: false,
             label: 'Date Published',
             allowSort: true,
-            getValue: (row: Survey) => formatDate(row.published_date),
+            getValue: (row: Survey) => formatDate(row.engagement?.published_date || ''),
         },
         {
             key: 'responseCount',
