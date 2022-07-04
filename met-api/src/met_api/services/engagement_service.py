@@ -1,7 +1,7 @@
 
 """Service for engagement management."""
 from met_api.models.engagement import Engagement
-from met_api.schemas.Engagement import EngagementSchema
+from met_api.schemas.engagement import EngagementSchema
 from met_api.services.object_storage_service import ObjectStorageService
 
 

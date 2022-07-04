@@ -11,57 +11,57 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""API endpoints for managing an engagement resource."""
+"""API endpoints for managing an survey resource."""
 
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
 from met_api.auth import auth
-from met_api.schemas.engagement import EngagementSchema
-from met_api.services.engagement_service import EngagementService
+from met_api.schemas.survey import SurveySchema
+from met_api.services.survey_service import SurveyService
 from met_api.utils.action_result import ActionResult
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
-API = Namespace('engagement', description='Endpoints for Engagements Management')
+API = Namespace('survey', description='Endpoints for Survey Management')
 """Custom exception messages
 """
 
 
 @cors_preflight('GET,OPTIONS')
-@API.route('/<engagement_id>')
-class GetEngagement(Resource):
-    """Resource for managing a single engagement."""
+@API.route('/<survey_id>')
+class GetSurvey(Resource):
+    """Resource for managing a single survey."""
 
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
-    def get(engagement_id):
-        """Fetch a single engagement matching the provided id."""
+    def get(survey_id):
+        """Fetch a single survey matching the provided id."""
         try:
-            engagement_record = EngagementService().get_engagement(engagement_id)
-            return ActionResult.success(engagement_id, engagement_record)
+            survey_record = SurveyService().get(survey_id)
+            return ActionResult.success(survey_id, survey_record)
         except KeyError:
-            return ActionResult.error('Engagement was not found')
+            return ActionResult.error('Survey was not found')
         except ValueError as err:
             return ActionResult.error(str(err))
 
 
 @cors_preflight('GET, POST, PUT, OPTIONS')
 @API.route('/')
-class GetEngagements(Resource):
-    """Resource for managing all engagements."""
+class GetSurveys(Resource):
+    """Resource for managing all surveys."""
 
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
     def get():
-        """Fetch all engagements."""
+        """Fetch all surveys."""
         try:
-            engagement_records = EngagementService().get_all_engagements()
-            return ActionResult.success(result=engagement_records)
+            survey_records = SurveyService().get_all()
+            return ActionResult.success(result=survey_records)
         except ValueError as err:
             return ActionResult.error(str(err))
 
@@ -70,15 +70,16 @@ class GetEngagements(Resource):
     @cross_origin(origins=allowedorigins())
     @auth.require
     def post():
-        """Create a new engagement."""
+        """Create a new survey."""
         try:
             user_id = TokenInfo.get_id()
             requestjson = request.get_json()
-            engagment_schema = EngagementSchema().load(requestjson)
-            engagment_schema['created_by'] = user_id
-            engagment_schema['updated_by'] = user_id
-            result = EngagementService().create_engagement(engagment_schema)
-            return ActionResult.success(result.identifier, engagment_schema)
+            survey_schema = SurveySchema().load(requestjson)
+            survey_schema['created_by'] = user_id
+            survey_schema['updated_by'] = user_id
+            result = SurveyService().create(survey_schema)
+            survey_schema['id'] = result.identifier
+            return ActionResult.success(result.identifier, survey_schema)
         except KeyError as err:
             return ActionResult.error(str(err))
         except ValueError as err:
@@ -89,14 +90,14 @@ class GetEngagements(Resource):
     @cross_origin(origins=allowedorigins())
     @auth.require
     def put():
-        """Update saved engagement."""
+        """Update a existing survey."""
         try:
             requestjson = request.get_json()
-            engagment_schema = EngagementSchema().load(requestjson)
+            survey_schema = SurveySchema().load(requestjson)
             user_id = TokenInfo.get_id()
-            engagment_schema['updated_by'] = user_id
-            result = EngagementService().update_engagement(engagment_schema)
-            return ActionResult.success(result.identifier, engagment_schema)
+            survey_schema['updated_by'] = user_id
+            result = SurveySchema().update(survey_schema)
+            return ActionResult.success(result.identifier, survey_schema)
         except KeyError as err:
             return ActionResult.error(str(err))
         except ValueError as err:
