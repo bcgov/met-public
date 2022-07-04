@@ -1,33 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import EnhancedTable from '../common/Table';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
+import EnhancedTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
-import { MetPageGridContainer } from '../common';
-import { Engagement } from 'models/engagement';
-import { useAppSelector, useAppDispatch } from 'hooks';
-import { HeadCell } from '../common/Table/types';
+import { MetPageGridContainer } from 'components/common';
+import { Survey } from 'models/survey';
+import { HeadCell } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink } from '@mui/material';
-import { fetchAll } from 'services/engagementService';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
+import { fetchAllSurveys } from 'services/surveyService';
+import { useAppDispatch } from 'hooks';
+import { openNotification } from 'services/notificationService/notificationSlice';
 
-const LandingPage = () => {
+const SurveyListing = () => {
     const [searchFilter, setSearchFilter] = useState({
         key: 'name',
         value: '',
     });
     const [searchText, setSearchText] = useState('');
+    const [surveys, setSurveys] = useState<Survey[]>([]);
 
     const dispatch = useAppDispatch();
 
+    const callFetchSurveys = async () => {
+        try {
+            const surveys = fetchAllSurveys();
+            return surveys;
+        } catch (error) {
+            // dispatch(openNotification({severity: 'error', text: "Error occurred while fetching surveys"}))
+        }
+    };
     useEffect(() => {
-        fetchAll(dispatch);
-    }, [dispatch]);
-
-    const rows = useAppSelector<Engagement[]>((state) => state.engagement.allEngagements);
+        // setSurveys()
+    }, []);
 
     const handleSearchBarClick = (engagementNameFilter: string) => {
         setSearchFilter({
@@ -36,14 +44,14 @@ const LandingPage = () => {
         });
     };
 
-    const headCells: HeadCell<Engagement>[] = [
+    const headCells: HeadCell<Survey>[] = [
         {
             key: 'name',
             numeric: false,
             disablePadding: true,
-            label: 'Engagement Name',
+            label: 'Survey Name',
             allowSort: true,
-            getValue: (row: Engagement) => (
+            getValue: (row: Survey) => (
                 <MuiLink component={Link} to={`/engagement/form/${Number(row.id)}`}>
                     {row.name}
                 </MuiLink>
@@ -55,15 +63,14 @@ const LandingPage = () => {
             disablePadding: false,
             label: 'Date Created',
             allowSort: true,
-            getValue: (row: Engagement) => formatDate(row.created_date),
+            getValue: (row: Survey) => formatDate(row.created_date),
         },
         {
-            key: 'status_id',
+            key: 'status',
             numeric: true,
             disablePadding: false,
             label: 'Status',
             allowSort: true,
-            getValue: (row: Engagement) => row.status.status_name,
         },
         {
             key: 'published_date',
@@ -71,51 +78,25 @@ const LandingPage = () => {
             disablePadding: false,
             label: 'Date Published',
             allowSort: true,
-            getValue: (row: Engagement) => formatDate(row.published_date),
+            getValue: (row: Survey) => formatDate(row.published_date),
         },
         {
-            key: 'survey',
-            numeric: false,
-            disablePadding: false,
-            label: 'Survey',
-            allowSort: false,
-            getValue: (row: Engagement) => (
-                <>
-                    {!row.survey && 'No Survey'}
-                    <MuiLink component={Link} to={`/survey/${Number(row.survey?.id)}`}>
-                        {row.survey?.name}
-                    </MuiLink>
-                </>
-            ),
-        },
-        {
-            key: 'survey',
+            key: 'responseCount',
             numeric: true,
             disablePadding: false,
             label: 'Responses',
             allowSort: false,
-            getValue: (row: Engagement) => (
-                <>
-                    {!row.survey && 'N/A'}
-                    {row.survey?.responseCount}
-                </>
-            ),
         },
         {
-            key: 'survey',
+            key: 'id',
             numeric: true,
             disablePadding: false,
             label: 'Reporting',
             allowSort: false,
-            getValue: (row: Engagement) => (
-                <>
-                    {!row.survey && 'N/A'}
-                    {row.survey && (
-                        <MuiLink component={Link} to={`/survey/${Number(row.survey?.id)}/results`}>
-                            View Report
-                        </MuiLink>
-                    )}
-                </>
+            getValue: (row: Survey) => (
+                <MuiLink component={Link} to={`/survey/${Number(row.id)}/results`}>
+                    View Report
+                </MuiLink>
             ),
         },
     ];
@@ -129,7 +110,7 @@ const LandingPage = () => {
             columnSpacing={2}
             rowSpacing={1}
         >
-            <Grid item xs={12} md={4} lg={4}>
+            <Grid item xs={12} md={4} lg={3}>
                 <Stack direction="row" spacing={1}>
                     <TextField
                         id="engagement-name"
@@ -145,19 +126,19 @@ const LandingPage = () => {
                     </Button>
                 </Stack>
             </Grid>
-            <Grid item xs={0} md={4} lg={3}></Grid>
+            <Grid item xs={0} md={4} lg={4}></Grid>
             <Grid item xs={12} md={4} lg={3}>
-                <Link to="/engagement/form/create">
+                <Link to="/survey/create">
                     <Button variant="contained" fullWidth>
-                        + Create An Engagement
+                        + Create Survey
                     </Button>
                 </Link>
             </Grid>
             <Grid item xs={12} lg={10}>
-                <EnhancedTable filter={searchFilter} headCells={headCells} rows={rows} defaultSort={'created_date'} />
+                <EnhancedTable headCells={headCells} rows={surveys} defaultSort={'created_date'} />
             </Grid>
         </MetPageGridContainer>
     );
 };
 
-export default LandingPage;
+export default SurveyListing;
