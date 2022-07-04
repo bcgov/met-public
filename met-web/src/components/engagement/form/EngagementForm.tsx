@@ -115,32 +115,47 @@ const EngagementForm = () => {
         return Object.values(errors).some((isError: unknown) => isError);
     };
 
-    const handleSaveEngagement = async (isPreview: boolean) => {
+    const handleCreateEngagement = async () => {
         const hasErrors = validateForm();
 
-        if (hasErrors) {
-            return Promise.reject('Validation Errors');
-        }
-        if (isNewEngagement) {
+        if (!hasErrors) {
             const engagement = await handleCreateEngagementRequest({
                 ...engagementFormData,
                 richDescription: richDescription,
                 richContent: richContent,
             });
 
-            if (isPreview) {
-                navigate(`/engagement/view/${engagement.id}`);
-            } else {
-                navigate(`/engagement/form/${engagement.id}`);
-            }
-        } else {
+            navigate(`/engagement/form/${engagement.id}`);
+
+            return engagement;
+        }
+    };
+
+    const handleUpdateEngagement = async () => {
+        const hasErrors = validateForm();
+
+        if (!hasErrors) {
             const engagement = await handleUpdateEngagementRequest({
                 ...engagementFormData,
                 richDescription: richDescription,
                 richContent: richContent,
             });
 
-            if (isPreview) {
+            return engagement;
+        }
+    };
+
+    const handlePreviewEngagement = async () => {
+        const hasErrors = validateForm();
+        if (!hasErrors) {
+            let engagement;
+            if (isNewEngagement) {
+                engagement = await handleCreateEngagement();
+            } else {
+                engagement = await handleUpdateEngagement();
+            }
+
+            if (engagement) {
                 navigate(`/engagement/view/${engagement.id}`);
             }
         }
@@ -291,16 +306,28 @@ const EngagementForm = () => {
                         </Grid>
 
                         <Grid item xs={12}>
-                            <Button
-                                variant="contained"
-                                sx={{ marginRight: 1 }}
-                                onClick={() => handleSaveEngagement(false)}
-                                disabled={isSaving}
-                            >
-                                {isNewEngagement ? 'Create Engagement Draft' : 'Update Engagement Draft'}
-                                {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
-                            </Button>
-                            <Button variant="outlined" onClick={() => handleSaveEngagement(true)} disabled={isSaving}>
+                            {isNewEngagement ? (
+                                <Button
+                                    variant="contained"
+                                    sx={{ marginRight: 1 }}
+                                    onClick={() => handleCreateEngagement()}
+                                    disabled={isSaving}
+                                >
+                                    Create Engagement Draft
+                                    {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
+                                </Button>
+                            ) : (
+                                <Button
+                                    variant="contained"
+                                    sx={{ marginRight: 1 }}
+                                    onClick={() => handleUpdateEngagement()}
+                                    disabled={isSaving}
+                                >
+                                    Update Engagement Draft
+                                    {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
+                                </Button>
+                            )}
+                            <Button variant="outlined" onClick={() => handlePreviewEngagement()} disabled={isSaving}>
                                 Save & Preview Engagement
                             </Button>
                         </Grid>
