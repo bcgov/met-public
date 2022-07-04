@@ -3,10 +3,19 @@
 Manages the Survey
 """
 from datetime import datetime
-from .db import db, ma
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.dialects.postgresql import UUID
-import uuid 
+from .default_method_result import DefaultMethodResult
+from .db import db, ma
+
+
+class SurveySchema(ma.Schema):
+    """survey schema."""
+
+    class Meta:  # pylint: disable=too-few-public-methods
+        """Meta class."""
+
+        fields = ('id', 'name', 'form_json', 'created_date', 'updated_date', 'created_by', 'updated_by')
 
 
 class Survey(db.Model):  # pylint: disable=too-few-public-methods
@@ -16,12 +25,12 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
 
     id = db.Column(UUID(as_uuid=True))
     name = db.Column(db.String(50))
-    formJSON = db.Column(postgresql.JSON(astext_type=db.Text()), nullable=False, server_default="{}")
+    form_json = db.Column(postgresql.JSON(astext_type=db.Text()), nullable=False, server_default='{}')
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
     created_by = db.Column(db.String(50))
     updated_by = db.Column(db.String(50))
-    
+
     @classmethod
     def get_survey(cls, survey_id):
         """Get a survey."""
@@ -34,7 +43,7 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
         """Save Survey."""
         new_survey = Survey(
             name=survey.get('name', None),
-            formJSON=survey.get('formJSON', None),
+            form_json=survey.get('form_json', None),
             created_date=survey.get('created_date', None),
             updated_date=survey.get('updated_date', None),
             created_by=survey.get('created_by', None),
@@ -49,7 +58,7 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
         """Update engagement."""
         update_fields = dict(
             name=survey.get('name', None),
-            formJSON=survey.get('formJSON', None),
+            form_json=survey.get('form_json', None),
             created_date=survey.get('created_date', None),
             updated_date=survey.get('updated_date', None),
             created_by=survey.get('created_by', None),
@@ -57,12 +66,4 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
         )
         Survey.query.filter_by(id=survey.get('id', None)).update(update_fields)
         db.session.commit()
-        return DefaultMethodResult(True, 'Engagement Updated', survey['id'])
-
-class SurveySchema(ma.Schema):
-    """survey schema."""
-
-    class Meta:  # pylint: disable=too-few-public-methods
-        """Meta class."""
-
-        fields = ('id', 'name','formJSON', 'created_date', 'updated_date', 'created_by', 'updated_by')
+        return DefaultMethodResult(True, 'Survey Updated', survey['id'])
