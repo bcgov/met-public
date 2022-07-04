@@ -119,7 +119,7 @@ function MetTable<T>({ filter = { key: '', value: '' }, headCells = [], defaultS
                 return false;
             }
             // filter by rows who have the specified field in filter.key matching the search filter value
-            return String(row[filter.key]).match(`${filter.value}.*`);
+            return String(row[filter.key]).toLowerCase().match(`${filter.value.toLowerCase()}.*`);
         });
         setFilteredRows(rowsFilteredResults);
     }, [rows, filter]);
