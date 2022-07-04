@@ -27,6 +27,7 @@ const ImageUpload = ({ handleAddFile, savedImageUrl = '' }: ImageUploadProps) =>
                     style={{
                         border: '1px dashed #606060',
                         height: '10em',
+                        padding: '0',
                     }}
                 >
                     <img

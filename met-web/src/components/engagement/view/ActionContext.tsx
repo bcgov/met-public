@@ -2,6 +2,8 @@ import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getEngagement } from '../../../services/engagementService';
 import { Engagement } from '../../../models/engagement';
+import { useAppDispatch } from 'hooks';
+import { openNotification } from 'services/notificationService/notificationSlice';
 
 export interface EngagementViewContext {
     savedEngagement: Engagement;
@@ -37,6 +39,7 @@ export const ActionContext = createContext<EngagementViewContext>({
 export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     const { engagementId } = useParams<EngagementParams>();
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     const [savedEngagement, setSavedEngagement] = useState<Engagement>({
         id: 0,
@@ -71,6 +74,12 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
             } catch (error) {
                 //TODO engagement created success message in notification module
                 console.log(error);
+                dispatch(
+                    openNotification({
+                        severity: 'error',
+                        text: 'Error occurred while fetching Engagement information',
+                    }),
+                );
                 navigate('/');
             }
         };

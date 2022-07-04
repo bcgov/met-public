@@ -6,6 +6,7 @@ import { Engagement } from '../../../models/engagement';
 import { saveDocument } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
+import { getErrorMessage } from 'utils';
 
 export const ActionContext = createContext<EngagementContext>({
     handleCreateEngagementRequest: (_engagement: EngagementForm): Promise<Engagement> => {
@@ -93,7 +94,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                     setLoadingSavedEngagement(false);
                 } catch (err) {
                     console.log(err);
-                    dispatch(openNotification({ open: true, severity: 'error', text: 'Error Fetching Engagement' }));
+                    dispatch(openNotification({ severity: 'error', text: 'Error Fetching Engagement' }));
                     navigate('/');
                 }
             } else {
@@ -119,12 +120,14 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 banner_filename: uploadedBannerImageFileName,
             });
             //TODO engagement created success message in notification module
-            dispatch(openNotification({ open: true, severity: 'success', text: 'Engagement Created Successfully' }));
+            dispatch(openNotification({ severity: 'success', text: 'Engagement Created Successfully' }));
             setSaving(false);
             return Promise.resolve(result);
         } catch (error) {
             //TODO:engagement create error message in notification module
-            dispatch(openNotification({ open: true, severity: 'error', text: 'Error Creating Engagement' }));
+            dispatch(
+                openNotification({ severity: 'error', text: getErrorMessage(error) || 'Error Creating Engagement' }),
+            );
             setSaving(false);
             console.log(error);
             return Promise.reject(error);
@@ -140,6 +143,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             return savedDocumentDetails?.uniquefilename || '';
         } catch (error) {
             console.log(error);
+            throw new Error('Error occurred during banner image upload');
         }
     };
 
@@ -160,12 +164,12 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 banner_filename: uploadedBannerImageFileName,
             });
             //TODO engagement update success message in notification module
-            dispatch(openNotification({ open: true, severity: 'success', text: 'Engagement Updated Successfully' }));
+            dispatch(openNotification({ severity: 'success', text: 'Engagement Updated Successfully' }));
             setSaving(false);
             return Promise.resolve(result);
         } catch (error) {
             //TODO: engagement update error message in notification module
-            dispatch(openNotification({ open: true, severity: 'error', text: 'Error Updating Engagement' }));
+            dispatch(openNotification({ severity: 'error', text: 'Error Updating Engagement' }));
             setSaving(false);
             console.log(error);
             return Promise.reject(error);
