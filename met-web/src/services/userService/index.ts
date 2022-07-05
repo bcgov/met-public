@@ -13,61 +13,54 @@ const KeycloakData = _kc;
 /**
  * Initializes Keycloak instance.
  */
-const initKeycloak = (dispatch: Dispatch<AnyAction>) => {
-    KeycloakData.init({
-        onLoad: 'check-sso',
-        silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html',
-        pkceMethod: 'S256',
-        checkLoginIframe: false,
-    })
-        .then(async (authenticated) => {
-            if (!authenticated) {
-                console.warn('not authenticated!');
-                dispatch(userAuthentication(authenticated));
-                return;
-            }
-
-            dispatch(userToken(KeycloakData.token));
-            KeycloakData.loadUserInfo().then((userDetail: UserDetail) => {
-                updateUser().then((updateUserResponse) => {
-                    if (updateUserResponse.data.result) {
-                        userDetail.user = updateUserResponse.data.result;
-                        dispatch(userDetails(userDetail));
-                        dispatch(userAuthorization(true));
-                    } else {
-                        console.error('Missing user object');
-                        dispatch(userAuthentication(false));
-                    }
-                });
-            });
-
-            dispatch(userAuthentication(KeycloakData.authenticated ? true : false));
-            refreshToken(dispatch);
-            /* 
-        To do: uncomment when we have FORMIO_JWT_SECRET and USER_RESOURCE_FORM_ID 
-        authenticateAnonymouslyOnFormio();
-      */
-        })
-        .catch((error) => {
-            console.error(error);
-            dispatch(userAuthentication(false));
+const initKeycloak = async (dispatch: Dispatch<AnyAction>) => {
+    try {
+        const authenticated = await KeycloakData.init({
+            onLoad: 'check-sso',
+            silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html',
+            pkceMethod: 'S256',
+            checkLoginIframe: false,
         });
+        if (!authenticated) {
+            console.warn('not authenticated!');
+            dispatch(userAuthentication(authenticated));
+            return;
+        }
+
+        dispatch(userToken(KeycloakData.token));
+        const userDetail: UserDetail = await KeycloakData.loadUserInfo();
+        const updateUserResponse = await updateUser();
+        if (updateUserResponse.data.result) {
+            userDetail.user = updateUserResponse.data.result;
+            dispatch(userDetails(userDetail));
+            dispatch(userAuthorization(true));
+        } else {
+            console.error('Missing user object');
+            dispatch(userAuthentication(false));
+        }
+
+        dispatch(userAuthentication(KeycloakData.authenticated ? true : false));
+        refreshToken(dispatch);
+    } catch (err) {
+        console.error(err);
+        dispatch(userAuthentication(false));
+    }
 };
 
 let refreshInterval: NodeJS.Timer;
 const refreshToken = (dispatch: Dispatch<Action>) => {
-    refreshInterval = setInterval(() => {
-        KeycloakData &&
-            KeycloakData.updateToken(3000)
-                .then((refreshed) => {
-                    if (refreshed) {
-                        dispatch(userToken(KeycloakData.token));
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                    userLogout();
-                });
+    refreshInterval = setInterval(async () => {
+        if (KeycloakData) {
+            try {
+                const refreshed = await KeycloakData.updateToken(3000);
+                if (refreshed) {
+                    dispatch(userToken(KeycloakData.token));
+                }
+            } catch (error) {
+                console.log(error);
+                userLogout();
+            }
+        }
     }, 60000);
 };
 

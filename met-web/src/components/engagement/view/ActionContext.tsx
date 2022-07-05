@@ -62,19 +62,18 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const [engagementLoading, setEngagementLoading] = useState(true);
 
     useEffect(() => {
-        if (isNaN(Number(engagementId))) {
-            navigate('/');
-            return;
-        }
-        getEngagement(
-            Number(engagementId),
-            (result: Engagement) => {
+        const fetchEngagement = async () => {
+            if (isNaN(Number(engagementId))) {
+                navigate('/');
+                return;
+            }
+            try {
+                const result = await getEngagement(Number(engagementId));
                 setSavedEngagement({ ...result });
                 setEngagementLoading(false);
-            },
-            (errorMessage: string) => {
+            } catch (error) {
                 //TODO engagement created success message in notification module
-                console.log(errorMessage);
+                console.log(error);
                 dispatch(
                     openNotification({
                         severity: 'error',
@@ -82,8 +81,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                     }),
                 );
                 navigate('/');
-            },
-        );
+            }
+        };
+        fetchEngagement();
     }, [engagementId]);
 
     return (
