@@ -9,30 +9,34 @@ class SurveyService:
 
     otherdateformat = '%Y-%m-%d'
 
-    def get(self, survey_id):
+    @classmethod
+    def get(cls, survey_id):
         """Get survey by the id."""
         db_data = Survey.get_survey(survey_id)
         return db_data
 
-    def get_all(self):
+    @classmethod
+    def get_all(cls):
         """Get all surveys."""
         db_data = Survey.get_all_surveys()
         return db_data
 
-    def create(self, data: SurveySchema):
+    @classmethod
+    def create(cls, data: SurveySchema):
         """Create survey."""
-        self.validated_fields(data)
+        cls.validated_fields(data)
         return Survey.create_survey(data)
 
-    def update(self, data: SurveySchema):
+    @classmethod
+    def update(cls, data: SurveySchema):
         """Update survey."""
-        self.validated_fields(data)
+        cls.validated_fields(data)
         return Survey.update_survey(data)
 
     @staticmethod
     def validated_fields(data):
         """Validate all fields."""
-        empty_fields = [not data[field] for field in ['name', 'formJSON']]
+        empty_fields = [not data[field] for field in ['name', 'form_json']]
 
         if any(empty_fields):
             raise ValueError('Some required fields are empty')
