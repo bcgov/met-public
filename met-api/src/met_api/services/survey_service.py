@@ -21,12 +21,12 @@ class SurveyService:
         return [self.__create_object(record) for record in db_data]
 
     @staticmethod
-    def __create_object(db_data):
+    def __create_object(db_data: SurveySchema):
         survey = {
             'id': db_data.get('id', None),
             'name': db_data.get('name', None),
             'formJSON': db_data.get('formJSON', None),
-            'created_date': db_data['created_date'],
+            'created_date': db_data.get('created_date', None),
             'engagement': db_data.get('engagement', None),
         }
         return survey
