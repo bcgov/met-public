@@ -4,20 +4,12 @@ Manages the Survey
 """
 from datetime import datetime
 from met_api.models.engagement import Engagement
+from met_api.schemas.survey import SurveySchema
 from sqlalchemy import ForeignKey
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.dialects.postgresql import UUID
 from .default_method_result import DefaultMethodResult
 from .db import db, ma
-
-
-class SurveySchema(ma.Schema):
-    """Survey schema."""
-
-    class Meta:  # pylint: disable=too-few-public-methods
-        """Meta class."""
-
-        fields = ('id', 'name', 'form_json', 'created_date', 'updated_date', 'created_by', 'updated_by')
 
 
 class Survey(db.Model):  # pylint: disable=too-few-public-methods
