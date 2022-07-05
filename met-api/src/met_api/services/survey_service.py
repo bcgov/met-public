@@ -22,14 +22,14 @@ class SurveyService:
 
     @staticmethod
     def __create_object(db_data):
-        engagement = {
+        survey = {
             'id': db_data.get('id', None),
             'name': db_data.get('name', None),
             'formJSON': db_data.get('formJSON', None),
             'created_date': db_data['created_date'],
             'engagement': db_data.get('engagement', None),
         }
-        return engagement
+        return survey
 
     def create(self, data: SurveySchema):
         """Create survey."""
