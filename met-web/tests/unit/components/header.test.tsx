@@ -2,7 +2,6 @@ import { render, cleanup } from '@testing-library/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'jest-dom/extend-expect';
-import renderer from 'react-test-renderer';
 import LoggedInHeader from 'components/layout/Header/LoggedInHeader';
 
 afterEach(cleanup);
