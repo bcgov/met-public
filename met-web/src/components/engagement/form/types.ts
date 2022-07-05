@@ -1,9 +1,9 @@
 import { Engagement } from '../../../models/engagement';
 
 export interface EngagementContext {
-    handleCreateEngagementRequest: (_engagement: EngagementForm) => void;
-    handleUpdateEngagementRequest: (_engagement: EngagementForm) => void;
-    saving: boolean;
+    handleCreateEngagementRequest: (_engagement: EngagementForm) => Promise<Engagement>;
+    handleUpdateEngagementRequest: (_engagement: EngagementForm) => Promise<Engagement>;
+    isSaving: boolean;
     savedEngagement: Engagement;
     engagementId: string | undefined;
     loadingSavedEngagement: boolean;
