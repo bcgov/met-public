@@ -23,7 +23,7 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
 
     __tablename__ = 'survey'
 
-    id = db.Column(UUID(as_uuid=True),primary_key=True)
+    id = db.Column(UUID(as_uuid=True), primary_key=True)
     name = db.Column(db.String(50))
     form_json = db.Column(postgresql.JSON(astext_type=db.Text()), nullable=False, server_default='{}')
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
