@@ -6,7 +6,7 @@ import { hasKey } from 'utils';
 
 export const CreateOptions = () => {
     const navigate = useNavigate();
-    const { surveyForm, handleSurveyFormChange, handleTabValueChange } = useContext(CreateSurveyContext);
+    const { surveyForm, handleSurveyFormChange } = useContext(CreateSurveyContext);
     const { name } = surveyForm;
 
     const initialFormError = {
@@ -39,8 +39,7 @@ export const CreateOptions = () => {
         if (!validate()) {
             return;
         }
-
-        handleTabValueChange(1);
+        navigate('/survey/build');
     };
 
     return (

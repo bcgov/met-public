@@ -15,6 +15,9 @@ const Endpoints = {
     },
     Survey: {
         GET_ALL: `${AppConfig.apiUrl}/survey/`,
+        CREATE: `${AppConfig.apiUrl}/survey/`,
+        UPDATE: `${AppConfig.apiUrl}/survey/`,
+        GET: `${AppConfig.apiUrl}/survey/<survey_id>`,
     },
 };
 
