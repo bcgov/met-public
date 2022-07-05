@@ -12,24 +12,12 @@ class SurveyService:
     def get(self, survey_id):
         """Get survey by the id."""
         db_data = Survey.get_survey(survey_id)
-        extension = self.__create_object(db_data)
-        return extension
+        return db_data
 
     def get_all(self):
         """Get all surveys."""
         db_data = Survey.get_all_surveys()
-        return [self.__create_object(record) for record in db_data]
-
-    @staticmethod
-    def __create_object(db_data: SurveySchema):
-        survey = {
-            'id': db_data.get('id', None),
-            'name': db_data.get('name', None),
-            'formJSON': db_data.get('formJSON', None),
-            'created_date': db_data.get('created_date', None),
-            'engagement': db_data.get('engagement', None),
-        }
-        return survey
+        return db_data
 
     def create(self, data: SurveySchema):
         """Create survey."""

@@ -3,6 +3,7 @@
 Manages the Survey
 """
 from datetime import datetime
+from typing import List
 from met_api.models.engagement import Engagement
 from met_api.schemas.survey import SurveySchema
 from sqlalchemy import ForeignKey
@@ -27,14 +28,14 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
     updated_by = db.Column(db.String(50))
 
     @classmethod
-    def get_survey(cls, survey_id):
+    def get_survey(cls, survey_id) -> SurveySchema:
         """Get a survey."""
         survey_schema = SurveySchema()
         data = db.session.query(Survey).join(Engagement, isouter=True).filter_by(id=survey_id).first()
         return survey_schema.dump(data)
 
     @classmethod
-    def get_all_surveys(cls):
+    def get_all_surveys(cls) -> List[SurveySchema]:
         """Get all engagements."""
         survey_schema = SurveySchema(many=True)
         data = db.session.query(Survey).join(Engagement, isouter=True).all()

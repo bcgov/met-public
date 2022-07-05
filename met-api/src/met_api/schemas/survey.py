@@ -17,7 +17,7 @@ class SurveySchema(Schema):
 
     id = fields.Str(data_key='id')
     name = fields.Str(data_key='name')
-    formJSON = fields.Dict(data_key='formJSON')
+    form_json = fields.Dict(data_key='form_json')
     created_by = fields.Str(data_key='created_by')
     created_date = fields.Str(data_key='created_date')
     updated_by = fields.Str(data_key='updated_by')
