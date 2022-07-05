@@ -12,9 +12,6 @@ import {
     Button,
 } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import { Palette } from 'styles/Theme';
-import { CreateSurveyContext } from './CreateSurveyContext';
-import TabPanel from 'components/common/TabPanel';
 import { ConditionalComponent } from 'components/common';
 import { CreateOptions } from './CreateOptions';
 import { useNavigate } from 'react-router-dom';

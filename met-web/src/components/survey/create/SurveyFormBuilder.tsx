@@ -4,7 +4,6 @@ import { CreateSurveyContext } from './CreateSurveyContext';
 import { useNavigate } from 'react-router-dom';
 import FormBuilder from 'components/Form/Create';
 import ClearIcon from '@mui/icons-material/Clear';
-import { hasKey } from 'utils';
 
 const SurveyFormBuilder = () => {
     const navigate = useNavigate();
