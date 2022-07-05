@@ -1,6 +1,6 @@
 
 """Service for survey management."""
-# from met_api.models.survey import Survey
+from met_api.models.survey import Survey
 from met_api.schemas.survey import SurveySchema
 
 class SurveyService:
@@ -10,14 +10,14 @@ class SurveyService:
 
     def get(self, id):
         """Get survey by the id."""
-        #db_data = Survey.get_engagement(id)
-        #extension = self.__create_object(db_data)
-        #return extension
+        db_data = Survey.get_survey(id)
+        extension = self.__create_object(db_data)
+        return extension
 
     def get_all(self):
         """Get all surveys."""
-        #db_data = Survey.get_all_surveys()
-        #return [self.__create_object(record) for record in db_data]
+        db_data = Survey.get_all_surveys()
+        return [self.__create_object(record) for record in db_data]
 
     @staticmethod
     def __create_object(db_data):
@@ -33,12 +33,12 @@ class SurveyService:
     def create(self, data: SurveySchema):
         """Create survey."""
         self.validated_fields(data)
-        #return Survey.create_survey(data)
+        return Survey.create_survey(data)
 
     def update(self, data: SurveySchema):
         """Update survey."""
         self.validated_fields(data)
-        #return Survey.update_survey(data)
+        return Survey.update_survey(data)
 
     @staticmethod
     def validated_fields(data):
