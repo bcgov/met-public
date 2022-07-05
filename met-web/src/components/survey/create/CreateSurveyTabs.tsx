@@ -3,6 +3,7 @@ import TabPanel from 'components/common/TabPanel';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import OptionsForm from './OptionsForm';
 import { MetPageGridContainer } from 'components/common';
+import SurveyFormBuilder from './SurveyFormBuilder';
 
 const CreateSurveyTabs = () => {
     const { tabValue } = useContext(CreateSurveyContext);
@@ -13,7 +14,7 @@ const CreateSurveyTabs = () => {
                 <OptionsForm />
             </TabPanel>
             <TabPanel value={tabValue} index={1}>
-                Item Two
+                <SurveyFormBuilder />
             </TabPanel>
         </MetPageGridContainer>
     );
