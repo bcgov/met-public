@@ -25,6 +25,7 @@ const App = () => {
     if (authenticationLoading) {
         return <MidScreenLoader />;
     }
+
     if (!isLoggedIn) {
         return (
             <Router>
@@ -33,6 +34,7 @@ const App = () => {
             </Router>
         );
     }
+
     if (!isMediumScreen) {
         return (
             <Router>
@@ -44,6 +46,7 @@ const App = () => {
             </Router>
         );
     }
+
     return (
         <Router>
             <Box sx={{ display: 'flex' }}>

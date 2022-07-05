@@ -13,6 +13,9 @@ const Endpoints = {
     Document: {
         OSS_HEADER: `${AppConfig.apiUrl}/document/`,
     },
+    Survey: {
+        GET_ALL: `${AppConfig.apiUrl}/survey/`,
+    },
 };
 
 export default Endpoints;
