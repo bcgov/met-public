@@ -3,8 +3,8 @@ import Box from '@mui/material/Box';
 
 interface TabPanelProps {
     children?: React.ReactNode;
-    index: number;
-    value: number;
+    index: number | string;
+    value: number | string;
 }
 
 const TabPanel = (props: TabPanelProps) => {
@@ -15,7 +15,7 @@ const TabPanel = (props: TabPanelProps) => {
     }
 
     return (
-        <Box role="tabpanel" id={`tabpanel-${index}`} aria-labelledby={`tab-${index}`} {...other}>
+        <Box role="tabpanel" id={`tabpanel-${index}`} aria-labelledby={`tab-${index}`} {...other} width="100%">
             {children}
         </Box>
     );

@@ -8,6 +8,7 @@ import UserService from '../services/userService';
 import EngagementForm from '../components/engagement/form';
 import Engagement from '../components/engagement/view';
 import SurveyListing from 'components/survey/listing';
+import CreateSurvey from 'components/survey/create';
 
 const AuthenticatedRoutes = () => {
     let adminRole = UserService.hasAdminRole();
@@ -20,6 +21,7 @@ const AuthenticatedRoutes = () => {
             <Routes>
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/survey/listing" element={<SurveyListing />} />
+                <Route path="/survey/create" element={<CreateSurvey />} />
                 <Route path="/engagement/form/:engagementId" element={<EngagementForm />} />
                 <Route path="/engagement/view/:engagementId" element={<Engagement />} />
                 <Route path="*" element={<NotFound />} />
