@@ -3,6 +3,8 @@
 Manages the Survey
 """
 from datetime import datetime
+from met_api.models.engagement import Engagement
+from sqlalchemy import ForeignKey
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.dialects.postgresql import UUID
 from .default_method_result import DefaultMethodResult
@@ -10,7 +12,7 @@ from .db import db, ma
 
 
 class SurveySchema(ma.Schema):
-    """survey schema."""
+    """Survey schema."""
 
     class Meta:  # pylint: disable=too-few-public-methods
         """Meta class."""
@@ -23,9 +25,10 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
 
     __tablename__ = 'survey'
 
-    id = db.Column(UUID(as_uuid=True), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50))
     form_json = db.Column(postgresql.JSON(astext_type=db.Text()), nullable=False, server_default='{}')
+    engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'))
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
     created_by = db.Column(db.String(50))
@@ -36,6 +39,13 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
         """Get a survey."""
         survey_schema = SurveySchema()
         data = db.session.query(Survey).filter_by(id=survey_id).first()
+        return survey_schema.dump(data)
+
+    @classmethod
+    def get_all_surveys(cls):
+        """Get all engagements."""
+        survey_schema = SurveySchema(many=True)
+        data = db.session.query(Survey).join(Engagement, isouter=True).all()
         return survey_schema.dump(data)
 
     @classmethod

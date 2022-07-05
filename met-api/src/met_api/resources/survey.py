@@ -96,7 +96,7 @@ class GetSurveys(Resource):
             survey_schema = SurveySchema().load(requestjson)
             user_id = TokenInfo.get_id()
             survey_schema['updated_by'] = user_id
-            result = SurveySchema().update(survey_schema)
+            result = SurveyService().update(survey_schema)
             return ActionResult.success(result.identifier, survey_schema)
         except KeyError as err:
             return ActionResult.error(str(err))

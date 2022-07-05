@@ -4,7 +4,7 @@ Manages the survey
 """
 
 from marshmallow import EXCLUDE, Schema, fields
-from .Engagement import EngagementSchema
+from .engagement import EngagementSchema
 
 
 class SurveySchema(Schema):

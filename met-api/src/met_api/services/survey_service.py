@@ -3,14 +3,15 @@
 from met_api.models.survey import Survey
 from met_api.schemas.survey import SurveySchema
 
+
 class SurveyService:
     """Survey management service."""
 
     otherdateformat = '%Y-%m-%d'
 
-    def get(self, id):
+    def get(self, survey_id):
         """Get survey by the id."""
-        db_data = Survey.get_survey(id)
+        db_data = Survey.get_survey(survey_id)
         extension = self.__create_object(db_data)
         return extension
 
