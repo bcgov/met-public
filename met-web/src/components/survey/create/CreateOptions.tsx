@@ -3,9 +3,13 @@ import { Grid, TextField, Typography, Stack, Button } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { useNavigate } from 'react-router-dom';
 import { hasKey } from 'utils';
+import { postSurvey } from 'services/surveyService';
+import { useAppDispatch } from 'hooks';
+import { openNotification } from 'services/notificationService/notificationSlice';
 
 export const CreateOptions = () => {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const { surveyForm, handleSurveyFormChange } = useContext(CreateSurveyContext);
     const { name } = surveyForm;
 
@@ -35,11 +39,20 @@ export const CreateOptions = () => {
         return Object.values(surveyForm).some((errorExists) => errorExists);
     };
 
-    const handleSaveClick = () => {
+    const handleSaveClick = async () => {
         if (!validate()) {
             return;
         }
-        navigate('/survey/build');
+
+        const createdSurvey = await postSurvey({ name: surveyForm.name });
+
+        dispatch(
+            openNotification({
+                severity: 'success',
+                text: 'Survey created, please proceed to building it',
+            }),
+        );
+        navigate(`/survey/build/${createdSurvey.id}`);
     };
 
     return (

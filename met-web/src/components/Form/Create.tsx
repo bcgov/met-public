@@ -1,18 +1,18 @@
 import React from 'react';
-import { selectError, FormBuilder } from '@formio/react';
+import { selectError, FormBuilder as FormioFormBuilder } from '@formio/react';
 import './formio.scss';
 import { useAppSelector } from 'hooks';
 import { formioOptions } from './FormBuilderOptions';
 
 interface FormBuilderProps {
-    handleSaveForm: (form: unknown) => void;
-    savedForm?: unknown[];
+    handleFormChange: (form: unknown) => void;
+    savedForm?: unknown;
 }
-const Create = ({ handleSaveForm, savedForm = [] }: FormBuilderProps) => {
+const FormBuilder = ({ handleFormChange, savedForm = [] }: FormBuilderProps) => {
     const errors = useAppSelector((state) => selectError('form', state));
 
     return (
-        <FormBuilder
+        <FormioFormBuilder
             form={{
                 display: 'form',
                 components: savedForm,
@@ -21,10 +21,9 @@ const Create = ({ handleSaveForm, savedForm = [] }: FormBuilderProps) => {
             options={formioOptions}
             saveText={'Create Form'}
             errors={errors}
-            saveForm={handleSaveForm}
-            onChange={(change: unknown) => console.log(change)}
+            onChange={handleFormChange}
         />
     );
 };
 
-export default Create;
+export default FormBuilder;

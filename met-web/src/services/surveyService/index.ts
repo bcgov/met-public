@@ -8,48 +8,50 @@ export const fetchAllSurveys = async (): Promise<Survey[]> => {
     return responseData.data.result ?? [];
 };
 
-// export const getEngagement = async (
-//     engagementId: number,
-//     successCallback: (data: Survey) => void,
-//     errorCallback: (errorMessage: string) => void,
-// ) => {
-//     try {
-//         const url = replaceUrl(Endpoints.Survey.GET, '<survey_id>', String(engagementId));
-//         if (!engagementId || isNaN(Number(engagementId))) {
-//             throw new Error('Invalid Survey Id ' + engagementId);
-//         }
-//         const responseData = await http.GetRequest<Survey>(url);
-//         if (responseData.data.result) {
-//             successCallback(responseData.data.result);
-//         } else {
-//             errorCallback('Missing survey object');
-//         }
-//     } catch (e: unknown) {
-//         let errorMessage = '';
-//         if (typeof e === 'string') {
-//             errorMessage = e.toUpperCase();
-//         } else if (e instanceof Error) {
-//             errorMessage = e.message;
-//         }
-//         errorCallback(errorMessage);
-//     }
-// };
+export const getSurvey = async (surveyId: number): Promise<Survey> => {
+    const url = replaceUrl(Endpoints.Survey.GET, '<survey_id>', String(surveyId));
+    if (!surveyId || isNaN(Number(surveyId))) {
+        return Promise.reject('Invalid Survey Id ' + surveyId);
+    }
+    try {
+        const response = await http.GetRequest<Survey>(url);
+        if (response.data.result) {
+            return Promise.resolve(response.data.result);
+        }
+        return Promise.reject(response.data.message ?? 'Failed to fetch survey');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
 
-// export const postEngagement = async (
-//     data: PostEngagementRequest,
-//     successCallback: () => void,
-//     errorCallback: (errorMessage: string) => void,
-// ) => {
-//     try {
-//         await http.PostRequest(Endpoints.Survey.CREATE, data);
-//         successCallback();
-//     } catch (e: unknown) {
-//         let errorMessage = '';
-//         if (typeof e === 'string') {
-//             errorMessage = e.toUpperCase();
-//         } else if (e instanceof Error) {
-//             errorMessage = e.message;
-//         }
-//         errorCallback(errorMessage);
-//     }
-// };
+interface PostSurveyRequest {
+    name: string;
+    components?: unknown[];
+}
+export const postSurvey = async (data: PostSurveyRequest): Promise<Survey> => {
+    try {
+        const response = await http.PostRequest<Survey>(Endpoints.Survey.CREATE, data);
+        if (response.data.status && response.data.result) {
+            return Promise.resolve(response.data.result);
+        }
+        return Promise.reject(response.data.message ?? 'Failed to create survey');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
+interface PutSurveyRequest {
+    id: number;
+    form: unknown;
+}
+export const putSurvey = async (data: PutSurveyRequest): Promise<Survey> => {
+    try {
+        const response = await http.PutRequest<Survey>(Endpoints.Survey.UPDATE, data);
+        if (response.data.status && response.data.result) {
+            return Promise.resolve(response.data.result);
+        }
+        return Promise.reject(response.data.message ?? 'Failed to update survey');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
