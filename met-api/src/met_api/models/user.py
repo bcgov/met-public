@@ -64,7 +64,12 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
             external_id=user.get('external_id', None),
             updated_date=datetime.utcnow(),
         )
-        User.query.filter_by(id=user_id).update(update_fields)
+        query = User.query.filter_by(id=user_id)
+        user = query.first()
+        if not user:
+            return DefaultMethodResult(False, 'User Not Found', user_id)
+
+        query.update(update_fields)
         db.session.commit()
         return DefaultMethodResult(True, 'User Updated', user_id)
 
