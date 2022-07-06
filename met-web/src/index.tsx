@@ -8,9 +8,6 @@ import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { BaseTheme } from 'styles/Theme';
 // import reportWebVitals from './reportWebVitals';
 
-// Formio.setProjectUrl(AppConfig.formio.projectUrl);
-// Formio.setBaseUrl(AppConfig.apiUrl);
-
 // eslint-disable-next-line
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(

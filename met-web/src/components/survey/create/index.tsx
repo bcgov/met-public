@@ -1,11 +1,11 @@
 import React from 'react';
 import { CreateSurveyContextProvider } from './CreateSurveyContext';
-import CreateSurveyTabs from './CreateSurveyTabs';
+import OptionsForm from './OptionsForm';
 
 const CreateSurvey = () => {
     return (
         <CreateSurveyContextProvider>
-            <CreateSurveyTabs />
+            <OptionsForm />
         </CreateSurveyContextProvider>
     );
 };

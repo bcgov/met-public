@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import {
     Divider,
     FormControl,
@@ -12,7 +12,7 @@ import {
     Button,
 } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import { ConditionalComponent } from 'components/common';
+import { ConditionalComponent, MetPageGridContainer } from 'components/common';
 import { CreateOptions } from './CreateOptions';
 import { useNavigate } from 'react-router-dom';
 
@@ -24,7 +24,7 @@ const OptionsForm = () => {
         setValue((event.target as HTMLInputElement).value);
     };
     return (
-        <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
+        <MetPageGridContainer container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
             <Grid item xs={12}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
                     <Typography variant="h6">Survey</Typography>
@@ -80,7 +80,7 @@ const OptionsForm = () => {
                     </Stack>
                 </Grid>
             </ConditionalComponent>
-        </Grid>
+        </MetPageGridContainer>
     );
 };
 
