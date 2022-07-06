@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Grid, TextField, Typography, Stack, Button } from '@mui/material';
+import { Grid, TextField, Typography, Stack, Button, CircularProgress } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { useNavigate } from 'react-router-dom';
 import { hasKey } from 'utils';
@@ -17,6 +17,7 @@ export const CreateOptions = () => {
         name: false,
     };
     const [formError, setFormError] = useState(initialFormError);
+    const [isSaving, setIsSaving] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         handleSurveyFormChange({
@@ -44,15 +45,26 @@ export const CreateOptions = () => {
             return;
         }
 
-        const createdSurvey = await postSurvey({ name: surveyForm.name });
+        try {
+            setIsSaving(true);
+            const createdSurvey = await postSurvey({ name: surveyForm.name });
 
-        dispatch(
-            openNotification({
-                severity: 'success',
-                text: 'Survey created, please proceed to building it',
-            }),
-        );
-        navigate(`/survey/build/${createdSurvey.id}`);
+            dispatch(
+                openNotification({
+                    severity: 'success',
+                    text: 'Survey created, please proceed to building it',
+                }),
+            );
+            navigate(`/survey/build/${createdSurvey.id}`);
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while attempting to save survey',
+                }),
+            );
+            setIsSaving(false);
+        }
     };
 
     return (
@@ -79,8 +91,9 @@ export const CreateOptions = () => {
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <Button variant="contained" onClick={handleSaveClick}>
+                    <Button variant="contained" onClick={handleSaveClick} disabled={isSaving}>
                         {'Save & Continue'}
+                        {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
                     </Button>
                     <Button variant="outlined" onClick={() => navigate('/survey/listing')}>
                         Cancel

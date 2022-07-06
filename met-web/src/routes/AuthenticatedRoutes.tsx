@@ -9,7 +9,7 @@ import EngagementForm from '../components/engagement/form';
 import Engagement from '../components/engagement/view';
 import SurveyListing from 'components/survey/listing';
 import CreateSurvey from 'components/survey/create';
-import SurveyFormBuilder from 'components/survey/build';
+import SurveyFormBuilder from 'components/survey/building';
 
 const AuthenticatedRoutes = () => {
     let adminRole = UserService.hasAdminRole();
