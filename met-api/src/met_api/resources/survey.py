@@ -32,7 +32,7 @@ API = Namespace('survey', description='Endpoints for Survey Management')
 
 @cors_preflight('GET,OPTIONS')
 @API.route('/<survey_id>')
-class GetSurvey(Resource):
+class Survey(Resource):
     """Resource for managing a single survey."""
 
     @staticmethod
@@ -51,7 +51,7 @@ class GetSurvey(Resource):
 
 @cors_preflight('GET, POST, PUT, OPTIONS')
 @API.route('/')
-class GetSurveys(Resource):
+class Surveys(Resource):
     """Resource for managing all surveys."""
 
     @staticmethod

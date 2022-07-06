@@ -32,7 +32,7 @@ API = Namespace('engagement', description='Endpoints for Engagements Management'
 
 @cors_preflight('GET,OPTIONS')
 @API.route('/<engagement_id>')
-class GetEngagement(Resource):
+class Engagement(Resource):
     """Resource for managing a single engagement."""
 
     @staticmethod
@@ -51,7 +51,7 @@ class GetEngagement(Resource):
 
 @cors_preflight('GET, POST, PUT, OPTIONS')
 @API.route('/')
-class GetEngagements(Resource):
+class Engagements(Resource):
     """Resource for managing all engagements."""
 
     @staticmethod
