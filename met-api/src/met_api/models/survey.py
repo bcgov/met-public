@@ -18,7 +18,7 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
     __tablename__ = 'survey'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(50))
+    name = db.Column(db.String(50), index=True)
     form_json = db.Column(postgresql.JSON(astext_type=db.Text()), nullable=False, server_default='{}')
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'))
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
@@ -35,7 +35,7 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
 
     @classmethod
     def get_all_surveys(cls) -> List[SurveySchema]:
-        """Get all engagements."""
+        """Get all surveys."""
         survey_schema = SurveySchema(many=True)
         data = db.session.query(Survey).join(Engagement, isouter=True).all()
         return survey_schema.dump(data)
@@ -66,6 +66,11 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
             created_by=survey.get('created_by', None),
             updated_by=survey.get('updated_by', None),
         )
-        Survey.query.filter_by(id=survey.get('id', None)).update(update_fields)
+        survey_id = survey.get('id', None)
+        query = Survey.query.filter_by(id=survey_id)
+        record = query.first()
+        if not record:
+            return DefaultMethodResult(False, 'Survey Not Found', survey_id)
+        query.update(update_fields)
         db.session.commit()
-        return DefaultMethodResult(True, 'Survey Updated', survey['id'])
+        return DefaultMethodResult(True, 'Survey Updated', survey_id)
