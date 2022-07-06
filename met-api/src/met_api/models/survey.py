@@ -59,11 +59,8 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
     def update_survey(cls, survey: SurveySchema) -> DefaultMethodResult:
         """Update engagement."""
         update_fields = dict(
-            name=survey.get('name', None),
             form_json=survey.get('form_json', None),
-            created_date=survey.get('created_date', None),
             updated_date=survey.get('updated_date', None),
-            created_by=survey.get('created_by', None),
             updated_by=survey.get('updated_by', None),
         )
         survey_id = survey.get('id', None)

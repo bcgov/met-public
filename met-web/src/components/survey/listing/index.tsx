@@ -52,7 +52,7 @@ const SurveyListing = () => {
             label: 'Survey Name',
             allowSort: true,
             getValue: (row: Survey) => (
-                <MuiLink component={Link} to={`/engagement/form/${Number(row.id)}`}>
+                <MuiLink component={Link} to={`/survey/build/${Number(row.id)}`}>
                     {row.name}
                 </MuiLink>
             ),
@@ -87,6 +87,7 @@ const SurveyListing = () => {
             disablePadding: false,
             label: 'Responses',
             allowSort: false,
+            getValue: (row: Survey) => row.responseCount || 'draft',
         },
         {
             key: 'id',

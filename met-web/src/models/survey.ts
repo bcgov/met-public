@@ -6,4 +6,5 @@ export interface Survey {
     created_date: string;
     engagement?: Engagement;
     form?: unknown;
+    form_json?: unknown;
 }

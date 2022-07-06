@@ -41,8 +41,8 @@ export const postSurvey = async (data: PostSurveyRequest): Promise<Survey> => {
 };
 
 interface PutSurveyRequest {
-    id: number;
-    form: unknown;
+    id: string;
+    form_json: unknown;
 }
 export const putSurvey = async (data: PutSurveyRequest): Promise<Survey> => {
     try {

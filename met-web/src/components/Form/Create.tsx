@@ -6,18 +6,18 @@ import { formioOptions } from './FormBuilderOptions';
 
 interface FormBuilderProps {
     handleFormChange: (form: unknown) => void;
-    savedForm?: unknown;
+    savedForm: any;
 }
-const FormBuilder = ({ handleFormChange, savedForm = [] }: FormBuilderProps) => {
+const initialFormData = {
+    display: 'form',
+};
+const FormBuilder = ({ handleFormChange, savedForm }: FormBuilderProps) => {
     const errors = useAppSelector((state) => selectError('form', state));
+    console.log(savedForm);
 
     return (
         <FormioFormBuilder
-            form={{
-                display: 'form',
-                components: savedForm,
-                title: 'blaa',
-            }}
+            form={{ ...savedForm }}
             options={formioOptions}
             saveText={'Create Form'}
             errors={errors}

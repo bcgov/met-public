@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Stack, Button, Typography, Divider } from '@mui/material';
+import { Grid, Stack, Button, Typography, Divider, CircularProgress } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import FormBuilder from 'components/Form/Create';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -9,6 +9,8 @@ import { Survey } from 'models/survey';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { hasKey } from 'utils';
+import { MetPageGridContainer } from 'components/common';
+import FormBuilderSkeleton from './FormBuilderSkeleton';
 
 const SurveyFormBuilder = () => {
     const navigate = useNavigate();
@@ -22,6 +24,7 @@ const SurveyFormBuilder = () => {
     });
 
     const [formData, setFormData] = useState<unknown>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         loadSurvey();
@@ -38,10 +41,10 @@ const SurveyFormBuilder = () => {
             );
             return;
         }
-
         try {
             const loadedSurvey = await getSurvey(Number(surveyId));
             setSavedSurvey(loadedSurvey);
+            setLoading(false);
         } catch (error) {
             dispatch(
                 openNotification({
@@ -62,8 +65,8 @@ const SurveyFormBuilder = () => {
     const handleSaveForm = async () => {
         try {
             await putSurvey({
-                id: Number(surveyId),
-                form: formData,
+                id: String(surveyId),
+                form_json: formData,
             });
             dispatch(
                 openNotification({
@@ -79,31 +82,44 @@ const SurveyFormBuilder = () => {
                     text: 'Error occurred while saving survey',
                 }),
             );
-            navigate('/survey/listing');
         }
     };
 
+    if (loading) {
+        return <FormBuilderSkeleton />;
+    }
+
     return (
-        <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" item xs={12} spacing={2}>
+        <MetPageGridContainer
+            container
+            direction="row"
+            alignItems="flex-start"
+            justifyContent="flex-start"
+            item
+            xs={12}
+            spacing={2}
+        >
             <Grid item xs={12}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Typography variant="h6">Sruvey Name Placeholder</Typography>
+                    <Typography variant="h6">{savedSurvey.name || ''}</Typography>
                     <ClearIcon />
                 </Stack>
                 <Divider />
             </Grid>
             <Grid item xs={12}>
-                <FormBuilder handleFormChange={handleFormChange} savedForm={savedSurvey.form || []} />
+                <FormBuilder handleFormChange={handleFormChange} savedForm={savedSurvey.form_json || []} />
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
                     <Button variant="contained" disabled={!formData} onClick={handleSaveForm}>
                         {'Save & Continue'}
                     </Button>
-                    <Button variant="outlined">Cancel</Button>
+                    <Button variant="outlined" onClick={() => navigate('/survey/listing')}>
+                        Cancel
+                    </Button>
                 </Stack>
             </Grid>
-        </Grid>
+        </MetPageGridContainer>
     );
 };
 
