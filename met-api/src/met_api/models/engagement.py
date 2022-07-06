@@ -5,7 +5,7 @@ Manages the engagement
 from datetime import datetime
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.dialects.postgresql import JSON
-from met_api.schemas.Engagement import EngagementSchema
+from met_api.schemas.engagement import EngagementSchema
 from .engagement_status import EngagementStatus
 from .db import db
 from .default_method_result import DefaultMethodResult
@@ -83,6 +83,11 @@ class Engagement(db.Model):
             content=engagement.get('content', None),
             rich_content=engagement.get('rich_content', None),
         )
-        Engagement.query.filter_by(id=engagement.get('id', None)).update(update_fields)
+        engagement_id = engagement.get('id', None)
+        query = Engagement.query.filter_by(id=engagement_id)
+        record = query.first()
+        if not record:
+            return DefaultMethodResult(False, 'Engagement Not Found', engagement_id)
+        query.update(update_fields)
         db.session.commit()
-        return DefaultMethodResult(True, 'Engagement Updated', engagement['id'])
+        return DefaultMethodResult(True, 'Engagement Updated', engagement_id)

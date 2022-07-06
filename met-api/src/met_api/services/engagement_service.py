@@ -1,7 +1,7 @@
 
 """Service for engagement management."""
 from met_api.models.engagement import Engagement
-from met_api.schemas.Engagement import EngagementSchema
+from met_api.schemas.engagement import EngagementSchema
 from met_api.services.object_storage_service import ObjectStorageService
 
 
@@ -30,7 +30,7 @@ class EngagementService:
             'rich_description': request_engagement.get('rich_description', None),
             'start_date': request_engagement.get('start_date', None),
             'end_date': request_engagement.get('end_date', None),
-            'created_date': request_engagement['created_date'],
+            'created_date': request_engagement.get('created_date', None),
             'published_date': request_engagement.get('published_date', None),
             'content': request_engagement.get('content', None),
             'rich_content': request_engagement.get('rich_content', None),
