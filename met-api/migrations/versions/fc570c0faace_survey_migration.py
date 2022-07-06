@@ -21,7 +21,7 @@ def upgrade():
     op.create_table('survey',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('name', sa.String(length=50), nullable=True, index=True),
-    sa.Column('form_json', postgresql.JSON(astext_type=sa.Text()), server_default='{}', nullable=False),
+    sa.Column('form_json', postgresql.JSONB(astext_type=sa.Text()), server_default='{}', nullable=False),
     sa.Column('engagement_id', sa.Integer(), nullable=True),
     sa.Column('created_date', sa.DateTime(), nullable=True),
     sa.Column('updated_date', sa.DateTime(), nullable=True),
