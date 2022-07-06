@@ -97,7 +97,7 @@ const SurveyFormBuilder = () => {
             justifyContent="flex-start"
             item
             xs={12}
-            spacing={2}
+            spacing={4}
         >
             <Grid item xs={12}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center">

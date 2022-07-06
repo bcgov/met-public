@@ -4,7 +4,14 @@ import { MetPageGridContainer } from 'components/common';
 
 export const FormBuilderSkeleton = () => {
     return (
-        <MetPageGridContainer container alignItems="flex-start" justifyContent="flex-start" direction="row" spacing={2}>
+        <MetPageGridContainer
+            container
+            alignItems="flex-start"
+            justifyContent="flex-start"
+            direction="row"
+            rowSpacing={4}
+            columnSpacing={2}
+        >
             <Grid item xs={12}>
                 <Skeleton variant="rectangular" width="100%" height="3em" />
             </Grid>

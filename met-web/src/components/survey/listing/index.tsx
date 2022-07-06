@@ -69,25 +69,43 @@ const SurveyListing = () => {
             key: 'engagement',
             numeric: true,
             disablePadding: false,
-            label: 'Status',
-            allowSort: true,
-            getValue: (row: Survey) => row.engagement?.status.status_name || 'draft',
-        },
-        {
-            key: 'engagement',
-            numeric: true,
-            disablePadding: false,
             label: 'Date Published',
             allowSort: true,
             getValue: (row: Survey) => formatDate(row.engagement?.published_date || ''),
         },
         {
-            key: 'responseCount',
+            key: 'engagement',
             numeric: true,
             disablePadding: false,
-            label: 'Responses',
+            label: 'Engagement Name',
             allowSort: false,
-            getValue: (row: Survey) => row.responseCount || 'draft',
+            getValue: (row: Survey) => {
+                if (!row.engagement) {
+                    return <></>;
+                }
+
+                return (
+                    <MuiLink component={Link} to={`/engagement/view/${row.engagement.id}`}>
+                        {row.engagement.name}
+                    </MuiLink>
+                );
+            },
+        },
+        {
+            key: 'comments',
+            numeric: true,
+            disablePadding: false,
+            label: 'Comments',
+            allowSort: true,
+            getValue: (row: Survey) => '',
+        },
+        {
+            key: 'engagement',
+            numeric: true,
+            disablePadding: false,
+            label: 'Status',
+            allowSort: true,
+            getValue: (row: Survey) => row.engagement?.status.status_name || 'draft',
         },
         {
             key: 'id',
@@ -95,11 +113,21 @@ const SurveyListing = () => {
             disablePadding: false,
             label: 'Reporting',
             allowSort: false,
-            getValue: (row: Survey) => (
-                <MuiLink component={Link} to={`/survey/${Number(row.id)}/results`}>
-                    View Report
-                </MuiLink>
-            ),
+            getValue: (row: Survey) => {
+                if (!row.engagement) {
+                    return <></>;
+                }
+
+                if (row.engagement.status.status_name === 'draft') {
+                    return <></>;
+                }
+
+                return (
+                    <MuiLink component={Link} to={`/survey/${Number(row.id)}/results`}>
+                        View Report
+                    </MuiLink>
+                );
+            },
         },
     ];
 
