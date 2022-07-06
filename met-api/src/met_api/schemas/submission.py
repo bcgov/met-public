@@ -1,6 +1,6 @@
 """Submission schema class.
 
-Manages the survey
+Manages the submission
 """
 
 from marshmallow import EXCLUDE, Schema, fields
