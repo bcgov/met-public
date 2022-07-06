@@ -19,6 +19,7 @@ from flask_restx import Namespace, Resource
 
 from met_api.auth import auth
 from met_api.schemas.survey import SurveySchema
+from met_api.services.submission_service import SubmissionService
 from met_api.services.survey_service import SurveyService
 from met_api.utils.action_result import ActionResult
 from met_api.utils.token_info import TokenInfo
@@ -28,6 +29,24 @@ from met_api.utils.util import allowedorigins, cors_preflight
 API = Namespace('survey', description='Endpoints for Survey Management')
 """Custom exception messages
 """
+
+@cors_preflight('GET,OPTIONS')
+@API.route('/<survey_id>/submission')
+class SurveySubmission(Resource):
+    """Resource for managing a survey submissions."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def get(survey_id):
+        """Fetch a list of submissions by survey id."""
+        try:
+            submission_records = SubmissionService().get_by_survey_id(survey_id)
+            return ActionResult.success(survey_id, submission_records)
+        except KeyError:
+            return ActionResult.error('No submissions not found')
+        except ValueError as err:
+            return ActionResult.error(str(err))
 
 
 @cors_preflight('GET,OPTIONS')
