@@ -26,10 +26,10 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
     updated_by = db.Column(db.String(50), nullable=True)
 
     @classmethod
-    def get(cls, id) -> SubmissionSchema:
+    def get(cls, submission_id) -> SubmissionSchema:
         """Get a submission."""
         submission_schema = SubmissionSchema()
-        data = db.session.query(Submission).filter_by(id=id).first()
+        data = db.session.query(Submission).filter_by(id=submission_id).first()
         return submission_schema.dump(data)
 
     @classmethod
