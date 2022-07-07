@@ -31,6 +31,8 @@ class Engagement(db.Model):
     rich_content = db.Column(JSON, unique=False, nullable=False)
     banner_filename = db.Column(db.String(), unique=False, nullable=True)
 
+    engagement_survey_id = db.relationship('Survey', backref='engagement', cascade='all, delete')
+
     @classmethod
     def get_engagement(cls, engagement_id):
         """Get an engagement."""

@@ -42,7 +42,7 @@ const EngagementForm = () => {
             description: savedEngagement?.description || '',
             content: savedEngagement?.content || '',
             status_id: savedEngagement?.status_id || 0,
-            status: savedEngagement?.status || {},
+            status: savedEngagement?.engagement_status || {},
         });
         setRichDescription(savedEngagement?.rich_description || '');
         setRichContent(savedEngagement?.rich_content || '');

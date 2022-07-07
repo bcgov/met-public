@@ -12,33 +12,13 @@ class EngagementService:
 
     def get_engagement(self, engagement_id):
         """Get Engagement for the id."""
-        request_engagement = Engagement.get_engagement(engagement_id)
-        extension = self.__create_engagement_object(request_engagement)
-        return extension
+        engagement = Engagement.get_engagement(engagement_id)
+        return engagement
 
     def get_all_engagements(self):
         """Get all engagements."""
-        engagements_requests = Engagement.get_all_engagements()
-        return [self.__create_engagement_object(engagement) for engagement in engagements_requests]
-
-    @staticmethod
-    def __create_engagement_object(request_engagement):
-        engagement = {
-            'id': request_engagement.get('id', None),
-            'name': request_engagement.get('name', None),
-            'description': request_engagement.get('description', None),
-            'rich_description': request_engagement.get('rich_description', None),
-            'start_date': request_engagement.get('start_date', None),
-            'end_date': request_engagement.get('end_date', None),
-            'created_date': request_engagement.get('created_date', None),
-            'published_date': request_engagement.get('published_date', None),
-            'content': request_engagement.get('content', None),
-            'rich_content': request_engagement.get('rich_content', None),
-            'banner_filename': request_engagement.get('banner_filename', None),
-            'banner_url': ObjectStorageService.get_url(request_engagement.get('banner_filename', None)),
-            'status': request_engagement.get('engagement_status', None),
-        }
-        return engagement
+        engagements = Engagement.get_all_engagements()
+        return engagements
 
     def create_engagement(self, data: EngagementSchema):
         """Create engagement."""

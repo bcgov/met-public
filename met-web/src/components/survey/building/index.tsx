@@ -107,7 +107,7 @@ const SurveyFormBuilder = () => {
                 <Divider />
             </Grid>
             <Grid item xs={12}>
-                <FormBuilder handleFormChange={handleFormChange} savedForm={savedSurvey.form_json || []} />
+                <FormBuilder handleFormChange={handleFormChange} savedForm={savedSurvey.form_json || {}} />
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>

@@ -18,5 +18,5 @@ export interface Engagement {
     banner_url: string;
     banner_filename: string;
     survey?: Survey;
-    status: Status;
+    engagement_status: Status;
 }

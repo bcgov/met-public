@@ -14,6 +14,7 @@ import Stack from '@mui/material/Stack';
 import { fetchAllSurveys } from 'services/surveyService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { EngagementStatus } from 'constants/engagementStatus';
 
 const SurveyListing = () => {
     const [searchFilter, setSearchFilter] = useState({
@@ -105,7 +106,8 @@ const SurveyListing = () => {
             disablePadding: false,
             label: 'Status',
             allowSort: true,
-            getValue: (row: Survey) => row.engagement?.status.status_name || 'draft',
+            getValue: (row: Survey) =>
+                row.engagement?.engagement_status.status_name || EngagementStatus[EngagementStatus.Draft].toString(),
         },
         {
             key: 'id',
@@ -118,7 +120,7 @@ const SurveyListing = () => {
                     return <></>;
                 }
 
-                if (row.engagement.status.status_name === 'draft') {
+                if (row.engagement.engagement_status.id === EngagementStatus.Draft) {
                     return <></>;
                 }
 

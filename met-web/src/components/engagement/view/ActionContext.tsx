@@ -31,7 +31,7 @@ export const ActionContext = createContext<EngagementViewContext>({
         banner_filename: '',
         content: '',
         rich_content: '',
-        status: { status_name: '' },
+        engagement_status: { id: 0, status_name: '' },
     },
     engagementLoading: true,
 });
@@ -57,7 +57,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         banner_filename: '',
         content: '',
         rich_content: '',
-        status: { status_name: '' },
+        engagement_status: { id: 0, status_name: '' },
     });
     const [engagementLoading, setEngagementLoading] = useState(true);
 
