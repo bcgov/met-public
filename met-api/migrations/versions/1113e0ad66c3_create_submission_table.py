@@ -21,12 +21,14 @@ def upgrade():
     op.create_table('submission',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('submission_json', postgresql.JSONB(astext_type=sa.Text()), server_default='{}', nullable=False),
-    sa.Column('survey_id', sa.Integer(), nullable=True),
+    sa.Column('survey_id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('created_date', sa.DateTime(), nullable=True),
     sa.Column('updated_date', sa.DateTime(), nullable=True),
     sa.Column('created_by', sa.String(length=50), nullable=True),
     sa.Column('updated_by', sa.String(length=50), nullable=True),
     sa.ForeignKeyConstraint(['survey_id'], ['survey.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###

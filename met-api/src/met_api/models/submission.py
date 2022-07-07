@@ -18,7 +18,8 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     submission_json = db.Column(postgresql.JSONB(astext_type=db.Text()), nullable=False, server_default='{}')
-    survey_id = db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'))
+    survey_id = db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), nullable=False)
+    user_id = db.Column(db.Integer, ForeignKey('user.id', ondelete='CASCADE'), nullable=True)
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
     created_by = db.Column(db.String(50), nullable=True)
@@ -44,6 +45,7 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
         new_submission = Submission(
             submission_json=submission.get('submission_json', None),
             survey_id=submission.get('survey_id', None),
+            user_id=submission.get('user_id', None),
             created_date=submission.get('created_date', None),
             updated_date=submission.get('updated_date', None),
             created_by=submission.get('created_by', None),
