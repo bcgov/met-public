@@ -28,7 +28,7 @@ def upgrade():
     sa.Column('created_by', sa.String(length=50), nullable=True),
     sa.Column('updated_by', sa.String(length=50), nullable=True),
     sa.ForeignKeyConstraint(['survey_id'], ['survey.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['user_id'], ['user.id'],
+    sa.ForeignKeyConstraint(['user_id'], ['user.id']),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
