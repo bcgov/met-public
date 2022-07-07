@@ -44,3 +44,11 @@ export const MidScreenLoader = () => (
 export const MetPageGridContainer = styled(Grid)(() => ({
     padding: '3em',
 }));
+
+export const ConditionalComponent = ({ condition, children }: { condition: boolean; children: React.ReactNode }) => {
+    if (!condition) {
+        return null;
+    }
+
+    return <>{children}</>;
+};
