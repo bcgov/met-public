@@ -42,16 +42,16 @@ class EngagementService:
 
     def create_engagement(self, data: EngagementSchema):
         """Create engagement."""
-        self.validated_fields(data)
+        self.validate_fields(data)
         return Engagement.create_engagement(data)
 
     def update_engagement(self, data: EngagementSchema):
         """Update all engagement."""
-        self.validated_fields(data)
+        self.validate_fields(data)
         return Engagement.update_engagement(data)
 
     @staticmethod
-    def validated_fields(data):
+    def validate_fields(data):
         """Validate all fields."""
         empty_fields = [not data[field] for field in ['name', 'description', 'rich_description',
                                                       'start_date', 'end_date']]

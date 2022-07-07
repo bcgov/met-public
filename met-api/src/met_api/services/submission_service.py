@@ -24,17 +24,17 @@ class SubmissionService:
     @classmethod
     def create(cls, data: SubmissionSchema):
         """Create submission."""
-        cls.validated_fields(data)
+        cls.validate_fields(data)
         return Submission.create(data)
 
     @classmethod
     def update(cls, data: SubmissionSchema):
         """Update submission."""
-        cls.validated_fields(data)
+        cls.validate_fields(data)
         return Submission.update(data)
 
     @staticmethod
-    def validated_fields(data):
+    def validate_fields(data):
         # TODO: Validate against survey form_json
         """Validate all fields."""
         empty_fields = [not data[field] for field in ['submission_json']]

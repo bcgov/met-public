@@ -37,7 +37,7 @@ class UserService:
 
     def create_or_update_user(self, data: UserSchema):
         """Create or update a user."""
-        self.validated_fields(data)
+        self.validate_fields(data)
 
         db_user = User.get_user_by_external_id(data.get('external_id'))
         if db_user is None:
@@ -45,7 +45,7 @@ class UserService:
         return User.update_user(db_user.id, data)
 
     @staticmethod
-    def validated_fields(data: UserSchema):
+    def validate_fields(data: UserSchema):
         """Validate all fields."""
         empty_fields = [not data[field] for field in [
             'first_name',

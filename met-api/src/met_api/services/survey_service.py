@@ -24,17 +24,17 @@ class SurveyService:
     @classmethod
     def create(cls, data: SurveySchema):
         """Create survey."""
-        cls.validated_fields(data)
+        cls.validate_fields(data)
         return Survey.create_survey(data)
 
     @classmethod
     def update(cls, data: SurveySchema):
         """Update survey."""
-        cls.validated_fields(data)
+        cls.validate_fields(data)
         return Survey.update_survey(data)
 
     @staticmethod
-    def validated_fields(data):
+    def validate_fields(data):
         """Validate all fields."""
         empty_fields = [not data[field] for field in ['name', 'form_json']]
 
