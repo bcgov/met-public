@@ -30,6 +30,7 @@ API = Namespace('survey', description='Endpoints for Survey Management')
 """Custom exception messages
 """
 
+
 @cors_preflight('GET,OPTIONS')
 @API.route('/<survey_id>/submission')
 class SurveySubmission(Resource):
