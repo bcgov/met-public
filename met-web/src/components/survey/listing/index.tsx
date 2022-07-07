@@ -97,7 +97,7 @@ const SurveyListing = () => {
             disablePadding: false,
             label: 'Comments',
             allowSort: true,
-            getValue: (row: Survey) => '',
+            getValue: (_row: Survey) => '',
         },
         {
             key: 'engagement',

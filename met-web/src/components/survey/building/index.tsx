@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Stack, Button, Typography, Divider, CircularProgress } from '@mui/material';
+import { Grid, Stack, Button, Typography, Divider } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import FormBuilder from 'components/Form/Create';
+import FormBuilder from 'components/Form/FormBuilder';
 import ClearIcon from '@mui/icons-material/Clear';
 import { SurveyParams } from './types';
 import { getSurvey, putSurvey } from 'services/surveyService';
