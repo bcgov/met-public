@@ -4,9 +4,9 @@ Manages the Survey
 """
 from datetime import datetime
 from typing import List
-from met_api.models.engagement_status import EngagementStatus
 from sqlalchemy import ForeignKey
 from sqlalchemy.dialects import postgresql
+from met_api.models.engagement_status import EngagementStatus
 from met_api.models.engagement import Engagement
 from met_api.schemas.survey import SurveySchema
 from .default_method_result import DefaultMethodResult

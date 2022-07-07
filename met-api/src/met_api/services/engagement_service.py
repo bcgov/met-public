@@ -9,12 +9,14 @@ class EngagementService:
 
     otherdateformat = '%Y-%m-%d'
 
-    def get_engagement(self, engagement_id):
+    @staticmethod
+    def get_engagement(engagement_id):
         """Get Engagement for the id."""
         engagement = Engagement.get_engagement(engagement_id)
         return engagement
 
-    def get_all_engagements(self):
+    @staticmethod
+    def get_all_engagements():
         """Get all engagements."""
         engagements = Engagement.get_all_engagements()
         return engagements
