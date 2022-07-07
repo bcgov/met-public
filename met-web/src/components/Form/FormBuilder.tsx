@@ -6,7 +6,7 @@ import { formioOptions } from './FormBuilderOptions';
 
 interface FormBuilderProps {
     handleFormChange: (form: unknown) => void;
-    savedForm: any;
+    savedForm: unknown;
 }
 
 const FormBuilder = ({ handleFormChange, savedForm }: FormBuilderProps) => {
@@ -14,7 +14,7 @@ const FormBuilder = ({ handleFormChange, savedForm }: FormBuilderProps) => {
 
     return (
         <FormioFormBuilder
-            form={{ ...savedForm }}
+            form={savedForm}
             options={formioOptions}
             saveText={'Create Form'}
             errors={errors}
