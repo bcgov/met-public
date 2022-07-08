@@ -23,7 +23,20 @@ services:
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
       - 54333:5432/tcp
+    restart: unless-stopped 
+   
+  met-analytics-db:
+    image: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data4
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD:admin
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - 54334:5432/tcp
     restart: unless-stopped        
+           
   
 volumes:
   db-data:
