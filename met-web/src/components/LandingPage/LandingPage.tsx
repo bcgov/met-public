@@ -63,7 +63,7 @@ const LandingPage = () => {
             disablePadding: false,
             label: 'Status',
             allowSort: true,
-            getValue: (row: Engagement) => row.status.status_name,
+            getValue: (row: Engagement) => row.engagement_status.status_name,
         },
         {
             key: 'published_date',

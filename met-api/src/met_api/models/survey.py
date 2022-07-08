@@ -6,6 +6,7 @@ from datetime import datetime
 from typing import List
 from sqlalchemy import ForeignKey
 from sqlalchemy.dialects import postgresql
+from met_api.models.engagement_status import EngagementStatus
 from met_api.models.engagement import Engagement
 from met_api.schemas.survey import SurveySchema
 from .default_method_result import DefaultMethodResult
@@ -30,14 +31,15 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
     def get_survey(cls, survey_id) -> SurveySchema:
         """Get a survey."""
         survey_schema = SurveySchema()
-        data = db.session.query(Survey).join(Engagement, isouter=True).filter_by(id=survey_id).first()
+        data = db.session.query(Survey).join(Engagement, isouter=True)\
+            .join(EngagementStatus, isouter=True).filter_by(id=survey_id).first()
         return survey_schema.dump(data)
 
     @classmethod
     def get_all_surveys(cls) -> List[SurveySchema]:
         """Get all surveys."""
         survey_schema = SurveySchema(many=True)
-        data = db.session.query(Survey).join(Engagement, isouter=True).all()
+        data = db.session.query(Survey).join(Engagement, isouter=True).join(EngagementStatus, isouter=True).all()
         return survey_schema.dump(data)
 
     @classmethod
@@ -59,11 +61,8 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
     def update_survey(cls, survey: SurveySchema) -> DefaultMethodResult:
         """Update engagement."""
         update_fields = dict(
-            name=survey.get('name', None),
             form_json=survey.get('form_json', None),
-            created_date=survey.get('created_date', None),
             updated_date=survey.get('updated_date', None),
-            created_by=survey.get('created_by', None),
             updated_by=survey.get('updated_by', None),
         )
         survey_id = survey.get('id', None)

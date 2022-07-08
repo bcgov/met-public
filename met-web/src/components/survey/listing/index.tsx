@@ -14,6 +14,7 @@ import Stack from '@mui/material/Stack';
 import { fetchAllSurveys } from 'services/surveyService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { EngagementStatus } from 'constants/engagementStatus';
 
 const SurveyListing = () => {
     const [searchFilter, setSearchFilter] = useState({
@@ -52,7 +53,7 @@ const SurveyListing = () => {
             label: 'Survey Name',
             allowSort: true,
             getValue: (row: Survey) => (
-                <MuiLink component={Link} to={`/engagement/form/${Number(row.id)}`}>
+                <MuiLink component={Link} to={`/survey/build/${Number(row.id)}`}>
                     {row.name}
                 </MuiLink>
             ),
@@ -69,24 +70,44 @@ const SurveyListing = () => {
             key: 'engagement',
             numeric: true,
             disablePadding: false,
-            label: 'Status',
-            allowSort: true,
-            getValue: (row: Survey) => row.engagement?.status.status_name || 'draft',
-        },
-        {
-            key: 'engagement',
-            numeric: true,
-            disablePadding: false,
             label: 'Date Published',
             allowSort: true,
             getValue: (row: Survey) => formatDate(row.engagement?.published_date || ''),
         },
         {
-            key: 'responseCount',
+            key: 'engagement',
             numeric: true,
             disablePadding: false,
-            label: 'Responses',
+            label: 'Engagement Name',
             allowSort: false,
+            getValue: (row: Survey) => {
+                if (!row.engagement) {
+                    return <></>;
+                }
+
+                return (
+                    <MuiLink component={Link} to={`/engagement/view/${row.engagement.id}`}>
+                        {row.engagement.name}
+                    </MuiLink>
+                );
+            },
+        },
+        {
+            key: 'comments',
+            numeric: true,
+            disablePadding: false,
+            label: 'Comments',
+            allowSort: true,
+            getValue: (_row: Survey) => '',
+        },
+        {
+            key: 'engagement',
+            numeric: true,
+            disablePadding: false,
+            label: 'Status',
+            allowSort: true,
+            getValue: (row: Survey) =>
+                row.engagement?.engagement_status.status_name || EngagementStatus[EngagementStatus.Draft].toString(),
         },
         {
             key: 'id',
@@ -94,11 +115,21 @@ const SurveyListing = () => {
             disablePadding: false,
             label: 'Reporting',
             allowSort: false,
-            getValue: (row: Survey) => (
-                <MuiLink component={Link} to={`/survey/${Number(row.id)}/results`}>
-                    View Report
-                </MuiLink>
-            ),
+            getValue: (row: Survey) => {
+                if (!row.engagement) {
+                    return <></>;
+                }
+
+                if (row.engagement.engagement_status.id === EngagementStatus.Draft) {
+                    return <></>;
+                }
+
+                return (
+                    <MuiLink component={Link} to={`/survey/${Number(row.id)}/results`}>
+                        View Report
+                    </MuiLink>
+                );
+            },
         },
     ];
 
