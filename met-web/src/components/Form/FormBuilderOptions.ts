@@ -5,6 +5,5 @@ export const formioOptions = {
         advanced: false,
         data: false,
         premium: false,
-        layout: false,
     },
 };

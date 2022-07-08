@@ -2,9 +2,12 @@ import React, { useContext } from 'react';
 import { Button, Grid, Typography } from '@mui/material';
 import { MetPaper } from '../../common';
 import './EngagementContent.scss';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { ActionContext } from './ActionContext';
 
 const SurveyBlock = () => {
+    const { savedEngagement } = useContext(ActionContext);
+    const navigate = useNavigate();
     return (
         <MetPaper elevation={1} sx={{ padding: '2em' }}>
             <Grid container direction="row" alignItems="flex-end" justifyContent="flex-end" spacing={2}>
@@ -19,9 +22,13 @@ const SurveyBlock = () => {
                     </Typography>
                 </Grid>
                 <Grid item xs={4} container justifyContent="flex-end" direction="row">
-                    <Link to="/">
-                        <Button variant="contained">Take me to the survey</Button>
-                    </Link>
+                    <Button
+                        variant="contained"
+                        disabled={!savedEngagement.survey}
+                        onClick={() => navigate(`/survey/submit/${savedEngagement.survey?.id || ''}`)}
+                    >
+                        Take me to the survey
+                    </Button>
                 </Grid>
             </Grid>
         </MetPaper>

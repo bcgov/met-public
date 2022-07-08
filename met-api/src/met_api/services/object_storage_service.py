@@ -17,6 +17,13 @@ class ObjectStorageService:
     def get_url(filename: string):
         """Get the object url."""
         return f'https://{_Config.S3_HOST}/{_Config.S3_BUCKET}/{filename}' if filename else ''
+    
+    @staticmethod
+    def put_url(engagement):
+        """Get the object url."""
+        filename = engagement.get('banner_filename', None)
+        engagement['banner_url'] = f'https://{_Config.S3_HOST}/{_Config.S3_BUCKET}/{filename}' if filename else ''
+        return engagement
 
     def get_auth_headers(self, documents: List[Document]):
         """Get the s3 auth headers or the provided documents."""

@@ -2,6 +2,7 @@
 """Service for survey management."""
 from met_api.models.survey import Survey
 from met_api.schemas.survey import SurveySchema
+from met_api.services.object_storage_service import ObjectStorageService
 
 
 class SurveyService:
@@ -13,6 +14,7 @@ class SurveyService:
     def get(cls, survey_id):
         """Get survey by the id."""
         db_data = Survey.get_survey(survey_id)
+        db_data['engagement'] = ObjectStorageService.put_url(db_data['engagement']) if 'engagement' in db_data else None
         return db_data
 
     @classmethod
