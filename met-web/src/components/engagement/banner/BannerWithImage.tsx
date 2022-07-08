@@ -1,17 +1,15 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Grid, Box, Typography } from '@mui/material';
-import { ActionContext } from './ActionContext';
 import { formatDate } from '../../common/dateHelper';
 import BannerWithoutImage from './BannerWithoutImage';
+import { EngagementBannerProps } from '../view/types';
 
-const BannerWithImage = () => {
-    const { savedEngagement } = useContext(ActionContext);
-
+const BannerWithImage = ({ savedEngagement }: EngagementBannerProps) => {
     const { description, name, start_date, end_date, banner_url } = savedEngagement;
     const [imageError, setImageError] = useState(false);
 
     if (imageError) {
-        return <BannerWithoutImage />;
+        return <BannerWithoutImage savedEngagement={savedEngagement} />;
     }
 
     return (

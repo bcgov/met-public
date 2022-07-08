@@ -146,11 +146,9 @@ const LandingPage = () => {
                 </Stack>
             </Grid>
             <Grid item xs={0} md={4} lg={3}></Grid>
-            <Grid item xs={12} md={4} lg={3}>
+            <Grid item xs={12} md={4} lg={3} container direction="row" justifyContent={'flex-end'}>
                 <Link to="/engagement/form/create">
-                    <Button variant="contained" fullWidth>
-                        + Create An Engagement
-                    </Button>
+                    <Button variant="contained">+ Create An Engagement</Button>
                 </Link>
             </Grid>
             <Grid item xs={12} lg={10}>

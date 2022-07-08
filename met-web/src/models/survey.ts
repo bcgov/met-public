@@ -4,7 +4,7 @@ export interface Survey {
     name: string;
     responseCount: number;
     created_date: string;
-    engagement?: Engagement;
+    engagement: Engagement;
     form_json?: unknown;
     comments?: unknown;
 }

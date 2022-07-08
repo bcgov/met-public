@@ -3,7 +3,7 @@ import { Grid, Stack, Button, Typography, Divider } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import FormBuilder from 'components/Form/FormBuilder';
 import ClearIcon from '@mui/icons-material/Clear';
-import { SurveyParams } from './types';
+import { SurveyParams } from '../types';
 import { getSurvey, putSurvey } from 'services/surveyService';
 import { Survey } from 'models/survey';
 import { useAppDispatch } from 'hooks';
@@ -21,6 +21,24 @@ const SurveyFormBuilder = () => {
         name: '',
         responseCount: 0,
         created_date: '',
+        engagement: {
+            id: 0,
+            name: '',
+            description: '',
+            rich_description: '',
+            status_id: 0,
+            start_date: '',
+            end_date: '',
+            published_date: '',
+            user_id: '',
+            created_date: '',
+            updated_date: '',
+            banner_url: '',
+            banner_filename: '',
+            content: '',
+            rich_content: '',
+            engagement_status: { id: 0, status_name: '' },
+        },
     });
 
     const [formData, setFormData] = useState<unknown>(null);
