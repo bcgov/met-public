@@ -32,7 +32,7 @@ class SurveyService:
         """Update survey."""
         cls.validate_update_fields(data)
         return Survey.update_survey(data)
-        
+
     @staticmethod
     def validate_update_fields(data):
         """Validate all fields."""
