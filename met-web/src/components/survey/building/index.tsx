@@ -38,6 +38,7 @@ const SurveyFormBuilder = () => {
             content: '',
             rich_content: '',
             engagement_status: { id: 0, status_name: '' },
+            surveys: [],
         },
     });
 

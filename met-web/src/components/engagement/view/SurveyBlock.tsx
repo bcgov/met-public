@@ -9,7 +9,7 @@ const SurveyBlock = () => {
     const { savedEngagement } = useContext(ActionContext);
     const navigate = useNavigate();
 
-    const surveyId = savedEngagement.surveys?.[0]?.id || '';
+    const surveyId = savedEngagement.surveys[0]?.id || '';
 
     return (
         <MetPaper elevation={1} sx={{ padding: '2em' }}>

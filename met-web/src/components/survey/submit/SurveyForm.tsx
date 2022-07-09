@@ -13,7 +13,7 @@ export const SurveyForm = () => {
     };
 
     if (isLoading) {
-        return <Skeleton variant="rectangular" height="30em" width="100%" />;
+        return <Skeleton variant="rectangular" height="50em" width="100%" />;
     }
 
     return (

@@ -33,6 +33,7 @@ export const ActionContext = createContext<EngagementContext>({
         content: '',
         rich_content: '',
         engagement_status: { id: 0, status_name: '' },
+        surveys: [],
     },
     engagementId: 'create',
     loadingSavedEngagement: true,
@@ -65,6 +66,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         content: '',
         rich_content: '',
         engagement_status: { id: 0, status_name: '' },
+        surveys: [],
     });
 
     const [bannerImage, setBannerImage] = useState<File | null>();

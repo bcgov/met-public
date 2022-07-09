@@ -1,14 +1,10 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { Grid } from '@mui/material';
-import { SurveyBanner } from './SurveyBanner';
 import { Survey } from 'models/survey';
 import { useAppDispatch } from 'hooks';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { SurveyParams } from '../types';
 import { getSurvey } from 'services/surveyService';
-import { SurveyForm } from './SurveyForm';
-import { Link as MuiLink } from '@mui/material';
 
 interface SubmitSurveyContext {
     savedSurvey: Survey;
@@ -37,17 +33,13 @@ const initialSurvey = {
         content: '',
         rich_content: '',
         engagement_status: { id: 0, status_name: '' },
+        surveys: [],
     },
 };
 export const ActionContext = createContext<SubmitSurveyContext>({
     savedSurvey: initialSurvey,
     isLoading: true,
 });
-
-interface SurveyForm {
-    name: string;
-    structure?: unknown;
-}
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const navigate = useNavigate();

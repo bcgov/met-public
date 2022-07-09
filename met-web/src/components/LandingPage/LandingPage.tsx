@@ -80,7 +80,7 @@ const LandingPage = () => {
             label: 'Survey',
             allowSort: false,
             getValue: (row: Engagement) => {
-                if (!row.surveys?.[0]) {
+                if (row.surveys.length === 0) {
                     return 'N/A';
                 }
 
@@ -98,7 +98,7 @@ const LandingPage = () => {
             label: 'Responses',
             allowSort: false,
             getValue: (row: Engagement) => {
-                if (!row.surveys?.[0]) {
+                if (row.surveys.length === 0) {
                     return 'N/A';
                 }
 
@@ -112,7 +112,7 @@ const LandingPage = () => {
             label: 'Reporting',
             allowSort: false,
             getValue: (row: Engagement) => {
-                if (!row.surveys?.[0]) {
+                if (row.surveys.length === 0) {
                     return 'N/A';
                 }
 
