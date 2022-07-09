@@ -30,8 +30,7 @@ class Engagement(db.Model):
     content = db.Column(db.Text, unique=False, nullable=False)
     rich_content = db.Column(JSON, unique=False, nullable=False)
     banner_filename = db.Column(db.String(), unique=False, nullable=True)
-
-    engagement_survey_id = db.relationship('Survey', backref='engagement', cascade='all, delete')
+    surveys = db.relationship('Survey', backref='engagement', cascade='all, delete')
 
     @classmethod
     def get_engagement(cls, engagement_id):

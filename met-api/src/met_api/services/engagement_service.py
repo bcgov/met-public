@@ -14,7 +14,7 @@ class EngagementService:
     def get_engagement(engagement_id):
         """Get Engagement for the id."""
         engagement = Engagement.get_engagement(engagement_id)
-        engagement = ObjectStorageService.put_url(engagement)
+        engagement['banner_url'] = ObjectStorageService.get_url(engagement.get('banner_filename', None))
         return engagement
 
     @staticmethod

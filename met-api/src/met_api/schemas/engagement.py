@@ -4,6 +4,8 @@ Manages the engagement
 """
 
 from marshmallow import EXCLUDE, Schema, fields
+
+from met_api.schemas.engagement_survey import EngagementSurveySchema
 from .engagement_status import EngagementStatusSchema
 
 
@@ -31,3 +33,4 @@ class EngagementSchema(Schema):
     rich_content = fields.Str(data_key='rich_content')
     banner_filename = fields.Str(data_key='banner_filename')
     engagement_status = fields.Nested(EngagementStatusSchema)
+    surveys = fields.List(fields.Nested(EngagementSurveySchema))

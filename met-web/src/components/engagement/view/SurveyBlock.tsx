@@ -8,6 +8,9 @@ import { ActionContext } from './ActionContext';
 const SurveyBlock = () => {
     const { savedEngagement } = useContext(ActionContext);
     const navigate = useNavigate();
+
+    const surveyId = savedEngagement.surveys?.[0]?.id || '';
+
     return (
         <MetPaper elevation={1} sx={{ padding: '2em' }}>
             <Grid container direction="row" alignItems="flex-end" justifyContent="flex-end" spacing={2}>
@@ -24,8 +27,8 @@ const SurveyBlock = () => {
                 <Grid item xs={4} container justifyContent="flex-end" direction="row">
                     <Button
                         variant="contained"
-                        disabled={!savedEngagement.survey}
-                        onClick={() => navigate(`/survey/submit/${savedEngagement.survey?.id || ''}`)}
+                        disabled={!surveyId}
+                        onClick={() => navigate(`/survey/submit/${surveyId}`)}
                     >
                         Take me to the survey
                     </Button>
