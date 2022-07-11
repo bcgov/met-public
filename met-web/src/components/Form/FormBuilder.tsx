@@ -2,15 +2,15 @@ import React from 'react';
 import { FormBuilder as FormioFormBuilder } from '@formio/react';
 import './formio.scss';
 import { formioOptions } from './FormBuilderOptions';
-import { FormProps } from './types';
+import { FormBuilderData, FormBuilderProps } from './types';
 
-const FormBuilder = ({ handleFormChange, savedForm }: FormProps) => {
+const FormBuilder = ({ handleFormChange, savedForm }: FormBuilderProps) => {
     return (
         <FormioFormBuilder
-            form={savedForm}
+            form={savedForm || { display: 'form' }}
             options={formioOptions}
             saveText={'Create Form'}
-            onChange={handleFormChange}
+            onChange={(form: unknown) => handleFormChange(form as FormBuilderData)}
         />
     );
 };

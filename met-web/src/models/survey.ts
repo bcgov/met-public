@@ -1,3 +1,4 @@
+import { FormBuilderData } from 'components/Form/types';
 import { Engagement } from './engagement';
 export interface Survey {
     id: number;
@@ -5,6 +6,6 @@ export interface Survey {
     responseCount: number;
     created_date: string;
     engagement: Engagement;
-    form_json?: unknown;
+    form_json?: FormBuilderData;
     comments?: unknown;
 }

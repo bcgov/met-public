@@ -4,7 +4,7 @@ import { useAppDispatch } from 'hooks';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { SurveyParams } from '../types';
-import { getSurvey } from 'services/surveyService';
+import { getSurvey } from 'services/surveyService/form';
 
 interface SubmitSurveyContext {
     savedSurvey: Survey;

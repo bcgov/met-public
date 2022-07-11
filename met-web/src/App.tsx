@@ -29,6 +29,7 @@ const App = () => {
     if (!isLoggedIn) {
         return (
             <Router>
+                <Notification />
                 <LoggedOutHeader />
                 <UnauthenticatedRoutes />
             </Router>

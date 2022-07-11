@@ -1,10 +1,15 @@
 /* eslint-disable */
 import React from 'react';
 import { Form } from '@formio/react';
-import { FormProps } from './types';
+import { FormSubmissionData, FormSubmitterProps } from './types';
 
-const FormSubmit = ({ handleFormChange, savedForm }: FormProps) => {
-    return <Form form={savedForm} onChange={handleFormChange} />;
+const FormSubmit = ({ handleFormChange, savedForm }: FormSubmitterProps) => {
+    return (
+        <Form
+            form={savedForm || { display: 'form' }}
+            onChange={(form: unknown) => handleFormChange(form as FormSubmissionData)}
+        />
+    );
 };
 
 export default FormSubmit;
