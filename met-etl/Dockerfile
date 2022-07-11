@@ -44,6 +44,10 @@ COPY . .
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
+RUN pip install .
+
+# Set Python path
+ENV PYTHONPATH=/met-etl/src
 
 
 # Set ownership and permissions

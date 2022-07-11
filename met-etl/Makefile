@@ -6,8 +6,8 @@
 MKFILE_PATH:=$(abspath $(lastword $(MAKEFILE_LIST)))
 CURRENT_ABS_DIR:=$(patsubst %/,%,$(dir $(MKFILE_PATH)))
 
-PROJECT_NAME:=payment-jobs
-DOCKER_NAME:=payment-job
+PROJECT_NAME:=met-etl
+DOCKER_NAME:=met-etl
 
 #################################################################################
 # COMMANDS -- Setup                                                             #
