@@ -16,7 +16,7 @@ class SurveyService:
         db_data = Survey.get_survey(survey_id)
         db_data['engagement'] = cls.supply_banner_url(db_data.get('engagement', None))
         return db_data
-    
+
     @staticmethod
     def supply_banner_url(engagement):
         if not engagement:
