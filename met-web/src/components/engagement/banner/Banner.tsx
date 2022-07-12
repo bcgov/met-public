@@ -4,7 +4,7 @@ import BannerWithoutImage from './BannerWithoutImage';
 import { EngagementBannerProps } from '../view/types';
 
 export const Banner = ({ savedEngagement, children }: EngagementBannerProps) => {
-    const imageExists = false;
+    const imageExists = !!savedEngagement.banner_url;
 
     if (imageExists) {
         return <BannerWithImage savedEngagement={savedEngagement}>{children}</BannerWithImage>;
