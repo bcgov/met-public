@@ -9,7 +9,7 @@ const BannerWithoutImage = ({ savedEngagement }: EngagementBannerProps) => {
         <Box
             sx={{
                 backgroundColor: '#F2F2F2',
-                height: '20em',
+                height: '35em',
                 width: '100%',
             }}
         >

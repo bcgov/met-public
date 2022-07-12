@@ -17,7 +17,7 @@ const BannerWithImage = ({ savedEngagement, children }: EngagementBannerProps) =
         <>
             <Box
                 sx={{
-                    height: '30em',
+                    height: '35em',
                     width: '100%',
                     position: 'relative',
                 }}
@@ -26,7 +26,7 @@ const BannerWithImage = ({ savedEngagement, children }: EngagementBannerProps) =
                     src={banner_url}
                     style={{
                         objectFit: 'cover',
-                        height: '30em',
+                        height: '35em',
                         width: '100%',
                     }}
                     onError={(_e) => {

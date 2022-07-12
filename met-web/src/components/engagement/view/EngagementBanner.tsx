@@ -10,7 +10,7 @@ export const EngagementBanner = () => {
 
     const surveyId = savedEngagement.surveys[0]?.id || '';
     if (engagementLoading) {
-        return <Skeleton variant="rectangular" width="100%" height="20em" />;
+        return <Skeleton variant="rectangular" width="100%" height="35em" />;
     }
 
     return (

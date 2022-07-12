@@ -10,7 +10,7 @@ const Closed = () => {
 };
 
 const Upcoming = () => {
-    return <Chip label="Upcoming" color="warning" sx={{ fontWeight: 500 }} />;
+    return <Chip label="Upcoming" sx={{ fontWeight: 500, backgroundColor: '#FFC107', color: 'black' }} />;
 };
 
 export const EngagementStatusChip = ({ status }: { status: string }) => {
