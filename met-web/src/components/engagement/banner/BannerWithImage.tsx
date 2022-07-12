@@ -30,7 +30,6 @@ const BannerWithImage = ({ savedEngagement, children }: EngagementBannerProps) =
                         width: '100%',
                     }}
                     onError={(e) => {
-                        console.log(e);
                         setImageError(true);
                     }}
                 />
@@ -56,7 +55,7 @@ const BannerWithImage = ({ savedEngagement, children }: EngagementBannerProps) =
                         justifyContent="flex-start"
                         alignItems="flex-start"
                         sx={{
-                            backgroundColor: 'rgba(242, 242, 242, 0.85)',
+                            backgroundColor: 'rgba(242, 242, 242, 0.95)',
                             padding: '1em',
                         }}
                         rowSpacing={2}

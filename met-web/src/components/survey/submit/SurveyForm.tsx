@@ -1,25 +1,30 @@
 import React, { useContext, useState } from 'react';
-import { Skeleton, Grid, Stack, Button } from '@mui/material';
+import { Skeleton, Grid, Stack, Button, CircularProgress } from '@mui/material';
 import { ActionContext } from './ActionContext';
 import FormSubmit from 'components/Form/FormSubmit';
 import { useNavigate } from 'react-router-dom';
 import { FormSubmissionData } from 'components/Form/types';
 import { submitSurvey } from 'services/surveyService/submission';
-import { useAppDispatch } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
 export const SurveyForm = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const { isLoading, savedSurvey } = useContext(ActionContext);
     const [submissionData, setSubmissionData] = useState<unknown>(null);
+    const [isValid, setIsValid] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleChange = (filledForm: FormSubmissionData) => {
         setSubmissionData(filledForm.data);
+        setIsValid(filledForm.isValid);
     };
 
     const handleSubmit = async () => {
         try {
+            setIsSubmitting(true);
             await submitSurvey({
                 survey_id: savedSurvey.id,
                 submission_json: submissionData,
@@ -38,6 +43,7 @@ export const SurveyForm = () => {
                     text: 'Error occurred during survey submission',
                 }),
             );
+            setIsSubmitting(true);
         }
     };
 
@@ -62,8 +68,13 @@ export const SurveyForm = () => {
                     <Button variant="outlined" onClick={() => navigate('/')}>
                         Cancel
                     </Button>
-                    <Button variant="contained" onClick={() => handleSubmit()}>
+                    <Button
+                        variant="contained"
+                        disabled={!isValid || isLoggedIn || isSubmitting}
+                        onClick={() => handleSubmit()}
+                    >
                         Submit Survey
+                        {isSubmitting && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
                     </Button>
                 </Stack>
             </Grid>

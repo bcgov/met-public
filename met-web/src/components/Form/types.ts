@@ -14,4 +14,5 @@ export interface FormBuilderData {
 }
 export interface FormSubmissionData {
     data: unknown;
+    isValid: boolean;
 }
