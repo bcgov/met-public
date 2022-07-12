@@ -36,7 +36,7 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'production')):
 
     app.config.from_object(config.CONFIGURATION[run_mode])
     # Configure Sentry
-    app.logger.info(f'<<<< Starting Payment Jobs >>>>')
+    app.logger.info(f'<<<< Starting ETL Jobs >>>>')
     db.init_app(app)
     ma.init_app(app)
 
@@ -64,7 +64,7 @@ def run(job_name):
     application.app_context().push()
     if job_name == 'EXTRACT_MET':
         MetExtractor.do_etl()
-        application.logger.info(f'<<<< Completed Updating GL Codes >>>>')
+        application.logger.info(f'<<<< Completed MET Extraction >>>>')
     else:
         MetExtractor.do_etl()
         application.logger.debug('No valid args passed.Exiting job without running any ***************')
