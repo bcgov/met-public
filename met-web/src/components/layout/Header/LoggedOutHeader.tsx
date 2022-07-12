@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import UserService from 'services/userService';
 import { useMediaQuery, Theme } from '@mui/material';
 import { useLocation } from 'react-router-dom';
+import { ConditionalComponent } from 'components/common';
 
 const LoggedOutHeader = () => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
@@ -28,12 +29,14 @@ const LoggedOutHeader = () => {
                         alt="BC Logo."
                         src="https://www2.gov.bc.ca/StaticWebResources/static/gov3/images/gov_bc_logo.svg"
                     />
-                    <Typography variant={isMediumScreen ? 'h3' : 'h6'} component="div" sx={{ flexGrow: 1 }}>
-                        {loginPage ? 'Login to MET' : 'MET'}
-                    </Typography>
-                    <Button color="inherit" onClick={() => UserService.doLogin()}>
-                        Login
-                    </Button>
+                    <ConditionalComponent condition={loginPage}>
+                        <Typography variant={isMediumScreen ? 'h3' : 'h6'} component="div" sx={{ flexGrow: 1 }}>
+                            Login to MET
+                        </Typography>
+                        <Button color="inherit" onClick={() => UserService.doLogin()}>
+                            Login
+                        </Button>
+                    </ConditionalComponent>
                 </Toolbar>
             </AppBar>
         </Box>
