@@ -20,7 +20,7 @@ class SurveyService:
     @staticmethod
     def supply_banner_url(engagement):
         """Supply engagement with banner url."""
-        
+
         if not engagement:
             return None
         engagement['banner_url'] = ObjectStorageService.get_url(engagement.get('banner_filename', None))
