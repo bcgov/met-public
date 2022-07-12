@@ -3,6 +3,7 @@ import { Grid } from '@mui/material';
 import { EngagementBanner } from './EngagementBanner';
 import { ActionProvider } from './ActionContext';
 import { EngagementContent } from './EngagementContent';
+import SurveyBlock from './SurveyBlock';
 
 const Engagement = () => {
     return (
@@ -19,10 +20,13 @@ const Engagement = () => {
                     justifyContent={'flex-start'}
                     alignItems="flex-start"
                     sx={{ margin: '1em 2em 1em 3em' }}
-                    spacing={1}
+                    spacing={2}
                 >
                     <Grid item xs={8}>
                         <EngagementContent />
+                    </Grid>
+                    <Grid item xs={8}>
+                        <SurveyBlock />
                     </Grid>
                 </Grid>
             </Grid>

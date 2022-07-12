@@ -74,49 +74,54 @@ const LandingPage = () => {
             getValue: (row: Engagement) => formatDate(row.published_date),
         },
         {
-            key: 'survey',
+            key: 'surveys',
             numeric: false,
             disablePadding: false,
             label: 'Survey',
             allowSort: false,
-            getValue: (row: Engagement) => (
-                <>
-                    {!row.survey && 'No Survey'}
-                    <MuiLink component={Link} to={`/survey/${Number(row.survey?.id)}`}>
-                        {row.survey?.name}
+            getValue: (row: Engagement) => {
+                if (row.surveys.length === 0) {
+                    return 'N/A';
+                }
+
+                return (
+                    <MuiLink component={Link} to={`/survey/submit/${Number(row.surveys[0].id)}`}>
+                        View Report
                     </MuiLink>
-                </>
-            ),
+                );
+            },
         },
         {
-            key: 'survey',
+            key: 'surveys',
             numeric: true,
             disablePadding: false,
             label: 'Responses',
             allowSort: false,
-            getValue: (row: Engagement) => (
-                <>
-                    {!row.survey && 'N/A'}
-                    {row.survey?.responseCount}
-                </>
-            ),
+            getValue: (row: Engagement) => {
+                if (row.surveys.length === 0) {
+                    return 'N/A';
+                }
+
+                return row.surveys[0].responseCount;
+            },
         },
         {
-            key: 'survey',
+            key: 'surveys',
             numeric: true,
             disablePadding: false,
             label: 'Reporting',
             allowSort: false,
-            getValue: (row: Engagement) => (
-                <>
-                    {!row.survey && 'N/A'}
-                    {row.survey && (
-                        <MuiLink component={Link} to={`/survey/${Number(row.survey?.id)}/results`}>
-                            View Report
-                        </MuiLink>
-                    )}
-                </>
-            ),
+            getValue: (row: Engagement) => {
+                if (row.surveys.length === 0) {
+                    return 'N/A';
+                }
+
+                return (
+                    <MuiLink component={Link} to={`/survey/${Number(row.surveys[0].id)}/results`}>
+                        View Report
+                    </MuiLink>
+                );
+            },
         },
     ];
 
@@ -146,11 +151,9 @@ const LandingPage = () => {
                 </Stack>
             </Grid>
             <Grid item xs={0} md={4} lg={3}></Grid>
-            <Grid item xs={12} md={4} lg={3}>
+            <Grid item xs={12} md={4} lg={3} container direction="row" justifyContent={'flex-end'}>
                 <Link to="/engagement/form/create">
-                    <Button variant="contained" fullWidth>
-                        + Create An Engagement
-                    </Button>
+                    <Button variant="contained">+ Create An Engagement</Button>
                 </Link>
             </Grid>
             <Grid item xs={12} lg={10}>

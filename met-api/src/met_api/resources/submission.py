@@ -61,12 +61,8 @@ class Submissions(Resource):
     def post():
         """Create a new submission."""
         try:
-            user_id = TokenInfo.get_id()
             requestjson = request.get_json()
             schema = SubmissionSchema().load(requestjson)
-            schema['user_id'] = user_id
-            schema['created_by'] = user_id
-            schema['updated_by'] = user_id
             result = SubmissionService().create(schema)
             schema['id'] = result.identifier
             return ActionResult.success(result.identifier, schema)

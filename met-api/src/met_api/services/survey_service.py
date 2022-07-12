@@ -2,6 +2,7 @@
 """Service for survey management."""
 from met_api.models.survey import Survey
 from met_api.schemas.survey import SurveySchema
+from met_api.services.object_storage_service import ObjectStorageService
 
 
 class SurveyService:
@@ -13,7 +14,16 @@ class SurveyService:
     def get(cls, survey_id):
         """Get survey by the id."""
         db_data = Survey.get_survey(survey_id)
+        db_data['engagement'] = cls.supply_banner_url(db_data.get('engagement', None))
         return db_data
+
+    @staticmethod
+    def supply_banner_url(engagement):
+        """Supply engagement with banner url."""
+        if not engagement:
+            return None
+        engagement['banner_url'] = ObjectStorageService.get_url(engagement.get('banner_filename', None))
+        return engagement
 
     @classmethod
     def get_all(cls):

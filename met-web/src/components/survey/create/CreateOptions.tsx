@@ -3,7 +3,7 @@ import { Grid, TextField, Typography, Stack, Button, CircularProgress } from '@m
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { useNavigate } from 'react-router-dom';
 import { hasKey } from 'utils';
-import { postSurvey } from 'services/surveyService';
+import { postSurvey } from 'services/surveyService/form';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 

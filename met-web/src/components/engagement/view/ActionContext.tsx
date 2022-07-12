@@ -32,6 +32,7 @@ export const ActionContext = createContext<EngagementViewContext>({
         content: '',
         rich_content: '',
         engagement_status: { id: 0, status_name: '' },
+        surveys: [],
     },
     engagementLoading: true,
 });
@@ -58,6 +59,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         content: '',
         rich_content: '',
         engagement_status: { id: 0, status_name: '' },
+        surveys: [],
     });
     const [engagementLoading, setEngagementLoading] = useState(true);
 

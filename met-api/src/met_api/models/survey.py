@@ -21,18 +21,18 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), index=True)
     form_json = db.Column(postgresql.JSONB(astext_type=db.Text()), nullable=False, server_default='{}')
-    engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'))
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
     created_by = db.Column(db.String(50))
     updated_by = db.Column(db.String(50))
+    engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'))
 
     @classmethod
     def get_survey(cls, survey_id) -> SurveySchema:
         """Get a survey."""
         survey_schema = SurveySchema()
-        data = db.session.query(Survey).join(Engagement, isouter=True)\
-            .join(EngagementStatus, isouter=True).filter_by(id=survey_id).first()
+        data = db.session.query(Survey).filter_by(id=survey_id).join(Engagement, isouter=True)\
+            .join(EngagementStatus, isouter=True).first()
         return survey_schema.dump(data)
 
     @classmethod

@@ -2,6 +2,7 @@
 """Service for engagement management."""
 from met_api.models.engagement import Engagement
 from met_api.schemas.engagement import EngagementSchema
+from met_api.services.object_storage_service import ObjectStorageService
 
 
 class EngagementService:
@@ -13,6 +14,7 @@ class EngagementService:
     def get_engagement(engagement_id):
         """Get Engagement for the id."""
         engagement = Engagement.get_engagement(engagement_id)
+        engagement['banner_url'] = ObjectStorageService.get_url(engagement.get('banner_filename', None))
         return engagement
 
     @staticmethod

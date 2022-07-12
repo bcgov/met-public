@@ -19,6 +19,9 @@ const Endpoints = {
         UPDATE: `${AppConfig.apiUrl}/survey/`,
         GET: `${AppConfig.apiUrl}/survey/<survey_id>`,
     },
+    SurveySubmission: {
+        CREATE: `${AppConfig.apiUrl}/submission/`,
+    },
 };
 
 export default Endpoints;

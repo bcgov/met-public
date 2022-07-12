@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
-import { fetchAllSurveys } from 'services/surveyService';
+import { fetchAllSurveys } from 'services/surveyService/form';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { EngagementStatus } from 'constants/engagementStatus';
@@ -159,11 +159,9 @@ const SurveyListing = () => {
                 </Stack>
             </Grid>
             <Grid item xs={0} md={4} lg={4}></Grid>
-            <Grid item xs={12} md={4} lg={3}>
+            <Grid item xs={12} md={4} lg={3} container direction="row" justifyContent={'flex-end'}>
                 <Link to="/survey/create">
-                    <Button variant="contained" fullWidth>
-                        + Create Survey
-                    </Button>
+                    <Button variant="contained">+ Create Survey</Button>
                 </Link>
             </Grid>
             <Grid item xs={12} lg={10}>

@@ -1,17 +1,15 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Grid, Box, Typography } from '@mui/material';
-import { ActionContext } from './ActionContext';
 import { formatDate } from '../../common/dateHelper';
+import { EngagementBannerProps } from '../view/types';
 
-const BannerWithoutImage = () => {
-    const { savedEngagement } = useContext(ActionContext);
-
+const BannerWithoutImage = ({ savedEngagement }: EngagementBannerProps) => {
     const { description, name, start_date, end_date } = savedEngagement;
     return (
         <Box
             sx={{
                 backgroundColor: '#F2F2F2',
-                height: '20em',
+                height: '35em',
                 width: '100%',
             }}
         >
