@@ -20,8 +20,8 @@ const SurveySubmitWrapped = () => {
                 direction="row"
                 justifyContent={'flex-start'}
                 alignItems="flex-start"
-                sx={{ margin: '0 8em 1em 3em' }}
-                spacing={2}
+                m={{ lg: '0 8em 1em 3em', md: '2em', xs: '1em' }}
+                rowSpacing={2}
             >
                 <Grid item container direction="row" justifyContent="flex-end">
                     <MuiLink component={Link} to={`/engagement/view/${savedSurvey.engagement.id}`}>

@@ -40,7 +40,6 @@ const BannerWithImage = ({ savedEngagement, children }: EngagementBannerProps) =
                     justifyContent="flex-start"
                     alignItems="flex-start"
                     height="100%"
-                    padding="5em 5em 0 3em"
                     sx={{
                         position: 'absolute',
                         top: '0px',
@@ -49,7 +48,8 @@ const BannerWithImage = ({ savedEngagement, children }: EngagementBannerProps) =
                 >
                     <Grid
                         item
-                        xs={6}
+                        lg={6}
+                        sm={12}
                         container
                         direction="row"
                         justifyContent="flex-start"
@@ -57,7 +57,9 @@ const BannerWithImage = ({ savedEngagement, children }: EngagementBannerProps) =
                         sx={{
                             backgroundColor: 'rgba(242, 242, 242, 0.95)',
                             padding: '1em',
+                            margin: '1em',
                         }}
+                        m={{ lg: '5em 5em 0 3em', md: '3em', sm: '1em' }}
                         rowSpacing={2}
                     >
                         <Grid item xs={12}>
