@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { Survey } from 'models/survey';
 import { useAppDispatch } from 'hooks';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { SurveyParams } from '../types';
 import { getSurvey } from 'services/surveyService/form';

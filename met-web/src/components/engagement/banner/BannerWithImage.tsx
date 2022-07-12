@@ -29,7 +29,7 @@ const BannerWithImage = ({ savedEngagement, children }: EngagementBannerProps) =
                         height: '30em',
                         width: '100%',
                     }}
-                    onError={(e) => {
+                    onError={(_e) => {
                         setImageError(true);
                     }}
                 />
