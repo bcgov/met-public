@@ -24,7 +24,7 @@ const SurveyBlock = () => {
                         complete
                     </Typography>
                 </Grid>
-                <Grid item xs={4} container justifyContent="flex-end" direction="row">
+                <Grid item xs={12} container justifyContent="flex-end" direction="row">
                     <Button
                         variant="contained"
                         disabled={!surveyId}
