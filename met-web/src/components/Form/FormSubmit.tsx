@@ -5,10 +5,12 @@ import { FormSubmissionData, FormSubmitterProps } from './types';
 
 const FormSubmit = ({ handleFormChange, savedForm }: FormSubmitterProps) => {
     return (
-        <Form
-            form={savedForm || { display: 'form' }}
-            onChange={(form: unknown) => handleFormChange(form as FormSubmissionData)}
-        />
+        <div className="formio">
+            <Form
+                form={savedForm || { display: 'form' }}
+                onChange={(form: unknown) => handleFormChange(form as FormSubmissionData)}
+            />
+        </div>
     );
 };
 

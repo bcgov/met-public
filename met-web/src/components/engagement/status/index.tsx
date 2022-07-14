@@ -17,7 +17,7 @@ export const EngagementStatusChip = ({ status }: { status: string }) => {
     switch (status) {
         case 'Draft':
             return <Upcoming />;
-        case 'Open':
+        case 'Published':
             return <Open />;
         case 'Closed':
             return <Closed />;

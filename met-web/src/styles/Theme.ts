@@ -50,6 +50,33 @@ export const BaseTheme = createTheme({
             },
         },
     },
+    typography: {
+        fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+        fontSize: 16,
+        h1: {
+            fontWeight: 500,
+        },
+        h2: {
+            fontWeight: 500,
+        },
+        h3: {
+            fontWeight: 500,
+        },
+        h4: {
+            fontWeight: 500,
+        },
+        h5: {
+            fontWeight: 500,
+        },
+        h6: {
+            fontWeight: 500,
+        },
+        button: {
+            fontWeight: 700,
+            fontSize: '1.2rem',
+            textTransform: 'none',
+        },
+    },
 });
 
 export const PublicTheme = createTheme(BaseTheme, {
@@ -58,6 +85,27 @@ export const PublicTheme = createTheme(BaseTheme, {
             main: '#CFD8DC',
             dark: '#455A64',
             light: '#ECF2F5',
+        },
+    },
+    typography: {
+        fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+        fontSize: 16,
+        h1: {
+            fontWeight: 500,
+        },
+        h2: {
+            fontWeight: 500,
+        },
+        h3: {
+            fontWeight: 500,
+        },
+        h4: {
+            fontWeight: 500,
+        },
+        button: {
+            fontWeight: 700,
+            fontSize: '1.2rem',
+            textTransform: 'none',
         },
     },
 });
