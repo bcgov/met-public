@@ -66,7 +66,6 @@ def run(job_name):
         MetExtractor.do_etl()
         application.logger.info(f'<<<< Completed MET Extraction >>>>')
     else:
-        MetExtractor.do_etl()
         application.logger.debug('No valid args passed.Exiting job without running any ***************')
 
 

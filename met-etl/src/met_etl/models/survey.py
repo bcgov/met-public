@@ -21,5 +21,5 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
 
     @classmethod
     def get_all(cls):
-        """Get all engagements."""
+        """Get all surveys."""
         return db.session.query(Survey).all()
