@@ -71,6 +71,10 @@ export const BaseTheme = createTheme({
         h6: {
             fontWeight: 500,
         },
+        subtitle2: {
+            fontWeight: 500,
+            fontSize: '1.15rem',
+        },
         button: {
             fontWeight: 700,
             fontSize: '1.2rem',
