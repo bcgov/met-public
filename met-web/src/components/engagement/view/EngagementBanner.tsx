@@ -7,8 +7,8 @@ import { useNavigate } from 'react-router-dom';
 export const EngagementBanner = () => {
     const navigate = useNavigate();
     const { engagementLoading, savedEngagement } = useContext(ActionContext);
-
     const surveyId = savedEngagement.surveys[0]?.id || '';
+
     if (engagementLoading) {
         return <Skeleton variant="rectangular" width="100%" height="35em" />;
     }

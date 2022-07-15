@@ -1,16 +1,23 @@
-import React from 'react';
-import { Grid } from '@mui/material';
+import React, { useState } from 'react';
+import { Grid, Button, formLabelClasses } from '@mui/material';
 import { EngagementBanner } from './EngagementBanner';
 import { ActionProvider } from './ActionContext';
 import { EngagementContent } from './EngagementContent';
 import SurveyBlock from './SurveyBlock';
+import EmailModal from 'components/survey/submit/EmailModal';
 
 const Engagement = () => {
+    const [open, setOpen] = useState(true);
+
     return (
         <ActionProvider>
             <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2}>
                 <Grid item xs={12}>
                     <EngagementBanner />
+                    <Button variant="contained" onClick={() => setOpen(!open)}>
+                        Share your thoughts
+                    </Button>
+                    <EmailModal open={open} handleClose={() => setOpen(false)} />
                 </Grid>
                 <Grid
                     container
