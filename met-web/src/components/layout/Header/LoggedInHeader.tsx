@@ -8,6 +8,7 @@ import UserService from 'services/userService';
 import { useMediaQuery, Theme } from '@mui/material';
 import SideNav from '../SideNav/SideNav';
 import CssBaseline from '@mui/material/CssBaseline';
+import { Palette } from 'styles/Theme';
 
 const LoggedInHeader = ({ drawerWidth = 240 }) => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
@@ -18,6 +19,7 @@ const LoggedInHeader = ({ drawerWidth = 240 }) => {
                 color="default"
                 sx={{
                     zIndex: (theme) => theme.zIndex.drawer + 1,
+                    color: Palette.text.primary,
                 }}
             >
                 <CssBaseline />
@@ -32,7 +34,7 @@ const LoggedInHeader = ({ drawerWidth = 240 }) => {
                         alt="BC Logo"
                         src="https://marketplacebc.ca/wp-content/themes/sbbc-marketplace/images/bc-logo.svg"
                     />
-                    <Typography variant={isMediumScreen ? 'h3' : 'h6'} component="div" sx={{ flexGrow: 1 }}>
+                    <Typography variant={isMediumScreen ? 'h3' : 'h6'} sx={{ flexGrow: 1 }}>
                         MET
                     </Typography>
                     <Button color="inherit" onClick={() => UserService.doLogout()}>
