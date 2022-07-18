@@ -4,6 +4,7 @@ Manages the Survey
 """
 from datetime import datetime
 from typing import List
+from met_api.constants.status import Status
 from sqlalchemy import ForeignKey
 from sqlalchemy.dialects import postgresql
 from met_api.models.engagement_status import EngagementStatus
@@ -31,8 +32,21 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
     def get_survey(cls, survey_id) -> SurveySchema:
         """Get a survey."""
         survey_schema = SurveySchema()
-        data = db.session.query(Survey).filter_by(id=survey_id).join(Engagement, isouter=True)\
-            .join(EngagementStatus, isouter=True).first()
+        data = db.session.query(Survey)\
+            .outerjoin(Engagement)\
+            .outerjoin(EngagementStatus)\
+            .filter(Survey.id == survey_id)\
+            .first()
+        return survey_schema.dump(data)
+
+    @classmethod
+    def get_open_survey(cls, survey_id) -> SurveySchema:
+        """Get a survey."""
+        survey_schema = SurveySchema()
+        data = db.session.query(Survey).filter_by(id=survey_id)\
+            .join(Engagement).filter_by(status_id=Status.Published.value)\
+            .join(EngagementStatus)\
+                .first()
         return survey_schema.dump(data)
 
     @classmethod

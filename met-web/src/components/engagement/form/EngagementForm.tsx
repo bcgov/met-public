@@ -323,7 +323,7 @@ const EngagementForm = () => {
                                     onClick={() => handleUpdateEngagement()}
                                     disabled={isSaving}
                                 >
-                                    Update Engagement Draft
+                                    Update Engagement
                                     {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
                                 </Button>
                             )}

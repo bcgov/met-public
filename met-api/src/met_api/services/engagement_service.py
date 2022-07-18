@@ -12,15 +12,30 @@ class EngagementService:
 
     @staticmethod
     def get_engagement(engagement_id):
-        """Get Engagement for the id."""
+        """Get Engagement by the id."""
         engagement = Engagement.get_engagement(engagement_id)
-        engagement['banner_url'] = ObjectStorageService.get_url(engagement.get('banner_filename', None))
+        if engagement:
+            engagement['banner_url'] = ObjectStorageService.get_url(engagement.get('banner_filename', None))
+        return engagement
+
+    @staticmethod
+    def get_published_engagement(engagement_id):
+        """Get an Open Engagement by the id."""
+        engagement = Engagement.get_published_engagement(engagement_id)
+        if engagement:
+            engagement['banner_url'] = ObjectStorageService.get_url(engagement.get('banner_filename', None))
         return engagement
 
     @staticmethod
     def get_all_engagements():
         """Get all engagements."""
         engagements = Engagement.get_all_engagements()
+        return engagements
+
+    @staticmethod
+    def get_published_engagements():
+        """Get all open engagements."""
+        engagements = Engagement.get_published_engagements()
         return engagements
 
     def create_engagement(self, data: EngagementSchema):

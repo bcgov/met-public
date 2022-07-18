@@ -4,11 +4,15 @@ import { EngagementBanner } from './EngagementBanner';
 import { ActionProvider } from './ActionContext';
 import { EngagementContent } from './EngagementContent';
 import SurveyBlock from './SurveyBlock';
+import { PreviewBanner } from './PreviewBanner';
 
 const Engagement = () => {
     return (
         <ActionProvider>
-            <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2}>
+            <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
+                <Grid item xs={12}>
+                    <PreviewBanner />
+                </Grid>
                 <Grid item xs={12}>
                     <EngagementBanner />
                 </Grid>

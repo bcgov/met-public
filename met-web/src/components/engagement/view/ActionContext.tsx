@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getEngagement } from '../../../services/engagementService';
+import { getEngagement, putEngagement } from '../../../services/engagementService';
 import { Engagement } from '../../../models/engagement';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -8,6 +8,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 export interface EngagementViewContext {
     savedEngagement: Engagement;
     engagementLoading: boolean;
+    publishEngagement: (_engagement: Engagement) => Promise<Engagement>;
 }
 
 export type EngagementParams = {
@@ -15,6 +16,9 @@ export type EngagementParams = {
 };
 
 export const ActionContext = createContext<EngagementViewContext>({
+    publishEngagement: (_engagement: Engagement): Promise<Engagement> => {
+        return Promise.reject();
+    },
     savedEngagement: {
         id: 0,
         name: '',
@@ -63,6 +67,20 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     });
     const [engagementLoading, setEngagementLoading] = useState(true);
 
+    const publishEngagement = async (engagement: Engagement): Promise<Engagement> => {
+        try {
+            const result = await putEngagement(engagement);
+            //TODO engagement update success message in notification module
+            dispatch(openNotification({ severity: 'success', text: 'Engagement Updated Successfully' }));
+            return Promise.resolve(result);
+        } catch (error) {
+            //TODO: engagement update error message in notification module
+            dispatch(openNotification({ severity: 'error', text: 'Error Updating Engagement' }));
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+
     useEffect(() => {
         const fetchEngagement = async () => {
             if (isNaN(Number(engagementId))) {
@@ -93,6 +111,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
             value={{
                 savedEngagement,
                 engagementLoading,
+                publishEngagement,
             }}
         >
             {children}
