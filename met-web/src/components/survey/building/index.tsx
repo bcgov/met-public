@@ -117,6 +117,17 @@ const SurveyFormBuilder = () => {
         return <FormBuilderSkeleton />;
     }
 
+    const hasEngagement = !!savedSurvey.engagement;
+    const isEngagementDraft = savedSurvey.engagement?.status_id == EngagementStatus.Draft;
+
+    if (hasEngagement && !isEngagementDraft) {
+        dispatch(
+            openNotification({
+                severity: 'warning',
+                text: 'Engagement already published. Saving is disabled.',
+            }),
+        );
+    }
     return (
         <MetPageGridContainer
             container

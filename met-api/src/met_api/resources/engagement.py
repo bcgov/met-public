@@ -53,7 +53,6 @@ class Engagement(Resource):
         except ValueError as err:
             return ActionResult.error(str(err))
 
-
 @cors_preflight('GET, POST, PUT, OPTIONS')
 @API.route('/')
 class Engagements(Resource):

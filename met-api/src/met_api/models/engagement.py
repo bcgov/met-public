@@ -3,6 +3,7 @@
 Manages the engagement
 """
 from datetime import datetime
+from met_api.constants.status import Status
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.dialects.postgresql import JSON
 from met_api.constants.status import Status
@@ -38,6 +39,16 @@ class Engagement(db.Model):
         """Get an engagement."""
         engagement_schema = EngagementSchema()
         data = db.session.query(Engagement).filter_by(id=engagement_id).first()
+        return engagement_schema.dump(data)
+
+    @classmethod
+    def get_published_engagement(cls, engagement_id):
+        """Get an engagement."""
+        engagement_schema = EngagementSchema()
+        data = db.session.query(Engagement)\
+            .filter(Engagement.status_id != Status.Draft.value)\
+            .filter_by(id=engagement_id)\
+            .first()
         return engagement_schema.dump(data)
 
     @classmethod
