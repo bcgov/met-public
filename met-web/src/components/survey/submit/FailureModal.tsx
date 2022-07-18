@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Grid, Button, Modal, Box, Typography, TextField, Checkbox } from '@mui/material';
+import React from 'react';
+import { Grid, Button, Modal, Box, Typography } from '@mui/material';
 
 const style = {
     position: 'absolute',
@@ -16,7 +16,7 @@ const style = {
     height: 600,
 };
 
-function SuccessModal(props: any) {
+function FailureModal(props: any) {
     return (
         <>
             <Modal
@@ -81,4 +81,4 @@ function SuccessModal(props: any) {
     );
 }
 
-export default SuccessModal;
+export default FailureModal;

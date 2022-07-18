@@ -7,7 +7,6 @@ import EmailModal from 'components/survey/submit/EmailModal';
 import { ConditionalComponent } from 'components/common';
 
 export const EngagementBanner = () => {
-    const navigate = useNavigate();
     const { engagementLoading, savedEngagement } = useContext(ActionContext);
     const surveyId = savedEngagement.surveys[0]?.id || '';
     const [open, setOpen] = useState(true);
