@@ -52,7 +52,7 @@ const SurveyFormBuilder = () => {
 
     const loadSurvey = async () => {
         if (isNaN(Number(surveyId))) {
-            navigate('survey/listing');
+            navigate('/survey/listing');
             dispatch(
                 openNotification({
                     severity: 'error',
