@@ -1,6 +1,16 @@
 import React from 'react';
-import { Button as MuiButton, Grid, Paper as MuiPaper, CircularProgress } from '@mui/material';
+import {
+    Button as MuiButton,
+    Grid,
+    Paper as MuiPaper,
+    CircularProgress,
+    Typography,
+    Stack,
+    IconButton,
+} from '@mui/material';
 import styled from '@emotion/styled';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const RoundedButton = styled(MuiButton)(() => ({
     borderRadius: '23px',
@@ -19,19 +29,49 @@ export const MetPaper = ({ children, ...rest }: { children: JSX.Element[] | JSX.
     );
 };
 
-export const Row = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-`;
+export const MetWidgetPaper = styled(MuiPaper)(() => ({
+    backgroundColor: '#F2F2F2',
+    padding: '1em',
+}));
 
-export const Column = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-`;
+interface MetWidgetProps {
+    title: string;
+    children?: React.ReactNode;
+    [prop: string]: unknown;
+    onEditClick?: () => void;
+    onDeleteClick?: () => void;
+}
+
+export const MetWidget = ({ children, title, onEditClick, onDeleteClick, ...rest }: MetWidgetProps) => {
+    return (
+        <MetWidgetPaper elevation={3} {...rest}>
+            <Grid container alignItems={'flex-start'} justifyContent="flex-start" direction="row">
+                <Grid item xs={6}>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                        {title}
+                    </Typography>
+                </Grid>
+                <Grid item xs={6} container direction="row" justifyContent="flex-end">
+                    <Stack direction="row" spacing={1}>
+                        <ConditionalComponent condition={!!onEditClick}>
+                            <IconButton color="inherit" onClick={onEditClick}>
+                                <EditIcon />
+                            </IconButton>
+                        </ConditionalComponent>
+                        <ConditionalComponent condition={!!onDeleteClick}>
+                            <IconButton color="inherit" onClick={onDeleteClick}>
+                                <DeleteIcon />
+                            </IconButton>
+                        </ConditionalComponent>
+                    </Stack>
+                </Grid>
+                <Grid item xs={12}>
+                    {children}
+                </Grid>
+            </Grid>
+        </MetWidgetPaper>
+    );
+};
 
 export const MidScreenLoader = () => (
     <Grid container direction="row" justifyContent="center" alignItems="center" sx={{ minHeight: '90vh' }}>
@@ -52,3 +92,9 @@ export const ConditionalComponent = ({ condition, children }: { condition: boole
 
     return <>{children}</>;
 };
+
+export const MetLabel = styled(Typography)(() => ({
+    fontSize: '16px',
+    fontWeight: 'bold',
+    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+}));

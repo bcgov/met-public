@@ -27,6 +27,7 @@ export const getSurvey = async (surveyId: number): Promise<Survey> => {
 interface PostSurveyRequest {
     name: string;
     components?: unknown[];
+    engagement_id?: string;
 }
 export const postSurvey = async (data: PostSurveyRequest): Promise<Survey> => {
     try {
