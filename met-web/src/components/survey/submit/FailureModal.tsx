@@ -1,5 +1,6 @@
 import React from 'react';
 import { Grid, Button, Modal, Box, Typography } from '@mui/material';
+import { FailureModalProps } from '../types';
 
 const style = {
     position: 'absolute',
@@ -16,7 +17,7 @@ const style = {
     height: 600,
 };
 
-function FailureModal(props: any) {
+function FailureModal(props: FailureModalProps) {
     return (
         <>
             <Modal

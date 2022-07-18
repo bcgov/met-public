@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Button, Modal, Box, Typography } from '@mui/material';
-
+import { SuccessModalProps } from '../types';
 const style = {
     position: 'absolute',
     top: '50%',
@@ -16,7 +16,7 @@ const style = {
     height: 600,
 };
 
-function SuccessModal(props: any) {
+function SuccessModal(props: SuccessModalProps) {
     return (
         <>
             <Modal

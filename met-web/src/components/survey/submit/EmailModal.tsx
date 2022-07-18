@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Grid, Button, Modal, Box, Typography, TextField, Checkbox } from '@mui/material';
 import SuccessModal from './SuccessModal';
 import FailureModal from './FailureModal';
+import { EmailModalProps } from '../types';
 
 const style = {
     position: 'absolute',
@@ -16,7 +17,7 @@ const style = {
     pb: 3,
 };
 
-function EmailModal(props: any) {
+function EmailModal(props: EmailModalProps) {
     function checkEmail(emailString: string) {
         const filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
         if (!filter.test(emailString)) {
