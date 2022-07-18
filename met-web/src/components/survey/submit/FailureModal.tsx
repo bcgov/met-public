@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Grid, Button, Modal, Box, Typography, TextField, Checkbox } from '@mui/material';
 
 const style = {
-    position: 'absolute' as 'absolute',
+    position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
@@ -12,9 +12,11 @@ const style = {
     pt: 2,
     px: 4,
     pb: 3,
+    borderColor: 'red',
+    height: 600,
 };
 
-function FailureModal(props: any) {
+function SuccessModal(props: any) {
     return (
         <>
             <Modal
@@ -23,54 +25,60 @@ function FailureModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={{ ...style }}>
-                    <Grid
-                        container
-                        direction="column"
-                        justifyContent="flex-start"
-                        alignItems="flex-start"
-                        height="100%"
-                        width="100%"
-                    >
-                        <Grid item xs={12} sx={{ p: 2 }}>
-                            <Typography
-                                id="modal-modal-title"
-                                variant="h4"
-                                component="h2"
-                                sx={{ p: 1, fontWeight: 'bold' }}
-                            >
-                                Thank you
+                <Grid
+                    container
+                    direction="column"
+                    justifyContent="flex-start"
+                    alignItems="flex-start"
+                    height="100%"
+                    width="100%"
+                    sx={{ ...style }}
+                >
+                    <Grid item xs={2} sx={{ mt: 2 }}>
+                        <Typography
+                            id="modal-modal-title"
+                            variant="h4"
+                            component="h2"
+                            sx={{ pt: 1, fontWeight: 'bold' }}
+                        >
+                            We are sorry
+                        </Typography>
+                        <Typography id="modal-modal-header" sx={{ mt: 1 }}>
+                            There was a problem with the email address you provided:
+                        </Typography>
+                        <Box sx={{ pt: 1 }}>
+                            <Typography>{props.email}</Typography>
+                        </Box>
+                    </Grid>
+                    <Grid container direction="column" item xs={8} height="100%" width="100%" sx={{ mt: 2 }}>
+                        <Grid
+                            item
+                            xs={10}
+                            justifyContent="flex-start"
+                            alignItems="flex-start"
+                            height="100%"
+                            width="100%"
+                        >
+                            <Typography id="modal-modal-title" sx={{ mt: 2, fontWeight: 'bold' }}>
+                                Please verify your email and try again.
                             </Typography>
-                            <Typography id="modal-modal-header" sx={{ mt: 1 }}>
-                                We sent a link to access the survey at the following email address:
+                            <Typography id="modal-modal-title" sx={{ mt: 2, fontWeight: 'bold' }}>
+                                If this problem persists, contact sample@gmail.com
                             </Typography>
-                            <Box sx={{ p: 1 }}>
-                                <Typography>XXXXX@XXXX.com</Typography>
-                            </Box>
                         </Grid>
-                        <Grid item xs={12} sx={{ p: 2 }}>
-                            <Typography
-                                id="modal-modal-title"
-                                variant="h4"
-                                component="h2"
-                                sx={{ p: 1, fontWeight: 'bold' }}
-                            >
-                                Please Click the link provided to access the survey.
-                            </Typography>
-                            <Typography id="modal-modal-header" sx={{ mt: 1 }}>
-                                The link will be valid for 24 hours.
-                            </Typography>
-                            <Grid item xs={12} sx={{ p: 2 }}>
-                                <Button variant="outlined" onClick={props.handleClose} sx={{ m: 1 }}>
-                                    Close
-                                </Button>
-                            </Grid>
+                        <Grid item container xs={2} justifyContent="flex-end" alignItems="flex-end">
+                            <Button variant="outlined" onClick={props.handleClose} sx={{ m: 1 }}>
+                                Go back to Engagement
+                            </Button>
+                            <Button variant="contained" onClick={props.tryAgain} sx={{ m: 1 }}>
+                                Try Again
+                            </Button>
                         </Grid>
                     </Grid>
-                </Box>
+                </Grid>
             </Modal>
         </>
     );
 }
 
-export default FailureModal;
+export default SuccessModal;

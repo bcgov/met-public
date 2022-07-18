@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Button, Modal, Box, Typography, TextField, Checkbox } from '@mui/material';
+import SuccessModal from './SuccessModal';
+import FailureModal from './FailureModal';
 
 const style = {
-    position: 'absolute' as 'absolute',
+    position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
@@ -18,16 +20,25 @@ function EmailModal(props: any) {
     function checkEmail(emailString: string) {
         const filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
         if (!filter.test(emailString)) {
-            alert('Please provide a valid email address');
-            setEmailVerify(true);
-        } else {
+            // alert('Please provide a valid email address');
             setEmailVerify(false);
+            setOpen(true);
+        } else {
+            setEmailVerify(true);
+            setOpen(true);
         }
+    }
+
+    function handleClose() {
+        setOpen(false);
+        setEmailVerify(false);
+        props.handleClose();
     }
 
     const [open, setOpen] = useState(false);
     const [emailVerify, setEmailVerify] = useState(false);
     const [email, setEmail] = useState('');
+    const [checked, setChecked] = useState(false);
 
     useEffect(() => {
         console.log(email);
@@ -57,16 +68,16 @@ function EmailModal(props: any) {
                                 id="modal-modal-title"
                                 variant="h4"
                                 component="h2"
-                                sx={{ p: 1, fontWeight: 'bold' }}
+                                sx={{ mb: 3, fontWeight: 'bold' }}
                             >
                                 Verify your email address
                             </Typography>
-                            <Typography id="modal-modal-header" sx={{ mt: 1 }}>
+                            <Typography id="modal-modal-header" sx={{ mb: 1 }}>
                                 To provide you with the best experience possible. We require you to validate your email
                                 address.
                             </Typography>
-                            <Box sx={{ p: 1 }}>
-                                <Typography>
+                            <Box>
+                                <Typography sx={{ mb: 1 }}>
                                     You will receive a link to access the survey at the email address you provide.
                                 </Typography>
                             </Box>
@@ -90,7 +101,12 @@ function EmailModal(props: any) {
                             justifyContent="flex-start"
                             sx={{ p: 1 }}
                         >
-                            <Checkbox {...label} />
+                            <Checkbox
+                                onChange={(event) => {
+                                    setChecked(event.target.checked);
+                                }}
+                                {...label}
+                            />
                             <Typography>I agree to the Terms and Conditions below.</Typography>
                         </Grid>
                         <Grid item xs={12} sx={{ pt: 1, pb: 1, borderLeft: 8, borderColor: '#003366' }}>
@@ -114,11 +130,25 @@ function EmailModal(props: any) {
                             <Button variant="outlined" onClick={props.handleClose} sx={{ m: 1 }}>
                                 Cancel
                             </Button>
-                            <Button onClick={() => checkEmail(email)} variant="contained" sx={{ m: 1 }}>
+                            <Button onClick={() => checkEmail(email)} variant={'contained'} sx={{ m: 1 }}>
                                 Submit
                             </Button>
                         </Grid>
                     </Grid>
+                    {emailVerify && open ? (
+                        <>
+                            <SuccessModal open={open} handleClose={handleClose} email={email} />
+                        </>
+                    ) : (
+                        <>
+                            <FailureModal
+                                tryAgain={() => setOpen(false)}
+                                open={open}
+                                handleClose={handleClose}
+                                email={email}
+                            />
+                        </>
+                    )}
                 </Box>
             </Modal>
         </>
