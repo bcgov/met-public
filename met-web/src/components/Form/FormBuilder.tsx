@@ -6,12 +6,14 @@ import { FormBuilderData, FormBuilderProps } from './types';
 
 const FormBuilder = ({ handleFormChange, savedForm }: FormBuilderProps) => {
     return (
-        <FormioFormBuilder
-            form={savedForm || { display: 'form' }}
-            options={formioOptions}
-            saveText={'Create Form'}
-            onChange={(form: unknown) => handleFormChange(form as FormBuilderData)}
-        />
+        <div className="formio">
+            <FormioFormBuilder
+                form={savedForm || { display: 'form' }}
+                options={formioOptions}
+                saveText={'Create Form'}
+                onChange={(form: unknown) => handleFormChange(form as FormBuilderData)}
+            />
+        </div>
     );
 };
 

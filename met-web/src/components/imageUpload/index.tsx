@@ -44,7 +44,7 @@ const ImageUpload = ({ handleAddFile, savedImageUrl = '' }: ImageUploadProps) =>
                         }}
                     />
                 </Grid>
-                <Grid>
+                <Grid item xs={12} container justifyContent="flex-end" direction="row">
                     <Button
                         onClick={() => {
                             setObjectUrl('');
@@ -52,6 +52,7 @@ const ImageUpload = ({ handleAddFile, savedImageUrl = '' }: ImageUploadProps) =>
                             handleAddFile([]);
                             URL.revokeObjectURL(objectUrl);
                         }}
+                        variant="outlined"
                     >
                         Remove Image
                     </Button>

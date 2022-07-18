@@ -70,7 +70,7 @@ function MetTableHead<T>(props: MetTableHeadProps<T>) {
                         key={`${String(headCell.key)}${index}`}
                         align={'left'}
                         sortDirection={orderBy === headCell.key ? order : false}
-                        sx={{ borderBottom: '1.5px solid gray' }}
+                        sx={{ borderBottom: '1.5px solid gray', fontWeight: 'bold' }}
                     >
                         <TableSortLabel
                             disabled={!headCell.allowSort}

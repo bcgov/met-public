@@ -63,15 +63,13 @@ const BannerWithImage = ({ savedEngagement, children }: EngagementBannerProps) =
                         rowSpacing={2}
                     >
                         <Grid item xs={12}>
-                            <Typography variant="h3" style={{ fontWeight: 500 }}>
+                            <Typography variant="h3" style={{ fontWeight: 500 }} color="black">
                                 {name}
                             </Typography>
-                            <Typography variant="subtitle2" style={{ fontWeight: 600 }}>
-                                {description}
-                            </Typography>
+                            <Typography variant="subtitle2">{description}</Typography>
                         </Grid>
                         <Grid item xs={12}>
-                            <Typography variant="h6" style={{ fontWeight: 600 }}>
+                            <Typography variant="h6" style={{ fontWeight: 600 }} color="black">
                                 {`Engagement dates: ${formatDate(start_date, 'MMMM dd, yyyy')} to ${formatDate(
                                     end_date,
                                     'MMMM dd, yyyy',
