@@ -130,3 +130,9 @@ dmypy.json
 .DS_Store
 met-api/.DS_Store
 met-api/.DS_Store
+/.idea/vcs.xml
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/met-public.iml

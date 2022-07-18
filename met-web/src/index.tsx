@@ -6,6 +6,7 @@ import { store } from './store';
 import { Provider } from 'react-redux';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { BaseTheme } from 'styles/Theme';
+import '@bcgov/bc-sans/css/BCSans.css';
 // import reportWebVitals from './reportWebVitals';
 
 // eslint-disable-next-line

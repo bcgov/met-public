@@ -30,6 +30,7 @@ const DrawerBox = ({ navigate }: DrawerBoxProps) => {
                                     variant: 'h6',
                                     sx: {
                                         color: activeLink === route.path ? '#ffc107' : '#fafafa',
+                                        fontWeight: activeLink === route.path ? 'bold' : 'normal',
                                     },
                                 }}
                                 primary={route.name}
