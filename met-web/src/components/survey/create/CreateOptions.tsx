@@ -1,23 +1,18 @@
 import React, { useContext, useState } from 'react';
-import { Grid, TextField, Typography, Stack, Button, CircularProgress } from '@mui/material';
+import { Grid, TextField, Stack, Button, CircularProgress } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { hasKey } from 'utils';
 import { postSurvey } from 'services/surveyService/form';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { MetLabel } from 'components/common';
 
-interface StateParams {
-    engagementId?: number;
-}
 export const CreateOptions = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const location = useLocation();
-    const locationState = location.state as StateParams;
-    const engagementId = locationState?.engagementId || '';
 
-    const { surveyForm, handleSurveyFormChange } = useContext(CreateSurveyContext);
+    const { surveyForm, handleSurveyFormChange, engagementToLink } = useContext(CreateSurveyContext);
     const { name } = surveyForm;
 
     const initialFormError = {
@@ -56,7 +51,7 @@ export const CreateOptions = () => {
             setIsSaving(true);
             const createdSurvey = await postSurvey({
                 name: surveyForm.name,
-                engagement_id: String(engagementId) || undefined,
+                engagement_id: engagementToLink?.id ? String(engagementToLink.id) : undefined,
             });
 
             dispatch(
@@ -80,9 +75,7 @@ export const CreateOptions = () => {
     return (
         <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" item xs={12} spacing={2}>
             <Grid item xs={6}>
-                <Typography variant="h6" sx={{ marginBottom: '2px' }}>
-                    Enter Survey Name
-                </Typography>
+                <MetLabel>Enter Survey Name</MetLabel>
                 <TextField
                     id="survey-name"
                     size="small"

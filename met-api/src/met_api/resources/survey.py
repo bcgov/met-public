@@ -72,15 +72,18 @@ class Survey(Resource):
 @cors_preflight('GET, POST, PUT, OPTIONS')
 @API.route('/')
 class Surveys(Resource):
-    """Resource for managing all surveys."""
+    """Resource for managing surveys."""
 
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
     def get():
-        """Fetch all surveys."""
+        """Fetch surveys."""
         try:
-            survey_records = SurveyService().get_all()
+            args = request.args
+            print(args)
+            print(args.get('unlinked', False))
+            survey_records = SurveyService().get_surveys(unlinked= args.get('unlinked', False))
             return ActionResult.success(result=survey_records)
         except ValueError as err:
             return ActionResult.error(str(err))

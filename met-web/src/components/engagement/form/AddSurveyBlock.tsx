@@ -18,8 +18,10 @@ export const AddSurveyBlock = () => {
             );
             return;
         }
-
-        navigate('/survey/create', { state: { engagementId: savedEngagement.id } });
+        navigate({
+            pathname: '/survey/create',
+            search: `?engagementId=${savedEngagement.id}`,
+        });
     };
 
     return (

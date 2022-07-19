@@ -136,13 +136,11 @@ const EngagementForm = () => {
         const hasErrors = validateForm();
 
         if (!hasErrors) {
-            const engagement = await handleUpdateEngagementRequest({
+            return await handleUpdateEngagementRequest({
                 ...engagementFormData,
                 richDescription: richDescription,
                 richContent: richContent,
             });
-
-            return engagement;
         }
     };
 

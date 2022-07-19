@@ -43,6 +43,13 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
         return survey_schema.dump(data)
 
     @classmethod
+    def get_all_unlinked_surveys(cls) -> List[SurveySchema]:
+        """Get all surveys that are unlinked to engagement."""
+        survey_schema = SurveySchema(many=True)
+        data = db.session.query(Survey).filter_by(engagement_id=None).all()
+        return survey_schema.dump(data)
+
+    @classmethod
     def create_survey(cls, survey: SurveySchema) -> DefaultMethodResult:
         """Save Survey."""
         new_survey = Survey(

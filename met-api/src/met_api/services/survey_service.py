@@ -26,9 +26,22 @@ class SurveyService:
         return engagement
 
     @classmethod
+    def get_surveys(cls, unlinked = False):
+        """Get surveys."""
+        if unlinked:
+            return cls.get_unlinked()
+        return cls.get_all()
+
+    @classmethod
     def get_all(cls):
         """Get all surveys."""
         db_data = Survey.get_all_surveys()
+        return db_data
+
+    @classmethod
+    def get_unlinked(cls):
+        """Get all surveys."""
+        db_data = Survey.get_all_unlinked_surveys()
         return db_data
 
     @classmethod

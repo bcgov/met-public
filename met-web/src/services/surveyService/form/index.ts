@@ -3,8 +3,11 @@ import { Survey } from 'models/survey';
 import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
 
-export const fetchAllSurveys = async (): Promise<Survey[]> => {
-    const responseData = await http.GetRequest<Survey[]>(Endpoints.Survey.GET_ALL);
+interface FetchSurveyParams {
+    unlinked?: boolean;
+}
+export const fetchSurveys = async (params: FetchSurveyParams = {}): Promise<Survey[]> => {
+    const responseData = await http.GetRequest<Survey[]>(Endpoints.Survey.GET_ALL, params);
     return responseData.data.result ?? [];
 };
 

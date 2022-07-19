@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
     Divider,
     FormControl,
@@ -10,20 +10,31 @@ import {
     Typography,
     Radio,
     Button,
+    Skeleton,
 } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { ConditionalComponent, MetPageGridContainer } from 'components/common';
 import { CreateOptions } from './CreateOptions';
 import { useNavigate } from 'react-router-dom';
 import { Palette } from 'styles/Theme';
+import LinkOptions from './LinkOptions';
+import { CreateSurveyContext } from './CreateSurveyContext';
+import { OptionsFormSkeleton } from './OptionsFormSkeleton';
 
 const OptionsForm = () => {
     const navigate = useNavigate();
+    const { engagementToLink, loading } = useContext(CreateSurveyContext);
+
     const [value, setValue] = React.useState('');
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValue((event.target as HTMLInputElement).value);
     };
+
+    if (loading) {
+        return <OptionsFormSkeleton />;
+    }
+
     return (
         <MetPageGridContainer container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
             <Grid item xs={12}>
@@ -55,6 +66,13 @@ const OptionsForm = () => {
                             label="Clone an existing Survey"
                             disabled={true}
                         />
+                        <ConditionalComponent condition={!!engagementToLink}>
+                            <FormControlLabel
+                                value="LINK"
+                                control={<Radio />}
+                                label="Add an existing survey to my engagement"
+                            />
+                        </ConditionalComponent>
                     </RadioGroup>
                 </FormControl>
             </Grid>
@@ -66,6 +84,12 @@ const OptionsForm = () => {
             <ConditionalComponent condition={value === 'CLONE'}>
                 <Grid item xs={12}>
                     <Typography>This is where clone options would go</Typography>
+                </Grid>
+            </ConditionalComponent>
+
+            <ConditionalComponent condition={value === 'LINK'}>
+                <Grid item xs={12}>
+                    <LinkOptions />
                 </Grid>
             </ConditionalComponent>
 
