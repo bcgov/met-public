@@ -21,6 +21,7 @@ const SurveyFormBuilder = () => {
 
     const [formData, setFormData] = useState<unknown>(null);
     const [loading, setLoading] = useState(true);
+    const [hasPublishedEngagement, setHasPublishedEngagement] = useState(false);
 
     const hasEngagement = Boolean(savedSurvey?.engagement);
     const isEngagementDraft = savedSurvey?.engagement?.status_id === EngagementStatus.Draft;
@@ -117,17 +118,6 @@ const SurveyFormBuilder = () => {
         return <FormBuilderSkeleton />;
     }
 
-    const hasEngagement = !!savedSurvey.engagement;
-    const isEngagementDraft = savedSurvey.engagement?.status_id == EngagementStatus.Draft;
-
-    if (hasEngagement && !isEngagementDraft) {
-        dispatch(
-            openNotification({
-                severity: 'warning',
-                text: 'Engagement already published. Saving is disabled.',
-            }),
-        );
-    }
     return (
         <MetPageGridContainer
             container

@@ -41,16 +41,6 @@ class Engagement(db.Model):
         return engagement_schema.dump(data)
 
     @classmethod
-    def get_published_engagement(cls, engagement_id):
-        """Get an engagement."""
-        engagement_schema = EngagementSchema()
-        data = db.session.query(Engagement)\
-            .filter(Engagement.status_id != Status.Draft.value)\
-            .filter_by(id=engagement_id)\
-            .first()
-        return engagement_schema.dump(data)
-
-    @classmethod
     def get_all_engagements(cls):
         """Get all engagements."""
         engagements_schema = EngagementSchema(many=True)

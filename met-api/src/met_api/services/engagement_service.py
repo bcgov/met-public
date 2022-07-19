@@ -35,12 +35,6 @@ class EngagementService:
 
         return engagements
 
-    @staticmethod
-    def get_published_engagements():
-        """Get all open engagements."""
-        engagements = Engagement.get_published_engagements()
-        return engagements
-
     def create_engagement(self, data: EngagementSchema):
         """Create engagement."""
         self.validate_fields(data)
