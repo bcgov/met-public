@@ -4,7 +4,6 @@ Manages the Survey
 """
 from datetime import datetime
 from typing import List
-from met_api.constants.status import Status
 from sqlalchemy import ForeignKey
 from sqlalchemy.dialects import postgresql
 from met_api.constants.status import Status

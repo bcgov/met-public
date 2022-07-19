@@ -3,7 +3,6 @@
 Manages the engagement
 """
 from datetime import datetime
-from met_api.constants.status import Status
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.dialects.postgresql import JSON
 from met_api.constants.status import Status
