@@ -13,7 +13,6 @@
 # limitations under the License.
 """Bring in the common JWT Manager."""
 from functools import wraps
-
 from flask import g, request
 from flask_jwt_oidc import JwtManager, AuthError
 
@@ -39,13 +38,14 @@ class Auth:  # pylint: disable=too-few-public-methods
         return decorated
 
     @classmethod
-    def requireOptional(cls, f):
+    def optional(cls, f):
         """Validate an optional Bearer Token."""
 
         @wraps(f)
         def decorated(*args, **kwargs):
             try:
                 token = jwt.get_token_auth_header()
+                # pylint: disable=protected-access
                 jwt._validate_token(token)
                 g.authorization_header = request.headers.get('Authorization', None)
                 g.token_info = g.jwt_oidc_token_info

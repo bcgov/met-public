@@ -37,7 +37,7 @@ class Engagement(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.requireOptional
+    @auth.optional
     def get(engagement_id):
         """Fetch a single engagement matching the provided id."""
         try:
@@ -49,12 +49,13 @@ class Engagement(Resource):
                 engagement_record = EngagementService().get_published_engagement(engagement_id)
             if engagement_record:
                 return ActionResult.success(engagement_id, engagement_record)
-            
+
             return ActionResult.error('Engagement was not found')
         except KeyError:
             return ActionResult.error('Engagement was not found')
         except ValueError as err:
             return ActionResult.error(str(err))
+
 
 @cors_preflight('GET, POST, PUT, OPTIONS')
 @API.route('/')
@@ -63,7 +64,7 @@ class Engagements(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.requireOptional
+    @auth.optional
     def get():
         """Fetch all engagements."""
         try:

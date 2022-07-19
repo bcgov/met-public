@@ -58,7 +58,7 @@ class Survey(Resource):
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
-    @auth.requireOptional
+    @auth.optional
     def get(survey_id):
         """Fetch a single survey matching the provided id."""
         try:

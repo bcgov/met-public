@@ -11,7 +11,7 @@ class TokenInfo:
         try:
             token_info = g.token_info
             return token_info.get('sub', None)
-        except:
+        except ValueError:
             return None
 
     @staticmethod

@@ -27,7 +27,7 @@ class SubmissionService:
     def create(cls, data: SubmissionSchema):
         """Create submission."""
         cls.validate_fields(data)
-        survey_id = data.get('survey_id', None),
+        survey_id = data.get('survey_id', None)
         survey = Survey.get_survey(survey_id)
         if survey.engagement.status_id != Status.Published:
             raise ValueError('Engagament not open to submissions')
