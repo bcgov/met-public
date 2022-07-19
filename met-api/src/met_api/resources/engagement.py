@@ -18,6 +18,7 @@ from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
 from met_api.auth import auth
+from met_api.constants.status import Status
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services.engagement_service import EngagementService
 from met_api.utils.action_result import ActionResult
@@ -42,11 +43,8 @@ class Engagement(Resource):
         """Fetch a single engagement matching the provided id."""
         try:
             user_id = TokenInfo.get_id()
-            if user_id:
-                # authenticated users have access to any engagement status
-                engagement_record = EngagementService().get_engagement(engagement_id)
-            else:
-                engagement_record = EngagementService().get_published_engagement(engagement_id)
+            engagement_record = EngagementService().get_engagement(engagement_id, user_id)
+
             if engagement_record:
                 return ActionResult.success(engagement_id, engagement_record)
 
@@ -69,11 +67,7 @@ class Engagements(Resource):
         """Fetch all engagements."""
         try:
             user_id = TokenInfo.get_id()
-            if user_id:
-                # authenticated users have access to any engagement status
-                engagement_records = EngagementService().get_all_engagements()
-            else:
-                engagement_records = EngagementService().get_published_engagements()
+            engagement_records = EngagementService().get_all_engagements(user_id)
             return ActionResult.success(result=engagement_records)
         except ValueError as err:
             return ActionResult.error(str(err))

@@ -49,14 +49,8 @@ export const PreviewBanner = () => {
                     backgroundColor: 'secondary.light',
                 }}
             >
-                <Grid
-                    container
-                    direction="column"
-                    justifyContent="flex-end"
-                    alignItems="flex-start"
-                    padding="1em 3em 1em 3em"
-                >
-                    <Grid item xs={10}>
+                <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start" padding={4}>
+                    <Grid item xs={12}>
                         <Typography variant="h4">Preview Engagement</Typography>
                         <Typography variant="body2">
                             This engagement must be published. Please publish it when ready.

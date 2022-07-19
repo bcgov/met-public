@@ -157,6 +157,7 @@ const EngagementForm = () => {
 
             if (engagement) {
                 navigate(`/engagement/view/${engagement.id}`);
+                window.scrollTo(0, 0);
             }
         }
     };

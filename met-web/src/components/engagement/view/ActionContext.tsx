@@ -70,11 +70,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const publishEngagement = async (engagement: Engagement): Promise<Engagement> => {
         try {
             const result = await putEngagement(engagement);
-            //TODO engagement update success message in notification module
             dispatch(openNotification({ severity: 'success', text: 'Engagement Updated Successfully' }));
             return Promise.resolve(result);
         } catch (error) {
-            //TODO: engagement update error message in notification module
             dispatch(openNotification({ severity: 'error', text: 'Error Updating Engagement' }));
             console.log(error);
             return Promise.reject(error);
@@ -92,7 +90,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 setSavedEngagement({ ...result });
                 setEngagementLoading(false);
             } catch (error) {
-                //TODO engagement created success message in notification module
                 console.log(error);
                 dispatch(
                     openNotification({

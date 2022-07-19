@@ -34,20 +34,10 @@ class Engagement(db.Model):
     surveys = db.relationship('Survey', backref='engagement', cascade='all, delete')
 
     @classmethod
-    def get_engagement(cls, engagement_id):
+    def get_engagement(cls, engagement_id) -> EngagementSchema:
         """Get an engagement."""
         engagement_schema = EngagementSchema()
         data = db.session.query(Engagement).filter_by(id=engagement_id).first()
-        return engagement_schema.dump(data)
-
-    @classmethod
-    def get_published_engagement(cls, engagement_id):
-        """Get an engagement."""
-        engagement_schema = EngagementSchema()
-        data = db.session.query(Engagement)\
-            .filter(Engagement.status_id != Status.Draft.value)\
-            .filter_by(id=engagement_id)\
-            .first()
         return engagement_schema.dump(data)
 
     @classmethod
@@ -58,12 +48,12 @@ class Engagement(db.Model):
         return engagements_schema.dump(data)
 
     @classmethod
-    def get_published_engagements(cls):
-        """Get all open engagements."""
+    def get_engagements_by_status(cls, status_id):
+        """Get all engagements by a list of status."""
         engagements_schema = EngagementSchema(many=True)
         data = db.session.query(Engagement)\
             .join(EngagementStatus)\
-            .filter(Engagement.status_id != Status.Draft.value)\
+            .filter(Engagement.status_id.in_(status_id))\
             .order_by(Engagement.id.asc())\
             .all()
         return engagements_schema.dump(data)
