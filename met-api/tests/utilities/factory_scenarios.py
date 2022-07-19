@@ -28,6 +28,15 @@ fake = Faker()
 CONFIG = get_named_config('testing')
 
 
+class TestUserInfo(dict, Enum):
+    """Test scenarios of user."""
+
+    user1 = {
+        'id': 123,
+        'first_name': 'System',
+    }
+
+
 class TestEngagemntInfo(dict, Enum):
     """Test scenarios of engagement."""
 
