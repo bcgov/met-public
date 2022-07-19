@@ -29,7 +29,7 @@ class EngagementService:
         """Get all engagements."""
         if user_id:
             # authenticated users have access to any engagement status
-            engagements = EngagementService().get_all_engagements()
+            engagements = Engagement.get_all_engagements()
         else:
             engagements = Engagement.get_engagements_by_status([Status.Published.value, Status.Closed.value])
 
