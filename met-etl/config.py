@@ -32,7 +32,8 @@ CONFIGURATION = {
     'development': 'config.DevConfig',
     'testing': 'config.TestConfig',
     'production': 'config.ProdConfig',
-    'default': 'config.ProdConfig'
+    'default': 'config.ProdConfig',
+    'migration': 'config.MigrationConfig',
 }
 
 
@@ -42,6 +43,7 @@ def get_named_config(config_name: str = 'development'):
 
     :raise: KeyError: if an unknown configuration is requested
     """
+    print(f'CONFIGURATION: {config_name}')
     if config_name in ['production', 'staging', 'default']:
         config = ProdConfig()
     elif config_name == 'testing':
@@ -50,6 +52,9 @@ def get_named_config(config_name: str = 'development'):
         config = DevConfig()
     elif config_name == 'docker':
         config = DockerConfig()
+    elif config_name == 'migration':
+        print('------')
+        config = MigrationConfig()
     else:
         raise KeyError("Unknown configuration '{config_name}'")
     return config
@@ -71,7 +76,11 @@ class _Config():  # pylint: disable=too-few-public-methods
     DB_NAME = os.getenv('DATABASE_NAME', '')
     DB_HOST = os.getenv('DATABASE_HOST', '')
     DB_PORT = os.getenv('DATABASE_PORT', '5432')
-    SQLALCHEMY_DATABASE_URI = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}'
+    MET_DB_PORT = os.getenv('DATABASE_TEST_PORT', '54332')
+    SQLALCHEMY_DATABASE_URI = f'postgresql://admin:admin@{DB_HOST}:{int(MET_DB_PORT)}/{DB_NAME}'
+    SQLALCHEMY_BINDS = {
+        'met_db_analytics': f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}'
+    }
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -93,6 +102,32 @@ class _Config():  # pylint: disable=too-few-public-methods
 
     print(f'SQLAlchemy URL (_Config): {SQLALCHEMY_DATABASE_URI}')
 
+class MigrationConfig():  # pylint: disable=too-few-public-methods
+    """Base class configuration that should set reasonable defaults for all the other configurations."""
+
+    PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+
+    SECRET_KEY = 'a secret'
+
+    TESTING = False
+    DEBUG = False
+
+    # POSTGRESQL
+    DB_USER = os.getenv('DATABASE_USERNAME', '')
+    DB_PASSWORD = os.getenv('DATABASE_PASSWORD', '')
+    DB_NAME = os.getenv('DATABASE_NAME', '')
+    DB_HOST = os.getenv('DATABASE_HOST', '')
+    DB_PORT = os.getenv('DATABASE_PORT', '5432')
+    MET_DB_PORT = os.getenv('DATABASE_TEST_PORT', '54332')
+    SQLALCHEMY_DATABASE_URI =  f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}'
+    SQLALCHEMY_BINDS = {
+        'met_db_analytics': f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}'
+    }
+    SQLALCHEMY_ECHO = True
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
+
+
+    print(f'SQLAlchemy URL (_Config): {SQLALCHEMY_DATABASE_URI}')
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
     """Dev Config."""
@@ -114,10 +149,11 @@ class TestConfig(_Config):  # pylint: disable=too-few-public-methods
     DB_PASSWORD = os.getenv('DATABASE_TEST_PASSWORD', 'postgres')
     DB_NAME = os.getenv('DATABASE_TEST_NAME', 'postgres')
     DB_HOST = os.getenv('DATABASE_TEST_HOST', 'localhost')
-    DB_PORT = os.getenv('DATABASE_TEST_PORT', '5432')
+    DB_PORT = os.getenv('DATABASE_TEST_PORT', '54334')
+    MET_DB_PORT = os.getenv('DATABASE_TEST_PORT', '54333')
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_TEST_URL',
                                         f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}')
-
+                                        
     # JWT OIDC settings
     # JWT_OIDC_TEST_MODE will set jwt_manager to use
     JWT_OIDC_TEST_MODE = True
