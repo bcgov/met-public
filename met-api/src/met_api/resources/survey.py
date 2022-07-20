@@ -58,11 +58,20 @@ class Survey(Resource):
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
+    @auth.optional
     def get(survey_id):
         """Fetch a single survey matching the provided id."""
         try:
-            survey_record = SurveyService().get(survey_id)
-            return ActionResult.success(survey_id, survey_record)
+            user_id = TokenInfo.get_id()
+            if user_id:
+                # authenticated users have access to any survey/engagement status
+                survey_record = SurveyService().get(survey_id)
+            else:
+                survey_record = SurveyService().get_open(survey_id)
+            if survey_record:
+                return ActionResult.success(survey_id, survey_record)
+
+            return ActionResult.error('Survey was not found')
         except KeyError:
             return ActionResult.error('Survey was not found')
         except ValueError as err:
@@ -76,6 +85,7 @@ class Surveys(Resource):
 
     @staticmethod
     # @TRACER.trace()
+    @auth.require
     @cross_origin(origins=allowedorigins())
     def get():
         """Fetch all surveys."""

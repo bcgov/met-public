@@ -158,6 +158,7 @@ const EngagementForm = () => {
 
             if (engagement) {
                 navigate(`/engagement/view/${engagement.id}`);
+                window.scrollTo(0, 0);
             }
         }
     };
@@ -322,7 +323,7 @@ const EngagementForm = () => {
                                     onClick={() => handleUpdateEngagement()}
                                     disabled={isSaving}
                                 >
-                                    Update Engagement Draft
+                                    Update Engagement
                                     {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
                                 </Button>
                             )}

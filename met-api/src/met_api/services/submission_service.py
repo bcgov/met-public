@@ -1,6 +1,8 @@
 
 """Service for submission management."""
+from met_api.constants.status import Status
 from met_api.models.submission import Submission
+from met_api.models.survey import Survey
 from met_api.schemas.submission import SubmissionSchema
 
 
@@ -25,6 +27,11 @@ class SubmissionService:
     def create(cls, data: SubmissionSchema):
         """Create submission."""
         cls.validate_fields(data)
+        survey_id = data.get('survey_id', None)
+        survey = Survey.get_survey(survey_id)
+        if survey.engagement.status_id != Status.Published:
+            raise ValueError('Engagament not open to submissions')
+
         return Submission.create(data)
 
     @classmethod
