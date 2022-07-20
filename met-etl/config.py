@@ -33,7 +33,7 @@ CONFIGURATION = {
     'testing': 'config.TestConfig',
     'production': 'config.ProdConfig',
     'default': 'config.ProdConfig',
-    # Alembic connects to migration config which is MET Analytis Database
+    # Alembic connects to migration config which is MET Analytics Database
     'migration': 'config.MigrationConfig',
 }
 
@@ -70,7 +70,7 @@ class _Config():  # pylint: disable=too-few-public-methods
     TESTING = False
     DEBUG = False
 
-    # POSTGRESQL CONFIGURATION FOR MET ANALYTIS DATABASE .Used in the Bind and Migration config
+    # POSTGRESQL CONFIGURATION FOR MET ANALYTICS DATABASE .Used in the Bind and Migration config
     DB_USER = os.getenv('DATABASE_USERNAME', '')
     DB_PASSWORD = os.getenv('DATABASE_PASSWORD', '')
     DB_NAME = os.getenv('DATABASE_NAME', '')
