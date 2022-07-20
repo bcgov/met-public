@@ -8,8 +8,11 @@ class TokenInfo:
     @staticmethod
     def get_id():
         """Get the user identifier."""
-        token_info = g.token_info
-        return token_info.get('sub', None)
+        try:
+            token_info = g.token_info
+            return token_info.get('sub', None)
+        except AttributeError:
+            return None
 
     @staticmethod
     def get_user_data():

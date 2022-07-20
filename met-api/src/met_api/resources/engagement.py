@@ -36,13 +36,18 @@ class Engagement(Resource):
     """Resource for managing a single engagement."""
 
     @staticmethod
-    # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
+    @auth.optional
     def get(engagement_id):
         """Fetch a single engagement matching the provided id."""
         try:
-            engagement_record = EngagementService().get_engagement(engagement_id)
-            return ActionResult.success(engagement_id, engagement_record)
+            user_id = TokenInfo.get_id()
+            engagement_record = EngagementService().get_engagement(engagement_id, user_id)
+
+            if engagement_record:
+                return ActionResult.success(engagement_id, engagement_record)
+
+            return ActionResult.error('Engagement was not found')
         except KeyError:
             return ActionResult.error('Engagement was not found')
         except ValueError as err:
@@ -55,12 +60,13 @@ class Engagements(Resource):
     """Resource for managing all engagements."""
 
     @staticmethod
-    # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
+    @auth.optional
     def get():
         """Fetch all engagements."""
         try:
-            engagement_records = EngagementService().get_all_engagements()
+            user_id = TokenInfo.get_id()
+            engagement_records = EngagementService().get_all_engagements(user_id)
             return ActionResult.success(result=engagement_records)
         except ValueError as err:
             return ActionResult.error(str(err))

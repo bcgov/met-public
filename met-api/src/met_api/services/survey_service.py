@@ -1,5 +1,6 @@
 
 """Service for survey management."""
+from met_api.constants.status import Status
 from met_api.models.survey import Survey
 from met_api.schemas.survey import SurveySchema
 from met_api.services.object_storage_service import ObjectStorageService
@@ -14,6 +15,13 @@ class SurveyService:
     def get(cls, survey_id):
         """Get survey by the id."""
         db_data = Survey.get_survey(survey_id)
+        db_data['engagement'] = cls.supply_banner_url(db_data.get('engagement', None))
+        return db_data
+
+    @classmethod
+    def get_open(cls, survey_id):
+        """Get survey by the id."""
+        db_data = Survey.get_open_survey(survey_id)
         db_data['engagement'] = cls.supply_banner_url(db_data.get('engagement', None))
         return db_data
 
@@ -41,6 +49,9 @@ class SurveyService:
     def update(cls, data: SurveySchema):
         """Update survey."""
         cls.validate_update_fields(data)
+        survey = cls.get(data.id)
+        if survey.engagement.status_id != Status.Draft:
+            raise ValueError('Engagament already published')
         return Survey.update_survey(data)
 
     @staticmethod

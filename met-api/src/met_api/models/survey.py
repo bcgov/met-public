@@ -6,6 +6,7 @@ from datetime import datetime
 from typing import List
 from sqlalchemy import ForeignKey
 from sqlalchemy.dialects import postgresql
+from met_api.constants.status import Status
 from met_api.models.engagement_status import EngagementStatus
 from met_api.models.engagement import Engagement
 from met_api.schemas.survey import SurveySchema
@@ -31,8 +32,21 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
     def get_survey(cls, survey_id) -> SurveySchema:
         """Get a survey."""
         survey_schema = SurveySchema()
-        data = db.session.query(Survey).filter_by(id=survey_id).join(Engagement, isouter=True)\
-            .join(EngagementStatus, isouter=True).first()
+        data = db.session.query(Survey)\
+            .outerjoin(Engagement)\
+            .outerjoin(EngagementStatus)\
+            .filter(Survey.id == survey_id)\
+            .first()
+        return survey_schema.dump(data)
+
+    @classmethod
+    def get_open_survey(cls, survey_id) -> SurveySchema:
+        """Get a survey."""
+        survey_schema = SurveySchema()
+        data = db.session.query(Survey).filter_by(id=survey_id)\
+            .join(Engagement).filter_by(status_id=Status.Published.value)\
+            .join(EngagementStatus)\
+            .first()
         return survey_schema.dump(data)
 
     @classmethod
@@ -52,6 +66,8 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
             updated_date=survey.get('updated_date', None),
             created_by=survey.get('created_by', None),
             updated_by=survey.get('updated_by', None),
+            engagement_id=survey.get('engagement_id', None),
+
         )
         db.session.add(new_survey)
         db.session.commit()

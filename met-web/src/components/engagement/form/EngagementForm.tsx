@@ -1,11 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Typography, Grid, TextField, Button, CircularProgress } from '@mui/material';
-import { MetPaper, MidScreenLoader, MetPageGridContainer } from '../../common';
+import { MetPaper, MidScreenLoader, MetPageGridContainer, MetLabel } from '../../common';
 import RichTextEditor from './RichTextEditor';
 import { ActionContext } from './ActionContext';
 import { formatDate } from '../../common/dateHelper';
 import ImageUpload from 'components/imageUpload';
 import { useNavigate } from 'react-router-dom';
+import { AddSurveyBlock } from './AddSurveyBlock';
 
 const EngagementForm = () => {
     const {
@@ -157,6 +158,7 @@ const EngagementForm = () => {
 
             if (engagement) {
                 navigate(`/engagement/view/${engagement.id}`);
+                window.scrollTo(0, 0);
             }
         }
     };
@@ -187,9 +189,7 @@ const EngagementForm = () => {
                             />
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <Typography variant="h6" sx={{ marginBottom: '2px' }}>
-                                Engagement Name
-                            </Typography>
+                            <MetLabel sx={{ marginBottom: '2px' }}>Engagement Name</MetLabel>
                             <TextField
                                 id="engagement-name"
                                 variant="outlined"
@@ -218,7 +218,7 @@ const EngagementForm = () => {
                             rowSpacing={{ xs: 1, sm: 0 }}
                         >
                             <Grid item xs={12}>
-                                <Typography variant="h6">Engagement Date</Typography>
+                                <MetLabel>Engagement Date</MetLabel>
                             </Grid>
 
                             <Grid item sm="auto" xs={2}>
@@ -264,9 +264,7 @@ const EngagementForm = () => {
                             </Grid>
                         </Grid>
                         <Grid item xs={12}>
-                            <Typography variant="h6" sx={{ marginBottom: '2px' }}>
-                                Engagement Description
-                            </Typography>
+                            <MetLabel sx={{ marginBottom: '2px' }}>Engagement Description</MetLabel>
                             <RichTextEditor
                                 setRawText={handleDescriptionChange}
                                 handleEditorStateChange={handleRichDescriptionChange}
@@ -277,7 +275,7 @@ const EngagementForm = () => {
                         </Grid>
 
                         <Grid item xs={12}>
-                            <Typography variant="h6" sx={{ marginBottom: '2px' }}>
+                            <Typography variant="h6" sx={{ marginBottom: '2px', fontWeight: 'bold' }}>
                                 Content Block
                             </Typography>
                             <MetPaper>
@@ -290,9 +288,7 @@ const EngagementForm = () => {
                                     sx={{ padding: '1em' }}
                                 >
                                     <Grid item xs={12}>
-                                        <Typography variant="h6" sx={{ marginBottom: '2px' }}>
-                                            Engagement Content
-                                        </Typography>
+                                        <MetLabel sx={{ marginBottom: '2px' }}>Engagement Content</MetLabel>
                                         <RichTextEditor
                                             setRawText={handleContentChange}
                                             handleEditorStateChange={handleRichContentChange}
@@ -303,6 +299,10 @@ const EngagementForm = () => {
                                     </Grid>
                                 </Grid>
                             </MetPaper>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <AddSurveyBlock />
                         </Grid>
 
                         <Grid item xs={12}>
@@ -323,7 +323,7 @@ const EngagementForm = () => {
                                     onClick={() => handleUpdateEngagement()}
                                     disabled={isSaving}
                                 >
-                                    Update Engagement Draft
+                                    Update Engagement
                                     {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
                                 </Button>
                             )}

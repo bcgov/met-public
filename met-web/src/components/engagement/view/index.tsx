@@ -5,14 +5,18 @@ import { ActionProvider } from './ActionContext';
 import { EngagementContent } from './EngagementContent';
 import SurveyBlock from './SurveyBlock';
 import EmailModal from './EmailModal';
+import { PreviewBanner } from './PreviewBanner';
 
 const Engagement = () => {
     const [open, setOpen] = useState(true);
 
     return (
         <ActionProvider>
-            <EmailModal open={open} handleClose={() => setOpen(false)} />
-            <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2}>
+            <EmailModal open={open} handleClose={() => setOpen(false)} /
+            <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
+                <Grid item xs={12}>
+                    <PreviewBanner />
+                </Grid>
                 <Grid item xs={12}>
                     <EngagementBanner openModal={() => setOpen(true)} />
                 </Grid>
