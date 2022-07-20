@@ -147,9 +147,14 @@ class Survey(Resource):
     @auth.require
     def put(survey_id, engagement_id):
         """Update survey to be linked with engagement."""
-        try:            
-            SurveyService().link(survey_id, engagement_id)                
-            return ActionResult.success(survey_id, "Survey successfully linked")
+        try:
+            
+            result = SurveyService().link(survey_id, engagement_id)
+                
+            if result.success:
+                return ActionResult.success(survey_id, "Survey successfully linked")
+
+            return ActionResult.error('Error occurred while linking survey to engagement')
         except KeyError:
             return ActionResult.error('Survey was not found')
         except ValueError as err:
