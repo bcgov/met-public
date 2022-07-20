@@ -79,7 +79,7 @@ const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
                         <Grid item xs={12}>
                             <Stack direction="row" spacing={1}>
                                 <Typography variant="subtitle1">status:</Typography>
-                                <EngagementStatusChip status={engagement_status.status_name} />
+                                <EngagementStatusChip status_id={engagement_status.id} />
                             </Stack>
                         </Grid>
                         {children}

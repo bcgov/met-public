@@ -49,6 +49,11 @@ export const BaseTheme = createTheme({
                 color: Palette.action.active,
             },
         },
+        MuiFormLabel: {
+            defaultProps: {
+                focused: false,
+            },
+        },
     },
     typography: {
         fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",

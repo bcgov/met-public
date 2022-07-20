@@ -5,6 +5,7 @@ Manages the engagement
 from datetime import datetime
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.dialects.postgresql import JSON
+from met_api.constants.status import Status
 from met_api.schemas.engagement import EngagementSchema
 from .engagement_status import EngagementStatus
 from .db import db
@@ -33,7 +34,7 @@ class Engagement(db.Model):
     surveys = db.relationship('Survey', backref='engagement', cascade='all, delete')
 
     @classmethod
-    def get_engagement(cls, engagement_id):
+    def get_engagement(cls, engagement_id) -> EngagementSchema:
         """Get an engagement."""
         engagement_schema = EngagementSchema()
         data = db.session.query(Engagement).filter_by(id=engagement_id).first()
@@ -47,6 +48,17 @@ class Engagement(db.Model):
         return engagements_schema.dump(data)
 
     @classmethod
+    def get_engagements_by_status(cls, status_id):
+        """Get all engagements by a list of status."""
+        engagements_schema = EngagementSchema(many=True)
+        data = db.session.query(Engagement)\
+            .join(EngagementStatus)\
+            .filter(Engagement.status_id.in_(status_id))\
+            .order_by(Engagement.id.asc())\
+            .all()
+        return engagements_schema.dump(data)
+
+    @classmethod
     def create_engagement(cls, engagement: EngagementSchema) -> DefaultMethodResult:
         """Save engagement."""
         new_engagement = Engagement(
@@ -55,7 +67,7 @@ class Engagement(db.Model):
             rich_description=engagement.get('rich_description', None),
             start_date=engagement.get('start_date', None),
             end_date=engagement.get('end_date', None),
-            status_id=1,  # Draft status
+            status_id=Status.Draft.value,
             created_by=engagement.get('created_by', None),
             created_date=datetime.utcnow(),
             updated_by=engagement.get('updated_by', None),
@@ -78,6 +90,8 @@ class Engagement(db.Model):
             rich_description=engagement.get('rich_description', None),
             start_date=engagement.get('start_date', None),
             end_date=engagement.get('end_date', None),
+            status_id=engagement.get('status_id', None),
+            published_date=engagement.get('published_date', None),
             updated_date=datetime.utcnow(),
             updated_by=engagement.get('updated_by', None),
             banner_filename=engagement.get('banner_filename', None),
