@@ -73,6 +73,7 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
             form_json=survey.get('form_json', None),
             updated_date=survey.get('updated_date', None),
             updated_by=survey.get('updated_by', None),
+            engagement_id=survey.get('engagement_id', None),
         )
         survey_id = survey.get('id', None)
         query = Survey.query.filter_by(id=survey_id)
