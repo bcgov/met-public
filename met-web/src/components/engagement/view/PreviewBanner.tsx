@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ActionContext } from './ActionContext';
 import { Box, Button, Grid, Skeleton, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -10,40 +10,33 @@ export const PreviewBanner = () => {
     const navigate = useNavigate();
     const { engagementLoading, savedEngagement, publishEngagement } = useContext(ActionContext);
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
+    const [isDraft, setIsDraft] = useState(true);
 
     const engagementId = savedEngagement.id || '';
-    if (engagementLoading) {
-        return <Skeleton variant="rectangular" width="100%" height="10em" />;
-    }
-    const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
 
-    const validate = () => {
-        const errors = {
-            status: savedEngagement.status_id !== EngagementStatus.Draft,
-        };
-
-        return Object.values(errors).some((isError: unknown) => isError);
-    };
+    useEffect(() => {
+        setIsDraft(savedEngagement.status_id === EngagementStatus.Draft);
+    }, [savedEngagement]);
 
     const handlePublishEngagement = async () => {
-        const hasErrors = validate();
-
-        if (!hasErrors) {
-            const engagement = await publishEngagement({
+        if (isDraft) {
+            await publishEngagement({
                 ...savedEngagement,
                 status_id: EngagementStatus.Published,
                 published_date: new Date().toUTCString(),
                 surveys: [],
             });
-
+        } else {
             navigate(`/`);
-
-            return engagement;
         }
     };
 
+    if (engagementLoading) {
+        return <Skeleton variant="rectangular" width="100%" height="10em" />;
+    }
+
     return (
-        <ConditionalComponent condition={isDraft && isLoggedIn}>
+        <ConditionalComponent condition={isLoggedIn}>
             <Box
                 sx={{
                     backgroundColor: 'secondary.light',
@@ -51,9 +44,9 @@ export const PreviewBanner = () => {
             >
                 <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start" padding={4}>
                     <Grid item xs={12}>
-                        <Typography variant="h4">Preview Engagement</Typography>
-                        <Typography variant="body2">
-                            This engagement must be published. Please publish it when ready.
+                        <Typography variant="h4">Preview Engagement{isDraft ? '' : ' - Published'}</Typography>
+                        <Typography variant="body2" minHeight={25}>
+                            {isDraft ? 'This engagement must be published. Please publish it when ready.' : ''}
                         </Typography>
                     </Grid>
                     <Grid item xs={12} container direction="row" justifyContent="flex-end">
@@ -64,7 +57,7 @@ export const PreviewBanner = () => {
                             }}
                         >
                             <Button variant="outlined" onClick={() => navigate(`/engagement/form/${engagementId}`)}>
-                                Edit Enagagement
+                                Edit Engagement
                             </Button>
                         </Box>
                         <Button
@@ -72,7 +65,7 @@ export const PreviewBanner = () => {
                             sx={{ marginLeft: '1em' }}
                             onClick={() => handlePublishEngagement()}
                         >
-                            Publish
+                            {isDraft ? 'Publish' : 'Close Preview'}
                         </Button>
                     </Grid>
                 </Grid>
