@@ -6,6 +6,7 @@ import EmailPanel from './EmailPanel';
 import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
 import { EmailModalProps } from './types';
+import { checkEmail } from 'utils';
 
 function EmailModal(props: EmailModalProps) {
     const [formIndex, setFormIndex] = useState('email');
@@ -16,9 +17,8 @@ function EmailModal(props: EmailModalProps) {
         setFormIndex('email');
     }
 
-    function checkEmail() {
-        const filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-        if (!filter.test(email)) {
+    function updateTabValue() {
+        if (!checkEmail(email)) {
             setFormIndex('error');
         } else {
             setFormIndex('success');
@@ -37,7 +37,7 @@ function EmailModal(props: EmailModalProps) {
                     <TabPanel value="email">
                         <EmailPanel
                             email={email}
-                            checkEmail={checkEmail}
+                            checkEmail={updateTabValue}
                             handleClose={() => handleClose()}
                             updateEmail={setEmail}
                         />
