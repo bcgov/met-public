@@ -4,8 +4,9 @@ import { MetPaper } from '../../common';
 import './EngagementContent.scss';
 import { useNavigate } from 'react-router-dom';
 import { ActionContext } from './ActionContext';
+import { SurveyBlockProps } from './types';
 
-const SurveyBlock = () => {
+const SurveyBlock = (props: SurveyBlockProps) => {
     const { savedEngagement } = useContext(ActionContext);
     const navigate = useNavigate();
 
@@ -25,11 +26,7 @@ const SurveyBlock = () => {
                     </Typography>
                 </Grid>
                 <Grid item xs={12} container justifyContent="flex-end" direction="row">
-                    <Button
-                        variant="contained"
-                        disabled={!surveyId}
-                        onClick={() => navigate(`/survey/submit/${surveyId}`)}
-                    >
+                    <Button variant="contained" disabled={!surveyId} onClick={() => props.openModal}>
                         Take me to the survey
                     </Button>
                 </Grid>

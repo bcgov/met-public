@@ -1,14 +1,13 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { ActionContext } from './ActionContext';
 import { Button, Grid, Skeleton } from '@mui/material';
 import { Banner } from '../banner/Banner';
 import { ConditionalComponent } from 'components/common';
-import EmailModal from './EmailModal';
+import { EngagementBannerProps } from './types';
 
-export const EngagementBanner = () => {
+export const EngagementBanner = (props: EngagementBannerProps) => {
     const { engagementLoading, savedEngagement } = useContext(ActionContext);
     const surveyId = savedEngagement.surveys[0]?.id || '';
-    const [open, setOpen] = useState(true);
 
     const publishedStatus = savedEngagement.engagement_status.id === 2;
     if (engagementLoading) {
@@ -18,9 +17,8 @@ export const EngagementBanner = () => {
     return (
         <Banner savedEngagement={savedEngagement}>
             <ConditionalComponent condition={!!surveyId && publishedStatus}>
-                <EmailModal open={open} handleClose={() => setOpen(false)} />
                 <Grid item xs={12} container direction="row" justifyContent="flex-end">
-                    <Button variant="contained" onClick={() => setOpen(true)}>
+                    <Button variant="contained" onClick={() => props.openModal}>
                         Share your thoughts
                     </Button>
                 </Grid>

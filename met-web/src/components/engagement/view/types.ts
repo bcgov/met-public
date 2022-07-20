@@ -3,6 +3,7 @@ import { Engagement } from 'models/engagement';
 export interface EngagementBannerProps {
     savedEngagement: Engagement;
     children?: JSX.Element;
+    openModal: () => void;
 }
 
 export interface EmailModalProps {
@@ -26,4 +27,8 @@ export interface FailurePanelProps {
     tryAgain: () => void;
     handleClose: () => void;
     email: string;
+}
+
+export interface SurveyBlockProps {
+    openModal: () => void;
 }
