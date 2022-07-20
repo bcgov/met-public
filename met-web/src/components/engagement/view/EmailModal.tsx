@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Grid, Button, Modal, Box, Typography, TextField, Checkbox } from '@mui/material';
+import React, { useState } from 'react';
+import { Modal } from '@mui/material';
 import SuccessPanel from './SuccessPanel';
 import FailurePanel from './FailurePanel';
 import EmailPanel from './EmailPanel';
-import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { EmailModalProps } from './types';
 

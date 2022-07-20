@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-import { Grid, Button, formLabelClasses } from '@mui/material';
+import React from 'react';
+import { Grid } from '@mui/material';
 import { EngagementBanner } from './EngagementBanner';
 import { ActionProvider } from './ActionContext';
 import { EngagementContent } from './EngagementContent';
 import SurveyBlock from './SurveyBlock';
-import EmailModal from 'components/engagement/view/EmailModal';
 
 const Engagement = () => {
     return (

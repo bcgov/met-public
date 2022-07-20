@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import { ActionContext } from './ActionContext';
 import { Button, Grid, Skeleton } from '@mui/material';
 import { Banner } from '../banner/Banner';
-import { useNavigate } from 'react-router-dom';
 import { ConditionalComponent } from 'components/common';
 import EmailModal from './EmailModal';
 

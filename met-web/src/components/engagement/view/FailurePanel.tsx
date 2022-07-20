@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Button, Modal, Box, Typography } from '@mui/material';
+import { Grid, Button, Box, Typography } from '@mui/material';
 import { FailurePanelProps } from './types';
 
 const style = {
