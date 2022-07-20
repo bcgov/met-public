@@ -33,6 +33,7 @@ CONFIGURATION = {
     'testing': 'config.TestConfig',
     'production': 'config.ProdConfig',
     'default': 'config.ProdConfig',
+    # Alembic connects to migration config which is MET Analytis Database
     'migration': 'config.MigrationConfig',
 }
 
@@ -53,7 +54,6 @@ def get_named_config(config_name: str = 'development'):
     elif config_name == 'docker':
         config = DockerConfig()
     elif config_name == 'migration':
-        print('------')
         config = MigrationConfig()
     else:
         raise KeyError("Unknown configuration '{config_name}'")
@@ -70,14 +70,33 @@ class _Config():  # pylint: disable=too-few-public-methods
     TESTING = False
     DEBUG = False
 
-    # POSTGRESQL
+    # POSTGRESQL CONFIGURATION FOR MET ANALYTIS DATABASE .Used in the Bind and Migration config
     DB_USER = os.getenv('DATABASE_USERNAME', '')
     DB_PASSWORD = os.getenv('DATABASE_PASSWORD', '')
     DB_NAME = os.getenv('DATABASE_NAME', '')
     DB_HOST = os.getenv('DATABASE_HOST', '')
     DB_PORT = os.getenv('DATABASE_PORT', '5432')
-    MET_DB_PORT = os.getenv('DATABASE_TEST_PORT', '54332')
-    SQLALCHEMY_DATABASE_URI = f'postgresql://admin:admin@{DB_HOST}:{int(MET_DB_PORT)}/{DB_NAME}'
+    
+
+    # POSTGRESQL CONFIGURATION FOR MET MASTER DATABASE
+    MET_DB_USER = os.getenv('MET_DATABASE_USERNAME', '')
+    MET_DB_PASSWORD = os.getenv('MET_DATABASE_PASSWORD', '')
+    MET_DB_HOST = os.getenv('MET_DATABASE_HOST', '')
+    MET_DB_PORT = os.getenv('MET_DATABASE_PORT', '5432')
+    MET_DB_NAME= os.getenv('MET_DB_NAME', '')
+
+    """
+    Though the main data base assosiated with this microservice is MET Analytics database , its configured as a bind.
+    MET DB is configured as the main database since the models are used from the met-api python module and we cant change it to add bind.
+    So all the models in this project will have a bind.
+
+    To handle migrations ,we need to connect to MET Analytics database.For that a new Miigration config is added.
+    """
+
+    # MET MASTER DB.
+    SQLALCHEMY_DATABASE_URI = f'postgresql://{MET_DB_USER}:{MET_DB_PASSWORD}@{MET_DB_HOST}:{int(MET_DB_PORT)}/{MET_DB_NAME}'
+    
+    # MET ANALYTICS DB.
     SQLALCHEMY_BINDS = {
         'met_db_analytics': f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}'
     }
@@ -112,17 +131,13 @@ class MigrationConfig():  # pylint: disable=too-few-public-methods
     TESTING = False
     DEBUG = False
 
-    # POSTGRESQL
+    # Migration connects to the MET Analytics database
     DB_USER = os.getenv('DATABASE_USERNAME', '')
     DB_PASSWORD = os.getenv('DATABASE_PASSWORD', '')
     DB_NAME = os.getenv('DATABASE_NAME', '')
     DB_HOST = os.getenv('DATABASE_HOST', '')
     DB_PORT = os.getenv('DATABASE_PORT', '5432')
-    MET_DB_PORT = os.getenv('DATABASE_TEST_PORT', '54332')
     SQLALCHEMY_DATABASE_URI =  f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}'
-    SQLALCHEMY_BINDS = {
-        'met_db_analytics': f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}'
-    }
     SQLALCHEMY_ECHO = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 

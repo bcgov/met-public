@@ -69,56 +69,75 @@ objects:
             readOnly: true
             mountPath: /met-etl/cron/
           env:
-          - name: DATABASE_USERNAME
-            valueFrom:
-              configMapKeyRef:
-                name: ${DATABASE_NAME}-${TAG_NAME}-config
-                key: DATABASE_USER
-          - name: DATABASE_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: ${DATABASE_NAME}-${TAG_NAME}-secret
-                key: DATABASE_PASSWORD
-          - name: DATABASE_NAME
-            valueFrom:
-              configMapKeyRef:
-                name: ${DATABASE_NAME}-${TAG_NAME}-config
-                key: DATABASE_NAME
-          - name: DATABASE_HOST
-            valueFrom:
-              configMapKeyRef:
-                name: ${DATABASE_NAME}-${TAG_NAME}-config
-                key: DATABASE_HOST
-          - name: DATABASE_PORT
-            valueFrom:
-              configMapKeyRef:
-                name: ${DATABASE_NAME}-${TAG_NAME}-config
-                key: DATABASE_PORT
-          - name: DATABASE_TEST_USERNAME
-            valueFrom:
-              configMapKeyRef:
-                name: ${DATABASE_NAME}-${TAG_NAME}-config
-                key: DATABASE_TEST_USER
-          - name: DATABASE_TEST_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: ${DATABASE_NAME}-${TAG_NAME}-secret
-                key: DATABASE_TEST_PASSWORD
-          - name: DATABASE_TEST_NAME
-            valueFrom:
-              configMapKeyRef:
-                name: ${DATABASE_NAME}-${TAG_NAME}-config
-                key: DATABASE_TEST_NAME
-          - name: DATABASE_TEST_HOST
-            valueFrom:
-              configMapKeyRef:
-                name: ${DATABASE_NAME}-${TAG_NAME}-config
-                key: DATABASE_TEST_HOST
-          - name: DATABASE_TEST_PORT
-            valueFrom:
-              configMapKeyRef:
-                name: ${DATABASE_NAME}-${TAG_NAME}-config
-                key: DATABASE_TEST_PORT
+            # these MET analytics DB details which is the master DB
+            - name: DATABASE_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: ${DATABASE_NAME}-${TAG_NAME}-config
+                  key: DATABASE_USER
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${DATABASE_NAME}-${TAG_NAME}-secret
+                  key: DATABASE_PASSWORD
+            - name: DATABASE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: ${DATABASE_NAME}-${TAG_NAME}-config
+                  key: DATABASE_NAME
+            - name: DATABASE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: ${DATABASE_NAME}-${TAG_NAME}-config
+                  key: DATABASE_HOST
+            - name: DATABASE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: ${DATABASE_NAME}-${TAG_NAME}-config
+                  key: DATABASE_PORT
+            # MET Master DB Details     
+            - name: MET_DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: database-user
+                  name: ${MET_DB_APP_NAME}
+            - name: MET_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: database-password
+                  name: ${MET_DB_APP_NAME}
+            - name: MET_DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  key: database-name
+                  name: ${MET_DB_APP_NAME}
+            - name: MET_DATABASE_HOST
+              value: ${MET_DB_APP_NAME}
+            - name: DATABASE_TEST_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: ${DATABASE_NAME}-${TAG_NAME}-config
+                  key: DATABASE_TEST_USER
+            - name: DATABASE_TEST_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${DATABASE_NAME}-${TAG_NAME}-secret
+                  key: DATABASE_TEST_PASSWORD
+            - name: DATABASE_TEST_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: ${DATABASE_NAME}-${TAG_NAME}-config
+                  key: DATABASE_TEST_NAME
+            - name: DATABASE_TEST_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: ${DATABASE_NAME}-${TAG_NAME}-config
+                  key: DATABASE_TEST_HOST
+            - name: DATABASE_TEST_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: ${DATABASE_NAME}-${TAG_NAME}-config
+                  key: DATABASE_TEST_PORT
           resources:
             requests:
               cpu: ${CPU_REQUEST}
@@ -179,10 +198,13 @@ parameters:
   required: true
   value: dev
 - name: DATABASE_NAME
-  displayName: Database App Name
+  displayName: Database App Name for MET Analytics DB
   description: A valid database app name used by the service.
   required: true
   value: met-analytics-db
+- name: MET_DB_APP_NAME
+  description: "The postgresql application name"
+  value: postgresql-met
 - name: CPU_REQUEST
   displayName: Resources CPU Request
   description: The resources CPU request (in cores) for this build.

@@ -24,5 +24,8 @@ class MetExtractor:  # pylint:disable=too-few-public-methods
         print(Survey.query.all())
         print('-------')
         print(Engagement.get_engagement('1'))
-        print('-------')
+        print('--each engagement-----')
+        for eng in Engagement.get_all_engagements():
+            print(eng)
+
         

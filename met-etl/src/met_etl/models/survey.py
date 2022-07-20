@@ -20,7 +20,7 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
     created_by = db.Column(db.String(50))
     updated_by = db.Column(db.String(50))
-    helo = db.Column(db.String(50))
+    user_id = db.Column(db.String(50))
 
     @classmethod
     def get_all(cls):
