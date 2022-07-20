@@ -8,7 +8,6 @@ import { SurveyBlockProps } from './types';
 
 const SurveyBlock = (props: SurveyBlockProps) => {
     const { savedEngagement } = useContext(ActionContext);
-    const navigate = useNavigate();
 
     const surveyId = savedEngagement.surveys[0]?.id || '';
 
