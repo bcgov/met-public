@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { Button, Grid, Typography } from '@mui/material';
 import { MetPaper } from '../../common';
 import './EngagementContent.scss';
-import { useNavigate } from 'react-router-dom';
 import { ActionContext } from './ActionContext';
 import { SurveyBlockProps } from './types';
 
