@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Button, Modal, Box, Typography } from '@mui/material';
+import { Grid, Button, Typography } from '@mui/material';
 import { SuccessPanelProps } from './types';
 const style = {
     position: 'absolute',
