@@ -11,6 +11,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { MetPageGridContainer } from 'components/common';
 import FormBuilderSkeleton from './FormBuilderSkeleton';
 import { FormBuilderData } from 'components/Form/types';
+import { EngagementStatus } from 'constants/engagementStatus';
 
 const SurveyFormBuilder = () => {
     const navigate = useNavigate();
@@ -44,10 +45,25 @@ const SurveyFormBuilder = () => {
 
     const [formData, setFormData] = useState<unknown>(null);
     const [loading, setLoading] = useState(true);
+    const [hasPublishedEngagement, setHasPublishedEngagement] = useState(false);
 
     useEffect(() => {
         loadSurvey();
     }, []);
+
+    useEffect(() => {
+        const hasEngagement = !!savedSurvey.engagement;
+        const isEngagementDraft = savedSurvey.engagement?.status_id == EngagementStatus.Draft;
+        setHasPublishedEngagement(hasEngagement && !isEngagementDraft);
+        if (hasPublishedEngagement) {
+            dispatch(
+                openNotification({
+                    severity: 'warning',
+                    text: 'Engagement already published. Saving is disabled.',
+                }),
+            );
+        }
+    }, [savedSurvey]);
 
     const loadSurvey = async () => {
         if (isNaN(Number(surveyId))) {
@@ -137,7 +153,7 @@ const SurveyFormBuilder = () => {
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <Button variant="contained" disabled={!formData} onClick={handleSaveForm}>
+                    <Button variant="contained" disabled={!formData || hasPublishedEngagement} onClick={handleSaveForm}>
                         {'Save & Continue'}
                     </Button>
                     <Button variant="outlined" onClick={() => navigate('/survey/listing')}>

@@ -1,13 +1,16 @@
 import React, { useContext, useState } from 'react';
 import { Grid, TextField, Stack, Button, CircularProgress } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { hasKey } from 'utils';
 import { postSurvey } from 'services/surveyService/form';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { MetLabel } from 'components/common';
 
+interface StateParams {
+    engagementId?: number;
+}
 export const CreateOptions = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
