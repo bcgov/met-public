@@ -66,6 +66,8 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
             updated_date=survey.get('updated_date', None),
             created_by=survey.get('created_by', None),
             updated_by=survey.get('updated_by', None),
+            engagement_id=survey.get('engagement_id', None),
+
         )
         db.session.add(new_survey)
         db.session.commit()

@@ -110,6 +110,12 @@ const SurveyFormBuilder = () => {
                     text: 'The survey was successfully built',
                 }),
             );
+
+            if (savedSurvey.engagement?.id) {
+                navigate(`/engagement/form/${savedSurvey.engagement.id}`);
+                return;
+            }
+
             navigate('/survey/listing');
         } catch (error) {
             dispatch(

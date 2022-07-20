@@ -15,6 +15,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { ConditionalComponent, MetPageGridContainer } from 'components/common';
 import { CreateOptions } from './CreateOptions';
 import { useNavigate } from 'react-router-dom';
+import { Palette } from 'styles/Theme';
 
 const OptionsForm = () => {
     const navigate = useNavigate();
@@ -37,7 +38,7 @@ const OptionsForm = () => {
                 <FormControl>
                     <FormLabel
                         id="controlled-radio-buttons-group"
-                        // sx={{ fontWeight: 'bold', color: Palette.text.primary }}
+                        sx={{ fontWeight: 'bold', color: Palette.text.primary }}
                     >
                         I want to
                     </FormLabel>

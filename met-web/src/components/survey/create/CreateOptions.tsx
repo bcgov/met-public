@@ -1,15 +1,22 @@
 import React, { useContext, useState } from 'react';
 import { Grid, TextField, Typography, Stack, Button, CircularProgress } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { hasKey } from 'utils';
 import { postSurvey } from 'services/surveyService/form';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
+interface StateParams {
+    engagementId?: number;
+}
 export const CreateOptions = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const location = useLocation();
+    const locationState = location.state as StateParams;
+    const engagementId = locationState?.engagementId || '';
+
     const { surveyForm, handleSurveyFormChange } = useContext(CreateSurveyContext);
     const { name } = surveyForm;
 
@@ -47,7 +54,10 @@ export const CreateOptions = () => {
 
         try {
             setIsSaving(true);
-            const createdSurvey = await postSurvey({ name: surveyForm.name });
+            const createdSurvey = await postSurvey({
+                name: surveyForm.name,
+                engagement_id: String(engagementId) || undefined,
+            });
 
             dispatch(
                 openNotification({
@@ -95,7 +105,7 @@ export const CreateOptions = () => {
                         {'Save & Continue'}
                         {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
                     </Button>
-                    <Button variant="outlined" onClick={() => navigate('/survey/listing')}>
+                    <Button variant="outlined" onClick={() => navigate(-1)}>
                         Cancel
                     </Button>
                 </Stack>
