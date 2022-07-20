@@ -1,0 +1,1 @@
+-e git+https://github.com/bcgov/met-public.git#egg=met-api&subdirectory=met-api

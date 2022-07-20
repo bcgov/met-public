@@ -33,6 +33,8 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'production')):
     from  met_etl.models import db, ma
 
     app = Flask(__name__)
+    print(f'>>>>> Creating app in run_mode: {run_mode}')
+    print(f'>>>>> Creating app in run_mode: {config.CONFIGURATION[run_mode]}')
 
     app.config.from_object(config.CONFIGURATION[run_mode])
     # Configure Sentry
