@@ -55,6 +55,10 @@ export const CreateOptions = () => {
             const createdSurvey = await postSurvey({
                 name: surveyForm.name,
                 engagement_id: engagementToLink?.id ? String(engagementToLink.id) : undefined,
+                form_json: {
+                    display: 'form',
+                    components: [],
+                },
             });
 
             dispatch(

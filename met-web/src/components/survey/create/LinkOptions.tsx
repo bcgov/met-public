@@ -1,18 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import {
-    Grid,
-    TextField,
-    Typography,
-    Stack,
-    Button,
-    CircularProgress,
-    MenuItem,
-    Autocomplete,
-    Skeleton,
-} from '@mui/material';
+import { Grid, TextField, Stack, Button, CircularProgress, Autocomplete } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { useNavigate } from 'react-router-dom';
-import { fetchSurveys, putSurvey } from 'services/surveyService/form';
+import { fetchSurveys, linkSurvey } from 'services/surveyService/form';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { MetLabel } from 'components/common';
@@ -49,7 +39,7 @@ const LinkOptions = () => {
         handleFetchSurveys();
     }, [availableSurveys]);
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!selectedSurvey) {
             dispatch(openNotification({ severity: 'error', text: 'Please select a survey first' }));
             return;
@@ -62,11 +52,23 @@ const LinkOptions = () => {
 
         setIsSaving(true);
 
-        putSurvey({
-            id: String(selectedSurvey.id),
-            form_json: selectedSurvey.form_json,
-            engagement_id: String(engagementToLink.id),
-        });
+        try {
+            await linkSurvey({
+                id: String(selectedSurvey.id),
+                engagement_id: String(engagementToLink.id),
+            });
+            dispatch(
+                openNotification({
+                    severity: 'success',
+                    text: `Survey of name ${selectedSurvey.name} was successfully added to engagement of name ${engagementToLink.name}`,
+                }),
+            );
+            navigate(`/engagement/form/${engagementToLink.id}`);
+        } catch (error) {
+            console.log(error);
+            dispatch(openNotification({ severity: 'error', text: 'Failed to link survey to engagement' }));
+            setIsSaving(false);
+        }
     };
 
     return (
@@ -97,7 +99,7 @@ const LinkOptions = () => {
                 <Stack direction="row" spacing={2}>
                     <Button variant="contained" onClick={handleSave}>
                         {'Save & Continue'}
-                        {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
+                        {isSaving && <CircularProgress color="inherit" sx={{ marginLeft: 1 }} size={20} />}
                     </Button>
                     <Button variant="outlined" onClick={() => navigate(-1)}>
                         Cancel

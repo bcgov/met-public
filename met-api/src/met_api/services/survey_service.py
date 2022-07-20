@@ -62,8 +62,9 @@ class SurveyService:
     def update(cls, data: SurveySchema):
         """Update survey."""
         cls.validate_update_fields(data)
-        survey = cls.get(data.id)
-        if survey.engagement.status_id != Status.Draft:
+        survey = cls.get(data.get('id', None))
+        engagement = survey.get('engagement', None)
+        if engagement and engagement.get('status_id', None) != Status.Draft:
             raise ValueError('Engagament already published')
         return Survey.update_survey(data)
 
@@ -78,7 +79,33 @@ class SurveyService:
     @staticmethod
     def validate_create_fields(data):
         """Validate all fields."""
-        empty_fields = [not data[field] for field in ['name']]
+        empty_fields = [not data[field] for field in ['name', 'form_json']]
 
         if any(empty_fields):
             raise ValueError('Some required fields are empty')
+        
+        
+
+    @classmethod
+    def link(cls, survey_id, engagement_id):
+        """Update survey."""
+        cls.validate_link_fields(survey_id, engagement_id)        
+        return Survey.link_survey(survey_id, engagement_id)
+
+    @classmethod
+    def validate_link_fields(cls, survey_id, engagement_id):
+        """Validate all fields."""
+        
+        empty_fields = [not value for value in [survey_id, engagement_id]]
+        if any(empty_fields):
+            raise ValueError('Some required fields are empty')
+        
+        survey = cls.get(survey_id)
+        
+        if not survey:
+            raise ValueError('Could not find survey ' + survey_id)
+            
+        if survey.get('engagement', None):
+            raise ValueError('Survey is already linked to an engagement')
+        
+

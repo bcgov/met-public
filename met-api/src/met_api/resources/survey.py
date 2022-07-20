@@ -135,3 +135,23 @@ class Surveys(Resource):
             return ActionResult.error(str(err))
         except ValueError as err:
             return ActionResult.error(str(err))
+
+@cors_preflight('PUT,OPTIONS')
+@API.route('/<survey_id>/link/engagement/<engagement_id>')
+class Survey(Resource):
+    """Resource for linking a single survey to an engagement."""
+
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def put(survey_id, engagement_id):
+        """Update survey to be linked with engagement."""
+        try:            
+            SurveyService().link(survey_id, engagement_id)                
+            return ActionResult.success(survey_id, "Survey successfully linked")
+        except KeyError:
+            return ActionResult.error('Survey was not found')
+        except ValueError as err:
+            return ActionResult.error(str(err))
+        
