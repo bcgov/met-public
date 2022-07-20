@@ -12,7 +12,7 @@ const Engagement = () => {
 
     return (
         <ActionProvider>
-            <EmailModal open={open} handleClose={() => setOpen(false)} /
+            <EmailModal open={open} handleClose={() => setOpen(false)} />
             <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
                 <Grid item xs={12}>
                     <PreviewBanner />
