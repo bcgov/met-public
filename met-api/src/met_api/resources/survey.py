@@ -91,8 +91,6 @@ class Surveys(Resource):
         """Fetch surveys."""
         try:
             args = request.args
-            print(args)
-            print(args.get('unlinked', False))
             survey_records = SurveyService().get_surveys(unlinked= args.get('unlinked', False))
             return ActionResult.success(result=survey_records)
         except ValueError as err:
@@ -148,9 +146,9 @@ class Survey(Resource):
     def put(survey_id, engagement_id):
         """Update survey to be linked with engagement."""
         try:
-            
+
             result = SurveyService().link(survey_id, engagement_id)
-                
+
             if result.success:
                 return ActionResult.success(survey_id, "Survey successfully linked")
 
