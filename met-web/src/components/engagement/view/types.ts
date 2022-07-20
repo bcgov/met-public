@@ -1,8 +1,11 @@
 import { Engagement } from 'models/engagement';
 
-export interface EngagementBannerProps {
+export interface BannerProps {
     savedEngagement: Engagement;
     children?: JSX.Element;
+}
+
+export interface EngagementBannerProps {
     openModal: () => void;
 }
 
