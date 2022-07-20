@@ -18,13 +18,8 @@ function EmailModal(props: EmailModalProps) {
         setFormIndex('email');
     }
 
-    useEffect(() => {
-        console.log('EMAIL UPDATED::::' + email);
-    }, [email]);
-
     function checkEmail() {
         const filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-        console.log('EMAIL STRING::::::::::::::::' + JSON.stringify(email));
         if (!filter.test(email)) {
             setFormIndex('error');
         } else {
@@ -50,11 +45,10 @@ function EmailModal(props: EmailModalProps) {
                         />
                     </TabPanel>
                     <TabPanel value="success">
-                        <SuccessPanel open={props.open} handleClose={() => handleClose()} email={email} />
+                        <SuccessPanel handleClose={() => handleClose()} email={email} />
                     </TabPanel>
                     <TabPanel value="error">
                         <FailurePanel
-                            open={props.open}
                             tryAgain={() => setFormIndex('email')}
                             handleClose={() => handleClose()}
                             email={email}

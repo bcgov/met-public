@@ -1,5 +1,16 @@
-import React, { useState } from 'react';
-import { Box, Grid, Typography, Checkbox, Button, TextField } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import {
+    Box,
+    Grid,
+    Typography,
+    Checkbox,
+    Button,
+    TextField,
+    FormControl,
+    FormGroup,
+    FormControlLabel,
+    FormHelperText,
+} from '@mui/material';
 import { EmailPanelProps } from './types';
 
 const style = {
@@ -20,7 +31,20 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 export default function EmailPanel(props: EmailPanelProps) {
     const [checked, setChecked] = useState(false);
-    const [error, setError] = useState(false);
+    const [termsError, setTermsError] = useState(false);
+    const [emailError, setEmailError] = useState(false);
+
+    useEffect(() => {
+        setTermsError(!checked);
+    }, [checked]);
+
+    useEffect(() => {
+        if (props.email === '') {
+            setEmailError(true);
+        } else {
+            setEmailError(false);
+        }
+    }, [props.email]);
 
     return (
         <Grid container direction="row" sx={{ ...style }} rowSpacing={1}>
@@ -45,8 +69,8 @@ export default function EmailPanel(props: EmailPanelProps) {
                     id="outlined-basic"
                     label="Outlined"
                     variant="outlined"
-                    error={error}
-                    helperText={error ? 'Please enter an email address' : ' '}
+                    error={emailError}
+                    helperText={'Please Enter an Email'}
                 />
             </Grid>
             <Grid
@@ -59,13 +83,21 @@ export default function EmailPanel(props: EmailPanelProps) {
                 justifyContent="flex-start"
                 rowSpacing={1}
             >
-                <Checkbox
-                    onChange={(event) => {
-                        setChecked(event.target.checked);
-                    }}
-                    {...label}
-                />
-                <Typography>I agree to the Terms and Conditions below.</Typography>
+                <FormControl required error={termsError} component="fieldset" sx={{ m: 1 }} variant="standard">
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                onChange={(event) => {
+                                    setChecked(event.target.checked);
+                                }}
+                                {...label}
+                                name="gilad"
+                            />
+                        }
+                        label={<Typography>I agree to the Terms and Conditions below.</Typography>}
+                    />
+                    {termsError ? <FormHelperText>Please Accept the Terms and Conditions</FormHelperText> : <></>}
+                </FormControl>
             </Grid>
             <Grid item xs={12} sx={{ pt: 1, pb: 1, borderLeft: 8, borderColor: '#003366' }}>
                 <Typography paragraph={true} id="modal-modal-description" sx={{ pl: 1 }}>
@@ -79,7 +111,17 @@ export default function EmailPanel(props: EmailPanelProps) {
                 <Button variant="outlined" onClick={props.handleClose} sx={{ m: 1 }}>
                     Cancel
                 </Button>
-                <Button onClick={() => props.checkEmail()} variant={'contained'} sx={{ m: 1 }}>
+                <Button
+                    onClick={
+                        !termsError && !emailError
+                            ? () => props.checkEmail()
+                            : () => {
+                                  console.log('error');
+                              }
+                    }
+                    variant={'contained'}
+                    sx={{ m: 1 }}
+                >
                     Submit
                 </Button>
             </Grid>

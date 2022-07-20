@@ -18,13 +18,11 @@ export interface EmailPanelProps {
 }
 
 export interface SuccessPanelProps {
-    open: boolean;
     handleClose: () => void;
     email: string;
 }
 
 export interface FailurePanelProps {
-    open: boolean;
     tryAgain: () => void;
     handleClose: () => void;
     email: string;

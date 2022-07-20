@@ -7,17 +7,11 @@ import SurveyBlock from './SurveyBlock';
 import EmailModal from 'components/engagement/view/EmailModal';
 
 const Engagement = () => {
-    const [open, setOpen] = useState(false);
-
     return (
         <ActionProvider>
-            <EmailModal open={open} handleClose={() => setOpen(false)} />
             <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2}>
                 <Grid item xs={12}>
                     <EngagementBanner />
-                    <Button variant="contained" onClick={() => setOpen(!open)}>
-                        Share your thoughts
-                    </Button>
                 </Grid>
                 <Grid
                     container
