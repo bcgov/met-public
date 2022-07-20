@@ -70,6 +70,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const publishEngagement = async (engagement: Engagement): Promise<Engagement> => {
         try {
             const result = await putEngagement(engagement);
+            setSavedEngagement({ ...result });
+            setEngagementLoading(false);
             dispatch(openNotification({ severity: 'success', text: 'Engagement Updated Successfully' }));
             return Promise.resolve(result);
         } catch (error) {
