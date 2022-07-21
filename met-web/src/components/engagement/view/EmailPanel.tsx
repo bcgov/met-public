@@ -27,22 +27,31 @@ const style = {
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
-export default function EmailPanel(props: EmailPanelProps) {
+const EmailPanel = ({ email, checkEmail, handleClose, updateEmail }: EmailPanelProps) => {
     const [checked, setChecked] = useState(false);
-    const [termsError, setTermsError] = useState(false);
-    const [emailError, setEmailError] = useState(false);
+    const [emailFormError, setEmailFormError] = useState({
+        terms: false,
+        email: false,
+    });
 
-    useEffect(() => {
-        setTermsError(!checked);
-    }, [checked]);
+    function validateForm() {
+        const errors = {
+            terms: !checked,
+            email: email === '',
+        };
 
-    useEffect(() => {
-        if (props.email === '') {
-            setEmailError(true);
-        } else {
-            setEmailError(false);
+        setEmailFormError(errors);
+
+        return Object.values(errors).some((isError: unknown) => isError);
+    }
+
+    function handleSubmit() {
+        const hasErrors = validateForm();
+
+        if (!hasErrors) {
+            checkEmail();
         }
-    }, [props.email]);
+    }
 
     return (
         <Grid container direction="row" sx={{ ...style }} rowSpacing={1}>
@@ -63,12 +72,12 @@ export default function EmailPanel(props: EmailPanelProps) {
             <Grid item xs={12}>
                 <Typography sx={{ mb: 2, fontWeight: 'bold' }}>Email address</Typography>
                 <TextField
-                    onChange={(e) => props.updateEmail(e.target.value)}
+                    onChange={(e) => updateEmail(e.target.value)}
                     id="outlined-basic"
                     label="Outlined"
                     variant="outlined"
-                    error={emailError}
-                    helperText={'Please Enter an Email'}
+                    error={emailFormError.email}
+                    helperText={emailFormError.email ? 'Please Enter an Email' : ''}
                 />
             </Grid>
             <Grid
@@ -81,7 +90,13 @@ export default function EmailPanel(props: EmailPanelProps) {
                 justifyContent="flex-start"
                 rowSpacing={1}
             >
-                <FormControl required error={termsError} component="fieldset" sx={{ m: 1 }} variant="standard">
+                <FormControl
+                    required
+                    error={emailFormError.terms}
+                    component="fieldset"
+                    sx={{ m: 1 }}
+                    variant="standard"
+                >
                     <FormControlLabel
                         control={
                             <Checkbox
@@ -94,7 +109,11 @@ export default function EmailPanel(props: EmailPanelProps) {
                         }
                         label={<Typography>I agree to the Terms and Conditions below.</Typography>}
                     />
-                    {termsError ? <FormHelperText>Please Accept the Terms and Conditions</FormHelperText> : <></>}
+                    {emailFormError.terms ? (
+                        <FormHelperText>Please Accept the Terms and Conditions</FormHelperText>
+                    ) : (
+                        <></>
+                    )}
                 </FormControl>
             </Grid>
             <Grid item xs={12} sx={{ pt: 1, pb: 1, borderLeft: 8, borderColor: '#003366' }}>
@@ -106,23 +125,15 @@ export default function EmailPanel(props: EmailPanelProps) {
                 </Typography>
             </Grid>
             <Grid item container direction="row" justifyContent="flex-end" alignItems="flex-end" xs={12} rowSpacing={1}>
-                <Button variant="outlined" onClick={props.handleClose} sx={{ m: 1 }}>
+                <Button variant="outlined" onClick={handleClose} sx={{ m: 1 }}>
                     Cancel
                 </Button>
-                <Button
-                    onClick={
-                        !termsError && !emailError
-                            ? () => props.checkEmail()
-                            : () => {
-                                  console.log('error');
-                              }
-                    }
-                    variant={'contained'}
-                    sx={{ m: 1 }}
-                >
+                <Button onClick={() => handleSubmit()} variant={'contained'} sx={{ m: 1 }}>
                     Submit
                 </Button>
             </Grid>
         </Grid>
     );
-}
+};
+
+export default EmailPanel;

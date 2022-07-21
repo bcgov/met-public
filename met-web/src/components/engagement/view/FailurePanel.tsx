@@ -17,7 +17,7 @@ const style = {
     height: 600,
 };
 
-function FailurePanel(props: FailurePanelProps) {
+const FailurePanel = ({ email, handleClose, tryAgain }: FailurePanelProps) => {
     return (
         <Grid container direction="column" justifyContent="flex-start" alignItems="flex-start" sx={{ ...style }}>
             <Grid item xs={2} sx={{ mt: 4 }}>
@@ -28,7 +28,7 @@ function FailurePanel(props: FailurePanelProps) {
                     There was a problem with the email address you provided:
                 </Typography>
                 <Box sx={{ pt: 1 }}>
-                    <Typography>{props.email}</Typography>
+                    <Typography>{email}</Typography>
                 </Box>
             </Grid>
             <Grid container direction="column" item xs={8} height="100%" width="100%" sx={{ mt: 2 }}>
@@ -41,16 +41,16 @@ function FailurePanel(props: FailurePanelProps) {
                     </Typography>
                 </Grid>
                 <Grid item container xs={2} justifyContent="flex-end" alignItems="flex-end">
-                    <Button variant="outlined" onClick={props.handleClose} sx={{ m: 1 }}>
+                    <Button variant="outlined" onClick={handleClose} sx={{ m: 1 }}>
                         Go back to Engagement
                     </Button>
-                    <Button variant="contained" onClick={props.tryAgain} sx={{ m: 1 }}>
+                    <Button variant="contained" onClick={tryAgain} sx={{ m: 1 }}>
                         Try Again
                     </Button>
                 </Grid>
             </Grid>
         </Grid>
     );
-}
+};
 
 export default FailurePanel;

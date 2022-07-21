@@ -5,7 +5,7 @@ import './EngagementContent.scss';
 import { ActionContext } from './ActionContext';
 import { SurveyBlockProps } from './types';
 
-const SurveyBlock = (props: SurveyBlockProps) => {
+const SurveyBlock = ({ openModal }: SurveyBlockProps) => {
     const { savedEngagement } = useContext(ActionContext);
 
     const surveyId = savedEngagement.surveys[0]?.id || '';
@@ -24,7 +24,7 @@ const SurveyBlock = (props: SurveyBlockProps) => {
                     </Typography>
                 </Grid>
                 <Grid item xs={12} container justifyContent="flex-end" direction="row">
-                    <Button variant="contained" disabled={!surveyId} onClick={() => props.openModal}>
+                    <Button variant="contained" disabled={!surveyId} onClick={() => openModal}>
                         Take me to the survey
                     </Button>
                 </Grid>

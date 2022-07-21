@@ -8,12 +8,12 @@ import TabPanel from '@mui/lab/TabPanel';
 import { EmailModalProps } from './types';
 import { checkEmail } from 'utils';
 
-function EmailModal(props: EmailModalProps) {
+const EmailModal = ({ open, handleClose }: EmailModalProps) => {
     const [formIndex, setFormIndex] = useState('email');
     const [email, setEmail] = useState('');
 
-    function handleClose() {
-        props.handleClose();
+    function close() {
+        handleClose();
         setFormIndex('email');
     }
 
@@ -26,36 +26,30 @@ function EmailModal(props: EmailModalProps) {
     }
 
     return (
-        <>
-            <Modal
-                open={props.open}
-                onClose={props.handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <TabContext value={formIndex}>
-                    <TabPanel value="email">
-                        <EmailPanel
-                            email={email}
-                            checkEmail={updateTabValue}
-                            handleClose={() => handleClose()}
-                            updateEmail={setEmail}
-                        />
-                    </TabPanel>
-                    <TabPanel value="success">
-                        <SuccessPanel handleClose={() => handleClose()} email={email} />
-                    </TabPanel>
-                    <TabPanel value="error">
-                        <FailurePanel
-                            tryAgain={() => setFormIndex('email')}
-                            handleClose={() => handleClose()}
-                            email={email}
-                        />
-                    </TabPanel>
-                </TabContext>
-            </Modal>
-        </>
+        <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+            <TabContext value={formIndex}>
+                <TabPanel value="email">
+                    <EmailPanel
+                        email={email}
+                        checkEmail={updateTabValue}
+                        handleClose={() => close()}
+                        updateEmail={setEmail}
+                    />
+                </TabPanel>
+                <TabPanel value="success">
+                    <SuccessPanel handleClose={() => handleClose()} email={email} />
+                </TabPanel>
+                <TabPanel value="error">
+                    <FailurePanel tryAgain={() => setFormIndex('email')} handleClose={() => close()} email={email} />
+                </TabPanel>
+            </TabContext>
+        </Modal>
     );
-}
+};
 
 export default EmailModal;

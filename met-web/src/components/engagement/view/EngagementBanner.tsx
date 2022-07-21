@@ -5,7 +5,7 @@ import { Banner } from '../banner/Banner';
 import { ConditionalComponent } from 'components/common';
 import { EngagementBannerProps } from './types';
 
-export const EngagementBanner = (props: EngagementBannerProps) => {
+export const EngagementBanner = ({ openModal }: EngagementBannerProps) => {
     const { engagementLoading, savedEngagement } = useContext(ActionContext);
     const surveyId = savedEngagement.surveys[0]?.id || '';
 
@@ -18,7 +18,7 @@ export const EngagementBanner = (props: EngagementBannerProps) => {
         <Banner savedEngagement={savedEngagement}>
             <ConditionalComponent condition={!!surveyId && publishedStatus}>
                 <Grid item xs={12} container direction="row" justifyContent="flex-end">
-                    <Button variant="contained" onClick={() => props.openModal}>
+                    <Button variant="contained" onClick={() => openModal}>
                         Share your thoughts
                     </Button>
                 </Grid>

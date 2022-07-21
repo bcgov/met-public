@@ -17,7 +17,7 @@ const style = {
     border: 2,
 };
 
-function SuccessPanel(props: SuccessPanelProps) {
+const SuccessPanel = ({ email, handleClose }: SuccessPanelProps) => {
     return (
         <Grid container direction="row" justifyContent="flex-start" alignItems="space-between" sx={{ ...style }}>
             <Grid container item xs={12}>
@@ -30,7 +30,7 @@ function SuccessPanel(props: SuccessPanelProps) {
                     <Typography id="modal-modal-header">
                         We sent a link to access the survey at the following email address:
                     </Typography>
-                    <Typography sx={{ mt: 1 }}>{props.email}</Typography>
+                    <Typography sx={{ mt: 1 }}>{email}</Typography>
                 </Grid>
             </Grid>
             <Grid container direction="column" item xs={12}>
@@ -43,13 +43,13 @@ function SuccessPanel(props: SuccessPanelProps) {
                     </Typography>
                 </Grid>
                 <Grid item container xs={4} justifyContent="flex-end" alignItems="flex-end">
-                    <Button variant="contained" onClick={props.handleClose} sx={{ m: 1 }}>
+                    <Button variant="contained" onClick={handleClose} sx={{ m: 1 }}>
                         Close
                     </Button>
                 </Grid>
             </Grid>
         </Grid>
     );
-}
+};
 
 export default SuccessPanel;
