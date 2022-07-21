@@ -42,8 +42,8 @@ class TestEngagemntInfo(dict, Enum):
 
     engagement1 = {
         'name': 'My Test Engagement',
-        'start_date': datetime.datetime.now().strftime('%m/%d/%Y'),
-        'end_date': datetime.datetime.now().strftime('%m/%d/%Y'),
+        'start_date': datetime.datetime.now().strftime('%Y/%m/%d'),
+        'end_date': datetime.datetime.now().strftime('%Y/%m/%d'),
         'banner_url': '',
         'created_by': '123',
         'updated_by': '123',
