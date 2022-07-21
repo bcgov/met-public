@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, Button } from '@mui/material';
+import { Grid } from '@mui/material';
 import { EngagementBanner } from './EngagementBanner';
 import { ActionProvider } from './ActionContext';
 import { EngagementContent } from './EngagementContent';
