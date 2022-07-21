@@ -42,10 +42,10 @@ class EngagementSchema(Schema):
     hearing_status = fields.Method("get_hearing_status")
 
     def get_hearing_status(self, obj):
-        if obj.status_id == Status.Draft.value:
+        if obj.status_id == Status.Draft:
             return HearingStatus.Upcoming
 
         if obj.start_date <= datetime.now() <= obj.end_date:
             return HearingStatus.Open
 
-        return HearingStatus.Closed.value
+        return HearingStatus.Closed
