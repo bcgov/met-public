@@ -101,7 +101,7 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
     def link_survey(cls, survey_id, engagement_id) -> DefaultMethodResult:
         """Update engagement."""
         update_fields = dict(
-            engagement_id= engagement_id,
+            engagement_id=engagement_id,
         )
         query = Survey.query.filter_by(id=survey_id)
         record = query.first()

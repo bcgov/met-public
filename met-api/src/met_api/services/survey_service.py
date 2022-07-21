@@ -34,7 +34,7 @@ class SurveyService:
         return engagement
 
     @classmethod
-    def get_surveys(cls, unlinked = False):
+    def get_surveys(cls, unlinked=False):
         """Get surveys."""
         if unlinked:
             return cls.get_unlinked()
@@ -83,7 +83,6 @@ class SurveyService:
 
         if any(empty_fields):
             raise ValueError('Some required fields are empty')
-
 
     @classmethod
     def link(cls, survey_id, engagement_id):

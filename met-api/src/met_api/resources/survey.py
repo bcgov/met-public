@@ -91,7 +91,7 @@ class Surveys(Resource):
         """Fetch surveys."""
         try:
             args = request.args
-            survey_records = SurveyService().get_surveys(unlinked= args.get('unlinked', False))
+            survey_records = SurveyService().get_surveys(unlinked=args.get('unlinked', False))
             return ActionResult.success(result=survey_records)
         except ValueError as err:
             return ActionResult.error(str(err))
@@ -134,6 +134,7 @@ class Surveys(Resource):
         except ValueError as err:
             return ActionResult.error(str(err))
 
+
 @cors_preflight('PUT,OPTIONS')
 @API.route('/<survey_id>/link/engagement/<engagement_id>')
 class SurveyLink(Resource):
@@ -157,4 +158,3 @@ class SurveyLink(Resource):
             return ActionResult.error(str(err))
         except ValueError as err:
             return ActionResult.error(str(err))
-        
