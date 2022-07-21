@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Grid, Box, Typography, Stack } from '@mui/material';
 import { formatDate } from '../../common/dateHelper';
 import BannerWithoutImage from './BannerWithoutImage';
-import { EngagementBannerProps } from '../view/types';
+import { BannerProps } from '../view/types';
 import { EngagementStatusChip } from '../status';
 
-const BannerWithImage = ({ savedEngagement, children }: EngagementBannerProps) => {
+const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
     const { description, name, start_date, end_date, banner_url, engagement_status } = savedEngagement;
     const [imageError, setImageError] = useState(false);
 

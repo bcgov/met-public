@@ -1,9 +1,9 @@
 import React from 'react';
 import { Grid, Box, Typography } from '@mui/material';
 import { formatDate } from '../../common/dateHelper';
-import { EngagementBannerProps } from '../view/types';
+import { BannerProps } from '../view/types';
 
-const BannerWithoutImage = ({ savedEngagement }: EngagementBannerProps) => {
+const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
     const { description, name, start_date, end_date } = savedEngagement;
     return (
         <Box

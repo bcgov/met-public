@@ -121,12 +121,11 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 rich_content: engagement.richContent,
                 banner_filename: uploadedBannerImageFileName,
             });
-            //TODO engagement created success message in notification module
+
             dispatch(openNotification({ severity: 'success', text: 'Engagement Created Successfully' }));
             setSaving(false);
             return Promise.resolve(result);
         } catch (error) {
-            //TODO:engagement create error message in notification module
             dispatch(
                 openNotification({ severity: 'error', text: getErrorMessage(error) || 'Error Creating Engagement' }),
             );
@@ -165,12 +164,11 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 rich_content: engagement.richContent,
                 banner_filename: uploadedBannerImageFileName,
             });
-            //TODO engagement update success message in notification module
+
             dispatch(openNotification({ severity: 'success', text: 'Engagement Updated Successfully' }));
             setSaving(false);
             return Promise.resolve(result);
         } catch (error) {
-            //TODO: engagement update error message in notification module
             dispatch(openNotification({ severity: 'error', text: 'Error Updating Engagement' }));
             setSaving(false);
             console.log(error);

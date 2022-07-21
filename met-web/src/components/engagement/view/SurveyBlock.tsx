@@ -2,12 +2,11 @@ import React, { useContext } from 'react';
 import { Button, Grid, Typography } from '@mui/material';
 import { MetPaper } from '../../common';
 import './EngagementContent.scss';
-import { useNavigate } from 'react-router-dom';
 import { ActionContext } from './ActionContext';
+import { SurveyBlockProps } from './types';
 
-const SurveyBlock = () => {
+const SurveyBlock = ({ openModal }: SurveyBlockProps) => {
     const { savedEngagement } = useContext(ActionContext);
-    const navigate = useNavigate();
 
     const surveyId = savedEngagement.surveys[0]?.id || '';
 
@@ -25,11 +24,7 @@ const SurveyBlock = () => {
                     </Typography>
                 </Grid>
                 <Grid item xs={12} container justifyContent="flex-end" direction="row">
-                    <Button
-                        variant="contained"
-                        disabled={!surveyId}
-                        onClick={() => navigate(`/survey/submit/${surveyId}`)}
-                    >
+                    <Button variant="contained" disabled={!surveyId} onClick={() => openModal}>
                         Take me to the survey
                     </Button>
                 </Grid>
