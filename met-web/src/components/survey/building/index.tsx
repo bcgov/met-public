@@ -19,10 +19,12 @@ const SurveyFormBuilder = () => {
     const dispatch = useAppDispatch();
     const { surveyId } = useParams<SurveyParams>();
     const [savedSurvey, setSavedSurvey] = useState<Survey | null>(null);
-
     const [formData, setFormData] = useState<unknown>(null);
     const [loading, setLoading] = useState(true);
-    const [hasPublishedEngagement, setHasPublishedEngagement] = useState(false);
+
+    const hasEngagement = Boolean(savedSurvey?.engagement);
+    const isEngagementDraft = savedSurvey?.engagement?.status_id === EngagementStatus.Draft;
+    const hasPublishedEngagement = hasEngagement && !isEngagementDraft;
 
     const hasEngagement = Boolean(savedSurvey?.engagement);
     const isEngagementDraft = savedSurvey?.engagement?.status_id === EngagementStatus.Draft;
