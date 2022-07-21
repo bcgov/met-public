@@ -81,16 +81,17 @@ class Survey(Resource):
 @cors_preflight('GET, POST, PUT, OPTIONS')
 @API.route('/')
 class Surveys(Resource):
-    """Resource for managing all surveys."""
+    """Resource for managing surveys."""
 
     @staticmethod
     # @TRACER.trace()
     @auth.require
     @cross_origin(origins=allowedorigins())
     def get():
-        """Fetch all surveys."""
+        """Fetch surveys."""
         try:
-            survey_records = SurveyService().get_all()
+            args = request.args
+            survey_records = SurveyService().get_surveys(unlinked=args.get('unlinked', False))
             return ActionResult.success(result=survey_records)
         except ValueError as err:
             return ActionResult.error(str(err))
@@ -128,6 +129,31 @@ class Surveys(Resource):
             survey_schema['updated_by'] = user_id
             result = SurveyService().update(survey_schema)
             return ActionResult.success(result.identifier, survey_schema)
+        except KeyError as err:
+            return ActionResult.error(str(err))
+        except ValueError as err:
+            return ActionResult.error(str(err))
+
+
+@cors_preflight('PUT,OPTIONS')
+@API.route('/<survey_id>/link/engagement/<engagement_id>')
+class SurveyLink(Resource):
+    """Resource for linking a single survey to an engagement."""
+
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def put(survey_id, engagement_id):
+        """Update survey to be linked with engagement."""
+        try:
+
+            result = SurveyService().link(survey_id, engagement_id)
+
+            if result.success:
+                return ActionResult.success(survey_id, 'Survey successfully linked')
+
+            return ActionResult.error('Error occurred while linking survey to engagement')
         except KeyError as err:
             return ActionResult.error(str(err))
         except ValueError as err:

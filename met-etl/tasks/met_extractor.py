@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from met_etl.models.survey import Survey
+from met_api.models.engagement import Engagement
 
 class MetExtractor:  # pylint:disable=too-few-public-methods
     """Task to link routing slips."""
@@ -21,4 +22,10 @@ class MetExtractor:  # pylint:disable=too-few-public-methods
     def do_etl(cls):
         """Perform the ETL."""
         print(Survey.query.all())
+        print('-------')
+        print(Engagement.get_engagement('1'))
+        print('--each engagement-----')
+        for eng in Engagement.get_all_engagements():
+            print(eng)
+
         
