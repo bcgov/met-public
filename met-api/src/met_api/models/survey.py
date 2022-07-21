@@ -99,8 +99,7 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
 
     @classmethod
     def link_survey(cls, survey_id, engagement_id) -> DefaultMethodResult:
-        """link survey to engagement."""
-
+        """Link survey to engagement."""
         query = Survey.query.filter_by(id=survey_id)
         survey = query.first()
         if not survey:
