@@ -17,44 +17,20 @@ const SurveyFormBuilder = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { surveyId } = useParams<SurveyParams>();
-    const [savedSurvey, setSavedSurvey] = useState<Survey>({
-        id: 0,
-        name: '',
-        responseCount: 0,
-        created_date: '',
-        engagement: {
-            id: 0,
-            name: '',
-            description: '',
-            rich_description: '',
-            status_id: 0,
-            start_date: '',
-            end_date: '',
-            published_date: '',
-            user_id: '',
-            created_date: '',
-            updated_date: '',
-            banner_url: '',
-            banner_filename: '',
-            content: '',
-            rich_content: '',
-            engagement_status: { id: 0, status_name: '' },
-            surveys: [],
-        },
-    });
+    const [savedSurvey, setSavedSurvey] = useState<Survey | null>(null);
 
     const [formData, setFormData] = useState<unknown>(null);
     const [loading, setLoading] = useState(true);
-    const [hasPublishedEngagement, setHasPublishedEngagement] = useState(false);
+
+    const hasEngagement = Boolean(savedSurvey?.engagement);
+    const isEngagementDraft = savedSurvey?.engagement?.status_id === EngagementStatus.Draft;
+    const hasPublishedEngagement = hasEngagement && !isEngagementDraft;
 
     useEffect(() => {
         loadSurvey();
     }, []);
 
     useEffect(() => {
-        const hasEngagement = !!savedSurvey.engagement;
-        const isEngagementDraft = savedSurvey.engagement?.status_id == EngagementStatus.Draft;
-        setHasPublishedEngagement(hasEngagement && !isEngagementDraft);
         if (hasPublishedEngagement) {
             dispatch(
                 openNotification({
@@ -63,7 +39,7 @@ const SurveyFormBuilder = () => {
                 }),
             );
         }
-    }, [savedSurvey]);
+    }, [hasPublishedEngagement]);
 
     const loadSurvey = async () => {
         if (isNaN(Number(surveyId))) {
@@ -99,6 +75,16 @@ const SurveyFormBuilder = () => {
     };
 
     const handleSaveForm = async () => {
+        if (!savedSurvey) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Unable to build survey, please reload',
+                }),
+            );
+            return;
+        }
+
         try {
             await putSurvey({
                 id: String(surveyId),
@@ -143,13 +129,13 @@ const SurveyFormBuilder = () => {
         >
             <Grid item xs={12}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Typography variant="h6">{savedSurvey.name || ''}</Typography>
+                    <Typography variant="h6">{savedSurvey?.name || ''}</Typography>
                     <ClearIcon />
                 </Stack>
                 <Divider />
             </Grid>
             <Grid item xs={12}>
-                <FormBuilder handleFormChange={handleFormChange} savedForm={savedSurvey.form_json} />
+                <FormBuilder handleFormChange={handleFormChange} savedForm={savedSurvey?.form_json} />
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>

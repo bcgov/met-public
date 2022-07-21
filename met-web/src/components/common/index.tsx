@@ -98,3 +98,20 @@ export const MetLabel = styled(Typography)(() => ({
     fontWeight: 'bold',
     fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
 }));
+
+interface RepeatedGridProps {
+    times: number;
+    children: React.ReactNode;
+    [prop: string]: unknown;
+}
+export const RepeatedGrid = ({ times = 1, children, ...rest }: RepeatedGridProps) => {
+    return (
+        <>
+            {[...Array(times)].map((_element, index) => (
+                <Grid key={`repeated-grid-${index}`} {...rest}>
+                    {children}
+                </Grid>
+            ))}
+        </>
+    );
+};

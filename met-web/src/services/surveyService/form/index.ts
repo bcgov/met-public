@@ -1,10 +1,13 @@
 import http from 'apiManager/httpRequestHandler';
 import { Survey } from 'models/survey';
 import Endpoints from 'apiManager/endpoints';
-import { replaceUrl } from 'helper';
+import { replaceAllInURL, replaceUrl } from 'helper';
 
-export const fetchAllSurveys = async (): Promise<Survey[]> => {
-    const responseData = await http.GetRequest<Survey[]>(Endpoints.Survey.GET_ALL);
+interface FetchSurveyParams {
+    unlinked?: boolean;
+}
+export const fetchSurveys = async (params: FetchSurveyParams = {}): Promise<Survey[]> => {
+    const responseData = await http.GetRequest<Survey[]>(Endpoints.Survey.GET_ALL, params);
     return responseData.data.result ?? [];
 };
 
@@ -28,6 +31,7 @@ interface PostSurveyRequest {
     name: string;
     components?: unknown[];
     engagement_id?: string;
+    form_json: unknown;
 }
 export const postSurvey = async (data: PostSurveyRequest): Promise<Survey> => {
     try {
@@ -48,6 +52,30 @@ interface PutSurveyRequest {
 export const putSurvey = async (data: PutSurveyRequest): Promise<Survey> => {
     try {
         const response = await http.PutRequest<Survey>(Endpoints.Survey.UPDATE, data);
+        if (response.data.status && response.data.result) {
+            return Promise.resolve(response.data.result);
+        }
+        return Promise.reject(response.data.message ?? 'Failed to update survey');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
+interface LinkPutSurveyRequest {
+    id: string;
+    engagement_id: string;
+}
+export const linkSurvey = async (params: LinkPutSurveyRequest): Promise<Survey> => {
+    try {
+        const url = replaceAllInURL({
+            URL: Endpoints.Survey.LINK_TO_ENGAGEMENT,
+            params: {
+                survey_id: params.id,
+                engagement_id: params.engagement_id,
+            },
+        });
+
+        const response = await http.PutRequest<Survey>(url);
         if (response.data.status && response.data.result) {
             return Promise.resolve(response.data.result);
         }
