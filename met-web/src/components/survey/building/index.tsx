@@ -12,6 +12,7 @@ import { MetPageGridContainer } from 'components/common';
 import FormBuilderSkeleton from './FormBuilderSkeleton';
 import { FormBuilderData } from 'components/Form/types';
 import { EngagementStatus } from 'constants/engagementStatus';
+import { createDefaultEngagement } from 'models/engagement';
 
 const SurveyFormBuilder = () => {
     const navigate = useNavigate();
@@ -22,25 +23,7 @@ const SurveyFormBuilder = () => {
         name: '',
         responseCount: 0,
         created_date: '',
-        engagement: {
-            id: 0,
-            name: '',
-            description: '',
-            rich_description: '',
-            status_id: 0,
-            start_date: '',
-            end_date: '',
-            published_date: '',
-            user_id: '',
-            created_date: '',
-            updated_date: '',
-            banner_url: '',
-            banner_filename: '',
-            content: '',
-            rich_content: '',
-            engagement_status: { id: 0, status_name: '' },
-            surveys: [],
-        },
+        engagement: createDefaultEngagement(),
     });
 
     const [formData, setFormData] = useState<unknown>(null);

@@ -3,9 +3,13 @@
 Manages the engagement
 """
 
+from datetime import datetime
+from xmlrpc.client import DateTime
 from marshmallow import EXCLUDE, Schema, fields
+from met_api.constants.status import HearingStatus, Status
 
 from met_api.schemas.engagement_survey import EngagementSurveySchema
+from sqlalchemy import between
 from .engagement_status import EngagementStatusSchema
 
 
@@ -21,8 +25,8 @@ class EngagementSchema(Schema):
     name = fields.Str(data_key='name')
     description = fields.Str(data_key='description')
     rich_description = fields.Str(data_key='rich_description')
-    start_date = fields.Str(data_key='start_date')
-    end_date = fields.Str(data_key='end_date')
+    start_date = fields.Date(data_key='start_date')
+    end_date = fields.Date(data_key='end_date')
     status_id = fields.Int(data_key='status_id')
     created_by = fields.Str(data_key='created_by')
     created_date = fields.Str(data_key='created_date')
@@ -34,3 +38,14 @@ class EngagementSchema(Schema):
     banner_filename = fields.Str(data_key='banner_filename')
     engagement_status = fields.Nested(EngagementStatusSchema)
     surveys = fields.List(fields.Nested(EngagementSurveySchema))
+
+    hearing_status = fields.Method("get_hearing_status")
+
+    def get_hearing_status(self, obj):
+        if obj.status_id == Status.Draft.value:
+            return HearingStatus.Upcoming
+
+        if obj.start_date <= datetime.now() <= obj.end_date:
+            return HearingStatus.Open
+
+        return HearingStatus.Closed.value

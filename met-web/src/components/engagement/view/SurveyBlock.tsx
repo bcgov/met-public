@@ -4,11 +4,13 @@ import { MetPaper } from '../../common';
 import './EngagementContent.scss';
 import { useNavigate } from 'react-router-dom';
 import { ActionContext } from './ActionContext';
+import { HearingStatus } from 'constants/engagementStatus';
 
 const SurveyBlock = () => {
     const { savedEngagement } = useContext(ActionContext);
     const navigate = useNavigate();
 
+    const isOpen = savedEngagement.hearing_status === HearingStatus.Open;
     const surveyId = savedEngagement.surveys[0]?.id || '';
 
     return (
@@ -27,7 +29,7 @@ const SurveyBlock = () => {
                 <Grid item xs={12} container justifyContent="flex-end" direction="row">
                     <Button
                         variant="contained"
-                        disabled={!surveyId}
+                        disabled={!surveyId || !isOpen}
                         onClick={() => navigate(`/survey/submit/${surveyId}`)}
                     >
                         Take me to the survey
