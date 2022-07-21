@@ -12,18 +12,18 @@ const EmailModal = ({ open, handleClose }: EmailModalProps) => {
     const [formIndex, setFormIndex] = useState('email');
     const [email, setEmail] = useState('');
 
-    function close() {
+    const close = () => {
         handleClose();
         setFormIndex('email');
-    }
+    };
 
-    function updateTabValue() {
+    const updateTabValue = () => {
         if (!checkEmail(email)) {
             setFormIndex('error');
         } else {
             setFormIndex('success');
         }
-    }
+    };
 
     return (
         <Modal

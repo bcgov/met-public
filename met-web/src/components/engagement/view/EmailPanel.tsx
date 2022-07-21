@@ -34,7 +34,7 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail }: EmailPanelP
         email: false,
     });
 
-    function validateForm() {
+    const validateForm = () => {
         const errors = {
             terms: !checked,
             email: email === '',
@@ -43,15 +43,15 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail }: EmailPanelP
         setEmailFormError(errors);
 
         return Object.values(errors).some((isError: unknown) => isError);
-    }
+    };
 
-    function handleSubmit() {
+    const handleSubmit = () => {
         const hasErrors = validateForm();
 
         if (!hasErrors) {
             checkEmail();
         }
-    }
+    };
 
     return (
         <Grid container direction="row" sx={{ ...style }} rowSpacing={1}>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid } from '@mui/material';
+import { Grid, Button } from '@mui/material';
 import { EngagementBanner } from './EngagementBanner';
 import { ActionProvider } from './ActionContext';
 import { EngagementContent } from './EngagementContent';
@@ -15,6 +15,9 @@ const Engagement = () => {
             <EmailModal open={open} handleClose={() => setOpen(false)} />
             <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
                 <Grid item xs={12}>
+                    <Button variant="contained" onClick={() => setOpen(true)}>
+                        Share your thoughts
+                    </Button>
                     <PreviewBanner />
                 </Grid>
                 <Grid item xs={12}>
