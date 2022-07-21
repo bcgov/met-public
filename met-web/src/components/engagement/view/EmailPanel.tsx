@@ -10,6 +10,7 @@ import {
     FormHelperText,
 } from '@mui/material';
 import { EmailPanelProps } from './types';
+import { MetLabel } from 'components/common';
 
 const style = {
     position: 'absolute',
@@ -37,7 +38,7 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail }: EmailPanelP
     const validateForm = () => {
         const errors = {
             terms: !checked,
-            email: email === '',
+            email: !email,
         };
 
         setEmailFormError(errors);
@@ -70,11 +71,11 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail }: EmailPanelP
             </Grid>
 
             <Grid item xs={12}>
-                <Typography sx={{ mb: 2, fontWeight: 'bold' }}>Email address</Typography>
+                <MetLabel sx={{ mb: 2 }}>Email Address</MetLabel>
                 <TextField
                     onChange={(e) => updateEmail(e.target.value)}
                     id="outlined-basic"
-                    label="Outlined"
+                    label="Email"
                     variant="outlined"
                     error={emailFormError.email}
                     helperText={emailFormError.email ? 'Please Enter an Email' : ''}
