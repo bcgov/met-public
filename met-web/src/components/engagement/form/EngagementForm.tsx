@@ -119,46 +119,53 @@ const EngagementForm = () => {
     const handleCreateEngagement = async () => {
         const hasErrors = validateForm();
 
-        if (!hasErrors) {
-            const engagement = await handleCreateEngagementRequest({
-                ...engagementFormData,
-                richDescription: richDescription,
-                richContent: richContent,
-            });
-
-            navigate(`/engagement/form/${engagement.id}`);
-
-            return engagement;
+        if (hasErrors) {
+            return;
         }
+
+        const engagement = await handleCreateEngagementRequest({
+            ...engagementFormData,
+            richDescription: richDescription,
+            richContent: richContent,
+        });
+
+        navigate(`/engagement/form/${engagement.id}`);
+
+        return engagement;
     };
 
     const handleUpdateEngagement = async () => {
         const hasErrors = validateForm();
 
-        if (!hasErrors) {
-            return await handleUpdateEngagementRequest({
-                ...engagementFormData,
-                richDescription: richDescription,
-                richContent: richContent,
-            });
+        if (hasErrors) {
+            return;
         }
+
+        const engagement = await handleUpdateEngagementRequest({
+            ...engagementFormData,
+            richDescription: richDescription,
+            richContent: richContent,
+        });
+
+        navigate(`/engagement/form/${engagement.id}`);
+    };
+
+    const handleSaveEngagement = () => {
+        if (isNewEngagement) {
+            return handleCreateEngagement();
+        }
+
+        return handleUpdateEngagement();
     };
 
     const handlePreviewEngagement = async () => {
-        const hasErrors = validateForm();
-        if (!hasErrors) {
-            let engagement;
-            if (isNewEngagement) {
-                engagement = await handleCreateEngagement();
-            } else {
-                engagement = await handleUpdateEngagement();
-            }
-
-            if (engagement) {
-                navigate(`/engagement/view/${engagement.id}`);
-                window.scrollTo(0, 0);
-            }
+        const engagement = await handleSaveEngagement();
+        if (!engagement) {
+            return;
         }
+
+        navigate(`/engagement/view/${engagement.id}`);
+        window.scrollTo(0, 0);
     };
 
     if (loadingSavedEngagement) {

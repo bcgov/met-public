@@ -98,7 +98,7 @@ class SurveyService:
         
         empty_fields = [not value for value in [survey_id, engagement_id]]
         if any(empty_fields):
-            raise ValueError('Some required fields are empty')
+            raise ValueError('Necessary fields for linking survey to an engagement were missing')
         
         survey = cls.get(survey_id)
         

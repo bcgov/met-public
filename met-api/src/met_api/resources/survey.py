@@ -153,8 +153,8 @@ class Survey(Resource):
                 return ActionResult.success(survey_id, "Survey successfully linked")
 
             return ActionResult.error('Error occurred while linking survey to engagement')
-        except KeyError:
-            return ActionResult.error('Survey was not found')
+        except KeyError as err:
+            return ActionResult.error(str(err))
         except ValueError as err:
             return ActionResult.error(str(err))
         

@@ -10,7 +10,6 @@ import {
     Typography,
     Radio,
     Button,
-    Skeleton,
 } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { ConditionalComponent, MetPageGridContainer } from 'components/common';
