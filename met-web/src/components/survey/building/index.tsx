@@ -26,10 +26,6 @@ const SurveyFormBuilder = () => {
     const isEngagementDraft = savedSurvey?.engagement?.status_id === EngagementStatus.Draft;
     const hasPublishedEngagement = hasEngagement && !isEngagementDraft;
 
-    const hasEngagement = Boolean(savedSurvey?.engagement);
-    const isEngagementDraft = savedSurvey?.engagement?.status_id === EngagementStatus.Draft;
-    const hasPublishedEngagement = hasEngagement && !isEngagementDraft;
-
     useEffect(() => {
         loadSurvey();
     }, []);
