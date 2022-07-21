@@ -1,20 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Grid } from '@mui/material';
 import { EngagementBanner } from './EngagementBanner';
 import { ActionProvider } from './ActionContext';
 import { EngagementContent } from './EngagementContent';
 import SurveyBlock from './SurveyBlock';
+import EmailModal from './EmailModal';
 import { PreviewBanner } from './PreviewBanner';
 
 const Engagement = () => {
+    const [open, setOpen] = useState(false);
+
     return (
         <ActionProvider>
+            <EmailModal open={open} handleClose={() => setOpen(false)} />
             <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
                 <Grid item xs={12}>
                     <PreviewBanner />
                 </Grid>
                 <Grid item xs={12}>
-                    <EngagementBanner />
+                    <EngagementBanner openModal={() => setOpen(true)} />
                 </Grid>
                 <Grid
                     container
@@ -31,7 +35,7 @@ const Engagement = () => {
                         <EngagementContent />
                     </Grid>
                     <Grid item xs={12} lg={8}>
-                        <SurveyBlock />
+                        <SurveyBlock openModal={() => setOpen(true)} />
                     </Grid>
                 </Grid>
             </Grid>

@@ -8,6 +8,7 @@
     "@emotion/styled": "^11.8.1",
     "@formio/react": "^5.2.1",
     "@mui/icons-material": "^5.8.3",
+    "@mui/lab": "^5.0.0-alpha.91",
     "@mui/material": "^5.6.1",
     "@reduxjs/toolkit": "^1.8.1",
     "@testing-library/react": "^13.0.1",
