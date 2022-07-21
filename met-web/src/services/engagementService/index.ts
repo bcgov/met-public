@@ -14,7 +14,7 @@ export const fetchAll = async (dispatch: Dispatch<AnyAction>): Promise<Engagemen
 };
 
 export const getEngagement = async (engagementId: number): Promise<Engagement> => {
-    const url = replaceUrl(Endpoints.Engagement.GET, '<engagement_id>', String(engagementId));
+    const url = replaceUrl(Endpoints.Engagement.GET, 'engagement_id', String(engagementId));
     if (!engagementId || isNaN(Number(engagementId))) {
         return Promise.reject('Invalid Engagement Id ' + engagementId);
     }

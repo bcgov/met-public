@@ -12,7 +12,7 @@ export const fetchSurveys = async (params: FetchSurveyParams = {}): Promise<Surv
 };
 
 export const getSurvey = async (surveyId: number): Promise<Survey> => {
-    const url = replaceUrl(Endpoints.Survey.GET, '<survey_id>', String(surveyId));
+    const url = replaceUrl(Endpoints.Survey.GET, 'survey_id', String(surveyId));
     if (!surveyId || isNaN(Number(surveyId))) {
         return Promise.reject('Invalid Survey Id ' + surveyId);
     }
