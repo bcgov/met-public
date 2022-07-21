@@ -8,7 +8,7 @@ import EmailModal from './EmailModal';
 import { PreviewBanner } from './PreviewBanner';
 
 const Engagement = () => {
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
 
     return (
         <ActionProvider>

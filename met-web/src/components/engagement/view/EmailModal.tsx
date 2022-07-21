@@ -42,7 +42,7 @@ const EmailModal = ({ open, handleClose }: EmailModalProps) => {
                     />
                 </TabPanel>
                 <TabPanel value="success">
-                    <SuccessPanel handleClose={() => handleClose()} email={email} />
+                    <SuccessPanel handleClose={() => close()} email={email} />
                 </TabPanel>
                 <TabPanel value="error">
                     <FailurePanel tryAgain={() => setFormIndex('email')} handleClose={() => close()} email={email} />
