@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { Engagement } from 'models/engagement';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { getEngagement } from 'services/engagementService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -43,8 +43,9 @@ export const CreateSurveyContextProvider = ({ children }: { children: JSX.Elemen
     const [loading, setLoading] = useState(true);
     const [engagementToLink, setEngagementToLink] = useState<Engagement | null>(null);
     const [availableSurveys, setAvailableSurveys] = useState<Survey[] | null>(null);
-    const [searchParams, _setSearchParams] = useSearchParams();
 
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
     const engagementId = searchParams.get('engagementId');
 
     useEffect(() => {
