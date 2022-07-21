@@ -93,7 +93,6 @@ class SurveyService:
     @classmethod
     def validate_link_fields(cls, survey_id, engagement_id):
         """Validate all fields."""
-
         empty_fields = [not value for value in [survey_id, engagement_id]]
         if any(empty_fields):
             raise ValueError('Necessary fields for linking survey to an engagement were missing')

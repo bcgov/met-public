@@ -151,7 +151,7 @@ class SurveyLink(Resource):
             result = SurveyService().link(survey_id, engagement_id)
 
             if result.success:
-                return ActionResult.success(survey_id, "Survey successfully linked")
+                return ActionResult.success(survey_id, 'Survey successfully linked')
 
             return ActionResult.error('Error occurred while linking survey to engagement')
         except KeyError as err:
