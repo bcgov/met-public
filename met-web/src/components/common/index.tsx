@@ -104,7 +104,7 @@ interface RepeatedGridProps {
     children: React.ReactNode;
     [prop: string]: unknown;
 }
-export const RepeatedGrid = ({ times, children, ...rest }: RepeatedGridProps) => {
+export const RepeatedGrid = ({ times = 1, children, ...rest }: RepeatedGridProps) => {
     return (
         <>
             {[...Array(times)].map((_element, index) => (
