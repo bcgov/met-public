@@ -83,29 +83,26 @@ class SurveyService:
 
         if any(empty_fields):
             raise ValueError('Some required fields are empty')
-        
-        
+
 
     @classmethod
     def link(cls, survey_id, engagement_id):
         """Update survey."""
-        cls.validate_link_fields(survey_id, engagement_id)        
+        cls.validate_link_fields(survey_id, engagement_id)
         return Survey.link_survey(survey_id, engagement_id)
 
     @classmethod
     def validate_link_fields(cls, survey_id, engagement_id):
         """Validate all fields."""
-        
+
         empty_fields = [not value for value in [survey_id, engagement_id]]
         if any(empty_fields):
             raise ValueError('Necessary fields for linking survey to an engagement were missing')
-        
+
         survey = cls.get(survey_id)
-        
+
         if not survey:
             raise ValueError('Could not find survey ' + survey_id)
-            
+
         if survey.get('engagement', None):
             raise ValueError('Survey is already linked to an engagement')
-        
-
