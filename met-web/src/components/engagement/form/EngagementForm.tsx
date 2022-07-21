@@ -148,6 +148,8 @@ const EngagementForm = () => {
         });
 
         navigate(`/engagement/form/${engagement.id}`);
+
+        return engagement;
     };
 
     const handleSaveEngagement = () => {
