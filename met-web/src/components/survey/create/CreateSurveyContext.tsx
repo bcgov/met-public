@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { Engagement } from 'models/engagement';
-import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { getEngagement } from 'services/engagementService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
