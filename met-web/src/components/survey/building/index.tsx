@@ -12,7 +12,6 @@ import { MetPageGridContainer } from 'components/common';
 import FormBuilderSkeleton from './FormBuilderSkeleton';
 import { FormBuilderData } from 'components/Form/types';
 import { EngagementStatus } from 'constants/engagementStatus';
-import { createDefaultEngagement } from 'models/engagement';
 
 const SurveyFormBuilder = () => {
     const navigate = useNavigate();
