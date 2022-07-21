@@ -1,6 +1,6 @@
 
 """Service for submission management."""
-from met_api.constants.status import Status
+from met_api.constants.status import HearingStatus, Status
 from met_api.models.submission import Submission
 from met_api.models.survey import Survey
 from met_api.schemas.submission import SubmissionSchema
@@ -27,11 +27,6 @@ class SubmissionService:
     def create(cls, data: SubmissionSchema):
         """Create submission."""
         cls.validate_fields(data)
-        survey_id = data.get('survey_id', None)
-        survey = Survey.get_survey(survey_id)
-        if survey.engagement.status_id != Status.Published:
-            raise ValueError('Engagament not open to submissions')
-
         return Submission.create(data)
 
     @classmethod
@@ -48,3 +43,15 @@ class SubmissionService:
 
         if any(empty_fields):
             raise ValueError('Some required fields are empty')
+
+        survey_id = data.get('survey_id', None)
+        survey = Survey.get_survey(survey_id)
+        engagement = survey.get('engagement', None)
+        if not engagement:
+            raise ValueError('Survey not linked to an Engagement')
+        
+        hearing_status = engagement.get('hearing_status', None)
+
+        if hearing_status != HearingStatus.Open:
+            raise ValueError('Engagement not open to submissions')
+

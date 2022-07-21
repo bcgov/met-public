@@ -20,4 +20,10 @@ class Status(IntEnum):
 
     Draft = 1
     Published = 2
+
+class HearingStatus(IntEnum):
+    """Enum of engagement hearing status."""
+
+    Upcoming = 1
+    Open = 2
     Closed = 3

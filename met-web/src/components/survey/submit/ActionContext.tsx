@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { Survey } from 'models/survey';
+import { createDefaultSurvey, Survey } from 'models/survey';
 import { useAppDispatch } from 'hooks';
 import { useNavigate, useParams } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -11,33 +11,8 @@ interface SubmitSurveyContext {
     isLoading: boolean;
 }
 
-const initialSurvey = {
-    id: 0,
-    name: '',
-    responseCount: 0,
-    created_date: '',
-    engagement: {
-        id: 0,
-        name: '',
-        description: '',
-        rich_description: '',
-        status_id: 0,
-        start_date: '',
-        end_date: '',
-        published_date: '',
-        user_id: '',
-        created_date: '',
-        updated_date: '',
-        banner_url: '',
-        banner_filename: '',
-        content: '',
-        rich_content: '',
-        engagement_status: { id: 0, status_name: '' },
-        surveys: [],
-    },
-};
 export const ActionContext = createContext<SubmitSurveyContext>({
-    savedSurvey: initialSurvey,
+    savedSurvey: createDefaultSurvey(),
     isLoading: true,
 });
 
@@ -45,7 +20,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { surveyId } = useParams<SurveyParams>();
-    const [savedSurvey, setSavedSurvey] = useState<Survey>(initialSurvey);
+    const [savedSurvey, setSavedSurvey] = useState<Survey>(createDefaultSurvey());
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
