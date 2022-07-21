@@ -1,5 +1,5 @@
 import { Grid, Skeleton, Stack, Typography } from '@mui/material';
-import { MetPageGridContainer } from 'components/common';
+import { MetPageGridContainer, RepeatedGrid } from 'components/common';
 import React from 'react';
 
 export const OptionsFormSkeleton = () => {
@@ -25,30 +25,14 @@ export const OptionsFormSkeleton = () => {
                         <Skeleton />
                     </Typography>
                 </Grid>
-                <Grid item xs={12}>
+                <RepeatedGrid times={3} item xs={12}>
                     <Stack direction="row" spacing={1} alignItems="center">
                         <Skeleton variant="circular" width={30} height={30} />
                         <Typography variant="h6" width="100%">
                             <Skeleton />
                         </Typography>
                     </Stack>
-                </Grid>
-                <Grid item xs={12}>
-                    <Stack direction="row" spacing={1} alignItems="center">
-                        <Skeleton variant="circular" width={30} height={30} />
-                        <Typography variant="h6" width="100%">
-                            <Skeleton />
-                        </Typography>
-                    </Stack>
-                </Grid>
-                <Grid item xs={12}>
-                    <Stack direction="row" spacing={1} alignItems="center">
-                        <Skeleton variant="circular" width={30} height={30} />
-                        <Typography variant="h6" width="100%">
-                            <Skeleton />
-                        </Typography>
-                    </Stack>
-                </Grid>
+                </RepeatedGrid>
             </Grid>
         </MetPageGridContainer>
     );
