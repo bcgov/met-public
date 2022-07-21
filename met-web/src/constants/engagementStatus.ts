@@ -3,7 +3,7 @@ export enum EngagementStatus {
     Published = 2,
 }
 
-export enum HearingStatus {
+export enum SubmissionStatus {
     Upcoming = 1,
     Open = 2,
     Closed = 3,

@@ -22,8 +22,8 @@ class Status(IntEnum):
     Published = 2
 
 
-class HearingStatus(IntEnum):
-    """Enum of engagement hearing status."""
+class SubmissionStatus(IntEnum):
+    """Enum of engagement submission status."""
 
     Upcoming = 1
     Open = 2

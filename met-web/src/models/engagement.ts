@@ -1,6 +1,6 @@
 import { Survey } from './survey';
 import { Status } from './status';
-import { HearingStatus } from 'constants/engagementStatus';
+import { SubmissionStatus } from 'constants/engagementStatus';
 
 export interface Engagement {
     id: number;
@@ -20,7 +20,7 @@ export interface Engagement {
     banner_filename: string;
     surveys: Survey[];
     engagement_status: Status;
-    hearing_status: HearingStatus;
+    submission_status: SubmissionStatus;
 }
 
 export const createDefaultEngagement = (): Engagement => {
@@ -42,6 +42,6 @@ export const createDefaultEngagement = (): Engagement => {
         rich_content: '',
         engagement_status: { id: 0, status_name: '' },
         surveys: [],
-        hearing_status: HearingStatus.Upcoming,
+        submission_status: SubmissionStatus.Upcoming,
     };
 };

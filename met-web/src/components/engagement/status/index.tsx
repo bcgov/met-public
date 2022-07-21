@@ -1,6 +1,6 @@
 import React from 'react';
 import { Chip } from '@mui/material';
-import { HearingStatus } from 'constants/engagementStatus';
+import { SubmissionStatus } from 'constants/engagementStatus';
 
 const Open = () => {
     return <Chip label="Open" color="success" sx={{ fontWeight: 500 }} />;
@@ -14,16 +14,16 @@ const Upcoming = () => {
     return <Chip label="Upcoming" sx={{ fontWeight: 500, backgroundColor: '#FFC107', color: 'black' }} />;
 };
 
-export const EngagementStatusChip = ({ hearingStatus }: { hearingStatus: HearingStatus }) => {
-    switch (hearingStatus) {
-        case HearingStatus.Upcoming:
-            // Engagement is published but hearing start date is not due yet.
+export const EngagementStatusChip = ({ submissionStatus }: { submissionStatus: SubmissionStatus }) => {
+    switch (submissionStatus) {
+        case SubmissionStatus.Upcoming:
+            // Engagement is published but submission start date is not due yet.
             return <Upcoming />;
-        case HearingStatus.Open:
-            // Engagement is published and open for hearing.
+        case SubmissionStatus.Open:
+            // Engagement is published and open for submission.
             return <Open />;
-        case HearingStatus.Closed:
-            // Engagement is published but it's past the hearing date.
+        case SubmissionStatus.Closed:
+            // Engagement is published but it's past the submission date.
             return <Closed />;
         default:
             return null;

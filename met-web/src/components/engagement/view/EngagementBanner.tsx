@@ -4,7 +4,7 @@ import { Button, Grid, Skeleton } from '@mui/material';
 import { Banner } from '../banner/Banner';
 import { useNavigate } from 'react-router-dom';
 import { ConditionalComponent } from 'components/common';
-import { HearingStatus } from 'constants/engagementStatus';
+import { SubmissionStatus } from 'constants/engagementStatus';
 
 export const EngagementBanner = () => {
     const navigate = useNavigate();
@@ -12,7 +12,7 @@ export const EngagementBanner = () => {
 
     const surveyId = savedEngagement.surveys[0]?.id || '';
     const publishedStatus = savedEngagement.engagement_status.id === 2;
-    const isOpen = savedEngagement.hearing_status === HearingStatus.Open;
+    const isOpen = savedEngagement.submission_status === SubmissionStatus.Open;
     if (engagementLoading) {
         return <Skeleton variant="rectangular" width="100%" height="35em" />;
     }

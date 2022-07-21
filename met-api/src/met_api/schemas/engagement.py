@@ -5,7 +5,7 @@ Manages the engagement
 
 from datetime import datetime
 from marshmallow import EXCLUDE, Schema, fields
-from met_api.constants.status import HearingStatus, Status
+from met_api.constants.status import SubmissionStatus, Status
 
 from met_api.schemas.engagement_survey import EngagementSurveySchema
 from .engagement_status import EngagementStatusSchema
@@ -37,14 +37,14 @@ class EngagementSchema(Schema):
     engagement_status = fields.Nested(EngagementStatusSchema)
     surveys = fields.List(fields.Nested(EngagementSurveySchema))
 
-    hearing_status = fields.Method('get_hearing_status')
+    submission_status = fields.Method('get_submission_status')
 
-    def get_hearing_status(self, obj):
-        """Get the hearing status of the engagement."""
+    def get_submission_status(self, obj):
+        """Get the submission status of the engagement."""
         if obj.status_id == Status.Draft:
-            return HearingStatus.Upcoming
+            return SubmissionStatus.Upcoming
 
         if obj.start_date <= datetime.now() <= obj.end_date:
-            return HearingStatus.Open
+            return SubmissionStatus.Open
 
-        return HearingStatus.Closed
+        return SubmissionStatus.Closed

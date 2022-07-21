@@ -4,13 +4,13 @@ import { MetPaper } from '../../common';
 import './EngagementContent.scss';
 import { useNavigate } from 'react-router-dom';
 import { ActionContext } from './ActionContext';
-import { HearingStatus } from 'constants/engagementStatus';
+import { SubmissionStatus } from 'constants/engagementStatus';
 
 const SurveyBlock = () => {
     const { savedEngagement } = useContext(ActionContext);
     const navigate = useNavigate();
 
-    const isOpen = savedEngagement.hearing_status === HearingStatus.Open;
+    const isOpen = savedEngagement.submission_status === SubmissionStatus.Open;
     const surveyId = savedEngagement.surveys[0]?.id || '';
 
     return (
