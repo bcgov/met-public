@@ -4,12 +4,10 @@ Manages the engagement
 """
 
 from datetime import datetime
-from xmlrpc.client import DateTime
 from marshmallow import EXCLUDE, Schema, fields
 from met_api.constants.status import HearingStatus, Status
 
 from met_api.schemas.engagement_survey import EngagementSurveySchema
-from sqlalchemy import between
 from .engagement_status import EngagementStatusSchema
 
 
@@ -39,9 +37,10 @@ class EngagementSchema(Schema):
     engagement_status = fields.Nested(EngagementStatusSchema)
     surveys = fields.List(fields.Nested(EngagementSurveySchema))
 
-    hearing_status = fields.Method("get_hearing_status")
+    hearing_status = fields.Method('get_hearing_status')
 
     def get_hearing_status(self, obj):
+        """Get the hearing status of the engagement."""
         if obj.status_id == Status.Draft:
             return HearingStatus.Upcoming
 

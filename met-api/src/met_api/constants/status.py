@@ -21,6 +21,7 @@ class Status(IntEnum):
     Draft = 1
     Published = 2
 
+
 class HearingStatus(IntEnum):
     """Enum of engagement hearing status."""
 

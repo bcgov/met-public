@@ -1,6 +1,6 @@
 
 """Service for submission management."""
-from met_api.constants.status import HearingStatus, Status
+from met_api.constants.status import HearingStatus
 from met_api.models.submission import Submission
 from met_api.models.survey import Survey
 from met_api.schemas.submission import SubmissionSchema
@@ -49,9 +49,8 @@ class SubmissionService:
         engagement = survey.get('engagement', None)
         if not engagement:
             raise ValueError('Survey not linked to an Engagement')
-        
+
         hearing_status = engagement.get('hearing_status', None)
 
         if hearing_status != HearingStatus.Open:
             raise ValueError('Engagement not open to submissions')
-
