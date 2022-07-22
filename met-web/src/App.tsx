@@ -10,6 +10,7 @@ import LoggedInHeader from './components/layout/Header/LoggedInHeader';
 import UnauthenticatedRoutes from './routes/UnauthenticatedRoutes';
 import AuthenticatedRoutes from './routes/AuthenticatedRoutes';
 import { Notification } from 'components/common/notification';
+import PageViewTracker from 'routes/PageViewTracker';
 
 const App = () => {
     const drawerWidth = 240;
@@ -29,6 +30,7 @@ const App = () => {
     if (!isLoggedIn) {
         return (
             <Router>
+                <PageViewTracker />
                 <Notification />
                 <LoggedOutHeader />
                 <UnauthenticatedRoutes />
@@ -39,6 +41,7 @@ const App = () => {
     if (!isMediumScreen) {
         return (
             <Router>
+                <PageViewTracker />
                 <LoggedInHeader />
                 <Container>
                     <Toolbar />
@@ -51,6 +54,7 @@ const App = () => {
     return (
         <Router>
             <Box sx={{ display: 'flex' }}>
+                <PageViewTracker />
                 <LoggedInHeader drawerWidth={drawerWidth} />
                 <Notification />
                 <Box component="main" sx={{ flexGrow: 1, width: `calc(100% - ${drawerWidth}px)`, marginTop: '17px' }}>

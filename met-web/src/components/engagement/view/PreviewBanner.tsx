@@ -10,63 +10,55 @@ export const PreviewBanner = () => {
     const navigate = useNavigate();
     const { engagementLoading, savedEngagement, publishEngagement } = useContext(ActionContext);
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
-
+    const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
     const engagementId = savedEngagement.id || '';
+
+    const handlePublishEngagement = async () => {
+        await publishEngagement({
+            ...savedEngagement,
+            status_id: EngagementStatus.Published,
+            published_date: new Date().toUTCString(),
+            surveys: [],
+        });
+    };
+
+    const handleClosePreview = async () => {
+        navigate(`/`);
+    };
+
     if (engagementLoading) {
         return <Skeleton variant="rectangular" width="100%" height="10em" />;
     }
-    const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
 
-    const validate = () => {
-        const errors = {
-            status: savedEngagement.status_id !== EngagementStatus.Draft,
-        };
-
-        return Object.values(errors).some((isError: unknown) => isError);
-    };
-
-    const handlePublishEngagement = async () => {
-        const hasErrors = validate();
-
-        if (!hasErrors) {
-            const engagement = await publishEngagement({
-                ...savedEngagement,
-                status_id: EngagementStatus.Published,
-                published_date: new Date().toUTCString(),
-                surveys: [],
-            });
-
-            navigate(`/`);
-
-            return engagement;
-        }
-    };
+    if (!isLoggedIn) {
+        return null;
+    }
 
     return (
-        <ConditionalComponent condition={isDraft && isLoggedIn}>
-            <Box
-                sx={{
-                    backgroundColor: 'secondary.light',
-                }}
-            >
-                <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start" padding={4}>
-                    <Grid item xs={12}>
-                        <Typography variant="h4">Preview Engagement</Typography>
-                        <Typography variant="body2">
-                            This engagement must be published. Please publish it when ready.
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12} container direction="row" justifyContent="flex-end">
-                        <Box
-                            sx={{
-                                backgroundColor: 'background.paper',
-                                borderRadius: '4px',
-                            }}
-                        >
-                            <Button variant="outlined" onClick={() => navigate(`/engagement/form/${engagementId}`)}>
-                                Edit Enagagement
-                            </Button>
-                        </Box>
+        <Box
+            sx={{
+                backgroundColor: 'secondary.light',
+            }}
+        >
+            <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start" padding={4}>
+                <Grid item xs={12}>
+                    <Typography variant="h4">Preview Engagement{isDraft ? '' : ' - Published'}</Typography>
+                    <Typography variant="body2" minHeight={25}>
+                        {isDraft ? 'This engagement must be published. Please publish it when ready.' : ''}
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} container direction="row" justifyContent="flex-end">
+                    <Box
+                        sx={{
+                            backgroundColor: 'background.paper',
+                            borderRadius: '4px',
+                        }}
+                    >
+                        <Button variant="outlined" onClick={() => navigate(`/engagement/form/${engagementId}`)}>
+                            Edit Engagement
+                        </Button>
+                    </Box>
+                    <ConditionalComponent condition={isDraft}>
                         <Button
                             variant="contained"
                             sx={{ marginLeft: '1em' }}
@@ -74,9 +66,14 @@ export const PreviewBanner = () => {
                         >
                             Publish
                         </Button>
-                    </Grid>
+                    </ConditionalComponent>
+                    <ConditionalComponent condition={!isDraft}>
+                        <Button variant="contained" sx={{ marginLeft: '1em' }} onClick={() => handleClosePreview()}>
+                            Close Preview
+                        </Button>
+                    </ConditionalComponent>
                 </Grid>
-            </Box>
-        </ConditionalComponent>
+            </Grid>
+        </Box>
     );
 };

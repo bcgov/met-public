@@ -52,6 +52,7 @@ export const AddSurveyBlock = () => {
                         {savedEngagement.surveys.map((survey) => {
                             return (
                                 <MetWidget
+                                    key={survey.id}
                                     title={survey.name}
                                     onEditClick={() => navigate(`/survey/build/${survey.id}`)}
                                 />
