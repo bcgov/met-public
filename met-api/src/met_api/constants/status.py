@@ -20,4 +20,11 @@ class Status(IntEnum):
 
     Draft = 1
     Published = 2
+
+
+class SubmissionStatus(IntEnum):
+    """Enum of engagement submission status."""
+
+    Upcoming = 1
+    Open = 2
     Closed = 3

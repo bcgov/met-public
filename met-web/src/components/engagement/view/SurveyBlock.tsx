@@ -3,11 +3,13 @@ import { Button, Grid, Typography } from '@mui/material';
 import { MetPaper } from '../../common';
 import './EngagementContent.scss';
 import { ActionContext } from './ActionContext';
+import { SubmissionStatus } from 'constants/engagementStatus';
 import { SurveyBlockProps } from './types';
 
 const SurveyBlock = ({ openModal }: SurveyBlockProps) => {
     const { savedEngagement } = useContext(ActionContext);
 
+    const isOpen = savedEngagement.submission_status === SubmissionStatus.Open;
     const surveyId = savedEngagement.surveys[0]?.id || '';
 
     return (
@@ -24,7 +26,7 @@ const SurveyBlock = ({ openModal }: SurveyBlockProps) => {
                     </Typography>
                 </Grid>
                 <Grid item xs={12} container justifyContent="flex-end" direction="row">
-                    <Button variant="contained" disabled={!surveyId} onClick={() => openModal}>
+                    <Button variant="contained" disabled={!surveyId || !isOpen} onClick={() => openModal}>
                         Take me to the survey
                     </Button>
                 </Grid>

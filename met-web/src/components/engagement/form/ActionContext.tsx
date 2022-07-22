@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect } from 'react';
 import { postEngagement, putEngagement, getEngagement } from '../../../services/engagementService';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EngagementContext, EngagementForm, EngagementParams } from './types';
-import { Engagement } from '../../../models/engagement';
+import { createDefaultEngagement, Engagement } from '../../../models/engagement';
 import { saveDocument } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
@@ -16,25 +16,7 @@ export const ActionContext = createContext<EngagementContext>({
         return Promise.reject();
     },
     isSaving: false,
-    savedEngagement: {
-        id: 0,
-        name: '',
-        description: '',
-        rich_description: '',
-        status_id: 0,
-        start_date: '',
-        end_date: '',
-        published_date: '',
-        user_id: '',
-        created_date: '',
-        updated_date: '',
-        banner_url: '',
-        banner_filename: '',
-        content: '',
-        rich_content: '',
-        engagement_status: { id: 0, status_name: '' },
-        surveys: [],
-    },
+    savedEngagement: createDefaultEngagement(),
     engagementId: 'create',
     loadingSavedEngagement: true,
     handleAddBannerImage: (_files: File[]) => {
@@ -49,25 +31,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [isSaving, setSaving] = useState(false);
     const [loadingSavedEngagement, setLoadingSavedEngagement] = useState(true);
 
-    const [savedEngagement, setSavedEngagement] = useState<Engagement>({
-        id: 0,
-        name: '',
-        description: '',
-        rich_description: '',
-        status_id: 0,
-        start_date: '',
-        end_date: '',
-        published_date: '',
-        user_id: '',
-        created_date: '',
-        updated_date: '',
-        banner_url: '',
-        banner_filename: '',
-        content: '',
-        rich_content: '',
-        engagement_status: { id: 0, status_name: '' },
-        surveys: [],
-    });
+    const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
 
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');

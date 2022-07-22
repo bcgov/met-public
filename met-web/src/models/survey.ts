@@ -1,5 +1,6 @@
 import { FormBuilderData } from 'components/Form/types';
-import { Engagement } from './engagement';
+import { createDefaultEngagement, Engagement } from './engagement';
+
 export interface Survey {
     id: number;
     name: string;
@@ -9,3 +10,13 @@ export interface Survey {
     form_json?: FormBuilderData;
     comments?: unknown;
 }
+
+export const createDefaultSurvey = (): Survey => {
+    return {
+        id: 0,
+        name: '',
+        responseCount: 0,
+        created_date: '',
+        engagement: createDefaultEngagement(),
+    };
+};

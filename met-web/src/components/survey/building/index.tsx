@@ -18,7 +18,6 @@ const SurveyFormBuilder = () => {
     const dispatch = useAppDispatch();
     const { surveyId } = useParams<SurveyParams>();
     const [savedSurvey, setSavedSurvey] = useState<Survey | null>(null);
-
     const [formData, setFormData] = useState<unknown>(null);
     const [loading, setLoading] = useState(true);
 

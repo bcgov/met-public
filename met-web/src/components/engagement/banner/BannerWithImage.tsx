@@ -6,7 +6,7 @@ import { BannerProps } from '../view/types';
 import { EngagementStatusChip } from '../status';
 
 const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
-    const { description, name, start_date, end_date, banner_url, engagement_status } = savedEngagement;
+    const { description, name, start_date, end_date, banner_url, submission_status } = savedEngagement;
     const [imageError, setImageError] = useState(false);
 
     if (imageError) {
@@ -79,7 +79,7 @@ const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
                         <Grid item xs={12}>
                             <Stack direction="row" spacing={1}>
                                 <Typography variant="subtitle1">status:</Typography>
-                                <EngagementStatusChip status_id={engagement_status.id} />
+                                <EngagementStatusChip submissionStatus={submission_status} />
                             </Stack>
                         </Grid>
                         {children}
