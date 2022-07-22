@@ -32,12 +32,12 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
     def get_survey(cls, survey_id) -> SurveySchema:
         """Get a survey."""
         survey_schema = SurveySchema()
-        data = db.session.query(Survey)\
+        survey = db.session.query(Survey)\
             .outerjoin(Engagement)\
             .outerjoin(EngagementStatus)\
             .filter(Survey.id == survey_id)\
             .first()
-        return survey_schema.dump(data)
+        return survey_schema.dump(survey)
 
     @classmethod
     def get_open_survey(cls, survey_id) -> SurveySchema:
@@ -47,21 +47,21 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
             .join(Engagement).filter_by(status_id=Status.Published)\
             .join(EngagementStatus)\
             .first()
-        return survey_schema.dump(data)
+        return survey_schema.dump(survey)
 
     @classmethod
     def get_all_surveys(cls) -> List[SurveySchema]:
         """Get all surveys."""
         survey_schema = SurveySchema(many=True)
-        data = db.session.query(Survey).join(Engagement, isouter=True).join(EngagementStatus, isouter=True).all()
-        return survey_schema.dump(data)
+        surveys = db.session.query(Survey).join(Engagement, isouter=True).join(EngagementStatus, isouter=True).all()
+        return survey_schema.dump(surveys)
 
     @classmethod
     def get_all_unlinked_surveys(cls) -> List[SurveySchema]:
         """Get all surveys that are unlinked to engagement."""
         survey_schema = SurveySchema(many=True)
-        data = db.session.query(Survey).filter_by(engagement_id=None).all()
-        return survey_schema.dump(data)
+        surveys = db.session.query(Survey).filter_by(engagement_id=None).all()
+        return survey_schema.dump(surveys)
 
     @classmethod
     def create_survey(cls, survey: SurveySchema) -> DefaultMethodResult:
@@ -82,7 +82,7 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
 
     @classmethod
     def update_survey(cls, survey: SurveySchema) -> DefaultMethodResult:
-        """Update engagement."""
+        """Update survey."""
         update_fields = dict(
             form_json=survey.get('form_json', None),
             updated_date=survey.get('updated_date', None),
@@ -99,14 +99,11 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
 
     @classmethod
     def link_survey(cls, survey_id, engagement_id) -> DefaultMethodResult:
-        """Update engagement."""
-        update_fields = dict(
-            engagement_id=engagement_id,
-        )
+        """Link survey to engagement."""
         query = Survey.query.filter_by(id=survey_id)
-        record = query.first()
-        if not record:
+        survey = query.first()
+        if not survey:
             return DefaultMethodResult(False, 'Survey Not Found', survey_id)
-        query.update(update_fields)
+        survey.engagement_id = engagement_id
         db.session.commit()
         return DefaultMethodResult(True, 'Survey Updated', survey_id)
