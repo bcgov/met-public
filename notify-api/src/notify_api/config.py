@@ -50,15 +50,10 @@ class _Config(object):  # pylint: disable=too-few-public-methods
     """Base class configuration that should set reasonable defaults for all the other configurations. """
     PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
-    # SMS variables
-    SMS_USE_GC_NOTIFY = os.getenv('SMS_USE_GC_NOTIFY', 'true').lower() == 'true'
     # GC Notify
     GC_NOTIFY_API_KEY = os.getenv('GC_NOTIFY_API_KEY')
     GC_NOTIFY_API_BASE_URL = os.getenv('GC_NOTIFY_API_BASE_URL')
-    GC_NOTIFY_SMS_TEMPLATE_ID = os.getenv('GC_NOTIFY_SMS_TEMPLATE_ID')
-    SMS_APPOINTMENT_APP_URL = os.getenv('SMS_APPOINTMENT_APP_URL')
-    APPOINTMENT_APP_URL = os.getenv('APPOINTMENT_APP_URL')
-
+   
     #   Set up OIDC variables.
     SECRET_KEY = os.getenv('SECRET_KEY')
 
