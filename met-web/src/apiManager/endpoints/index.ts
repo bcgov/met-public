@@ -5,7 +5,7 @@ const Endpoints = {
         GET_ALL: `${AppConfig.apiUrl}/engagement/`,
         CREATE: `${AppConfig.apiUrl}/engagement/`,
         UPDATE: `${AppConfig.apiUrl}/engagement/`,
-        GET: `${AppConfig.apiUrl}/engagement/<engagement_id>`,
+        GET: `${AppConfig.apiUrl}/engagement/engagement_id`,
     },
     User: {
         CREATE_UPDATE: `${AppConfig.apiUrl}/user/`,
@@ -18,7 +18,7 @@ const Endpoints = {
         CREATE: `${AppConfig.apiUrl}/survey/`,
         UPDATE: `${AppConfig.apiUrl}/survey/`,
         LINK_TO_ENGAGEMENT: `${AppConfig.apiUrl}/survey/survey_id/link/engagement/engagement_id`,
-        GET: `${AppConfig.apiUrl}/survey/<survey_id>`,
+        GET: `${AppConfig.apiUrl}/survey/survey_id`,
     },
     SurveySubmission: {
         CREATE: `${AppConfig.apiUrl}/submission/`,

@@ -52,6 +52,17 @@ export const CreateSurveyContextProvider = ({ children }: { children: JSX.Elemen
         fetchEngagementToLink();
     }, [engagementId]);
 
+    const handleEngagement = (engagement: Engagement) => {
+        if (engagement.surveys?.length > 0) {
+            dispatch(openNotification({ severity: 'error', text: `Engagement ${engagement.id} already has a survey` }));
+            navigate(-1);
+            return;
+        }
+
+        setEngagementToLink(engagement);
+        setLoading(false);
+    };
+
     const fetchEngagementToLink = async () => {
         if (!engagementId || isNaN(Number(engagementId))) {
             setLoading(false);
@@ -59,8 +70,7 @@ export const CreateSurveyContextProvider = ({ children }: { children: JSX.Elemen
         }
         try {
             const engagement = await getEngagement(Number(engagementId));
-            setEngagementToLink(engagement);
-            setLoading(false);
+            handleEngagement(engagement);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error fetching the linked engagement' }));
             navigate(-1);
