@@ -24,7 +24,7 @@ const SurveyBlock = ({ openModal }: SurveyBlockProps) => {
                     </Typography>
                 </Grid>
                 <Grid item xs={12} container justifyContent="flex-end" direction="row">
-                    <Button variant="contained" disabled={!surveyId} onClick={() => openModal}>
+                    <Button variant="contained" disabled={!surveyId} onClick={openModal}>
                         Take me to the survey
                     </Button>
                 </Grid>
