@@ -1,9 +1,9 @@
 import React from 'react';
 import BannerWithImage from './BannerWithImage';
 import BannerWithoutImage from './BannerWithoutImage';
-import { EngagementBannerProps } from '../view/types';
+import { BannerProps } from '../view/types';
 
-export const Banner = ({ savedEngagement, children }: EngagementBannerProps) => {
+export const Banner = ({ savedEngagement, children }: BannerProps) => {
     const imageExists = !!savedEngagement.banner_url;
 
     if (imageExists) {

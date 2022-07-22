@@ -6,3 +6,8 @@ export function getErrorMessage(error: unknown) {
     if (error instanceof Error) return error.message;
     return String(error);
 }
+
+export function checkEmail(email: string) {
+    const filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    return filter.test(email);
+}
