@@ -1,28 +1,28 @@
-"""Survey model class.
+"""survey model class.
 
-Manages the Survey
+Manages the survey
 """
 from datetime import datetime
+from sqlalchemy import ForeignKey
 from .db import db
 
 
-class Survey(db.Model):  # pylint: disable=too-few-public-methods
-    """Definition of the Survey entity."""
+class survey(db.Model):  # pylint: disable=too-few-public-methods
+    """Definition of the survey entity."""
 
     __bind_key__ = 'met_db_analytics'
     __tablename__ = 'survey'
     
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(50), index=True)
-    engagement_id = db.Column(db.Integer)
+    survey_id = db.Column(db.Integer, primary_key=True, nullable=False)
+    survey_name = db.Column(db.String(50))
+    engagement_id = db.Column(db.Integer, ForeignKey('engagement.engagement_id', ondelete='CASCADE'))
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
-    created_by = db.Column(db.String(50))
-    updated_by = db.Column(db.String(50))
-    user_id = db.Column(db.String(50))
+    version = db.Column(db.String(50))
+    active_flag = db.Column(db.String(1))
 
     @classmethod
-    def get_all(cls):
-        """Get all surveys."""
-        return db.session.query(Survey).all()
+    def get_all(cls): 
+        """Get all survey."""
+        return db.session.query(survey).all()
