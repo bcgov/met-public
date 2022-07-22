@@ -20,7 +20,7 @@ export const EngagementBanner = ({ openModal }: EngagementBannerProps) => {
         <Banner savedEngagement={savedEngagement}>
             <ConditionalComponent condition={!!surveyId && publishedStatus && isOpen}>
                 <Grid item xs={12} container direction="row" justifyContent="flex-end">
-                    <Button variant="contained" onClick={() => openModal}>
+                    <Button variant="contained" onClick={openModal}>
                         Share your thoughts
                     </Button>
                 </Grid>
