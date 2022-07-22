@@ -6,7 +6,7 @@ import { BannerProps } from '../view/types';
 import { EngagementStatusChip } from '../status';
 
 const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
-    const { description, name, start_date, end_date, banner_url, engagement_status } = savedEngagement;
+    const { description, name, start_date, end_date, banner_url, submission_status } = savedEngagement;
     const [imageError, setImageError] = useState(false);
 
     if (imageError) {
