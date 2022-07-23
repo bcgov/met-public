@@ -1,12 +1,12 @@
 /* tslint:disable */
 import { Components } from 'formiojs';
-const ParentComponent = (Components as any).components.textfield;
+const ParentComponent = (Components as any).components.radio;
 import editForm from './Component.form';
 
 import { Constants } from '../Common/Constants';
 
-const ID = 'simpletextfield';
-const DISPLAY = 'Single Line Answer';
+const ID = 'simpleradios';
+const DISPLAY = 'Radio Button';
 
 export default class Component extends (ParentComponent as any) {
     static schema(...extend) {
@@ -15,20 +15,9 @@ export default class Component extends (ParentComponent as any) {
                 type: ID,
                 label: DISPLAY,
                 key: ID,
-                mask: false,
-                inputType: 'text',
-                inputFormat: 'plain',
-                inputMask: '',
-                tableView: false,
-                spellcheck: true,
-                widget: {
-                    type: 'input',
-                },
-                validate: {
-                    minLength: '',
-                    maxLength: '',
-                    pattern: '',
-                },
+                inline: false,
+                values: [{ label: '', value: '' }],
+                fieldSet: false,
             },
             ...extend,
         );
@@ -40,8 +29,8 @@ export default class Component extends (ParentComponent as any) {
         return {
             title: DISPLAY,
             group: 'simple',
-            icon: 'horizontal-rule',
-            weight: 1,
+            icon: 'dot-circle-o',
+            weight: 6,
             documentation: Constants.DEFAULT_HELP_LINK,
             schema: Component.schema(),
         };

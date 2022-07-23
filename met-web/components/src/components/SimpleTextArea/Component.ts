@@ -1,12 +1,12 @@
 /* tslint:disable */
 import { Components } from 'formiojs';
-const ParentComponent = (Components as any).components.textfield;
+const ParentComponent = (Components as any).components.textarea;
 import editForm from './Component.form';
 
 import { Constants } from '../Common/Constants';
 
-const ID = 'simpletextfield';
-const DISPLAY = 'Single Line Answer';
+const ID = 'simpletextarea';
+const DISPLAY = 'Multiple Lines Answer';
 
 export default class Component extends (ParentComponent as any) {
     static schema(...extend) {
@@ -15,19 +15,15 @@ export default class Component extends (ParentComponent as any) {
                 type: ID,
                 label: DISPLAY,
                 key: ID,
-                mask: false,
-                inputType: 'text',
-                inputFormat: 'plain',
-                inputMask: '',
-                tableView: false,
+                rows: 3,
+                wysiwyg: false,
+                editor: '',
                 spellcheck: true,
-                widget: {
-                    type: 'input',
-                },
+                fixedSize: true,
+                inputFormat: 'plain',
                 validate: {
-                    minLength: '',
-                    maxLength: '',
-                    pattern: '',
+                    minWords: '',
+                    maxWords: '',
                 },
             },
             ...extend,
@@ -40,8 +36,8 @@ export default class Component extends (ParentComponent as any) {
         return {
             title: DISPLAY,
             group: 'simple',
-            icon: 'horizontal-rule',
-            weight: 1,
+            icon: 'grip-lines',
+            weight: 2,
             documentation: Constants.DEFAULT_HELP_LINK,
             schema: Component.schema(),
         };

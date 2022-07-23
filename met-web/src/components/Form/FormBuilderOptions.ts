@@ -4,18 +4,18 @@ export const formioOptions = {
         advanced: false,
         data: false,
         premium: false,
-        layout: {
-            components: {
-                table: true,
-            },
-        },
+        basic: false,
+        layout: false,
         entryControls: {
             title: 'Basic Fields',
             weight: 20,
             components: {
                 simpletextfield: true,
-                simpletime: true,
-                checkmatrix: true,
+                simpletextarea: true,
+                simpleradios: true,
+                simplecheckboxes: true,
+                header: true,
+                paragraph: true,
             },
         },
     },
