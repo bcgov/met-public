@@ -18,7 +18,7 @@ This module is being invoked from a job and it sends SMS reminders to customers.
 import os
 from notifications_python_client import NotificationsAPIClient
 
-from .providers import EmailBaseService
+from . import EmailBaseService
 
 
 class EmailGCNotify(EmailBaseService):
