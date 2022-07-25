@@ -27,7 +27,7 @@ export default class Component extends (ParentComponent as any) {
         return {
             title: DISPLAY,
             group: 'simple',
-            icon: 'heading',
+            icon: 'paragraph',
             weight: 22,
             documentation: Constants.DEFAULT_HELP_LINK,
             schema: Component.schema(),

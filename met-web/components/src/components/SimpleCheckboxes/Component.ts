@@ -29,7 +29,7 @@ export default class Component extends (ParentComponent as any) {
         return {
             title: DISPLAY,
             group: 'simple',
-            icon: 'square-check',
+            icon: 'check-square-o',
             weight: 5,
             documentation: Constants.DEFAULT_HELP_LINK,
             schema: Component.schema(),

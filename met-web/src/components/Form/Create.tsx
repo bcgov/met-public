@@ -1,5 +1,5 @@
 import React from 'react';
-import { selectError, FormEdit } from '@formio/react';
+import { selectError, FormBuilder } from '@formio/react';
 import { useSelector } from 'react-redux';
 import { Grid, Typography } from '@mui/material';
 import { formioOptions } from './FormBuilderOptions';
@@ -16,13 +16,7 @@ const Create = () => {
                 <Typography variant="h4">Create Form</Typography>
             </Grid>
             <Grid item xs={12}>
-                <FormEdit
-                    form={{ display: 'form' }}
-                    saveText={'Create Form'}
-                    errors={errors}
-                    options={formioOptions}
-                    saveForm={handleSaveForm}
-                />
+                <FormBuilder form={{ display: 'form' }} options={formioOptions} />
             </Grid>
         </Grid>
     );

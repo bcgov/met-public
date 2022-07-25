@@ -6,8 +6,8 @@ export const formioOptions = {
         premium: false,
         basic: false,
         layout: false,
-        entryControls: {
-            title: 'Basic Fields',
+        custom: {
+            title: 'Basic',
             weight: 20,
             components: {
                 simpletextfield: true,
@@ -17,6 +17,7 @@ export const formioOptions = {
                 header: true,
                 paragraph: true,
             },
+            default: true,
         },
     },
 };

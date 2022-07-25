@@ -36,7 +36,7 @@ export default class Component extends (ParentComponent as any) {
         return {
             title: DISPLAY,
             group: 'simple',
-            icon: 'grip-lines',
+            icon: 'comment-o',
             weight: 2,
             documentation: Constants.DEFAULT_HELP_LINK,
             schema: Component.schema(),
