@@ -14,9 +14,11 @@ class user_feedback(db.Model):  # pylint: disable=too-few-public-methods
     __tablename__ = 'user_feedback'
     
 
-    user_id = db.Column(db.Integer, primary_key=True, nullable=False)
-    survey_id = db.Column(db.Integer, ForeignKey('survey.survey_id', ondelete='CASCADE'), primary_key=True, nullable=False)
-    comments = db.Column(db.String(5000))
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
+    survey_id = db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), primary_key=True, nullable=False)
+    engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), primary_key=True, nullable=False)
+    user_id = db.Column(db.Integer, ForeignKey('user.id', ondelete='CASCADE'), primary_key=True, nullable=False)
+    comment = db.Column(db.String(5000))
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
     sentiment_analysis = db.Column(db.String(100))

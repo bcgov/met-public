@@ -14,9 +14,9 @@ class survey(db.Model):  # pylint: disable=too-few-public-methods
     __tablename__ = 'survey'
     
 
-    survey_id = db.Column(db.Integer, primary_key=True, nullable=False)
-    survey_name = db.Column(db.String(50))
-    engagement_id = db.Column(db.Integer, ForeignKey('engagement.engagement_id', ondelete='CASCADE'))
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    name = db.Column(db.String(50))
+    engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'))
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
     version = db.Column(db.String(50))

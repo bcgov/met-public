@@ -14,12 +14,12 @@ class response_type_textfield(db.Model):  # pylint: disable=too-few-public-metho
     __tablename__ = 'response_type_textfield'
     
 
-    response_id = db.Column(db.Integer, primary_key=True, nullable=False)
-    survey_id = db.Column(db.Integer, ForeignKey('survey.survey_id', ondelete='CASCADE'), primary_key=True, nullable=False)
-    engagement_id = db.Column(db.Integer, ForeignKey('engagement.engagement_id', ondelete='CASCADE'), primary_key=True, nullable=False)
-    user_id = db.Column(db.Integer, ForeignKey('user_table.user_id', ondelete='CASCADE'), primary_key=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    survey_id = db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), primary_key=True, nullable=False)
+    engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), primary_key=True, nullable=False)
+    user_id = db.Column(db.Integer, ForeignKey('user.id', ondelete='CASCADE'), primary_key=True, nullable=False)
     request_key = db.Column(db.String(100))
-    response_value = db.Column(db.String(5000))
+    value = db.Column(db.String(5000))
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
     active_flag = db.Column(db.String(1))

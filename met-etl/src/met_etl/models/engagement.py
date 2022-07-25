@@ -13,8 +13,8 @@ class engagement(db.Model):  # pylint: disable=too-few-public-methods
     __tablename__ = 'engagement'
     
 
-    engagement_id = db.Column(db.Integer, primary_key=True, nullable=False)
-    engagement_name = db.Column(db.String(50))
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    name = db.Column(db.String(50))
     start_date = db.Column(db.DateTime, default=datetime.utcnow)
     end_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
     status_name = db.Column(db.String(50))
