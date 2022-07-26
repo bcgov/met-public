@@ -28,6 +28,7 @@ const SurveyBlock = () => {
                     <Button
                         variant="contained"
                         disabled={!surveyId}
+                        data-testid="SurveyBlock/take-me-to-survey-button"
                         onClick={() => navigate(`/survey/submit/${surveyId}`)}
                     >
                         Take me to the survey

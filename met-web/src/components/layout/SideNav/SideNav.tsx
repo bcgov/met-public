@@ -24,7 +24,7 @@ const DrawerBox = ({ navigate }: DrawerBoxProps) => {
             <List sx={{ paddingTop: '2em' }}>
                 {Routes.map((route) => (
                     <ListItem key={route.name}>
-                        <ListItemButton onClick={() => navigation(route.path)}>
+                        <ListItemButton data-testid={`SideNav/${route}-button`} onClick={() => navigation(route.path)}>
                             <ListItemText
                                 primaryTypographyProps={{
                                     variant: 'h6',

@@ -19,7 +19,11 @@ export const EngagementBanner = () => {
         <Banner savedEngagement={savedEngagement}>
             <ConditionalComponent condition={!!surveyId && publishedStatus}>
                 <Grid item xs={12} container direction="row" justifyContent="flex-end">
-                    <Button variant="contained" onClick={() => navigate(`/survey/submit/${surveyId}`)}>
+                    <Button
+                        data-testid="EngagementBanner/share-your-thoughts-button"
+                        variant="contained"
+                        onClick={() => navigate(`/survey/submit/${surveyId}`)}
+                    >
                         Share your thoughts
                     </Button>
                 </Grid>

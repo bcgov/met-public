@@ -1,21 +1,46 @@
-import { render, cleanup } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import '@testing-library/jest-dom';
 import SideNav from '../../../src/components/layout/SideNav/SideNav';
-import { createRoot } from 'react-dom/client';
-import { ListItemButton, List, ListItem, ListItemText, Box, Drawer, Toolbar } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import ProviderShell from './ProviderShell';
+import { setupEnv } from './setEnvVars';
 import { Routes } from '../../../src/components/layout/SideNav/SideNavElements';
-import { Palette } from '../../../src/styles/Theme';
-import { DrawerBoxProps, SideNavProps } from '../../../src/components/layout/SideNav/types';
-
-afterEach(cleanup);
 
 const drawerWidth = 240;
 
-it('renders without crashing', () => {
-    const container = document.getElementById('root');
-    const root = createRoot(container as Element);
-    root.render(<SideNav isMediumScreen={false} open={true} drawerWidth={drawerWidth} />);
+test('Load SideNav', async () => {
+    // Arrange
+    // Act
+    // Assert
+    setupEnv();
+    render(
+        <ProviderShell>
+            <SideNav isMediumScreen={false} open={true} drawerWidth={drawerWidth} />
+        </ProviderShell>,
+    );
+
+    Routes.forEach((route, index) => {
+        fireEvent.click(screen.getByTestId(`SideNav/${route}-button`));
+    }),
+        // wait until the `get` request promise resolves and
+        // the component calls setState and re-renders.
+        // `waitFor` waits until the callback doesn't throw an error
+
+        await waitFor(() =>
+            // getByRole throws an error if it cannot find an element
+            Routes.forEach((route, index) => {
+                screen.getByTestId(`SideNav/${route}-button`);
+            }),
+        );
+    // assert that the alert message is correct using
+    // toHaveTextContent, a custom matcher from jest-dom.
+    Routes.forEach((route, index) => {
+        expect(screen.getByTestId(`SideNav/${route}-button`)).toHaveTextContent('Logout');
+    });
+
+    // assert that the button is not disabled using
+    // toBeDisabled, a custom matcher from jest-dom.
+    Routes.forEach((route, index) => {
+        expect(screen.getByTestId(`SideNav/${route}-button`)).not.toBeDisabled();
+    });
 });

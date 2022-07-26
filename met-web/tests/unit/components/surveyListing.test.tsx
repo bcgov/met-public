@@ -1,29 +1,35 @@
-import { render, cleanup } from '@testing-library/react';
-import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
+import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
+import React from 'react';
 import '@testing-library/jest-dom';
 import SurveyListing from '../../../src/components/survey/listing';
-import { createRoot } from 'react-dom/client';
-import MetTable from '../../../src/components/common/Table';
-import Grid from '@mui/material/Grid';
-import { Link } from 'react-router-dom';
-import { MetPageGridContainer } from '../../../src/components/common';
-import { Survey } from '../../../src/models/survey';
-import { HeadCell } from '../../../src/components/common/Table/types';
-import { formatDate } from '../../../src/components/common/dateHelper';
-import { Link as MuiLink } from '@mui/material';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import SearchIcon from '@mui/icons-material/Search';
-import Stack from '@mui/material/Stack';
-import { fetchAllSurveys } from '../../../src/services/surveyService';
-import { useAppDispatch } from '../../../src/hooks';
-import { openNotification } from '../../../src/services/notificationService/notificationSlice';
+import ProviderShell from './ProviderShell';
+import { setupEnv } from './setEnvVars';
 
-afterEach(cleanup);
+test('render SurveyListing', async () => {
+    // Arrange
+    // Act
+    // Assert
+    setupEnv();
+    render(
+        <ProviderShell>
+            <SurveyListing />
+        </ProviderShell>,
+    );
 
-it('renders without crashing', () => {
-    const container = document.getElementById('root');
-    const root = createRoot(container as Element);
-    root.render(<SurveyListing />);
+    // wait until the `get` request promise resolves and
+    // the component calls setState and re-renders.
+    // `waitFor` waits until the callback doesn't throw an error
+
+    await waitFor(() =>
+        // getByRole throws an error if it cannot find an element
+
+        screen.getByTestId('SurveyListing/search-button'),
+    );
+    // assert that the alert message is correct using
+    // toHaveTextContent, a custom matcher from jest-dom.
+    expect(screen.getByTestId('SurveyListing/search-button'));
+
+    // assert that the button is not disabled using
+    // toBeDisabled, a custom matcher from jest-dom.
+    expect(screen.getByTestId('SurveyListing/search-button')).not.toBeDisabled();
 });

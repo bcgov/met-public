@@ -75,7 +75,10 @@ const config: Config.InitialOptions = {
     moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json'],
 
     // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-    // moduleNameMapper: {},
+    moduleNameMapper: {
+        formiojs: '<rootDir>/node_modules/formiojs/providers/storage/indexeddb.js',
+        uuid: '<rootDir>/node_modules/uuid/dist/esm-browser/index.js',
+    },
 
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
     // modulePathIgnorePatterns: [],
@@ -107,19 +110,14 @@ const config: Config.InitialOptions = {
     // Automatically restore mock state between every test
     // restoreMocks: false,
 
-    // The root directory that Jest should scan for tests and modules within
-    // rootDir: undefined,
-
     // A list of paths to directories that Jest should use to search for files in
-    // roots: [
-    //   "<rootDir>"
-    // ],
+    roots: ['<rootDir>'],
 
     // Allows you to use a custom runner instead of Jest's default test runner
     // runner: "jest-runner",
 
     // The paths to modules that run some code to configure or set up the testing environment before each test
-    // setupFiles: [],
+    setupFiles: ['<rootDir>/tests/unit/components/setEnvVars.tsx'],
 
     // A list of paths to modules that run some code to configure or set up the testing framework before each test
     setupFilesAfterEnv: ['jest-extended/all', '@testing-library/jest-dom'],
@@ -164,12 +162,10 @@ const config: Config.InitialOptions = {
     // timers: "real",
 
     // A map from regular expressions to paths to transformers
-    // transform: undefined,
+    transform: { '^.+\\.ts?$': 'ts-jest' },
 
     // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-    transformIgnorePatterns: [
-        'node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base)',
-    ],
+    transformIgnorePatterns: ['/node_modules/(?!@formiojs|uuid)'],
     modulePaths: ['src'],
 
     // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them

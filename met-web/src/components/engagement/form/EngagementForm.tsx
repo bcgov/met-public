@@ -182,6 +182,7 @@ const EngagementForm = () => {
                     >
                         <Grid item xs={12}>
                             <ImageUpload
+                                data-testid="engagement-form/image-upload"
                                 handleAddFile={handleAddBannerImage}
                                 savedImageUrl={savedEngagement.banner_url}
                             />
@@ -310,6 +311,7 @@ const EngagementForm = () => {
                                 <Button
                                     variant="contained"
                                     sx={{ marginRight: 1 }}
+                                    data-testid="engagement-form/create-engagement-button"
                                     onClick={() => handleCreateEngagement()}
                                     disabled={isSaving}
                                 >
@@ -319,6 +321,7 @@ const EngagementForm = () => {
                             ) : (
                                 <Button
                                     variant="contained"
+                                    data-testid="engagement-form/update-engagement-button"
                                     sx={{ marginRight: 1 }}
                                     onClick={() => handleUpdateEngagement()}
                                     disabled={isSaving}
@@ -327,7 +330,12 @@ const EngagementForm = () => {
                                     {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
                                 </Button>
                             )}
-                            <Button variant="outlined" onClick={() => handlePreviewEngagement()} disabled={isSaving}>
+                            <Button
+                                variant="outlined"
+                                data-testid="engagement-form/preview-engagement-button"
+                                onClick={() => handlePreviewEngagement()}
+                                disabled={isSaving}
+                            >
                                 Save & Preview Engagement
                             </Button>
                         </Grid>

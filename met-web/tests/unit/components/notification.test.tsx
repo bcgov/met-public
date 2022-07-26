@@ -1,18 +1,35 @@
-import { render, cleanup } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import '@testing-library/jest-dom';
 import { Notification } from '../../../src/components/common/notification';
-import { createRoot } from 'react-dom/client';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import { useAppSelector, useAppDispatch } from '../../../src/hooks';
-import { closeNotification } from '../../../src/services/notificationService/notificationSlice';
+import ProviderShell from './ProviderShell';
+import { setupEnv } from './setEnvVars';
 
-afterEach(cleanup);
+test('render notification', async () => {
+    // Arrange
+    // Act
+    // Assert
+    setupEnv();
+    render(
+        <ProviderShell>
+            <Notification />
+        </ProviderShell>,
+    );
 
-it('renders without crashing', () => {
-    const container = document.getElementById('root');
-    const root = createRoot(container as Element);
-    root.render(<Notification />);
+    // wait until the `get` request promise resolves and
+    // the component calls setState and re-renders.
+    // `waitFor` waits until the callback doesn't throw an error
+
+    await waitFor(() =>
+        // getByRole throws an error if it cannot find an element
+
+        screen.getByTestId('snackbar-notification'),
+    );
+    // assert that the alert message is correct using
+    // toHaveTextContent, a custom matcher from jest-dom.
+    expect(screen.getByTestId('snackbar-notification'));
+
+    // assert that the button is not disabled using
+    // toBeDisabled, a custom matcher from jest-dom.
+    expect(screen.getByTestId('snackbar-notification')).not.toBeDisabled();
 });
