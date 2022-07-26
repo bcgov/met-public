@@ -6,7 +6,7 @@ export interface BannerProps {
 }
 
 export interface EngagementBannerProps {
-    openModal: () => void;
+    startSurvey: () => void;
 }
 
 export interface EmailModalProps {
@@ -33,5 +33,5 @@ export interface FailurePanelProps {
 }
 
 export interface SurveyBlockProps {
-    openModal: () => void;
+    startSurvey: () => void;
 }
