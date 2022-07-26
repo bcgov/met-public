@@ -26,7 +26,7 @@ api = Namespace('notifications', description='API for Sending MET Notifications'
 @api.route('/email')
 class EmailNotification(Resource):
     """Notification resource."""
-    # @jwt.requires_auth
+    @jwt.requires_auth
     def post(self):
         """Send email notification."""
         email_payload = request.get_json(force=True)
