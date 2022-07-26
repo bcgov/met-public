@@ -5,5 +5,20 @@ export const formioOptions = {
         advanced: false,
         data: false,
         premium: false,
+        basic: false,
+        layout: false,
+        custom: {
+            title: 'Basic',
+            weight: 20,
+            components: {
+                simpletextfield: true,
+                simpletextarea: true,
+                simpleradios: true,
+                simplecheckboxes: true,
+                header: true,
+                paragraph: true,
+            },
+            default: true,
+        },
     },
 };
