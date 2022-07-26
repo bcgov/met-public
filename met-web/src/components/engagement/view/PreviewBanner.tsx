@@ -8,7 +8,7 @@ import { useAppSelector } from 'hooks';
 
 export const PreviewBanner = () => {
     const navigate = useNavigate();
-    const { engagementLoading, savedEngagement, publishEngagement } = useContext(ActionContext);
+    const { isEngagementLoading, savedEngagement, publishEngagement } = useContext(ActionContext);
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
     const engagementId = savedEngagement.id || '';
@@ -26,7 +26,7 @@ export const PreviewBanner = () => {
         navigate(`/`);
     };
 
-    if (engagementLoading) {
+    if (isEngagementLoading) {
         return <Skeleton variant="rectangular" width="100%" height="10em" />;
     }
 

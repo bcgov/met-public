@@ -7,7 +7,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 
 export interface EngagementViewContext {
     savedEngagement: Engagement;
-    engagementLoading: boolean;
+    isEngagementLoading: boolean;
     publishEngagement: (_engagement: Engagement) => Promise<Engagement>;
 }
 
@@ -20,7 +20,7 @@ export const ActionContext = createContext<EngagementViewContext>({
         return Promise.reject();
     },
     savedEngagement: createDefaultEngagement(),
-    engagementLoading: true,
+    isEngagementLoading: true,
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -29,15 +29,16 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const dispatch = useAppDispatch();
 
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
-    const [engagementLoading, setEngagementLoading] = useState(true);
+    const [isEngagementLoading, setEngagementLoading] = useState(true);
 
     const publishEngagement = async (engagement: Engagement): Promise<Engagement> => {
         try {
-            const result = await putEngagement(engagement);
-            setSavedEngagement({ ...result });
+            const updateResult = await putEngagement(engagement);
+            const getResult = await getEngagement(Number(engagementId));
+            setSavedEngagement({ ...getResult });
             setEngagementLoading(false);
             dispatch(openNotification({ severity: 'success', text: 'Engagement Updated Successfully' }));
-            return Promise.resolve(result);
+            return Promise.resolve(updateResult);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error Updating Engagement' }));
             console.log(error);
@@ -73,7 +74,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         <ActionContext.Provider
             value={{
                 savedEngagement,
-                engagementLoading,
+                isEngagementLoading,
                 publishEngagement,
             }}
         >

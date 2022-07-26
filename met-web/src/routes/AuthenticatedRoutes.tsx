@@ -6,7 +6,7 @@ import { ThemeProvider } from '@mui/system';
 import { BaseTheme, PublicTheme } from '../styles/Theme';
 import UserService from '../services/userService';
 import EngagementForm from '../components/engagement/form';
-import Engagement from '../components/engagement/view';
+import EngagementView from '../components/engagement/view';
 import SurveyListing from 'components/survey/listing';
 import CreateSurvey from 'components/survey/create';
 import SurveyFormBuilder from 'components/survey/building';
@@ -27,7 +27,7 @@ const AuthenticatedRoutes = () => {
                 <Route path="/survey/build/:surveyId" element={<SurveyFormBuilder />} />
                 <Route path="/survey/submit/:surveyId" element={<SurveySubmit />} />
                 <Route path="/engagement/form/:engagementId" element={<EngagementForm />} />
-                <Route path="/engagement/view/:engagementId" element={<Engagement />} />
+                <Route path="/engagement/view/:engagementId" element={<EngagementView />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </ThemeProvider>
