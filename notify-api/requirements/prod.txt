@@ -1,0 +1,15 @@
+gunicorn
+Flask
+Flask-Script
+flask-restx
+flask-jwt-oidc
+python-dotenv
+jsonschema
+requests
+Werkzeug<2
+Flask-Caching
+secure
+python-dotenv
+requests
+notifications-python-client
+Jinja2
