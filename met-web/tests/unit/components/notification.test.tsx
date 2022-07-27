@@ -6,9 +6,7 @@ import ProviderShell from './ProviderShell';
 import { setupEnv } from './setEnvVars';
 
 test('render notification', async () => {
-    // Arrange
-    // Act
-    // Assert
+
     setupEnv();
     render(
         <ProviderShell>

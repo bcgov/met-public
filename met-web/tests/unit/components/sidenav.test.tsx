@@ -9,9 +9,7 @@ import { Routes } from '../../../src/components/layout/SideNav/SideNavElements';
 const drawerWidth = 240;
 
 test('Load SideNav', async () => {
-    // Arrange
-    // Act
-    // Assert
+
     setupEnv();
     render(
         <ProviderShell>
@@ -21,25 +19,19 @@ test('Load SideNav', async () => {
 
     Routes.forEach((route) => {
         fireEvent.click(screen.getByTestId(`SideNav/${route.name}-button`));
-    }),
-        // wait until the `get` request promise resolves and
-        // the component calls setState and re-renders.
-        // `waitFor` waits until the callback doesn't throw an error
-
+    });
+    
         await waitFor(() =>
-            // getByRole throws an error if it cannot find an element
+       
             Routes.forEach((route) => {
                 screen.getByTestId(`SideNav/${route.name}-button`);
             }),
         );
-    // assert that the alert message is correct using
-    // toHaveTextContent, a custom matcher from jest-dom.
+
     Routes.forEach((route) => {
         expect(screen.getByTestId(`SideNav/${route.name}-button`)).toHaveTextContent(`${route.name}`);
     });
 
-    // assert that the button is not disabled using
-    // toBeDisabled, a custom matcher from jest-dom.
     Routes.forEach((route, index) => {
         expect(screen.getByTestId(`SideNav/${route.name}-button`)).not.toBeDisabled();
     });

@@ -6,9 +6,7 @@ import ProviderShell from './ProviderShell';
 import { setupEnv } from './setEnvVars';
 
 test('Load Engagement Form', async () => {
-    // Arrange
-    // Act
-    // Assert
+
     setupEnv();
     render(
         <ProviderShell>
