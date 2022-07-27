@@ -118,7 +118,7 @@ const config: Config.InitialOptions = {
     // runner: "jest-runner",
 
     // The paths to modules that run some code to configure or set up the testing environment before each test
-    setupFiles: ['<rootDir>/tests/unit/components/setEnvVars.tsx'],
+    setupFiles: ['<rootDir>/tests/unit/components/setEnvVars.tsx', '<rootDir>/public/config/config.js'],
 
     // A list of paths to modules that run some code to configure or set up the testing framework before each test
     setupFilesAfterEnv: ['jest-extended/all', '@testing-library/jest-dom'],
