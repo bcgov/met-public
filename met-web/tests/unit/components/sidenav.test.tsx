@@ -32,7 +32,7 @@ test('Load SideNav', async () => {
         expect(screen.getByTestId(`SideNav/${route.name}-button`)).toHaveTextContent(`${route.name}`);
     });
 
-    Routes.forEach((route, index) => {
+    Routes.forEach((route) => {
         expect(screen.getByTestId(`SideNav/${route.name}-button`)).not.toBeDisabled();
     });
 });
