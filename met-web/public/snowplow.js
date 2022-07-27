@@ -8,9 +8,9 @@
         n.src = w; g.parentNode.insertBefore(n, g)
     }
 }(window, document, "script", "https://www2.gov.bc.ca/StaticWebResources/static/sp/sp-2-14-0.js", "snowplow"));
-var collector = 'spm.apps.gov.bc.ca';
+var collector = 'spt.apps.gov.bc.ca';
 window.snowplow('newTracker', 'rt', collector, {
-    appId: "Snowplow_standalone",
+    appId: "Snowplow_standalone_MET",
     cookieLifetime: 86400 * 548,
     platform: 'web',
     post: true,
