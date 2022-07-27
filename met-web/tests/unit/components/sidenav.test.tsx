@@ -1,4 +1,4 @@
-import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
 import SideNav from '../../../src/components/layout/SideNav/SideNav';
@@ -19,7 +19,7 @@ test('Load SideNav', async () => {
         </ProviderShell>,
     );
 
-    Routes.forEach((route, index) => {
+    Routes.forEach((route) => {
         fireEvent.click(screen.getByTestId(`SideNav/${route.name}-button`));
     }),
         // wait until the `get` request promise resolves and
@@ -28,13 +28,13 @@ test('Load SideNav', async () => {
 
         await waitFor(() =>
             // getByRole throws an error if it cannot find an element
-            Routes.forEach((route, index) => {
+            Routes.forEach((route) => {
                 screen.getByTestId(`SideNav/${route.name}-button`);
             }),
         );
     // assert that the alert message is correct using
     // toHaveTextContent, a custom matcher from jest-dom.
-    Routes.forEach((route, index) => {
+    Routes.forEach((route) => {
         expect(screen.getByTestId(`SideNav/${route.name}-button`)).toHaveTextContent(`${route.name}`);
     });
 

@@ -1,4 +1,4 @@
-import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
+import { render, waitFor, screen } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
 import SurveyListing from '../../../src/components/survey/listing';

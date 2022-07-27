@@ -38,17 +38,17 @@ const LoggedInHeader = ({ drawerWidth = 240 }) => {
                     <Typography variant={isMediumScreen ? 'h3' : 'h6'} sx={{ flexGrow: 1 }}>
                         MET
                     </Typography>
-                    <Button data-testid="button-header" color="inherit" onClick={() => console.log('logout')}>
+                    <Button data-testid="button-header" color="inherit" onClick={() => UserService.doLogout()}>
                         Logout
                     </Button>
                 </Toolbar>
             </AppBar>
-            {/* <SideNav
+            <SideNav
                 data-testid="sidenav-header"
                 isMediumScreen={isMediumScreen}
                 open={true}
                 drawerWidth={drawerWidth}
-            /> */}
+            />
         </>
     );
 };

@@ -1,4 +1,4 @@
-import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
 import { Notification } from '../../../src/components/common/notification';
@@ -16,20 +16,5 @@ test('render notification', async () => {
         </ProviderShell>,
     );
 
-    // wait until the `get` request promise resolves and
-    // the component calls setState and re-renders.
-    // `waitFor` waits until the callback doesn't throw an error
 
-    // await waitFor(() =>
-    // getByRole throws an error if it cannot find an element
-
-    //     screen.getByTestId('alert-notification'),
-    // );
-    // assert that the alert message is correct using
-    // toHaveTextContent, a custom matcher from jest-dom.
-    // expect(screen.getByTestId('alert-notification'));
-
-    // assert that the button is not disabled using
-    // toBeDisabled, a custom matcher from jest-dom.
-    // expect(screen.getByTestId('alert-notification')).not.toBeDisabled();
 });

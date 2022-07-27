@@ -1,8 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import '@testing-library/jest-dom';
 import LoggedInHeader from '../../../src/components/layout/Header/LoggedInHeader';
-import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import ProviderShell from './ProviderShell';
 import { setupEnv } from './setEnvVars';
 
