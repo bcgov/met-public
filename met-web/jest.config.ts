@@ -72,12 +72,13 @@ const config: Config.InitialOptions = {
     // ],
 
     // An array of file extensions your modules use
-    moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json'],
+    moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json', 'css', 'scss'],
 
     // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
     moduleNameMapper: {
-        formiojs: '<rootDir>/node_modules/formiojs/providers/storage/indexeddb.js',
-        uuid: '<rootDir>/node_modules/uuid/dist/esm-browser/index.js',
+        // formiojs: '<rootDir>/node_modules/formiojs/providers/storage/indexeddb.js',
+        '^uuid$': require.resolve('uuid'),
+        '\\.(css|scss)$': '<rootDir>/tests/unit/components/styleMock.tsx',
     },
 
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -165,7 +166,8 @@ const config: Config.InitialOptions = {
     transform: { '^.+\\.ts?$': 'ts-jest' },
 
     // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-    transformIgnorePatterns: ['/node_modules/(?!@formiojs|uuid)'],
+    transformIgnorePatterns: ['<rootDir>/node_modules/(?!uuid)'],
+
     modulePaths: ['src'],
 
     // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them

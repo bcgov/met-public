@@ -27,7 +27,7 @@ test('Load Landing Page', async () => {
     );
     // assert that the alert message is correct using
     // toHaveTextContent, a custom matcher from jest-dom.
-    expect(screen.getByTestId('create-engagement-button-landingPage')).toHaveTextContent('Logout');
+    expect(screen.getByTestId('create-engagement-button-landingPage')).toHaveTextContent('+ Create An Engagement');
 
     // assert that the button is not disabled using
     // toBeDisabled, a custom matcher from jest-dom.

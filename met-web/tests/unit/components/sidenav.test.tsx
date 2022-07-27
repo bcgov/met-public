@@ -20,7 +20,7 @@ test('Load SideNav', async () => {
     );
 
     Routes.forEach((route, index) => {
-        fireEvent.click(screen.getByTestId(`SideNav/${route}-button`));
+        fireEvent.click(screen.getByTestId(`SideNav/${route.name}-button`));
     }),
         // wait until the `get` request promise resolves and
         // the component calls setState and re-renders.
@@ -29,18 +29,18 @@ test('Load SideNav', async () => {
         await waitFor(() =>
             // getByRole throws an error if it cannot find an element
             Routes.forEach((route, index) => {
-                screen.getByTestId(`SideNav/${route}-button`);
+                screen.getByTestId(`SideNav/${route.name}-button`);
             }),
         );
     // assert that the alert message is correct using
     // toHaveTextContent, a custom matcher from jest-dom.
     Routes.forEach((route, index) => {
-        expect(screen.getByTestId(`SideNav/${route}-button`)).toHaveTextContent('Logout');
+        expect(screen.getByTestId(`SideNav/${route.name}-button`)).toHaveTextContent(`${route.name}`);
     });
 
     // assert that the button is not disabled using
     // toBeDisabled, a custom matcher from jest-dom.
     Routes.forEach((route, index) => {
-        expect(screen.getByTestId(`SideNav/${route}-button`)).not.toBeDisabled();
+        expect(screen.getByTestId(`SideNav/${route.name}-button`)).not.toBeDisabled();
     });
 });

@@ -20,7 +20,7 @@ export const Notification = () => {
 
     return (
         <Snackbar data-testid="snackbar-notification" open={open} autoHideDuration={6000} onClose={handleClose}>
-            <Alert data-testid="alert-notificaiton" onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
+            <Alert data-testid="alert-notification" onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
                 {text}
             </Alert>
         </Snackbar>
