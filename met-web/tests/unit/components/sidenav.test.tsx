@@ -9,7 +9,6 @@ import { Routes } from '../../../src/components/layout/SideNav/SideNavElements';
 const drawerWidth = 240;
 
 test('Load SideNav', async () => {
-
     setupEnv();
     render(
         <ProviderShell>
@@ -19,10 +18,8 @@ test('Load SideNav', async () => {
 
     Routes.forEach((route) => {
         fireEvent.click(screen.getByTestId(`SideNav/${route.name}-button`));
-    });
-    
+    }),
         await waitFor(() =>
-       
             Routes.forEach((route) => {
                 screen.getByTestId(`SideNav/${route.name}-button`);
             }),

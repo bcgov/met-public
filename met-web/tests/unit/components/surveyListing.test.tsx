@@ -6,7 +6,6 @@ import ProviderShell from './ProviderShell';
 import { setupEnv } from './setEnvVars';
 
 test('render SurveyListing', async () => {
-
     setupEnv();
     render(
         <ProviderShell>
@@ -14,10 +13,7 @@ test('render SurveyListing', async () => {
         </ProviderShell>,
     );
 
-    await waitFor(() =>
-
-        screen.getByTestId('SurveyListing/search-button'),
-    );
+    await waitFor(() => screen.getByTestId('SurveyListing/search-button'));
     expect(screen.getByTestId('SurveyListing/search-button'));
 
     expect(screen.getByTestId('SurveyListing/search-button')).not.toBeDisabled();

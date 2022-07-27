@@ -6,12 +6,10 @@ import ProviderShell from './ProviderShell';
 import { setupEnv } from './setEnvVars';
 
 test('Load Engagement Form', async () => {
-
     setupEnv();
     render(
         <ProviderShell>
             <EngagementForm />
         </ProviderShell>,
     );
-
 });

@@ -7,7 +7,6 @@ import '@testing-library/jest-dom';
 import Button from '@mui/material/Button';
 
 test('loads and displays greeting', async () => {
-
     render(
         <Button data-testid="test-button" onClick={() => console.log('Hello')} variant="contained">
             Hello
@@ -15,15 +14,9 @@ test('loads and displays greeting', async () => {
     );
     fireEvent.click(screen.getByTestId('test-button'));
 
-
-
-    await waitFor(() =>
-
-        screen.getByTestId('test-button'),
-    );
+    await waitFor(() => screen.getByTestId('test-button'));
 
     expect(screen.getByTestId('test-button')).toHaveTextContent('Hello');
-
 
     expect(screen.getByTestId('test-button')).not.toBeDisabled();
 });

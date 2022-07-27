@@ -6,7 +6,6 @@ import ProviderShell from './ProviderShell';
 import { setupEnv } from './setEnvVars';
 
 test('Load Header', async () => {
-
     setupEnv();
     render(
         <ProviderShell>
@@ -14,15 +13,9 @@ test('Load Header', async () => {
         </ProviderShell>,
     );
 
-
-
-    await waitFor(() =>
-
-        screen.getByTestId('button-header'),
-    );
+    await waitFor(() => screen.getByTestId('button-header'));
 
     expect(screen.getByTestId('button-header')).toHaveTextContent('Logout');
-
 
     expect(screen.getByTestId('button-header')).not.toBeDisabled();
 });

@@ -6,13 +6,10 @@ import ProviderShell from './ProviderShell';
 import { setupEnv } from './setEnvVars';
 
 test('render notification', async () => {
-
     setupEnv();
     render(
         <ProviderShell>
             <Notification />
         </ProviderShell>,
     );
-
-
 });

@@ -6,7 +6,6 @@ import ProviderShell from './ProviderShell';
 import { setupEnv } from './setEnvVars';
 
 test('Load Landing Page', async () => {
-
     setupEnv();
     render(
         <ProviderShell>
@@ -15,10 +14,7 @@ test('Load Landing Page', async () => {
     );
     fireEvent.click(screen.getByTestId('create-engagement-button-landingPage'));
 
-    await waitFor(() =>
-
-        screen.getByTestId('create-engagement-button-landingPage'),
-    );
+    await waitFor(() => screen.getByTestId('create-engagement-button-landingPage'));
 
     expect(screen.getByTestId('create-engagement-button-landingPage')).toHaveTextContent('+ Create An Engagement');
 
