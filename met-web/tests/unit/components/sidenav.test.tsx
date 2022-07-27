@@ -18,12 +18,13 @@ test('Load SideNav', async () => {
 
     Routes.forEach((route) => {
         fireEvent.click(screen.getByTestId(`SideNav/${route.name}-button`));
-    }),
-        await waitFor(() =>
-            Routes.forEach((route) => {
-                screen.getByTestId(`SideNav/${route.name}-button`);
-            }),
-        );
+    });
+
+    await waitFor(() =>
+        Routes.forEach((route) => {
+            screen.getByTestId(`SideNav/${route.name}-button`);
+        }),
+    );
 
     Routes.forEach((route) => {
         expect(screen.getByTestId(`SideNav/${route.name}-button`)).toHaveTextContent(`${route.name}`);
