@@ -11,23 +11,7 @@ import {
     Stack,
 } from '@mui/material';
 import { EmailPanelProps } from './types';
-import { MetLabel } from 'components/common';
-
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '48%',
-    transform: 'translate(-50%, -50%)',
-    maxWidth: 'min(95vw, 700px)',
-    maxHeight: '95vh',
-    bgcolor: 'background.paper',
-    boxShadow: 10,
-    pt: 2,
-    px: 4,
-    pb: 3,
-    m: 1,
-    overflowY: 'scroll',
-};
+import { MetLabel, modalStyle } from 'components/common';
 
 const EmailPanel = ({ email, checkEmail, handleClose, updateEmail }: EmailPanelProps) => {
     const [checked, setChecked] = useState(false);
@@ -59,13 +43,13 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail }: EmailPanelP
         <Grid
             container
             direction="row"
-            sx={{ ...style }}
+            sx={{ ...modalStyle }}
             alignItems="flex-start"
             justifyContent="flex-start"
             rowSpacing={2}
         >
             <Grid item xs={12}>
-                <Typography id="modal-modal-title" variant="h4" sx={{ mb: 2, fontWeight: 'bold' }}>
+                <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold' }}>
                     Verify your email address
                 </Typography>
             </Grid>

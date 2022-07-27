@@ -1,21 +1,7 @@
 import React from 'react';
 import { Grid, Button, Typography } from '@mui/material';
 import { SuccessPanelProps } from './types';
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '48%',
-    transform: 'translate(-50%, -50%)',
-    maxWidth: 'min(95vw, 700px)',
-    maxHeight: '95vh',
-    bgcolor: 'background.paper',
-    boxShadow: 10,
-    pt: 2,
-    px: 4,
-    pb: 3,
-    m: 1,
-    overflowY: 'scroll',
-};
+import { modalStyle } from 'components/common';
 
 const SuccessPanel = ({ email, handleClose }: SuccessPanelProps) => {
     return (
@@ -24,7 +10,7 @@ const SuccessPanel = ({ email, handleClose }: SuccessPanelProps) => {
             direction="row"
             justifyContent="flex-start"
             alignItems="space-between"
-            sx={{ ...style }}
+            sx={{ ...modalStyle }}
             rowSpacing={2}
         >
             <Grid container item xs={12}>
