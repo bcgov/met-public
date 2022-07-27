@@ -8,6 +8,7 @@ import {
     FormControl,
     FormControlLabel,
     FormHelperText,
+    Stack,
 } from '@mui/material';
 import { EmailPanelProps } from './types';
 import { MetLabel } from 'components/common';
@@ -15,18 +16,18 @@ import { MetLabel } from 'components/common';
 const style = {
     position: 'absolute',
     top: '50%',
-    left: '50%',
+    left: '48%',
     transform: 'translate(-50%, -50%)',
-    width: 700,
+    maxWidth: 'min(95vw, 700px)',
+    maxHeight: '95vh',
     bgcolor: 'background.paper',
     boxShadow: 10,
     pt: 2,
     px: 4,
     pb: 3,
-    height: 700,
+    m: 1,
+    overflowY: 'scroll',
 };
-
-const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 const EmailPanel = ({ email, checkEmail, handleClose, updateEmail }: EmailPanelProps) => {
     const [checked, setChecked] = useState(false);
@@ -55,31 +56,40 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail }: EmailPanelP
     };
 
     return (
-        <Grid container direction="row" sx={{ ...style }} rowSpacing={1}>
+        <Grid
+            container
+            direction="row"
+            sx={{ ...style }}
+            alignItems="flex-start"
+            justifyContent="flex-start"
+            rowSpacing={2}
+        >
             <Grid item xs={12}>
-                <Typography id="modal-modal-title" variant="h4" component="h2" sx={{ mb: 2, fontWeight: 'bold' }}>
+                <Typography id="modal-modal-title" variant="h4" sx={{ mb: 2, fontWeight: 'bold' }}>
                     Verify your email address
                 </Typography>
             </Grid>
+
             <Grid item xs={12}>
-                <Typography id="modal-modal-header">
+                <Typography>
                     To provide you with the best experience possible. We require you to validate your email address.
                 </Typography>
             </Grid>
+
             <Grid item xs={12}>
                 <Typography>You will receive a link to access the survey at the email address you provide.</Typography>
             </Grid>
 
             <Grid item xs={12}>
-                <MetLabel sx={{ mb: 2 }}>Email Address</MetLabel>
-                <TextField
-                    onChange={(e) => updateEmail(e.target.value)}
-                    id="outlined-basic"
-                    label="Email"
-                    variant="outlined"
-                    error={emailFormError.email}
-                    helperText={emailFormError.email ? 'Please Enter an Email' : ''}
-                />
+                <Typography
+                    variant="subtitle2"
+                    sx={{ p: '1em', borderLeft: 8, borderColor: '#003366', backgroundColor: '#F2F2F2' }}
+                >
+                    "On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and
+                    demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee
+                    the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their
+                    duty through weakness of will, which is the same as saying through shrinking from toil and pain.
+                </Typography>
             </Grid>
             <Grid
                 item
@@ -87,51 +97,56 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail }: EmailPanelP
                 direction="row"
                 width="100%"
                 xs={12}
-                alignItems="center"
+                alignItems="flex-start"
                 justifyContent="flex-start"
                 rowSpacing={1}
             >
-                <FormControl
-                    required
-                    error={emailFormError.terms}
-                    component="fieldset"
-                    sx={{ m: 1 }}
-                    variant="standard"
-                >
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                onChange={(event) => {
-                                    setChecked(event.target.checked);
-                                }}
-                                {...label}
-                                name="gilad"
-                            />
-                        }
-                        label={<Typography>I agree to the Terms and Conditions below.</Typography>}
+                <Grid item xs={12}>
+                    <FormControl required error={emailFormError.terms} component="fieldset" variant="standard">
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    onChange={(event) => {
+                                        setChecked(event.target.checked);
+                                        setEmailFormError({ ...emailFormError, terms: false });
+                                    }}
+                                />
+                            }
+                            label="I agree to the terms and conditions below."
+                        />
+                        <FormHelperText>
+                            {emailFormError.terms ? 'Please accept the terms and conditions' : ''}
+                        </FormHelperText>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                    <MetLabel>Email Address</MetLabel>
+                    <TextField
+                        onChange={(e) => {
+                            updateEmail(e.target.value);
+                            setEmailFormError({ ...emailFormError, email: false });
+                        }}
+                        label=" "
+                        InputLabelProps={{
+                            shrink: false,
+                        }}
+                        variant="outlined"
+                        error={emailFormError.email}
+                        helperText={emailFormError.email ? 'Please enter an email' : ''}
+                        fullWidth
                     />
-                    {emailFormError.terms ? (
-                        <FormHelperText>Please Accept the Terms and Conditions</FormHelperText>
-                    ) : (
-                        <></>
-                    )}
-                </FormControl>
+                </Grid>
             </Grid>
-            <Grid item xs={12} sx={{ pt: 1, pb: 1, borderLeft: 8, borderColor: '#003366' }}>
-                <Typography paragraph={true} id="modal-modal-description" sx={{ pl: 1 }}>
-                    "On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and
-                    demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee
-                    the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their
-                    duty through weakness of will, which is the same as saying through shrinking from toil and pain.
-                </Typography>
-            </Grid>
-            <Grid item container direction="row" justifyContent="flex-end" alignItems="flex-end" xs={12} rowSpacing={1}>
-                <Button variant="outlined" onClick={handleClose} sx={{ m: 1 }}>
-                    Cancel
-                </Button>
-                <Button onClick={() => handleSubmit()} variant={'contained'} sx={{ m: 1 }}>
-                    Submit
-                </Button>
+
+            <Grid item container xs={12} justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
+                    <Button variant="outlined" onClick={handleClose}>
+                        Cancel
+                    </Button>
+                    <Button onClick={() => handleSubmit()} variant={'contained'}>
+                        Submit
+                    </Button>
+                </Stack>
             </Grid>
         </Grid>
     );
