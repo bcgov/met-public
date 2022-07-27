@@ -145,7 +145,11 @@ const LandingPage = () => {
                         onChange={(e) => setSearchText(e.target.value)}
                         size="small"
                     />
-                    <Button variant="contained" onClick={() => handleSearchBarClick(searchText)}>
+                    <Button
+                        data-testid="search-button-landingPage"
+                        variant="contained"
+                        onClick={() => handleSearchBarClick(searchText)}
+                    >
                         <SearchIcon />
                     </Button>
                 </Stack>
@@ -153,7 +157,9 @@ const LandingPage = () => {
             <Grid item xs={0} md={4} lg={3}></Grid>
             <Grid item xs={12} md={4} lg={3} container direction="row" justifyContent={'flex-end'}>
                 <Link to="/engagement/form/create">
-                    <Button variant="contained">+ Create An Engagement</Button>
+                    <Button data-testid="create-engagement-button-landingPage" variant="contained">
+                        + Create An Engagement
+                    </Button>
                 </Link>
             </Grid>
             <Grid item xs={12} lg={10}>

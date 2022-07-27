@@ -1,22 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import '@testing-library/jest-dom';
-import LoggedInHeader from '../../../src/components/layout/Header/LoggedInHeader';
 import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
+import React from 'react';
+import '@testing-library/jest-dom';
+import SurveyListing from '../../../src/components/survey/listing';
 import ProviderShell from './ProviderShell';
 import { setupEnv } from './setEnvVars';
 
-test('Load Header', async () => {
+test('render SurveyListing', async () => {
     // Arrange
     // Act
     // Assert
     setupEnv();
     render(
         <ProviderShell>
-            <LoggedInHeader />
+            <SurveyListing />
         </ProviderShell>,
     );
-    fireEvent.click(screen.getByTestId('button-header'));
 
     // wait until the `get` request promise resolves and
     // the component calls setState and re-renders.
@@ -24,13 +22,14 @@ test('Load Header', async () => {
 
     await waitFor(() =>
         // getByRole throws an error if it cannot find an element
-        screen.getByTestId('button-header'),
+
+        screen.getByTestId('SurveyListing/search-button'),
     );
     // assert that the alert message is correct using
     // toHaveTextContent, a custom matcher from jest-dom.
-    expect(screen.getByTestId('button-header')).toHaveTextContent('Logout');
+    expect(screen.getByTestId('SurveyListing/search-button'));
 
     // assert that the button is not disabled using
     // toBeDisabled, a custom matcher from jest-dom.
-    expect(screen.getByTestId('button-header')).not.toBeDisabled();
+    expect(screen.getByTestId('SurveyListing/search-button')).not.toBeDisabled();
 });

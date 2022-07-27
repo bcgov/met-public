@@ -1,36 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import '@testing-library/jest-dom';
-import LoggedInHeader from '../../../src/components/layout/Header/LoggedInHeader';
+import LandingPage from '../../../src/components/LandingPage/LandingPage';
 import { render, fireEvent, waitFor, screen, cleanup } from '@testing-library/react';
 import ProviderShell from './ProviderShell';
 import { setupEnv } from './setEnvVars';
 
-test('Load Header', async () => {
+test('Load Landing Page', async () => {
     // Arrange
     // Act
     // Assert
     setupEnv();
     render(
         <ProviderShell>
-            <LoggedInHeader />
+            <LandingPage />
         </ProviderShell>,
     );
-    fireEvent.click(screen.getByTestId('button-header'));
-
+    fireEvent.click(screen.getByTestId('create-engagement-button-landingPage'));
     // wait until the `get` request promise resolves and
     // the component calls setState and re-renders.
     // `waitFor` waits until the callback doesn't throw an error
 
     await waitFor(() =>
         // getByRole throws an error if it cannot find an element
-        screen.getByTestId('button-header'),
+        screen.getByTestId('create-engagement-button-landingPage'),
     );
     // assert that the alert message is correct using
     // toHaveTextContent, a custom matcher from jest-dom.
-    expect(screen.getByTestId('button-header')).toHaveTextContent('Logout');
+    expect(screen.getByTestId('create-engagement-button-landingPage')).toHaveTextContent('+ Create An Engagement');
 
     // assert that the button is not disabled using
     // toBeDisabled, a custom matcher from jest-dom.
-    expect(screen.getByTestId('button-header')).not.toBeDisabled();
+    expect(screen.getByTestId('create-engagement-button-landingPage')).not.toBeDisabled();
 });

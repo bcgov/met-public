@@ -153,7 +153,11 @@ const SurveyListing = () => {
                         onChange={(e) => setSearchText(e.target.value)}
                         size="small"
                     />
-                    <Button variant="contained" onClick={() => handleSearchBarClick(searchText)}>
+                    <Button
+                        variant="contained"
+                        data-testid="SurveyListing/search-button"
+                        onClick={() => handleSearchBarClick(searchText)}
+                    >
                         <SearchIcon />
                     </Button>
                 </Stack>
