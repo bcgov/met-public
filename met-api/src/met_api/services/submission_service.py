@@ -44,7 +44,7 @@ class SubmissionService:
         if any(empty_fields):
             raise ValueError('Some required fields are empty')
 
-        survey_id = data.get('survey_id', None)
+        survey_id = data.get('survey_id')
         survey = Survey.get_survey(survey_id)
         engagement = survey.get('engagement', None)
         if not engagement:
