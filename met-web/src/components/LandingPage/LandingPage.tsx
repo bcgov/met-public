@@ -152,9 +152,9 @@ const LandingPage = () => {
             </Grid>
             <Grid item xs={0} md={4} lg={3}></Grid>
             <Grid item xs={12} md={4} lg={3} container direction="row" justifyContent={'flex-end'}>
-                <Link to="/engagement/form/create">
-                    <Button variant="contained">+ Create An Engagement</Button>
-                </Link>
+                <Button component={Link} to="/engagement/form/create" variant="contained">
+                    + Create An Engagement
+                </Button>
             </Grid>
             <Grid item xs={12} lg={10}>
                 <MetTable filter={searchFilter} headCells={headCells} rows={rows} defaultSort={'created_date'} />
