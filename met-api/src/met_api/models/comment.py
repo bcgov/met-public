@@ -1,0 +1,57 @@
+"""Engagement model class.
+
+Manages the engagement
+"""
+from datetime import datetime
+from sqlalchemy.sql.schema import ForeignKey
+from met_api.constants.comment_status import Status
+from met_api.models.survey import Survey
+from met_api.schemas.comment import CommentSchema
+from met_api.models.comment import Comment
+from .comment_status import CommentStatus
+from .db import db
+from .default_method_result import DefaultMethodResult
+
+
+class Comment(db.Model):
+    """Definition of the Engagement entity."""
+
+    __tablename__ = 'engagement'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    text = db.Column(db.Text, unique=False, nullable=False)
+    submission_date = db.Column(db.DateTime)
+    reviewed_by = db.Column(db.String(50))
+    review_date = db.Column(db.DateTime)
+    status_id = db.Column(db.Integer, ForeignKey('comment_status.id', ondelete='SET NULL'))
+    survey_id = db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), nullable=False)
+
+    @classmethod
+    def get_comment(cls, comment_id) -> CommentSchema:
+        """Get a comment."""
+        comment_schema = CommentSchema()
+        data = db.session.query(Comment).join(Survey).filter_by(id=comment_id).first()
+        return comment_schema.dump(data)
+
+    @classmethod
+    def get_comments_by_survey_id(cls, survey_id):
+        """Get all engagements."""
+        comment_schema = CommentSchema(many=True)
+        data = db.session.query(Comment).join(CommentStatus).filter(Comment.survey_id == survey_id).order_by(Comment.id.asc()).all()
+        return comment_schema.dump(data)
+
+    def create_new_comment_entity(comment) -> Comment:
+        """Create new comment entity."""
+        return Comment(
+            text = comment.get('text', None),
+            submission_date = datetime.utcnow(),
+            status_id=Status.Pending,
+            survey_id=comment.get('survey_id', None)
+        )
+        
+    @classmethod
+    def bulk_create_comment(cls, comments: list[CommentSchema]) -> DefaultMethodResult:
+        """Save comments."""
+        new_comments = [cls.create_new_comment_entity(comment) for comment in comments]
+        db.session.add_all(new_comments)
+        db.session.commit()
+        return DefaultMethodResult(True, 'Comments Added', [new_comment.id for new_comment in new_comments])

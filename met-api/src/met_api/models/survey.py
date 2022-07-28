@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import List
 from sqlalchemy import ForeignKey
 from sqlalchemy.dialects import postgresql
-from met_api.constants.status import Status
+from met_api.constants.engagement_status import Status
 from met_api.models.engagement_status import EngagementStatus
 from met_api.models.engagement import Engagement
 from met_api.schemas.survey import SurveySchema

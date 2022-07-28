@@ -1,6 +1,6 @@
 
 """Service for submission management."""
-from met_api.constants.status import SubmissionStatus
+from met_api.constants.engagement_status import SubmissionStatus
 from met_api.models.submission import Submission
 from met_api.models.survey import Survey
 from met_api.schemas.submission import SubmissionSchema
