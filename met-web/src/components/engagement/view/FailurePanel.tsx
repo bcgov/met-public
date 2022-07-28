@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Button, Box, Typography, Stack } from '@mui/material';
+import { Grid, Button, Typography, Stack } from '@mui/material';
 import { FailurePanelProps } from './types';
 import { modalStyle } from 'components/common';
 
