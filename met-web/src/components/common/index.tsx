@@ -11,6 +11,7 @@ import {
 import styled from '@emotion/styled';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Palette } from 'styles/Theme';
 
 export const RoundedButton = styled(MuiButton)(() => ({
     borderRadius: '23px',
@@ -114,4 +115,21 @@ export const RepeatedGrid = ({ times = 1, children, ...rest }: RepeatedGridProps
             ))}
         </>
     );
+};
+
+export const modalStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '48%',
+    transform: 'translate(-50%, -50%)',
+    maxWidth: 'min(95vw, 700px)',
+    maxHeight: '95vh',
+    bgcolor: 'background.paper',
+    boxShadow: 10,
+    pt: 2,
+    px: 4,
+    pb: 3,
+    m: 1,
+    overflowY: 'scroll',
+    color: Palette.text.primary,
 };
