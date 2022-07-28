@@ -43,7 +43,12 @@ const LoggedInHeader = ({ drawerWidth = 240 }) => {
                     </Button>
                 </Toolbar>
             </AppBar>
-            <SideNav data-testid="sidenav-header" isMediumScreen={isMediumScreen} open={false} drawerWidth={drawerWidth} />
+            <SideNav
+                data-testid="sidenav-header"
+                isMediumScreen={isMediumScreen}
+                open={false}
+                drawerWidth={drawerWidth}
+            />
         </>
     );
 };
