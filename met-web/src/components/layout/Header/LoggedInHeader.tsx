@@ -21,6 +21,7 @@ const LoggedInHeader = ({ drawerWidth = 240 }) => {
                     zIndex: (theme) => theme.zIndex.drawer + 1,
                     color: Palette.text.primary,
                 }}
+                data-testid="appbar-header"
             >
                 <CssBaseline />
                 <Toolbar>
@@ -37,12 +38,12 @@ const LoggedInHeader = ({ drawerWidth = 240 }) => {
                     <Typography variant={isMediumScreen ? 'h3' : 'h6'} sx={{ flexGrow: 1 }}>
                         MET
                     </Typography>
-                    <Button color="inherit" onClick={() => UserService.doLogout()}>
+                    <Button data-testid="button-header" color="inherit" onClick={() => UserService.doLogout()}>
                         Logout
                     </Button>
                 </Toolbar>
             </AppBar>
-            <SideNav isMediumScreen={isMediumScreen} open={false} drawerWidth={drawerWidth} />
+            <SideNav data-testid="sidenav-header" isMediumScreen={isMediumScreen} open={false} drawerWidth={drawerWidth} />
         </>
     );
 };
