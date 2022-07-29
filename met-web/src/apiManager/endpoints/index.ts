@@ -23,6 +23,11 @@ const Endpoints = {
     SurveySubmission: {
         CREATE: `${AppConfig.apiUrl}/submission/`,
     },
+    Comment: {
+        GET_ALL: `${AppConfig.apiUrl}/comments/`,
+        UPDATE: `${AppConfig.apiUrl}/comments/`,
+        GET: `${AppConfig.apiUrl}/comments/comment_id`,
+    },
 };
 
 export default Endpoints;
