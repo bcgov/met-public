@@ -153,16 +153,20 @@ const SurveyListing = () => {
                         onChange={(e) => setSearchText(e.target.value)}
                         size="small"
                     />
-                    <Button variant="contained" onClick={() => handleSearchBarClick(searchText)}>
+                    <Button
+                        variant="contained"
+                        data-testid="SurveyListing/search-button"
+                        onClick={() => handleSearchBarClick(searchText)}
+                    >
                         <SearchIcon />
                     </Button>
                 </Stack>
             </Grid>
             <Grid item xs={0} md={4} lg={4}></Grid>
             <Grid item xs={12} md={4} lg={3} container direction="row" justifyContent={'flex-end'}>
-                <Link to="/survey/create">
-                    <Button variant="contained">+ Create Survey</Button>
-                </Link>
+                <Button component={Link} to="/survey/create" variant="contained">
+                    + Create Survey
+                </Button>
             </Grid>
             <Grid item xs={12} lg={10}>
                 <MetTable headCells={headCells} rows={surveys} defaultSort={'created_date'} />

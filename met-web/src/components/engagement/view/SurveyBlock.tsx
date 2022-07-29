@@ -28,8 +28,13 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
                         complete
                     </Typography>
                 </Grid>
-                <Grid item xs={12} container justifyContent="flex-end" direction="row">
-                    <Button variant="contained" disabled={!surveyId || (!isOpen && !isPreview)} onClick={startSurvey}>
+                <Grid item container direction={{ xs: 'column', sm: 'row' }} xs={12} justifyContent="flex-end">
+                    <Button
+                        data-testid="SurveyBlock/take-me-to-survey-button"
+                        variant="contained"
+                        disabled={!surveyId || (!isOpen && !isPreview)}
+                        onClick={startSurvey}
+                    >
                         Take me to the survey
                     </Button>
                 </Grid>

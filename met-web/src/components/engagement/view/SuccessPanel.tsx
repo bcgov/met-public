@@ -1,28 +1,21 @@
 import React from 'react';
 import { Grid, Button, Typography } from '@mui/material';
 import { SuccessPanelProps } from './types';
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 700,
-    bgcolor: 'background.paper',
-    boxShadow: 10,
-    pt: 2,
-    px: 4,
-    pb: 3,
-    borderColor: 'red',
-    height: 600,
-    border: 2,
-};
+import { modalStyle } from 'components/common';
 
 const SuccessPanel = ({ email, handleClose }: SuccessPanelProps) => {
     return (
-        <Grid container direction="row" justifyContent="flex-start" alignItems="space-between" sx={{ ...style }}>
+        <Grid
+            container
+            direction="row"
+            justifyContent="flex-start"
+            alignItems="space-between"
+            sx={{ ...modalStyle }}
+            rowSpacing={2}
+        >
             <Grid container item xs={12}>
                 <Grid item xs={12}>
-                    <Typography id="modal-modal-title" variant="h4" component="h2" sx={{ fontWeight: 'bold' }}>
+                    <Typography variant="h4" component="h2" sx={{ fontWeight: 'bold', mb: 2 }}>
                         Thank you
                     </Typography>
                 </Grid>
@@ -33,16 +26,25 @@ const SuccessPanel = ({ email, handleClose }: SuccessPanelProps) => {
                     <Typography sx={{ mt: 1 }}>{email}</Typography>
                 </Grid>
             </Grid>
-            <Grid container direction="column" item xs={12}>
-                <Grid item xs={8} justifyContent="flex-start" alignItems="flex-start">
-                    <Typography id="modal-modal-title" sx={{ mb: 1, fontWeight: 'bold' }}>
+            <Grid container direction="row" item xs={12}>
+                <Grid item xs={12}>
+                    <Typography sx={{ mb: 1, fontWeight: 'bold' }}>
                         Please Click the link provided to access the survey.
                     </Typography>
-                    <Typography id="modal-modal-title" sx={{ mb: 1, fontWeight: 'bold' }}>
-                        The link will be valid for 24 hours.
-                    </Typography>
                 </Grid>
-                <Grid item container xs={4} justifyContent="flex-end" alignItems="flex-end">
+                <Grid item xs={12}>
+                    <Typography sx={{ mb: 1, fontWeight: 'bold' }}>The link will be valid for 24 hours.</Typography>
+                </Grid>
+
+                <Grid
+                    item
+                    container
+                    direction={{ xs: 'column', sm: 'row' }}
+                    xs={12}
+                    justifyContent="flex-end"
+                    spacing={1}
+                    sx={{ mt: '1em' }}
+                >
                     <Button variant="contained" onClick={handleClose} sx={{ m: 1 }}>
                         Close
                     </Button>
