@@ -6,7 +6,7 @@ import { MetPageGridContainer } from 'components/common';
 import { Comment } from 'models/comment';
 import { HeadCell } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
-import { Link as MuiLink } from '@mui/material';
+import { Link as MuiLink, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
@@ -75,6 +75,15 @@ const CommentListing = () => {
             getValue: (row: Comment) => formatDate(row.comment_date || ''),
         },
         {
+            key: 'reviewed_by',
+            numeric: true,
+            disablePadding: false,
+            label: 'Reviewed By',
+            allowSort: true,
+            getValue: (row: Comment) => row.email,
+        },
+
+        {
             key: 'published_date',
             numeric: true,
             disablePadding: false,
@@ -124,7 +133,11 @@ const CommentListing = () => {
             <Grid item xs={0} md={4} lg={4}></Grid>
 
             <Grid item xs={12} lg={10}>
+                <Typography variant="h4" sx={{ fontWeight: 'bold', m: 3 }}>
+                    {'<Survey Name>'} Comments
+                </Typography>
                 <MetTable headCells={headCells} rows={comments} defaultSort={'id'} />
+                <Button variant="contained">View All Comments</Button>
             </Grid>
         </MetPageGridContainer>
     );
