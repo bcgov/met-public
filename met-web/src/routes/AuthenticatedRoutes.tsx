@@ -8,6 +8,7 @@ import SurveyListing from 'components/survey/listing';
 import CreateSurvey from 'components/survey/create';
 import SurveyFormBuilder from 'components/survey/building';
 import SurveySubmit from 'components/survey/submit';
+import CommentListing from 'components/comments';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -19,6 +20,7 @@ const AuthenticatedRoutes = () => {
             <Route path="/survey/submit/:surveyId" element={<SurveySubmit />} />
             <Route path="/engagement/form/:engagementId" element={<EngagementForm />} />
             <Route path="/engagement/view/:engagementId" element={<EngagementView />} />
+            <Route path="/survey/:surveyId/comments" element={<CommentListing />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
     );
