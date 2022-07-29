@@ -4,6 +4,8 @@ from met_api.constants.engagement_status import SubmissionStatus
 from met_api.models.submission import Submission
 from met_api.models.survey import Survey
 from met_api.schemas.submission import SubmissionSchema
+from met_api.services.comment_service import CommentService
+from met_api.services.survey_service import SurveyService
 
 
 class SubmissionService:
@@ -27,6 +29,9 @@ class SubmissionService:
     def create(cls, data: SubmissionSchema):
         """Create submission."""
         cls.validate_fields(data)
+        survey = SurveyService.get(data.get('survey_id'))
+        comments = CommentService.extract_comments(data, survey)
+        CommentService.create_comments(comments)
         return Submission.create(data)
 
     @classmethod

@@ -32,22 +32,39 @@ class CommentService:
             filters['status_id'] = Status.Accepted
         return Comment.get_comments_by_survey_id(survey_id, filters)
 
-    def create_comments(self, comments: list):
+    @classmethod
+    def create_comments(cls, comments: list):
         """Create comment."""
         
         for comment in comments:
-            self.validate_fields(comment)
+            cls.validate_fields(comment)
             
         return Comment.bulk_create_comment(comments)
 
     @staticmethod
     def validate_fields(data):
         """Validate all fields."""
+        ##Will empty text return False
         empty_fields = [not data[field] for field in ['text', 'survey_id']]
 
         if any(empty_fields):
-            raise ValueError('Some required fields are empty')
+            raise ValueError('Some required fields for comments are missing')
         
     @staticmethod
-    def extract_comments(surveySubmission: SubmissionSchema, survey: SurveySchema):
-        return;
+    def extract_comments(survey_submission: SubmissionSchema, survey: SurveySchema):
+        survey_form = survey.get('form_json', {})
+        components = list(survey_form.get('components', []))
+        if len(components) == 0:
+            return;
+        
+        comments_keys = [component.get('key', None) for component in components if component.get('inputType', None) == 'text']
+        
+        submission = survey_submission.get('submission_json', {})
+        comments_texts = [submission.get(key, None) for key in comments_keys]
+        
+        if None in comments_texts:
+            raise KeyError('Some answered questions were not found in the survey form')
+        
+        comments = [{"text": comment_text, "survey_id": survey.get('id', None)} for comment_text in comments_texts]
+        
+        return comments

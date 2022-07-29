@@ -53,7 +53,7 @@ class Comment(Resource):
             return ActionResult.error(str(err))
         
 @cors_preflight('GET, POST, PUT, OPTIONS')
-@API.route('/<survey_id>')
+@API.route('/all/survey/<survey_id>')
 class Comments(Resource):
     """Resource for managing multiple comments."""
 
