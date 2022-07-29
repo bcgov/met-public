@@ -1,7 +1,7 @@
 import http from 'apiManager/httpRequestHandler';
 import { Comment } from 'models/comment';
 import Endpoints from 'apiManager/endpoints';
-import { replaceAllInURL, replaceUrl } from 'helper';
+import { replaceUrl } from 'helper';
 
 interface FetchCommentParams {
     survey_id: number;

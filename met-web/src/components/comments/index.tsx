@@ -15,6 +15,42 @@ import { fetchComments } from 'services/commentService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
+const testComments: Comment[] = [
+    {
+        id: 0,
+        survey_id: 1,
+        email: '@gmail.com',
+        comment_date: '2022-04-15',
+        published_date: '2022-04-16',
+        status: 'Pending',
+        content: '',
+        reviewed_by: 'Jimmy',
+        date_reviewed: '2022-04-16',
+    },
+    {
+        id: 1,
+        survey_id: 1,
+        email: '@gmail.com',
+        comment_date: '2022-04-15',
+        published_date: '2022-04-16',
+        status: 'Pending',
+        content: '',
+        reviewed_by: 'Bill',
+        date_reviewed: '2022-04-16',
+    },
+    {
+        id: 2,
+        survey_id: 1,
+        email: '@gmail.com',
+        comment_date: '2022-04-15',
+        published_date: '2022-04-16',
+        status: 'Pending',
+        content: '',
+        reviewed_by: 'Robert',
+        date_reviewed: '2022-04-16',
+    },
+];
+
 const CommentListing = () => {
     const [searchFilter, setSearchFilter] = useState({
         key: 'email',
@@ -27,7 +63,8 @@ const CommentListing = () => {
 
     const callFetchComments = async () => {
         try {
-            const fetchedComments = await fetchComments();
+            const fetchedComments = testComments;
+            // await fetchComments();
             setComments(fetchedComments);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching comments' }));
@@ -53,7 +90,7 @@ const CommentListing = () => {
             label: 'ID',
             allowSort: true,
             getValue: (row: Comment) => (
-                <MuiLink component={Link} to={`/survey/build/${Number(row.id)}/comments`}>
+                <MuiLink component={Link} to={`/survey/${Number(row.survey_id)}/comments/${row.id}`}>
                     {row.id}
                 </MuiLink>
             ),
@@ -64,14 +101,14 @@ const CommentListing = () => {
             disablePadding: false,
             label: 'Masked email',
             allowSort: true,
-            getValue: (row: Comment) => row.email,
+            getValue: (row: Comment) => <Typography sx={{ color: '#F0860B' }}>{row.email}</Typography>,
         },
         {
             key: 'comment_date',
             numeric: true,
             disablePadding: false,
             label: 'Comment Date',
-            allowSort: false,
+            allowSort: true,
             getValue: (row: Comment) => formatDate(row.comment_date || ''),
         },
         {
@@ -80,7 +117,7 @@ const CommentListing = () => {
             disablePadding: false,
             label: 'Reviewed By',
             allowSort: true,
-            getValue: (row: Comment) => row.email,
+            getValue: (row: Comment) => row.reviewed_by,
         },
 
         {
@@ -134,7 +171,7 @@ const CommentListing = () => {
 
             <Grid item xs={12} lg={10}>
                 <Typography variant="h4" sx={{ fontWeight: 'bold', m: 3 }}>
-                    {'<Survey Name>'} Comments
+                    {'Test Survey'} Comments
                 </Typography>
                 <MetTable headCells={headCells} rows={comments} defaultSort={'id'} />
                 <Button variant="contained">View All Comments</Button>
