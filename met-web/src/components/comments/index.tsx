@@ -11,10 +11,9 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
-import { fetchComments } from 'services/surveyService/form';
+import { fetchComments } from 'services/commentService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { EngagementStatus } from 'constants/engagementStatus';
 
 const CommentListing = () => {
     const [searchFilter, setSearchFilter] = useState({
@@ -48,12 +47,32 @@ const CommentListing = () => {
 
     const headCells: HeadCell<Comment>[] = [
         {
+            key: 'id',
+            numeric: true,
+            disablePadding: false,
+            label: 'ID',
+            allowSort: true,
+            getValue: (row: Comment) => (
+                <MuiLink component={Link} to={`/survey/build/${Number(row.id)}/comments`}>
+                    {row.id}
+                </MuiLink>
+            ),
+        },
+        {
+            key: 'email',
+            numeric: true,
+            disablePadding: false,
+            label: 'Masked email',
+            allowSort: true,
+            getValue: (row: Comment) => row.email,
+        },
+        {
             key: 'comment_date',
             numeric: true,
             disablePadding: false,
-            label: 'Date Created',
-            allowSort: true,
-            getValue: (row: Comment) => formatDate(row.comment_date),
+            label: 'Comment Date',
+            allowSort: false,
+            getValue: (row: Comment) => formatDate(row.comment_date || ''),
         },
         {
             key: 'published_date',
@@ -65,63 +84,11 @@ const CommentListing = () => {
         },
         {
             key: 'status',
-            numeric: true,
-            disablePadding: false,
-            label: 'Status',
-            allowSort: false,
-            getValue: (row: Comment) => {
-                !row.status ? (
-                    <></>
-                ) : (
-                    <MuiLink component={Link} to={`/comment/${row.id}`}>
-                        {row.status}
-                    </MuiLink>
-                );
-            },
-        },
-        {
-            key: 'content',
-            numeric: true,
-            disablePadding: false,
-            label: 'Content',
-            allowSort: true,
-            getValue: (_row: Comment) => {
-                row.content;
-            },
-        },
-        {
-            key: 'email',
             numeric: false,
             disablePadding: true,
-            label: 'Comment Email',
+            label: 'Status',
             allowSort: true,
-            getValue: (row: Comment) => (
-                <MuiLink component={Link} to={`/survey/build/${Number(row.id)}/comments`}>
-                    {row.email}
-                </MuiLink>
-            ),
-        },
-        {
-            key: 'id',
-            numeric: true,
-            disablePadding: false,
-            label: 'Reporting',
-            allowSort: false,
-            getValue: (row: Comment) => {
-                if (!row.engagement) {
-                    return <></>;
-                }
-
-                if (row.engagement.engagement_status.id === EngagementStatus.Draft) {
-                    return <></>;
-                }
-
-                return (
-                    <MuiLink component={Link} to={`/survey/${Number(row.id)}/comments`}>
-                        View Report
-                    </MuiLink>
-                );
-            },
+            getValue: (row: Comment) => row.status,
         },
     ];
 
@@ -137,9 +104,9 @@ const CommentListing = () => {
             <Grid item xs={12} md={4} lg={3}>
                 <Stack direction="row" spacing={1}>
                     <TextField
-                        id="engagement-name"
+                        id="comments"
                         variant="outlined"
-                        label="Search by name"
+                        label="Search Comments"
                         fullWidth
                         value={searchText}
                         onChange={(e) => setSearchText(e.target.value)}
@@ -155,13 +122,9 @@ const CommentListing = () => {
                 </Stack>
             </Grid>
             <Grid item xs={0} md={4} lg={4}></Grid>
-            <Grid item xs={12} md={4} lg={3} container direction="row" justifyContent={'flex-end'}>
-                <Link to="/survey/create">
-                    <Button variant="contained">+ Create Comment</Button>
-                </Link>
-            </Grid>
+
             <Grid item xs={12} lg={10}>
-                <MetTable headCells={headCells} rows={surveys} defaultSort={'created_date'} />
+                <MetTable headCells={headCells} rows={comments} defaultSort={'id'} />
             </Grid>
         </MetPageGridContainer>
     );
