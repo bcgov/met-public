@@ -5,6 +5,8 @@ Manages the user
 from __future__ import annotations
 from datetime import datetime
 
+from sqlalchemy import func
+
 from .db import db, ma
 from .default_method_result import DefaultMethodResult
 
@@ -32,7 +34,7 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
     @classmethod
     def get_user_by_external_id(cls, _external_id) -> User:
         """Get a user with the provided external id."""
-        return cls.query.filter_by(external_id=_external_id).first()
+        return cls.query.filter(func.lower(User.external_id) == func.lower(_external_id)).first()
 
     @classmethod
     def create_user(cls, user) -> DefaultMethodResult:
