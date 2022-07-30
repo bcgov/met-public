@@ -28,14 +28,14 @@ class Comment(db.Model):
     def get_comment(cls, comment_id) -> CommentSchema:
         """Get a comment."""
         comment_schema = CommentSchema()
-        data = db.session.query(Comment).join(Survey).filter_by(id=comment_id).first()
+        data = db.session.query(Comment).join(CommentStatus).join(Survey).filter_by(id=comment_id).first()
         return comment_schema.dump(data)
 
     @classmethod
-    def get_comments_by_survey_id(cls, survey_id, **filterkwargs):
+    def get_comments_by_survey_id_query(cls, survey_id, **filterkwargs):
         """Get all comments."""
         comment_schema = CommentSchema(many=True)
-        data = db.session.query(Comment).join(CommentStatus).filter(Comment.survey_id == survey_id).filter(**filterkwargs).order_by(Comment.id.asc()).all()
+        data = db.session.query(Comment).join(CommentStatus).join(Survey).filter(Comment.survey_id == survey_id).filter(**filterkwargs).order_by(Comment.id.asc()).all()
         return comment_schema.dump(data)
 
     @staticmethod

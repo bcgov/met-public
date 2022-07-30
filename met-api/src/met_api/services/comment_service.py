@@ -24,13 +24,13 @@ class CommentService:
 
         return comment
 
-    @staticmethod
-    def get_comments_by_survey_id(user_id, survey_id):
+    @classmethod
+    def get_comments_by_survey_id(cls, user_id, survey_id):
         """Get all comments."""
         filters = {}
         if not user_id:
             filters['status_id'] = Status.Accepted
-        return Comment.get_comments_by_survey_id(survey_id, filters)
+        return Comment.get_comments_by_survey_id_query(survey_id, **filters)
 
     @classmethod
     def create_comments(cls, comments: list):

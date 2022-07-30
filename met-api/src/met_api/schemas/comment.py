@@ -23,5 +23,6 @@ class CommentSchema(Schema):
     reviewed_by = fields.Str(data_key='reviewed_by')
     review_date = fields.Str(data_key='review_date')
     status_id = fields.Int(data_key='status_id')
-    survey = fields.Nested(SurveySchema)
+    survey_id = fields.Int(data_key='survey_id')
     comment_status = fields.Nested(CommentStatusSchema)
+    survey = fields.Pluck(SurveySchema, 'name')

@@ -27,6 +27,7 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
     created_by = db.Column(db.String(50))
     updated_by = db.Column(db.String(50))
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'))
+    comments = db.relationship('Comment', backref='survey', cascade='all, delete')
 
     @classmethod
     def get_survey(cls, survey_id) -> SurveySchema:

@@ -43,9 +43,9 @@ def upgrade():
     conn = op.get_bind()
 
     op.bulk_insert(comment_status_table, [
-        {'id': 1, 'status_name': 'pending', 'description': 'Comment is pending review', 'created_date': datetime.utcnow(), 'updated_date': datetime.utcnow()},
-        {'id': 2, 'status_name': 'accepted', 'description': 'Comment is accepted for public view', 'created_date': datetime.utcnow(), 'updated_date': datetime.utcnow()},
-        {'id': 3, 'status_name': 'rejected', 'description': 'Comment is rejected and not shown', 'created_date': datetime.utcnow(), 'updated_date': datetime.utcnow()},
+        {'id': 1, 'status_name': 'Pending', 'description': 'Comment is pending review', 'created_date': datetime.utcnow(), 'updated_date': datetime.utcnow()},
+        {'id': 2, 'status_name': 'Accepted', 'description': 'Comment is accepted for public view', 'created_date': datetime.utcnow(), 'updated_date': datetime.utcnow()},
+        {'id': 3, 'status_name': 'Rejected', 'description': 'Comment is rejected and not shown', 'created_date': datetime.utcnow(), 'updated_date': datetime.utcnow()},
     ])
     
     conn.execute('SELECT setval(\'comment_status_id_seq\', 1);')

@@ -24,3 +24,10 @@ class SurveySchema(Schema):
     updated_date = fields.Str(data_key='updated_date')
     engagement_id = fields.Str(data_key='engagement_id')
     engagement = fields.Nested(EngagementSchema)
+    comments_count = fields.Method('get_comments_count')
+
+    def get_comments_count(self, obj):
+        """Get the number of comments made in the survey."""
+        if not obj.comments:
+            return 0
+        return len(obj.comments)
