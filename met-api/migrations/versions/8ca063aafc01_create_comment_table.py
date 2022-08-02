@@ -1,7 +1,7 @@
 """empty message
 
 Revision ID: 8ca063aafc01
-Revises: 1113e0ad66c3
+Revises: 6d3c33a79c5e
 Create Date: 2022-07-28 15:13:35.368696
 
 """
@@ -12,7 +12,7 @@ from datetime import datetime
 
 # revision identifiers, used by Alembic.
 revision = '8ca063aafc01'
-down_revision = '1113e0ad66c3'
+down_revision = '6d3c33a79c5e'
 branch_labels = None
 depends_on = None
 
@@ -37,18 +37,14 @@ def upgrade():
     sa.Column('survey_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['status_id'], ['comment_status.id'], ondelete='SET NULL'),
     sa.ForeignKeyConstraint(['survey_id'], ['survey.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], nullable=True, ondelete='SET NULL'),
     sa.PrimaryKeyConstraint('id')
     )
-    
-    conn = op.get_bind()
-
     op.bulk_insert(comment_status_table, [
         {'id': 1, 'status_name': 'Pending', 'description': 'Comment is pending review', 'created_date': datetime.utcnow(), 'updated_date': datetime.utcnow()},
         {'id': 2, 'status_name': 'Accepted', 'description': 'Comment is accepted for public view', 'created_date': datetime.utcnow(), 'updated_date': datetime.utcnow()},
         {'id': 3, 'status_name': 'Rejected', 'description': 'Comment is rejected and not shown', 'created_date': datetime.utcnow(), 'updated_date': datetime.utcnow()},
     ])
-    
-    conn.execute('SELECT setval(\'comment_status_id_seq\', 1);')
     # ### end Alembic commands ###
 
 

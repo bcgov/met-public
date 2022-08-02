@@ -12,7 +12,7 @@ export const SurveyForm = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
-    const { isLoading, savedSurvey } = useContext(ActionContext);
+    const { isLoading, savedSurvey, token } = useContext(ActionContext);
     const [submissionData, setSubmissionData] = useState<unknown>(null);
     const [isValid, setIsValid] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -28,6 +28,7 @@ export const SurveyForm = () => {
             await submitSurvey({
                 survey_id: savedSurvey.id,
                 submission_json: submissionData,
+                verification_token: token ? token : '',
             });
             dispatch(
                 openNotification({

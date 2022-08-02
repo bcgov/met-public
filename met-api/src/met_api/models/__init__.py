@@ -20,4 +20,5 @@ from .engagement_status import EngagementStatus
 from .user import User
 from .survey import Survey
 from .submission import Submission
+from .email_verification import EmailVerification
 from .comment import Comment

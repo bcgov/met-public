@@ -44,13 +44,21 @@ class CommentService:
     def validate_fields(data):
         """Validate all fields."""
         # Will empty text return False
-        empty_fields = [not data[field] for field in ['text', 'survey_id']]
+        empty_fields = [not data[field] for field in ['text', 'survey_id', 'user_id']]
 
         if any(empty_fields):
             raise ValueError('Some required fields for comments are missing')
 
     @staticmethod
-    def extract_comments(survey_submission: SubmissionSchema, survey: SurveySchema):
+    def form_comment(comment_text, survey_submission: SubmissionSchema, survey: SurveySchema):
+        return {
+            'text': comment_text,
+            'survey_id': survey.get('id', None),
+            'user_id': survey_submission.get('user_id', None)
+        }
+        
+    @classmethod
+    def extract_comments(cls, survey_submission: SubmissionSchema, survey: SurveySchema):
         """Extract comments from survey submission."""
         survey_form = survey.get('form_json', {})
         components = list(survey_form.get('components', []))
@@ -70,6 +78,6 @@ class CommentService:
         if None in comments_texts:
             raise KeyError('Some answered questions were not found in the survey form')
 
-        comments = [{'text': comment_text, 'survey_id': survey.get('id', None)} for comment_text in comments_texts]
+        comments = [cls.form_comment(comment_text, survey_submission, survey) for comment_text in comments_texts]
 
         return comments

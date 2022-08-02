@@ -1,6 +1,6 @@
-"""Engagement Status model class.
+"""Comment Status model class.
 
-Manages the engagement status
+Manages the comment status
 """
 from datetime import datetime
 

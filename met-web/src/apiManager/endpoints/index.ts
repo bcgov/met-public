@@ -28,6 +28,10 @@ const Endpoints = {
         UPDATE: `${AppConfig.apiUrl}/comments/`,
         GET: `${AppConfig.apiUrl}/comments/comment_id`,
     },
+    EmailVerification: {
+        GET: `${AppConfig.apiUrl}/email_verification/verification_token`,
+        CREATE: `${AppConfig.apiUrl}/email_verification/`,
+    },
 };
 
 export default Endpoints;

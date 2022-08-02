@@ -4,6 +4,7 @@ from met_api.constants.engagement_status import SubmissionStatus
 from met_api.models.submission import Submission
 from met_api.models.survey import Survey
 from met_api.schemas.submission import SubmissionSchema
+from met_api.services.email_verification_service import EmailVerificationService
 from met_api.services.comment_service import CommentService
 from met_api.services.survey_service import SurveyService
 
@@ -26,13 +27,21 @@ class SubmissionService:
         return db_data
 
     @classmethod
-    def create(cls, data: SubmissionSchema):
+    def create(cls, submission: SubmissionSchema):
         """Create submission."""
-        cls.validate_fields(data)
-        survey = SurveyService.get(data.get('survey_id'))
-        comments = CommentService.extract_comments(data, survey)
+        cls.validate_fields(submission)
+        verification_token = submission.get('verification_token', None)
+        survey_id = submission.get('survey_id', None)
+        email_verification = cls.validate_email_verification(verification_token, survey_id)
+        user_id = email_verification.get('user_id', None)
+        submission['user_id'] = user_id
+        submission['created_by'] = user_id
+        
+        survey = SurveyService.get(survey_id)
+        comments = CommentService.extract_comments(submission, survey)
         CommentService.create_comments(comments)
-        return Submission.create(data)
+
+        return Submission.create(submission)
 
     @classmethod
     def update(cls, data: SubmissionSchema):
@@ -41,15 +50,15 @@ class SubmissionService:
         return Submission.update(data)
 
     @staticmethod
-    def validate_fields(data):
+    def validate_fields(submission):
         # TODO: Validate against survey form_json
         """Validate all fields."""
-        empty_fields = [not data[field] for field in ['submission_json', 'survey_id']]
+        empty_fields = [not submission[field] for field in ['submission_json', 'survey_id', 'verification_token']]
 
         if any(empty_fields):
             raise ValueError('Some required fields are empty')
 
-        survey_id = data.get('survey_id')
+        survey_id = submission.get('survey_id', None)
         survey = Survey.get_survey(survey_id)
         engagement = survey.get('engagement', None)
         if not engagement:
@@ -59,3 +68,8 @@ class SubmissionService:
 
         if submission_status != SubmissionStatus.Open:
             raise ValueError('Engagement not open to submissions')
+
+    @staticmethod
+    def validate_email_verification(verification_token, survey_id):
+        """Validate the provided verification token."""
+        return EmailVerificationService().verify(verification_token, survey_id)
