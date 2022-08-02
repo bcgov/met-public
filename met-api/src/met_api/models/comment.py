@@ -48,7 +48,13 @@ class Comment(db.Model):
             .join(CommentStatus)\
             .join(Survey)\
             .join(Engagement, Engagement.id == Survey.engagement_id)\
-            .filter(and_(Comment.survey_id == survey_id, Engagement.end_date < now, CommentStatus.id == Status.Accepted))\
+            .filter(\
+                and_(\
+                    Comment.survey_id == survey_id,\
+                    Engagement.end_date < now,\
+                    CommentStatus.id == Status.Accepted\
+                )
+            )\
             .order_by(Comment.id.asc()).all()
 
     @staticmethod
