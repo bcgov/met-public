@@ -14,7 +14,6 @@ from .db import db
 from .default_method_result import DefaultMethodResult
 
 
-
 class Comment(db.Model):
     """Definition of the Comment entity."""
 
@@ -37,22 +36,22 @@ class Comment(db.Model):
     def get_comments_by_survey_id_query(cls, survey_id):
         """Get all comments."""
         return db.session.query(Comment)\
-        .join(CommentStatus)\
-        .join(Survey)\
-        .filter(Comment.survey_id == survey_id)\
-        .order_by(Comment.id.asc()).all()
+            .join(CommentStatus)\
+            .join(Survey)\
+            .filter(Comment.survey_id == survey_id)\
+            .order_by(Comment.id.asc()).all()
 
     @classmethod
     def get_publicly_viewable_comments_by_survey_id_query(cls, survey_id):
         """Get all comments."""
         now = datetime.now()
         return db.session.query(Comment)\
-        .join(CommentStatus)\
-        .join(Survey)\
-        .join(Engagement, Engagement.id == Survey.engagement_id)\
-        .filter(and_(Comment.survey_id == survey_id, Engagement.end_date < now, CommentStatus.id == Status.Accepted ))\
-        .order_by(Comment.id.asc()).all()
-    
+            .join(CommentStatus)\
+            .join(Survey)\
+            .join(Engagement, Engagement.id == Survey.engagement_id)\
+            .filter(and_(Comment.survey_id == survey_id, Engagement.end_date < now, CommentStatus.id == Status.Accepted))\
+            .order_by(Comment.id.asc()).all()
+
     @staticmethod
     def create_new_comment_entity(comment):
         """Create new comment entity."""

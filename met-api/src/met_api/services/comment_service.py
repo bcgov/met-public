@@ -24,7 +24,7 @@ class CommentService:
         if not user_id:
             comment_schema = CommentSchema(many=True, only=("text", "submission_date", "survey"))
             return comment_schema.dump(Comment.get_publicly_viewable_comments_by_survey_id_query(survey_id))
-        
+
         comment_schema = CommentSchema(many=True)
         return comment_schema.dump(Comment.get_comments_by_survey_id_query(survey_id))
 
@@ -75,7 +75,7 @@ class CommentService:
             raise KeyError('Some answered questions were not found in the survey form')
 
         comments = [cls.form_comment(comment_text, survey_submission, survey) for comment_text in comments_texts]
-        
+
         print(comments)
 
         return comments
