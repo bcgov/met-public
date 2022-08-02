@@ -1,8 +1,6 @@
 """Comment model class.
 
-Manages the comment
-"""
-
+Manages the comment"""
 from marshmallow import EXCLUDE, Schema, fields
 
 from met_api.schemas.survey import SurveySchema

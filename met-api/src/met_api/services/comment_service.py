@@ -35,7 +35,6 @@ class CommentService:
     @classmethod
     def create_comments(cls, comments: list):
         """Create comment."""
-
         for comment in comments:
             cls.validate_fields(comment)
 
@@ -71,6 +70,6 @@ class CommentService:
         if None in comments_texts:
             raise KeyError('Some answered questions were not found in the survey form')
 
-        comments = [{"text": comment_text, "survey_id": survey.get('id', None)} for comment_text in comments_texts]
+        comments = [{'text': comment_text, 'survey_id': survey.get('id', None)} for comment_text in comments_texts]
 
         return comments
