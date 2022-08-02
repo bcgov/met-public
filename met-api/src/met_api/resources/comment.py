@@ -35,12 +35,11 @@ class Comment(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.optional
+    @auth.require
     def get(comment_id):
         """Fetch a single comment matching the provided id."""
         try:
-            user_id = TokenInfo.get_id()
-            comment_record = CommentService().get_comment(comment_id, user_id)
+            comment_record = CommentService().get_comment(comment_id)
 
             if comment_record:
                 return ActionResult.success(comment_id, comment_record)

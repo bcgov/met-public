@@ -35,9 +35,10 @@ def upgrade():
     sa.Column('review_date', sa.DateTime(), nullable=True),
     sa.Column('status_id', sa.Integer(), nullable=True),
     sa.Column('survey_id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['status_id'], ['comment_status.id'], ondelete='SET NULL'),
     sa.ForeignKeyConstraint(['survey_id'], ['survey.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['user_id'], ['user.id'], nullable=True, ondelete='SET NULL'),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ondelete='SET NULL'),
     sa.PrimaryKeyConstraint('id')
     )
     op.bulk_insert(comment_status_table, [

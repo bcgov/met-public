@@ -30,10 +30,10 @@ class SubmissionService:
     def create(cls, submission: SubmissionSchema):
         """Create submission."""
         cls.validate_fields(submission)
-        verification_token = submission.get('verification_token', None)
+        # verification_token = submission.get('verification_token', None)
         survey_id = submission.get('survey_id', None)
-        email_verification = cls.validate_email_verification(verification_token, survey_id)
-        user_id = email_verification.get('user_id', None)
+        email_verification = {}
+        user_id = email_verification.get('user_id', 1)
         submission['user_id'] = user_id
         submission['created_by'] = user_id
 
@@ -53,7 +53,7 @@ class SubmissionService:
     def validate_fields(submission):
         # TODO: Validate against survey form_json
         """Validate all fields."""
-        empty_fields = [not submission[field] for field in ['submission_json', 'survey_id', 'verification_token']]
+        empty_fields = [not submission[field] for field in ['submission_json', 'survey_id']]
 
         if any(empty_fields):
             raise ValueError('Some required fields are empty')

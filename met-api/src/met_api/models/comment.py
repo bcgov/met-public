@@ -3,13 +3,16 @@
 Manages the comment
 """
 from datetime import datetime
+from sqlalchemy import and_
 from sqlalchemy.sql.schema import ForeignKey
 from met_api.constants.comment_status import Status
+from met_api.models.engagement import Engagement
 from met_api.models.survey import Survey
-from met_api.schemas.comment import CommentSchema
+from met_api.constants.comment_status import Status
 from .comment_status import CommentStatus
 from .db import db
 from .default_method_result import DefaultMethodResult
+
 
 
 class Comment(db.Model):
@@ -23,23 +26,33 @@ class Comment(db.Model):
     review_date = db.Column(db.DateTime)
     status_id = db.Column(db.Integer, ForeignKey('comment_status.id', ondelete='SET NULL'))
     survey_id = db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), nullable=False)
-    survey_id = db.Column(db.Integer, ForeignKey('user.id', ondelete='SET NULL'), nullable=True)
+    user_id = db.Column(db.Integer, ForeignKey('user.id', ondelete='SET NULL'), nullable=True)
 
     @classmethod
-    def get_comment(cls, comment_id) -> CommentSchema:
+    def get_comment(cls, comment_id):
         """Get a comment."""
-        comment_schema = CommentSchema()
-        data = db.session.query(Comment).join(CommentStatus).join(Survey).filter_by(id=comment_id).first()
-        return comment_schema.dump(data)
+        return db.session.query(Comment).join(CommentStatus).join(Survey).filter_by(id=comment_id).first()
 
     @classmethod
-    def get_comments_by_survey_id_query(cls, survey_id, **filterkwargs):
+    def get_comments_by_survey_id_query(cls, survey_id):
         """Get all comments."""
-        comment_schema = CommentSchema(many=True)
-        data = db.session.query(Comment).join(CommentStatus).join(Survey).filter(
-            Comment.survey_id == survey_id).filter(**filterkwargs).order_by(Comment.id.asc()).all()
-        return comment_schema.dump(data)
+        return db.session.query(Comment)\
+        .join(CommentStatus)\
+        .join(Survey)\
+        .filter(Comment.survey_id == survey_id)\
+        .order_by(Comment.id.asc()).all()
 
+    @classmethod
+    def get_publicly_viewable_comments_by_survey_id_query(cls, survey_id):
+        """Get all comments."""
+        now = datetime.now()
+        return db.session.query(Comment)\
+        .join(CommentStatus)\
+        .join(Survey)\
+        .join(Engagement, Engagement.id == Survey.engagement_id)\
+        .filter(and_(Comment.survey_id == survey_id, Engagement.end_date < now, CommentStatus.id == Status.Accepted ))\
+        .order_by(Comment.id.asc()).all()
+    
     @staticmethod
     def create_new_comment_entity(comment):
         """Create new comment entity."""

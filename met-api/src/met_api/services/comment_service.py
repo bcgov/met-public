@@ -1,6 +1,5 @@
 
 """Service for comment management."""
-from met_api.constants.comment_status import Status
 from met_api.models.comment import Comment
 from met_api.schemas.comment import CommentSchema
 from met_api.schemas.submission import SubmissionSchema
@@ -13,24 +12,21 @@ class CommentService:
     otherdateformat = '%Y-%m-%d'
 
     @staticmethod
-    def get_comment(comment_id, user_id) -> CommentSchema:
+    def get_comment(comment_id) -> CommentSchema:
         """Get Comment by the id."""
         comment = Comment.get_comment(comment_id)
-
-        if comment:
-            if user_id is None and comment.get('status_id', None) != Status.Accepted:
-                # Non authenticated users only have access to accepted comments
-                return None
-
-        return comment
+        comment_schema = CommentSchema()
+        return comment_schema.dump(comment)
 
     @classmethod
     def get_comments_by_survey_id(cls, user_id, survey_id):
         """Get all comments."""
-        filters = {}
         if not user_id:
-            filters['status_id'] = Status.Accepted
-        return Comment.get_comments_by_survey_id_query(survey_id, **filters)
+            comment_schema = CommentSchema(many=True, only=("text", "submission_date", "survey"))
+            return comment_schema.dump(Comment.get_publicly_viewable_comments_by_survey_id_query(survey_id))
+        
+        comment_schema = CommentSchema(many=True)
+        return comment_schema.dump(Comment.get_comments_by_survey_id_query(survey_id))
 
     @classmethod
     def create_comments(cls, comments: list):
@@ -79,5 +75,7 @@ class CommentService:
             raise KeyError('Some answered questions were not found in the survey form')
 
         comments = [cls.form_comment(comment_text, survey_submission, survey) for comment_text in comments_texts]
+        
+        print(comments)
 
         return comments
