@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Modal } from '@mui/material';
 import SuccessPanel from './SuccessPanel';
 import FailurePanel from './FailurePanel';
@@ -7,10 +7,16 @@ import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
 import { EmailModalProps } from './types';
 import { checkEmail } from 'utils';
+import { createEmailVerification } from 'services/emailVerificationService';
+import { openNotification } from 'services/notificationService/notificationSlice';
+import { useAppDispatch } from 'hooks';
+import { ActionContext } from './ActionContext';
 
 const EmailModal = ({ open, handleClose }: EmailModalProps) => {
+    const dispatch = useAppDispatch();
     const [formIndex, setFormIndex] = useState('email');
     const [email, setEmail] = useState('');
+    const { savedEngagement } = useContext(ActionContext);
 
     const close = () => {
         handleClose();
@@ -21,7 +27,31 @@ const EmailModal = ({ open, handleClose }: EmailModalProps) => {
         if (!checkEmail(email)) {
             setFormIndex('error');
         } else {
+            handleSubmit();
+        }
+    };
+
+    const handleSubmit = async () => {
+        try {
+            await createEmailVerification({
+                email_address: email,
+                survey_id: savedEngagement.surveys[0].id,
+            });
+            dispatch(
+                openNotification({
+                    severity: 'success',
+                    text: 'Email verification has been sent',
+                }),
+            );
             setFormIndex('success');
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while sending the email verification',
+                }),
+            );
+            setFormIndex('error');
         }
     };
 
