@@ -29,6 +29,7 @@ API = Namespace('comment', description='Endpoints for Comments Management')
 """Custom exception messages
 """
 
+
 @cors_preflight('GET,OPTIONS')
 @API.route('/<comment_id>')
 class Comment(Resource):
@@ -51,7 +52,8 @@ class Comment(Resource):
             return ActionResult.error('Comment was not found')
         except ValueError as err:
             return ActionResult.error(str(err))
-        
+
+
 @cors_preflight('GET, POST, PUT, OPTIONS')
 @API.route('/all/survey/<survey_id>')
 class Comments(Resource):
