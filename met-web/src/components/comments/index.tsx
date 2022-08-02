@@ -3,7 +3,7 @@ import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
 import { Link, useParams } from 'react-router-dom';
 import { MetPageGridContainer } from 'components/common';
-import { Comment, CommentStatus } from 'models/comment';
+import { Comment } from 'models/comment';
 import { HeadCell } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink, Typography } from '@mui/material';
