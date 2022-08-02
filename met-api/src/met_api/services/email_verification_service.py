@@ -1,11 +1,20 @@
-
 """Service for Email Verification management."""
-from datetime import datetime, timedelta
 import uuid
-from met_api.models.default_method_result import DefaultMethodResult
+from datetime import datetime, timedelta
+from http import HTTPStatus
+
+from flask import current_app, g
+from jinja2 import Environment, FileSystemLoader
+
+from met_api.exceptions.business_exception import BusinessException
 from met_api.models.email_verification import EmailVerification
+from met_api.models.engagement import Engagement as EngagementModel
 from met_api.schemas.email_verification import EmailVerificationSchema
+from met_api.services.rest_service import RestService
 from met_api.services.user_service import UserService
+from met_api.utils.notification import send_email
+
+ENV = Environment(loader=FileSystemLoader('.'), autoescape=True)
 
 
 class EmailVerificationService:
@@ -20,7 +29,7 @@ class EmailVerificationService:
         self.validate_object(db_email_verification)
         return db_email_verification
 
-    def create(self, email_verification: EmailVerificationSchema) -> DefaultMethodResult:
+    def create(self, email_verification: EmailVerificationSchema) -> None:
         """Create an email verification."""
         self.validate_fields(email_verification)
         email_address = email_verification.get('email_address')
@@ -34,8 +43,8 @@ class EmailVerificationService:
         if not create_verification_result.success:
             raise ValueError('Error creating email verification')
 
-        send_verification_result = self.send_verification_email(email_verification)
-        return send_verification_result
+        self._send_verification_email(email_verification)
+        return email_verification
 
     def verify(self, verification_token, survey_id):
         """Validate and update an email verification."""
@@ -53,11 +62,28 @@ class EmailVerificationService:
         return db_email_verification
 
     @staticmethod
-    def send_verification_email(email_verification: EmailVerificationSchema) -> DefaultMethodResult:
-        """Send an verification email."""
-        print(email_verification)
-        # TODO: send email.
-        return DefaultMethodResult(True, '', 0)
+    def _send_verification_email(email_verification: EmailVerificationSchema) -> None:
+        """Send an verification email.Throws error if fails."""
+        sender = current_app.config.get('MAIL_FROM_ID')
+        survey_id = email_verification.get('survey_id')
+        email_to = email_verification.email_address
+        eng: EngagementModel = EngagementModel.get_engagement_by_survey_id(survey_id)
+        if not eng:
+            raise ValueError('Survey not found')
+        template = ENV.get_template('email_templates/email_verification.html')
+        # TODO make it read from config
+        subject = 'survey link - link expires in 24h'
+        app_url = f"{g.get('origin_url', '')}/" \
+                  f"{current_app.config.get('SURVEY_PATH')}" \
+                  f'{survey_id}/{email_verification.verification_token}'
+        body = template.render(engagement_name=eng.name, url=app_url)
+        try:
+            # users havent been created yet.so create token using SA.
+            sa_token = RestService.get_service_account_token()
+            send_email(subject=subject, email=email_to, sender=sender, html_body=body, token=sa_token)
+        except Exception as exc:  # noqa: B902
+            current_app.logger.error('<Notification for registration failed', exc)
+            raise BusinessException(error='Deletion not allowed.', status_code=HTTPStatus.FORBIDDEN) from exc
 
     @staticmethod
     def validate_object(email_verification: EmailVerificationSchema):

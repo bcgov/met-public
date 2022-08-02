@@ -3,13 +3,16 @@
 Manages the engagement
 """
 from datetime import datetime
-from sqlalchemy.sql.schema import ForeignKey
+
 from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy.sql.schema import ForeignKey
+
 from met_api.constants.status import Status
 from met_api.schemas.engagement import EngagementSchema
-from .engagement_status import EngagementStatus
+
 from .db import db
 from .default_method_result import DefaultMethodResult
+from .engagement_status import EngagementStatus
 
 
 class Engagement(db.Model):
@@ -39,6 +42,12 @@ class Engagement(db.Model):
         engagement_schema = EngagementSchema()
         data = db.session.query(Engagement).filter_by(id=engagement_id).first()
         return engagement_schema.dump(data)
+
+    @classmethod
+    def get_engagement_by_survey_id(cls, survey_id):
+        """Get an engagement."""
+        eng = db.session.query(Engagement).filter_by(surveys__id=survey_id).first()
+        return eng
 
     @classmethod
     def get_all_engagements(cls):
