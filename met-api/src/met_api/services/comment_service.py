@@ -52,10 +52,11 @@ class CommentService:
 
     @staticmethod
     def extract_comments(survey_submission: SubmissionSchema, survey: SurveySchema):
+        """Extract comments from survey submission."""
         survey_form = survey.get('form_json', {})
         components = list(survey_form.get('components', []))
         if len(components) == 0:
-            return
+            return []
 
         comments_keys = [
             component.get(
