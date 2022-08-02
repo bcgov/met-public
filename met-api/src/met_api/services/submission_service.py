@@ -36,7 +36,7 @@ class SubmissionService:
         user_id = email_verification.get('user_id', None)
         submission['user_id'] = user_id
         submission['created_by'] = user_id
-        
+
         survey = SurveyService.get(survey_id)
         comments = CommentService.extract_comments(submission, survey)
         CommentService.create_comments(comments)

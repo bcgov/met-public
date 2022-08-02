@@ -56,7 +56,7 @@ class CommentService:
             'survey_id': survey.get('id', None),
             'user_id': survey_submission.get('user_id', None)
         }
-        
+
     @classmethod
     def extract_comments(cls, survey_submission: SubmissionSchema, survey: SurveySchema):
         """Extract comments from survey submission."""

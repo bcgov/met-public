@@ -23,7 +23,7 @@ class Comment(db.Model):
     review_date = db.Column(db.DateTime)
     status_id = db.Column(db.Integer, ForeignKey('comment_status.id', ondelete='SET NULL'))
     survey_id = db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), nullable=False)
-    user_id = db.Column(db.Integer, ForeignKey('user.id'), nullable=True, ondelete='SET NULL')
+    survey_id = db.Column(db.Integer, ForeignKey('user.id', ondelete='SET NULL'), nullable=True)
 
     @classmethod
     def get_comment(cls, comment_id) -> CommentSchema:
