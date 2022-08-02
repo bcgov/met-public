@@ -1,4 +1,4 @@
-export type CommentStatus = 'Pending' | 'Review' | 'Published' | 'Rejected';
+export type CommentStatus = 'Pending' | 'Approved' | 'Rejected';
 
 export interface Comment {
     id: number;

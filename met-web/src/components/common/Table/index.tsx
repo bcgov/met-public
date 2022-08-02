@@ -100,8 +100,17 @@ interface MetTableProps<T> {
     headCells: HeadCell<T>[];
     defaultSort: keyof T;
     rows: T[];
+    hideHeader: boolean;
+    ref: React.Ref<MetTable>;
 }
-function MetTable<T>({ filter = { key: '', value: '' }, headCells = [], defaultSort, rows = [] }: MetTableProps<T>) {
+function MetTable<T>({
+    ref,
+    hideHeader,
+    filter = { key: '', value: '' },
+    headCells = [],
+    defaultSort,
+    rows = [],
+}: MetTableProps<T>) {
     const [filteredRows, setFilteredRows] = useState<T[]>(rows);
     const [order, setOrder] = useState<Order>('asc');
     const [orderBy, setOrderBy] = useState(defaultSort);
@@ -147,13 +156,18 @@ function MetTable<T>({ filter = { key: '', value: '' }, headCells = [], defaultS
             <Paper sx={{ width: '100%', mb: 2 }} elevation={0}>
                 <TableContainer>
                     <Table aria-labelledby="Engagements">
-                        <MetTableHead
-                            order={order}
-                            orderBy={orderBy}
-                            onRequestSort={handleRequestSort}
-                            rowCount={filteredRows.length}
-                            headCells={headCells}
-                        />
+                        {hideHeader ? (
+                            <></>
+                        ) : (
+                            <MetTableHead
+                                order={order}
+                                orderBy={orderBy}
+                                onRequestSort={handleRequestSort}
+                                rowCount={filteredRows.length}
+                                headCells={headCells}
+                            />
+                        )}
+
                         <TableBody>
                             {stableSort<T>(filteredRows, getComparator<T>(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
