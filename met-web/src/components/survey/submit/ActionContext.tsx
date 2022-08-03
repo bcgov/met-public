@@ -35,27 +35,13 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     }, []);
 
     const verifyToken = async () => {
-        if (!token) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Verification token is invalid.',
-                }),
-            );
-            navigate('/');
-            return;
-        }
         try {
+            if (!token) {
+                throw new Error('token is empty');
+            }
             const verification = await getEmailVerification(token);
             if (!verification || verification.survey_id !== Number(surveyId)) {
-                dispatch(
-                    openNotification({
-                        severity: 'error',
-                        text: 'Verification token is invalid.',
-                    }),
-                );
-                navigate('/');
-                return;
+                throw new Error('verification not found or does not match survey');
             }
 
             loadSurvey();
