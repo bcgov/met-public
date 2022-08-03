@@ -7,8 +7,8 @@ from .db import db
 from .base_model import BaseModel
 
 
-class user_feedback(BaseModel):  # pylint: disable=too-few-public-methods
-    """Definition of the user_feedback entity."""
+class UserFeedback(BaseModel):  # pylint: disable=too-few-public-methods
+    """Definition of the User Feedback entity."""
 
     __tablename__ = 'user_feedback'
     

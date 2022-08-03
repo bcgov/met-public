@@ -6,8 +6,8 @@ from .db import db
 from .base_model import BaseModel
 
 
-class user(BaseModel):  # pylint: disable=too-few-public-methods
-    """Definition of the user entity."""
+class User(BaseModel):  # pylint: disable=too-few-public-methods
+    """Definition of the User entity."""
 
     __tablename__ = 'user'
     

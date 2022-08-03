@@ -15,16 +15,16 @@
 """This exports all of the models and schemas used by the application."""
 
 from .db import db, ma, migrate
-from .engagement import engagement
-from .survey import survey
-from .user import user
-from .user_response_detail import user_response_detail
-from .request_type_radio import request_type_radio
-from .response_type_radio import response_type_radio
-from .request_type_selectbox import request_type_selectbox
-from .response_type_selectbox import response_type_selectbox
-from .request_type_textarea import request_type_textarea
-from .response_type_textarea import response_type_textarea
-from .request_type_textfield import request_type_textfield
-from .response_type_textfield import response_type_textfield
-from .user_feedback import user_feedback
+from .engagement import Engagement
+from .survey import Survey
+from .user import User
+from .user_response_detail import UserResponseDetail
+from .request_type_radio import RequestTypeRadio
+from .response_type_radio import ResponseTypeRadio
+from .request_type_selectbox import RequestTypeSelectbox
+from .response_type_selectbox import ResponseTypeSelectbox
+from .request_type_textarea import RequestTypeTextarea
+from .response_type_textarea import ResponseTypeTextarea
+from .request_type_textfield import RequestTypeTextfield
+from .response_type_textfield import ResponseTypeTextfield
+from .user_feedback import UserFeedback

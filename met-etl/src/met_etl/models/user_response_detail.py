@@ -7,8 +7,8 @@ from .db import db
 from .base_model import BaseModel
 
 
-class user_response_detail(BaseModel):  # pylint: disable=too-few-public-methods
-    """Definition of the user_response_detail entity."""
+class UserResponseDetail(BaseModel):  # pylint: disable=too-few-public-methods
+    """Definition of the User Response Detail entity."""
 
     __tablename__ = 'user_response_detail'
     

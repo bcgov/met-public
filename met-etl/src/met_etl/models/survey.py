@@ -7,8 +7,8 @@ from .db import db
 from .base_model import BaseModel
 
 
-class survey(BaseModel):  # pylint: disable=too-few-public-methods
-    """Definition of the survey entity."""
+class Survey(BaseModel):  # pylint: disable=too-few-public-methods
+    """Definition of the Survey entity."""
 
     __tablename__ = 'survey'
     

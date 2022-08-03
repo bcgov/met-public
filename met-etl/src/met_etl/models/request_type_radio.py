@@ -7,8 +7,8 @@ from .db import db
 from .base_model import BaseModel
 
 
-class request_type_radio(BaseModel):  # pylint: disable=too-few-public-methods
-    """Definition of the request_type_radio entity."""
+class RequestTypeRadio(BaseModel):  # pylint: disable=too-few-public-methods
+    """Definition of the Request Type Radio entity."""
 
     __tablename__ = 'request_type_radio'
     

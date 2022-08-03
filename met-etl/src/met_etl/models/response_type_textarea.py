@@ -8,8 +8,8 @@ from .base_model import BaseModel
 from .request_type_textarea import request_type_textarea
 
 
-class response_type_textarea(BaseModel):  # pylint: disable=too-few-public-methods
-    """Definition of the response_type_textarea entity."""
+class ResponseTypeTextarea(BaseModel):  # pylint: disable=too-few-public-methods
+    """Definition of the Response Type Textarea entity."""
 
     __tablename__ = 'response_type_textarea'
     

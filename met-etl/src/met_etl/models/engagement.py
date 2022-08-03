@@ -7,8 +7,8 @@ from .db import db
 from .base_model import BaseModel
 
 
-class engagement(BaseModel):  # pylint: disable=too-few-public-methods
-    """Definition of the engagement entity."""
+class Engagement(BaseModel):  # pylint: disable=too-few-public-methods
+    """Definition of the Engagement entity."""
 
     __tablename__ = 'engagement'
     

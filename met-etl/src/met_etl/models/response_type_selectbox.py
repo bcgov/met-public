@@ -8,8 +8,8 @@ from .base_model import BaseModel
 from .request_type_selectbox import request_type_selectbox
 
 
-class response_type_selectbox(BaseModel):  # pylint: disable=too-few-public-methods
-    """Definition of the response_type_selectbox entity."""
+class ResponseTypeSelectbox(BaseModel):  # pylint: disable=too-few-public-methods
+    """Definition of the Response Type Selectbox entity."""
 
     __tablename__ = 'response_type_selectbox'
     

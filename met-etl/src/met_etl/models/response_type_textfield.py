@@ -8,8 +8,8 @@ from .base_model import BaseModel
 from .request_type_textfield import request_type_textfield
 
 
-class response_type_textfield(BaseModel):  # pylint: disable=too-few-public-methods
-    """Definition of the response_type_textfield entity."""
+class ResponseTypeTextfield(BaseModel):  # pylint: disable=too-few-public-methods
+    """Definition of the Response Type Textfield entity."""
 
     __tablename__ = 'response_type_textfield'
     

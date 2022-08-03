@@ -7,8 +7,8 @@ from .db import db
 from .base_model import BaseModel
 
 
-class request_type_textfield(BaseModel):  # pylint: disable=too-few-public-methods
-    """Definition of the request_type_textfield entity."""
+class RequestTypeTextfield(BaseModel):  # pylint: disable=too-few-public-methods
+    """Definition of the Request Type Textfield entity."""
 
     __tablename__ = 'request_type_textfield'
     
