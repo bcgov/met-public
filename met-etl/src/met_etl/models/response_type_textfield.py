@@ -2,29 +2,25 @@
 
 Manages the responses for a textfield type questions on a survey
 """
-from datetime import datetime
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKeyConstraint
 from .db import db
+from .base_model import BaseModel
+from .request_type_textfield import request_type_textfield
 
 
-class response_type_textfield(db.Model):  # pylint: disable=too-few-public-methods
-    """Definition of the response_type_textfield entity."""
+class ResponseTypeTextfield(BaseModel):  # pylint: disable=too-few-public-methods
+    """Definition of the Response Type Textfield entity."""
 
-    __bind_key__ = 'met_db_analytics'
     __tablename__ = 'response_type_textfield'
     
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    survey_id = db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), primary_key=True, nullable=False)
-    engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), primary_key=True, nullable=False)
-    user_id = db.Column(db.Integer, ForeignKey('user.id', ondelete='CASCADE'), primary_key=True, nullable=False)
-    request_key = db.Column(db.String(100))
-    value = db.Column(db.String(5000))
-    created_date = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
-    active_flag = db.Column(db.String(1))
-
-    @classmethod
-    def get_all(cls):
-        """Get all response_type_textfield."""
-        return db.session.query(response_type_textfield).all()
+    request_id = db.Column(db.String(100), primary_key=True, nullable=False)
+    request_key = db.Column(db.String(100), primary_key=True, nullable=False)
+    survey_id = db.Column(db.Integer, primary_key=True, nullable=False)
+    engagement_id = db.Column(db.Integer, primary_key=True, nullable=False)
+    user_id = db.Column(db.Integer)
+    value = db.Column(db.String(5000)) 
+    __table_args__ = (ForeignKeyConstraint([request_id, request_key, survey_id, engagement_id],
+                                           [request_type_textfield.id, request_type_textfield.key, request_type_textfield.survey_id, request_type_textfield.engagement_id]),
+                      {}) 
