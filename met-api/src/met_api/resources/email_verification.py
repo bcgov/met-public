@@ -63,7 +63,7 @@ class EmailVerifications(Resource):
         try:
             requestjson = request.get_json()
             email_verification = EmailVerificationSchema().load(requestjson)
-            result = EmailVerificationService().create(email_verification)
+            EmailVerificationService().create(email_verification)
             return ActionResult.success({}, {})
         except KeyError as err:
             return ActionResult.error(str(err))
