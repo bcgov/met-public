@@ -1,4 +1,5 @@
 """Service for Email Verification management."""
+import os
 import uuid
 from datetime import datetime, timedelta
 from http import HTTPStatus
@@ -14,7 +15,8 @@ from met_api.services.rest_service import RestService
 from met_api.services.user_service import UserService
 from met_api.utils.notification import send_email
 
-ENV = Environment(loader=FileSystemLoader('.'), autoescape=True)
+templates_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..', 'templates'))
+ENV = Environment(loader=FileSystemLoader(templates_dir), autoescape=True)
 
 
 class EmailVerificationService:
@@ -22,6 +24,8 @@ class EmailVerificationService:
 
     verification_expiry_hours = 24
     datetime_format = '%Y-%m-%d %H:%M:%S.%f'
+    full_date_format = ' %B %d, %Y'
+    date_format = '%Y-%m-%d'
 
     def get_active(self, verification_token):
         """Get an active email verification matching the provided token."""
@@ -68,18 +72,14 @@ class EmailVerificationService:
         survey_id = email_verification.get('survey_id')
         email_to = email_verification.get('email_address')
         survey: SurveyModel = SurveyModel.get_open_survey(survey_id)
+
         if not survey:
             raise ValueError('Survey not found')
         if not survey.get('engagement'):
             raise ValueError('Engagement not found')
-        template = ENV.get_template('email_templates/email_verification.html')
-        # TODO make it read from config
-        subject = 'survey link - link expires in 24h'
-        survey_path = current_app.config.get('SURVEY_PATH'). \
-            format(survey_id=survey_id, token=email_verification.get('verification_token'))
-        # url is origin url excluding context path
-        app_url = f"{g.get('origin_url', '')}/{survey_path}"
-        body = template.render(engagement_name=survey.get('engagement').get('name'), url=app_url)
+
+        subject, body = EmailVerificationService._render_email_template(
+            survey, email_verification.get('verification_token'))
         try:
             # user hasn't been created yet.so create token using SA.
             service_account_token = RestService.get_service_account_token()
@@ -88,6 +88,31 @@ class EmailVerificationService:
         except Exception as exc:  # noqa: B902
             current_app.logger.error('<Notification for registration failed', exc)
             raise BusinessException(error='Deletion not allowed.', status_code=HTTPStatus.FORBIDDEN) from exc
+
+    @staticmethod
+    def _render_email_template(survey: SurveyModel, token):
+        template = ENV.get_template('email_verification.html')
+        survey_id = survey.get('id')
+        survey_path = current_app.config.get('SURVEY_PATH'). \
+            format(survey_id=survey_id, token=token)
+        engagement_path = current_app.config.get('ENGAGEMENT_PATH'). \
+            format(engagement_id=survey.get('engagement_id'))
+        # url is origin url excluding context path
+        survey_url = f"{g.get('origin_url', '')}{survey_path}"
+        engagement_url = f"{g.get('origin_url', '')}{engagement_path}"
+        engagement = survey.get('engagement')
+        engagement_name = engagement.get('name')
+        # TODO make it read from config
+        subject = current_app.config.get('VERIFICATION_EMAIL_SUBJECT'). \
+            format(engagement_name=engagement_name)
+        end_date = datetime.strptime(engagement.get('end_date'), EmailVerificationService.date_format)
+        formatted_end_date = datetime.strftime(end_date, EmailVerificationService.full_date_format)
+        body = template.render(
+            engagement_name=engagement_name,
+            survey_url=survey_url,
+            engagement_url=engagement_url,
+            end_date=formatted_end_date)
+        return subject, body
 
     @staticmethod
     def validate_object(email_verification: EmailVerificationSchema):

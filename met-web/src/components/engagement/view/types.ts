@@ -19,6 +19,7 @@ export interface EmailPanelProps {
     checkEmail: () => void;
     handleClose: () => void;
     updateEmail: (string: string) => void;
+    isSaving: boolean;
 }
 
 export interface SuccessPanelProps {
