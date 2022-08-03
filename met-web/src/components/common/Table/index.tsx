@@ -101,10 +101,8 @@ interface MetTableProps<T> {
     defaultSort: keyof T;
     rows: T[];
     hideHeader: boolean;
-    ref: React.Ref<MetTable>;
 }
 function MetTable<T>({
-    ref,
     hideHeader,
     filter = { key: '', value: '' },
     headCells = [],

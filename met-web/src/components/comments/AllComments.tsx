@@ -1,14 +1,10 @@
-import React, { useState, useEffect, createRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
-import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
 import { MetPageGridContainer } from 'components/common';
 import { Comment } from 'models/comment';
 import { HeadCell } from 'components/common/Table/types';
-import { formatDate } from 'components/common/dateHelper';
-import { Link as MuiLink, Typography } from '@mui/material';
-import Button from '@mui/material/Button';
-import { Box } from '@mui/material';
+import { Link as MuiLink, Typography, Box, Button, Grid } from '@mui/material';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
@@ -53,7 +49,6 @@ const testComments: Comment[] = [
 
 const AllComments = () => {
     const [comments, setComments] = useState<Comment[]>([]);
-    const tableRef = createRef<MetTable>();
 
     const dispatch = useAppDispatch();
 
@@ -69,10 +64,6 @@ const AllComments = () => {
     useEffect(() => {
         callFetchComments();
     }, []);
-
-    useEffect(() => {
-        console.log(tableRef);
-    });
 
     const headCells: HeadCell<Comment>[] = [
         {
@@ -116,7 +107,7 @@ const AllComments = () => {
                     </Grid>
                     <Grid item xs={6}></Grid>
                     <Grid item xs={6}>
-                        {!(row.status == 'Approved') ? (
+                        {row.status != 'Approved' ? (
                             <Box
                                 style={{
                                     fontWeight: 'bold',
@@ -165,8 +156,7 @@ const AllComments = () => {
             rowSpacing={1}
         >
             <Grid item xs={12} lg={10}>
-                <Typography>Showing X out of {comments.length} comments</Typography>
-                <MetTable ref={tableRef} hideHeader={true} headCells={headCells} rows={comments} defaultSort={'id'} />
+                <MetTable hideHeader={true} headCells={headCells} rows={comments} defaultSort={'id'} />
                 <Button variant="contained">Return to Comments List</Button>
             </Grid>
         </MetPageGridContainer>
