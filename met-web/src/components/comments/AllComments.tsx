@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { MetPageGridContainer } from 'components/common';
 import { Comment } from 'models/comment';
 import { HeadCell } from 'components/common/Table/types';
-import { Link as MuiLink, Typography, Box, Button, Grid, Chip } from '@mui/material';
+import { Link as MuiLink, Typography, Button, Grid, Chip } from '@mui/material';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
