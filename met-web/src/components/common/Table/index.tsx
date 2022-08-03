@@ -172,7 +172,10 @@ function MetTable<T>({
                                     return (
                                         <TableRow hover tabIndex={-1} key={`row-${rowIndex}`}>
                                             {headCells.map((cell, cellIndex) => (
-                                                <MetTableCell key={`row-${rowIndex}-${cellIndex}`}>
+                                                <MetTableCell
+                                                    key={`row-${rowIndex}-${cellIndex}`}
+                                                    style={cell.customStyle || {}}
+                                                >
                                                     {cell.getValue ? cell.getValue(row) : String(row[cell.key])}
                                                 </MetTableCell>
                                             ))}
@@ -185,7 +188,7 @@ function MetTable<T>({
                                         height: 53 * emptyRows,
                                     }}
                                 >
-                                    <TableCell colSpan={6} />
+                                    <TableCell colSpan={headCells.length} />
                                 </TableRow>
                             )}
                         </TableBody>

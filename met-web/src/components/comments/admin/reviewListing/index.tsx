@@ -135,7 +135,9 @@ const CommentListing = () => {
                     {`${comments[0]?.survey || ''} Comments`}
                 </Typography>
                 <MetTable headCells={headCells} rows={comments} defaultSort={'id'} />
-                <Button variant="contained">View All Comments</Button>
+                <Button component={Link} to={`/survey/${comments[0]?.survey_id || 0}/comments/all`} variant="contained">
+                    View All Comments
+                </Button>
             </Grid>
         </MetPageGridContainer>
     );
