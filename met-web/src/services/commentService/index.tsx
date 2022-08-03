@@ -28,7 +28,6 @@ export const getComment = async (commentId: number): Promise<Comment> => {
     }
 };
 
-
 interface UpdateCommentRequest {
     id: string;
     survey_id: number;
@@ -44,4 +43,3 @@ export const UpdateComment = async (data: UpdateCommentRequest): Promise<Comment
         return Promise.reject(err);
     }
 };
-
