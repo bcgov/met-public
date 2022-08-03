@@ -15,7 +15,6 @@ import { fetchComments } from 'services/commentService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
-
 const CommentListing = () => {
     const [searchFilter, setSearchFilter] = useState({
         key: 'email',
