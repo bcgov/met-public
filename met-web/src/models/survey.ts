@@ -9,6 +9,7 @@ export interface Survey {
     engagement: Engagement;
     form_json?: FormBuilderData;
     comments?: unknown;
+    comments_count?: number;
 }
 
 export const createDefaultSurvey = (): Survey => {
@@ -18,5 +19,6 @@ export const createDefaultSurvey = (): Survey => {
         responseCount: 0,
         created_date: '',
         engagement: createDefaultEngagement(),
+        comments_count: 0,
     };
 };

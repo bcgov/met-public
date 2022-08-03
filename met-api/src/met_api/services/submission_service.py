@@ -1,10 +1,12 @@
 
 """Service for submission management."""
-from met_api.constants.status import SubmissionStatus
+from met_api.constants.engagement_status import SubmissionStatus
 from met_api.models.submission import Submission
 from met_api.models.survey import Survey
 from met_api.schemas.submission import SubmissionSchema
 from met_api.services.email_verification_service import EmailVerificationService
+from met_api.services.comment_service import CommentService
+from met_api.services.survey_service import SurveyService
 
 
 class SubmissionService:
@@ -31,10 +33,14 @@ class SubmissionService:
         verification_token = submission.get('verification_token', None)
         survey_id = submission.get('survey_id', None)
         email_verification = cls.validate_email_verification(verification_token, survey_id)
-
         user_id = email_verification.get('user_id', None)
         submission['user_id'] = user_id
         submission['created_by'] = user_id
+
+        survey = SurveyService.get(survey_id)
+        comments = CommentService.extract_comments(submission, survey)
+        CommentService.create_comments(comments)
+
         return Submission.create(submission)
 
     @classmethod

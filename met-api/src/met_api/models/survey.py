@@ -4,9 +4,9 @@ Manages the Survey
 """
 from datetime import datetime
 from typing import List
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, and_
 from sqlalchemy.dialects import postgresql
-from met_api.constants.status import Status
+from met_api.constants.engagement_status import Status
 from met_api.models.engagement_status import EngagementStatus
 from met_api.models.engagement import Engagement
 from met_api.schemas.survey import SurveySchema
@@ -27,6 +27,7 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
     created_by = db.Column(db.String(50))
     updated_by = db.Column(db.String(50))
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'))
+    comments = db.relationship('Comment', backref='survey', cascade='all, delete')
 
     @classmethod
     def get_survey(cls, survey_id) -> SurveySchema:
@@ -42,9 +43,12 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
     @classmethod
     def get_open_survey(cls, survey_id) -> SurveySchema:
         """Get a survey."""
+        now = datetime.now()
         survey_schema = SurveySchema()
         survey = db.session.query(Survey).filter_by(id=survey_id)\
-            .join(Engagement).filter_by(status_id=Status.Published)\
+            .join(Engagement)\
+            .filter_by(status_id=Status.Published)\
+            .filter(and_(Engagement.start_date <= now, Engagement.end_date >= now))\
             .join(EngagementStatus)\
             .first()
         return survey_schema.dump(survey)
