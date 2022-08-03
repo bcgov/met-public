@@ -89,7 +89,7 @@ class _Config():  # pylint: disable=too-few-public-methods
     KEYCLOAK_SERVICE_ACCOUNT_SECRET = os.getenv('MET_ADMIN_CLIENT_SECRET')
 
     # front end urls
-    SURVEY_PATH = os.getenv('SURVEY_PATH','/survey/submit/{survey_id}/{token}')
+    SURVEY_PATH = os.getenv('SURVEY_PATH', '/survey/submit/{survey_id}/{token}')
 
     # Email Service
     NOTIFICATIONS_EMAIL_ENDPOINT = os.getenv('NOTIFICATIONS_EMAIL_ENDPOINT')

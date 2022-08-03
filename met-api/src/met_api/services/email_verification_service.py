@@ -75,7 +75,8 @@ class EmailVerificationService:
         template = ENV.get_template('email_templates/email_verification.html')
         # TODO make it read from config
         subject = 'survey link - link expires in 24h'
-        survey_path = current_app.config.get('SURVEY_PATH').format(survey_id=survey_id,token=email_verification.get('verification_token'))
+        survey_path = current_app.config.get('SURVEY_PATH'). \
+            format(survey_id=survey_id, token=email_verification.get('verification_token'))
         # url is origin url excluding context path
         app_url = f"{g.get('origin_url', '')}/{survey_path}"
         body = template.render(engagement_name=survey.get('engagement').get('name'), url=app_url)
