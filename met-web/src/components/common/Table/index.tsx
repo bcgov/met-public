@@ -13,6 +13,7 @@ import { visuallyHidden } from '@mui/utils';
 import { MetTableCell } from './TableElements';
 import { HeadCell } from 'components/common/Table/types';
 import { hasKey } from 'utils';
+import { ConditionalComponent } from '..';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
@@ -154,9 +155,7 @@ function MetTable<T>({
             <Paper sx={{ width: '100%', mb: 2 }} elevation={0}>
                 <TableContainer>
                     <Table aria-labelledby="Engagements">
-                        {hideHeader ? (
-                            <></>
-                        ) : (
+                        <ConditionalComponent condition={!hideHeader}>
                             <MetTableHead
                                 order={order}
                                 orderBy={orderBy}
@@ -164,7 +163,7 @@ function MetTable<T>({
                                 rowCount={filteredRows.length}
                                 headCells={headCells}
                             />
-                        )}
+                        </ConditionalComponent>
 
                         <TableBody>
                             {stableSort<T>(filteredRows, getComparator<T>(order, orderBy))
