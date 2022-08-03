@@ -2,9 +2,6 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import NotFound from './NotFound';
 import LandingPage from '../components/LandingPage/LandingPage';
-import { ThemeProvider } from '@mui/system';
-import { BaseTheme, PublicTheme } from '../styles/Theme';
-import UserService from '../services/userService';
 import EngagementForm from '../components/engagement/form';
 import EngagementView from '../components/engagement/view';
 import SurveyListing from 'components/survey/listing';
@@ -15,26 +12,19 @@ import CommentListing from 'components/comments';
 import CommentReview from 'components/comments/CommentReview';
 
 const AuthenticatedRoutes = () => {
-    let adminRole = UserService.hasAdminRole();
-
-    //TODO: Remove when we setup roles
-    adminRole = true;
-
     return (
-        <ThemeProvider theme={adminRole ? BaseTheme : PublicTheme}>
-            <Routes>
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/survey/listing" element={<SurveyListing />} />
-                <Route path="/survey/create" element={<CreateSurvey />} />
-                <Route path="/survey/build/:surveyId" element={<SurveyFormBuilder />} />
-                <Route path="/survey/submit/:surveyId" element={<SurveySubmit />} />
-                <Route path="/engagement/form/:engagementId" element={<EngagementForm />} />
-                <Route path="/engagement/view/:engagementId" element={<EngagementView />} />
-                <Route path="/comments" element={<CommentListing />} />
-                <Route path="/comments/review" element={<CommentReview />} />
-                <Route path="*" element={<NotFound />} />
-            </Routes>
-        </ThemeProvider>
+        <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/survey/listing" element={<SurveyListing />} />
+            <Route path="/survey/create" element={<CreateSurvey />} />
+            <Route path="/survey/build/:surveyId" element={<SurveyFormBuilder />} />
+            <Route path="/survey/submit/:surveyId" element={<SurveySubmit />} />
+            <Route path="/engagement/form/:engagementId" element={<EngagementForm />} />
+            <Route path="/engagement/view/:engagementId" element={<EngagementView />} />
+            <Route path="/survey/:surveyId/comments" element={<CommentListing />} />
+            <Route path="/comments/review" element={<CommentReview />} />
+            <Route path="*" element={<NotFound />} />
+        </Routes>
     );
 };
 

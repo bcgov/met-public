@@ -2,6 +2,7 @@ export type CommentStatus = 'Pending' | 'Review' | 'Published' | 'Rejected';
 
 export interface Comment {
     id: number;
+    survey_id: number;
     email: string;
     comment_date: string;
     published_date: string;
@@ -14,6 +15,7 @@ export interface Comment {
 export const createDefaultComment = (): Comment => {
     return {
         id: 0,
+        survey_id: 0,
         email: '',
         comment_date: '',
         published_date: 'Sent for Review',

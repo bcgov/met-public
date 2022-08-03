@@ -21,8 +21,12 @@ export const EngagementBanner = ({ startSurvey }: EngagementBannerProps) => {
     return (
         <Banner savedEngagement={savedEngagement}>
             <ConditionalComponent condition={!!surveyId && (isOpen || isPreview)}>
-                <Grid item xs={12} container direction="row" justifyContent="flex-end">
-                    <Button variant="contained" onClick={startSurvey}>
+                <Grid item container direction={{ xs: 'column', sm: 'row' }} xs={12} justifyContent="flex-end">
+                    <Button
+                        variant="contained"
+                        data-testid="EngagementBanner/share-your-thoughts-button"
+                        onClick={startSurvey}
+                    >
                         Share your thoughts
                     </Button>
                 </Grid>

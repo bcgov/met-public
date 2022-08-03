@@ -12,7 +12,7 @@ export const SurveyForm = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
-    const { isLoading, savedSurvey } = useContext(ActionContext);
+    const { isLoading, savedSurvey, token } = useContext(ActionContext);
     const [submissionData, setSubmissionData] = useState<unknown>(null);
     const [isValid, setIsValid] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -28,6 +28,7 @@ export const SurveyForm = () => {
             await submitSurvey({
                 survey_id: savedSurvey.id,
                 submission_json: submissionData,
+                verification_token: token ? token : '',
             });
             dispatch(
                 openNotification({
@@ -63,8 +64,8 @@ export const SurveyForm = () => {
             <Grid item xs={12}>
                 <FormSubmit savedForm={savedSurvey.form_json} handleFormChange={handleChange} />
             </Grid>
-            <Grid item xs={12} container direction="row" justifyContent="flex-end">
-                <Stack direction="row" spacing={2}>
+            <Grid item container xs={12} justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
                     <Button variant="outlined" onClick={() => navigate('/')}>
                         Cancel
                     </Button>

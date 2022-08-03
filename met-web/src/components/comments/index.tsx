@@ -15,6 +15,7 @@ import { fetchComments } from 'services/commentService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
+
 const CommentListing = () => {
     const [searchFilter, setSearchFilter] = useState({
         key: 'email',
@@ -53,7 +54,7 @@ const CommentListing = () => {
             label: 'ID',
             allowSort: true,
             getValue: (row: Comment) => (
-                <MuiLink component={Link} to={`/survey/build/${Number(row.id)}/comments`}>
+                <MuiLink component={Link} to={`/survey/${Number(row.survey_id)}/comments/${row.id}`}>
                     {row.id}
                 </MuiLink>
             ),
@@ -64,14 +65,14 @@ const CommentListing = () => {
             disablePadding: false,
             label: 'Masked email',
             allowSort: true,
-            getValue: (row: Comment) => row.email,
+            getValue: (row: Comment) => <Typography sx={{ color: '#F0860B' }}>{row.email}</Typography>,
         },
         {
             key: 'comment_date',
             numeric: true,
             disablePadding: false,
             label: 'Comment Date',
-            allowSort: false,
+            allowSort: true,
             getValue: (row: Comment) => formatDate(row.comment_date || ''),
         },
         {
@@ -80,7 +81,7 @@ const CommentListing = () => {
             disablePadding: false,
             label: 'Reviewed By',
             allowSort: true,
-            getValue: (row: Comment) => row.email,
+            getValue: (row: Comment) => row.reviewed_by,
         },
 
         {

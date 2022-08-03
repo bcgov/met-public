@@ -9,7 +9,7 @@ const UnauthenticatedRoutes = () => {
             <Route path="/" element={<></>} />
             <Route path="*" element={<Navigate to="/" replace />} />
             <Route path="/engagement/view/:engagementId" element={<EngagementView />} />
-            <Route path="/survey/submit/:surveyId" element={<SurveySubmit />} />
+            <Route path="/survey/submit/:surveyId/:token" element={<SurveySubmit />} />
         </Routes>
     );
 };
