@@ -9,40 +9,51 @@ class UserService:
 
     otherdateformat = '%Y-%m-%d'
 
-    def get_user(self, _id):
+    @staticmethod
+    def get_user(_id):
         """Get user by id."""
+        user = UserSchema()
         db_user = User.get_user(_id)
-        user_object = self.__create_user_object(db_user)
-        return user_object
-
-    def get_user_by_external_id(self, _external_id):
-        """Get user by external id."""
-        db_user = User.get_user_by_external_id(_external_id)
-        user_object = self.__create_user_object(db_user)
-        return user_object
+        return user.dump(db_user)
 
     @staticmethod
-    def __create_user_object(db_user: User):
-        """Create user object from a db object."""
-        user = {
-            'id': db_user.id,
-            'first_name': db_user.first_name,
-            'middle_name': db_user.middle_name,
-            'last_name': db_user.last_name,
-            'email_id': db_user.email_id,
-            'contact_number': db_user.contact_number,
-            'external_id': db_user.external_id,
-        }
-        return user
+    def get_user_by_external_id(_external_id):
+        """Get user by external id."""
+        user = UserSchema()
+        db_user = User.get_user_by_external_id(_external_id)
+        return user.dump(db_user)
 
-    def create_or_update_user(self, data: UserSchema):
+    def create_or_update_user(self, user: UserSchema):
         """Create or update a user."""
-        self.validate_fields(data)
+        self.validate_fields(user)
 
-        db_user = User.get_user_by_external_id(data.get('external_id'))
+        external_id = user.get('external_id')
+        db_user = User.get_user_by_external_id(external_id)
         if db_user is None:
-            return User.create_user(data)
-        return User.update_user(db_user.id, data)
+            return User.create_user(user)
+        return User.update_user(db_user.id, user)
+
+    @staticmethod
+    def get_or_create_user(email_address):
+        """Get or create a user matching the email address."""
+        db_user = User.get_user_by_external_id(email_address)
+        if db_user is not None:
+            return db_user
+
+        new_user = {
+            'first_name': '',
+            'middle_name': '',
+            'last_name': '',
+            'email_id': email_address,
+            'contact_number': '',
+            'external_id': email_address,
+        }
+        create_user_result = User.create_user(new_user)
+        if not create_user_result.success:
+            raise ValueError('Error creating user')
+
+        db_user = User.get_user_by_external_id(email_address)
+        return db_user
 
     @staticmethod
     def validate_fields(data: UserSchema):
