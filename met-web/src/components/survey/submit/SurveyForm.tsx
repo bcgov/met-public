@@ -44,7 +44,7 @@ export const SurveyForm = () => {
                     text: 'Error occurred during survey submission',
                 }),
             );
-            setIsSubmitting(true);
+            setIsSubmitting(false);
         }
     };
 

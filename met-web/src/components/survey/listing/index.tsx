@@ -93,12 +93,22 @@ const SurveyListing = () => {
             },
         },
         {
-            key: 'comments',
+            key: 'comments_count',
             numeric: true,
             disablePadding: false,
             label: 'Comments',
             allowSort: true,
-            getValue: (_row: Survey) => '',
+            getValue: (row: Survey) => {
+                if (!row.comments_count) {
+                    return 0;
+                }
+
+                return (
+                    <MuiLink component={Link} to={`/survey/${row.id}/comments`}>
+                        {row.comments_count}
+                    </MuiLink>
+                );
+            },
         },
         {
             key: 'engagement',

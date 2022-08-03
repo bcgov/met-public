@@ -1,27 +1,37 @@
-export type CommentStatus = 'Pending' | 'Review' | 'Published' | 'Rejected';
+import { Status } from './status';
+
+export type CommentStatusType = 'Pending' | 'Accepted' | 'Rejected';
+
+export const CommentStatus = Object.freeze({
+    1: 'Pending',
+    2: 'Accepted',
+    3: 'Rejected',
+});
 
 export interface Comment {
     id: number;
     survey_id: number;
-    email: string;
-    comment_date: string;
+    submission_date: string;
     published_date: string;
-    status: CommentStatus;
-    content: string;
+    status_id: number;
+    text: string;
     reviewed_by: string;
-    date_reviewed: string;
+    review_date: string;
+    comment_status: Status;
+    survey: string;
 }
 
 export const createDefaultComment = (): Comment => {
     return {
         id: 0,
         survey_id: 0,
-        email: '',
-        comment_date: '',
-        published_date: 'Sent for Review',
-        status: 'Pending',
-        content: '',
+        submission_date: '',
+        published_date: '',
+        status_id: 1,
+        text: '',
         reviewed_by: '',
-        date_reviewed: '',
+        review_date: '',
+        comment_status: { id: 0, status_name: '' },
+        survey: '',
     };
 };
