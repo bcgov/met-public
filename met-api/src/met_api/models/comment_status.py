@@ -12,7 +12,7 @@ class CommentStatus(db.Model):  # pylint: disable=too-few-public-methods
 
     __tablename__ = 'comment_status'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True)
     status_name = db.Column(db.String(50), unique=True, nullable=False)
     description = db.Column(db.String(50))
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
