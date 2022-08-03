@@ -8,7 +8,6 @@ from datetime import datetime
 from marshmallow import EXCLUDE, Schema, fields
 from met_api.constants.engagement_status import Status, SubmissionStatus
 
-from met_api.constants.status import Status, SubmissionStatus
 from met_api.schemas.engagement_survey import EngagementSurveySchema
 
 from .engagement_status import EngagementStatusSchema
