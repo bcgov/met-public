@@ -13,6 +13,7 @@ import { visuallyHidden } from '@mui/utils';
 import { MetTableCell } from './TableElements';
 import { HeadCell } from 'components/common/Table/types';
 import { hasKey } from 'utils';
+import { ConditionalComponent } from '..';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
@@ -100,8 +101,15 @@ interface MetTableProps<T> {
     headCells: HeadCell<T>[];
     defaultSort: keyof T;
     rows: T[];
+    hideHeader?: boolean;
 }
-function MetTable<T>({ filter = { key: '', value: '' }, headCells = [], defaultSort, rows = [] }: MetTableProps<T>) {
+function MetTable<T>({
+    hideHeader = false,
+    filter = { key: '', value: '' },
+    headCells = [],
+    defaultSort,
+    rows = [],
+}: MetTableProps<T>) {
     const [filteredRows, setFilteredRows] = useState<T[]>(rows);
     const [order, setOrder] = useState<Order>('asc');
     const [orderBy, setOrderBy] = useState(defaultSort);
@@ -147,13 +155,16 @@ function MetTable<T>({ filter = { key: '', value: '' }, headCells = [], defaultS
             <Paper sx={{ width: '100%', mb: 2 }} elevation={0}>
                 <TableContainer>
                     <Table aria-labelledby="Engagements">
-                        <MetTableHead
-                            order={order}
-                            orderBy={orderBy}
-                            onRequestSort={handleRequestSort}
-                            rowCount={filteredRows.length}
-                            headCells={headCells}
-                        />
+                        <ConditionalComponent condition={!hideHeader}>
+                            <MetTableHead
+                                order={order}
+                                orderBy={orderBy}
+                                onRequestSort={handleRequestSort}
+                                rowCount={filteredRows.length}
+                                headCells={headCells}
+                            />
+                        </ConditionalComponent>
+
                         <TableBody>
                             {stableSort<T>(filteredRows, getComparator<T>(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)

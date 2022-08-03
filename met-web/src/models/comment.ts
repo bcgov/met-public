@@ -1,7 +1,5 @@
 import { Status } from './status';
-
 export type CommentStatusType = 'Pending' | 'Accepted' | 'Rejected';
-
 export const CommentStatus = Object.freeze({
     1: 'Pending',
     2: 'Accepted',
