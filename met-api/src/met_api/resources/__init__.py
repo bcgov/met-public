@@ -25,8 +25,6 @@ from flask import Blueprint
 
 from .apihelper import Api
 from .document import API as DOCUMENT_API
-from .survey import API as SURVEY_API
-from .submission import API as SUBMISSION_API
 from .comment import API as COMMENT_API
 from .email_verification import API as EMAIL_VERIFICATION_API
 from .engagement import API as ENGAGEMENT_API

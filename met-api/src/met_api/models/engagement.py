@@ -6,7 +6,6 @@ from datetime import datetime
 
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.sql.schema import ForeignKey
-from met_api.constants.status import Status
 from met_api.constants.engagement_status import Status
 from met_api.schemas.engagement import EngagementSchema
 
