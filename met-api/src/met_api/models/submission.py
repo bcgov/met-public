@@ -4,11 +4,14 @@ Manages the Submission
 """
 from datetime import datetime
 from typing import List
+
 from sqlalchemy import ForeignKey
 from sqlalchemy.dialects import postgresql
+
 from met_api.schemas.submission import SubmissionSchema
-from .default_method_result import DefaultMethodResult
+
 from .db import db
+from .default_method_result import DefaultMethodResult
 
 
 class Submission(db.Model):  # pylint: disable=too-few-public-methods

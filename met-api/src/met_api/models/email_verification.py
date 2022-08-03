@@ -3,10 +3,13 @@
 Manages the Email verification
 """
 from datetime import datetime
+
 from sqlalchemy import ForeignKey
+
 from met_api.schemas.email_verification import EmailVerificationSchema
-from .default_method_result import DefaultMethodResult
+
 from .db import db
+from .default_method_result import DefaultMethodResult
 
 
 class EmailVerification(db.Model):  # pylint: disable=too-few-public-methods

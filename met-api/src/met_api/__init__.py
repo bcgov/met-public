@@ -4,12 +4,15 @@ This module is for the initiation of the flask app.
 """
 
 import os
+
 import secure
-from flask import Flask
+from flask import Flask, g, request
 from flask_cors import CORS
-from met_api.models import db, ma, migrate
-from met_api.config import get_named_config
+
 from met_api.auth import jwt
+from met_api.config import get_named_config
+from met_api.models import db, ma, migrate
+
 
 # Security Response headers
 csp = (
@@ -71,6 +74,10 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
 
     # Marshmallow initialize
     ma.init_app(app)
+
+    @app.before_request
+    def set_origin():
+        g.origin_url = request.environ.get('HTTP_ORIGIN', 'localhost')
 
     # Return App for run in run.py file
     return app

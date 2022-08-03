@@ -39,6 +39,8 @@ objects:
         - env:
           - name: FLASK_ENV
             value: production
+          - name: EMAIL_PROVIDER
+            value: ${EMAIL_PROVIDER}
           - name: GC_NOTIFY_API_KEY
             valueFrom:
               secretKeyRef:
@@ -53,7 +55,32 @@ objects:
             valueFrom:
               secretKeyRef:
                 key: GC_NOTIFY_EMAIL_TEMPLATE_ID
-                name: ${APP}-secret      
+                name: ${APP}-secret
+          - name: CHES_SSO_TOKEN_URL
+            valueFrom:
+              secretKeyRef:
+                key: CHES_SSO_TOKEN_URL
+                name: ${APP}-secret 
+          - name: CHES_SSO_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                key: CHES_SSO_CLIENT_ID
+                name: ${APP}-secret 
+          - name: CHES_SSO_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: CHES_SSO_CLIENT_SECRET
+                name: ${APP}-secret 
+          - name: CHES_POST_EMAIL_ENDPOINT
+            valueFrom:
+              secretKeyRef:
+                key: CHES_POST_EMAIL_ENDPOINT
+                name: ${APP}-secret    
+          - name: CHES_EMAIL_FROM_ID
+            valueFrom:
+              secretKeyRef:
+                key: CHES_EMAIL_FROM_ID
+                name: ${APP}-secret                                         
           envFrom:
           - configMapRef:
               name: ${APP}
@@ -150,6 +177,11 @@ objects:
     GC_NOTIFY_API_KEY: "${GC_NOTIFY_API_KEY}"
     GC_NOTIFY_API_BASE_URL: "${GC_NOTIFY_API_BASE_URL}"
     GC_NOTIFY_EMAIL_TEMPLATE_ID: "${GC_NOTIFY_EMAIL_TEMPLATE_ID}"
+    CHES_SSO_TOKEN_URL: "${CHES_SSO_TOKEN_URL}"
+    CHES_SSO_CLIENT_ID: "${CHES_SSO_CLIENT_ID}"
+    CHES_SSO_CLIENT_SECRET: "${CHES_SSO_CLIENT_SECRET}"
+    CHES_POST_EMAIL_ENDPOINT: "${CHES_POST_EMAIL_ENDPOINT}"
+    CHES_EMAIL_FROM_ID: "${CHES_EMAIL_FROM_ID}"
  
 parameters:
   - name: APP
@@ -179,5 +211,21 @@ parameters:
   - name: GC_NOTIFY_EMAIL_TEMPLATE_ID
     description: "GC_NOTIFY_EMAIL_TEMPLATE_ID"
     value:       
-    
-    
+  - name: CHES_SSO_TOKEN_URL
+    description: "CHES Token Url"
+    value: https://dev.oidc.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token        
+  - name: CHES_SSO_CLIENT_ID
+    description: "CHES Client Id"
+    value: MET_SERVICE_CLIENT        
+  - name: CHES_SSO_CLIENT_SECRET
+    description: "CHES Client Secret"
+    value:    
+  - name: CHES_POST_EMAIL_ENDPOINT
+    description: "CHES Post Email endpoint"
+    value: https://ches-dev.apps.silver.devops.gov.bc.ca/api/v1/email            
+  - name: EMAIL_PROVIDER
+    description: "CHES or GC_NOTIFY"
+    value: CHES
+  - name: CHES_EMAIL_FROM_ID
+    description: "CHES From email id"
+    value: modernengagement@gov.bc.ca         
