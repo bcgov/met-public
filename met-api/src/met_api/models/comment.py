@@ -73,3 +73,19 @@ class Comment(db.Model):
         db.session.add_all(new_comments)
         db.session.commit()
         return DefaultMethodResult(True, 'Comments Added', 1)
+
+    @classmethod
+    def update_comment_status(cls, comment_id, status_id, reviewed_by) -> DefaultMethodResult:
+        """Update comment status."""
+        query = Comment.query.filter_by(id=comment_id)
+
+        if not query.first():
+            return DefaultMethodResult(False, 'Survey Not Found', comment_id)
+
+        update_fields = dict(
+            status_id=status_id,
+            reviewed_by=reviewed_by
+        )
+        query.update(update_fields)
+        db.session.commit()
+        return DefaultMethodResult(True, 'Survey Updated', comment_id)

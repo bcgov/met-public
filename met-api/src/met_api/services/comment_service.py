@@ -80,3 +80,17 @@ class CommentService:
         print(comments)
 
         return comments
+
+    @classmethod
+    def review_comment(cls, comment_id, status_id, reviewed_by):
+        """review comment."""
+        if not status_id or status_id == 1 or not reviewed_by:
+            raise ValueError('Invalid review')
+
+        comment = cls.get_comment(comment_id)
+        db_status_id = comment.get('comment_status').get('id')
+
+        if db_status_id != 1:
+            raise ValueError('Comment has already been reviewed')
+
+        return Comment.update_comment_status(comment_id, status_id, reviewed_by)
