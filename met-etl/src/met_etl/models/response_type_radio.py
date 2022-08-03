@@ -5,7 +5,7 @@ Manages the responses for a radio type questions on a survey
 from sqlalchemy import ForeignKeyConstraint
 from .db import db
 from .base_model import BaseModel
-from .request_type_radio import request_type_radio
+from .request_type_radio import RequestTypeRadio
 
 
 class ResponseTypeRadio(BaseModel):  # pylint: disable=too-few-public-methods
@@ -22,5 +22,5 @@ class ResponseTypeRadio(BaseModel):  # pylint: disable=too-few-public-methods
     user_id = db.Column(db.Integer)
     value = db.Column(db.String(5000)) 
     __table_args__ = (ForeignKeyConstraint([request_id, request_key, survey_id, engagement_id],
-                                           [request_type_radio.id, request_type_radio.key, request_type_radio.survey_id, request_type_radio.engagement_id]),
+                                           [RequestTypeRadio.id, RequestTypeRadio.key, RequestTypeRadio.survey_id, RequestTypeRadio.engagement_id]),
                       {}) 
