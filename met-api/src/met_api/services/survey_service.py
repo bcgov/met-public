@@ -1,6 +1,6 @@
 
 """Service for survey management."""
-from met_api.constants.status import Status
+from met_api.constants.engagement_status import Status
 from met_api.models.survey import Survey
 from met_api.schemas.survey import SurveySchema
 from met_api.services.object_storage_service import ObjectStorageService
