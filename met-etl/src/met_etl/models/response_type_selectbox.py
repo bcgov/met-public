@@ -5,7 +5,7 @@ Manages the responses for a selectboxes type questions on a survey
 from sqlalchemy import ForeignKeyConstraint
 from .db import db
 from .base_model import BaseModel
-from .request_type_selectbox import request_type_selectbox
+from .request_type_selectbox import RequestTypeSelectbox
 
 
 class ResponseTypeSelectbox(BaseModel):  # pylint: disable=too-few-public-methods
@@ -24,5 +24,5 @@ class ResponseTypeSelectbox(BaseModel):  # pylint: disable=too-few-public-method
     request_value = db.Column(db.String(5000))
     value = db.Column(db.String(5000)) 
     __table_args__ = (ForeignKeyConstraint([request_id, request_key, survey_id, engagement_id],
-                                           [request_type_selectbox.id, request_type_selectbox.key, request_type_selectbox.survey_id, request_type_selectbox.engagement_id]),
+                                           [RequestTypeSelectbox.id, RequestTypeSelectbox.key, RequestTypeSelectbox.survey_id, RequestTypeSelectbox.engagement_id]),
                       {}) 

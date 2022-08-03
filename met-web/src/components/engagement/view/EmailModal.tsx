@@ -17,6 +17,7 @@ const EmailModal = ({ open, handleClose }: EmailModalProps) => {
     const [formIndex, setFormIndex] = useState('email');
     const [email, setEmail] = useState('');
     const { savedEngagement } = useContext(ActionContext);
+    const [isSaving, setSaving] = useState(false);
 
     const close = () => {
         handleClose();
@@ -33,6 +34,7 @@ const EmailModal = ({ open, handleClose }: EmailModalProps) => {
 
     const handleSubmit = async () => {
         try {
+            setSaving(true);
             await createEmailVerification({
                 email_address: email,
                 survey_id: savedEngagement.surveys[0].id,
@@ -52,6 +54,8 @@ const EmailModal = ({ open, handleClose }: EmailModalProps) => {
                 }),
             );
             setFormIndex('error');
+        } finally {
+            setSaving(false);
         }
     };
 
@@ -69,6 +73,7 @@ const EmailModal = ({ open, handleClose }: EmailModalProps) => {
                         checkEmail={updateTabValue}
                         handleClose={() => close()}
                         updateEmail={setEmail}
+                        isSaving={isSaving}
                     />
                 </TabPanel>
                 <TabPanel value="success">

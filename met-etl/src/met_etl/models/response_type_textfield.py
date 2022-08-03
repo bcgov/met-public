@@ -5,7 +5,7 @@ Manages the responses for a textfield type questions on a survey
 from sqlalchemy import ForeignKeyConstraint
 from .db import db
 from .base_model import BaseModel
-from .request_type_textfield import request_type_textfield
+from .request_type_textfield import RequestTypeTextfield
 
 
 class ResponseTypeTextfield(BaseModel):  # pylint: disable=too-few-public-methods
@@ -22,5 +22,5 @@ class ResponseTypeTextfield(BaseModel):  # pylint: disable=too-few-public-method
     user_id = db.Column(db.Integer)
     value = db.Column(db.String(5000)) 
     __table_args__ = (ForeignKeyConstraint([request_id, request_key, survey_id, engagement_id],
-                                           [request_type_textfield.id, request_type_textfield.key, request_type_textfield.survey_id, request_type_textfield.engagement_id]),
+                                           [RequestTypeTextfield.id, RequestTypeTextfield.key, RequestTypeTextfield.survey_id, RequestTypeTextfield.engagement_id]),
                       {}) 
