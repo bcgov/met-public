@@ -15,8 +15,7 @@ from met_api.services.rest_service import RestService
 from met_api.services.user_service import UserService
 from met_api.utils.notification import send_email
 
-templates_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..', 'templates'))
-ENV = Environment(loader=FileSystemLoader(templates_dir), autoescape=True)
+ENV = Environment(loader=FileSystemLoader('./templates'), autoescape=True)
 
 
 class EmailVerificationService:
