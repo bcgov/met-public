@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { MetPageGridContainer } from 'components/common';
 import { Comment } from 'models/comment';
 import { HeadCell } from 'components/common/Table/types';
-import { Link as MuiLink, Typography, Box, Button, Grid } from '@mui/material';
+import { Link as MuiLink, Typography, Box, Button, Grid, Chip } from '@mui/material';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
@@ -105,40 +105,12 @@ const AllComments = () => {
                             <b>Reviewed By: </b> {row.reviewed_by}
                         </Typography>
                     </Grid>
-                    <Grid item xs={6}></Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={4}></Grid>
+                    <Grid item xs={8}>
                         {row.status != 'Approved' ? (
-                            <Box
-                                style={{
-                                    fontWeight: 'bold',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    background: 'green',
-                                    borderRadius: '40px',
-                                    color: 'white',
-                                    display: 'flex',
-                                    fontSize: '14px',
-                                    padding: '5px',
-                                }}
-                            >
-                                Approved
-                            </Box>
+                            <Chip label="Approved" color="success" />
                         ) : (
-                            <Box
-                                style={{
-                                    fontWeight: 'bold',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    background: 'red',
-                                    borderRadius: '40px',
-                                    color: 'white',
-                                    display: 'flex',
-                                    fontSize: '14px',
-                                    padding: '5px',
-                                }}
-                            >
-                                Rejected
-                            </Box>
+                            <Chip label="Rejected" color="error" />
                         )}
                     </Grid>
                 </Grid>

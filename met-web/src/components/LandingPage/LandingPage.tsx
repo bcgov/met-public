@@ -166,13 +166,7 @@ const LandingPage = () => {
                 </Button>
             </Grid>
             <Grid item xs={12} lg={10}>
-                <MetTable
-                    hideHeader={false}
-                    filter={searchFilter}
-                    headCells={headCells}
-                    rows={rows}
-                    defaultSort={'created_date'}
-                />
+                <MetTable filter={searchFilter} headCells={headCells} rows={rows} defaultSort={'created_date'} />
             </Grid>
         </MetPageGridContainer>
     );

@@ -100,10 +100,10 @@ interface MetTableProps<T> {
     headCells: HeadCell<T>[];
     defaultSort: keyof T;
     rows: T[];
-    hideHeader: boolean;
+    hideHeader?: boolean;
 }
 function MetTable<T>({
-    hideHeader,
+    hideHeader = false,
     filter = { key: '', value: '' },
     headCells = [],
     defaultSort,

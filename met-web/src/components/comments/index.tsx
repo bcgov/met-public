@@ -171,7 +171,7 @@ const CommentListing = () => {
                 <Typography variant="h4" sx={{ fontWeight: 'bold', m: 3 }}>
                     {'Test Survey'} Comments
                 </Typography>
-                <MetTable hideHeader={false} headCells={headCells} rows={comments} defaultSort={'id'} />
+                <MetTable headCells={headCells} rows={comments} defaultSort={'id'} />
                 <Button variant="contained">View All Comments</Button>
             </Grid>
         </MetPageGridContainer>
