@@ -1,4 +1,5 @@
 """Service for Email Verification management."""
+import os
 import uuid
 from datetime import datetime, timedelta
 from http import HTTPStatus
