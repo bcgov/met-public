@@ -67,20 +67,21 @@ class EmailVerificationService:
         sender = current_app.config.get('MAIL_FROM_ID')
         survey_id = email_verification.get('survey_id')
         email_to = email_verification.get('email_address')
-        survey: SurveyModel = SurveyModel.get_survey(survey_id)
+        survey: SurveyModel = SurveyModel.get_open_survey(survey_id)
         if not survey:
             raise ValueError('Survey not found')
+        if not survey.get('engagement'):
+            raise ValueError('Engagement not found')    
         template = ENV.get_template('email_templates/email_verification.html')
         # TODO make it read from config
         subject = 'survey link - link expires in 24h'
-        app_url = f"{g.get('origin_url', '')}/" \
-                  f"{current_app.config.get('SURVEY_PATH')}" \
-                  f"{survey_id}/{email_verification.get('verification_token')}"
+        survey_path = current_app.config.get('SURVEY_PATH').format(survey_id=survey_id,token=email_verification.get('verification_token'))
+        # url is origin url excluding context path 
+        app_url = f"{g.get('origin_url', '')}/{survey_path}"
         body = template.render(engagement_name=survey.get('engagement').get('name'), url=app_url)
         try:
             # users hasn't been created yet.so create token using SA.
             service_account_token = RestService.get_service_account_token()
-            print('-----------------service_account_token-----------------',service_account_token)
             send_email(subject=subject, email=email_to, sender=sender, html_body=body,  
                        token=service_account_token)
         except Exception as exc:  # noqa: B902
