@@ -8,7 +8,6 @@ from sqlalchemy.sql.schema import ForeignKey
 from met_api.constants.comment_status import Status
 from met_api.models.engagement import Engagement
 from met_api.models.survey import Survey
-from met_api.models.user import User
 from .comment_status import CommentStatus
 from .db import db
 from .default_method_result import DefaultMethodResult
