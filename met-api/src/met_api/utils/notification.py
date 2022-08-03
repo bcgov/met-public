@@ -2,6 +2,7 @@
 
 import json
 import re
+from traceback import print_tb
 
 import requests
 from flask import current_app
@@ -14,12 +15,15 @@ def send_email(subject, email, sender, html_body, token=None):
 
     send_email_endpoint = current_app.config.get('NOTIFICATIONS_EMAIL_ENDPOINT')
     payload = {
-        'bodyType': 'text',
+        'bodyType': 'html',
         'body': html_body,
         'from': sender,
         'subject': subject,
         'to': email.split()
     }
+    print('-----------------payload-----------------',json.dumps(payload))
+    print('-----------------sender-----------------',sender)
+    print('-----------------send_email_endpoint-----------------',send_email_endpoint)
     response = requests.post(send_email_endpoint,
                              headers={'Content-Type': 'application/json', 'Authorization': f'Bearer {token}'},
                              data=json.dumps(payload))

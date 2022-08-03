@@ -8,7 +8,7 @@ from jinja2 import Environment, FileSystemLoader
 
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.email_verification import EmailVerification
-from met_api.models.engagement import Engagement as EngagementModel
+from met_api.models.survey import Survey as SurveyModel
 from met_api.schemas.email_verification import EmailVerificationSchema
 from met_api.services.rest_service import RestService
 from met_api.services.user_service import UserService
@@ -62,25 +62,27 @@ class EmailVerificationService:
         return db_email_verification
 
     @staticmethod
-    def _send_verification_email(email_verification: EmailVerificationSchema) -> None:
+    def _send_verification_email(email_verification: dict) -> None:
         """Send an verification email.Throws error if fails."""
         sender = current_app.config.get('MAIL_FROM_ID')
         survey_id = email_verification.get('survey_id')
-        email_to = email_verification.email_address
-        eng: EngagementModel = EngagementModel.get_engagement_by_survey_id(survey_id)
-        if not eng:
+        email_to = email_verification.get('email_address')
+        survey: SurveyModel = SurveyModel.get_survey(survey_id)
+        if not survey:
             raise ValueError('Survey not found')
         template = ENV.get_template('email_templates/email_verification.html')
         # TODO make it read from config
         subject = 'survey link - link expires in 24h'
         app_url = f"{g.get('origin_url', '')}/" \
                   f"{current_app.config.get('SURVEY_PATH')}" \
-                  f'{survey_id}/{email_verification.verification_token}'
-        body = template.render(engagement_name=eng.name, url=app_url)
+                  f"{survey_id}/{email_verification.get('verification_token')}"
+        body = template.render(engagement_name=survey.get('engagement').get('name'), url=app_url)
         try:
-            # users havent been created yet.so create token using SA.
-            sa_token = RestService.get_service_account_token()
-            send_email(subject=subject, email=email_to, sender=sender, html_body=body, token=sa_token)
+            # users hasn't been created yet.so create token using SA.
+            service_account_token = RestService.get_service_account_token()
+            print('-----------------service_account_token-----------------',service_account_token)
+            send_email(subject=subject, email=email_to, sender=sender, html_body=body,  
+                       token=service_account_token)
         except Exception as exc:  # noqa: B902
             current_app.logger.error('<Notification for registration failed', exc)
             raise BusinessException(error='Deletion not allowed.', status_code=HTTPStatus.FORBIDDEN) from exc

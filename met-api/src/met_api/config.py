@@ -84,6 +84,13 @@ class _Config():  # pylint: disable=too-few-public-methods
 
     print(f'SQLAlchemy URL (_Config): {SQLALCHEMY_DATABASE_URI}')
 
+    # Service account details
+    KEYCLOAK_SERVICE_ACCOUNT_ID = os.getenv('MET_ADMIN_CLIENT_ID')
+    KEYCLOAK_SERVICE_ACCOUNT_SECRET = os.getenv('MET_ADMIN_CLIENT_SECRET')
+
+    # Email Service
+    NOTIFICATIONS_EMAIL_ENDPOINT = os.getenv('NOTIFICATIONS_EMAIL_ENDPOINT')
+
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
     """Dev Config."""

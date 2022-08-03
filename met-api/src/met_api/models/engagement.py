@@ -44,12 +44,6 @@ class Engagement(db.Model):
         return engagement_schema.dump(data)
 
     @classmethod
-    def get_engagement_by_survey_id(cls, survey_id):
-        """Get an engagement."""
-        eng = db.session.query(Engagement).filter_by(surveys__id=survey_id).first()
-        return eng
-
-    @classmethod
     def get_all_engagements(cls):
         """Get all engagements."""
         engagements_schema = EngagementSchema(many=True)
