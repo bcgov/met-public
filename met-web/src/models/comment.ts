@@ -1,4 +1,3 @@
-
 export type CommentStatus = 'Pending' | 'Approved' | 'Rejected';
 
 export interface Comment {
