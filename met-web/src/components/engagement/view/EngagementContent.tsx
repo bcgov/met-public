@@ -7,7 +7,7 @@ import './EngagementContent.scss';
 import { Skeleton } from '@mui/material';
 
 export const EngagementContent = () => {
-    const { savedEngagement, engagementLoading } = useContext(ActionContext);
+    const { savedEngagement, isEngagementLoading } = useContext(ActionContext);
 
     const { rich_content } = savedEngagement;
 
@@ -19,7 +19,7 @@ export const EngagementContent = () => {
         return EditorState.createWithContent(rawContentFromStore);
     };
 
-    if (engagementLoading) {
+    if (isEngagementLoading) {
         return <Skeleton variant="rectangular" width="100%" height="30em" />;
     }
 

@@ -95,5 +95,11 @@ export const PublicTheme = createTheme(BaseTheme, {
             dark: '#455A64',
             light: '#ECF2F5',
         },
+        text: {
+            primary: Palette.text.primary,
+        },
+        action: {
+            active: Palette.action.active,
+        },
     },
 });

@@ -23,4 +23,5 @@ class SubmissionSchema(Schema):
     updated_date = fields.Str(data_key='updated_date')
     survey_id = fields.Int(data_key='survey_id')
     user_id = fields.Int(data_key='user_id')
+    verification_token = fields.Str(data_key='verification_token')
     survey = fields.Nested(SurveySchema)

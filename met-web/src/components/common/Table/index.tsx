@@ -106,7 +106,7 @@ function MetTable<T>({ filter = { key: '', value: '' }, headCells = [], defaultS
     const [order, setOrder] = useState<Order>('asc');
     const [orderBy, setOrderBy] = useState(defaultSort);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
 
     useEffect(() => {
         if (!filter.key || !filter.value) {
