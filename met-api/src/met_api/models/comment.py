@@ -8,6 +8,7 @@ from sqlalchemy.sql.schema import ForeignKey
 from met_api.constants.comment_status import Status
 from met_api.models.engagement import Engagement
 from met_api.models.survey import Survey
+from met_api.models.user import User
 from .comment_status import CommentStatus
 from .db import db
 from .default_method_result import DefaultMethodResult
@@ -29,7 +30,7 @@ class Comment(db.Model):
     @classmethod
     def get_comment(cls, comment_id):
         """Get a comment."""
-        return db.session.query(Comment).join(CommentStatus).join(Survey).filter_by(id=comment_id).first()
+        return db.session.query(Comment).join(CommentStatus).join(Survey).filter(Comment.id == comment_id).first()
 
     @classmethod
     def get_comments_by_survey_id_query(cls, survey_id):
@@ -63,7 +64,8 @@ class Comment(db.Model):
             text=comment.get('text', None),
             submission_date=datetime.utcnow(),
             status_id=Status.Pending,
-            survey_id=comment.get('survey_id', None)
+            survey_id=comment.get('survey_id', None),
+            user_id=comment.get('user_id', None)
         )
 
     @classmethod
@@ -84,7 +86,8 @@ class Comment(db.Model):
 
         update_fields = dict(
             status_id=status_id,
-            reviewed_by=reviewed_by
+            reviewed_by=reviewed_by,
+            review_date=datetime.utcnow()
         )
         query.update(update_fields)
         db.session.commit()

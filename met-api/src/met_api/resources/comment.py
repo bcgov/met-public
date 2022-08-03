@@ -29,7 +29,7 @@ API = Namespace('comment', description='Endpoints for Comments Management')
 """
 
 
-@cors_preflight('GET,OPTIONS')
+@cors_preflight('GET, PUT, OPTIONS')
 @API.route('/<comment_id>')
 class Comment(Resource):
     """Resource for managing a single comment."""
@@ -59,8 +59,8 @@ class Comment(Resource):
         try:
             requestjson = request.get_json()
             status_id = requestjson.get('status_id', None)
-            user_id = TokenInfo.get_id()
-            result = CommentService().review_comment(comment_id, status_id, user_id)
+            external_user_id = TokenInfo.get_id()
+            result = CommentService().review_comment(comment_id, status_id, external_user_id)
             return ActionResult.success(result.identifier, requestjson)
         except KeyError:
             return ActionResult.error('Comment was not found')

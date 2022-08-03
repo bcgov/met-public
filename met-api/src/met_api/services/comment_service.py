@@ -4,6 +4,7 @@ from met_api.models.comment import Comment
 from met_api.schemas.comment import CommentSchema
 from met_api.schemas.submission import SubmissionSchema
 from met_api.schemas.survey import SurveySchema
+from met_api.services.user_service import UserService
 
 
 class CommentService:
@@ -82,15 +83,21 @@ class CommentService:
         return comments
 
     @classmethod
-    def review_comment(cls, comment_id, status_id, reviewed_by):
+    def review_comment(cls, comment_id, status_id, external_user_id):
         """review comment."""
-        if not status_id or status_id == 1 or not reviewed_by:
+        user = UserService.get_user_by_external_id(external_user_id)
+        if not status_id or status_id == 1 or not user:
             raise ValueError('Invalid review')
-
+        
         comment = cls.get_comment(comment_id)
+        if not comment:
+            raise KeyError('Comment was not found')
+            
         db_status_id = comment.get('comment_status').get('id')
 
         if db_status_id != 1:
             raise ValueError('Comment has already been reviewed')
+        
+        reviewed_by = ' '.join([user.get('first_name', ''), user.get('last_name', '')])
 
         return Comment.update_comment_status(comment_id, status_id, reviewed_by)

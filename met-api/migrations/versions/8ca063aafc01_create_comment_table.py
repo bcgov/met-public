@@ -1,4 +1,4 @@
-"""empty message
+"""Create comment table
 
 Revision ID: 8ca063aafc01
 Revises: 6d3c33a79c5e

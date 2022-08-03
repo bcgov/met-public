@@ -84,12 +84,12 @@ const CommentListing = () => {
         },
 
         {
-            key: 'published_date',
+            key: 'review_date',
             numeric: true,
             disablePadding: false,
-            label: 'Date Published',
+            label: 'Date Reviewed',
             allowSort: true,
-            getValue: (row: Comment) => formatDate(row.published_date || ''),
+            getValue: (row: Comment) => formatDate(row.review_date || ''),
         },
         {
             key: 'comment_status',
