@@ -102,7 +102,6 @@ class EmailVerificationService:
         engagement_url = f"{g.get('origin_url', '')}{engagement_path}"
         engagement = survey.get('engagement')
         engagement_name = engagement.get('name')
-        # TODO make it read from config
         subject = current_app.config.get('VERIFICATION_EMAIL_SUBJECT'). \
             format(engagement_name=engagement_name)
         end_date = datetime.strptime(engagement.get('end_date'), EmailVerificationService.date_format)
