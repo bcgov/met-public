@@ -12,38 +12,38 @@ const testComments: Comment[] = [
     {
         id: 0,
         survey_id: 1,
-        email: '@gmail.com',
-        comment_date: '2022-04-15',
+        submission_date: '2022-04-15',
         published_date: '2022-04-16',
-        status: 'Pending',
-        content:
-            'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
+        status_id: 1,
+        text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
         reviewed_by: 'Jimmy',
-        date_reviewed: '2022-04-16',
+        review_date: '2022-04-16',
+        comment_status: { id: 1, status_name: 'Pending' },
+        survey: '',
     },
     {
         id: 1,
         survey_id: 1,
-        email: '@gmail.com',
-        comment_date: '2022-04-15',
+        submission_date: '2022-04-15',
         published_date: '2022-04-16',
-        status: 'Pending',
-        content:
-            'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
+        status_id: 1,
+        text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
         reviewed_by: 'Bill',
-        date_reviewed: '2022-04-16',
+        review_date: '2022-04-16',
+        comment_status: { id: 1, status_name: 'Pending' },
+        survey: '',
     },
     {
         id: 2,
         survey_id: 1,
-        email: '@gmail.com',
-        comment_date: '2022-04-15',
+        submission_date: '2022-04-15',
         published_date: '2022-04-16',
-        status: 'Pending',
-        content:
-            'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
+        status_id: 1,
+        text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
         reviewed_by: 'Robert',
-        date_reviewed: '2022-04-16',
+        review_date: '2022-04-16',
+        comment_status: { id: 1, status_name: 'Pending' },
+        survey: '',
     },
 ];
 
@@ -79,15 +79,15 @@ const AllComments = () => {
             ),
         },
         {
-            key: 'content',
+            key: 'text',
             numeric: true,
             disablePadding: false,
             label: 'Content',
             allowSort: true,
-            getValue: (row: Comment) => row.content,
+            getValue: (row: Comment) => row.text,
         },
         {
-            key: 'comment_date',
+            key: 'submission_date',
             numeric: true,
             disablePadding: false,
             label: 'Comment Date',
@@ -97,7 +97,7 @@ const AllComments = () => {
                     <Grid item xs={12}>
                         <Typography sx={{ fontSize: '16px' }}>
                             <b>Comment Date: </b>
-                            {row.comment_date}
+                            {row.submission_date}
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
@@ -107,7 +107,7 @@ const AllComments = () => {
                     </Grid>
                     <Grid item xs={4}></Grid>
                     <Grid item xs={8}>
-                        {row.status != 'Approved' ? (
+                        {row.comment_status.status_name != 'Approved' ? (
                             <Chip label="Approved" color="success" />
                         ) : (
                             <Chip label="Rejected" color="error" />
