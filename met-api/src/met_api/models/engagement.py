@@ -3,13 +3,16 @@
 Manages the engagement
 """
 from datetime import datetime
+
+from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.dialects.postgresql import JSON
 from met_api.constants.engagement_status import Status
 from met_api.schemas.engagement import EngagementSchema
-from .engagement_status import EngagementStatus
+
 from .db import db
 from .default_method_result import DefaultMethodResult
+from .engagement_status import EngagementStatus
 
 
 class Engagement(db.Model):

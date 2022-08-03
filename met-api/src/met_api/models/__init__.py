@@ -15,8 +15,11 @@
 """This exports all of the models and schemas used by the application."""
 
 from .db import db, ma, migrate
+from .email_verification import EmailVerification
 from .engagement import Engagement
 from .engagement_status import EngagementStatus
+from .submission import Submission
+from .survey import Survey
 from .user import User
 from .survey import Survey
 from .submission import Submission
