@@ -5,4 +5,5 @@ export interface HeadCell<T> {
     numeric: boolean;
     allowSort: boolean;
     getValue?: (row: T) => string | number | JSX.Element;
+    customStyle?: React.CSSProperties;
 }

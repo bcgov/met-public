@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { MetPageGridContainer } from 'components/common';
 import { Comment } from 'models/comment';
 import { HeadCell } from 'components/common/Table/types';
-import { Link as MuiLink, Typography, Button, Grid, Chip } from '@mui/material';
+import { Link as MuiLink, Typography, Button, Grid } from '@mui/material';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { CommentStatusChip } from '../../status';
 import { fetchComments } from 'services/commentService';
 
-const AllComments = () => {
+const CommentTextListing = () => {
     const [comments, setComments] = useState<Comment[]>([]);
 
     const dispatch = useAppDispatch();
     const { surveyId } = useParams();
-    const navigate = useNavigate();
 
     const callFetchComments = async () => {
         try {
@@ -43,7 +43,7 @@ const AllComments = () => {
             label: 'ID',
             allowSort: true,
             getValue: (row: Comment) => (
-                <MuiLink component={Link} to={`/survey/${Number(row.survey_id)}/comments/${row.id}/review`}>
+                <MuiLink component={Link} to={`/survey/${Number(row.survey_id)}/comments/${row.id}`}>
                     {row.id}
                 </MuiLink>
             ),
@@ -62,26 +62,31 @@ const AllComments = () => {
             disablePadding: false,
             label: 'Comment Date',
             allowSort: true,
+            customStyle: { width: '20%' },
             getValue: (row: Comment) => (
-                <Grid container spacing={2}>
+                <Grid
+                    item
+                    xs={12}
+                    container
+                    direction="row"
+                    alignItems="flex-start"
+                    justifyContent="flex-start"
+                    rowSpacing={1}
+                    width="20em"
+                >
                     <Grid item xs={12}>
-                        <Typography sx={{ fontSize: '16px' }}>
+                        <Typography variant="subtitle2">
                             <b>Comment Date: </b>
                             {row.submission_date}
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        <Typography sx={{ fontSize: '16px' }}>
+                        <Typography variant="subtitle2">
                             <b>Reviewed By: </b> {row.reviewed_by}
                         </Typography>
                     </Grid>
-                    <Grid item xs={4}></Grid>
-                    <Grid item xs={8}>
-                        {row.comment_status.status_name != 'Approved' ? (
-                            <Chip label="Approved" color="success" />
-                        ) : (
-                            <Chip label="Rejected" color="error" />
-                        )}
+                    <Grid container item xs={12} justifyContent="flex-end">
+                        <CommentStatusChip commentStatus={row.comment_status.id} />
                     </Grid>
                 </Grid>
             ),
@@ -97,9 +102,9 @@ const AllComments = () => {
             columnSpacing={2}
             rowSpacing={1}
         >
-            <Grid item xs={12} lg={10}>
+            <Grid item xs={12}>
                 <MetTable hideHeader={true} headCells={headCells} rows={comments} defaultSort={'id'} />
-                <Button variant="contained" onClick={() => navigate(`/survey/${surveyId}/comments`)}>
+                <Button component={Link} to={`/survey/${comments[0]?.survey_id || 0}/comments`} variant="contained">
                     Return to Comments List
                 </Button>
             </Grid>
@@ -107,4 +112,4 @@ const AllComments = () => {
     );
 };
 
-export default AllComments;
+export default CommentTextListing;

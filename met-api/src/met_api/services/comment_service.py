@@ -4,6 +4,7 @@ from met_api.models.comment import Comment
 from met_api.schemas.comment import CommentSchema
 from met_api.schemas.submission import SubmissionSchema
 from met_api.schemas.survey import SurveySchema
+from met_api.services.user_service import UserService
 
 
 class CommentService:
@@ -23,10 +24,12 @@ class CommentService:
         """Get all comments."""
         if not user_id:
             comment_schema = CommentSchema(many=True, only=('text', 'submission_date', 'survey'))
-            return comment_schema.dump(Comment.get_publicly_viewable_comments_by_survey_id_query(survey_id))
+            return comment_schema.dump(
+                Comment.get_accepted_comments_by_survey_id_where_engagement_closed(survey_id)
+            )
 
         comment_schema = CommentSchema(many=True)
-        return comment_schema.dump(Comment.get_comments_by_survey_id_query(survey_id))
+        return comment_schema.dump(Comment.get_comments_by_survey_id(survey_id))
 
     @classmethod
     def create_comments(cls, comments: list):
@@ -34,7 +37,7 @@ class CommentService:
         for comment in comments:
             cls.validate_fields(comment)
 
-        return Comment.bulk_create_comment(comments)
+        return Comment.add_all_comments(comments)
 
     @staticmethod
     def validate_fields(data):
@@ -46,7 +49,7 @@ class CommentService:
             raise ValueError('Some required fields for comments are missing')
 
     @staticmethod
-    def form_comment(comment_text, survey_submission: SubmissionSchema, survey: SurveySchema):
+    def __form_comment(comment_text, survey_submission: SubmissionSchema, survey: SurveySchema):
         """Create a comment dict."""
         return {
             'text': comment_text,
@@ -62,12 +65,10 @@ class CommentService:
         if len(components) == 0:
             return []
 
+        # get the 'key' for each component that has 'inputType' text and filter out the rest.
         comments_keys = [
-            component.get(
-                'key',
-                None) for component in components if component.get(
-                'inputType',
-                None) == 'text']
+            component.get('key', None) for component in components
+            if component.get('inputType', None) == 'text']
 
         submission = survey_submission.get('submission_json', {})
         comments_texts = [submission.get(key, None) for key in comments_keys]
@@ -75,8 +76,26 @@ class CommentService:
         if None in comments_texts:
             raise KeyError('Some answered questions were not found in the survey form')
 
-        comments = [cls.form_comment(comment_text, survey_submission, survey) for comment_text in comments_texts]
-
-        print(comments)
+        comments = [cls.__form_comment(comment_text, survey_submission, survey) for comment_text in comments_texts]
 
         return comments
+
+    @classmethod
+    def review_comment(cls, comment_id, status_id, external_user_id):
+        """Review comment."""
+        user = UserService.get_user_by_external_id(external_user_id)
+        if not status_id or status_id == 1 or not user:
+            raise ValueError('Invalid review')
+
+        comment = cls.get_comment(comment_id)
+        if not comment:
+            raise KeyError('Comment was not found')
+
+        db_status_id = comment.get('comment_status').get('id')
+
+        if db_status_id != 1:
+            raise ValueError('Comment has already been reviewed')
+
+        reviewed_by = ' '.join([user.get('first_name', ''), user.get('last_name', '')])
+
+        return Comment.update_comment_status(comment_id, status_id, reviewed_by)

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { MetPageGridContainer } from 'components/common';
 import { Comment } from 'models/comment';
 import { HeadCell } from 'components/common/Table/types';
@@ -11,9 +11,9 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
-import { fetchComments } from 'services/commentService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { fetchComments } from 'services/commentService';
 
 const CommentListing = () => {
     const [searchFilter, setSearchFilter] = useState({
@@ -22,8 +22,9 @@ const CommentListing = () => {
     });
     const [searchText, setSearchText] = useState('');
     const [comments, setComments] = useState<Comment[]>([]);
+
     const { surveyId } = useParams();
-    const navigate = useNavigate();
+
     const dispatch = useAppDispatch();
 
     const callFetchComments = async () => {
@@ -83,12 +84,12 @@ const CommentListing = () => {
         },
 
         {
-            key: 'published_date',
+            key: 'review_date',
             numeric: true,
             disablePadding: false,
-            label: 'Date Published',
+            label: 'Date Reviewed',
             allowSort: true,
-            getValue: (row: Comment) => formatDate(row.published_date || ''),
+            getValue: (row: Comment) => formatDate(row.review_date || ''),
         },
         {
             key: 'comment_status',
@@ -134,7 +135,7 @@ const CommentListing = () => {
                     {`${comments[0]?.survey || ''} Comments`}
                 </Typography>
                 <MetTable headCells={headCells} rows={comments} defaultSort={'id'} />
-                <Button variant="contained" onClick={() => navigate(`/survey/${surveyId}/comments/all`)}>
+                <Button component={Link} to={`/survey/${comments[0]?.survey_id || 0}/comments/all`} variant="contained">
                     View All Comments
                 </Button>
             </Grid>

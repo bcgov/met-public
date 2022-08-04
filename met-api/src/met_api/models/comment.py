@@ -29,19 +29,19 @@ class Comment(db.Model):
     @classmethod
     def get_comment(cls, comment_id):
         """Get a comment."""
-        return db.session.query(Comment).join(CommentStatus).join(Survey).filter_by(id=comment_id).first()
+        return db.session.query(Comment).join(CommentStatus).join(Survey).filter(Comment.id == comment_id).first()
 
     @classmethod
-    def get_comments_by_survey_id_query(cls, survey_id):
+    def get_comments_by_survey_id(cls, survey_id):
         """Get all comments."""
         return db.session.query(Comment)\
             .join(CommentStatus)\
             .join(Survey)\
             .filter(Comment.survey_id == survey_id)\
-            .order_by(Comment.id.asc()).all()
+            .all()
 
     @classmethod
-    def get_publicly_viewable_comments_by_survey_id_query(cls, survey_id):
+    def get_accepted_comments_by_survey_id_where_engagement_closed(cls, survey_id):
         """Get all comments."""
         now = datetime.now()
         return db.session.query(Comment)\
@@ -54,22 +54,40 @@ class Comment(db.Model):
                     Engagement.end_date < now,
                     CommentStatus.id == Status.Accepted
                 ))\
-            .order_by(Comment.id.asc()).all()
+            .all()
 
     @staticmethod
-    def create_new_comment_entity(comment):
+    def __create_new_comment_entity(comment):
         """Create new comment entity."""
         return Comment(
             text=comment.get('text', None),
             submission_date=datetime.utcnow(),
             status_id=Status.Pending,
-            survey_id=comment.get('survey_id', None)
+            survey_id=comment.get('survey_id', None),
+            user_id=comment.get('user_id', None)
         )
 
     @classmethod
-    def bulk_create_comment(cls, comments: list) -> DefaultMethodResult:
+    def add_all_comments(cls, comments: list) -> DefaultMethodResult:
         """Save comments."""
-        new_comments = [cls.create_new_comment_entity(comment) for comment in comments]
+        new_comments = [cls.__create_new_comment_entity(comment) for comment in comments]
         db.session.add_all(new_comments)
         db.session.commit()
         return DefaultMethodResult(True, 'Comments Added', 1)
+
+    @classmethod
+    def update_comment_status(cls, comment_id, status_id, reviewed_by) -> DefaultMethodResult:
+        """Update comment status."""
+        query = Comment.query.filter_by(id=comment_id)
+
+        if not query.first():
+            return DefaultMethodResult(False, 'Survey Not Found', comment_id)
+
+        update_fields = dict(
+            status_id=status_id,
+            reviewed_by=reviewed_by,
+            review_date=datetime.utcnow()
+        )
+        query.update(update_fields)
+        db.session.commit()
+        return DefaultMethodResult(True, 'Survey Updated', comment_id)

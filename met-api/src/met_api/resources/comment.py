@@ -13,6 +13,7 @@
 # limitations under the License.
 """API endpoints for managing an comment resource."""
 
+from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
@@ -28,7 +29,7 @@ API = Namespace('comment', description='Endpoints for Comments Management')
 """
 
 
-@cors_preflight('GET,OPTIONS')
+@cors_preflight('GET, PUT, OPTIONS')
 @API.route('/<comment_id>')
 class Comment(Resource):
     """Resource for managing a single comment."""
@@ -44,7 +45,23 @@ class Comment(Resource):
             if comment_record:
                 return ActionResult.success(comment_id, comment_record)
 
+            raise KeyError('comment record is None')
+        except KeyError:
             return ActionResult.error('Comment was not found')
+        except ValueError as err:
+            return ActionResult.error(str(err))
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def put(comment_id):
+        """Fetch a single comment matching the provided id."""
+        try:
+            requestjson = request.get_json()
+            status_id = requestjson.get('status_id', None)
+            external_user_id = TokenInfo.get_id()
+            result = CommentService().review_comment(comment_id, status_id, external_user_id)
+            return ActionResult.success(result.identifier, requestjson)
         except KeyError:
             return ActionResult.error('Comment was not found')
         except ValueError as err:

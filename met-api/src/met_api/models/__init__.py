@@ -22,3 +22,4 @@ from .submission import Submission
 from .survey import Survey
 from .user import User
 from .comment import Comment
+from .comment_status import CommentStatus
