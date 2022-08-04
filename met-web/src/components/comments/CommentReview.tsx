@@ -6,18 +6,6 @@ const headerStyle = { fontWeight: 'bold' };
 import { useAppDispatch } from 'hooks';
 import { useParams, useNavigate } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
-const comment: Comment = {
-    id: 1,
-    survey_id: 1,
-    submission_date: 'test',
-    published_date: 'test',
-    status_id: 1,
-    text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum hasbeen the industry's standard dummy text ever since the 1500s, when an unknown printer took agalley of type and scrambled it to make a type specimen book. It has survived not only fivecenturies, but also the leap into electronic typesetting, remaining essentially unchanged.It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum",
-    reviewed_by: 'test',
-    review_date: 'test',
-    comment_status: { id: 0, status_name: 'Approved' },
-    survey: 'hello',
-};
 
 const CommentReview = () => {
     const [comment, setComments] = useState<Comment>(createDefaultComment());
