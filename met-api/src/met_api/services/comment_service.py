@@ -82,7 +82,7 @@ class CommentService:
 
     @classmethod
     def review_comment(cls, comment_id, status_id, external_user_id):
-        """review comment."""
+        """Review comment."""
         user = UserService.get_user_by_external_id(external_user_id)
         if not status_id or status_id == 1 or not user:
             raise ValueError('Invalid review')
