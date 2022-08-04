@@ -27,9 +27,9 @@ class Comment(db.Model):
     user_id = db.Column(db.Integer, ForeignKey('user.id', ondelete='SET NULL'), nullable=True)
 
     @classmethod
-    def get_comment(cls, id):
+    def get_comment(cls, comment_id):
         """Get a comment."""
-        return db.session.query(Comment).join(CommentStatus).join(Survey).filter(Comment.id == id).first()
+        return db.session.query(Comment).join(CommentStatus).join(Survey).filter(Comment.id == comment_id).first()
 
     @classmethod
     def get_comments_by_survey_id(cls, survey_id):
@@ -76,12 +76,12 @@ class Comment(db.Model):
         return DefaultMethodResult(True, 'Comments Added', 1)
 
     @classmethod
-    def update_comment_status(cls, id, status_id, reviewed_by) -> DefaultMethodResult:
+    def update_comment_status(cls, comment_id, status_id, reviewed_by) -> DefaultMethodResult:
         """Update comment status."""
-        query = Comment.query.filter_by(id=id)
+        query = Comment.query.filter_by(id=comment_id)
 
         if not query.first():
-            return DefaultMethodResult(False, 'Survey Not Found', id)
+            return DefaultMethodResult(False, 'Survey Not Found', comment_id)
 
         update_fields = dict(
             status_id=status_id,
@@ -90,4 +90,4 @@ class Comment(db.Model):
         )
         query.update(update_fields)
         db.session.commit()
-        return DefaultMethodResult(True, 'Survey Updated', id)
+        return DefaultMethodResult(True, 'Survey Updated', comment_id)
