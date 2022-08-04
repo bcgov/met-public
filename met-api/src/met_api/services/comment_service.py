@@ -24,7 +24,9 @@ class CommentService:
         """Get all comments."""
         if not user_id:
             comment_schema = CommentSchema(many=True, only=('text', 'submission_date', 'survey'))
-            return comment_schema.dump(Comment.get_publicly_viewable_comments_by_survey_id_query(survey_id))
+            return comment_schema.dump(
+                Comment.get_accepted_comments_by_survey_id_where_engagement_closed_query(survey_id)
+                )
 
         comment_schema = CommentSchema(many=True)
         return comment_schema.dump(Comment.get_comments_by_survey_id_query(survey_id))
@@ -35,7 +37,7 @@ class CommentService:
         for comment in comments:
             cls.validate_fields(comment)
 
-        return Comment.bulk_create_comment(comments)
+        return Comment.add_all_comments(comments)
 
     @staticmethod
     def validate_fields(data):
@@ -63,12 +65,10 @@ class CommentService:
         if len(components) == 0:
             return []
 
+        ## get the 'key' for each component that has 'inputType' text and filter out the rest.
         comments_keys = [
-            component.get(
-                'key',
-                None) for component in components if component.get(
-                'inputType',
-                None) == 'text']
+            component.get('key', None) for component in components 
+            if component.get('inputType', None) == 'text']
 
         submission = survey_submission.get('submission_json', {})
         comments_texts = [submission.get(key, None) for key in comments_keys]
