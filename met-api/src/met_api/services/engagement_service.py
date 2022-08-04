@@ -1,6 +1,6 @@
 
 """Service for engagement management."""
-from met_api.constants.status import Status
+from met_api.constants.engagement_status import Status
 from met_api.models.engagement import Engagement
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services.object_storage_service import ObjectStorageService

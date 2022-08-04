@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { MetPageGridContainer } from 'components/common';
 import { Comment } from 'models/comment';
 import { HeadCell } from 'components/common/Table/types';
@@ -23,11 +23,19 @@ const CommentListing = () => {
     const [searchText, setSearchText] = useState('');
     const [comments, setComments] = useState<Comment[]>([]);
 
+    const { surveyId } = useParams();
+
     const dispatch = useAppDispatch();
 
     const callFetchComments = async () => {
         try {
-            const fetchedComments = await fetchComments();
+            if (isNaN(Number(surveyId))) {
+                dispatch(openNotification({ severity: 'error', text: 'Invalid surveyId' }));
+            }
+
+            const fetchedComments = await fetchComments({
+                survey_id: Number(surveyId),
+            });
             setComments(fetchedComments);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching comments' }));
@@ -36,7 +44,7 @@ const CommentListing = () => {
 
     useEffect(() => {
         callFetchComments();
-    }, []);
+    }, [surveyId]);
 
     const handleSearchBarClick = (commentEmailFilter: string) => {
         setSearchFilter({
@@ -59,20 +67,12 @@ const CommentListing = () => {
             ),
         },
         {
-            key: 'email',
-            numeric: true,
-            disablePadding: false,
-            label: 'Masked email',
-            allowSort: true,
-            getValue: (row: Comment) => <Typography sx={{ color: '#F0860B' }}>{row.email}</Typography>,
-        },
-        {
-            key: 'comment_date',
+            key: 'submission_date',
             numeric: true,
             disablePadding: false,
             label: 'Comment Date',
             allowSort: true,
-            getValue: (row: Comment) => formatDate(row.comment_date || ''),
+            getValue: (row: Comment) => formatDate(row.submission_date || ''),
         },
         {
             key: 'reviewed_by',
@@ -92,12 +92,12 @@ const CommentListing = () => {
             getValue: (row: Comment) => formatDate(row.published_date || ''),
         },
         {
-            key: 'status',
+            key: 'comment_status',
             numeric: false,
             disablePadding: true,
             label: 'Status',
             allowSort: true,
-            getValue: (row: Comment) => row.status,
+            getValue: (row: Comment) => row.comment_status.status_name,
         },
     ];
 
@@ -107,16 +107,14 @@ const CommentListing = () => {
             justifyContent="flex-start"
             alignItems="flex-start"
             container
-            columnSpacing={2}
             rowSpacing={1}
         >
-            <Grid item xs={12} md={4} lg={3}>
+            <Grid item xs={12}>
                 <Stack direction="row" spacing={1}>
                     <TextField
                         id="comments"
                         variant="outlined"
                         label="Search Comments"
-                        fullWidth
                         value={searchText}
                         onChange={(e) => setSearchText(e.target.value)}
                         size="small"
@@ -132,9 +130,9 @@ const CommentListing = () => {
             </Grid>
             <Grid item xs={0} md={4} lg={4}></Grid>
 
-            <Grid item xs={12} lg={10}>
-                <Typography variant="h4" sx={{ fontWeight: 'bold', m: 3 }}>
-                    {'<Survey Name>'} Comments
+            <Grid item xs={12}>
+                <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                    {`${comments[0]?.survey || ''} Comments`}
                 </Typography>
                 <MetTable headCells={headCells} rows={comments} defaultSort={'id'} />
                 <Button variant="contained">View All Comments</Button>

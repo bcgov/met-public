@@ -24,7 +24,6 @@ import sys
 
 from dotenv import find_dotenv, load_dotenv
 
-
 # this will load all the envars from a .env file located in the project root (api)
 load_dotenv(find_dotenv())
 
@@ -84,6 +83,18 @@ class _Config():  # pylint: disable=too-few-public-methods
     S3_SERVICE = os.getenv('S3_SERVICE')
 
     print(f'SQLAlchemy URL (_Config): {SQLALCHEMY_DATABASE_URI}')
+
+    # Service account details
+    KEYCLOAK_SERVICE_ACCOUNT_ID = os.getenv('MET_ADMIN_CLIENT_ID')
+    KEYCLOAK_SERVICE_ACCOUNT_SECRET = os.getenv('MET_ADMIN_CLIENT_SECRET')
+
+    # front end urls
+    SURVEY_PATH = os.getenv('SURVEY_PATH', '/survey/submit/{survey_id}/{token}')
+    ENGAGEMENT_PATH = os.getenv('ENGAGEMENT_PATH', '/engagement/view/{engagement_id}')
+    VERIFICATION_EMAIL_SUBJECT = os.getenv('VERIFICATION_EMAIL_SUBJECT', '{engagement_name} - Survey link')
+
+    # Email Service
+    NOTIFICATIONS_EMAIL_ENDPOINT = os.getenv('NOTIFICATIONS_EMAIL_ENDPOINT')
 
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods

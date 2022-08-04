@@ -7,8 +7,9 @@ import { replaceUrl } from 'helper';
 interface FetchCommentParams {
     survey_id: number;
 }
-export const fetchComments = async (params: FetchCommentParams): Promise<Comment[]> => {
-    const responseData = await http.GetRequest<Comment[]>(Endpoints.Comment.GET_ALL, params);
+export const fetchComments = async ({ survey_id }: FetchCommentParams): Promise<Comment[]> => {
+    const url = replaceUrl(Endpoints.Comment.GET_ALL, 'survey_id', String(survey_id));
+    const responseData = await http.GetRequest<Comment[]>(url);
     return responseData.data.result ?? [];
 };
 
