@@ -45,7 +45,7 @@ class Comment(Resource):
             if comment_record:
                 return ActionResult.success(comment_id, comment_record)
 
-            return ActionResult.error('Comment was not found')
+            raise KeyError('comment record is None')
         except KeyError:
             return ActionResult.error('Comment was not found')
         except ValueError as err:
