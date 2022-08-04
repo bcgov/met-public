@@ -1,11 +1,12 @@
 
-    
+
 """Comment model class.
 
 Manages the comment
 """
 
 from marshmallow import EXCLUDE, Schema, fields
+
 
 class CommentUserSchema(Schema):
     """User schema for comment."""

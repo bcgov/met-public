@@ -26,7 +26,7 @@ class CommentService:
             comment_schema = CommentSchema(many=True, only=('text', 'submission_date', 'survey'))
             return comment_schema.dump(
                 Comment.get_accepted_comments_by_survey_id_where_engagement_closed(survey_id)
-                )
+            )
 
         comment_schema = CommentSchema(many=True)
         return comment_schema.dump(Comment.get_comments_by_survey_id(survey_id))
@@ -65,9 +65,9 @@ class CommentService:
         if len(components) == 0:
             return []
 
-        ## get the 'key' for each component that has 'inputType' text and filter out the rest.
+        # get the 'key' for each component that has 'inputType' text and filter out the rest.
         comments_keys = [
-            component.get('key', None) for component in components 
+            component.get('key', None) for component in components
             if component.get('inputType', None) == 'text']
 
         submission = survey_submission.get('submission_json', {})
@@ -86,16 +86,16 @@ class CommentService:
         user = UserService.get_user_by_external_id(external_user_id)
         if not status_id or status_id == 1 or not user:
             raise ValueError('Invalid review')
-        
+
         comment = cls.get_comment(comment_id)
         if not comment:
             raise KeyError('Comment was not found')
-            
+
         db_status_id = comment.get('comment_status').get('id')
 
         if db_status_id != 1:
             raise ValueError('Comment has already been reviewed')
-        
+
         reviewed_by = ' '.join([user.get('first_name', ''), user.get('last_name', '')])
 
         return Comment.update_comment_status(comment_id, status_id, reviewed_by)
