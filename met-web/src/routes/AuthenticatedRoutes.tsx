@@ -25,7 +25,7 @@ const AuthenticatedRoutes = () => {
             <Route path="/engagement/view/:engagementId" element={<EngagementView />} />
             <Route path="/survey/:surveyId/comments" element={<CommentListing />} />
             <Route path="/survey/:surveyId/comments/all" element={<AllComments />} />
-            <Route path="/comments/review" element={<CommentReview />} />
+            <Route path="/survey/:surveyId/comments/:commentId/review" element={<CommentReview />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
     );
