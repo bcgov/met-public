@@ -49,7 +49,7 @@ class CommentService:
             raise ValueError('Some required fields for comments are missing')
 
     @staticmethod
-    def form_comment(comment_text, survey_submission: SubmissionSchema, survey: SurveySchema):
+    def __form_comment(comment_text, survey_submission: SubmissionSchema, survey: SurveySchema):
         """Create a comment dict."""
         return {
             'text': comment_text,
@@ -76,7 +76,7 @@ class CommentService:
         if None in comments_texts:
             raise KeyError('Some answered questions were not found in the survey form')
 
-        comments = [cls.form_comment(comment_text, survey_submission, survey) for comment_text in comments_texts]
+        comments = [cls.__form_comment(comment_text, survey_submission, survey) for comment_text in comments_texts]
 
         print(comments)
 
