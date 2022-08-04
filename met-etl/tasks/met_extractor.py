@@ -44,7 +44,7 @@ class MetExtractor:  # pylint:disable=too-few-public-methods
         4). If No, create it
         """
         
-        time_delta = datetime.utcnow() - timedelta(minutes=inteval_in_minutes)
+        time_delta = datetime.utcnow() - timedelta(minutes=int(inteval_in_minutes))
         engagements = db.session.query(METEngagementModel).filter(METEngagementModel.updated_date > time_delta).all()
         engagement: METEngagementModel
         for engagement in engagements:
