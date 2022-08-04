@@ -31,10 +31,6 @@ class MetExtractor:  # pylint:disable=too-few-public-methods
         
         TIME_DELTA_IN_MINUTES = current_app.config.get('TIME_DELTA_IN_MINUTES')
         current_app.logger.info('Time Delta %s.', TIME_DELTA_IN_MINUTES)
-        print(METEngagementModel.get_engagement('1'))
-        print('--each engagement-----')
-        for eng in METEngagementModel.get_all_engagements():
-            print(eng)
         cls._do_etl_engagement(TIME_DELTA_IN_MINUTES)
 
         
