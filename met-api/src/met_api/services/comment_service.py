@@ -78,8 +78,6 @@ class CommentService:
 
         comments = [cls.__form_comment(comment_text, survey_submission, survey) for comment_text in comments_texts]
 
-        print(comments)
-
         return comments
 
     @classmethod
