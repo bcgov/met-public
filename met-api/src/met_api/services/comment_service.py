@@ -25,11 +25,11 @@ class CommentService:
         if not user_id:
             comment_schema = CommentSchema(many=True, only=('text', 'submission_date', 'survey'))
             return comment_schema.dump(
-                Comment.get_accepted_comments_by_survey_id_where_engagement_closed_query(survey_id)
+                Comment.get_accepted_comments_by_survey_id_where_engagement_closed(survey_id)
                 )
 
         comment_schema = CommentSchema(many=True)
-        return comment_schema.dump(Comment.get_comments_by_survey_id_query(survey_id))
+        return comment_schema.dump(Comment.get_comments_by_survey_id(survey_id))
 
     @classmethod
     def create_comments(cls, comments: list):

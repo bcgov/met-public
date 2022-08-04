@@ -32,7 +32,7 @@ class Comment(db.Model):
         return db.session.query(Comment).join(CommentStatus).join(Survey).filter(Comment.id == id).first()
 
     @classmethod
-    def get_comments_by_survey_id_query(cls, survey_id):
+    def get_comments_by_survey_id(cls, survey_id):
         """Get all comments."""
         return db.session.query(Comment)\
             .join(CommentStatus)\
@@ -41,7 +41,7 @@ class Comment(db.Model):
             .all()
 
     @classmethod
-    def get_accepted_comments_by_survey_id_where_engagement_closed_query(cls, survey_id):
+    def get_accepted_comments_by_survey_id_where_engagement_closed(cls, survey_id):
         """Get all comments."""
         now = datetime.now()
         return db.session.query(Comment)\
