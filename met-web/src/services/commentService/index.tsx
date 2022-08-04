@@ -1,6 +1,7 @@
 import http from 'apiManager/httpRequestHandler';
 import { Comment } from 'models/comment';
 import Endpoints from 'apiManager/endpoints';
+
 import { replaceUrl } from 'helper';
 
 interface FetchCommentParams {

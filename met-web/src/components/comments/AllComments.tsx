@@ -1,60 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
-import { Link } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { MetPageGridContainer } from 'components/common';
 import { Comment } from 'models/comment';
 import { HeadCell } from 'components/common/Table/types';
 import { Link as MuiLink, Typography, Button, Grid, Chip } from '@mui/material';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-
-const testComments: Comment[] = [
-    {
-        id: 0,
-        survey_id: 1,
-        submission_date: '2022-04-15',
-        published_date: '2022-04-16',
-        status_id: 1,
-        text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
-        reviewed_by: 'Jimmy',
-        review_date: '2022-04-16',
-        comment_status: { id: 1, status_name: 'Pending' },
-        survey: '',
-    },
-    {
-        id: 1,
-        survey_id: 1,
-        submission_date: '2022-04-15',
-        published_date: '2022-04-16',
-        status_id: 1,
-        text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
-        reviewed_by: 'Bill',
-        review_date: '2022-04-16',
-        comment_status: { id: 1, status_name: 'Pending' },
-        survey: '',
-    },
-    {
-        id: 2,
-        survey_id: 1,
-        submission_date: '2022-04-15',
-        published_date: '2022-04-16',
-        status_id: 1,
-        text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
-        reviewed_by: 'Robert',
-        review_date: '2022-04-16',
-        comment_status: { id: 1, status_name: 'Pending' },
-        survey: '',
-    },
-];
+import { fetchComments } from 'services/commentService';
 
 const AllComments = () => {
     const [comments, setComments] = useState<Comment[]>([]);
 
     const dispatch = useAppDispatch();
+    const { surveyId } = useParams();
+    const navigate = useNavigate();
 
     const callFetchComments = async () => {
         try {
-            const fetchedComments = testComments;
+            if (isNaN(Number(surveyId))) {
+                dispatch(openNotification({ severity: 'error', text: 'Invalid surveyId' }));
+            }
+
+            const fetchedComments = await fetchComments({
+                survey_id: Number(surveyId),
+            });
             setComments(fetchedComments);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching comments' }));
@@ -73,7 +43,7 @@ const AllComments = () => {
             label: 'ID',
             allowSort: true,
             getValue: (row: Comment) => (
-                <MuiLink component={Link} to={`/survey/${Number(row.survey_id)}/comments/${row.id}`}>
+                <MuiLink component={Link} to={`/survey/${Number(row.survey_id)}/comments/${row.id}/review`}>
                     {row.id}
                 </MuiLink>
             ),
@@ -129,7 +99,9 @@ const AllComments = () => {
         >
             <Grid item xs={12} lg={10}>
                 <MetTable hideHeader={true} headCells={headCells} rows={comments} defaultSort={'id'} />
-                <Button variant="contained">Return to Comments List</Button>
+                <Button variant="contained" onClick={() => navigate(`/survey/${surveyId}/comments`)}>
+                    Return to Comments List
+                </Button>
             </Grid>
         </MetPageGridContainer>
     );
