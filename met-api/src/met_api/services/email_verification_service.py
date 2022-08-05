@@ -81,7 +81,7 @@ class EmailVerificationService:
         try:
             # user hasn't been created yet.so create token using SA.
             service_account_token = RestService.get_service_account_token()
-            send_email(subject=subject, email=email_to, sender=sender, html_body=body, args=argsDict,
+            send_email(subject=subject, email=email_to, sender=sender, html_body=body, args=args,
                        token=service_account_token)
         except Exception as exc:  # noqa: B902
             current_app.logger.error('<Notification for registration failed', exc)
