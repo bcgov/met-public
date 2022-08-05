@@ -31,15 +31,13 @@ class EmailGCNotify(EmailBaseService):
         gc_notify_url = os.getenv('GC_NOTIFY_API_BASE_URL')
         email_template_id = os.getenv('GC_NOTIFY_EMAIL_TEMPLATE_ID')
         notifications_client = NotificationsAPIClient(api_key=api_key, base_url=gc_notify_url)
-        email_to=','.join(email_payload.get('to'))
+        email_to = ','.join(email_payload.get('to'))
+        args = email_payload.get('args')
         try:            
             response = notifications_client.send_email_notification(
                 email_address=email_to,
                 template_id=email_template_id,
-                personalisation={
-                    'email_subject': email_payload.get('subject'),
-                    'email_text': email_payload.get('body')
-                })
+                personalisation=args)
             print(response)
 
         except Exception as e:
