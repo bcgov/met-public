@@ -74,7 +74,6 @@ const CommentTextListing = () => {
                             <b>Reviewed By: </b> {row.reviewed_by}
                         </Typography>
                     </Grid>
-
                     <Grid item>
                         <CommentStatusChip commentStatus={row.comment_status.id} />
                     </Grid>
