@@ -29,13 +29,14 @@ export const getComment = async (commentId: number): Promise<Comment> => {
     }
 };
 
-interface UpdateCommentRequest {
-    id: string;
-    survey_id: number;
+interface ReviewCommentRequest {
+    status_id: number;
+    comment_id: number;
 }
-export const UpdateComment = async (data: UpdateCommentRequest): Promise<Comment> => {
+export const ReviewComment = async ({ comment_id, status_id }: ReviewCommentRequest): Promise<Comment> => {
     try {
-        const response = await http.PutRequest<Comment>(Endpoints.Comment.UPDATE, data);
+        const url = replaceUrl(Endpoints.Comment.REVIEW, 'comment_id', String(comment_id));
+        const response = await http.PutRequest<Comment>(url, { status_id });
         if (response.data.status && response.data.result) {
             return Promise.resolve(response.data.result);
         }

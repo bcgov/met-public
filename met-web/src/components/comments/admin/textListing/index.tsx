@@ -43,14 +43,14 @@ const CommentTextListing = () => {
             label: 'ID',
             allowSort: true,
             getValue: (row: Comment) => (
-                <MuiLink component={Link} to={`/survey/${Number(row.survey_id)}/comments/${row.id}`}>
+                <MuiLink component={Link} to={`/survey/${Number(row.survey_id)}/comments/${row.id}/review`}>
                     {row.id}
                 </MuiLink>
             ),
         },
         {
             key: 'text',
-            numeric: true,
+            numeric: false,
             disablePadding: false,
             label: 'Content',
             allowSort: true,
@@ -58,34 +58,24 @@ const CommentTextListing = () => {
         },
         {
             key: 'submission_date',
-            numeric: true,
+            numeric: false,
             disablePadding: false,
             label: 'Comment Date',
-            allowSort: true,
+            allowSort: false,
             customStyle: { width: '20%' },
             getValue: (row: Comment) => (
-                <Grid
-                    item
-                    xs={12}
-                    container
-                    direction="row"
-                    alignItems="flex-start"
-                    justifyContent="flex-start"
-                    rowSpacing={1}
-                    width="20em"
-                >
-                    <Grid item xs={12}>
-                        <Typography variant="subtitle2">
+                <Grid container direction="column" alignItems="flex-end" justifyContent="flex-start" width="20em">
+                    <Grid item sx={{ pb: '0.5em' }}>
+                        <Typography variant="subtitle2" sx={{ pb: '0.5em' }}>
                             <b>Comment Date: </b>
                             {row.submission_date}
                         </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
                         <Typography variant="subtitle2">
                             <b>Reviewed By: </b> {row.reviewed_by}
                         </Typography>
                     </Grid>
-                    <Grid container item xs={12} justifyContent="flex-end">
+
+                    <Grid item>
                         <CommentStatusChip commentStatus={row.comment_status.id} />
                     </Grid>
                 </Grid>
@@ -102,7 +92,7 @@ const CommentTextListing = () => {
             columnSpacing={2}
             rowSpacing={1}
         >
-            <Grid item xs={12}>
+            <Grid item sm={12} lg={10}>
                 <MetTable hideHeader={true} headCells={headCells} rows={comments} defaultSort={'id'} />
                 <Button component={Link} to={`/survey/${comments[0]?.survey_id || 0}/comments`} variant="contained">
                     Return to Comments List
