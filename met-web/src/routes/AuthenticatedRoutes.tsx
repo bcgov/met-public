@@ -8,7 +8,7 @@ import SurveyListing from 'components/survey/listing';
 import CreateSurvey from 'components/survey/create';
 import SurveyFormBuilder from 'components/survey/building';
 import SurveySubmit from 'components/survey/submit';
-import CommentReview from 'components/comments/CommentReview';
+import CommentReview from 'components/comments/admin/review/CommentReview';
 import CommentReviewListing from 'components/comments/admin/reviewListing';
 import CommentTextListing from 'components/comments/admin/textListing';
 

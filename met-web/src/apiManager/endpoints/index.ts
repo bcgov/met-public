@@ -25,8 +25,8 @@ const Endpoints = {
     },
     Comment: {
         GET_ALL: `${AppConfig.apiUrl}/comment/all/survey/survey_id`,
-        UPDATE: `${AppConfig.apiUrl}/comments/`,
-        GET: `${AppConfig.apiUrl}/comments/comment_id`,
+        REVIEW: `${AppConfig.apiUrl}/comment/comment_id `,
+        GET: `${AppConfig.apiUrl}/comment/comment_id`,
     },
     EmailVerification: {
         GET: `${AppConfig.apiUrl}/email_verification/verification_token`,

@@ -100,6 +100,11 @@ export const MetLabel = styled(Typography)(() => ({
     fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
 }));
 
+export const MetLabelBody = styled(Typography)(() => ({
+    fontSize: '16px',
+    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+}));
+
 interface RepeatedGridProps {
     times: number;
     children: React.ReactNode;
