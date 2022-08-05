@@ -1,20 +1,28 @@
+import { Grid, Typography } from '@mui/material';
 import React from 'react';
 import { IProps } from './types';
 
 const NotFound = React.memo(({ errorMessage = 'Page Not Found', errorCode = '404' }: IProps) => {
     return (
-        <section>
-            <div>
-                <p>
+        <Grid
+            container
+            direction="row"
+            justifyContent="flex-start"
+            alignItems="space-between"
+            spacing={1}
+            padding={'2em 2em 1em 2em'}
+        >
+            <Grid item xs={12} justifyContent="center">
+                <Typography variant="h2" component="h2" align="center">
                     {errorCode}
-                    <br />
-                    <small>{errorMessage}</small>
-                </p>
-                <span />
-                <span />
-                <span />
-            </div>
-        </section>
+                </Typography>
+            </Grid>
+            <Grid item xs={12} justifyContent="center">
+                <Typography variant="h2" component="h2" align="center">
+                    {errorMessage}
+                </Typography>
+            </Grid>
+        </Grid>
     );
 });
 
