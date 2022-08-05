@@ -76,7 +76,7 @@ class EmailVerificationService:
         if not survey.get('engagement'):
             raise ValueError('Engagement not found')
 
-        subject, body, argsDict = EmailVerificationService._render_email_template(
+        subject, body, args = EmailVerificationService._render_email_template(
             survey, email_verification.get('verification_token'))
         try:
             # user hasn't been created yet.so create token using SA.
@@ -104,7 +104,7 @@ class EmailVerificationService:
             format(engagement_name=engagement_name)
         end_date = datetime.strptime(engagement.get('end_date'), EmailVerificationService.date_format)
         formatted_end_date = datetime.strftime(end_date, EmailVerificationService.full_date_format)
-        argsDict = {
+        args = {
             'engagement_name': engagement_name,
             'survey_url': survey_url,
             'engagement_url': engagement_url,
@@ -115,7 +115,7 @@ class EmailVerificationService:
             survey_url=survey_url,
             engagement_url=engagement_url,
             end_date=formatted_end_date)
-        return subject, body, argsDict
+        return subject, body, args
 
     @staticmethod
     def validate_object(email_verification: EmailVerificationSchema):
@@ -133,6 +133,11 @@ class EmailVerificationService:
             timedelta(hours=EmailVerificationService.verification_expiry_hours)
         if datetime.now() >= verification_expiry_datetime:
             raise ValueError('Email verification is expired')
+
+        survey_id = email_verification.get('survey_id'  )
+        survey = SurveyModel.get_open(survey_id)
+        if not survey:
+            raise ValueError('Engagement period is over')
 
     @staticmethod
     def validate_fields(data: EmailVerificationSchema):
