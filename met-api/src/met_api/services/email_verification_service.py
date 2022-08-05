@@ -134,7 +134,7 @@ class EmailVerificationService:
         if datetime.now() >= verification_expiry_datetime:
             raise ValueError('Email verification is expired')
 
-        survey_id = email_verification.get('survey_id'  )
+        survey_id = email_verification.get('survey_id')
         survey = SurveyModel.get_open(survey_id)
         if not survey:
             raise ValueError('Engagement period is over')
