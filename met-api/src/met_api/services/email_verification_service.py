@@ -96,8 +96,9 @@ class EmailVerificationService:
         engagement_path = current_app.config.get('ENGAGEMENT_PATH'). \
             format(engagement_id=survey.get('engagement_id'))
         # url is origin url excluding context path
-        survey_url = f"{g.get('origin_url', '')}{survey_path}"
-        engagement_url = f"{g.get('origin_url', '')}{engagement_path}"
+        site_url = current_app.config.get('SITE_URL')
+        survey_url = f"{site_url}{survey_path}"
+        engagement_url = f"{site_url}{engagement_path}"
         engagement = survey.get('engagement')
         engagement_name = engagement.get('name')
         subject = current_app.config.get('VERIFICATION_EMAIL_SUBJECT'). \
