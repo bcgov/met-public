@@ -5,7 +5,6 @@ Manages the survey
 
 from marshmallow import EXCLUDE, Schema, fields
 from .engagement import EngagementSchema
-from .survey_comment import SurveyCommentSchema
 from met_api.constants.comment_status import Status
 
 
