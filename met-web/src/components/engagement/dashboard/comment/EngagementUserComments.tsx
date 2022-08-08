@@ -24,7 +24,7 @@ export const EngagementCommentDashboard = () => {
     };
 
     const routeChange = () => {
-        const path = `/engagement/dashboard/` + savedEngagement.id;
+        const path = `/engagement/` + savedEngagement.id + `/dashboard`;
         navigate(path);
     };
 
