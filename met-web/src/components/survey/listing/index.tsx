@@ -15,6 +15,7 @@ import { fetchSurveys } from 'services/surveyService/form';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { EngagementStatus } from 'constants/engagementStatus';
+import { totalmem } from 'os';
 
 const SurveyListing = () => {
     const [searchFilter, setSearchFilter] = useState({
@@ -93,19 +94,21 @@ const SurveyListing = () => {
             },
         },
         {
-            key: 'comments_count',
+            key: 'comments_meta_data',
             numeric: true,
             disablePadding: false,
             label: 'Comments',
             allowSort: true,
             getValue: (row: Survey) => {
-                if (!row.comments_count) {
+                if (!row.comments_meta_data.total) {
                     return 0;
                 }
 
+                const { total, pending } = row.comments_meta_data;
                 return (
                     <MuiLink component={Link} to={`/survey/${row.id}/comments`}>
-                        {row.comments_count}
+                        {`${total}`}
+                        {pending ? ` (${pending} New)` : ''}
                     </MuiLink>
                 );
             },

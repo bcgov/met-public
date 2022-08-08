@@ -1,17 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
 import { Link, useParams } from 'react-router-dom';
-import { MetPageGridContainer } from 'components/common';
+import { ConditionalComponent, MetPageGridContainer } from 'components/common';
 import { Comment } from 'models/comment';
 import { HeadCell } from 'components/common/Table/types';
-import { Link as MuiLink, Typography, Button, Grid } from '@mui/material';
+import { Link as MuiLink, Typography, Button, Grid, Stack, TextField } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { CommentStatusChip } from '../../status';
 import { fetchComments } from 'services/commentService';
+import { CommentStatus } from 'constants/commentStatus';
 
 const CommentTextListing = () => {
     const [comments, setComments] = useState<Comment[]>([]);
+    const [searchFilter, setSearchFilter] = useState({
+        key: 'text',
+        value: '',
+    });
+    const [searchText, setSearchText] = useState('');
 
     const dispatch = useAppDispatch();
     const { surveyId } = useParams();
@@ -34,6 +41,13 @@ const CommentTextListing = () => {
     useEffect(() => {
         callFetchComments();
     }, []);
+
+    const handleSearchBarClick = (filter: string) => {
+        setSearchFilter({
+            ...searchFilter,
+            value: filter,
+        });
+    };
 
     const headCells: HeadCell<Comment>[] = [
         {
@@ -70,9 +84,11 @@ const CommentTextListing = () => {
                             <b>Comment Date: </b>
                             {row.submission_date}
                         </Typography>
-                        <Typography variant="subtitle2">
-                            <b>Reviewed By: </b> {row.reviewed_by}
-                        </Typography>
+                        <ConditionalComponent condition={row.comment_status.id !== CommentStatus.Pending}>
+                            <Typography variant="subtitle2">
+                                <b>Reviewed By: </b> {row.reviewed_by}
+                            </Typography>
+                        </ConditionalComponent>
                     </Grid>
                     <Grid item>
                         <CommentStatusChip commentStatus={row.comment_status.id} />
@@ -91,8 +107,35 @@ const CommentTextListing = () => {
             columnSpacing={2}
             rowSpacing={1}
         >
+            <Grid item xs={12} container>
+                <Grid item xs={12} lg={4}>
+                    <Stack direction="row" spacing={1}>
+                        <TextField
+                            id="comments"
+                            variant="outlined"
+                            label="Search Comments"
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                            size="small"
+                        />
+                        <Button
+                            variant="contained"
+                            data-testid="CommentListing/search-button"
+                            onClick={() => handleSearchBarClick(searchText)}
+                        >
+                            <SearchIcon />
+                        </Button>
+                    </Stack>
+                </Grid>
+            </Grid>
             <Grid item sm={12} lg={10}>
-                <MetTable hideHeader={true} headCells={headCells} rows={comments} defaultSort={'id'} />
+                <MetTable
+                    filter={searchFilter}
+                    hideHeader={true}
+                    headCells={headCells}
+                    rows={comments}
+                    defaultSort={'id'}
+                />
                 <Button component={Link} to={`/survey/${comments[0]?.survey_id || 0}/comments`} variant="contained">
                     Return to Comments List
                 </Button>

@@ -5,6 +5,8 @@ Manages the survey
 
 from marshmallow import EXCLUDE, Schema, fields
 from .engagement import EngagementSchema
+from .survey_comment import SurveyCommentSchema
+from met_api.constants.comment_status import Status
 
 
 class SurveySchema(Schema):
@@ -24,10 +26,12 @@ class SurveySchema(Schema):
     updated_date = fields.Str(data_key='updated_date')
     engagement_id = fields.Str(data_key='engagement_id')
     engagement = fields.Nested(EngagementSchema)
-    comments_count = fields.Method('get_comments_count')
+    comments_meta_data = fields.Method('get_comments_meta_data')
 
-    def get_comments_count(self, obj):
-        """Get the number of comments made in the survey."""
-        if not obj.comments:
-            return 0
-        return len(obj.comments)
+    def get_comments_meta_data(self, obj):
+        """Get the meta data of the comments made in the survey."""
+        return {
+            'total': len(obj.comments),
+            'pending': len([comment for comment in obj.comments if comment.status_id == Status.Pending])
+        }
+        
