@@ -69,7 +69,7 @@ class EmailVerificationService:
         sender = current_app.config.get('MAIL_FROM_ID')
         survey_id = email_verification.get('survey_id')
         email_to = email_verification.get('email_address')
-        survey: SurveyModel = SurveyModel.get_open_survey(survey_id)
+        survey: SurveyModel = SurveyModel.get_open(survey_id)
 
         if not survey:
             raise ValueError('Survey not found')

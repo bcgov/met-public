@@ -41,8 +41,8 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
         return survey_schema.dump(survey)
 
     @classmethod
-    def get_open_survey(cls, survey_id) -> SurveySchema:
-        """Get a survey."""
+    def get_open(cls, survey_id) -> SurveySchema:
+        """Get a open survey."""
         now = datetime.now()
         survey_schema = SurveySchema()
         survey = db.session.query(Survey).filter_by(id=survey_id)\

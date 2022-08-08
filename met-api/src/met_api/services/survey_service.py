@@ -21,7 +21,7 @@ class SurveyService:
     @classmethod
     def get_open(cls, survey_id):
         """Get survey by the id."""
-        db_data = Survey.get_open_survey(survey_id)
+        db_data = Survey.get_open(survey_id)
         db_data['engagement'] = cls.supply_banner_url(db_data.get('engagement', None))
         return db_data
 
