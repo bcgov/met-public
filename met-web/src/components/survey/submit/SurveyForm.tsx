@@ -4,48 +4,18 @@ import { ActionContext } from './ActionContext';
 import FormSubmit from 'components/Form/FormSubmit';
 import { useNavigate } from 'react-router-dom';
 import { FormSubmissionData } from 'components/Form/types';
-import { submitSurvey } from 'services/surveyService/submission';
-import { useAppDispatch, useAppSelector } from 'hooks';
-import { openNotification } from 'services/notificationService/notificationSlice';
+import { useAppSelector } from 'hooks';
 
 export const SurveyForm = () => {
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
-    const { isLoading, savedSurvey, token } = useContext(ActionContext);
+    const { isLoading, savedSurvey, handleSubmit, isSubmitting } = useContext(ActionContext);
     const [submissionData, setSubmissionData] = useState<unknown>(null);
     const [isValid, setIsValid] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleChange = (filledForm: FormSubmissionData) => {
         setSubmissionData(filledForm.data);
         setIsValid(filledForm.isValid);
-    };
-
-    const handleSubmit = async () => {
-        try {
-            setIsSubmitting(true);
-            await submitSurvey({
-                survey_id: savedSurvey.id,
-                submission_json: submissionData,
-                verification_token: token ? token : '',
-            });
-            dispatch(
-                openNotification({
-                    severity: 'success',
-                    text: 'Survey was successfully submitted',
-                }),
-            );
-            navigate(`/engagement/view/${savedSurvey.engagement.id}`);
-        } catch (error) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred during survey submission',
-                }),
-            );
-            setIsSubmitting(false);
-        }
     };
 
     if (isLoading) {
@@ -72,7 +42,7 @@ export const SurveyForm = () => {
                     <Button
                         variant="contained"
                         disabled={!isValid || isLoggedIn || isSubmitting}
-                        onClick={() => handleSubmit()}
+                        onClick={() => handleSubmit(submissionData)}
                     >
                         Submit Survey
                         {isSubmitting && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}

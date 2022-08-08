@@ -4,10 +4,13 @@ import { SurveyBanner } from './SurveyBanner';
 import { SurveyForm } from './SurveyForm';
 import { ActionContext } from './ActionContext';
 import { Link } from 'react-router-dom';
-import { MetPaper } from 'components/common';
+import { ConditionalComponent, MetPaper } from 'components/common';
+import { InvalidTokenModal } from './InvalidTokenModal';
+import { useNavigate } from 'react-router';
 
 const SurveySubmitWrapped = () => {
-    const { savedSurvey } = useContext(ActionContext);
+    const { savedSurvey, isTokenValid } = useContext(ActionContext);
+    const navigate = useNavigate();
     return (
         <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2}>
             <Grid item xs={12}>
@@ -30,7 +33,15 @@ const SurveySubmitWrapped = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <MetPaper elevation={2}>
-                        <SurveyForm />
+                        <ConditionalComponent condition={isTokenValid}>
+                            <SurveyForm />
+                        </ConditionalComponent>
+                        <InvalidTokenModal
+                            open={!isTokenValid}
+                            handleClose={() => {
+                                navigate(`/engagement/view/${savedSurvey.engagement.id}`);
+                            }}
+                        />
                     </MetPaper>
                 </Grid>
             </Grid>
