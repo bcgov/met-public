@@ -32,5 +32,4 @@ class SurveySchema(Schema):
         return {
             'total': len(obj.comments),
             'pending': len([comment for comment in obj.comments if comment.status_id == Status.Pending])
-        }
-        
+        }        

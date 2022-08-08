@@ -15,7 +15,6 @@ import { fetchSurveys } from 'services/surveyService/form';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { EngagementStatus } from 'constants/engagementStatus';
-import { totalmem } from 'os';
 
 const SurveyListing = () => {
     const [searchFilter, setSearchFilter] = useState({
