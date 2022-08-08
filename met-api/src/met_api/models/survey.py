@@ -42,7 +42,7 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
 
     @classmethod
     def get_open(cls, survey_id) -> SurveySchema:
-        """Get an open survey."""
+        """Get a open survey."""
         now = datetime.now()
         survey_schema = SurveySchema()
         survey = db.session.query(Survey).filter_by(id=survey_id)\
