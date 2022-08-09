@@ -2,6 +2,8 @@ declare global {
     interface Window {
         _env_: {
             REACT_APP_API_URL: string;
+            REACT_APP_REDASH_PUBLIC_URL: string;
+            REACT_APP_REDASH_COMMENTS_PUBLIC_URL: string;
 
             // Formio
             REACT_APP_API_PROJECT_URL: string;
@@ -21,6 +23,9 @@ declare global {
 }
 
 const API_URL = window._env_.REACT_APP_API_URL || process.env.REACT_APP_API_URL;
+const REDASH_DASHBOARD_URL = window._env_.REACT_APP_REDASH_PUBLIC_URL || process.env.REACT_APP_REDASH_PUBLIC_URL;
+const REDASH_CMNTS_DASHBOARD_URL =
+    window._env_.REACT_APP_REDASH_COMMENTS_PUBLIC_URL || process.env.REACT_APP_REDASH_COMMENTS_PUBLIC_URL;
 
 // Formio Environment Variables
 const FORMIO_PROJECT_URL = window._env_.REACT_APP_API_PROJECT_URL || process.env.REACT_APP_API_PROJECT_URL;
@@ -41,6 +46,8 @@ const KC_ADMIN_ROLE = window._env_.REACT_APP_KEYCLOAK_ADMIN_ROLE || process.env.
 
 export const AppConfig = {
     apiUrl: API_URL,
+    redashDashboardUrl: REDASH_DASHBOARD_URL,
+    redashCmntsDashboardUrl: REDASH_CMNTS_DASHBOARD_URL,
     formio: {
         projectUrl: FORMIO_PROJECT_URL,
         apiUrl: FORMIO_API_URL,
