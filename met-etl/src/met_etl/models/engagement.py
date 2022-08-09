@@ -18,3 +18,5 @@ class Engagement(BaseModel):  # pylint: disable=too-few-public-methods
     end_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
     status_name = db.Column(db.String(50))
     published_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
+
+    
