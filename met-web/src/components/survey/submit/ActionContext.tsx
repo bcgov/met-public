@@ -21,7 +21,7 @@ export const ActionContext = createContext<SubmitSurveyContext>({
     savedSurvey: createDefaultSurvey(),
     isLoading: true,
     isTokenValid: true,
-    handleSubmit: (submissionData: unknown) => {
+    handleSubmit: (_submissionData: unknown) => {
         return;
     },
     isSubmitting: false,
