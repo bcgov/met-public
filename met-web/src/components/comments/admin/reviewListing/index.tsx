@@ -17,7 +17,7 @@ import { fetchComments } from 'services/commentService';
 
 const CommentListing = () => {
     const [searchFilter, setSearchFilter] = useState({
-        key: 'email',
+        key: 'id',
         value: '',
     });
     const [searchText, setSearchText] = useState('');
@@ -46,10 +46,10 @@ const CommentListing = () => {
         callFetchComments();
     }, [surveyId]);
 
-    const handleSearchBarClick = (commentEmailFilter: string) => {
+    const handleSearchBarClick = (filter: string) => {
         setSearchFilter({
             ...searchFilter,
-            value: commentEmailFilter,
+            value: filter,
         });
     };
 
@@ -134,7 +134,7 @@ const CommentListing = () => {
                 <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
                     {`${comments[0]?.survey || ''} Comments`}
                 </Typography>
-                <MetTable headCells={headCells} rows={comments} defaultSort={'id'} />
+                <MetTable filter={searchFilter} headCells={headCells} rows={comments} defaultSort={'id'} />
                 <Button component={Link} to={`/survey/${comments[0]?.survey_id || 0}/comments/all`} variant="contained">
                     View All Comments
                 </Button>

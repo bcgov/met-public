@@ -23,7 +23,7 @@ import { CommentReviewSkeleton } from './CommentReviewSkeleton';
 
 const CommentReview = () => {
     const [comment, setComment] = useState<Comment>(createDefaultComment());
-    const [review, setReview] = useState(CommentStatus.Accepted);
+    const [review, setReview] = useState(CommentStatus.Approved);
     const [isSaving, setIsSaving] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -146,11 +146,11 @@ const CommentReview = () => {
                             Comment Approval
                         </FormLabel>
                         <RadioGroup
-                            defaultValue={CommentStatus.Accepted}
+                            defaultValue={CommentStatus.Approved}
                             onChange={(e) => handleReviewChange(Number(e.target.value))}
                         >
                             <FormControlLabel
-                                value={CommentStatus.Accepted}
+                                value={CommentStatus.Approved}
                                 control={<Radio />}
                                 label={<MetLabelBody>Approve</MetLabelBody>}
                             />
@@ -169,7 +169,7 @@ const CommentReview = () => {
                             {'Save & Continue'}
                             {isSaving && <CircularProgress color="inherit" sx={{ marginLeft: 1 }} size={20} />}
                         </Button>
-                        <Button variant="outlined" onClick={() => navigate('/survey/listing')}>
+                        <Button variant="outlined" onClick={() => navigate(-1)}>
                             Cancel
                         </Button>
                     </Stack>

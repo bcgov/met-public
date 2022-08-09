@@ -2,8 +2,8 @@ import React from 'react';
 import { Chip } from '@mui/material';
 import { CommentStatus } from 'constants/commentStatus';
 
-const Accepted = () => {
-    return <Chip label="Accepted" color="success" sx={{ fontWeight: 500 }} />;
+const Approved = () => {
+    return <Chip label="Approved" color="success" sx={{ fontWeight: 500 }} />;
 };
 
 const Rejected = () => {
@@ -18,8 +18,8 @@ export const CommentStatusChip = ({ commentStatus }: { commentStatus: CommentSta
     switch (commentStatus) {
         case CommentStatus.Pending:
             return <Pending />;
-        case CommentStatus.Accepted:
-            return <Accepted />;
+        case CommentStatus.Approved:
+            return <Approved />;
         case CommentStatus.Rejected:
             return <Rejected />;
         default:
