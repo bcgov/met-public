@@ -74,8 +74,14 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
 
                 <Grid item xs={12}>
                     <Typography
-                        variant="body2"
-                        sx={{ p: '1em', borderLeft: 8, borderColor: '#003366', backgroundColor: '#F2F2F2', mt: '2em' }}
+                        sx={{
+                            p: '1em',
+                            borderLeft: 8,
+                            borderColor: '#003366',
+                            backgroundColor: '#F2F2F2',
+                            mt: '2em',
+                            fontSize: '0.8rem',
+                        }}
                     >
                         {`
                             Personal information (your email address) is collected under section 26(c) and 26(e) of the Freedom of Information\
