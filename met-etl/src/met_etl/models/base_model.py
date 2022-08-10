@@ -1,10 +1,11 @@
 """Super class to handle all operations related to base model."""
 
-from .db import db
 from datetime import datetime
 
-class BaseModel(db.Model):
+from .db import db
 
+
+class BaseModel(db.Model):
     __abstract__ = True
     __bind_key__ = 'met_db_analytics'
 
@@ -20,4 +21,4 @@ class BaseModel(db.Model):
     @classmethod
     def find_by_survey_id(cls, identifier: int):
         """Return model by id."""
-        return cls.query.get(identifier)    
+        return cls.query.get(identifier)

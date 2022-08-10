@@ -3,15 +3,15 @@
 Manages the survey
 """
 from sqlalchemy import ForeignKey
-from .db import db
+
 from .base_model import BaseModel
+from .db import db
 
 
 class Survey(BaseModel):  # pylint: disable=too-few-public-methods
     """Definition of the Survey entity."""
 
     __tablename__ = 'survey'
-    
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.String(50))
