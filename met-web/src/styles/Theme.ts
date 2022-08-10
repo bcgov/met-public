@@ -84,10 +84,6 @@ export const BaseTheme = createTheme({
             fontWeight: 500,
             fontSize: '16px',
         },
-        body2: {
-            fontWeight: 500,
-            fontSize: '0.8rem',
-        },
         button: {
             fontWeight: 700,
             fontSize: '1.2rem',
