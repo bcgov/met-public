@@ -43,6 +43,7 @@ class SurveyEtlService:  # pylint: disable=too-few-public-methods
         if not new_surveys:
             current_app.logger.info('No updated Surveys Found')
             return
+        current_app.logger.info('Total updated surveys Found : %s.', len(new_surveys))
 
         SurveyEtlService._do_etl_survey_data(new_surveys)
         SurveyEtlService._do_etl_survey_inputs(new_surveys)

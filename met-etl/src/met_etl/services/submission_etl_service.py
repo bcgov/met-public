@@ -12,8 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Service to do ETL on e."""
+from datetime import timedelta, datetime
 from typing import List
 
+from flask import current_app
 from met_api.models.submission import Submission as MetSubmissionModel
 from met_api.models.survey import Survey as MetSurveyModel
 from met_api.models.user import User as UserModel
@@ -28,16 +30,28 @@ class SubmissionEtlService:  # pylint: disable=too-few-public-methods
     """ETL Service on Submissions."""
 
     @staticmethod
-    def do_etl_submissions(submissions: List[MetSubmissionModel]):
+    def do_etl_submissions():
         """Perform the ETL on submissions.
 
-            1.Extract data out of submssion_json.
+            1.Extract data out of submission.
             2.Iterate form_json.components.
             3.Check Type and save to db
 
         """
-        for submission in submissions:
+        time_delta_in_minutes: int = int(current_app.config.get('TIME_DELTA_IN_MINUTES'))
+        time_delta = datetime.utcnow() - timedelta(minutes=time_delta_in_minutes)
+
+        new_submissions = db.session.query(MetSubmissionModel).filter(
+            MetSubmissionModel.updated_date > time_delta).all()
+
+        if not new_submissions:
+            current_app.logger.info('No New Submissions Found.')
+            return
+        current_app.logger.info('Total updated submissions Found : %s.', len(new_submissions))
+
+        for submission in new_submissions:
             survey = db.session.query(MetSurveyModel).filter(MetSurveyModel.id == submission.survey_id).first()
+            current_app.logger.info('Submission found for survey : %s.', survey.id)
             form_questions = survey.form_json['components']
             user = db.session.query(UserModel).filter(UserModel.id == submission.user_id).first()
             for component in form_questions:
