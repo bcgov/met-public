@@ -38,7 +38,6 @@ class SurveyEtlService:  # pylint: disable=too-few-public-methods
         time_delta = datetime.utcnow() - timedelta(minutes=time_delta_in_minutes)
 
         new_surveys = db.session.query(MetSurveyModel).filter(MetSurveyModel.updated_date > time_delta).all()
-        # new_surveys = db.session.query(MetSurveyModel).filter(MetSurveyModel.id == 12).all()
 
         if not new_surveys:
             current_app.logger.info('No updated Surveys Found')

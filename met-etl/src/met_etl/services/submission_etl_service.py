@@ -72,7 +72,6 @@ class SubmissionEtlService:  # pylint: disable=too-few-public-methods
                         request_id=component['id'],
                         user_id=user.id)
                     db.session.add(radio_response)
-                    continue
 
                 elif component['type'] == 'simplecheckboxes':
                     # selectbox answer is a list.so values have to be found from question
@@ -95,7 +94,6 @@ class SubmissionEtlService:  # pylint: disable=too-few-public-methods
                             db.session.add(selectbox_response)
                             continue
                         # need not to save if false
-                        continue
                 elif component['type'] == 'text' or component['type'] == 'simpletextfield':
                     # text answer is a string.so value has to be found from question
                     text_response = MetResponseTypeTextModel(
@@ -108,4 +106,3 @@ class SubmissionEtlService:  # pylint: disable=too-few-public-methods
                         user_id=user.id
                     )
                     db.session.add(text_response)
-                    continue
