@@ -141,9 +141,7 @@ const SurveyFormBuilder = () => {
                     <PrimaryButton disabled={!formData || hasPublishedEngagement} onClick={handleSaveForm}>
                         {'Save & Continue'}
                     </PrimaryButton>
-                    <SecondaryButton variant="outlined" onClick={() => navigate('/survey/listing')}>
-                        Cancel
-                    </SecondaryButton>
+                    <SecondaryButton onClick={() => navigate('/survey/listing')}>Cancel</SecondaryButton>
                 </Stack>
             </Grid>
         </MetPageGridContainer>

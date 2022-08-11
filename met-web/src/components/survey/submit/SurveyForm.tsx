@@ -37,9 +37,7 @@ export const SurveyForm = () => {
             </Grid>
             <Grid item container xs={12} justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
-                    <SecondaryButton variant="outlined" onClick={() => navigate('/')}>
-                        Cancel
-                    </SecondaryButton>
+                    <SecondaryButton onClick={() => navigate('/')}>Cancel</SecondaryButton>
                     <PrimaryButton
                         disabled={!isValid || isLoggedIn || isSubmitting}
                         onClick={() => handleSubmit(submissionData)}

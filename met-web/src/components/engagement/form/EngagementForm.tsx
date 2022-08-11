@@ -343,7 +343,6 @@ const EngagementForm = () => {
                                 </PrimaryButton>
                             )}
                             <SecondaryButton
-                                variant="outlined"
                                 data-testid="engagement-form/preview-engagement-button"
                                 onClick={() => handlePreviewEngagement()}
                                 disabled={isSaving}

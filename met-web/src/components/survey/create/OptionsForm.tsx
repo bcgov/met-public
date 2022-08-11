@@ -95,9 +95,7 @@ const OptionsForm = () => {
                 <Grid item xs={12}>
                     <Stack direction="row" spacing={2}>
                         <PrimaryButton disabled={true}>{'Save & Continue'}</PrimaryButton>
-                        <SecondaryButton variant="outlined" onClick={() => navigate('/survey/listing')}>
-                            Cancel
-                        </SecondaryButton>
+                        <SecondaryButton onClick={() => navigate('/survey/listing')}>Cancel</SecondaryButton>
                     </Stack>
                 </Grid>
             </ConditionalComponent>

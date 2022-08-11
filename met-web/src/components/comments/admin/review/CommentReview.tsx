@@ -168,9 +168,7 @@ const CommentReview = () => {
                             {'Save & Continue'}
                             {isSaving && <CircularProgress color="inherit" sx={{ marginLeft: 1 }} size={20} />}
                         </PrimaryButton>
-                        <SecondaryButton variant="outlined" onClick={() => navigate(-1)}>
-                            Cancel
-                        </SecondaryButton>
+                        <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
                     </Stack>
                 </Grid>
             </Grid>

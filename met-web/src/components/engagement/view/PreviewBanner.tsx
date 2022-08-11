@@ -73,10 +73,7 @@ export const PreviewBanner = () => {
                             borderRadius: '4px',
                         }}
                     >
-                        <SecondaryButton
-                            variant="outlined"
-                            onClick={() => navigate(`/engagement/form/${engagementId}`)}
-                        >
+                        <SecondaryButton onClick={() => navigate(`/engagement/form/${engagementId}`)}>
                             Edit Engagement
                         </SecondaryButton>
                     </Box>

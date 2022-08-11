@@ -37,9 +37,7 @@ const FailurePanel = ({ email, handleClose, tryAgain }: FailurePanelProps) => {
             </Grid>
             <Grid item container xs={12} justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
-                    <SecondaryButton variant="outlined" onClick={handleClose}>
-                        Go back to Engagement
-                    </SecondaryButton>
+                    <SecondaryButton onClick={handleClose}>Go back to Engagement</SecondaryButton>
                     <PrimaryButton onClick={tryAgain}>Try Again</PrimaryButton>
                 </Stack>
             </Grid>

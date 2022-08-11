@@ -53,7 +53,6 @@ const ImageUpload = ({ handleAddFile, savedImageUrl = '' }: ImageUploadProps) =>
                             handleAddFile([]);
                             URL.revokeObjectURL(objectUrl);
                         }}
-                        variant="outlined"
                     >
                         Remove Image
                     </SecondaryButton>
