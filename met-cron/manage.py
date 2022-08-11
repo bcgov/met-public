@@ -2,7 +2,7 @@ from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 import invoke_jobs
 
-from src.met_etl.models import db
+from src.met_cron.models import db
 
 app = invoke_jobs.create_app(run_mode='migration')
 # app.config.from_object(os.environ['APP_SETTINGS'])

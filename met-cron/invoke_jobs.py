@@ -30,7 +30,7 @@ setup_logging(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'logging.
 
 def create_app(run_mode=os.getenv('FLASK_ENV', 'production')):
     """Return a configured Flask App using the Factory method."""
-    from  met_etl.models import db, ma
+    from  met_cron.models import db, ma
 
     app = Flask(__name__)
     print(f'>>>>> Creating app in run_mode: {run_mode}')
