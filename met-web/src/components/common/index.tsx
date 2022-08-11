@@ -8,7 +8,7 @@ import {
     Stack,
     IconButton,
 } from '@mui/material';
-import styled from '@emotion/styled';
+import { styled } from '@mui/system';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Palette } from 'styles/Theme';
@@ -16,6 +16,38 @@ import { Palette } from 'styles/Theme';
 export const RoundedButton = styled(MuiButton)(() => ({
     borderRadius: '23px',
 }));
+
+export const StyledPrimaryButton = styled(MuiButton)(() => ({
+    backgroundColor: Palette.primary.main,
+    color: '#fff',
+    '&:hover': {
+        opacity: '0.8',
+        backgroundColor: Palette.primary.main,
+        color: '#fff',
+        textDecoration: 'underline',
+    },
+}));
+
+export const StyledSecondaryButton = styled(MuiButton)(() => ({
+    backgroundColor: 'transparent',
+    color: Palette.primary.main,
+    border: `2px solid ${Palette.primary.main}`,
+    '&:hover': {
+        opacity: '0.8',
+        textDecoration: 'underline',
+        backgroundColor: Palette.primary.main,
+        color: '#FFFFFF',
+        border: `2px solid ${Palette.primary.main}`,
+    },
+}));
+
+export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
+    <StyledSecondaryButton {...rest}>{children}</StyledSecondaryButton>
+);
+
+export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
+    <StyledPrimaryButton {...rest}>{children}</StyledPrimaryButton>
+);
 
 export const StyledPaper = styled(MuiPaper)(() => ({
     border: `1px solid #606060`,

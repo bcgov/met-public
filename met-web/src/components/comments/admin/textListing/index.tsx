@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
 import { Link, useParams } from 'react-router-dom';
-import { ConditionalComponent, MetPageGridContainer } from 'components/common';
+import { ConditionalComponent, MetPageGridContainer, PrimaryButton } from 'components/common';
 import { Comment } from 'models/comment';
 import { HeadCell } from 'components/common/Table/types';
-import { Link as MuiLink, Typography, Button, Grid, Stack, TextField } from '@mui/material';
+import { Link as MuiLink, Typography, Grid, Stack, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -118,13 +118,13 @@ const CommentTextListing = () => {
                             onChange={(e) => setSearchText(e.target.value)}
                             size="small"
                         />
-                        <Button
+                        <PrimaryButton
                             variant="contained"
                             data-testid="CommentListing/search-button"
                             onClick={() => handleSearchBarClick(searchText)}
                         >
                             <SearchIcon />
-                        </Button>
+                        </PrimaryButton>
                     </Stack>
                 </Grid>
             </Grid>
@@ -136,9 +136,13 @@ const CommentTextListing = () => {
                     rows={comments}
                     defaultSort={'id'}
                 />
-                <Button component={Link} to={`/survey/${comments[0]?.survey_id || 0}/comments`} variant="contained">
+                <PrimaryButton
+                    component={Link}
+                    to={`/survey/${comments[0]?.survey_id || 0}/comments`}
+                    variant="contained"
+                >
                     Return to Comments List
-                </Button>
+                </PrimaryButton>
             </Grid>
         </MetPageGridContainer>
     );

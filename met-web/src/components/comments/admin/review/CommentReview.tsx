@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
     Grid,
-    Button,
     FormControl,
     RadioGroup,
     FormControlLabel,
@@ -15,7 +14,7 @@ import { getComment, ReviewComment } from 'services/commentService';
 import { useAppDispatch } from 'hooks';
 import { useParams, useNavigate } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { MetLabel, MetLabelBody, MetPageGridContainer } from 'components/common';
+import { MetLabel, MetLabelBody, MetPageGridContainer, PrimaryButton, SecondaryButton } from 'components/common';
 import { Palette } from 'styles/Theme';
 import { CommentStatus } from 'constants/commentStatus';
 import { formatDate } from 'components/common/dateHelper';
@@ -165,13 +164,13 @@ const CommentReview = () => {
 
                 <Grid item xs={12}>
                     <Stack direction="row" spacing={2}>
-                        <Button variant="contained" disabled={isSaving} onClick={handleSave}>
+                        <PrimaryButton variant="contained" disabled={isSaving} onClick={handleSave}>
                             {'Save & Continue'}
                             {isSaving && <CircularProgress color="inherit" sx={{ marginLeft: 1 }} size={20} />}
-                        </Button>
-                        <Button variant="outlined" onClick={() => navigate(-1)}>
+                        </PrimaryButton>
+                        <SecondaryButton variant="outlined" onClick={() => navigate(-1)}>
                             Cancel
-                        </Button>
+                        </SecondaryButton>
                     </Stack>
                 </Grid>
             </Grid>

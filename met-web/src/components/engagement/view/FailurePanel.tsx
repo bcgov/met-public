@@ -1,7 +1,7 @@
 import React from 'react';
-import { Grid, Button, Typography, Stack } from '@mui/material';
+import { Grid, Typography, Stack } from '@mui/material';
 import { FailurePanelProps } from './types';
-import { modalStyle } from 'components/common';
+import { modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
 
 const FailurePanel = ({ email, handleClose, tryAgain }: FailurePanelProps) => {
     return (
@@ -37,12 +37,12 @@ const FailurePanel = ({ email, handleClose, tryAgain }: FailurePanelProps) => {
             </Grid>
             <Grid item container xs={12} justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
-                    <Button variant="outlined" onClick={handleClose}>
+                    <SecondaryButton variant="outlined" onClick={handleClose}>
                         Go back to Engagement
-                    </Button>
-                    <Button variant="contained" onClick={tryAgain}>
+                    </SecondaryButton>
+                    <PrimaryButton variant="contained" onClick={tryAgain}>
                         Try Again
-                    </Button>
+                    </PrimaryButton>
                 </Stack>
             </Grid>
         </Grid>

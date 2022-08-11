@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react';
 import { ActionContext } from './ActionContext';
-import { Box, Button, CircularProgress, Grid, Skeleton, Typography } from '@mui/material';
+import { Box, CircularProgress, Grid, Skeleton, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { EngagementStatus } from 'constants/engagementStatus';
-import { ConditionalComponent } from 'components/common';
+import { ConditionalComponent, PrimaryButton, SecondaryButton } from 'components/common';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
@@ -73,24 +73,31 @@ export const PreviewBanner = () => {
                             borderRadius: '4px',
                         }}
                     >
-                        <Button variant="outlined" onClick={() => navigate(`/engagement/form/${engagementId}`)}>
+                        <SecondaryButton
+                            variant="outlined"
+                            onClick={() => navigate(`/engagement/form/${engagementId}`)}
+                        >
                             Edit Engagement
-                        </Button>
+                        </SecondaryButton>
                     </Box>
                     <ConditionalComponent condition={isDraft}>
-                        <Button
+                        <PrimaryButton
                             variant="contained"
                             sx={{ marginLeft: '1em' }}
                             onClick={() => handlePublishEngagement()}
                         >
                             Publish
                             {isPublishing && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
-                        </Button>
+                        </PrimaryButton>
                     </ConditionalComponent>
                     <ConditionalComponent condition={!isDraft}>
-                        <Button variant="contained" sx={{ marginLeft: '1em' }} onClick={() => handleClosePreview()}>
+                        <PrimaryButton
+                            variant="contained"
+                            sx={{ marginLeft: '1em' }}
+                            onClick={() => handleClosePreview()}
+                        >
                             Close Preview
-                        </Button>
+                        </PrimaryButton>
                     </ConditionalComponent>
                 </Grid>
             </Grid>

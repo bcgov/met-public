@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Stack, Button, Typography, Divider } from '@mui/material';
+import { Grid, Stack, Typography, Divider } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import FormBuilder from 'components/Form/FormBuilder';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -8,7 +8,7 @@ import { getSurvey, putSurvey } from 'services/surveyService/form';
 import { Survey } from 'models/survey';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { MetPageGridContainer } from 'components/common';
+import { MetPageGridContainer, PrimaryButton, SecondaryButton } from 'components/common';
 import FormBuilderSkeleton from './FormBuilderSkeleton';
 import { FormBuilderData } from 'components/Form/types';
 import { EngagementStatus } from 'constants/engagementStatus';
@@ -138,12 +138,16 @@ const SurveyFormBuilder = () => {
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <Button variant="contained" disabled={!formData || hasPublishedEngagement} onClick={handleSaveForm}>
+                    <PrimaryButton
+                        variant="contained"
+                        disabled={!formData || hasPublishedEngagement}
+                        onClick={handleSaveForm}
+                    >
                         {'Save & Continue'}
-                    </Button>
-                    <Button variant="outlined" onClick={() => navigate('/survey/listing')}>
+                    </PrimaryButton>
+                    <SecondaryButton variant="outlined" onClick={() => navigate('/survey/listing')}>
                         Cancel
-                    </Button>
+                    </SecondaryButton>
                 </Stack>
             </Grid>
         </MetPageGridContainer>

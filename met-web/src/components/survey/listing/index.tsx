@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
-import { MetPageGridContainer } from 'components/common';
+import { MetPageGridContainer, PrimaryButton } from 'components/common';
 import { Survey } from 'models/survey';
 import { HeadCell } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
@@ -165,20 +165,20 @@ const SurveyListing = () => {
                         onChange={(e) => setSearchText(e.target.value)}
                         size="small"
                     />
-                    <Button
+                    <PrimaryButton
                         variant="contained"
                         data-testid="SurveyListing/search-button"
                         onClick={() => handleSearchBarClick(searchText)}
                     >
                         <SearchIcon />
-                    </Button>
+                    </PrimaryButton>
                 </Stack>
             </Grid>
             <Grid item xs={0} md={4} lg={4}></Grid>
             <Grid item xs={12} md={4} lg={3} container direction="row" justifyContent={'flex-end'}>
-                <Button component={Link} to="/survey/create" variant="contained">
+                <PrimaryButton component={Link} to="/survey/create" variant="contained">
                     + Create Survey
-                </Button>
+                </PrimaryButton>
             </Grid>
             <Grid item xs={12} lg={10}>
                 <MetTable headCells={headCells} rows={surveys} defaultSort={'created_date'} />

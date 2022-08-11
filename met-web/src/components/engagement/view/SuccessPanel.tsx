@@ -1,7 +1,7 @@
 import React from 'react';
-import { Grid, Button, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { SuccessPanelProps } from './types';
-import { modalStyle } from 'components/common';
+import { modalStyle, PrimaryButton } from 'components/common';
 
 const SuccessPanel = ({ email, handleClose }: SuccessPanelProps) => {
     return (
@@ -45,9 +45,9 @@ const SuccessPanel = ({ email, handleClose }: SuccessPanelProps) => {
                     spacing={1}
                     sx={{ mt: '1em' }}
                 >
-                    <Button variant="contained" onClick={handleClose} sx={{ m: 1 }}>
+                    <PrimaryButton variant="contained" onClick={handleClose} sx={{ m: 1 }}>
                         Close
-                    </Button>
+                    </PrimaryButton>
                 </Grid>
             </Grid>
         </Grid>

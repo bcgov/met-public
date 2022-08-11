@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { Button, Grid, Typography } from '@mui/material';
-import { MetPaper } from '../../common';
+import { Grid, Typography } from '@mui/material';
+import { MetPaper, PrimaryButton } from '../../common';
 import './EngagementContent.scss';
 import { ActionContext } from './ActionContext';
 import { SubmissionStatus } from 'constants/engagementStatus';
@@ -29,14 +29,14 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
                     </Typography>
                 </Grid>
                 <Grid item container direction={{ xs: 'column', sm: 'row' }} xs={12} justifyContent="flex-end">
-                    <Button
+                    <PrimaryButton
                         data-testid="SurveyBlock/take-me-to-survey-button"
                         variant="contained"
                         disabled={!surveyId || (!isOpen && !isPreview)}
                         onClick={startSurvey}
                     >
                         Take me to the survey
-                    </Button>
+                    </PrimaryButton>
                 </Grid>
             </Grid>
         </MetPaper>

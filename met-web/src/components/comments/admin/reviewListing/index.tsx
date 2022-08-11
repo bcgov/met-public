@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
 import { Link, useParams } from 'react-router-dom';
-import { MetPageGridContainer } from 'components/common';
+import { MetPageGridContainer, PrimaryButton } from 'components/common';
 import { Comment } from 'models/comment';
 import { HeadCell } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
@@ -119,13 +119,13 @@ const CommentListing = () => {
                         onChange={(e) => setSearchText(e.target.value)}
                         size="small"
                     />
-                    <Button
+                    <PrimaryButton
                         variant="contained"
                         data-testid="CommentListing/search-button"
                         onClick={() => handleSearchBarClick(searchText)}
                     >
                         <SearchIcon />
-                    </Button>
+                    </PrimaryButton>
                 </Stack>
             </Grid>
             <Grid item xs={0} md={4} lg={4}></Grid>
@@ -135,9 +135,13 @@ const CommentListing = () => {
                     {`${comments[0]?.survey || ''} Comments`}
                 </Typography>
                 <MetTable filter={searchFilter} headCells={headCells} rows={comments} defaultSort={'id'} />
-                <Button component={Link} to={`/survey/${comments[0]?.survey_id || 0}/comments/all`} variant="contained">
+                <PrimaryButton
+                    component={Link}
+                    to={`/survey/${comments[0]?.survey_id || 0}/comments/all`}
+                    variant="contained"
+                >
                     View All Comments
-                </Button>
+                </PrimaryButton>
             </Grid>
         </MetPageGridContainer>
     );
