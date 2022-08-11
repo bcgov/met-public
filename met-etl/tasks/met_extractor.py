@@ -11,21 +11,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""MET Extractions."""
+from datetime import datetime
 
-from met_etl.models.survey import Survey
-from met_api.models.engagement import Engagement
+from met_etl.services.engagement_etl_service import EngagementEtlService
+from met_etl.services.submission_etl_service import SubmissionEtlService
+from met_etl.services.survey_etl_service import SurveyEtlService
+
 
 class MetExtractor:  # pylint:disable=too-few-public-methods
-    """Task to link routing slips."""
+    """Task to run MET Extraction."""
 
     @classmethod
     def do_etl(cls):
         """Perform the ETL."""
-        print(Survey.query.all())
-        print('-------')
-        print(Engagement.get_engagement('1'))
-        print('--each engagement-----')
-        for eng in Engagement.get_all_engagements():
-            print(eng)
+        print('Starting Met Extractor at------------------------', datetime.now())
 
-        
+        #EngagementEtlService.do_etl_engagement()
+        #SurveyEtlService.do_etl_surveys()
+        SubmissionEtlService.do_etl_submissions()

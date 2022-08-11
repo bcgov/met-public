@@ -3,7 +3,7 @@ import uuid
 from datetime import datetime, timedelta
 from http import HTTPStatus
 
-from flask import current_app, g
+from flask import current_app
 from jinja2 import Environment, FileSystemLoader
 
 from met_api.exceptions.business_exception import BusinessException
@@ -69,19 +69,19 @@ class EmailVerificationService:
         sender = current_app.config.get('MAIL_FROM_ID')
         survey_id = email_verification.get('survey_id')
         email_to = email_verification.get('email_address')
-        survey: SurveyModel = SurveyModel.get_open_survey(survey_id)
+        survey: SurveyModel = SurveyModel.get_open(survey_id)
 
         if not survey:
             raise ValueError('Survey not found')
         if not survey.get('engagement'):
             raise ValueError('Engagement not found')
 
-        subject, body = EmailVerificationService._render_email_template(
+        subject, body, args = EmailVerificationService._render_email_template(
             survey, email_verification.get('verification_token'))
         try:
             # user hasn't been created yet.so create token using SA.
             service_account_token = RestService.get_service_account_token()
-            send_email(subject=subject, email=email_to, sender=sender, html_body=body,
+            send_email(subject=subject, email=email_to, sender=sender, html_body=body, args=args,
                        token=service_account_token)
         except Exception as exc:  # noqa: B902
             current_app.logger.error('<Notification for registration failed', exc)
@@ -96,20 +96,25 @@ class EmailVerificationService:
         engagement_path = current_app.config.get('ENGAGEMENT_PATH'). \
             format(engagement_id=survey.get('engagement_id'))
         # url is origin url excluding context path
-        survey_url = f"{g.get('origin_url', '')}{survey_path}"
-        engagement_url = f"{g.get('origin_url', '')}{engagement_path}"
+        site_url = current_app.config.get('SITE_URL')
         engagement = survey.get('engagement')
         engagement_name = engagement.get('name')
         subject = current_app.config.get('VERIFICATION_EMAIL_SUBJECT'). \
             format(engagement_name=engagement_name)
         end_date = datetime.strptime(engagement.get('end_date'), EmailVerificationService.date_format)
-        formatted_end_date = datetime.strftime(end_date, EmailVerificationService.full_date_format)
+        args = {
+            'engagement_name': engagement_name,
+            'survey_url': f'{site_url}{survey_path}',
+            'engagement_url': f'{site_url}{engagement_path}',
+            'end_date': datetime.strftime(end_date, EmailVerificationService.full_date_format),
+        }
         body = template.render(
-            engagement_name=engagement_name,
-            survey_url=survey_url,
-            engagement_url=engagement_url,
-            end_date=formatted_end_date)
-        return subject, body
+            engagement_name=args.get('engagement_name'),
+            survey_url=args.get('survey_url'),
+            engagement_url=args.get('engagement_url'),
+            end_date=args.get('end_date'),
+        )
+        return subject, body, args
 
     @staticmethod
     def validate_object(email_verification: EmailVerificationSchema):
@@ -127,6 +132,11 @@ class EmailVerificationService:
             timedelta(hours=EmailVerificationService.verification_expiry_hours)
         if datetime.now() >= verification_expiry_datetime:
             raise ValueError('Email verification is expired')
+
+        survey_id = email_verification.get('survey_id')
+        survey = SurveyModel.get_open(survey_id)
+        if not survey:
+            raise ValueError('Engagement period is over')
 
     @staticmethod
     def validate_fields(data: EmailVerificationSchema):

@@ -16,7 +16,6 @@
 This module is being invoked from a job and it sends SMS reminders to customers.
 """
 import os, json, requests
-from notifications_python_client import NotificationsAPIClient
 
 from . import EmailBaseService
 
@@ -25,7 +24,7 @@ class EmailChesNotify(EmailBaseService):
     """Implementation from Ches Email Notify."""
 
     def send(self, email_payload):
-        """Send SMS reminders for next day appointments."""
+        """Send email."""
         ches_token_url = os.getenv('CHES_SSO_TOKEN_URL')
         ches_client_id = os.getenv('CHES_SSO_CLIENT_ID')
         ches_client_secret = os.getenv('CHES_SSO_CLIENT_SECRET')

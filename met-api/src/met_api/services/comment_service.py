@@ -90,11 +90,6 @@ class CommentService:
         if not comment:
             raise KeyError('Comment was not found')
 
-        db_status_id = comment.get('comment_status').get('id')
-
-        if db_status_id != 1:
-            raise ValueError('Comment has already been reviewed')
-
         reviewed_by = ' '.join([user.get('first_name', ''), user.get('last_name', '')])
 
         return Comment.update_comment_status(comment_id, status_id, reviewed_by)

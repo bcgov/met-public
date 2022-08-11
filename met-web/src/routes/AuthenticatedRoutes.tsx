@@ -8,9 +8,11 @@ import SurveyListing from 'components/survey/listing';
 import CreateSurvey from 'components/survey/create';
 import SurveyFormBuilder from 'components/survey/building';
 import SurveySubmit from 'components/survey/submit';
-import CommentReview from 'components/comments/CommentReview';
+import CommentReview from 'components/comments/admin/review/CommentReview';
 import CommentReviewListing from 'components/comments/admin/reviewListing';
 import CommentTextListing from 'components/comments/admin/textListing';
+import EngagementDashboard from '../components/engagement/dashboard/report';
+import EngagementCommentDashboard from '../components/engagement/dashboard/comment';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -25,6 +27,8 @@ const AuthenticatedRoutes = () => {
             <Route path="/engagement/form/:engagementId" element={<EngagementForm />} />
             <Route path="/engagement/view/:engagementId" element={<EngagementView />} />
             <Route path="/survey/:surveyId/comments/:commentId/review" element={<CommentReview />} />
+            <Route path="/engagement/:engagementId/dashboard" element={<EngagementDashboard />} />
+            <Route path="/engagement/:engagementId/dashboard/comment" element={<EngagementCommentDashboard />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
     );

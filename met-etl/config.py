@@ -24,7 +24,6 @@ import sys
 
 from dotenv import find_dotenv, load_dotenv
 
-
 # this will load all the envars from a .env file located in the project root (api)
 load_dotenv(find_dotenv())
 
@@ -36,7 +35,6 @@ CONFIGURATION = {
     # Alembic connects to migration config which is MET Analytics Database
     'migration': 'config.MigrationConfig',
 }
-
 
 
 def get_named_config(config_name: str = 'development'):
@@ -76,14 +74,13 @@ class _Config():  # pylint: disable=too-few-public-methods
     DB_NAME = os.getenv('DATABASE_NAME', '')
     DB_HOST = os.getenv('DATABASE_HOST', '')
     DB_PORT = os.getenv('DATABASE_PORT', '5432')
-    
 
     # POSTGRESQL CONFIGURATION FOR MET MASTER DATABASE
     MET_DB_USER = os.getenv('MET_DATABASE_USERNAME', '')
     MET_DB_PASSWORD = os.getenv('MET_DATABASE_PASSWORD', '')
     MET_DB_HOST = os.getenv('MET_DATABASE_HOST', '')
     MET_DB_PORT = os.getenv('MET_DATABASE_PORT', '5432')
-    MET_DB_NAME= os.getenv('MET_DB_NAME', '')
+    MET_DB_NAME = os.getenv('MET_DB_NAME', '')
 
     """
     Though the main data base assosiated with this microservice is MET Analytics database , its configured as a bind.
@@ -95,7 +92,7 @@ class _Config():  # pylint: disable=too-few-public-methods
 
     # MET MASTER DB.
     SQLALCHEMY_DATABASE_URI = f'postgresql://{MET_DB_USER}:{MET_DB_PASSWORD}@{MET_DB_HOST}:{int(MET_DB_PORT)}/{MET_DB_NAME}'
-    
+
     # MET ANALYTICS DB.
     SQLALCHEMY_BINDS = {
         'met_db_analytics': f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}'
@@ -119,7 +116,10 @@ class _Config():  # pylint: disable=too-few-public-methods
     S3_REGION = os.getenv('S3_REGION')
     S3_SERVICE = os.getenv('S3_SERVICE')
 
+    TIME_DELTA_IN_MINUTES = os.getenv('TIME_DELTA_IN_MINUTES', 10)
+
     print(f'SQLAlchemy URL (_Config): {SQLALCHEMY_DATABASE_URI}')
+
 
 class MigrationConfig():  # pylint: disable=too-few-public-methods
     """Base class configuration that should set reasonable defaults for all the other configurations."""
@@ -137,12 +137,12 @@ class MigrationConfig():  # pylint: disable=too-few-public-methods
     DB_NAME = os.getenv('DATABASE_NAME', '')
     DB_HOST = os.getenv('DATABASE_HOST', '')
     DB_PORT = os.getenv('DATABASE_PORT', '5432')
-    SQLALCHEMY_DATABASE_URI =  f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}'
+    SQLALCHEMY_DATABASE_URI = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}'
     SQLALCHEMY_ECHO = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
-
     print(f'SQLAlchemy URL (_Config): {SQLALCHEMY_DATABASE_URI}')
+
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
     """Dev Config."""
@@ -168,7 +168,7 @@ class TestConfig(_Config):  # pylint: disable=too-few-public-methods
     MET_DB_PORT = os.getenv('DATABASE_TEST_PORT', '54333')
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_TEST_URL',
                                         f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}')
-                                        
+
     # JWT OIDC settings
     # JWT_OIDC_TEST_MODE will set jwt_manager to use
     JWT_OIDC_TEST_MODE = True

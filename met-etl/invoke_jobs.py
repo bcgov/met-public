@@ -72,5 +72,4 @@ def run(job_name):
 
 
 if __name__ == "__main__":
-    print('----------------------------Scheduler Ran With Argument--', sys.argv[1])
-    run(sys.argv[1])
+    run('EXTRACT_MET')

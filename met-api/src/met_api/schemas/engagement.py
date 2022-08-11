@@ -49,4 +49,7 @@ class EngagementSchema(Schema):
         if obj.start_date <= datetime.now() <= obj.end_date:
             return SubmissionStatus.Open
 
+        if datetime.now() <= obj.start_date:
+            return SubmissionStatus.Upcoming
+
         return SubmissionStatus.Closed

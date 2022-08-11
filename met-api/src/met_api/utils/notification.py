@@ -7,7 +7,7 @@ import requests
 from flask import current_app
 
 
-def send_email(subject, email, sender, html_body, token=None):
+def send_email(subject, email, sender, html_body, args, token=None):
     """Send the email asynchronously, using the given details."""
     if not email or not is_valid_email(email):
         return
@@ -18,7 +18,8 @@ def send_email(subject, email, sender, html_body, token=None):
         'body': html_body,
         'from': sender,
         'subject': subject,
-        'to': email.split()
+        'to': email.split(),
+        'args': args,
     }
     response = requests.post(send_email_endpoint,
                              headers={'Content-Type': 'application/json', 'Authorization': f'Bearer {token}'},

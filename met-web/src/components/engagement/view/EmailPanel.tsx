@@ -45,15 +45,15 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
     };
 
     return (
-        <Grid
-            container
-            direction="row"
-            sx={{ ...modalStyle }}
-            alignItems="flex-start"
-            justifyContent="flex-start"
-            rowSpacing={2}
-        >
-            <form onSubmit={(e) => handleSubmit(e)}>
+        <form onSubmit={(e) => handleSubmit(e)}>
+            <Grid
+                container
+                direction="row"
+                sx={{ ...modalStyle }}
+                alignItems="flex-start"
+                justifyContent="flex-start"
+                rowSpacing={2}
+            >
                 <Grid item xs={12}>
                     <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold' }}>
                         Verify your email address
@@ -61,27 +61,37 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
                 </Grid>
 
                 <Grid item xs={12}>
-                    <Typography>
+                    <Typography variant="body1">
                         To provide you with the best experience possible. We require you to validate your email address.
                     </Typography>
                 </Grid>
 
                 <Grid item xs={12}>
-                    <Typography>
+                    <Typography variant="body1">
                         You will receive a link to access the survey at the email address you provide.
                     </Typography>
                 </Grid>
 
                 <Grid item xs={12}>
                     <Typography
-                        variant="subtitle2"
-                        sx={{ p: '1em', borderLeft: 8, borderColor: '#003366', backgroundColor: '#F2F2F2' }}
+                        sx={{
+                            p: '1em',
+                            borderLeft: 8,
+                            borderColor: '#003366',
+                            backgroundColor: '#F2F2F2',
+                            mt: '2em',
+                            fontSize: '0.8rem',
+                        }}
                     >
-                        "On the other hand, we denounce with righteous indignation and dislike men who are so beguiled
-                        and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot
-                        foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail
-                        in their duty through weakness of will, which is the same as saying through shrinking from toil
-                        and pain.
+                        {`
+                            Personal information (your email address) is collected under section 26(c) and 26(e) of the Freedom of Information\
+                            and Protection of Privacy Act, to keep you updated on current engagements and to notify you of future opportunities to participate.
+                        `}
+                        <br />
+                        <br />
+                        {
+                            'If you have any questions about the collection, use and disclosure of your personal information, please contact <TBC>'
+                        }
                     </Typography>
                 </Grid>
                 <Grid
@@ -142,8 +152,8 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
                         </Button>
                     </Stack>
                 </Grid>
-            </form>
-        </Grid>
+            </Grid>
+        </form>
     );
 };
 

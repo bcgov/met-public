@@ -6,16 +6,25 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { SurveyParams } from '../types';
 import { getEmailVerification } from 'services/emailVerificationService';
 import { getSurvey } from 'services/surveyService/form';
+import { submitSurvey } from 'services/surveyService/submission';
 
 interface SubmitSurveyContext {
     savedSurvey: Survey;
     isLoading: boolean;
     token?: string;
+    isTokenValid: boolean;
+    handleSubmit: (submissionData: unknown) => void;
+    isSubmitting: boolean;
 }
 
 export const ActionContext = createContext<SubmitSurveyContext>({
     savedSurvey: createDefaultSurvey(),
     isLoading: true,
+    isTokenValid: true,
+    handleSubmit: (_submissionData: unknown) => {
+        return;
+    },
+    isSubmitting: false,
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
@@ -25,26 +34,50 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const { surveyId, token } = useParams<SurveyParams>();
     const [savedSurvey, setSavedSurvey] = useState<Survey>(createDefaultSurvey());
     const [isLoading, setIsLoading] = useState(true);
+    const [isTokenValid, setTokenValid] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
-        if (!isLoggedIn) {
-            verifyToken();
-        } else {
-            loadSurvey();
-        }
+        loadSurvey();
     }, []);
+
+    const handleSubmit = async (submissionData: unknown) => {
+        try {
+            setIsSubmitting(true);
+            await submitSurvey({
+                survey_id: savedSurvey.id,
+                submission_json: submissionData,
+                verification_token: token ? token : '',
+            });
+            dispatch(
+                openNotification({
+                    severity: 'success',
+                    text: 'Survey was successfully submitted',
+                }),
+            );
+            navigate(`/engagement/view/${savedSurvey.engagement.id}`);
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred during survey submission',
+                }),
+            );
+            setIsSubmitting(false);
+            verifyToken();
+        }
+    };
 
     const verifyToken = async () => {
         try {
             if (!token) {
-                throw new Error('token is empty');
+                navigate(`/404`);
+                return;
             }
             const verification = await getEmailVerification(token);
             if (!verification || verification.survey_id !== Number(surveyId)) {
                 throw new Error('verification not found or does not match survey');
             }
-
-            loadSurvey();
         } catch (error) {
             dispatch(
                 openNotification({
@@ -52,13 +85,15 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                     text: 'Verification token is invalid.',
                 }),
             );
-            navigate('/');
+            setTokenValid(false);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const loadSurvey = async () => {
         if (isNaN(Number(surveyId))) {
-            navigate('survey/listing');
+            navigate('/404');
             dispatch(
                 openNotification({
                     severity: 'error',
@@ -70,7 +105,11 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         try {
             const loadedSurvey = await getSurvey(Number(surveyId));
             setSavedSurvey(loadedSurvey);
-            setIsLoading(false);
+            if (!isLoggedIn) {
+                verifyToken();
+            } else {
+                setIsLoading(false);
+            }
         } catch (error) {
             dispatch(
                 openNotification({
@@ -78,7 +117,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                     text: 'Error occurred while loading saved survey',
                 }),
             );
-            navigate('/survey/listing');
         }
     };
 
@@ -88,6 +126,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 savedSurvey,
                 isLoading,
                 token,
+                isTokenValid,
+                handleSubmit,
+                isSubmitting,
             }}
         >
             {children}
