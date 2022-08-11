@@ -8,7 +8,7 @@ import { PrimaryButton } from 'components/common';
 
 test('loads and displays greeting', async () => {
     render(
-        <PrimaryButton data-testid="test-button" onClick={() => console.log('Hello')} variant="contained">
+        <PrimaryButton data-testid="test-button" onClick={() => console.log('Hello')}>
             Hello
         </PrimaryButton>,
     );

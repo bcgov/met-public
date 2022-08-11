@@ -45,7 +45,7 @@ const SuccessPanel = ({ email, handleClose }: SuccessPanelProps) => {
                     spacing={1}
                     sx={{ mt: '1em' }}
                 >
-                    <PrimaryButton variant="contained" onClick={handleClose} sx={{ m: 1 }}>
+                    <PrimaryButton onClick={handleClose} sx={{ m: 1 }}>
                         Close
                     </PrimaryButton>
                 </Grid>

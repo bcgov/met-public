@@ -40,9 +40,7 @@ const FailurePanel = ({ email, handleClose, tryAgain }: FailurePanelProps) => {
                     <SecondaryButton variant="outlined" onClick={handleClose}>
                         Go back to Engagement
                     </SecondaryButton>
-                    <PrimaryButton variant="contained" onClick={tryAgain}>
-                        Try Again
-                    </PrimaryButton>
+                    <PrimaryButton onClick={tryAgain}>Try Again</PrimaryButton>
                 </Stack>
             </Grid>
         </Grid>

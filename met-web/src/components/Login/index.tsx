@@ -10,19 +10,11 @@ const Login = () => {
     return (
         <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2} padding="2em">
             {isLoggedIn ? (
-                <PrimaryButton
-                    variant="contained"
-                    className="btn btn-lg btn-warning"
-                    onClick={() => UserService.doLogout()}
-                >
+                <PrimaryButton className="btn btn-lg btn-warning" onClick={() => UserService.doLogout()}>
                     Logout
                 </PrimaryButton>
             ) : (
-                <PrimaryButton
-                    variant="contained"
-                    className="btn btn-lg btn-warning"
-                    onClick={() => UserService.doLogin()}
-                >
+                <PrimaryButton className="btn btn-lg btn-warning" onClick={() => UserService.doLogin()}>
                     Login
                 </PrimaryButton>
             )}

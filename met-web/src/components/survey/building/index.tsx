@@ -138,11 +138,7 @@ const SurveyFormBuilder = () => {
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <PrimaryButton
-                        variant="contained"
-                        disabled={!formData || hasPublishedEngagement}
-                        onClick={handleSaveForm}
-                    >
+                    <PrimaryButton disabled={!formData || hasPublishedEngagement} onClick={handleSaveForm}>
                         {'Save & Continue'}
                     </PrimaryButton>
                     <SecondaryButton variant="outlined" onClick={() => navigate('/survey/listing')}>

@@ -41,7 +41,6 @@ export const SurveyForm = () => {
                         Cancel
                     </SecondaryButton>
                     <PrimaryButton
-                        variant="contained"
                         disabled={!isValid || isLoggedIn || isSubmitting}
                         onClick={() => handleSubmit(submissionData)}
                     >

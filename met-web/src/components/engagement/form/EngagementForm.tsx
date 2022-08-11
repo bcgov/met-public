@@ -323,7 +323,6 @@ const EngagementForm = () => {
                         <Grid item xs={12}>
                             {isNewEngagement ? (
                                 <PrimaryButton
-                                    variant="contained"
                                     sx={{ marginRight: 1 }}
                                     data-testid="engagement-form/create-engagement-button"
                                     onClick={() => handleCreateEngagement()}
@@ -334,7 +333,6 @@ const EngagementForm = () => {
                                 </PrimaryButton>
                             ) : (
                                 <PrimaryButton
-                                    variant="contained"
                                     data-testid="engagement-form/update-engagement-button"
                                     sx={{ marginRight: 1 }}
                                     onClick={() => handleUpdateEngagement()}

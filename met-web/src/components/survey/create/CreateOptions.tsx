@@ -98,7 +98,7 @@ export const CreateOptions = () => {
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <PrimaryButton variant="contained" onClick={handleSaveClick} disabled={isSaving}>
+                    <PrimaryButton onClick={handleSaveClick} disabled={isSaving}>
                         {'Save & Continue'}
                         {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
                     </PrimaryButton>

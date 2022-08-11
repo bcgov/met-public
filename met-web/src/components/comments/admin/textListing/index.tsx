@@ -119,7 +119,6 @@ const CommentTextListing = () => {
                             size="small"
                         />
                         <PrimaryButton
-                            variant="contained"
                             data-testid="CommentListing/search-button"
                             onClick={() => handleSearchBarClick(searchText)}
                         >
@@ -136,11 +135,7 @@ const CommentTextListing = () => {
                     rows={comments}
                     defaultSort={'id'}
                 />
-                <PrimaryButton
-                    component={Link}
-                    to={`/survey/${comments[0]?.survey_id || 0}/comments`}
-                    variant="contained"
-                >
+                <PrimaryButton component={Link} to={`/survey/${comments[0]?.survey_id || 0}/comments`}>
                     Return to Comments List
                 </PrimaryButton>
             </Grid>

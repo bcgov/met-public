@@ -165,7 +165,6 @@ const SurveyListing = () => {
                         size="small"
                     />
                     <PrimaryButton
-                        variant="contained"
                         data-testid="SurveyListing/search-button"
                         onClick={() => handleSearchBarClick(searchText)}
                     >
@@ -175,7 +174,7 @@ const SurveyListing = () => {
             </Grid>
             <Grid item xs={0} md={4} lg={4}></Grid>
             <Grid item xs={12} md={4} lg={3} container direction="row" justifyContent={'flex-end'}>
-                <PrimaryButton component={Link} to="/survey/create" variant="contained">
+                <PrimaryButton component={Link} to="/survey/create">
                     + Create Survey
                 </PrimaryButton>
             </Grid>

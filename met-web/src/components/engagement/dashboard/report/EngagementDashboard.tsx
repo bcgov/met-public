@@ -62,7 +62,6 @@ export const EngagementDashboard = () => {
                     {!isOpen && !isPreview ? (
                         <PrimaryButton
                             data-testid="SurveyBlock/take-me-to-survey-button"
-                            variant="contained"
                             style={{ marginLeft: 'auto' }}
                             onClick={routeChange}
                         >

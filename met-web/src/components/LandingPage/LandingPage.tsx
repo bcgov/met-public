@@ -146,7 +146,6 @@ const LandingPage = () => {
                     />
                     <PrimaryButton
                         data-testid="search-button-landingPage"
-                        variant="contained"
                         onClick={() => handleSearchBarClick(searchText)}
                     >
                         <SearchIcon />
@@ -159,7 +158,6 @@ const LandingPage = () => {
                     component={Link}
                     to="/engagement/form/create"
                     data-testid="create-engagement-button-landingPage"
-                    variant="contained"
                 >
                     + Create An Engagement
                 </PrimaryButton>

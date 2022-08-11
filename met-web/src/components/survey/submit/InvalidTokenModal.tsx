@@ -42,9 +42,7 @@ export const InvalidTokenModal = ({ open, handleClose }: InvalidTokenModalProps)
                     </Typography>
                 </Grid>
                 <Grid item container xs={12} justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
-                    <PrimaryButton variant="contained" onClick={handleClose}>
-                        Back to Engagement
-                    </PrimaryButton>
+                    <PrimaryButton onClick={handleClose}>Back to Engagement</PrimaryButton>
                 </Grid>
             </Grid>
         </Modal>

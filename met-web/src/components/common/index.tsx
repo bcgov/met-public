@@ -42,11 +42,15 @@ export const StyledSecondaryButton = styled(MuiButton)(() => ({
 }));
 
 export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
-    <StyledSecondaryButton {...rest}>{children}</StyledSecondaryButton>
+    <StyledSecondaryButton {...rest} variant="outlined">
+        {children}
+    </StyledSecondaryButton>
 );
 
 export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
-    <StyledPrimaryButton {...rest}>{children}</StyledPrimaryButton>
+    <StyledPrimaryButton {...rest} variant="contained">
+        {children}
+    </StyledPrimaryButton>
 );
 
 export const StyledPaper = styled(MuiPaper)(() => ({

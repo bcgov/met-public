@@ -31,7 +31,6 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
                 <Grid item container direction={{ xs: 'column', sm: 'row' }} xs={12} justifyContent="flex-end">
                     <PrimaryButton
                         data-testid="SurveyBlock/take-me-to-survey-button"
-                        variant="contained"
                         disabled={!surveyId || (!isOpen && !isPreview)}
                         onClick={startSurvey}
                     >
