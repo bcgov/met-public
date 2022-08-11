@@ -1,2 +1,2 @@
-* * * * * default cd /met-etl && ./run_met_etl.sh
+* * * * * default cd /met-cron && ./run_met_etl.sh
 # An empty line is required at the end of this file for a valid cron file
