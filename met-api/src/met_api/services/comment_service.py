@@ -73,7 +73,7 @@ class CommentService:
         if None in comments_texts:
             raise KeyError('Some answered questions were not found in the survey form')
         comments = [cls.__form_comment(comment_text, survey_submission, survey) for comment_text in comments_texts]
-        #filter out all empty strings from empty optional fields
+        # filter out all empty strings from empty optional fields
         for comment in comments:
             if comment['text'] == '':
                 comments.remove(comment)
