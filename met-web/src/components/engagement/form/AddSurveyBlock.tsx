@@ -39,11 +39,7 @@ export const AddSurveyBlock = () => {
                     sx={{ padding: '1em' }}
                 >
                     <Grid item xs={12} container direction="row" justifyContent="flex-end">
-                        <SecondaryButton
-                            variant="outlined"
-                            onClick={handleAddSurvey}
-                            disabled={savedEngagement.surveys.length > 0}
-                        >
+                        <SecondaryButton onClick={handleAddSurvey} disabled={savedEngagement.surveys.length > 0}>
                             Add Survey
                         </SecondaryButton>
                     </Grid>
