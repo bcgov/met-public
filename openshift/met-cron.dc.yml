@@ -2,7 +2,7 @@ apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   annotations:
-    description: Deployment template for a MET ETL job.
+    description: Deployment template for a MET CRON job.
     tags: ${NAME}-${TAG_NAME}
   name: ${NAME}-${TAG_NAME}-deploy
 objects:
@@ -26,7 +26,7 @@ objects:
         pre:
           execNewPod:
             command:
-            - /met-etl/pre-hook-update-db.sh
+            - /met-cron/pre-hook-update-db.sh
             containerName: ${NAME}-${TAG_NAME}
           failurePolicy: Abort
     triggers:
@@ -67,7 +67,7 @@ objects:
           volumeMounts:
           - name: cron-config
             readOnly: true
-            mountPath: /met-etl/cron/
+            mountPath: /met-cron/cron/
           env:
             # these MET analytics DB details which is the master DB
             - name: DATABASE_USERNAME
@@ -180,7 +180,7 @@ parameters:
   description: The name assigned to all of the OpenShift resources associated to the
     server instance.
   required: true
-  value: met-etl
+  value: met-cron
 - name: APP_GROUP
   displayName: App Group
   description: The name assigned to all of the deployments in this project.
