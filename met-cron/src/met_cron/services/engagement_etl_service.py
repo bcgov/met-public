@@ -18,8 +18,8 @@ from typing import List
 from flask import current_app
 from met_api.models.engagement import Engagement as MetEngagementModel
 from met_api.constants.engagement_status import Status as EngagementStatus
-from met_etl.models.db import db
-from met_etl.models.engagement import Engagement as EtlEngagementModel
+from met_cron.models.db import db
+from met_cron.models.engagement import Engagement as EtlEngagementModel
 
 
 class EngagementEtlService:  # pylint: disable=too-few-public-methods
