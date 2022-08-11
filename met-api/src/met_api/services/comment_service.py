@@ -69,13 +69,11 @@ class CommentService:
             component.get('key', None) for component in components
             if component.get('inputType', None) == 'text']
         submission = survey_submission.get('submission_json', {})
-        comments_texts = [submission.get(key, None) for key in comments_keys]
+        comments_texts = [submission.get(key, None) for key in comments_keys if submission.get(key, None) != '']
         if None in comments_texts:
             raise KeyError('Some answered questions were not found in the survey form')
         comments = [cls.__form_comment(comment_text, survey_submission, survey) for comment_text in comments_texts]
-        # filter out all empty strings from empty optional fields
-        filteredComments = [comment for comment in comments if '' != comment['text']]
-        return filteredComments
+        return comments
 
     @classmethod
     def review_comment(cls, comment_id, status_id, external_user_id):
