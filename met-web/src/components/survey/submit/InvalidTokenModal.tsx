@@ -1,7 +1,7 @@
 import React from 'react';
-import { Grid, Typography, Modal, Button } from '@mui/material';
+import { Grid, Typography, Modal } from '@mui/material';
 import { InvalidTokenModalProps } from '../types';
-import { modalStyle } from 'components/common';
+import { modalStyle, PrimaryButton } from 'components/common';
 
 export const InvalidTokenModal = ({ open, handleClose }: InvalidTokenModalProps) => {
     return (
@@ -42,9 +42,7 @@ export const InvalidTokenModal = ({ open, handleClose }: InvalidTokenModalProps)
                     </Typography>
                 </Grid>
                 <Grid item container xs={12} justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
-                    <Button variant="contained" onClick={handleClose}>
-                        Back to Engagement
-                    </Button>
+                    <PrimaryButton onClick={handleClose}>Back to Engagement</PrimaryButton>
                 </Grid>
             </Grid>
         </Modal>

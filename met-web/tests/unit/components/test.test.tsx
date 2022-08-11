@@ -4,13 +4,13 @@ import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 // add custom jest matchers from jest-dom
 import '@testing-library/jest-dom';
 // the component to test
-import Button from '@mui/material/Button';
+import { PrimaryButton } from 'components/common';
 
 test('loads and displays greeting', async () => {
     render(
-        <Button data-testid="test-button" onClick={() => console.log('Hello')} variant="contained">
+        <PrimaryButton data-testid="test-button" onClick={() => console.log('Hello')}>
             Hello
-        </Button>,
+        </PrimaryButton>,
     );
     fireEvent.click(screen.getByTestId('test-button'));
 

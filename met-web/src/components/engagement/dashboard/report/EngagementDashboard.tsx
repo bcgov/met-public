@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import { useAppSelector } from 'hooks';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router';
@@ -8,6 +8,7 @@ import { EngagementBanner } from '../../view/EngagementBanner';
 import { PreviewBanner } from '../../view/PreviewBanner';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { AppConfig } from 'config';
+import { PrimaryButton } from 'components/common';
 
 export const EngagementDashboard = () => {
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
@@ -59,14 +60,13 @@ export const EngagementDashboard = () => {
                 >
                     <h1>What we heard</h1>
                     {!isOpen && !isPreview ? (
-                        <Button
+                        <PrimaryButton
                             data-testid="SurveyBlock/take-me-to-survey-button"
-                            variant="contained"
                             style={{ marginLeft: 'auto' }}
                             onClick={routeChange}
                         >
                             Read Comments
-                        </Button>
+                        </PrimaryButton>
                     ) : null}
                     <p></p>
                 </Grid>

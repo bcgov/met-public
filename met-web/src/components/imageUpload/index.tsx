@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Button } from '@mui/material';
+import { Grid } from '@mui/material';
 import Dropzone from 'react-dropzone';
+import { SecondaryButton } from 'components/common';
 
 interface ImageUploadProps {
     handleAddFile: (_files: File[]) => void;
@@ -45,17 +46,16 @@ const ImageUpload = ({ handleAddFile, savedImageUrl = '' }: ImageUploadProps) =>
                     />
                 </Grid>
                 <Grid item xs={12} container justifyContent="flex-end" direction="row">
-                    <Button
+                    <SecondaryButton
                         onClick={() => {
                             setObjectUrl('');
                             setExistingImageURL('');
                             handleAddFile([]);
                             URL.revokeObjectURL(objectUrl);
                         }}
-                        variant="outlined"
                     >
                         Remove Image
-                    </Button>
+                    </SecondaryButton>
                 </Grid>
             </Grid>
         );

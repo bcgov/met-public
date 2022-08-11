@@ -3,7 +3,6 @@ import {
     Grid,
     Typography,
     Checkbox,
-    Button,
     TextField,
     FormControl,
     FormControlLabel,
@@ -12,7 +11,7 @@ import {
     CircularProgress,
 } from '@mui/material';
 import { EmailPanelProps } from './types';
-import { MetLabel, modalStyle } from 'components/common';
+import { MetLabel, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
 
 const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: EmailPanelProps) => {
     const [checked, setChecked] = useState(false);
@@ -143,13 +142,13 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
 
                 <Grid item container xs={12} justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
-                        <Button variant="outlined" onClick={handleClose} disabled={isSaving}>
+                        <SecondaryButton onClick={handleClose} disabled={isSaving}>
                             Cancel
-                        </Button>
-                        <Button type="submit" variant={'contained'} disabled={isSaving}>
+                        </SecondaryButton>
+                        <PrimaryButton type="submit" variant={'contained'} disabled={isSaving}>
                             Submit
                             {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
-                        </Button>
+                        </PrimaryButton>
                     </Stack>
                 </Grid>
             </Grid>

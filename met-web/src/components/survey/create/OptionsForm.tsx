@@ -9,10 +9,9 @@ import {
     Stack,
     Typography,
     Radio,
-    Button,
 } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import { ConditionalComponent, MetPageGridContainer } from 'components/common';
+import { ConditionalComponent, MetPageGridContainer, PrimaryButton, SecondaryButton } from 'components/common';
 import { CreateOptions } from './CreateOptions';
 import { useNavigate } from 'react-router-dom';
 import { Palette } from 'styles/Theme';
@@ -95,12 +94,8 @@ const OptionsForm = () => {
             <ConditionalComponent condition={!value}>
                 <Grid item xs={12}>
                     <Stack direction="row" spacing={2}>
-                        <Button variant="contained" disabled={true}>
-                            {'Save & Continue'}
-                        </Button>
-                        <Button variant="outlined" onClick={() => navigate('/survey/listing')}>
-                            Cancel
-                        </Button>
+                        <PrimaryButton disabled={true}>{'Save & Continue'}</PrimaryButton>
+                        <SecondaryButton onClick={() => navigate('/survey/listing')}>Cancel</SecondaryButton>
                     </Stack>
                 </Grid>
             </ConditionalComponent>

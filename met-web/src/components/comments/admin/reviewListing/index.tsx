@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
 import { Link, useParams } from 'react-router-dom';
-import { MetPageGridContainer } from 'components/common';
+import { MetPageGridContainer, PrimaryButton } from 'components/common';
 import { Comment } from 'models/comment';
 import { HeadCell } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink, Typography } from '@mui/material';
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
@@ -119,13 +118,12 @@ const CommentListing = () => {
                         onChange={(e) => setSearchText(e.target.value)}
                         size="small"
                     />
-                    <Button
-                        variant="contained"
+                    <PrimaryButton
                         data-testid="CommentListing/search-button"
                         onClick={() => handleSearchBarClick(searchText)}
                     >
                         <SearchIcon />
-                    </Button>
+                    </PrimaryButton>
                 </Stack>
             </Grid>
             <Grid item xs={0} md={4} lg={4}></Grid>
@@ -135,9 +133,9 @@ const CommentListing = () => {
                     {`${comments[0]?.survey || ''} Comments`}
                 </Typography>
                 <MetTable filter={searchFilter} headCells={headCells} rows={comments} defaultSort={'id'} />
-                <Button component={Link} to={`/survey/${comments[0]?.survey_id || 0}/comments/all`} variant="contained">
+                <PrimaryButton component={Link} to={`/survey/${comments[0]?.survey_id || 0}/comments/all`}>
                     View All Comments
-                </Button>
+                </PrimaryButton>
             </Grid>
         </MetPageGridContainer>
     );

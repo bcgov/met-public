@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Grid, TextField, Stack, Button, CircularProgress, Autocomplete } from '@mui/material';
+import { Grid, TextField, Stack, CircularProgress, Autocomplete } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { useNavigate } from 'react-router-dom';
 import { fetchSurveys, linkSurvey } from 'services/surveyService/form';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { MetLabel } from 'components/common';
+import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
 import { Survey } from 'models/survey';
 
 const LinkOptions = () => {
@@ -97,13 +97,11 @@ const LinkOptions = () => {
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <Button variant="contained" onClick={handleSave}>
+                    <PrimaryButton onClick={handleSave}>
                         {'Save & Continue'}
                         {isSaving && <CircularProgress color="inherit" sx={{ marginLeft: 1 }} size={20} />}
-                    </Button>
-                    <Button variant="outlined" onClick={() => navigate(-1)}>
-                        Cancel
-                    </Button>
+                    </PrimaryButton>
+                    <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
                 </Stack>
             </Grid>
         </Grid>

@@ -1,10 +1,11 @@
 import React, { useContext, useState } from 'react';
-import { Skeleton, Grid, Stack, Button, CircularProgress } from '@mui/material';
+import { Skeleton, Grid, Stack, CircularProgress } from '@mui/material';
 import { ActionContext } from './ActionContext';
 import FormSubmit from 'components/Form/FormSubmit';
 import { useNavigate } from 'react-router-dom';
 import { FormSubmissionData } from 'components/Form/types';
 import { useAppSelector } from 'hooks';
+import { PrimaryButton, SecondaryButton } from 'components/common';
 
 export const SurveyForm = () => {
     const navigate = useNavigate();
@@ -36,17 +37,14 @@ export const SurveyForm = () => {
             </Grid>
             <Grid item container xs={12} justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
-                    <Button variant="outlined" onClick={() => navigate('/')}>
-                        Cancel
-                    </Button>
-                    <Button
-                        variant="contained"
+                    <SecondaryButton onClick={() => navigate('/')}>Cancel</SecondaryButton>
+                    <PrimaryButton
                         disabled={!isValid || isLoggedIn || isSubmitting}
                         onClick={() => handleSubmit(submissionData)}
                     >
                         Submit Survey
                         {isSubmitting && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
-                    </Button>
+                    </PrimaryButton>
                 </Stack>
             </Grid>
         </Grid>

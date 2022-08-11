@@ -1,6 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Typography, Grid, TextField, Button, CircularProgress } from '@mui/material';
-import { MetPaper, MidScreenLoader, MetPageGridContainer, MetLabel } from '../../common';
+import { Typography, Grid, TextField, CircularProgress } from '@mui/material';
+import {
+    MetPaper,
+    MidScreenLoader,
+    MetPageGridContainer,
+    MetLabel,
+    PrimaryButton,
+    SecondaryButton,
+} from '../../common';
 import RichTextEditor from './RichTextEditor';
 import { ActionContext } from './ActionContext';
 import { formatDate } from '../../common/dateHelper';
@@ -315,8 +322,7 @@ const EngagementForm = () => {
 
                         <Grid item xs={12}>
                             {isNewEngagement ? (
-                                <Button
-                                    variant="contained"
+                                <PrimaryButton
                                     sx={{ marginRight: 1 }}
                                     data-testid="engagement-form/create-engagement-button"
                                     onClick={() => handleCreateEngagement()}
@@ -324,10 +330,9 @@ const EngagementForm = () => {
                                 >
                                     Create Engagement Draft
                                     {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
-                                </Button>
+                                </PrimaryButton>
                             ) : (
-                                <Button
-                                    variant="contained"
+                                <PrimaryButton
                                     data-testid="engagement-form/update-engagement-button"
                                     sx={{ marginRight: 1 }}
                                     onClick={() => handleUpdateEngagement()}
@@ -335,16 +340,15 @@ const EngagementForm = () => {
                                 >
                                     Update Engagement
                                     {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
-                                </Button>
+                                </PrimaryButton>
                             )}
-                            <Button
-                                variant="outlined"
+                            <SecondaryButton
                                 data-testid="engagement-form/preview-engagement-button"
                                 onClick={() => handlePreviewEngagement()}
                                 disabled={isSaving}
                             >
-                                Save & Preview Engagement
-                            </Button>
+                                {'Save & Preview Engagement'}
+                            </SecondaryButton>
                         </Grid>
                     </Grid>
                 </MetPaper>
