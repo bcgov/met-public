@@ -17,15 +17,15 @@
 }(window, document, "script", "https://www2.gov.bc.ca/StaticWebResources/static/sp/sp-2-14-0.js", "snowplow"));
 const collector = 'spt.apps.gov.bc.ca';
 window.snowplow('newTracker', 'rt', collector, {
-    appId: "Snowplow_standalone_MET",
+    appId: 'Snowplow_standalone_MET',
     cookieLifetime: 86400 * 548,
     platform: 'web',
     post: true,
     forceSecureTracker: true,
     contexts: {
         webPage: true,
-        performanceTiming: true
-    }
+        performanceTiming: true,
+    },
 });
 window.snowplow('enableActivityTracking', 30, 30); // Ping every 30 seconds after 30 seconds
 window.snowplow('enableLinkClickTracking');

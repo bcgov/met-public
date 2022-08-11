@@ -64,20 +64,15 @@ class CommentService:
         components = list(survey_form.get('components', []))
         if len(components) == 0:
             return []
-
         # get the 'key' for each component that has 'inputType' text and filter out the rest.
         comments_keys = [
             component.get('key', None) for component in components
             if component.get('inputType', None) == 'text']
-
         submission = survey_submission.get('submission_json', {})
-        comments_texts = [submission.get(key, None) for key in comments_keys]
-
+        comments_texts = [submission.get(key, None) for key in comments_keys if submission.get(key, None) != '']
         if None in comments_texts:
             raise KeyError('Some answered questions were not found in the survey form')
-
         comments = [cls.__form_comment(comment_text, survey_submission, survey) for comment_text in comments_texts]
-
         return comments
 
     @classmethod
