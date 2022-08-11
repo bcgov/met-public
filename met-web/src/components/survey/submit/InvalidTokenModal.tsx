@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Typography, Modal, Button } from '@mui/material';
+import { Grid, Typography, Modal } from '@mui/material';
 import { InvalidTokenModalProps } from '../types';
 import { modalStyle, PrimaryButton } from 'components/common';
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Button } from '@mui/material';
+import { Grid } from '@mui/material';
 import Dropzone from 'react-dropzone';
 import { SecondaryButton } from 'components/common';
 

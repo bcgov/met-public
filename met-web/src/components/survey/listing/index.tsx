@@ -7,7 +7,6 @@ import { Survey } from 'models/survey';
 import { HeadCell } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink } from '@mui/material';
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
