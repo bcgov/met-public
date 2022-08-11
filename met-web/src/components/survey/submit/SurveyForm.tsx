@@ -72,7 +72,7 @@ export const SurveyForm = () => {
                     <Button
                         variant="contained"
                         disabled={!isValid || isLoggedIn || isSubmitting}
-                        onClick={() => (isValid ? handleSubmit() : setIsValid(false))}
+                        onClick={() => handleSubmit()}
                     >
                         Submit Survey
                         {isSubmitting && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
