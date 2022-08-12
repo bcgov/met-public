@@ -9,7 +9,9 @@ export default function WidgetForm() {
         <>
             <Grid container item xs={4}>
                 <Grid item xs={12}>
-                    <Typography variant="h5">Widgets</Typography>
+                    <Typography variant="h5">
+                        <strong>Widgets</strong>
+                    </Typography>
                 </Grid>
                 <Grid item xs={12}>
                     <MetPaper elevation={1} sx={{ p: 1 }}>
