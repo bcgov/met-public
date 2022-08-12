@@ -29,7 +29,7 @@ class EmailGCNotify(EmailBaseService):
         api_key = os.getenv('GC_NOTIFY_API_KEY')
         print('----email_payload', email_payload)
         gc_notify_url = os.getenv('GC_NOTIFY_API_BASE_URL')
-        email_template_id = os.getenv('GC_NOTIFY_EMAIL_TEMPLATE_ID')
+        email_template_id = email_payload.get('template_id', os.getenv('GC_NOTIFY_EMAIL_TEMPLATE_ID'))
         notifications_client = NotificationsAPIClient(api_key=api_key, base_url=gc_notify_url)
         email_to = ','.join(email_payload.get('to'))
         args = email_payload.get('args')

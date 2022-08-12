@@ -3,10 +3,11 @@
 Manages the engagement
 """
 from datetime import datetime
-
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.sql.schema import ForeignKey
+
 from met_api.constants.engagement_status import Status
+from met_api.constants.user import SYSTEM_USER
 from met_api.schemas.engagement import EngagementSchema
 
 from .db import db
@@ -108,3 +109,21 @@ class Engagement(db.Model):
         query.update(update_fields)
         db.session.commit()
         return DefaultMethodResult(True, 'Engagement Updated', engagement_id)
+
+    @classmethod
+    def close_engagements_due(cls) -> list[EngagementSchema]:
+        """Update engagement to closed."""
+        engagements_schema = EngagementSchema(many=True)
+        update_fields = dict(
+            status_id=Status.Published,
+            updated_date=datetime.utcnow(),
+            updated_by=SYSTEM_USER
+        )
+        query = Engagement.query\
+            .filter(Engagement.status_id == Status.Published and Engagement.end_date < datetime.utcnow())
+        records = query.all()
+        if not records:
+            return []
+        query.update(update_fields)
+        db.session.commit()
+        return engagements_schema.dump(records)

@@ -126,6 +126,15 @@ tag: push ## tag image
 run: ## Run the project in local
 	./docker-entrypoint.sh
 
+run_etl: ## Run the etl task in local
+	. venv/bin/activate && python invoke_jobs.py EXTRACT_MET
+
+run_closeout: ## Run the etl task in local
+	. venv/bin/activate && python invoke_jobs.py ENGAGEMENT_CLOSEOUT
+
+db: ## Update the local database
+	. venv/bin/activate && python manage.py db upgrade
+
 #################################################################################
 # Self Documenting Commands                                                     #
 #################################################################################

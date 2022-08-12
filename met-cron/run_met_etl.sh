@@ -1,3 +1,3 @@
 #! /bin/sh
-echo 'run invoke_jobs.py NOTIFY_UNPAID_INVOICE_OB'
+echo 'run invoke_jobs.py EXTRACT_MET'
 python3 invoke_jobs.py EXTRACT_MET

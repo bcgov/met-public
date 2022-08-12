@@ -11,20 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""MET Extractions."""
+"""MET Engagement Closure."""
 from datetime import datetime
 
-from met_cron.services.submission_etl_service import SubmissionEtlService
+from met_api.services.engagement_service import EngagementService
 
 
-class MetExtractor:  # pylint:disable=too-few-public-methods
-    """Task to run MET Extraction."""
+class MetEngagementCloseout:  # pylint:disable=too-few-public-methods
+    """Task to handles Engagement due closure."""
 
     @classmethod
-    def do_etl(cls):
-        """Perform the ETL."""
-        print('Starting Met Extractor at------------------------', datetime.now())
+    def do(cls):
+        """Perform the engagement closeout report."""
+        print('Starting Met Engagement Closeout at------------------------', datetime.now())
 
-        #EngagementEtlService.do_etl_engagement()
-        #SurveyEtlService.do_etl_surveys()
-        SubmissionEtlService.do_etl_submissions()
+        EngagementService.close_engagements_due()
