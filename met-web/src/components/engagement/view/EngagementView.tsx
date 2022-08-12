@@ -8,6 +8,7 @@ import EmailModal from './EmailModal';
 import { PreviewBanner } from './PreviewBanner';
 import { useAppSelector } from 'hooks';
 import { useNavigate } from 'react-router';
+import EngagementWidget from './EngagementWidget';
 
 export const EngagementView = () => {
     const [isEmailModalOpen, setEmailModalOpen] = useState(false);
@@ -47,8 +48,11 @@ export const EngagementView = () => {
                     m={{ lg: '0 8em 1em 3em', md: '2em', xs: '1em' }}
                     rowSpacing={2}
                 >
-                    <Grid item xs={12} lg={8}>
+                    <Grid item xs={8} lg={8}>
                         <EngagementContent />
+                    </Grid>
+                    <Grid item xs={4} lg={4}>
+                        <EngagementWidget />
                     </Grid>
                     <Grid item xs={12} lg={8}>
                         <SurveyBlock startSurvey={handleStartSurvey} />
