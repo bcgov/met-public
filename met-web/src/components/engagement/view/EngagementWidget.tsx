@@ -15,8 +15,8 @@ export default function EngagementWidget() {
             <Grid item container xs={11}>
                 <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '10em' }}>
                     <Grid item justifyContent="flex-start" alignItems="center" xs={12}>
-                        <Typography variant="h5">
-                            <strong>Who is Listening</strong>
+                        <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+                            Who is Listening
                         </Typography>
                     </Grid>
                     <Grid container item spacing={1} xs={12}>
@@ -28,7 +28,7 @@ export default function EngagementWidget() {
                             />
                         </Grid>
                         <Grid container item alignItems="flex-start" justifyContent="center" direction="column" xs={8}>
-                            <Grid item xs={3} sx={{ fontWeight: 'bold' }}>
+                            <Grid item xs={3}>
                                 {testData.name}
                             </Grid>
                             <Grid item xs={3}>
