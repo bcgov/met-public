@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Typography, IconButton, Paper as MuiPaper, Button } from '@mui/material';
+import { Grid, Typography, IconButton, Button } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import ModeIcon from '@mui/icons-material/Mode';
