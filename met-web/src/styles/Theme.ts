@@ -11,11 +11,19 @@ export const Palette = {
         dark: '#FFAB00',
         light: '#FFE082',
     },
+    info: {
+        main: '#404040',
+        dark: '#404040',
+        light: '#404040',
+    },
     text: {
         primary: '#494949',
     },
     action: {
         active: '#1A5A96',
+    },
+    widgets: {
+        default: '#404040',
     },
 };
 
@@ -30,6 +38,9 @@ export const BaseTheme = createTheme({
             main: Palette.secondary.main,
             dark: Palette.secondary.dark,
             light: Palette.secondary.light,
+        },
+        info: {
+            main: Palette.info.main,
         },
         text: {
             primary: Palette.text.primary,
@@ -52,6 +63,11 @@ export const BaseTheme = createTheme({
         MuiFormLabel: {
             defaultProps: {
                 focused: false,
+            },
+        },
+        MuiIconButton: {
+            defaultProps: {
+                color: 'info',
             },
         },
     },

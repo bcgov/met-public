@@ -8,6 +8,8 @@ import ImageUpload from 'components/imageUpload';
 import { useNavigate } from 'react-router-dom';
 import { AddSurveyBlock } from './AddSurveyBlock';
 
+import WidgetForm from './WidgetForm';
+
 const EngagementForm = () => {
     const {
         handleCreateEngagementRequest,
@@ -349,6 +351,7 @@ const EngagementForm = () => {
                     </Grid>
                 </MetPaper>
             </Grid>
+            <WidgetForm />
         </MetPageGridContainer>
     );
 };

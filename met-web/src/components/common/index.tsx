@@ -32,7 +32,10 @@ export const MetPaper = ({ children, ...rest }: { children: JSX.Element[] | JSX.
 
 export const MetWidgetPaper = styled(MuiPaper)(() => ({
     backgroundColor: '#F2F2F2',
-    padding: '1em',
+    width: '100%',
+    display: 'flex',
+    border: '2px #f2f2f2',
+    paddingBottom: '3em',
 }));
 
 interface MetWidgetProps {
