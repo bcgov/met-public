@@ -12,15 +12,15 @@ const testData = {
 export default function EngagementWidget() {
     return (
         <Grid container alignItems="center" justifyContent="center" spacing={2} xs={12}>
-            <Grid item xs={11}>
+            <Grid item container xs={11}>
                 <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '10em' }}>
-                    <Grid container item justifyContent="flex-start" alignItems="center" xs={12}>
+                    <Grid item justifyContent="flex-start" alignItems="center" xs={12}>
                         <Typography variant="h5">
                             <strong>Who is Listening</strong>
                         </Typography>
                     </Grid>
-                    <Grid container spacing={1} item xs={12}>
-                        <Grid item container alignItems="center" justifyContent="center" xs={4}>
+                    <Grid container item spacing={1} xs={12}>
+                        <Grid item alignItems="center" justifyContent="center" xs={4}>
                             <Avatar
                                 alt={testData.name}
                                 src={testData.image}
@@ -28,14 +28,14 @@ export default function EngagementWidget() {
                             />
                         </Grid>
                         <Grid container item alignItems="flex-start" justifyContent="center" direction="column" xs={8}>
-                            <Grid item xs={3}>
-                                <strong>{testData.name}</strong>
+                            <Grid item xs={3} sx={{ fontWeight: 'bold' }}>
+                                {testData.name}
                             </Grid>
                             <Grid item xs={3}>
-                                <Link>{testData.email}</Link>
+                                <Link href={`mailto:${testData.email}`}>{testData.email}</Link>
                             </Grid>
                             <Grid item xs={2}>
-                                Phone: <Link>{testData.phone}</Link>
+                                Phone: <Link href={`tel:${testData.phone}`}>{testData.phone}</Link>
                             </Grid>
                         </Grid>
                     </Grid>
