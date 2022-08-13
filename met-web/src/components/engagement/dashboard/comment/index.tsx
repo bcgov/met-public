@@ -1,12 +1,12 @@
 import React from 'react';
-import { ActionProvider } from '../../view/ActionContext';
-import EngagementCommentDashboard from './EngagementUserComments';
+import { CommentViewProvider } from './CommentViewContext';
+import EngagementCommentDashboard from './EngagementComments';
 
 export const Dashboard = () => {
     return (
-        <ActionProvider>
+        <CommentViewProvider>
             <EngagementCommentDashboard />
-        </ActionProvider>
+        </CommentViewProvider>
     );
 };
 

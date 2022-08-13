@@ -134,6 +134,7 @@ const CommentTextListing = () => {
                     headCells={headCells}
                     rows={comments}
                     defaultSort={'id'}
+                    noRowBorder={true}
                 />
                 <PrimaryButton component={Link} to={`/survey/${comments[0]?.survey_id || 0}/comments`}>
                     Return to Comments List

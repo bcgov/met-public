@@ -179,7 +179,7 @@ const SurveyListing = () => {
                 </PrimaryButton>
             </Grid>
             <Grid item xs={12} lg={10}>
-                <MetTable headCells={headCells} rows={surveys} defaultSort={'created_date'} />
+                <MetTable headCells={headCells} rows={surveys} defaultSort={'created_date'} noRowBorder={true} />
             </Grid>
         </MetPageGridContainer>
     );
