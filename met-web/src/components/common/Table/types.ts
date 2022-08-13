@@ -6,5 +6,5 @@ export interface HeadCell<T> {
     allowSort: boolean;
     getValue?: (row: T) => string | number | JSX.Element;
     customStyle?: React.CSSProperties;
-    align?: 'right' | 'left' | 'inherit' | 'center' | 'justify' | undefined;
+    align?: 'right' | 'left' | 'inherit' | 'center' | 'justify';
 }
