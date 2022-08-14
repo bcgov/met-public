@@ -45,7 +45,7 @@ pyparsing==3.0.9
 pyrsistent==0.18.1
 python-dotenv==0.20.0
 python-jose==3.3.0
-pytz==2022.1
+pytz==2022.2.1
 requests==2.28.1
 rsa==4.9
 secure==0.3.0

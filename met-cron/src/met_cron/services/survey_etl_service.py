@@ -34,10 +34,7 @@ class SurveyEtlService:  # pylint: disable=too-few-public-methods
     def do_etl_surveys():
         """Run ETL on Survey and Survey inputs."""
 
-        time_delta_in_minutes: int = int(current_app.config.get('TIME_DELTA_IN_MINUTES'))
-        time_delta = datetime.utcnow() - timedelta(minutes=time_delta_in_minutes)
-
-        new_surveys = db.session.query(MetSurveyModel).filter(MetSurveyModel.updated_date > time_delta).all()
+        new_surveys = SurveyEtlService._get_updated_surveys()
 
         if not new_surveys:
             current_app.logger.info('No updated Surveys Found')
@@ -45,9 +42,16 @@ class SurveyEtlService:  # pylint: disable=too-few-public-methods
         current_app.logger.info('Total updated surveys Found : %s.', len(new_surveys))
 
         SurveyEtlService._do_etl_survey_data(new_surveys)
-        SurveyEtlService._do_etl_survey_inputs(new_surveys)
+        # SurveyEtlService._do_etl_survey_inputs(new_surveys)
         # commit after both jobs are done
         db.session.commit()
+
+    @staticmethod
+    def _get_updated_surveys():
+        time_delta_in_minutes: int = int(current_app.config.get('TIME_DELTA_IN_MINUTES'))
+        time_delta = datetime.utcnow() - timedelta(minutes=time_delta_in_minutes)
+        new_surveys = db.session.query(MetSurveyModel).filter(MetSurveyModel.updated_date > time_delta).all()
+        return new_surveys
 
     @staticmethod
     def _do_etl_survey_data(new_surveys: List[MetSurveyModel]):
@@ -61,13 +65,10 @@ class SurveyEtlService:  # pylint: disable=too-few-public-methods
         for survey in new_surveys:
             current_app.logger.info('Processing updated survey: %s.', survey.id)
             existing_survey: EtlSurveyModel
-            if existing_survey := EtlSurveyModel.find_by_id(survey.id):
-                current_app.logger.info('Found existing Survey in Analytics DB: %s.', existing_survey.id)
-                existing_survey.active_flag = 'F'
-                db.session.add(existing_survey)
-            new_survey = SurveyEtlService._build_survey_obj(existing_survey)
-            db.session.add(new_survey)
-            current_app.logger.info('Created New Survey: %s.', survey.id)
+            if existing_survey := EtlSurveyModel.find_by_source_id(survey.id):
+                current_app.logger.info('Found existing Surveys in Analytics DB: %s.', existing_survey)
+                EtlSurveyModel.deactivate_by_source_id(survey.id)
+            SurveyEtlService._load_survey_obj(survey)
 
     @staticmethod
     def _do_etl_survey_inputs(surveys: List[MetSurveyModel]):
@@ -90,13 +91,16 @@ class SurveyEtlService:  # pylint: disable=too-few-public-methods
 
             # extract data out of survey.form_json and save now
             for component in survey.form_json['components']:
-                current_app.logger.info('Survey: %s.Processing component with id %s and type: %s and label %s ', survey.id,
-                                        component.get('id',None), component.get('type', None), component.get('label', None))
-                model_type = SurveyEtlService._identify_form_type(component.get('type', None))
-                current_app.logger.info('Survey: %s.Model Type component with id %s and type: %s mapped to db object type: %s ',
+                current_app.logger.info('Survey: %s.Processing component with id %s and type: %s and label %s ',
                                         survey.id,
                                         component.get('id', None), component.get('type', None),
-                                        model_type)
+                                        component.get('label', None))
+                model_type = SurveyEtlService._identify_form_type(component.get('type', None))
+                current_app.logger.info(
+                    'Survey: %s.Model Type component with id %s and type: %s mapped to db object type: %s ',
+                    survey.id,
+                    component.get('id', None), component.get('type', None),
+                    model_type)
                 if model_type:
                     SurveyEtlService._create_input_model(component, model_type, survey)
 
@@ -143,9 +147,12 @@ class SurveyEtlService:  # pylint: disable=too-few-public-methods
             MetRequestTypeTextAreaModel.survey_id == survey_id).update(deactive_flag)
 
     @staticmethod
-    def _build_survey_obj(existing_survey):
-        survey: MetSurveyModel = MetSurveyModel()
+    def _load_survey_obj(existing_survey):
+        survey: EtlSurveyModel = EtlSurveyModel()
         survey.name = existing_survey.name
+        survey.source_survey_id = existing_survey.id
         survey.engagement_id = existing_survey.engagement_id
-        survey.active_flag = 'Y'
+        survey.active_flag = True
+        survey.flush()
+        current_app.logger.info('Created New Survey: %s.', survey.id)
         return survey
