@@ -18,14 +18,9 @@ class ResponseMixin(object):
 
     @declared_attr
     def survey_id(self):
-        return db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), primary_key=True, nullable=False)
-
-    @declared_attr
-    def engagement_id(self):
-        return db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), primary_key=True,
-                         nullable=False)
+        return db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), nullable=False)
 
     user_id = db.Column(db.Integer)
     request_key = db.Column(db.String(100), primary_key=True, nullable=False)
-    value = db.Column(db.String(200))
+    value = db.Column(db.String(1000))
     request_id = db.Column(db.String(20))

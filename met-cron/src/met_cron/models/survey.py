@@ -24,6 +24,11 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         return cls.query.filter_by(source_survey_id=source_identifier).all()
 
     @classmethod
+    def find_active_by_source_id(cls, source_identifier: int):
+        """Return model by source_identifier."""
+        return cls.query.filter_by(source_survey_id=source_identifier, is_active=True).first()
+
+    @classmethod
     def deactivate_by_source_id(cls, source_identifier: int):
         """Deactivate model by source_identifier."""
         return cls.query.filter_by(source_survey_id=source_identifier).update(

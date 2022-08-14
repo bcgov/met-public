@@ -11,12 +11,7 @@ class RequestMixin(object):
 
     @declared_attr
     def survey_id(self):
-        return db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), primary_key=True, nullable=False)
-
-    @declared_attr
-    def engagement_id(self):
-        return db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), primary_key=True,
-                         nullable=False)
+        return db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), nullable=False)
 
     key = db.Column(db.String(100), primary_key=True, nullable=False)
     type = db.Column(db.String(100))

@@ -18,11 +18,6 @@ class BaseModel(db.Model):
         """Return model by id."""
         return cls.query.get(identifier)
 
-    @classmethod
-    def find_by_survey_id(cls, identifier: int):
-        """Return model by id."""
-        return cls.query.get(identifier)
-
     @staticmethod
     def commit():
         """Commit the session."""

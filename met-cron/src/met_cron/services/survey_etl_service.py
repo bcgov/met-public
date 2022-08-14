@@ -24,6 +24,8 @@ from met_cron.models.request_type_textarea import RequestTypeTextarea as MetRequ
 from met_cron.models.request_type_textfield import RequestTypeTextfield as MetRequestTypeTextModel
 from met_cron.models.survey import Survey as EtlSurveyModel
 from met_api.models.survey import Survey as MetSurveyModel
+from met_cron.models.engagement import Engagement as EtlEngagementModel
+
 from met_cron.utils import FormIoComponentType
 
 
@@ -42,7 +44,7 @@ class SurveyEtlService:  # pylint: disable=too-few-public-methods
         current_app.logger.info('Total updated surveys Found : %s.', len(new_surveys))
 
         SurveyEtlService._do_etl_survey_data(new_surveys)
-        # SurveyEtlService._do_etl_survey_inputs(new_surveys)
+        SurveyEtlService._do_etl_survey_inputs(new_surveys)
         # commit after both jobs are done
         db.session.commit()
 
@@ -86,47 +88,54 @@ class SurveyEtlService:  # pylint: disable=too-few-public-methods
                 continue
 
             # check already if questions exists in DB for this survey.
-            # update all MetRequestTypeRadioModel active_flag to N
+            # update all MetRequestTypeRadioModel is_active to False
+
             SurveyEtlService._inactivate_old_questions(survey.id)
 
             # extract data out of survey.form_json and save now
             for component in survey.form_json['components']:
-                current_app.logger.info('Survey: %s.Processing component with id %s and type: %s and label %s ',
+                current_app.logger.info('Survey: %s.%sProcessing component with id %s and type: %s and label %s ',
                                         survey.id,
+                                        survey.name,
                                         component.get('id', None), component.get('type', None),
                                         component.get('label', None))
                 model_type = SurveyEtlService._identify_form_type(component.get('type', None))
+                etl_survey = EtlSurveyModel.find_active_by_source_id(survey.id)
                 current_app.logger.info(
-                    'Survey: %s.Model Type component with id %s and type: %s mapped to db object type: %s ',
+                    'Survey: Source Id %s.Model , ETL Id: %s Type component with id %s and type: %s mapped to db object type: %s ',
                     survey.id,
-                    component.get('id', None), component.get('type', None),
+                    etl_survey.id,
+                    component.get('id', None),
+                    component.get('type', None),
                     model_type)
                 if model_type:
-                    SurveyEtlService._create_input_model(component, model_type, survey)
+                    SurveyEtlService._create_input_model(component, model_type, etl_survey)
 
     @staticmethod
     def _identify_form_type(component_type):
         model_type = None
         if component_type == FormIoComponentType.RADIOS.value:  # TODO dict and pick from it
             # radio save only the question label
-            model_type = MetRequestTypeSelectBoxesModel
-        elif component_type == FormIoComponentType.CHECKBOXES.value:
+            model_type = MetRequestTypeRadioModel
+        elif component_type in (FormIoComponentType.CHECKBOX.value,FormIoComponentType.SIMPLE_CHECKBOXES.value,FormIoComponentType.SELECTBOXES.value):
             # select box save only the question label
             model_type = MetRequestTypeSelectBoxesModel
-        elif component_type == FormIoComponentType.TEXT.value or component_type == FormIoComponentType.SIMPLE_TEXT.value:
+        elif component_type in (FormIoComponentType.TEXT.value,FormIoComponentType.SIMPLE_TEXTFIELD.value, FormIoComponentType.TEXTFIELD.value):
             model_type = MetRequestTypeTextModel
+        elif component_type in (FormIoComponentType.SIMPLE_TEXT_AREA.value, FormIoComponentType.TEXT_AREA.value):
+            model_type = MetRequestTypeTextAreaModel
             # select box save only the question label
-
+        else:
+            current_app.logger.info('*************Component Type Missed to match %s',component_type)
         return model_type
 
     @staticmethod
     def _create_input_model(component, model_name, survey):
         form_model: model_name = model_name(
             survey_id=survey.id,
-            engagement_id=survey.engagement_id,
-            id=component['id'],
+            request_id=component['id'],
             label=component['label'],
-            active_flag='R',
+            is_active=True,
             key=component['key'],
             type=component['type']
         )
@@ -134,8 +143,12 @@ class SurveyEtlService:  # pylint: disable=too-few-public-methods
         return form_model
 
     @staticmethod
-    def _inactivate_old_questions(survey_id):
-        deactive_flag = {'active_flag': 'N'}
+    def _inactivate_old_questions(source_survey_id):
+        etl_survey_model = EtlSurveyModel.find_active_by_source_id(source_survey_id)
+        if not etl_survey_model:
+            return
+        deactive_flag = {'is_active': False}
+        survey_id = etl_survey_model.id
         current_app.logger.info('Inactivating Surve: %s questions if any', survey_id)
         db.session.query(MetRequestTypeRadioModel).filter(MetRequestTypeRadioModel.survey_id == survey_id).update(
             deactive_flag)
@@ -148,11 +161,12 @@ class SurveyEtlService:  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def _load_survey_obj(existing_survey):
+        eng: EtlEngagementModel = EtlEngagementModel.find_by_source_id(existing_survey.engagement_id)
         survey: EtlSurveyModel = EtlSurveyModel()
         survey.name = existing_survey.name
         survey.source_survey_id = existing_survey.id
-        survey.engagement_id = existing_survey.engagement_id
-        survey.active_flag = True
+        survey.engagement_id = getattr(eng, 'id', None)
+        survey.is_active = True
         survey.flush()
         current_app.logger.info('Created New Survey: %s.', survey.id)
         return survey

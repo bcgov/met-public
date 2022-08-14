@@ -19,6 +19,12 @@ class FormIoComponentType(Enum):
     """FormIO Component Types."""
 
     RADIOS = 'simpleradios'
-    CHECKBOXES = 'simplecheckboxes'
+    SIMPLE_CHECKBOXES = 'simplecheckboxes'
+    SELECTBOXES = 'selectboxes'
+    CHECKBOX = 'checkbox'
     TEXT = 'text'
-    SIMPLE_TEXT = 'simpletextfield'
+    SIMPLE_TEXTFIELD = 'simpletextfield'
+    TEXTFIELD = 'textfield'
+    SIMPLE_TEXT_AREA = 'simpletextarea'
+    TEXT_AREA = 'textarea'
+
