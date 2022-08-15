@@ -6,6 +6,10 @@ import { EngagementStatus } from 'constants/engagementStatus';
 import { ConditionalComponent, PrimaryButton, SecondaryButton } from 'components/common';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import ImageIcon from '@mui/icons-material/Image';
+import PollIcon from '@mui/icons-material/Poll';
+import UnpublishedIcon from '@mui/icons-material/Unpublished';
+import IconButton from '@mui/material/IconButton';
 
 export const PreviewBanner = () => {
     const navigate = useNavigate();
@@ -15,6 +19,7 @@ export const PreviewBanner = () => {
     const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
     const engagementId = savedEngagement.id || '';
     const [isPublishing, setIsPublishing] = useState(false);
+    const imageExists = savedEngagement.banner_url;
 
     const handlePublishEngagement = async () => {
         if (savedEngagement.surveys.length === 0) {
@@ -55,15 +60,41 @@ export const PreviewBanner = () => {
             }}
         >
             <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start" padding={4}>
-                <Grid item xs={12}>
-                    <Typography variant="h4">Preview Engagement{!isDraft && ' - Published'}</Typography>
+                <Grid item container xs={12}>
+                    <Typography variant="h4" sx={{ mb: 2 }}>
+                        Preview Engagement{!isDraft && ' - Published'}
+                    </Typography>
                     <ConditionalComponent condition={isDraft}>
-                        <ConditionalComponent condition={savedEngagement.surveys.length === 0}>
-                            <Typography variant="body2">This engagement is still missing a survey.</Typography>
+                        <ConditionalComponent condition={imageExists === ''}>
+                            <Grid container alignItems="center" item xs={12}>
+                                <IconButton
+                                    onClick={() => navigate(`/engagement/form/${engagementId}`)}
+                                    aria-label="no image"
+                                >
+                                    <ImageIcon />
+                                </IconButton>
+                                <Typography variant="body2">- This engagement is missing a header image.</Typography>
+                            </Grid>
                         </ConditionalComponent>
-                        <Typography variant="body2" minHeight={25}>
-                            Please publish the engagement when ready.
-                        </Typography>
+                        <ConditionalComponent condition={savedEngagement.surveys.length === 0}>
+                            <Grid container alignItems="center" item xs={12}>
+                                <IconButton
+                                    onClick={() => navigate(`/survey/create?engagementId=${engagementId}`)}
+                                    aria-label="no survey"
+                                >
+                                    <PollIcon />
+                                </IconButton>
+                                <Typography variant="body2">- This engagement is missing a survey.</Typography>
+                            </Grid>
+                        </ConditionalComponent>
+                        <Grid container alignItems="center" item xs={12}>
+                            <IconButton aria-label="not published">
+                                <UnpublishedIcon />
+                            </IconButton>
+                            <Typography variant="body2" minHeight={25}>
+                                - Please publish the engagement when ready.
+                            </Typography>
+                        </Grid>
                     </ConditionalComponent>
                 </Grid>
                 <Grid item xs={12} container direction="row" justifyContent="flex-end">
