@@ -140,7 +140,7 @@ const CommentListing = () => {
                     noRowBorder={true}
                 />
                 <PrimaryButton component={Link} to={`/survey/${comments[0]?.survey_id || 0}/comments/all`}>
-                    View All Comments
+                    Read All Comments
                 </PrimaryButton>
             </Grid>
         </MetPageGridContainer>
