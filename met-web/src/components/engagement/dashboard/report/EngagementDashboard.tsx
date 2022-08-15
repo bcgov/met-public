@@ -25,10 +25,10 @@ export const EngagementDashboard = () => {
     const [isEngagementLoading, setEngagementLoading] = useState(true);
 
     const validateEngagement = (engagementToValidate: Engagement) => {
-        const isOpen = engagementToValidate?.submission_status === SubmissionStatus.Open;
+        const neverOpened = engagementToValidate?.submission_status < SubmissionStatus.Open;
 
-        if (!isOpen) {
-            throw new Error('Engagement is not yet open');
+        if (neverOpened) {
+            throw new Error('Engagement has not been yet opened');
         }
     };
     useEffect(() => {
