@@ -23,7 +23,7 @@ export const SurveyForm = () => {
 
     const submit = (submissionData: any) => {
         setModalVisible(true);
-        handleChange(submissionData);
+        handleSubmit(submissionData);
     };
 
     if (isLoading) {
