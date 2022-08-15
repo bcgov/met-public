@@ -25,8 +25,6 @@ from met_cron.models.request_type_textfield import RequestTypeTextfield as MetRe
 from met_cron.models.survey import Survey as EtlSurveyModel
 from met_api.models.survey import Survey as MetSurveyModel
 from met_cron.models.engagement import Engagement as EtlEngagementModel
-from met_cron.utils import SELECTBOXES_TYPES, TEXT_TYPES, TEXT_AREA_TYPES, RADIO_TYPES
-
 from met_cron.utils import FormIoComponentType
 
 
@@ -98,16 +96,16 @@ class SurveyEtlService:  # pylint: disable=too-few-public-methods
                 current_app.logger.info('Survey: %s.%sProcessing component with id %s and type: %s and label %s ',
                                         survey.id,
                                         survey.name,
-                                        component.get('id', None), component.get('type', None),
+                                        component.get('id', None), component.get('inputType', None),
                                         component.get('label', None))
-                model_type = SurveyEtlService._identify_form_type(component.get('type', None))
+                model_type = SurveyEtlService._identify_form_type(component.get('inputType', None))
                 etl_survey = EtlSurveyModel.find_active_by_source_id(survey.id)
                 current_app.logger.info(
                     'Survey: Source Id %s.Model , ETL Id: %s Type component with id %s and type: %s mapped to db object type: %s ',
                     survey.id,
                     etl_survey.id,
                     component.get('id', None),
-                    component.get('type', None),
+                    component.get('inputType', None),
                     model_type)
                 if model_type:
                     SurveyEtlService._create_input_model(component, model_type, etl_survey)
@@ -115,19 +113,18 @@ class SurveyEtlService:  # pylint: disable=too-few-public-methods
     @staticmethod
     def _identify_form_type(component_type):
         model_type = None
-        if component_type in RADIO_TYPES:  # TODO dict and pick from it
+        component_type = component_type.lower()
+        if component_type == FormIoComponentType.RADIO.value:
             # radio save only the question label
             model_type = MetRequestTypeRadioModel
-        elif component_type in SELECTBOXES_TYPES:
+        elif component_type == FormIoComponentType.CHECKBOX.value:
             # select box save only the question label
             model_type = MetRequestTypeSelectBoxesModel
-        elif component_type in TEXT_TYPES:
-            model_type = MetRequestTypeTextModel
-        elif component_type in TEXT_AREA_TYPES:
+        elif component_type == FormIoComponentType.TEXT.value:
             model_type = MetRequestTypeTextAreaModel
             # select box save only the question label
         else:
-            current_app.logger.info('*************Component Type Missed to match %s',component_type)
+            current_app.logger.info('*************Component Type Missed to match %s', component_type)
         return model_type
 
     @staticmethod

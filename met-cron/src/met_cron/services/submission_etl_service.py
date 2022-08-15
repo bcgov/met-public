@@ -21,12 +21,11 @@ from met_api.models.survey import Survey as MetSurveyModel
 from met_api.models.user import User as UserModel
 
 from met_cron.models.db import db
-from met_cron.models.survey import Survey as EtlSurvey
 from met_cron.models.response_type_radio import ResponseTypeRadio as ResponseTypeRadioModel
 from met_cron.models.response_type_selectbox import ResponseTypeSelectbox as ResponseTypeSelectboxModel
-from met_cron.models.response_type_textfield import ResponseTypeTextfield as ResponseTypeTextModel
 from met_cron.models.response_type_textarea import ResponseTypeTextarea as ResponseTypeTextareaModel
-from met_cron.utils import SELECTBOXES_TYPES, TEXT_TYPES, TEXT_AREA_TYPES, RADIO_TYPES
+from met_cron.models.survey import Survey as EtlSurvey
+from met_cron.utils import FormIoComponentType
 
 
 class SubmissionEtlService:  # pylint: disable=too-few-public-methods
@@ -70,15 +69,13 @@ class SubmissionEtlService:  # pylint: disable=too-few-public-methods
     def _load_components(component, etl_survey, submission, user):
         if not (answer_key := submission.submission_json.get(component['key'])):
             return
-        component_type = component['type']
+        component_type = component['type'].lower()
         current_app.logger.info('Type for submission id : %s. is %s ', submission.id, component_type)
-        if component_type in RADIO_TYPES:
+        if component_type == FormIoComponentType.RADIO.value:
             SubmissionEtlService._save_radio(answer_key, component, etl_survey, user)
-        elif component_type in SELECTBOXES_TYPES:
+        elif component_type == FormIoComponentType.CHECKBOX.value:
             SubmissionEtlService._save_checkbox(answer_key, component, etl_survey, user)
-        elif component_type in TEXT_TYPES:
-            SubmissionEtlService._save_text(ResponseTypeTextModel, answer_key, component, etl_survey, user)
-        elif component_type in TEXT_AREA_TYPES:
+        elif component_type == FormIoComponentType.TEXT.value:
             SubmissionEtlService._save_text(ResponseTypeTextareaModel, answer_key, component, etl_survey, user)
         else:
             current_app.logger.info('No Mapping Found for .Type for submission id : %s. is %s .Skipping',
