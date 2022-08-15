@@ -21,7 +21,7 @@ export const SurveyForm = () => {
         setIsValid(filledForm.isValid);
     };
 
-    const submit = (submissionData: any) => {
+    const submit = (submissionData: unknown) => {
         setModalVisible(true);
         handleSubmit(submissionData);
     };
