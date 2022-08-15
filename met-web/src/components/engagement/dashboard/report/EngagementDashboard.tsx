@@ -28,7 +28,7 @@ export const EngagementDashboard = () => {
         const neverOpened = engagementToValidate?.submission_status < SubmissionStatus.Open;
 
         if (neverOpened) {
-            throw new Error('Engagement has not been yet opened');
+            throw new Error('Engagement has not yet been opened');
         }
     };
     useEffect(() => {
