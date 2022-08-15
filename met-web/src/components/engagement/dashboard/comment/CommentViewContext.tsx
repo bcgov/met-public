@@ -38,7 +38,6 @@ export const CommentViewProvider = ({ children }: { children: JSX.Element | JSX.
     const [comments, setComments] = useState<Comment[]>([]);
 
     const validateEngagement = (engagementToValidate: Engagement) => {
-        console.log(engagementToValidate);
         const isClosed = engagementToValidate?.submission_status === SubmissionStatus.Closed;
 
         if (!isClosed) {
