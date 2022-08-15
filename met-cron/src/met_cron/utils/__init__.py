@@ -28,3 +28,8 @@ class FormIoComponentType(Enum):
     SIMPLE_TEXT_AREA = 'simpletextarea'
     TEXT_AREA = 'textarea'
 
+
+RADIO_TYPES = (FormIoComponentType.SIMPLE_CHECKBOXES.value,)
+SELECTBOXES_TYPES = (FormIoComponentType.SIMPLE_CHECKBOXES.value, FormIoComponentType.CHECKBOX.value, FormIoComponentType.SELECTBOXES.value)
+TEXT_TYPES = (FormIoComponentType.TEXT.value, FormIoComponentType.SIMPLE_TEXTFIELD.value, FormIoComponentType.TEXTFIELD.value)
+TEXT_AREA_TYPES = (FormIoComponentType.SIMPLE_TEXT_AREA,FormIoComponentType.TEXT_AREA)

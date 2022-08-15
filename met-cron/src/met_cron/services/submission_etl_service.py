@@ -26,7 +26,7 @@ from met_cron.models.response_type_radio import ResponseTypeRadio as ResponseTyp
 from met_cron.models.response_type_selectbox import ResponseTypeSelectbox as ResponseTypeSelectboxModel
 from met_cron.models.response_type_textfield import ResponseTypeTextfield as ResponseTypeTextModel
 from met_cron.models.response_type_textarea import ResponseTypeTextarea as ResponseTypeTextareaModel
-from met_cron.utils import FormIoComponentType
+from met_cron.utils import SELECTBOXES_TYPES, TEXT_TYPES, TEXT_AREA_TYPES, RADIO_TYPES
 
 
 class SubmissionEtlService:  # pylint: disable=too-few-public-methods
@@ -72,14 +72,13 @@ class SubmissionEtlService:  # pylint: disable=too-few-public-methods
             return
         component_type = component['type']
         current_app.logger.info('Type for submission id : %s. is %s ', submission.id, component_type)
-        if component_type == FormIoComponentType.RADIOS.value:
+        if component_type in RADIO_TYPES:
             SubmissionEtlService._save_radio(answer_key, component, etl_survey, user)
-        elif component_type in (FormIoComponentType.SIMPLE_CHECKBOXES.value,FormIoComponentType.CHECKBOX.value,FormIoComponentType.SELECTBOXES.value):
+        elif component_type in SELECTBOXES_TYPES:
             SubmissionEtlService._save_checkbox(answer_key, component, etl_survey, user)
-        elif component_type in (FormIoComponentType.TEXT.value, FormIoComponentType.SIMPLE_TEXTFIELD.value, FormIoComponentType.TEXTFIELD.value):
+        elif component_type in TEXT_TYPES:
             SubmissionEtlService._save_text(ResponseTypeTextModel, answer_key, component, etl_survey, user)
-        elif component_type in (
-                FormIoComponentType.SIMPLE_TEXT_AREA.value):
+        elif component_type in TEXT_AREA_TYPES:
             SubmissionEtlService._save_text(ResponseTypeTextareaModel, answer_key, component, etl_survey, user)
         else:
             current_app.logger.info('No Mapping Found for .Type for submission id : %s. is %s .Skipping',
@@ -95,7 +94,7 @@ class SubmissionEtlService:  # pylint: disable=too-few-public-methods
         return new_submissions
 
     @staticmethod
-    def _save_text(model_type , answer_key, component, survey, user):
+    def _save_text(model_type, answer_key, component, survey, user):
         # text answer is a string.so value has to be found from question
         current_app.logger.info('Input type  ResponseTypeTextModel is created:survey id: %s. '
                                 'request_key is %s value:%s request_id:%s', survey.id, component['key'], answer_key,

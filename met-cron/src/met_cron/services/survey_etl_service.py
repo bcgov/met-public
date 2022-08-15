@@ -25,6 +25,7 @@ from met_cron.models.request_type_textfield import RequestTypeTextfield as MetRe
 from met_cron.models.survey import Survey as EtlSurveyModel
 from met_api.models.survey import Survey as MetSurveyModel
 from met_cron.models.engagement import Engagement as EtlEngagementModel
+from met_cron.utils import SELECTBOXES_TYPES, TEXT_TYPES, TEXT_AREA_TYPES, RADIO_TYPES
 
 from met_cron.utils import FormIoComponentType
 
@@ -114,15 +115,15 @@ class SurveyEtlService:  # pylint: disable=too-few-public-methods
     @staticmethod
     def _identify_form_type(component_type):
         model_type = None
-        if component_type == FormIoComponentType.RADIOS.value:  # TODO dict and pick from it
+        if component_type in RADIO_TYPES:  # TODO dict and pick from it
             # radio save only the question label
             model_type = MetRequestTypeRadioModel
-        elif component_type in (FormIoComponentType.CHECKBOX.value,FormIoComponentType.SIMPLE_CHECKBOXES.value,FormIoComponentType.SELECTBOXES.value):
+        elif component_type in SELECTBOXES_TYPES:
             # select box save only the question label
             model_type = MetRequestTypeSelectBoxesModel
-        elif component_type in (FormIoComponentType.TEXT.value,FormIoComponentType.SIMPLE_TEXTFIELD.value, FormIoComponentType.TEXTFIELD.value):
+        elif component_type in TEXT_TYPES:
             model_type = MetRequestTypeTextModel
-        elif component_type in (FormIoComponentType.SIMPLE_TEXT_AREA.value, FormIoComponentType.TEXT_AREA.value):
+        elif component_type in TEXT_AREA_TYPES:
             model_type = MetRequestTypeTextAreaModel
             # select box save only the question label
         else:
