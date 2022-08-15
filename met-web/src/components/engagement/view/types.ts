@@ -23,6 +23,8 @@ export interface EmailPanelProps {
 }
 
 export interface SuccessPanelProps {
+    mainText: string;
+    subTextArray: string[];
     handleClose: () => void;
     email: string;
 }

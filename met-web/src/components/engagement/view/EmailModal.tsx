@@ -77,7 +77,15 @@ const EmailModal = ({ open, handleClose }: EmailModalProps) => {
                     />
                 </TabPanel>
                 <TabPanel value="success">
-                    <SuccessPanel handleClose={() => close()} email={email} />
+                    <SuccessPanel
+                        mainText={'We sent a link to access the survey at the following email address:'}
+                        subTextArray={[
+                            'Please Click the link provided to access the survey.',
+                            'The link will be valid for 24 hours.',
+                        ]}
+                        handleClose={() => close()}
+                        email={email}
+                    />
                 </TabPanel>
                 <TabPanel value="error">
                     <FailurePanel tryAgain={() => setFormIndex('email')} handleClose={() => close()} email={email} />
