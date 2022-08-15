@@ -19,7 +19,7 @@ export const PreviewBanner = () => {
     const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
     const engagementId = savedEngagement.id || '';
     const [isPublishing, setIsPublishing] = useState(false);
-    const imageExists = savedEngagement.banner_url;
+    const imageExists = !!savedEngagement.banner_url;
 
     const handlePublishEngagement = async () => {
         if (savedEngagement.surveys.length === 0) {
@@ -65,7 +65,7 @@ export const PreviewBanner = () => {
                         Preview Engagement{!isDraft && ' - Published'}
                     </Typography>
                     <ConditionalComponent condition={isDraft}>
-                        <ConditionalComponent condition={imageExists === ''}>
+                        <ConditionalComponent condition={imageExists}>
                             <Grid container alignItems="center" item xs={12}>
                                 <IconButton
                                     color="info"
