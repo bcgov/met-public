@@ -37,6 +37,11 @@ export const BaseTheme = createTheme({
         action: {
             active: Palette.action.active,
         },
+        info: {
+            main: '#404040',
+            dark: '#404040',
+            light: '#404040',
+        },
     },
     components: {
         MuiButton: {

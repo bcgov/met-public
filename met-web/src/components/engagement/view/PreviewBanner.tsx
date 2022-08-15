@@ -68,31 +68,33 @@ export const PreviewBanner = () => {
                         <ConditionalComponent condition={imageExists === ''}>
                             <Grid container alignItems="center" item xs={12}>
                                 <IconButton
+                                    color="info"
                                     onClick={() => navigate(`/engagement/form/${engagementId}`)}
                                     aria-label="no image"
                                 >
                                     <ImageIcon />
                                 </IconButton>
-                                <Typography variant="body2">- This engagement is missing a header image.</Typography>
+                                <Typography variant="body2">This engagement is missing a header image.</Typography>
                             </Grid>
                         </ConditionalComponent>
                         <ConditionalComponent condition={savedEngagement.surveys.length === 0}>
                             <Grid container alignItems="center" item xs={12}>
                                 <IconButton
+                                    color="info"
                                     onClick={() => navigate(`/survey/create?engagementId=${engagementId}`)}
                                     aria-label="no survey"
                                 >
                                     <PollIcon />
                                 </IconButton>
-                                <Typography variant="body2">- This engagement is missing a survey.</Typography>
+                                <Typography variant="body2">This engagement is missing a survey.</Typography>
                             </Grid>
                         </ConditionalComponent>
                         <Grid container alignItems="center" item xs={12}>
-                            <IconButton aria-label="not published">
+                            <IconButton color="info" aria-label="not published">
                                 <UnpublishedIcon />
                             </IconButton>
                             <Typography variant="body2" minHeight={25}>
-                                - Please publish the engagement when ready.
+                                Please publish the engagement when ready.
                             </Typography>
                         </Grid>
                     </ConditionalComponent>
