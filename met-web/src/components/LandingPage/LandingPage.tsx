@@ -111,20 +111,14 @@ const LandingPage = () => {
             label: 'Reporting',
             allowSort: false,
             getValue: (row: Engagement) => {
-                if (row.surveys.length === 0) {
+                if (row.surveys.length === 0 || row.surveys[0].responseCount === 0) {
                     return '';
                 }
 
                 return (
-                    <>
-                        {row.surveys[0].responseCount > 0 ? (
-                            <MuiLink component={Link} to={`/survey/${Number(row.surveys[0].id)}/results`}>
-                                View Report
-                            </MuiLink>
-                        ) : (
-                            <></>
-                        )}
-                    </>
+                    <MuiLink component={Link} to={`/survey/${Number(row.surveys[0].id)}/results`}>
+                        View Report
+                    </MuiLink>
                 );
             },
         },
