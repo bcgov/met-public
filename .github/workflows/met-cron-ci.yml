@@ -3,7 +3,7 @@ name: MET CRON JOB CI
 on:
   pull_request:
     branches:
-      - gha
+      - main
     paths:
       - "met-cron/**"
 
