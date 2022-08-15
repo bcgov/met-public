@@ -10,7 +10,6 @@ import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Paper from '@mui/material/Paper';
 import { visuallyHidden } from '@mui/utils';
-import { MetTableCell } from './TableElements';
 import { HeadCell } from 'components/common/Table/types';
 import { hasKey } from 'utils';
 import { ConditionalComponent } from '..';
@@ -69,7 +68,7 @@ function MetTableHead<T>(props: MetTableHeadProps<T>) {
                 {headCells.map((headCell, index) => (
                     <TableCell
                         key={`${String(headCell.key)}${index}`}
-                        align={'left'}
+                        align={headCell.align}
                         sortDirection={orderBy === headCell.key ? order : false}
                         sx={{ borderBottom: '1.5px solid gray', fontWeight: 'bold' }}
                     >
@@ -102,6 +101,7 @@ interface MetTableProps<T> {
     defaultSort: keyof T;
     rows: T[];
     hideHeader?: boolean;
+    noRowBorder?: boolean;
 }
 function MetTable<T>({
     hideHeader = false,
@@ -109,6 +109,7 @@ function MetTable<T>({
     headCells = [],
     defaultSort,
     rows = [],
+    noRowBorder = false,
 }: MetTableProps<T>) {
     const [filteredRows, setFilteredRows] = useState<T[]>(rows);
     const [order, setOrder] = useState<Order>('asc');
@@ -172,12 +173,18 @@ function MetTable<T>({
                                     return (
                                         <TableRow hover tabIndex={-1} key={`row-${rowIndex}`}>
                                             {headCells.map((cell, cellIndex) => (
-                                                <MetTableCell
+                                                <TableCell
+                                                    align={cell.align}
                                                     key={`row-${rowIndex}-${cellIndex}`}
                                                     style={cell.customStyle || {}}
+                                                    sx={[
+                                                        noRowBorder && {
+                                                            border: 'none',
+                                                        },
+                                                    ]}
                                                 >
                                                     {cell.getValue ? cell.getValue(row) : String(row[cell.key])}
-                                                </MetTableCell>
+                                                </TableCell>
                                             ))}
                                         </TableRow>
                                     );

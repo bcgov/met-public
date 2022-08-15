@@ -24,7 +24,7 @@ const Endpoints = {
         CREATE: `${AppConfig.apiUrl}/submission/`,
     },
     Comment: {
-        GET_ALL: `${AppConfig.apiUrl}/comment/all/survey/survey_id`,
+        GET_ALL: `${AppConfig.apiUrl}/comment/survey/survey_id/comments`,
         REVIEW: `${AppConfig.apiUrl}/comment/comment_id `,
         GET: `${AppConfig.apiUrl}/comment/comment_id`,
     },
