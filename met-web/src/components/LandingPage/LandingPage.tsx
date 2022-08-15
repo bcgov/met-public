@@ -80,7 +80,7 @@ const LandingPage = () => {
             allowSort: false,
             getValue: (row: Engagement) => {
                 if (row.surveys.length === 0) {
-                    return 'N/A';
+                    return '';
                 }
 
                 return (
@@ -98,7 +98,7 @@ const LandingPage = () => {
             allowSort: false,
             getValue: (row: Engagement) => {
                 if (row.surveys.length === 0) {
-                    return 'N/A';
+                    return '';
                 }
 
                 return row.surveys[0].responseCount;
@@ -112,13 +112,19 @@ const LandingPage = () => {
             allowSort: false,
             getValue: (row: Engagement) => {
                 if (row.surveys.length === 0) {
-                    return 'N/A';
+                    return '';
                 }
 
                 return (
-                    <MuiLink component={Link} to={`/survey/${Number(row.surveys[0].id)}/results`}>
-                        View Report
-                    </MuiLink>
+                    <>
+                        {row.surveys[0].responseCount > 0 ? (
+                            <MuiLink component={Link} to={`/survey/${Number(row.surveys[0].id)}/results`}>
+                                View Report
+                            </MuiLink>
+                        ) : (
+                            <></>
+                        )}
+                    </>
                 );
             },
         },
