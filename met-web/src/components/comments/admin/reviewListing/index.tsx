@@ -134,7 +134,7 @@ const CommentListing = () => {
                 </Typography>
                 <MetTable filter={searchFilter} headCells={headCells} rows={comments} defaultSort={'id'} />
                 <PrimaryButton component={Link} to={`/survey/${comments[0]?.survey_id || 0}/comments/all`}>
-                    View All Comments
+                    Read All Comments
                 </PrimaryButton>
             </Grid>
         </MetPageGridContainer>
