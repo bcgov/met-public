@@ -24,9 +24,9 @@ export const EngagementDashboard = () => {
     const [engagement, setEngagement] = useState<Engagement>(createDefaultEngagement());
     const [isEngagementLoading, setEngagementLoading] = useState(true);
 
-    const validateEngagement = (engagementToValidate: Engagement) => {
+    const failIfInvalidEngagement = (engagementToValidate: Engagement) => {
         // submission status e.g. of pending or draft will have id less than of Open
-        const neverOpened = engagementToValidate?.submission_status < SubmissionStatus.Open;
+        const neverOpened = [SubmissionStatus.Upcoming].includes(engagementToValidate?.submission_status);
 
         if (neverOpened) {
             throw new Error('Engagement has not yet been opened');
@@ -40,7 +40,7 @@ export const EngagementDashboard = () => {
             }
             try {
                 const result = await getEngagement(Number(engagementId));
-                validateEngagement(result);
+                failIfInvalidEngagement(result);
                 setEngagement({ ...result });
                 setEngagementLoading(false);
             } catch (error) {
