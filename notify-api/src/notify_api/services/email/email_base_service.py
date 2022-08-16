@@ -17,13 +17,10 @@ from abc import ABC, abstractmethod
 from typing import Dict
 
 
-class EmailBaseService(ABC):
+class EmailBaseService(ABC):  # pylint: disable=too-few-public-methods
     """Abstract base class for Email Service."""
-
-    def __init__(self):
-        """Initialize."""
-        super(EmailBaseService, self).__init__()
 
     @abstractmethod
     def send(self, email_payload: Dict):
         """Send Email."""
+        raise Exception('Not Implemented')

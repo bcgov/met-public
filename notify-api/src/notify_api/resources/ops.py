@@ -13,32 +13,32 @@
 # limitations under the License.
 """Endpoints to check and manage the health of the service."""
 
-from flask_restx import Namespace
-from flask_restx import Resource
-from flask_restx import cors
+from flask_restx import Namespace, Resource, cors
 
-api = Namespace('', description='API for Sending MET Notifications')
+API = Namespace('', description='API for Sending MET Notifications')
 
 
-@api.route('/healthz')
+@API.route('/healthz')
 class Health(Resource):
     """Determines if the service and required dependencies are still working.
 
     This could be thought of as a heartbeat for the service.
     """
 
+    @staticmethod
     @cors.crossdomain(origin='*')
-    def get(self):
+    def get():
         """Made it here..so its all fine."""
         return {'message': 'api is healthy'}, 200
 
 
-@api.route('/readyz')
+@API.route('/readyz')
 class Ready(Resource):
     """Determines if the service is ready to respond."""
 
+    @staticmethod
     @cors.crossdomain(origin='*')
-    def get(self):
+    def get():
         """Return a JSON object that identifies if the service is setupAnd ready to work."""
         # add a poll to the DB when called
         return {'message': 'api is ready'}, 200

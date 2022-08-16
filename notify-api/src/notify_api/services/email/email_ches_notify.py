@@ -15,12 +15,14 @@
 
 This module is being invoked from a job and it sends SMS reminders to customers.
 """
-import os, json, requests
+import os
+import json
+import requests
 
-from . import EmailBaseService
+from .email_base_service import EmailBaseService
 
 
-class EmailChesNotify(EmailBaseService):
+class EmailChesNotify(EmailBaseService):  # pylint: disable=too-few-public-methods
     """Implementation from Ches Email Notify."""
 
     def send(self, email_payload):
@@ -36,14 +38,21 @@ class EmailChesNotify(EmailBaseService):
             'subject': email_payload.get('subject'),
             'to': email_payload.get('to')
         }
+        token_request_data = \
+            f'client_id={ches_client_id}&client_secret={ches_client_secret}&grant_type=client_credentials'
+        token_request_headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         try:
             ches_token_response = requests.post(ches_token_url,
-                                    data=f'client_id={ches_client_id}&client_secret={ches_client_secret}&grant_type=client_credentials',
-                                    headers={'Content-Type': 'application/x-www-form-urlencoded'})
+                                                data=token_request_data,
+                                                headers=token_request_headers)
             ches_api_token = ches_token_response.json().get('access_token')
+            email_request_headers = \
+                {'Content-Type': 'application/json', 'Authorization': f'Bearer {ches_api_token}'}
             email_response = requests.post(ches_email_endpoint,
-                                headers={'Content-Type': 'application/json', 'Authorization': f'Bearer {ches_api_token}'},
-                                data=json.dumps(ches_payload))
+                                           headers=email_request_headers,
+                                           data=json.dumps(ches_payload))
             print(email_response)
-        except Exception as e:
+        except Exception as e:  # noqa: B902
             print(e)  # log and continue
+            raise Exception(
+                error='Error sending CHES email.') from e

@@ -11,17 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Send SMS reminder.
-
-This module is being invoked from a job and it sends SMS reminders to customers.
-"""
+"""GC notify email service."""
 import os
 from notifications_python_client import NotificationsAPIClient
 
-from . import EmailBaseService
+from .email_base_service import EmailBaseService
 
 
-class EmailGCNotify(EmailBaseService):
+class EmailGCNotify(EmailBaseService):  # pylint: disable=too-few-public-methods
     """Implementation for email from GC Notify."""
 
     def send(self, email_payload):
@@ -33,12 +30,14 @@ class EmailGCNotify(EmailBaseService):
         notifications_client = NotificationsAPIClient(api_key=api_key, base_url=gc_notify_url)
         email_to = ','.join(email_payload.get('to'))
         args = email_payload.get('args')
-        try:            
+        try:
             response = notifications_client.send_email_notification(
                 email_address=email_to,
                 template_id=email_template_id,
                 personalisation=args)
             print(response)
 
-        except Exception as e:
+        except Exception as e:  # noqa: B902
             print(e)
+            raise Exception(
+                error='Error sending GC notify email.') from e
