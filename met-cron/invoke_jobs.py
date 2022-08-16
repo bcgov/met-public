@@ -71,7 +71,7 @@ def run(job_name):
         MetExtractor.do_etl()
         application.logger.info(f'<<<< Completed MET Extraction >>>>')
     elif job_name == 'ENGAGEMENT_CLOSEOUT':
-        MetEngagementCloseout.do()
+        MetEngagementCloseout.do_closeout()
         application.logger.info(f'<<<< Completed MET Engagement Closeout >>>>')
     else:
         application.logger.debug('No valid args passed.Exiting job without running any ***************')

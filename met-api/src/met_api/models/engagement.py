@@ -116,7 +116,7 @@ class Engagement(db.Model):
         """Update engagement to closed."""
         engagements_schema = EngagementSchema(many=True)
         update_fields = dict(
-            status_id=Status.Published,
+            status_id=Status.Closed,
             updated_date=datetime.utcnow(),
             updated_by=SYSTEM_USER
         )

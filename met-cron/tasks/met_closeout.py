@@ -21,7 +21,7 @@ class MetEngagementCloseout:  # pylint:disable=too-few-public-methods
     """Task to handles Engagement due closure."""
 
     @classmethod
-    def do(cls):
+    def do_clouseout(cls):
         """Perform the engagement closeout report."""
         print('Starting Met Engagement Closeout at------------------------', datetime.now())
 
