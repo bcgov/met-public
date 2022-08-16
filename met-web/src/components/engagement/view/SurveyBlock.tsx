@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { Grid, Typography } from '@mui/material';
 import { MetPaper, PrimaryButton } from '../../common';
-import './EngagementContent.scss';
 import { ActionContext } from './ActionContext';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { SurveyBlockProps } from './types';
