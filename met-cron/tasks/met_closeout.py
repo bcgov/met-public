@@ -11,16 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Abstract class for Email implementation."""
+"""MET Engagement Closure."""
+from datetime import datetime
 
-from abc import ABC, abstractmethod
-from typing import Dict
+# from met_api.services.engagement_service import EngagementService
 
 
-class EmailBaseService(ABC):  # pylint: disable=too-few-public-methods
-    """Abstract base class for Email Service."""
+class MetEngagementCloseout:  # pylint:disable=too-few-public-methods
+    """Task to handles Engagement due closure."""
 
-    @abstractmethod
-    def send(self, email_payload: Dict):
-        """Send Email."""
-        raise Exception('Not Implemented')
+    @classmethod
+    def do_clouseout(cls):
+        """Perform the engagement closeout report."""
+        print('Starting Met Engagement Closeout at------------------------', datetime.now())
+
+        # EngagementService.close_engagements_due()

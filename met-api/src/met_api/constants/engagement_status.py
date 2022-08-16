@@ -20,6 +20,7 @@ class Status(IntEnum):
 
     Draft = 1
     Published = 2
+    Closed = 3
 
 
 class SubmissionStatus(IntEnum):

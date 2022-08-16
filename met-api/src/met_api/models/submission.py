@@ -4,10 +4,11 @@ Manages the Submission
 """
 from datetime import datetime
 from typing import List
-
 from sqlalchemy import ForeignKey
 from sqlalchemy.dialects import postgresql
 
+from met_api.models.survey import Survey
+from met_api.models.user import User, UserSchema
 from met_api.schemas.submission import SubmissionSchema
 
 from .db import db
@@ -74,3 +75,14 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
         query.update(update_fields)
         db.session.commit()
         return DefaultMethodResult(True, 'Submission Updated', submission_id)
+
+    @classmethod
+    def get_engaged_users(cls, engagement_id) -> List[UserSchema]:
+        """Get users that have submissions for the specified engagement id."""
+        user_schema = UserSchema(many=True)
+        users = db.session.query(User)\
+            .join(Submission)\
+            .join(Survey)\
+            .filter(Survey.engagement_id == engagement_id)\
+            .all()
+        return user_schema.dump(users)

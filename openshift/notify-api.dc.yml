@@ -225,7 +225,7 @@ parameters:
     value: https://ches-dev.apps.silver.devops.gov.bc.ca/api/v1/email            
   - name: EMAIL_PROVIDER
     description: "CHES or GC_NOTIFY"
-    value: CHES
+    value: GC_NOTIFY
   - name: CHES_EMAIL_FROM_ID
     description: "CHES From email id"
     value: modernengagement@gov.bc.ca         
