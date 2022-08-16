@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { ActionContext } from './ActionContext';
-import { Box, CircularProgress, Grid, Skeleton, Typography } from '@mui/material';
+import { Box, CircularProgress, Grid, Skeleton, Typography, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { ConditionalComponent, PrimaryButton, SecondaryButton } from 'components/common';
@@ -107,28 +107,30 @@ export const PreviewBanner = () => {
                         </Grid>
                     </ConditionalComponent>
                 </Grid>
-                <Grid sx={{ pt: 2 }} item xs={12} container direction="row" justifyContent="flex-end">
-                    <Box
-                        sx={{
-                            backgroundColor: 'background.paper',
-                            borderRadius: '4px',
-                        }}
-                    >
-                        <SecondaryButton onClick={() => navigate(`/engagement/form/${engagementId}`)}>
+                <Grid sx={{ pt: 2 }} item xs={12} container direction="row" justifyContent="flex-end" spacing={1}>
+                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
+                        <SecondaryButton
+                            sx={{
+                                backgroundColor: 'background.paper',
+                                borderRadius: '4px',
+                            }}
+                            onClick={() => navigate(`/engagement/form/${engagementId}`)}
+                        >
                             Edit Engagement
                         </SecondaryButton>
-                    </Box>
-                    <ConditionalComponent condition={isDraft}>
-                        <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => handlePublishEngagement()}>
-                            Publish
-                            {isPublishing && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
-                        </PrimaryButton>
-                    </ConditionalComponent>
-                    <ConditionalComponent condition={!isDraft}>
-                        <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => handleClosePreview()}>
-                            Close Preview
-                        </PrimaryButton>
-                    </ConditionalComponent>
+
+                        <ConditionalComponent condition={isDraft}>
+                            <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => handlePublishEngagement()}>
+                                Publish
+                                {isPublishing && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
+                            </PrimaryButton>
+                        </ConditionalComponent>
+                        <ConditionalComponent condition={!isDraft}>
+                            <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => handleClosePreview()}>
+                                Close Preview
+                            </PrimaryButton>
+                        </ConditionalComponent>
+                    </Stack>
                 </Grid>
             </Grid>
         </Box>
