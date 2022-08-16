@@ -25,6 +25,7 @@ export const EngagementDashboard = () => {
     const [isEngagementLoading, setEngagementLoading] = useState(true);
 
     const validateEngagement = (engagementToValidate: Engagement) => {
+        // submission status e.g. of pending or draft will have id less than of Open
         const neverOpened = engagementToValidate?.submission_status < SubmissionStatus.Open;
 
         if (neverOpened) {
