@@ -77,7 +77,7 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
         return DefaultMethodResult(True, 'Submission Updated', submission_id)
 
     @classmethod
-    def get_engaged_users(cls, engagement_id) -> list[UserSchema]:
+    def get_engaged_users(cls, engagement_id) -> List[UserSchema]:
         """Get users that have submissions for the specified engagement id."""
         user_schema = UserSchema(many=True)
         users = db.session.query(User)\

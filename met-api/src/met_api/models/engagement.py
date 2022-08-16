@@ -3,6 +3,7 @@
 Manages the engagement
 """
 from datetime import datetime
+from typing import List
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.sql.schema import ForeignKey
 
@@ -111,7 +112,7 @@ class Engagement(db.Model):
         return DefaultMethodResult(True, 'Engagement Updated', engagement_id)
 
     @classmethod
-    def close_engagements_due(cls) -> list[EngagementSchema]:
+    def close_engagements_due(cls) -> List[EngagementSchema]:
         """Update engagement to closed."""
         engagements_schema = EngagementSchema(many=True)
         update_fields = dict(

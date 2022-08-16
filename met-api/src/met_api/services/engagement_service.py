@@ -76,7 +76,7 @@ class EngagementService:
         subject, body, args = EngagementService._render_email_template(engagement)
         users = Submission.get_engaged_users(engagement_id)
         template_id = current_app.config.get('ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID', None)
-        # Removes duplicated recors
+        # Removes duplicated records
         users = list(set(users))
         try:
             [send_email(subject=subject, email=user.get('email_id'), html_body=body,
