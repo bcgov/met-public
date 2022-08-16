@@ -17,6 +17,7 @@ export const EngagementComments = () => {
             <Grid
                 container
                 item
+                xs={12}
                 direction="row"
                 justifyContent={'flex-end'}
                 alignItems="flex-end"

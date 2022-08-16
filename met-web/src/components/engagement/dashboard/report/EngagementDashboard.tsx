@@ -1,92 +1,125 @@
-import React, { useContext } from 'react';
-import { Grid } from '@mui/material';
-import { useAppSelector } from 'hooks';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router';
-import { ActionContext } from '../../view/ActionContext';
-import { EngagementBanner } from '../../view/EngagementBanner';
-import { PreviewBanner } from '../../view/PreviewBanner';
-import { SubmissionStatus } from 'constants/engagementStatus';
+import React, { useEffect, useState } from 'react';
+import { Grid, Link as MuiLink, Skeleton, Typography } from '@mui/material';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { AppConfig } from 'config';
-import { PrimaryButton } from 'components/common';
+import { MetPaper, PrimaryButton } from 'components/common';
+import { ReportBanner } from './ReportBanner';
+import { createDefaultEngagement, Engagement } from 'models/engagement';
+import { SubmissionStatus } from 'constants/engagementStatus';
+import { getEngagement } from 'services/engagementService';
+import { getErrorMessage } from 'utils';
+import { openNotification } from 'services/notificationService/notificationSlice';
+import { useAppDispatch } from 'hooks';
+
+export type EngagementParams = {
+    engagementId: string;
+};
 
 export const EngagementDashboard = () => {
-    const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
-    const isPreview = isLoggedIn;
-    const { savedEngagement } = useContext(ActionContext);
+    const { engagementId } = useParams<EngagementParams>();
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const urlpath = AppConfig.redashDashboardUrl;
-    const isOpen = savedEngagement.submission_status === SubmissionStatus.Open;
 
-    const handleStartSurvey = () => {
-        if (!isPreview) {
-            return;
+    const [engagement, setEngagement] = useState<Engagement>(createDefaultEngagement());
+    const [isEngagementLoading, setEngagementLoading] = useState(true);
+
+    const validateEngagement = (engagementToValidate: Engagement) => {
+        // submission status e.g. of pending or draft will have id less than of Open
+        const neverOpened = engagementToValidate?.submission_status < SubmissionStatus.Open;
+
+        if (neverOpened) {
+            throw new Error('Engagement has not yet been opened');
         }
     };
+    useEffect(() => {
+        const fetchEngagement = async () => {
+            if (isNaN(Number(engagementId))) {
+                navigate('/');
+                return;
+            }
+            try {
+                const result = await getEngagement(Number(engagementId));
+                validateEngagement(result);
+                setEngagement({ ...result });
+                setEngagementLoading(false);
+            } catch (error) {
+                console.log(error);
+                dispatch(
+                    openNotification({
+                        severity: 'error',
+                        text: getErrorMessage(error) || 'Error occurred while fetching Engagement information',
+                    }),
+                );
+                navigate('/');
+            }
+        };
+        fetchEngagement();
+    }, [engagementId]);
 
-    const routeChange = () => {
-        const path = `/engagement/` + savedEngagement.id + `/dashboard/comment`;
-        navigate(path);
-    };
+    if (isEngagementLoading) {
+        return <Skeleton variant="rectangular" width="100%" height="60m" />;
+    }
 
     return (
-        <>
-            <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
+        <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
+            <Grid item xs={12}>
+                <ReportBanner engagement={engagement} isLoading={isEngagementLoading} />
+            </Grid>
+            <Grid
+                container
+                item
+                xs={12}
+                direction="row"
+                justifyContent={'flex-end'}
+                alignItems="flex-end"
+                m={{ lg: '1em 8em 2em 3em', xs: '1em' }}
+            >
+                <Grid item xs={12} container justifyContent="flex-end">
+                    <MuiLink component={Link} to={`/engagement/view/${engagement.id}`}>
+                        {`<< Return to ${engagement.name} Engagement`}
+                    </MuiLink>
+                </Grid>
+
                 <Grid item xs={12}>
-                    <PreviewBanner />
-                </Grid>
-                <Grid item xs={12}>
-                    <EngagementBanner startSurvey={handleStartSurvey} />
-                </Grid>
-                <Grid
-                    container
-                    item
-                    direction="row"
-                    justifyContent={'flex-end'}
-                    alignItems="flex-end"
-                    m={{ lg: '1em 8em 0em 3em' }}
-                >
-                    <Link to={'/engagement/view/' + savedEngagement.id} style={{ color: '#1A5A96' }}>
-                        {'<<Return to ' + savedEngagement.name + ' Engagement'}
-                    </Link>
-                </Grid>
-                <Grid
-                    container
-                    item
-                    direction="row"
-                    justifyContent={'flex-start'}
-                    alignItems="flex-start"
-                    m={{ lg: '1em 8em 0em 3em' }}
-                >
-                    <h1>What we heard</h1>
-                    {!isOpen && !isPreview ? (
-                        <PrimaryButton
-                            data-testid="SurveyBlock/take-me-to-survey-button"
-                            style={{ marginLeft: 'auto' }}
-                            onClick={routeChange}
+                    <MetPaper elevation={1} sx={{ padding: '2em 2em 0 2em' }}>
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="flex-start"
+                            alignItems="flex-start"
+                            rowSpacing={2}
                         >
-                            Read Comments
-                        </PrimaryButton>
-                    ) : null}
-                    <p></p>
-                </Grid>
-                <Grid
-                    container
-                    item
-                    xs={12}
-                    direction="row"
-                    justifyContent={'flex-start'}
-                    alignItems="flex-start"
-                    m={{ lg: '0em 8em 1em 3em' }}
-                    rowSpacing={2}
-                >
-                    <iframe
-                        style={{ width: '100%', height: 1310, overflow: 'visible' }}
-                        src={urlpath + savedEngagement.name}
-                    ></iframe>
+                            <Grid item xs={12} sm={6}>
+                                <Typography variant={'h4'}>What we heard</Typography>
+                            </Grid>
+                            <Grid
+                                item
+                                xs={12}
+                                sm={6}
+                                container
+                                direction={{ xs: 'column', sm: 'row' }}
+                                justifyContent="flex-end"
+                            >
+                                <PrimaryButton
+                                    data-testid="SurveyBlock/take-me-to-survey-button"
+                                    component={Link}
+                                    to={`/engagement/${engagement.id}/comments`}
+                                >
+                                    Read Comments
+                                </PrimaryButton>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <iframe
+                                    style={{ width: '100%', height: '1310px', overflow: 'scroll', border: 'none' }}
+                                    src={`${urlpath}${engagement.name}`}
+                                ></iframe>
+                            </Grid>
+                        </Grid>
+                    </MetPaper>
                 </Grid>
             </Grid>
-        </>
+        </Grid>
     );
 };
 
