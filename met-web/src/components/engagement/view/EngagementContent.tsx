@@ -16,14 +16,7 @@ export const EngagementContent = () => {
 
     return (
         <MetPaper elevation={1} sx={{ padding: '2em', minHeight: '30em' }}>
-            <Editor
-                editorState={getEditorState(rich_content)}
-                readOnly={true}
-                onChange={() => {
-                    //do nothing because this is read only
-                }}
-                toolbarHidden
-            />
+            <Editor editorState={getEditorState(rich_content)} readOnly={true} toolbarHidden />
         </MetPaper>
     );
 };

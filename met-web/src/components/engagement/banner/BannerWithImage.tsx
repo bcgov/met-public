@@ -70,14 +70,7 @@ const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
                             <Typography variant={isSmallscreen ? 'h3' : 'h4'} color="black">
                                 {name}
                             </Typography>
-                            <Editor
-                                editorState={getEditorState(rich_description)}
-                                readOnly={true}
-                                onChange={() => {
-                                    //do nothing because this is read only
-                                }}
-                                toolbarHidden
-                            />
+                            <Editor editorState={getEditorState(rich_description)} readOnly={true} toolbarHidden />
                         </Grid>
                         <Grid item xs={12}>
                             <Typography variant="h6" style={{ fontWeight: 600 }} color="black">
