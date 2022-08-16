@@ -65,41 +65,49 @@ export const PreviewBanner = () => {
                         Preview Engagement{!isDraft && ' - Published'}
                     </Typography>
                     <ConditionalComponent condition={isDraft}>
-                        <ConditionalComponent condition={imageExists}>
+                        <Grid item container rowSpacing={2}>
+                            <ConditionalComponent condition={imageExists}>
+                                <Grid container alignItems="center" item xs={12}>
+                                    <IconButton
+                                        color="info"
+                                        onClick={() => navigate(`/engagement/form/${engagementId}`)}
+                                        aria-label="no image"
+                                    >
+                                        <ImageIcon />
+                                    </IconButton>
+                                    <Typography variant="body2">This engagement is missing a header image.</Typography>
+                                </Grid>
+                            </ConditionalComponent>
+                            <ConditionalComponent condition={savedEngagement.surveys.length === 0}>
+                                <Grid container alignItems="center" item xs={12}>
+                                    <Grid item sm={0.5} xs={2}>
+                                        <IconButton
+                                            color="info"
+                                            onClick={() => navigate(`/survey/create?engagementId=${engagementId}`)}
+                                            aria-label="no survey"
+                                        >
+                                            <PollIcon />
+                                        </IconButton>
+                                    </Grid>
+                                    <Grid item xs={10} sm={10}>
+                                        <Typography variant="body2">This engagement is missing a survey.</Typography>
+                                    </Grid>
+                                </Grid>
+                            </ConditionalComponent>
                             <Grid container alignItems="center" item xs={12}>
-                                <IconButton
-                                    color="info"
-                                    onClick={() => navigate(`/engagement/form/${engagementId}`)}
-                                    aria-label="no image"
-                                >
-                                    <ImageIcon />
-                                </IconButton>
-                                <Typography variant="body2">This engagement is missing a header image.</Typography>
+                                <Grid item sm={0.5} xs={2}>
+                                    <IconButton color="info" aria-label="not published">
+                                        <UnpublishedIcon />
+                                    </IconButton>
+                                </Grid>
+                                <Grid item xs={10} sm={10}>
+                                    <Typography variant="body2">Please publish the engagement when ready.</Typography>
+                                </Grid>
                             </Grid>
-                        </ConditionalComponent>
-                        <ConditionalComponent condition={savedEngagement.surveys.length === 0}>
-                            <Grid container alignItems="center" item xs={12}>
-                                <IconButton
-                                    color="info"
-                                    onClick={() => navigate(`/survey/create?engagementId=${engagementId}`)}
-                                    aria-label="no survey"
-                                >
-                                    <PollIcon />
-                                </IconButton>
-                                <Typography variant="body2">This engagement is missing a survey.</Typography>
-                            </Grid>
-                        </ConditionalComponent>
-                        <Grid container alignItems="center" item xs={12}>
-                            <IconButton color="info" aria-label="not published">
-                                <UnpublishedIcon />
-                            </IconButton>
-                            <Typography variant="body2" minHeight={25}>
-                                Please publish the engagement when ready.
-                            </Typography>
                         </Grid>
                     </ConditionalComponent>
                 </Grid>
-                <Grid item xs={12} container direction="row" justifyContent="flex-end">
+                <Grid sx={{ pt: 2 }} item xs={12} container direction="row" justifyContent="flex-end">
                     <Box
                         sx={{
                             backgroundColor: 'background.paper',
