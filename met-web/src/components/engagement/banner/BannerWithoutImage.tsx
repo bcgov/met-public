@@ -3,9 +3,11 @@ import { Grid, Box, Typography, Stack } from '@mui/material';
 import { formatDate } from '../../common/dateHelper';
 import { BannerProps } from '../view/types';
 import { EngagementStatusChip } from '../status';
+import { getEditorState } from 'utils';
+import { Editor } from 'react-draft-wysiwyg';
 
 const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
-    const { description, name, start_date, end_date, submission_status } = savedEngagement;
+    const { rich_description, name, start_date, end_date, submission_status } = savedEngagement;
     return (
         <Box
             sx={{
@@ -23,7 +25,7 @@ const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
             >
                 <Grid item xs={12}>
                     <Typography variant="h3">{name}</Typography>
-                    <Typography variant="subtitle2">{description}</Typography>
+                    <Editor editorState={getEditorState(rich_description)} readOnly={true} toolbarHidden />
                 </Grid>
                 <Grid item xs={12}>
                     <Typography variant="subtitle1">
