@@ -15,21 +15,20 @@
 
 Currently this only provides API versioning information
 """
-from flask import jsonify
-from flask_restx import cors
-from flask_restx import Resource
-from flask_restx import Namespace
 import os
+from flask import jsonify
+from flask_restx import Namespace, Resource, cors
 
-api = Namespace('', description='API for Sending MET Notifications')
+API = Namespace('', description='API for Sending MET Notifications')
 
 
-@api.route('/info')
+@API.route('/info')
 class Info(Resource):
     """Meta information about the overall service."""
 
+    @staticmethod
     @cors.crossdomain(origin='*')
-    def get(self):
+    def get():
         """Return a JSON object with meta information about the Service."""
         version = os.getenv('OPENSHIFT_BUILD_COMMIT', '')
         return jsonify(API=f'notifications_api/{version}')

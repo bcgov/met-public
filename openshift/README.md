@@ -14,6 +14,14 @@ In the tools namespace use the following to create the build configurations:
     oc process -f ./api.bc.yml | oc create -f -
 ```
 
+```
+    oc process -f ./notify-api.bc.yml | oc create -f -
+```
+
+```
+    oc process -f ./cron.bc.yml | oc create -f -
+```
+
 
 Allow image pullers from the other namespaces to pull images from tools namespace:
 
@@ -64,16 +72,17 @@ In the keycloak app:
 1. Request a new client configuration in sso-requests (https://bcgov.github.io/sso-requests/)
 1. Update the identity provider client secret and url domains.
 
-## Formio Configuration
-
-TODO
 
 ## Database Configuration
 
-Create an instance of a postgresql database:
+Create two instance of a postgresql database (transactional and analytics):
 
 ```
 oc new-app --template=postgresql-persistent -p POSTGRESQL_DATABASE=met -p DATABASE_SERVICE_NAME=postgresql-met
+```
+
+```
+oc new-app --template=postgresql-persistent -p POSTGRESQL_DATABASE=met-analytics -p DATABASE_SERVICE_NAME=postgresql-edw
 ```
 
 Create an instance of patroni:
@@ -86,17 +95,25 @@ In each environment namespace (dev, test, prod) use the following:
 
 Deploy the web application:
 ```
-oc process -f ./web.dc.yml -p ENV=test | oc create -f -
+oc process -f ./web.dc.yml -p ENV=test -p IMAGE_TAG=test | oc create -f -
 ```
 
 Deploy the api application:
 ```
-oc process -f ./api.dc.yml -p ENV=test -p KC_DOMAIN=met-oidc-test.apps.gold.devops.gov.bc.ca | oc create -f -
+oc process -f ./api.dc.yml -p ENV=test -p IMAGE_TAG=test -p KC_DOMAIN=met-oidc-test.apps.gold.devops.gov.bc.ca | oc create -f -
 
 ```
 
+Deploy the notify api application:
 ```
-... -p IMAGE_TAG=test ...
+oc process -f ./notify-api.dc.yml -p ENV=test -p IMAGE_TAG=test -p KC_DOMAIN=met-oidc-test.apps.gold.devops.gov.bc.ca | oc create -f -
+
+```
+
+Deploy the cron job application:
+```
+oc process -f ./cron.dc.yml -p ENV=test -p IMAGE_TAG=test | oc create -f -
+
 ```
 
 ### Additional NetworkPolicies

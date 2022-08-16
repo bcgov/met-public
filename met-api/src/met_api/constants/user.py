@@ -1,4 +1,4 @@
-# Copyright © 2019 Province of British Columbia
+# Copyright © 2021 Province of British Columbia
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
@@ -11,16 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Abstract class for Email implementation."""
-
-from abc import ABC, abstractmethod
-from typing import Dict
+"""Constants of users."""
 
 
-class EmailBaseService(ABC):  # pylint: disable=too-few-public-methods
-    """Abstract base class for Email Service."""
-
-    @abstractmethod
-    def send(self, email_payload: Dict):
-        """Send Email."""
-        raise Exception('Not Implemented')
+SYSTEM_USER = 1

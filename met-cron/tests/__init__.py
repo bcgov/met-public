@@ -11,20 +11,4 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Initialize and inject the email service by type."""
-import os
-from .email_base_service import EmailBaseService
-from .email_ches_notify import EmailChesNotify
-from .email_gc_notify import EmailGCNotify
-
-
-def get_email_service():
-    """Return SMS Service implementation."""
-    _instance: EmailBaseService
-    if os.getenv('EMAIL_PROVIDER') == 'GC_NOTIFY':
-        _instance = EmailGCNotify()
-    elif os.getenv('EMAIL_PROVIDER') == 'CHES':
-        _instance = EmailChesNotify()
-    else:
-        _instance = EmailGCNotify()
-    return _instance
+"""The Test Suites to ensure that the service is built and operating correctly."""
