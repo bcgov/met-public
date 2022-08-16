@@ -93,10 +93,9 @@ class _Config():  # pylint: disable=too-few-public-methods
     ENGAGEMENT_PATH = os.getenv('ENGAGEMENT_PATH', '/engagement/view/{engagement_id}')
     SITE_URL = os.getenv('SITE_URL')
 
+    # Email Service
     VERIFICATION_EMAIL_SUBJECT = os.getenv('VERIFICATION_EMAIL_SUBJECT', '{engagement_name} - Survey link')
     VERIFICATION_EMAIL_TEMPLATE_ID = os.getenv('VERIFICATION_EMAIL_TEMPLATE_ID')
-
-    # Email Service
     NOTIFICATIONS_EMAIL_ENDPOINT = os.getenv('NOTIFICATIONS_EMAIL_ENDPOINT')
 
 

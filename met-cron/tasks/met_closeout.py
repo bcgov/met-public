@@ -14,15 +14,15 @@
 """MET Engagement Closure."""
 from datetime import datetime
 
-# from met_api.services.engagement_service import EngagementService
+from met_api.services.engagement_service import EngagementService
 
 
 class MetEngagementCloseout:  # pylint:disable=too-few-public-methods
     """Task to handles Engagement due closure."""
 
     @classmethod
-    def do_clouseout(cls):
+    def do_closeout(cls):
         """Perform the engagement closeout report."""
         print('Starting Met Engagement Closeout at------------------------', datetime.now())
 
-        # EngagementService.close_engagements_due()
+        EngagementService.close_engagements_due()
