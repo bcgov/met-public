@@ -3,13 +3,16 @@ import { Grid, Box, Typography, Stack } from '@mui/material';
 import { formatDate } from '../../common/dateHelper';
 import { BannerProps } from '../view/types';
 import { EngagementStatusChip } from '../status';
+import { EngagementStatus } from 'constants/engagementStatus';
 
 const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
     const { description, name, start_date, end_date, submission_status } = savedEngagement;
+    const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
+
     return (
         <Box
             sx={{
-                backgroundColor: '#707070',
+                backgroundColor: isDraft ? '#707070' : '#F2F2F2',
                 width: '100%',
             }}
         >
