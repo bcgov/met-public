@@ -117,11 +117,11 @@ class Engagement(db.Model):
         engagements_schema = EngagementSchema(many=True)
         update_fields = dict(
             status_id=Status.Closed,
-            updated_date=datetime.utcnow(),
+            updated_date=datetime.now(),
             updated_by=SYSTEM_USER
         )
         query = Engagement.query\
-            .filter(Engagement.status_id == Status.Published and Engagement.end_date < datetime.utcnow())
+            .filter(Engagement.status_id == Status.Published & Engagement.end_date < datetime.now())
         records = query.all()
         if not records:
             return []
