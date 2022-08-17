@@ -121,7 +121,8 @@ class Engagement(db.Model):
             updated_by=SYSTEM_USER
         )
         query = Engagement.query\
-            .filter(Engagement.status_id == Status.Published & Engagement.end_date < datetime.now())
+            .filter(Engagement.status_id == Status.Published)\
+            .filter(Engagement.end_date < datetime.now())
         records = query.all()
         if not records:
             return []
