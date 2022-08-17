@@ -1,8 +1,10 @@
 """Template Services."""
 
+import os
 from jinja2 import Environment, FileSystemLoader
 
-ENV = Environment(loader=FileSystemLoader('./templates'), autoescape=True)
+templates_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..', 'templates'))
+ENV = Environment(loader=FileSystemLoader(templates_dir), autoescape=True)
 
 
 class Template:
