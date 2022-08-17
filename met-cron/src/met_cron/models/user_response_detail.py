@@ -15,6 +15,5 @@ class UserResponseDetail(BaseModel):  # pylint: disable=too-few-public-methods
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     survey_id = db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), primary_key=True, nullable=False)
-    engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), primary_key=True,
-                              nullable=False)
+    engagement_id = db.Column(db.Integer)
     user_id = db.Column(db.Integer)
