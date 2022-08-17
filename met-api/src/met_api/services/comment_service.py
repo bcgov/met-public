@@ -1,7 +1,7 @@
 
 """Service for comment management."""
 from met_api.models.comment import Comment
-from met_api.models.comment_status import CommentStatus, CommentStatusSchema
+from met_api.models.comment_status import CommentStatus
 from met_api.schemas.comment import CommentSchema
 from met_api.schemas.submission import SubmissionSchema
 from met_api.schemas.survey import SurveySchema
