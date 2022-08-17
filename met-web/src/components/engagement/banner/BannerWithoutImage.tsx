@@ -4,9 +4,11 @@ import { formatDate } from '../../common/dateHelper';
 import { BannerProps } from '../view/types';
 import { EngagementStatusChip } from '../status';
 import { EngagementStatus } from 'constants/engagementStatus';
+import { Editor } from 'react-draft-wysiwyg';
+import { getEditorState } from 'utils';
 
 const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
-    const { description, name, start_date, end_date, submission_status } = savedEngagement;
+    const { rich_description, name, start_date, end_date, submission_status } = savedEngagement;
     const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
 
     return (
@@ -54,7 +56,7 @@ const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
                     >
                         <Grid item xs={12}>
                             <Typography variant="h3">{name}</Typography>
-                            <Typography variant="subtitle2">{description}</Typography>
+                            <Editor editorState={getEditorState(rich_description)} readOnly={true} toolbarHidden />
                         </Grid>
                         <Grid item xs={12}>
                             <Typography variant="subtitle1">

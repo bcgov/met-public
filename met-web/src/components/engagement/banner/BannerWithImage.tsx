@@ -4,9 +4,11 @@ import { formatDate } from '../../common/dateHelper';
 import BannerWithoutImage from './BannerWithoutImage';
 import { BannerProps } from '../view/types';
 import { EngagementStatusChip } from '../status';
+import { Editor } from 'react-draft-wysiwyg';
+import { getEditorState } from 'utils';
 
 const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
-    const { description, name, start_date, end_date, banner_url, submission_status } = savedEngagement;
+    const { name, start_date, end_date, banner_url, submission_status, rich_description } = savedEngagement;
     const [imageError, setImageError] = useState(false);
     const isSmallscreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
 
@@ -68,7 +70,7 @@ const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
                             <Typography variant={isSmallscreen ? 'h3' : 'h4'} color="black">
                                 {name}
                             </Typography>
-                            <Typography variant="subtitle2">{description}</Typography>
+                            <Editor editorState={getEditorState(rich_description)} readOnly={true} toolbarHidden />
                         </Grid>
                         <Grid item xs={12}>
                             <Typography variant="h6" style={{ fontWeight: 600 }} color="black">
