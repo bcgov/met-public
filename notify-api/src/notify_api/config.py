@@ -11,7 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""All of the configuration for the service is captured here. All items are loaded, or have Constants defined here that are loaded into the Flask configuration. All modules and lookups get their configuration from the Flask config, rather than reading environment variables directly or by accessing this configuration directly.
+"""All of the configuration for the service is captured here.
+
+All items are loaded, or have Constants defined here that are loaded into the Flask configuration.
+All modules and lookups get their configuration from the Flask config,
+rather than reading environment variables directly or by accessing this configuration directly.
 """
 
 import os
@@ -31,7 +35,7 @@ CONFIGURATION = {
 
 
 def get_named_config(config_name: str = 'production'):
-    """Return the configuration object based on the name
+    """Return the configuration object based on the name.
 
     :raise: KeyError: if an unknown configuration is requested
     """
@@ -46,14 +50,15 @@ def get_named_config(config_name: str = 'production'):
     return config
 
 
-class _Config(object):  # pylint: disable=too-few-public-methods
-    """Base class configuration that should set reasonable defaults for all the other configurations. """
+class _Config():  # pylint: disable=too-few-public-methods
+    """Base class configuration that should set reasonable defaults for all the other configurations."""
+
     PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
     # GC Notify
     GC_NOTIFY_API_KEY = os.getenv('GC_NOTIFY_API_KEY')
     GC_NOTIFY_API_BASE_URL = os.getenv('GC_NOTIFY_API_BASE_URL')
-   
+
     #   Set up OIDC variables.
     SECRET_KEY = os.getenv('SECRET_KEY')
 
@@ -62,14 +67,16 @@ class _Config(object):  # pylint: disable=too-few-public-methods
     JWT_OIDC_ALGORITHMS = os.getenv('JWT_OIDC_ALGORITHMS', 'RS256')
     JWT_OIDC_AUDIENCE = os.getenv('JWT_OIDC_AUDIENCE')
     JWT_OIDC_CLIENT_SECRET = os.getenv('JWT_OIDC_CLIENT_SECRET', '')
-    JWT_OIDC_CACHING_ENABLED = os.getenv('JWT_OIDC_CACHING_ENABLED', True)
-    JWT_OIDC_JWKS_CACHE_TIMEOUT = int(os.getenv('JWT_OIDC_JWKS_CACHE_TIMEOUT', 300))
+    JWT_OIDC_CACHING_ENABLED = os.getenv('JWT_OIDC_CACHING_ENABLED', 'True')
+    JWT_OIDC_JWKS_CACHE_TIMEOUT = int(os.getenv('JWT_OIDC_JWKS_CACHE_TIMEOUT', '300'))
 
     TESTING = False
     DEBUG = True
 
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
+    """Development environment configuration."""
+
     TESTING = False
     DEBUG = True
 

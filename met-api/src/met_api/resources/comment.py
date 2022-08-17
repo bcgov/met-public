@@ -69,7 +69,7 @@ class Comment(Resource):
 
 
 @cors_preflight('GET, POST, PUT, OPTIONS')
-@API.route('/all/survey/<survey_id>')
+@API.route('/survey/<survey_id>/comments')
 class Comments(Resource):
     """Resource for managing multiple comments."""
 

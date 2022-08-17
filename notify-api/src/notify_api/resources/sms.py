@@ -13,23 +13,23 @@
 # limitations under the License.
 """Endpoints to check manage notifications."""
 
-from flask import request, jsonify
-from flask_restx import Namespace
-from flask_restx import Resource
+# from flask import request, jsonify
+from flask_restx import Namespace, Resource
 
-from api.auth.auth import jwt
-from api.services.sms import get_sms_service
+from notify_api.auth import jwt
+# from notify_api.services.sms import get_sms_service
 
-api = Namespace('notifications', description='API for Sending MET Notifications')
+API = Namespace('notifications', description='API for Sending MET Notifications')
 
 
-@api.route('/sms')
+@API.route('/sms')
 class SmsNotification(Resource):
     """Notification resource."""
 
+    @staticmethod
     @jwt.requires_auth
-    def post(self):
+    def post():
         """Send notification."""
-        sms_payload = request.get_json(force=True)
-        get_sms_service().send(sms_payload)
-        return jsonify({})
+        # sms_payload = request.get_json(force=True)
+        # get_sms_service().send(sms_payload)
+        raise Exception('Not implemented')

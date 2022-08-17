@@ -4,17 +4,14 @@ from datetime import datetime, timedelta
 from http import HTTPStatus
 
 from flask import current_app
-from jinja2 import Environment, FileSystemLoader
 
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.email_verification import EmailVerification
 from met_api.models.survey import Survey as SurveyModel
 from met_api.schemas.email_verification import EmailVerificationSchema
-from met_api.services.rest_service import RestService
 from met_api.services.user_service import UserService
 from met_api.utils.notification import send_email
-
-ENV = Environment(loader=FileSystemLoader('./templates'), autoescape=True)
+from met_api.utils.template import Template
 
 
 class EmailVerificationService:
@@ -66,7 +63,6 @@ class EmailVerificationService:
     @staticmethod
     def _send_verification_email(email_verification: dict) -> None:
         """Send an verification email.Throws error if fails."""
-        sender = current_app.config.get('MAIL_FROM_ID')
         survey_id = email_verification.get('survey_id')
         email_to = email_verification.get('email_address')
         survey: SurveyModel = SurveyModel.get_open(survey_id)
@@ -76,20 +72,21 @@ class EmailVerificationService:
         if not survey.get('engagement'):
             raise ValueError('Engagement not found')
 
+        template_id = current_app.config.get('VERIFICATION_EMAIL_TEMPLATE_ID', None)
         subject, body, args = EmailVerificationService._render_email_template(
             survey, email_verification.get('verification_token'))
         try:
             # user hasn't been created yet.so create token using SA.
-            service_account_token = RestService.get_service_account_token()
-            send_email(subject=subject, email=email_to, sender=sender, html_body=body, args=args,
-                       token=service_account_token)
+            send_email(subject=subject, email=email_to, html_body=body, args=args, template_id=template_id)
         except Exception as exc:  # noqa: B902
             current_app.logger.error('<Notification for registration failed', exc)
-            raise BusinessException(error='Deletion not allowed.', status_code=HTTPStatus.FORBIDDEN) from exc
+            raise BusinessException(
+                error='Error sending verification email.',
+                status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
 
     @staticmethod
     def _render_email_template(survey: SurveyModel, token):
-        template = ENV.get_template('email_verification.html')
+        template = Template.get_template('email_verification.html')
         survey_id = survey.get('id')
         survey_path = current_app.config.get('SURVEY_PATH'). \
             format(survey_id=survey_id, token=token)

@@ -1,9 +1,16 @@
 
 """Service for engagement management."""
+from http import HTTPStatus
+from flask import current_app
+
 from met_api.constants.engagement_status import Status
+from met_api.exceptions.business_exception import BusinessException
 from met_api.models.engagement import Engagement
+from met_api.models.submission import Submission
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services.object_storage_service import ObjectStorageService
+from met_api.utils.notification import send_email
+from met_api.utils.template import Template
 
 
 class EngagementService:
@@ -35,6 +42,14 @@ class EngagementService:
 
         return engagements
 
+    @staticmethod
+    def close_engagements_due():
+        """Close published engagements that are due for a closeout."""
+        engagements = Engagement.close_engagements_due()
+        print('Engagements to close: ', engagements)
+        results = [EngagementService._send_closeout_emails(engagement) for engagement in engagements]
+        return results
+
     def create_engagement(self, data: EngagementSchema):
         """Create engagement."""
         self.validate_fields(data)
@@ -53,3 +68,41 @@ class EngagementService:
 
         if any(empty_fields):
             raise ValueError('Some required fields are empty')
+
+    @staticmethod
+    def _send_closeout_emails(engagement: EngagementSchema) -> None:
+        """Send the engagement closeout emails.Throws error if fails."""
+        engagement_id = engagement.get('id')
+        subject, body, args = EngagementService._render_email_template(engagement)
+        users = Submission.get_engaged_users(engagement_id)
+        template_id = current_app.config.get('ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID', None)
+        # Removes duplicated records
+        users = list(set(users))
+        try:
+            [send_email(subject=subject, email=user.get('email_id'), html_body=body,
+                        args=args, template_id=template_id) for user in users]
+        except Exception as exc:  # noqa: B902
+            current_app.logger.error('<Notification for engagement closeout failed', exc)
+            raise BusinessException(
+                error='Error sending engagement closeout.',
+                status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
+
+    @staticmethod
+    def _render_email_template(engagement: EngagementSchema):
+        template = Template.get_template('email_engagement_closeout.html')
+        engagement_path = current_app.config.get('ENGAGEMENT_PATH'). \
+            format(engagement_id=engagement.get('id'))
+        # url is origin url excluding context path
+        site_url = current_app.config.get('SITE_URL')
+        engagement_name = engagement.get('name')
+        subject = current_app.config.get('ENGAGEMENT_CLOSEOUT_EMAIL_SUBJECT'). \
+            format(engagement_name=engagement_name)
+        args = {
+            'engagement_name': engagement_name,
+            'engagement_url': f'{site_url}{engagement_path}',
+        }
+        body = template.render(
+            engagement_name=args.get('engagement_name'),
+            engagement_url=args.get('engagement_url'),
+        )
+        return subject, body, args

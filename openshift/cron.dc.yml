@@ -3,15 +3,15 @@ kind: Template
 metadata:
   annotations:
     description: Deployment template for a MET CRON job.
-    tags: ${NAME}-${TAG_NAME}
-  name: ${NAME}-${TAG_NAME}-deploy
+    tags: ${NAME}
+  name: ${NAME}-deploy
 objects:
 - kind: DeploymentConfig
   apiVersion: apps.openshift.io/v1
   metadata:
-    name: ${NAME}-${TAG_NAME}
+    name: ${NAME}
     labels:
-      app: ${NAME}-${TAG_NAME}
+      app: ${NAME}
       app-group: ${APP_GROUP}
       template: ${NAME}-deploy
   spec:
@@ -27,40 +27,41 @@ objects:
           execNewPod:
             command:
             - /met-cron/pre-hook-update-db.sh
-            containerName: ${NAME}-${TAG_NAME}
+            containerName: ${NAME}
           failurePolicy: Abort
     triggers:
     - type: ImageChange
       imageChangeParams:
         automatic: true
         containerNames:
-        - ${NAME}-${TAG_NAME}
+        - ${NAME}
         from:
           kind: ImageStreamTag
           namespace: ${IMAGE_NAMESPACE}
-          name: ${NAME}:${TAG_NAME}
+          name: ${NAME}:${IMAGE_TAG}
     - type: ConfigChange
     replicas: 1
     test: false
     selector:
-      app: ${NAME}-${TAG_NAME}
-      deploymentconfig: ${NAME}-${TAG_NAME}
+      app: ${NAME}
+      deploymentconfig: ${NAME}
     template:
       metadata:
         labels:
-          app: ${NAME}-${TAG_NAME}
+          app: ${NAME}
           app-group: ${APP_GROUP}
-          deploymentconfig: ${NAME}-${TAG_NAME}
+          environment: ${ENV}
+          deploymentconfig: ${NAME}
           template: ${NAME}-deploy
       spec:
         volumes:
         - name: cron-config
           configMap:
-            name: ${NAME}-${TAG_NAME}-cron-configuration
+            name: ${NAME}-config
             defaultMode: 420
         containers:
-        - name: ${NAME}-${TAG_NAME}
-          image: image-registry.openshift-image-registry.svc:5000/${IMAGE_NAMESPACE}/${NAME}:${TAG_NAME}
+        - name: ${NAME}
+          image: image-registry.openshift-image-registry.svc:5000/${IMAGE_NAMESPACE}/${NAME}:${IMAGE_TAG}
           ports:
           - containerPort: 8080
             protocol: TCP
@@ -73,70 +74,66 @@ objects:
             - name: DATABASE_USERNAME
               valueFrom:
                 configMapKeyRef:
-                  name: ${DATABASE_NAME}-${TAG_NAME}-config
+                  name: ${DATABASE_NAME}-config
                   key: DATABASE_USER
             - name: DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: ${DATABASE_NAME}-${TAG_NAME}-secret
+                  name: ${DATABASE_NAME}-secret
                   key: DATABASE_PASSWORD
             - name: DATABASE_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: ${DATABASE_NAME}-${TAG_NAME}-config
+                  name: ${DATABASE_NAME}-config
                   key: DATABASE_NAME
             - name: DATABASE_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: ${DATABASE_NAME}-${TAG_NAME}-config
-                  key: DATABASE_HOST
+              value: ${DATABASE_HOST}
             - name: DATABASE_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: ${DATABASE_NAME}-${TAG_NAME}-config
-                  key: DATABASE_PORT
+              value: ${DATABASE_PORT}
             # MET Master DB Details     
             - name: MET_DATABASE_USERNAME
               valueFrom:
                 secretKeyRef:
                   key: database-user
-                  name: ${MET_DB_APP_NAME}
+                  name: ${MET_DATABASE_HOST}
             - name: MET_DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
                   key: database-password
-                  name: ${MET_DB_APP_NAME}
+                  name: ${MET_DATABASE_HOST}
             - name: MET_DB_NAME
               valueFrom:
                 secretKeyRef:
                   key: database-name
-                  name: ${MET_DB_APP_NAME}
+                  name: ${MET_DATABASE_HOST}
             - name: MET_DATABASE_HOST
-              value: ${MET_DB_APP_NAME}
+              value: ${MET_DATABASE_HOST}
+            - name: MET_DATABASE_PORT
+              value: ${MET_DATABASE_PORT}
             - name: DATABASE_TEST_USERNAME
               valueFrom:
                 configMapKeyRef:
-                  name: ${DATABASE_NAME}-${TAG_NAME}-config
+                  name: ${DATABASE_NAME}-config
                   key: DATABASE_TEST_USER
             - name: DATABASE_TEST_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: ${DATABASE_NAME}-${TAG_NAME}-secret
+                  name: ${DATABASE_NAME}-secret
                   key: DATABASE_TEST_PASSWORD
             - name: DATABASE_TEST_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: ${DATABASE_NAME}-${TAG_NAME}-config
+                  name: ${DATABASE_NAME}-config
                   key: DATABASE_TEST_NAME
             - name: DATABASE_TEST_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: ${DATABASE_NAME}-${TAG_NAME}-config
+                  name: ${DATABASE_NAME}-config
                   key: DATABASE_TEST_HOST
             - name: DATABASE_TEST_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: ${DATABASE_NAME}-${TAG_NAME}-config
+                  name: ${DATABASE_NAME}-config
                   key: DATABASE_TEST_PORT
           resources:
             requests:
@@ -156,10 +153,10 @@ objects:
 - kind: Service
   apiVersion: v1
   metadata:
-    name: ${NAME}-${TAG_NAME}
+    name: ${NAME}
     creationTimestamp:
     labels:
-      app: ${NAME}-${TAG_NAME}
+      app: ${NAME}
       app-group: ${APP_GROUP}
       template: ${NAME}-deploy
   spec:
@@ -169,7 +166,7 @@ objects:
       port: 8080
       targetPort: 8080
     selector:
-      deploymentconfig: ${NAME}-${TAG_NAME}
+      deploymentconfig: ${NAME}
     type: ClusterIP
     sessionAffinity: None
   status:
@@ -192,19 +189,32 @@ parameters:
   description: The namespace of the OpenShift project containing the imagestream for
     the application.
   value: e903c2-tools
-- name: TAG_NAME
+- name: ENV
   displayName: Environment TAG name
   description: The TAG name for this environment, e.g., dev, test, prod
   required: true
   value: dev
-- name: DATABASE_NAME
-  displayName: Database App Name for MET Analytics DB
-  description: A valid database app name used by the service.
+- name: DATABASE_HOST
+  displayName: Analytics Database App Name
+  description: "The analytics postgresql application name."
   required: true
-  value: met-analytics-db
-- name: MET_DB_APP_NAME
-  description: "The postgresql application name"
+  value: postgresql-edw
+- name: DATABASE_PORT
+  displayName: Analytics Database App Port
+  description: "The analytics postgresql application port."
+  required: true
+  value: 5432
+- name: DATABASE_NAME
+  displayName: Database Name for MET Analytics DB
+  description: The database name used by the analytics service.
+  required: true
+  value: met-analytics
+- name: MET_DATABASE_HOST
+  description: "The transactional postgresql application name."
   value: postgresql-met
+- name: MET_DATABASE_PORT
+  description: "The transactional postgresql application port"
+  value: 5432
 - name: CPU_REQUEST
   displayName: Resources CPU Request
   description: The resources CPU request (in cores) for this build.
@@ -230,3 +240,6 @@ parameters:
   description: The number of replicas to run in this environment.
   required: true
   value: '1'
+- name: IMAGE_TAG
+  description: "The image tag to deploy"
+  value: latest

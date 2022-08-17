@@ -12,22 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Endpoints to check manage notifications."""
+from flask import jsonify, request
+from flask_restx import Namespace, Resource
 
-from flask import request, jsonify
-from flask_restx import Namespace
-from flask_restx import Resource
-
-from notify_api.auth import jwt
+from notify_api.auth import Auth
 from notify_api.services.email import get_email_service
 
-api = Namespace('notifications', description='API for Sending MET Notifications')
+API = Namespace('notifications', description='API for Sending MET Notifications')
 
 
-@api.route('/email')
+@API.route('/email')
 class EmailNotification(Resource):
     """Notification resource."""
-    @jwt.requires_auth
-    def post(self):
+
+    @staticmethod
+    @Auth.require
+    def post():
         """Send email notification."""
         email_payload = request.get_json(force=True)
         get_email_service().send(email_payload)
