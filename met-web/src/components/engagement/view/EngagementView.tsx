@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Grid } from '@mui/material';
 import { EngagementBanner } from './EngagementBanner';
 import { ActionContext } from './ActionContext';
@@ -7,8 +7,7 @@ import SurveyBlock from './SurveyBlock';
 import EmailModal from './EmailModal';
 import { PreviewBanner } from './PreviewBanner';
 import { useAppSelector } from 'hooks';
-import { useNavigate } from 'react-router';
-import WhoIsListeningWidget from './WhoIsListeningWidget';
+import { useNavigate, useLocation } from 'react-router';
 import { EngagementViewProps } from './types';
 
 export const EngagementView = ({ open }: EngagementViewProps) => {
@@ -18,6 +17,10 @@ export const EngagementView = ({ open }: EngagementViewProps) => {
     const { savedEngagement } = useContext(ActionContext);
     const surveyId = savedEngagement.surveys[0]?.id || '';
     const navigate = useNavigate();
+
+    useEffect(() => {
+        console.log('');
+    });
 
     const handleStartSurvey = () => {
         if (!isPreview) {
