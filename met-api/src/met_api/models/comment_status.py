@@ -19,6 +19,11 @@ class CommentStatus(db.Model):  # pylint: disable=too-few-public-methods
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
     comment = db.relationship('Comment', backref='comment_status', cascade='all, delete')
 
+    @classmethod
+    def get_comment_statuses(cls):
+        """Get all comment statuses."""
+        return db.session.query(CommentStatus).all()
+
 
 class CommentStatusSchema(ma.Schema):
     """Comment status schema."""
