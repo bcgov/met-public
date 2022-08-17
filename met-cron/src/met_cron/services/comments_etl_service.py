@@ -66,7 +66,7 @@ class CommentsEtlService:  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def _load_new_user_feedback(comment: MetCommentModel, survey: SurveyModel):
-        """Helper to Build the engagement."""
+        """Helper to build the engagement."""
 
         current_app.logger.info('Creating new User Feedback  in Analytics DB: %s.', comment.id)
         feedback: UserFeedbackModel = UserFeedbackModel()
