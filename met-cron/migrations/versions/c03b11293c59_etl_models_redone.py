@@ -29,7 +29,7 @@ def upgrade():
                     sa.Column('published_date', sa.DateTime(), nullable=True),
                     sa.PrimaryKeyConstraint('id')
                     )
-    op.create_table('user',
+    op.create_table('user_details',
                     sa.Column('created_date', sa.DateTime(), nullable=True),
                     sa.Column('updated_date', sa.DateTime(), nullable=True),
                     sa.Column('is_active', sa.Boolean(), nullable=True),
@@ -192,6 +192,6 @@ def downgrade():
     op.drop_table('request_type_selectbox')
     op.drop_table('request_type_radio')
     op.drop_table('survey')
-    op.drop_table('user')
+    op.drop_table('user_details')
     op.drop_table('engagement')
     # ### end Alembic commands ###
