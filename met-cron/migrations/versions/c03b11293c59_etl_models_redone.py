@@ -192,6 +192,6 @@ def downgrade():
     op.drop_table('request_type_selectbox')
     op.drop_table('request_type_radio')
     op.drop_table('survey')
-    op.drop_table('user')
+    op.drop_table('user_details')
     op.drop_table('engagement')
     # ### end Alembic commands ###
