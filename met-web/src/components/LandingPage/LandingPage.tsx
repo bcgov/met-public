@@ -70,7 +70,12 @@ const LandingPage = () => {
             disablePadding: false,
             label: 'Date Published',
             allowSort: true,
-            getValue: (row: Engagement) => formatDate(row.published_date),
+            getValue: (row: Engagement) => {
+                if (row.published_date === 'None') {
+                    return '';
+                }
+                return formatDate(row.published_date);
+            },
         },
         {
             key: 'surveys',

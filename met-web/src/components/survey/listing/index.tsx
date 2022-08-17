@@ -131,7 +131,7 @@ const SurveyListing = () => {
                     return <></>;
                 }
 
-                if (row.engagement.engagement_status.id === EngagementStatus.Draft) {
+                if (row.engagement.engagement_status.id === EngagementStatus.Draft || !row.comments_meta_data.total) {
                     return <></>;
                 }
 
