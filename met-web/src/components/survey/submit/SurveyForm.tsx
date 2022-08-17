@@ -21,18 +21,16 @@ export const SurveyForm = () => {
 
     const submit = (submissionData: unknown) => {
         const submitStatus = handleSubmit(submissionData);
-        if (submitStatus === 'success') {
-            navigate(`/engagement/view/${savedSurvey.engagement.id}`, {
-                state: {
-                    open: true,
-                    mainText: '',
-                    subTextArray: [
-                        'We have successfully submitted your answers.',
-                        'We appreciate the time you took to help our community.',
-                    ],
-                },
-            });
-        }
+        navigate(`/engagement/view/${savedSurvey.engagement.id}`, {
+            state: {
+                open: true,
+                mainText: '',
+                subTextArray: [
+                    'We have successfully submitted your answers.',
+                    'We appreciate the time you took to help our community.',
+                ],
+            },
+        });
     };
 
     if (isLoading) {
