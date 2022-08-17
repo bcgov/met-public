@@ -51,7 +51,7 @@ class SurveyEtlService:  # pylint: disable=too-few-public-methods
     def _get_updated_surveys():
         time_delta_in_minutes: int = int(current_app.config.get('TIME_DELTA_IN_MINUTES'))
         time_delta = datetime.utcnow() - timedelta(minutes=time_delta_in_minutes)
-        new_surveys = db.session.query(MetSurveyModel).filter(MetSurveyModel.updated_date > time_delta).all()
+        new_surveys = db.session.query(MetSurveyModel).filter(MetSurveyModel.created_date > time_delta).all()
         return new_surveys
 
     @staticmethod
@@ -86,26 +86,41 @@ class SurveyEtlService:  # pylint: disable=too-few-public-methods
                 current_app.logger.info('Survey Found without form_json: %s.Skipping it', survey.id)
                 continue
 
+            if (form_components := survey.form_json.get('components', None)) is None:
+                # throw error or notify by logging
+                current_app.logger.info('Survey Found without any component in form_json: %s.Skipping it', survey.id)
+                continue
+
             # check already if questions exists in DB for this survey.
             # update all MetRequestTypeRadioModel is_active to False
 
             SurveyEtlService._inactivate_old_questions(survey.id)
 
             # extract data out of survey.form_json and save now
-            for component in survey.form_json['components']:
+            for component in form_components:
+                component_type = component.get('inputType', None)
                 current_app.logger.info('Survey: %s.%sProcessing component with id %s and type: %s and label %s ',
                                         survey.id,
                                         survey.name,
-                                        component.get('id', None), component.get('inputType', None),
+                                        component.get('id', None), component_type,
                                         component.get('label', None))
-                model_type = SurveyEtlService._identify_form_type(component.get('inputType', None))
+                if not component_type:
+                    current_app.logger.info(
+                        'Survey: %s.% *******Skipping Run******** for component with id %s and type: %s and label %s ',
+                        survey.id,
+                        survey.name,
+                        component.get('id', None), component_type,
+                        component.get('label', None))
+                    continue
+
+                model_type = SurveyEtlService._identify_form_type(component_type)
                 etl_survey = EtlSurveyModel.find_active_by_source_id(survey.id)
                 current_app.logger.info(
                     'Survey: Source Id %s.Model , ETL Id: %s Type component with id %s and type: %s mapped to db object type: %s ',
                     survey.id,
                     etl_survey.id,
                     component.get('id', None),
-                    component.get('inputType', None),
+                    component_type,
                     model_type)
                 if model_type:
                     SurveyEtlService._create_input_model(component, model_type, etl_survey)

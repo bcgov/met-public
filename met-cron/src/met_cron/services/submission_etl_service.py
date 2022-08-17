@@ -53,8 +53,24 @@ class SubmissionEtlService:  # pylint: disable=too-few-public-methods
             current_app.logger.info(
                 '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Extraction starting for Submission id %s . Survey : %s.',
                 submission.id, met_survey.id)
-            form_questions = met_survey.form_json['components']
+            # submission without survey is probably an old updated survey not beiing loaded to analytics db.Wont happen in prod
+            if not etl_survey or not met_survey:
+                current_app.logger.info(
+                    '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Skipping Extraction  for Submission id %s . Survey Not Found in Analytics DB : %s.Probably a very old survey',
+                    submission.id,
+                    met_survey.id)
+                continue
+
+            if (form_questions := met_survey.form_json.get('components', None)) is None:
+                # throw error or notify by logging
+                current_app.logger.info('Survey Found without any component in form_json: %s.Skipping it',
+                                        met_survey.id)
+                continue
+
             user = db.session.query(UserModel).filter(UserModel.id == submission.user_id).first()
+            current_app.logger.info('User : %s Found for submission id : %s with mappedd user id %s', user,
+                                    submission.id, submission.user_id)
+
             for component in form_questions:
                 # go thru each component type and check for answer in the submission_json.
                 # instead of going through each answer and iterate , we find the questions from the form and try to get the answer.
@@ -69,7 +85,7 @@ class SubmissionEtlService:  # pylint: disable=too-few-public-methods
     def _load_components(component, etl_survey, submission, user):
         if not (answer_key := submission.submission_json.get(component['key'])):
             return
-        component_type = component['type'].lower()
+        component_type = component['inputType'].lower()
         current_app.logger.info('Type for submission id : %s. is %s ', submission.id, component_type)
         if component_type == FormIoComponentType.RADIO.value:
             SubmissionEtlService._save_radio(answer_key, component, etl_survey, user)
@@ -87,12 +103,13 @@ class SubmissionEtlService:  # pylint: disable=too-few-public-methods
         time_delta = datetime.utcnow() - timedelta(minutes=time_delta_in_minutes)
         # submissions never gets updated.so use created_date
         new_submissions = db.session.query(MetSubmissionModel).filter(
-            MetSubmissionModel.updated_date > time_delta).all()
+            MetSubmissionModel.created_date > time_delta).all()
         return new_submissions
 
     @staticmethod
     def _save_text(model_type, answer_key, component, survey, user):
         # text answer is a string.so value has to be found from question
+        print('--------', survey)
         current_app.logger.info('Input type  ResponseTypeTextModel is created:survey id: %s. '
                                 'request_key is %s value:%s request_id:%s', survey.id, component['key'], answer_key,
                                 component['id'])
@@ -101,7 +118,7 @@ class SubmissionEtlService:  # pylint: disable=too-few-public-methods
             request_key=component['key'],
             value=answer_key,
             request_id=component['id'],
-            user_id=user.id
+            user_id=getattr(user, 'id', None)
         )
         db.session.add(text_response)
 
@@ -132,7 +149,7 @@ class SubmissionEtlService:  # pylint: disable=too-few-public-methods
                     request_key=component['key'],
                     value=answer_label,
                     request_id=component['id'],
-                    user_id=user.id
+                    user_id=getattr(user, 'id', None)
                 )
                 db.session.add(selectbox_response)
                 continue
@@ -157,7 +174,8 @@ class SubmissionEtlService:  # pylint: disable=too-few-public-methods
             request_key=component['key'],
             value=answer_value,
             request_id=component['id'],
-            user_id=user.id)
+            user_id=getattr(user, 'id', None)
+        )
         db.session.add(radio_response)
 
     @staticmethod

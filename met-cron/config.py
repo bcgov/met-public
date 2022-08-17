@@ -116,7 +116,7 @@ class _Config():  # pylint: disable=too-few-public-methods
     S3_REGION = os.getenv('S3_REGION')
     S3_SERVICE = os.getenv('S3_SERVICE')
 
-    TIME_DELTA_IN_MINUTES = os.getenv('TIME_DELTA_IN_MINUTES', 10)
+    TIME_DELTA_IN_MINUTES = os.getenv('TIME_DELTA_IN_MINUTES', 30)
 
     print(f'SQLAlchemy URL (_Config): {SQLALCHEMY_DATABASE_URI}')
 
