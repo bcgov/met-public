@@ -29,7 +29,7 @@ def upgrade():
                     sa.Column('published_date', sa.DateTime(), nullable=True),
                     sa.PrimaryKeyConstraint('id')
                     )
-    op.create_table('user',
+    op.create_table('user_details',
                     sa.Column('created_date', sa.DateTime(), nullable=True),
                     sa.Column('updated_date', sa.DateTime(), nullable=True),
                     sa.Column('is_active', sa.Boolean(), nullable=True),

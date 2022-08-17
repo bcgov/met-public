@@ -6,10 +6,10 @@ from .base_model import BaseModel
 from .db import db
 
 
-class User(BaseModel):  # pylint: disable=too-few-public-methods
-    """Definition of the User entity."""
+class UserDetails(BaseModel):  # pylint: disable=too-few-public-methods
+    """Definition of the User Details entity."""
 
-    __tablename__ = 'user'
+    __tablename__ = 'user_details'
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.String(100))
