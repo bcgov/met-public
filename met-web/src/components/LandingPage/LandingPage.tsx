@@ -71,7 +71,7 @@ const LandingPage = () => {
             label: 'Date Published',
             allowSort: true,
             getValue: (row: Engagement) => {
-                if (row.published_date === 'None') {
+                if (row.published_date === 'None' || !row.published_date) {
                     return '';
                 }
                 return formatDate(row.published_date);
