@@ -158,3 +158,28 @@ class SurveyLink(Resource):
             return ActionResult.error(str(err))
         except ValueError as err:
             return ActionResult.error(str(err))
+
+
+@cors_preflight('PUT,OPTIONS')
+@API.route('/<survey_id>/unlink/engagement/<engagement_id>')
+class SurveyLink(Resource):
+    """Resource for linking a single survey to an engagement."""
+
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def put(survey_id, engagement_id):
+        """Update survey to be unlinked to an engagement."""
+        try:
+
+            result = SurveyService().link(survey_id, engagement_id)
+
+            if result.success:
+                return ActionResult.success(survey_id, 'Survey successfully unlinked')
+
+            return ActionResult.error('Error occurred while unlinking survey from engagement')
+        except KeyError as err:
+            return ActionResult.error(str(err))
+        except ValueError as err:
+            return ActionResult.error(str(err))

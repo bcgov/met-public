@@ -110,4 +110,15 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
             return DefaultMethodResult(False, 'Survey Not Found', survey_id)
         survey.engagement_id = engagement_id
         db.session.commit()
-        return DefaultMethodResult(True, 'Survey Updated', survey_id)
+        return DefaultMethodResult(True, 'Survey Linked', survey_id)
+
+    @classmethod
+    def unlink_survey(cls, survey_id) -> DefaultMethodResult:
+        """Unlink survey from engagement."""
+        query = Survey.query.filter_by(id=survey_id)
+        survey = query.first()
+        if not survey:
+            return DefaultMethodResult(False, 'Survey to unlink was not found', survey_id)
+        survey.engagement_id = None
+        db.session.commit()
+        return DefaultMethodResult(True, 'Survey Unlinked', survey_id)
