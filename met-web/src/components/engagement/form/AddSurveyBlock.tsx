@@ -9,7 +9,7 @@ import { EngagementStatus } from 'constants/engagementStatus';
 import { unlinkSurvey } from 'services/surveyService/form';
 
 export const AddSurveyBlock = () => {
-    const { savedEngagement } = useContext(ActionContext);
+    const { savedEngagement, fetchEngagement } = useContext(ActionContext);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
@@ -48,7 +48,7 @@ export const AddSurveyBlock = () => {
                     text: `Survey "${surveyName}" successfuly removed from this engagement`,
                 }),
             );
-            navigate(`/engagement/form/${savedEngagement.id}`);
+            fetchEngagement();
         } catch (error) {
             console.log(error);
             dispatch(

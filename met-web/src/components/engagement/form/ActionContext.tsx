@@ -23,6 +23,9 @@ export const ActionContext = createContext<EngagementContext>({
     handleAddBannerImage: (_files: File[]) => {
         /* empty default method  */
     },
+    fetchEngagement: () => {
+        /* empty default method  */
+    },
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
@@ -47,30 +50,32 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         setBannerImage(null);
         setSavedBannerImageFileName('');
     };
-    useEffect(() => {
-        const fetchEngagement = async () => {
-            if (engagementId !== 'create' && isNaN(Number(engagementId))) {
-                navigate('/engagement/form/create');
-            }
 
-            if (engagementId !== 'create') {
-                setLoadingSavedEngagement(true);
-                try {
-                    const engagement = await getEngagement(Number(engagementId));
-                    setSavedEngagement({ ...engagement });
-                    setSavedBannerImageFileName(engagement.banner_filename);
-                    setLoadingSavedEngagement(false);
-                } catch (err) {
-                    console.log(err);
-                    dispatch(openNotification({ severity: 'error', text: 'Error Fetching Engagement' }));
-                    navigate('/');
-                }
-            } else {
-                setLoadingSavedEngagement(false);
-            }
-        };
+    const fetchEngagement = async () => {
+        if (engagementId !== 'create' && isNaN(Number(engagementId))) {
+            navigate('/engagement/form/create');
+        }
+
+        if (engagementId === 'create') {
+            setLoadingSavedEngagement(false);
+            return;
+        }
+
+        try {
+            const engagement = await getEngagement(Number(engagementId));
+            setSavedEngagement({ ...engagement });
+            setSavedBannerImageFileName(engagement.banner_filename);
+            setLoadingSavedEngagement(false);
+        } catch (err) {
+            console.log(err);
+            dispatch(openNotification({ severity: 'error', text: 'Error Fetching Engagement' }));
+            navigate('/');
+        }
+    };
+
+    useEffect(() => {
         fetchEngagement();
-    }, [engagementId, location.key]);
+    }, [engagementId]);
 
     const handleCreateEngagementRequest = async (engagement: EngagementForm): Promise<Engagement> => {
         setSaving(true);
@@ -152,6 +157,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 engagementId,
                 loadingSavedEngagement,
                 handleAddBannerImage,
+                fetchEngagement,
             }}
         >
             {children}

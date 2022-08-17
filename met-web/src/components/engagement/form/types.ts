@@ -8,6 +8,7 @@ export interface EngagementContext {
     engagementId: string | undefined;
     loadingSavedEngagement: boolean;
     handleAddBannerImage: (_files: File[]) => void;
+    fetchEngagement: () => void;
 }
 
 export interface EngagementForm {
