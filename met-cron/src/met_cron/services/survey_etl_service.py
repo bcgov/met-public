@@ -174,11 +174,10 @@ class SurveyEtlService:  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def _load_survey_obj(existing_survey):
-        eng: EtlEngagementModel = EtlEngagementModel.find_by_source_id(existing_survey.engagement_id)
         survey: EtlSurveyModel = EtlSurveyModel()
         survey.name = existing_survey.name
         survey.source_survey_id = existing_survey.id
-        survey.engagement_id = getattr(eng, 'id', None)
+        survey.engagement_id = existing_survey.engagement_id
         survey.is_active = True
         survey.flush()
         current_app.logger.info('Created New Survey: %s.', survey.id)
