@@ -162,7 +162,7 @@ class SurveyLink(Resource):
 
 @cors_preflight('PUT,OPTIONS')
 @API.route('/<survey_id>/unlink/engagement/<engagement_id>')
-class SurveyLink(Resource):
+class SurveyUnlink(Resource):
     """Resource for linking a single survey to an engagement."""
 
     @staticmethod
