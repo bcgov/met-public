@@ -7,7 +7,6 @@ import { saveDocument } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
 import { getErrorMessage } from 'utils';
-import { useLocation } from 'react-router';
 
 export const ActionContext = createContext<EngagementContext>({
     handleCreateEngagementRequest: (_engagement: EngagementForm): Promise<Engagement> => {
@@ -32,7 +31,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const { engagementId } = useParams<EngagementParams>();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const location = useLocation();
     const [isSaving, setSaving] = useState(false);
     const [loadingSavedEngagement, setLoadingSavedEngagement] = useState(true);
 
