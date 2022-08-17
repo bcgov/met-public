@@ -9,9 +9,10 @@ import { PreviewBanner } from './PreviewBanner';
 import { useAppSelector } from 'hooks';
 import { useNavigate } from 'react-router';
 import WhoIsListeningWidget from './WhoIsListeningWidget';
+import { EngagementViewProps } from './types';
 
-export const EngagementView = () => {
-    const [isEmailModalOpen, setEmailModalOpen] = useState(false);
+export const EngagementView = ({ open }: EngagementViewProps) => {
+    const [isEmailModalOpen, setEmailModalOpen] = useState(open ? open : false);
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isPreview = isLoggedIn;
     const { savedEngagement } = useContext(ActionContext);

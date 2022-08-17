@@ -38,3 +38,7 @@ export interface FailurePanelProps {
 export interface SurveyBlockProps {
     startSurvey: () => void;
 }
+
+export interface EngagementViewProps {
+    open?: boolean;
+}
