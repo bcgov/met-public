@@ -1,15 +1,19 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { ActionContext } from './ActionContext';
 import { Grid, Typography } from '@mui/material';
 import { MetPaper, MetWidget, SecondaryButton } from 'components/common';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { EngagementStatus } from 'constants/engagementStatus';
+import { unlinkSurvey } from 'services/surveyService/form';
 
 export const AddSurveyBlock = () => {
     const { savedEngagement } = useContext(ActionContext);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+
+    const [isDeletingSurvey, setIsDeletingSurvey] = useState(false);
 
     const handleAddSurvey = () => {
         if (!savedEngagement.id) {
@@ -22,6 +26,39 @@ export const AddSurveyBlock = () => {
             pathname: '/survey/create',
             search: `?engagementId=${savedEngagement.id}`,
         });
+    };
+
+    const handleRemoveSurvey = async (surveyId: number, surveyName: string) => {
+        if (savedEngagement.engagement_status.id !== EngagementStatus.Draft) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: `Cannot remove survey from an engagement of status ${savedEngagement.engagement_status.status_name}`,
+                }),
+            );
+            return;
+        }
+
+        try {
+            setIsDeletingSurvey(true);
+            await unlinkSurvey({ id: surveyId, engagement_id: savedEngagement.id });
+            dispatch(
+                openNotification({
+                    severity: 'success',
+                    text: `Survey "${surveyName}" successfuly removed from this engagement`,
+                }),
+            );
+            navigate(`/engagement/form/${savedEngagement.id}`);
+        } catch (error) {
+            console.log(error);
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: `Error occurred while trying to remove survey "${surveyName}"`,
+                }),
+            );
+            setIsDeletingSurvey(false);
+        }
     };
 
     return (
@@ -51,6 +88,8 @@ export const AddSurveyBlock = () => {
                                     key={survey.id}
                                     title={survey.name}
                                     onEditClick={() => navigate(`/survey/build/${survey.id}`)}
+                                    onDeleteClick={() => handleRemoveSurvey(survey.id, survey.name)}
+                                    deleting={isDeletingSurvey}
                                 />
                             );
                         })}

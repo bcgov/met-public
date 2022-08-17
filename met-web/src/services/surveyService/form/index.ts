@@ -84,3 +84,27 @@ export const linkSurvey = async (params: LinkPutSurveyRequest): Promise<Survey> 
         return Promise.reject(err);
     }
 };
+
+interface UnlinkPutSurveyRequest {
+    id: number;
+    engagement_id: number;
+}
+export const unlinkSurvey = async (params: UnlinkPutSurveyRequest): Promise<Survey> => {
+    try {
+        const url = replaceAllInURL({
+            URL: Endpoints.Survey.UNLINK_FROM_ENGAGEMENT,
+            params: {
+                survey_id: String(params.id),
+                engagement_id: String(params.engagement_id),
+            },
+        });
+
+        const response = await http.PutRequest<Survey>(url);
+        if (response.data.status && response.data.result) {
+            return Promise.resolve(response.data.result);
+        }
+        return Promise.reject(response.data.message ?? 'Failed to update survey');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};

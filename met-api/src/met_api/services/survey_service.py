@@ -108,7 +108,7 @@ class SurveyService:
     @classmethod
     def unlink(cls, survey_id, engagement_id):
         """Unlink survey."""
-        cls.validate_link_fields(survey_id, engagement_id)
+        cls.validate_unlink_fields(survey_id, engagement_id)
         return Survey.unlink_survey(survey_id)
 
     @classmethod
@@ -124,7 +124,7 @@ class SurveyService:
             raise ValueError('Could not find survey ' + survey_id)
 
         linked_engagement = survey.get('engagement', None)
-        if not linked_engagement or linked_engagement.get('id') != engagement_id:
+        if not linked_engagement or linked_engagement.get('id') != int(engagement_id):
             raise ValueError('Survey is not linked to engagement ' + engagement_id)
 
         engagement_status = linked_engagement.get('engagement_status')

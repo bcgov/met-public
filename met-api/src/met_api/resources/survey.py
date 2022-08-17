@@ -173,7 +173,7 @@ class SurveyLink(Resource):
         """Update survey to be unlinked to an engagement."""
         try:
 
-            result = SurveyService().link(survey_id, engagement_id)
+            result = SurveyService().unlink(survey_id, engagement_id)
 
             if result.success:
                 return ActionResult.success(survey_id, 'Survey successfully unlinked')
