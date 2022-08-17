@@ -1,8 +1,8 @@
-"""etl models
+"""ETL Models redone
 
-Revision ID: 4767b338440a
+Revision ID: c03b11293c59
 Revises: 
-Create Date: 2022-08-14 11:18:02.708345
+Create Date: 2022-08-16 20:49:33.177210
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '4767b338440a'
+revision = 'c03b11293c59'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -60,7 +60,7 @@ def upgrade():
     sa.Column('request_id', sa.String(length=20), nullable=True),
     sa.Column('survey_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['survey_id'], ['survey.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id', 'key')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('request_type_selectbox',
     sa.Column('created_date', sa.DateTime(), nullable=True),
@@ -73,7 +73,7 @@ def upgrade():
     sa.Column('request_id', sa.String(length=20), nullable=True),
     sa.Column('survey_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['survey_id'], ['survey.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id', 'key')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('request_type_textarea',
     sa.Column('created_date', sa.DateTime(), nullable=True),
@@ -86,7 +86,7 @@ def upgrade():
     sa.Column('request_id', sa.String(length=20), nullable=True),
     sa.Column('survey_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['survey_id'], ['survey.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id', 'key')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('request_type_textfield',
     sa.Column('created_date', sa.DateTime(), nullable=True),
@@ -99,7 +99,7 @@ def upgrade():
     sa.Column('request_id', sa.String(length=20), nullable=True),
     sa.Column('survey_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['survey_id'], ['survey.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id', 'key')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('response_type_radio',
     sa.Column('created_date', sa.DateTime(), nullable=True),
@@ -159,14 +159,13 @@ def upgrade():
     sa.Column('is_active', sa.Boolean(), nullable=True),
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('survey_id', sa.Integer(), nullable=False),
-    sa.Column('engagement_id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('comment', sa.String(length=5000), nullable=True),
     sa.Column('sentiment_analysis', sa.String(length=100), nullable=True),
     sa.Column('label', sa.String(length=100), nullable=True),
-    sa.ForeignKeyConstraint(['engagement_id'], ['engagement.id'], ondelete='CASCADE'),
+    sa.Column('source_comment_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['survey_id'], ['survey.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id', 'survey_id', 'engagement_id')
+    sa.PrimaryKeyConstraint('id', 'survey_id')
     )
     op.create_table('user_response_detail',
     sa.Column('created_date', sa.DateTime(), nullable=True),

@@ -13,7 +13,7 @@ class RequestMixin(object):
     def survey_id(self):
         return db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), nullable=False)
 
-    key = db.Column(db.String(100), primary_key=True, nullable=False)
+    key = db.Column(db.String(100), nullable=False)
     type = db.Column(db.String(100))
     label = db.Column(db.String(200))
     request_id = db.Column(db.String(20))
