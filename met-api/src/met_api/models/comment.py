@@ -52,7 +52,7 @@ class Comment(db.Model):
                 and_(
                     Comment.survey_id == survey_id,
                     Engagement.end_date < now,
-                    CommentStatus.id == Status.Approved
+                    CommentStatus.id == Status.Approved.value
                 ))\
             .all()
 
