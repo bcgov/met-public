@@ -9,6 +9,9 @@ export interface EngagementContext {
     loadingSavedEngagement: boolean;
     handleAddBannerImage: (_files: File[]) => void;
     fetchEngagement: () => void;
+    modalState: EngagementFormModalState;
+    handleOpenModal: (props: OpenModalProps) => void;
+    handleCloseModal: () => void;
 }
 
 export interface EngagementForm {
@@ -25,4 +28,13 @@ export interface EngagementForm {
 
 export type EngagementParams = {
     engagementId: string;
+};
+
+export type EngagementFormModalState = {
+    modalOpen: boolean;
+    handleConfirm?: () => void;
+};
+
+export type OpenModalProps = {
+    handleConfirm?: () => void;
 };

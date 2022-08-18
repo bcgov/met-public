@@ -9,7 +9,7 @@ import { EngagementStatus } from 'constants/engagementStatus';
 import { unlinkSurvey } from 'services/surveyService/form';
 
 export const AddSurveyBlock = () => {
-    const { savedEngagement, fetchEngagement } = useContext(ActionContext);
+    const { savedEngagement, fetchEngagement, handleOpenModal, handleCloseModal } = useContext(ActionContext);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
@@ -61,6 +61,15 @@ export const AddSurveyBlock = () => {
         }
     };
 
+    const handleDeleteClick = (surveyId: number, surveyName: string) => {
+        handleOpenModal({
+            handleConfirm: () => {
+                handleCloseModal();
+                handleRemoveSurvey(surveyId, surveyName);
+            },
+        });
+    };
+
     return (
         <>
             <Typography variant="h6" sx={{ marginBottom: '2px', fontWeight: 'bold' }}>
@@ -88,7 +97,7 @@ export const AddSurveyBlock = () => {
                                     key={survey.id}
                                     title={survey.name}
                                     onEditClick={() => navigate(`/survey/build/${survey.id}`)}
-                                    onDeleteClick={() => handleRemoveSurvey(survey.id, survey.name)}
+                                    onDeleteClick={() => handleDeleteClick(survey.id, survey.name)}
                                     deleting={isDeletingSurvey}
                                 />
                             );

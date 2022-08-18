@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { postEngagement, putEngagement, getEngagement } from '../../../services/engagementService';
 import { useNavigate, useParams } from 'react-router-dom';
-import { EngagementContext, EngagementForm, EngagementParams } from './types';
+import { EngagementContext, EngagementForm, EngagementFormModalState, EngagementParams, OpenModalProps } from './types';
 import { createDefaultEngagement, Engagement } from '../../../models/engagement';
 import { saveDocument } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -25,6 +25,15 @@ export const ActionContext = createContext<EngagementContext>({
     fetchEngagement: () => {
         /* empty default method  */
     },
+    modalState: {
+        modalOpen: false,
+    },
+    handleOpenModal: (_props: OpenModalProps) => {
+        /* empty default method  */
+    },
+    handleCloseModal: () => {
+        /* empty default method  */
+    },
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
@@ -35,6 +44,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [loadingSavedEngagement, setLoadingSavedEngagement] = useState(true);
 
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
+    const [modalState, setModalState] = useState<EngagementFormModalState>({
+        modalOpen: false,
+    });
 
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
@@ -145,6 +157,20 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
     };
 
+    const handleOpenModal = ({
+        handleConfirm = () => {
+            /*
+                default empty function
+            */
+        },
+    }: OpenModalProps) => {
+        setModalState({ modalOpen: true, handleConfirm });
+    };
+
+    const handleCloseModal = () => {
+        setModalState({ modalOpen: false });
+    };
+
     return (
         <ActionContext.Provider
             value={{
@@ -156,6 +182,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 loadingSavedEngagement,
                 handleAddBannerImage,
                 fetchEngagement,
+                modalState,
+                handleOpenModal,
+                handleCloseModal,
             }}
         >
             {children}

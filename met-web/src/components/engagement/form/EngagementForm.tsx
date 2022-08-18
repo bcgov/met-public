@@ -14,6 +14,7 @@ import { formatDate } from '../../common/dateHelper';
 import ImageUpload from 'components/imageUpload';
 import { useNavigate } from 'react-router-dom';
 import { AddSurveyBlock } from './AddSurveyBlock';
+import EngagementFormModal from './EngagementFormModal';
 
 const EngagementForm = () => {
     const {
@@ -186,7 +187,7 @@ const EngagementForm = () => {
             <Grid item xs={12}>
                 <Typography variant="h4">Engagement Details</Typography>
             </Grid>
-            <Grid item xs={8}>
+            <Grid item lg={8} xs={12}>
                 <MetPaper elevation={1}>
                     <Grid
                         container
@@ -353,6 +354,7 @@ const EngagementForm = () => {
                     </Grid>
                 </MetPaper>
             </Grid>
+            <EngagementFormModal />
         </MetPageGridContainer>
     );
 };
