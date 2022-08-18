@@ -4,14 +4,14 @@ import EngagementView from './EngagementView';
 import { EngagementRouteProps } from './types';
 import { useLocation } from 'react-router-dom';
 export const Engagement = () => {
-    const state =
-        useLocation().state != null ? (useLocation().state as EngagementRouteProps) : (useLocation().state as null);
+    const state = useLocation().state;
+    const routerState = state != null ? (useLocation().state as EngagementRouteProps) : (useLocation().state as null);
 
     window.history.replaceState({}, document.title);
 
     return (
         <ActionProvider>
-            <EngagementView state={state} />
+            <EngagementView state={routerState} />
         </ActionProvider>
     );
 };
