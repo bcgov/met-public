@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/system';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Palette } from 'styles/Theme';
 
 export const RoundedButton = styled(MuiButton)(() => ({
@@ -77,9 +77,10 @@ interface MetWidgetProps {
     [prop: string]: unknown;
     onEditClick?: () => void;
     onDeleteClick?: () => void;
+    deleting?: boolean;
 }
 
-export const MetWidget = ({ children, title, onEditClick, onDeleteClick, ...rest }: MetWidgetProps) => {
+export const MetWidget = ({ children, title, onEditClick, onDeleteClick, deleting, ...rest }: MetWidgetProps) => {
     return (
         <MetWidgetPaper elevation={3} {...rest}>
             <Grid container alignItems={'flex-start'} justifyContent="flex-start" direction="row">
@@ -97,7 +98,7 @@ export const MetWidget = ({ children, title, onEditClick, onDeleteClick, ...rest
                         </ConditionalComponent>
                         <ConditionalComponent condition={!!onDeleteClick}>
                             <IconButton color="inherit" onClick={onDeleteClick}>
-                                <DeleteIcon />
+                                {deleting ? <CircularProgress size="1em" color="inherit" /> : <HighlightOffIcon />}
                             </IconButton>
                         </ConditionalComponent>
                     </Stack>

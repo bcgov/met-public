@@ -43,16 +43,16 @@ class EngagementSchema(Schema):
 
     def get_submission_status(self, obj):
         """Get the submission status of the engagement."""
-        if obj.status_id == Status.Draft:
-            return SubmissionStatus.Upcoming
+        if obj.status_id == Status.Draft.value:
+            return SubmissionStatus.Upcoming.value
 
-        if obj.status_id == Status.Closed:
-            return SubmissionStatus.Closed
+        if obj.status_id == Status.Closed.value:
+            return SubmissionStatus.Closed.value
 
         if obj.start_date <= datetime.now() <= obj.end_date:
-            return SubmissionStatus.Open
+            return SubmissionStatus.Open.value
 
         if datetime.now() <= obj.start_date:
-            return SubmissionStatus.Upcoming
+            return SubmissionStatus.Upcoming.value
 
-        return SubmissionStatus.Closed
+        return SubmissionStatus.Closed.value

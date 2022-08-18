@@ -30,6 +30,16 @@ const PutRequest = <T>(url: string, data = {}) => {
     });
 };
 
+const DeleteRequest = <T>(url: string, params = {}) => {
+    return axios.delete<ApiResponse<T>>(url, {
+        params: params,
+        headers: {
+            'Content-type': 'application/json',
+            Authorization: `Bearer ${UserService.getToken()}`,
+        },
+    });
+};
+
 interface OSSRequestOptions {
     amzDate: string;
     authHeader: string;
@@ -56,6 +66,7 @@ export default {
     GetRequest,
     PostRequest,
     PutRequest,
+    DeleteRequest,
     OSSGetRequest,
     OSSPutRequest,
 };

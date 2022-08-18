@@ -52,7 +52,7 @@ class Comment(db.Model):
                 and_(
                     Comment.survey_id == survey_id,
                     Engagement.end_date < now,
-                    CommentStatus.id == Status.Accepted
+                    CommentStatus.id == Status.Approved.value
                 ))\
             .all()
 
@@ -62,7 +62,7 @@ class Comment(db.Model):
         return Comment(
             text=comment.get('text', None),
             submission_date=datetime.utcnow(),
-            status_id=Status.Pending,
+            status_id=Status.Pending.value,
             survey_id=comment.get('survey_id', None),
             user_id=comment.get('user_id', None)
         )

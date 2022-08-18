@@ -19,5 +19,5 @@ class Status(IntEnum):
     """Enum of comment status."""
 
     Pending = 1
-    Accepted = 2
-    Rejected = 2
+    Approved = 2
+    Rejected = 3

@@ -31,5 +31,5 @@ class SurveySchema(Schema):
         """Get the meta data of the comments made in the survey."""
         return {
             'total': len(obj.comments),
-            'pending': len([comment for comment in obj.comments if comment.status_id == Status.Pending])
+            'pending': len([comment for comment in obj.comments if comment.status_id == Status.Pending.value])
         }

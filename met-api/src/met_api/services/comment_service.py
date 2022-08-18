@@ -1,6 +1,8 @@
 
 """Service for comment management."""
+from met_api.constants.comment_status import Status
 from met_api.models.comment import Comment
+from met_api.models.comment_status import CommentStatus
 from met_api.schemas.comment import CommentSchema
 from met_api.schemas.submission import SubmissionSchema
 from met_api.schemas.survey import SurveySchema
@@ -79,7 +81,10 @@ class CommentService:
     def review_comment(cls, comment_id, status_id, external_user_id):
         """Review comment."""
         user = UserService.get_user_by_external_id(external_user_id)
-        if not status_id or status_id == 1 or not user:
+
+        valid_statuses = [status.id for status in CommentStatus.get_comment_statuses()]
+
+        if not status_id or status_id == Status.Pending.value or status_id not in valid_statuses or not user:
             raise ValueError('Invalid review')
 
         comment = cls.get_comment(comment_id)

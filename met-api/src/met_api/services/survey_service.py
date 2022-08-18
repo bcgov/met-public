@@ -64,7 +64,7 @@ class SurveyService:
         cls.validate_update_fields(data)
         survey = cls.get(data.get('id', None))
         engagement = survey.get('engagement', None)
-        if engagement and engagement.get('status_id', None) != Status.Draft:
+        if engagement and engagement.get('status_id', None) != Status.Draft.value:
             raise ValueError('Engagament already published')
         return Survey.update_survey(data)
 
@@ -104,3 +104,29 @@ class SurveyService:
 
         if survey.get('engagement', None):
             raise ValueError('Survey is already linked to an engagement')
+
+    @classmethod
+    def unlink(cls, survey_id, engagement_id):
+        """Unlink survey."""
+        cls.validate_unlink_fields(survey_id, engagement_id)
+        return Survey.unlink_survey(survey_id)
+
+    @classmethod
+    def validate_unlink_fields(cls, survey_id, engagement_id):
+        """Validate all fields for unlinking survey."""
+        empty_fields = [not value for value in [survey_id, engagement_id]]
+        if any(empty_fields):
+            raise ValueError('Necessary fields for unlinking survey to an engagement were missing')
+
+        survey = cls.get(survey_id)
+
+        if not survey:
+            raise ValueError('Could not find survey ' + survey_id)
+
+        linked_engagement = survey.get('engagement', None)
+        if not linked_engagement or linked_engagement.get('id') != int(engagement_id):
+            raise ValueError('Survey is not linked to engagement ' + engagement_id)
+
+        engagement_status = linked_engagement.get('engagement_status')
+        if engagement_status.get('id') != Status.Draft.value:
+            raise ValueError('Cannot unlink survey from engagement with status ' + engagement_status.get('status_name'))
