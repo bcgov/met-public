@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { Grid } from '@mui/material';
 import { EngagementBanner } from './EngagementBanner';
 import { ActionContext } from './ActionContext';
