@@ -11,7 +11,6 @@ import { createEmailVerification } from 'services/emailVerificationService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
 import { ActionContext } from './ActionContext';
-import { useLocation } from 'react-router-dom';
 
 const EmailModal = ({ defaultPanel, panelData, open, handleClose }: EmailModalProps) => {
     const dispatch = useAppDispatch();

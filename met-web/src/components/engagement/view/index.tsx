@@ -7,6 +7,8 @@ export const Engagement = () => {
     const state =
         useLocation().state != null ? (useLocation().state as EngagementRouteProps) : (useLocation().state as null);
 
+    window.history.replaceState({}, document.title);
+
     return (
         <ActionProvider>
             <EngagementView state={state} />
