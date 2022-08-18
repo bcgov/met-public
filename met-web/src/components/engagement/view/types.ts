@@ -15,11 +15,6 @@ export interface EmailModalProps {
     defaultPanel: string;
 }
 
-export interface PanelDataProps {
-    defaultPanel: 'success' | 'email' | 'thank you' | 'error';
-    email: string;
-}
-
 export interface EmailPanelProps {
     email: string;
     checkEmail: () => void;
@@ -29,7 +24,7 @@ export interface EmailPanelProps {
 }
 
 export interface SuccessPanelProps {
-    handleClose?: () => void;
+    handleClose: () => void;
     email: string;
 }
 
@@ -47,24 +42,10 @@ export interface SurveyBlockProps {
     startSurvey: () => void;
 }
 
-export interface EngagementViewProps {
-    open?: boolean;
-    state: RouteState;
-}
-
 export interface RouteState {
     state: EngagementRouteProps | null;
 }
 
 export interface EngagementRouteProps {
     open: boolean;
-    mainText: string;
-    subTextArray: string[];
-    email: string;
 }
-
-export const defaultPanelData = {
-    mainText: 'We sent a link to access the survey at the following email address:',
-    subTextArray: ['Please Click the link provided to access the survey.', 'The link will be valid for 24 hours.'],
-    email: '',
-};
