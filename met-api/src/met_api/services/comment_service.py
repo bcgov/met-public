@@ -84,7 +84,7 @@ class CommentService:
 
         valid_statuses = [status.id for status in CommentStatus.get_comment_statuses()]
 
-        if not status_id or status_id == Status.Pending or status_id not in valid_statuses or not user:
+        if not status_id or status_id == Status.Pending.value or status_id not in valid_statuses or not user:
             raise ValueError('Invalid review')
 
         comment = cls.get_comment(comment_id)

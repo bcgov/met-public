@@ -66,7 +66,7 @@ class SubmissionService:
 
         submission_status = engagement.get('submission_status', None)
 
-        if submission_status != SubmissionStatus.Open:
+        if submission_status != SubmissionStatus.Open.value:
             raise ValueError('Engagement not open to submissions')
 
     @staticmethod

@@ -71,7 +71,7 @@ class Engagement(db.Model):
             rich_description=engagement.get('rich_description', None),
             start_date=engagement.get('start_date', None),
             end_date=engagement.get('end_date', None),
-            status_id=Status.Draft,
+            status_id=Status.Draft.value,
             created_by=engagement.get('created_by', None),
             created_date=datetime.utcnow(),
             updated_by=engagement.get('updated_by', None),
@@ -116,12 +116,12 @@ class Engagement(db.Model):
         """Update engagement to closed."""
         engagements_schema = EngagementSchema(many=True)
         update_fields = dict(
-            status_id=Status.Closed,
+            status_id=Status.Closed.value,
             updated_date=datetime.now(),
             updated_by=SYSTEM_USER
         )
         query = Engagement.query\
-            .filter(Engagement.status_id == Status.Published)\
+            .filter(Engagement.status_id == Status.Published.value)\
             .filter(Engagement.end_date < datetime.now())
         records = query.all()
         if not records:

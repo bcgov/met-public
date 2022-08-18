@@ -47,7 +47,7 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
         survey_schema = SurveySchema()
         survey = db.session.query(Survey).filter_by(id=survey_id)\
             .join(Engagement)\
-            .filter_by(status_id=Status.Published)\
+            .filter_by(status_id=Status.Published.value)\
             .filter(and_(Engagement.start_date <= now, Engagement.end_date >= now))\
             .join(EngagementStatus)\
             .first()

@@ -64,7 +64,7 @@ class SurveyService:
         cls.validate_update_fields(data)
         survey = cls.get(data.get('id', None))
         engagement = survey.get('engagement', None)
-        if engagement and engagement.get('status_id', None) != Status.Draft:
+        if engagement and engagement.get('status_id', None) != Status.Draft.value:
             raise ValueError('Engagament already published')
         return Survey.update_survey(data)
 
@@ -128,5 +128,5 @@ class SurveyService:
             raise ValueError('Survey is not linked to engagement ' + engagement_id)
 
         engagement_status = linked_engagement.get('engagement_status')
-        if engagement_status.get('id') != Status.Draft:
+        if engagement_status.get('id') != Status.Draft.value:
             raise ValueError('Cannot unlink survey from engagement with status ' + engagement_status.get('status_name'))
