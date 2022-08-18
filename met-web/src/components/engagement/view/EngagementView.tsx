@@ -7,16 +7,22 @@ import SurveyBlock from './SurveyBlock';
 import EmailModal from './EmailModal';
 import { PreviewBanner } from './PreviewBanner';
 import { useAppSelector } from 'hooks';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import WhoIsListeningWidget from './WhoIsListeningWidget';
+import { RouteState } from './types';
 
 export const EngagementView = () => {
-    const [isEmailModalOpen, setEmailModalOpen] = useState(false);
+    const { state } = useLocation() as RouteState;
+    const [isEmailModalOpen, setEmailModalOpen] = useState(state ? state.open : false);
+    const [defaultPanel, setDefaultPanel] = useState(state ? 'thank you' : 'email');
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isPreview = isLoggedIn;
     const { savedEngagement } = useContext(ActionContext);
     const surveyId = savedEngagement.surveys[0]?.id || '';
     const navigate = useNavigate();
+
+    //Clear state on window refresh
+    window.history.replaceState({}, document.title);
 
     const handleStartSurvey = () => {
         if (!isPreview) {
@@ -27,9 +33,14 @@ export const EngagementView = () => {
         navigate(`/survey/submit/${surveyId}`);
     };
 
+    const handleClose = () => {
+        setEmailModalOpen(false);
+        setDefaultPanel('email');
+    };
+
     return (
         <>
-            <EmailModal open={isEmailModalOpen} handleClose={() => setEmailModalOpen(false)} />
+            <EmailModal defaultPanel={defaultPanel} open={isEmailModalOpen} handleClose={() => handleClose()} />
             <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
                 <Grid item xs={12}>
                     <PreviewBanner />
