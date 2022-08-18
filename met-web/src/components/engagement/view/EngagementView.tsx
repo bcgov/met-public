@@ -27,10 +27,6 @@ export const EngagementView = ({ state }: EngagementViewProps) => {
     const surveyId = savedEngagement.surveys[0]?.id || '';
     const navigate = useNavigate();
 
-    useEffect(() => {
-        console.log('NAVIGATION STATE:::::::' + state);
-    });
-
     const handleStartSurvey = () => {
         if (!isPreview) {
             setEmailModalOpen(true);
