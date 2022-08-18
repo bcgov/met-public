@@ -1,10 +1,10 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
+  name: cron-deploy-template
   annotations:
-    description: Deployment template for a MET CRON job.
-    tags: ${NAME}
-  name: ${NAME}-deploy
+    description: "Deployment Configuration Template for the MET Cron job Project"
+    tags: "met, cron, python"
 objects:
 - kind: DeploymentConfig
   apiVersion: apps.openshift.io/v1
@@ -12,7 +12,7 @@ objects:
     name: ${NAME}
     labels:
       app: ${NAME}
-      app-group: ${APP_GROUP}
+      app-group: met-app
       template: ${NAME}-deploy
   spec:
     strategy:
@@ -49,7 +49,7 @@ objects:
       metadata:
         labels:
           app: ${NAME}
-          app-group: ${APP_GROUP}
+          app-group: met-app
           environment: ${ENV}
           deploymentconfig: ${NAME}
           template: ${NAME}-deploy
@@ -70,27 +70,25 @@ objects:
             readOnly: true
             mountPath: /met-cron/cron/
           env:
-            # these MET analytics DB details which is the master DB
             - name: DATABASE_USERNAME
               valueFrom:
-                configMapKeyRef:
-                  name: ${DATABASE_NAME}-config
-                  key: DATABASE_USER
+                secretKeyRef:
+                  key: database-user
+                  name: ${DATABASE_HOST}
             - name: DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: ${DATABASE_NAME}-secret
-                  key: DATABASE_PASSWORD
+                  name: ${DATABASE_HOST}
+                  key: database-password
             - name: DATABASE_NAME
               valueFrom:
-                configMapKeyRef:
-                  name: ${DATABASE_NAME}-config
-                  key: DATABASE_NAME
+                secretKeyRef:
+                  name: ${DATABASE_HOST}
+                  key: database-name
             - name: DATABASE_HOST
               value: ${DATABASE_HOST}
             - name: DATABASE_PORT
               value: ${DATABASE_PORT}
-            # MET Master DB Details     
             - name: MET_DATABASE_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -110,31 +108,13 @@ objects:
               value: ${MET_DATABASE_HOST}
             - name: MET_DATABASE_PORT
               value: ${MET_DATABASE_PORT}
-            - name: DATABASE_TEST_USERNAME
-              valueFrom:
-                configMapKeyRef:
-                  name: ${DATABASE_NAME}-config
-                  key: DATABASE_TEST_USER
-            - name: DATABASE_TEST_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: ${DATABASE_NAME}-secret
-                  key: DATABASE_TEST_PASSWORD
-            - name: DATABASE_TEST_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: ${DATABASE_NAME}-config
-                  key: DATABASE_TEST_NAME
-            - name: DATABASE_TEST_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: ${DATABASE_NAME}-config
-                  key: DATABASE_TEST_HOST
-            - name: DATABASE_TEST_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: ${DATABASE_NAME}-config
-                  key: DATABASE_TEST_PORT
+          envFrom:
+            - configMapRef:
+                name: ${NAME}
+            - secretRef:
+                name: met-service-account
+            - configMapRef:
+                name: jwt-oidc
           resources:
             requests:
               cpu: ${CPU_REQUEST}
@@ -157,7 +137,7 @@ objects:
     creationTimestamp:
     labels:
       app: ${NAME}
-      app-group: ${APP_GROUP}
+      app-group: met-app
       template: ${NAME}-deploy
   spec:
     ports:
@@ -171,75 +151,113 @@ objects:
     sessionAffinity: None
   status:
     loadBalancer: {}
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    labels:
+      app: jwt-oidc
+      app-group: met-app
+    name: jwt-oidc
+  data:
+    JWT_OIDC_ALGORITHMS: RS256
+    JWT_OIDC_AUDIENCE: account
+    JWT_OIDC_ISSUER: https://${KC_DOMAIN}/auth/realms/met
+    JWT_OIDC_JWKS_URI: https://${KC_DOMAIN}/auth/realms/met/protocol/openid-connect/certs
+    JWT_OIDC_WELL_KNOWN_CONFIG: https://${KC_DOMAIN}/auth/realms/met/.well-known/openid-configuration
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    labels:
+      app: ${NAME}
+      app-group: met-app
+    name: ${NAME}
+  data:
+    ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID: ${ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID}
+    NOTIFICATIONS_EMAIL_ENDPOINT: ${NOTIFICATIONS_EMAIL_ENDPOINT}
+    SITE_URL: ${SITE_URL}
+- kind: Secret
+  apiVersion: v1
+  type: Opaque
+  metadata:
+    name: met-service-account
+    labels:
+      app: met-service-account
+      app-group: met-app
+  stringData:
+    MET_ADMIN_CLIENT_ID: ${MET_ADMIN_CLIENT_ID}
+    MET_ADMIN_CLIENT_SECRET: ${MET_ADMIN_CLIENT_SECRET}
 parameters:
 - name: NAME
-  displayName: Name
-  description: The name assigned to all of the OpenShift resources associated to the
-    server instance.
+  description: "The name assigned to all of the OpenShift resources associated to the server instance."
   required: true
   value: met-cron
-- name: APP_GROUP
-  displayName: App Group
-  description: The name assigned to all of the deployments in this project.
-  required: true
-  value: met-app
 - name: IMAGE_NAMESPACE
-  displayName: Image Namespace
   required: true
-  description: The namespace of the OpenShift project containing the imagestream for
-    the application.
+  description: "The namespace of the OpenShift project containing the imagestream for the application."
   value: e903c2-tools
 - name: ENV
-  displayName: Environment TAG name
-  description: The TAG name for this environment, e.g., dev, test, prod
+  description: "The TAG name for this environment, e.g.(dev, test, prod)."
   required: true
   value: dev
 - name: DATABASE_HOST
-  displayName: Analytics Database App Name
   description: "The analytics postgresql application name."
   required: true
   value: postgresql-edw
 - name: DATABASE_PORT
-  displayName: Analytics Database App Port
   description: "The analytics postgresql application port."
   required: true
-  value: 5432
+  value: '5432'
 - name: DATABASE_NAME
-  displayName: Database Name for MET Analytics DB
-  description: The database name used by the analytics service.
+  description: "The database name used by the analytics service."
   required: true
-  value: met-analytics
+  value: 'met-analytics'
 - name: MET_DATABASE_HOST
   description: "The transactional postgresql application name."
-  value: postgresql-met
+  value: 'postgresql-met'
 - name: MET_DATABASE_PORT
-  description: "The transactional postgresql application port"
-  value: 5432
+  description: "The transactional postgresql application port."
+  value: '5432'
 - name: CPU_REQUEST
-  displayName: Resources CPU Request
-  description: The resources CPU request (in cores) for this build.
+  description: "The resources CPU request (in cores) for this build."
   required: true
   value: 100m
 - name: CPU_LIMIT
-  displayName: Resources CPU Limit
-  description: The resources CPU limit (in cores) for this build.
+  description: "The resources CPU limit (in cores) for this build."
   required: true
   value: 750m
 - name: MEMORY_REQUEST
-  displayName: Resources Memory Request
-  description: The resources Memory request (in Mi, Gi, etc) for this build.
+  description: "The resources Memory request (in Mi, Gi, etc) for this build."
   required: true
   value: 100Mi
 - name: MEMORY_LIMIT
-  displayName: Resources Memory Limit
-  description: The resources Memory limit (in Mi, Gi, etc) for this build.
+  description: "The resources Memory limit (in Mi, Gi, etc) for this build."
   required: true
   value: 2Gi
 - name: REPLICAS
-  displayName: The number of replicas to run
-  description: The number of replicas to run in this environment.
+  description: "The number of replicas to run in this environment."
   required: true
   value: '1'
 - name: IMAGE_TAG
   description: "The image tag to deploy"
   value: latest
+- name: KC_DOMAIN
+  description: "The keycloak domain"
+  value: met-oidc-dev.apps.gold.devops.gov.bc.ca
+- name: SITE_URL
+  description: "The frontend site URL"
+  required: true
+  value: 'https://met-web-dev.apps.gold.devops.gov.bc.ca'
+- name: NOTIFICATIONS_EMAIL_ENDPOINT
+  description: "The email notification endpoint"
+  required: true
+  value: 'https://met-notify-api-dev.apps.gold.devops.gov.bc.ca/api/v1/notifications/email'
+- name: ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID
+  description: "The engagement closeout email template id"
+  value: 'b7ea041b-fc30-4ad3-acb2-82119dd4f95d'
+- name: MET_ADMIN_CLIENT_ID
+  description: "The MET admin service account id"
+  required: true
+  value: 'met-admin'
+- name: MET_ADMIN_CLIENT_SECRET
+  description: "The MET admin service account secret"
+  required: true

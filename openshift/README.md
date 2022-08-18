@@ -95,24 +95,48 @@ In each environment namespace (dev, test, prod) use the following:
 
 Deploy the web application:
 ```
-oc process -f ./web.dc.yml -p ENV=test -p IMAGE_TAG=test | oc create -f -
+oc process -f ./web.dc.yml 
+  -p ENV=test 
+  -p IMAGE_TAG=test 
+  | oc create -f -
 ```
 
 Deploy the api application:
 ```
-oc process -f ./api.dc.yml -p ENV=test -p IMAGE_TAG=test -p KC_DOMAIN=met-oidc-test.apps.gold.devops.gov.bc.ca | oc create -f -
+oc process -f ./api.dc.yml 
+  -p ENV=test 
+  -p IMAGE_TAG=test 
+  -p KC_DOMAIN=met-oidc-test.apps.gold.devops.gov.bc.ca 
+  -p S3_BUCKET=met-test 
+  -p SITE_URL=https://met-web-test.apps.gold.devops.gov.bc.ca 
+  -p S3_ACCESS_KEY=<S3_KEY> 
+  -p MET_ADMIN_CLIENT_SECRET=<SERVICE_ACCOUNT_SECRET> 
+  -p NOTIFICATIONS_EMAIL_ENDPOINT=https://met-notify-api-test.apps.gold.devops.gov.bc.ca/api/v1/notifications/email 
+  | oc create -f -
 
 ```
 
 Deploy the notify api application:
 ```
-oc process -f ./notify-api.dc.yml -p ENV=test -p IMAGE_TAG=test -p KC_DOMAIN=met-oidc-test.apps.gold.devops.gov.bc.ca | oc create -f -
+oc process -f ./notify-api.dc.yml 
+  -p ENV=test 
+  -p IMAGE_TAG=test 
+  -p KC_DOMAIN=met-oidc-test.apps.gold.devops.gov.bc.ca 
+  -p GC_NOTIFY_API_KEY=<GC_NOTIFY_API_KEY>
+  | oc create -f -
 
 ```
 
 Deploy the cron job application:
 ```
-oc process -f ./cron.dc.yml -p ENV=test -p IMAGE_TAG=test | oc create -f -
+oc process -f ./cron.dc.yml 
+  -p ENV=test 
+  -p IMAGE_TAG=test 
+  -p KC_DOMAIN=met-oidc-test.apps.gold.devops.gov.bc.ca 
+  -p SITE_URL=https://met-web-test.apps.gold.devops.gov.bc.ca 
+  -p MET_ADMIN_CLIENT_SECRET=<SERVICE_ACCOUNT_SECRET> 
+  -p NOTIFICATIONS_EMAIL_ENDPOINT=https://met-notify-api-test.apps.gold.devops.gov.bc.ca/api/v1/notifications/email 
+  | oc create -f -
 
 ```
 

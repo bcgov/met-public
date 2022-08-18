@@ -48,10 +48,7 @@ parameters:
     value: notify-api
   - name: GITHUB_REPO
     description: "The github repo uri"
-    value: 'https://github.com/saravanpa-aot/met-public.git'
+    value: 'https://github.com/bcgov/met-public.git'
   - name: GITHUB_CONTEXT_DIR
     description: "The repository folder context"
-    value: /notify-api
-  - name: GITHUB_WEBOOK_SECRET
-    description: "The webook secret for build triggers"
-    
+    value: /notify-api    
