@@ -78,14 +78,10 @@ const EmailModal = ({ defaultPanel, panelData, open, handleClose }: EmailModalPr
                 </TabPanel>
                 <TabPanel value="success">
                     <SuccessPanel
-                        mainText={
-                            panelData?.mainText
-                                ? panelData.mainText
-                                : 'We sent a link to access the survey at the following email address:'
-                        }
-                        subTextArray={panelData?.subTextArray ? panelData.subTextArray : []}
+                        mainText={panelData?.mainText ? panelData.mainText : ''}
+                        subTextArray={panelData?.subTextArray ? panelData?.subTextArray : []}
                         handleClose={() => close()}
-                        email={panelData?.email ? panelData.email : email}
+                        email={email}
                     />
                 </TabPanel>
                 <TabPanel value="error">

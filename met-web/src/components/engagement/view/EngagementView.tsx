@@ -7,18 +7,17 @@ import SurveyBlock from './SurveyBlock';
 import EmailModal from './EmailModal';
 import { PreviewBanner } from './PreviewBanner';
 import { useAppSelector } from 'hooks';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import WhoIsListeningWidget from './WhoIsListeningWidget';
-import { EngagementViewProps } from './types';
+import { RouteState, defaultPanelData } from './types';
 
-export const EngagementView = ({ state }: EngagementViewProps) => {
+export const EngagementView = () => {
+    const { state } = useLocation() as RouteState;
     const [isEmailModalOpen, setEmailModalOpen] = useState(state ? state.open : false);
     const [panelData, setPanelData] = useState({
-        mainText: state ? state.mainText : 'We sent a link to access the survey at the following email address:',
-        subTextArray: state
-            ? state.subTextArray
-            : ['Please Click the link provided to access the survey.', 'The link will be valid for 24 hours.'],
-        email: state ? state.email : '',
+        mainText: state ? state.mainText : defaultPanelData.mainText,
+        subTextArray: state ? state.subTextArray : defaultPanelData.subTextArray,
+        email: state ? state.email : defaultPanelData.email,
         defaultPanel: state ? 'success' : 'email',
     });
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
@@ -26,6 +25,9 @@ export const EngagementView = ({ state }: EngagementViewProps) => {
     const { savedEngagement } = useContext(ActionContext);
     const surveyId = savedEngagement.surveys[0]?.id || '';
     const navigate = useNavigate();
+
+    //Clear state on window refresh
+    window.history.replaceState({}, document.title);
 
     const handleStartSurvey = () => {
         if (!isPreview) {
@@ -39,12 +41,9 @@ export const EngagementView = ({ state }: EngagementViewProps) => {
     useEffect(() => {
         if (isEmailModalOpen === false) {
             setPanelData({
-                mainText: 'We sent a link to access the survey at the following email address:',
-                subTextArray: [
-                    'Please Click the link provided to access the survey.',
-                    'The link will be valid for 24 hours.',
-                ],
-                email: '',
+                mainText: defaultPanelData.mainText,
+                subTextArray: defaultPanelData.subTextArray,
+                email: defaultPanelData.email,
                 defaultPanel: 'email',
             });
         }
