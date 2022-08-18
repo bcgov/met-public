@@ -148,7 +148,7 @@ Deploy the redash analytics helm chart:
 ```
 cd redash
 helm dependency build
-helm install met-analytics ./ -f ./values.yaml
+helm install met-analytics ./ -f ./values.yaml --set redash.image.tag=test
 ```
 
 
