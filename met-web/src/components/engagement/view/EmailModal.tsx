@@ -11,8 +11,9 @@ import { createEmailVerification } from 'services/emailVerificationService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
 import { ActionContext } from './ActionContext';
+import { useLocation } from 'react-router-dom';
 
-const EmailModal = ({ open, handleClose }: EmailModalProps) => {
+const EmailModal = ({ panelData, open, handleClose }: EmailModalProps) => {
     const dispatch = useAppDispatch();
     const [formIndex, setFormIndex] = useState('email');
     const [email, setEmail] = useState('');
@@ -78,13 +79,14 @@ const EmailModal = ({ open, handleClose }: EmailModalProps) => {
                 </TabPanel>
                 <TabPanel value="success">
                     <SuccessPanel
-                        mainText={'We sent a link to access the survey at the following email address:'}
-                        subTextArray={[
-                            'Please Click the link provided to access the survey.',
-                            'The link will be valid for 24 hours.',
-                        ]}
+                        mainText={
+                            panelData?.mainText
+                                ? panelData.mainText
+                                : 'We sent a link to access the survey at the following email address:'
+                        }
+                        subTextArray={panelData?.subTextArray ? panelData.subTextArray : []}
                         handleClose={() => close()}
-                        email={email}
+                        email={panelData?.email ? panelData.email : email}
                     />
                 </TabPanel>
                 <TabPanel value="error">

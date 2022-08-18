@@ -8,10 +8,12 @@ import EmailModal from './EmailModal';
 import { PreviewBanner } from './PreviewBanner';
 import { useAppSelector } from 'hooks';
 import { useNavigate, useLocation } from 'react-router';
-import { EngagementViewProps } from './types';
+import { EngagementRouteProps } from './types';
+import WhoIsListeningWidget from './WhoIsListeningWidget';
 
-export const EngagementView = ({ open }: EngagementViewProps) => {
-    const [isEmailModalOpen, setEmailModalOpen] = useState(open ? open : false);
+export const EngagementView = () => {
+    const state = useLocation().state as EngagementRouteProps;
+    const [isEmailModalOpen, setEmailModalOpen] = useState(state.open ? state.open : false);
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isPreview = isLoggedIn;
     const { savedEngagement } = useContext(ActionContext);
@@ -19,7 +21,7 @@ export const EngagementView = ({ open }: EngagementViewProps) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log('');
+        console.log('NAVIGATION STATE:::::::' + state);
     });
 
     const handleStartSurvey = () => {
@@ -33,7 +35,11 @@ export const EngagementView = ({ open }: EngagementViewProps) => {
 
     return (
         <>
-            <EmailModal open={isEmailModalOpen} handleClose={() => setEmailModalOpen(false)} />
+            <EmailModal
+                panelData={{ mainText: state.mainText, subTextArray: state.subTextArray, email: state.email }}
+                open={isEmailModalOpen}
+                handleClose={() => setEmailModalOpen(false)}
+            />
             <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
                 <Grid item xs={12}>
                     <PreviewBanner />

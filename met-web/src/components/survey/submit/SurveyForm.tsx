@@ -19,22 +19,6 @@ export const SurveyForm = () => {
         setIsValid(filledForm.isValid);
     };
 
-    const submit = (submissionData: unknown) => {
-        const submitStatus = handleSubmit(submissionData);
-
-        if (submitStatus == 'success')
-            navigate(`/engagement/view/${savedSurvey.engagement.id}`, {
-                state: {
-                    open: true,
-                    mainText: '',
-                    subTextArray: [
-                        'We have successfully submitted your answers.',
-                        'We appreciate the time you took to help our community.',
-                    ],
-                },
-            });
-    };
-
     if (isLoading) {
         return <Skeleton variant="rectangular" height="50em" width="100%" />;
     }
@@ -56,7 +40,7 @@ export const SurveyForm = () => {
                     <SecondaryButton onClick={() => navigate('/')}>Cancel</SecondaryButton>
                     <PrimaryButton
                         disabled={!isValid || isLoggedIn || isSubmitting}
-                        onClick={() => submit(submissionData)}
+                        onClick={() => handleSubmit(submissionData)}
                     >
                         Submit Survey
                         {isSubmitting && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}

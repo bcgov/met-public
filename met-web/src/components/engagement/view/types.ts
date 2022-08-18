@@ -12,6 +12,7 @@ export interface EngagementBannerProps {
 export interface EmailModalProps {
     open: boolean;
     handleClose: () => void;
+    panelData?: SuccessPanelProps;
 }
 
 export interface EmailPanelProps {
@@ -25,7 +26,7 @@ export interface EmailPanelProps {
 export interface SuccessPanelProps {
     mainText: string;
     subTextArray: string[];
-    handleClose: () => void;
+    handleClose?: () => void;
     email: string;
 }
 
@@ -41,4 +42,11 @@ export interface SurveyBlockProps {
 
 export interface EngagementViewProps {
     open?: boolean;
+}
+
+export interface EngagementRouteProps {
+    open: boolean;
+    mainText: string;
+    subTextArray: string[];
+    email: string;
 }

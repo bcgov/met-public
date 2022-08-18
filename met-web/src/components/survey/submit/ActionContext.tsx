@@ -13,7 +13,7 @@ interface SubmitSurveyContext {
     isLoading: boolean;
     token?: string;
     isTokenValid: boolean;
-    handleSubmit: (submissionData: unknown) => 'success' | 'error';
+    handleSubmit: (submissionData: unknown) => void;
     isSubmitting: boolean;
 }
 
@@ -22,7 +22,7 @@ export const ActionContext = createContext<SubmitSurveyContext>({
     isLoading: true,
     isTokenValid: true,
     handleSubmit: (_submissionData: unknown) => {
-        return 'success';
+        return;
     },
     isSubmitting: false,
 });
@@ -55,8 +55,16 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                     text: 'Survey was successfully submitted',
                 }),
             );
-            navigate(`/engagement/view/${savedSurvey.engagement.id}`);
-            return 'success';
+            navigate(`/engagement/view/${savedSurvey.engagement.id}`, {
+                state: {
+                    open: true,
+                    mainText: '',
+                    subTextArray: [
+                        'We have successfully submitted your answers.',
+                        'We appreciate the time you took to help our community.',
+                    ],
+                },
+            });
         } catch (error) {
             dispatch(
                 openNotification({
@@ -66,7 +74,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             );
             setIsSubmitting(false);
             verifyToken();
-            return 'error';
         }
     };
 
