@@ -11,11 +11,12 @@ import { createEmailVerification } from 'services/emailVerificationService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
 import { ActionContext } from './ActionContext';
+import { useLocation } from 'react-router-dom';
 
-const EmailModal = ({ open, handleClose }: EmailModalProps) => {
+const EmailModal = ({ defaultPanel, panelData, open, handleClose }: EmailModalProps) => {
     const dispatch = useAppDispatch();
-    const [formIndex, setFormIndex] = useState('email');
-    const [email, setEmail] = useState('');
+    const [formIndex, setFormIndex] = useState(defaultPanel);
+    const [email, setEmail] = useState(panelData ? panelData.email : '');
     const { savedEngagement } = useContext(ActionContext);
     const [isSaving, setSaving] = useState(false);
 
@@ -77,7 +78,16 @@ const EmailModal = ({ open, handleClose }: EmailModalProps) => {
                     />
                 </TabPanel>
                 <TabPanel value="success">
-                    <SuccessPanel handleClose={() => close()} email={email} />
+                    <SuccessPanel
+                        mainText={
+                            panelData?.mainText
+                                ? panelData.mainText
+                                : 'We sent a link to access the survey at the following email address:'
+                        }
+                        subTextArray={panelData?.subTextArray ? panelData.subTextArray : []}
+                        handleClose={() => close()}
+                        email={panelData?.email ? panelData.email : email}
+                    />
                 </TabPanel>
                 <TabPanel value="error">
                     <FailurePanel tryAgain={() => setFormIndex('email')} handleClose={() => close()} email={email} />
