@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { ActionContext } from './ActionContext';
-import { Box, CircularProgress, Grid, Skeleton, Typography, Stack } from '@mui/material';
+import { Box, CircularProgress, Grid, Skeleton, Typography, Stack, useMediaQuery, Theme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { ConditionalComponent, PrimaryButton, SecondaryButton } from 'components/common';
@@ -12,6 +12,7 @@ import UnpublishedIcon from '@mui/icons-material/Unpublished';
 import IconButton from '@mui/material/IconButton';
 
 export const PreviewBanner = () => {
+    const isSmallScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { isEngagementLoading, savedEngagement, publishEngagement } = useContext(ActionContext);
@@ -65,17 +66,23 @@ export const PreviewBanner = () => {
                         Preview Engagement{!isDraft && ' - Published'}
                     </Typography>
                     <ConditionalComponent condition={isDraft}>
-                        <Grid item container rowSpacing={2}>
-                            <ConditionalComponent condition={imageExists}>
-                                <Grid container alignItems="center" item xs={12}>
-                                    <IconButton
-                                        color="info"
-                                        onClick={() => navigate(`/engagement/form/${engagementId}`)}
-                                        aria-label="no image"
-                                    >
-                                        <ImageIcon />
-                                    </IconButton>
-                                    <Typography variant="body2">This engagement is missing a header image.</Typography>
+                        <Grid item container rowSpacing={isSmallScreen ? 2 : 0}>
+                            <ConditionalComponent condition={!imageExists}>
+                                <Grid item container xs={12}>
+                                    <Grid container alignItems="center" item sm={0.5} xs={2}>
+                                        <IconButton
+                                            color="info"
+                                            onClick={() => navigate(`/engagement/form/${engagementId}`)}
+                                            aria-label="no image"
+                                        >
+                                            <ImageIcon />
+                                        </IconButton>
+                                    </Grid>
+                                    <Grid item container alignItems="center" xs={10} sm={10}>
+                                        <Typography variant="body2">
+                                            This engagement is missing a header image.
+                                        </Typography>
+                                    </Grid>
                                 </Grid>
                             </ConditionalComponent>
                             <ConditionalComponent condition={savedEngagement.surveys.length === 0}>
