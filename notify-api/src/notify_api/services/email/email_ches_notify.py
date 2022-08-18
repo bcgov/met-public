@@ -54,5 +54,4 @@ class EmailChesNotify(EmailBaseService):  # pylint: disable=too-few-public-metho
             print(email_response)
         except Exception as e:  # noqa: B902
             print(e)  # log and continue
-            raise Exception(
-                error='Error sending CHES email.') from e
+            raise e

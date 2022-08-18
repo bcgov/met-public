@@ -25,6 +25,6 @@ from .response_type_selectbox import ResponseTypeSelectbox
 from .response_type_textarea import ResponseTypeTextarea
 from .response_type_textfield import ResponseTypeTextfield
 from .survey import Survey
-from .user import User
+from .user_details import UserDetails
 from .user_feedback import UserFeedback
 from .user_response_detail import UserResponseDetail

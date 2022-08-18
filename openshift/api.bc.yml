@@ -52,5 +52,3 @@ parameters:
   - name: GITHUB_CONTEXT_DIR
     description: "The repository folder context"
     value: /met-api
-  - name: GITHUB_WEBOOK_SECRET
-    description: "The webook secret for build triggers"

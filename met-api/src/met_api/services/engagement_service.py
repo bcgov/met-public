@@ -76,11 +76,12 @@ class EngagementService:
         subject, body, args = EngagementService._render_email_template(engagement)
         users = Submission.get_engaged_users(engagement_id)
         template_id = current_app.config.get('ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID', None)
+        emails = [user.get('email_id') for user in users]
         # Removes duplicated records
-        users = list(set(users))
+        emails = list(set(emails))
         try:
-            [send_email(subject=subject, email=user.get('email_id'), html_body=body,
-                        args=args, template_id=template_id) for user in users]
+            [send_email(subject=subject, email=email_address, html_body=body,
+                        args=args, template_id=template_id) for email_address in emails]
         except Exception as exc:  # noqa: B902
             current_app.logger.error('<Notification for engagement closeout failed', exc)
             raise BusinessException(
@@ -90,7 +91,7 @@ class EngagementService:
     @staticmethod
     def _render_email_template(engagement: EngagementSchema):
         template = Template.get_template('email_engagement_closeout.html')
-        engagement_path = current_app.config.get('ENGAGEMENT_PATH'). \
+        engagement_path = current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
             format(engagement_id=engagement.get('id'))
         # url is origin url excluding context path
         site_url = current_app.config.get('SITE_URL')

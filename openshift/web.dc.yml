@@ -12,17 +12,12 @@ objects:
     name: ${APP}
     labels:
       app: ${APP}
+      app-group: met-app
   data:
     config.js: |-
       window["_env_"] = {
         "NODE_ENV": "production",
         "REACT_APP_API_URL": "https://${APP}-${ENV}.apps.gold.devops.gov.bc.ca/api/",
-        // Formio
-        "REACT_APP_API_PROJECT_URL": "https://formio-e903c2-${ENV}.apps.gold.devops.gov.bc.ca",
-        "REACT_APP_FORM_ID": "",
-        "REACT_APP_FORMIO_JWT_SECRET": "",
-        "REACT_APP_USER_RESOURCE_FORM_ID": "",
-        "REACT_APP_ANONYMOUS_ID": "",
         // Keycloak
         "REACT_APP_KEYCLOAK_URL": "https://met-oidc-${ENV}.apps.gold.devops.gov.bc.ca/auth",
         "REACT_APP_KEYCLOAK_CLIENT": "${KC_CLIENT}",
@@ -33,6 +28,7 @@ objects:
   metadata:
     labels:
       app: ${APP}
+      app-group: met-app
     name: ${APP}
   spec:
     replicas: 1
@@ -54,6 +50,7 @@ objects:
         creationTimestamp: null
         labels:
           app: ${APP}
+          app-group: met-app
           environment: ${ENV}
       spec:
         containers:
@@ -113,6 +110,7 @@ objects:
   metadata:
     labels:
       app: ${APP}
+      app-group: met-app
     name: ${APP}
   spec:
     ipFamilyPolicy: SingleStack
@@ -128,7 +126,8 @@ objects:
   kind: Route
   metadata:
     labels:
-      app: ${APP}    
+      app: ${APP}
+      app-group: met-app 
     name: ${APP}
   spec:
     host: ${APP}-${ENV}.apps.gold.devops.gov.bc.ca

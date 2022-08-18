@@ -11,6 +11,7 @@ objects:
   metadata:
     labels:
       app: ${APP}
+      app-group: met-app
     name: ${APP}
   spec:
     replicas: 1
@@ -40,6 +41,7 @@ objects:
           app: ${APP}
           environment: ${ENV}
           role: api
+          app-group: met-app
       spec:
         containers:
         - env:
@@ -62,9 +64,20 @@ objects:
                 name: ${DB_APP_NAME}
           - name: DATABASE_HOST
             value: ${DB_APP_NAME}
+          - name: S3_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                key: secret-access-key
+                name: s3
           envFrom:
           - configMapRef:
               name: ${APP}
+          - configMapRef:
+              name: jwt-oidc
+          - configMapRef:
+              name: s3-objectstore
+          - secretRef:
+              name: met-service-account
           imagePullPolicy: Always
           name: ${APP}
           ports:
@@ -103,6 +116,7 @@ objects:
   metadata:
     labels:
       app: ${APP}
+      app-group: met-app
     name: ${APP}
   spec:
     ipFamilyPolicy: SingleStack
@@ -120,6 +134,7 @@ objects:
   metadata:
     labels:
       app: ${APP}
+      app-group: met-app
     name: ${APP}-web-path
   spec:
     host: met-web-${ENV}.apps.gold.devops.gov.bc.ca
@@ -136,33 +151,115 @@ objects:
     wildcardPolicy: None
 - apiVersion: v1
   kind: ConfigMap
+  metadata:
+    labels:
+      app: jwt-oidc
+      app-group: met-app
+    name: jwt-oidc
   data:
     JWT_OIDC_ALGORITHMS: RS256
     JWT_OIDC_AUDIENCE: account
     JWT_OIDC_ISSUER: https://${KC_DOMAIN}/auth/realms/met
     JWT_OIDC_JWKS_URI: https://${KC_DOMAIN}/auth/realms/met/protocol/openid-connect/certs
     JWT_OIDC_WELL_KNOWN_CONFIG: https://${KC_DOMAIN}/auth/realms/met/.well-known/openid-configuration
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    labels:
+      app: s3-objectstore
+      app-group: met-app
+    name: ${APP}
+  data:
+    S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID}
+    S3_BUCKET: ${S3_BUCKET}
+    S3_HOST: citz-gdx.objectstore.gov.bc.ca
+    S3_REGION: us-east-1
+    S3_SERVICE: execute-api
+- apiVersion: v1
+  kind: ConfigMap
   metadata:
     labels:
       app: ${APP}
+      app-group: met-app
     name: ${APP}
+  data:
+    NOTIFICATIONS_EMAIL_ENDPOINT: ${NOTIFICATIONS_EMAIL_ENDPOINT}    
+    SITE_URL: ${SITE_URL}
+    VERIFICATION_EMAIL_TEMPLATE_ID: ${VERIFICATION_EMAIL_TEMPLATE_ID}
+- kind: Secret
+  apiVersion: v1
+  type: Opaque
+  metadata:
+    name: met-service-account
+    labels:
+      app: met-service-account
+      app-group: met-app
+  stringData:
+    MET_ADMIN_CLIENT_ID: ${MET_ADMIN_CLIENT_ID}
+    MET_ADMIN_CLIENT_SECRET: ${MET_ADMIN_CLIENT_SECRET}
+- kind: Secret
+  apiVersion: v1
+  type: Opaque
+  metadata:
+    name: s3
+    labels:
+      app: s3
+      app-group: met-app
+  stringData:
+    secret-access-key: ${S3_ACCESS_KEY}
 parameters:
   - name: APP
     description: "The application name"
+    required: true
     value: met-api
   - name: IMAGE_NAMESPACE
     description: "The image stream location namespace"
+    required: true
     value: e903c2-tools
   - name: ENV
     description: "The selected environment (dev, test, prod)"
+    required: true
     value: dev
   - name: KC_DOMAIN
     description: "The keycloak domain"
+    required: true
     value: met-oidc-dev.apps.gold.devops.gov.bc.ca
+  - name: SITE_URL
+    description: "The frontend site URL"
+    required: true
+    value: 'https://met-web-dev.apps.gold.devops.gov.bc.ca'
+  - name: NOTIFICATIONS_EMAIL_ENDPOINT
+    description: "The email notification endpoint"
+    required: true
+    value: 'https://met-notify-api-dev.apps.gold.devops.gov.bc.ca/api/v1/notifications/email'
+  - name: VERIFICATION_EMAIL_TEMPLATE_ID
+    description: "The email verification template id"
+    required: true
+    value: 'c4cc1633-321a-4400-8a22-272acecd836a'
+  - name: S3_BUCKET
+    description: "The s3 object store bucket"
+    required: true
+    value: 'met-web'
+  - name: S3_ACCESS_KEY_ID
+    description: "The s3 object store access key id"
+    required: true
+    value: 'met-admin'
+  - name: S3_ACCESS_KEY
+    description: "The s3 object store access key"
+    required: true
   - name: DB_APP_NAME
     description: "The postgresql application name"
+    required: true
     value: postgresql-met
   - name: IMAGE_TAG
     description: "The image tag to deploy"
+    required: true
     value: latest
+  - name: MET_ADMIN_CLIENT_ID
+    description: "The MET admin service account id"
+    required: true
+    value: 'met-admin'
+  - name: MET_ADMIN_CLIENT_SECRET
+    description: "The MET admin service account secret"
+    required: true
     

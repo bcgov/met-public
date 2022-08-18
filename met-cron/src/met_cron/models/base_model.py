@@ -11,14 +11,32 @@ class BaseModel(db.Model):
 
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
-    active_flag = db.Column(db.String(1))
+    is_active = db.Column(db.Boolean(), default=True)
 
     @classmethod
     def find_by_id(cls, identifier: int):
         """Return model by id."""
         return cls.query.get(identifier)
 
-    @classmethod
-    def find_by_survey_id(cls, identifier: int):
-        """Return model by id."""
-        return cls.query.get(identifier)
+    @staticmethod
+    def commit():
+        """Commit the session."""
+        db.session.commit()
+
+    def flush(self):
+        """Save and flush."""
+        db.session.add(self)
+        db.session.flush()
+        return self
+
+    def save(self):
+        """Save and commit."""
+        db.session.add(self)
+        db.session.flush()
+        db.session.commit()
+        return self
+
+    @staticmethod
+    def rollback():
+        """RollBack."""
+        db.session.rollback()

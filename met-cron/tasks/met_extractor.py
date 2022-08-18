@@ -14,7 +14,10 @@
 """MET Extractions."""
 from datetime import datetime
 
+from met_cron.services.engagement_etl_service import EngagementEtlService
 from met_cron.services.submission_etl_service import SubmissionEtlService
+from met_cron.services.survey_etl_service import SurveyEtlService
+from met_cron.services.comments_etl_service import CommentsEtlService
 
 
 class MetExtractor:  # pylint:disable=too-few-public-methods
@@ -25,6 +28,7 @@ class MetExtractor:  # pylint:disable=too-few-public-methods
         """Perform the ETL."""
         print('Starting Met Extractor at------------------------', datetime.now())
 
-        # EngagementEtlService.do_etl_engagement()
-        # SurveyEtlService.do_etl_surveys()
+        EngagementEtlService.do_etl_engagement()
+        SurveyEtlService.do_etl_surveys()
         SubmissionEtlService.do_etl_submissions()
+        CommentsEtlService.do_etl_comments()
