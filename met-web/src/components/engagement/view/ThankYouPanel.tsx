@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Grid, Typography } from '@mui/material';
 import { modalStyle, PrimaryButton } from 'components/common';
 import { ThankYouPanelProps } from './types';
+import { ActionContext } from './ActionContext';
+
 const ThankYouPanel = ({ handleClose }: ThankYouPanelProps) => {
+    const { savedEngagement } = useContext(ActionContext);
     return (
         <Grid
             container
@@ -24,13 +27,14 @@ const ThankYouPanel = ({ handleClose }: ThankYouPanelProps) => {
             </Grid>
             <Grid container direction="row" item xs={12}>
                 <Grid item xs={12}>
-                    <Typography sx={{ mb: 1, fontWeight: 'bold' }}>
-                        We have successfully submitted your answers.
-                    </Typography>
+                    <Typography sx={{ mb: 1 }}>Your submission was successful.</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography sx={{ mb: 1, fontWeight: 'bold' }}>
-                        We appreciate the time you took to help our community.
+                    <Typography sx={{ mb: 1 }}>
+                        We appreciate you took the time to voice your opinion about {savedEngagement.name}. You will
+                        receive a confirmation email about your submission. When the engagement period is over (
+                        {savedEngagement.end_date}), you will receive a link to access the full survey report and view
+                        all the comments we received.
                     </Typography>
                 </Grid>
 

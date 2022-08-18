@@ -33,19 +33,14 @@ export const EngagementView = () => {
         navigate(`/survey/submit/${surveyId}`);
     };
 
-    useEffect(() => {
-        if (isEmailModalOpen === false) {
-            setDefaultPanel('email');
-        }
-    }, [isEmailModalOpen]);
+    const handleClose = () => {
+        setEmailModalOpen(false);
+        setDefaultPanel('email');
+    };
 
     return (
         <>
-            <EmailModal
-                defaultPanel={defaultPanel}
-                open={isEmailModalOpen}
-                handleClose={() => setEmailModalOpen(false)}
-            />
+            <EmailModal defaultPanel={defaultPanel} open={isEmailModalOpen} handleClose={() => handleClose()} />
             <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
                 <Grid item xs={12}>
                     <PreviewBanner />
