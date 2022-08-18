@@ -9,7 +9,7 @@ import { PreviewBanner } from './PreviewBanner';
 import { useAppSelector } from 'hooks';
 import { useNavigate, useLocation } from 'react-router';
 import WhoIsListeningWidget from './WhoIsListeningWidget';
-import { RouteState, defaultPanelData } from './types';
+import { RouteState } from './types';
 
 export const EngagementView = () => {
     const { state } = useLocation() as RouteState;
