@@ -1,0 +1,198 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: "{{ .Chart.Name }}-server"
+  name: "{{ .Chart.Name }}-server"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "{{ .Chart.Name }}-server"
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: "{{ .Chart.Name }}-server"
+      name: "{{ .Chart.Name }}-server"
+    spec:
+      containers:
+      - args:
+        - server
+        envFrom:
+        - secretRef:
+            name: "{{ .Chart.Name }}" # default redash environment variables
+        env:
+        - name: REDASH_WEB_WORKERS
+          value: "4"
+        - name: GUNICORN_CMD_ARGS
+          value: "--timeout 300"
+        imagePullPolicy: Always
+        image: "{{ .Values.redash.image.registry}}/{{ .Values.redash.image.repository }}:{{ .Values.redash.image.tag }}"
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "python -v ./manage.py database create_tables"]
+        name: "{{ .Chart.Name }}-server"
+        ports:
+        - containerPort: {{ int .Values.ingress.port }}
+          protocol: TCP
+        resources:
+          limits:
+            cpu: "{{ .Values.resources.limits.cpu }}"
+            memory: "{{ .Values.resources.limits.memory }}"
+          requests:
+            cpu: "{{ .Values.resources.requests.cpu }}"
+            memory: "{{ .Values.resources.requests.memory }}"
+      restartPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: "{{ .Chart.Name }}-adhoc-worker"
+  name: "{{ .Chart.Name }}-adhoc-worker"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "{{ .Chart.Name }}-adhoc-worker"
+  strategy:
+  template:
+    metadata:
+      labels:
+        app: "{{ .Chart.Name }}-adhoc-worker"
+    spec:
+      containers:
+      - args:
+        - worker
+        envFrom:
+        - secretRef:
+            name: "{{ .Chart.Name }}" # default redash environment variables
+        env: 
+        - name: WORKERS_COUNT
+          value: "2"
+        image: "{{ .Values.redash.image.registry}}/{{ .Values.redash.image.repository }}:{{ .Values.redash.image.tag }}"
+        name: "{{ .Chart.Name }}-adhoc-worker"
+        resources:
+          limits:
+            cpu: "{{ .Values.resources.limits.cpu }}"
+            memory: "{{ .Values.resources.limits.memory }}"
+          requests:
+            cpu: "{{ .Values.resources.requests.cpu }}"
+            memory: "{{ .Values.resources.requests.memory }}"
+      restartPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: "{{ .Chart.Name }}-scheduled-worker"
+  name: "{{ .Chart.Name }}-scheduled-worker"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "{{ .Chart.Name }}-scheduled-worker"
+  strategy:
+  template:
+    metadata:
+      labels:
+        app: "{{ .Chart.Name }}-scheduled-worker"
+    spec:
+      containers:
+      - args:
+        - worker
+        envFrom:
+        - secretRef:
+            name: "{{ .Chart.Name }}" # default redash environment variables
+        env:
+        - name: WORKERS_COUNT
+          value: "1"
+        image: "{{ .Values.redash.image.registry}}/{{ .Values.redash.image.repository }}:{{ .Values.redash.image.tag }}"
+        name: "{{ .Chart.Name }}-scheduled-worker"
+        resources:
+          limits:
+            cpu: "{{ .Values.resources.limits.cpu }}"
+            memory: "{{ .Values.resources.limits.memory }}"
+          requests:
+            cpu: "{{ .Values.resources.requests.cpu }}"
+            memory: "{{ .Values.resources.requests.memory }}"
+      restartPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: "{{ .Chart.Name }}-scheduler"
+  name: "{{ .Chart.Name }}-scheduler"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "{{ .Chart.Name }}-scheduler"
+  strategy:
+  template:
+    metadata:
+      labels:
+        app: "{{ .Chart.Name }}-scheduler"
+    spec:
+      containers:
+      - args:
+        - scheduler
+        envFrom:
+        - secretRef:
+            name: "{{ .Chart.Name }}" # default redash environment variables
+        image: "{{ .Values.redash.image.registry}}/{{ .Values.redash.image.repository }}:{{ .Values.redash.image.tag }}"
+        name: "{{ .Chart.Name }}-scheduler"
+        resources:
+          limits:
+            cpu: "{{ .Values.resources.limits.cpu }}"
+            memory: "{{ .Values.resources.limits.memory }}"
+          requests:
+            cpu: "{{ .Values.resources.requests.cpu }}"
+            memory: "{{ .Values.resources.requests.memory }}"
+      restartPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: "{{ .Chart.Name }}-worker"
+  name: "{{ .Chart.Name }}-worker"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "{{ .Chart.Name }}-worker"
+  strategy:    
+  template:
+    metadata:
+      labels:
+        app: "{{ .Chart.Name }}-worker"
+    spec:
+      containers:
+      - args:
+        - worker
+        envFrom:
+        - secretRef:
+            name: "{{ .Chart.Name }}" # default redash environment variables
+        env:
+        - name: QUEUES
+          value: "periodic_emails,default"
+        - name: WORKERS_COUNT
+          value: "1"
+        image: "{{ .Values.redash.image.registry}}/{{ .Values.redash.image.repository }}:{{ .Values.redash.image.tag }}"
+        name: "{{ .Chart.Name }}-worker"
+        resources:
+          limits:
+            cpu: "{{ .Values.resources.limits.cpu }}"
+            memory: "{{ .Values.resources.limits.memory }}"
+          requests:
+            cpu: "{{ .Values.resources.requests.cpu }}"
+            memory: "{{ .Values.resources.requests.memory }}"
+      restartPolicy: Always

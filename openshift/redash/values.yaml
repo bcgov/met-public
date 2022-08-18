@@ -1,0 +1,73 @@
+Domain: apps.gold.devops.gov.bc.ca
+ingress: 
+  enabled: true # create an ingress for this component
+  hostname: "{{.Chart.Name}}-{{.Release.Namespace}}.{{.Values.Domain}}"
+  port: 5000
+
+postgresql:
+  auth:
+    database: redash-analytics # Name for custom database to create
+    postgresPassword: postgres # Password for the "postgres" admin user
+    password: postgres  # Password for the custom user to create
+    userName: postgres  # Name for a custom user to create
+  image:
+    registry: docker.io
+    repository: bitnami/postgresql
+    tag: 14.2.0-debian-10-r57
+  fullnameOverride: "postgresql-analytics"
+  primary:
+    containerSecurityContext:
+      enabled: false
+    persistence:
+      storageClass: ""
+      size: 1Gi 
+    podSecurityContext:
+      enabled: false
+    service:
+      ports:
+        postgresql: 5432  # PostgreSQL service port
+    shmVolume:
+      chmod:
+        enabled: false
+  volumePermissions:
+    containerSecurityContext:
+      runAsUser: "auto"
+
+redisExporter:
+  exporter:
+    image:  
+      registry: docker.io
+      repository: oliver006/redis_exporter
+      tag: v1.14.0-alpine
+  redis:
+    image:  
+      registry: docker.io
+      repository: redis
+      tag: 7.0-rc3-alpine
+  persistentVolumeClaim:
+    size: 2Gi  
+    storageClass: ""
+  resources:
+    limits:
+      cpu: 60m
+      memory: 512Mi
+    requests:
+      cpu: 50m
+      memory: 256Mi
+redash:
+  image:  
+    registry: image-registry.openshift-image-registry.svc:5000
+    repository: e903c2-tools/met-analytics
+    tag: latest
+  database:
+    password: postgres # admin password
+    url: "postgresql://postgres:postgres@postgresql-analytics:5432/postgres"
+
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 2Gi
+  requests:
+    cpu: 180m
+    memory: 1Gi

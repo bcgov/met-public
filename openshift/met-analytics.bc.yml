@@ -2,10 +2,10 @@ apiVersion: template.openshift.io/v1
 kind: Template
 apiVersion: template.openshift.io/v1
 metadata:
-  name: forms-flow-analytics
+  name: met-analytics
   annotations:
     description: ""
-    tags: forms-flow-analytics
+    tags: met-analytics
 parameters:
   - name: SOURCE_REPOSITORY_URL
     displayName: Git Repository URL
@@ -23,9 +23,9 @@ objects:
   apiVersion: build.openshift.io/v1
   kind: BuildConfig
   metadata:
-    name: forms-flow-analytics
+    name: met-analytics
     labels:
-      app: forms-flow-analytics
+      app: met-analytics
   spec:
     resources:
       limits:
@@ -41,7 +41,7 @@ objects:
     output:
       to:
         kind: ImageStreamTag
-        name: 'forms-flow-analytics:latest'
+        name: 'met-analytics:latest'
     strategy:
       type: Docker
       dockerStrategy:
