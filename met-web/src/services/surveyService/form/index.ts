@@ -99,7 +99,7 @@ export const unlinkSurvey = async (params: UnlinkPutSurveyRequest): Promise<Surv
             },
         });
 
-        const response = await http.PutRequest<Survey>(url);
+        const response = await http.DeleteRequest<Survey>(url);
         if (response.data.status && response.data.result) {
             return Promise.resolve(response.data.result);
         }

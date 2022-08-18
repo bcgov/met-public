@@ -160,7 +160,7 @@ class SurveyLink(Resource):
             return ActionResult.error(str(err))
 
 
-@cors_preflight('PUT,OPTIONS')
+@cors_preflight('DELETE, OPTIONS')
 @API.route('/<survey_id>/unlink/engagement/<engagement_id>')
 class SurveyUnlink(Resource):
     """Resource for linking a single survey to an engagement."""
@@ -169,7 +169,7 @@ class SurveyUnlink(Resource):
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
     @auth.require
-    def put(survey_id, engagement_id):
+    def delete(survey_id, engagement_id):
         """Update survey to be unlinked to an engagement."""
         try:
 
