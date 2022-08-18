@@ -83,7 +83,7 @@ class CommentService:
         user = UserService.get_user_by_external_id(external_user_id)
 
         valid_statuses = [status.id for status in CommentStatus.get_comment_statuses()]
-        
+
         if not status_id or status_id == Status.Pending or status_id not in valid_statuses or not user:
             raise ValueError('Invalid review')
 
