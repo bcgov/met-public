@@ -11,11 +11,12 @@ import { createEmailVerification } from 'services/emailVerificationService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
 import { ActionContext } from './ActionContext';
+import ThankYouPanel from './ThankYouPanel';
 
-const EmailModal = ({ defaultPanel, panelData, open, handleClose }: EmailModalProps) => {
+const EmailModal = ({ defaultPanel, open, handleClose }: EmailModalProps) => {
     const dispatch = useAppDispatch();
     const [formIndex, setFormIndex] = useState(defaultPanel);
-    const [email, setEmail] = useState(panelData ? panelData.email : '');
+    const [email, setEmail] = useState('');
     const { savedEngagement } = useContext(ActionContext);
     const [isSaving, setSaving] = useState(false);
 
@@ -77,12 +78,10 @@ const EmailModal = ({ defaultPanel, panelData, open, handleClose }: EmailModalPr
                     />
                 </TabPanel>
                 <TabPanel value="success">
-                    <SuccessPanel
-                        mainText={panelData?.mainText ? panelData.mainText : ''}
-                        subTextArray={panelData?.subTextArray ? panelData?.subTextArray : []}
-                        handleClose={() => close()}
-                        email={email}
-                    />
+                    <SuccessPanel handleClose={() => close()} email={email} />
+                </TabPanel>
+                <TabPanel value="thank you">
+                    <ThankYouPanel handleClose={() => close()} />
                 </TabPanel>
                 <TabPanel value="error">
                     <FailurePanel tryAgain={() => setFormIndex('email')} handleClose={() => close()} email={email} />

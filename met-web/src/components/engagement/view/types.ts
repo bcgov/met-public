@@ -12,8 +12,12 @@ export interface EngagementBannerProps {
 export interface EmailModalProps {
     open: boolean;
     handleClose: () => void;
-    panelData?: SuccessPanelProps;
     defaultPanel: string;
+}
+
+export interface PanelDataProps {
+    defaultPanel: 'success' | 'email' | 'thank you' | 'error';
+    email: string;
 }
 
 export interface EmailPanelProps {
@@ -25,10 +29,12 @@ export interface EmailPanelProps {
 }
 
 export interface SuccessPanelProps {
-    mainText: string;
-    subTextArray: string[];
     handleClose?: () => void;
     email: string;
+}
+
+export interface ThankYouPanelProps {
+    handleClose?: () => void;
 }
 
 export interface FailurePanelProps {

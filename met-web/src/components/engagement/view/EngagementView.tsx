@@ -14,12 +14,7 @@ import { RouteState, defaultPanelData } from './types';
 export const EngagementView = () => {
     const { state } = useLocation() as RouteState;
     const [isEmailModalOpen, setEmailModalOpen] = useState(state ? state.open : false);
-    const [panelData, setPanelData] = useState({
-        mainText: state ? state.mainText : defaultPanelData.mainText,
-        subTextArray: state ? state.subTextArray : defaultPanelData.subTextArray,
-        email: state ? state.email : defaultPanelData.email,
-        defaultPanel: state ? 'success' : 'email',
-    });
+    const [defaultPanel, setDefaultPanel] = useState(state ? 'thank you' : 'email');
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isPreview = isLoggedIn;
     const { savedEngagement } = useContext(ActionContext);
@@ -40,24 +35,14 @@ export const EngagementView = () => {
 
     useEffect(() => {
         if (isEmailModalOpen === false) {
-            setPanelData({
-                mainText: defaultPanelData.mainText,
-                subTextArray: defaultPanelData.subTextArray,
-                email: defaultPanelData.email,
-                defaultPanel: 'email',
-            });
+            setDefaultPanel('email');
         }
     }, [isEmailModalOpen]);
 
     return (
         <>
             <EmailModal
-                panelData={{
-                    mainText: panelData.mainText,
-                    subTextArray: panelData.subTextArray,
-                    email: panelData.email,
-                }}
-                defaultPanel={panelData.defaultPanel}
+                defaultPanel={defaultPanel}
                 open={isEmailModalOpen}
                 handleClose={() => setEmailModalOpen(false)}
             />

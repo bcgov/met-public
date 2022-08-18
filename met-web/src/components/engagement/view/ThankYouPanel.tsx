@@ -2,8 +2,8 @@ import React from 'react';
 import { Grid, Typography } from '@mui/material';
 import { SuccessPanelProps } from './types';
 import { modalStyle, PrimaryButton } from 'components/common';
-
-const SuccessPanel = ({ email, handleClose }: SuccessPanelProps) => {
+import { ThankYouPanelProps } from './types';
+const ThankYouPanel = ({ handleClose }: ThankYouPanelProps) => {
     return (
         <Grid
             container
@@ -20,20 +20,19 @@ const SuccessPanel = ({ email, handleClose }: SuccessPanelProps) => {
                     </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography id="modal-modal-header">
-                        We sent a link to access the survey at the following email address:
-                    </Typography>
-                    <Typography sx={{ mt: 1 }}>{email}</Typography>
+                    <Typography id="modal-modal-header"></Typography>
                 </Grid>
             </Grid>
             <Grid container direction="row" item xs={12}>
                 <Grid item xs={12}>
                     <Typography sx={{ mb: 1, fontWeight: 'bold' }}>
-                        Please Click the link provided to access the survey.
+                        We have successfully submitted your answers.
                     </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography sx={{ mb: 1, fontWeight: 'bold' }}>The link will be valid for 24 hours.</Typography>
+                    <Typography sx={{ mb: 1, fontWeight: 'bold' }}>
+                        We appreciate the time you took to help our community.
+                    </Typography>
                 </Grid>
 
                 <Grid
@@ -54,4 +53,4 @@ const SuccessPanel = ({ email, handleClose }: SuccessPanelProps) => {
     );
 };
 
-export default SuccessPanel;
+export default ThankYouPanel;
