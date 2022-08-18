@@ -1,6 +1,5 @@
 import React from 'react';
 import { Grid, Typography } from '@mui/material';
-import { SuccessPanelProps } from './types';
 import { modalStyle, PrimaryButton } from 'components/common';
 import { ThankYouPanelProps } from './types';
 const ThankYouPanel = ({ handleClose }: ThankYouPanelProps) => {
