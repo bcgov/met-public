@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Typography, Grid, TextField, CircularProgress } from '@mui/material';
-import { MetPaper, MidScreenLoader, MetLabel, PrimaryButton, SecondaryButton } from '../../common';
+import { MetPaper, MetLabel, PrimaryButton, SecondaryButton } from '../../common';
 import RichTextEditor from './RichTextEditor';
 import { ActionContext } from './ActionContext';
 import { formatDate } from '../../common/dateHelper';
