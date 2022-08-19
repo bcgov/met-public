@@ -17,6 +17,10 @@ export interface SurveyCommentData {
     pending: number;
 }
 
+export interface SurveySubmissionData {
+    total: number;
+}
+
 export const createDefaultSurvey = (): Survey => {
     return {
         id: 0,

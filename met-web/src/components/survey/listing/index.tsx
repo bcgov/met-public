@@ -95,7 +95,7 @@ const SurveyListing = () => {
             key: 'comments_meta_data',
             numeric: true,
             disablePadding: false,
-            label: 'Comments',
+            label: 'Responses',
             allowSort: true,
             getValue: (row: Survey) => {
                 if (!row.comments_meta_data.total) {
@@ -131,7 +131,7 @@ const SurveyListing = () => {
                     return <></>;
                 }
 
-                if (row.engagement.engagement_status.id === EngagementStatus.Draft) {
+                if (row.engagement.engagement_status.id === EngagementStatus.Draft || !row.comments_meta_data.total) {
                     return <></>;
                 }
 

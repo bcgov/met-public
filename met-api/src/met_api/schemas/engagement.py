@@ -38,8 +38,18 @@ class EngagementSchema(Schema):
     banner_filename = fields.Str(data_key='banner_filename')
     engagement_status = fields.Nested(EngagementStatusSchema)
     surveys = fields.List(fields.Nested(EngagementSurveySchema))
-
     submission_status = fields.Method('get_submission_status')
+    submissions_meta_data = fields.Method('get_submissions_meta_data')
+
+    def get_submissions_meta_data(self, obj):
+        """Get the meta data of the submissions made in the survey."""
+        if len(obj.surveys) == 0:
+            return {
+                'total': '0'
+            }
+        return {
+            'total': len(obj.surveys[0].submissions),
+        }
 
     def get_submission_status(self, obj):
         """Get the submission status of the engagement."""
