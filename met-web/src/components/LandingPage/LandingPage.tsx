@@ -70,7 +70,12 @@ const LandingPage = () => {
             disablePadding: false,
             label: 'Date Published',
             allowSort: true,
-            getValue: (row: Engagement) => formatDate(row.published_date),
+            getValue: (row: Engagement) => {
+                if (row.published_date === 'None' || !row.published_date) {
+                    return '';
+                }
+                return formatDate(row.published_date);
+            },
         },
         {
             key: 'surveys',
@@ -80,7 +85,7 @@ const LandingPage = () => {
             allowSort: false,
             getValue: (row: Engagement) => {
                 if (row.surveys.length === 0) {
-                    return 'N/A';
+                    return '';
                 }
 
                 return (
@@ -98,7 +103,7 @@ const LandingPage = () => {
             allowSort: false,
             getValue: (row: Engagement) => {
                 if (row.surveys.length === 0) {
-                    return 'N/A';
+                    return '';
                 }
 
                 return row.surveys[0].responseCount;
@@ -111,8 +116,8 @@ const LandingPage = () => {
             label: 'Reporting',
             allowSort: false,
             getValue: (row: Engagement) => {
-                if (row.surveys.length === 0) {
-                    return 'N/A';
+                if (row.surveys.length === 0 || row.surveys[0].responseCount === 0) {
+                    return '';
                 }
 
                 return (
