@@ -1,20 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Typography, Grid, TextField, CircularProgress } from '@mui/material';
-import {
-    MetPaper,
-    MidScreenLoader,
-    MetPageGridContainer,
-    MetLabel,
-    PrimaryButton,
-    SecondaryButton,
-} from '../../common';
+import { MetPaper, MidScreenLoader, MetLabel, PrimaryButton, SecondaryButton } from '../../common';
 import RichTextEditor from './RichTextEditor';
 import { ActionContext } from './ActionContext';
 import { formatDate } from '../../common/dateHelper';
 import ImageUpload from 'components/imageUpload';
 import { useNavigate } from 'react-router-dom';
 import { AddSurveyBlock } from './AddSurveyBlock';
-import EngagementFormModal from './EngagementFormModal';
 
 const EngagementForm = () => {
     const {
@@ -23,7 +15,6 @@ const EngagementForm = () => {
         isSaving,
         savedEngagement,
         engagementId,
-        loadingSavedEngagement,
         handleAddBannerImage,
     } = useContext(ActionContext);
 
@@ -178,15 +169,8 @@ const EngagementForm = () => {
         window.scrollTo(0, 0);
     };
 
-    if (loadingSavedEngagement) {
-        return <MidScreenLoader />;
-    }
-
     return (
-        <MetPageGridContainer container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2}>
-            <Grid item xs={12}>
-                <Typography variant="h4">Engagement Details</Typography>
-            </Grid>
+        <>
             <Grid item lg={8} xs={12}>
                 <MetPaper elevation={1}>
                     <Grid
@@ -354,8 +338,7 @@ const EngagementForm = () => {
                     </Grid>
                 </MetPaper>
             </Grid>
-            <EngagementFormModal />
-        </MetPageGridContainer>
+        </>
     );
 };
 
