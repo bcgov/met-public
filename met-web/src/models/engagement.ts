@@ -1,7 +1,6 @@
-import { Survey } from './survey';
+import { Survey, SurveySubmissionData } from './survey';
 import { Status } from './status';
 import { SubmissionStatus } from 'constants/engagementStatus';
-
 export interface Engagement {
     id: number;
     name: string;
@@ -21,6 +20,7 @@ export interface Engagement {
     surveys: Survey[];
     engagement_status: Status;
     submission_status: SubmissionStatus;
+    submissions_meta_data: SurveySubmissionData;
 }
 
 export const createDefaultEngagement = (): Engagement => {
@@ -43,5 +43,8 @@ export const createDefaultEngagement = (): Engagement => {
         engagement_status: { id: 0, status_name: '' },
         surveys: [],
         submission_status: SubmissionStatus.Upcoming,
+        submissions_meta_data: {
+            total: 0,
+        },
     };
 };
