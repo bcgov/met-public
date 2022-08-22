@@ -26,7 +26,9 @@ export const EngagementView = () => {
 
     const handleStartSurvey = () => {
         if (!isPreview) {
+            setDefaultPanel('email');
             setEmailModalOpen(true);
+            window.snowplow('trackPageView', 'Verify Email Modal');
             return;
         }
 
