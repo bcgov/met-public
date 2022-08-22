@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import TabContext from '@mui/lab/TabContext';
 import EngagementForm from './EngagementForm';
 import EngagementSettings from './EngagementSettings';
-import { EngagementFormTab, EngagementFormTabList, EngagementFormTabPanel } from './StyledFormComponents';
+import { EngagementFormTab, EngagementFormTabList, EngagementFormTabPanel } from './StyledTabComponents';
 
 const EngagementFormTabs = () => {
     const [value, setValue] = React.useState('details');

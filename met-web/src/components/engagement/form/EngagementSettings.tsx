@@ -56,7 +56,7 @@ const EngagementSettings = () => {
                             published.
                         </Typography>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} lg={9}>
                         <ClickAwayListener onClickAway={handleTooltipClose}>
                             <Tooltip
                                 title="Link copied!"
@@ -82,7 +82,6 @@ const EngagementSettings = () => {
                                     disabled
                                     sx={{
                                         '.MuiInputBase-input': {
-                                            cursor: 'pointer',
                                             marginRight: 0,
                                             padding: '0 0 0 1em',
                                         },
