@@ -50,8 +50,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 verification_token: token ? token : '',
             });
 
-            window.snowplow("trackSelfDescribingEvent", {
-                schema: "iglu:ca.bc.gov.met/submit_survey/jsonschema/1-0-0",
+            window.snowplow('trackSelfDescribingEvent', {
+                schema: 'iglu:ca.bc.gov.met/submit_survey/jsonschema/1-0-0',
                 data: { survey_id: savedSurvey.id, engagement_id: savedSurvey.engagement.id },
             });
             dispatch(
