@@ -50,10 +50,10 @@ class SubmissionEtlService:  # pylint: disable=too-few-public-methods
         current_app.logger.info('Total updated submissions Found : %s.', len(new_submissions))
 
         SubmissionEtlService._extract_answers(new_submissions)
-        SubmissionEtlService.extract_user_response_details(new_submissions)
+        SubmissionEtlService.etl_user_response_details(new_submissions)
 
     @staticmethod
-    def extract_user_response_details(new_submissions):
+    def etl_user_response_details(new_submissions):
         for submission in new_submissions:
             met_survey:MetSurveyModel = db.session.query(MetSurveyModel).filter(MetSurveyModel.id == submission.survey_id).first()
             etl_survey: EtlSurvey = EtlSurvey.find_active_by_source_id(met_survey.id)
