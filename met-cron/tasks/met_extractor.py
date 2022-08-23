@@ -18,6 +18,7 @@ from met_cron.services.engagement_etl_service import EngagementEtlService
 from met_cron.services.submission_etl_service import SubmissionEtlService
 from met_cron.services.survey_etl_service import SurveyEtlService
 from met_cron.services.comments_etl_service import CommentsEtlService
+from met_cron.services.user_etl_service import UserEtlService
 
 
 class MetExtractor:  # pylint:disable=too-few-public-methods
@@ -32,3 +33,4 @@ class MetExtractor:  # pylint:disable=too-few-public-methods
         SurveyEtlService.do_etl_surveys()
         SubmissionEtlService.do_etl_submissions()
         CommentsEtlService.do_etl_comments()
+        UserEtlService.do_etl_users()
