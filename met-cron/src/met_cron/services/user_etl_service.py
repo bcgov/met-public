@@ -44,7 +44,7 @@ class UserEtlService:  # pylint: disable=too-few-public-methods
         user: MetUserModel
         for user in updated_users:
             current_app.logger.info('Processing updated User: %s.', user.id)
-            UserEtlService._load_new_user_feedback(user)
+            UserEtlService._load_new_user_model(user)
 
     @staticmethod
     def _get_updated_users():
@@ -55,7 +55,7 @@ class UserEtlService:  # pylint: disable=too-few-public-methods
         return updated_users
 
     @staticmethod
-    def _load_new_user_feedback(user: MetUserModel):
+    def _load_new_user_model(user: MetUserModel):
         """Helper to build the user."""
 
         current_app.logger.info('Creating new User in Analytics DB: %s.', user.id)
