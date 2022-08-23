@@ -4,6 +4,10 @@
 
 @import url(https://cdn.jsdelivr.net/npm/formiojs@4.13.1/dist/formio.full.min.css);
 
+$btn-primary-main: #FFC107;
+$btn-primary-light: #FFE082;
+$text-primary: #494949;
+
 .formio {
   font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
 }
@@ -338,15 +342,15 @@ i.fa.fa-question-circle.text-muted {
   margin-left: 10px;
 }
 .btn-primary {
-  background-color: #FFC107;
-  border-color: #FFC107;
-  color: #494949;
+  background-color: $btn-primary-main;
+  border-color: $btn-primary-main;
+  color: $text-primary;
 
 }
 .btn-primary:hover {
-  background-color: #FFE082;
-  border-color: #FFE082;
-  color: #494949;
+  background-color: $btn-primary-light;
+  border-color: $btn-primary-light;
+  color: $text-primary;
 }
 .btn-right {
   float: right;
