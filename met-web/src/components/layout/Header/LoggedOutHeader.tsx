@@ -8,6 +8,7 @@ import UserService from 'services/userService';
 import { useMediaQuery, Theme } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { ConditionalComponent } from 'components/common';
+import EnvironmentBanner from './EnvironmentBanner';
 
 const LoggedOutHeader = () => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
@@ -38,6 +39,7 @@ const LoggedOutHeader = () => {
                         </Button>
                     </ConditionalComponent>
                 </Toolbar>
+                <EnvironmentBanner />
             </AppBar>
         </Box>
     );

@@ -9,9 +9,10 @@ const HomePage = () => {
             direction="column"
             alignItems="center"
             justifyContent="center"
+            textAlign="center"
             style={{ minHeight: '100vh' }}
         >
-            <Typography variant="h2">Welcome to MET</Typography>
+            <Typography variant="h3">Welcome to MET</Typography>
         </Grid>
     );
 };
