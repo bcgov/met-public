@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Service to do ETL on comments."""
+"""Service to do ETL on Users."""
 
 from datetime import datetime, timedelta
 from typing import List
@@ -36,14 +36,14 @@ class UserEtlService:  # pylint: disable=too-few-public-methods
             current_app.logger.info('No new Users Found')
             return
         current_app.logger.info('Total updated Users Found : %s.', len(updated_users))
-        UserEtlService._transform_users(updated_users)
+        UserEtlService._load_users(updated_users)
         db.session.commit()
 
     @staticmethod
-    def _transform_users(updated_users):
+    def _load_users(updated_users):
         user: MetUserModel
         for user in updated_users:
-            current_app.logger.info('Processing updated Comment: %s.', user.id)
+            current_app.logger.info('Processing updated User: %s.', user.id)
             UserEtlService._load_new_user_feedback(user)
 
     @staticmethod

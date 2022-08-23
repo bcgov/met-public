@@ -43,7 +43,6 @@ class EngagementEtlService:  # pylint: disable=too-few-public-methods
 
         current_app.logger.info('Total updated Engagement Found : %s.', len(updated_engagements))
         EngagementEtlService._transform_engagements(updated_engagements)
-        EngagementEtlService._transform_engagements(updated_engagements)
         db.session.commit()
 
     @staticmethod
