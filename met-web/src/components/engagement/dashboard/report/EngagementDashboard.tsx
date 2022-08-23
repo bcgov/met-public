@@ -103,6 +103,7 @@ export const EngagementDashboard = () => {
                             >
                                 <PrimaryButton
                                     data-testid="SurveyBlock/take-me-to-survey-button"
+                                    disabled={engagement.submission_status != SubmissionStatus.Closed}
                                     component={Link}
                                     to={`/engagement/${engagement.id}/comments`}
                                 >
