@@ -19,11 +19,13 @@ from flask import current_app
 from met_api.models.submission import Submission as MetSubmissionModel
 from met_api.models.survey import Survey as MetSurveyModel
 from met_api.models.user import User as UserModel
-
-from met_cron.models.db import db
 from met_cron.models.response_type_radio import ResponseTypeRadio as ResponseTypeRadioModel
 from met_cron.models.response_type_selectbox import ResponseTypeSelectbox as ResponseTypeSelectboxModel
 from met_cron.models.response_type_textarea import ResponseTypeTextarea as ResponseTypeTextareaModel
+
+
+from met_cron.models.db import db
+from met_cron.models.user_response_detail import UserResponseDetail as UserResponseDetailModel
 from met_cron.models.survey import Survey as EtlSurvey
 from met_cron.utils import FormIoComponentType
 
@@ -47,6 +49,40 @@ class SubmissionEtlService:  # pylint: disable=too-few-public-methods
             return
         current_app.logger.info('Total updated submissions Found : %s.', len(new_submissions))
 
+        SubmissionEtlService._extract_answers(new_submissions)
+        SubmissionEtlService.etl_user_response_details(new_submissions)
+
+    @staticmethod
+    def etl_user_response_details(new_submissions):
+        for submission in new_submissions:
+            met_survey:MetSurveyModel = db.session.query(MetSurveyModel).filter(MetSurveyModel.id == submission.survey_id).first()
+            etl_survey: EtlSurvey = EtlSurvey.find_active_by_source_id(met_survey.id)
+            current_app.logger.info(
+                '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<User Response Detail Extraction starting for Submission id %s . Survey : %s.',
+                submission.id, met_survey.id)
+            # submission without survey is probably an old updated survey not beiing loaded to analytics db.Wont happen in prod
+            if not etl_survey or not met_survey:
+                current_app.logger.info(
+                    '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Skipping User Response Detail Extraction  for Submission id %s . Survey Not Found in Analytics DB : %s.Probably a very old survey',
+                    submission.id,
+                    met_survey.id)
+                continue
+
+            current_app.logger.info('Creating new UserResponseDetailModel in Analytics DB: %s.', submission.id)
+            SubmissionEtlService.load_user_responses(etl_survey, met_survey, submission)
+
+    @staticmethod
+    def load_user_responses(etl_survey, met_survey, submission):
+        user_response_detail: UserResponseDetailModel = UserResponseDetailModel()
+        user_response_detail.survey_id = etl_survey.id
+        user_response_detail.engagement_id = met_survey.engagement_id
+        user_response_detail.user_id = submission.user_id
+        user_response_detail.flush()
+        db.session.commit()
+        return user_response_detail
+
+    @staticmethod
+    def _extract_answers(new_submissions):
         for submission in new_submissions:
             met_survey = db.session.query(MetSurveyModel).filter(MetSurveyModel.id == submission.survey_id).first()
             etl_survey = EtlSurvey.find_active_by_source_id(met_survey.id)

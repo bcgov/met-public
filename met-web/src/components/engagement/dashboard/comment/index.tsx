@@ -1,13 +1,13 @@
 import React from 'react';
 import { CommentViewProvider } from './CommentViewContext';
-import EngagementCommentDashboard from './EngagementComments';
+import EngagementComments from './EngagementComments';
 
-export const Dashboard = () => {
+export const EngagementCommentsWrapper = () => {
     return (
         <CommentViewProvider>
-            <EngagementCommentDashboard />
+            <EngagementComments />
         </CommentViewProvider>
     );
 };
 
-export default Dashboard;
+export default EngagementCommentsWrapper;

@@ -21,7 +21,10 @@ objects:
         // Keycloak
         "REACT_APP_KEYCLOAK_URL": "https://met-oidc-${ENV}.apps.gold.devops.gov.bc.ca/auth",
         "REACT_APP_KEYCLOAK_CLIENT": "${KC_CLIENT}",
-        "REACT_APP_KEYCLOAK_REALM": "${KC_REALM}"
+        "REACT_APP_KEYCLOAK_REALM": "${KC_REALM}",
+        // Redash
+        "REACT_APP_REDASH_PUBLIC_URL": "https://met-analytics-e903c2-${ENV}.apps.gold.devops.gov.bc.ca/public/dashboards/<PUBLIC_DASHBOARD_ID>?p_Engagement%20Name=",
+        "REACT_APP_REDASH_COMMENTS_PUBLIC_URL": "https://met-analytics-e903c2-${ENV}.apps.gold.devops.gov.bc.ca/public/dashboards/<COMMENTS_ASHBOARD_ID>?p_Engagement%20Name=",
       }
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig

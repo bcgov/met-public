@@ -22,6 +22,10 @@ In the tools namespace use the following to create the build configurations:
     oc process -f ./cron.bc.yml | oc create -f -
 ```
 
+```
+    oc process -f ./met-analytics.bc.yml | oc create -f -
+```
+
 
 Allow image pullers from the other namespaces to pull images from tools namespace:
 
@@ -139,6 +143,14 @@ oc process -f ./cron.dc.yml
   | oc create -f -
 
 ```
+
+Deploy the redash analytics helm chart:
+```
+cd redash
+helm dependency build
+helm install met-analytics ./ -f ./values.yaml --set redash.image.tag=test
+```
+
 
 ### Additional NetworkPolicies
 

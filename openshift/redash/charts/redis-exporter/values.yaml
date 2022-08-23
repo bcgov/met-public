@@ -1,0 +1,21 @@
+exporter:
+  image:  
+    registry: docker.io
+    repository: oliver006/redis_exporter
+    tag: v1.14.0-alpine
+redis:
+  image:  
+    registry: docker.io
+    repository: redis
+    tag: 7.0-rc3-alpine
+
+persistentVolumeClaim:
+  size: 2Gi 
+  storageClass: ""
+resources:
+  limits:
+    cpu: 60m
+    memory: 512Mi
+  requests:
+    cpu: 50m
+    memory: 256Mi

@@ -12,7 +12,7 @@ import CommentReview from 'components/comments/admin/review/CommentReview';
 import CommentReviewListing from 'components/comments/admin/reviewListing';
 import CommentTextListing from 'components/comments/admin/textListing';
 import EngagementDashboard from '../components/engagement/dashboard/report';
-import EngagementCommentDashboard from '../components/engagement/dashboard/comment';
+import EngagementComments from '../components/engagement/dashboard/comment';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -26,7 +26,7 @@ const AuthenticatedRoutes = () => {
             <Route path="/survey/:surveyId/comments/all" element={<CommentTextListing />} />
             <Route path="/engagement/form/:engagementId" element={<EngagementForm />} />
             <Route path="/engagement/view/:engagementId" element={<EngagementView />} />
-            <Route path="/engagement/:engagementId/comments" element={<EngagementCommentDashboard />} />
+            <Route path="/engagement/:engagementId/comments" element={<EngagementComments />} />
             <Route path="/engagement/:engagementId/dashboard" element={<EngagementDashboard />} />
             <Route path="/survey/:surveyId/comments/:commentId/review" element={<CommentReview />} />
             <Route path="*" element={<NotFound />} />

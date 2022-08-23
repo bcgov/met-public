@@ -77,23 +77,23 @@ h4 {
   padding: 1.5rem 2rem 1.5rem 2rem;
 }
 .page-item.active .page-link {
-  background-color: #036 !important;
+  background-color: #003366 !important;
   border-color: #56595d !important;
 }
 .bg-default {
   background-color: #38598a;
-  border: #38598a;
+  border: #003366;
   color: white !important;
 }
 .text-muted {
   color: #868e96 !important;
 }
 i.fa.fa-question-circle.text-muted {
-  color: #2e96ff !important;
+  color: #003366 !important;
 }
 .panel-heading {
-  background-color: #38598a;
-  border: #38598a;
+  background-color: #003366;
+  border: #003366;
   color: white !important;
   padding: 0.75rem 1.25rem;
   margin-bottom: 8px;
@@ -131,7 +131,7 @@ i.fa.fa-question-circle.text-muted {
   padding: 0 0 0 0;
   font-size: 2rem;
   float: right;
-  color: #1264b6e0;
+  color: #003366;
 }
 .nav-dropdown :hover {
   text-decoration: none !important;
@@ -197,8 +197,8 @@ i.fa.fa-question-circle.text-muted {
   background-color: #e9ecef;
 }
 .selected-tag {
-  color: #4d61fc !important;
-  border-bottom: 1px solid #4d61fc;
+  color: #003366 !important;
+  border-bottom: 1px solid #003366;
   background-color: transparent;
 }
 .lbl-logout {
@@ -358,12 +358,7 @@ i.fa.fa-question-circle.text-muted {
 .div-center {
   align-self: center;
 }
-.tooltip-inner {
-  color: black !important;
-  background-color: white !important;
-  border: 0.5px solid !important;
-  text-align: left;
-}
+
 .navbar-brand {
   align-items: center;
 }
@@ -391,7 +386,7 @@ header nav {
 }
 .topheading-border-bottom {
   z-index: 2000;
-  border-bottom: 2px solid #4d61fc !important;
+  border-bottom: 2px solid #003366 !important;
   padding: 0 0.5rem !important;
   box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
 }
@@ -437,4 +432,50 @@ div[disabled] {
 
 .title {
   padding-bottom: 30px;
+}
+
+.tippy-box {
+  position: relative;
+  background-color: #003366;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: normal;
+  outline: 0;
+  transition-property: transform,visibility,opacity;
+  font-weight: 500;
+}
+
+.tippy-content {
+  position: relative;
+  padding: 5px 9px;
+  z-index: 1;
+}
+
+.tippy-arrow {
+  width: 16px;
+  height: 16px;
+  color: #003366;
+}
+
+.tippy-arrow::before {
+  content: "";
+  position: absolute;
+  border-color: transparent;
+    border-right-color: transparent;
+  border-style: solid;
+}
+
+.tippy-box[data-placement^="right"] > .tippy-arrow {
+  left: 0;
+}
+
+.tippy-box[data-placement^="right"] > .tippy-arrow::before {
+
+  left: -7px;
+  border-width: 8px 8px 8px 0;
+  border-right-color: initial;
+  transform-origin: center right;
+
 }
