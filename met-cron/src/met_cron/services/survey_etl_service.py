@@ -51,7 +51,7 @@ class SurveyEtlService:  # pylint: disable=too-few-public-methods
     def _get_updated_surveys():
         time_delta_in_minutes: int = int(current_app.config.get('TIME_DELTA_IN_MINUTES'))
         time_delta = datetime.utcnow() - timedelta(minutes=time_delta_in_minutes)
-        new_surveys = db.session.query(MetSurveyModel).filter(MetSurveyModel.created_date > time_delta).all()
+        new_surveys = db.session.query(MetSurveyModel).filter(MetSurveyModel.updated_date > time_delta).all()
         return new_surveys
 
     @staticmethod
