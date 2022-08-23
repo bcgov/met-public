@@ -9,6 +9,7 @@ import { useMediaQuery, Theme } from '@mui/material';
 import SideNav from '../SideNav/SideNav';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Palette } from 'styles/Theme';
+import EnvironmentBanner from './EnvironmentBanner';
 
 const LoggedInHeader = ({ drawerWidth = 240 }) => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
@@ -42,6 +43,7 @@ const LoggedInHeader = ({ drawerWidth = 240 }) => {
                         Logout
                     </Button>
                 </Toolbar>
+                <EnvironmentBanner />
             </AppBar>
             <SideNav
                 data-testid="sidenav-header"

@@ -5,10 +5,12 @@ import EngagementView from '../components/engagement/view';
 import NotFound from './NotFound';
 import EngagementDashboard from '../components/engagement/dashboard/report';
 import EngagementComments from '../components/engagement/dashboard/comment';
+import HomePage from 'components/homePage/homePage';
 
 const UnauthenticatedRoutes = () => {
     return (
         <Routes>
+            <Route path="/" element={<HomePage />} />
             <Route path="/engagement/view/:engagementId" element={<EngagementView />} />
             <Route path="/engagement/:engagementId/dashboard" element={<EngagementDashboard />} />
             <Route path="/engagement/:engagementId/comments" element={<EngagementComments />} />
