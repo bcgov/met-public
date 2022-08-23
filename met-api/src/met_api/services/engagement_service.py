@@ -91,7 +91,7 @@ class EngagementService:
     @staticmethod
     def _render_email_template(engagement: EngagementSchema):
         template = Template.get_template('email_engagement_closeout.html')
-        engagement_path = current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
+        dashboard_path = current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
             format(engagement_id=engagement.get('id'))
         # url is origin url excluding context path
         site_url = current_app.config.get('SITE_URL')
@@ -100,7 +100,7 @@ class EngagementService:
             format(engagement_name=engagement_name)
         args = {
             'engagement_name': engagement_name,
-            'engagement_url': f'{site_url}{engagement_path}',
+            'engagement_url': f'{site_url}{dashboard_path}',
         }
         body = template.render(
             engagement_name=args.get('engagement_name'),

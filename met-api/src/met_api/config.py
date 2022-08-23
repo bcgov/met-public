@@ -90,7 +90,7 @@ class _Config():  # pylint: disable=too-few-public-methods
 
     # front end urls
     SURVEY_PATH = os.getenv('SURVEY_PATH', '/survey/submit/{survey_id}/{token}')
-    ENGAGEMENT_PATH = os.getenv('ENGAGEMENT_PATH', '/engagement/view/{engagement_id}')
+    ENGAGEMENT_DASHBOARD_PATH = os.getenv('ENGAGEMENT_DASHBOARD_PATH', '/engagement/{engagement_id}/dashboard')
     SITE_URL = os.getenv('SITE_URL')
 
     # Email Service

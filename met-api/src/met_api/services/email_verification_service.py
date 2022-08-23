@@ -90,7 +90,7 @@ class EmailVerificationService:
         survey_id = survey.get('id')
         survey_path = current_app.config.get('SURVEY_PATH'). \
             format(survey_id=survey_id, token=token)
-        engagement_path = current_app.config.get('ENGAGEMENT_PATH'). \
+        dashboard_path = current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
             format(engagement_id=survey.get('engagement_id'))
         # url is origin url excluding context path
         site_url = current_app.config.get('SITE_URL')
@@ -102,7 +102,7 @@ class EmailVerificationService:
         args = {
             'engagement_name': engagement_name,
             'survey_url': f'{site_url}{survey_path}',
-            'engagement_url': f'{site_url}{engagement_path}',
+            'engagement_url': f'{site_url}{dashboard_path}',
             'end_date': datetime.strftime(end_date, EmailVerificationService.full_date_format),
         }
         body = template.render(
