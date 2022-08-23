@@ -337,12 +337,16 @@ i.fa.fa-question-circle.text-muted {
   vertical-align: middle;
   margin-left: 10px;
 }
-.btn {
-  font-weight: bold;
-}
 .btn-primary {
-    background-color: #003366;
-    border-color: #003366;
+  background-color: #FFC107;
+  border-color: #FFC107;
+  color: #494949;
+
+}
+.btn-primary:hover {
+  background-color: #FFE082;
+  border-color: #FFE082;
+  color: #494949;
 }
 .btn-right {
   float: right;
