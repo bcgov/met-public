@@ -22,7 +22,6 @@ const SurveyListing = () => {
     });
     const [searchText, setSearchText] = useState('');
     const [surveys, setSurveys] = useState<Survey[]>([]);
-
     const dispatch = useAppDispatch();
 
     const callFetchSurveys = async () => {
@@ -42,6 +41,11 @@ const SurveyListing = () => {
             ...searchFilter,
             value: engagementNameFilter,
         });
+    };
+
+    const handleSearchBarInput = (engagementNameFilter: string) => {
+        setSearchText(engagementNameFilter);
+        handleSearchBarClick(engagementNameFilter);
     };
 
     const headCells: HeadCell<Survey>[] = [
@@ -78,7 +82,7 @@ const SurveyListing = () => {
             numeric: true,
             disablePadding: false,
             label: 'Engagement Name',
-            allowSort: false,
+            allowSort: true,
             getValue: (row: Survey) => {
                 if (!row.engagement) {
                     return <></>;
@@ -161,7 +165,7 @@ const SurveyListing = () => {
                         label="Search by name"
                         fullWidth
                         value={searchText}
-                        onChange={(e) => setSearchText(e.target.value)}
+                        onChange={(e) => handleSearchBarInput(e.target.value)}
                         size="small"
                     />
                     <PrimaryButton
@@ -179,7 +183,13 @@ const SurveyListing = () => {
                 </PrimaryButton>
             </Grid>
             <Grid item xs={12} lg={10}>
-                <MetTable headCells={headCells} rows={surveys} defaultSort={'created_date'} noRowBorder={true} />
+                <MetTable
+                    filter={searchFilter}
+                    headCells={headCells}
+                    rows={surveys}
+                    defaultSort={'created_date'}
+                    noRowBorder={true}
+                />
             </Grid>
         </MetPageGridContainer>
     );

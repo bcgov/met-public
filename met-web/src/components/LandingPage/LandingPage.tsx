@@ -35,6 +35,11 @@ const LandingPage = () => {
         });
     };
 
+    const handleSearchBarInput = (engagementNameFilter: string) => {
+        setSearchText(engagementNameFilter);
+        handleSearchBarClick(engagementNameFilter);
+    };
+
     const headCells: HeadCell<Engagement>[] = [
         {
             key: 'name',
@@ -146,7 +151,7 @@ const LandingPage = () => {
                         label="Search by name"
                         fullWidth
                         value={searchText}
-                        onChange={(e) => setSearchText(e.target.value)}
+                        onChange={(e) => handleSearchBarInput(e.target.value)}
                         size="small"
                     />
                     <PrimaryButton
