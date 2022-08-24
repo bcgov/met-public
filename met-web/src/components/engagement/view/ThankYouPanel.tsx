@@ -31,10 +31,9 @@ const ThankYouPanel = ({ handleClose }: ThankYouPanelProps) => {
                 </Grid>
                 <Grid item xs={12}>
                     <Typography sx={{ mb: 1 }}>
-                        We appreciate you took the time to voice your opinion about {savedEngagement.name}. You will
-                        receive a confirmation email about your submission. When the engagement period is over (
-                        {savedEngagement.end_date}), you will receive a link to access the full survey report and view
-                        all the comments we received.
+                        We appreciate you take the time to voice your opinion about {savedEngagement.name}. When the
+                        engagement period is over ({savedEngagement.end_date}), you will receive a link to access the
+                        full survey report and view all the comments we received.
                     </Typography>
                 </Grid>
 
