@@ -112,7 +112,7 @@ function MetTable<T>({
     noRowBorder = false,
 }: MetTableProps<T>) {
     const [filteredRows, setFilteredRows] = useState<T[]>(rows);
-    const [order, setOrder] = useState<Order>('asc');
+    const [order, setOrder] = useState<Order>('desc');
     const [orderBy, setOrderBy] = useState(defaultSort);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
