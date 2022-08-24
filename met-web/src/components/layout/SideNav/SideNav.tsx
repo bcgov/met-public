@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ListItemButton, List, ListItem, ListItemText, Box, Drawer, Toolbar } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Routes } from './SideNavElements';
 import { Palette } from '../../../styles/Theme';
-import { DrawerBoxProps, SideNavProps } from './types';
+import { SideNavProps } from './types';
 
-const DrawerBox = ({ navigate }: DrawerBoxProps) => {
-    const [activeLink, setActiveLink] = useState('/');
+const DrawerBox = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
 
-    const navigation = (path: string) => {
-        setActiveLink(path);
-        navigate(path);
+    const getCurrentBaseRoute = () => {
+        return Routes.map((route) => route.base)
+            .filter((route) => location.pathname.includes(route))
+            .reduce((prev, curr) => (prev.length > curr.length ? prev : curr));
     };
+
+    const currentBaseRoute = getCurrentBaseRoute();
 
     return (
         <Box
@@ -26,15 +30,16 @@ const DrawerBox = ({ navigate }: DrawerBoxProps) => {
                     <ListItem key={route.name}>
                         <ListItemButton
                             data-testid={`SideNav/${route.name}-button`}
-                            onClick={() => navigation(route.path)}
+                            onClick={() => navigate(route.path)}
                         >
                             <ListItemText
                                 primaryTypographyProps={{
                                     variant: 'h6',
-                                    sx: {
-                                        color: activeLink === route.path ? '#ffc107' : '#fafafa',
-                                        fontWeight: activeLink === route.path ? 'bold' : 'normal',
-                                    },
+                                    sx: [
+                                        currentBaseRoute === route.base
+                                            ? { color: Palette.secondary.main, fontWeight: 700 }
+                                            : { color: 'white' },
+                                    ],
                                 }}
                                 primary={route.name}
                             />
@@ -47,8 +52,6 @@ const DrawerBox = ({ navigate }: DrawerBoxProps) => {
 };
 
 const SideNav = ({ open, isMediumScreen, drawerWidth = 240 }: SideNavProps) => {
-    const navigate = useNavigate();
-
     return (
         <>
             {isMediumScreen ? (
@@ -65,7 +68,7 @@ const SideNav = ({ open, isMediumScreen, drawerWidth = 240 }: SideNavProps) => {
                     }}
                 >
                     <Toolbar />
-                    <DrawerBox navigate={navigate} />
+                    <DrawerBox />
                 </Drawer>
             ) : (
                 <Drawer
@@ -78,7 +81,7 @@ const SideNav = ({ open, isMediumScreen, drawerWidth = 240 }: SideNavProps) => {
                     hideBackdrop={!open}
                 >
                     <Toolbar />
-                    <DrawerBox navigate={navigate} />
+                    <DrawerBox />
                 </Drawer>
             )}
         </>
