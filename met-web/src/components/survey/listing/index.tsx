@@ -43,11 +43,6 @@ const SurveyListing = () => {
         });
     };
 
-    const handleSearchBarInput = (engagementNameFilter: string) => {
-        setSearchText(engagementNameFilter);
-        handleSearchBarClick(engagementNameFilter);
-    };
-
     const headCells: HeadCell<Survey>[] = [
         {
             key: 'name',
@@ -165,7 +160,7 @@ const SurveyListing = () => {
                         label="Search by name"
                         fullWidth
                         value={searchText}
-                        onChange={(e) => handleSearchBarInput(e.target.value)}
+                        onChange={(e) => setSearchText(e.target.value)}
                         size="small"
                     />
                     <PrimaryButton
