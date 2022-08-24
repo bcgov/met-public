@@ -55,10 +55,10 @@ class Engagement(db.Model):
     def get_engagements_by_status(cls, status_id):
         """Get all engagements by a list of status."""
         engagements_schema = EngagementSchema(many=True)
-        data = db.session.query(Engagement)\
-            .join(EngagementStatus)\
-            .filter(Engagement.status_id.in_(status_id))\
-            .order_by(Engagement.id.asc())\
+        data = db.session.query(Engagement) \
+            .join(EngagementStatus) \
+            .filter(Engagement.status_id.in_(status_id)) \
+            .order_by(Engagement.id.asc()) \
             .all()
         return engagements_schema.dump(data)
 
@@ -88,6 +88,12 @@ class Engagement(db.Model):
     @classmethod
     def update_engagement(cls, engagement: EngagementSchema) -> DefaultMethodResult:
         """Update engagement."""
+        engagement_id = engagement.get('id', None)
+        query = Engagement.query.filter_by(id=engagement_id)
+        record: Engagement = query.first()
+        if not record:
+            return DefaultMethodResult(False, 'Engagement Not Found', engagement_id)
+
         update_fields = dict(
             name=engagement.get('name', None),
             description=engagement.get('description', None),
@@ -95,18 +101,15 @@ class Engagement(db.Model):
             start_date=engagement.get('start_date', None),
             end_date=engagement.get('end_date', None),
             status_id=engagement.get('status_id', None),
-            published_date=engagement.get('published_date', None),
+            # to fix the bug with UI not passing published date always.
+            # Defaulting to existing
+            published_date=engagement.get('published_date', record.published_date),
             updated_date=datetime.utcnow(),
             updated_by=engagement.get('updated_by', None),
             banner_filename=engagement.get('banner_filename', None),
             content=engagement.get('content', None),
             rich_content=engagement.get('rich_content', None),
         )
-        engagement_id = engagement.get('id', None)
-        query = Engagement.query.filter_by(id=engagement_id)
-        record = query.first()
-        if not record:
-            return DefaultMethodResult(False, 'Engagement Not Found', engagement_id)
         query.update(update_fields)
         db.session.commit()
         return DefaultMethodResult(True, 'Engagement Updated', engagement_id)
@@ -120,8 +123,8 @@ class Engagement(db.Model):
             updated_date=datetime.now(),
             updated_by=SYSTEM_USER
         )
-        query = Engagement.query\
-            .filter(Engagement.status_id == Status.Published.value)\
+        query = Engagement.query \
+            .filter(Engagement.status_id == Status.Published.value) \
             .filter(Engagement.end_date < datetime.now())
         records = query.all()
         if not records:
