@@ -61,7 +61,7 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
 
                 <Grid item xs={12}>
                     <Typography variant="body1">
-                        To provide you with the best experience possible. We require you to validate your email address.
+                        To provide you with the best experience possible, we require you to validate your email address.
                     </Typography>
                 </Grid>
 
@@ -114,7 +114,7 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
                                         }}
                                     />
                                 }
-                                label="I agree to the terms and conditions below."
+                                label="I agree to the terms and conditions above."
                             />
                             <FormHelperText>
                                 {emailFormError.terms ? 'Please accept the terms and conditions' : ''}
