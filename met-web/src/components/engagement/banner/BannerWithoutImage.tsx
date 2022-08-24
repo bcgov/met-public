@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Box, Typography, Stack } from '@mui/material';
+import { Grid, Box, Typography, Stack, useMediaQuery, Theme } from '@mui/material';
 import { formatDate } from '../../common/dateHelper';
 import { BannerProps } from '../view/types';
 import { EngagementStatusChip } from '../status';
@@ -10,19 +10,20 @@ import { getEditorState } from 'utils';
 const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
     const { rich_description, name, start_date, end_date, submission_status } = savedEngagement;
     const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
 
     return (
         <Box
             sx={{
                 backgroundColor: isDraft ? '#707070' : '#F2F2F2',
                 width: '100%',
+                position: 'relative',
             }}
         >
             <Box
                 sx={{
                     height: '38em',
                     width: '100%',
-                    position: 'relative',
                 }}
             >
                 <Grid
@@ -54,8 +55,8 @@ const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
                         m={{ lg: '3em 5em 0 3em', md: '3em', sm: '1em' }}
                         rowSpacing={2}
                     >
-                        <Grid item xs={12}>
-                            <Typography variant="h3">{name}</Typography>
+                        <Grid item xs={12} sx={{ maxHeight: '20em', overflowY: 'auto', overflowX: 'auto' }}>
+                            <Typography variant={isSmallScreen ? 'h3' : 'h4'}>{name}</Typography>
                             <Editor editorState={getEditorState(rich_description)} readOnly={true} toolbarHidden />
                         </Grid>
                         <Grid item xs={12}>

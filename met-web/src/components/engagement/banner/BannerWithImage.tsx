@@ -10,7 +10,7 @@ import { getEditorState } from 'utils';
 const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
     const { name, start_date, end_date, banner_url, submission_status, rich_description } = savedEngagement;
     const [imageError, setImageError] = useState(false);
-    const isSmallscreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
 
     if (imageError) {
         return <BannerWithoutImage savedEngagement={savedEngagement} />;
@@ -67,7 +67,7 @@ const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
                         rowSpacing={2}
                     >
                         <Grid item xs={12} sx={{ maxHeight: '20em', overflowY: 'auto', overflowX: 'auto' }}>
-                            <Typography variant={isSmallscreen ? 'h3' : 'h4'} color="black">
+                            <Typography variant={isSmallScreen ? 'h3' : 'h4'} color="black">
                                 {name}
                             </Typography>
                             <Editor editorState={getEditorState(rich_description)} readOnly={true} toolbarHidden />
