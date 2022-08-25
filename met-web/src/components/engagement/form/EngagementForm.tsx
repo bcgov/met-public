@@ -233,6 +233,7 @@ const EngagementForm = () => {
                                         InputLabelProps={{
                                             shrink: false,
                                         }}
+                                        InputProps={{ inputProps: { max: toDate || null } }}
                                         fullWidth
                                         name="fromDate"
                                         value={fromDate}
@@ -254,6 +255,7 @@ const EngagementForm = () => {
                                         InputLabelProps={{
                                             shrink: false,
                                         }}
+                                        InputProps={{ inputProps: { min: fromDate || null } }}
                                         fullWidth
                                         name="toDate"
                                         value={toDate}
