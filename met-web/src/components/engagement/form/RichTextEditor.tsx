@@ -74,7 +74,7 @@ const RichTextEditor = ({
                     />
                 </form>
             </MetPaper>
-            <FormHelperText error={error}>{error ? helperText : ' '}</FormHelperText>
+            <FormHelperText error={error}>{error ? helperText : ''}</FormHelperText>
         </FormControl>
     );
 };
