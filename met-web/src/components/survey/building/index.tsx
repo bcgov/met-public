@@ -20,7 +20,7 @@ const SurveyFormBuilder = () => {
     const [savedSurvey, setSavedSurvey] = useState<Survey | null>(null);
     const [formData, setFormData] = useState<unknown>(null);
     const [loading, setLoading] = useState(true);
-    const [isNameFocused, setIsNamedFocused] = React.useState(false);
+    const [isNameFocused, setIsNamedFocused] = useState(false);
     const [name, setName] = useState(savedSurvey ? savedSurvey.name : '');
 
     const hasEngagement = Boolean(savedSurvey?.engagement);
