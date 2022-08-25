@@ -1,0 +1,28 @@
+{
+  "description": "Schema for Verify Email action.",
+  "properties": {
+    "survey_id": {
+      "type": "integer",
+      "description": "The integer ID value of the survey",
+      "minimum": 0
+    },
+    "engagement_id": {
+      "type": "integer",
+      "description": "The integer ID value of the engagement",
+      "minimum": 0
+    }
+  },
+  "additionalProperties": false,
+  "type": "object",
+  "required": [
+    "survey_id",
+    "engagement_id"
+  ],
+  "self": {
+    "vendor": "ca.bc.gov.met",
+    "name": "verify-email",
+    "format": "jsonschema",
+    "version": "1-0-0"
+  },
+  "$schema": "http://iglucentral.com/schemas/com.snowplowanalytics.self-desc/schema/jsonschema/1-0-0#"
+}
