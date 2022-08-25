@@ -60,7 +60,7 @@ const LinkOptions = () => {
             dispatch(
                 openNotification({
                     severity: 'success',
-                    text: `Survey of name ${selectedSurvey.name} was successfully added to engagement of name ${engagementToLink.name}`,
+                    text: `Survey ${selectedSurvey.name} was successfully added to engagement ${engagementToLink.name}`,
                 }),
             );
             navigate(`/engagement/form/${engagementToLink.id}`);
