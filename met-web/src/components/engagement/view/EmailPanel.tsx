@@ -15,13 +15,13 @@ import {
 import { EmailPanelProps } from './types';
 import { MetLabel, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
 
-const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
 const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: EmailPanelProps) => {
     const [checked, setChecked] = useState(false);
     const [emailFormError, setEmailFormError] = useState({
         terms: false,
         email: false,
     });
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
 
     const validateForm = () => {
         const errors = {
