@@ -66,11 +66,12 @@ export const PreviewBanner = () => {
                         Preview Engagement{!isDraft && ' - Published'}
                     </Typography>
                     <ConditionalComponent condition={isDraft}>
-                        <Grid item container rowSpacing={isSmallScreen ? 2 : 0}>
+                        <Grid item container rowSpacing={isSmallScreen ? 2 : 0.5}>
                             <ConditionalComponent condition={!imageExists}>
-                                <Grid item container xs={12}>
+                                <Grid item container xs={12} lg={8}>
                                     <Grid container alignItems="center" item sm={0.5} xs={2}>
                                         <IconButton
+                                            sx={{ padding: 0, margin: 0 }}
                                             color="info"
                                             onClick={() => navigate(`/engagement/form/${engagementId}`)}
                                             aria-label="no image"
@@ -86,9 +87,10 @@ export const PreviewBanner = () => {
                                 </Grid>
                             </ConditionalComponent>
                             <ConditionalComponent condition={savedEngagement.surveys.length === 0}>
-                                <Grid container alignItems="center" item xs={12}>
+                                <Grid container alignItems="center" item xs={12} lg={8}>
                                     <Grid item sm={0.5} xs={2}>
                                         <IconButton
+                                            sx={{ padding: 0, margin: 0 }}
                                             color="info"
                                             onClick={() => navigate(`/survey/create?engagementId=${engagementId}`)}
                                             aria-label="no survey"
@@ -101,9 +103,9 @@ export const PreviewBanner = () => {
                                     </Grid>
                                 </Grid>
                             </ConditionalComponent>
-                            <Grid container alignItems="center" item xs={12}>
+                            <Grid container alignItems="center" item xs={12} lg={8}>
                                 <Grid item sm={0.5} xs={2}>
-                                    <IconButton color="info" aria-label="not published">
+                                    <IconButton sx={{ padding: 0, margin: 0 }} color="info" aria-label="not published">
                                         <UnpublishedIcon />
                                     </IconButton>
                                 </Grid>
