@@ -21,7 +21,7 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
         terms: false,
         email: false,
     });
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
     const validateForm = () => {
         const errors = {
