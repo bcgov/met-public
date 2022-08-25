@@ -9,6 +9,8 @@ import {
     FormHelperText,
     Stack,
     CircularProgress,
+    useMediaQuery,
+    Theme,
 } from '@mui/material';
 import { EmailPanelProps } from './types';
 import { MetLabel, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
@@ -19,6 +21,7 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
         terms: false,
         email: false,
     });
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
     const validateForm = () => {
         const errors = {
@@ -142,13 +145,27 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
 
                 <Grid item container xs={12} justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
-                        <SecondaryButton onClick={handleClose} disabled={isSaving}>
-                            Cancel
-                        </SecondaryButton>
-                        <PrimaryButton type="submit" variant={'contained'} disabled={isSaving}>
-                            Submit
-                            {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
-                        </PrimaryButton>
+                        {isSmallScreen ? (
+                            <>
+                                <PrimaryButton type="submit" variant={'contained'} disabled={isSaving}>
+                                    Submit
+                                    {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
+                                </PrimaryButton>
+                                <SecondaryButton onClick={handleClose} disabled={isSaving}>
+                                    Cancel
+                                </SecondaryButton>
+                            </>
+                        ) : (
+                            <>
+                                <SecondaryButton onClick={handleClose} disabled={isSaving}>
+                                    Cancel
+                                </SecondaryButton>
+                                <PrimaryButton type="submit" variant={'contained'} disabled={isSaving}>
+                                    Submit
+                                    {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
+                                </PrimaryButton>
+                            </>
+                        )}
                     </Stack>
                 </Grid>
             </Grid>
