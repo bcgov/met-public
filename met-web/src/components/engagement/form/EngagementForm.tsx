@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Typography, Grid, TextField, CircularProgress } from '@mui/material';
+import { Typography, Grid, TextField, CircularProgress, Stack } from '@mui/material';
 import { MetPaper, MetLabel, PrimaryButton, SecondaryButton } from '../../common';
 import RichTextEditor from './RichTextEditor';
 import { ActionContext } from './ActionContext';
@@ -178,7 +178,7 @@ const EngagementForm = () => {
                         direction="row"
                         justifyContent="flex-start"
                         alignItems="flex-start"
-                        spacing={2}
+                        rowSpacing={2}
                         sx={{ padding: '2em' }}
                     >
                         <Grid item xs={12}>
@@ -188,7 +188,7 @@ const EngagementForm = () => {
                                 savedImageUrl={savedEngagement.banner_url}
                             />
                         </Grid>
-                        <Grid item xs={12} md={6}>
+                        <Grid item xs={12} lg={8} md={6}>
                             <MetLabel sx={{ marginBottom: '2px' }}>Engagement Name</MetLabel>
                             <TextField
                                 id="engagement-name"
@@ -202,65 +202,66 @@ const EngagementForm = () => {
                                 value={name}
                                 onChange={handleChange}
                                 error={engagementFormError.name}
-                                helperText={engagementFormError.name ? 'Name must be specified' : ' '}
+                                helperText={engagementFormError.name ? 'Name must be specified' : ''}
                             />
                         </Grid>
-                        <Grid item md={6} xs={0}></Grid>
-
                         <Grid
                             item
-                            md={6}
-                            sm={12}
+                            lg={8}
+                            xs={12}
                             container
                             direction="row"
-                            justifyContent="space-between"
-                            alignItems="center"
+                            justifyContent="flex-start"
+                            alignItems="baseline"
                             rowSpacing={{ xs: 1, sm: 0 }}
+                            columnSpacing={2}
                         >
                             <Grid item xs={12}>
                                 <MetLabel>Engagement Date</MetLabel>
                             </Grid>
 
-                            <Grid item sm="auto" xs={2}>
-                                From
+                            <Grid item md={6} xs={12}>
+                                <Stack direction="row" alignItems="center" spacing={2}>
+                                    <Typography minWidth={{ xs: '2.5em', md: 'auto' }} align="center">
+                                        From
+                                    </Typography>
+
+                                    <TextField
+                                        id="date"
+                                        type="date"
+                                        label=" "
+                                        InputLabelProps={{
+                                            shrink: false,
+                                        }}
+                                        fullWidth
+                                        name="fromDate"
+                                        value={fromDate}
+                                        onChange={handleChange}
+                                        error={engagementFormError.fromDate}
+                                        helperText={engagementFormError.fromDate ? 'From Date must be specified' : ''}
+                                    />
+                                </Stack>
                             </Grid>
 
-                            <Grid item sm={5} xs={10}>
-                                <TextField
-                                    id="date"
-                                    type="date"
-                                    label=" "
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
-                                    name="fromDate"
-                                    value={fromDate}
-                                    onChange={handleChange}
-                                    error={engagementFormError.fromDate}
-                                    helperText={engagementFormError.fromDate ? 'From Date must be specified' : ''}
-                                />
-                            </Grid>
+                            <Grid item md={6} xs={12}>
+                                <Stack direction="row" alignItems="center" spacing={2}>
+                                    <Typography minWidth={{ xs: '2.5em', md: 'auto' }}>To</Typography>
 
-                            <Grid item sm="auto" xs={2}>
-                                To
-                            </Grid>
-
-                            <Grid item sm={5} xs={10}>
-                                <TextField
-                                    id="date"
-                                    type="date"
-                                    label=" "
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
-                                    name="toDate"
-                                    value={toDate}
-                                    onChange={handleChange}
-                                    error={engagementFormError.toDate}
-                                    helperText={engagementFormError.toDate ? 'To Date must be specified' : ''}
-                                />
+                                    <TextField
+                                        id="date"
+                                        type="date"
+                                        label=" "
+                                        InputLabelProps={{
+                                            shrink: false,
+                                        }}
+                                        fullWidth
+                                        name="toDate"
+                                        value={toDate}
+                                        onChange={handleChange}
+                                        error={engagementFormError.toDate}
+                                        helperText={engagementFormError.toDate ? 'To Date must be specified' : ''}
+                                    />
+                                </Stack>
                             </Grid>
                         </Grid>
                         <Grid item xs={12}>
