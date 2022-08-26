@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Stack, Typography, Divider } from '@mui/material';
+import { Grid, Stack, Typography, Divider, TextField } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import FormBuilder from 'components/Form/FormBuilder';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -20,6 +20,8 @@ const SurveyFormBuilder = () => {
     const [savedSurvey, setSavedSurvey] = useState<Survey | null>(null);
     const [formData, setFormData] = useState<unknown>(null);
     const [loading, setLoading] = useState(true);
+    const [isNameFocused, setIsNamedFocused] = useState(false);
+    const [name, setName] = useState(savedSurvey ? savedSurvey.name : '');
 
     const hasEngagement = Boolean(savedSurvey?.engagement);
     const isEngagementDraft = savedSurvey?.engagement?.status_id === EngagementStatus.Draft;
@@ -54,6 +56,7 @@ const SurveyFormBuilder = () => {
         try {
             const loadedSurvey = await getSurvey(Number(surveyId));
             setSavedSurvey(loadedSurvey);
+            setName(loadedSurvey.name);
             setLoading(false);
         } catch (error) {
             dispatch(
@@ -88,6 +91,7 @@ const SurveyFormBuilder = () => {
             await putSurvey({
                 id: String(surveyId),
                 form_json: formData,
+                name: name,
             });
             dispatch(
                 openNotification({
@@ -128,7 +132,23 @@ const SurveyFormBuilder = () => {
         >
             <Grid item xs={12}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Typography variant="h6">{savedSurvey?.name || ''}</Typography>
+                    {!isNameFocused ? (
+                        <Typography
+                            variant="h6"
+                            onClick={() => {
+                                setIsNamedFocused(true);
+                            }}
+                        >
+                            {name}
+                        </Typography>
+                    ) : (
+                        <TextField
+                            autoFocus
+                            value={name}
+                            onChange={(event) => setName(event.target.value)}
+                            onBlur={(event) => setIsNamedFocused(false)}
+                        />
+                    )}
                     <ClearIcon />
                 </Stack>
                 <Divider />
