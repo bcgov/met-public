@@ -121,7 +121,7 @@ const LandingPage = () => {
                 }
 
                 return (
-                    <MuiLink component={Link} to={`/survey/${Number(row.surveys[0].id)}/results`}>
+                    <MuiLink component={Link} to={`/engagement/${Number(row.id)}/dashboard`}>
                         View Report
                     </MuiLink>
                 );
