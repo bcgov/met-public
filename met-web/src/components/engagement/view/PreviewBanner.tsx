@@ -66,10 +66,10 @@ export const PreviewBanner = () => {
                         Preview Engagement{!isDraft && ' - Published'}
                     </Typography>
                     <ConditionalComponent condition={isDraft}>
-                        <Grid item container rowSpacing={isSmallScreen ? 2 : 0.5}>
+                        <Grid item container direction="row" rowSpacing={isSmallScreen ? 2 : 0.5}>
                             <ConditionalComponent condition={!imageExists}>
-                                <Grid item container xs={12} lg={8}>
-                                    <Grid container alignItems="center" item sm={0.5} xs={2}>
+                                <Grid item container direction="row" xs={12} lg={8}>
+                                    <Grid container direction="row" alignItems="center" item sm={0.5} xs={2}>
                                         <IconButton
                                             sx={{ padding: 0, margin: 0 }}
                                             color="info"
@@ -87,7 +87,7 @@ export const PreviewBanner = () => {
                                 </Grid>
                             </ConditionalComponent>
                             <ConditionalComponent condition={savedEngagement.surveys.length === 0}>
-                                <Grid container alignItems="center" item xs={12} lg={8}>
+                                <Grid container direction="row" alignItems="center" item xs={12} lg={8}>
                                     <Grid item sm={0.5} xs={2}>
                                         <IconButton
                                             sx={{ padding: 0, margin: 0 }}
@@ -103,7 +103,7 @@ export const PreviewBanner = () => {
                                     </Grid>
                                 </Grid>
                             </ConditionalComponent>
-                            <Grid container alignItems="center" item xs={12} lg={8}>
+                            <Grid container direction="row" alignItems="center" item xs={12} lg={8}>
                                 <Grid item sm={0.5} xs={2}>
                                     <IconButton sx={{ padding: 0, margin: 0 }} color="info" aria-label="not published">
                                         <UnpublishedIcon />
