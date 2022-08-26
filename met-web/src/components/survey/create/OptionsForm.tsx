@@ -10,7 +10,6 @@ import {
     Typography,
     Radio,
 } from '@mui/material';
-import ClearIcon from '@mui/icons-material/Clear';
 import { ConditionalComponent, MetPageGridContainer, PrimaryButton, SecondaryButton } from 'components/common';
 import { CreateOptions } from './CreateOptions';
 import { useNavigate } from 'react-router-dom';
@@ -38,7 +37,6 @@ const OptionsForm = () => {
             <Grid item xs={12}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
                     <Typography variant="h6">Survey</Typography>
-                    <ClearIcon />
                 </Stack>
                 <Divider />
             </Grid>

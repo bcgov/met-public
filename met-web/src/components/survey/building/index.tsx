@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Stack, Typography, Divider, TextField } from '@mui/material';
+import { Grid, Stack, Typography, Divider, TextField, IconButton } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import FormBuilder from 'components/Form/FormBuilder';
-import ClearIcon from '@mui/icons-material/Clear';
+import EditIcon from '@mui/icons-material/Edit';
 import { SurveyParams } from '../types';
 import { getSurvey, putSurvey } from 'services/surveyService/form';
 import { Survey } from 'models/survey';
@@ -131,7 +131,7 @@ const SurveyFormBuilder = () => {
             spacing={4}
         >
             <Grid item xs={12}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
+                <Stack direction="row" justifyContent="flex-start" alignItems="center">
                     {!isNameFocused ? (
                         <Typography
                             variant="h6"
@@ -149,7 +149,14 @@ const SurveyFormBuilder = () => {
                             onBlur={(event) => setIsNamedFocused(false)}
                         />
                     )}
-                    <ClearIcon />
+
+                    <IconButton
+                        onClick={() => {
+                            setIsNamedFocused(true);
+                        }}
+                    >
+                        <EditIcon />
+                    </IconButton>
                 </Stack>
                 <Divider />
             </Grid>
