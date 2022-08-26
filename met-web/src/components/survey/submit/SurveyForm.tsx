@@ -9,7 +9,6 @@ import { PrimaryButton, SecondaryButton } from 'components/common';
 import { SurveyFormProps } from '../types';
 
 export const SurveyForm = ({ handleClose }: SurveyFormProps) => {
-    const navigate = useNavigate();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const { isLoading, savedSurvey, handleSubmit, isSubmitting } = useContext(ActionContext);
     const [submissionData, setSubmissionData] = useState<unknown>(null);
