@@ -37,7 +37,7 @@ const OptionsForm = () => {
         <MetPageGridContainer container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
             <Grid item xs={12}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Typography variant="h3">Survey</Typography>
+                    <Typography variant="h6">Survey</Typography>
                     <ClearIcon />
                 </Stack>
                 <Divider />

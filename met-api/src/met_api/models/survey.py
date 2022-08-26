@@ -88,16 +88,17 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
     @classmethod
     def update_survey(cls, survey: SurveySchema) -> DefaultMethodResult:
         """Update survey."""
-        update_fields = dict(
-            form_json=survey.get('form_json', None),
-            updated_date=datetime.now(),
-            updated_by=survey.get('updated_by', None),
-        )
         survey_id = survey.get('id', None)
         query = Survey.query.filter_by(id=survey_id)
         record = query.first()
         if not record:
             return DefaultMethodResult(False, 'Survey Not Found', survey_id)
+        update_fields = dict(
+            form_json=survey.get('form_json', record.form_json),
+            updated_date=datetime.now(),
+            updated_by=survey.get('updated_by', record.updated_by),
+            name=survey.get('name', record.name),
+        )
         query.update(update_fields)
         db.session.commit()
         return DefaultMethodResult(True, 'Survey Updated', survey_id)

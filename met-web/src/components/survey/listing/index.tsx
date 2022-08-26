@@ -135,7 +135,7 @@ const SurveyListing = () => {
                 }
 
                 return (
-                    <MuiLink component={Link} to={`/survey/${Number(row.id)}/results`}>
+                    <MuiLink component={Link} to={`/engagement/${Number(row.engagement.id)}/dashboard`}>
                         View Report
                     </MuiLink>
                 );
