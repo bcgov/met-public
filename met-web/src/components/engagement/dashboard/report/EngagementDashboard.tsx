@@ -10,6 +10,7 @@ import { getEngagement } from 'services/engagementService';
 import { getErrorMessage } from 'utils';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
+import CommentInfoModal from './CommentInfoModal';
 
 export type EngagementParams = {
     engagementId: string;
@@ -23,6 +24,7 @@ export const EngagementDashboard = () => {
 
     const [engagement, setEngagement] = useState<Engagement>(createDefaultEngagement());
     const [isEngagementLoading, setEngagementLoading] = useState(true);
+    const [commentInfoModalIsOpen, setCommentInfoModalIsOpen] = useState(false);
 
     const failIfInvalidEngagement = (engagementToValidate: Engagement) => {
         // submission status e.g. of pending or draft will have id less than of Open
@@ -56,6 +58,15 @@ export const EngagementDashboard = () => {
         };
         fetchEngagement();
     }, [engagementId]);
+
+    const handleReadComments = () => {
+        if (engagement.submission_status === SubmissionStatus.Closed) {
+            navigate(`/engagement/${engagement.id}/comments`);
+            return;
+        }
+
+        setCommentInfoModalIsOpen(true);
+    };
 
     if (isEngagementLoading) {
         return <Skeleton variant="rectangular" width="100%" height="60m" />;
@@ -103,9 +114,7 @@ export const EngagementDashboard = () => {
                             >
                                 <PrimaryButton
                                     data-testid="SurveyBlock/take-me-to-survey-button"
-                                    disabled={engagement.submission_status != SubmissionStatus.Closed}
-                                    component={Link}
-                                    to={`/engagement/${engagement.id}/comments`}
+                                    onClick={handleReadComments}
                                 >
                                     Read Comments
                                 </PrimaryButton>
@@ -120,6 +129,10 @@ export const EngagementDashboard = () => {
                     </MetPaper>
                 </Grid>
             </Grid>
+            <CommentInfoModal
+                modalOpen={commentInfoModalIsOpen}
+                handleCloseModal={() => setCommentInfoModalIsOpen(false)}
+            />
         </Grid>
     );
 };

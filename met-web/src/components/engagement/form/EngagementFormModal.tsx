@@ -13,12 +13,7 @@ const EngagementFormModal = () => {
     };
 
     return (
-        <Modal
-            open={modalOpen}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-        >
+        <Modal open={modalOpen} onClose={handleClose}>
             <Grid
                 container
                 direction="row"
