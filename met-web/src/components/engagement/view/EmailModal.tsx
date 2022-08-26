@@ -41,7 +41,7 @@ const EmailModal = ({ defaultPanel, open, handleClose }: EmailModalProps) => {
                 survey_id: savedEngagement.surveys[0].id,
             });
             window.snowplow('trackSelfDescribingEvent', {
-                schema: 'iglu:ca.bc.gov.met/verify_email/jsonschema/1-0-0',
+                schema: 'iglu:ca.bc.gov.met/verify-email/jsonschema/1-0-0',
                 data: { survey_id: savedEngagement.surveys[0].id, engagement_id: savedEngagement.id },
             });
             dispatch(

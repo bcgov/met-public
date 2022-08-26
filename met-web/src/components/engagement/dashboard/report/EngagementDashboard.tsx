@@ -37,7 +37,7 @@ export const EngagementDashboard = () => {
     useEffect(() => {
         const fetchEngagement = async () => {
             if (isNaN(Number(engagementId))) {
-                navigate('/');
+                navigate('/404');
                 return;
             }
             try {
@@ -53,7 +53,6 @@ export const EngagementDashboard = () => {
                         text: getErrorMessage(error) || 'Error occurred while fetching Engagement information',
                     }),
                 );
-                navigate('/');
             }
         };
         fetchEngagement();

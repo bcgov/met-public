@@ -12,3 +12,7 @@ export interface InvalidTokenModalProps {
     open: boolean;
     handleClose: () => void;
 }
+
+export interface SurveyFormProps {
+    handleClose: () => void;
+}

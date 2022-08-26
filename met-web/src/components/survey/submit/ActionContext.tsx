@@ -51,7 +51,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             });
 
             window.snowplow('trackSelfDescribingEvent', {
-                schema: 'iglu:ca.bc.gov.met/submit_survey/jsonschema/1-0-0',
+                schema: 'iglu:ca.bc.gov.met/submit-survey/jsonschema/1-0-0',
                 data: { survey_id: savedSurvey.id, engagement_id: savedSurvey.engagement.id },
             });
             dispatch(

@@ -49,7 +49,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     useEffect(() => {
         const fetchEngagement = async () => {
             if (isNaN(Number(engagementId))) {
-                navigate('/');
+                navigate('/404');
                 return;
             }
             try {
@@ -64,7 +64,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                         text: 'Error occurred while fetching Engagement information',
                     }),
                 );
-                navigate('/');
             }
         };
         fetchEngagement();
