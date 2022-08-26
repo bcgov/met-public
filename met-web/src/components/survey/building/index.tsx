@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Stack, Typography, Divider, TextField } from '@mui/material';
+import { Grid, Stack, Typography, Divider, TextField, IconButton } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import FormBuilder from 'components/Form/FormBuilder';
-import ClearIcon from '@mui/icons-material/Clear';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { SurveyParams } from '../types';
 import { getSurvey, putSurvey } from 'services/surveyService/form';
 import { Survey } from 'models/survey';
@@ -149,7 +149,14 @@ const SurveyFormBuilder = () => {
                             onBlur={(event) => setIsNamedFocused(false)}
                         />
                     )}
-                    <ClearIcon />
+                    <IconButton
+                        onClick={() => {
+                            setIsNamedFocused(true);
+                        }}
+                        color="info"
+                    >
+                        <BorderColorIcon />
+                    </IconButton>
                 </Stack>
                 <Divider />
             </Grid>
