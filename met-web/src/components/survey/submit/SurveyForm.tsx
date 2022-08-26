@@ -6,8 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import { FormSubmissionData } from 'components/Form/types';
 import { useAppSelector } from 'hooks';
 import { PrimaryButton, SecondaryButton } from 'components/common';
+import { SurveyFormProps } from '../types';
 
-export const SurveyForm = () => {
+export const SurveyForm = ({ handleClose }: SurveyFormProps) => {
     const navigate = useNavigate();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const { isLoading, savedSurvey, handleSubmit, isSubmitting } = useContext(ActionContext);
@@ -37,7 +38,7 @@ export const SurveyForm = () => {
             </Grid>
             <Grid item container xs={12} justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
-                    <SecondaryButton onClick={() => navigate('/')}>Cancel</SecondaryButton>
+                    <SecondaryButton onClick={() => handleClose()}>Cancel</SecondaryButton>
                     <PrimaryButton
                         disabled={!isValid || isLoggedIn || isSubmitting}
                         onClick={() => handleSubmit(submissionData)}

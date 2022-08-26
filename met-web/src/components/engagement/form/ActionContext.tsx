@@ -79,7 +79,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         } catch (err) {
             console.log(err);
             dispatch(openNotification({ severity: 'error', text: 'Error Fetching Engagement' }));
-            navigate('/');
         }
     };
 
