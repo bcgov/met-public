@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Grid, Stack, Typography, Divider, TextField, IconButton } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import FormBuilder from 'components/Form/FormBuilder';
-import EditIcon from '@mui/icons-material/Edit';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { SurveyParams } from '../types';
 import { getSurvey, putSurvey } from 'services/surveyService/form';
 import { Survey } from 'models/survey';
@@ -154,8 +154,9 @@ const SurveyFormBuilder = () => {
                         onClick={() => {
                             setIsNamedFocused(true);
                         }}
+                        color="info"
                     >
-                        <EditIcon />
+                        <BorderColorIcon />
                     </IconButton>
                 </Stack>
                 <Divider />
