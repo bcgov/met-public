@@ -131,7 +131,7 @@ const SurveyFormBuilder = () => {
             spacing={4}
         >
             <Grid item xs={12}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
+                <Stack direction="row" justifyContent="flex-start" alignItems="center">
                     {!isNameFocused ? (
                         <Typography
                             variant="h6"
@@ -151,7 +151,7 @@ const SurveyFormBuilder = () => {
                     )}
                     <IconButton
                         onClick={() => {
-                            setIsNamedFocused(true);
+                            setIsNamedFocused(!isNameFocused);
                         }}
                         color="info"
                     >
