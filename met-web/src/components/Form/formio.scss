@@ -6,6 +6,7 @@
 
 $btn-primary-main: #FFC107;
 $btn-primary-light: #FFE082;
+$btn-primary-dark: #FFAB00;
 $text-primary: #494949;
 
 .formio {
@@ -350,6 +351,11 @@ i.fa.fa-question-circle.text-muted {
 .btn-primary:hover {
   background-color: $btn-primary-light;
   border-color: $btn-primary-light;
+  color: $text-primary;
+}
+.btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show > .btn-primary.dropdown-toggle {
+  background-color: $btn-primary-dark;
+  border-color: $btn-primary-dark;
   color: $text-primary;
 }
 .btn-right {
