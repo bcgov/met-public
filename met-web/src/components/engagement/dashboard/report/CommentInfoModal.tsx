@@ -35,7 +35,7 @@ const CommentInfoModal = ({ modalOpen, handleCloseModal }: CommentInfoModalProps
                     </Grid>
                 </Grid>
                 <Grid item xs={12} container direction={{ xs: 'column', sm: 'row' }} justifyContent="flex-end">
-                    <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
+                    <SecondaryButton onClick={handleClose}>Close</SecondaryButton>
                 </Grid>
             </Grid>
         </Modal>
