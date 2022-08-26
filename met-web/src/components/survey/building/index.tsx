@@ -3,6 +3,7 @@ import { Grid, Stack, Typography, Divider, TextField, IconButton } from '@mui/ma
 import { useNavigate, useParams } from 'react-router-dom';
 import FormBuilder from 'components/Form/FormBuilder';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
+import ClearIcon from '@mui/icons-material/Clear';
 import { SurveyParams } from '../types';
 import { getSurvey, putSurvey } from 'services/surveyService/form';
 import { Survey } from 'models/survey';
@@ -133,30 +134,42 @@ const SurveyFormBuilder = () => {
             <Grid item xs={12}>
                 <Stack direction="row" justifyContent="flex-start" alignItems="center">
                     {!isNameFocused ? (
-                        <Typography
-                            variant="h6"
-                            onClick={() => {
-                                setIsNamedFocused(true);
-                            }}
-                        >
-                            {name}
-                        </Typography>
+                        <>
+                            <Typography
+                                variant="h6"
+                                onClick={() => {
+                                    setIsNamedFocused(true);
+                                }}
+                            >
+                                {name}
+                            </Typography>
+                            <IconButton
+                                onClick={() => {
+                                    setIsNamedFocused(!isNameFocused);
+                                }}
+                                color="info"
+                            >
+                                <BorderColorIcon />
+                            </IconButton>
+                        </>
                     ) : (
-                        <TextField
-                            autoFocus
-                            value={name}
-                            onChange={(event) => setName(event.target.value)}
-                            onBlur={(event) => setIsNamedFocused(false)}
-                        />
+                        <>
+                            <TextField
+                                autoFocus
+                                value={name}
+                                onChange={(event) => setName(event.target.value)}
+                                onBlur={(event) => setIsNamedFocused(false)}
+                            />
+                            <IconButton
+                                onClick={() => {
+                                    setIsNamedFocused(!isNameFocused);
+                                }}
+                                color="info"
+                            >
+                                <ClearIcon />
+                            </IconButton>
+                        </>
                     )}
-                    <IconButton
-                        onClick={() => {
-                            setIsNamedFocused(!isNameFocused);
-                        }}
-                        color="info"
-                    >
-                        <BorderColorIcon />
-                    </IconButton>
                 </Stack>
                 <Divider />
             </Grid>
