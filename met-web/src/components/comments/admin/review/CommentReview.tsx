@@ -164,9 +164,8 @@ const CommentReview = () => {
 
                 <Grid item xs={12}>
                     <Stack direction="row" spacing={2}>
-                        <PrimaryButton disabled={isSaving} onClick={handleSave}>
+                        <PrimaryButton loading={isSaving} onClick={handleSave}>
                             {'Save & Continue'}
-                            {isSaving && <CircularProgress color="inherit" sx={{ marginLeft: 1 }} size={20} />}
                         </PrimaryButton>
                         <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
                     </Stack>

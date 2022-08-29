@@ -314,10 +314,9 @@ const EngagementForm = () => {
                                     sx={{ marginRight: 1 }}
                                     data-testid="engagement-form/create-engagement-button"
                                     onClick={() => handleCreateEngagement()}
-                                    disabled={isSaving}
+                                    loading={isSaving}
                                 >
                                     Create Engagement Draft
-                                    {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
                                 </PrimaryButton>
                             ) : (
                                 <PrimaryButton
@@ -325,9 +324,9 @@ const EngagementForm = () => {
                                     sx={{ marginRight: 1 }}
                                     onClick={() => handleUpdateEngagement()}
                                     disabled={isSaving}
+                                    loading={isSaving}
                                 >
                                     Update Engagement
-                                    {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
                                 </PrimaryButton>
                             )}
                             <SecondaryButton

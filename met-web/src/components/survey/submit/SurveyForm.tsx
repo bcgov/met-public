@@ -38,11 +38,11 @@ export const SurveyForm = ({ handleClose }: SurveyFormProps) => {
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
                     <SecondaryButton onClick={() => handleClose()}>Cancel</SecondaryButton>
                     <PrimaryButton
-                        disabled={!isValid || isLoggedIn || isSubmitting}
+                        disabled={!isValid || isLoggedIn}
                         onClick={() => handleSubmit(submissionData)}
+                        loading={isSubmitting}
                     >
                         Submit Survey
-                        {isSubmitting && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
                     </PrimaryButton>
                 </Stack>
             </Grid>

@@ -129,9 +129,12 @@ export const PreviewBanner = () => {
                         </SecondaryButton>
 
                         <ConditionalComponent condition={isDraft}>
-                            <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => handlePublishEngagement()}>
+                            <PrimaryButton
+                                sx={{ marginLeft: '1em' }}
+                                onClick={() => handlePublishEngagement()}
+                                disabled={isPublishing}
+                            >
                                 Publish
-                                {isPublishing && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
                             </PrimaryButton>
                         </ConditionalComponent>
                         <ConditionalComponent condition={!isDraft}>

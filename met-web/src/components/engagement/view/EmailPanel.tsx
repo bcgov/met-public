@@ -147,9 +147,8 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
                         {isSmallScreen ? (
                             <>
-                                <PrimaryButton type="submit" variant={'contained'} disabled={isSaving}>
+                                <PrimaryButton type="submit" variant={'contained'} loading={isSaving}>
                                     Submit
-                                    {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
                                 </PrimaryButton>
                                 <SecondaryButton onClick={handleClose} disabled={isSaving}>
                                     Cancel
@@ -160,9 +159,8 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
                                 <SecondaryButton onClick={handleClose} disabled={isSaving}>
                                     Cancel
                                 </SecondaryButton>
-                                <PrimaryButton type="submit" variant={'contained'} disabled={isSaving}>
+                                <PrimaryButton type="submit" variant={'contained'} loading={isSaving}>
                                     Submit
-                                    {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
                                 </PrimaryButton>
                             </>
                         )}

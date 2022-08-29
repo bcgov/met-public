@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Stack, Typography, Divider, TextField, IconButton } from '@mui/material';
+import { Grid, Stack, Typography, Divider, TextField, IconButton, CircularProgress } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import FormBuilder from 'components/Form/FormBuilder';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
@@ -23,6 +23,7 @@ const SurveyFormBuilder = () => {
     const [loading, setLoading] = useState(true);
     const [isNameFocused, setIsNamedFocused] = useState(false);
     const [name, setName] = useState(savedSurvey ? savedSurvey.name : '');
+    const [isSaving, setIsSaving] = useState(false);
 
     const hasEngagement = Boolean(savedSurvey?.engagement);
     const isEngagementDraft = savedSurvey?.engagement?.status_id === EngagementStatus.Draft;
@@ -89,6 +90,7 @@ const SurveyFormBuilder = () => {
         }
 
         try {
+            setIsSaving(true);
             await putSurvey({
                 id: String(surveyId),
                 form_json: formData,
@@ -100,7 +102,6 @@ const SurveyFormBuilder = () => {
                     text: 'The survey was successfully built',
                 }),
             );
-
             if (savedSurvey.engagement?.id) {
                 navigate(`/engagement/form/${savedSurvey.engagement.id}`);
                 return;
@@ -108,6 +109,7 @@ const SurveyFormBuilder = () => {
 
             navigate('/survey/listing');
         } catch (error) {
+            setIsSaving(false);
             dispatch(
                 openNotification({
                     severity: 'error',
@@ -178,7 +180,11 @@ const SurveyFormBuilder = () => {
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <PrimaryButton disabled={!formData || hasPublishedEngagement} onClick={handleSaveForm}>
+                    <PrimaryButton
+                        disabled={!formData || hasPublishedEngagement}
+                        loading={isSaving}
+                        onClick={handleSaveForm}
+                    >
                         {'Save & Continue'}
                     </PrimaryButton>
                     <SecondaryButton onClick={() => navigate('/survey/listing')}>Cancel</SecondaryButton>
