@@ -10,7 +10,13 @@ import {
     Typography,
     Radio,
 } from '@mui/material';
-import { ConditionalComponent, MetPageGridContainer, PrimaryButton, SecondaryButton } from 'components/common';
+import {
+    ConditionalComponent,
+    MetPageGridContainer,
+    PrimaryButton,
+    SecondaryButton,
+    MetHeader3,
+} from 'components/common';
 import { CreateOptions } from './CreateOptions';
 import { useNavigate } from 'react-router-dom';
 import { Palette } from 'styles/Theme';
@@ -36,7 +42,7 @@ const OptionsForm = () => {
         <MetPageGridContainer container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
             <Grid item xs={12}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Typography variant="h6">Survey</Typography>
+                    <MetHeader3>Survey</MetHeader3>
                 </Stack>
                 <Divider />
             </Grid>

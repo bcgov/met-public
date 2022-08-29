@@ -1,4 +1,5 @@
 import { Grid, Typography } from '@mui/material';
+import { MetHeader1 } from 'components/common';
 import React from 'react';
 import { IProps } from './types';
 
@@ -13,14 +14,10 @@ const NotFound = React.memo(({ errorMessage = 'Page Not Found', errorCode = '404
             padding={'2em 2em 1em 2em'}
         >
             <Grid item xs={12} justifyContent="center">
-                <Typography variant="h2" component="h2" align="center">
-                    {errorCode}
-                </Typography>
+                <MetHeader1 align="center">{errorCode}</MetHeader1>
             </Grid>
             <Grid item xs={12} justifyContent="center">
-                <Typography variant="h2" component="h2" align="center">
-                    {errorMessage}
-                </Typography>
+                <MetHeader1 align="center">{errorMessage}</MetHeader1>
             </Grid>
         </Grid>
     );

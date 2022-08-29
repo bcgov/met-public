@@ -3,7 +3,7 @@ import { ActionContext } from './ActionContext';
 import { Box, Grid, Skeleton, Typography, Stack, useMediaQuery, Theme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { EngagementStatus } from 'constants/engagementStatus';
-import { ConditionalComponent, PrimaryButton, SecondaryButton } from 'components/common';
+import { ConditionalComponent, MetHeader1, PrimaryButton, SecondaryButton, MetBody } from 'components/common';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import ImageIcon from '@mui/icons-material/Image';
@@ -62,9 +62,7 @@ export const PreviewBanner = () => {
         >
             <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start" padding={4}>
                 <Grid item container xs={12}>
-                    <Typography variant="h4" sx={{ mb: 2 }}>
-                        Preview Engagement{!isDraft && ' - Published'}
-                    </Typography>
+                    <MetHeader1 sx={{ mb: 2 }}>Preview Engagement{!isDraft && ' - Published'}</MetHeader1>
                     <ConditionalComponent condition={isDraft}>
                         <Grid item container direction="row" rowSpacing={isSmallScreen ? 2 : 0.5}>
                             <ConditionalComponent condition={!imageExists}>
@@ -80,9 +78,7 @@ export const PreviewBanner = () => {
                                         </IconButton>
                                     </Grid>
                                     <Grid item container alignItems="center" xs={10} sm={10}>
-                                        <Typography variant="body2">
-                                            This engagement is missing a header image.
-                                        </Typography>
+                                        <MetBody>This engagement is missing a header image.</MetBody>
                                     </Grid>
                                 </Grid>
                             </ConditionalComponent>
@@ -99,7 +95,7 @@ export const PreviewBanner = () => {
                                         </IconButton>
                                     </Grid>
                                     <Grid item xs={10} sm={10}>
-                                        <Typography variant="body2">This engagement is missing a survey.</Typography>
+                                        <MetBody>This engagement is missing a survey.</MetBody>
                                     </Grid>
                                 </Grid>
                             </ConditionalComponent>
@@ -110,7 +106,7 @@ export const PreviewBanner = () => {
                                     </IconButton>
                                 </Grid>
                                 <Grid item xs={10} sm={10}>
-                                    <Typography variant="body2">Please publish the engagement when ready.</Typography>
+                                    <MetBody>Please publish the engagement when ready.</MetBody>
                                 </Grid>
                             </Grid>
                         </Grid>

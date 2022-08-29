@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
 import { Link, useParams } from 'react-router-dom';
-import { MetPageGridContainer, PrimaryButton } from 'components/common';
+import { MetPageGridContainer, PrimaryButton, MetHeader1 } from 'components/common';
 import { Comment } from 'models/comment';
 import { HeadCell } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
@@ -129,9 +129,7 @@ const CommentListing = () => {
             <Grid item xs={0} md={4} lg={4}></Grid>
 
             <Grid item xs={12}>
-                <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                    {`${comments[0]?.survey || ''} Comments`}
-                </Typography>
+                <MetHeader1 sx={{ fontWeight: 'bold' }}>{`${comments[0]?.survey || ''} Comments`}</MetHeader1>
                 <MetTable
                     filter={searchFilter}
                     headCells={headCells}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Grid, Box, Typography, Stack, useMediaQuery, Theme } from '@mui/material';
 import { formatDate } from '../../common/dateHelper';
 import BannerWithoutImage from './BannerWithoutImage';
+import { MetHeader1, MetHeader2 } from 'components/common';
 import { BannerProps } from '../view/types';
 import { EngagementStatusChip } from '../status';
 import { Editor } from 'react-draft-wysiwyg';
@@ -10,7 +11,7 @@ import { getEditorState } from 'utils';
 const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
     const { name, start_date, end_date, banner_url, submission_status, rich_description } = savedEngagement;
     const [imageError, setImageError] = useState(false);
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
     if (imageError) {
         return <BannerWithoutImage savedEngagement={savedEngagement} />;
@@ -67,18 +68,21 @@ const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
                         rowSpacing={2}
                     >
                         <Grid item xs={12} sx={{ maxHeight: '20em', overflowY: 'auto', overflowX: 'auto' }}>
-                            <Typography variant={isSmallScreen ? 'h3' : 'h4'} color="black">
-                                {name}
-                            </Typography>
+                            {isSmallScreen ? (
+                                <MetHeader2 color="black">{name}</MetHeader2>
+                            ) : (
+                                <MetHeader1 color="black">{name}</MetHeader1>
+                            )}
+
                             <Editor editorState={getEditorState(rich_description)} readOnly={true} toolbarHidden />
                         </Grid>
                         <Grid item xs={12}>
-                            <Typography variant="h6" style={{ fontWeight: 600 }} color="black">
+                            <MetHeader2 style={{ fontWeight: 600 }} color="black">
                                 {`Engagement dates: ${formatDate(start_date, 'MMMM dd, yyyy')} to ${formatDate(
                                     end_date,
                                     'MMMM dd, yyyy',
                                 )}`}
-                            </Typography>
+                            </MetHeader2>
                         </Grid>
                         <Grid item xs={12}>
                             <Stack direction="row" spacing={1}>

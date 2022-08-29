@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Grid, Typography } from '@mui/material';
-import { modalStyle, PrimaryButton } from 'components/common';
+import { modalStyle, PrimaryButton, MetHeader1, MetHeader2, MetBody } from 'components/common';
 import { ThankYouPanelProps } from './types';
 import { ActionContext } from './ActionContext';
 
@@ -17,9 +17,7 @@ const ThankYouPanel = ({ handleClose }: ThankYouPanelProps) => {
         >
             <Grid container item xs={12}>
                 <Grid item xs={12}>
-                    <Typography variant="h4" component="h2" sx={{ fontWeight: 'bold', mb: 2 }}>
-                        Thank you
-                    </Typography>
+                    <MetHeader1 sx={{ fontWeight: 'bold', mb: 2 }}>Thank you</MetHeader1>
                 </Grid>
                 <Grid item xs={12}>
                     <Typography id="modal-modal-header"></Typography>
@@ -27,14 +25,14 @@ const ThankYouPanel = ({ handleClose }: ThankYouPanelProps) => {
             </Grid>
             <Grid container direction="row" item xs={12}>
                 <Grid item xs={12}>
-                    <Typography sx={{ mb: 1 }}>Your submission was successful.</Typography>
+                    <MetBody sx={{ mb: 1 }}>Your submission was successful.</MetBody>
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography sx={{ mb: 1 }}>
+                    <MetBody sx={{ mb: 1 }}>
                         We appreciate you take the time to voice your opinion about {savedEngagement.name}. When the
                         engagement period is over ({savedEngagement.end_date}), you will receive a link to access the
                         full survey report and view all the comments we received.
-                    </Typography>
+                    </MetBody>
                 </Grid>
 
                 <Grid

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Grid, Typography } from '@mui/material';
+import { Grid } from '@mui/material';
 import { SuccessPanelProps } from './types';
-import { modalStyle, PrimaryButton } from 'components/common';
+import { modalStyle, PrimaryButton, MetHeader1, MetBody } from 'components/common';
 
 const SuccessPanel = ({ email, handleClose }: SuccessPanelProps) => {
     return (
@@ -15,25 +15,23 @@ const SuccessPanel = ({ email, handleClose }: SuccessPanelProps) => {
         >
             <Grid container item xs={12}>
                 <Grid item xs={12}>
-                    <Typography variant="h4" component="h2" sx={{ fontWeight: 'bold', mb: 2 }}>
-                        Thank you
-                    </Typography>
+                    <MetHeader1 sx={{ fontWeight: 'bold', mb: 2 }}>Thank you</MetHeader1>
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography id="modal-modal-header">
+                    <MetBody id="modal-modal-header">
                         We sent a link to access the survey at the following email address:
-                    </Typography>
-                    <Typography sx={{ mt: 1 }}>{email}</Typography>
+                    </MetBody>
+                    <MetBody sx={{ mt: 1 }}>{email}</MetBody>
                 </Grid>
             </Grid>
             <Grid container direction="row" item xs={12}>
                 <Grid item xs={12}>
-                    <Typography sx={{ mb: 1, fontWeight: 'bold' }}>
+                    <MetBody sx={{ mb: 1, fontWeight: 'bold' }}>
                         Please Click the link provided to access the survey.
-                    </Typography>
+                    </MetBody>
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography sx={{ mb: 1, fontWeight: 'bold' }}>The link will be valid for 24 hours.</Typography>
+                    <MetBody sx={{ mb: 1, fontWeight: 'bold' }}>The link will be valid for 24 hours.</MetBody>
                 </Grid>
 
                 <Grid

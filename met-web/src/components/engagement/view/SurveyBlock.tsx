@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Grid, Typography } from '@mui/material';
-import { MetPaper, PrimaryButton } from '../../common';
+import { MetPaper, PrimaryButton, MetHeader1 } from '../../common';
 import { ActionContext } from './ActionContext';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { SurveyBlockProps } from './types';
@@ -18,7 +18,7 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
         <MetPaper elevation={1} sx={{ padding: '2em' }}>
             <Grid container direction="row" alignItems="flex-end" justifyContent="flex-end" spacing={2}>
                 <Grid item xs={12}>
-                    <Typography variant="h4">Let us know what you think!</Typography>
+                    <MetHeader1>Let us know what you think!</MetHeader1>
                 </Grid>
                 <Grid item xs={12}>
                     <Typography variant="subtitle1">
