@@ -129,7 +129,9 @@ const CommentListing = () => {
             <Grid item xs={0} md={4} lg={4}></Grid>
 
             <Grid item xs={12}>
-                <MetHeader1 sx={{ fontWeight: 'bold' }}>{`${comments[0]?.survey || ''} Comments`}</MetHeader1>
+                <MetHeader1>
+                    <strong>{`${comments[0]?.survey || ''} Comments`}</strong>
+                </MetHeader1>
                 <MetTable
                     filter={searchFilter}
                     headCells={headCells}

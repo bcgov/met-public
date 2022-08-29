@@ -13,9 +13,7 @@ const WhoIsListeningWidget = () => {
     return (
         <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
             <Grid item sx={{ pb: 2 }} justifyContent="flex-start" alignItems="center" xs={12}>
-                <MetHeader2 variant="h5" sx={{ fontWeight: 'bold' }}>
-                    Who is Listening
-                </MetHeader2>
+                <MetHeader2 sx={{ fontWeight: 'bold' }}>Who is Listening</MetHeader2>
             </Grid>
             <Grid container item spacing={1} xs={12}>
                 <Grid item xs={4}>
@@ -35,13 +33,8 @@ const WhoIsListeningWidget = () => {
                     xs={8}
                 >
                     <Grid item xs={12}>
-                        <MetHeader3
-                            variant="h6"
-                            sx={{
-                                fontWeight: 'bold',
-                            }}
-                        >
-                            {testData.name}
+                        <MetHeader3>
+                            <strong>{testData.name}</strong>
                         </MetHeader3>
                     </Grid>
                     <Grid item xs={12}>
