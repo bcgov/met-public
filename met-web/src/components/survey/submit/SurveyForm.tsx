@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Skeleton, Grid, Stack, CircularProgress } from '@mui/material';
+import { Skeleton, Grid, Stack } from '@mui/material';
 import { ActionContext } from './ActionContext';
 import FormSubmit from 'components/Form/FormSubmit';
 import { FormSubmissionData } from 'components/Form/types';

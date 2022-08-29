@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { ActionContext } from './ActionContext';
-import { Box, CircularProgress, Grid, Skeleton, Typography, Stack, useMediaQuery, Theme } from '@mui/material';
+import { Box, Grid, Skeleton, Typography, Stack, useMediaQuery, Theme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { ConditionalComponent, PrimaryButton, SecondaryButton } from 'components/common';

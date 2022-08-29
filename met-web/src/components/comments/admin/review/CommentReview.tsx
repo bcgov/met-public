@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-    Grid,
-    FormControl,
-    RadioGroup,
-    FormControlLabel,
-    Radio,
-    Stack,
-    CircularProgress,
-    FormLabel,
-} from '@mui/material';
+import { Grid, FormControl, RadioGroup, FormControlLabel, Radio, Stack, FormLabel } from '@mui/material';
 import { Comment, createDefaultComment } from 'models/comment';
 import { getComment, ReviewComment } from 'services/commentService';
 import { useAppDispatch } from 'hooks';

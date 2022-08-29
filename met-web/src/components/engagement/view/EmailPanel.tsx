@@ -8,7 +8,6 @@ import {
     FormControlLabel,
     FormHelperText,
     Stack,
-    CircularProgress,
     useMediaQuery,
     Theme,
 } from '@mui/material';
