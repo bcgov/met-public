@@ -1,6 +1,6 @@
 import React from 'react';
-import { MetPaper, MetHeader2, MetHeader1, MetHeader3 } from 'components/common';
-import { Grid, Typography, Avatar, Link } from '@mui/material';
+import { MetPaper, MetHeader2, MetHeader3 } from 'components/common';
+import { Grid, Avatar, Link } from '@mui/material';
 
 const testData = {
     image: 'https://cdn.pixabay.com/photo/2017/09/25/13/12/cocker-spaniel-2785074__340.jpg',

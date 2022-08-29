@@ -1,6 +1,6 @@
 import React from 'react';
-import { Modal, Grid, Typography } from '@mui/material';
-import { modalStyle, SecondaryButton, MetHeader1, MetBody, ModalSubtitle } from 'components/common';
+import { Modal, Grid } from '@mui/material';
+import { modalStyle, SecondaryButton, MetHeader1, ModalSubtitle } from 'components/common';
 
 interface CommentInfoModalProps {
     modalOpen: boolean;

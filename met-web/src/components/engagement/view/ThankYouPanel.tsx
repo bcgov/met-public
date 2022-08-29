@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Grid, Typography } from '@mui/material';
-import { modalStyle, PrimaryButton, MetHeader1, MetHeader2, MetBody } from 'components/common';
+import { modalStyle, PrimaryButton, MetHeader1, MetBody } from 'components/common';
 import { ThankYouPanelProps } from './types';
 import { ActionContext } from './ActionContext';
 

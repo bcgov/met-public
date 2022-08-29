@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Grid, Skeleton, Typography } from '@mui/material';
+import { Grid, Skeleton } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { CommentViewContext } from './CommentViewContext';
 import { PrimaryButton, MetPaper, MetHeader4 } from 'components/common';

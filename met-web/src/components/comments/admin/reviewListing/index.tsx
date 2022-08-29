@@ -6,7 +6,7 @@ import { MetPageGridContainer, PrimaryButton, MetHeader1 } from 'components/comm
 import { Comment } from 'models/comment';
 import { HeadCell } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
-import { Link as MuiLink, Typography } from '@mui/material';
+import { Link as MuiLink } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';

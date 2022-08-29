@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Link as MuiLink, Skeleton, Typography } from '@mui/material';
+import { Grid, Link as MuiLink, Skeleton } from '@mui/material';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { AppConfig } from 'config';
 import { MetHeader1, MetPaper, PrimaryButton } from 'components/common';

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Modal, Grid, Typography, Stack } from '@mui/material';
+import { Modal, Grid, Stack } from '@mui/material';
 import { ActionContext } from './ActionContext';
 import { modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody, ModalSubtitle } from 'components/common';
 

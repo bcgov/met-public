@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@mui/material';
+import { Grid } from '@mui/material';
 import { MetHeader1 } from 'components/common';
 import React from 'react';
 import { IProps } from './types';
