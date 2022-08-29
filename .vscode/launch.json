@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Flask",
+            "name": "MET-API Launch",
             "type": "python",
             "request": "launch",
             "module": "flask",
@@ -29,6 +29,16 @@
           "purpose": ["debug-test"],
           "console": "integratedTerminal",
           "justMyCode": false
-        }
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "MET-WEB Launch",
+            "url": "http://localhost:3000/",
+            "userDataDir": "${workspaceRoot}/.vscode/chrome",
+            "webRoot": "${workspaceRoot}/met-web",
+            "preLaunchTask": "npm: start" 
+        },
+
     ]
 }
