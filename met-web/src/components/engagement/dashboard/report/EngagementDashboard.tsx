@@ -101,7 +101,7 @@ export const EngagementDashboard = () => {
                             rowSpacing={2}
                         >
                             <Grid item xs={12} sm={6}>
-                                <Typography variant={'h4'}>What we heard - {engagement.name}</Typography>
+                                <Typography variant={'h4'}>What We Heard - {engagement.name}</Typography>
                             </Grid>
                             <Grid
                                 item
