@@ -4,9 +4,13 @@
 
 [![codecov](https://codecov.io/gh/bcgov/met-public/branch/main/graph/badge.svg?token=E1JXYU701O)](https://codecov.io/gh/bcgov/met-public)
 
-## The Modern Engagement Tool
+## The Modern Engagement Tools (MET) 
 
-TBD
+This project is to develop modern engagement tools that address shortfalls identified in the Province’s existing public engagement processes.
+
+## Objectives 
+**The goal of this project is** to transform B.C.’s public engagement processes and enable the public to provide more value and influence decision-making while generating useful data insights, an enhanced post commenting experience for the user, and minimize rejected comments. The product will be cost effective, leverage investments and successes to date, explore best in class strategies, and be maintainable and continuously improved by government staff. It will be privacy enhancing, and support DRIPA/ GBA+ implementation and analysis, and continuously delivered and tested with users.
+
 
 ## Directory Structure
 
