@@ -132,7 +132,7 @@ export const PreviewBanner = () => {
                             <PrimaryButton
                                 sx={{ marginLeft: '1em' }}
                                 onClick={() => handlePublishEngagement()}
-                                disabled={isPublishing}
+                                loading={isPublishing}
                             >
                                 Publish
                             </PrimaryButton>
