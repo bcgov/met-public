@@ -145,7 +145,9 @@ const CommentReview = () => {
                             Comment Approval
                         </FormLabel>
                         <RadioGroup
-                            defaultValue={CommentStatus.Approved}
+                            defaultValue={
+                                comment.status_id === CommentStatus.Pending ? CommentStatus.Approved : comment.status_id
+                            }
                             onChange={(e) => handleReviewChange(Number(e.target.value))}
                         >
                             <FormControlLabel
