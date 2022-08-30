@@ -196,7 +196,8 @@ class SubmissionEtlService:  # pylint: disable=too-few-public-methods
         # radio answer is a key.so value has to be found from question
         current_app.logger.info('Input type  ResponseTypeRadioModel is created:survey id: %s. '
                                 'request_key is %s ', survey.id, component['key'])
-        answer = next((x for x in component.get('values') if x.get('value') == answer_key), None)
+        answer_key_str = str(answer_key)
+        answer = next((x for x in component.get('values') if x.get('value') == answer_key_str), None)
         if not answer:
             return
         answer_value = answer.get('label')
