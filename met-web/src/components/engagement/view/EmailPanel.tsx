@@ -75,6 +75,13 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
                 </Grid>
 
                 <Grid item xs={12}>
+                    <Typography variant="body1">
+                        <strong>Why are we collecting your email?</strong> Email verification helps us to know you are
+                        not a robot, and ensures we have your consent to send you the survey link.
+                    </Typography>
+                </Grid>
+
+                <Grid item xs={12}>
                     <Typography
                         sx={{
                             p: '1em',
@@ -86,13 +93,15 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
                         }}
                     >
                         {`
-                            Personal information (your email address) is collected under section 26(c) and 26(e) of the Freedom of Information\
-                            and Protection of Privacy Act, to keep you updated on current engagements and to notify you of future opportunities to participate.
+                            Personal information (your email address) is collected under Section 26(c) and 26(e) of the Freedom of Information\
+                            and Protection of Privacy Act, for the purpose of providing content updates and future opportunities to participate.\
+                            Your email is never shared with third parties.
                         `}
                         <br />
                         <br />
                         {
-                            'If you have any questions about the collection, use and disclosure of your personal information, please contact <TBC>'
+                            'If you have any questions about the collection, use and disclosure of your personal information,\
+                            please contact the Director of Digital Services at Sid.Tobias@gov.bc.ca'
                         }
                     </Typography>
                 </Grid>
