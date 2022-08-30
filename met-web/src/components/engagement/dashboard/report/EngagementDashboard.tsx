@@ -101,7 +101,7 @@ export const EngagementDashboard = () => {
                             rowSpacing={2}
                         >
                             <Grid item xs={12} sm={6}>
-                                <MetHeader1>What we heard - {engagement.name}</MetHeader1>
+                                <MetHeader1>What We Heard - {engagement.name}</MetHeader1>
                             </Grid>
                             <Grid
                                 item
