@@ -136,3 +136,6 @@ met-api/.DS_Store
 /.idea/misc.xml
 /.idea/modules.xml
 /.idea/met-public.iml
+
+# VSCode Chrome extension user data
+.vscode/chrome
