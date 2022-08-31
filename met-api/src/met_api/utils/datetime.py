@@ -20,5 +20,5 @@ import pytz
 def local_datetime():
     """Get the local datetime."""
     utcmoment = datetime.utcnow().replace(tzinfo=pytz.utc)
-    localDatetime = utcmoment.astimezone(pytz.timezone('America/Vancouver'))        
-    return localDatetime
+    now = utcmoment.astimezone(pytz.timezone('America/Vancouver'))
+    return now

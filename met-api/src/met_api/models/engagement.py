@@ -118,8 +118,8 @@ class Engagement(db.Model):
     @classmethod
     def close_engagements_due(cls) -> List[EngagementSchema]:
         """Update engagement to closed."""
-        localDatetime = local_datetime()
-        date_due = (localDatetime + timedelta(days=-1))
+        now = local_datetime()
+        date_due = (now + timedelta(days=-1))
         date_due = datetime(date_due.year, date_due.month, date_due.day)
         engagements_schema = EngagementSchema(many=True)
         update_fields = dict(
