@@ -3,12 +3,12 @@
 Manages the engagement
 """
 
-from datetime import datetime
-
+from datetime import datetime, timedelta
 from marshmallow import EXCLUDE, Schema, fields
-from met_api.constants.engagement_status import Status, SubmissionStatus
 
+from met_api.constants.engagement_status import Status, SubmissionStatus
 from met_api.schemas.engagement_survey import EngagementSurveySchema
+from met_api.utils.datetime import local_datetime
 
 from .engagement_status import EngagementStatusSchema
 
@@ -59,7 +59,11 @@ class EngagementSchema(Schema):
         if obj.status_id == Status.Closed.value:
             return SubmissionStatus.Closed.value
 
-        if obj.start_date <= datetime.now() <= obj.end_date:
+        localDatetime = local_datetime()
+        date_due = (localDatetime + timedelta(days=1))
+        date_due = datetime(date_due.year, date_due.month, date_due.day)
+
+        if obj.start_date <= date_due <= obj.end_date:
             return SubmissionStatus.Open.value
 
         if datetime.now() <= obj.start_date:
