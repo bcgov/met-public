@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Grid, TextField, Stack, CircularProgress } from '@mui/material';
+import { Grid, TextField, Stack } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { useNavigate } from 'react-router-dom';
 import { hasKey } from 'utils';
@@ -98,9 +98,8 @@ export const CreateOptions = () => {
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <PrimaryButton onClick={handleSaveClick} disabled={isSaving}>
+                    <PrimaryButton onClick={handleSaveClick} loading={isSaving}>
                         {'Save & Continue'}
-                        {isSaving && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
                     </PrimaryButton>
                     <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
                 </Stack>

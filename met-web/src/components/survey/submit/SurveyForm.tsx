@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Skeleton, Grid, Stack, CircularProgress } from '@mui/material';
+import { Skeleton, Grid, Stack } from '@mui/material';
 import { ActionContext } from './ActionContext';
 import FormSubmit from 'components/Form/FormSubmit';
 import { FormSubmissionData } from 'components/Form/types';
@@ -38,11 +38,11 @@ export const SurveyForm = ({ handleClose }: SurveyFormProps) => {
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
                     <SecondaryButton onClick={() => handleClose()}>Cancel</SecondaryButton>
                     <PrimaryButton
-                        disabled={!isValid || isLoggedIn || isSubmitting}
+                        disabled={!isValid || isLoggedIn}
                         onClick={() => handleSubmit(submissionData)}
+                        loading={isSubmitting}
                     >
                         Submit Survey
-                        {isSubmitting && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
                     </PrimaryButton>
                 </Stack>
             </Grid>

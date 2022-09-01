@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-    Grid,
-    FormControl,
-    RadioGroup,
-    FormControlLabel,
-    Radio,
-    Stack,
-    CircularProgress,
-    FormLabel,
-} from '@mui/material';
+import { Grid, FormControl, RadioGroup, FormControlLabel, Radio, Stack, FormLabel } from '@mui/material';
 import { Comment, createDefaultComment } from 'models/comment';
 import { getComment, ReviewComment } from 'services/commentService';
 import { useAppDispatch } from 'hooks';
@@ -164,9 +155,8 @@ const CommentReview = () => {
 
                 <Grid item xs={12}>
                     <Stack direction="row" spacing={2}>
-                        <PrimaryButton disabled={isSaving} onClick={handleSave}>
+                        <PrimaryButton loading={isSaving} onClick={handleSave}>
                             {'Save & Continue'}
-                            {isSaving && <CircularProgress color="inherit" sx={{ marginLeft: 1 }} size={20} />}
                         </PrimaryButton>
                         <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
                     </Stack>

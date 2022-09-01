@@ -12,12 +12,13 @@ import { styled } from '@mui/system';
 import EditIcon from '@mui/icons-material/Edit';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Palette } from 'styles/Theme';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 export const RoundedButton = styled(MuiButton)(() => ({
     borderRadius: '23px',
 }));
 
-export const StyledPrimaryButton = styled(MuiButton)(() => ({
+export const StyledPrimaryButton = styled(LoadingButton)(() => ({
     backgroundColor: Palette.primary.main,
     color: '#fff',
     '&:hover': {
@@ -48,7 +49,11 @@ export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNo
 );
 
 export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
-    <StyledPrimaryButton {...rest} variant="contained">
+    <StyledPrimaryButton
+        {...rest}
+        variant="contained"
+        loadingIndicator={<CircularProgress color="primary" size={'1.8em'} />}
+    >
         {children}
     </StyledPrimaryButton>
 );

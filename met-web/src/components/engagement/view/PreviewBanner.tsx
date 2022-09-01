@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { ActionContext } from './ActionContext';
-import { Box, CircularProgress, Grid, Skeleton, Typography, Stack, useMediaQuery, Theme } from '@mui/material';
+import { Box, Grid, Skeleton, Typography, Stack, useMediaQuery, Theme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { ConditionalComponent, PrimaryButton, SecondaryButton } from 'components/common';
@@ -129,9 +129,12 @@ export const PreviewBanner = () => {
                         </SecondaryButton>
 
                         <ConditionalComponent condition={isDraft}>
-                            <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => handlePublishEngagement()}>
+                            <PrimaryButton
+                                sx={{ marginLeft: '1em' }}
+                                onClick={() => handlePublishEngagement()}
+                                loading={isPublishing}
+                            >
                                 Publish
-                                {isPublishing && <CircularProgress sx={{ marginLeft: 1 }} size={20} />}
                             </PrimaryButton>
                         </ConditionalComponent>
                         <ConditionalComponent condition={!isDraft}>

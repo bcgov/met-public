@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Grid, TextField, Stack, CircularProgress, Autocomplete } from '@mui/material';
+import { Grid, TextField, Stack, Autocomplete } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { useNavigate } from 'react-router-dom';
 import { fetchSurveys, linkSurvey } from 'services/surveyService/form';
@@ -97,9 +97,8 @@ const LinkOptions = () => {
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <PrimaryButton onClick={handleSave}>
+                    <PrimaryButton onClick={handleSave} loading={isSaving}>
                         {'Save & Continue'}
-                        {isSaving && <CircularProgress color="inherit" sx={{ marginLeft: 1 }} size={20} />}
                     </PrimaryButton>
                     <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
                 </Stack>
