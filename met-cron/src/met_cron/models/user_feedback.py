@@ -16,7 +16,7 @@ class UserFeedback(BaseModel):  # pylint: disable=too-few-public-methods
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     survey_id = db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), primary_key=True, nullable=False)
     user_id = db.Column(db.Integer)
-    comment = db.Column(db.String(5000))
+    comment = db.Column(db.Text())
     sentiment_analysis = db.Column(db.String(100))
     label = db.Column(db.String(100))
     source_comment_id = db.Column(db.Integer)
