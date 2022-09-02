@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton } from 'components/common';
 import { Survey } from 'models/survey';
-import { HeadCell } from 'components/common/Table/types';
+import { HeadCell, Pagination } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink } from '@mui/material';
 import TextField from '@mui/material/TextField';
@@ -22,6 +22,13 @@ const SurveyListing = () => {
     });
     const [searchText, setSearchText] = useState('');
     const [surveys, setSurveys] = useState<Survey[]>([]);
+    const [page, setPage] = useState(1);
+    const [size, setSize] = useState(10);
+    const [pagination, setPagination] = useState<Pagination>({
+        page: 0,
+        size: 10,
+        total: 0,
+    });
     const dispatch = useAppDispatch();
 
     const callFetchSurveys = async () => {
@@ -184,6 +191,9 @@ const SurveyListing = () => {
                     rows={surveys}
                     defaultSort={'created_date'}
                     noRowBorder={true}
+                    handlePageChange={(newPage: number) => setPage(newPage)}
+                    handleSizeChange={(newSize: number) => setSize(newSize)}
+                    handleChangePagination={(pagination: Pagination) => setPagination(pagination)}
                 />
             </Grid>
         </MetPageGridContainer>

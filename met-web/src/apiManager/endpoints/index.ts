@@ -2,10 +2,10 @@ import { AppConfig } from 'config';
 
 const Endpoints = {
     Engagement: {
-        GET_ALL: `${AppConfig.apiUrl}/engagement/`,
-        CREATE: `${AppConfig.apiUrl}/engagement/`,
-        UPDATE: `${AppConfig.apiUrl}/engagement/`,
-        GET: `${AppConfig.apiUrl}/engagement/engagement_id`,
+        GET_LIST: `${AppConfig.apiUrl}/engagements/`,
+        CREATE: `${AppConfig.apiUrl}/engagements/`,
+        UPDATE: `${AppConfig.apiUrl}/engagements/`,
+        GET: `${AppConfig.apiUrl}/engagements/engagement_id`,
     },
     User: {
         CREATE_UPDATE: `${AppConfig.apiUrl}/user/`,

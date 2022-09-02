@@ -5,13 +5,14 @@ import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton } from '../common';
 import { Engagement } from 'models/engagement';
-import { useAppSelector, useAppDispatch } from 'hooks';
-import { HeadCell } from '../common/Table/types';
+import { useAppDispatch } from 'hooks';
+import { HeadCell, Pagination } from '../common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink } from '@mui/material';
-import { fetchAll } from 'services/engagementService';
+import { getEngagements } from 'services/engagementService';
 import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
+import { openNotification } from 'services/notificationService/notificationSlice';
 
 const LandingPage = () => {
     const [searchFilter, setSearchFilter] = useState({
@@ -19,14 +20,41 @@ const LandingPage = () => {
         value: '',
     });
     const [searchText, setSearchText] = useState('');
+    const [engagements, setEngagements] = useState<Engagement[]>([]);
+    const [page, setPage] = useState(1);
+    const [size, setSize] = useState(10);
+    const [total, setTotal] = useState(0);
+    const [pagination, setPagination] = useState<Pagination>({
+        page: 0,
+        size: 10,
+        total: 0,
+    });
+    const [tableLoading, setTableLoading] = useState(false);
 
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        fetchAll(dispatch);
-    }, [dispatch]);
+        callGetEngagements();
+    }, [page, size]);
 
-    const rows = useAppSelector<Engagement[]>((state) => state.engagement.allEngagements);
+    const callGetEngagements = async () => {
+        try {
+            setTableLoading(true);
+            const response = await getEngagements({ page, size });
+            setEngagements(response.items);
+            setTotal(response.total);
+            setTableLoading(false);
+        } catch (error) {
+            console.log(error);
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while trying to fetch engagements, please refresh the page or try again at a later time',
+                }),
+            );
+            setTableLoading(false);
+        }
+    };
 
     const handleSearchBarClick = (engagementNameFilter: string) => {
         setSearchFilter({
@@ -170,9 +198,16 @@ const LandingPage = () => {
                 <MetTable
                     filter={searchFilter}
                     headCells={headCells}
-                    rows={rows}
+                    rows={engagements}
                     defaultSort={'created_date'}
                     noRowBorder={true}
+                    handlePageChange={(newPage: number) => setPage(newPage)}
+                    handleSizeChange={(newSize: number) => setSize(newSize)}
+                    handleChangePagination={(pagination: Pagination) => setPagination(pagination)}
+                    total={total}
+                    page={page}
+                    size={size}
+                    loading={tableLoading}
                 />
             </Grid>
         </MetPageGridContainer>

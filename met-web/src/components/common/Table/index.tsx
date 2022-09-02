@@ -10,9 +10,10 @@ import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Paper from '@mui/material/Paper';
 import { visuallyHidden } from '@mui/utils';
-import { HeadCell } from 'components/common/Table/types';
+import { HeadCell, Pagination } from 'components/common/Table/types';
 import { hasKey } from 'utils';
 import { ConditionalComponent } from '..';
+import { CircularProgress, Grid, LinearProgress } from '@mui/material';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
@@ -102,6 +103,13 @@ interface MetTableProps<T> {
     rows: T[];
     hideHeader?: boolean;
     noRowBorder?: boolean;
+    handlePageChange: (newPage: number) => void;
+    handleSizeChange: (newPage: number) => void;
+    handleChangePagination: (pagination: Pagination) => void;
+    total?: number;
+    page?: number;
+    size?: number;
+    loading?: boolean;
 }
 function MetTable<T>({
     hideHeader = false,
@@ -110,12 +118,17 @@ function MetTable<T>({
     defaultSort,
     rows = [],
     noRowBorder = false,
+    handlePageChange,
+    handleSizeChange,
+    handleChangePagination,
+    total = 0,
+    page = 1,
+    size = 10,
+    loading = false,
 }: MetTableProps<T>) {
     const [filteredRows, setFilteredRows] = useState<T[]>(rows);
     const [order, setOrder] = useState<Order>('desc');
     const [orderBy, setOrderBy] = useState(defaultSort);
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
 
     useEffect(() => {
         if (!filter.key || !filter.value) {
@@ -140,16 +153,17 @@ function MetTable<T>({
     };
 
     const handleChangePage = (_event: unknown, newPage: number) => {
-        setPage(newPage);
+        handlePageChange(newPage + 1);
     };
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
+        const newSize = parseInt(event.target.value, 10);
+        handleSizeChange(newSize);
+        handlePageChange(1);
     };
 
     // Avoid a layout jump when reaching the last page with empty filteredRows.
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredRows.length) : 0;
+    const emptyRows = page > 1 ? Math.max(0, page * size - total) : 0;
 
     return (
         <Box>
@@ -166,36 +180,52 @@ function MetTable<T>({
                             />
                         </ConditionalComponent>
 
-                        <TableBody>
-                            {stableSort<T>(filteredRows, getComparator<T>(order, orderBy))
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((row, rowIndex) => {
-                                    return (
-                                        <TableRow hover tabIndex={-1} key={`row-${rowIndex}`}>
-                                            {headCells.map((cell, cellIndex) => (
-                                                <TableCell
-                                                    align={cell.align}
-                                                    key={`row-${rowIndex}-${cellIndex}`}
-                                                    style={cell.customStyle || {}}
-                                                    sx={[
-                                                        noRowBorder && {
-                                                            border: 'none',
-                                                        },
-                                                    ]}
-                                                >
-                                                    {cell.getValue ? cell.getValue(row) : String(row[cell.key])}
-                                                </TableCell>
-                                            ))}
-                                        </TableRow>
-                                    );
-                                })}
+                        <TableBody sx={{ position: 'relative' }}>
+                            <ConditionalComponent condition={loading}>
+                                <Box
+                                    sx={{
+                                        position: 'absolute',
+                                        width: '100%',
+                                        height: '100%',
+                                    }}
+                                >
+                                    <LinearProgress />
+                                </Box>
+                            </ConditionalComponent>
+                            {stableSort<T>(filteredRows, getComparator<T>(order, orderBy)).map((row, rowIndex) => {
+                                return (
+                                    <TableRow hover tabIndex={-1} key={`row-${rowIndex}`}>
+                                        {headCells.map((cell, cellIndex) => (
+                                            <TableCell
+                                                align={cell.align}
+                                                key={`row-${rowIndex}-${cellIndex}`}
+                                                style={cell.customStyle || {}}
+                                                sx={[
+                                                    noRowBorder && {
+                                                        border: 'none',
+                                                    },
+                                                ]}
+                                            >
+                                                {cell.getValue ? cell.getValue(row) : String(row[cell.key])}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                );
+                            })}
                             {emptyRows > 0 && (
                                 <TableRow
                                     style={{
                                         height: 53 * emptyRows,
                                     }}
                                 >
-                                    <TableCell colSpan={headCells.length} />
+                                    <TableCell
+                                        colSpan={headCells.length}
+                                        sx={[
+                                            noRowBorder && {
+                                                border: 'none',
+                                            },
+                                        ]}
+                                    />
                                 </TableRow>
                             )}
                         </TableBody>
@@ -204,9 +234,9 @@ function MetTable<T>({
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={filteredRows.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
+                    count={Number(total)}
+                    rowsPerPage={size}
+                    page={page - 1}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />

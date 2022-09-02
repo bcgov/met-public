@@ -8,3 +8,9 @@ export interface HeadCell<T> {
     customStyle?: React.CSSProperties;
     align?: 'right' | 'left' | 'inherit' | 'center' | 'justify';
 }
+
+export interface Pagination {
+    page: number;
+    size: number;
+    total: number;
+}

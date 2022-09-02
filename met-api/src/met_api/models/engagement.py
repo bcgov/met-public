@@ -53,6 +53,16 @@ class Engagement(db.Model):
         return engagements_schema.dump(data)
 
     @classmethod
+    def get_engagements_paginated(cls, page, size, statuses = []):
+        """Get engagements paginated."""
+        query = db.session.query(Engagement).join(EngagementStatus)
+        
+        if len(statuses) > 0:
+            query.filter(Engagement.status_id.in_(statuses))
+            
+        return query.order_by(Engagement.id.asc()).paginate(page=page, per_page=size)
+
+    @classmethod
     def get_engagements_by_status(cls, status_id):
         """Get all engagements by a list of status."""
         engagements_schema = EngagementSchema(many=True)

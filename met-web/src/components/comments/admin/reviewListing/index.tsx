@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import { Link, useParams } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton, MetHeader1 } from 'components/common';
 import { Comment } from 'models/comment';
-import { HeadCell } from 'components/common/Table/types';
+import { HeadCell, Pagination } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink } from '@mui/material';
 import TextField from '@mui/material/TextField';
@@ -21,6 +21,13 @@ const CommentListing = () => {
     });
     const [searchText, setSearchText] = useState('');
     const [comments, setComments] = useState<Comment[]>([]);
+    const [page, setPage] = useState(1);
+    const [size, setSize] = useState(10);
+    const [pagination, setPagination] = useState<Pagination>({
+        page: 0,
+        size: 10,
+        total: 0,
+    });
 
     const { surveyId } = useParams();
 
@@ -138,6 +145,9 @@ const CommentListing = () => {
                     rows={comments}
                     defaultSort={'id'}
                     noRowBorder={true}
+                    handlePageChange={(newPage: number) => setPage(newPage)}
+                    handleSizeChange={(newSize: number) => setSize(newSize)}
+                    handleChangePagination={(pagination: Pagination) => setPagination(pagination)}
                 />
                 <PrimaryButton component={Link} to={`/survey/${comments[0]?.survey_id || 0}/comments/all`}>
                     Read All Comments

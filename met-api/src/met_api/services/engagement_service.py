@@ -36,11 +36,30 @@ class EngagementService:
         """Get all engagements."""
         if user_id:
             # authenticated users have access to any engagement status
-            engagements = Engagement.get_all_engagements()
+            engagements = Engagement.get_engagements_paginated
         else:
             engagements = Engagement.get_engagements_by_status([Status.Published.value, Status.Closed.value])
 
         return engagements
+
+    @staticmethod
+    def get_engagements_paginated(user_id, page, size):
+        """Get engagements paginated."""
+        if user_id:
+            # authenticated users have access to any engagement status
+            engagements_page = Engagement.get_engagements_paginated(page, size)
+        else:
+            engagements_page = Engagement.get_engagements_paginated(page, size, statuses=[Status.Published.value])
+        
+        engagements_schema = EngagementSchema(many=True)
+        {
+            'items': engagements_schema.dump(engagements_page.items),
+            'total': engagements_page.total
+        }
+        return {
+            'items': engagements_schema.dump(engagements_page.items),
+            'total': engagements_page.total
+        }
 
     @staticmethod
     def close_engagements_due():

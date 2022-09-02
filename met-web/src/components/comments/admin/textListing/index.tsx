@@ -3,7 +3,7 @@ import MetTable from 'components/common/Table';
 import { Link, useParams } from 'react-router-dom';
 import { ConditionalComponent, MetPageGridContainer, PrimaryButton } from 'components/common';
 import { Comment } from 'models/comment';
-import { HeadCell } from 'components/common/Table/types';
+import { HeadCell, Pagination } from 'components/common/Table/types';
 import { Link as MuiLink, Typography, Grid, Stack, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAppDispatch } from 'hooks';
@@ -19,6 +19,13 @@ const CommentTextListing = () => {
         value: '',
     });
     const [searchText, setSearchText] = useState('');
+    const [page, setPage] = useState(1);
+    const [size, setSize] = useState(10);
+    const [pagination, setPagination] = useState<Pagination>({
+        page: 0,
+        size: 10,
+        total: 0,
+    });
 
     const dispatch = useAppDispatch();
     const { surveyId } = useParams();
@@ -135,6 +142,9 @@ const CommentTextListing = () => {
                     rows={comments}
                     defaultSort={'id'}
                     noRowBorder={true}
+                    handlePageChange={(newPage: number) => setPage(newPage)}
+                    handleSizeChange={(newSize: number) => setSize(newSize)}
+                    handleChangePagination={(pagination: Pagination) => setPagination(pagination)}
                 />
                 <PrimaryButton component={Link} to={`/survey/${comments[0]?.survey_id || 0}/comments`}>
                     Return to Comments List
