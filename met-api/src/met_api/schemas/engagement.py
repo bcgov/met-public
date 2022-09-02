@@ -60,8 +60,8 @@ class EngagementSchema(Schema):
             return SubmissionStatus.Closed.value
 
         now = local_datetime()
-        date_due = (now + timedelta(days=1))
-        date_due = datetime(date_due.year, date_due.month, date_due.day)
+        # Strip time off datetime object
+        date_due = datetime(now.year, now.month, now.day)
 
         if obj.start_date <= date_due <= obj.end_date:
             return SubmissionStatus.Open.value

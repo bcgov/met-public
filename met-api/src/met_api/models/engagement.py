@@ -119,17 +119,18 @@ class Engagement(db.Model):
     def close_engagements_due(cls) -> List[EngagementSchema]:
         """Update engagement to closed."""
         now = local_datetime()
-        date_due = (now + timedelta(days=-1))
-        date_due = datetime(date_due.year, date_due.month, date_due.day)
+        # Strip the time off the datetime object
+        date_due = datetime(now.year, now.month, now.day)
         engagements_schema = EngagementSchema(many=True)
         update_fields = dict(
             status_id=Status.Closed.value,
             updated_date=datetime.now(),
             updated_by=SYSTEM_USER
         )
+        # Close published engagements where end date is prior than today
         query = Engagement.query \
             .filter(Engagement.status_id == Status.Published.value) \
-            .filter(Engagement.end_date <= date_due)
+            .filter(Engagement.end_date < date_due)
         records = query.all()
         if not records:
             return []
