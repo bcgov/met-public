@@ -38,7 +38,7 @@ class EngagementService:
             # authenticated users have access to any engagement status
             engagements = Engagement.get_all_engagements()
         else:
-            engagements = Engagement.get_engagements_by_status([Status.Published.value])
+            engagements = Engagement.get_engagements_by_status([Status.Published.value, Status.Closed.value])
 
         return engagements
 

@@ -10,6 +10,7 @@ from sqlalchemy.sql.schema import ForeignKey
 from met_api.constants.engagement_status import Status
 from met_api.constants.user import SYSTEM_USER
 from met_api.schemas.engagement import EngagementSchema
+from met_api.utils.datetime import local_datetime
 
 from .db import db
 from .default_method_result import DefaultMethodResult
@@ -117,15 +118,19 @@ class Engagement(db.Model):
     @classmethod
     def close_engagements_due(cls) -> List[EngagementSchema]:
         """Update engagement to closed."""
+        now = local_datetime()
+        # Strip the time off the datetime object
+        date_due = datetime(now.year, now.month, now.day)
         engagements_schema = EngagementSchema(many=True)
         update_fields = dict(
             status_id=Status.Closed.value,
             updated_date=datetime.now(),
             updated_by=SYSTEM_USER
         )
+        # Close published engagements where end date is prior than today
         query = Engagement.query \
             .filter(Engagement.status_id == Status.Published.value) \
-            .filter(Engagement.end_date < datetime.now())
+            .filter(Engagement.end_date < date_due)
         records = query.all()
         if not records:
             return []
