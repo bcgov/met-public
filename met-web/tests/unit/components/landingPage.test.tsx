@@ -16,7 +16,7 @@ test('Load Landing Page', async () => {
 
     await waitFor(() => screen.getByTestId('create-engagement-button-landingPage'));
 
-    expect(screen.getByTestId('create-engagement-button-landingPage')).toHaveTextContent('+ Create An Engagement');
+    expect(screen.getByTestId('create-engagement-button-landingPage')).toHaveTextContent('+ Create Engagement');
 
     expect(screen.getByTestId('create-engagement-button-landingPage')).not.toBeDisabled();
 });
