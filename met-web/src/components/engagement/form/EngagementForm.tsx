@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Typography, Grid, TextField, CircularProgress, Stack } from '@mui/material';
+import { Typography, Grid, TextField, Stack } from '@mui/material';
 import { MetPaper, MetLabel, PrimaryButton, SecondaryButton, MetHeader4 } from '../../common';
 import RichTextEditor from './RichTextEditor';
 import { ActionContext } from './ActionContext';
