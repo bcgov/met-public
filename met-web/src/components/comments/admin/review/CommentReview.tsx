@@ -63,6 +63,11 @@ const CommentReview = () => {
         return <CommentReviewSkeleton />;
     }
 
+    const filteredVerdict = [CommentStatus.Approved, CommentStatus.Rejected].filter(
+        (verdict) => comment.status_id === verdict,
+    );
+    const defaultVerdict = filteredVerdict.length === 0 ? CommentStatus.Approved : filteredVerdict[0];
+
     return (
         <MetPageGridContainer>
             <Grid
@@ -136,7 +141,7 @@ const CommentReview = () => {
                             Comment Approval
                         </FormLabel>
                         <RadioGroup
-                            defaultValue={CommentStatus.Approved}
+                            defaultValue={defaultVerdict}
                             onChange={(e) => handleReviewChange(Number(e.target.value))}
                         >
                             <FormControlLabel
