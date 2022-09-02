@@ -2,7 +2,7 @@
 
 Manages the engagement
 """
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import List
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.sql.schema import ForeignKey

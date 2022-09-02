@@ -3,7 +3,7 @@
 Manages the engagement
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from marshmallow import EXCLUDE, Schema, fields
 
 from met_api.constants.engagement_status import Status, SubmissionStatus
