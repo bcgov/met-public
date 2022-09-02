@@ -167,7 +167,6 @@ const SurveyListing = () => {
                         <PrimaryButton
                             data-testid="SurveyListing/search-button"
                             onClick={() => handleSearchBarClick(searchText)}
-                            noWrap
                         >
                             <SearchIcon />
                         </PrimaryButton>

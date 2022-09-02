@@ -153,7 +153,6 @@ const LandingPage = () => {
                         <PrimaryButton
                             data-testid="search-button-landingPage"
                             onClick={() => handleSearchBarClick(searchText)}
-                            noWrap
                         >
                             <SearchIcon />
                         </PrimaryButton>
