@@ -138,34 +138,34 @@ const LandingPage = () => {
             columnSpacing={2}
             rowSpacing={1}
         >
-            <Grid item xs={12} md={4} lg={4}>
-                <Stack direction="row" spacing={1}>
-                    <TextField
-                        id="engagement-name"
-                        variant="outlined"
-                        label="Search by name"
-                        fullWidth
-                        value={searchText}
-                        onChange={(e) => setSearchText(e.target.value)}
-                        size="small"
-                    />
+            <Grid item xs={12} lg={10}>
+                <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="100%" justifyContent="space-between">
+                    <Stack direction="row" spacing={1} alignItems="center">
+                        <TextField
+                            id="engagement-name"
+                            variant="outlined"
+                            label="Search by name"
+                            fullWidth
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                            size="small"
+                        />
+                        <PrimaryButton
+                            data-testid="search-button-landingPage"
+                            onClick={() => handleSearchBarClick(searchText)}
+                            noWrap
+                        >
+                            <SearchIcon />
+                        </PrimaryButton>
+                    </Stack>
                     <PrimaryButton
-                        data-testid="search-button-landingPage"
-                        onClick={() => handleSearchBarClick(searchText)}
+                        component={Link}
+                        to="/engagement/form/create"
+                        data-testid="create-engagement-button-landingPage"
                     >
-                        <SearchIcon />
+                        + Create Engagement
                     </PrimaryButton>
                 </Stack>
-            </Grid>
-            <Grid item xs={0} md={4} lg={3}></Grid>
-            <Grid item xs={12} md={4} lg={3} container direction="row" justifyContent={'flex-end'}>
-                <PrimaryButton
-                    component={Link}
-                    to="/engagement/form/create"
-                    data-testid="create-engagement-button-landingPage"
-                >
-                    + Create An Engagement
-                </PrimaryButton>
             </Grid>
             <Grid item xs={12} lg={10}>
                 <MetTable
