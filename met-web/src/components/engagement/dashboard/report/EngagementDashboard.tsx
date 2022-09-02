@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Link as MuiLink, Skeleton, Typography } from '@mui/material';
+import { Grid, Link as MuiLink, Skeleton } from '@mui/material';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { AppConfig } from 'config';
-import { MetPaper, PrimaryButton } from 'components/common';
+import { MetHeader1, MetPaper, PrimaryButton } from 'components/common';
 import { ReportBanner } from './ReportBanner';
 import { createDefaultEngagement, Engagement } from 'models/engagement';
 import { SubmissionStatus } from 'constants/engagementStatus';
@@ -101,7 +101,7 @@ export const EngagementDashboard = () => {
                             rowSpacing={2}
                         >
                             <Grid item xs={12} sm={6}>
-                                <Typography variant={'h4'}>What We Heard - {engagement.name}</Typography>
+                                <MetHeader1>What We Heard - {engagement.name}</MetHeader1>
                             </Grid>
                             <Grid
                                 item

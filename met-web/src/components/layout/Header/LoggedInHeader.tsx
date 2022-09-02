@@ -2,7 +2,6 @@ import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import UserService from 'services/userService';
 import { useMediaQuery, Theme } from '@mui/material';
@@ -10,6 +9,7 @@ import SideNav from '../SideNav/SideNav';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Palette } from 'styles/Theme';
 import EnvironmentBanner from './EnvironmentBanner';
+import { MetHeader1, MetHeader2 } from 'components/common';
 
 const LoggedInHeader = ({ drawerWidth = 240 }) => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
@@ -36,9 +36,11 @@ const LoggedInHeader = ({ drawerWidth = 240 }) => {
                         alt="BC Logo"
                         src="https://marketplacebc.ca/wp-content/themes/sbbc-marketplace/images/bc-logo.svg"
                     />
-                    <Typography variant={isMediumScreen ? 'h3' : 'h6'} sx={{ flexGrow: 1 }}>
-                        MET
-                    </Typography>
+                    {isMediumScreen ? (
+                        <MetHeader1 sx={{ flexGrow: 1 }}>MET</MetHeader1>
+                    ) : (
+                        <MetHeader2 sx={{ flexGrow: 1 }}>MET</MetHeader2>
+                    )}
                     <Button data-testid="button-header" color="inherit" onClick={() => UserService.doLogout()}>
                         Logout
                     </Button>

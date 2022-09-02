@@ -1,6 +1,6 @@
 import React from 'react';
-import { Modal, Grid, Typography } from '@mui/material';
-import { modalStyle, SecondaryButton } from 'components/common';
+import { Modal, Grid } from '@mui/material';
+import { modalStyle, SecondaryButton, MetHeader1, ModalSubtitle } from 'components/common';
 
 interface CommentInfoModalProps {
     modalOpen: boolean;
@@ -23,15 +23,13 @@ const CommentInfoModal = ({ modalOpen, handleCloseModal }: CommentInfoModalProps
             >
                 <Grid container item xs={12}>
                     <Grid item xs={12}>
-                        <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
-                            View Comments
-                        </Typography>
+                        <MetHeader1 sx={{ fontWeight: 'bold', mb: 1 }}>View Comments</MetHeader1>
                     </Grid>
                     <Grid item xs={12}>
-                        <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                        <ModalSubtitle sx={{ mb: 1 }}>
                             The comments will only be available to view after the engagement period is over and the
                             engagement is closed.
-                        </Typography>
+                        </ModalSubtitle>
                     </Grid>
                 </Grid>
                 <Grid item xs={12} container direction={{ xs: 'column', sm: 'row' }} justifyContent="flex-end">

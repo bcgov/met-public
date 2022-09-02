@@ -1,7 +1,7 @@
 import React from 'react';
-import { Grid, Typography, Stack } from '@mui/material';
+import { Grid, Stack } from '@mui/material';
 import { FailurePanelProps } from './types';
-import { modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
+import { modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody, ModalSubtitle } from 'components/common';
 
 const FailurePanel = ({ email, handleClose, tryAgain }: FailurePanelProps) => {
     return (
@@ -14,26 +14,22 @@ const FailurePanel = ({ email, handleClose, tryAgain }: FailurePanelProps) => {
             spacing={2}
         >
             <Grid item xs={12}>
-                <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                    We are sorry
-                </Typography>
+                <MetHeader1 sx={{ fontWeight: 'bold' }}>We are sorry</MetHeader1>
             </Grid>
             <Grid item xs={12}>
-                <Typography variant="subtitle1">There was a problem with the email address you provided:</Typography>
+                <MetBody>There was a problem with the email address you provided:</MetBody>
             </Grid>
 
             <Grid item xs={12}>
-                <Typography>{email}</Typography>
+                <MetBody>{email}</MetBody>
             </Grid>
             <Grid item xs={12}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                    Please verify your email and try again.
-                </Typography>
+                <ModalSubtitle sx={{ fontWeight: 'bold' }}>Please verify your email and try again.</ModalSubtitle>
             </Grid>
             <Grid item xs={12}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                <ModalSubtitle sx={{ fontWeight: 'bold' }}>
                     If this problem persists, contact sample@gmail.com
-                </Typography>
+                </ModalSubtitle>
             </Grid>
             <Grid item container xs={12} justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">

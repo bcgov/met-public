@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Stack, Typography, Divider, TextField, IconButton } from '@mui/material';
+import { Grid, Stack, Divider, TextField, IconButton } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import FormBuilder from 'components/Form/FormBuilder';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
@@ -9,7 +9,7 @@ import { getSurvey, putSurvey } from 'services/surveyService/form';
 import { Survey } from 'models/survey';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { MetPageGridContainer, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetHeader3, MetPageGridContainer, PrimaryButton, SecondaryButton } from 'components/common';
 import FormBuilderSkeleton from './FormBuilderSkeleton';
 import { FormBuilderData } from 'components/Form/types';
 import { EngagementStatus } from 'constants/engagementStatus';
@@ -137,14 +137,13 @@ const SurveyFormBuilder = () => {
                 <Stack direction="row" justifyContent="flex-start" alignItems="center">
                     {!isNameFocused ? (
                         <>
-                            <Typography
-                                variant="h6"
+                            <MetHeader3
                                 onClick={() => {
                                     setIsNamedFocused(true);
                                 }}
                             >
                                 {name}
-                            </Typography>
+                            </MetHeader3>
                             <IconButton
                                 onClick={() => {
                                     setIsNamedFocused(!isNameFocused);

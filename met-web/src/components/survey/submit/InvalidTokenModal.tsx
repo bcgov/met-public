@@ -1,7 +1,7 @@
 import React from 'react';
-import { Grid, Typography, Modal } from '@mui/material';
+import { Grid, Modal } from '@mui/material';
 import { InvalidTokenModalProps } from '../types';
-import { modalStyle, PrimaryButton } from 'components/common';
+import { modalStyle, PrimaryButton, MetHeader1, MetBody } from 'components/common';
 
 export const InvalidTokenModal = ({ open, handleClose }: InvalidTokenModalProps) => {
     return (
@@ -20,26 +20,21 @@ export const InvalidTokenModal = ({ open, handleClose }: InvalidTokenModalProps)
                 spacing={2}
             >
                 <Grid item xs={12}>
-                    <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold' }}>
-                        Oops! Something Went Wrong
-                    </Typography>
+                    <MetHeader1 sx={{ mb: 2, fontWeight: 'bold' }}>Oops! Something Went Wrong</MetHeader1>
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography>
+                    <MetBody>
                         You are trying to access a survey through an invalid link, please check the possible reasons:
-                    </Typography>
+                    </MetBody>
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography
-                        variant="subtitle2"
-                        sx={{ p: '1em', borderLeft: 8, borderColor: '#003366', backgroundColor: '#F2F2F2' }}
-                    >
+                    <MetBody sx={{ p: '1em', borderLeft: 8, borderColor: '#003366', backgroundColor: '#F2F2F2' }}>
                         The survey link is expired (24 hours). Or
                         <br />
                         This link has already been previously used. Or
                         <br />
                         The engagement period is over.
-                    </Typography>
+                    </MetBody>
                 </Grid>
                 <Grid item container xs={12} justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
                     <PrimaryButton onClick={handleClose}>Back to Engagement</PrimaryButton>

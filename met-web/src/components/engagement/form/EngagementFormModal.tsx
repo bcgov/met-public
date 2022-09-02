@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-import { Modal, Grid, Typography, Stack } from '@mui/material';
+import { Modal, Grid, Stack } from '@mui/material';
 import { ActionContext } from './ActionContext';
-import { modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
+import { modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody, ModalSubtitle } from 'components/common';
 
 const EngagementFormModal = () => {
     const { modalState, handleCloseModal } = useContext(ActionContext);
@@ -24,22 +24,18 @@ const EngagementFormModal = () => {
             >
                 <Grid container item xs={12}>
                     <Grid item xs={12}>
-                        <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
-                            Remove Survey
-                        </Typography>
+                        <MetHeader1 sx={{ fontWeight: 'bold', mb: 1 }}>Remove Survey</MetHeader1>
                     </Grid>
                     <Grid item xs={12}>
-                        <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                        <ModalSubtitle sx={{ mb: 1 }}>
                             You will be removing this survey from the engagement. This survey will not be deleted and
                             will be available to add to any engagement.
-                        </Typography>
+                        </ModalSubtitle>
                     </Grid>
                 </Grid>
                 <Grid container direction="row" item xs={12}>
                     <Grid item xs={12}>
-                        <Typography variant="body1" sx={{ mb: 1, fontWeight: 'bold' }}>
-                            Do you want to remove this survey?
-                        </Typography>
+                        <MetBody sx={{ mb: 1, fontWeight: 'bold' }}>Do you want to remove this survey?</MetBody>
                     </Grid>
 
                     <Grid item container xs={12} justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>

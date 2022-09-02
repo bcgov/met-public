@@ -90,9 +90,7 @@ export const MetWidget = ({ children, title, onEditClick, onDeleteClick, deletin
         <MetWidgetPaper elevation={3} {...rest}>
             <Grid container alignItems={'flex-start'} justifyContent="flex-start" direction="row">
                 <Grid item xs={6}>
-                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                        {title}
-                    </Typography>
+                    <MetHeader3 sx={{ fontWeight: 'bold' }}>{title}</MetHeader3>
                 </Grid>
                 <Grid item xs={6} container direction="row" justifyContent="flex-end">
                     <Stack direction="row" spacing={1}>
@@ -179,4 +177,44 @@ export const modalStyle = {
     m: 1,
     overflowY: 'scroll',
     color: Palette.text.primary,
+};
+
+export const MetHeader1 = styled(Typography)(() => ({
+    fontSize: '2.3rem',
+    fontWeight: 500,
+    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+}));
+
+export const MetHeader2 = styled(Typography)(() => ({
+    fontSize: '1.9rem',
+    fontWeight: 500,
+    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+}));
+
+export const MetHeader3 = styled(Typography)(() => ({
+    fontSize: '1.5rem',
+    fontWeight: 500,
+    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+}));
+
+export const MetHeader4 = styled(Typography)(() => ({
+    fontSize: '1.3rem',
+    fontWeight: 500,
+    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+}));
+
+export const MetBody = styled(Typography)(() => ({
+    fontSize: '16px',
+    fontWeight: 500,
+    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+}));
+
+export const ModalSubtitle = ({
+    children,
+    ...rest
+}: {
+    children: JSX.Element[] | JSX.Element | string;
+    [prop: string]: unknown;
+}) => {
+    return <Typography variant={'subtitle1'}>{children}</Typography>;
 };

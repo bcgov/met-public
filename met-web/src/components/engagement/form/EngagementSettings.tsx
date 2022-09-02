@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
-import { Grid, InputAdornment, TextField, Tooltip, Typography } from '@mui/material';
-import { MetLabel, MetPaper, PrimaryButton } from '../../common';
+import { Grid, InputAdornment, TextField, Tooltip } from '@mui/material';
+import { MetLabel, MetPaper, PrimaryButton, MetBody } from '../../common';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { ActionContext } from './ActionContext';
@@ -51,10 +51,10 @@ const EngagementSettings = () => {
                         <MetLabel>Engagement Link</MetLabel>
                     </Grid>
                     <Grid item xs={12}>
-                        <Typography variant="body1">
+                        <MetBody>
                             This is the link to the public engagement and will only be accessible once the engagement is
                             published.
-                        </Typography>
+                        </MetBody>
                     </Grid>
                     <Grid item xs={12} lg={9}>
                         <ClickAwayListener onClickAway={handleTooltipClose}>

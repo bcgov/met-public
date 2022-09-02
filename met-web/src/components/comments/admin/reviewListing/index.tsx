@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
 import { Link, useParams } from 'react-router-dom';
-import { MetPageGridContainer, PrimaryButton } from 'components/common';
+import { MetPageGridContainer, PrimaryButton, MetHeader1 } from 'components/common';
 import { Comment } from 'models/comment';
 import { HeadCell } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
-import { Link as MuiLink, Typography } from '@mui/material';
+import { Link as MuiLink } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
@@ -129,9 +129,9 @@ const CommentListing = () => {
             <Grid item xs={0} md={4} lg={4}></Grid>
 
             <Grid item xs={12}>
-                <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                    {`${comments[0]?.survey || ''} Comments`}
-                </Typography>
+                <MetHeader1>
+                    <strong>{`${comments[0]?.survey || ''} Comments`}</strong>
+                </MetHeader1>
                 <MetTable
                     filter={searchFilter}
                     headCells={headCells}

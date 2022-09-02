@@ -12,7 +12,7 @@ import {
     Theme,
 } from '@mui/material';
 import { EmailPanelProps } from './types';
-import { MetLabel, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetLabel, modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody } from 'components/common';
 
 const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: EmailPanelProps) => {
     const [checked, setChecked] = useState(false);
@@ -56,21 +56,17 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
                 rowSpacing={2}
             >
                 <Grid item xs={12}>
-                    <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold' }}>
-                        Verify your email address
-                    </Typography>
+                    <MetHeader1 sx={{ mb: 2, fontWeight: 'bold' }}>Verify your email address</MetHeader1>
                 </Grid>
 
                 <Grid item xs={12}>
-                    <Typography variant="body1">
+                    <MetBody>
                         To provide you with the best experience possible, we require you to validate your email address.
-                    </Typography>
+                    </MetBody>
                 </Grid>
 
                 <Grid item xs={12}>
-                    <Typography variant="body1">
-                        You will receive a link to access the survey at the email address you provide.
-                    </Typography>
+                    <MetBody>You will receive a link to access the survey at the email address you provide.</MetBody>
                 </Grid>
 
                 <Grid item xs={12}>

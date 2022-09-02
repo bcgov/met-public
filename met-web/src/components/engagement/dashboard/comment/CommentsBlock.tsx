@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
-import { Grid, Skeleton, Typography } from '@mui/material';
+import { Grid, Skeleton } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { CommentViewContext } from './CommentViewContext';
-import { PrimaryButton, MetPaper } from 'components/common';
+import { PrimaryButton, MetPaper, MetHeader4 } from 'components/common';
 import CommentTable from './CommentTable';
 
 export const CommentsBlock = () => {
@@ -23,7 +23,7 @@ export const CommentsBlock = () => {
                 <MetPaper elevation={1} sx={{ padding: '2em 2em 0 2em' }}>
                     <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" rowSpacing={2}>
                         <Grid item xs={12} sm={6}>
-                            <Typography variant={'h4'}>Comments</Typography>
+                            <MetHeader4>Comments</MetHeader4>
                         </Grid>
                         <Grid
                             item
