@@ -69,7 +69,12 @@ class Engagements(Resource):
             user_id = TokenInfo.get_id()
             
             engagement_records = EngagementService()\
-                .get_engagements_paginated(user_id, args.get('page', 1, int), args.get('size', 10, int))
+                .get_engagements_paginated(
+                    user_id, args.get('page', None, int),
+                    args.get('size', None, int),
+                    args.get('sort_key', None, str),
+                    args.get('sort_order', None, str)
+                )
             
             return ActionResult.success(result=engagement_records)
         except ValueError as err:

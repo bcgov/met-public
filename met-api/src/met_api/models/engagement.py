@@ -6,6 +6,7 @@ from datetime import datetime
 from typing import List
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.sql.schema import ForeignKey
+from sqlalchemy import desc, asc
 
 from met_api.constants.engagement_status import Status
 from met_api.constants.user import SYSTEM_USER
@@ -53,14 +54,16 @@ class Engagement(db.Model):
         return engagements_schema.dump(data)
 
     @classmethod
-    def get_engagements_paginated(cls, page, size, statuses = []):
+    def get_engagements_paginated(cls, page = 1, size = 10, sort_key = 'name', sort_order = 'asc', statuses = []):
         """Get engagements paginated."""
         query = db.session.query(Engagement).join(EngagementStatus)
         
         if len(statuses) > 0:
             query.filter(Engagement.status_id.in_(statuses))
-            
-        return query.order_by(Engagement.id.asc()).paginate(page=page, per_page=size)
+        
+        sort = asc(sort_key) if sort_order == "desc" else desc(sort_key)
+        
+        return query.order_by(sort).paginate(page=page, per_page=size)
 
     @classmethod
     def get_engagements_by_status(cls, status_id):

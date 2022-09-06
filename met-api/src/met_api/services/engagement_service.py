@@ -43,19 +43,15 @@ class EngagementService:
         return engagements
 
     @staticmethod
-    def get_engagements_paginated(user_id, page, size):
+    def get_engagements_paginated(user_id, page, size, sort_key, sort_order):
         """Get engagements paginated."""
         if user_id:
             # authenticated users have access to any engagement status
-            engagements_page = Engagement.get_engagements_paginated(page, size)
+            engagements_page = Engagement.get_engagements_paginated(page, size, sort_key, sort_order)
         else:
-            engagements_page = Engagement.get_engagements_paginated(page, size, statuses=[Status.Published.value])
+            engagements_page = Engagement.get_engagements_paginated(page, size, sort_key, sort_order, statuses=[Status.Published.value])
         
         engagements_schema = EngagementSchema(many=True)
-        {
-            'items': engagements_schema.dump(engagements_page.items),
-            'total': engagements_page.total
-        }
         return {
             'items': engagements_schema.dump(engagements_page.items),
             'total': engagements_page.total
