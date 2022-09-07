@@ -25,9 +25,9 @@ const Endpoints = {
         CREATE: `${AppConfig.apiUrl}/submission/`,
     },
     Comment: {
-        GET_ALL: `${AppConfig.apiUrl}/comment/survey/survey_id/comments`,
-        REVIEW: `${AppConfig.apiUrl}/comment/comment_id `,
-        GET: `${AppConfig.apiUrl}/comment/comment_id`,
+        GET_LIST: `${AppConfig.apiUrl}/comments/survey/survey_id`,
+        REVIEW: `${AppConfig.apiUrl}/comments/comment_id `,
+        GET: `${AppConfig.apiUrl}/comments/comment_id`,
     },
     EmailVerification: {
         GET: `${AppConfig.apiUrl}/email_verification/verification_token`,

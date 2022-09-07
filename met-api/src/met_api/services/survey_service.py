@@ -50,7 +50,7 @@ class SurveyService:
     def get_unlinked(cls):
         """Get all surveys."""
         db_data = Survey.get_all_unlinked_surveys()
-        return db_data   
+        return db_data
 
     @staticmethod
     def get_surveys_paginated(page, size, sort_key = 'name', sort_order = 'asc', search_text='', unlinked=False):

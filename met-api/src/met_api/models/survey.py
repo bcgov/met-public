@@ -4,10 +4,9 @@ Manages the Survey
 """
 from datetime import datetime
 from typing import List
-from sqlalchemy import ForeignKey, and_
+from sqlalchemy import ForeignKey, and_, desc, asc
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.sql import text
-from sqlalchemy import desc, asc
 from met_api.constants.engagement_status import Status
 from met_api.models.engagement_status import EngagementStatus
 from met_api.models.engagement import Engagement

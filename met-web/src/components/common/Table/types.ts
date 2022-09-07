@@ -13,9 +13,9 @@ export interface HeadCell<T> {
 export interface PaginationOptions<T> {
     page: number;
     size: number;
-    sort_key: keyof T;
+    sort_key?: keyof T;
     nested_sort_key?: string | null;
-    sort_order: 'asc' | 'desc';
+    sort_order?: 'asc' | 'desc';
 }
 
 export interface PageInfo {

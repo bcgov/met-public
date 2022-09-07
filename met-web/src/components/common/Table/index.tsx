@@ -18,8 +18,8 @@ type Order = 'asc' | 'desc';
 
 interface MetTableHeadProps<T> {
     onRequestSort: (event: React.MouseEvent<unknown>, property: keyof T, headCellIndex: number) => void;
-    order: Order;
-    orderBy: keyof T;
+    order?: Order;
+    orderBy?: keyof T;
     rowCount: number;
     headCells: HeadCell<T>[];
     loading: boolean;

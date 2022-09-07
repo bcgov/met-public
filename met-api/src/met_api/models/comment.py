@@ -3,7 +3,8 @@
 Manages the comment
 """
 from datetime import datetime
-from sqlalchemy import and_
+from sqlalchemy import and_, desc, asc
+from sqlalchemy.sql import text
 from sqlalchemy.sql.schema import ForeignKey
 from met_api.constants.comment_status import Status
 from met_api.models.engagement import Engagement
@@ -32,19 +33,24 @@ class Comment(db.Model):
         return db.session.query(Comment).join(CommentStatus).join(Survey).filter(Comment.id == comment_id).first()
 
     @classmethod
-    def get_comments_by_survey_id(cls, survey_id):
-        """Get all comments."""
-        return db.session.query(Comment)\
+    def get_comments_by_survey_id_paginated(cls, survey_id, page = 1, size = 10, sort_key = 'id', sort_order = 'asc', search_text= ''):
+        """Get comments paginated."""
+        query = db.session.query(Comment)\
             .join(CommentStatus)\
             .join(Survey)\
             .filter(Comment.survey_id == survey_id)\
-            .all()
+                
+        if search_text:
+            query = query.filter(Comment.id.like('%' + search_text + '%'))
+            
+        sort = asc(text(sort_key)) if sort_order == "asc" else desc(text(sort_key))
+        return query.order_by(sort).paginate(page=page, per_page=size)
 
     @classmethod
-    def get_accepted_comments_by_survey_id_where_engagement_closed(cls, survey_id):
-        """Get all comments."""
-        now = datetime.now()
-        return db.session.query(Comment)\
+    def get_accepted_comments_by_survey_id_where_engagement_closed_paginated(cls, survey_id, page = 1, size = 10):
+        """Get comments for closed engagements."""
+        now = datetime.now()            
+        query = db.session.query(Comment)\
             .join(CommentStatus)\
             .join(Survey)\
             .join(Engagement, Engagement.id == Survey.engagement_id)\
@@ -54,7 +60,8 @@ class Comment(db.Model):
                     Engagement.end_date < now,
                     CommentStatus.id == Status.Approved.value
                 ))\
-            .all()
+            
+        return query.order_by(Comment.id.desc()).paginate(page=page, per_page=size)
 
     @staticmethod
     def __create_new_comment_entity(comment):

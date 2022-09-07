@@ -91,7 +91,7 @@ class Surveys(Resource):
         """Fetch surveys."""
         try:
             args = request.args
-            
+
             survey_records = SurveyService()\
                 .get_surveys_paginated(
                     args.get('page', None, int),
@@ -100,7 +100,7 @@ class Surveys(Resource):
                     args.get('sort_order', None, str),
                     args.get('search_text', '', str),
                     args.get('unlinked', False, bool)
-                )            
+                )
             return ActionResult.success(result=survey_records)
         except ValueError as err:
             return ActionResult.error(str(err))
