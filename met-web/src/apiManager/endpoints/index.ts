@@ -14,12 +14,12 @@ const Endpoints = {
         OSS_HEADER: `${AppConfig.apiUrl}/document/`,
     },
     Survey: {
-        GET_ALL: `${AppConfig.apiUrl}/survey/`,
-        CREATE: `${AppConfig.apiUrl}/survey/`,
-        UPDATE: `${AppConfig.apiUrl}/survey/`,
-        LINK_TO_ENGAGEMENT: `${AppConfig.apiUrl}/survey/survey_id/link/engagement/engagement_id`,
-        UNLINK_FROM_ENGAGEMENT: `${AppConfig.apiUrl}/survey/survey_id/unlink/engagement/engagement_id`,
-        GET: `${AppConfig.apiUrl}/survey/survey_id`,
+        GET_LIST: `${AppConfig.apiUrl}/surveys/`,
+        CREATE: `${AppConfig.apiUrl}/surveys/`,
+        UPDATE: `${AppConfig.apiUrl}/surveys/`,
+        LINK_TO_ENGAGEMENT: `${AppConfig.apiUrl}/surveys/survey_id/link/engagement/engagement_id`,
+        UNLINK_FROM_ENGAGEMENT: `${AppConfig.apiUrl}/surveys/survey_id/unlink/engagement/engagement_id`,
+        GET: `${AppConfig.apiUrl}/surveys/survey_id`,
     },
     SurveySubmission: {
         CREATE: `${AppConfig.apiUrl}/submission/`,

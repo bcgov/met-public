@@ -11,6 +11,7 @@ from met_api.schemas.engagement import EngagementSchema
 from met_api.services.object_storage_service import ObjectStorageService
 from met_api.utils.notification import send_email
 from met_api.utils.template import Template
+from operator import attrgetter
 
 
 class EngagementService:
@@ -36,24 +37,28 @@ class EngagementService:
         """Get all engagements."""
         if user_id:
             # authenticated users have access to any engagement status
-            engagements = Engagement.get_engagements_paginated
+            engagements = Engagement.get_all_engagements()
         else:
             engagements = Engagement.get_engagements_by_status([Status.Published.value, Status.Closed.value])
 
         return engagements
 
     @staticmethod
-    def get_engagements_paginated(user_id, page, size, sort_key, sort_order):
+    def get_engagements_paginated(user_id, page, size, sort_key = 'name', sort_order = 'asc', search_text=''):
         """Get engagements paginated."""
-        if user_id:
-            # authenticated users have access to any engagement status
-            engagements_page = Engagement.get_engagements_paginated(page, size, sort_key, sort_order)
-        else:
-            engagements_page = Engagement.get_engagements_paginated(page, size, sort_key, sort_order, statuses=[Status.Published.value])
-        
+        engagements_page = Engagement.get_engagements_paginated(
+            page,
+            size,
+            sort_key,
+            sort_order,
+            search_text,
+            statuses=[] if user_id else [Status.Published.value],
+        )
         engagements_schema = EngagementSchema(many=True)
+        engagements = engagements_schema.dump(engagements_page.items)
+        
         return {
-            'items': engagements_schema.dump(engagements_page.items),
+            'items': engagements,
             'total': engagements_page.total
         }
 

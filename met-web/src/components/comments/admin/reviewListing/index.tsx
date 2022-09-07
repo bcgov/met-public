@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import { Link, useParams } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton, MetHeader1 } from 'components/common';
 import { Comment } from 'models/comment';
-import { HeadCell, Pagination } from 'components/common/Table/types';
+import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink } from '@mui/material';
 import TextField from '@mui/material/TextField';
@@ -23,12 +23,15 @@ const CommentListing = () => {
     const [comments, setComments] = useState<Comment[]>([]);
     const [page, setPage] = useState(1);
     const [size, setSize] = useState(10);
-    const [pagination, setPagination] = useState<Pagination>({
+    const [paginationOptions, setPagination] = useState<PaginationOptions<Comment>>({
         page: 0,
         size: 10,
+        sort_key: 'id',
+        sort_order: 'asc',
+    });
+    const [pageInfo, setPageInfo] = useState<PageInfo>({
         total: 0,
     });
-
     const { surveyId } = useParams();
 
     const dispatch = useAppDispatch();
@@ -140,14 +143,12 @@ const CommentListing = () => {
                     <strong>{`${comments[0]?.survey || ''} Comments`}</strong>
                 </MetHeader1>
                 <MetTable
-                    filter={searchFilter}
                     headCells={headCells}
                     rows={comments}
-                    defaultSort={'id'}
                     noRowBorder={true}
-                    handlePageChange={(newPage: number) => setPage(newPage)}
-                    handleSizeChange={(newSize: number) => setSize(newSize)}
-                    handleChangePagination={(pagination: Pagination) => setPagination(pagination)}
+                    handleChangePagination={(pagination: PaginationOptions<Comment>) => setPagination(pagination)}
+                    paginationOptions={paginationOptions}
+                    pageInfo={pageInfo}
                 />
                 <PrimaryButton component={Link} to={`/survey/${comments[0]?.survey_id || 0}/comments/all`}>
                     Read All Comments

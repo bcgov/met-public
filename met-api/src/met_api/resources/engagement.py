@@ -73,12 +73,15 @@ class Engagements(Resource):
                     user_id, args.get('page', None, int),
                     args.get('size', None, int),
                     args.get('sort_key', None, str),
-                    args.get('sort_order', None, str)
+                    args.get('sort_order', None, str),
+                    args.get('search_text', '', str)
                 )
             
             return ActionResult.success(result=engagement_records)
         except ValueError as err:
             return ActionResult.error(str(err))
+        except Exception as err:
+            print(str(err))
 
     @staticmethod
     # @TRACER.trace()

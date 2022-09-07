@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,57 +10,24 @@ import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Paper from '@mui/material/Paper';
 import { visuallyHidden } from '@mui/utils';
-import { HeadCell, Pagination } from 'components/common/Table/types';
-import { hasKey } from 'utils';
+import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { ConditionalComponent } from '..';
-import { CircularProgress, Grid, LinearProgress } from '@mui/material';
-
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
+import { LinearProgress } from '@mui/material';
 
 type Order = 'asc' | 'desc';
 
-// eslint-disable-next-line
-function getComparator<T>(order: Order, orderBy: keyof T): (a: T, b: T) => number {
-    return order === 'desc'
-        ? (a, b) => descendingComparator(a, b, orderBy)
-        : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-// This method is created for cross-browser compatibility, if you don't
-// need to support IE11, you can use Array.prototype.sort() directly
-function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
-    const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-    stabilizedThis.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) {
-            return order;
-        }
-        return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-}
-
 interface MetTableHeadProps<T> {
-    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof T) => void;
+    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof T, headCellIndex: number) => void;
     order: Order;
     orderBy: keyof T;
     rowCount: number;
     headCells: HeadCell<T>[];
+    loading: boolean;
 }
 
-function MetTableHead<T>(props: MetTableHeadProps<T>) {
-    const { order, orderBy, onRequestSort, headCells } = props;
-
-    const createSortHandler = (property: keyof T) => (event: React.MouseEvent<unknown>) => {
-        onRequestSort(event, property);
+function MetTableHead<T>({ order, orderBy, onRequestSort, headCells, loading }: MetTableHeadProps<T>) {
+    const createSortHandler = (property: keyof T, headCellIndex: number) => (event: React.MouseEvent<unknown>) => {
+        onRequestSort(event, property, headCellIndex);
     };
 
     return (
@@ -74,10 +41,10 @@ function MetTableHead<T>(props: MetTableHeadProps<T>) {
                         sx={{ borderBottom: '1.5px solid gray', fontWeight: 'bold' }}
                     >
                         <TableSortLabel
-                            disabled={!headCell.allowSort}
+                            disabled={!headCell.allowSort || loading}
                             active={orderBy === headCell.key}
                             direction={orderBy === headCell.key ? order : 'asc'}
-                            onClick={createSortHandler(headCell.key)}
+                            onClick={createSortHandler(headCell.key, index)}
                         >
                             {headCell.label}
                             {orderBy === headCell.key && (
@@ -94,72 +61,55 @@ function MetTableHead<T>(props: MetTableHeadProps<T>) {
 }
 
 interface MetTableProps<T> {
-    filter?: {
-        key: string;
-        value: string;
-    };
     headCells: HeadCell<T>[];
-    defaultSort: keyof T;
     rows: T[];
     hideHeader?: boolean;
     noRowBorder?: boolean;
-    handlePageChange: (newPage: number) => void;
-    handleSizeChange: (newPage: number) => void;
-    handleChangePagination: (pagination: Pagination) => void;
-    total?: number;
-    page?: number;
-    size?: number;
+    handleChangePagination: (pagination: PaginationOptions<T>) => void;
     loading?: boolean;
+    paginationOptions: PaginationOptions<T>;
+    pageInfo: PageInfo;
 }
 function MetTable<T>({
     hideHeader = false,
-    filter = { key: '', value: '' },
     headCells = [],
-    defaultSort,
     rows = [],
     noRowBorder = false,
-    handlePageChange,
-    handleSizeChange,
     handleChangePagination,
-    total = 0,
-    page = 1,
-    size = 10,
     loading = false,
+    paginationOptions,
+    pageInfo,
 }: MetTableProps<T>) {
-    const [filteredRows, setFilteredRows] = useState<T[]>(rows);
-    const [order, setOrder] = useState<Order>('desc');
-    const [orderBy, setOrderBy] = useState(defaultSort);
+    const { page, size, sort_key, sort_order } = paginationOptions;
+    const { total } = pageInfo;
 
-    useEffect(() => {
-        if (!filter.key || !filter.value) {
-            setFilteredRows(rows);
-            return;
-        }
+    const order = sort_order;
+    const orderBy = sort_key;
 
-        const rowsFilteredResults = rows.filter((row: T) => {
-            if (!hasKey(row, filter.key)) {
-                return false;
-            }
-            // filter by rows who have the specified field in filter.key matching the search filter value
-            return String(row[filter.key]).toLowerCase().match(`${filter.value.toLowerCase()}.*`);
-        });
-        setFilteredRows(rowsFilteredResults);
-    }, [rows, filter]);
-
-    const handleRequestSort = (_event: React.MouseEvent<unknown>, property: keyof T) => {
+    const handleRequestSort = (_event: React.MouseEvent<unknown>, property: keyof T, headCellIndex: number) => {
         const isAsc = orderBy === property && order === 'asc';
-        setOrder(isAsc ? 'desc' : 'asc');
-        setOrderBy(property);
+        handleChangePagination({
+            ...paginationOptions,
+            sort_key: property,
+            nested_sort_key: headCells[headCellIndex].nestedSortKey,
+            sort_order: isAsc ? 'desc' : 'asc',
+        });
     };
 
     const handleChangePage = (_event: unknown, newPage: number) => {
-        handlePageChange(newPage + 1);
+        handleChangePagination({
+            ...paginationOptions,
+            page: newPage + 1,
+        });
     };
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newSize = parseInt(event.target.value, 10);
-        handleSizeChange(newSize);
-        handlePageChange(1);
+        handleChangePagination({
+            ...paginationOptions,
+            page: 1,
+            size: newSize,
+        });
     };
 
     // Avoid a layout jump when reaching the last page with empty filteredRows.
@@ -175,8 +125,9 @@ function MetTable<T>({
                                 order={order}
                                 orderBy={orderBy}
                                 onRequestSort={handleRequestSort}
-                                rowCount={filteredRows.length}
+                                rowCount={rows.length}
                                 headCells={headCells}
+                                loading={loading}
                             />
                         </ConditionalComponent>
 
@@ -192,7 +143,7 @@ function MetTable<T>({
                                     <LinearProgress />
                                 </Box>
                             </ConditionalComponent>
-                            {stableSort<T>(filteredRows, getComparator<T>(order, orderBy)).map((row, rowIndex) => {
+                            {rows.map((row, rowIndex) => {
                                 return (
                                     <TableRow hover tabIndex={-1} key={`row-${rowIndex}`}>
                                         {headCells.map((cell, cellIndex) => (

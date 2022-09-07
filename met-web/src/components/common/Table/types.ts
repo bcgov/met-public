@@ -1,6 +1,7 @@
 export interface HeadCell<T> {
     disablePadding: boolean;
     key: keyof T;
+    nestedSortKey?: string;
     label: string;
     numeric: boolean;
     allowSort: boolean;
@@ -9,8 +10,14 @@ export interface HeadCell<T> {
     align?: 'right' | 'left' | 'inherit' | 'center' | 'justify';
 }
 
-export interface Pagination {
+export interface PaginationOptions<T> {
     page: number;
     size: number;
+    sort_key: keyof T;
+    nested_sort_key?: string | null;
+    sort_order: 'asc' | 'desc';
+}
+
+export interface PageInfo {
     total: number;
 }

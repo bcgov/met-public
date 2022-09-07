@@ -4,13 +4,13 @@ import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton } from 'components/common';
 import { Survey } from 'models/survey';
-import { HeadCell, Pagination } from 'components/common/Table/types';
+import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
-import { fetchSurveys } from 'services/surveyService/form';
+import { getSurveysPage } from 'services/surveyService/form';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { EngagementStatus } from 'constants/engagementStatus';
@@ -22,37 +22,59 @@ const SurveyListing = () => {
     });
     const [searchText, setSearchText] = useState('');
     const [surveys, setSurveys] = useState<Survey[]>([]);
-    const [page, setPage] = useState(1);
-    const [size, setSize] = useState(10);
-    const [pagination, setPagination] = useState<Pagination>({
-        page: 0,
+    const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Survey>>({
+        page: 1,
         size: 10,
+        sort_key: 'name',
+        nested_sort_key: 'survey.name',
+        sort_order: 'asc',
+    });
+    const [pageInfo, setPageInfo] = useState<PageInfo>({
         total: 0,
     });
+
+    const [tableLoading, setTableLoading] = useState(false);
+
     const dispatch = useAppDispatch();
 
-    const callFetchSurveys = async () => {
+    const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
+
+    const callGetSurveysPage = async () => {
         try {
-            const fetchedSurveys = await fetchSurveys();
-            setSurveys(fetchedSurveys);
+            setTableLoading(true);
+            const response = await getSurveysPage({
+                page,
+                size,
+                sort_key: nested_sort_key || sort_key,
+                sort_order,
+                search_text: searchFilter.value,
+            });
+            setSurveys(response.items);
+            setPageInfo({
+                total: response.total,
+            });
+            setTableLoading(false);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching surveys' }));
+            setTableLoading(false);
         }
     };
-    useEffect(() => {
-        callFetchSurveys();
-    }, []);
 
-    const handleSearchBarClick = (engagementNameFilter: string) => {
+    useEffect(() => {
+        callGetSurveysPage();
+    }, [paginationOptions, searchFilter]);
+
+    const handleSearchBarClick = (surveyNameFilter: string) => {
         setSearchFilter({
             ...searchFilter,
-            value: engagementNameFilter,
+            value: surveyNameFilter,
         });
     };
 
     const headCells: HeadCell<Survey>[] = [
         {
             key: 'name',
+            nestedSortKey: 'survey.name',
             numeric: false,
             disablePadding: true,
             label: 'Survey Name',
@@ -65,6 +87,7 @@ const SurveyListing = () => {
         },
         {
             key: 'created_date',
+            nestedSortKey: 'survey.created_date',
             numeric: true,
             disablePadding: false,
             label: 'Date Created',
@@ -73,6 +96,7 @@ const SurveyListing = () => {
         },
         {
             key: 'engagement',
+            nestedSortKey: 'engagement.published_date',
             numeric: true,
             disablePadding: false,
             label: 'Date Published',
@@ -81,6 +105,7 @@ const SurveyListing = () => {
         },
         {
             key: 'engagement',
+            nestedSortKey: 'engagement.name',
             numeric: true,
             disablePadding: false,
             label: 'Engagement Name',
@@ -102,7 +127,7 @@ const SurveyListing = () => {
             numeric: true,
             disablePadding: false,
             label: 'Responses',
-            allowSort: true,
+            allowSort: false,
             getValue: (row: Survey) => {
                 if (!row.comments_meta_data.total) {
                     return 0;
@@ -119,6 +144,7 @@ const SurveyListing = () => {
         },
         {
             key: 'engagement',
+            nestedSortKey: 'engagement.status_id',
             numeric: true,
             disablePadding: false,
             label: 'Status',
@@ -128,6 +154,7 @@ const SurveyListing = () => {
         },
         {
             key: 'id',
+            nestedSortKey: 'survey.id',
             numeric: true,
             disablePadding: false,
             label: 'Reporting',
@@ -186,14 +213,15 @@ const SurveyListing = () => {
 
             <Grid item xs={12} lg={10}>
                 <MetTable
-                    filter={searchFilter}
                     headCells={headCells}
                     rows={surveys}
-                    defaultSort={'created_date'}
                     noRowBorder={true}
-                    handlePageChange={(newPage: number) => setPage(newPage)}
-                    handleSizeChange={(newSize: number) => setSize(newSize)}
-                    handleChangePagination={(pagination: Pagination) => setPagination(pagination)}
+                    handleChangePagination={(paginationOptions: PaginationOptions<Survey>) =>
+                        setPaginationOptions(paginationOptions)
+                    }
+                    paginationOptions={paginationOptions}
+                    loading={tableLoading}
+                    pageInfo={pageInfo}
                 />
             </Grid>
         </MetPageGridContainer>

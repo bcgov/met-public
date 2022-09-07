@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton } from '../common';
 import { Engagement } from 'models/engagement';
 import { useAppDispatch } from 'hooks';
-import { HeadCell, Pagination } from '../common/Table/types';
+import { HeadCell, PageInfo, PaginationOptions } from '../common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink } from '@mui/material';
 import { getEngagements } from 'services/engagementService';
@@ -21,28 +21,41 @@ const LandingPage = () => {
     });
     const [searchText, setSearchText] = useState('');
     const [engagements, setEngagements] = useState<Engagement[]>([]);
-    const [page, setPage] = useState(1);
-    const [size, setSize] = useState(10);
-    const [total, setTotal] = useState(0);
-    const [pagination, setPagination] = useState<Pagination>({
-        page: 0,
+    const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Engagement>>({
+        page: 1,
         size: 10,
+        sort_key: 'name',
+        nested_sort_key: null,
+        sort_order: 'asc',
+    });
+
+    const [pageInfo, setPageInfo] = useState<PageInfo>({
         total: 0,
     });
     const [tableLoading, setTableLoading] = useState(false);
 
     const dispatch = useAppDispatch();
 
+    const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
+
     useEffect(() => {
         callGetEngagements();
-    }, [page, size]);
+    }, [paginationOptions, searchFilter]);
 
     const callGetEngagements = async () => {
         try {
             setTableLoading(true);
-            const response = await getEngagements({ page, size });
+            const response = await getEngagements({
+                page,
+                size,
+                sort_key: nested_sort_key || sort_key,
+                sort_order,
+                search_text: searchFilter.value,
+            });
             setEngagements(response.items);
-            setTotal(response.total);
+            setPageInfo({
+                total: response.total,
+            });
             setTableLoading(false);
         } catch (error) {
             console.log(error);
@@ -78,6 +91,7 @@ const LandingPage = () => {
         },
         {
             key: 'created_date',
+            nestedSortKey: 'engagement.created_date',
             numeric: true,
             disablePadding: false,
             label: 'Date Created',
@@ -196,18 +210,15 @@ const LandingPage = () => {
             </Grid>
             <Grid item xs={12} lg={10}>
                 <MetTable
-                    filter={searchFilter}
                     headCells={headCells}
                     rows={engagements}
-                    defaultSort={'created_date'}
                     noRowBorder={true}
-                    handlePageChange={(newPage: number) => setPage(newPage)}
-                    handleSizeChange={(newSize: number) => setSize(newSize)}
-                    handleChangePagination={(pagination: Pagination) => setPagination(pagination)}
-                    total={total}
-                    page={page}
-                    size={size}
+                    handleChangePagination={(paginationOptions: PaginationOptions<Engagement>) =>
+                        setPaginationOptions(paginationOptions)
+                    }
+                    paginationOptions={paginationOptions}
                     loading={tableLoading}
+                    pageInfo={pageInfo}
                 />
             </Grid>
         </MetPageGridContainer>

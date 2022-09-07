@@ -26,7 +26,7 @@ from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
-API = Namespace('survey', description='Endpoints for Survey Management')
+API = Namespace('surveys', description='Endpoints for Survey Management')
 """Custom exception messages
 """
 
@@ -91,7 +91,16 @@ class Surveys(Resource):
         """Fetch surveys."""
         try:
             args = request.args
-            survey_records = SurveyService().get_surveys(unlinked=args.get('unlinked', False))
+            
+            survey_records = SurveyService()\
+                .get_surveys_paginated(
+                    args.get('page', None, int),
+                    args.get('size', None, int),
+                    args.get('sort_key', None, str),
+                    args.get('sort_order', None, str),
+                    args.get('search_text', '', str),
+                    args.get('unlinked', False, bool)
+                )            
             return ActionResult.success(result=survey_records)
         except ValueError as err:
             return ActionResult.error(str(err))

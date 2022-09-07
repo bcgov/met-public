@@ -5,6 +5,7 @@ import { Engagement } from 'models/engagement';
 import { PostEngagementRequest, PutEngagementRequest } from './types';
 import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
+import { Page } from 'services/type';
 
 export const fetchAll = async (dispatch: Dispatch<AnyAction>): Promise<Engagement[]> => {
     const responseData = await http.GetRequest<Engagement[]>(Endpoints.Engagement.GET_LIST);
@@ -16,11 +17,9 @@ export const fetchAll = async (dispatch: Dispatch<AnyAction>): Promise<Engagemen
 interface GetEngagementsParams {
     page?: number;
     size?: number;
-}
-
-interface Page<T> {
-    items: T[];
-    total: number;
+    sort_key?: string;
+    sort_order?: 'asc' | 'desc';
+    search_text?: string;
 }
 export const getEngagements = async (params: GetEngagementsParams = {}): Promise<Page<Engagement>> => {
     const responseData = await http.GetRequest<Page<Engagement>>(Endpoints.Engagement.GET_LIST, params);
