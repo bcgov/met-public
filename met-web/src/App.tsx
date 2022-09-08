@@ -11,6 +11,7 @@ import UnauthenticatedRoutes from './routes/UnauthenticatedRoutes';
 import AuthenticatedRoutes from './routes/AuthenticatedRoutes';
 import { Notification } from 'components/common/notification';
 import PageViewTracker from 'routes/PageViewTracker';
+import { ModalProvider } from 'components/common/modal';
 
 const App = () => {
     const drawerWidth = 240;
@@ -55,6 +56,7 @@ const App = () => {
             <Box sx={{ display: 'flex' }}>
                 <LoggedInHeader drawerWidth={drawerWidth} />
                 <Notification />
+                <ModalProvider />
                 <Box component="main" sx={{ flexGrow: 1, width: `calc(100% - ${drawerWidth}px)`, marginTop: '17px' }}>
                     <Toolbar />
                     <AuthenticatedRoutes />
