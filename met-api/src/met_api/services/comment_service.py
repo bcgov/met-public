@@ -38,9 +38,10 @@ class CommentService:
         """Get comments paginated."""
         if not user_id:
             comment_schema = CommentSchema(many=True, only=('text', 'submission_date', 'survey'))
-            comments_page = Comment.get_accepted_comments_by_survey_id_where_engagement_closed_paginated(survey_id, page, size)
+            comments_page = Comment.get_accepted_comments_by_survey_id_where_engagement_closed_paginated(
+                survey_id, page, size)
         else:
-            comment_schema = CommentSchema(many=True) 
+            comment_schema = CommentSchema(many=True)
             comments_page = Comment.get_comments_by_survey_id_paginated(
                 survey_id,
                 page,

@@ -67,7 +67,7 @@ class Engagements(Resource):
         try:
             args = request.args
             user_id = TokenInfo.get_id()
-            
+
             engagement_records = EngagementService()\
                 .get_engagements_paginated(
                     user_id, args.get('page', None, int),
@@ -75,8 +75,8 @@ class Engagements(Resource):
                     args.get('sort_key', None, str),
                     args.get('sort_order', None, str),
                     args.get('search_text', '', str)
-                )
-            
+            )
+
             return ActionResult.success(result=engagement_records)
         except ValueError as err:
             return ActionResult.error(str(err))

@@ -70,12 +70,12 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
         return survey_schema.dump(surveys)
 
     @classmethod
-    def get_surveys_paginated(cls, page = 1, size = 10, sort_key = 'name', sort_order = 'asc', search_text= '', unlinked = False):
+    def get_surveys_paginated(cls, page=1, size=10, sort_key='name', sort_order='asc', search_text='', unlinked=False):
         """Get surveys paginated."""
         query = db.session.query(Survey).join(Engagement, isouter=True).join(EngagementStatus, isouter=True)
 
         if unlinked:
-            query = query.filter(Survey.engagement_id == None)
+            query = query.filter(Survey.engagement_id is None)
 
         if search_text:
             query = query.filter(Survey.name.like('%' + search_text + '%'))

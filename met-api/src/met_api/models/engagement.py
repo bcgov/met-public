@@ -53,7 +53,7 @@ class Engagement(db.Model):
         return engagements_schema.dump(data)
 
     @classmethod
-    def get_engagements_paginated(cls, page = 1, size = 10, sort_key = 'name', sort_order = 'asc', search_text= '', statuses = []):
+    def get_engagements_paginated(cls, page=1, size=10, sort_key='name', sort_order='asc', search_text='', statuses=[]):
         """Get engagements paginated."""
         query = db.session.query(Engagement).join(EngagementStatus)
 

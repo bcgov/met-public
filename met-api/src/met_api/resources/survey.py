@@ -100,7 +100,7 @@ class Surveys(Resource):
                     args.get('sort_order', None, str),
                     args.get('search_text', '', str),
                     args.get('unlinked', False, bool)
-                )
+            )
             return ActionResult.success(result=survey_records)
         except ValueError as err:
             return ActionResult.error(str(err))

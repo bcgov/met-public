@@ -33,24 +33,25 @@ class Comment(db.Model):
         return db.session.query(Comment).join(CommentStatus).join(Survey).filter(Comment.id == comment_id).first()
 
     @classmethod
-    def get_comments_by_survey_id_paginated(cls, survey_id, page = 1, size = 10, sort_key = 'id', sort_order = 'asc', search_text= ''):
+    def get_comments_by_survey_id_paginated(cls, survey_id, page=1, size=10,
+                                            sort_key='id', sort_order='asc', search_text=''):
         """Get comments paginated."""
         query = db.session.query(Comment)\
             .join(CommentStatus)\
             .join(Survey)\
             .filter(Comment.survey_id == survey_id)\
-                
+
         if search_text:
             # Remove all non-digit characters from search text
             query = query.filter(cast(Comment.id, TEXT).like('%' + search_text + '%'))
-            
+
         sort = asc(text(sort_key)) if sort_order == "asc" else desc(text(sort_key))
         return query.order_by(sort).paginate(page=page, per_page=size)
 
     @classmethod
-    def get_accepted_comments_by_survey_id_where_engagement_closed_paginated(cls, survey_id, page = 1, size = 10):
+    def get_accepted_comments_by_survey_id_where_engagement_closed_paginated(cls, survey_id, page=1, size=10):
         """Get comments for closed engagements."""
-        now = datetime.now()            
+        now = datetime.now()
         query = db.session.query(Comment)\
             .join(CommentStatus)\
             .join(Survey)\
@@ -61,7 +62,7 @@ class Comment(db.Model):
                     Engagement.end_date < now,
                     CommentStatus.id == Status.Approved.value
                 ))\
-            
+
         return query.order_by(Comment.id.desc()).paginate(page=page, per_page=size)
 
     @staticmethod

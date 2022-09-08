@@ -90,7 +90,7 @@ class Comments(Resource):
                     args.get('sort_key', None, str),
                     args.get('sort_order', None, str),
                     args.get('search_text', '', str),
-                )
+            )
             return ActionResult.success(result=comment_records)
         except ValueError as err:
             return ActionResult.error(str(err))

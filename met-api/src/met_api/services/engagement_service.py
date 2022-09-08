@@ -44,7 +44,7 @@ class EngagementService:
         return engagements
 
     @staticmethod
-    def get_engagements_paginated(user_id, page, size, sort_key = 'name', sort_order = 'asc', search_text=''):
+    def get_engagements_paginated(user_id, page, size, sort_key='name', sort_order='asc', search_text=''):
         """Get engagements paginated."""
         engagements_page = Engagement.get_engagements_paginated(
             page,
@@ -56,7 +56,7 @@ class EngagementService:
         )
         engagements_schema = EngagementSchema(many=True)
         engagements = engagements_schema.dump(engagements_page.items)
-        
+
         return {
             'items': engagements,
             'total': engagements_page.total
