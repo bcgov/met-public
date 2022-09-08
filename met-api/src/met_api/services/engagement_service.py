@@ -11,7 +11,6 @@ from met_api.schemas.engagement import EngagementSchema
 from met_api.services.object_storage_service import ObjectStorageService
 from met_api.utils.notification import send_email
 from met_api.utils.template import Template
-from operator import attrgetter
 
 
 class EngagementService:
@@ -52,7 +51,7 @@ class EngagementService:
             sort_key,
             sort_order,
             search_text,
-            statuses=[] if user_id else [Status.Published.value],
+            statuses=None if user_id else [Status.Published.value],
         )
         engagements_schema = EngagementSchema(many=True)
         engagements = engagements_schema.dump(engagements_page.items)

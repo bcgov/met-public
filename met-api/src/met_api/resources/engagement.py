@@ -80,8 +80,6 @@ class Engagements(Resource):
             return ActionResult.success(result=engagement_records)
         except ValueError as err:
             return ActionResult.error(str(err))
-        except Exception as err:
-            print(str(err))
 
     @staticmethod
     # @TRACER.trace()
