@@ -5,13 +5,14 @@ import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton } from '../common';
 import { Engagement } from 'models/engagement';
-import { useAppSelector, useAppDispatch } from 'hooks';
-import { HeadCell } from '../common/Table/types';
+import { useAppDispatch } from 'hooks';
+import { HeadCell, PageInfo, PaginationOptions } from '../common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink } from '@mui/material';
-import { fetchAll } from 'services/engagementService';
+import { getEngagements } from 'services/engagementService';
 import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
+import { openNotification } from 'services/notificationService/notificationSlice';
 
 const LandingPage = () => {
     const [searchFilter, setSearchFilter] = useState({
@@ -19,14 +20,54 @@ const LandingPage = () => {
         value: '',
     });
     const [searchText, setSearchText] = useState('');
+    const [engagements, setEngagements] = useState<Engagement[]>([]);
+    const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Engagement>>({
+        page: 1,
+        size: 10,
+        sort_key: 'name',
+        nested_sort_key: null,
+        sort_order: 'asc',
+    });
+
+    const [pageInfo, setPageInfo] = useState<PageInfo>({
+        total: 0,
+    });
+    const [tableLoading, setTableLoading] = useState(true);
 
     const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        fetchAll(dispatch);
-    }, [dispatch]);
+    const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
-    const rows = useAppSelector<Engagement[]>((state) => state.engagement.allEngagements);
+    useEffect(() => {
+        callGetEngagements();
+    }, [paginationOptions, searchFilter]);
+
+    const callGetEngagements = async () => {
+        try {
+            setTableLoading(true);
+            const response = await getEngagements({
+                page,
+                size,
+                sort_key: nested_sort_key || sort_key,
+                sort_order,
+                search_text: searchFilter.value,
+            });
+            setEngagements(response.items);
+            setPageInfo({
+                total: response.total,
+            });
+            setTableLoading(false);
+        } catch (error) {
+            console.log(error);
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while trying to fetch engagements, please refresh the page or try again at a later time',
+                }),
+            );
+            setTableLoading(false);
+        }
+    };
 
     const handleSearchBarClick = (engagementNameFilter: string) => {
         setSearchFilter({
@@ -50,6 +91,7 @@ const LandingPage = () => {
         },
         {
             key: 'created_date',
+            nestedSortKey: 'engagement.created_date',
             numeric: true,
             disablePadding: false,
             label: 'Date Created',
@@ -168,11 +210,15 @@ const LandingPage = () => {
             </Grid>
             <Grid item xs={12} lg={10}>
                 <MetTable
-                    filter={searchFilter}
                     headCells={headCells}
-                    rows={rows}
-                    defaultSort={'created_date'}
+                    rows={engagements}
                     noRowBorder={true}
+                    handleChangePagination={(paginationOptions: PaginationOptions<Engagement>) =>
+                        setPaginationOptions(paginationOptions)
+                    }
+                    paginationOptions={paginationOptions}
+                    loading={tableLoading}
+                    pageInfo={pageInfo}
                 />
             </Grid>
         </MetPageGridContainer>

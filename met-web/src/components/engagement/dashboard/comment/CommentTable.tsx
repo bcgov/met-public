@@ -6,7 +6,9 @@ import { Skeleton, Typography } from '@mui/material';
 import { CommentViewContext } from './CommentViewContext';
 
 const CommentTable = () => {
-    const { isCommentsListLoading, comments } = useContext(CommentViewContext);
+    const { isCommentsListLoading, comments, paginationOptions, pageInfo, handleChangePagination, tableLoading } =
+        useContext(CommentViewContext);
+
     const headCells: HeadCell<Comment>[] = [
         {
             key: 'text',
@@ -32,7 +34,20 @@ const CommentTable = () => {
         return <Skeleton variant="rectangular" width="100%" height="60m" />;
     }
 
-    return <MetTable hideHeader={true} headCells={headCells} rows={comments} defaultSort={'submission_date'} />;
+    return (
+        <>
+            <MetTable
+                headCells={headCells}
+                rows={comments}
+                noRowBorder={true}
+                hideHeader={true}
+                handleChangePagination={handleChangePagination}
+                paginationOptions={paginationOptions}
+                pageInfo={pageInfo}
+                loading={tableLoading}
+            />
+        </>
+    );
 };
 
 export default CommentTable;

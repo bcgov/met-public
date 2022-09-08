@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import { Link, useParams } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton, MetHeader1 } from 'components/common';
 import { Comment } from 'models/comment';
-import { HeadCell } from 'components/common/Table/types';
+import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink } from '@mui/material';
 import TextField from '@mui/material/TextField';
@@ -12,7 +12,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { fetchComments } from 'services/commentService';
+import { getCommentsPage } from 'services/commentService';
 
 const CommentListing = () => {
     const [searchFilter, setSearchFilter] = useState({
@@ -21,29 +21,53 @@ const CommentListing = () => {
     });
     const [searchText, setSearchText] = useState('');
     const [comments, setComments] = useState<Comment[]>([]);
-
+    const [paginationOptions, setPagination] = useState<PaginationOptions<Comment>>({
+        page: 1,
+        size: 10,
+        sort_key: 'id',
+        nested_sort_key: 'comment.id',
+        sort_order: 'desc',
+    });
+    const [pageInfo, setPageInfo] = useState<PageInfo>({
+        total: 0,
+    });
+    const [tableLoading, setTableLoading] = useState(true);
     const { surveyId } = useParams();
 
     const dispatch = useAppDispatch();
 
-    const callFetchComments = async () => {
+    const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
+
+    const callGetComments = async () => {
         try {
             if (isNaN(Number(surveyId))) {
                 dispatch(openNotification({ severity: 'error', text: 'Invalid surveyId' }));
             }
 
-            const fetchedComments = await fetchComments({
+            setTableLoading(true);
+            const response = await getCommentsPage({
                 survey_id: Number(surveyId),
+                page,
+                size,
+                sort_key: nested_sort_key || sort_key,
+                sort_order,
+                search_text: searchFilter.value,
             });
-            setComments(fetchedComments);
+            setComments(response.items);
+            setPageInfo({
+                total: response.total,
+            });
+            setTableLoading(false);
         } catch (error) {
+            console.log(error);
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching comments' }));
+            setTableLoading(false);
         }
     };
 
     useEffect(() => {
-        callFetchComments();
-    }, [surveyId]);
+        callGetComments();
+    }, [surveyId, paginationOptions, searchFilter]);
 
     const handleSearchBarClick = (filter: string) => {
         setSearchFilter({
@@ -55,6 +79,7 @@ const CommentListing = () => {
     const headCells: HeadCell<Comment>[] = [
         {
             key: 'id',
+            nestedSortKey: 'comment.id',
             numeric: true,
             disablePadding: false,
             label: 'ID',
@@ -133,11 +158,13 @@ const CommentListing = () => {
                     <strong>{`${comments[0]?.survey || ''} Comments`}</strong>
                 </MetHeader1>
                 <MetTable
-                    filter={searchFilter}
                     headCells={headCells}
                     rows={comments}
-                    defaultSort={'id'}
                     noRowBorder={true}
+                    handleChangePagination={(pagination: PaginationOptions<Comment>) => setPagination(pagination)}
+                    paginationOptions={paginationOptions}
+                    pageInfo={pageInfo}
+                    loading={tableLoading}
                 />
                 <PrimaryButton component={Link} to={`/survey/${comments[0]?.survey_id || 0}/comments/all`}>
                     Read All Comments
