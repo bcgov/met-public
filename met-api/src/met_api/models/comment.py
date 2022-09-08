@@ -3,7 +3,7 @@
 Manages the comment
 """
 from datetime import datetime
-from sqlalchemy import and_, desc, asc
+from sqlalchemy import and_, desc, asc, cast, TEXT
 from sqlalchemy.sql import text
 from sqlalchemy.sql.schema import ForeignKey
 from met_api.constants.comment_status import Status
@@ -41,7 +41,8 @@ class Comment(db.Model):
             .filter(Comment.survey_id == survey_id)\
                 
         if search_text:
-            query = query.filter(Comment.id.like('%' + search_text + '%'))
+            # Remove all non-digit characters from search text
+            query = query.filter(cast(Comment.id, TEXT).like('%' + search_text + '%'))
             
         sort = asc(text(sort_key)) if sort_order == "asc" else desc(text(sort_key))
         return query.order_by(sort).paginate(page=page, per_page=size)

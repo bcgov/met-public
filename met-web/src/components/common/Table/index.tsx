@@ -131,7 +131,7 @@ function MetTable<T>({
                             />
                         </ConditionalComponent>
 
-                        <TableBody sx={{ position: 'relative' }}>
+                        <TableBody sx={{ position: 'relative', minHeight: 53 }}>
                             <ConditionalComponent condition={loading}>
                                 <Box
                                     sx={{
@@ -142,6 +142,13 @@ function MetTable<T>({
                                 >
                                     <LinearProgress />
                                 </Box>
+                            </ConditionalComponent>
+                            <ConditionalComponent condition={rows.length === 0}>
+                                <TableRow>
+                                    <TableCell colSpan={headCells.length} align="center">
+                                        {loading ? '' : 'No rows to display'}
+                                    </TableCell>
+                                </TableRow>
                             </ConditionalComponent>
                             {rows.map((row, rowIndex) => {
                                 return (

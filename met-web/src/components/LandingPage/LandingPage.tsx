@@ -32,7 +32,7 @@ const LandingPage = () => {
     const [pageInfo, setPageInfo] = useState<PageInfo>({
         total: 0,
     });
-    const [tableLoading, setTableLoading] = useState(false);
+    const [tableLoading, setTableLoading] = useState(true);
 
     const dispatch = useAppDispatch();
 

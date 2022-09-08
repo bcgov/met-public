@@ -33,7 +33,7 @@ const SurveyListing = () => {
         total: 0,
     });
 
-    const [tableLoading, setTableLoading] = useState(false);
+    const [tableLoading, setTableLoading] = useState(true);
 
     const dispatch = useAppDispatch();
 
