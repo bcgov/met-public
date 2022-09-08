@@ -1,23 +1,13 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import MetTable from 'components/common/Table';
 import { Comment } from 'models/comment';
-import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
+import { HeadCell } from 'components/common/Table/types';
 import { Skeleton, Typography } from '@mui/material';
 import { CommentViewContext } from './CommentViewContext';
 
 const CommentTable = () => {
-    const { isCommentsListLoading, comments } = useContext(CommentViewContext);
-    const [page, setPage] = useState(1);
-    const [size, setSize] = useState(10);
-    const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Comment>>({
-        page: 0,
-        size: 10,
-        sort_key: 'id',
-        sort_order: 'asc',
-    });
-    const [pageInfo, setPageInfo] = useState<PageInfo>({
-        total: 0,
-    });
+    const { isCommentsListLoading, comments, paginationOptions, pageInfo, handleChangePagination, tableLoading } =
+        useContext(CommentViewContext);
 
     const headCells: HeadCell<Comment>[] = [
         {
@@ -46,26 +36,15 @@ const CommentTable = () => {
 
     return (
         <>
-            {/* <MetTable
-                rows={comments}
-                headCells={headCells}
-                hideHeader={true}
-                handlePageChange={(newPage: number) => setPage(newPage)}
-                handleSizeChange={(newSize: number) => setSize(newSize)}
-                handleChangePagination={(pagination: PaginationOptions<Comment>) => setPaginationOptions(pagination)}
-                paginationOptions={paginationOptions}
-            /> */}
-
             <MetTable
                 headCells={headCells}
                 rows={comments}
                 noRowBorder={true}
                 hideHeader={true}
-                handleChangePagination={(paginationOptions: PaginationOptions<Comment>) =>
-                    setPaginationOptions(paginationOptions)
-                }
+                handleChangePagination={handleChangePagination}
                 paginationOptions={paginationOptions}
                 pageInfo={pageInfo}
+                loading={tableLoading}
             />
         </>
     );

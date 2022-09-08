@@ -6,25 +6,43 @@ import { getEngagement } from 'services/engagementService';
 import { Engagement } from 'models/engagement';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { getErrorMessage } from 'utils';
-import { fetchComments } from 'services/commentService';
+import { getCommentsPage } from 'services/commentService';
 import { Comment } from 'models/comment';
+import { PageInfo, PaginationOptions } from 'components/common/Table/types';
 
 export interface EngagementCommentContextProps {
     engagement: Engagement | null;
     comments: Comment[];
     isEngagementLoading: boolean;
     isCommentsListLoading: boolean;
+    paginationOptions: PaginationOptions<Comment>;
+    pageInfo: PageInfo;
+    handleChangePagination: (_paginationOptions: PaginationOptions<Comment>) => void;
+    tableLoading: boolean;
 }
 
 export type EngagementParams = {
     engagementId: string;
 };
 
+const initialPaginationOptions = {
+    page: 0,
+    size: 10,
+};
+const initialTableLoading = {
+    total: 0,
+};
 export const CommentViewContext = createContext<EngagementCommentContextProps>({
     engagement: null,
     isEngagementLoading: true,
     isCommentsListLoading: true,
     comments: [],
+    paginationOptions: { page: 0, size: 10 },
+    pageInfo: { total: 0 },
+    handleChangePagination: (_paginationOptions: PaginationOptions<Comment>) => {
+        throw new Error('Unimplemented');
+    },
+    tableLoading: false,
 });
 
 export const CommentViewProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -36,6 +54,11 @@ export const CommentViewProvider = ({ children }: { children: JSX.Element | JSX.
     const [isEngagementLoading, setEngagementLoading] = useState(true);
     const [isCommentsListLoading, setIsCommentsListLoading] = useState(true);
     const [comments, setComments] = useState<Comment[]>([]);
+    const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Comment>>(initialPaginationOptions);
+    const [pageInfo, setPageInfo] = useState<PageInfo>(initialTableLoading);
+    const [tableLoading, setTableLoading] = useState(true);
+
+    const { page, size } = paginationOptions;
 
     const validateEngagement = (engagementToValidate: Engagement) => {
         const isClosed = engagementToValidate?.submission_status === SubmissionStatus.Closed;
@@ -75,12 +98,20 @@ export const CommentViewProvider = ({ children }: { children: JSX.Element | JSX.
             if (isNaN(Number(surveyId))) {
                 throw new Error('Invalid survey id');
             }
-
-            const fetchedComments = await fetchComments({
+            setTableLoading(true);
+            const response = await getCommentsPage({
                 survey_id: Number(surveyId),
+                page,
+                size,
             });
-            setComments(fetchedComments);
-            setIsCommentsListLoading(false);
+            setComments(response.items);
+            setPageInfo({
+                total: response.total,
+            });
+            setTableLoading(false);
+            if (isCommentsListLoading) {
+                setIsCommentsListLoading(false);
+            }
         } catch (error) {
             dispatch(
                 openNotification({
@@ -88,15 +119,19 @@ export const CommentViewProvider = ({ children }: { children: JSX.Element | JSX.
                     text: getErrorMessage(error) || 'Error occurred while fetching comments',
                 }),
             );
-            navigate('/');
+            setTableLoading(false);
         }
+    };
+
+    const handleChangePagination = (paginationOptions: PaginationOptions<Comment>) => {
+        setPaginationOptions(paginationOptions);
     };
 
     useEffect(() => {
         if (engagement) {
             callFetchComments();
         }
-    }, [engagement]);
+    }, [engagement, paginationOptions]);
 
     return (
         <CommentViewContext.Provider
@@ -105,6 +140,10 @@ export const CommentViewProvider = ({ children }: { children: JSX.Element | JSX.
                 isEngagementLoading,
                 comments,
                 isCommentsListLoading,
+                paginationOptions,
+                pageInfo,
+                handleChangePagination,
+                tableLoading,
             }}
         >
             {children}
