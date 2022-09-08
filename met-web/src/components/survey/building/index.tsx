@@ -138,6 +138,8 @@ const SurveyFormBuilder = () => {
                     {!isNameFocused ? (
                         <>
                             <MetHeader3
+                                variant="h3"
+                                sx={{ p: 0.5 }}
                                 onClick={() => {
                                     setIsNamedFocused(true);
                                 }}
@@ -145,12 +147,13 @@ const SurveyFormBuilder = () => {
                                 {name}
                             </MetHeader3>
                             <IconButton
+                                size="small"
                                 onClick={() => {
                                     setIsNamedFocused(!isNameFocused);
                                 }}
                                 color="info"
                             >
-                                <BorderColorIcon />
+                                <BorderColorIcon sx={{ fontSize: '1rem' }} />
                             </IconButton>
                         </>
                     ) : (
