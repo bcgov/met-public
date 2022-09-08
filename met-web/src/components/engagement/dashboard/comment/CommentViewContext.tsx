@@ -26,7 +26,7 @@ export type EngagementParams = {
 };
 
 const initialPaginationOptions = {
-    page: 0,
+    page: 1,
     size: 10,
 };
 const initialTableLoading = {
