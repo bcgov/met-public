@@ -1,6 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    image.openshift.io/triggers: >-
+      [{"from":{"kind":"ImageStreamTag","name":"{{ .Chart.Name }}:{{ .Values.redash.image.tag }}","namespace":"{{ .Values.redash.image.namespace }}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"{{ .Chart.Name }}-server\")].image"}]
   labels:
     app: "{{ .Chart.Name }}-server"
   name: "{{ .Chart.Name }}-server"

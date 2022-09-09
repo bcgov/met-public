@@ -1,3 +1,5 @@
-* * * * * default cd /met-cron && ./run_met_etl.sh
-0 8 * * * default cd /met-cron && ./run_met_closeout.sh
+# ANALYTICS ETL Runs At every hour (UTC).
+0 * * * * default cd /met-cron && ./run_met_etl.sh
+# ENGAGEMENT CLOSEOUT Runs At 17:00 on every day-of-week from Monday through Friday (UTC).
+0 17 * * 1-5 default cd /met-cron && ./run_met_closeout.sh
 # An empty line is required at the end of this file for a valid cron file
