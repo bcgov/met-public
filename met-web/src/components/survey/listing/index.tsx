@@ -39,7 +39,7 @@ const SurveyListing = () => {
 
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
-    const callGetSurveysPage = async () => {
+    const loadSurveys = async () => {
         try {
             setTableLoading(true);
             const response = await getSurveysPage({
@@ -61,7 +61,7 @@ const SurveyListing = () => {
     };
 
     useEffect(() => {
-        callGetSurveysPage();
+        loadSurveys();
     }, [paginationOptions, searchFilter]);
 
     const handleSearchBarClick = (surveyNameFilter: string) => {

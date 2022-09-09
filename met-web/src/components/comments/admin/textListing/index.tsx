@@ -36,7 +36,7 @@ const CommentTextListing = () => {
 
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
-    const callGetComments = async () => {
+    const loadComments = async () => {
         try {
             if (isNaN(Number(surveyId))) {
                 dispatch(openNotification({ severity: 'error', text: 'Invalid surveyId' }));
@@ -64,7 +64,7 @@ const CommentTextListing = () => {
     };
 
     useEffect(() => {
-        callGetComments();
+        loadComments();
     }, [paginationOptions, surveyId, searchFilter]);
 
     const handleSearchBarClick = (filter: string) => {

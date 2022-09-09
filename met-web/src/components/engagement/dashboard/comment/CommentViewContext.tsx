@@ -92,7 +92,7 @@ export const CommentViewProvider = ({ children }: { children: JSX.Element | JSX.
         fetchEngagement();
     }, [engagementId]);
 
-    const callFetchComments = async () => {
+    const loadComments = async () => {
         try {
             const surveyId = engagement?.surveys[0]?.id;
             if (isNaN(Number(surveyId))) {
@@ -129,7 +129,7 @@ export const CommentViewProvider = ({ children }: { children: JSX.Element | JSX.
 
     useEffect(() => {
         if (engagement) {
-            callFetchComments();
+            loadComments();
         }
     }, [engagement, paginationOptions]);
 

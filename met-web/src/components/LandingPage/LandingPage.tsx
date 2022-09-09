@@ -39,10 +39,10 @@ const LandingPage = () => {
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
     useEffect(() => {
-        callGetEngagements();
+        loadEngagements();
     }, [paginationOptions, searchFilter]);
 
-    const callGetEngagements = async () => {
+    const loadEngagements = async () => {
         try {
             setTableLoading(true);
             const response = await getEngagements({
