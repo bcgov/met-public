@@ -4,8 +4,9 @@ Manages the Survey
 """
 from datetime import datetime
 from typing import List
-from sqlalchemy import ForeignKey, and_
+from sqlalchemy import ForeignKey, and_, desc, asc
 from sqlalchemy.dialects import postgresql
+from sqlalchemy.sql import text
 from met_api.constants.engagement_status import Status
 from met_api.models.engagement_status import EngagementStatus
 from met_api.models.engagement import Engagement
@@ -67,6 +68,20 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
         survey_schema = SurveySchema(many=True)
         surveys = db.session.query(Survey).filter_by(engagement_id=None).all()
         return survey_schema.dump(surveys)
+
+    @classmethod
+    def get_surveys_paginated(cls, page=1, size=10, sort_key='name', sort_order='asc', search_text='', unlinked=False):
+        """Get surveys paginated."""
+        query = db.session.query(Survey).join(Engagement, isouter=True).join(EngagementStatus, isouter=True)
+
+        if unlinked:
+            query = query.filter(Survey.engagement_id is None)
+
+        if search_text:
+            query = query.filter(Survey.name.like('%' + search_text + '%'))
+
+        sort = asc(text(sort_key)) if sort_order == "asc" else desc(text(sort_key))
+        return query.order_by(sort).paginate(page=page, per_page=size)
 
     @classmethod
     def create_survey(cls, survey: SurveySchema) -> DefaultMethodResult:

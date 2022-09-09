@@ -24,7 +24,7 @@ from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
-API = Namespace('comment', description='Endpoints for Comments Management')
+API = Namespace('comments', description='Endpoints for Comments Management')
 """Custom exception messages
 """
 
@@ -69,7 +69,7 @@ class Comment(Resource):
 
 
 @cors_preflight('GET, POST, PUT, OPTIONS')
-@API.route('/survey/<survey_id>/comments')
+@API.route('/survey/<survey_id>')
 class Comments(Resource):
     """Resource for managing multiple comments."""
 
@@ -77,10 +77,20 @@ class Comments(Resource):
     @cross_origin(origins=allowedorigins())
     @auth.optional
     def get(survey_id):
-        """Fetch all comments."""
+        """Get comments page"""
         try:
             user_id = TokenInfo.get_id()
-            comment_records = CommentService().get_comments_by_survey_id(user_id, survey_id)
+            args = request.args
+            comment_records = CommentService()\
+                .get_comments_paginated(
+                    user_id,
+                    survey_id,
+                    args.get('page', None, int),
+                    args.get('size', None, int),
+                    args.get('sort_key', None, str),
+                    args.get('sort_order', None, str),
+                    args.get('search_text', '', str),
+            )
             return ActionResult.success(result=comment_records)
         except ValueError as err:
             return ActionResult.error(str(err))

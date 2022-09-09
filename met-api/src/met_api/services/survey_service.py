@@ -52,6 +52,24 @@ class SurveyService:
         db_data = Survey.get_all_unlinked_surveys()
         return db_data
 
+    @staticmethod
+    def get_surveys_paginated(page, size, sort_key='name', sort_order='asc', search_text='', unlinked=False):
+        """Get engagements paginated."""
+        surveys_page = Survey.get_surveys_paginated(
+            page,
+            size,
+            sort_key,
+            sort_order,
+            search_text,
+            unlinked,
+        )
+        surveys_schema = SurveySchema(many=True)
+
+        return {
+            'items': surveys_schema.dump(surveys_page.items),
+            'total': surveys_page.total
+        }
+
     @classmethod
     def create(cls, data: SurveySchema):
         """Create survey."""

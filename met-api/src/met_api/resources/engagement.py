@@ -25,7 +25,7 @@ from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
-API = Namespace('engagement', description='Endpoints for Engagements Management')
+API = Namespace('engagements', description='Endpoints for Engagements Management')
 """Custom exception messages
 """
 
@@ -57,16 +57,26 @@ class Engagement(Resource):
 @cors_preflight('GET, POST, PUT, OPTIONS')
 @API.route('/')
 class Engagements(Resource):
-    """Resource for managing all engagements."""
+    """Resource for managing engagements."""
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @auth.optional
     def get():
-        """Fetch all engagements."""
+        """Fetch engagements."""
         try:
+            args = request.args
             user_id = TokenInfo.get_id()
-            engagement_records = EngagementService().get_all_engagements(user_id)
+
+            engagement_records = EngagementService()\
+                .get_engagements_paginated(
+                    user_id, args.get('page', None, int),
+                    args.get('size', None, int),
+                    args.get('sort_key', None, str),
+                    args.get('sort_order', None, str),
+                    args.get('search_text', '', str)
+            )
+
             return ActionResult.success(result=engagement_records)
         except ValueError as err:
             return ActionResult.error(str(err))
