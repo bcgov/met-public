@@ -15,12 +15,26 @@ export const ModalProvider = () => {
         dispatch(closeModal());
     }
 
+    React.useEffect(() => {
+        console.log('MODAL STATES::::::' + open);
+    }, []);
+
+    React.useEffect(() => {
+        console.log('OPEN STATE CHANGED' + open);
+    });
+
     return (
-        <Modal open={open} onClose={handleClose}>
+        <Modal
+            sx={{ border: '2px solid red' }}
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
             {type === 'closeModal' ? (
-                <CloseModal header={modalData.header} subTextArray={modalData.subText} handleClose={handleClose} />
+                <CloseModal header={modalData.header} subText={modalData.subText} handleClose={handleClose} />
             ) : (
-                <ConfirmModal header={modalData.header} subTextArray={modalData.subText} handleClose={handleClose} />
+                <ConfirmModal header={modalData.header} subText={modalData.subText} handleClose={handleClose} />
             )}
         </Modal>
     );

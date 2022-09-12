@@ -3,7 +3,7 @@ import { Grid, Stack, useMediaQuery, Theme } from '@mui/material';
 import { modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody } from 'components/common';
 import { ModalProps } from './types';
 
-const ConfirmModal = ({ header, subTextArray, handleClose }: ModalProps) => {
+const ConfirmModal = ({ header, subText, handleClose, buttons }: ModalProps) => {
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     return (
         <Grid
@@ -20,9 +20,9 @@ const ConfirmModal = ({ header, subTextArray, handleClose }: ModalProps) => {
                 </Grid>
             </Grid>
             <Grid container direction="row" item xs={12}>
-                {subTextArray.map((subText: string) => (
+                {subText.map((text: string) => (
                     <Grid item xs={12}>
-                        <MetBody sx={{ mb: 1 }}> {subText} </MetBody>
+                        <MetBody sx={{ mb: 1 }}> {text} </MetBody>
                     </Grid>
                 ))}
                 <Grid
@@ -37,16 +37,28 @@ const ConfirmModal = ({ header, subTextArray, handleClose }: ModalProps) => {
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
                         {isSmallScreen ? (
                             <>
-                                <PrimaryButton type="submit" variant={'contained'}>
-                                    Confirm
+                                <PrimaryButton
+                                    onClick={() => buttons[0].buttonFunction}
+                                    type="submit"
+                                    variant={'contained'}
+                                >
+                                    {buttons[0].buttonText}
                                 </PrimaryButton>
-                                <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
+                                <SecondaryButton onClick={buttons[1].buttonFunction}>
+                                    {buttons[1].buttonText}
+                                </SecondaryButton>
                             </>
                         ) : (
                             <>
-                                <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
-                                <PrimaryButton type="submit" variant={'contained'}>
-                                    Confirm
+                                <SecondaryButton onClick={buttons[1].buttonFunction}>
+                                    {buttons[1].buttonText}
+                                </SecondaryButton>
+                                <PrimaryButton
+                                    onClick={() => buttons[0].buttonFunction}
+                                    type="submit"
+                                    variant={'contained'}
+                                >
+                                    {buttons[0].buttonText}
                                 </PrimaryButton>
                             </>
                         )}

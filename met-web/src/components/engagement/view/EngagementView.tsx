@@ -1,15 +1,16 @@
 import React, { useContext, useState } from 'react';
-import { Grid } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { EngagementBanner } from './EngagementBanner';
 import { ActionContext } from './ActionContext';
 import { EngagementContent } from './EngagementContent';
 import SurveyBlock from './SurveyBlock';
 import EmailModal from './EmailModal';
 import { PreviewBanner } from './PreviewBanner';
-import { useAppSelector } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { useNavigate, useLocation } from 'react-router';
 import WhoIsListeningWidget from './WhoIsListeningWidget';
 import { RouteState } from './types';
+import { openModal } from 'services/modalService/modalSlice';
 
 export const EngagementView = () => {
     const { state } = useLocation() as RouteState;
@@ -20,7 +21,7 @@ export const EngagementView = () => {
     const { savedEngagement } = useContext(ActionContext);
     const surveyId = savedEngagement.surveys[0]?.id || '';
     const navigate = useNavigate();
-
+    const dispatch = useAppDispatch();
     //Clear state on window refresh
     window.history.replaceState({}, document.title);
 
@@ -66,6 +67,27 @@ export const EngagementView = () => {
                     </Grid>
                     <Grid item xs={12} lg={4}>
                         <WhoIsListeningWidget />
+                        <Button
+                            onClick={() =>
+                                dispatch(
+                                    openModal({
+                                        open: true,
+                                        data: {
+                                            header: 'Test',
+                                            subText: ['hello'],
+                                            buttons: [
+                                                { buttonText: 'Test', buttonFunction: handleStartSurvey },
+                                                { buttonText: 'close', buttonFunction: handleClose },
+                                            ],
+                                        },
+                                        type: 'testModal',
+                                    }),
+                                )
+                            }
+                            variant="text"
+                        >
+                            Open Modal
+                        </Button>
                     </Grid>
                     <Grid item xs={12} lg={8}>
                         <SurveyBlock startSurvey={handleStartSurvey} />

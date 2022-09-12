@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ModalProps } from './types';
+import { ModalState } from './types';
 
 const initialState: ModalState = {
     open: false,
-    data: { header: '', subTextArray: [] },
+    data: { header: '', subText: [], buttons: [{ buttonText: 'hello', buttonFunction: '' }] },
     type: '',
 };
 
@@ -11,10 +11,11 @@ export const modalSlice = createSlice({
     name: 'modal',
     initialState,
     reducers: {
-        openModal: (state: ModalState, action: PayloadAction<ModalProps>) => {
+        openModal: (state: ModalState, action: PayloadAction<ModalState>) => {
             state.open = true;
             state.data = action.payload.data;
             state.type = action.payload.type;
+            console.log('MODAL OPEN!!!' + state.open);
         },
         closeModal: (state: ModalState) => {
             state.open = false;

@@ -3,7 +3,7 @@ import { Grid } from '@mui/material';
 import { modalStyle, PrimaryButton, MetHeader1, MetBody } from 'components/common';
 import { ModalProps } from './types';
 
-const UpdateModal = ({ header, subTextArray, handleClose }: ModalProps) => {
+const UpdateModal = ({ header, subText, handleClose }: ModalProps) => {
     return (
         <Grid
             container
@@ -19,9 +19,9 @@ const UpdateModal = ({ header, subTextArray, handleClose }: ModalProps) => {
                 </Grid>
             </Grid>
             <Grid container direction="row" item xs={12}>
-                {subTextArray.map((subText: string) => (
+                {subText.map((text: string) => (
                     <Grid item xs={12}>
-                        <MetBody sx={{ mb: 1 }}> {subText} </MetBody>
+                        <MetBody sx={{ mb: 1 }}> {text} </MetBody>
                     </Grid>
                 ))}
                 <Grid

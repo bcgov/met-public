@@ -33,6 +33,7 @@ const App = () => {
             <Router>
                 <PageViewTracker />
                 <Notification />
+                <ModalProvider />
                 <LoggedOutHeader />
                 <UnauthenticatedRoutes />
             </Router>
