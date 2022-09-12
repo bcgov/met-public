@@ -3,9 +3,11 @@
 import os
 import uuid
 from typing import List
+
 import requests
-from markupsafe import string
 from aws_requests_auth.aws_auth import AWSRequestsAuth
+from markupsafe import string
+
 from met_api.config import _Config
 from met_api.schemas.document import Document
 

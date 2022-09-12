@@ -3,12 +3,15 @@
 Manages the comment
 """
 from datetime import datetime
-from sqlalchemy import and_, desc, asc, cast, TEXT
+
+from sqlalchemy import TEXT, and_, asc, cast, desc
 from sqlalchemy.sql import text
 from sqlalchemy.sql.schema import ForeignKey
+
 from met_api.constants.comment_status import Status
 from met_api.models.engagement import Engagement
 from met_api.models.survey import Survey
+
 from .comment_status import CommentStatus
 from .db import db
 from .default_method_result import DefaultMethodResult
@@ -33,7 +36,7 @@ class Comment(db.Model):
         return db.session.query(Comment).join(CommentStatus).join(Survey).filter(Comment.id == comment_id).first()
 
     @classmethod
-    def get_comments_by_survey_id_paginated(cls, survey_id, page=1, size=10,
+    def get_comments_by_survey_id_paginated(cls, survey_id, page=1, size=10,  # pylint: disable=too-many-arguments
                                             sort_key='id', sort_order='asc', search_text=''):
         """Get comments paginated."""
         query = db.session.query(Comment)\
@@ -45,7 +48,7 @@ class Comment(db.Model):
             # Remove all non-digit characters from search text
             query = query.filter(cast(Comment.id, TEXT).like('%' + search_text + '%'))
 
-        sort = asc(text(sort_key)) if sort_order == "asc" else desc(text(sort_key))
+        sort = asc(text(sort_key)) if sort_order == 'asc' else desc(text(sort_key))
         return query.order_by(sort).paginate(page=page, per_page=size)
 
     @classmethod

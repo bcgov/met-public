@@ -1,11 +1,11 @@
-
 """Service for engagement management."""
 from http import HTTPStatus
+
 from flask import current_app
 
 from met_api.constants.engagement_status import Status
 from met_api.exceptions.business_exception import BusinessException
-from met_api.models.engagement import Engagement
+from met_api.models import Engagement as EngagementModel
 from met_api.models.submission import Submission
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services.object_storage_service import ObjectStorageService
@@ -21,14 +21,14 @@ class EngagementService:
     @staticmethod
     def get_engagement(engagement_id, user_id) -> EngagementSchema:
         """Get Engagement by the id."""
-        engagement = Engagement.get_engagement(engagement_id)
+        engagement_model: EngagementModel = EngagementModel.get_engagement(engagement_id)
 
-        if engagement:
-            engagement['banner_url'] = ObjectStorageService.get_url(engagement.get('banner_filename', None))
-            if user_id is None and engagement.get('status_id', None) == Status.Draft.value:
+        if engagement_model:
+            if user_id is None and engagement_model.status_id == Status.Draft.value:
                 # Non authenticated users only have access to published engagements
                 return None
-
+            engagement = EngagementSchema().dump(engagement_model)
+            engagement['banner_url'] = ObjectStorageService.get_url(engagement_model.banner_filename)
         return engagement
 
     @staticmethod
@@ -36,16 +36,18 @@ class EngagementService:
         """Get all engagements."""
         if user_id:
             # authenticated users have access to any engagement status
-            engagements = Engagement.get_all_engagements()
+            engagements = EngagementModel.get_all_engagements()
         else:
-            engagements = Engagement.get_engagements_by_status([Status.Published.value, Status.Closed.value])
+            engagements = EngagementModel.get_engagements_by_status([Status.Published.value, Status.Closed.value])
 
         return engagements
 
     @staticmethod
-    def get_engagements_paginated(user_id, page, size, sort_key='name', sort_order='asc', search_text=''):
+    def get_engagements_paginated(user_id, page, size,  # pylint: disable=too-many-arguments
+                                  sort_key='name', sort_order='asc',
+                                  search_text=''):
         """Get engagements paginated."""
-        engagements_page = Engagement.get_engagements_paginated(
+        engagements_page = EngagementModel.get_engagements_paginated(
             page,
             size,
             sort_key,
@@ -64,7 +66,7 @@ class EngagementService:
     @staticmethod
     def close_engagements_due():
         """Close published engagements that are due for a closeout."""
-        engagements = Engagement.close_engagements_due()
+        engagements = EngagementModel.close_engagements_due()
         print('Engagements to close: ', engagements)
         results = [EngagementService._send_closeout_emails(engagement) for engagement in engagements]
         return results
@@ -72,12 +74,12 @@ class EngagementService:
     def create_engagement(self, data: EngagementSchema):
         """Create engagement."""
         self.validate_fields(data)
-        return Engagement.create_engagement(data)
+        return EngagementModel.create_engagement(data)
 
     def update_engagement(self, data: EngagementSchema):
         """Update all engagement."""
         self.validate_fields(data)
-        return Engagement.update_engagement(data)
+        return EngagementModel.update_engagement(data)
 
     @staticmethod
     def validate_fields(data):

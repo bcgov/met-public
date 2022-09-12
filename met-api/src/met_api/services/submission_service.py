@@ -1,11 +1,11 @@
-
 """Service for submission management."""
 from met_api.constants.engagement_status import SubmissionStatus
+from met_api.models import Engagement as EngagementModel
+from met_api.models import Survey as SurveyModel
 from met_api.models.submission import Submission
-from met_api.models.survey import Survey
 from met_api.schemas.submission import SubmissionSchema
-from met_api.services.email_verification_service import EmailVerificationService
 from met_api.services.comment_service import CommentService
+from met_api.services.email_verification_service import EmailVerificationService
 from met_api.services.survey_service import SurveyService
 
 
@@ -29,7 +29,7 @@ class SubmissionService:
     @classmethod
     def create(cls, submission: SubmissionSchema):
         """Create submission."""
-        cls.validate_fields(submission)
+        cls._validate_fields(submission)
         verification_token = submission.get('verification_token', None)
         survey_id = submission.get('survey_id', None)
         email_verification = cls.validate_email_verification(verification_token, survey_id)
@@ -46,11 +46,11 @@ class SubmissionService:
     @classmethod
     def update(cls, data: SubmissionSchema):
         """Update submission."""
-        cls.validate_fields(data)
+        cls._validate_fields(data)
         return Submission.update(data)
 
     @staticmethod
-    def validate_fields(submission):
+    def _validate_fields(submission):
         # TODO: Validate against survey form_json
         """Validate all fields."""
         empty_fields = [not submission[field] for field in ['submission_json', 'survey_id', 'verification_token']]
@@ -59,14 +59,12 @@ class SubmissionService:
             raise ValueError('Some required fields are empty')
 
         survey_id = submission.get('survey_id', None)
-        survey = Survey.get_survey(survey_id)
-        engagement = survey.get('engagement', None)
+        survey: SurveyModel = SurveyModel.get_survey(survey_id)
+        engagement: EngagementModel = EngagementModel.get_engagement(survey.engagement_id)
         if not engagement:
             raise ValueError('Survey not linked to an Engagement')
 
-        submission_status = engagement.get('submission_status', None)
-
-        if submission_status != SubmissionStatus.Open.value:
+        if engagement.status_id != SubmissionStatus.Open.value:
             raise ValueError('Engagement not open to submissions')
 
     @staticmethod

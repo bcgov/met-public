@@ -34,7 +34,8 @@ class CommentService:
         return comment_schema.dump(Comment.get_comments_by_survey_id_paginated(survey_id))
 
     @classmethod
-    def get_comments_paginated(cls, user_id, survey_id, page, size, sort_key, sort_order, search_text=''):
+    def get_comments_paginated(cls, user_id, survey_id, page,  # pylint: disable=too-many-arguments
+                               size, sort_key, sort_order, search_text=''):
         """Get comments paginated."""
         if not user_id:
             comment_schema = CommentSchema(many=True, only=('text', 'submission_date', 'survey'))

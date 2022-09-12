@@ -2,16 +2,22 @@
 
 Manages the engagement
 """
+
+from __future__ import annotations
+
 from datetime import datetime
 from typing import List
+
+from sqlalchemy import asc, desc
 from sqlalchemy.dialects.postgresql import JSON
-from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql import text
-from sqlalchemy import desc, asc
+from sqlalchemy.sql.schema import ForeignKey
+
 from met_api.constants.engagement_status import Status
 from met_api.constants.user import SYSTEM_USER
 from met_api.schemas.engagement import EngagementSchema
 from met_api.utils.datetime import local_datetime
+
 from .db import db
 from .default_method_result import DefaultMethodResult
 from .engagement_status import EngagementStatus
@@ -39,11 +45,10 @@ class Engagement(db.Model):
     surveys = db.relationship('Survey', backref='engagement', cascade='all, delete')
 
     @classmethod
-    def get_engagement(cls, engagement_id) -> EngagementSchema:
+    def get_engagement(cls, engagement_id) -> Engagement:
         """Get an engagement."""
-        engagement_schema = EngagementSchema()
-        data = db.session.query(Engagement).filter_by(id=engagement_id).first()
-        return engagement_schema.dump(data)
+        engagement = db.session.query(Engagement).filter_by(id=engagement_id).first()
+        return engagement
 
     @classmethod
     def get_all_engagements(cls):
@@ -53,7 +58,9 @@ class Engagement(db.Model):
         return engagements_schema.dump(data)
 
     @classmethod
-    def get_engagements_paginated(cls, page=1, size=10, sort_key='name', sort_order='asc', search_text='', statuses=None):
+    def get_engagements_paginated(cls, page=1, size=10, sort_key='name', sort_order='asc', search_text='',
+                                  # pylint: disable=too-many-arguments
+                                  statuses=None):
         """Get engagements paginated."""
         query = db.session.query(Engagement).join(EngagementStatus)
 
@@ -63,7 +70,7 @@ class Engagement(db.Model):
         if search_text:
             query = query.filter(Engagement.name.like('%' + search_text + '%'))
 
-        sort = asc(text(sort_key)) if sort_order == "asc" else desc(text(sort_key))
+        sort = asc(text(sort_key)) if sort_order == 'asc' else desc(text(sort_key))
         return query.order_by(sort).paginate(page=page, per_page=size)
 
     @classmethod

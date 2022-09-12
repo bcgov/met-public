@@ -2,17 +2,22 @@
 
 Manages the Survey
 """
+
+from __future__ import annotations
+
 from datetime import datetime
-from typing import List
-from sqlalchemy import ForeignKey, and_, desc, asc
+
+from sqlalchemy import ForeignKey, and_, asc, desc
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.sql import text
+
 from met_api.constants.engagement_status import Status
-from met_api.models.engagement_status import EngagementStatus
 from met_api.models.engagement import Engagement
+from met_api.models.engagement_status import EngagementStatus
 from met_api.schemas.survey import SurveySchema
-from .default_method_result import DefaultMethodResult
+
 from .db import db
+from .default_method_result import DefaultMethodResult
 
 
 class Survey(db.Model):  # pylint: disable=too-few-public-methods
@@ -32,45 +37,29 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
     submissions = db.relationship('Submission', backref='survey', cascade='all, delete')
 
     @classmethod
-    def get_survey(cls, survey_id) -> SurveySchema:
+    def get_survey(cls, survey_id) -> Survey:
         """Get a survey."""
-        survey_schema = SurveySchema()
-        survey = db.session.query(Survey)\
-            .outerjoin(Engagement)\
-            .outerjoin(EngagementStatus)\
-            .filter(Survey.id == survey_id)\
+        survey = db.session.query(Survey) \
+            .filter(Survey.id == survey_id) \
             .first()
-        return survey_schema.dump(survey)
+        return survey
 
     @classmethod
-    def get_open(cls, survey_id) -> SurveySchema:
+    def get_open(cls, survey_id) -> Survey:
         """Get an open survey."""
         now = datetime.now()
-        survey_schema = SurveySchema()
-        survey = db.session.query(Survey).filter_by(id=survey_id)\
-            .join(Engagement)\
-            .filter_by(status_id=Status.Published.value)\
-            .filter(and_(Engagement.start_date <= now, Engagement.end_date >= now))\
-            .join(EngagementStatus)\
+        survey: Survey = db.session.query(Survey).filter_by(id=survey_id) \
+            .join(Engagement) \
+            .filter_by(status_id=Status.Published.value) \
+            .filter(and_(Engagement.start_date <= now, Engagement.end_date >= now)) \
+            .join(EngagementStatus) \
             .first()
-        return survey_schema.dump(survey)
+        return survey
 
     @classmethod
-    def get_all_surveys(cls) -> List[SurveySchema]:
-        """Get all surveys."""
-        survey_schema = SurveySchema(many=True)
-        surveys = db.session.query(Survey).join(Engagement, isouter=True).join(EngagementStatus, isouter=True).all()
-        return survey_schema.dump(surveys)
-
-    @classmethod
-    def get_all_unlinked_surveys(cls) -> List[SurveySchema]:
-        """Get all surveys that are unlinked to engagement."""
-        survey_schema = SurveySchema(many=True)
-        surveys = db.session.query(Survey).filter_by(engagement_id=None).all()
-        return survey_schema.dump(surveys)
-
-    @classmethod
-    def get_surveys_paginated(cls, page=1, size=10, sort_key='name', sort_order='asc', search_text='', unlinked=False):
+    def get_surveys_paginated(cls, page=1, size=10, sort_key='name',  # pylint: disable=too-many-arguments
+                              sort_order='asc', search_text='',
+                              unlinked=False):
         """Get surveys paginated."""
         query = db.session.query(Survey).join(Engagement, isouter=True).join(EngagementStatus, isouter=True)
 
@@ -80,7 +69,7 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
         if search_text:
             query = query.filter(Survey.name.like('%' + search_text + '%'))
 
-        sort = asc(text(sort_key)) if sort_order == "asc" else desc(text(sort_key))
+        sort = asc(text(sort_key)) if sort_order == 'asc' else desc(text(sort_key))
         return query.order_by(sort).paginate(page=page, per_page=size)
 
     @classmethod
