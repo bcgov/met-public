@@ -3,6 +3,7 @@
 from met_api.constants.comment_status import Status
 from met_api.models.comment import Comment
 from met_api.models.comment_status import CommentStatus
+from met_api.models.data_class import PaginationOptions
 from met_api.schemas.comment import CommentSchema
 from met_api.schemas.submission import SubmissionSchema
 from met_api.schemas.survey import SurveySchema
@@ -34,20 +35,17 @@ class CommentService:
         return comment_schema.dump(Comment.get_comments_by_survey_id_paginated(survey_id))
 
     @classmethod
-    def get_comments_paginated(cls, user_id, survey_id, page, size, sort_key, sort_order, search_text=''):
+    def get_comments_paginated(cls, user_id, survey_id, pagination_options: PaginationOptions, search_text=''):
         """Get comments paginated."""
         if not user_id:
             comment_schema = CommentSchema(many=True, only=('text', 'submission_date', 'survey'))
             comments_page = Comment.get_accepted_comments_by_survey_id_where_engagement_closed_paginated(
-                survey_id, page, size)
+                survey_id, pagination_options)
         else:
             comment_schema = CommentSchema(many=True)
             comments_page = Comment.get_comments_by_survey_id_paginated(
                 survey_id,
-                page,
-                size,
-                sort_key,
-                sort_order,
+                pagination_options,
                 search_text,
             )
         return {

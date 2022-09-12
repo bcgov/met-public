@@ -18,6 +18,7 @@ from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
 from met_api.auth import auth
+from met_api.models.data_class import PaginationOptions
 from met_api.schemas.survey import SurveySchema
 from met_api.services.submission_service import SubmissionService
 from met_api.services.survey_service import SurveyService
@@ -92,12 +93,16 @@ class Surveys(Resource):
         try:
             args = request.args
 
+            pagination_options = PaginationOptions(
+                page= args.get('page', 1, int),
+                size= args.get('size', 10, int),
+                sort_key= args.get('sort_key', 'survey.name', int),
+                sort_order= args.get('sort_order', 'asc', str),
+            )
+
             survey_records = SurveyService()\
                 .get_surveys_paginated(
-                    args.get('page', None, int),
-                    args.get('size', None, int),
-                    args.get('sort_key', None, str),
-                    args.get('sort_order', None, str),
+                    pagination_options,
                     args.get('search_text', '', str),
                     args.get('unlinked', False, bool)
             )

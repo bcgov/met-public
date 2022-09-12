@@ -1,6 +1,7 @@
 
 """Service for survey management."""
 from met_api.constants.engagement_status import Status
+from met_api.models.data_class import PaginationOptions
 from met_api.models.survey import Survey
 from met_api.schemas.survey import SurveySchema
 from met_api.services.object_storage_service import ObjectStorageService
@@ -53,13 +54,10 @@ class SurveyService:
         return db_data
 
     @staticmethod
-    def get_surveys_paginated(page, size, sort_key='name', sort_order='asc', search_text='', unlinked=False):
+    def get_surveys_paginated(pagination_options: PaginationOptions, search_text='', unlinked=False):
         """Get engagements paginated."""
         surveys_page = Survey.get_surveys_paginated(
-            page,
-            size,
-            sort_key,
-            sort_order,
+            pagination_options,
             search_text,
             unlinked,
         )

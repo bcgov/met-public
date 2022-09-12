@@ -8,6 +8,7 @@ from sqlalchemy import ForeignKey, and_, desc, asc
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.sql import text
 from met_api.constants.engagement_status import Status
+from met_api.models.data_class import PaginationOptions
 from met_api.models.engagement_status import EngagementStatus
 from met_api.models.engagement import Engagement
 from met_api.schemas.survey import SurveySchema
@@ -70,7 +71,7 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
         return survey_schema.dump(surveys)
 
     @classmethod
-    def get_surveys_paginated(cls, page=1, size=10, sort_key='name', sort_order='asc', search_text='', unlinked=False):
+    def get_surveys_paginated(cls, pagination_options: PaginationOptions, search_text='', unlinked=False):
         """Get surveys paginated."""
         query = db.session.query(Survey).join(Engagement, isouter=True).join(EngagementStatus, isouter=True)
 
@@ -78,10 +79,10 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
             query = query.filter(Survey.engagement_id is None)
 
         if search_text:
-            query = query.filter(Survey.name.like('%' + search_text + '%'))
+            query = query.filter(Survey.name.ilike('%' + search_text + '%'))
 
-        sort = asc(text(sort_key)) if sort_order == "asc" else desc(text(sort_key))
-        return query.order_by(sort).paginate(page=page, per_page=size)
+        sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == "asc" else desc(text(pagination_options.sort_key))
+        return query.order_by(sort).paginate(page=pagination_options.page, per_page=pagination_options.size)
 
     @classmethod
     def create_survey(cls, survey: SurveySchema) -> DefaultMethodResult:
