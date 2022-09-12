@@ -99,7 +99,9 @@ const SurveyFormBuilder = () => {
             dispatch(
                 openNotification({
                     severity: 'success',
-                    text: 'The survey was successfully built',
+                    text: savedSurvey.engagement?.id
+                        ? `Survey was successfully added to engagement`
+                        : 'The survey was successfully built',
                 }),
             );
             if (savedSurvey.engagement?.id) {
