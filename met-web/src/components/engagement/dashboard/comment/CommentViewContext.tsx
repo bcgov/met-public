@@ -25,13 +25,6 @@ export type EngagementParams = {
     engagementId: string;
 };
 
-const initialPaginationOptions = {
-    page: 1,
-    size: 10,
-};
-const initialTableLoading = {
-    total: 0,
-};
 export const CommentViewContext = createContext<EngagementCommentContextProps>({
     engagement: null,
     isEngagementLoading: true,
