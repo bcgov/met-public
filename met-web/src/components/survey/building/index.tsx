@@ -100,7 +100,7 @@ const SurveyFormBuilder = () => {
                 openNotification({
                     severity: 'success',
                     text: savedSurvey.engagement?.id
-                        ? `Survey ${savedSurvey.name} was successfully added to engagement ${savedSurvey.engagement.name}`
+                        ? `Survey was successfully added to engagement`
                         : 'The survey was successfully built',
                 }),
             );
