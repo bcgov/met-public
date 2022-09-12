@@ -78,7 +78,7 @@ class Comments(Resource):
     @cross_origin(origins=allowedorigins())
     @auth.optional
     def get(survey_id):
-        """Get comments page"""
+        """Get comments page."""
         try:
             user_id = TokenInfo.get_id()
             args = request.args

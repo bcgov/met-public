@@ -66,7 +66,7 @@ class Engagement(db.Model):
 
         sort = asc(
             text(
-                pagination_options.sort_key)) if pagination_options.sort_order == "asc" else desc(
+                pagination_options.sort_key)) if pagination_options.sort_order == 'asc' else desc(
             text(
                 pagination_options.sort_key))
         return query.order_by(sort).paginate(page=pagination_options.page, per_page=pagination_options.size)
