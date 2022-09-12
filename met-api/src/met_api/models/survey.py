@@ -12,7 +12,6 @@ from met_api.constants.engagement_status import Status
 from met_api.models.data_class import PaginationOptions
 from met_api.models.engagement_status import EngagementStatus
 from met_api.models.engagement import Engagement
-from met_api.models.engagement_status import EngagementStatus
 from met_api.schemas.survey import SurveySchema
 from .db import db
 from .default_method_result import DefaultMethodResult
