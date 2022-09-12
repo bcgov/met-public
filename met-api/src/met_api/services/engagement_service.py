@@ -12,7 +12,6 @@ from met_api.schemas.engagement import EngagementSchema
 from met_api.services.object_storage_service import ObjectStorageService
 from met_api.utils.notification import send_email
 from met_api.utils.template import Template
-from operator import attrgetter
 
 
 class EngagementService:
