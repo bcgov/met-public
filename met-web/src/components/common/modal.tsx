@@ -15,14 +15,6 @@ export const ModalProvider = () => {
         dispatch(closeModal());
     }
 
-    React.useEffect(() => {
-        console.log('MODAL STATES::::::' + open);
-    }, []);
-
-    React.useEffect(() => {
-        console.log('OPEN STATE CHANGED' + open);
-    });
-
     return (
         <Modal
             sx={{ border: '2px solid red' }}
