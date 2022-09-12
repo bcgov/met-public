@@ -4,9 +4,10 @@ Manages the comment
 """
 from datetime import datetime
 from sqlalchemy import and_, desc, asc, cast, TEXT
-from sqlalchemy.sql import text
 from sqlalchemy.sql.schema import ForeignKey
+from sqlalchemy.sql import text
 from met_api.constants.comment_status import Status
+from met_api.models.data_class import PaginationOptions
 from met_api.models.engagement import Engagement
 from met_api.models.survey import Survey
 from .comment_status import CommentStatus
@@ -33,8 +34,7 @@ class Comment(db.Model):
         return db.session.query(Comment).join(CommentStatus).join(Survey).filter(Comment.id == comment_id).first()
 
     @classmethod
-    def get_comments_by_survey_id_paginated(cls, survey_id, page=1, size=10,
-                                            sort_key='id', sort_order='asc', search_text=''):
+    def get_comments_by_survey_id_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text=''):
         """Get comments paginated."""
         query = db.session.query(Comment)\
             .join(CommentStatus)\
@@ -45,11 +45,16 @@ class Comment(db.Model):
             # Remove all non-digit characters from search text
             query = query.filter(cast(Comment.id, TEXT).like('%' + search_text + '%'))
 
-        sort = asc(text(sort_key)) if sort_order == "asc" else desc(text(sort_key))
-        return query.order_by(sort).paginate(page=page, per_page=size)
+        sort = asc(
+            text(
+                pagination_options.sort_key)) if pagination_options.sort_order == 'asc' else desc(
+            text(
+                pagination_options.sort_key))
+        return query.order_by(sort).paginate(page=pagination_options.page, per_page=pagination_options.size)
 
     @classmethod
-    def get_accepted_comments_by_survey_id_where_engagement_closed_paginated(cls, survey_id, page=1, size=10):
+    def get_accepted_comments_by_survey_id_where_engagement_closed_paginated(
+            cls, survey_id, pagination_options: PaginationOptions):
         """Get comments for closed engagements."""
         now = datetime.now()
         query = db.session.query(Comment)\
@@ -63,7 +68,8 @@ class Comment(db.Model):
                     CommentStatus.id == Status.Approved.value
                 ))\
 
-        return query.order_by(Comment.id.desc()).paginate(page=page, per_page=size)
+        return query.order_by(Comment.id.desc()).paginate(
+            page=pagination_options.page, per_page=pagination_options.size)
 
     @staticmethod
     def __create_new_comment_entity(comment):

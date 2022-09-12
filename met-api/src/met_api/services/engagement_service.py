@@ -5,6 +5,7 @@ from flask import current_app
 
 from met_api.constants.engagement_status import Status
 from met_api.exceptions.business_exception import BusinessException
+from met_api.models.data_class import PaginationOptions
 from met_api.models.engagement import Engagement
 from met_api.models.submission import Submission
 from met_api.schemas.engagement import EngagementSchema
@@ -43,13 +44,10 @@ class EngagementService:
         return engagements
 
     @staticmethod
-    def get_engagements_paginated(user_id, page, size, sort_key='name', sort_order='asc', search_text=''):
+    def get_engagements_paginated(user_id, pagination_options: PaginationOptions, search_text=''):
         """Get engagements paginated."""
         engagements_page = Engagement.get_engagements_paginated(
-            page,
-            size,
-            sort_key,
-            sort_order,
+            pagination_options,
             search_text,
             statuses=None if user_id else [Status.Published.value],
         )
