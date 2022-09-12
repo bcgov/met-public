@@ -45,11 +45,16 @@ class Comment(db.Model):
             # Remove all non-digit characters from search text
             query = query.filter(cast(Comment.id, TEXT).like('%' + search_text + '%'))
 
-        sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == "asc" else desc(text(pagination_options.sort_key))
+        sort = asc(
+            text(
+                pagination_options.sort_key)) if pagination_options.sort_order == "asc" else desc(
+            text(
+                pagination_options.sort_key))
         return query.order_by(sort).paginate(page=pagination_options.page, per_page=pagination_options.size)
 
     @classmethod
-    def get_accepted_comments_by_survey_id_where_engagement_closed_paginated(cls, survey_id, pagination_options: PaginationOptions):
+    def get_accepted_comments_by_survey_id_where_engagement_closed_paginated(
+            cls, survey_id, pagination_options: PaginationOptions):
         """Get comments for closed engagements."""
         now = datetime.now()
         query = db.session.query(Comment)\
@@ -63,7 +68,8 @@ class Comment(db.Model):
                     CommentStatus.id == Status.Approved.value
                 ))\
 
-        return query.order_by(Comment.id.desc()).paginate(page=pagination_options.page, per_page=pagination_options.size)
+        return query.order_by(Comment.id.desc()).paginate(
+            page=pagination_options.page, per_page=pagination_options.size)
 
     @staticmethod
     def __create_new_comment_entity(comment):

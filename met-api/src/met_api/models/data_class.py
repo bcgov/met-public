@@ -2,6 +2,7 @@
 
 from attr import dataclass
 
+
 @dataclass
 class PaginationOptions:  # pylint: disable=too-many-instance-attributes
     """Used for searching organizations."""

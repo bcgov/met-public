@@ -81,7 +81,11 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
         if search_text:
             query = query.filter(Survey.name.ilike('%' + search_text + '%'))
 
-        sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == "asc" else desc(text(pagination_options.sort_key))
+        sort = asc(
+            text(
+                pagination_options.sort_key)) if pagination_options.sort_order == "asc" else desc(
+            text(
+                pagination_options.sort_key))
         return query.order_by(sort).paginate(page=pagination_options.page, per_page=pagination_options.size)
 
     @classmethod
