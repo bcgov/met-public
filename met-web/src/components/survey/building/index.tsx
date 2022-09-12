@@ -138,7 +138,6 @@ const SurveyFormBuilder = () => {
                     {!isNameFocused ? (
                         <>
                             <MetHeader3
-                                variant="h3"
                                 sx={{ p: 0.5 }}
                                 onClick={() => {
                                     setIsNamedFocused(true);
