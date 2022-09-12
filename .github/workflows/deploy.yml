@@ -1,0 +1,61 @@
+name: MET Deploy
+
+
+on:
+  # Triggers are being handled by openshift 
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - "/met-api/**"
+  #     - "/met-web/**"
+  #     - "/met-cron/**"
+  #     - "/notify-api/**"
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment (test/prod)"
+        required: true
+        default: "test"
+
+defaults:
+  run:
+    shell: bash
+    working-directory: ./openshift
+
+env:
+  TAG_NAME: "test"
+
+jobs:
+  met-deploy:
+    runs-on: ubuntu-20.04
+
+    # if: github.event_name == 'push' && github.repository == 'bcgov/met-public'
+    # environment:
+    #   name: "test"
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login Openshift
+        shell: bash
+        run: |
+          oc login --server=${{secrets.OPENSHIFT4_LOGIN_REGISTRY}} --token=${{secrets.OPENSHIFT4_SA_TOKEN}}
+
+      # Sets the branch before a build
+      # - name: Build from dev branch
+      #   shell: bash
+      #   run: |
+      #     oc patch bc/${{ env.APP_NAME }} -p '{"spec":{"source":{"git":{"ref":"dev"}}}}'
+
+      # Only deploying last image since this workflow will deploy every single app
+      # - name: Start Build Openshift
+      #   shell: bash
+      #   run: |
+      #     oc start-build met-web --wait
+
+
+      - name: Tag+Deploy
+        shell: bash
+        run: |
+          deploy.sh ${{ env.environment }}
