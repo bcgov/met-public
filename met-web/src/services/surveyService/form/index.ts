@@ -2,13 +2,31 @@ import http from 'apiManager/httpRequestHandler';
 import { Survey } from 'models/survey';
 import Endpoints from 'apiManager/endpoints';
 import { replaceAllInURL, replaceUrl } from 'helper';
+import { Page } from 'services/type';
 
 interface FetchSurveyParams {
     unlinked?: boolean;
 }
 export const fetchSurveys = async (params: FetchSurveyParams = {}): Promise<Survey[]> => {
-    const responseData = await http.GetRequest<Survey[]>(Endpoints.Survey.GET_ALL, params);
+    const responseData = await http.GetRequest<Survey[]>(Endpoints.Survey.GET_LIST, params);
     return responseData.data.result ?? [];
+};
+
+interface GetSurveysParams {
+    page?: number;
+    size?: number;
+    sort_key?: string;
+    sort_order?: 'asc' | 'desc';
+    search_text?: string;
+}
+export const getSurveysPage = async (params: GetSurveysParams = {}): Promise<Page<Survey>> => {
+    const responseData = await http.GetRequest<Page<Survey>>(Endpoints.Survey.GET_LIST, params);
+    return (
+        responseData.data.result ?? {
+            items: [],
+            total: 0,
+        }
+    );
 };
 
 export const getSurvey = async (surveyId: number): Promise<Survey> => {

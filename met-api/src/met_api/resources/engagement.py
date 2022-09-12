@@ -18,6 +18,7 @@ from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
 from met_api.auth import auth
+from met_api.models.data_class import PaginationOptions
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services.engagement_service import EngagementService
 from met_api.utils.action_result import ActionResult
@@ -68,12 +69,17 @@ class Engagements(Resource):
             args = request.args
             user_id = TokenInfo.get_id()
 
+            pagination_options = PaginationOptions(
+                page=args.get('page', 1, int),
+                size=args.get('size', 10, int),
+                sort_key=args.get('sort_key', 'name', int),
+                sort_order=args.get('sort_order', 'asc', str),
+            )
+
             engagement_records = EngagementService()\
                 .get_engagements_paginated(
-                    user_id, args.get('page', None, int),
-                    args.get('size', None, int),
-                    args.get('sort_key', None, str),
-                    args.get('sort_order', None, str),
+                    user_id,
+                    pagination_options,
                     args.get('search_text', '', str)
             )
 

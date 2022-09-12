@@ -1,7 +1,9 @@
 oc project e903c2-tools
+oc tag met-api:latest met-api:$1
+oc tag notify-api:latest notify-api:$1
+oc tag met-cron:latest met-cron:$1
+oc tag met-web:latest met-web:$1
+oc tag met-analytics:latest met-analytics:$1
 
-oc tag met-api:latest met-api:test
-oc tag notify-api:latest notify-api:test
-oc tag met-cron:latest met-cron:test
-oc tag met-web:latest met-web:test
-oc tag met-analytics:latest met-analytics:test
+oc rollout status dc/met-api -n e903c2-$1 -w
+oc rollout status dc/met-web -n e903c2-$1 -w

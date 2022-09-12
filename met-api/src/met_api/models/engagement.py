@@ -4,20 +4,17 @@ Manages the engagement
 """
 
 from __future__ import annotations
-
 from datetime import datetime
 from typing import List
-
 from sqlalchemy import asc, desc
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.sql import text
 from sqlalchemy.sql.schema import ForeignKey
-
 from met_api.constants.engagement_status import Status
 from met_api.constants.user import SYSTEM_USER
+from met_api.models.data_class import PaginationOptions
 from met_api.schemas.engagement import EngagementSchema
 from met_api.utils.datetime import local_datetime
-
 from .db import db
 from .default_method_result import DefaultMethodResult
 from .engagement_status import EngagementStatus
@@ -58,9 +55,7 @@ class Engagement(db.Model):
         return engagements_schema.dump(data)
 
     @classmethod
-    def get_engagements_paginated(cls, page=1, size=10, sort_key='name', sort_order='asc', search_text='',
-                                  # pylint: disable=too-many-arguments
-                                  statuses=None):
+    def get_engagements_paginated(cls, pagination_options: PaginationOptions, search_text='', statuses=None):
         """Get engagements paginated."""
         query = db.session.query(Engagement).join(EngagementStatus)
 
@@ -68,10 +63,12 @@ class Engagement(db.Model):
             query = query.filter(Engagement.status_id.in_(statuses))
 
         if search_text:
-            query = query.filter(Engagement.name.like('%' + search_text + '%'))
+            query = query.filter(Engagement.name.ilike('%' + search_text + '%'))
 
-        sort = asc(text(sort_key)) if sort_order == 'asc' else desc(text(sort_key))
-        return query.order_by(sort).paginate(page=page, per_page=size)
+        sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == 'asc'\
+            else desc(text(pagination_options.sort_key))
+        
+        return query.order_by(sort).paginate(page=pagination_options.page, per_page=pagination_options.size)
 
     @classmethod
     def get_engagements_by_status(cls, status_id):

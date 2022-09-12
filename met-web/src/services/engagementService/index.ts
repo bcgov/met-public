@@ -5,12 +5,30 @@ import { Engagement } from 'models/engagement';
 import { PostEngagementRequest, PutEngagementRequest } from './types';
 import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
+import { Page } from 'services/type';
 
 export const fetchAll = async (dispatch: Dispatch<AnyAction>): Promise<Engagement[]> => {
-    const responseData = await http.GetRequest<Engagement[]>(Endpoints.Engagement.GET_ALL);
+    const responseData = await http.GetRequest<Engagement[]>(Endpoints.Engagement.GET_LIST);
     const engagements = responseData.data.result ?? [];
     dispatch(setEngagements(engagements));
     return engagements;
+};
+
+interface GetEngagementsParams {
+    page?: number;
+    size?: number;
+    sort_key?: string;
+    sort_order?: 'asc' | 'desc';
+    search_text?: string;
+}
+export const getEngagements = async (params: GetEngagementsParams = {}): Promise<Page<Engagement>> => {
+    const responseData = await http.GetRequest<Page<Engagement>>(Endpoints.Engagement.GET_LIST, params);
+    return (
+        responseData.data.result ?? {
+            items: [],
+            total: 0,
+        }
+    );
 };
 
 export const getEngagement = async (engagementId: number): Promise<Engagement> => {

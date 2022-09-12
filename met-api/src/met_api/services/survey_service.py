@@ -1,6 +1,7 @@
 """Service for survey management."""
 
 from met_api.constants.engagement_status import Status
+from met_api.models.data_class import PaginationOptions
 from met_api.models import Engagement as EngagementModel
 from met_api.models import Survey as SurveyModel
 from met_api.schemas.engagement import EngagementSchema
@@ -36,15 +37,10 @@ class SurveyService:
         return survey
 
     @staticmethod
-    def get_surveys_paginated(page, size, sort_key='name',  # pylint: disable=too-many-arguments
-                              sort_order='asc', search_text='',
-                              unlinked=False):
+    def get_surveys_paginated(pagination_options: PaginationOptions, search_text='', unlinked=False):
         """Get engagements paginated."""
         surveys_page = SurveyModel.get_surveys_paginated(
-            page,
-            size,
-            sort_key,
-            sort_order,
+            pagination_options,
             search_text,
             unlinked,
         )

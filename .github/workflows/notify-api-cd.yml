@@ -1,0 +1,68 @@
+name: MET NOTIFY API DEV CD
+
+
+on:
+  # Disable triggers for now.
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - "met-web/**"
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment (dev/test/prod)"
+        required: true
+        default: "dev"
+
+defaults:
+  run:
+    shell: bash
+    working-directory: ./notify-api
+
+env:
+  APP_NAME: "notify-api"
+  TAG_NAME: "dev"
+
+jobs:
+  forms-flow-bpm-cd-by-push:
+    runs-on: ubuntu-20.04
+
+    if: github.event_name == 'push' && github.repository == 'bcgov/met-public'
+    environment:
+      name: "dev"
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login Openshift
+        shell: bash
+        run: |
+          oc login --server=${{secrets.OPENSHIFT4_LOGIN_REGISTRY}} --token=${{secrets.OPENSHIFT4_SA_TOKEN}}
+
+
+      - name: Tools project
+        shell: bash
+        run: |
+          oc project ${{ secrets.OPENSHIFT4_REPOSITORY }}-tools
+
+      # - name: Build from dev branch
+      #   shell: bash
+      #   run: |
+      #     oc patch bc/${{ env.APP_NAME }} -p '{"spec":{"source":{"git":{"ref":"dev"}}}}'
+
+      - name: Start Build Openshift
+        shell: bash
+        run: |
+          oc start-build ${{ env.APP_NAME }} --wait
+
+
+      - name: Tag+Deploy for DEV
+        shell: bash
+        run: |
+          oc tag ${{ env.APP_NAME }}:latest ${{ env.APP_NAME }}:${{ env.TAG_NAME }}
+
+      - name: Watch new rollout (trigger by image change in Openshift)
+        shell: bash
+        run: |
+          oc rollout status dc/${{ env.APP_NAME }} -n ${{ secrets.OPENSHIFT4_REPOSITORY }}-${{ env.TAG_NAME }} -w

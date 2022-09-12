@@ -99,7 +99,9 @@ const SurveyFormBuilder = () => {
             dispatch(
                 openNotification({
                     severity: 'success',
-                    text: 'The survey was successfully built',
+                    text: savedSurvey.engagement?.id
+                        ? `Survey was successfully added to engagement`
+                        : 'The survey was successfully built',
                 }),
             );
             if (savedSurvey.engagement?.id) {
@@ -138,6 +140,7 @@ const SurveyFormBuilder = () => {
                     {!isNameFocused ? (
                         <>
                             <MetHeader3
+                                sx={{ p: 0.5 }}
                                 onClick={() => {
                                     setIsNamedFocused(true);
                                 }}
@@ -145,12 +148,13 @@ const SurveyFormBuilder = () => {
                                 {name}
                             </MetHeader3>
                             <IconButton
+                                size="small"
                                 onClick={() => {
                                     setIsNamedFocused(!isNameFocused);
                                 }}
                                 color="info"
                             >
-                                <BorderColorIcon />
+                                <BorderColorIcon sx={{ fontSize: '1rem' }} />
                             </IconButton>
                         </>
                     ) : (

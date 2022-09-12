@@ -3,14 +3,41 @@ import { Comment } from 'models/comment';
 import Endpoints from 'apiManager/endpoints';
 
 import { replaceUrl } from 'helper';
+import { Page } from 'services/type';
 
 interface FetchCommentParams {
     survey_id: number;
 }
 export const fetchComments = async ({ survey_id }: FetchCommentParams): Promise<Comment[]> => {
-    const url = replaceUrl(Endpoints.Comment.GET_ALL, 'survey_id', String(survey_id));
+    const url = replaceUrl(Endpoints.Comment.GET_LIST, 'survey_id', String(survey_id));
     const responseData = await http.GetRequest<Comment[]>(url);
     return responseData.data.result ?? [];
+};
+
+interface GetCommentsParams {
+    survey_id: number;
+    page?: number;
+    size?: number;
+    sort_key?: string;
+    sort_order?: 'asc' | 'desc';
+    search_text?: string;
+}
+export const getCommentsPage = async ({
+    survey_id,
+    page,
+    size,
+    sort_key,
+    sort_order,
+    search_text,
+}: GetCommentsParams): Promise<Page<Comment>> => {
+    const url = replaceUrl(Endpoints.Comment.GET_LIST, 'survey_id', String(survey_id));
+    const responseData = await http.GetRequest<Page<Comment>>(url, { page, size, sort_key, sort_order, search_text });
+    return (
+        responseData.data.result ?? {
+            items: [],
+            total: 0,
+        }
+    );
 };
 
 export const getComment = async (commentId: number): Promise<Comment> => {
