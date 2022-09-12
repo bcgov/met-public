@@ -21,3 +21,9 @@ export interface PaginationOptions<T> {
 export interface PageInfo {
     total: number;
 }
+
+export const createDefaultPageInfo = (): PageInfo => {
+    return {
+        total: 0,
+    };
+};

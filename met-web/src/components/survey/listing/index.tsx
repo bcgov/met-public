@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton } from 'components/common';
 import { Survey } from 'models/survey';
-import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
+import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink } from '@mui/material';
 import TextField from '@mui/material/TextField';
@@ -29,9 +29,7 @@ const SurveyListing = () => {
         nested_sort_key: 'survey.name',
         sort_order: 'asc',
     });
-    const [pageInfo, setPageInfo] = useState<PageInfo>({
-        total: 0,
-    });
+    const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
 
     const [tableLoading, setTableLoading] = useState(true);
 

@@ -8,7 +8,7 @@ import { SubmissionStatus } from 'constants/engagementStatus';
 import { getErrorMessage } from 'utils';
 import { getCommentsPage } from 'services/commentService';
 import { Comment } from 'models/comment';
-import { PageInfo, PaginationOptions } from 'components/common/Table/types';
+import { createDefaultPageInfo, PageInfo, PaginationOptions } from 'components/common/Table/types';
 
 export interface EngagementCommentContextProps {
     engagement: Engagement | null;
@@ -54,8 +54,11 @@ export const CommentViewProvider = ({ children }: { children: JSX.Element | JSX.
     const [isEngagementLoading, setEngagementLoading] = useState(true);
     const [isCommentsListLoading, setIsCommentsListLoading] = useState(true);
     const [comments, setComments] = useState<Comment[]>([]);
-    const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Comment>>(initialPaginationOptions);
-    const [pageInfo, setPageInfo] = useState<PageInfo>(initialTableLoading);
+    const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Comment>>({
+        page: 1,
+        size: 10,
+    });
+    const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
     const [tableLoading, setTableLoading] = useState(true);
 
     const { page, size } = paginationOptions;

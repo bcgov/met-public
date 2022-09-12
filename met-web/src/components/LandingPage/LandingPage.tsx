@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton } from '../common';
 import { Engagement } from 'models/engagement';
 import { useAppDispatch } from 'hooks';
-import { HeadCell, PageInfo, PaginationOptions } from '../common/Table/types';
+import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from '../common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink } from '@mui/material';
 import { getEngagements } from 'services/engagementService';
@@ -29,9 +29,7 @@ const LandingPage = () => {
         sort_order: 'asc',
     });
 
-    const [pageInfo, setPageInfo] = useState<PageInfo>({
-        total: 0,
-    });
+    const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
     const [tableLoading, setTableLoading] = useState(true);
 
     const dispatch = useAppDispatch();

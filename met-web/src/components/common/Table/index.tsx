@@ -192,7 +192,7 @@ function MetTable<T>({
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={Number(total)}
+                    count={total}
                     rowsPerPage={size}
                     page={page - 1}
                     onPageChange={handleChangePage}
