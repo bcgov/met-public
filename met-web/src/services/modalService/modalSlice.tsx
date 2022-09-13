@@ -11,17 +11,17 @@ export const notificationModalSlice = createSlice({
     name: 'modal',
     initialState,
     reducers: {
-        openModal: (state: NotificationModalState, action: PayloadAction<NotificationModalState>) => {
+        openNotificationModal: (state: NotificationModalState, action: PayloadAction<NotificationModalState>) => {
             state.open = true;
             state.data = action.payload.data;
             state.type = action.payload.type;
         },
-        closeModal: (state: NotificationModalState) => {
+        closeNotificationModal: (state: NotificationModalState) => {
             state.open = false;
         },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { openModal, closeModal } = notificationModalSlice.actions;
+export const { openNotificationModal, closeNotificationModal } = notificationModalSlice.actions;
 export default notificationModalSlice.reducer;
