@@ -6,7 +6,7 @@ import { EngagementContent } from './EngagementContent';
 import SurveyBlock from './SurveyBlock';
 import EmailModal from './EmailModal';
 import { PreviewBanner } from './PreviewBanner';
-import { useAppDispatch, useAppSelector } from 'hooks';
+import { useAppSelector } from 'hooks';
 import { useNavigate, useLocation } from 'react-router';
 import WhoIsListeningWidget from './WhoIsListeningWidget';
 import { RouteState } from './types';
