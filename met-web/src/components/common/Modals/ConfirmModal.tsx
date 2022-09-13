@@ -1,9 +1,9 @@
 import React from 'react';
 import { Grid, Stack, useMediaQuery, Theme } from '@mui/material';
 import { modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody } from 'components/common';
-import { ModalProps } from './types';
+import { NotificationModalProps } from './types';
 
-const ConfirmModal = ({ header, subText, handleClose, buttons }: ModalProps) => {
+const ConfirmModal = ({ header, subText, handleConfirm, handleClose }: NotificationModalProps) => {
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     return (
         <Grid
@@ -37,28 +37,16 @@ const ConfirmModal = ({ header, subText, handleClose, buttons }: ModalProps) => 
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
                         {isSmallScreen ? (
                             <>
-                                <PrimaryButton
-                                    onClick={() => buttons[0].buttonFunction}
-                                    type="submit"
-                                    variant={'contained'}
-                                >
-                                    {buttons[0].buttonText}
+                                <PrimaryButton onClick={handleConfirm} type="submit" variant={'contained'}>
+                                    Confirm
                                 </PrimaryButton>
-                                <SecondaryButton onClick={buttons[1].buttonFunction}>
-                                    {buttons[1].buttonText}
-                                </SecondaryButton>
+                                <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
                             </>
                         ) : (
                             <>
-                                <SecondaryButton onClick={buttons[1].buttonFunction}>
-                                    {buttons[1].buttonText}
-                                </SecondaryButton>
-                                <PrimaryButton
-                                    onClick={() => buttons[0].buttonFunction}
-                                    type="submit"
-                                    variant={'contained'}
-                                >
-                                    {buttons[0].buttonText}
+                                <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
+                                <PrimaryButton onClick={handleConfirm} type="submit" variant={'contained'}>
+                                    Confirm
                                 </PrimaryButton>
                             </>
                         )}

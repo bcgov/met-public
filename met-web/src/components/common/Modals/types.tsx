@@ -1,11 +1,6 @@
-export interface ModalProps {
+export interface NotificationModalProps {
     header: string;
     subText: string[];
-    buttons?: ButtonProps[];
+    handleConfirm?: () => void;
     handleClose: () => void;
-}
-
-export interface ButtonProps {
-    buttonText: string;
-    buttonFunction: unknown;
 }

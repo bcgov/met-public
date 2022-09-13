@@ -1,27 +1,27 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ModalState } from './types';
+import { NotificationModalState } from './types';
 
-const initialState: ModalState = {
+const initialState: NotificationModalState = {
     open: false,
-    data: { header: '', subText: [], buttons: [{ buttonText: 'hello', buttonFunction: '' }] },
+    data: { header: '', subText: [] },
     type: '',
 };
 
-export const modalSlice = createSlice({
+export const notificationModalSlice = createSlice({
     name: 'modal',
     initialState,
     reducers: {
-        openModal: (state: ModalState, action: PayloadAction<ModalState>) => {
+        openModal: (state: NotificationModalState, action: PayloadAction<NotificationModalState>) => {
             state.open = true;
             state.data = action.payload.data;
             state.type = action.payload.type;
         },
-        closeModal: (state: ModalState) => {
+        closeModal: (state: NotificationModalState) => {
             state.open = false;
         },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { openModal, closeModal } = modalSlice.actions;
-export default modalSlice.reducer;
+export const { openModal, closeModal } = notificationModalSlice.actions;
+export default notificationModalSlice.reducer;

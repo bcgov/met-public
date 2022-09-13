@@ -1,9 +1,9 @@
 import React from 'react';
 import { Grid } from '@mui/material';
 import { modalStyle, PrimaryButton, MetHeader1, MetBody } from 'components/common';
-import { ModalProps } from './types';
+import { NotificationModalProps } from './types';
 
-const UpdateModal = ({ header, subText, handleClose }: ModalProps) => {
+const UpdateModal = ({ header, subText, handleClose }: NotificationModalProps) => {
     return (
         <Grid
             container

@@ -75,10 +75,8 @@ export const EngagementView = () => {
                                         data: {
                                             header: 'Test',
                                             subText: ['hello'],
-                                            buttons: [
-                                                { buttonText: 'Test', buttonFunction: handleStartSurvey },
-                                                { buttonText: 'close', buttonFunction: handleClose },
-                                            ],
+                                            handleConfirm: handleStartSurvey,
+                                            handleClose: handleClose,
                                         },
                                         type: 'testModal',
                                     }),

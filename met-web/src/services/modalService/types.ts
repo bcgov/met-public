@@ -4,13 +4,13 @@ export interface ModalProps {
     handleClose: () => void;
 }
 
-export interface ModalState {
+export interface NotificationModalState {
     open: boolean;
-    data: { header: string; subText: string[]; buttons?: ButtonProps[] };
+    data: {
+        header: string;
+        subText: string[];
+        handleConfirm?: () => void;
+        handleClose?: () => void;
+    };
     type: string;
-}
-
-export interface ButtonProps {
-    buttonText: string;
-    buttonFunction: unknown;
 }
