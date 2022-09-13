@@ -1,8 +1,10 @@
-
 """Service for survey management."""
+
 from met_api.constants.engagement_status import Status
 from met_api.models.data_class import PaginationOptions
-from met_api.models.survey import Survey
+from met_api.models import Engagement as EngagementModel
+from met_api.models import Survey as SurveyModel
+from met_api.schemas.engagement import EngagementSchema
 from met_api.schemas.survey import SurveySchema
 from met_api.services.object_storage_service import ObjectStorageService
 
@@ -15,48 +17,29 @@ class SurveyService:
     @classmethod
     def get(cls, survey_id):
         """Get survey by the id."""
-        db_data = Survey.get_survey(survey_id)
-        db_data['engagement'] = cls.supply_banner_url(db_data.get('engagement', None))
-        return db_data
+        survey_model: SurveyModel = SurveyModel.get_survey(survey_id)
+        engagement_model: EngagementModel = EngagementModel.get_engagement(survey_model.engagement_id)
+        survey = SurveySchema().dump(survey_model)
+        eng = EngagementSchema().dump(engagement_model)
+        eng['banner_url'] = ObjectStorageService.get_url(engagement_model.banner_filename)
+        survey['engagement'] = eng
+        return survey
 
     @classmethod
     def get_open(cls, survey_id):
         """Get survey by the id."""
-        db_data = Survey.get_open(survey_id)
-        db_data['engagement'] = cls.supply_banner_url(db_data.get('engagement', None))
-        return db_data
-
-    @staticmethod
-    def supply_banner_url(engagement):
-        """Supply engagement with banner url."""
-        if not engagement:
-            return None
-        engagement['banner_url'] = ObjectStorageService.get_url(engagement.get('banner_filename', None))
-        return engagement
-
-    @classmethod
-    def get_surveys(cls, unlinked=False):
-        """Get surveys."""
-        if unlinked:
-            return cls.get_unlinked()
-        return cls.get_all()
-
-    @classmethod
-    def get_all(cls):
-        """Get all surveys."""
-        db_data = Survey.get_all_surveys()
-        return db_data
-
-    @classmethod
-    def get_unlinked(cls):
-        """Get all surveys."""
-        db_data = Survey.get_all_unlinked_surveys()
-        return db_data
+        survey_model = SurveyModel.get_open(survey_id)
+        engagement_model: EngagementModel = EngagementModel.get_engagement(survey_model.engagement_id)
+        survey = SurveySchema().dump(survey_model)
+        eng = EngagementSchema().dump(engagement_model)
+        eng['banner_url'] = ObjectStorageService.get_url(engagement_model.banner_filename)
+        survey['engagement'] = eng
+        return survey
 
     @staticmethod
     def get_surveys_paginated(pagination_options: PaginationOptions, search_text='', unlinked=False):
         """Get engagements paginated."""
-        surveys_page = Survey.get_surveys_paginated(
+        surveys_page = SurveyModel.get_surveys_paginated(
             pagination_options,
             search_text,
             unlinked,
@@ -72,7 +55,7 @@ class SurveyService:
     def create(cls, data: SurveySchema):
         """Create survey."""
         cls.validate_create_fields(data)
-        return Survey.create_survey(data)
+        return SurveyModel.create_survey(data)
 
     @classmethod
     def update(cls, data: SurveySchema):
@@ -82,7 +65,7 @@ class SurveyService:
         engagement = survey.get('engagement', None)
         if engagement and engagement.get('status_id', None) != Status.Draft.value:
             raise ValueError('Engagament already published')
-        return Survey.update_survey(data)
+        return SurveyModel.update_survey(data)
 
     @staticmethod
     def validate_update_fields(data):
@@ -104,7 +87,7 @@ class SurveyService:
     def link(cls, survey_id, engagement_id):
         """Update survey."""
         cls.validate_link_fields(survey_id, engagement_id)
-        return Survey.link_survey(survey_id, engagement_id)
+        return SurveyModel.link_survey(survey_id, engagement_id)
 
     @classmethod
     def validate_link_fields(cls, survey_id, engagement_id):
@@ -125,7 +108,7 @@ class SurveyService:
     def unlink(cls, survey_id, engagement_id):
         """Unlink survey."""
         cls.validate_unlink_fields(survey_id, engagement_id)
-        return Survey.unlink_survey(survey_id)
+        return SurveyModel.unlink_survey(survey_id)
 
     @classmethod
     def validate_unlink_fields(cls, survey_id, engagement_id):

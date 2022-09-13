@@ -6,8 +6,9 @@ from http import HTTPStatus
 from flask import current_app
 
 from met_api.exceptions.business_exception import BusinessException
+from met_api.models import Engagement as EngagementModel
+from met_api.models import Survey as SurveyModel
 from met_api.models.email_verification import EmailVerification
-from met_api.models.survey import Survey as SurveyModel
 from met_api.schemas.email_verification import EmailVerificationSchema
 from met_api.services.user_service import UserService
 from met_api.utils.notification import send_email
@@ -69,7 +70,7 @@ class EmailVerificationService:
 
         if not survey:
             raise ValueError('Survey not found')
-        if not survey.get('engagement'):
+        if not survey.engagement_id:
             raise ValueError('Engagement not found')
 
         template_id = current_app.config.get('VERIFICATION_EMAIL_TEMPLATE_ID', None)
@@ -87,18 +88,18 @@ class EmailVerificationService:
     @staticmethod
     def _render_email_template(survey: SurveyModel, token):
         template = Template.get_template('email_verification.html')
-        survey_id = survey.get('id')
+        survey_id = survey.id
         survey_path = current_app.config.get('SURVEY_PATH'). \
             format(survey_id=survey_id, token=token)
         dashboard_path = current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
-            format(engagement_id=survey.get('engagement_id'))
+            format(engagement_id=survey.engagement_id)
         # url is origin url excluding context path
         site_url = current_app.config.get('SITE_URL')
-        engagement = survey.get('engagement')
-        engagement_name = engagement.get('name')
+        engagement: EngagementModel = EngagementModel.get_engagement(survey.engagement_id)
+        engagement_name = engagement.name
         subject = current_app.config.get('VERIFICATION_EMAIL_SUBJECT'). \
             format(engagement_name=engagement_name)
-        end_date = datetime.strptime(engagement.get('end_date'), EmailVerificationService.date_format)
+        end_date = datetime.strptime(engagement.end_date, EmailVerificationService.date_format)
         args = {
             'engagement_name': engagement_name,
             'survey_url': f'{site_url}{survey_path}',
@@ -131,7 +132,7 @@ class EmailVerificationService:
             raise ValueError('Email verification is expired')
 
         survey_id = email_verification.get('survey_id')
-        survey = SurveyModel.get_open(survey_id)
+        survey: SurveyModel = SurveyModel.get_open(survey_id)
         if not survey:
             raise ValueError('Engagement period is over')
 

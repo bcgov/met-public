@@ -10,6 +10,7 @@ from met_api.constants.comment_status import Status
 from met_api.models.data_class import PaginationOptions
 from met_api.models.engagement import Engagement
 from met_api.models.survey import Survey
+
 from .comment_status import CommentStatus
 from .db import db
 from .default_method_result import DefaultMethodResult
@@ -45,11 +46,9 @@ class Comment(db.Model):
             # Remove all non-digit characters from search text
             query = query.filter(cast(Comment.id, TEXT).like('%' + search_text + '%'))
 
-        sort = asc(
-            text(
-                pagination_options.sort_key)) if pagination_options.sort_order == 'asc' else desc(
-            text(
-                pagination_options.sort_key))
+        sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == 'asc'\
+            else desc(text(pagination_options.sort_key))
+
         return query.order_by(sort).paginate(page=pagination_options.page, per_page=pagination_options.size)
 
     @classmethod
