@@ -58,4 +58,4 @@ jobs:
       - name: Tag+Deploy
         shell: bash
         run: |
-          deploy.sh ${{ env.environment }}
+          ./deploy.sh ${{ env.environment }}
