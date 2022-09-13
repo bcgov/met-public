@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import { EngagementBanner } from './EngagementBanner';
 import { ActionContext } from './ActionContext';
 import { EngagementContent } from './EngagementContent';
@@ -10,7 +10,6 @@ import { useAppDispatch, useAppSelector } from 'hooks';
 import { useNavigate, useLocation } from 'react-router';
 import WhoIsListeningWidget from './WhoIsListeningWidget';
 import { RouteState } from './types';
-import { openModal } from 'services/modalService/modalSlice';
 
 export const EngagementView = () => {
     const { state } = useLocation() as RouteState;
@@ -21,7 +20,6 @@ export const EngagementView = () => {
     const { savedEngagement } = useContext(ActionContext);
     const surveyId = savedEngagement.surveys[0]?.id || '';
     const navigate = useNavigate();
-    const dispatch = useAppDispatch();
     //Clear state on window refresh
     window.history.replaceState({}, document.title);
 
