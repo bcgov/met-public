@@ -2,12 +2,11 @@ name: MET API DEV CD
 
 
 on:
-  # Disable triggers for now.
-  # push:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - "met-api/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "met-api/**"
   workflow_dispatch:
     inputs:
       environment:
@@ -25,10 +24,10 @@ env:
   TAG_NAME: "dev"
 
 jobs:
-  forms-flow-bpm-cd-by-push:
+  met-api-cd:
     runs-on: ubuntu-20.04
 
-    if: github.event_name == 'push' && github.repository == 'bcgov/met-public'
+    if: github.repository == 'bcgov/met-public'
     environment:
       name: "dev"
 
