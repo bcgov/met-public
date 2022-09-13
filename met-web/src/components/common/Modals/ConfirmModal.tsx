@@ -2,9 +2,18 @@ import React from 'react';
 import { Grid, Stack, useMediaQuery, Theme } from '@mui/material';
 import { modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody } from 'components/common';
 import { NotificationModalProps } from './types';
+import { useAppDispatch } from '../../../hooks';
+import { closeModal } from 'services/modalService/modalSlice';
 
 const ConfirmModal = ({ header, subText, handleConfirm, handleClose }: NotificationModalProps) => {
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+    const dispatch = useAppDispatch();
+
+    function confirm() {
+        if (handleConfirm) handleConfirm();
+        dispatch(closeModal());
+    }
+
     return (
         <Grid
             container
@@ -37,7 +46,7 @@ const ConfirmModal = ({ header, subText, handleConfirm, handleClose }: Notificat
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
                         {isSmallScreen ? (
                             <>
-                                <PrimaryButton onClick={handleConfirm} type="submit" variant={'contained'}>
+                                <PrimaryButton onClick={() => confirm()} type="submit" variant={'contained'}>
                                     Confirm
                                 </PrimaryButton>
                                 <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
@@ -45,7 +54,7 @@ const ConfirmModal = ({ header, subText, handleConfirm, handleClose }: Notificat
                         ) : (
                             <>
                                 <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
-                                <PrimaryButton onClick={handleConfirm} type="submit" variant={'contained'}>
+                                <PrimaryButton onClick={() => confirm()} type="submit" variant={'contained'}>
                                     Confirm
                                 </PrimaryButton>
                             </>

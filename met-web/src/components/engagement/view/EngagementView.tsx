@@ -67,25 +67,6 @@ export const EngagementView = () => {
                     </Grid>
                     <Grid item xs={12} lg={4}>
                         <WhoIsListeningWidget />
-                        <Button
-                            onClick={() =>
-                                dispatch(
-                                    openModal({
-                                        open: true,
-                                        data: {
-                                            header: 'Test',
-                                            subText: ['hello'],
-                                            handleConfirm: handleStartSurvey,
-                                            handleClose: handleClose,
-                                        },
-                                        type: 'testModal',
-                                    }),
-                                )
-                            }
-                            variant="text"
-                        >
-                            Open Modal
-                        </Button>
                     </Grid>
                     <Grid item xs={12} lg={8}>
                         <SurveyBlock startSurvey={handleStartSurvey} />

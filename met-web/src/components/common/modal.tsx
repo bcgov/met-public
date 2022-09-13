@@ -13,6 +13,7 @@ export const NotificationModal = () => {
     const type = useAppSelector((state) => state.notificationModal.type);
 
     function handleClose() {
+        if (modalData.handleClose) modalData.handleClose();
         dispatch(closeModal());
     }
 
@@ -26,18 +27,14 @@ export const NotificationModal = () => {
         >
             <>
                 <ConditionalComponent condition={type === 'update'}>
-                    <UpdateModal
-                        header={modalData.header}
-                        subText={modalData.subText}
-                        handleClose={modalData.handleClose ? modalData.handleClose : handleClose}
-                    />
+                    <UpdateModal header={modalData.header} subText={modalData.subText} handleClose={handleClose} />
                 </ConditionalComponent>
                 <ConditionalComponent condition={type === 'confirm'}>
                     <ConfirmModal
                         header={modalData.header}
                         subText={modalData.subText}
                         handleConfirm={modalData.handleConfirm}
-                        handleClose={modalData.handleClose ? modalData.handleClose : handleClose}
+                        handleClose={handleClose}
                     />
                 </ConditionalComponent>
             </>
