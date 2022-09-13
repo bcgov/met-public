@@ -23,9 +23,6 @@ defaults:
     shell: bash
     working-directory: ./openshift
 
-env:
-  TAG_NAME: "test"
-
 jobs:
   met-deploy:
     runs-on: ubuntu-20.04
@@ -58,4 +55,4 @@ jobs:
       - name: Tag+Deploy
         shell: bash
         run: |
-          sh deploy.sh ${{ env.environment }}
+          sh deploy.sh ${{ github.event.inputs.environment }}
