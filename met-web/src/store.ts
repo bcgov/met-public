@@ -4,6 +4,7 @@ import userSlice from 'services/userService/userSlice';
 import { form, submission } from '@formio/react';
 import engagementSlice from 'services/engagementService/engagementSlice';
 import notificationSlice from 'services/notificationService/notificationSlice';
+import notificationModalSlice from 'services/modalService/modalSlice';
 
 export const store = configureStore({
     reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
         user: userSlice,
         engagement: engagementSlice,
         notification: notificationSlice,
+        notificationModal: notificationModalSlice,
         form: form({ name: 'form' }),
         submission: submission({ name: 'submission' }),
     },

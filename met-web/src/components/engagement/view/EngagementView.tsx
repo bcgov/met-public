@@ -20,7 +20,6 @@ export const EngagementView = () => {
     const { savedEngagement } = useContext(ActionContext);
     const surveyId = savedEngagement.surveys[0]?.id || '';
     const navigate = useNavigate();
-
     //Clear state on window refresh
     window.history.replaceState({}, document.title);
 
