@@ -8,8 +8,7 @@ import {
     Stack,
     IconButton,
 } from '@mui/material';
-import { SxProps } from '@mui/system';
-import { styled } from '@mui/system';
+import { SxProps, styled } from '@mui/system';
 import EditIcon from '@mui/icons-material/Edit';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Palette } from 'styles/Theme';
@@ -182,7 +181,7 @@ export const modalStyle = {
 interface HeaderProps {
     sx?: SxProps;
     children?: React.ReactNode | string;
-    align?: 'left' | 'right' | 'inherit' | 'center' | 'justify' | undefined;
+    align?: 'left' | 'right' | 'inherit' | 'center' | 'justify';
     style?: React.CSSProperties;
     onClick?: () => void;
     color?: string;
@@ -192,7 +191,7 @@ export const MetHeader1 = ({ children, sx, onClick, color, align, style }: Heade
         <Typography
             sx={{
                 ...sx,
-                fontSize: '1.9rem',
+                fontSize: '2.3rem',
                 fontWeight: 500,
                 fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
             }}
@@ -230,7 +229,7 @@ export const MetHeader3 = ({ children, sx, onClick, color, align, style }: Heade
         <Typography
             sx={{
                 ...sx,
-                fontSize: '1.9rem',
+                fontSize: '1.5rem',
                 fontWeight: 500,
                 fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
             }}
@@ -249,7 +248,7 @@ export const MetHeader4 = ({ children, sx, onClick, color, align, style }: Heade
         <Typography
             sx={{
                 ...sx,
-                fontSize: '1.9rem',
+                fontSize: '1.3rem',
                 fontWeight: 500,
                 fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
             }}
