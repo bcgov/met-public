@@ -8,6 +8,7 @@ import {
     Stack,
     IconButton,
 } from '@mui/material';
+import { SxProps } from '@mui/system';
 import { styled } from '@mui/system';
 import EditIcon from '@mui/icons-material/Edit';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
@@ -178,30 +179,90 @@ export const modalStyle = {
     overflowY: 'scroll',
     color: Palette.text.primary,
 };
-
-export const MetHeader1 = styled(Typography)(() => ({
-    fontSize: '2.3rem',
-    fontWeight: 500,
-    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
-}));
-
-export const MetHeader2 = styled(Typography)(() => ({
-    fontSize: '1.9rem',
-    fontWeight: 500,
-    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
-}));
-
-export const MetHeader3 = styled(Typography)(() => ({
-    fontSize: '1.5rem',
-    fontWeight: 500,
-    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
-}));
-
-export const MetHeader4 = styled(Typography)(() => ({
-    fontSize: '1.3rem',
-    fontWeight: 500,
-    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
-}));
+interface HeaderProps {
+    sx?: SxProps;
+    children?: React.ReactNode | string;
+    align?: 'left' | 'right' | 'inherit' | 'center' | 'justify' | undefined;
+    style?: React.CSSProperties;
+    onClick?: () => void;
+    color?: string;
+}
+export const MetHeader1 = ({ children, sx, onClick, color, align, style }: HeaderProps) => {
+    return (
+        <Typography
+            sx={{
+                ...sx,
+                fontSize: '1.9rem',
+                fontWeight: 500,
+                fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+            }}
+            style={{ ...style }}
+            variant="h2"
+            onClick={onClick}
+            color={color}
+            align={align}
+        >
+            {children}
+        </Typography>
+    );
+};
+export const MetHeader2 = ({ children, sx, onClick, color, align, style }: HeaderProps) => {
+    return (
+        <Typography
+            sx={{
+                ...sx,
+                fontSize: '1.9rem',
+                fontWeight: 500,
+                fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+            }}
+            style={{ ...style }}
+            variant="h2"
+            onClick={onClick}
+            color={color}
+            align={align}
+        >
+            {children}
+        </Typography>
+    );
+};
+export const MetHeader3 = ({ children, sx, onClick, color, align, style }: HeaderProps) => {
+    return (
+        <Typography
+            sx={{
+                ...sx,
+                fontSize: '1.9rem',
+                fontWeight: 500,
+                fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+            }}
+            style={{ ...style }}
+            variant="h3"
+            onClick={onClick}
+            color={color}
+            align={align}
+        >
+            {children}
+        </Typography>
+    );
+};
+export const MetHeader4 = ({ children, sx, onClick, color, align, style }: HeaderProps) => {
+    return (
+        <Typography
+            sx={{
+                ...sx,
+                fontSize: '1.9rem',
+                fontWeight: 500,
+                fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+            }}
+            style={{ ...style }}
+            variant="h4"
+            onClick={onClick}
+            color={color}
+            align={align}
+        >
+            {children}
+        </Typography>
+    );
+};
 
 export const MetBody = styled(Typography)(() => ({
     fontSize: '16px',
