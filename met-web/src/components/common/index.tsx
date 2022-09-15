@@ -13,6 +13,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Palette } from 'styles/Theme';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { MET_Header_Font_Family, MET_Header_Font_Weight } from './constants';
 
 export const RoundedButton = styled(MuiButton)(() => ({
     borderRadius: '23px',
@@ -178,6 +179,7 @@ export const modalStyle = {
     overflowY: 'scroll',
     color: Palette.text.primary,
 };
+
 interface HeaderProps {
     sx?: SxProps;
     children?: React.ReactNode | string;
@@ -192,8 +194,8 @@ export const MetHeader1 = ({ children, sx, onClick, color, align, style }: Heade
             sx={{
                 ...sx,
                 fontSize: '2.3rem',
-                fontWeight: 500,
-                fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+                fontWeight: MET_Header_Font_Weight,
+                fontFamily: MET_Header_Font_Family,
             }}
             style={{ ...style }}
             variant="h2"
@@ -211,8 +213,8 @@ export const MetHeader2 = ({ children, sx, onClick, color, align, style }: Heade
             sx={{
                 ...sx,
                 fontSize: '1.9rem',
-                fontWeight: 500,
-                fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+                fontWeight: MET_Header_Font_Weight,
+                fontFamily: MET_Header_Font_Family,
             }}
             style={{ ...style }}
             variant="h2"
@@ -230,8 +232,8 @@ export const MetHeader3 = ({ children, sx, onClick, color, align, style }: Heade
             sx={{
                 ...sx,
                 fontSize: '1.5rem',
-                fontWeight: 500,
-                fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+                fontWeight: MET_Header_Font_Weight,
+                fontFamily: MET_Header_Font_Family,
             }}
             style={{ ...style }}
             variant="h3"
@@ -249,8 +251,8 @@ export const MetHeader4 = ({ children, sx, onClick, color, align, style }: Heade
             sx={{
                 ...sx,
                 fontSize: '1.3rem',
-                fontWeight: 500,
-                fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+                fontWeight: MET_Header_Font_Weight,
+                fontFamily: MET_Header_Font_Family,
             }}
             style={{ ...style }}
             variant="h4"
@@ -265,8 +267,8 @@ export const MetHeader4 = ({ children, sx, onClick, color, align, style }: Heade
 
 export const MetBody = styled(Typography)(() => ({
     fontSize: '16px',
-    fontWeight: 500,
-    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+    fontWeight: MET_Header_Font_Weight,
+    fontFamily: MET_Header_Font_Family,
 }));
 
 export const ModalSubtitle = ({
