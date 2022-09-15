@@ -91,7 +91,7 @@ export const MetWidget = ({ children, title, onEditClick, onDeleteClick, deletin
         <MetWidgetPaper elevation={3} {...rest}>
             <Grid container alignItems={'flex-start'} justifyContent="flex-start" direction="row">
                 <Grid item xs={6}>
-                    <MetHeader3 sx={{ fontWeight: 'bold' }}>{title}</MetHeader3>
+                    <MetHeader3 bold={true}>{title}</MetHeader3>
                 </Grid>
                 <Grid item xs={6} container direction="row" justifyContent="flex-end">
                     <Stack direction="row" spacing={1}>
@@ -182,19 +182,20 @@ export const modalStyle = {
 
 interface HeaderProps {
     sx?: SxProps;
+    bold?: boolean;
     children?: React.ReactNode | string;
     align?: 'left' | 'right' | 'inherit' | 'center' | 'justify';
     style?: React.CSSProperties;
     onClick?: () => void;
     color?: string;
 }
-export const MetHeader1 = ({ children, sx, onClick, color, align, style }: HeaderProps) => {
+export const MetHeader1 = ({ bold, children, sx, onClick, color, align, style }: HeaderProps) => {
     return (
         <Typography
             sx={{
                 ...sx,
                 fontSize: '2.3rem',
-                fontWeight: MET_Header_Font_Weight,
+                fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
                 fontFamily: MET_Header_Font_Family,
             }}
             style={{ ...style }}
@@ -207,13 +208,13 @@ export const MetHeader1 = ({ children, sx, onClick, color, align, style }: Heade
         </Typography>
     );
 };
-export const MetHeader2 = ({ children, sx, onClick, color, align, style }: HeaderProps) => {
+export const MetHeader2 = ({ bold, children, sx, onClick, color, align, style }: HeaderProps) => {
     return (
         <Typography
             sx={{
                 ...sx,
                 fontSize: '1.9rem',
-                fontWeight: MET_Header_Font_Weight,
+                fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
                 fontFamily: MET_Header_Font_Family,
             }}
             style={{ ...style }}
@@ -226,13 +227,13 @@ export const MetHeader2 = ({ children, sx, onClick, color, align, style }: Heade
         </Typography>
     );
 };
-export const MetHeader3 = ({ children, sx, onClick, color, align, style }: HeaderProps) => {
+export const MetHeader3 = ({ bold, children, sx, onClick, color, align, style }: HeaderProps) => {
     return (
         <Typography
             sx={{
                 ...sx,
                 fontSize: '1.5rem',
-                fontWeight: MET_Header_Font_Weight,
+                fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
                 fontFamily: MET_Header_Font_Family,
             }}
             style={{ ...style }}
@@ -245,13 +246,13 @@ export const MetHeader3 = ({ children, sx, onClick, color, align, style }: Heade
         </Typography>
     );
 };
-export const MetHeader4 = ({ children, sx, onClick, color, align, style }: HeaderProps) => {
+export const MetHeader4 = ({ bold, children, sx, onClick, color, align, style }: HeaderProps) => {
     return (
         <Typography
             sx={{
                 ...sx,
                 fontSize: '1.3rem',
-                fontWeight: MET_Header_Font_Weight,
+                fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
                 fontFamily: MET_Header_Font_Family,
             }}
             style={{ ...style }}

@@ -77,7 +77,7 @@ const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
                             <Editor editorState={getEditorState(rich_description)} readOnly={true} toolbarHidden />
                         </Grid>
                         <Grid item xs={12}>
-                            <MetHeader2 style={{ fontWeight: 600 }} color="black">
+                            <MetHeader2 bold={true} color="black">
                                 {`Engagement dates: ${formatDate(start_date, 'MMMM dd, yyyy')} to ${formatDate(
                                     end_date,
                                     'MMMM dd, yyyy',

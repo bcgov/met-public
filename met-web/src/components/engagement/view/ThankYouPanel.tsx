@@ -17,7 +17,9 @@ const ThankYouPanel = ({ handleClose }: ThankYouPanelProps) => {
         >
             <Grid container item xs={12}>
                 <Grid item xs={12}>
-                    <MetHeader1 sx={{ fontWeight: 'bold', mb: 2 }}>Thank you</MetHeader1>
+                    <MetHeader1 bold={true} sx={{ mb: 2 }}>
+                        Thank you
+                    </MetHeader1>
                 </Grid>
                 <Grid item xs={12}>
                     <Typography id="modal-modal-header"></Typography>
