@@ -9,7 +9,7 @@ from sqlalchemy import ForeignKey, and_, asc, desc
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.sql import text
 from met_api.constants.engagement_status import Status
-from met_api.models.data_class import PaginationOptions
+from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement_status import EngagementStatus
 from met_api.models.engagement import Engagement
 from met_api.schemas.survey import SurveySchema

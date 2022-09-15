@@ -1,13 +1,15 @@
 """Service for engagement management."""
 from http import HTTPStatus
+from typing import List
 
 from flask import current_app
 
 from met_api.constants.engagement_status import Status
 from met_api.exceptions.business_exception import BusinessException
-from met_api.models.data_class import PaginationOptions
+from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.submission import Submission
+from met_api.models import User as UserModel
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services.object_storage_service import ObjectStorageService
 from met_api.utils.notification import send_email
@@ -94,9 +96,9 @@ class EngagementService:
         """Send the engagement closeout emails.Throws error if fails."""
         engagement_id = engagement.get('id')
         subject, body, args = EngagementService._render_email_template(engagement)
-        users = Submission.get_engaged_users(engagement_id)
+        users: List[UserModel] = Submission.get_engaged_users(engagement_id)
         template_id = current_app.config.get('ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID', None)
-        emails = [user.get('email_id') for user in users]
+        emails = [user.email_id for user in users]
         # Removes duplicated records
         emails = list(set(emails))
         try:

@@ -24,7 +24,7 @@ class SubmissionService:
     def get_by_survey_id(cls, survey_id):
         """Get all surveys."""
         db_data = Submission.get_by_survey_id(survey_id)
-        return db_data
+        return SubmissionSchema(many=True).dump(db_data)
 
     @classmethod
     def create(cls, submission: SubmissionSchema):

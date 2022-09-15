@@ -9,7 +9,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.dialects import postgresql
 
 from met_api.models.survey import Survey
-from met_api.models.user import User, UserSchema
+from met_api.models.user import User
 from met_api.schemas.submission import SubmissionSchema
 
 from .db import db
@@ -31,18 +31,9 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
     updated_by = db.Column(db.String(50), nullable=True)
 
     @classmethod
-    def get(cls, submission_id) -> SubmissionSchema:
-        """Get a submission."""
-        submission_schema = SubmissionSchema()
-        data = db.session.query(Submission).filter_by(id=submission_id).first()
-        return submission_schema.dump(data)
-
-    @classmethod
     def get_by_survey_id(cls, survey_id) -> List[SubmissionSchema]:
         """Get submissions by survey id."""
-        submission_schema = SubmissionSchema(many=True)
-        data = db.session.query(Submission).filter_by(survey_id=survey_id).all()
-        return submission_schema.dump(data)
+        return db.session.query(Submission).filter_by(survey_id=survey_id).all()
 
     @classmethod
     def create(cls, submission: SubmissionSchema) -> DefaultMethodResult:
@@ -78,12 +69,11 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
         return DefaultMethodResult(True, 'Submission Updated', submission_id)
 
     @classmethod
-    def get_engaged_users(cls, engagement_id) -> List[UserSchema]:
+    def get_engaged_users(cls, engagement_id) -> List[User]:
         """Get users that have submissions for the specified engagement id."""
-        user_schema = UserSchema(many=True)
         users = db.session.query(User)\
             .join(Submission)\
             .join(Survey)\
             .filter(Survey.engagement_id == engagement_id)\
             .all()
-        return user_schema.dump(users)
+        return users

@@ -18,7 +18,7 @@ from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
 from met_api.auth import auth
-from met_api.models.data_class import PaginationOptions
+from met_api.models.pagination_options import PaginationOptions
 from met_api.services.comment_service import CommentService
 from met_api.utils.action_result import ActionResult
 from met_api.utils.token_info import TokenInfo
