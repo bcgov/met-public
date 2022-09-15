@@ -2,7 +2,7 @@ import React from 'react';
 import { Chip } from '@mui/material';
 import { SubmissionStatus } from 'constants/engagementStatus';
 
-const Chip_Font_Weight = { fontWeight: 800 };
+const Chip_Font_Weight = { fontWeight: 'bold' };
 
 const Open = () => {
     return <Chip label="Open" color="success" sx={{ ...Chip_Font_Weight }} />;
