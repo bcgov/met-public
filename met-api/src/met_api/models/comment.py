@@ -3,11 +3,13 @@
 Manages the comment
 """
 from datetime import datetime
-from sqlalchemy import and_, desc, asc, cast, TEXT
-from sqlalchemy.sql.schema import ForeignKey
+
+from sqlalchemy import TEXT, and_, asc, cast, desc
 from sqlalchemy.sql import text
+from sqlalchemy.sql.schema import ForeignKey
+
 from met_api.constants.comment_status import Status
-from met_api.models.data_class import PaginationOptions
+from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement import Engagement
 from met_api.models.survey import Survey
 

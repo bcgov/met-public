@@ -18,7 +18,7 @@ from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
 from met_api.auth import auth
-from met_api.models.data_class import PaginationOptions
+from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.survey import SurveySchema
 from met_api.services.submission_service import SubmissionService
 from met_api.services.survey_service import SurveyService
