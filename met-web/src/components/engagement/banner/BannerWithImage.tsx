@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Grid, Box, Typography, Stack, useMediaQuery, Theme } from '@mui/material';
 import { formatDate } from '../../common/dateHelper';
 import BannerWithoutImage from './BannerWithoutImage';
-import { MetHeader1, MetHeader2 } from 'components/common';
+import { MetHeader1, MetHeader2, MetHeader3 } from 'components/common';
 import { BannerProps } from '../view/types';
 import { EngagementStatusChip } from '../status';
 import { Editor } from 'react-draft-wysiwyg';
@@ -67,7 +67,7 @@ const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
                         m={{ lg: '3em 5em 0 3em', md: '3em', sm: '1em' }}
                         rowSpacing={2}
                     >
-                        <Grid item xs={12} sx={{ maxHeight: '20em', overflowY: 'auto', overflowX: 'auto' }}>
+                        <Grid item xs={12} sx={{ maxHeight: '20em', overflowY: 'auto', overflowX: 'auto', mb: 2 }}>
                             {isSmallScreen ? (
                                 <MetHeader2 color="black">{name}</MetHeader2>
                             ) : (
@@ -77,16 +77,27 @@ const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
                             <Editor editorState={getEditorState(rich_description)} readOnly={true} toolbarHidden />
                         </Grid>
                         <Grid item xs={12}>
-                            <MetHeader2 style={{ fontWeight: 600 }} color="black">
-                                {`Engagement dates: ${formatDate(start_date, 'MMMM dd, yyyy')} to ${formatDate(
-                                    end_date,
-                                    'MMMM dd, yyyy',
-                                )}`}
-                            </MetHeader2>
+                            {isSmallScreen ? (
+                                <MetHeader3 style={{ fontWeight: 600 }} color="black">
+                                    {`Engagement dates: ${formatDate(start_date, 'MMMM dd, yyyy')} to ${formatDate(
+                                        end_date,
+                                        'MMMM dd, yyyy',
+                                    )}`}
+                                </MetHeader3>
+                            ) : (
+                                <MetHeader2 style={{ fontWeight: 600 }} color="black">
+                                    {`Engagement dates: ${formatDate(start_date, 'MMMM dd, yyyy')} to ${formatDate(
+                                        end_date,
+                                        'MMMM dd, yyyy',
+                                    )}`}
+                                </MetHeader2>
+                            )}
                         </Grid>
                         <Grid item xs={12}>
                             <Stack direction="row" spacing={1}>
-                                <Typography variant="subtitle1">status:</Typography>
+                                <Typography sx={{ fontWeight: 800 }} variant="subtitle1">
+                                    Status:
+                                </Typography>
                                 <EngagementStatusChip submissionStatus={submission_status} />
                             </Stack>
                         </Grid>
