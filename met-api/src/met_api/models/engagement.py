@@ -12,7 +12,7 @@ from sqlalchemy.sql import text
 from sqlalchemy.sql.schema import ForeignKey
 from met_api.constants.engagement_status import Status
 from met_api.constants.user import SYSTEM_USER
-from met_api.models.data_class import PaginationOptions
+from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.engagement import EngagementSchema
 from met_api.utils.datetime import local_datetime
 from .db import db

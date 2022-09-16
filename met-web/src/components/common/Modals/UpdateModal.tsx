@@ -15,7 +15,9 @@ const UpdateModal = ({ header, subText, handleClose }: NotificationModalProps) =
         >
             <Grid container item xs={12}>
                 <Grid item xs={12}>
-                    <MetHeader1 sx={{ fontWeight: 'bold', mb: 2 }}>{header}</MetHeader1>
+                    <MetHeader1 bold={true} sx={{ mb: 2 }}>
+                        {header}
+                    </MetHeader1>
                 </Grid>
             </Grid>
             <Grid container direction="row" item xs={12}>
