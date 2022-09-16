@@ -1,4 +1,4 @@
-import { render, waitFor, screen, fireEvent } from '@testing-library/react';
+import { render, waitFor, screen, fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
 import EngagementForm from '../../../src/components/engagement/form';
@@ -9,17 +9,19 @@ import * as engagementService from 'services/engagementService';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
 import { createDefaultSurvey } from 'models/survey';
 import { createDefaultEngagement } from 'models/engagement';
+import * as surveyService from 'services/surveyService/form';
+import { act } from 'react-dom/test-utils';
 
-const surveys = [
-    {
-        ...createDefaultSurvey(),
-        engagement_id: '1',
-        id: 1,
-        name: 'Survey 1',
-    },
-];
+const mockSurvey = {
+    ...createDefaultSurvey(),
+    engagement_id: '1',
+    id: 1,
+    name: 'Survey 1',
+};
 
-const savedEngagement = {
+const mockSurveys = [mockSurvey];
+
+const mockEngagement = {
     ...createDefaultEngagement(),
     content: 'Test content',
     created_date: '2022-09-14 20:16:29.846877',
@@ -32,7 +34,14 @@ const savedEngagement = {
     rich_description:
         '{"blocks":[{"key":"bqupg","text":"Test description","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
     start_date: '2022-09-01',
-    surveys: surveys,
+    surveys: mockSurveys,
+    engagement_status: {
+        created_date: '2022-09-14 15:37:22.754245',
+        description: 'Not ready to the public',
+        id: 1,
+        status_name: 'Draft',
+        updated_date: '2022-09-14 15:37:22.754247',
+    },
 };
 
 describe('Engagement form page tests', () => {
@@ -42,13 +51,13 @@ describe('Engagement form page tests', () => {
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
-        .mockReturnValue(Promise.resolve(savedEngagement));
+        .mockReturnValue(Promise.resolve(mockEngagement));
     const putEngagementMock = jest
         .spyOn(engagementService, 'putEngagement')
-        .mockReturnValue(Promise.resolve(savedEngagement));
+        .mockReturnValue(Promise.resolve(mockEngagement));
     const postEngagementMock = jest
         .spyOn(engagementService, 'postEngagement')
-        .mockReturnValue(Promise.resolve(savedEngagement));
+        .mockReturnValue(Promise.resolve(mockEngagement));
 
     beforeEach(() => {
         setupEnv();
@@ -155,8 +164,8 @@ describe('Engagement form page tests', () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
-                ...savedEngagement,
-                surveys: surveys,
+                ...mockEngagement,
+                surveys: mockSurveys,
             }),
         );
         render(<EngagementForm />);
@@ -172,8 +181,8 @@ describe('Engagement form page tests', () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
-                ...savedEngagement,
-                surveys: surveys,
+                ...mockEngagement,
+                surveys: mockSurveys,
             }),
         );
         render(<EngagementForm />);
@@ -188,5 +197,48 @@ describe('Engagement form page tests', () => {
 
         expect(screen.getByText('Engagement Link')).toBeInTheDocument();
         expect(screen.getByDisplayValue('/engagement/view/1', { exact: false })).toBeInTheDocument();
+    });
+
+    test('Can remove survey', async () => {
+        useParamsMock.mockReturnValue({ engagementId: '1' });
+        getEngagementMock.mockReturnValueOnce(
+            Promise.resolve({
+                ...mockEngagement,
+                surveys: mockSurveys,
+            }),
+        );
+        const unlinkSurveyMock = jest
+            .spyOn(surveyService, 'unlinkSurvey')
+            .mockReturnValueOnce(Promise.resolve(mockSurvey));
+
+        getEngagementMock.mockReturnValueOnce(
+            Promise.resolve({
+                ...mockEngagement,
+                surveys: [],
+            }),
+        );
+
+        render(<EngagementForm />);
+
+        await waitFor(() => {
+            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+        });
+
+        expect(screen.getByText('Survey 1')).toBeInTheDocument();
+
+        const removeSurveyButton = screen.getByTestId('survey-widget/remove');
+
+        fireEvent.click(removeSurveyButton);
+
+        await waitFor(() => {
+            expect(screen.getByText('Confirm')).toBeInTheDocument();
+        });
+
+        const modalConfirmButton = screen.getByText('Confirm');
+
+        fireEvent.click(modalConfirmButton);
+
+        await waitForElementToBeRemoved(() => screen.queryByText('Survey 1'));
+        expect(unlinkSurveyMock).toHaveBeenCalledOnce();
     });
 });
