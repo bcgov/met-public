@@ -59,4 +59,4 @@ jobs:
       - name: Rollout
         shell: bash
         run: |
-          oc rollout status dc/${{ env.APP_NAME }} -n ${{ secrets.OPENSHIFT4_REPOSITORY }}-${{ env.TAG_NAME }} -w
+          oc rollout status dc/${{ env.APP_NAME }} -n ${{ secrets.OPENSHIFT_REPOSITORY }}-${{ env.TAG_NAME }} -w
