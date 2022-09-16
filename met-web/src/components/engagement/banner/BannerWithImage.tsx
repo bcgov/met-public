@@ -13,12 +13,10 @@ const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
     const [imageError, setImageError] = useState(false);
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
-    const EngagementDateString = () => {
-        return `Engagement dates: ${formatDate(start_date, 'MMMM dd, yyyy')} to ${formatDate(
-            end_date,
-            'MMMM dd, yyyy',
-        )}`;
-    };
+    const EngagementDate = `Engagement dates: ${formatDate(start_date, 'MMMM dd, yyyy')} to ${formatDate(
+        end_date,
+        'MMMM dd, yyyy',
+    )}`;
 
     if (imageError) {
         return <BannerWithoutImage savedEngagement={savedEngagement} />;
@@ -86,11 +84,11 @@ const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
                         <Grid item xs={12}>
                             {isSmallScreen ? (
                                 <MetHeader3 style={{ fontWeight: 600 }} color="black">
-                                    {EngagementDateString()}
+                                    {EngagementDate}
                                 </MetHeader3>
                             ) : (
                                 <MetHeader2 style={{ fontWeight: 600 }} color="black">
-                                    {EngagementDateString()}
+                                    {EngagementDate}
                                 </MetHeader2>
                             )}
                         </Grid>

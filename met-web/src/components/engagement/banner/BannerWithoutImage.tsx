@@ -13,12 +13,11 @@ const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
     const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
-    const EngagementDateString = () => {
-        return `Engagement dates: ${formatDate(start_date, 'MMMM dd, yyyy')} to ${formatDate(
-            end_date,
-            'MMMM dd, yyyy',
-        )}`;
-    };
+    const EngagementDate = `Engagement dates: ${formatDate(start_date, 'MMMM dd, yyyy')} to ${formatDate(
+        end_date,
+        'MMMM dd, yyyy',
+    )}`;
+
     return (
         <Box
             sx={{
@@ -74,11 +73,11 @@ const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
                         <Grid item xs={12}>
                             {isSmallScreen ? (
                                 <MetHeader3 style={{ fontWeight: 600 }} color="black">
-                                    {EngagementDateString()}
+                                    {EngagementDate}
                                 </MetHeader3>
                             ) : (
                                 <MetHeader2 style={{ fontWeight: 600 }} color="black">
-                                    {EngagementDateString()}
+                                    {EngagementDate}
                                 </MetHeader2>
                             )}
                         </Grid>
