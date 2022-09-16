@@ -184,12 +184,9 @@ interface HeaderProps {
     sx?: SxProps;
     bold?: boolean;
     children?: React.ReactNode | string;
-    align?: 'left' | 'right' | 'inherit' | 'center' | 'justify';
-    style?: React.CSSProperties;
-    onClick?: () => void;
-    color?: string;
 }
-export const MetHeader1 = ({ bold, children, sx, onClick, color, align, style }: HeaderProps) => {
+
+export const MetHeader1 = ({ bold, children, sx, ...rest }: HeaderProps) => {
     return (
         <Typography
             sx={{
@@ -198,17 +195,14 @@ export const MetHeader1 = ({ bold, children, sx, onClick, color, align, style }:
                 fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
                 fontFamily: MET_Header_Font_Family,
             }}
-            style={{ ...style }}
             variant="h2"
-            onClick={onClick}
-            color={color}
-            align={align}
+            {...rest}
         >
             {children}
         </Typography>
     );
 };
-export const MetHeader2 = ({ bold, children, sx, onClick, color, align, style }: HeaderProps) => {
+export const MetHeader2 = ({ bold, children, sx, ...rest }: HeaderProps) => {
     return (
         <Typography
             sx={{
@@ -217,17 +211,14 @@ export const MetHeader2 = ({ bold, children, sx, onClick, color, align, style }:
                 fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
                 fontFamily: MET_Header_Font_Family,
             }}
-            style={{ ...style }}
             variant="h2"
-            onClick={onClick}
-            color={color}
-            align={align}
+            {...rest}
         >
             {children}
         </Typography>
     );
 };
-export const MetHeader3 = ({ bold, children, sx, onClick, color, align, style }: HeaderProps) => {
+export const MetHeader3 = ({ bold, children, sx, ...rest }: HeaderProps) => {
     return (
         <Typography
             sx={{
@@ -236,17 +227,14 @@ export const MetHeader3 = ({ bold, children, sx, onClick, color, align, style }:
                 fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
                 fontFamily: MET_Header_Font_Family,
             }}
-            style={{ ...style }}
             variant="h3"
-            onClick={onClick}
-            color={color}
-            align={align}
+            {...rest}
         >
             {children}
         </Typography>
     );
 };
-export const MetHeader4 = ({ bold, children, sx, onClick, color, align, style }: HeaderProps) => {
+export const MetHeader4 = ({ bold, children, sx, ...rest }: HeaderProps) => {
     return (
         <Typography
             sx={{
@@ -255,11 +243,8 @@ export const MetHeader4 = ({ bold, children, sx, onClick, color, align, style }:
                 fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
                 fontFamily: MET_Header_Font_Family,
             }}
-            style={{ ...style }}
             variant="h4"
-            onClick={onClick}
-            color={color}
-            align={align}
+            {...rest}
         >
             {children}
         </Typography>
