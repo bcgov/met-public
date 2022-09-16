@@ -4,12 +4,12 @@ import { createDefaultEngagement, Engagement } from './engagement';
 export interface Survey {
     id: number;
     name: string;
-    responseCount?: number;
+    responseCount: number;
     created_date: string;
-    engagement?: Engagement;
+    engagement: Engagement;
     form_json?: FormBuilderData;
     comments?: unknown;
-    comments_meta_data?: SurveyCommentData;
+    comments_meta_data: SurveyCommentData;
 }
 
 export interface SurveyCommentData {

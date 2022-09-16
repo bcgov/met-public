@@ -7,9 +7,11 @@ import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
+import { createDefaultSurvey } from 'models/survey';
 
 const surveys = [
     {
+        ...createDefaultSurvey(),
         created_by: '2a160c34-a7bf-4d73-a980-b1e51d8a83dc',
         created_date: '2022-09-15 15:30:57.934554',
         engagement_id: '1',
