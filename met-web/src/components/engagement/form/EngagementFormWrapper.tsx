@@ -8,7 +8,7 @@ const EngagementFormWrapper = () => {
     const { loadingSavedEngagement } = useContext(ActionContext);
 
     if (loadingSavedEngagement) {
-        return <MidScreenLoader />;
+        return <MidScreenLoader data-testid="loader" />;
     }
 
     return (

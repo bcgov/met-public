@@ -9,7 +9,7 @@ export interface Engagement {
     status_id: number;
     start_date: string;
     end_date: string;
-    published_date: string;
+    published_date: string | null;
     user_id: string;
     created_date: string;
     updated_date: string;
