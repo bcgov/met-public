@@ -11,9 +11,13 @@ type ProviderProps = {
 
 function ProviderShell({ children }: ProviderProps) {
     return (
-        <ThemeProvider theme={BaseTheme}>
-            <StyledEngineProvider injectFirst>{children}</StyledEngineProvider>
-        </ThemeProvider>
+        <Router>
+            <Provider store={store}>
+                <ThemeProvider theme={BaseTheme}>
+                    <StyledEngineProvider injectFirst>{children}</StyledEngineProvider>
+                </ThemeProvider>
+            </Provider>
+        </Router>
     );
 }
 
