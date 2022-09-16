@@ -24,7 +24,9 @@ const EngagementFormModal = () => {
             >
                 <Grid container item xs={12}>
                     <Grid item xs={12}>
-                        <MetHeader1 sx={{ fontWeight: 'bold', mb: 1 }}>Remove Survey</MetHeader1>
+                        <MetHeader1 bold={true} sx={{ mb: 1 }}>
+                            Remove Survey
+                        </MetHeader1>
                     </Grid>
                     <Grid item xs={12}>
                         <ModalSubtitle sx={{ mb: 1 }}>

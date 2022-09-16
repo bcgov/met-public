@@ -8,11 +8,12 @@ import {
     Stack,
     IconButton,
 } from '@mui/material';
-import { styled } from '@mui/system';
+import { SxProps, styled } from '@mui/system';
 import EditIcon from '@mui/icons-material/Edit';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Palette } from 'styles/Theme';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { MET_Header_Font_Family, MET_Header_Font_Weight } from './constants';
 
 export const RoundedButton = styled(MuiButton)(() => ({
     borderRadius: '23px',
@@ -90,7 +91,7 @@ export const MetWidget = ({ children, title, onEditClick, onDeleteClick, deletin
         <MetWidgetPaper elevation={3} {...rest}>
             <Grid container alignItems={'flex-start'} justifyContent="flex-start" direction="row">
                 <Grid item xs={6}>
-                    <MetHeader3 sx={{ fontWeight: 'bold' }}>{title}</MetHeader3>
+                    <MetHeader3 bold={true}>{title}</MetHeader3>
                 </Grid>
                 <Grid item xs={6} container direction="row" justifyContent="flex-end">
                     <Stack direction="row" spacing={1}>
@@ -179,34 +180,82 @@ export const modalStyle = {
     color: Palette.text.primary,
 };
 
-export const MetHeader1 = styled(Typography)(() => ({
-    fontSize: '2.3rem',
-    fontWeight: 500,
-    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
-}));
+interface HeaderProps {
+    sx?: SxProps;
+    bold?: boolean;
+    children?: React.ReactNode | string;
+    [prop: string]: unknown;
+}
 
-export const MetHeader2 = styled(Typography)(() => ({
-    fontSize: '1.9rem',
-    fontWeight: 500,
-    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
-}));
-
-export const MetHeader3 = styled(Typography)(() => ({
-    fontSize: '1.5rem',
-    fontWeight: 500,
-    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
-}));
-
-export const MetHeader4 = styled(Typography)(() => ({
-    fontSize: '1.3rem',
-    fontWeight: 500,
-    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
-}));
+export const MetHeader1 = ({ bold, children, sx, ...rest }: HeaderProps) => {
+    return (
+        <Typography
+            sx={{
+                ...sx,
+                fontSize: '2.3rem',
+                fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
+                fontFamily: MET_Header_Font_Family,
+            }}
+            variant="h2"
+            {...rest}
+        >
+            {children}
+        </Typography>
+    );
+};
+export const MetHeader2 = ({ bold, children, sx, ...rest }: HeaderProps) => {
+    return (
+        <Typography
+            sx={{
+                ...sx,
+                fontSize: '1.9rem',
+                fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
+                fontFamily: MET_Header_Font_Family,
+            }}
+            variant="h2"
+            {...rest}
+        >
+            {children}
+        </Typography>
+    );
+};
+export const MetHeader3 = ({ bold, children, sx, ...rest }: HeaderProps) => {
+    return (
+        <Typography
+            sx={{
+                ...sx,
+                fontSize: '1.5rem',
+                fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
+                fontFamily: MET_Header_Font_Family,
+            }}
+            variant="h3"
+            {...rest}
+        >
+            {children}
+        </Typography>
+    );
+};
+export const MetHeader4 = ({ bold, children, sx, ...rest }: HeaderProps) => {
+    return (
+        <Typography
+            sx={{
+                ...sx,
+                fontSize: '1.3rem',
+                fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
+                fontFamily: MET_Header_Font_Family,
+            }}
+            variant="h4"
+            {...rest}
+        >
+            {children}
+        </Typography>
+    );
+};
 
 export const MetBody = styled(Typography)(() => ({
     fontSize: '16px',
-    fontWeight: 500,
-    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+    fontWeight: MET_Header_Font_Weight,
+    fontFamily: MET_Header_Font_Family,
 }));
 
 export const ModalSubtitle = ({

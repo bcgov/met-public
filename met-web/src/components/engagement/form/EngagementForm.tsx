@@ -277,26 +277,29 @@ const EngagementForm = () => {
                         />
                     </Grid>
 
-                    <Grid item xs={12}>
-                        <MetHeader4 sx={{ marginBottom: '2px', fontWeight: 'bold' }}>Content Block</MetHeader4>
-                        <MetPaper>
-                            <Grid
-                                container
-                                direction="row"
-                                justifyContent="flex-start"
-                                alignItems="flex-start"
-                                spacing={2}
-                                sx={{ padding: '1em' }}
-                            >
-                                <Grid item xs={12}>
-                                    <MetLabel sx={{ marginBottom: '2px' }}>Engagement Content</MetLabel>
-                                    <RichTextEditor
-                                        setRawText={handleContentChange}
-                                        handleEditorStateChange={handleRichContentChange}
-                                        initialRawEditorState={savedEngagement.rich_content || ''}
-                                        error={engagementFormError.content}
-                                        helperText="Content cannot be empty"
-                                    />
+                        <Grid item xs={12}>
+                            <MetHeader4 bold={true} sx={{ marginBottom: '2px' }}>
+                                Content Block
+                            </MetHeader4>
+                            <MetPaper>
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="flex-start"
+                                    spacing={2}
+                                    sx={{ padding: '1em' }}
+                                >
+                                    <Grid item xs={12}>
+                                        <MetLabel sx={{ marginBottom: '2px' }}>Engagement Content</MetLabel>
+                                        <RichTextEditor
+                                            setRawText={handleContentChange}
+                                            handleEditorStateChange={handleRichContentChange}
+                                            initialRawEditorState={savedEngagement.rich_content || ''}
+                                            error={engagementFormError.content}
+                                            helperText="Content cannot be empty"
+                                        />
+                                    </Grid>
                                 </Grid>
                             </Grid>
                         </MetPaper>
