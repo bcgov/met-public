@@ -35,10 +35,10 @@ const savedEngagement = {
     surveys: surveys,
 };
 
-describe('EngagementForm', () => {
-    const useSelectorMock = jest.spyOn(reactRedux, 'useSelector').mockReturnValue({});
-    const useDispatchMock = jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
-    const useNavigateMock = jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
+describe('Engagement form page tests', () => {
+    jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
+    jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
+    jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
@@ -46,26 +46,36 @@ describe('EngagementForm', () => {
     const putEngagementMock = jest
         .spyOn(engagementService, 'putEngagement')
         .mockReturnValue(Promise.resolve(savedEngagement));
+    const postEngagementMock = jest
+        .spyOn(engagementService, 'postEngagement')
+        .mockReturnValue(Promise.resolve(savedEngagement));
 
     beforeEach(() => {
         setupEnv();
     });
-    afterEach(() => {
-        useSelectorMock.mockClear();
-        useDispatchMock.mockClear();
-        useNavigateMock.mockClear();
-        useParamsMock.mockClear();
-        getEngagementMock.mockClear();
-        putEngagementMock.mockClear();
-    });
 
-    test('Test Engagement Form renders and has empty inputs by default', async () => {
+    test('Create engagement form is rendered with empty input fields', async () => {
         useParamsMock.mockReturnValue({ engagementId: 'create' });
-        const { getByText } = render(<EngagementForm />);
+        const { container, getByText } = render(<EngagementForm />);
         await waitFor(() => {
             expect(getByText('Engagement Name')).toBeInTheDocument();
         });
         expect(screen.getByText('Create Engagement Draft')).toBeInTheDocument();
+        expect(getEngagementMock).not.toHaveBeenCalled();
+
+        const nameInput = container.querySelector('input[name="name"]');
+        expect(nameInput).not.toBeNull();
+        expect(nameInput).toHaveAttribute('value', '');
+
+        const fromDateInput = container.querySelector('input[name="fromDate"]');
+        expect(fromDateInput).not.toBeNull();
+        expect(fromDateInput).toHaveAttribute('value', '');
+
+        const toDateInput = container.querySelector('input[name="toDate"]');
+        expect(toDateInput).not.toBeNull();
+        expect(toDateInput).toHaveAttribute('value', '');
+
+        expect(container.querySelector('input[type="file"][accept="image/*"]')).not.toBeNull();
     });
 
     test('Test cannot create engagement with empty fields', async () => {
@@ -76,6 +86,7 @@ describe('EngagementForm', () => {
         fireEvent.click(createButton);
 
         expect(container.querySelectorAll('.Mui-error').length).toBeGreaterThan(0);
+        expect(postEngagementMock).not.toHaveBeenCalled();
     });
 
     test('Engagement form with saved engagement should display saved info', async () => {
@@ -138,5 +149,44 @@ describe('EngagementForm', () => {
         fireEvent.click(removeSurveyButton);
 
         expect(screen.getByText('Do you want to remove this survey?')).toBeInTheDocument();
+    });
+
+    test('Cannot add more than one survey', async () => {
+        useParamsMock.mockReturnValue({ engagementId: '1' });
+        getEngagementMock.mockReturnValueOnce(
+            Promise.resolve({
+                ...savedEngagement,
+                surveys: surveys,
+            }),
+        );
+        render(<EngagementForm />);
+
+        await waitFor(() => {
+            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+        });
+
+        expect(screen.getByText('Add Survey')).toBeDisabled();
+    });
+
+    test('Can move to settings tab', async () => {
+        useParamsMock.mockReturnValue({ engagementId: '1' });
+        getEngagementMock.mockReturnValueOnce(
+            Promise.resolve({
+                ...savedEngagement,
+                surveys: surveys,
+            }),
+        );
+        render(<EngagementForm />);
+
+        await waitFor(() => {
+            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+        });
+
+        const settingsTabButton = screen.getByText('Settings');
+
+        fireEvent.click(settingsTabButton);
+
+        expect(screen.getByText('Engagement Link')).toBeInTheDocument();
+        expect(screen.getByDisplayValue('/engagement/view/1', { exact: false })).toBeInTheDocument();
     });
 });
