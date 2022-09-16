@@ -10,7 +10,7 @@ import * as notificationSlice from 'services/notificationService/notificationSli
 import { createDefaultSurvey } from 'models/survey';
 import { createDefaultEngagement } from 'models/engagement';
 import * as surveyService from 'services/surveyService/form';
-import { act } from 'react-dom/test-utils';
+import { EngagementStatus } from 'constants/engagementStatus';
 
 const mockSurvey = {
     ...createDefaultSurvey(),
@@ -36,11 +36,8 @@ const mockEngagement = {
     start_date: '2022-09-01',
     surveys: mockSurveys,
     engagement_status: {
-        created_date: '2022-09-14 15:37:22.754245',
-        description: 'Not ready to the public',
-        id: 1,
+        id: EngagementStatus.Draft,
         status_name: 'Draft',
-        updated_date: '2022-09-14 15:37:22.754247',
     },
 };
 
@@ -48,6 +45,8 @@ describe('Engagement form page tests', () => {
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
+    const openNotificationMock = jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
+    const unlinkSurveyMock = jest.spyOn(surveyService, 'unlinkSurvey').mockReturnValueOnce(Promise.resolve(mockSurvey));
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
@@ -130,7 +129,6 @@ describe('Engagement form page tests', () => {
     });
 
     test('Cannot add survey to unsaved engagement', async () => {
-        const openNotificationMock = jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
         useParamsMock.mockReturnValue({ engagementId: 'create' });
         render(<EngagementForm />);
 
@@ -207,9 +205,6 @@ describe('Engagement form page tests', () => {
                 surveys: mockSurveys,
             }),
         );
-        const unlinkSurveyMock = jest
-            .spyOn(surveyService, 'unlinkSurvey')
-            .mockReturnValueOnce(Promise.resolve(mockSurvey));
 
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
@@ -240,5 +235,49 @@ describe('Engagement form page tests', () => {
 
         await waitForElementToBeRemoved(() => screen.queryByText('Survey 1'));
         expect(unlinkSurveyMock).toHaveBeenCalledOnce();
+        expect(getEngagementMock).toHaveBeenCalledTimes(2);
+    });
+
+    test('Cannot remove survey from engagement with status not draft', async () => {
+        useParamsMock.mockReturnValue({ engagementId: '1' });
+        getEngagementMock.mockReturnValueOnce(
+            Promise.resolve({
+                ...mockEngagement,
+                surveys: mockSurveys,
+                engagement_status: {
+                    id: EngagementStatus.Published,
+                    status_name: 'Published',
+                },
+            }),
+        );
+
+        render(<EngagementForm />);
+
+        await waitFor(() => {
+            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+        });
+
+        expect(screen.getByText('Survey 1')).toBeInTheDocument();
+
+        const removeSurveyButton = screen.getByTestId('survey-widget/remove');
+
+        fireEvent.click(removeSurveyButton);
+
+        await waitFor(() => {
+            expect(screen.getByText('Confirm')).toBeInTheDocument();
+        });
+
+        const modalConfirmButton = screen.getByText('Confirm');
+
+        fireEvent.click(modalConfirmButton);
+
+        await waitFor(() => {
+            expect(openNotificationMock).toHaveBeenNthCalledWith(1, {
+                severity: 'error',
+                text: 'Cannot remove survey from an engagement of status Published',
+            });
+        });
+        expect(unlinkSurveyMock).not.toHaveBeenCalled();
+        expect(getEngagementMock).toHaveBeenCalledOnce();
     });
 });
