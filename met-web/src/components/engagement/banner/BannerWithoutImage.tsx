@@ -12,10 +12,11 @@ const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
     const { rich_description, name, start_date, end_date, submission_status } = savedEngagement;
     const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+    const dateFormat = 'MMM dd, yyyy';
 
-    const EngagementDate = `Engagement dates: ${formatDate(start_date, 'MMMM dd, yyyy')} to ${formatDate(
+    const EngagementDate = `Engagement dates: ${formatDate(start_date, dateFormat)} to ${formatDate(
         end_date,
-        'MMMM dd, yyyy',
+        dateFormat,
     )}`;
 
     return (

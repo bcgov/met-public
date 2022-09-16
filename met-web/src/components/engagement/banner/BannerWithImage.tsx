@@ -12,10 +12,11 @@ const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
     const { name, start_date, end_date, banner_url, submission_status, rich_description } = savedEngagement;
     const [imageError, setImageError] = useState(false);
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+    const dateFormat = 'MMM dd, yyyy';
 
-    const EngagementDate = `Engagement dates: ${formatDate(start_date, 'MMMM dd, yyyy')} to ${formatDate(
+    const EngagementDate = `Engagement dates: ${formatDate(start_date, dateFormat)} to ${formatDate(
         end_date,
-        'MMMM dd, yyyy',
+        dateFormat,
     )}`;
 
     if (imageError) {
