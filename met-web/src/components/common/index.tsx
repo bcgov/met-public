@@ -184,6 +184,7 @@ interface HeaderProps {
     sx?: SxProps;
     bold?: boolean;
     children?: React.ReactNode | string;
+    [prop: string]: unknown;
 }
 
 export const MetHeader1 = ({ bold, children, sx, ...rest }: HeaderProps) => {
