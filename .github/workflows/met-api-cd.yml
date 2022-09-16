@@ -27,7 +27,7 @@ jobs:
   met-api-cd:
     runs-on: ubuntu-20.04
 
-    #if: github.repository == 'bcgov/met-public'
+    if: github.repository == 'bcgov/met-public'
     environment:
       name: "dev"
 
