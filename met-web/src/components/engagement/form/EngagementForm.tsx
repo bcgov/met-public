@@ -278,7 +278,9 @@ const EngagementForm = () => {
                         </Grid>
 
                         <Grid item xs={12}>
-                            <MetHeader4 sx={{ marginBottom: '2px', fontWeight: 'bold' }}>Content Block</MetHeader4>
+                            <MetHeader4 bold={true} sx={{ marginBottom: '2px' }}>
+                                Content Block
+                            </MetHeader4>
                             <MetPaper>
                                 <Grid
                                     container

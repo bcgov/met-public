@@ -72,7 +72,9 @@ export const AddSurveyBlock = () => {
 
     return (
         <>
-            <MetHeader4 sx={{ marginBottom: '2px', fontWeight: 'bold' }}>Survey Block</MetHeader4>
+            <MetHeader4 bold={true} sx={{ marginBottom: '2px' }}>
+                Survey Block
+            </MetHeader4>
             <MetPaper>
                 <Grid
                     container
