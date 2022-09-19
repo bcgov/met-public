@@ -52,14 +52,14 @@ class Comment(db.Model):
             else desc(text(pagination_options.sort_key))
 
         query = query.order_by(sort)
-        
+
         no_pagination_options = not pagination_options.page or not pagination_options.size
         if no_pagination_options:
             items = query.all()
             return items, len(items)
-        
+
         page = query.paginate(page=pagination_options.page, per_page=pagination_options.size)
-        
+
         return page.items, page.total
 
     @classmethod
@@ -79,14 +79,14 @@ class Comment(db.Model):
                 ))\
 
         query = query.order_by(Comment.id.desc())
-        
+
         no_pagination_options = not pagination_options.page or not pagination_options.size
         if no_pagination_options:
             items = query.all()
             return items, len(items)
-        
+
         page = query.paginate(page=pagination_options.page, per_page=pagination_options.size)
-                
+
         return page.items, page.total
 
     @staticmethod
