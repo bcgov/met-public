@@ -27,18 +27,18 @@ class CommentService:
         """Get comments paginated."""
         if not user_id:
             comment_schema = CommentSchema(many=True, only=('text', 'submission_date', 'survey'))
-            comments_page = Comment.get_accepted_comments_by_survey_id_where_engagement_closed_paginated(
+            items, total = Comment.get_accepted_comments_by_survey_id_where_engagement_closed_paginated(
                 survey_id, pagination_options)
         else:
             comment_schema = CommentSchema(many=True)
-            comments_page = Comment.get_comments_by_survey_id_paginated(
+            items, total = Comment.get_comments_by_survey_id_paginated(
                 survey_id,
                 pagination_options,
                 search_text,
             )
         return {
-            'items': comment_schema.dump(comments_page.items),
-            'total': comments_page.total
+            'items': comment_schema.dump(items),
+            'total': total
         }
 
     @classmethod

@@ -59,7 +59,7 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
         query = db.session.query(Survey).join(Engagement, isouter=True).join(EngagementStatus, isouter=True)
 
         if unlinked:
-            query = query.filter(Survey.engagement_id is None)
+            query = query.filter(Survey.engagement_id == None)
 
         if search_text:
             query = query.filter(Survey.name.ilike('%' + search_text + '%'))
@@ -67,7 +67,16 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
         sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == 'asc'\
             else desc(text(pagination_options.sort_key))
 
-        return query.order_by(sort).paginate(page=pagination_options.page, per_page=pagination_options.size)
+        query = query.order_by(sort)
+        
+        no_pagination_options = not pagination_options.page or not pagination_options.size
+        if no_pagination_options:
+            items = query.all()
+            return items, len(items)
+        
+        page = query.paginate(page=pagination_options.page, per_page=pagination_options.size)
+        
+        return page.items, page.total
 
     @classmethod
     def create_survey(cls, survey: SurveySchema) -> DefaultMethodResult:

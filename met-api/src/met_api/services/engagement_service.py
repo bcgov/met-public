@@ -48,17 +48,17 @@ class EngagementService:
     @staticmethod
     def get_engagements_paginated(user_id, pagination_options: PaginationOptions, search_text=''):
         """Get engagements paginated."""
-        engagements_page = EngagementModel.get_engagements_paginated(
+        items, total = EngagementModel.get_engagements_paginated(
             pagination_options,
             search_text,
             statuses=None if user_id else [Status.Published.value],
         )
         engagements_schema = EngagementSchema(many=True)
-        engagements = engagements_schema.dump(engagements_page.items)
+        engagements = engagements_schema.dump(items)
 
         return {
             'items': engagements,
-            'total': engagements_page.total
+            'total': total
         }
 
     @staticmethod

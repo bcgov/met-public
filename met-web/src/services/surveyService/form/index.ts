@@ -8,8 +8,8 @@ interface FetchSurveyParams {
     unlinked?: boolean;
 }
 export const fetchSurveys = async (params: FetchSurveyParams = {}): Promise<Survey[]> => {
-    const responseData = await http.GetRequest<Survey[]>(Endpoints.Survey.GET_LIST, params);
-    return responseData.data.result ?? [];
+    const responseData = await http.GetRequest<Page<Survey>>(Endpoints.Survey.GET_LIST, { ...params });
+    return responseData.data.result?.items ?? [];
 };
 
 interface GetSurveysParams {

@@ -70,8 +70,8 @@ class Engagements(Resource):
             user_id = TokenInfo.get_id()
 
             pagination_options = PaginationOptions(
-                page=args.get('page', 1, int),
-                size=args.get('size', 10, int),
+                page=args.get('page', None, int),
+                size=args.get('size', None, int),
                 sort_key=args.get('sort_key', 'name', int),
                 sort_order=args.get('sort_order', 'asc', str),
             )
