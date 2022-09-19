@@ -8,8 +8,9 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { EngagementStatus } from 'constants/engagementStatus';
 import { unlinkSurvey } from 'services/surveyService/form';
 import { openNotificationModal } from 'services/modalService/modalSlice';
+
 export const AddSurveyBlock = () => {
-    const { savedEngagement, fetchEngagement, handleOpenModal, handleCloseModal } = useContext(ActionContext);
+    const { savedEngagement, fetchEngagement } = useContext(ActionContext);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
@@ -72,7 +73,6 @@ export const AddSurveyBlock = () => {
                         'Do you want to remove this survey?',
                     ],
                     handleConfirm: () => {
-                        handleCloseModal();
                         handleRemoveSurvey(surveyId, surveyName);
                     },
                 },
