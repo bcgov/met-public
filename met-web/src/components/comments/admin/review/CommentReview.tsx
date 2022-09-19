@@ -74,7 +74,6 @@ const CommentReview = () => {
                 container
                 direction="row"
                 padding="3em"
-                direction="row"
                 justifyContent="flex-start"
                 alignItems="flex-start"
                 rowSpacing={6}

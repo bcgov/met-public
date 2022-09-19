@@ -89,7 +89,7 @@ interface MetWidgetProps {
 export const MetWidget = ({ children, title, onEditClick, onDeleteClick, deleting, ...rest }: MetWidgetProps) => {
     return (
         <MetWidgetPaper elevation={3} {...rest}>
-            <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" direction="row">
+            <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
                 <Grid item xs={6}>
                     <MetHeader3 bold={true}>{title}</MetHeader3>
                 </Grid>
