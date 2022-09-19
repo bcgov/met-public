@@ -72,14 +72,15 @@ const CommentReview = () => {
         <MetPageGridContainer>
             <Grid
                 container
+                direction="row"
                 padding="3em"
                 direction="row"
                 justifyContent="flex-start"
                 alignItems="flex-start"
                 rowSpacing={6}
             >
-                <Grid container item rowSpacing={3}>
-                    <Grid container item xs={6} spacing={1}>
+                <Grid container direction="row" item rowSpacing={3}>
+                    <Grid container direction="row" item xs={6} spacing={1}>
                         <Grid item>
                             <MetLabel>Comment ID:</MetLabel>
                         </Grid>
@@ -88,7 +89,7 @@ const CommentReview = () => {
                         </Grid>
                     </Grid>
 
-                    <Grid container item xs={6} spacing={1}>
+                    <Grid container direction="row" item xs={6} spacing={1}>
                         <Grid item>
                             <MetLabel>Status:</MetLabel>
                         </Grid>
@@ -97,7 +98,7 @@ const CommentReview = () => {
                         </Grid>
                     </Grid>
 
-                    <Grid container item xs={6} spacing={1}>
+                    <Grid container direction="row" item xs={6} spacing={1}>
                         <Grid item>
                             <MetLabel>Reviewed by:</MetLabel>
                         </Grid>
@@ -106,7 +107,7 @@ const CommentReview = () => {
                         </Grid>
                     </Grid>
 
-                    <Grid container item xs={6} spacing={1}>
+                    <Grid container direction="row" item xs={6} spacing={1}>
                         <Grid item>
                             <MetLabel>Comment Date:</MetLabel>
                         </Grid>
@@ -115,7 +116,7 @@ const CommentReview = () => {
                         </Grid>
                     </Grid>
 
-                    <Grid container item xs={12} spacing={1}>
+                    <Grid container direction="row" item xs={12} spacing={1}>
                         <Grid item>
                             <MetLabel>Date Reviewed:</MetLabel>
                         </Grid>
@@ -124,7 +125,7 @@ const CommentReview = () => {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid container item xs={12} spacing={2}>
+                <Grid container direction="row" item xs={12} spacing={2}>
                     <Grid xs={12} item>
                         <MetLabel>Comment</MetLabel>
                     </Grid>

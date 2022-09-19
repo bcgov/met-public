@@ -21,7 +21,14 @@ const ImageUpload = ({ handleAddFile, savedImageUrl = '' }: ImageUploadProps) =>
 
     if (objectUrl || existingImageUrl) {
         return (
-            <Grid container alignItems="flex-start" justifyContent={'flex-end'} direction="row" spacing={1}>
+            <Grid
+                container
+                direction="row"
+                alignItems="flex-start"
+                justifyContent={'flex-end'}
+                direction="row"
+                spacing={1}
+            >
                 <Grid
                     item
                     xs={12}
