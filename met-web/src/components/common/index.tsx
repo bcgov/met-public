@@ -96,12 +96,12 @@ export const MetWidget = ({ children, title, onEditClick, onDeleteClick, deletin
                 <Grid item xs={6} container direction="row" justifyContent="flex-end">
                     <Stack direction="row" spacing={1}>
                         <ConditionalComponent condition={!!onEditClick}>
-                            <IconButton color="inherit" onClick={onEditClick}>
+                            <IconButton color="inherit" onClick={onEditClick} data-testid="survey-widget/edit">
                                 <EditIcon />
                             </IconButton>
                         </ConditionalComponent>
                         <ConditionalComponent condition={!!onDeleteClick}>
-                            <IconButton color="inherit" onClick={onDeleteClick}>
+                            <IconButton color="inherit" onClick={onDeleteClick} data-testid="survey-widget/remove">
                                 {deleting ? <CircularProgress size="1em" color="inherit" /> : <HighlightOffIcon />}
                             </IconButton>
                         </ConditionalComponent>
@@ -118,7 +118,7 @@ export const MetWidget = ({ children, title, onEditClick, onDeleteClick, deletin
 export const MidScreenLoader = () => (
     <Grid container direction="row" justifyContent="center" alignItems="center" sx={{ minHeight: '90vh' }}>
         <Grid item>
-            <CircularProgress />
+            <CircularProgress data-testid="loader" />
         </Grid>
     </Grid>
 );
