@@ -59,7 +59,7 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
         query = db.session.query(Survey).join(Engagement, isouter=True).join(EngagementStatus, isouter=True)
 
         if unlinked:
-            query = query.filter(Survey.engagement_id is None)
+            query = query.filter(Survey.engagement_id.is_(None))
 
         if search_text:
             query = query.filter(Survey.name.ilike('%' + search_text + '%'))
