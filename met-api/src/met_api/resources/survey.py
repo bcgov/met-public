@@ -96,7 +96,7 @@ class Surveys(Resource):
             pagination_options = PaginationOptions(
                 page=args.get('page', 1, int),
                 size=args.get('size', 10, int),
-                sort_key=args.get('sort_key', 'survey.name', int),
+                sort_key=args.get('sort_key', 'survey.name', str),
                 sort_order=args.get('sort_order', 'asc', str),
             )
 
