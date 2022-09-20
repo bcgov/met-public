@@ -68,7 +68,15 @@ class Engagement(db.Model):
         sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == 'asc'\
             else desc(text(pagination_options.sort_key))
 
-        return query.order_by(sort).paginate(page=pagination_options.page, per_page=pagination_options.size)
+        query = query.order_by(sort)
+
+        no_pagination_options = not pagination_options.page or not pagination_options.size
+        if no_pagination_options:
+            items = query.all()
+            return items, len(items)
+
+        page = query.paginate(page=pagination_options.page, per_page=pagination_options.size)
+        return page.items, page.total
 
     @classmethod
     def get_engagements_by_status(cls, status_id):

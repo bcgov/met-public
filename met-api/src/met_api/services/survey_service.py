@@ -39,7 +39,7 @@ class SurveyService:
     @staticmethod
     def get_surveys_paginated(pagination_options: PaginationOptions, search_text='', unlinked=False):
         """Get engagements paginated."""
-        surveys_page = SurveyModel.get_surveys_paginated(
+        items, total = SurveyModel.get_surveys_paginated(
             pagination_options,
             search_text,
             unlinked,
@@ -47,8 +47,8 @@ class SurveyService:
         surveys_schema = SurveySchema(many=True)
 
         return {
-            'items': surveys_schema.dump(surveys_page.items),
-            'total': surveys_page.total
+            'items': surveys_schema.dump(items),
+            'total': total
         }
 
     @classmethod
