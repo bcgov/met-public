@@ -37,11 +37,11 @@ comment:
   require_changes: true
 
 flags:
-  authapi:
+  metapi:
     paths:
       - met-api/src/met_api
     carryforward: true
-  authweb:
+  metweb:
     paths:
       - met-web/src
     carryforward: true
