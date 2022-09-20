@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import NotFound from './NotFound';
-import LandingPage from '../components/LandingPage/LandingPage';
 import EngagementForm from '../components/engagement/form';
+import EngagementListing from '../components/engagement/listing';
 import EngagementView from '../components/engagement/view';
 import SurveyListing from 'components/survey/listing';
 import CreateSurvey from 'components/survey/create';
@@ -18,7 +18,7 @@ import UnderConstruction from './UnderConstruction';
 const AuthenticatedRoutes = () => {
     return (
         <Routes>
-            <Route path="/" element={<LandingPage />} />
+            <Route path="/" element={<EngagementListing />} />
             <Route path="/survey/listing" element={<SurveyListing />} />
             <Route path="/survey/create" element={<CreateSurvey />} />
             <Route path="/survey/build/:surveyId" element={<SurveyFormBuilder />} />

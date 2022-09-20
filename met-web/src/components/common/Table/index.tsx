@@ -131,25 +131,22 @@ function MetTable<T>({
                             />
                         </ConditionalComponent>
 
-                        <TableBody sx={{ position: 'relative', minHeight: 53 }}>
-                            <ConditionalComponent condition={loading}>
-                                <Box
-                                    sx={{
-                                        position: 'absolute',
-                                        width: '100%',
-                                        height: '100%',
-                                    }}
+                        <TableBody>
+                            <TableRow
+                                sx={{
+                                    height: 5,
+                                }}
+                            >
+                                <TableCell
+                                    sx={{ padding: 0, border: 'none', verticalAlign: 'top' }}
+                                    colSpan={headCells.length}
                                 >
-                                    <LinearProgress />
-                                </Box>
-                            </ConditionalComponent>
-                            <ConditionalComponent condition={rows.length === 0}>
-                                <TableRow>
-                                    <TableCell colSpan={headCells.length} align="center">
-                                        {loading ? '' : 'No rows to display'}
-                                    </TableCell>
-                                </TableRow>
-                            </ConditionalComponent>
+                                    <ConditionalComponent condition={loading}>
+                                        <LinearProgress />
+                                    </ConditionalComponent>
+                                </TableCell>
+                            </TableRow>
+
                             {rows.map((row, rowIndex) => {
                                 return (
                                     <TableRow hover tabIndex={-1} key={`row-${rowIndex}`}>
