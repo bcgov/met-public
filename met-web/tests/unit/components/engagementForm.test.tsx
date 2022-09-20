@@ -10,7 +10,6 @@ import * as notificationSlice from 'services/notificationService/notificationSli
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
 import { createDefaultSurvey } from 'models/survey';
 import { createDefaultEngagement } from 'models/engagement';
-import * as surveyService from 'services/surveyService/form';
 import { EngagementStatus } from 'constants/engagementStatus';
 
 const mockSurvey = {
@@ -50,7 +49,6 @@ describe('Engagement form page tests', () => {
     const openNotificationModalMock = jest
         .spyOn(notificationModalSlice, 'openNotificationModal')
         .mockImplementation(jest.fn());
-    const unlinkSurveyMock = jest.spyOn(surveyService, 'unlinkSurvey').mockReturnValueOnce(Promise.resolve(mockSurvey));
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
