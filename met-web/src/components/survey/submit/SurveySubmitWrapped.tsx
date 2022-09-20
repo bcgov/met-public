@@ -27,7 +27,7 @@ const SurveySubmitWrapped = () => {
                 rowSpacing={2}
             >
                 <Grid item container direction="row" justifyContent="flex-end">
-                    <MuiLink component={Link} to={`/engagement/view/${savedSurvey.engagement.id}`}>
+                    <MuiLink component={Link} to={`/engagement/${savedSurvey.engagement.id}/view`}>
                         {`<< Return to ${savedSurvey.engagement.name} Engagement`}
                     </MuiLink>
                 </Grid>
@@ -36,14 +36,14 @@ const SurveySubmitWrapped = () => {
                         <ConditionalComponent condition={isTokenValid}>
                             <SurveyForm
                                 handleClose={() => {
-                                    navigate(`/engagement/view/${savedSurvey.engagement.id}`);
+                                    navigate(`/engagement/${savedSurvey.engagement.id}/view`);
                                 }}
                             />
                         </ConditionalComponent>
                         <InvalidTokenModal
                             open={!isTokenValid}
                             handleClose={() => {
-                                navigate(`/engagement/view/${savedSurvey.engagement.id}`);
+                                navigate(`/engagement/${savedSurvey.engagement.id}/view`);
                             }}
                         />
                     </MetPaper>

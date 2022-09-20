@@ -31,7 +31,7 @@ export const EngagementView = () => {
             return;
         }
 
-        navigate(`/survey/submit/${surveyId}`);
+        navigate(`/survey/${surveyId}/submit`);
     };
 
     const handleClose = () => {

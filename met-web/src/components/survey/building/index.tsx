@@ -105,7 +105,7 @@ const SurveyFormBuilder = () => {
                 }),
             );
             if (savedSurvey.engagement?.id) {
-                navigate(`/engagement/form/${savedSurvey.engagement.id}`);
+                navigate(`/engagement/${savedSurvey.engagement.id}/form`);
                 return;
             }
 

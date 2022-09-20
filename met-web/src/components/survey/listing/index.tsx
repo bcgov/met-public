@@ -78,7 +78,7 @@ const SurveyListing = () => {
             label: 'Survey Name',
             allowSort: true,
             getValue: (row: Survey) => (
-                <MuiLink component={Link} to={`/survey/build/${Number(row.id)}`}>
+                <MuiLink component={Link} to={`/survey/${Number(row.id)}/build`}>
                     {row.name}
                 </MuiLink>
             ),
@@ -114,7 +114,7 @@ const SurveyListing = () => {
                 }
 
                 return (
-                    <MuiLink component={Link} to={`/engagement/view/${row.engagement.id}`}>
+                    <MuiLink component={Link} to={`/engagement/${row.engagement.id}/view`}>
                         {row.engagement.name}
                     </MuiLink>
                 );

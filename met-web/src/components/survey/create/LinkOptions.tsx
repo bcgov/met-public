@@ -63,7 +63,7 @@ const LinkOptions = () => {
                     text: `Survey ${selectedSurvey.name} was successfully added to engagement ${engagementToLink.name}`,
                 }),
             );
-            navigate(`/engagement/form/${engagementToLink.id}`);
+            navigate(`/engagement/${engagementToLink.id}/form`);
         } catch (error) {
             console.log(error);
             dispatch(openNotification({ severity: 'error', text: 'Failed to link survey to engagement' }));
