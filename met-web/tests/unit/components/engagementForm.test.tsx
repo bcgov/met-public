@@ -1,4 +1,4 @@
-import { render, waitFor, screen, fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
 import EngagementForm from '../../../src/components/engagement/form';
@@ -7,9 +7,9 @@ import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
+import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
 import { createDefaultSurvey } from 'models/survey';
 import { createDefaultEngagement } from 'models/engagement';
-import * as surveyService from 'services/surveyService/form';
 import { EngagementStatus } from 'constants/engagementStatus';
 
 const mockSurvey = {
@@ -46,7 +46,9 @@ describe('Engagement form page tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
     const openNotificationMock = jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
-    const unlinkSurveyMock = jest.spyOn(surveyService, 'unlinkSurvey').mockReturnValueOnce(Promise.resolve(mockSurvey));
+    const openNotificationModalMock = jest
+        .spyOn(notificationModalSlice, 'openNotificationModal')
+        .mockImplementation(jest.fn());
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
@@ -140,7 +142,6 @@ describe('Engagement form page tests', () => {
             severity: 'error',
             text: 'Please save the engagement before adding a survey',
         });
-        openNotificationMock.mockClear();
     });
 
     test('Modal with warning appears when removing survey', async () => {
@@ -155,7 +156,7 @@ describe('Engagement form page tests', () => {
 
         fireEvent.click(removeSurveyButton);
 
-        expect(screen.getByText('Do you want to remove this survey?')).toBeInTheDocument();
+        expect(openNotificationModalMock).toHaveBeenCalledOnce();
     });
 
     test('Cannot add more than one survey', async () => {
@@ -197,7 +198,7 @@ describe('Engagement form page tests', () => {
         expect(screen.getByDisplayValue('/engagement/view/1', { exact: false })).toBeInTheDocument();
     });
 
-    test('Can remove survey', async () => {
+    test('Remove survey triggers notification modal', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
@@ -226,58 +227,7 @@ describe('Engagement form page tests', () => {
         fireEvent.click(removeSurveyButton);
 
         await waitFor(() => {
-            expect(screen.getByText('Confirm')).toBeInTheDocument();
+            expect(openNotificationModalMock).toHaveBeenCalledOnce();
         });
-
-        const modalConfirmButton = screen.getByText('Confirm');
-
-        fireEvent.click(modalConfirmButton);
-
-        await waitForElementToBeRemoved(() => screen.queryByText('Survey 1'));
-        expect(unlinkSurveyMock).toHaveBeenCalledOnce();
-        expect(getEngagementMock).toHaveBeenCalledTimes(2);
-    });
-
-    test('Cannot remove survey from engagement with status not draft', async () => {
-        useParamsMock.mockReturnValue({ engagementId: '1' });
-        getEngagementMock.mockReturnValueOnce(
-            Promise.resolve({
-                ...mockEngagement,
-                surveys: mockSurveys,
-                engagement_status: {
-                    id: EngagementStatus.Published,
-                    status_name: 'Published',
-                },
-            }),
-        );
-
-        render(<EngagementForm />);
-
-        await waitFor(() => {
-            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-        });
-
-        expect(screen.getByText('Survey 1')).toBeInTheDocument();
-
-        const removeSurveyButton = screen.getByTestId('survey-widget/remove');
-
-        fireEvent.click(removeSurveyButton);
-
-        await waitFor(() => {
-            expect(screen.getByText('Confirm')).toBeInTheDocument();
-        });
-
-        const modalConfirmButton = screen.getByText('Confirm');
-
-        fireEvent.click(modalConfirmButton);
-
-        await waitFor(() => {
-            expect(openNotificationMock).toHaveBeenNthCalledWith(1, {
-                severity: 'error',
-                text: 'Cannot remove survey from an engagement of status Published',
-            });
-        });
-        expect(unlinkSurveyMock).not.toHaveBeenCalled();
-        expect(getEngagementMock).toHaveBeenCalledOnce();
     });
 });

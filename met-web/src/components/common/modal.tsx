@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useAppSelector, useAppDispatch } from '../../hooks';
 import Modal from '@mui/material/Modal';
-import { closeNotificationModal } from 'services/modalService/modalSlice';
+import { closeNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import UpdateModal from './Modals/UpdateModal';
 import ConfirmModal from './Modals/ConfirmModal';
 import { ConditionalComponent } from '.';

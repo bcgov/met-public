@@ -7,7 +7,7 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { unlinkSurvey } from 'services/surveyService/form';
-import { openNotificationModal } from 'services/modalService/modalSlice';
+import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
 export const AddSurveyBlock = () => {
     const { savedEngagement, fetchEngagement } = useContext(ActionContext);

@@ -1,10 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
 import loginReducer from 'components/Login/loginSlice';
 import userSlice from 'services/userService/userSlice';
-import { form, submission } from '@formio/react';
 import engagementSlice from 'services/engagementService/engagementSlice';
 import notificationSlice from 'services/notificationService/notificationSlice';
-import notificationModalSlice from 'services/modalService/modalSlice';
+import notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
 
 export const store = configureStore({
     reducer: {
@@ -13,8 +12,6 @@ export const store = configureStore({
         engagement: engagementSlice,
         notification: notificationSlice,
         notificationModal: notificationModalSlice,
-        form: form({ name: 'form' }),
-        submission: submission({ name: 'submission' }),
     },
 });
 

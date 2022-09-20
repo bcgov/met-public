@@ -23,7 +23,7 @@ const UpdateModal = ({ header, subText, handleClose }: NotificationModalProps) =
             <Grid container direction="row" item xs={12}>
                 {subText.map((text: string) => (
                     <Grid item xs={12}>
-                        <MetBody sx={{ mb: 1 }}> {text} </MetBody>
+                        <MetBody sx={{ mb: 1 }}>{text}</MetBody>
                     </Grid>
                 ))}
                 <Grid

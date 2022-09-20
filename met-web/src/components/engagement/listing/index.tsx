@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import MetTable from '../common/Table';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
-import { MetPageGridContainer, PrimaryButton } from '../common';
+import { MetPageGridContainer, PrimaryButton } from 'components/common';
 import { Engagement } from 'models/engagement';
 import { useAppDispatch } from 'hooks';
-import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from '../common/Table/types';
+import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink } from '@mui/material';
 import { getEngagements } from 'services/engagementService';
 import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import MetTable from 'components/common/Table';
 
-const LandingPage = () => {
+const EngagementListing = () => {
     const [searchFilter, setSearchFilter] = useState({
         key: 'name',
         value: '',
@@ -183,15 +183,17 @@ const LandingPage = () => {
                     <Stack direction="row" spacing={1} alignItems="center">
                         <TextField
                             id="engagement-name"
+                            data-testid="engagement/listing/searchField"
                             variant="outlined"
                             label="Search by name"
                             fullWidth
+                            name="searchText"
                             value={searchText}
                             onChange={(e) => setSearchText(e.target.value)}
                             size="small"
                         />
                         <PrimaryButton
-                            data-testid="search-button-landingPage"
+                            data-testid="engagement/listing/searchButton"
                             onClick={() => handleSearchBarClick(searchText)}
                         >
                             <SearchIcon />
@@ -223,4 +225,4 @@ const LandingPage = () => {
     );
 };
 
-export default LandingPage;
+export default EngagementListing;
