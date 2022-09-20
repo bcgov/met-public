@@ -15,7 +15,7 @@ const ConfirmModal = ({ header, subText, handleConfirm, handleClose }: Notificat
             sx={{ ...modalStyle }}
             rowSpacing={2}
         >
-            <Grid container item xs={12}>
+            <Grid container direction="row" item xs={12}>
                 <Grid item xs={12}>
                     <MetHeader1 bold={true} sx={{ mb: 2 }}>
                         {header}

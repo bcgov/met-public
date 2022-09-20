@@ -61,7 +61,7 @@ export const PreviewBanner = () => {
             }}
         >
             <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start" padding={4}>
-                <Grid item container xs={12}>
+                <Grid item container direction="row" xs={12}>
                     <MetHeader1 sx={{ mb: 2 }}>Preview Engagement{!isDraft && ' - Published'}</MetHeader1>
                     <ConditionalComponent condition={isDraft}>
                         <Grid item container direction="row" rowSpacing={isSmallScreen ? 2 : 0.5}>
@@ -77,7 +77,7 @@ export const PreviewBanner = () => {
                                             <ImageIcon />
                                         </IconButton>
                                     </Grid>
-                                    <Grid item container alignItems="center" xs={10} sm={10}>
+                                    <Grid item container direction="row" alignItems="center" xs={10} sm={10}>
                                         <MetBody>This engagement is missing a header image.</MetBody>
                                     </Grid>
                                 </Grid>

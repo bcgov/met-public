@@ -37,31 +37,26 @@ jobs:
       - name: Login Openshift
         shell: bash
         run: |
-          oc login --server=${{secrets.OPENSHIFT4_LOGIN_REGISTRY}} --token=${{secrets.OPENSHIFT4_SA_TOKEN}}
+          oc login --server=${{secrets.OPENSHIFT_LOGIN_REGISTRY}} --token=${{secrets.OPENSHIFT_SA_TOKEN}}
 
+      - name: Login Docker
+        run: |
+          echo "${{ secrets.OPENSHIFT_SA_TOKEN }}" | 
+          docker login ${{ secrets.OPENSHIFT_IMAGE_REGISTRY }} -u ${{ secrets.OPENSHIFT_SA_NAME}} --password-stdin
 
-      - name: Tools project
+      - name: Build image
+        run: |
+          docker build . --file Dockerfile --tag image
+
+      - name: Push image
+        run: |
+          IMAGE_ID=${{ secrets.OPENSHIFT_IMAGE_REGISTRY }}/"${{ secrets.OPENSHIFT_REPOSITORY}}-tools"/$APP_NAME
+          docker tag image $IMAGE_ID:latest
+          docker push $IMAGE_ID:latest
+          docker image tag $IMAGE_ID:latest $IMAGE_ID:$TAG_NAME
+          docker push $IMAGE_ID:$TAG_NAME
+
+      - name: Rollout
         shell: bash
         run: |
-          oc project ${{ secrets.OPENSHIFT4_REPOSITORY }}-tools
-
-      # - name: Build from dev branch
-      #   shell: bash
-      #   run: |
-      #     oc patch bc/${{ env.APP_NAME }} -p '{"spec":{"source":{"git":{"ref":"dev"}}}}'
-
-      - name: Start Build Openshift
-        shell: bash
-        run: |
-          oc start-build ${{ env.APP_NAME }} --wait
-
-
-      - name: Tag+Deploy for DEV
-        shell: bash
-        run: |
-          oc tag ${{ env.APP_NAME }}:latest ${{ env.APP_NAME }}:${{ env.TAG_NAME }}
-
-      - name: Watch new rollout (trigger by image change in Openshift)
-        shell: bash
-        run: |
-          oc rollout status dc/${{ env.APP_NAME }} -n ${{ secrets.OPENSHIFT4_REPOSITORY }}-${{ env.TAG_NAME }} -w
+          oc rollout status dc/${{ env.APP_NAME }} -n ${{ secrets.OPENSHIFT_REPOSITORY }}-${{ env.TAG_NAME }} -w

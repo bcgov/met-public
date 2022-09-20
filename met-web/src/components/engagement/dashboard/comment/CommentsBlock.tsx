@@ -14,7 +14,7 @@ export const CommentsBlock = () => {
 
     return (
         <>
-            <Grid item xs={12} container justifyContent="flex-end">
+            <Grid item xs={12} container direction="row" justifyContent="flex-end">
                 <Link to={'/engagement/view/' + engagement.id} style={{ color: '#1A5A96' }}>
                     {'<<Return to ' + engagement.name + ' Engagement'}
                 </Link>
