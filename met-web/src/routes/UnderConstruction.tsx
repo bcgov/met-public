@@ -18,7 +18,7 @@ const UnderConstruction = React.memo(({ errorMessage = 'This page is under const
                     {errorMessage}
                 </Typography>
             </Grid>
-            <Grid item xs={12} container alignItems="center" justifyContent="center">
+            <Grid item xs={12} container direction="row" alignItems="center" justifyContent="center">
                 <RoofingIcon sx={{ height: '10em', width: '10em' }} />
             </Grid>
         </Grid>

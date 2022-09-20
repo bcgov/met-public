@@ -19,17 +19,17 @@ export const CommentReviewSkeleton = () => {
                         <Skeleton />
                     </MetLabel>
                 </RepeatedGrid>
-                <Grid container item xs={5}>
+                <Grid container direction="row" item xs={5}>
                     <MetLabel width="100%">
                         <Skeleton />
                     </MetLabel>
                 </Grid>
 
-                <Grid container item xs={12}>
+                <Grid container direction="row" item xs={12}>
                     <Skeleton width="100%" height="6em" />
                 </Grid>
 
-                <Grid item xs={12} container>
+                <Grid item xs={12} direction="row" container>
                     <Grid item xs={4}>
                         <Typography variant="h6">
                             <Skeleton />

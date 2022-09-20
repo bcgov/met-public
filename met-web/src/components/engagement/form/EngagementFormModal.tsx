@@ -22,7 +22,7 @@ const EngagementFormModal = () => {
                 sx={{ ...modalStyle }}
                 rowSpacing={2}
             >
-                <Grid container item xs={12}>
+                <Grid container direction="row" item xs={12}>
                     <Grid item xs={12}>
                         <MetHeader1 bold={true} sx={{ mb: 1 }}>
                             Remove Survey
@@ -40,7 +40,15 @@ const EngagementFormModal = () => {
                         <MetBody sx={{ mb: 1, fontWeight: 'bold' }}>Do you want to remove this survey?</MetBody>
                     </Grid>
 
-                    <Grid item container xs={12} justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
+                    <Grid
+                        item
+                        container
+                        direction="row"
+                        xs={12}
+                        justifyContent="flex-end"
+                        spacing={1}
+                        sx={{ mt: '1em' }}
+                    >
                         <Stack
                             direction={{ xs: 'column', sm: 'row' }}
                             spacing={1}
