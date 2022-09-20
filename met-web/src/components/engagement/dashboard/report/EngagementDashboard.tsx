@@ -10,7 +10,7 @@ import { getEngagement } from 'services/engagementService';
 import { getErrorMessage } from 'utils';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
-import { openNotificationModal } from 'services/modalService/modalSlice';
+import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
 export type EngagementParams = {
     engagementId: string;
