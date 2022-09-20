@@ -128,7 +128,7 @@ const EngagementForm = () => {
             richContent: richContent,
         });
 
-        navigate(`/engagement/:${engagement.id}/form`);
+        navigate(`/engagement/${engagement.id}/form`);
 
         return engagement;
     };
@@ -146,7 +146,7 @@ const EngagementForm = () => {
             richContent: richContent,
         });
 
-        navigate(`/engagement/:${engagement.id}/form`);
+        navigate(`/engagement/${engagement.id}/form`);
 
         return engagement;
     };
@@ -165,7 +165,7 @@ const EngagementForm = () => {
             return;
         }
 
-        navigate(`/engagement/:${engagement.id}/view`);
+        navigate(`/engagement/${engagement.id}/view`);
         window.scrollTo(0, 0);
     };
 

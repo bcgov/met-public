@@ -96,7 +96,7 @@ export const AddSurveyBlock = () => {
                                 <MetWidget
                                     key={survey.id}
                                     title={survey.name}
-                                    onEditClick={() => navigate(`/survey/:${survey.id}/build`)}
+                                    onEditClick={() => navigate(`/survey/${survey.id}/build`)}
                                     onDeleteClick={() => handleDeleteClick(survey.id, survey.name)}
                                     deleting={isDeletingSurvey}
                                 />
