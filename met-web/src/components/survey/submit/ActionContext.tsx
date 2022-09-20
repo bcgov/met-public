@@ -60,7 +60,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                     text: 'Survey was successfully submitted',
                 }),
             );
-            navigate(`/engagement/${savedSurvey.engagement.id}/view/`, {
+            navigate(`/engagements/${savedSurvey.engagement.id}/view/`, {
                 state: {
                     open: true,
                 },

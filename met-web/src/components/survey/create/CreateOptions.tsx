@@ -64,7 +64,7 @@ export const CreateOptions = () => {
                     text: 'Survey created, please proceed to building it',
                 }),
             );
-            navigate(`/survey/${createdSurvey.id}/build`);
+            navigate(`/surveys/${createdSurvey.id}/build`);
         } catch (error) {
             dispatch(
                 openNotification({

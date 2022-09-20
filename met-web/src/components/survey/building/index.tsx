@@ -46,7 +46,7 @@ const SurveyFormBuilder = () => {
 
     const loadSurvey = async () => {
         if (isNaN(Number(surveyId))) {
-            navigate('/survey/listing');
+            navigate('/surveys');
             dispatch(
                 openNotification({
                     severity: 'error',
@@ -67,7 +67,7 @@ const SurveyFormBuilder = () => {
                     text: 'Error occurred while loading saved survey',
                 }),
             );
-            navigate('/survey/listing');
+            navigate('/surveys');
         }
     };
 
@@ -105,11 +105,11 @@ const SurveyFormBuilder = () => {
                 }),
             );
             if (savedSurvey.engagement?.id) {
-                navigate(`/engagement/${savedSurvey.engagement.id}/form`);
+                navigate(`/engagements/${savedSurvey.engagement.id}/form`);
                 return;
             }
 
-            navigate('/survey/listing');
+            navigate('/surveys');
         } catch (error) {
             setIsSaving(false);
             dispatch(
@@ -190,7 +190,7 @@ const SurveyFormBuilder = () => {
                     >
                         {'Save & Continue'}
                     </PrimaryButton>
-                    <SecondaryButton onClick={() => navigate('/survey/listing')}>Cancel</SecondaryButton>
+                    <SecondaryButton onClick={() => navigate('/surveys')}>Cancel</SecondaryButton>
                 </Stack>
             </Grid>
         </MetPageGridContainer>

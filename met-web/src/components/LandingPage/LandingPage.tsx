@@ -82,7 +82,7 @@ const LandingPage = () => {
             label: 'Engagement Name',
             allowSort: true,
             getValue: (row: Engagement) => (
-                <MuiLink component={Link} to={`/engagement/${Number(row.id)}/form`}>
+                <MuiLink component={Link} to={`/engagements/${Number(row.id)}/form`}>
                     {row.name}
                 </MuiLink>
             ),
@@ -129,7 +129,7 @@ const LandingPage = () => {
                 }
 
                 return (
-                    <MuiLink component={Link} to={`/survey/${Number(row.surveys[0].id)}/submit/`}>
+                    <MuiLink component={Link} to={`/surveys/${Number(row.surveys[0].id)}/submit`}>
                         View Survey
                     </MuiLink>
                 );
@@ -161,7 +161,7 @@ const LandingPage = () => {
                 }
 
                 return (
-                    <MuiLink component={Link} to={`/engagement/${Number(row.id)}/dashboard`}>
+                    <MuiLink component={Link} to={`/engagements/${Number(row.id)}/dashboard`}>
                         View Report
                     </MuiLink>
                 );
@@ -199,7 +199,7 @@ const LandingPage = () => {
                     </Stack>
                     <PrimaryButton
                         component={Link}
-                        to="/engagement/form/create"
+                        to="/engagements/form/create"
                         data-testid="create-engagement-button-landingPage"
                     >
                         + Create Engagement

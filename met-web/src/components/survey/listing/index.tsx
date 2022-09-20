@@ -78,7 +78,7 @@ const SurveyListing = () => {
             label: 'Survey Name',
             allowSort: true,
             getValue: (row: Survey) => (
-                <MuiLink component={Link} to={`/survey/${Number(row.id)}/build`}>
+                <MuiLink component={Link} to={`/surveys/${Number(row.id)}/build`}>
                     {row.name}
                 </MuiLink>
             ),
@@ -114,7 +114,7 @@ const SurveyListing = () => {
                 }
 
                 return (
-                    <MuiLink component={Link} to={`/engagement/${row.engagement.id}/view`}>
+                    <MuiLink component={Link} to={`/engagements/${row.engagement.id}/view`}>
                         {row.engagement.name}
                     </MuiLink>
                 );
@@ -133,7 +133,7 @@ const SurveyListing = () => {
 
                 const { total, pending } = row.comments_meta_data;
                 return (
-                    <MuiLink component={Link} to={`/survey/${row.id}/comments`}>
+                    <MuiLink component={Link} to={`/surveys/${row.id}/comments`}>
                         {`${total}`}
                         {pending ? ` (${pending} New)` : ''}
                     </MuiLink>
@@ -167,7 +167,7 @@ const SurveyListing = () => {
                 }
 
                 return (
-                    <MuiLink component={Link} to={`/engagement/${Number(row.engagement.id)}/dashboard`}>
+                    <MuiLink component={Link} to={`/engagements/${Number(row.engagement.id)}/dashboard`}>
                         View Report
                     </MuiLink>
                 );
@@ -203,7 +203,7 @@ const SurveyListing = () => {
                             <SearchIcon />
                         </PrimaryButton>
                     </Stack>
-                    <PrimaryButton component={Link} to="/survey/create">
+                    <PrimaryButton component={Link} to="/surveys/create">
                         + Create Survey
                     </PrimaryButton>
                 </Stack>

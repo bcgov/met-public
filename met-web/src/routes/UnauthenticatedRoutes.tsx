@@ -11,10 +11,10 @@ const UnauthenticatedRoutes = () => {
     return (
         <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/engagement/:engagementId/view" element={<EngagementView />} />
-            <Route path="/engagement/:engagementId/dashboard" element={<EngagementDashboard />} />
-            <Route path="/engagement/:engagementId/comments" element={<EngagementComments />} />
-            <Route path="/survey/submit/:surveyId/:token" element={<SurveySubmit />} />
+            <Route path="/engagements/:engagementId/view" element={<EngagementView />} />
+            <Route path="/engagements/:engagementId/dashboard" element={<EngagementDashboard />} />
+            <Route path="/engagements/:engagementId/comments" element={<EngagementComments />} />
+            <Route path="/surveys/submit/:surveyId/:token" element={<SurveySubmit />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
     );

@@ -194,7 +194,7 @@ describe('Engagement form page tests', () => {
         fireEvent.click(settingsTabButton);
 
         expect(screen.getByText('Engagement Link')).toBeInTheDocument();
-        expect(screen.getByDisplayValue('/engagement/view/1', { exact: false })).toBeInTheDocument();
+        expect(screen.getByDisplayValue('/engagements/1/view', { exact: false })).toBeInTheDocument();
     });
 
     test('Can remove survey', async () => {

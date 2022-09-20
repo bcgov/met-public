@@ -15,7 +15,7 @@ export const CommentsBlock = () => {
     return (
         <>
             <Grid item xs={12} container direction="row" justifyContent="flex-end">
-                <Link to={'/engagement/view/' + engagement.id} style={{ color: '#1A5A96' }}>
+                <Link to={`/engagements/${engagement.id}/view`} style={{ color: '#1A5A96' }}>
                     {'<<Return to ' + engagement.name + ' Engagement'}
                 </Link>
             </Grid>
@@ -36,7 +36,7 @@ export const CommentsBlock = () => {
                             <PrimaryButton
                                 data-testid="SurveyBlock/take-me-to-survey-button"
                                 component={Link}
-                                to={`/engagement/${engagement.id}/dashboard`}
+                                to={`/engagements/${engagement.id}/dashboard`}
                             >
                                 View Report
                             </PrimaryButton>

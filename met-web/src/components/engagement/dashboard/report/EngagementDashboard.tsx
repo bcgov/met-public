@@ -60,7 +60,7 @@ export const EngagementDashboard = () => {
 
     const handleReadComments = () => {
         if (engagement.submission_status === SubmissionStatus.Closed) {
-            navigate(`/engagement/${engagement.id}/comments`);
+            navigate(`/engagements/${engagement.id}/comments`);
             return;
         }
 
@@ -86,7 +86,7 @@ export const EngagementDashboard = () => {
                 m={{ lg: '1em 8em 2em 3em', xs: '1em' }}
             >
                 <Grid item xs={12} container justifyContent="flex-end">
-                    <MuiLink component={Link} to={`/engagement/${engagement.id}/view`}>
+                    <MuiLink component={Link} to={`/engagements/${engagement.id}/view`}>
                         {`<< Return to ${engagement.name} Engagement`}
                     </MuiLink>
                 </Grid>
