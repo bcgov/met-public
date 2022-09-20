@@ -31,9 +31,23 @@ CONFIG = get_named_config('testing')
 class TestUserInfo(dict, Enum):
     """Test scenarios of user."""
 
-    user1 = {
+    user = {
         'id': 123,
         'first_name': 'System',
+    }
+
+    user_public_1 = {
+        'first_name': fake.name(),
+        'middle_name': fake.name(),
+        'last_name': fake.name(),
+        'email_id': fake.email(),
+    }
+
+    user_public_2 = {
+        'first_name': fake.name(),
+        'middle_name': fake.name(),
+        'last_name': fake.name(),
+        'email_id': fake.email(),
     }
 
 
@@ -67,6 +81,20 @@ class TestJwtClaims(dict, Enum):
         'preferred_username': fake.user_name(),
         'realm_access': {
             'roles': [
+            ]
+        }
+    }
+
+    public_user_role = {
+        'iss': CONFIG.JWT_OIDC_TEST_ISSUER,
+        'sub': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302064',
+        'given_name': fake.first_name(),
+        'family_name': fake.last_name(),
+        'preferred_username': fake.user_name(),
+        'email': fake.email(),
+        'realm_access': {
+            'roles': [
+                'public_user'
             ]
         }
     }

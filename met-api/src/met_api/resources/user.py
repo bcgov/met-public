@@ -43,9 +43,9 @@ class User(Resource):
         try:
             user_data = TokenInfo.get_user_data()
             user_schema = UserSchema().load(user_data)
-            result = UserService().create_or_update_user(user_schema)
-            user_schema['id'] = result.identifier
-            return ActionResult.success(result.identifier, user_schema)
+            user = UserService().create_or_update_user(user_schema)
+            user_schema['id'] = user.id
+            return ActionResult.success(user.id, user_schema)
         except KeyError as err:
             return ActionResult.error(str(err))
         except ValueError as err:

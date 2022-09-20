@@ -22,7 +22,7 @@ from tests.utilities.factory_scenarios import TestEngagemntInfo, TestUserInfo
 
 def test_create_engagement(session):  # pylint:disable=unused-argument
     """Assert that an Org can be created."""
-    user_id = TestUserInfo.user1['id']
+    user_id = TestUserInfo.user['id']
     engagement_data = TestEngagemntInfo.engagement1
     saved_engagament = EngagementService().create_engagement(engagement_data)
     # fetch the engagement with id and assert

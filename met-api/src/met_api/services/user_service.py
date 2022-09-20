@@ -7,15 +7,6 @@ from met_api.schemas.user import UserSchema
 class UserService:
     """User management service."""
 
-    otherdateformat = '%Y-%m-%d'
-
-    @staticmethod
-    def get_user(_id):
-        """Get user by id."""
-        user = UserSchema()
-        db_user = User.get_user(_id)
-        return user.dump(db_user)
-
     @staticmethod
     def get_user_by_external_id(_external_id):
         """Get user by external id."""
@@ -58,7 +49,7 @@ class UserService:
     @staticmethod
     def validate_fields(data: UserSchema):
         """Validate all fields."""
-        empty_fields = [not data[field] for field in [
+        empty_fields = [not data.get(field, None) for field in [
             'first_name',
             'last_name',
             'email_id',
