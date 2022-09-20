@@ -10,7 +10,7 @@ import { getEngagement } from 'services/engagementService';
 import { getErrorMessage } from 'utils';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
-import CommentInfoModal from './CommentInfoModal';
+import { openNotificationModal } from 'services/modalService/modalSlice';
 
 export type EngagementParams = {
     engagementId: string;
@@ -24,7 +24,6 @@ export const EngagementDashboard = () => {
 
     const [engagement, setEngagement] = useState<Engagement>(createDefaultEngagement());
     const [isEngagementLoading, setEngagementLoading] = useState(true);
-    const [commentInfoModalIsOpen, setCommentInfoModalIsOpen] = useState(false);
 
     const failIfInvalidEngagement = (engagementToValidate: Engagement) => {
         // submission status e.g. of pending or draft will have id less than of Open
@@ -64,7 +63,18 @@ export const EngagementDashboard = () => {
             return;
         }
 
-        setCommentInfoModalIsOpen(true);
+        dispatch(
+            openNotificationModal({
+                open: true,
+                data: {
+                    header: 'View Comments',
+                    subText: [
+                        'The comments will only be available to view after the engagement period is over and the engagement is closed.',
+                    ],
+                },
+                type: 'update',
+            }),
+        );
     };
 
     if (isEngagementLoading) {
@@ -128,10 +138,6 @@ export const EngagementDashboard = () => {
                     </MetPaper>
                 </Grid>
             </Grid>
-            <CommentInfoModal
-                modalOpen={commentInfoModalIsOpen}
-                handleCloseModal={() => setCommentInfoModalIsOpen(false)}
-            />
         </Grid>
     );
 };

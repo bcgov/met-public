@@ -7,9 +7,10 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { unlinkSurvey } from 'services/surveyService/form';
+import { openNotificationModal } from 'services/modalService/modalSlice';
 
 export const AddSurveyBlock = () => {
-    const { savedEngagement, fetchEngagement, handleOpenModal, handleCloseModal } = useContext(ActionContext);
+    const { savedEngagement, fetchEngagement } = useContext(ActionContext);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
@@ -62,12 +63,22 @@ export const AddSurveyBlock = () => {
     };
 
     const handleDeleteClick = (surveyId: number, surveyName: string) => {
-        handleOpenModal({
-            handleConfirm: () => {
-                handleCloseModal();
-                handleRemoveSurvey(surveyId, surveyName);
-            },
-        });
+        dispatch(
+            openNotificationModal({
+                open: true,
+                data: {
+                    header: 'Remove Survey',
+                    subText: [
+                        'You will be removing this survey from the engagement. This survey will not be deleted and will be available to add to any engagement.',
+                        'Do you want to remove this survey?',
+                    ],
+                    handleConfirm: () => {
+                        handleRemoveSurvey(surveyId, surveyName);
+                    },
+                },
+                type: 'confirm',
+            }),
+        );
     };
 
     return (
