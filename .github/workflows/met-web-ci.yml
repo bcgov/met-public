@@ -63,11 +63,11 @@ jobs:
           npm test -- --coverage
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
-        verbose: true
         with:
           flags: metweb
           name: codecov-met-web
           fail_ci_if_error: true    
+          verbose: true
 
   build-check:
     needs: setup-job
