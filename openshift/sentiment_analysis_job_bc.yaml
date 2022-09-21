@@ -31,10 +31,10 @@ objects:
       type: Docker
       dockerStrategy:
         env:
-          - name: FORMIO_SOURCE_REPO_URL
-            value: ${FORMIO_SOURCE_REPO_URL}
-          - name: FORMIO_SOURCE_REPO_BRANCH
-            value: ${FORMIO_SOURCE_REPO_BRANCH}
+          - name: SOURCE_REPO_URL
+            value: ${SOURCE_REPO_URL}
+          - name: SOURCE_REPO_BRANCH
+            value: ${SOURCE_REPO_BRANCH}
         buildArgs:
           - name: "MODEL_ID"
             value: ${MODEL_ID}
@@ -88,12 +88,12 @@ parameters:
   description: Docker cred secret name
   required: true
   value: 
-- name: FORMIO_SOURCE_REPO_URL
-  displayName: formsflow source
-  description: formsflow source repo
+- name: SOURCE_REPO_URL
+  displayName: source
+  description: source repo
   required: false
   value: 
-- name: FORMIO_SOURCE_REPO_BRANCH
+- name: SOURCE_REPO_BRANCH
   displayName: Repo Branch name
   description: Repo Branch name
   required: false
