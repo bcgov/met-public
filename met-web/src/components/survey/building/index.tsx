@@ -37,7 +37,7 @@ const SurveyFormBuilder = () => {
     }, []);
 
     useEffect(() => {
-        if (hasPublishedEngagement) {
+        if (savedEngagement && hasPublishedEngagement) {
             dispatch(
                 openNotification({
                     severity: 'warning',
@@ -45,7 +45,7 @@ const SurveyFormBuilder = () => {
                 }),
             );
         }
-    }, [hasPublishedEngagement]);
+    }, [savedEngagement]);
 
     const loadSurvey = async () => {
         if (isNaN(Number(surveyId))) {
