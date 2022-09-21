@@ -27,7 +27,7 @@ def test_create_engagement(session):  # pylint:disable=unused-argument
     saved_engagament = EngagementService().create_engagement(engagement_data)
     # fetch the engagement with id and assert
     fetched_engagement = EngagementService().get_engagement(saved_engagament.identifier, user_id)
-    print('-----fetched_engagement--', type(fetched_engagement))
+    print('-----fetched engagement--', type(fetched_engagement))
     assert fetched_engagement.get('id') == saved_engagament.identifier
     assert fetched_engagement.get('name') == engagement_data.get('name')
     assert fetched_engagement.get('description') == engagement_data.get('description')
