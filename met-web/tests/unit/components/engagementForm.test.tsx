@@ -196,6 +196,7 @@ describe('Engagement form page tests', () => {
 
         expect(screen.getByText('Engagement Link')).toBeInTheDocument();
         expect(screen.getByDisplayValue('/engagement/view/1', { exact: false })).toBeInTheDocument();
+        expect(1).toBe(1);
     });
 
     test('Remove survey triggers notification modal', async () => {
