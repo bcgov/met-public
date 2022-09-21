@@ -36,6 +36,7 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
     @classmethod
     def get_survey(cls, survey_id) -> Survey:
         """Get a survey."""
+        print("getting survey here")
         survey = db.session.query(Survey) \
             .filter(Survey.id == survey_id) \
             .first()

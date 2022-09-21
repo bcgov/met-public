@@ -24,7 +24,6 @@ class SurveySchema(Schema):
     updated_by = fields.Str(data_key='updated_by')
     updated_date = fields.Str(data_key='updated_date')
     engagement_id = fields.Str(data_key='engagement_id')
-    engagement = fields.Nested(EngagementSchema)
     comments_meta_data = fields.Method('get_comments_meta_data')
 
     def get_comments_meta_data(self, obj):
