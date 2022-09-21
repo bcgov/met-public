@@ -94,7 +94,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             const loadedSurvey = await getSurvey(Number(surveyId));
             setSavedSurvey(loadedSurvey);
             setIsSurveyLoading(false);
-            // verifyToken();
+            verifyToken();
         } catch (error) {
             dispatch(
                 openNotification({
@@ -148,7 +148,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
             window.snowplow('trackSelfDescribingEvent', {
                 schema: 'iglu:ca.bc.gov.met/submit-survey/jsonschema/1-0-0',
-                data: { survey_id: savedSurvey.id, engagement_id: savedEngagement?.id },
+                data: { survey_id: savedSurvey.id, engagement_id: savedSurvey.engagement_id },
             });
             dispatch(
                 openNotification({
@@ -156,7 +156,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                     text: 'Survey was successfully submitted',
                 }),
             );
-            navigate(`/engagement/view/${savedEngagement?.id}`, {
+            navigate(`/engagement/view/${savedSurvey.engagement_id}`, {
                 state: {
                     open: true,
                 },

@@ -24,7 +24,6 @@ const SurveySubmitWrapped = () => {
                 justifyContent={'flex-start'}
                 alignItems="flex-start"
                 m={{ lg: '0 8em 1em 3em', md: '2em', xs: '1em' }}
-                rowSpacing={2}
             >
                 <Grid item container direction="row" justifyContent="flex-end">
                     <EngagementLink />
