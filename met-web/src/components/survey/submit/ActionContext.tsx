@@ -148,7 +148,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
             window.snowplow('trackSelfDescribingEvent', {
                 schema: 'iglu:ca.bc.gov.met/submit-survey/jsonschema/1-0-0',
-                data: { survey_id: savedSurvey.id, engagement_id: savedSurvey.engagement.id },
+                data: { survey_id: savedSurvey.id, engagement_id: savedEngagement?.id },
             });
             dispatch(
                 openNotification({
@@ -156,7 +156,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                     text: 'Survey was successfully submitted',
                 }),
             );
-            navigate(`/engagement/view/${savedSurvey.engagement.id}`, {
+            navigate(`/engagement/view/${savedEngagement?.id}`, {
                 state: {
                     open: true,
                 },

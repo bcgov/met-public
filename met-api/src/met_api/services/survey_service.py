@@ -18,11 +18,7 @@ class SurveyService:
     def get(cls, survey_id):
         """Get survey by the id."""
         survey_model: SurveyModel = SurveyModel.get_survey(survey_id)
-        engagement_model: EngagementModel = EngagementModel.get_engagement(survey_model.engagement_id)
         survey = SurveySchema().dump(survey_model)
-        eng = EngagementSchema().dump(engagement_model)
-        eng['banner_url'] = ObjectStorageService.get_url(engagement_model.banner_filename)
-        survey['engagement'] = eng
         return survey
 
     @classmethod
