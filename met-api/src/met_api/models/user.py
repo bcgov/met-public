@@ -9,7 +9,6 @@ from datetime import datetime
 from sqlalchemy import func
 
 from .db import db, ma
-from .default_method_result import DefaultMethodResult
 
 
 class User(db.Model):  # pylint: disable=too-few-public-methods
@@ -38,7 +37,7 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
         return cls.query.filter(func.lower(User.external_id) == func.lower(_external_id)).first()
 
     @classmethod
-    def create_user(cls, user) -> DefaultMethodResult:
+    def create_user(cls, user) -> User:
         """Create user."""
         new_user = User(
             first_name=user.get('first_name', None),
@@ -53,28 +52,29 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
         db.session.add(new_user)
         db.session.commit()
 
-        return DefaultMethodResult(True, 'User Added', new_user.id)
+        return new_user
 
     @classmethod
-    def update_user(cls, user_id, user) -> DefaultMethodResult:
+    def update_user(cls, user_id, user_dict) -> User:
         """Update user."""
+        query = User.query.filter_by(id=user_id)
+        user: User = query.first()
+        if not user:
+            return None
+
         update_fields = dict(
-            first_name=user.get('first_name', None),
-            middle_name=user.get('middle_name', None),
-            last_name=user.get('last_name', None),
-            email_id=user.get('email_id', None),
-            contact_number=user.get('contact_number', None),
-            external_id=user.get('external_id', None),
+            first_name=user_dict.get('first_name', user.first_name),
+            middle_name=user_dict.get('middle_name', user.middle_name),
+            last_name=user_dict.get('last_name', user.last_name),
+            email_id=user_dict.get('email_id', user.last_name),
+            contact_number=user_dict.get('contact_number', user.contact_number),
+            external_id=user_dict.get('external_id', user.external_id),
             updated_date=datetime.utcnow(),
         )
-        query = User.query.filter_by(id=user_id)
-        user = query.first()
-        if not user:
-            return DefaultMethodResult(False, 'User Not Found', user_id)
 
         query.update(update_fields)
         db.session.commit()
-        return DefaultMethodResult(True, 'User Updated', user_id)
+        return user
 
 
 class UserSchema(ma.Schema):

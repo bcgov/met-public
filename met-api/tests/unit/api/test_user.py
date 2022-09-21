@@ -14,22 +14,23 @@
 
 """Tests to verify the Engagement API end-point.
 
-Test-Suite to ensure that the /Engagement endpoint is working as expected.
+Test-Suite to ensure that the /user endpoint is working as expected.
 """
-import json
 
-import pytest
-
-from tests.utilities.factory_scenarios import TestEngagemntInfo, TestJwtClaims
+from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import factory_auth_header
 
 
-@pytest.mark.parametrize('engagement_info', [TestEngagemntInfo.engagement1])
-def test_add_engagements(client, jwt, session, engagement_info):  # pylint:disable=unused-argument
-    """Assert that an engagement can be POSTed."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
-    rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
-                     headers=headers, content_type='application/json')
+def test_create_user(client, jwt, session, ):  # pylint:disable=unused-argument
+    """Assert that an user can be POSTed."""
+    claims = TestJwtClaims.public_user_role
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.put('/api/user/',
+                    headers=headers, content_type='application/json')
     assert rv.status_code == 200
-    assert rv.json.get('status') is True
     print(rv.json)
+    assert rv.json.get('status') is True
+    assert rv.json.get('id') is not None
+    assert rv.json.get('message') == ''
+    assert rv.json.get('result').get('email_id') == claims.get('email')
+    assert rv.json.get('result').get('external_id') == claims.get('sub')
