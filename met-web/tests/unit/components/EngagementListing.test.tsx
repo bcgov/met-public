@@ -78,7 +78,7 @@ describe('Engagement form page tests', () => {
         setupEnv();
     });
 
-    test('Engagement table is rendered and engagements are fetched', async () => {
+    test('Engagement  table is rendered and engagements are fetched', async () => {
         getEngagementMock.mockReturnValue(
             Promise.resolve({
                 items: [mockEngagementOne, mockEngagementTwo],

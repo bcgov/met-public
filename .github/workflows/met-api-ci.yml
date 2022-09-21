@@ -106,6 +106,7 @@ jobs:
           flags: metapi
           name: codecov-met-api
           fail_ci_if_error: true    
+          verbose: true
 
   build-check:
     needs: setup-job
