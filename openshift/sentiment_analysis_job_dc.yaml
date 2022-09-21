@@ -3,7 +3,7 @@ kind: Template
 apiVersion: v1
 metadata:
   annotations:
-    description: Deployment template for a payment job.
+    description: Deployment template for sentiment analysis.
     tags: "${NAME}"
   name: "${NAME}-deploy"
 objects:
@@ -134,7 +134,7 @@ objects:
             valueFrom:
               configMapKeyRef:
                 key: MODEL_ID
-                name: ${FORMSFLOW_CONFIG_NAME}-config
+                name: ${CONFIG_NAME}-config
 
           resources:
             requests:
@@ -270,7 +270,7 @@ parameters:
   description: Model ID for sentiment analysis
   required: true
   value: 
-- name: FORMSFLOW_CONFIG_NAME
+- name: CONFIG_NAME
   displayName: Config for sentiment analysis
   description: Config for sentiment analysis
   required: true
