@@ -16,9 +16,6 @@
 Test suite to ensure that the Engagement service routines are working as expected.
 """
 
-from met_api.services.engagement_service import EngagementService
-from tests.utilities.factory_scenarios import TestEngagemntInfo, TestUserInfo
-
 
 def test_create_engagement(session):  # pylint:disable=unused-argument
     """Assert that an Org can be created."""
