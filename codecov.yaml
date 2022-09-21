@@ -35,6 +35,8 @@ comment:
   layout: "diff,flags,tree"
   behavior: default
   require_changes: true
+  require_head: no
+  require_base: no
 
 flags:
   metapi:
