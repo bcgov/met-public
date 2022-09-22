@@ -76,7 +76,7 @@ class TestSurveyInfo(dict, Enum):
         'name': 'My Test Survey',
         'created_by': '123',
         'updated_by': '123',
-        'form_json': {'components':[],'display':'form'},
+        'form_json': {'components': [], 'display': 'form'},
         'engagement_id': None,
     }
 
