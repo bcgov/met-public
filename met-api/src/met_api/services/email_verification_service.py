@@ -99,12 +99,11 @@ class EmailVerificationService:
         engagement_name = engagement.name
         subject = current_app.config.get('VERIFICATION_EMAIL_SUBJECT'). \
             format(engagement_name=engagement_name)
-        end_date = datetime.strptime(engagement.end_date, EmailVerificationService.date_format)
         args = {
             'engagement_name': engagement_name,
             'survey_url': f'{site_url}{survey_path}',
             'engagement_url': f'{site_url}{dashboard_path}',
-            'end_date': datetime.strftime(end_date, EmailVerificationService.full_date_format),
+            'end_date': datetime.strftime(engagement.end_date, EmailVerificationService.full_date_format),
         }
         body = template.render(
             engagement_name=args.get('engagement_name'),
