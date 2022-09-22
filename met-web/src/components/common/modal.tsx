@@ -24,7 +24,6 @@ export const NotificationModal = () => {
 
     return (
         <Modal
-            sx={{ border: '2px solid red' }}
             open={open}
             onClose={_handleClose}
             aria-labelledby="modal-modal-title"
