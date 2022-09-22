@@ -82,7 +82,7 @@ const CommentTextListing = () => {
             label: 'ID',
             allowSort: true,
             getValue: (row: Comment) => (
-                <MuiLink component={Link} to={`/survey/${Number(row.survey_id)}/comments/${row.id}/review`}>
+                <MuiLink component={Link} to={`/surveys/${Number(row.survey_id)}/comments/${row.id}/review`}>
                     {row.id}
                 </MuiLink>
             ),
@@ -163,7 +163,7 @@ const CommentTextListing = () => {
                     pageInfo={pageInfo}
                     loading={tableLoading}
                 />
-                <PrimaryButton component={Link} to={`/survey/${comments[0]?.survey_id || 0}/comments`}>
+                <PrimaryButton component={Link} to={`/surveys/${comments[0]?.survey_id || 0}/comments`}>
                     Return to Comments List
                 </PrimaryButton>
             </Grid>

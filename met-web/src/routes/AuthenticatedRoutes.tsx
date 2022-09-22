@@ -18,7 +18,7 @@ import UnderConstruction from './UnderConstruction';
 const AuthenticatedRoutes = () => {
     return (
         <Routes>
-            <Route path="/" element={<EngagementListing />} />
+            <Route path="/" element={<LandingPage />} />
             <Route path="/survey/listing" element={<SurveyListing />} />
             <Route path="/survey/create" element={<CreateSurvey />} />
             <Route path="/survey/build/:surveyId" element={<SurveyFormBuilder />} />

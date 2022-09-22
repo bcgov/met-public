@@ -63,7 +63,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     const fetchEngagement = async () => {
         if (engagementId !== 'create' && isNaN(Number(engagementId))) {
-            navigate('/engagement/form/create');
+            navigate('/engagements/create/form');
         }
 
         if (engagementId === 'create') {
