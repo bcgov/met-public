@@ -18,4 +18,5 @@ Test suite to ensure that the Engagement service routines are working as expecte
 
 
 def test_create_engagement(session):  # pylint:disable=unused-argument
+    """Assert that an engagement can be created."""
     assert 1 == 1
