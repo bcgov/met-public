@@ -10,7 +10,7 @@ import { SurveyFormProps } from '../types';
 export const SurveyForm = ({ handleClose }: SurveyFormProps) => {
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
-    const { isLoading, savedSurvey, handleSubmit, isSubmitting } = useContext(ActionContext);
+    const { isSurveyLoading, savedSurvey, handleSubmit, isSubmitting } = useContext(ActionContext);
     const [submissionData, setSubmissionData] = useState<unknown>(null);
     const [isValid, setIsValid] = useState(false);
 
@@ -19,7 +19,7 @@ export const SurveyForm = ({ handleClose }: SurveyFormProps) => {
         setIsValid(filledForm.isValid);
     };
 
-    if (isLoading) {
+    if (isSurveyLoading) {
         return <Skeleton variant="rectangular" height="50em" width="100%" />;
     }
 

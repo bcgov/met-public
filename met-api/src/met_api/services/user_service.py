@@ -39,8 +39,8 @@ class UserService:
             'contact_number': '',
             'external_id': email_address,
         }
-        create_user_result = User.create_user(new_user)
-        if not create_user_result.success:
+        user = User.create_user(new_user)
+        if not user:
             raise ValueError('Error creating user')
 
         db_user = User.get_user_by_external_id(email_address)

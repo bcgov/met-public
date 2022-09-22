@@ -13,6 +13,8 @@ import { MetHeader3, MetPageGridContainer, PrimaryButton, SecondaryButton } from
 import FormBuilderSkeleton from './FormBuilderSkeleton';
 import { FormBuilderData } from 'components/Form/types';
 import { EngagementStatus } from 'constants/engagementStatus';
+import { getEngagement } from 'services/engagementService';
+import { Engagement } from 'models/engagement';
 
 const SurveyFormBuilder = () => {
     const navigate = useNavigate();
@@ -24,9 +26,10 @@ const SurveyFormBuilder = () => {
     const [isNameFocused, setIsNamedFocused] = useState(false);
     const [name, setName] = useState(savedSurvey ? savedSurvey.name : '');
     const [isSaving, setIsSaving] = useState(false);
+    const [savedEngagement, setSavedEngagement] = useState<Engagement | null>(null);
 
-    const hasEngagement = Boolean(savedSurvey?.engagement);
-    const isEngagementDraft = savedSurvey?.engagement?.status_id === EngagementStatus.Draft;
+    const hasEngagement = Boolean(savedSurvey?.engagement_id);
+    const isEngagementDraft = savedEngagement?.status_id === EngagementStatus.Draft;
     const hasPublishedEngagement = hasEngagement && !isEngagementDraft;
 
     useEffect(() => {
@@ -34,7 +37,7 @@ const SurveyFormBuilder = () => {
     }, []);
 
     useEffect(() => {
-        if (hasPublishedEngagement) {
+        if (savedEngagement && hasPublishedEngagement) {
             dispatch(
                 openNotification({
                     severity: 'warning',
@@ -42,7 +45,7 @@ const SurveyFormBuilder = () => {
                 }),
             );
         }
-    }, [hasPublishedEngagement]);
+    }, [savedEngagement]);
 
     const loadSurvey = async () => {
         if (isNaN(Number(surveyId))) {
@@ -59,7 +62,6 @@ const SurveyFormBuilder = () => {
             const loadedSurvey = await getSurvey(Number(surveyId));
             setSavedSurvey(loadedSurvey);
             setName(loadedSurvey.name);
-            setLoading(false);
         } catch (error) {
             dispatch(
                 openNotification({
@@ -68,6 +70,32 @@ const SurveyFormBuilder = () => {
                 }),
             );
             navigate('/surveys');
+        }
+    };
+
+    useEffect(() => {
+        if (savedSurvey) {
+            loadEngagement();
+        }
+    }, [savedSurvey]);
+    const loadEngagement = async () => {
+        if (!savedSurvey?.engagement_id) {
+            setLoading(false);
+            return;
+        }
+
+        try {
+            const loadedEngagement = await getEngagement(Number(savedSurvey.engagement_id));
+            setSavedEngagement(loadedEngagement);
+            setLoading(false);
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while loading saved engagement data',
+                }),
+            );
+            navigate('/survey/listing');
         }
     };
 

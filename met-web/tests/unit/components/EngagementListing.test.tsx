@@ -15,7 +15,7 @@ const mockSurvey = {
     ...createDefaultSurvey(),
     id: 1,
     name: 'Survey 1',
-    engagement_id: '2',
+    engagement_id: 2,
 };
 
 const mockSurveys = [mockSurvey];

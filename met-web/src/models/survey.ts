@@ -6,10 +6,12 @@ export interface Survey {
     name: string;
     responseCount: number;
     created_date: string;
-    engagement: Engagement;
+    engagement?: Engagement;
     form_json?: FormBuilderData;
     comments?: unknown;
     comments_meta_data: SurveyCommentData;
+    engagement_id: number;
+    engagement_status_id?: number;
 }
 
 export interface SurveyCommentData {
@@ -32,5 +34,6 @@ export const createDefaultSurvey = (): Survey => {
             total: 0,
             pending: 0,
         },
+        engagement_id: 0,
     };
 };
