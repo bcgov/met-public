@@ -20,12 +20,13 @@ interface MetTableHeadProps<T> {
     onRequestSort: (event: React.MouseEvent<unknown>, property: keyof T, headCellIndex: number) => void;
     order?: Order;
     orderBy?: keyof T;
+    nestedSortKey?: string | null;
     rowCount: number;
     headCells: HeadCell<T>[];
     loading: boolean;
 }
 
-function MetTableHead<T>({ order, orderBy, onRequestSort, headCells, loading }: MetTableHeadProps<T>) {
+function MetTableHead<T>({ order, orderBy, onRequestSort, headCells, loading, nestedSortKey }: MetTableHeadProps<T>) {
     const createSortHandler = (property: keyof T, headCellIndex: number) => (event: React.MouseEvent<unknown>) => {
         onRequestSort(event, property, headCellIndex);
     };
@@ -42,12 +43,14 @@ function MetTableHead<T>({ order, orderBy, onRequestSort, headCells, loading }: 
                     >
                         <TableSortLabel
                             disabled={!headCell.allowSort || loading}
-                            active={orderBy === headCell.key}
-                            direction={orderBy === headCell.key ? order : 'asc'}
+                            active={orderBy === headCell.key && nestedSortKey === headCell.nestedSortKey}
+                            direction={
+                                orderBy === headCell.key && nestedSortKey === headCell.nestedSortKey ? order : 'asc'
+                            }
                             onClick={createSortHandler(headCell.key, index)}
                         >
                             {headCell.label}
-                            {orderBy === headCell.key && (
+                            {orderBy === headCell.key && nestedSortKey === headCell.nestedSortKey && (
                                 <Box component="span" sx={visuallyHidden}>
                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                                 </Box>
@@ -80,7 +83,7 @@ function MetTable<T>({
     paginationOptions,
     pageInfo,
 }: MetTableProps<T>) {
-    const { page, size, sort_key, sort_order } = paginationOptions;
+    const { page, size, sort_key, sort_order, nested_sort_key } = paginationOptions;
     const { total } = pageInfo;
 
     const order = sort_order;
@@ -124,6 +127,7 @@ function MetTable<T>({
                             <MetTableHead
                                 order={order}
                                 orderBy={orderBy}
+                                nestedSortKey={nested_sort_key}
                                 onRequestSort={handleRequestSort}
                                 rowCount={rows.length}
                                 headCells={headCells}
