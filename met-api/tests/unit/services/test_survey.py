@@ -21,7 +21,7 @@ from tests.utilities.factory_scenarios import TestSurveyInfo
 
 
 def test_create_survey(session):  # pylint:disable=unused-argument
-    """Assert that an Org can be created."""
+    """Assert that a survey can be created."""
     survey_data = TestSurveyInfo.survey1
     saved_survey = SurveyService().create(survey_data)
     # fetch the survey with id and assert
