@@ -33,7 +33,7 @@ const mockSurveyOne = {
     ...createDefaultSurvey(),
     id: 1,
     name: 'Survey One',
-    engagement_id: '1',
+    engagement_id: 1,
     engagement: mockEngagementOne,
     created_date: '2022-09-14 00:00:00',
 };
@@ -57,7 +57,7 @@ const mockSurveyTwo = {
     ...createDefaultSurvey(),
     id: 2,
     name: 'Survey Two',
-    engagement_id: '2',
+    engagement_id: 2,
     engagement: mockEngagementTwo,
     created_date: '2022-09-15 00:00:00',
     comments_meta_data: {
