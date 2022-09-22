@@ -6,6 +6,9 @@ on:
       - main
     paths:
       - "met-web/**"
+  push:
+    branches:
+      - main    
 
 defaults:
   run:
@@ -67,6 +70,7 @@ jobs:
           flags: metweb
           name: codecov-met-web
           fail_ci_if_error: true    
+          verbose: true
 
   build-check:
     needs: setup-job
