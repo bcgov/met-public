@@ -26,9 +26,7 @@ const SurveySubmitWrapped = () => {
                 m={{ lg: '0 8em 1em 3em', md: '2em', xs: '1em' }}
             >
                 <Grid item container direction="row" justifyContent="flex-end">
-                    <MuiLink component={Link} to={`/engagements/${savedSurvey.engagement.id}/view`}>
-                        {`<< Return to ${savedSurvey.engagement.name} Engagement`}
-                    </MuiLink>
+                   <EngagementLink/>
                 </Grid>
                 <Grid item xs={12}>
                     <MetPaper elevation={2}>
