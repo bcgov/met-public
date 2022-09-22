@@ -35,7 +35,7 @@ const SurveySubmitWrapped = () => {
                                 handleClose={() => {
                                     savedSurvey.engagement?.id
                                         ? navigate(`/engagements/${savedSurvey.engagement.id}/view`)
-                                        : '';
+                                        : {};
                                 }}
                             />
                         </ConditionalComponent>
@@ -44,7 +44,7 @@ const SurveySubmitWrapped = () => {
                             handleClose={() => {
                                 savedSurvey.engagement?.id
                                     ? navigate(`/engagements/${savedSurvey.engagement.id}/view`)
-                                    : '';
+                                    : {};
                             }}
                         />
                     </MetPaper>
