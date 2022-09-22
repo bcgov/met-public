@@ -1,0 +1,31 @@
+# Copyright © 2019 Province of British Columbia
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+"""Tests for the Engagement service.
+
+Test suite to ensure that the Engagement service routines are working as expected.
+"""
+
+from met_api.services.survey_service import SurveyService
+from tests.utilities.factory_scenarios import TestSurveyInfo
+
+
+def test_create_survey(session):  # pylint:disable=unused-argument
+    """Assert that an Org can be created."""
+    survey_data = TestSurveyInfo.survey1
+    saved_survey = SurveyService().create(survey_data)
+    # fetch the survey with id and assert
+    fetched_survey = SurveyService().get(saved_survey.identifier)
+    print('-----fetched_survey--', type(fetched_survey))
+    assert fetched_survey.get('id') == saved_survey.identifier
+    assert fetched_survey.get('name') == survey_data.get('name')

@@ -69,6 +69,16 @@ class TestEngagemntInfo(dict, Enum):
         \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"'
     }
 
+class TestSurveyInfo(dict, Enum):
+    """Test scenarios of survey."""
+
+    survey1 = {
+        'name': 'My Test Survey',
+        'created_by': '123',
+        'updated_by': '123',
+        'form_json': {'components':[],'display':'form'},
+        'engagement_id': None,
+    }
 
 class TestJwtClaims(dict, Enum):
     """Test scenarios of jwt claims."""
