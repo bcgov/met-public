@@ -103,8 +103,8 @@ jobs:
       # Set codecov branch name with prefix if pull request
       - name: Sets Codecov branch name
         run: |
-          echo "CODECOV_BRANCH=PR_$github.head_ref" >> $GITHUB_ENV
-        if: startsWith(github.event_name, 'pull_request')
+          echo "CODECOV_BRANCH=PR_${{github.head_ref}}" >> $GITHUB_ENV
+        if: github.event_name == 'pull_request'
         
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
