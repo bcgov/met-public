@@ -53,17 +53,27 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+
       - name: Install dependencies
         run: |
           npm install --legacy-peer-deps
+
       - name: Test with jest
         id: test
         run: |
           npm test -- --coverage
+
+      # Set codecov branch name with prefix if pull request
+      - name: Sets Codecov branch name
+        run: |
+          echo "CODECOV_BRANCH=PR_${{github.head_ref}}" >> $GITHUB_ENV
+        if: github.event_name == 'pull_request'
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
@@ -71,6 +81,7 @@ jobs:
           name: codecov-met-web
           fail_ci_if_error: true    
           verbose: true
+          override_branch: ${{env.CODECOV_BRANCH}}
 
   build-check:
     needs: setup-job

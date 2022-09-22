@@ -19,7 +19,7 @@ jobs:
   setup-job:
     runs-on: ubuntu-20.04
 
-    #if: github.repository == 'bcgov/met-public'
+    if: github.repository == 'bcgov/met-public'
 
     steps:
       - uses: actions/checkout@v2
@@ -109,7 +109,6 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          file: ./met-api/coverage.xml
           flags: metapi
           name: codecov-met-api
           fail_ci_if_error: true   
