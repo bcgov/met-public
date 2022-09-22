@@ -7,24 +7,32 @@ import { SurveyParams } from '../types';
 import { getEmailVerification } from 'services/emailVerificationService';
 import { getSurvey } from 'services/surveyService/form';
 import { submitSurvey } from 'services/surveyService/submission';
+import { getEngagement } from 'services/engagementService';
+import { Engagement } from 'models/engagement';
 
 interface SubmitSurveyContext {
     savedSurvey: Survey;
-    isLoading: boolean;
+    isSurveyLoading: boolean;
     token?: string;
     isTokenValid: boolean;
     handleSubmit: (submissionData: unknown) => void;
     isSubmitting: boolean;
+    savedEngagement: Engagement | null;
+    isEngagementLoading: boolean;
+    loadEngagement: null | (() => void);
 }
 
 export const ActionContext = createContext<SubmitSurveyContext>({
     savedSurvey: createDefaultSurvey(),
-    isLoading: true,
+    isSurveyLoading: true,
     isTokenValid: true,
     handleSubmit: (_submissionData: unknown) => {
         return;
     },
     isSubmitting: false,
+    savedEngagement: null,
+    isEngagementLoading: true,
+    loadEngagement: null,
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
@@ -33,13 +41,101 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const { surveyId, token } = useParams<SurveyParams>();
     const [savedSurvey, setSavedSurvey] = useState<Survey>(createDefaultSurvey());
-    const [isLoading, setIsLoading] = useState(true);
+    const [isSurveyLoading, setIsSurveyLoading] = useState(true);
     const [isTokenValid, setTokenValid] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [savedEngagement, setSavedEngagement] = useState<Engagement | null>(null);
+    const [isEngagementLoading, setIsEngagementLoading] = useState(true);
+
+    const verifyToken = async () => {
+        if (isLoggedIn) {
+            setIsSurveyLoading(false);
+            return;
+        }
+
+        if (!token) {
+            navigate(`/404`);
+            return;
+        }
+
+        try {
+            const verification = await getEmailVerification(token);
+            if (!verification || verification.survey_id !== Number(surveyId)) {
+                throw new Error('verification not found or does not match survey');
+            }
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Verification token is invalid.',
+                }),
+            );
+            setTokenValid(false);
+        } finally {
+            setIsSurveyLoading(false);
+        }
+    };
 
     useEffect(() => {
         loadSurvey();
     }, []);
+    const loadSurvey = async () => {
+        if (isNaN(Number(surveyId))) {
+            navigate('/404');
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'The survey id passed was erroneous',
+                }),
+            );
+            return;
+        }
+        try {
+            const loadedSurvey = await getSurvey(Number(surveyId));
+            setSavedSurvey(loadedSurvey);
+            setIsSurveyLoading(false);
+            verifyToken();
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while loading saved survey',
+                }),
+            );
+        }
+    };
+
+    useEffect(() => {
+        if (savedSurvey?.id !== 0) {
+            loadEngagement();
+        }
+    }, [savedSurvey]);
+    const loadEngagement = async () => {
+        if (isNaN(Number(savedSurvey.engagement_id))) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'The engagement id is invalid',
+                }),
+            );
+            return;
+        }
+
+        setIsEngagementLoading(true);
+        try {
+            const loadedEngagement = await getEngagement(Number(savedSurvey.engagement_id));
+            setSavedEngagement(loadedEngagement);
+            setIsEngagementLoading(false);
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while loading saved engagement data',
+                }),
+            );
+            setIsEngagementLoading(false);
+        }
+    };
 
     const handleSubmit = async (submissionData: unknown) => {
         try {
@@ -52,7 +148,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
             window.snowplow('trackSelfDescribingEvent', {
                 schema: 'iglu:ca.bc.gov.met/submit-survey/jsonschema/1-0-0',
-                data: { survey_id: savedSurvey.id, engagement_id: savedSurvey.engagement.id },
+                data: { survey_id: savedSurvey.id, engagement_id: savedSurvey.engagement_id },
             });
             dispatch(
                 openNotification({
@@ -60,7 +156,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                     text: 'Survey was successfully submitted',
                 }),
             );
-            navigate(`/engagement/view/${savedSurvey.engagement.id}`, {
+            navigate(`/engagement/view/${savedSurvey.engagement_id}`, {
                 state: {
                     open: true,
                 },
@@ -77,67 +173,18 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
     };
 
-    const verifyToken = async () => {
-        try {
-            if (!token) {
-                navigate(`/404`);
-                return;
-            }
-            const verification = await getEmailVerification(token);
-            if (!verification || verification.survey_id !== Number(surveyId)) {
-                throw new Error('verification not found or does not match survey');
-            }
-        } catch (error) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Verification token is invalid.',
-                }),
-            );
-            setTokenValid(false);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const loadSurvey = async () => {
-        if (isNaN(Number(surveyId))) {
-            navigate('/404');
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'The survey id passed was erroneous',
-                }),
-            );
-            return;
-        }
-        try {
-            const loadedSurvey = await getSurvey(Number(surveyId));
-            setSavedSurvey(loadedSurvey);
-            if (!isLoggedIn) {
-                verifyToken();
-            } else {
-                setIsLoading(false);
-            }
-        } catch (error) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred while loading saved survey',
-                }),
-            );
-        }
-    };
-
     return (
         <ActionContext.Provider
             value={{
                 savedSurvey,
-                isLoading,
+                isSurveyLoading,
                 token,
                 isTokenValid,
                 handleSubmit,
                 isSubmitting,
+                savedEngagement,
+                isEngagementLoading,
+                loadEngagement,
             }}
         >
             {children}

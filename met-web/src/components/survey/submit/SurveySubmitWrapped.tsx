@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
-import { Grid, Link as MuiLink } from '@mui/material';
+import { Grid } from '@mui/material';
 import { SurveyBanner } from './SurveyBanner';
 import { SurveyForm } from './SurveyForm';
 import { ActionContext } from './ActionContext';
-import { Link } from 'react-router-dom';
 import { ConditionalComponent, MetPaper } from 'components/common';
 import { InvalidTokenModal } from './InvalidTokenModal';
 import { useNavigate } from 'react-router';
+import { EngagementLink } from './EngagementLink';
 
 const SurveySubmitWrapped = () => {
     const { savedSurvey, isTokenValid } = useContext(ActionContext);
@@ -24,26 +24,23 @@ const SurveySubmitWrapped = () => {
                 justifyContent={'flex-start'}
                 alignItems="flex-start"
                 m={{ lg: '0 8em 1em 3em', md: '2em', xs: '1em' }}
-                rowSpacing={2}
             >
                 <Grid item container direction="row" justifyContent="flex-end">
-                    <MuiLink component={Link} to={`/engagement/view/${savedSurvey.engagement.id}`}>
-                        {`<< Return to ${savedSurvey.engagement.name} Engagement`}
-                    </MuiLink>
+                    <EngagementLink />
                 </Grid>
                 <Grid item xs={12}>
                     <MetPaper elevation={2}>
                         <ConditionalComponent condition={isTokenValid}>
                             <SurveyForm
                                 handleClose={() => {
-                                    navigate(`/engagement/view/${savedSurvey.engagement.id}`);
+                                    navigate(`/engagement/view/${savedSurvey.engagement_id}`);
                                 }}
                             />
                         </ConditionalComponent>
                         <InvalidTokenModal
                             open={!isTokenValid}
                             handleClose={() => {
-                                navigate(`/engagement/view/${savedSurvey.engagement.id}`);
+                                navigate(`/engagement/view/${savedSurvey.engagement_id}`);
                             }}
                         />
                     </MetPaper>

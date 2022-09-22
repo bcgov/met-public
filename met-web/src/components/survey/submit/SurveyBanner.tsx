@@ -1,13 +1,41 @@
 import React, { useContext } from 'react';
-import { Skeleton } from '@mui/material';
+import { Box, Grid, IconButton, Skeleton, Stack } from '@mui/material';
 import { Banner } from 'components/engagement/banner/Banner';
 import { ActionContext } from './ActionContext';
+import ReplayIcon from '@mui/icons-material/Replay';
+import { MetHeader4 } from 'components/common';
 
 export const SurveyBanner = () => {
-    const { isLoading, savedSurvey } = useContext(ActionContext);
-    if (isLoading) {
-        return <Skeleton variant="rectangular" width="100%" height="35em" />;
+    const { isEngagementLoading, savedEngagement, loadEngagement } = useContext(ActionContext);
+
+    if (isEngagementLoading) {
+        return <Skeleton variant="rectangular" width="100%" height="38em" />;
     }
 
-    return <Banner savedEngagement={savedSurvey.engagement} />;
+    if (!savedEngagement) {
+        return (
+            <Box
+                sx={{
+                    height: '10em',
+                    backgroundColor: 'rgba(242, 242, 242)',
+                }}
+            >
+                <Grid container direction="row" justifyContent="center" alignItems="center" height="100%">
+                    <Stack direction="column" alignItems="center">
+                        <MetHeader4>Could not load banner, press to try again</MetHeader4>
+                        <IconButton
+                            color="inherit"
+                            onClick={() => {
+                                if (loadEngagement) loadEngagement();
+                            }}
+                        >
+                            <ReplayIcon />
+                        </IconButton>
+                    </Stack>
+                </Grid>
+            </Box>
+        );
+    }
+
+    return <Banner savedEngagement={savedEngagement} />;
 };
