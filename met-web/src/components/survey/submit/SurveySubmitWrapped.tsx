@@ -33,14 +33,18 @@ const SurveySubmitWrapped = () => {
                         <ConditionalComponent condition={isTokenValid}>
                             <SurveyForm
                                 handleClose={() => {
-                                    navigate(`/engagements/${savedSurvey.engagement_id}/view`);
+                                    savedSurvey.engagement?.id
+                                        ? navigate(`/engagements/${savedSurvey.engagement.id}/view`)
+                                        : '';
                                 }}
                             />
                         </ConditionalComponent>
                         <InvalidTokenModal
                             open={!isTokenValid}
                             handleClose={() => {
-                                navigate(`/engagements/${savedSurvey.engagement_id}/view`);
+                                savedSurvey.engagement?.id
+                                    ? navigate(`/engagements/${savedSurvey.engagement.id}/view`)
+                                    : '';
                             }}
                         />
                     </MetPaper>
