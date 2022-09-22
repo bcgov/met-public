@@ -50,7 +50,7 @@ const CommentReview = () => {
             await ReviewComment({ comment_id: Number(commentId), status_id: review });
             setIsSaving(false);
             dispatch(openNotification({ severity: 'success', text: 'Comment successfully reviewed.' }));
-            navigate(`/survey/${comment.survey_id}/comments`);
+            navigate(`/surveys/${comment.survey_id}/comments`);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while sending comment review.' }));
             setIsSaving(false);

@@ -71,7 +71,7 @@ export const PreviewBanner = () => {
                                         <IconButton
                                             sx={{ padding: 0, margin: 0 }}
                                             color="info"
-                                            onClick={() => navigate(`/engagement/form/${engagementId}`)}
+                                            onClick={() => navigate(`/engagements/${engagementId}/form`)}
                                             aria-label="no image"
                                         >
                                             <ImageIcon />
@@ -88,7 +88,7 @@ export const PreviewBanner = () => {
                                         <IconButton
                                             sx={{ padding: 0, margin: 0 }}
                                             color="info"
-                                            onClick={() => navigate(`/survey/create?engagementId=${engagementId}`)}
+                                            onClick={() => navigate(`/surveys/create?engagementId=${engagementId}`)}
                                             aria-label="no survey"
                                         >
                                             <PollIcon />
@@ -119,7 +119,7 @@ export const PreviewBanner = () => {
                                 backgroundColor: 'background.paper',
                                 borderRadius: '4px',
                             }}
-                            onClick={() => navigate(`/engagement/form/${engagementId}`)}
+                            onClick={() => navigate(`/engagements/${engagementId}/form`)}
                         >
                             Edit Engagement
                         </SecondaryButton>
