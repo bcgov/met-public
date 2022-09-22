@@ -11,9 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Tests for the Engagement service.
+"""Tests for the Survey service.
 
-Test suite to ensure that the Engagement service routines are working as expected.
+Test suite to ensure that the Survey service routines are working as expected.
 """
 
 from met_api.services.survey_service import SurveyService
