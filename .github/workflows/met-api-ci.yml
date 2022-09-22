@@ -6,6 +6,9 @@ on:
       - main
     paths:
       - "met-api/**"
+  push:
+    branches:
+      - main    
 
 defaults:
   run:
@@ -102,7 +105,8 @@ jobs:
           file: ./met-api/coverage.xml
           flags: metapi
           name: codecov-met-api
-          fail_ci_if_error: true    
+          fail_ci_if_error: true   
+          verbose: true 
 
   build-check:
     needs: setup-job
