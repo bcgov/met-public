@@ -30,17 +30,17 @@ const SurveySubmitWrapped = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <MetPaper elevation={2}>
-                        <ConditionalComponent condition={isTokenValid && savedSurvey.engagement}>
+                        <ConditionalComponent condition={isTokenValid && Boolean(savedSurvey.engagement)}>
                             <SurveyForm
                                 handleClose={() => {
-                                    navigate(`/engagements/${savedSurvey.engagement.id}/view`);
+                                    navigate(`/engagements/${savedSurvey.engagement?.id}/view`);
                                 }}
                             />
                         </ConditionalComponent>
                         <InvalidTokenModal
-                            open={!isTokenValid && savedSurvey.engagement}
+                            open={!isTokenValid && Boolean(savedSurvey.engagement)}
                             handleClose={() => {
-                                navigate(`/engagements/${savedSurvey.engagement.id}/view`);
+                                navigate(`/engagements/${savedSurvey.engagement?.id}/view`);
                             }}
                         />
                     </MetPaper>
