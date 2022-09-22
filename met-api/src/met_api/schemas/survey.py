@@ -16,7 +16,7 @@ class SurveySchema(Schema):
 
         unknown = EXCLUDE
 
-    id = fields.Str(data_key='id')
+    id = fields.Int(data_key='id')
     name = fields.Str(data_key='name')
     form_json = fields.Dict(data_key='form_json')
     created_by = fields.Str(data_key='created_by')
