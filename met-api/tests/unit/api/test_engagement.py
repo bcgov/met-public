@@ -20,11 +20,11 @@ import json
 
 import pytest
 
-from tests.utilities.factory_scenarios import TestEngagemntInfo, TestJwtClaims
+from tests.utilities.factory_scenarios import TestEngagementInfo, TestJwtClaims
 from tests.utilities.factory_utils import factory_auth_header
 
 
-@pytest.mark.parametrize('engagement_info', [TestEngagemntInfo.engagement1])
+@pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
 def test_add_engagements(client, jwt, session, engagement_info):  # pylint:disable=unused-argument
     """Assert that an engagement can be POSTed."""
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
@@ -32,4 +32,20 @@ def test_add_engagements(client, jwt, session, engagement_info):  # pylint:disab
                      headers=headers, content_type='application/json')
     assert rv.status_code == 200
     assert rv.json.get('status') is True
-    print(rv.json)
+
+
+@pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
+def test_get_engagements(client, jwt, session, engagement_info):  # pylint:disable=unused-argument
+    """Assert that an engagement can be POSTed."""
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+    rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
+                     headers=headers, content_type='application/json')
+    assert rv.status_code == 200
+    assert rv.json.get('status') is True
+    created_eng = rv.json
+
+    rv = client.get(f'/api/engagements/{created_eng.get("id")}', data=json.dumps(engagement_info),
+                    headers=headers, content_type='application/json')
+
+    assert created_eng.get('result').get('name') == rv.json.get('result').get('name')
+    assert created_eng.get('result').get('content') == rv.json.get('result').get('content')

@@ -43,7 +43,7 @@ class EngagementSchema(Schema):
 
     def get_submissions_meta_data(self, obj):
         """Get the meta data of the submissions made in the survey."""
-        if len(obj.surveys) == 0:
+        if not obj or len(obj.surveys) == 0:
             return {
                 'total': '0'
             }

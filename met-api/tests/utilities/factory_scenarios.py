@@ -17,11 +17,12 @@ Test Utility for creating test scenarios.
 """
 
 from enum import Enum
-import datetime
+from datetime import datetime, timedelta
 
 from faker import Faker
 
 from met_api.config import get_named_config
+from met_api.constants.engagement_status import SubmissionStatus
 
 fake = Faker()
 
@@ -51,34 +52,40 @@ class TestUserInfo(dict, Enum):
     }
 
 
-class TestEngagemntInfo(dict, Enum):
+class TestSurveyInfo(dict, Enum):
+    """Test scenarios of Survey."""
+
+    survey1 = {
+        'name': fake.name(),
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+        'created_by': '123',
+        'updated_by': '123',
+        'form_json': {'display': 'form', 'components': []}
+    }
+    survey2 = {
+        'name': fake.name(),
+        'form_json': {'display': 'form', 'components': []}
+    }
+
+
+class TestEngagementInfo(dict, Enum):
     """Test scenarios of engagement."""
 
     engagement1 = {
-        'name': 'My Test Engagement',
-        'start_date': datetime.datetime.now().strftime('%Y-%m-%d'),
-        'end_date': datetime.datetime.now().strftime('%Y-%m-%d'),
+        'name': fake.name(),
+        'start_date': (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d'),
+        'end_date': (datetime.today() + timedelta(days=1)).strftime('%Y-%m-%d'),
         'banner_url': '',
         'created_by': '123',
         'updated_by': '123',
+        'status': SubmissionStatus.Open.value,
         'description': 'My Test Engagement Description',
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\"type\":\"unstyled\",\
         \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
         'content': 'Content Sample',
         'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\"type\":\"unstyled\",\"depth\":0,\
         \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"'
-    }
-
-
-class TestSurveyInfo(dict, Enum):
-    """Test scenarios of survey."""
-
-    survey1 = {
-        'name': 'My Test Survey',
-        'created_by': '123',
-        'updated_by': '123',
-        'form_json': {'components': [], 'display': 'form'},
-        'engagement_id': None,
     }
 
 

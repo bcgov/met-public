@@ -66,7 +66,7 @@ class SurveyService:
     @staticmethod
     def validate_update_fields(data):
         """Validate all fields."""
-        empty_fields = [not data[field] for field in ['id', 'form_json']]
+        empty_fields = [not data[field] for field in ['id']]
 
         if any(empty_fields):
             raise ValueError('Some required fields are empty')
