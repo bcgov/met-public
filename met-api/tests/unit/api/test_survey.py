@@ -20,7 +20,7 @@ import json
 
 import pytest
 
-from tests.utilities.factory_scenarios import TestJwtClaims, TestSurveyInfo
+from tests.utilities.factory_scenarios import TestJwtClaims, TestSurveyInfo, TestEngagementInfo
 from tests.utilities.factory_utils import factory_auth_header
 
 
@@ -52,9 +52,40 @@ def test_put_survey(client, jwt, session, survey_info):  # pylint:disable=unused
 
     assert rv.status_code == 200
 
-    rv = client.get(f'/api/surveys/{id}', data=json.dumps(survey_info),
+    rv = client.get(f'/api/surveys/{id}',
                     headers=headers, content_type='application/json')
     assert rv.status_code == 200
     assert rv.json.get('status') is True
     assert rv.json.get('result').get('form_json') == survey_info.get('form_json')
     assert rv.json.get('result').get('name') == new_survey_name
+
+
+def test_survey_link(client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that an survey can be POSTed."""
+    survey_info = TestSurveyInfo.survey2
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+    rv = client.post('/api/surveys/', data=json.dumps(survey_info),
+                     headers=headers, content_type='application/json')
+    assert rv.status_code == 200
+    survey_id = rv.json.get('id')
+
+    engagement_info = TestEngagementInfo.engagement1
+    rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
+                     headers=headers, content_type='application/json')
+    assert rv.status_code == 200
+    eng_id = rv.json.get('id')
+
+    # assert eng id is none in GET Survey
+
+    rv = client.get(f'/api/surveys/{survey_id}',
+                    headers=headers, content_type='application/json')
+
+    assert rv.json.get('result').get('engagement_id') is None
+    # link them togother
+    rv = client.put(f'/api/surveys/{survey_id}/link/engagement/{eng_id}',
+                    headers=headers, content_type='application/json')
+
+    rv = client.get(f'/api/surveys/{survey_id}',
+                    headers=headers, content_type='application/json')
+
+    assert rv.json.get('result').get('engagement_id') == str(eng_id)
