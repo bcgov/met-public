@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Tests for the Org model.
+"""Tests for the Survey model.
 
 Test suite to ensure that the Survey model routines are working as expected.
 """
