@@ -16,8 +16,10 @@
 Test suite to ensure that the User model routines are working as expected.
 """
 
-from met_api.models.user import User as UserModel
 from faker import Faker
+
+from met_api.models.user import User as UserModel
+
 
 fake = Faker()
 

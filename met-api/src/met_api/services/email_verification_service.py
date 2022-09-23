@@ -11,7 +11,7 @@ from met_api.models import Survey as SurveyModel
 from met_api.models.email_verification import EmailVerification
 from met_api.schemas.email_verification import EmailVerificationSchema
 from met_api.services.user_service import UserService
-from met_api.utils.notification import send_email
+from met_api.utils import notification
 from met_api.utils.template import Template
 
 
@@ -78,7 +78,7 @@ class EmailVerificationService:
             survey, email_verification.get('verification_token'))
         try:
             # user hasn't been created yet.so create token using SA.
-            send_email(subject=subject, email=email_to, html_body=body, args=args, template_id=template_id)
+            notification.send_email(subject=subject, email=email_to, html_body=body, args=args, template_id=template_id)
         except Exception as exc:  # noqa: B902
             current_app.logger.error('<Notification for registration failed', exc)
             raise BusinessException(

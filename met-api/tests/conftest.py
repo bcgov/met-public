@@ -40,6 +40,12 @@ def app_request():
     return _app
 
 
+@pytest.fixture()
+def notify_mock(monkeypatch):
+    """Mock send_email."""
+    monkeypatch.setattr('met_api.utils.notification.send_email', lambda *args, **kwargs: None)
+
+
 @pytest.fixture(scope='session')
 def client(app):  # pylint: disable=redefined-outer-name
     """Return a session-wide Flask test client."""
