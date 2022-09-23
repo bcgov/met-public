@@ -64,7 +64,7 @@ def factory_survey_and_eng_model(survey_info: dict = TestSurveyInfo.survey1):
     )
     db.session.add(survey)
     db.session.commit()
-    return survey
+    return survey, eng
 
 
 def factory_engagement_model(eng_info: dict = TestEngagementInfo.engagement1, status=None):

@@ -26,7 +26,7 @@ def test_email_verification(client, jwt, session, notify_mock, ):  # pylint:disa
     """Assert that an Email can be sent."""
     claims = TestJwtClaims.public_user_role
 
-    survey = factory_survey_and_eng_model()
+    survey, eng = factory_survey_and_eng_model()
     to_dict = {
         'email_address': 'a@a.com',
         'survey_id': survey.id
