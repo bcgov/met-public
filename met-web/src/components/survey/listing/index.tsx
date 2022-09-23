@@ -192,12 +192,13 @@ const SurveyListing = () => {
                             variant="outlined"
                             label="Search by name"
                             fullWidth
+                            name="searchText"
                             value={searchText}
                             onChange={(e) => setSearchText(e.target.value)}
                             size="small"
                         />
                         <PrimaryButton
-                            data-testid="SurveyListing/search-button"
+                            data-testid="survey/listing/search-button"
                             onClick={() => handleSearchBarClick(searchText)}
                         >
                             <SearchIcon />
