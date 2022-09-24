@@ -16,7 +16,6 @@
 
 Test-Suite to ensure that the UserService is working as expected.
 """
-from http import HTTPStatus
 from unittest.mock import patch
 
 import pytest
