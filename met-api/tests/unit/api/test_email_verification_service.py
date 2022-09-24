@@ -31,8 +31,7 @@ def test_email_verification(client, jwt, session, notify_mock, ):  # pylint:disa
         'email_address': 'a@a.com',
         'survey_id': survey.id
     }
-    headers = factory_auth_header(jwt=jwt, claims=claims,
-                                  )
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/email_verification/', data=json.dumps(to_dict),
                      headers=headers, content_type='application/json')
 
