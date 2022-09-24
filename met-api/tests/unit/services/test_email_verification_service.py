@@ -16,10 +16,13 @@
 
 Test-Suite to ensure that the UserService is working as expected.
 """
+from http import HTTPStatus
 from unittest.mock import patch
 
+import pytest
 from faker import Faker
 
+from met_api.exceptions.business_exception import BusinessException
 from met_api.services.email_verification_service import EmailVerificationService
 from met_api.utils import notification
 from tests.utilities.factory_utils import factory_survey_and_eng_model
@@ -43,3 +46,17 @@ def test_create_email_verification(client, jwt, session, ):  # pylint:disable=un
         assert actual_data.get('email') == email
         assert str(eng.id) in actual_data.get('html_body'), 'engagement id will be in the email link'
         assert actual_data.get('args').get('engagement_name') == eng.name
+
+
+def test_create_email_verification_exception(client, jwt, session, ):  # pylint:disable=unused-argument
+    """Assert that an email verification can be Created."""
+    survey, eng = factory_survey_and_eng_model()
+    email = fake.email()
+    to_dict = {
+        'email_address': email,
+        'survey_id': survey.id
+    }
+    with pytest.raises(BusinessException) as exception:
+        with patch.object(notification, 'send_email', side_effect=Exception('mocked error')):
+            EmailVerificationService().create(to_dict)
+    assert exception.type == BusinessException
