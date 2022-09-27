@@ -24,6 +24,7 @@ from met_api.services.engagement_service import EngagementService
 from met_api.utils.action_result import ActionResult
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
+from marshmallow import ValidationError
 
 
 API = Namespace('engagements', description='Endpoints for Engagements Management')
@@ -55,7 +56,7 @@ class Engagement(Resource):
             return ActionResult.error(str(err))
 
 
-@cors_preflight('GET, POST, PUT, OPTIONS')
+@cors_preflight('GET, POST, PUT, PATCH, OPTIONS')
 @API.route('/')
 class Engagements(Resource):
     """Resource for managing engagements."""
@@ -106,6 +107,8 @@ class Engagements(Resource):
             return ActionResult.error(str(err))
         except ValueError as err:
             return ActionResult.error(str(err))
+        except ValidationError as err:
+            return ActionResult.error(str(err.messages))
 
     @staticmethod
     # @TRACER.trace()
@@ -124,3 +127,28 @@ class Engagements(Resource):
             return ActionResult.error(str(err))
         except ValueError as err:
             return ActionResult.error(str(err))
+        except ValidationError as err:
+            return ActionResult.error(str(err.messages))
+
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def patch():
+        """Partially update saved engagement."""
+        try:
+            requestjson = request.get_json()
+            user_id = TokenInfo.get_id()
+            requestjson['updated_by'] = user_id
+
+            EngagementSchema().load(requestjson)
+
+            result = EngagementService().edit_engagement(requestjson)
+
+            return ActionResult.success(result.identifier, requestjson)
+        except KeyError as err:
+            return ActionResult.error(str(err))
+        except ValueError as err:
+            return ActionResult.error(str(err))
+        except ValidationError as err:
+            return ActionResult.error(str(err.messages))

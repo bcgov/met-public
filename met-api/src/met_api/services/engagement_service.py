@@ -75,9 +75,13 @@ class EngagementService:
         return EngagementModel.create_engagement(data)
 
     def update_engagement(self, data: EngagementSchema):
-        """Update all engagement."""
+        """Update engagement."""
         self.validate_fields(data)
         return EngagementModel.update_engagement(data)
+
+    def edit_engagement(self, data: dict):
+        """Partially update engagement."""
+        return EngagementModel.edit_engagement(data)
 
     @staticmethod
     def validate_fields(data):

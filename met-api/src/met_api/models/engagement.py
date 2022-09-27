@@ -142,6 +142,19 @@ class Engagement(db.Model):
         return DefaultMethodResult(True, 'Engagement Updated', engagement_id)
 
     @classmethod
+    def edit_engagement(cls, engagement_data: dict) -> DefaultMethodResult:
+        """Update engagement."""
+        engagement_id = engagement_data.get('id', None)
+        query = Engagement.query.filter_by(id=engagement_id)
+        record: Engagement = query.first()
+        if not record:
+            return DefaultMethodResult(False, 'Engagement Not Found', engagement_id)
+
+        query.update(engagement_data)
+        db.session.commit()
+        return DefaultMethodResult(True, 'Engagement Updated', engagement_id)
+
+    @classmethod
     def close_engagements_due(cls) -> List[EngagementSchema]:
         """Update engagement to closed."""
         now = local_datetime()

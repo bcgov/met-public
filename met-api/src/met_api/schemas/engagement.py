@@ -4,7 +4,7 @@ Manages the engagement
 """
 
 from datetime import datetime
-from marshmallow import EXCLUDE, Schema, fields
+from marshmallow import EXCLUDE, Schema, fields, validates_schema, ValidationError
 
 from met_api.constants.engagement_status import Status, SubmissionStatus
 from met_api.schemas.engagement_survey import EngagementSurveySchema
@@ -22,19 +22,19 @@ class EngagementSchema(Schema):
         unknown = EXCLUDE
 
     id = fields.Int(data_key='id')
-    name = fields.Str(data_key='name')
-    description = fields.Str(data_key='description')
-    rich_description = fields.Str(data_key='rich_description')
-    start_date = fields.Date(data_key='start_date')
-    end_date = fields.Date(data_key='end_date')
+    name = fields.Str(data_key='name', required=True)
+    description = fields.Str(data_key='description', required=True)
+    rich_description = fields.Str(data_key='rich_description', required=True)
+    start_date = fields.Date(data_key='start_date', required=True)
+    end_date = fields.Date(data_key='end_date', required=True)
     status_id = fields.Int(data_key='status_id')
     created_by = fields.Str(data_key='created_by')
     created_date = fields.Str(data_key='created_date')
     updated_by = fields.Str(data_key='updated_by')
     updated_date = fields.Str(data_key='updated_date')
     published_date = fields.Str(data_key='published_date')
-    content = fields.Str(data_key='content')
-    rich_content = fields.Str(data_key='rich_content')
+    content = fields.Str(data_key='content', required=True)
+    rich_content = fields.Str(data_key='rich_content', required=True)
     banner_filename = fields.Str(data_key='banner_filename')
     engagement_status = fields.Nested(EngagementStatusSchema)
     surveys = fields.List(fields.Nested(EngagementSurveySchema))
@@ -70,3 +70,8 @@ class EngagementSchema(Schema):
             return SubmissionStatus.Upcoming.value
 
         return SubmissionStatus.Closed.value
+
+    @validates_schema
+    def validate_numbers(self, data, **kwargs):
+        if data["start_date"] > data["end_date"]:
+            raise ValidationError("Start date cannot be after End date")
