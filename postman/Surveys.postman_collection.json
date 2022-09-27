@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "Create Surveys",
+			"name": "Create Survey",
 			"event": [
 				{
 					"listen": "test",
@@ -25,10 +25,11 @@
 							"    pm.response.to.have.header('Content-Type', 'application/json');\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Returns name objects containing name\", () => {\r",
-							"    var jsonData = pm.response.json()\r",
+							"pm.test(\"Returns Survey Data\", () => {\r",
+							"    var jsonData = pm.response.json().result\r",
+							"    console.log(jsonData)\r",
 							"    pm.expect(jsonData.name).to.exist\r",
-							"\r",
+							"    pm.expect(jsonData.form_json).to.exist\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -75,7 +76,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n            \"id\": 10,\r\n            \"name\": \"postman\",\r\n            \"form_json\": \"\",\r\n            \"created_date\": \"2022-09-23\",\r\n            \"updated_date\": \"2022-09-23\",\r\n            \"created_by\": \"David\",\r\n            \"updated_by\": \"David\",\r\n            \"engagement_id\": \"1\",\r\n            \"comments\": \"\",\r\n            \"submissions\": \"\"\r\n}",
+					"raw": "{\r\n    \"name\": \"PostMan Survey\",\r\n    \"form_json\": {\r\n        \"display\": \"form\",\r\n        \"components\": []\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -83,14 +84,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{API_URL}}/api/surveys/create",
+					"raw": "{{API_URL}}/api/surveys/",
 					"host": [
 						"{{API_URL}}"
 					],
 					"path": [
 						"api",
 						"surveys",
-						"create"
+						""
 					]
 				}
 			},
