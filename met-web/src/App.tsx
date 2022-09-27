@@ -12,6 +12,7 @@ import AuthenticatedRoutes from './routes/AuthenticatedRoutes';
 import { Notification } from 'components/common/notification';
 import PageViewTracker from 'routes/PageViewTracker';
 import { NotificationModal } from 'components/common/modal';
+import { FeedbackModal } from 'components/common/Modals/FeedbackModal';
 
 const App = () => {
     const drawerWidth = 240;
@@ -36,6 +37,7 @@ const App = () => {
                 <NotificationModal />
                 <LoggedOutHeader />
                 <UnauthenticatedRoutes />
+                <FeedbackModal />
             </Router>
         );
     }
