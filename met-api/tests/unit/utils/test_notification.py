@@ -22,7 +22,8 @@ import pytest
 from met_api.utils import notification
 
 
-@pytest.mark.parametrize('test_input_email,expected', [('helo@gw.com', True), ('helo', False), (None, False), ('', False)])
+@pytest.mark.parametrize('test_input_email,expected',
+                         [('helo@gw.com', True), ('helo', False), (None, False), ('', False)])
 def test_is_valid_email(test_input_email, expected):
     """Assert that the valid email method works well.."""
     assert notification.is_valid_email(test_input_email) == expected
