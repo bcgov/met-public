@@ -1,0 +1,286 @@
+{
+	"info": {
+		"_postman_id": "8b8d4be3-8149-48c7-a9c3-9fbea87894f1",
+		"name": "Engagements",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23501006"
+	},
+	"item": [
+		{
+			"name": "GET Engagements",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response time is less than 10000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(10000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('should return JSON', function () {\r",
+							"    pm.response.to.have.header('Content-Type', 'application/json');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Validate Engagement JSON Data\", () => {\r",
+							"    var jsonData = pm.response.json().result;\r",
+							"    console.log(jsonData);\r",
+							"    for (var i=0; i<jsonData.items.length; i++) {\r",
+							"        pm.expect(jsonData.items[i].legalName).to.exist\r",
+							"           pm.expect(jsonData.id).to.exist\r",
+							"    pm.expect(jsonData.name).to.exist\r",
+							"    pm.expect(jsonData.banner_filename).to.exist\r",
+							"    pm.expect(jsonData.created_by).to.exist\r",
+							"    pm.expect(jsonData.created_date).to.exist\r",
+							"    pm.expect(jsonData.updated_date).to.exist\r",
+							"    pm.expect(jsonData.content).to.exist\r",
+							"    pm.expect(jsonData.rich_description).to.exist\r",
+							"    pm.expect(jsonData.description).to.exist\r",
+							"    }\r",
+							" \r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/api/engagements",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"api",
+						"engagements"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1",
+							"description": "What page number it is on",
+							"disabled": true
+						},
+						{
+							"key": "size",
+							"value": "10",
+							"description": "How many results",
+							"disabled": true
+						},
+						{
+							"key": "sort_key",
+							"value": "name",
+							"description": "Sort key",
+							"disabled": true
+						},
+						{
+							"key": "search_text",
+							"value": " ",
+							"description": "name to filter by",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Engagement",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response time is less than 10000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(10000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('should return JSON', function () {\r",
+							"    pm.response.to.have.header('Content-Type', 'application/json');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Validate Engagement JSON Data\", () => {\r",
+							"    var jsonData = pm.response.json().result;\r",
+							"    pm.expect(jsonData.id).to.exist\r",
+							"    pm.expect(jsonData.name).to.exist\r",
+							"    pm.expect(jsonData.banner_filename).to.exist\r",
+							"    pm.expect(jsonData.created_by).to.exist\r",
+							"    pm.expect(jsonData.created_date).to.exist\r",
+							"    pm.expect(jsonData.published_date).to.exist\r",
+							"    pm.expect(jsonData.content).to.exist\r",
+							"    pm.expect(jsonData.rich_description).to.exist\r",
+							"    pm.expect(jsonData.description).to.exist\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "clientId",
+							"value": "met-web",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/token",
+							"type": "string"
+						},
+						{
+							"key": "authUrl",
+							"value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/auth",
+							"type": "string"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "https://met-web-dev.apps.gold.devops.gov.bc.ca/",
+							"type": "string"
+						},
+						{
+							"key": "tokenName",
+							"value": "met",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n            \"id\": 10,\r\n            \"name\": \"postman\",\r\n            \"description\": \"test\",\r\n            \"rich_description\": \"postman is cool\",\r\n            \"start_date\": \"2022-09-23\",\r\n            \"end_date\": \"2022-09-23\",\r\n            \"status_id\": 1,\r\n            \"created_by\": \"David\",\r\n            \"created_date\": \"2022-09-23\",\r\n            \"updated_by\": \"\",\r\n            \"updated_date\": \"2022-09-23\",\r\n            \"published_date\": \"\",\r\n            \"banner_filename\": \"\",\r\n            \"content\": \"content\",\r\n            \"rich_content\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/api/engagements/",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"api",
+						"engagements",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Engagement",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response time is less than 10000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(10000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('should return JSON', function () {\r",
+							"    pm.response.to.have.header('Content-Type', 'application/json');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Validate Engagement JSON Data\", () => {\r",
+							"    var jsonData = pm.response.json().result;\r",
+							"    console.log(jsonData);\r",
+							"    pm.expect(jsonData.id).to.exist\r",
+							"    pm.expect(jsonData.name).to.exist\r",
+							"    pm.expect(jsonData.banner_filename).to.exist\r",
+							"    pm.expect(jsonData.created_by).to.exist\r",
+							"    pm.expect(jsonData.created_date).to.exist\r",
+							"    pm.expect(jsonData.published_date).to.exist\r",
+							"    pm.expect(jsonData.content).to.exist\r",
+							"    pm.expect(jsonData.rich_description).to.exist\r",
+							"    pm.expect(jsonData.description).to.exist\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"followAuthorizationHeader": false
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/api/engagements/{{ENGAGEMENT_ID}}",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"api",
+						"engagements",
+						"{{ENGAGEMENT_ID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "ENGAGEMENT_ID",
+			"value": "4",
+			"type": "string"
+		}
+	]
+}

@@ -1,0 +1,251 @@
+{
+	"info": {
+		"_postman_id": "53ee5bc5-1964-417b-ae5c-6e35a67ed4ec",
+		"name": "Surveys",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23501006"
+	},
+	"item": [
+		{
+			"name": "Create Survey",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response time is less than 10000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(10000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('should return JSON', function () {\r",
+							"    pm.response.to.have.header('Content-Type', 'application/json');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Returns Survey Data\", () => {\r",
+							"    var jsonData = pm.response.json().result\r",
+							"    console.log(jsonData)\r",
+							"    pm.expect(jsonData.name).to.exist\r",
+							"    pm.expect(jsonData.form_json).to.exist\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "clientId",
+							"value": "met-web",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/token",
+							"type": "string"
+						},
+						{
+							"key": "authUrl",
+							"value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/auth",
+							"type": "string"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "https://met-web-dev.apps.gold.devops.gov.bc.ca/",
+							"type": "string"
+						},
+						{
+							"key": "tokenName",
+							"value": "met",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"PostMan Survey\",\r\n    \"form_json\": {\r\n        \"display\": \"form\",\r\n        \"components\": []\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/api/surveys/",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"api",
+						"surveys",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Surveys",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"Response time is less than 10000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(10000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('should return JSON', function () {\r",
+							"    pm.response.to.have.header('Content-Type', 'application/json');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Returns name objects containing name\", () => {\r",
+							"    var jsonData = pm.response.json()\r",
+							"    pm.expect(jsonData.names).to.exist\r",
+							"    for (var i=0; i<jsonData.names.length; i++) {\r",
+							"        pm.expect(jsonData.names[i].legalName).to.exist\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response time is less than 10000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(10000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('should return JSON', function () {\r",
+							"    pm.response.to.have.header('Content-Type', 'application/json');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Returns name objects containing name\", () => {\r",
+							"    var jsonData = pm.response.json()\r",
+							"    pm.expect(jsonData.names).to.exist\r",
+							"    for (var i=0; i<jsonData.names.length; i++) {\r",
+							"        pm.expect(jsonData.names[i].legalName).to.exist\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/api/surveys",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"api",
+						"surveys"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "size",
+							"value": "10",
+							"disabled": true
+						},
+						{
+							"key": "sort_key",
+							"value": "name",
+							"disabled": true
+						},
+						{
+							"key": "search_text",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Survey",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response time is less than 10000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(10000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('should return JSON', function () {\r",
+							"    pm.response.to.have.header('Content-Type', 'application/json');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Returns name objects containing name\", () => {\r",
+							"    var jsonData = pm.response.json()\r",
+							"    pm.expect(jsonData.names).to.exist\r",
+							"    for (var i=0; i<jsonData.names.length; i++) {\r",
+							"        pm.expect(jsonData.names[i].legalName).to.exist\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/api/surveys/{{SURVEY_ID}}",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"api",
+						"surveys",
+						"{{SURVEY_ID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "SURVEY_ID",
+			"value": "1"
+		}
+	]
+}
