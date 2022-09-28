@@ -1,7 +1,7 @@
 import { Engagement } from '../../../models/engagement';
 
 export interface EngagementContext {
-    handleCreateEngagementRequest: (_engagement: IEngagementForm) => Promise<Engagement>;
+    handleCreateEngagementRequest: (_engagement: EngagementForm) => Promise<Engagement>;
     handleUpdateEngagementRequest: (_engagement: EngagementFormUpdate) => Promise<Engagement>;
     isSaving: boolean;
     savedEngagement: Engagement;
@@ -14,7 +14,7 @@ export interface EngagementContext {
     handleCloseModal: () => void;
 }
 
-export interface IEngagementForm {
+export interface EngagementForm {
     name: string;
     description: string;
     rich_description: string;

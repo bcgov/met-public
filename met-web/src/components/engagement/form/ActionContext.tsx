@@ -3,7 +3,7 @@ import { postEngagement, getEngagement, patchEngagement } from '../../../service
 import { useNavigate, useParams } from 'react-router-dom';
 import {
     EngagementContext,
-    IEngagementForm,
+    EngagementForm,
     EngagementFormModalState,
     EngagementFormUpdate,
     EngagementParams,
@@ -18,7 +18,7 @@ import { updatedDiff } from 'deep-object-diff';
 import { PatchEngagementRequest } from 'services/engagementService/types';
 
 export const ActionContext = createContext<EngagementContext>({
-    handleCreateEngagementRequest: (_engagement: IEngagementForm): Promise<Engagement> => {
+    handleCreateEngagementRequest: (_engagement: EngagementForm): Promise<Engagement> => {
         return Promise.reject();
     },
     handleUpdateEngagementRequest: (_engagement: EngagementFormUpdate): Promise<Engagement> => {
@@ -95,7 +95,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         fetchEngagement();
     }, [engagementId]);
 
-    const handleCreateEngagementRequest = async (engagement: IEngagementForm): Promise<Engagement> => {
+    const handleCreateEngagementRequest = async (engagement: EngagementForm): Promise<Engagement> => {
         setSaving(true);
         try {
             const uploadedBannerImageFileName = await handleUploadBannerImage();
