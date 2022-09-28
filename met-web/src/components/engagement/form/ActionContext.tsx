@@ -14,6 +14,8 @@ import { saveDocument } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
 import { getErrorMessage } from 'utils';
+import { updatedDiff } from 'deep-object-diff';
+import { PatchEngagementRequest } from 'services/engagementService/types';
 
 export const ActionContext = createContext<EngagementContext>({
     handleCreateEngagementRequest: (_engagement: IEngagementForm): Promise<Engagement> => {
@@ -132,12 +134,15 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         setSaving(true);
         try {
             const uploadedBannerImageFileName = await handleUploadBannerImage();
-            const engagementEditsToPatch = {
-                id: Number(engagementId),
+            const engagementEditsToPatch = updatedDiff(savedEngagement, {
                 ...engagement,
                 banner_filename: uploadedBannerImageFileName,
-            };
-            const result = await patchEngagement(engagementEditsToPatch);
+            }) as PatchEngagementRequest;
+
+            const result = await patchEngagement({
+                ...engagementEditsToPatch,
+                id: Number(engagementId),
+            });
 
             dispatch(openNotification({ severity: 'success', text: 'Engagement Updated Successfully' }));
             setSaving(false);

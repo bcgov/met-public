@@ -22,3 +22,16 @@ export const getEditorState = (rawTextToConvert: string) => {
     const rawContentFromStore = convertFromRaw(JSON.parse(rawTextToConvert));
     return EditorState.createWithContent(rawContentFromStore);
 };
+
+export const getNewObjectWithChangedProperties = (originalObject = {}, changedObject = {}) => {
+    const filteredEntries = Object.entries(changedObject).filter(([key, value]) => {
+        //Shouldn't happend unless changedObject has properites that don't exist on originalObject
+        if (!hasKey(originalObject, key)) {
+            throw new Error(`Key ${key} not found in savedEngagement`);
+        }
+
+        return originalObject[key] !== value;
+    });
+
+    return Object.fromEntries(filteredEntries);
+};

@@ -7,8 +7,6 @@ import { formatDate } from '../../common/dateHelper';
 import ImageUpload from 'components/imageUpload';
 import { useNavigate } from 'react-router-dom';
 import { AddSurveyBlock } from './AddSurveyBlock';
-import { hasKey } from 'utils';
-import { IEngagementForm } from './types';
 
 const EngagementForm = () => {
     const {
@@ -131,19 +129,6 @@ const EngagementForm = () => {
         return engagement;
     };
 
-    const filterEngagementFormUpdateData = (engagementUpdateFormData: IEngagementForm) => {
-        const filteredEntries = Object.entries(engagementUpdateFormData).filter(([key, value]) => {
-            //shouldn't happen unless developer created a field in interface EngagementForm that doesn't exist in interface Engagement
-            if (!hasKey(savedEngagement, key)) {
-                throw new Error(`Key ${key} not found in savedEngagement`);
-            }
-
-            return savedEngagement[key] !== value;
-        });
-
-        return Object.fromEntries(filteredEntries);
-    };
-
     const handleUpdateEngagement = async () => {
         const hasErrors = validateForm();
 
@@ -151,17 +136,15 @@ const EngagementForm = () => {
             return;
         }
 
-        const filteredEngagementEdits = filterEngagementFormUpdateData({
+        const engagement = await handleUpdateEngagementRequest({
             ...engagementFormData,
             rich_description: richDescription,
             rich_content: richContent,
         });
 
-        const engagement = await handleUpdateEngagementRequest(filteredEngagementEdits);
-
         navigate(`/engagements/${engagement.id}/form`);
 
-        return engagement;
+        return savedEngagement;
     };
 
     const handleSaveEngagement = () => {
