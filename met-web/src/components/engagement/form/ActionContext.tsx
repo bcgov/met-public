@@ -82,13 +82,18 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
         try {
             const engagement = await getEngagement(Number(engagementId));
-            setSavedEngagement({ ...engagement });
-            setSavedBannerImageFileName(engagement.banner_filename);
-            setLoadingSavedEngagement(false);
+            setEngagement(engagement);
         } catch (err) {
             console.log(err);
             dispatch(openNotification({ severity: 'error', text: 'Error Fetching Engagement' }));
         }
+    };
+
+    const setEngagement = (engagement: Engagement) => {
+        setSavedEngagement({ ...engagement });
+        setSavedBannerImageFileName(engagement.banner_filename);
+        setLoadingSavedEngagement(false);
+        if (bannerImage) setBannerImage(null);
     };
 
     useEffect(() => {
@@ -139,14 +144,14 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 banner_filename: uploadedBannerImageFileName,
             }) as PatchEngagementRequest;
 
-            const result = await patchEngagement({
+            const updatedEngagement = await patchEngagement({
                 ...engagementEditsToPatch,
                 id: Number(engagementId),
             });
-
+            setEngagement(updatedEngagement);
             dispatch(openNotification({ severity: 'success', text: 'Engagement Updated Successfully' }));
             setSaving(false);
-            return Promise.resolve(result);
+            return Promise.resolve(updatedEngagement);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error Updating Engagement' }));
             setSaving(false);
