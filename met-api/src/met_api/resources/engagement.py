@@ -140,7 +140,7 @@ class Engagements(Resource):
             requestjson = request.get_json()
             user_id = TokenInfo.get_id()
             requestjson['updated_by'] = user_id
-            
+
             EngagementSchema().load(requestjson, partial=True)
             result = EngagementService().edit_engagement(requestjson)
 
