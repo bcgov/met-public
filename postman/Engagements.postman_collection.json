@@ -115,9 +115,8 @@
 							"    pm.expect(jsonData.name).to.exist\r",
 							"    pm.expect(jsonData.banner_filename).to.exist\r",
 							"    pm.expect(jsonData.created_by).to.exist\r",
-							"    pm.expect(jsonData.created_date).to.exist\r",
-							"    pm.expect(jsonData.published_date).to.exist\r",
 							"    pm.expect(jsonData.content).to.exist\r",
+							"    pm.expect(jsonData.rich_content).to.exist\r",
 							"    pm.expect(jsonData.rich_description).to.exist\r",
 							"    pm.expect(jsonData.description).to.exist\r",
 							"\r",
@@ -167,7 +166,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n            \"id\": 10,\r\n            \"name\": \"postman\",\r\n            \"description\": \"test\",\r\n            \"rich_description\": \"postman is cool\",\r\n            \"start_date\": \"2022-09-23\",\r\n            \"end_date\": \"2022-09-23\",\r\n            \"status_id\": 1,\r\n            \"created_by\": \"David\",\r\n            \"created_date\": \"2022-09-23\",\r\n            \"updated_by\": \"\",\r\n            \"updated_date\": \"2022-09-23\",\r\n            \"published_date\": \"\",\r\n            \"banner_filename\": \"\",\r\n            \"content\": \"content\",\r\n            \"rich_content\": \"\"\r\n}",
+					"raw": "{\r\n    \"name\": \"{{NAME}}\",\r\n    \"start_date\": \"{{START_DATE}}\",\r\n    \"status_id\": {{STATUS_ID}},\r\n    \"end_date\": \"{{END_DATE}}\",\r\n    \"description\": \"{{DESCRIPTION}}\",\r\n    \"rich_description\": \"{\\\"blocks\\\":[{\\\"key\\\":\\\"668ab\\\",\\\"text\\\":\\\"dsadsa\\\",\\\"type\\\":\\\"unstyled\\\",\\\"depth\\\":0,\\\"inlineStyleRanges\\\":[],\\\"entityRanges\\\":[],\\\"data\\\":{}}],\\\"entityMap\\\":{}}\",\r\n    \"content\": \"dsadsa\",\r\n    \"rich_content\": \"{\\\"blocks\\\":[{\\\"key\\\":\\\"1v676\\\",\\\"text\\\":\\\"dsadsa\\\",\\\"type\\\":\\\"unstyled\\\",\\\"depth\\\":0,\\\"inlineStyleRanges\\\":[],\\\"entityRanges\\\":[],\\\"data\\\":{}}],\\\"entityMap\\\":{}}\",\r\n    \"banner_filename\": \"{{BANNER_FILENAME}}\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -256,6 +255,16 @@
 			"response": []
 		}
 	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
 	"event": [
 		{
 			"listen": "prerequest",
@@ -278,8 +287,68 @@
 	],
 	"variable": [
 		{
-			"key": "ENGAGEMENT_ID",
-			"value": "4",
+			"key": "NAME",
+			"value": "Postman Engagement TEST!",
+			"type": "string"
+		},
+		{
+			"key": "DESCRIPTION",
+			"value": "Description",
+			"type": "string"
+		},
+		{
+			"key": "RICH_DESCRIPTION",
+			"value": "Rich Description",
+			"type": "string"
+		},
+		{
+			"key": "START_DATE",
+			"value": "2022-09-23",
+			"type": "string"
+		},
+		{
+			"key": "END_DATE",
+			"value": "2022-09-23",
+			"type": "string"
+		},
+		{
+			"key": "STATUS_ID",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "CREATED_BY",
+			"value": "David",
+			"type": "string"
+		},
+		{
+			"key": "CREATED_DATE",
+			"value": "2022-09-23",
+			"type": "string"
+		},
+		{
+			"key": "BANNER_FILENAME",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "CONTENT",
+			"value": "Content",
+			"type": "string"
+		},
+		{
+			"key": "RICH_CONTENT",
+			"value": "Rich Content",
+			"type": "string"
+		},
+		{
+			"key": "PUBLISHED_DATE",
+			"value": "2022-09-23",
+			"type": "string"
+		},
+		{
+			"key": "UPDATED_DATE",
+			"value": "2022-09-23",
 			"type": "string"
 		}
 	]

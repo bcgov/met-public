@@ -76,7 +76,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"PostMan Survey\",\r\n    \"form_json\": {\r\n        \"display\": \"form\",\r\n        \"components\": []\r\n    }\r\n}",
+					"raw": "{\r\n    \"name\": {{SURVEY_NAME}},\r\n    \"form_json\": {\r\n        \"display\": \"form\",\r\n        \"components\": []\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -242,10 +242,81 @@
 			"response": []
 		}
 	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "tokenName",
+				"value": "met",
+				"type": "string"
+			},
+			{
+				"key": "challengeAlgorithm",
+				"value": "S256",
+				"type": "string"
+			},
+			{
+				"key": "redirect_uri",
+				"value": "https://met-web-dev.apps.gold.devops.gov.bc.ca/",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "authorization_code",
+				"type": "string"
+			},
+			{
+				"key": "clientId",
+				"value": "met-web",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/auth",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "client_authentication",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/token",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
 	"variable": [
 		{
-			"key": "SURVEY_ID",
-			"value": "1"
+			"key": "SURVEY_NAME",
+			"value": "\"Postman Survey2\"",
+			"type": "string"
 		}
 	]
 }
