@@ -73,7 +73,7 @@ export const putEngagement = async (data: PutEngagementRequest): Promise<Engagem
 
 export const patchEngagement = async (data: PatchEngagementRequest): Promise<Engagement> => {
     try {
-        const response = await http.PutRequest<Engagement>(Endpoints.Engagement.UPDATE, data);
+        const response = await http.PatchRequest<Engagement>(Endpoints.Engagement.UPDATE, data);
         if (response.data.status && response.data.result) {
             return Promise.resolve(response.data.result);
         }

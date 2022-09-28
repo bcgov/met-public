@@ -7,9 +7,8 @@ import { formatDate } from '../../common/dateHelper';
 import ImageUpload from 'components/imageUpload';
 import { useNavigate } from 'react-router-dom';
 import { AddSurveyBlock } from './AddSurveyBlock';
-import { Engagement } from 'models/engagement';
 import { hasKey } from 'utils';
-import { EngagementForm } from './types';
+import { IEngagementForm } from './types';
 
 const EngagementForm = () => {
     const {
@@ -132,7 +131,7 @@ const EngagementForm = () => {
         return engagement;
     };
 
-    const filterEngagementFormUpdateData = (engagementUpdateFormData: EngagementForm) => {
+    const filterEngagementFormUpdateData = (engagementUpdateFormData: IEngagementForm) => {
         const filteredEntries = Object.entries(engagementUpdateFormData).filter(([key, value]) => {
             //shouldn't happen unless developer created a field in interface EngagementForm that doesn't exist in interface Engagement
             if (!hasKey(savedEngagement, key)) {

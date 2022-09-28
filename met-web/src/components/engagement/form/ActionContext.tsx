@@ -3,7 +3,7 @@ import { postEngagement, getEngagement, patchEngagement } from '../../../service
 import { useNavigate, useParams } from 'react-router-dom';
 import {
     EngagementContext,
-    EngagementForm,
+    IEngagementForm,
     EngagementFormModalState,
     EngagementFormUpdate,
     EngagementParams,
@@ -16,7 +16,7 @@ import { useAppDispatch } from 'hooks';
 import { getErrorMessage } from 'utils';
 
 export const ActionContext = createContext<EngagementContext>({
-    handleCreateEngagementRequest: (_engagement: EngagementForm): Promise<Engagement> => {
+    handleCreateEngagementRequest: (_engagement: IEngagementForm): Promise<Engagement> => {
         return Promise.reject();
     },
     handleUpdateEngagementRequest: (_engagement: EngagementFormUpdate): Promise<Engagement> => {
@@ -93,7 +93,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         fetchEngagement();
     }, [engagementId]);
 
-    const handleCreateEngagementRequest = async (engagement: EngagementForm): Promise<Engagement> => {
+    const handleCreateEngagementRequest = async (engagement: IEngagementForm): Promise<Engagement> => {
         setSaving(true);
         try {
             const uploadedBannerImageFileName = await handleUploadBannerImage();
@@ -132,11 +132,12 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         setSaving(true);
         try {
             const uploadedBannerImageFileName = await handleUploadBannerImage();
-            const result = await patchEngagement({
+            const engagementEditsToPatch = {
                 id: Number(engagementId),
                 ...engagement,
                 banner_filename: uploadedBannerImageFileName,
-            });
+            };
+            const result = await patchEngagement(engagementEditsToPatch);
 
             dispatch(openNotification({ severity: 'success', text: 'Engagement Updated Successfully' }));
             setSaving(false);

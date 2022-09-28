@@ -30,6 +30,15 @@ const PutRequest = <T>(url: string, data = {}) => {
     });
 };
 
+const PatchRequest = <T>(url: string, data = {}) => {
+    return axios.patch<ApiResponse<T>>(url, data, {
+        headers: {
+            'Content-type': 'application/json',
+            Authorization: `Bearer ${UserService.getToken()}`,
+        },
+    });
+};
+
 const DeleteRequest = <T>(url: string, params = {}) => {
     return axios.delete<ApiResponse<T>>(url, {
         params: params,
@@ -66,6 +75,7 @@ export default {
     GetRequest,
     PostRequest,
     PutRequest,
+    PatchRequest,
     DeleteRequest,
     OSSGetRequest,
     OSSPutRequest,
