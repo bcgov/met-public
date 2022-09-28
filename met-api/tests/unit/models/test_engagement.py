@@ -23,7 +23,6 @@ from met_api.models import Engagement as EngagementModel
 from met_api.models.pagination_options import PaginationOptions
 from tests.utilities.factory_utils import factory_engagement_model
 
-
 fake = Faker()
 
 
@@ -35,7 +34,7 @@ def test_engagement(session):
     assert eng.name == eng_existing.name
 
 
-def test_get_engagements_paginated(session):
+def test_get_engagements_paginated_name_search(session):
     """Assert that an engagement can be created and fetched."""
     eng = factory_engagement_model()
     for i in range(0, 10):
@@ -46,7 +45,6 @@ def test_get_engagements_paginated(session):
         size=None,
         sort_key='name',
         sort_order=''
-
     )
 
     # verify name search
@@ -54,19 +52,36 @@ def test_get_engagements_paginated(session):
     assert eng.name == result[0].name
     assert count == 1, 'Name search brings up only search result'
 
+
+def test_get_engagements_paginated_status_search(session):
+    """Assert that an engagement can be created and fetched."""
+    eng = factory_engagement_model()
+    for i in range(0, 10):
+        factory_engagement_model()
+    assert eng.id is not None
+    pagination_options = PaginationOptions(
+        page=None,
+        size=None,
+        sort_key='name',
+        sort_order=''
+    )
+
     # status search
     factory_engagement_model(status=SubmissionStatus.Closed.value)
     factory_engagement_model(status=SubmissionStatus.Closed.value)
-    result, count = EngagementModel.get_engagements_paginated(pagination_options, None, [SubmissionStatus.Closed.value])
+    result, count = EngagementModel.get_engagements_paginated(pagination_options, search_text=None,
+                                                              statuses=[SubmissionStatus.Closed.value])
     assert count == 2
 
-    result, count = EngagementModel.get_engagements_paginated(pagination_options, None, [SubmissionStatus.Open.value])
+    result, count = EngagementModel.get_engagements_paginated(pagination_options, search_text=None,
+                                                              statuses=[SubmissionStatus.Open.value])
     # 11 Open ones are created
     assert count == 11
     assert len(result) == 11
 
-    result, count = EngagementModel.get_engagements_paginated(pagination_options, None, [SubmissionStatus.Open.value,
-                                                                                         SubmissionStatus.Closed.value])
+    result, count = EngagementModel.get_engagements_paginated(pagination_options, search_text=None,
+                                                              statuses=[SubmissionStatus.Open.value,
+                                                                        SubmissionStatus.Closed.value])
 
     # 13 Total. Open+Closed ones are created
     assert count == 13

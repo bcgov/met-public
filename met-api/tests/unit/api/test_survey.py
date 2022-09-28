@@ -20,8 +20,8 @@ import json
 
 import pytest
 
-from tests.utilities.factory_scenarios import TestEngagementInfo, TestJwtClaims, TestSurveyInfo
-from tests.utilities.factory_utils import factory_auth_header
+from tests.utilities.factory_scenarios import TestJwtClaims, TestSurveyInfo
+from tests.utilities.factory_utils import factory_auth_header, factory_engagement_model, factory_survey_model
 
 
 @pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey2])
@@ -39,20 +39,15 @@ def test_create_survey(client, jwt, session, survey_info):  # pylint:disable=unu
 def test_put_survey(client, jwt, session, survey_info):  # pylint:disable=unused-argument
     """Assert that an survey can be POSTed."""
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
-    rv = client.post('/api/surveys/', data=json.dumps(survey_info),
-                     headers=headers, content_type='application/json')
-    assert rv.status_code == 200
-    assert rv.json.get('status') is True
-    assert rv.json.get('result').get('form_json') == survey_info.get('form_json')
-    assert rv.json.get('result').get('name') == survey_info.get('name')
-    id = str(rv.json.get('id'))
+    survey = factory_survey_model()
+    survey_id = str(survey.id)
     new_survey_name = 'new_survey_name'
-    rv = client.put('/api/surveys/', data=json.dumps({'id': id, 'name': new_survey_name}),
+    rv = client.put('/api/surveys/', data=json.dumps({'id': survey_id, 'name': new_survey_name}),
                     headers=headers, content_type='application/json')
 
     assert rv.status_code == 200
 
-    rv = client.get(f'/api/surveys/{id}',
+    rv = client.get(f'/api/surveys/{survey_id}',
                     headers=headers, content_type='application/json')
     assert rv.status_code == 200
     assert rv.json.get('status') is True
@@ -62,18 +57,12 @@ def test_put_survey(client, jwt, session, survey_info):  # pylint:disable=unused
 
 def test_survey_link(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that an survey can be POSTed."""
-    survey_info = TestSurveyInfo.survey2
+    survey = factory_survey_model()
+    survey_id = survey.id
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
-    rv = client.post('/api/surveys/', data=json.dumps(survey_info),
-                     headers=headers, content_type='application/json')
-    assert rv.status_code == 200
-    survey_id = rv.json.get('id')
 
-    engagement_info = TestEngagementInfo.engagement1
-    rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
-                     headers=headers, content_type='application/json')
-    assert rv.status_code == 200
-    eng_id = rv.json.get('id')
+    eng = factory_engagement_model()
+    eng_id = eng.id
 
     # assert eng id is none in GET Survey
 
