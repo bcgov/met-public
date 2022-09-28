@@ -79,8 +79,12 @@ class EngagementService:
         self.validate_fields(data)
         return EngagementModel.update_engagement(data)
 
-    def edit_engagement(self, data: dict):
+    @staticmethod
+    def edit_engagement(data: dict):
         """Partially update engagement."""
+        updated_engagement = EngagementModel.edit_engagement(data)
+        if not updated_engagement:
+            raise ValueError('Engagement to update was not found')
         return EngagementModel.edit_engagement(data)
 
     @staticmethod

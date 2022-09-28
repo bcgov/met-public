@@ -16,6 +16,7 @@
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
+from marshmallow import ValidationError
 
 from met_api.auth import auth
 from met_api.models.pagination_options import PaginationOptions
@@ -24,7 +25,6 @@ from met_api.services.engagement_service import EngagementService
 from met_api.utils.action_result import ActionResult
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
-from marshmallow import ValidationError
 
 
 API = Namespace('engagements', description='Endpoints for Engagements Management')
@@ -141,10 +141,11 @@ class Engagements(Resource):
             user_id = TokenInfo.get_id()
             requestjson['updated_by'] = user_id
 
-            EngagementSchema().load(requestjson, partial=True)
-            result = EngagementService().edit_engagement(requestjson)
+            engagement_schema = EngagementSchema()
+            engagement_schema.load(requestjson, partial=True)
+            engagement = EngagementService().edit_engagement(requestjson)
 
-            return ActionResult.success(result.identifier, requestjson)
+            return ActionResult.success(engagement.id, engagement_schema.dump(engagement))
         except KeyError as err:
             return ActionResult.error(str(err))
         except ValueError as err:
