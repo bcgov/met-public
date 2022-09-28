@@ -135,7 +135,7 @@ class Engagements(Resource):
     @cross_origin(origins=allowedorigins())
     @auth.require
     def patch():
-        """Partially update saved engagement."""
+        """Update saved engagement partially."""
         try:
             requestjson = request.get_json()
             user_id = TokenInfo.get_id()

@@ -5,7 +5,7 @@ Manages the engagement
 
 from __future__ import annotations
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 from sqlalchemy import asc, desc
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.sql import text
@@ -142,7 +142,7 @@ class Engagement(db.Model):
         return DefaultMethodResult(True, 'Engagement Updated', engagement_id)
 
     @classmethod
-    def edit_engagement(cls, engagement_data: dict) -> DefaultMethodResult:
+    def edit_engagement(cls, engagement_data: dict) -> Optional[Engagement]:
         """Update engagement."""
         engagement_id = engagement_data.get('id', None)
         query = Engagement.query.filter_by(id=engagement_id)

@@ -5,11 +5,9 @@ Manages the engagement
 
 from datetime import datetime
 from marshmallow import EXCLUDE, Schema, fields, validates_schema, ValidationError, validate
-
 from met_api.constants.engagement_status import Status, SubmissionStatus
 from met_api.schemas.engagement_survey import EngagementSurveySchema
 from met_api.utils.datetime import local_datetime
-
 from .engagement_status import EngagementStatusSchema
 
 
@@ -93,8 +91,9 @@ class EngagementSchema(Schema):
 
     @validates_schema
     def validate_dates(self, data, **kwargs):
+        """Validate that start date is before end date."""
         if kwargs.get('partial', False):
             return
 
-        if data.get("start_date") > data.get("end_date"):
-            raise ValidationError("From date must be before to date")
+        if data.get('start_date') > data.get('end_date'):
+            raise ValidationError('From date must be before to date')

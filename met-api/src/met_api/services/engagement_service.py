@@ -81,7 +81,7 @@ class EngagementService:
 
     @staticmethod
     def edit_engagement(data: dict):
-        """Partially update engagement."""
+        """Update engagement partially."""
         updated_engagement = EngagementModel.edit_engagement(data)
         if not updated_engagement:
             raise ValueError('Engagement to update was not found')

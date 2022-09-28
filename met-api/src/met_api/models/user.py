@@ -5,6 +5,7 @@ Manages the user
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Optional
 
 from sqlalchemy import func
 
@@ -55,7 +56,7 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
         return new_user
 
     @classmethod
-    def update_user(cls, user_id, user_dict) -> User:
+    def update_user(cls, user_id, user_dict) -> Optional[User]:
         """Update user."""
         query = User.query.filter_by(id=user_id)
         user: User = query.first()
