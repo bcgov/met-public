@@ -53,10 +53,6 @@ class SubmissionService:
     def _validate_fields(submission):
         # TODO: Validate against survey form_json
         """Validate all fields."""
-        empty_fields = [not submission[field] for field in ['submission_json', 'survey_id', 'verification_token']]
-
-        if any(empty_fields):
-            raise ValueError('Some required fields are empty')
 
         survey_id = submission.get('survey_id', None)
         survey: SurveyModel = SurveyModel.get_survey(survey_id)
