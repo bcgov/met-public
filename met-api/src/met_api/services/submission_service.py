@@ -53,7 +53,6 @@ class SubmissionService:
     def _validate_fields(submission):
         # TODO: Validate against survey form_json
         """Validate all fields."""
-
         survey_id = submission.get('survey_id', None)
         survey: SurveyModel = SurveyModel.get_survey(survey_id)
         engagement: EngagementModel = EngagementModel.get_engagement(survey.engagement_id)
