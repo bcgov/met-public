@@ -1,41 +1,44 @@
 import {
-    FormControl,
-    FormControlLabel,
+    Box,
+    Button,
     Grid,
+    IconButton,
     IconContainerProps,
     InputAdornment,
     Modal,
-    Radio,
     Rating,
     Stack,
     styled,
+    SvgIcon,
     TextField,
     Theme,
 } from '@mui/material';
 import * as React from 'react';
-import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
-import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
-import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
-import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
-import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
-import BugReportIcon from '@mui/icons-material/BugReport';
-import LightbulbIcon from '@mui/icons-material/Lightbulb';
-import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
-import CheckIcon from '@mui/icons-material/Check';
-
+import ModeCommentIcon from '@mui/icons-material/ModeComment';
+import CloseIcon from '@mui/icons-material/Close';
+import { ReactComponent as CheckIcon } from 'assets/images/check.svg';
+import { ReactComponent as ExclamationIcon } from 'assets/images/exclamation.svg';
+import { ReactComponent as LightbulbIcon } from 'assets/images/lightbulb.svg';
+import { ReactComponent as ThinkingIcon } from 'assets/images/thinking.svg';
+import { ReactComponent as VeryDissatisfiedIcon } from 'assets/images/emojiVeryDissatisfied.svg';
+import { ReactComponent as DissatisfiedIcon } from 'assets/images/emojiDissatisfied.svg';
+import { ReactComponent as NeutralIcon } from 'assets/images/emojiNeutral.svg';
+import { ReactComponent as SatisfiedIcon } from 'assets/images/emojiSatisfied.svg';
+import { ReactComponent as VerySatisfiedIcon } from 'assets/images/emojiVerySatisfied.svg';
 import { useState } from 'react';
 import { ConditionalComponent, MetBody, MetHeader3, MetHeader4, modalStyle, PrimaryButton } from '..';
 import { BaseTheme } from 'styles/Theme';
+import { createDefaultFeedback } from 'models/feedback';
 
 export const FeedbackModal = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedRating, setSelectedRating] = React.useState(0);
-    const [selectedOption, setSelectedOption] = React.useState('');
+    const [feedbackFormData, setFeedbackFormData] = useState(createDefaultFeedback());
+    const { comment, rating, commentType } = feedbackFormData;
 
     const StyledRating = styled(Rating)(({ theme }) => ({
         '& .MuiRating-iconEmpty .MuiSvgIcon-root': {
-            color: theme.palette.action.disabled,
+            opacity: '0.5',
         },
         textAlign: 'center',
     }));
@@ -46,24 +49,24 @@ export const FeedbackModal = () => {
             label: string;
         };
     } = {
-        1: {
-            icon: <SentimentVeryDissatisfiedIcon color="error" fontSize="large" sx={{ marginX: 1 }} />,
+        5: {
+            icon: <SvgIcon fontSize="large" component={VeryDissatisfiedIcon} viewBox="0 0 64 64" sx={{ marginX: 1 }} />,
             label: 'Very Dissatisfied',
         },
-        2: {
-            icon: <SentimentDissatisfiedIcon color="error" fontSize="large" sx={{ marginX: 1 }} />,
+        4: {
+            icon: <SvgIcon fontSize="large" component={DissatisfiedIcon} viewBox="0 0 64 64" sx={{ marginX: 2 }} />,
             label: 'Dissatisfied',
         },
         3: {
-            icon: <SentimentSatisfiedIcon color="warning" fontSize="large" sx={{ marginX: 1 }} />,
+            icon: <SvgIcon fontSize="large" component={NeutralIcon} viewBox="0 0 64 64" sx={{ marginX: 1 }} />,
             label: 'Neutral',
         },
-        4: {
-            icon: <SentimentSatisfiedAltIcon color="success" fontSize="large" sx={{ marginX: 1 }} />,
+        2: {
+            icon: <SvgIcon fontSize="large" component={SatisfiedIcon} viewBox="0 0 64 64" sx={{ marginX: 2 }} />,
             label: 'Satisfied',
         },
-        5: {
-            icon: <SentimentVerySatisfiedIcon color="success" fontSize="large" sx={{ marginX: 1 }} />,
+        1: {
+            icon: <SvgIcon fontSize="large" component={VerySatisfiedIcon} viewBox="0 0 64 64" sx={{ marginX: 1 }} />,
             label: 'Very Satisfied',
         },
     };
@@ -74,12 +77,12 @@ export const FeedbackModal = () => {
     }
 
     function getLabelText() {
-        if (selectedRating == 0) return;
-        return `${customIcons[selectedRating].label}`;
+        if (rating == 0) return;
+        return `${customIcons[rating].label}`;
     }
 
     function getPlaceholderText() {
-        switch (selectedOption) {
+        switch (commentType) {
             case 'Issue':
                 return 'Something does not work...';
             case 'Idea':
@@ -91,41 +94,68 @@ export const FeedbackModal = () => {
         return '';
     }
 
+    function handleRatingChanged(value: number) {
+        setFeedbackFormData({
+            ...feedbackFormData,
+            rating: rating == value ? 0 : value,
+        });
+    }
+
+    function handleCommentTypeChanged(value: string) {
+        setFeedbackFormData({
+            ...feedbackFormData,
+            commentType: commentType == value ? '' : value,
+        });
+    }
+
+    function handleCommentChanged(value: string) {
+        setFeedbackFormData({
+            ...feedbackFormData,
+            comment: value,
+        });
+    }
+
     function handleSubmit() {
+        console.log(feedbackFormData);
         setIsSubmitted(true);
     }
 
     function handleClose() {
         setIsSubmitted(false);
-        setSelectedRating(0);
-        setSelectedOption('');
+        setFeedbackFormData(createDefaultFeedback());
         setIsOpen(false);
     }
 
-    const StyledFormControlLabel = styled(FormControlLabel)(() => ({
+    const StyledButton = styled(Button)(() => ({
         borderColor: BaseTheme.palette.divider,
+        color: BaseTheme.palette.text.primary,
         borderWidth: 1,
         borderStyle: 'solid',
         borderRadius: 5,
-        padding: 1,
+        padding: 3,
+        paddingBottom: 5,
         marginRight: 2,
         marginLeft: 2,
         width: 105,
+        ':focus': {
+            borderColor: BaseTheme.palette.primary.dark,
+        },
     }));
 
     return (
         <>
             <PrimaryButton
+                data-testid="feedback-button"
                 onClick={() => setIsOpen(true)}
                 sx={{
-                    borderRadius: '24px 24px 0px 0px',
+                    borderRadius: '20px 20px 0px 0px',
                     position: 'fixed',
                     bottom: (theme: Theme) => theme.spacing(10),
-                    right: (theme: Theme) => theme.spacing(-8),
+                    right: (theme: Theme) => theme.spacing(-7),
                     transform: 'rotate(-90deg)',
                 }}
             >
-                Your Feedback
+                <ModeCommentIcon fontSize="small" sx={{ marginRight: 1 }} /> Feedback
             </PrimaryButton>
             <Modal aria-labelledby="modal-title" open={isOpen} onClose={() => handleClose()}>
                 <Grid
@@ -133,38 +163,50 @@ export const FeedbackModal = () => {
                     direction="row"
                     justifyContent="space-around"
                     alignItems="flex-start"
-                    sx={{ ...modalStyle, paddingX: 2, width: 370, borderRadius: 5 }}
+                    sx={{ ...modalStyle, paddingX: 2, width: 370 }}
                     rowSpacing={2}
                 >
                     <ConditionalComponent condition={isSubmitted}>
                         <Grid item xs={12} justifyContent="center" textAlign="center" alignItems="center">
                             <Stack justifyContent="center" textAlign="center" alignItems="center" sx={{ height: 200 }}>
-                                <CheckIcon fontSize="large" color="success" />
+                                <SvgIcon
+                                    component={CheckIcon}
+                                    fontSize="large"
+                                    viewBox="0 0 64 64"
+                                    sx={{ marginBottom: 2 }}
+                                />
                                 <MetHeader3 id="modal-title">Thank you for your feedback</MetHeader3>
                             </Stack>
                         </Grid>
                         <Grid item xs={12} display="flex" alignItems="end" justifyContent="flex-end">
-                            <PrimaryButton disabled={!selectedRating} onClick={handleClose}>
-                                Close
-                            </PrimaryButton>
+                            <PrimaryButton onClick={handleClose}>Close</PrimaryButton>
                         </Grid>
                     </ConditionalComponent>
                     <ConditionalComponent condition={!isSubmitted}>
-                        <Grid item xs={12}>
-                            <MetHeader4 id="modal-title">Send us your feedback</MetHeader4>
+                        <Grid item xs={12} display="flex">
+                            <Box flexGrow={1}>
+                                <MetHeader4 id="modal-title" data-testid="feedback-title">
+                                    Send us your feedback
+                                </MetHeader4>
+                            </Box>
+                            <Box sx={{ marginTop: -1, padding: 0 }}>
+                                <IconButton aria-label="close" onClick={handleClose} sx={{ color: 'black' }}>
+                                    <CloseIcon fontSize="small" />
+                                </IconButton>
+                            </Box>
                         </Grid>
                         <Grid item xs={12}>
                             <MetBody>How do you like our engagement platform?</MetBody>
                         </Grid>
                         <Grid item xs={12} textAlign="center">
                             <StyledRating
-                                name="simple-controlled"
-                                value={selectedRating}
+                                data-testid="rating-input"
+                                value={rating}
                                 size="large"
                                 IconContainerComponent={IconContainer}
                                 highlightSelectedOnly
                                 onChange={(event, newValue) => {
-                                    setSelectedRating(newValue!);
+                                    handleRatingChanged(newValue ?? 0);
                                 }}
                             />
                         </Grid>
@@ -174,30 +216,44 @@ export const FeedbackModal = () => {
                         <Grid item xs={12}>
                             <MetBody>What else would you like to share with us?</MetBody>
                         </Grid>
-                        <Grid item xs={12} alignItems="flex-start" justifyContent="space-around" spacing={0}>
-                            <ConditionalComponent condition={Boolean(!selectedOption)}>
-                                <StyledFormControlLabel
-                                    labelPlacement="top"
-                                    label="An Issue"
-                                    onChange={() => setSelectedOption('Issue')}
-                                    control={<Radio checkedIcon={<BugReportIcon />} icon={<BugReportIcon />} />}
-                                />
-                                <StyledFormControlLabel
-                                    labelPlacement="top"
-                                    label="An Idea"
-                                    onChange={() => setSelectedOption('Idea')}
-                                    control={<Radio checkedIcon={<LightbulbIcon />} icon={<LightbulbIcon />} />}
-                                />
-                                <StyledFormControlLabel
-                                    labelPlacement="top"
-                                    label="A Question"
-                                    onChange={() => setSelectedOption('Else')}
-                                    control={<Radio checkedIcon={<QuestionMarkIcon />} icon={<QuestionMarkIcon />} />}
-                                />
-                            </ConditionalComponent>
+                        <Grid item xs={12} alignItems="flex-start" justifyContent="space-around" sx={{ paddingTop: 1 }}>
+                            <StyledButton
+                                data-testid="comment-type-issue-button"
+                                onClick={() => handleCommentTypeChanged('Issue')}
+                                sx={{ border: commentType == 'Issue' ? '2px solid black' : '' }}
+                            >
+                                <Stack spacing={0} justifyContent="space-around" alignItems="center">
+                                    <MetBody>An Issue</MetBody>
+                                    <ConditionalComponent condition={!commentType}>
+                                        <SvgIcon component={ExclamationIcon} viewBox="0 0 64 64" fontSize="large" />
+                                    </ConditionalComponent>
+                                </Stack>
+                            </StyledButton>
+                            <StyledButton
+                                onClick={() => handleCommentTypeChanged('Idea')}
+                                sx={{ border: commentType == 'Idea' ? '2px solid black' : '' }}
+                            >
+                                <Stack spacing={0} justifyContent="space-around" alignItems="center">
+                                    <MetBody>An Idea</MetBody>
+                                    <ConditionalComponent condition={!commentType}>
+                                        <SvgIcon component={LightbulbIcon} viewBox="0 0 64 64" fontSize="large" />
+                                    </ConditionalComponent>
+                                </Stack>
+                            </StyledButton>
+                            <StyledButton
+                                onClick={() => handleCommentTypeChanged('Else')}
+                                sx={{ border: commentType == 'Else' ? '2px solid black' : '' }}
+                            >
+                                <Stack spacing={0} justifyContent="space-around" alignItems="center">
+                                    <MetBody>A Question</MetBody>
+                                    <ConditionalComponent condition={!commentType}>
+                                        <SvgIcon component={ThinkingIcon} viewBox="0 0 64 64" fontSize="large" />
+                                    </ConditionalComponent>
+                                </Stack>
+                            </StyledButton>
                         </Grid>
                         <Grid item xs={12}>
-                            <ConditionalComponent condition={Boolean(selectedOption)}>
+                            <ConditionalComponent condition={Boolean(commentType)}>
                                 <TextField
                                     InputProps={{
                                         startAdornment: (
@@ -209,58 +265,57 @@ export const FeedbackModal = () => {
                                                     color: (theme) => theme.palette.text.primary,
                                                 }}
                                             >
-                                                <ConditionalComponent condition={selectedOption === 'Issue'}>
+                                                <ConditionalComponent condition={commentType === 'Issue'}>
                                                     <Stack
                                                         spacing={0}
                                                         justifyContent="space-around"
                                                         alignItems="center"
                                                     >
-                                                        <span>An Issue</span>
-                                                        <BugReportIcon
-                                                            sx={{
-                                                                marginTop: 1,
-                                                                color: (theme) => theme.palette.text.primary,
-                                                            }}
+                                                        <MetBody>An Issue</MetBody>
+                                                        <SvgIcon
+                                                            component={ExclamationIcon}
+                                                            viewBox="0 0 64 64"
+                                                            fontSize="large"
                                                         />
                                                     </Stack>
                                                 </ConditionalComponent>
-                                                <ConditionalComponent condition={selectedOption === 'Idea'}>
+                                                <ConditionalComponent condition={commentType === 'Idea'}>
                                                     <Stack
                                                         spacing={0}
                                                         justifyContent="space-around"
                                                         alignItems="center"
                                                     >
-                                                        <span>An Idea</span>
-                                                        <LightbulbIcon
-                                                            sx={{
-                                                                marginTop: 1,
-                                                                color: (theme) => theme.palette.text.primary,
-                                                            }}
+                                                        <MetBody>An Idea</MetBody>
+                                                        <SvgIcon
+                                                            component={LightbulbIcon}
+                                                            viewBox="0 0 64 64"
+                                                            fontSize="large"
                                                         />
                                                     </Stack>
                                                 </ConditionalComponent>
-                                                <ConditionalComponent condition={selectedOption === 'Else'}>
+                                                <ConditionalComponent condition={commentType === 'Else'}>
                                                     <Stack
                                                         spacing={0}
                                                         justifyContent="space-around"
                                                         alignItems="center"
                                                     >
-                                                        <span>A Question</span>
-                                                        <QuestionMarkIcon
-                                                            sx={{
-                                                                marginTop: 1,
-                                                                color: (theme) => theme.palette.text.primary,
-                                                            }}
+                                                        <MetBody>A Question</MetBody>
+                                                        <SvgIcon
+                                                            component={ThinkingIcon}
+                                                            viewBox="0 0 64 64"
+                                                            fontSize="large"
                                                         />
                                                     </Stack>
                                                 </ConditionalComponent>
                                             </InputAdornment>
                                         ),
                                     }}
+                                    data-testid="comment-input"
                                     placeholder={getPlaceholderText()}
+                                    onChange={(event) => handleCommentChanged(event.target.value)}
+                                    value={comment}
                                     multiline
                                     rows={4}
-                                    maxRows={4}
                                     sx={{
                                         width: '100%',
                                         '& .MuiOutlinedInput-root': {
@@ -271,7 +326,11 @@ export const FeedbackModal = () => {
                             </ConditionalComponent>
                         </Grid>
                         <Grid item xs={12} display="flex" alignItems="end" justifyContent="flex-end">
-                            <PrimaryButton disabled={!selectedRating} onClick={handleSubmit}>
+                            <PrimaryButton
+                                data-testid="submit-button"
+                                disabled={Boolean(!rating || (commentType && !comment))}
+                                onClick={handleSubmit}
+                            >
                                 Submit
                             </PrimaryButton>
                         </Grid>
