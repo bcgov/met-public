@@ -1,7 +1,7 @@
 export interface Feedback {
     rating: number;
     comment: string;
-    commentType: string;
+    commentType: 'Issue' | 'Idea' | 'Else' | '';
 }
 
 export const createDefaultFeedback = (): Feedback => {

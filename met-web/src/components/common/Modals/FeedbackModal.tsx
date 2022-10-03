@@ -101,7 +101,7 @@ export const FeedbackModal = () => {
         });
     }
 
-    function handleCommentTypeChanged(value: string) {
+    function handleCommentTypeChanged(value: 'Issue' | 'Idea' | 'Else' | '') {
         setFeedbackFormData({
             ...feedbackFormData,
             commentType: commentType == value ? '' : value,
@@ -126,7 +126,7 @@ export const FeedbackModal = () => {
         setIsOpen(false);
     }
 
-    const StyledButton = styled(Button)(() => ({
+    const CommentTypeButton = styled(Button)(() => ({
         borderColor: BaseTheme.palette.divider,
         color: BaseTheme.palette.text.primary,
         borderWidth: 1,
@@ -217,7 +217,7 @@ export const FeedbackModal = () => {
                             <MetBody>What else would you like to share with us?</MetBody>
                         </Grid>
                         <Grid item xs={12} alignItems="flex-start" justifyContent="space-around" sx={{ paddingTop: 1 }}>
-                            <StyledButton
+                            <CommentTypeButton
                                 data-testid="comment-type-issue-button"
                                 onClick={() => handleCommentTypeChanged('Issue')}
                                 sx={{ border: commentType == 'Issue' ? '2px solid black' : '' }}
@@ -228,8 +228,8 @@ export const FeedbackModal = () => {
                                         <SvgIcon component={ExclamationIcon} viewBox="0 0 64 64" fontSize="large" />
                                     </ConditionalComponent>
                                 </Stack>
-                            </StyledButton>
-                            <StyledButton
+                            </CommentTypeButton>
+                            <CommentTypeButton
                                 onClick={() => handleCommentTypeChanged('Idea')}
                                 sx={{ border: commentType == 'Idea' ? '2px solid black' : '' }}
                             >
@@ -239,8 +239,8 @@ export const FeedbackModal = () => {
                                         <SvgIcon component={LightbulbIcon} viewBox="0 0 64 64" fontSize="large" />
                                     </ConditionalComponent>
                                 </Stack>
-                            </StyledButton>
-                            <StyledButton
+                            </CommentTypeButton>
+                            <CommentTypeButton
                                 onClick={() => handleCommentTypeChanged('Else')}
                                 sx={{ border: commentType == 'Else' ? '2px solid black' : '' }}
                             >
@@ -250,7 +250,7 @@ export const FeedbackModal = () => {
                                         <SvgIcon component={ThinkingIcon} viewBox="0 0 64 64" fontSize="large" />
                                     </ConditionalComponent>
                                 </Stack>
-                            </StyledButton>
+                            </CommentTypeButton>
                         </Grid>
                         <Grid item xs={12}>
                             <ConditionalComponent condition={Boolean(commentType)}>
@@ -328,7 +328,7 @@ export const FeedbackModal = () => {
                         <Grid item xs={12} display="flex" alignItems="end" justifyContent="flex-end">
                             <PrimaryButton
                                 data-testid="submit-button"
-                                disabled={Boolean(!rating || (commentType && !comment))}
+                                disabled={Boolean(!rating || (commentType !== '' && !comment))}
                                 onClick={handleSubmit}
                             >
                                 Submit
