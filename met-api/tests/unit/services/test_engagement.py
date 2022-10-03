@@ -34,6 +34,7 @@ def test_create_engagement(session):  # pylint:disable=unused-argument
     assert fetched_engagement.get('start_date')  # TODO address date format and assert
     assert fetched_engagement.get('end_date')
 
+
 def test_patch_engagement(session):  # pylint:disable=unused-argument
     """Assert that an Org can be created."""
     saved_engagament = factory_engagement_model()
@@ -41,9 +42,7 @@ def test_patch_engagement(session):  # pylint:disable=unused-argument
         'id': saved_engagament.id,
         'name': 'Updated engagement name'
     }
-    
     assert engagement_edits['name'] != saved_engagament.name
-    
     upadted_engagement = EngagementService().edit_engagement(engagement_edits)
     # fetch the engagement with id and assert
     assert upadted_engagement.name == engagement_edits['name']

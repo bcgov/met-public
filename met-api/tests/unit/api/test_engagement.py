@@ -59,7 +59,7 @@ def test_patch_engagement(client, jwt, session, engagement_info):  # pylint:disa
     engagement_id = str(engagement.id)
     new_engagement_name = 'new_engagement_name'
     rv = client.patch('/api/engagements/', data=json.dumps({'id': engagement_id, 'name': new_engagement_name}),
-                    headers=headers, content_type='application/json')
+                      headers=headers, content_type='application/json')
 
     assert rv.status_code == 200
 
