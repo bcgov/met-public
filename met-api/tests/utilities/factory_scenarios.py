@@ -18,12 +18,13 @@ Test Utility for creating test scenarios.
 
 from enum import Enum
 from datetime import datetime, timedelta
+from xml.etree.ElementTree import Comment
 
 from faker import Faker
 
 from met_api.config import get_named_config
 from met_api.constants.engagement_status import SubmissionStatus
-from met_api.models.feedback import RatingType
+from met_api.models.feedback import CommentType, RatingType
 
 fake = Faker()
 
@@ -96,7 +97,7 @@ class TestFeedbackInfo(dict, Enum):
     feedback1 = {
         'comment': 'A feedback comment',
         'rating': RatingType.Satisfied,
-        'commentType': 1,
+        'commentType': CommentType.Idea,
     }
 
 
