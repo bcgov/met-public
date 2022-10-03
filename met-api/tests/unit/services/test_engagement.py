@@ -18,6 +18,7 @@ Test suite to ensure that the Engagement service routines are working as expecte
 
 from met_api.services.engagement_service import EngagementService
 from tests.utilities.factory_scenarios import TestEngagementInfo, TestUserInfo
+from tests.utilities.factory_utils import factory_engagement_model
 
 
 def test_create_engagement(session):  # pylint:disable=unused-argument
@@ -32,3 +33,17 @@ def test_create_engagement(session):  # pylint:disable=unused-argument
     assert fetched_engagement.get('description') == engagement_data.get('description')
     assert fetched_engagement.get('start_date')  # TODO address date format and assert
     assert fetched_engagement.get('end_date')
+
+def test_patch_engagement(session):  # pylint:disable=unused-argument
+    """Assert that an Org can be created."""
+    saved_engagament = factory_engagement_model()
+    engagement_edits = {
+        'id': saved_engagament.id,
+        'name': 'Updated engagement name'
+    }
+    
+    assert engagement_edits['name'] != saved_engagament.name
+    
+    upadted_engagement = EngagementService().edit_engagement(engagement_edits)
+    # fetch the engagement with id and assert
+    assert upadted_engagement.name == engagement_edits['name']
