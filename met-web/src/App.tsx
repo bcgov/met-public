@@ -49,6 +49,7 @@ const App = () => {
                 <Container>
                     <Toolbar />
                     <AuthenticatedRoutes />
+                    <FeedbackModal />
                 </Container>
             </Router>
         );
@@ -63,6 +64,7 @@ const App = () => {
                 <Box component="main" sx={{ flexGrow: 1, width: `calc(100% - ${drawerWidth}px)`, marginTop: '17px' }}>
                     <Toolbar />
                     <AuthenticatedRoutes />
+                    <FeedbackModal />
                 </Box>
             </Box>
         </Router>
