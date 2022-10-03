@@ -2,7 +2,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
 import { setupEnv } from './setEnvVars';
-import { FeedbackModal } from 'components/common/Modals/Feedback/FeedbackModal';
+import { FeedbackModal } from 'components/common/Modals/Feedback';
 
 describe('Feedback modal tests', () => {
     beforeEach(() => {
