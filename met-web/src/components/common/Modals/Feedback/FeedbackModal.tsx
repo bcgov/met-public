@@ -1,14 +1,11 @@
 import {
     Box,
-    Button,
     Grid,
     IconButton,
     IconContainerProps,
     InputAdornment,
     Modal,
-    Rating,
     Stack,
-    styled,
     SvgIcon,
     TextField,
     Theme,
@@ -26,10 +23,10 @@ import { ReactComponent as NeutralIcon } from 'assets/images/emojiNeutral.svg';
 import { ReactComponent as SatisfiedIcon } from 'assets/images/emojiSatisfied.svg';
 import { ReactComponent as VerySatisfiedIcon } from 'assets/images/emojiVerySatisfied.svg';
 import { useState } from 'react';
-import { MetBody, MetHeader3, MetHeader4, modalStyle, PrimaryButton } from '..';
-import { BaseTheme } from 'styles/Theme';
-import { createDefaultFeedback } from 'models/feedback';
+import { MetBody, MetHeader3, MetHeader4, modalStyle, PrimaryButton } from '../..';
+import { CommentTypeEnum, createDefaultFeedback } from 'models/feedback';
 import { Else, If, Then, When } from 'react-if';
+import { CommentTypeButton, StyledRating } from '.';
 
 export const FeedbackModal = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -37,15 +34,8 @@ export const FeedbackModal = () => {
     const [feedbackFormData, setFeedbackFormData] = useState(createDefaultFeedback());
     const { comment, rating, commentType } = feedbackFormData;
 
-    const StyledRating = styled(Rating)(({ theme }) => ({
-        '& .MuiRating-iconEmpty .MuiSvgIcon-root': {
-            opacity: '0.5',
-        },
-        textAlign: 'center',
-    }));
-
     const customRatings: {
-        [index: string]: {
+        [index: number]: {
             icon: React.ReactElement;
             label: string;
         };
@@ -77,28 +67,28 @@ export const FeedbackModal = () => {
     };
 
     const commentTypes: {
-        [index: string]: {
+        [index: number]: {
             icon: React.ReactElement;
             label: string;
             text: string;
         };
     } = {
-        Issue: {
+        1: {
             icon: <SvgIcon component={ExclamationIcon} viewBox="0 0 64 64" fontSize="large" />,
             label: 'An Issue',
             text: 'Something does not work...',
         },
-        Idea: {
+        2: {
             icon: <SvgIcon component={LightbulbIcon} viewBox="0 0 64 64" fontSize="large" />,
             label: 'An Idea',
             text: 'I was wondering...',
         },
-        Else: {
+        3: {
             icon: <SvgIcon component={ThinkingIcon} viewBox="0 0 64 64" fontSize="large" />,
             label: 'A Question',
             text: 'I was wondering...',
         },
-        '': {
+        0: {
             icon: <></>,
             label: '',
             text: '',
@@ -117,10 +107,10 @@ export const FeedbackModal = () => {
         });
     }
 
-    function handleCommentTypeChanged(value: 'Issue' | 'Idea' | 'Else' | '') {
+    function handleCommentTypeChanged(value: CommentTypeEnum) {
         setFeedbackFormData({
             ...feedbackFormData,
-            commentType: commentType == value ? '' : value,
+            commentType: commentType == value ? CommentTypeEnum.None : value,
         });
     }
 
@@ -141,22 +131,6 @@ export const FeedbackModal = () => {
         setFeedbackFormData(createDefaultFeedback());
         setIsOpen(false);
     }
-
-    const CommentTypeButton = styled(Button)(() => ({
-        borderColor: BaseTheme.palette.divider,
-        color: BaseTheme.palette.text.primary,
-        borderWidth: 1,
-        borderStyle: 'solid',
-        borderRadius: 5,
-        padding: 3,
-        paddingBottom: 5,
-        marginRight: 2,
-        marginLeft: 2,
-        width: 105,
-        ':focus': {
-            borderColor: BaseTheme.palette.primary.dark,
-        },
-    }));
 
     return (
         <>
@@ -247,30 +221,30 @@ export const FeedbackModal = () => {
                             >
                                 <CommentTypeButton
                                     data-testid="comment-type-issue-button"
-                                    onClick={() => handleCommentTypeChanged('Issue')}
-                                    sx={{ border: commentType == 'Issue' ? '2px solid black' : '' }}
+                                    onClick={() => handleCommentTypeChanged(CommentTypeEnum.Issue)}
+                                    sx={{ border: commentType == CommentTypeEnum.Issue ? '2px solid black' : '' }}
                                 >
                                     <Stack spacing={0} justifyContent="space-around" alignItems="center">
-                                        <MetBody>{commentTypes['Issue'].label}</MetBody>
-                                        <When condition={!commentType}>{commentTypes['Issue'].icon}</When>
+                                        <MetBody>{commentTypes[CommentTypeEnum.Issue].label}</MetBody>
+                                        <When condition={!commentType}>{commentTypes[CommentTypeEnum.Issue].icon}</When>
                                     </Stack>
                                 </CommentTypeButton>
                                 <CommentTypeButton
-                                    onClick={() => handleCommentTypeChanged('Idea')}
-                                    sx={{ border: commentType == 'Idea' ? '2px solid black' : '' }}
+                                    onClick={() => handleCommentTypeChanged(CommentTypeEnum.Idea)}
+                                    sx={{ border: commentType == CommentTypeEnum.Idea ? '2px solid black' : '' }}
                                 >
                                     <Stack spacing={0} justifyContent="space-around" alignItems="center">
-                                        <MetBody>{commentTypes['Idea'].label}</MetBody>
-                                        <When condition={!commentType}>{commentTypes['Idea'].icon}</When>
+                                        <MetBody>{commentTypes[CommentTypeEnum.Idea].label}</MetBody>
+                                        <When condition={!commentType}>{commentTypes[CommentTypeEnum.Idea].icon}</When>
                                     </Stack>
                                 </CommentTypeButton>
                                 <CommentTypeButton
-                                    onClick={() => handleCommentTypeChanged('Else')}
-                                    sx={{ border: commentType == 'Else' ? '2px solid black' : '' }}
+                                    onClick={() => handleCommentTypeChanged(CommentTypeEnum.Else)}
+                                    sx={{ border: commentType == CommentTypeEnum.Else ? '2px solid black' : '' }}
                                 >
                                     <Stack spacing={0} justifyContent="space-around" alignItems="center">
-                                        <MetBody>{commentTypes['Else'].label}</MetBody>
-                                        <When condition={!commentType}>{commentTypes['Else'].icon}</When>
+                                        <MetBody>{commentTypes[CommentTypeEnum.Else].label}</MetBody>
+                                        <When condition={!commentType}>{commentTypes[CommentTypeEnum.Else].icon}</When>
                                     </Stack>
                                 </CommentTypeButton>
                             </Grid>
@@ -316,7 +290,7 @@ export const FeedbackModal = () => {
                             <Grid item xs={12} display="flex" alignItems="end" justifyContent="flex-end">
                                 <PrimaryButton
                                     data-testid="submit-button"
-                                    disabled={Boolean(!rating || (commentType !== '' && !comment))}
+                                    disabled={Boolean(!rating || (commentType !== CommentTypeEnum.None && !comment))}
                                     onClick={handleSubmit}
                                 >
                                     Submit

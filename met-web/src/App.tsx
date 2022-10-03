@@ -12,7 +12,7 @@ import AuthenticatedRoutes from './routes/AuthenticatedRoutes';
 import { Notification } from 'components/common/notification';
 import PageViewTracker from 'routes/PageViewTracker';
 import { NotificationModal } from 'components/common/modal';
-import { FeedbackModal } from 'components/common/Modals/FeedbackModal';
+import { FeedbackModal } from 'components/common/Modals/Feedback/FeedbackModal';
 
 const App = () => {
     const drawerWidth = 240;
