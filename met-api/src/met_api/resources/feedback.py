@@ -62,12 +62,12 @@ class Feedback(Resource):
         """Create a new feedback."""
         try:
             request_json = request.get_json()
-            valid_format, errors = schema_utils.validate(request_json, 'submission')
+            valid_format, errors = schema_utils.validate(request_json, 'feedback')
             if not valid_format:
                 return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
             feedback_schema = FeedbackSchema().load(request_json)
             result = FeedbackService().create_feedback(feedback_schema)
-            return ActionResult.success(result.id, result)
+            return ActionResult.success(result.get('id'), result)
         except KeyError:
             return ActionResult.error('feedback was not found')
         except ValueError as err:

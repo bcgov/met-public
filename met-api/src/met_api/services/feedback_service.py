@@ -32,8 +32,9 @@ class FeedbackService:
     def create_feedback(cls, feedback: FeedbackSchema):
         """Create feedback."""
         cls.validate_fields(feedback)
-
-        return Feedback.create_feedback(feedback)
+        feedback_schema = FeedbackSchema()
+        new_feedback = Feedback.create_feedback(feedback)        
+        return feedback_schema.dump(new_feedback)
 
     @staticmethod
     def validate_fields(data):

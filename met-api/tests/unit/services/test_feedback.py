@@ -25,5 +25,5 @@ def test_create_feedback(session):  # pylint:disable=unused-argument
     feedback_data = TestFeedbackInfo.feedback1
     saved_feedback = FeedbackService().create_feedback(feedback_data)
     # fetch the feedback with id and assert
-    fetched_feedback = FeedbackService().get_feedback(saved_feedback.id)
+    fetched_feedback = FeedbackService().get_feedback(saved_feedback.get('id'))
     assert fetched_feedback.get('comment') == feedback_data.get('comment')

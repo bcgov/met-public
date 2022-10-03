@@ -29,21 +29,13 @@
         },
         "comment_type": {
             "$id": "#/properties/comment_type",
-            "type": "array",
-            "items": [
-                {
-                  "type": "string",
-                  "enum": ["Issue", "Idea", "Else", "None"]
-                },
-                {
-                  "type": "integer",
-                  "enum": [1, 2, 3, 0]
-                }
-            ],       
+            "type": "number",
+            "minimum": 0,
+            "maximum": 3,
             "title": "Comment Type",
             "description": "The comment type enum.",
             "examples": [
-                "Issue", "Idea", "Else", "None", 0, 1, 2, 3
+                0, 1, 2, 3
             ]
         },
         "comment": {

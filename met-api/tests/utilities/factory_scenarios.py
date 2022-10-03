@@ -96,7 +96,7 @@ class TestFeedbackInfo(dict, Enum):
     feedback1 = {
         'comment': 'A feedback comment',
         'rating': RatingType.Satisfied,
-        'commentType': CommentType.Idea,
+        'comment_type': CommentType.Idea,
     }
 
 

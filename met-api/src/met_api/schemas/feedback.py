@@ -16,5 +16,5 @@ class FeedbackSchema(Schema):
     id = fields.Int(data_key='id')
     comment = fields.Str(data_key='comment')
     created_date = fields.Date(data_key='created_date')
-    rating = EnumField(RatingType)
-    comment_type = EnumField(CommentType)
+    rating = EnumField(RatingType, by_value=True)
+    comment_type = EnumField(CommentType, by_value=True)
