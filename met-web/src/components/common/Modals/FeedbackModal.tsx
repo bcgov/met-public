@@ -29,7 +29,7 @@ import { useState } from 'react';
 import { MetBody, MetHeader3, MetHeader4, modalStyle, PrimaryButton } from '..';
 import { BaseTheme } from 'styles/Theme';
 import { createDefaultFeedback } from 'models/feedback';
-import { Case, Else, If, Switch, Then } from 'react-if';
+import { Else, If, Then } from 'react-if';
 
 export const FeedbackModal = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -44,7 +44,7 @@ export const FeedbackModal = () => {
         textAlign: 'center',
     }));
 
-    const customIcons: {
+    const customRatings: {
         [index: string]: {
             icon: React.ReactElement;
             label: string;
@@ -70,29 +70,44 @@ export const FeedbackModal = () => {
             icon: <SvgIcon fontSize="large" component={VerySatisfiedIcon} viewBox="0 0 64 64" sx={{ marginX: 1 }} />,
             label: 'Very Satisfied',
         },
+        0: {
+            icon: <></>,
+            label: '',
+        },
+    };
+
+    const commentTypes: {
+        [index: string]: {
+            icon: React.ReactElement;
+            label: string;
+            text: string;
+        };
+    } = {
+        Issue: {
+            icon: <SvgIcon component={ExclamationIcon} viewBox="0 0 64 64" fontSize="large" />,
+            label: 'An Issue',
+            text: 'Something does not work...',
+        },
+        Idea: {
+            icon: <SvgIcon component={LightbulbIcon} viewBox="0 0 64 64" fontSize="large" />,
+            label: 'An Idea',
+            text: 'I was wondering...',
+        },
+        Else: {
+            icon: <SvgIcon component={ThinkingIcon} viewBox="0 0 64 64" fontSize="large" />,
+            label: 'A Question',
+            text: 'I was wondering...',
+        },
+        '': {
+            icon: <></>,
+            label: '',
+            text: '',
+        },
     };
 
     function IconContainer(props: IconContainerProps) {
         const { value, ...other } = props;
-        return <span {...other}>{customIcons[value].icon}</span>;
-    }
-
-    function getLabelText() {
-        if (rating == 0) return;
-        return `${customIcons[rating].label}`;
-    }
-
-    function getPlaceholderText() {
-        switch (commentType) {
-            case 'Issue':
-                return 'Something does not work...';
-            case 'Idea':
-                return 'I would like to see...';
-            case 'Else':
-                return 'I was wondering...';
-        }
-
-        return '';
+        return <span {...other}>{customRatings[value].icon}</span>;
     }
 
     function handleRatingChanged(value: number) {
@@ -218,7 +233,7 @@ export const FeedbackModal = () => {
                                 />
                             </Grid>
                             <Grid item xs={12} justifyContent="space-around" textAlign="center">
-                                {getLabelText()}
+                                {customRatings[rating].label}
                             </Grid>
                             <Grid item xs={12}>
                                 <MetBody>What else would you like to share with us?</MetBody>
@@ -236,15 +251,9 @@ export const FeedbackModal = () => {
                                     sx={{ border: commentType == 'Issue' ? '2px solid black' : '' }}
                                 >
                                     <Stack spacing={0} justifyContent="space-around" alignItems="center">
-                                        <MetBody>An Issue</MetBody>
+                                        <MetBody>{commentTypes['Issue'].label}</MetBody>
                                         <If condition={!commentType}>
-                                            <Then>
-                                                <SvgIcon
-                                                    component={ExclamationIcon}
-                                                    viewBox="0 0 64 64"
-                                                    fontSize="large"
-                                                />
-                                            </Then>
+                                            <Then>{commentTypes['Issue'].icon}</Then>
                                             <Else></Else>
                                         </If>
                                     </Stack>
@@ -254,15 +263,9 @@ export const FeedbackModal = () => {
                                     sx={{ border: commentType == 'Idea' ? '2px solid black' : '' }}
                                 >
                                     <Stack spacing={0} justifyContent="space-around" alignItems="center">
-                                        <MetBody>An Idea</MetBody>
+                                        <MetBody>{commentTypes['Idea'].label}</MetBody>
                                         <If condition={!commentType}>
-                                            <Then>
-                                                <SvgIcon
-                                                    component={LightbulbIcon}
-                                                    viewBox="0 0 64 64"
-                                                    fontSize="large"
-                                                />
-                                            </Then>
+                                            <Then>{commentTypes['Idea'].icon}</Then>
                                             <Else></Else>
                                         </If>
                                     </Stack>
@@ -272,15 +275,9 @@ export const FeedbackModal = () => {
                                     sx={{ border: commentType == 'Else' ? '2px solid black' : '' }}
                                 >
                                     <Stack spacing={0} justifyContent="space-around" alignItems="center">
-                                        <MetBody>A Question</MetBody>
+                                        <MetBody>{commentTypes['Else'].label}</MetBody>
                                         <If condition={!commentType}>
-                                            <Then>
-                                                <SvgIcon
-                                                    component={ThinkingIcon}
-                                                    viewBox="0 0 64 64"
-                                                    fontSize="large"
-                                                />
-                                            </Then>
+                                            <Then>{commentTypes['Else'].icon}</Then>
                                             <Else></Else>
                                         </If>
                                     </Stack>
@@ -301,55 +298,19 @@ export const FeedbackModal = () => {
                                                             color: (theme) => theme.palette.text.primary,
                                                         }}
                                                     >
-                                                        <Switch>
-                                                            <Case condition={commentType === 'Issue'}>
-                                                                <Stack
-                                                                    spacing={0}
-                                                                    justifyContent="space-around"
-                                                                    alignItems="center"
-                                                                >
-                                                                    <MetBody>An Issue</MetBody>
-                                                                    <SvgIcon
-                                                                        component={ExclamationIcon}
-                                                                        viewBox="0 0 64 64"
-                                                                        fontSize="large"
-                                                                    />
-                                                                </Stack>
-                                                            </Case>
-                                                            <Case condition={commentType === 'Idea'}>
-                                                                <Stack
-                                                                    spacing={0}
-                                                                    justifyContent="space-around"
-                                                                    alignItems="center"
-                                                                >
-                                                                    <MetBody>An Idea</MetBody>
-                                                                    <SvgIcon
-                                                                        component={LightbulbIcon}
-                                                                        viewBox="0 0 64 64"
-                                                                        fontSize="large"
-                                                                    />
-                                                                </Stack>
-                                                            </Case>
-                                                            <Case condition={commentType === 'Else'}>
-                                                                <Stack
-                                                                    spacing={0}
-                                                                    justifyContent="space-around"
-                                                                    alignItems="center"
-                                                                >
-                                                                    <MetBody>A Question</MetBody>
-                                                                    <SvgIcon
-                                                                        component={ThinkingIcon}
-                                                                        viewBox="0 0 64 64"
-                                                                        fontSize="large"
-                                                                    />
-                                                                </Stack>
-                                                            </Case>
-                                                        </Switch>
+                                                        <Stack
+                                                            spacing={0}
+                                                            justifyContent="space-around"
+                                                            alignItems="center"
+                                                        >
+                                                            <MetBody>{commentTypes[commentType].label}</MetBody>
+                                                            {commentTypes[commentType].icon}
+                                                        </Stack>
                                                     </InputAdornment>
                                                 ),
                                             }}
                                             data-testid="comment-input"
-                                            placeholder={getPlaceholderText()}
+                                            placeholder={commentTypes[commentType].text}
                                             onChange={(event) => handleCommentChanged(event.target.value)}
                                             value={comment}
                                             multiline
