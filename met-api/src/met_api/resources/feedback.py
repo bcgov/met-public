@@ -13,6 +13,7 @@
 # limitations under the License.
 """API endpoints for managing an feedback resource."""
 
+from http import HTTPStatus
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
@@ -20,12 +21,12 @@ from flask_restx import Namespace, Resource
 from met_api.auth import auth
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.feedback import FeedbackSchema
+from met_api.schemas import utils as schema_utils
 from met_api.services.comment_service import CommentService
 from met_api.services.feedback_service import FeedbackService
 from met_api.utils.action_result import ActionResult
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
-
 
 API = Namespace('feedbacks', description='Endpoints for Feedbacks Management')
 """Custom exception messages
@@ -59,12 +60,14 @@ class Feedback(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.require
     def post():
         """Create a new feedback"""
         try:
-            requestjson = request.get_json()
-            feedback_schema = FeedbackSchema().load(requestjson)
+            request_json = request.get_json()
+            valid_format, errors = schema_utils.validate(request_json, 'submission')
+            if not valid_format:
+                return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
+            feedback_schema = FeedbackSchema().load(request_json)
             result = FeedbackService().create_feedback(feedback_schema)
             return ActionResult.success(result.id, result)
         except KeyError:
