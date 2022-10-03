@@ -29,7 +29,7 @@ import { useState } from 'react';
 import { MetBody, MetHeader3, MetHeader4, modalStyle, PrimaryButton } from '..';
 import { BaseTheme } from 'styles/Theme';
 import { createDefaultFeedback } from 'models/feedback';
-import { Else, If, Then } from 'react-if';
+import { Else, If, Then, When } from 'react-if';
 
 export const FeedbackModal = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -252,10 +252,7 @@ export const FeedbackModal = () => {
                                 >
                                     <Stack spacing={0} justifyContent="space-around" alignItems="center">
                                         <MetBody>{commentTypes['Issue'].label}</MetBody>
-                                        <If condition={!commentType}>
-                                            <Then>{commentTypes['Issue'].icon}</Then>
-                                            <Else></Else>
-                                        </If>
+                                        <When condition={!commentType}>{commentTypes['Issue'].icon}</When>
                                     </Stack>
                                 </CommentTypeButton>
                                 <CommentTypeButton
@@ -264,10 +261,7 @@ export const FeedbackModal = () => {
                                 >
                                     <Stack spacing={0} justifyContent="space-around" alignItems="center">
                                         <MetBody>{commentTypes['Idea'].label}</MetBody>
-                                        <If condition={!commentType}>
-                                            <Then>{commentTypes['Idea'].icon}</Then>
-                                            <Else></Else>
-                                        </If>
+                                        <When condition={!commentType}>{commentTypes['Idea'].icon}</When>
                                     </Stack>
                                 </CommentTypeButton>
                                 <CommentTypeButton
@@ -276,55 +270,48 @@ export const FeedbackModal = () => {
                                 >
                                     <Stack spacing={0} justifyContent="space-around" alignItems="center">
                                         <MetBody>{commentTypes['Else'].label}</MetBody>
-                                        <If condition={!commentType}>
-                                            <Then>{commentTypes['Else'].icon}</Then>
-                                            <Else></Else>
-                                        </If>
+                                        <When condition={!commentType}>{commentTypes['Else'].icon}</When>
                                     </Stack>
                                 </CommentTypeButton>
                             </Grid>
                             <Grid item xs={12}>
-                                <If condition={Boolean(commentType)}>
-                                    <Then>
-                                        <TextField
-                                            InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment
-                                                        position="start"
-                                                        sx={{
-                                                            padding: '35px 14px',
-                                                            borderRight: (theme) =>
-                                                                `1px solid ${theme.palette.divider}`,
-                                                            color: (theme) => theme.palette.text.primary,
-                                                        }}
+                                <When condition={Boolean(commentType)}>
+                                    <TextField
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment
+                                                    position="start"
+                                                    sx={{
+                                                        padding: '35px 14px',
+                                                        borderRight: (theme) => `1px solid ${theme.palette.divider}`,
+                                                        color: (theme) => theme.palette.text.primary,
+                                                    }}
+                                                >
+                                                    <Stack
+                                                        spacing={0}
+                                                        justifyContent="space-around"
+                                                        alignItems="center"
                                                     >
-                                                        <Stack
-                                                            spacing={0}
-                                                            justifyContent="space-around"
-                                                            alignItems="center"
-                                                        >
-                                                            <MetBody>{commentTypes[commentType].label}</MetBody>
-                                                            {commentTypes[commentType].icon}
-                                                        </Stack>
-                                                    </InputAdornment>
-                                                ),
-                                            }}
-                                            data-testid="comment-input"
-                                            placeholder={commentTypes[commentType].text}
-                                            onChange={(event) => handleCommentChanged(event.target.value)}
-                                            value={comment}
-                                            multiline
-                                            rows={4}
-                                            sx={{
-                                                width: '100%',
-                                                '& .MuiOutlinedInput-root': {
-                                                    paddingLeft: 0,
-                                                },
-                                            }}
-                                        />
-                                    </Then>
-                                    <Else></Else>
-                                </If>
+                                                        <MetBody>{commentTypes[commentType].label}</MetBody>
+                                                        {commentTypes[commentType].icon}
+                                                    </Stack>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        data-testid="comment-input"
+                                        placeholder={commentTypes[commentType].text}
+                                        onChange={(event) => handleCommentChanged(event.target.value)}
+                                        value={comment}
+                                        multiline
+                                        rows={4}
+                                        sx={{
+                                            width: '100%',
+                                            '& .MuiOutlinedInput-root': {
+                                                paddingLeft: 0,
+                                            },
+                                        }}
+                                    />
+                                </When>
                             </Grid>
                             <Grid item xs={12} display="flex" alignItems="end" justifyContent="flex-end">
                                 <PrimaryButton
