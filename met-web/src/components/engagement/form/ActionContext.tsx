@@ -1,18 +1,27 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { postEngagement, putEngagement, getEngagement } from '../../../services/engagementService';
+import { postEngagement, getEngagement, patchEngagement } from '../../../services/engagementService';
 import { useNavigate, useParams } from 'react-router-dom';
-import { EngagementContext, EngagementForm, EngagementFormModalState, EngagementParams, OpenModalProps } from './types';
+import {
+    EngagementContext,
+    EngagementForm,
+    EngagementFormModalState,
+    EngagementFormUpdate,
+    EngagementParams,
+    OpenModalProps,
+} from './types';
 import { createDefaultEngagement, Engagement } from '../../../models/engagement';
 import { saveDocument } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
 import { getErrorMessage } from 'utils';
+import { updatedDiff } from 'deep-object-diff';
+import { PatchEngagementRequest } from 'services/engagementService/types';
 
 export const ActionContext = createContext<EngagementContext>({
     handleCreateEngagementRequest: (_engagement: EngagementForm): Promise<Engagement> => {
         return Promise.reject();
     },
-    handleUpdateEngagementRequest: (_engagement: EngagementForm): Promise<Engagement> => {
+    handleUpdateEngagementRequest: (_engagement: EngagementFormUpdate): Promise<Engagement> => {
         return Promise.reject();
     },
     isSaving: false,
@@ -73,13 +82,18 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
         try {
             const engagement = await getEngagement(Number(engagementId));
-            setSavedEngagement({ ...engagement });
-            setSavedBannerImageFileName(engagement.banner_filename);
-            setLoadingSavedEngagement(false);
+            setEngagement(engagement);
         } catch (err) {
             console.log(err);
             dispatch(openNotification({ severity: 'error', text: 'Error Fetching Engagement' }));
         }
+    };
+
+    const setEngagement = (engagement: Engagement) => {
+        setSavedEngagement({ ...engagement });
+        setSavedBannerImageFileName(engagement.banner_filename);
+        setLoadingSavedEngagement(false);
+        if (bannerImage) setBannerImage(null);
     };
 
     useEffect(() => {
@@ -91,14 +105,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         try {
             const uploadedBannerImageFileName = await handleUploadBannerImage();
             const result = await postEngagement({
-                name: engagement.name,
-                start_date: engagement.fromDate,
-                status_id: engagement.status_id,
-                end_date: engagement.toDate,
-                description: engagement.description,
-                rich_description: engagement.richDescription,
-                content: engagement.content,
-                rich_content: engagement.richContent,
+                ...engagement,
                 banner_filename: uploadedBannerImageFileName,
             });
 
@@ -128,26 +135,23 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
     };
 
-    const handleUpdateEngagementRequest = async (engagement: EngagementForm): Promise<Engagement> => {
+    const handleUpdateEngagementRequest = async (engagement: EngagementFormUpdate): Promise<Engagement> => {
         setSaving(true);
         try {
             const uploadedBannerImageFileName = await handleUploadBannerImage();
-            const result = await putEngagement({
-                id: Number(engagementId),
-                name: engagement.name,
-                start_date: engagement.fromDate,
-                status_id: engagement.status_id,
-                end_date: engagement.toDate,
-                description: engagement.description,
-                rich_description: engagement.richDescription,
-                content: engagement.content,
-                rich_content: engagement.richContent,
+            const engagementEditsToPatch = updatedDiff(savedEngagement, {
+                ...engagement,
                 banner_filename: uploadedBannerImageFileName,
-            });
+            }) as PatchEngagementRequest;
 
+            const updatedEngagement = await patchEngagement({
+                ...engagementEditsToPatch,
+                id: Number(engagementId),
+            });
+            setEngagement(updatedEngagement);
             dispatch(openNotification({ severity: 'success', text: 'Engagement Updated Successfully' }));
             setSaving(false);
-            return Promise.resolve(result);
+            return Promise.resolve(updatedEngagement);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error Updating Engagement' }));
             setSaving(false);

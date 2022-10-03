@@ -53,8 +53,8 @@ describe('Engagement form page tests', () => {
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
         .mockReturnValue(Promise.resolve(mockEngagement));
-    const putEngagementMock = jest
-        .spyOn(engagementService, 'putEngagement')
+    const patchEngagementMock = jest
+        .spyOn(engagementService, 'patchEngagement')
         .mockReturnValue(Promise.resolve(mockEngagement));
     const postEngagementMock = jest
         .spyOn(engagementService, 'postEngagement')
@@ -77,11 +77,11 @@ describe('Engagement form page tests', () => {
         expect(nameInput).not.toBeNull();
         expect(nameInput).toHaveAttribute('value', '');
 
-        const fromDateInput = container.querySelector('input[name="fromDate"]');
+        const fromDateInput = container.querySelector('input[name="start_date"]');
         expect(fromDateInput).not.toBeNull();
         expect(fromDateInput).toHaveAttribute('value', '');
 
-        const toDateInput = container.querySelector('input[name="toDate"]');
+        const toDateInput = container.querySelector('input[name="end_date"]');
         expect(toDateInput).not.toBeNull();
         expect(toDateInput).toHaveAttribute('value', '');
 
@@ -126,7 +126,7 @@ describe('Engagement form page tests', () => {
         fireEvent.click(updateButton);
 
         await waitFor(() => {
-            expect(putEngagementMock).toHaveBeenCalledOnce();
+            expect(patchEngagementMock).toHaveBeenCalledOnce();
         });
     });
 

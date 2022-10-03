@@ -5,7 +5,7 @@ Manages the engagement
 
 from __future__ import annotations
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 from sqlalchemy import asc, desc
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.sql import text
@@ -140,6 +140,19 @@ class Engagement(db.Model):
         query.update(update_fields)
         db.session.commit()
         return DefaultMethodResult(True, 'Engagement Updated', engagement_id)
+
+    @classmethod
+    def edit_engagement(cls, engagement_data: dict) -> Optional[Engagement]:
+        """Update engagement."""
+        engagement_id = engagement_data.get('id', None)
+        query = Engagement.query.filter_by(id=engagement_id)
+        engagement: Engagement = query.first()
+        if not engagement:
+            return None
+
+        query.update(engagement_data)
+        db.session.commit()
+        return engagement
 
     @classmethod
     def close_engagements_due(cls) -> List[EngagementSchema]:

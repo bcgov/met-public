@@ -4,7 +4,8 @@ Manages the engagement
 """
 
 from datetime import datetime
-from marshmallow import EXCLUDE, Schema, fields
+
+from marshmallow import EXCLUDE, Schema, ValidationError, fields, validate, validates_schema
 
 from met_api.constants.engagement_status import Status, SubmissionStatus
 from met_api.schemas.engagement_survey import EngagementSurveySchema
@@ -22,19 +23,39 @@ class EngagementSchema(Schema):
         unknown = EXCLUDE
 
     id = fields.Int(data_key='id')
-    name = fields.Str(data_key='name')
-    description = fields.Str(data_key='description')
-    rich_description = fields.Str(data_key='rich_description')
-    start_date = fields.Date(data_key='start_date')
-    end_date = fields.Date(data_key='end_date')
+    name = fields.Str(data_key='name', required=True, validate=validate.Length(min=1, error='Name cannot be blank'))
+    description = fields.Str(
+        data_key='description',
+        required=True,
+        validate=validate.Length(
+            min=1,
+            error='Description cannot be blank'))
+    rich_description = fields.Str(
+        data_key='rich_description',
+        required=True,
+        validate=validate.Length(
+            min=1,
+            error='Rich description cannot be blank'))
+    start_date = fields.Date(data_key='start_date', required=True)
+    end_date = fields.Date(data_key='end_date', required=True)
     status_id = fields.Int(data_key='status_id')
     created_by = fields.Str(data_key='created_by')
     created_date = fields.Str(data_key='created_date')
     updated_by = fields.Str(data_key='updated_by')
     updated_date = fields.Str(data_key='updated_date')
     published_date = fields.Str(data_key='published_date')
-    content = fields.Str(data_key='content')
-    rich_content = fields.Str(data_key='rich_content')
+    content = fields.Str(
+        data_key='content',
+        required=True,
+        validate=validate.Length(
+            min=1,
+            error='Content cannot be blank'))
+    rich_content = fields.Str(
+        data_key='rich_content',
+        required=True,
+        validate=validate.Length(
+            min=1,
+            error='Rich Content cannot be blank'))
     banner_filename = fields.Str(data_key='banner_filename')
     engagement_status = fields.Nested(EngagementStatusSchema)
     surveys = fields.List(fields.Nested(EngagementSurveySchema))
@@ -70,3 +91,12 @@ class EngagementSchema(Schema):
             return SubmissionStatus.Upcoming.value
 
         return SubmissionStatus.Closed.value
+
+    @validates_schema
+    def validate_dates(self, data, **kwargs):
+        """Validate that start date is before end date."""
+        if kwargs.get('partial', False):
+            return
+
+        if data.get('start_date') > data.get('end_date'):
+            raise ValidationError('From date must be before to date')

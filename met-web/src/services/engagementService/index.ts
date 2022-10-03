@@ -2,7 +2,7 @@ import { setEngagements } from './engagementSlice';
 import http from 'apiManager/httpRequestHandler';
 import { AnyAction, Dispatch } from 'redux';
 import { Engagement } from 'models/engagement';
-import { PostEngagementRequest, PutEngagementRequest } from './types';
+import { PatchEngagementRequest, PostEngagementRequest, PutEngagementRequest } from './types';
 import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
 import { Page } from 'services/type';
@@ -62,6 +62,18 @@ export const postEngagement = async (data: PostEngagementRequest): Promise<Engag
 export const putEngagement = async (data: PutEngagementRequest): Promise<Engagement> => {
     try {
         const response = await http.PutRequest<Engagement>(Endpoints.Engagement.UPDATE, data);
+        if (response.data.status && response.data.result) {
+            return Promise.resolve(response.data.result);
+        }
+        return Promise.reject(response.data.message ?? 'Failed to update engagement');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
+export const patchEngagement = async (data: PatchEngagementRequest): Promise<Engagement> => {
+    try {
+        const response = await http.PatchRequest<Engagement>(Endpoints.Engagement.UPDATE, data);
         if (response.data.status && response.data.result) {
             return Promise.resolve(response.data.result);
         }

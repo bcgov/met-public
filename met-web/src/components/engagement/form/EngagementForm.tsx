@@ -24,12 +24,10 @@ const EngagementForm = () => {
 
     const [engagementFormData, setEngagementFormData] = useState({
         name: '',
-        fromDate: '',
-        toDate: '',
+        start_date: '',
+        end_date: '',
         description: '',
         content: '',
-        status_id: 0,
-        status: { status_name: '' },
     });
     const [richDescription, setRichDescription] = useState('');
     const [richContent, setRichContent] = useState('');
@@ -37,12 +35,10 @@ const EngagementForm = () => {
     useEffect(() => {
         setEngagementFormData({
             name: savedEngagement?.name || '',
-            fromDate: formatDate(savedEngagement.start_date),
-            toDate: formatDate(savedEngagement.end_date),
+            start_date: formatDate(savedEngagement.start_date),
+            end_date: formatDate(savedEngagement.end_date),
             description: savedEngagement?.description || '',
             content: savedEngagement?.content || '',
-            status_id: savedEngagement?.status_id || 0,
-            status: savedEngagement?.engagement_status || {},
         });
         setRichDescription(savedEngagement?.rich_description || '');
         setRichContent(savedEngagement?.rich_content || '');
@@ -50,8 +46,8 @@ const EngagementForm = () => {
 
     const [engagementFormError, setEngagementFormError] = useState({
         name: false,
-        fromDate: false,
-        toDate: false,
+        start_date: false,
+        end_date: false,
         description: false,
         content: false,
     });
@@ -99,13 +95,13 @@ const EngagementForm = () => {
         setRichContent(newState);
     };
 
-    const { name, fromDate, toDate, description, content } = engagementFormData;
+    const { name, start_date, end_date, description, content } = engagementFormData;
 
     const validateForm = () => {
         const errors = {
             name: !name,
-            fromDate: !fromDate,
-            toDate: !toDate,
+            start_date: !start_date,
+            end_date: !end_date,
             description: !description,
             content: !content,
         };
@@ -124,8 +120,8 @@ const EngagementForm = () => {
 
         const engagement = await handleCreateEngagementRequest({
             ...engagementFormData,
-            richDescription: richDescription,
-            richContent: richContent,
+            rich_description: richDescription,
+            rich_content: richContent,
         });
 
         navigate(`/engagements/${engagement.id}/form`);
@@ -142,13 +138,13 @@ const EngagementForm = () => {
 
         const engagement = await handleUpdateEngagementRequest({
             ...engagementFormData,
-            richDescription: richDescription,
-            richContent: richContent,
+            rich_description: richDescription,
+            rich_content: richContent,
         });
 
         navigate(`/engagements/${engagement.id}/form`);
 
-        return engagement;
+        return savedEngagement;
     };
 
     const handleSaveEngagement = () => {
@@ -233,13 +229,13 @@ const EngagementForm = () => {
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
-                                    InputProps={{ inputProps: { max: toDate || null } }}
+                                    InputProps={{ inputProps: { max: end_date || null } }}
                                     fullWidth
-                                    name="fromDate"
-                                    value={fromDate}
+                                    name="start_date"
+                                    value={start_date}
                                     onChange={handleChange}
-                                    error={engagementFormError.fromDate}
-                                    helperText={engagementFormError.fromDate ? 'From Date must be specified' : ''}
+                                    error={engagementFormError.start_date}
+                                    helperText={engagementFormError.start_date ? 'From Date must be specified' : ''}
                                 />
                             </Stack>
                         </Grid>
@@ -255,13 +251,13 @@ const EngagementForm = () => {
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
-                                    InputProps={{ inputProps: { min: fromDate || null } }}
+                                    InputProps={{ inputProps: { min: start_date || null } }}
                                     fullWidth
-                                    name="toDate"
-                                    value={toDate}
+                                    name="end_date"
+                                    value={end_date}
                                     onChange={handleChange}
-                                    error={engagementFormError.toDate}
-                                    helperText={engagementFormError.toDate ? 'To Date must be specified' : ''}
+                                    error={engagementFormError.end_date}
+                                    helperText={engagementFormError.end_date ? 'To Date must be specified' : ''}
                                 />
                             </Stack>
                         </Grid>

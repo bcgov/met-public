@@ -2,7 +2,7 @@ import { Engagement } from '../../../models/engagement';
 
 export interface EngagementContext {
     handleCreateEngagementRequest: (_engagement: EngagementForm) => Promise<Engagement>;
-    handleUpdateEngagementRequest: (_engagement: EngagementForm) => Promise<Engagement>;
+    handleUpdateEngagementRequest: (_engagement: EngagementFormUpdate) => Promise<Engagement>;
     isSaving: boolean;
     savedEngagement: Engagement;
     engagementId: string | undefined;
@@ -17,13 +17,21 @@ export interface EngagementContext {
 export interface EngagementForm {
     name: string;
     description: string;
-    richDescription: string;
-    status_id: number;
-    fromDate: string;
-    toDate: string;
+    rich_description: string;
+    start_date: string;
+    end_date: string;
     content: string;
-    richContent: string;
-    status: object;
+    rich_content: string;
+}
+
+export interface EngagementFormUpdate {
+    name?: string;
+    description?: string;
+    rich_description?: string;
+    start_date?: string;
+    end_date?: string;
+    content?: string;
+    rich_content?: string;
 }
 
 export type EngagementParams = {

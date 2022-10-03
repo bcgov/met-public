@@ -16,6 +16,7 @@
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
+from marshmallow import ValidationError
 
 from met_api.auth import auth
 from met_api.models.pagination_options import PaginationOptions
@@ -55,7 +56,7 @@ class Engagement(Resource):
             return ActionResult.error(str(err))
 
 
-@cors_preflight('GET, POST, PUT, OPTIONS')
+@cors_preflight('GET, POST, PUT, PATCH, OPTIONS')
 @API.route('/')
 class Engagements(Resource):
     """Resource for managing engagements."""
@@ -106,6 +107,8 @@ class Engagements(Resource):
             return ActionResult.error(str(err))
         except ValueError as err:
             return ActionResult.error(str(err))
+        except ValidationError as err:
+            return ActionResult.error(str(err.messages))
 
     @staticmethod
     # @TRACER.trace()
@@ -124,3 +127,28 @@ class Engagements(Resource):
             return ActionResult.error(str(err))
         except ValueError as err:
             return ActionResult.error(str(err))
+        except ValidationError as err:
+            return ActionResult.error(str(err.messages))
+
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def patch():
+        """Update saved engagement partially."""
+        try:
+            requestjson = request.get_json()
+            user_id = TokenInfo.get_id()
+            requestjson['updated_by'] = user_id
+
+            engagement_schema = EngagementSchema()
+            engagement_schema.load(requestjson, partial=True)
+            engagement = EngagementService().edit_engagement(requestjson)
+
+            return ActionResult.success(engagement.id, engagement_schema.dump(engagement))
+        except KeyError as err:
+            return ActionResult.error(str(err))
+        except ValueError as err:
+            return ActionResult.error(str(err))
+        except ValidationError as err:
+            return ActionResult.error(str(err.messages))
