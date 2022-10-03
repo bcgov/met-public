@@ -20,11 +20,11 @@ from .default_method_result import DefaultMethodResult
 
 
 class RatingType(enum.Enum):
-    VerySatisfied = 5
-    Satisfied = 4
+    VerySatisfied = 1
+    Satisfied = 2
     Neutral = 3
-    Unsatisfied = 2
-    VeryUnsatisfied = 1
+    Unsatisfied = 4
+    VeryUnsatisfied = 5
 
 class CommentType(enum.Enum):
     Issue = 1
