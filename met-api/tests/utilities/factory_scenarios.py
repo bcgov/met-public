@@ -23,7 +23,7 @@ from faker import Faker
 
 from met_api.config import get_named_config
 from met_api.constants.engagement_status import SubmissionStatus
-from met_api.models.feedback import CommentType, RatingType
+from met_api.constants.feedback import CommentType, RatingType
 
 fake = Faker()
 

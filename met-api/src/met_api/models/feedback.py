@@ -3,31 +3,13 @@
 Manages the feedback
 """
 from datetime import datetime
-import enum
 
 from sqlalchemy import TEXT, asc, cast, desc
 from sqlalchemy.sql import text
 
+from met_api.constants.feedback import CommentType, RatingType
 from met_api.models.pagination_options import PaginationOptions
 from .db import db
-
-
-class RatingType(enum.Enum):
-    """Rating types enum."""
-
-    VERYSATISFIED = 1
-    SATISFIED = 2
-    NEUTRAL = 3
-    UNSATISFIED = 4
-    VERYUNSATISFIED = 5
-
-
-class CommentType(enum.Enum):
-    """Comment types enum."""
-
-    ISSUE = 1
-    IDEA = 2
-    ELSE = 3
 
 
 class Feedback(db.Model):
