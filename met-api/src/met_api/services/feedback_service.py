@@ -33,7 +33,7 @@ class FeedbackService:
         """Create feedback."""
         cls.validate_fields(feedback)
         feedback_schema = FeedbackSchema()
-        new_feedback = Feedback.create_feedback(feedback)        
+        new_feedback = Feedback.create_feedback(feedback)
         return feedback_schema.dump(new_feedback)
 
     @staticmethod

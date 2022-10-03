@@ -32,7 +32,6 @@ def test_feedback(client, jwt, session):  # pylint:disable=unused-argument
         'comment_type': feedback.comment_type,
         'comment': feedback.comment
     }
-    print (json.dumps(to_dict))
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/feedbacks/', data=json.dumps(to_dict),
                      headers=headers, content_type='application/json')
