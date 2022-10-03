@@ -37,8 +37,8 @@ class Feedback(db.Model):
     __tablename__ = 'feedback'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     created_date = db.Column(db.DateTime)
-    rating = db.Column(db.Enum(RatingType), db.DateTime, nullable=False)
-    commentType = db.Column(db.Enum(CommentType), nullable=True)
+    rating = db.Column(db.Enum(RatingType), nullable=False)
+    comment_type = db.Column(db.Enum(CommentType), nullable=True)
     comment = db.Column(db.Text, nullable=True)
 
     @classmethod
@@ -77,7 +77,7 @@ class Feedback(db.Model):
             comment=feedback.get('comment', None),
             created_date=datetime.utcnow(),
             rating=feedback.get('rating'),
-            commentType=feedback.get('commentType', None)
+            comment_type=feedback.get('commentType', None)
         )
         db.session.add(new_feedback)
         db.session.commit()

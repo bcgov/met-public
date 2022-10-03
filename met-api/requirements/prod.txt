@@ -12,6 +12,7 @@ flask-jwt-oidc
 python-dotenv
 psycopg2-binary
 marshmallow-sqlalchemy==0.25.0
+marshmallow_enum
 jsonschema
 requests
 itsdangerous
