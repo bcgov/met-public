@@ -13,11 +13,14 @@
 # limitations under the License.
 """API endpoints for managing a submission resource."""
 
+from http import HTTPStatus
+
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
 from met_api.auth import auth
+from met_api.schemas import utils as schema_utils
 from met_api.schemas.submission import SubmissionSchema
 from met_api.services.submission_service import SubmissionService
 from met_api.utils.action_result import ActionResult
@@ -61,8 +64,12 @@ class Submissions(Resource):
     def post():
         """Create a new submission."""
         try:
-            requestjson = request.get_json()
-            schema = SubmissionSchema().load(requestjson)
+            request_json = request.get_json()
+            valid_format, errors = schema_utils.validate(request_json, 'submission')
+            if not valid_format:
+                return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
+
+            schema = SubmissionSchema().load(request_json)
             result = SubmissionService().create(schema)
             schema['id'] = result.identifier
             return ActionResult.success(result.identifier, schema)

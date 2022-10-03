@@ -22,6 +22,7 @@ from met_api.config import get_named_config
 from met_api.constants.engagement_status import Status
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.survey import Survey as SurveyModel
+from met_api.models.email_verification import EmailVerification as EmailVerificationModel
 from met_api.models.user import User as UserModel
 from tests.utilities.factory_scenarios import TestEngagementInfo, TestSurveyInfo, TestUserInfo
 
@@ -65,6 +66,20 @@ def factory_survey_and_eng_model(survey_info: dict = TestSurveyInfo.survey1):
     db.session.add(survey)
     db.session.commit()
     return survey, eng
+
+
+def factory_email_verification(survey_id):
+    """Produce a EmailVerification model."""
+    email_verification = EmailVerificationModel(
+        verification_token=fake.uuid4(),
+        is_active=True
+    )
+    if survey_id:
+        email_verification.survey_id = survey_id
+
+    db.session.add(email_verification)
+    db.session.commit()
+    return email_verification
 
 
 def factory_engagement_model(eng_info: dict = TestEngagementInfo.engagement1, status=None):
