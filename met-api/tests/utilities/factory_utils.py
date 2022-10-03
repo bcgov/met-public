@@ -25,7 +25,7 @@ from met_api.models.survey import Survey as SurveyModel
 from met_api.models.email_verification import EmailVerification as EmailVerificationModel
 from met_api.models.user import User as UserModel
 from met_api.models.feedback import Feedback as FeedbackModel
-from tests.utilities.factory_scenarios import TestEngagementInfo, TestSurveyInfo, TestUserInfo, TestFeedbackInfo
+from tests.utilities.factory_scenarios import TestEngagementInfo, TestFeedbackInfo, TestSurveyInfo, TestUserInfo
 
 CONFIG = get_named_config('testing')
 fake = Faker()

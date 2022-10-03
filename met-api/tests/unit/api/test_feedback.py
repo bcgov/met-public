@@ -19,7 +19,7 @@ Test-Suite to ensure that the /Feedbacks endpoint is working as expected.
 import json
 
 from tests.utilities.factory_scenarios import TestJwtClaims
-from tests.utilities.factory_utils import factory_feedback_model, factory_auth_header
+from tests.utilities.factory_utils import factory_auth_header, factory_feedback_model
 
 
 def test_feedback(client, jwt, session):  # pylint:disable=unused-argument

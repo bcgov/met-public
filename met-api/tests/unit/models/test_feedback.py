@@ -18,8 +18,7 @@ Test suite to ensure that the Feedback model routines are working as expected.
 
 from faker import Faker
 
-from met_api.constants.engagement_status import SubmissionStatus
-from met_api.models import Feedback as FeedbackModel, feedback
+from met_api.models import Feedback as FeedbackModel
 from met_api.models.pagination_options import PaginationOptions
 from tests.utilities.factory_utils import factory_feedback_model
 

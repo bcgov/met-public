@@ -5,31 +5,30 @@ Manages the feedback
 from datetime import datetime
 import enum
 
-from sqlalchemy import TEXT, and_, asc, cast, desc
+from sqlalchemy import TEXT, asc, cast, desc
 from sqlalchemy.sql import text
-from sqlalchemy.sql.schema import ForeignKey
 
-from met_api.constants.comment_status import Status
 from met_api.models.pagination_options import PaginationOptions
-from met_api.models.engagement import Engagement
-from met_api.models.survey import Survey
-
-from .comment_status import CommentStatus
 from .db import db
-from .default_method_result import DefaultMethodResult
 
 
 class RatingType(enum.Enum):
-    VerySatisfied = 1
-    Satisfied = 2
-    Neutral = 3
-    Unsatisfied = 4
-    VeryUnsatisfied = 5
+    """Rating types enum."""
+
+    VERYSATISFIED = 1
+    SATISFIED = 2
+    NEUTRAL = 3
+    UNSATISFIED = 4
+    VERYUNSATISFIED = 5
+
 
 class CommentType(enum.Enum):
-    Issue = 1
-    Idea = 2
-    Else = 3
+    """Comment types enum."""
+
+    ISSUE = 1
+    IDEA = 2
+    ELSE = 3
+
 
 class Feedback(db.Model):
     """Definition of the Feedback entity."""
@@ -69,7 +68,6 @@ class Feedback(db.Model):
 
         return page.items, page.total
 
-    
     @staticmethod
     def create_feedback(feedback):
         """Create new feedback entity."""

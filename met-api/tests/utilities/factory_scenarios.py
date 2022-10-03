@@ -18,7 +18,6 @@ Test Utility for creating test scenarios.
 
 from enum import Enum
 from datetime import datetime, timedelta
-from xml.etree.ElementTree import Comment
 
 from faker import Faker
 

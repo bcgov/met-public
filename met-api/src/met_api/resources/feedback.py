@@ -22,10 +22,8 @@ from met_api.auth import auth
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.feedback import FeedbackSchema
 from met_api.schemas import utils as schema_utils
-from met_api.services.comment_service import CommentService
 from met_api.services.feedback_service import FeedbackService
 from met_api.utils.action_result import ActionResult
-from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
 API = Namespace('feedbacks', description='Endpoints for Feedbacks Management')
@@ -61,7 +59,7 @@ class Feedback(Resource):
     @staticmethod
     @cross_origin(origins=allowedorigins())
     def post():
-        """Create a new feedback"""
+        """Create a new feedback."""
         try:
             request_json = request.get_json()
             valid_format, errors = schema_utils.validate(request_json, 'submission')
