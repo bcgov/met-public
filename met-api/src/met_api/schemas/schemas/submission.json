@@ -1,0 +1,52 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://met.gov.bc.ca/.well_known/schemas/submission",
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "survey_id": "49",
+            "submission_json": {
+                "simpletextarea": "myest"
+            },
+            "verification_token": "1f35b3bf-8e0e-4d72-899f-b1a3b16ee31d"
+        }
+    ],
+    "required": [
+        "survey_id",
+        "submission_json",
+        "verification_token"
+    ],
+    "properties": {
+        "survey_id": {
+            "$id": "#/properties/survey_id",
+            "type": "string",
+            "title": "The Survey Id",
+            "description": "The survey to which submission happens.",
+            "examples": [
+                1
+            ]
+        },
+        "submission_json": {
+            "$id": "#/properties/submission_json",
+            "type": "object",
+            "title": "The Submission JSON",
+            "description": "The Submission JSON.",
+            "examples": [
+                {"simpletextarea": "myest"}
+            ]
+        },
+        "verification_token": {
+            "$id": "#/properties/verification_token",
+            "type": "string",
+            "format": "uuid",
+            "title": "The Verification Token",
+            "description": "The Verification Token.",
+            "examples": [
+                {"simpletextarea": "1f35b3bf-8e0e-4d72-899f-b1a3b16ee31d"}
+            ]
+        }
+    }
+}
