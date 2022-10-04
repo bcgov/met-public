@@ -27,12 +27,17 @@ import { MetBody, MetHeader3, MetHeader4, modalStyle, PrimaryButton } from '../.
 import { CommentTypeEnum, createDefaultFeedback } from 'models/feedback';
 import { Else, If, Then, When } from 'react-if';
 import { CommentTypeButton, StyledRating } from './styledComponents';
+import { createFeedback } from 'services/feedbackService';
+import { openNotification } from 'services/notificationService/notificationSlice';
+import { useAppDispatch } from 'hooks';
 
 export const FeedbackModal = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [feedbackFormData, setFeedbackFormData] = useState(createDefaultFeedback());
-    const { comment, rating, commentType } = feedbackFormData;
+    const [isSaving, setIsSaving] = useState(false);
+    const { comment, rating, comment_type } = feedbackFormData;
+    const dispatch = useAppDispatch();
 
     const customRatings: {
         [index: number]: {
@@ -95,42 +100,50 @@ export const FeedbackModal = () => {
         },
     };
 
-    function IconContainer(props: IconContainerProps) {
+    const IconContainer = (props: IconContainerProps) => {
         const { value, ...other } = props;
         return <span {...other}>{customRatings[value].icon}</span>;
-    }
+    };
 
-    function handleRatingChanged(value: number) {
+    const handleRatingChanged = (value: number) => {
         setFeedbackFormData({
             ...feedbackFormData,
             rating: rating == value ? 0 : value,
         });
-    }
+    };
 
-    function handleCommentTypeChanged(value: CommentTypeEnum) {
+    const handleCommentTypeChanged = (value: CommentTypeEnum) => {
         setFeedbackFormData({
             ...feedbackFormData,
-            commentType: commentType == value ? CommentTypeEnum.None : value,
+            comment_type: comment_type == value ? CommentTypeEnum.None : value,
         });
-    }
+    };
 
-    function handleCommentChanged(value: string) {
+    const handleCommentChanged = (value: string) => {
         setFeedbackFormData({
             ...feedbackFormData,
             comment: value,
         });
-    }
+    };
 
-    function handleSubmit() {
-        console.log(feedbackFormData);
-        setIsSubmitted(true);
-    }
+    const handleSubmit = async () => {
+        setIsSaving(true);
+        try {
+            await createFeedback(feedbackFormData);
+            dispatch(openNotification({ severity: 'success', text: 'Your Feedback has been sent.' }));
+            setIsSubmitted(true);
+        } catch (error) {
+            dispatch(openNotification({ severity: 'error', text: 'Error occurred while sending your feedback.' }));
+        } finally {
+            setIsSaving(false);
+        }
+    };
 
-    function handleClose() {
+    const handleClose = () => {
         setIsSubmitted(false);
         setFeedbackFormData(createDefaultFeedback());
         setIsOpen(false);
-    }
+    };
 
     return (
         <>
@@ -171,7 +184,7 @@ export const FeedbackModal = () => {
                                         viewBox="0 0 64 64"
                                         sx={{ marginBottom: 2 }}
                                     />
-                                    <MetHeader3 id="modal-title">Thank you for your feedback</MetHeader3>
+                                    <MetHeader3 data-testid="success-title">Thank you for your feedback</MetHeader3>
                                 </Stack>
                             </Grid>
                             <Grid item xs={12} display="flex" alignItems="end" justifyContent="flex-end">
@@ -222,34 +235,36 @@ export const FeedbackModal = () => {
                                 <CommentTypeButton
                                     data-testid="comment-type-issue-button"
                                     onClick={() => handleCommentTypeChanged(CommentTypeEnum.Issue)}
-                                    sx={{ border: commentType == CommentTypeEnum.Issue ? '2px solid black' : '' }}
+                                    sx={{ border: comment_type == CommentTypeEnum.Issue ? '2px solid black' : '' }}
                                 >
                                     <Stack spacing={0} justifyContent="space-around" alignItems="center">
                                         <MetBody>{commentTypes[CommentTypeEnum.Issue].label}</MetBody>
-                                        <When condition={!commentType}>{commentTypes[CommentTypeEnum.Issue].icon}</When>
+                                        <When condition={!comment_type}>
+                                            {commentTypes[CommentTypeEnum.Issue].icon}
+                                        </When>
                                     </Stack>
                                 </CommentTypeButton>
                                 <CommentTypeButton
                                     onClick={() => handleCommentTypeChanged(CommentTypeEnum.Idea)}
-                                    sx={{ border: commentType == CommentTypeEnum.Idea ? '2px solid black' : '' }}
+                                    sx={{ border: comment_type == CommentTypeEnum.Idea ? '2px solid black' : '' }}
                                 >
                                     <Stack spacing={0} justifyContent="space-around" alignItems="center">
                                         <MetBody>{commentTypes[CommentTypeEnum.Idea].label}</MetBody>
-                                        <When condition={!commentType}>{commentTypes[CommentTypeEnum.Idea].icon}</When>
+                                        <When condition={!comment_type}>{commentTypes[CommentTypeEnum.Idea].icon}</When>
                                     </Stack>
                                 </CommentTypeButton>
                                 <CommentTypeButton
                                     onClick={() => handleCommentTypeChanged(CommentTypeEnum.Else)}
-                                    sx={{ border: commentType == CommentTypeEnum.Else ? '2px solid black' : '' }}
+                                    sx={{ border: comment_type == CommentTypeEnum.Else ? '2px solid black' : '' }}
                                 >
                                     <Stack spacing={0} justifyContent="space-around" alignItems="center">
                                         <MetBody>{commentTypes[CommentTypeEnum.Else].label}</MetBody>
-                                        <When condition={!commentType}>{commentTypes[CommentTypeEnum.Else].icon}</When>
+                                        <When condition={!comment_type}>{commentTypes[CommentTypeEnum.Else].icon}</When>
                                     </Stack>
                                 </CommentTypeButton>
                             </Grid>
                             <Grid item xs={12}>
-                                <When condition={Boolean(commentType)}>
+                                <When condition={Boolean(comment_type)}>
                                     <TextField
                                         InputProps={{
                                             startAdornment: (
@@ -266,14 +281,14 @@ export const FeedbackModal = () => {
                                                         justifyContent="space-around"
                                                         alignItems="center"
                                                     >
-                                                        <MetBody>{commentTypes[commentType].label}</MetBody>
-                                                        {commentTypes[commentType].icon}
+                                                        <MetBody>{commentTypes[comment_type].label}</MetBody>
+                                                        {commentTypes[comment_type].icon}
                                                     </Stack>
                                                 </InputAdornment>
                                             ),
                                         }}
                                         data-testid="comment-input"
-                                        placeholder={commentTypes[commentType].text}
+                                        placeholder={commentTypes[comment_type].text}
                                         onChange={(event) => handleCommentChanged(event.target.value)}
                                         value={comment}
                                         multiline
@@ -290,7 +305,8 @@ export const FeedbackModal = () => {
                             <Grid item xs={12} display="flex" alignItems="end" justifyContent="flex-end">
                                 <PrimaryButton
                                     data-testid="submit-button"
-                                    disabled={Boolean(!rating || (commentType !== CommentTypeEnum.None && !comment))}
+                                    loading={isSaving}
+                                    disabled={Boolean(!rating || (comment_type !== CommentTypeEnum.None && !comment))}
                                     onClick={handleSubmit}
                                 >
                                     Submit

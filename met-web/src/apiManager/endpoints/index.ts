@@ -29,6 +29,10 @@ const Endpoints = {
         REVIEW: `${AppConfig.apiUrl}/comments/comment_id `,
         GET: `${AppConfig.apiUrl}/comments/comment_id`,
     },
+    Feedback: {
+        GET_LIST: `${AppConfig.apiUrl}/feedbacks/`,
+        CREATE: `${AppConfig.apiUrl}/feedbacks/`,
+    },
     EmailVerification: {
         GET: `${AppConfig.apiUrl}/email_verification/verification_token`,
         CREATE: `${AppConfig.apiUrl}/email_verification/`,
