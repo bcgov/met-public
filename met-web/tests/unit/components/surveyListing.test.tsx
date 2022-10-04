@@ -136,8 +136,8 @@ describe('Survey form page tests', () => {
             expect(getSurveysPageMock).lastCalledWith({
                 page: 1,
                 size: 10,
-                sort_key: 'survey.name',
-                sort_order: 'asc',
+                sort_key: 'survey.created_date',
+                sort_order: 'desc',
                 search_text: 'Survey One',
             });
         });

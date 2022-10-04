@@ -24,9 +24,9 @@ const EngagementListing = () => {
     const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Engagement>>({
         page: 1,
         size: 10,
-        sort_key: 'name',
-        nested_sort_key: null,
-        sort_order: 'asc',
+        sort_key: 'created_date',
+        nested_sort_key: 'engagement.created_date',
+        sort_order: 'desc',
     });
 
     const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
