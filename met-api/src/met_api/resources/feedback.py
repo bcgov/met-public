@@ -20,7 +20,6 @@ from flask_restx import Namespace, Resource
 
 from met_api.auth import auth
 from met_api.models.pagination_options import PaginationOptions
-from met_api.schemas.feedback import FeedbackSchema
 from met_api.schemas import utils as schema_utils
 from met_api.services.feedback_service import FeedbackService
 from met_api.utils.action_result import ActionResult
