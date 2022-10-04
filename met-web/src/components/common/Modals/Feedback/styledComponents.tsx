@@ -6,7 +6,6 @@ export const StyledRating = styled(Rating)(({ theme }) => ({
         opacity: '0.5',
     },
     textAlign: 'center',
-    direction: 'rtl',
 }));
 
 export const CommentTypeButton = styled(Button)(() => ({
