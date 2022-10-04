@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import { Grid } from '@mui/material';
-import { MetHeader2, MetPaper, MetWidget, SecondaryButton } from 'components/common';
+import { MetHeader2, MetPaper, SecondaryButton } from 'components/common';
 import { ActionContext } from '../ActionContext';
+import { WidgetOptionCardSwitch } from './WidgetOptionCardSwitch';
 
 const WidgetsBlock = () => {
     const { widgets, handleWidgetDrawerOpen } = useContext(ActionContext);
@@ -25,16 +26,7 @@ const WidgetsBlock = () => {
                         {widgets.map((widget, index) => {
                             return (
                                 <Grid item xs={12}>
-                                    <MetWidget
-                                        key={`${widget.widget_type}-${index}`}
-                                        title="Who is Listening"
-                                        onDeleteClick={() => {
-                                            /**/
-                                        }}
-                                        onEditClick={() => {
-                                            /**/
-                                        }}
-                                    />
+                                    <WidgetOptionCardSwitch key={`${widget.widget_type}-${index}`} widget={widget} />
                                 </Grid>
                             );
                         })}

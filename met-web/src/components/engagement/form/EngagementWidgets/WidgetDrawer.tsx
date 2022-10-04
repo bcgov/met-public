@@ -4,8 +4,9 @@ import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import { Grid, Stack } from '@mui/material';
 import { MetHeader3 } from 'components/common';
-import WhoIsListeningOption from './WhoIsListeningOption';
 import { ActionContext } from '../ActionContext';
+import WidgetOptionCard from './WidgetOptionCard';
+import PersonIcon from '@mui/icons-material/Person';
 
 const WidgetDrawer = () => {
     const { widgetDrawerOpen, handleWidgetDrawerOpen } = useContext(ActionContext);
@@ -30,7 +31,12 @@ const WidgetDrawer = () => {
                         <Divider sx={{ marginTop: '1em' }} />
                     </Grid>
                     <Grid item xs={12} lg={6}>
-                        <WhoIsListeningOption />
+                        <WidgetOptionCard
+                            icon={<PersonIcon />}
+                            title={'Who is Listening'}
+                            description={'Add one or a few contact(s) for this engagement'}
+                            onClick={() => console.log('clicked who is listening')}
+                        />
                     </Grid>
                 </Grid>
             </Box>
