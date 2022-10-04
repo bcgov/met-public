@@ -1,0 +1,51 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://met.gov.bc.ca/.well_known/schemas/feedback",
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "rating": 1,
+            "comment_type": "2",
+            "comment": "Custom comment"
+        }
+    ],
+    "required": [
+        "rating"
+    ],
+    "properties": {
+        "rating": {
+            "$id": "#/properties/rating",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 5,
+            "title": "Rating",
+            "description": "The rating range from 1 to 5",
+            "examples": [
+                1, 2, 3, 4, 5
+            ]
+        },
+        "comment_type": {
+            "$id": "#/properties/comment_type",
+            "type": "number",
+            "minimum": 0,
+            "maximum": 3,
+            "title": "Comment Type",
+            "description": "The comment type enum.",
+            "examples": [
+                0, 1, 2, 3
+            ]
+        },
+        "comment": {
+            "$id": "#/properties/verification_token",
+            "type": "string",
+            "title": "Comment",
+            "description": "The freetext comment.",
+            "examples": [
+                "A comment example"
+            ]
+        }
+    }
+}
