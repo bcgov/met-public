@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Box, Typography, Stack, useMediaQuery, Theme } from '@mui/material';
+import { Grid, Box, Typography, Stack } from '@mui/material';
 import { MetHeader1 } from 'components/common';
 import { formatDate } from '../../common/dateHelper';
 import { BannerProps } from '../view/types';

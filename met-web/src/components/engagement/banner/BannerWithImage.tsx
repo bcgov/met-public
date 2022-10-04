@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, Box, Typography, Stack, useMediaQuery, Theme } from '@mui/material';
+import { Grid, Box, Typography, Stack } from '@mui/material';
 import { formatDate } from '../../common/dateHelper';
 import BannerWithoutImage from './BannerWithoutImage';
 import { MetHeader1 } from 'components/common';
