@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Box, Typography, Stack, useMediaQuery, Theme } from '@mui/material';
-import { MetHeader1, MetHeader2, MetHeader3 } from 'components/common';
+import { MetHeader1 } from 'components/common';
 import { formatDate } from '../../common/dateHelper';
 import { BannerProps } from '../view/types';
 import { EngagementStatusChip } from '../status';
@@ -11,7 +11,6 @@ import { getEditorState } from 'utils';
 const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
     const { rich_description, name, start_date, end_date, submission_status } = savedEngagement;
     const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const dateFormat = 'MMM dd, yyyy';
 
     const EngagementDate = `Engagement dates: ${formatDate(start_date, dateFormat)} to ${formatDate(
@@ -68,10 +67,7 @@ const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
                         </Grid>
                         <Grid item xs={12}>
                             <Typography sx={{ fontWeight: 'bold' }} variant="subtitle1" color="black">
-                                {`Engagement dates: ${formatDate(start_date, 'MMMM dd, yyyy')} to ${formatDate(
-                                    end_date,
-                                    'MMMM dd, yyyy',
-                                )}`}
+                                {EngagementDate}
                             </Typography>
                         </Grid>
                         <Grid item xs={12}>

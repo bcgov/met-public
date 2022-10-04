@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Grid, Box, Typography, Stack, useMediaQuery, Theme } from '@mui/material';
 import { formatDate } from '../../common/dateHelper';
 import BannerWithoutImage from './BannerWithoutImage';
-import { MetHeader1, MetHeader2, MetHeader3 } from 'components/common';
+import { MetHeader1 } from 'components/common';
 import { BannerProps } from '../view/types';
 import { EngagementStatusChip } from '../status';
 import { Editor } from 'react-draft-wysiwyg';
@@ -11,7 +11,6 @@ import { getEditorState } from 'utils';
 const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
     const { name, start_date, end_date, banner_url, submission_status, rich_description } = savedEngagement;
     const [imageError, setImageError] = useState(false);
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const dateFormat = 'MMM dd, yyyy';
 
     const EngagementDate = `Engagement dates: ${formatDate(start_date, dateFormat)} to ${formatDate(
@@ -79,10 +78,7 @@ const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
                         </Grid>
                         <Grid item xs={12}>
                             <Typography sx={{ fontWeight: 'bold' }} variant="subtitle1" color="black">
-                                {`Engagement dates: ${formatDate(start_date, 'MMMM dd, yyyy')} to ${formatDate(
-                                    end_date,
-                                    'MMMM dd, yyyy',
-                                )}`}
+                                {EngagementDate}
                             </Typography>
                         </Grid>
                         <Grid item xs={12}>
