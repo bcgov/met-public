@@ -64,7 +64,7 @@ describe('Feedback modal tests', () => {
         await waitFor(() => {
             expect(getByTestId('feedback-title')).toBeVisible();
         });
-        const ratingInput = getByTestId('rating-input')        
+        const ratingInput = getByTestId('rating-input');
         fireEvent.click(ratingInput.getElementsByTagName('label')[0]);
         const submitButton = getByTestId('submit-button');
         expect(submitButton).not.toBeDisabled();
@@ -73,5 +73,4 @@ describe('Feedback modal tests', () => {
             expect(getByTestId('success-title')).toBeVisible();
         });
     });
-
 });
