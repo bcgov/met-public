@@ -74,24 +74,16 @@ const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
                         rowSpacing={2}
                     >
                         <Grid item xs={12} sx={{ maxHeight: '20em', overflowY: 'auto', overflowX: 'auto', mb: 2 }}>
-                            {isSmallScreen ? (
-                                <MetHeader2 color="black">{name}</MetHeader2>
-                            ) : (
-                                <MetHeader1 color="black">{name}</MetHeader1>
-                            )}
-
+                            <MetHeader1 color="black">{name}</MetHeader1>
                             <Editor editorState={getEditorState(rich_description)} readOnly={true} toolbarHidden />
                         </Grid>
                         <Grid item xs={12}>
-                            {isSmallScreen ? (
-                                <MetHeader3 style={{ fontWeight: 600 }} color="black">
-                                    {EngagementDate}
-                                </MetHeader3>
-                            ) : (
-                                <MetHeader2 style={{ fontWeight: 600 }} color="black">
-                                    {EngagementDate}
-                                </MetHeader2>
-                            )}
+                            <Typography sx={{ fontWeight: 'bold' }} variant="subtitle1" color="black">
+                                {`Engagement dates: ${formatDate(start_date, 'MMMM dd, yyyy')} to ${formatDate(
+                                    end_date,
+                                    'MMMM dd, yyyy',
+                                )}`}
+                            </Typography>
                         </Grid>
                         <Grid item xs={12}>
                             <Stack direction="row" spacing={1}>
