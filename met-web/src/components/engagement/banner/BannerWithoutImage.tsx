@@ -62,7 +62,7 @@ const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
                         rowSpacing={2}
                     >
                         <Grid item xs={12} sx={{ maxHeight: '20em', overflowY: 'auto', overflowX: 'auto' }}>
-                            <MetHeader1 color="black">{name}</MetHeader1>
+                            <MetHeader1>{name}</MetHeader1>
                             <Editor editorState={getEditorState(rich_description)} readOnly={true} toolbarHidden />
                         </Grid>
                         <Grid item xs={12}>
