@@ -8,6 +8,7 @@ import {
     EngagementFormUpdate,
     EngagementParams,
     OpenModalProps,
+    WidgetsList,
 } from './types';
 import { createDefaultEngagement, Engagement } from '../../../models/engagement';
 import { saveDocument } from 'services/objectStorageService';
@@ -34,13 +35,21 @@ export const ActionContext = createContext<EngagementContext>({
     fetchEngagement: () => {
         /* empty default method  */
     },
-    modalState: {
-        modalOpen: false,
-    },
-    handleOpenModal: (_props: OpenModalProps) => {
-        /* empty default method  */
-    },
-    handleCloseModal: () => {
+    widgets: [
+        {
+            widget_type: 0,
+            items: [
+                {
+                    id: 0,
+                    widget_type: 0,
+                    engagement_id: 0,
+                    data: {},
+                },
+            ],
+        },
+    ],
+    widgetDrawerOpen: false,
+    handleWidgetDrawerOpen: (_open: boolean) => {
         /* empty default method  */
     },
 });
@@ -59,6 +68,25 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
+
+    const [widgets, setWidgets] = useState<WidgetsList[]>([
+        {
+            widget_type: 1,
+            items: [
+                {
+                    id: 1,
+                    widget_type: 1,
+                    engagement_id: Number(engagementId),
+                    data: {},
+                },
+            ],
+        },
+    ]);
+    const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
+
+    const handleWidgetDrawerOpen = (open: boolean) => {
+        setWidgetDrawerOpen(open);
+    };
 
     const handleAddBannerImage = (files: File[]) => {
         if (files.length > 0) {
@@ -160,20 +188,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
     };
 
-    const handleOpenModal = ({
-        handleConfirm = () => {
-            /*
-                default empty function
-            */
-        },
-    }: OpenModalProps) => {
-        setModalState({ modalOpen: true, handleConfirm });
-    };
-
-    const handleCloseModal = () => {
-        setModalState({ modalOpen: false });
-    };
-
     return (
         <ActionContext.Provider
             value={{
@@ -185,9 +199,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 loadingSavedEngagement,
                 handleAddBannerImage,
                 fetchEngagement,
-                modalState,
-                handleOpenModal,
-                handleCloseModal,
+                widgets,
+                widgetDrawerOpen,
+                handleWidgetDrawerOpen,
             }}
         >
             {children}

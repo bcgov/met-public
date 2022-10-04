@@ -1,23 +1,21 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import { Grid, Stack } from '@mui/material';
 import { MetHeader3 } from 'components/common';
-import WhoIsListeningOption from './WidgetOptionCard';
+import WhoIsListeningOption from './WhoIsListeningOption';
+import { ActionContext } from '../ActionContext';
 
 const WidgetDrawer = () => {
-    const [open, setOpen] = React.useState(true);
-
+    const { widgetDrawerOpen, handleWidgetDrawerOpen } = useContext(ActionContext);
     return (
-        <Drawer anchor="right" open={open} onClose={() => setOpen(false)} sx={{ marginTop: '60px' }}>
+        <Drawer
+            anchor="right"
+            open={widgetDrawerOpen}
+            onClose={() => handleWidgetDrawerOpen(false)}
+            sx={{ marginTop: '60px' }}
+        >
             <Box sx={{ width: '50vw', paddingTop: '10em' }} role="presentation">
                 <Grid
                     container

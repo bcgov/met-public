@@ -1,18 +1,23 @@
-import React from 'react';
-import { MetPaper, MetHeader2, MetHeader3, MetBody } from 'components/common';
-import { Grid, Avatar } from '@mui/material';
+import React, { ReactNode } from 'react';
+import { MetPaper, MetHeader3, MetBody } from 'components/common';
+import { Grid } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 
-const WhoIsListeningOption = () => {
+interface WidgetOptionCardProps {
+    title: string;
+    description: string;
+    icon: ReactNode;
+}
+const WidgetOptionCard = ({ title, description, icon }: WidgetOptionCardProps) => {
     return (
         <MetPaper
             elevation={1}
             sx={{ padding: '1px 2px 1px 2px', cursor: 'pointer', '&:hover': { backgroundColor: 'rgb(242, 242, 242)' } }}
             onClick={() => console.log('clicked')}
         >
-            <Grid container alignItems="flex-start" justifyContent="flex-start" direction="row">
-                <Grid item xs={3}>
-                    <PersonIcon sx={{ height: '100%', width: '100%' }} />
+            <Grid container alignItems="flex-start" justifyContent="flex-start" direction="row" columnSpacing={2}>
+                <Grid item>
+                    <PersonIcon sx={{ fontSize: '5em' }} />
                 </Grid>
                 <Grid
                     container
@@ -35,4 +40,4 @@ const WhoIsListeningOption = () => {
     );
 };
 
-export default WhoIsListeningOption;
+export default WidgetOptionCard;
