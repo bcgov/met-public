@@ -57,7 +57,7 @@ class Feedback(db.Model):
             comment=feedback.get('comment', None),
             created_date=datetime.utcnow(),
             rating=feedback.get('rating'),
-            comment_type=feedback.get('commentType', None)
+            comment_type=feedback.get('comment_type', None)
         )
         db.session.add(new_feedback)
         db.session.commit()

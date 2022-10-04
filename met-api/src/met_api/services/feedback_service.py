@@ -31,16 +31,6 @@ class FeedbackService:
     @classmethod
     def create_feedback(cls, feedback: FeedbackSchema):
         """Create feedback."""
-        cls.validate_fields(feedback)
         feedback_schema = FeedbackSchema()
         new_feedback = Feedback.create_feedback(feedback)
         return feedback_schema.dump(new_feedback)
-
-    @staticmethod
-    def validate_fields(data):
-        """Validate all fields."""
-        # Will empty text return False
-        empty_fields = [not data[field] for field in ['rating']]
-
-        if any(empty_fields):
-            raise ValueError('Some required fields for feedback are missing')

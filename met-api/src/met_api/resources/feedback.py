@@ -65,8 +65,7 @@ class Feedback(Resource):
             valid_format, errors = schema_utils.validate(request_json, 'feedback')
             if not valid_format:
                 return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
-            feedback_schema = FeedbackSchema().load(request_json)
-            result = FeedbackService().create_feedback(feedback_schema)
+            result = FeedbackService().create_feedback(request_json)
             return ActionResult.success(result.get('id'), result)
         except KeyError:
             return ActionResult.error('feedback was not found')

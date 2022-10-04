@@ -35,7 +35,14 @@ def test_feedback(client, jwt, session):  # pylint:disable=unused-argument
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/feedbacks/', data=json.dumps(to_dict),
                      headers=headers, content_type='application/json')
+
     assert rv.status_code == 200
+    result = rv.json.get('result')
+    assert result is not None
+    assert result.get('id') is not None
+    assert result.get('rating') == feedback.rating
+    assert result.get('comment_type') == feedback.comment_type
+    assert result.get('comment') == feedback.comment
 
 
 def test_invalid_feedback(client, jwt, session):  # pylint:disable=unused-argument
