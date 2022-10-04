@@ -69,7 +69,9 @@ const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
                     >
                         <Grid item xs={12} sx={{ maxHeight: '20em', overflowY: 'auto', overflowX: 'auto' }}>
                             {isSmallScreen ? (
-                                <MetHeader2 color="black">{name}</MetHeader2>
+                                <MetHeader1 sx={{ fontSize: '1.9rem' }} color="black">
+                                    {name}
+                                </MetHeader1>
                             ) : (
                                 <MetHeader1 color="black">{name}</MetHeader1>
                             )}
