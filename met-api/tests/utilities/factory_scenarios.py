@@ -23,6 +23,7 @@ from faker import Faker
 
 from met_api.config import get_named_config
 from met_api.constants.engagement_status import SubmissionStatus
+from met_api.constants.feedback import CommentType, RatingType
 
 fake = Faker()
 
@@ -86,6 +87,16 @@ class TestEngagementInfo(dict, Enum):
         'content': 'Content Sample',
         'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\"type\":\"unstyled\",\"depth\":0,\
         \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"'
+    }
+
+
+class TestFeedbackInfo(dict, Enum):
+    """Test scenarios of feedback."""
+
+    feedback1 = {
+        'comment': 'A feedback comment',
+        'rating': RatingType.Satisfied,
+        'comment_type': CommentType.Idea,
     }
 
 

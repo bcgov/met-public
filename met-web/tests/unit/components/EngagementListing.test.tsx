@@ -126,8 +126,8 @@ describe('Engagement form page tests', () => {
             expect(getEngagementMock).lastCalledWith({
                 page: 1,
                 size: 10,
-                sort_key: 'name',
-                sort_order: 'asc',
+                sort_key: 'engagement.created_date',
+                sort_order: 'desc',
                 search_text: 'Engagement One',
             });
         });

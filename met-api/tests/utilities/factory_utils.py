@@ -24,7 +24,8 @@ from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.survey import Survey as SurveyModel
 from met_api.models.email_verification import EmailVerification as EmailVerificationModel
 from met_api.models.user import User as UserModel
-from tests.utilities.factory_scenarios import TestEngagementInfo, TestSurveyInfo, TestUserInfo
+from met_api.models.feedback import Feedback as FeedbackModel
+from tests.utilities.factory_scenarios import TestEngagementInfo, TestFeedbackInfo, TestSurveyInfo, TestUserInfo
 
 CONFIG = get_named_config('testing')
 fake = Faker()
@@ -113,6 +114,18 @@ def factory_user_model(user_info: dict = TestUserInfo.user_public_1):
     db.session.add(user)
     db.session.commit()
     return user
+
+
+def factory_feedback_model(feedback_info: dict = TestFeedbackInfo.feedback1, status=None):
+    """Produce a feedback model."""
+    feedback = FeedbackModel(
+        comment=fake.text(),
+        rating=feedback_info.get('rating'),
+        comment_type=feedback_info.get('comment_type'),
+    )
+    db.session.add(feedback)
+    db.session.commit()
+    return feedback
 
 
 def factory_auth_header(jwt, claims):

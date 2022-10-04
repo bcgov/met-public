@@ -25,9 +25,9 @@ const SurveyListing = () => {
     const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Survey>>({
         page: 1,
         size: 10,
-        sort_key: 'name',
-        nested_sort_key: 'survey.name',
-        sort_order: 'asc',
+        sort_key: 'created_date',
+        nested_sort_key: 'survey.created_date',
+        sort_order: 'desc',
     });
     const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
 
