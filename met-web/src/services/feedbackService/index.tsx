@@ -1,6 +1,5 @@
 import http from 'apiManager/httpRequestHandler';
 import Endpoints from 'apiManager/endpoints';
-
 import { Page } from 'services/type';
 import { Feedback } from 'models/feedback';
 import { GetFeedbackRequest, PostFeedbackRequest } from './types';
@@ -13,7 +12,13 @@ export const getFeedbacksPage = async ({
     search_text,
 }: GetFeedbackRequest): Promise<Page<Feedback>> => {
     const url = Endpoints.Feedback.GET_LIST;
-    const responseData = await http.GetRequest<Page<Feedback>>(url, { page, size, sort_key, sort_order, search_text });
+    const responseData = await http.GetRequest<Page<Feedback>>(url, {
+        page,
+        size,
+        sort_key,
+        sort_order,
+        search_text,
+    });
     return (
         responseData.data.result ?? {
             items: [],
