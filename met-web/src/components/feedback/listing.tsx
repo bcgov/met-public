@@ -14,6 +14,7 @@ import Stack from '@mui/material/Stack';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import MetTable from 'components/common/Table';
 import { getFeedbacksPage } from 'services/feedbackService';
+import { formatDate } from 'components/common/dateHelper';
 
 const customRatings: {
     [index: number]: {
@@ -102,6 +103,14 @@ const FeedbackListing = () => {
             getValue: (row: Feedback) => customRatings[row.rating].icon,
         },
         {
+            key: 'created_date',
+            numeric: false,
+            disablePadding: false,
+            label: 'Date Published',
+            allowSort: true,
+            getValue: (row: Feedback) => formatDate(row.created_date),
+        },
+        {
             key: 'comment_type',
             numeric: false,
             disablePadding: false,
@@ -111,7 +120,7 @@ const FeedbackListing = () => {
         },
         {
             key: 'comment',
-            numeric: true,
+            numeric: false,
             disablePadding: false,
             label: 'Message',
             allowSort: true,
