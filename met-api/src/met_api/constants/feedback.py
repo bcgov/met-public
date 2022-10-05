@@ -32,3 +32,10 @@ class CommentType(IntEnum):
     Issue = 1
     Idea = 2
     Else = 3
+
+
+class FeedbackSourceType(IntEnum):
+    """Source types enum."""
+
+    Public = 0
+    Internal = 1

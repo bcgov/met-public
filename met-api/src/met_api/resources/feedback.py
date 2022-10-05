@@ -23,6 +23,7 @@ from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas import utils as schema_utils
 from met_api.services.feedback_service import FeedbackService
 from met_api.utils.action_result import ActionResult
+from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
 API = Namespace('feedbacks', description='Endpoints for Feedbacks Management')
@@ -57,14 +58,16 @@ class Feedback(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
+    @auth.optional
     def post():
         """Create a new feedback."""
         try:
+            user_id = TokenInfo.get_id()
             request_json = request.get_json()
             valid_format, errors = schema_utils.validate(request_json, 'feedback')
             if not valid_format:
                 return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
-            result = FeedbackService().create_feedback(request_json)
+            result = FeedbackService().create_feedback(request_json, user_id)
             return ActionResult.success(result.get('id'), result)
         except KeyError:
             return ActionResult.error('feedback was not found')

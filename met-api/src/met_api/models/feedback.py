@@ -7,7 +7,7 @@ from datetime import datetime
 from sqlalchemy import TEXT, asc, cast, desc
 from sqlalchemy.sql import text
 
-from met_api.constants.feedback import CommentType, RatingType
+from met_api.constants.feedback import CommentType, FeedbackSourceType, RatingType
 from met_api.models.pagination_options import PaginationOptions
 from .db import db
 
@@ -21,6 +21,7 @@ class Feedback(db.Model):
     rating = db.Column(db.Enum(RatingType), nullable=False)
     comment_type = db.Column(db.Enum(CommentType), nullable=True)
     comment = db.Column(db.Text, nullable=True)
+    source = db.Column(db.Enum(FeedbackSourceType), nullable=True)
 
     @classmethod
     def get(cls, feedback_id):
@@ -40,7 +41,7 @@ class Feedback(db.Model):
             else desc(text(pagination_options.sort_key))
 
         query = query.order_by(sort)
-
+ 
         no_pagination_options = not pagination_options.page or not pagination_options.size
         if no_pagination_options:
             items = query.all()
@@ -57,7 +58,8 @@ class Feedback(db.Model):
             comment=feedback.get('comment', None),
             created_date=datetime.utcnow(),
             rating=feedback.get('rating'),
-            comment_type=feedback.get('comment_type', None)
+            comment_type=feedback.get('comment_type', None),
+            source=feedback.get('source', None)
         )
         db.session.add(new_feedback)
         db.session.commit()

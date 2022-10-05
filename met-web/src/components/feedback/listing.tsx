@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import SvgIcon from '@mui/material/SvgIcon';
 import { MetPageGridContainer } from 'components/common';
-import { CommentTypeEnum, Feedback } from 'models/feedback';
+import { CommentTypeEnum, Feedback, SourceTypeEnum } from 'models/feedback';
 import { useAppDispatch } from 'hooks';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { ReactComponent as VeryDissatisfiedIcon } from 'assets/images/emojiVeryDissatisfied.svg';
@@ -109,6 +109,14 @@ const FeedbackListing = () => {
             label: 'Date Published',
             allowSort: true,
             getValue: (row: Feedback) => formatDate(row.created_date),
+        },
+        {
+            key: 'source',
+            numeric: false,
+            disablePadding: false,
+            label: 'Source',
+            allowSort: true,
+            getValue: (row: Feedback) => SourceTypeEnum[row.source ?? 0].toString(),
         },
         {
             key: 'comment_type',

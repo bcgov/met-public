@@ -20,6 +20,7 @@ from faker import Faker
 from met_api import db
 from met_api.config import get_named_config
 from met_api.constants.engagement_status import Status
+from met_api.constants.feedback import FeedbackSourceType
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.survey import Survey as SurveyModel
 from met_api.models.email_verification import EmailVerification as EmailVerificationModel
@@ -122,6 +123,7 @@ def factory_feedback_model(feedback_info: dict = TestFeedbackInfo.feedback1, sta
         comment=fake.text(),
         rating=feedback_info.get('rating'),
         comment_type=feedback_info.get('comment_type'),
+        source=FeedbackSourceType.Internal,
     )
     db.session.add(feedback)
     db.session.commit()
