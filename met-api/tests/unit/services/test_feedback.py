@@ -30,7 +30,6 @@ def test_create_feedback_public(session):  # pylint:disable=unused-argument
     assert fetched_feedback.get('comment') == feedback_data.get('comment')
     assert fetched_feedback.get('source') == FeedbackSourceType.Public
 
-
 def test_create_feedback_internal(session):  # pylint:disable=unused-argument
     """Assert that a feedback can be created."""
     feedback_data = TestFeedbackInfo.feedback1

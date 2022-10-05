@@ -20,6 +20,7 @@ from faker import Faker
 from met_api import db
 from met_api.config import get_named_config
 from met_api.constants.engagement_status import Status
+from met_api.constants.feedback import FeedbackSourceType
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.survey import Survey as SurveyModel
 from met_api.models.email_verification import EmailVerification as EmailVerificationModel

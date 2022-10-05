@@ -41,7 +41,7 @@ class Feedback(db.Model):
             else desc(text(pagination_options.sort_key))
 
         query = query.order_by(sort)
-
+ 
         no_pagination_options = not pagination_options.page or not pagination_options.size
         if no_pagination_options:
             items = query.all()
