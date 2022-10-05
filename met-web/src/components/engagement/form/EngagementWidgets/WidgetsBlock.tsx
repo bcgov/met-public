@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Grid } from '@mui/material';
 import { MetHeader2, MetPaper, SecondaryButton } from 'components/common';
 import { ActionContext } from '../ActionContext';
-import { WidgetOptionCardSwitch } from './WidgetOptionCardSwitch';
+import { WidgetCardSwitch } from './WidgetCardSwitch';
 
 const WidgetsBlock = () => {
     const { widgets, handleWidgetDrawerOpen } = useContext(ActionContext);
@@ -26,7 +26,7 @@ const WidgetsBlock = () => {
                         {widgets.map((widget, index) => {
                             return (
                                 <Grid item xs={12}>
-                                    <WidgetOptionCardSwitch key={`${widget.widget_type}-${index}`} widget={widget} />
+                                    <WidgetCardSwitch key={`${widget.widget_type}-${index}`} widget={widget} />
                                 </Grid>
                             );
                         })}

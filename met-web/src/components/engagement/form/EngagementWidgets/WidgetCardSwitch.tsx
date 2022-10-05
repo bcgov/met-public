@@ -3,10 +3,10 @@ import { WidgetsList } from '../types';
 import { Switch, Case, Default } from 'react-if';
 import { MetWidget } from 'components/common';
 
-interface WidgetOptionCardSwitchProps {
+interface WidgetCardSwitchProps {
     widget: WidgetsList;
 }
-export const WidgetOptionCardSwitch = ({ widget }: WidgetOptionCardSwitchProps) => {
+export const WidgetCardSwitch = ({ widget }: WidgetCardSwitchProps) => {
     return (
         <>
             <Switch>
