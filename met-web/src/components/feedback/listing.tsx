@@ -2,11 +2,17 @@ import React, { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
+import SvgIcon from '@mui/material/SvgIcon';
 import { MetPageGridContainer, PrimaryButton } from 'components/common';
 import { Feedback } from './Feedback';
 import { useAppDispatch } from 'hooks';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
+import { ReactComponent as VeryDissatisfiedIcon } from 'assets/images/emojiVeryDissatisfied.svg';
+import { ReactComponent as DissatisfiedIcon } from 'assets/images/emojiDissatisfied.svg';
+import { ReactComponent as NeutralIcon } from 'assets/images/emojiNeutral.svg';
+import { ReactComponent as SatisfiedIcon } from 'assets/images/emojiSatisfied.svg';
+import { ReactComponent as VerySatisfiedIcon } from 'assets/images/emojiVerySatisfied.svg';
 import { Link as MuiLink } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -14,34 +20,73 @@ import MetTable from 'components/common/Table';
 
 const feedbackData = [
     {
-        id: 0,
-        feedback_id: 0,
-        published_date: '',
-        feedback_type: 'Issue',
-        message: '',
-    },
-    {
         id: 1,
-        feedback_id: 0,
+        feedback_id: 1,
         published_date: '',
         feedback_type: 'Issue',
         message: '',
     },
     {
         id: 2,
-        feedback_id: 0,
+        feedback_id: 2,
         published_date: '',
         feedback_type: 'Issue',
         message: '',
     },
     {
         id: 3,
-        feedback_id: 0,
+        feedback_id: 3,
+        published_date: '',
+        feedback_type: 'Issue',
+        message: '',
+    },
+    {
+        id: 4,
+        feedback_id: 4,
+        published_date: '',
+        feedback_type: 'Issue',
+        message: '',
+    },
+    {
+        id: 5,
+        feedback_id: 5,
         published_date: '',
         feedback_type: 'Issue',
         message: '',
     },
 ];
+
+const customRatings: {
+    [index: number]: {
+        icon: React.ReactElement;
+        label: string;
+    };
+} = {
+    5: {
+        icon: <SvgIcon fontSize="large" component={VeryDissatisfiedIcon} viewBox="0 0 64 64" sx={{ marginX: 1 }} />,
+        label: 'Very Dissatisfied',
+    },
+    4: {
+        icon: <SvgIcon fontSize="large" component={DissatisfiedIcon} viewBox="0 0 64 64" sx={{ marginX: 1 }} />,
+        label: 'Dissatisfied',
+    },
+    3: {
+        icon: <SvgIcon fontSize="large" component={NeutralIcon} viewBox="0 0 64 64" sx={{ marginX: 1 }} />,
+        label: 'Neutral',
+    },
+    2: {
+        icon: <SvgIcon fontSize="large" component={SatisfiedIcon} viewBox="0 0 64 64" sx={{ marginX: 1 }} />,
+        label: 'Satisfied',
+    },
+    1: {
+        icon: <SvgIcon fontSize="large" component={VerySatisfiedIcon} viewBox="0 0 64 64" sx={{ marginX: 1 }} />,
+        label: 'Very Satisfied',
+    },
+    0: {
+        icon: <></>,
+        label: '',
+    },
+};
 
 const FeedbackListing = () => {
     const [searchFilter, setSearchFilter] = useState({
@@ -93,7 +138,7 @@ const FeedbackListing = () => {
             disablePadding: true,
             label: 'Feedback',
             allowSort: true,
-            getValue: (row: Feedback) => row.feedback_id,
+            getValue: (row: Feedback) => customRatings[row.feedback_id].icon,
         },
         {
             key: 'published_date',
