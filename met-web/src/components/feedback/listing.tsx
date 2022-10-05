@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
 import SvgIcon from '@mui/material/SvgIcon';
 import { MetPageGridContainer, PrimaryButton } from 'components/common';
-import { Feedback } from 'models/Feedback';
+import { Feedback } from 'models/feedback';
 import { useAppDispatch } from 'hooks';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
-import { formatDate } from 'components/common/dateHelper';
 import { ReactComponent as VeryDissatisfiedIcon } from 'assets/images/emojiVeryDissatisfied.svg';
 import { ReactComponent as DissatisfiedIcon } from 'assets/images/emojiDissatisfied.svg';
 import { ReactComponent as NeutralIcon } from 'assets/images/emojiNeutral.svg';
 import { ReactComponent as SatisfiedIcon } from 'assets/images/emojiSatisfied.svg';
 import { ReactComponent as VerySatisfiedIcon } from 'assets/images/emojiVerySatisfied.svg';
-import { Link as MuiLink } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import MetTable from 'components/common/Table';
@@ -77,7 +74,14 @@ const FeedbackListing = () => {
     const loadFeedbacks = async () => {
         try {
             setTableLoading(true);
-            setFeedbacks(getFeedbacksPage({ page, size, sort_key, sort_order, search_text }));
+            const response = await getFeedbacksPage({
+                page,
+                size,
+                sort_key: nested_sort_key || sort_key,
+                sort_order,
+                search_text: searchFilter.value,
+            });
+            setFeedbacks(response.items);
             setPageInfo({
                 total: feedbacks.length,
             });
