@@ -3,6 +3,7 @@ export interface Feedback {
     rating: number;
     comment: string;
     comment_type: CommentTypeEnum;
+    source: SourceTypeEnum;
 }
 
 export enum CommentTypeEnum {
@@ -12,11 +13,17 @@ export enum CommentTypeEnum {
     Else = 3,
 }
 
+export enum SourceTypeEnum {
+    Public = 0,
+    Internal = 1,
+}
+
 export const createDefaultFeedback = (): Feedback => {
     return {
         rating: 0,
         comment: '',
         comment_type: CommentTypeEnum.None,
         created_date: '',
+        source: SourceTypeEnum.Public,
     };
 };

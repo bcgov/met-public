@@ -1,5 +1,6 @@
 
 """Service for feedback management."""
+from met_api.constants.feedback import FeedbackSourceType
 from met_api.models.feedback import Feedback
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.feedback import FeedbackSchema
@@ -29,8 +30,12 @@ class FeedbackService:
         }
 
     @classmethod
-    def create_feedback(cls, feedback: FeedbackSchema):
+    def create_feedback(cls, feedback: FeedbackSchema, user_id):
         """Create feedback."""
-        feedback_schema = FeedbackSchema()
+        if user_id is None:
+            feedback['source'] = FeedbackSourceType.Public
+        else:
+            feedback['source'] = FeedbackSourceType.Internal
         new_feedback = Feedback.create_feedback(feedback)
+        feedback_schema = FeedbackSchema()
         return feedback_schema.dump(new_feedback)
