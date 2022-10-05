@@ -32,7 +32,7 @@ class FeedbackService:
     @classmethod
     def create_feedback(cls, feedback: FeedbackSchema, user_id):
         """Create feedback."""
-        if (user_id is None):
+        if user_id is None:
             feedback['source'] = FeedbackSourceType.Public
         else:
             feedback['source'] = FeedbackSourceType.Internal
