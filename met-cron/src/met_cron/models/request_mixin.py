@@ -17,3 +17,4 @@ class RequestMixin(object):
     type = db.Column(db.String(100))
     label = db.Column(db.String(200))
     request_id = db.Column(db.String(20))
+    postion = db.Column(db.Integer)
