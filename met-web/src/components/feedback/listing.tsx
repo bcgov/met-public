@@ -49,10 +49,6 @@ const customRatings: {
 };
 
 const FeedbackListing = () => {
-    const [searchFilter, setSearchFilter] = useState({
-        key: 'name',
-        value: '',
-    });
     const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
     const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Feedback>>({
         page: 1,
@@ -69,7 +65,7 @@ const FeedbackListing = () => {
 
     useEffect(() => {
         loadFeedbacks();
-    }, [paginationOptions, searchFilter]);
+    }, [paginationOptions]);
 
     const loadFeedbacks = async () => {
         try {
@@ -79,7 +75,6 @@ const FeedbackListing = () => {
                 size,
                 sort_key: nested_sort_key || sort_key,
                 sort_order,
-                search_text: searchFilter.value,
             });
             setFeedbacks(response.items);
             setPageInfo({
