@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
 import SvgIcon from '@mui/material/SvgIcon';
 import { MetPageGridContainer, PrimaryButton } from 'components/common';
-import { Feedback } from './Feedback';
+import { Feedback } from 'models/Feedback';
 import { useAppDispatch } from 'hooks';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
@@ -17,44 +17,7 @@ import { Link as MuiLink } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import MetTable from 'components/common/Table';
-
-const feedbackData = [
-    {
-        id: 1,
-        feedback_id: 1,
-        published_date: '',
-        feedback_type: 'Issue',
-        message: '',
-    },
-    {
-        id: 2,
-        feedback_id: 2,
-        published_date: '',
-        feedback_type: 'Issue',
-        message: '',
-    },
-    {
-        id: 3,
-        feedback_id: 3,
-        published_date: '',
-        feedback_type: 'Issue',
-        message: '',
-    },
-    {
-        id: 4,
-        feedback_id: 4,
-        published_date: '',
-        feedback_type: 'Issue',
-        message: '',
-    },
-    {
-        id: 5,
-        feedback_id: 5,
-        published_date: '',
-        feedback_type: 'Issue',
-        message: '',
-    },
-];
+import { getFeedbacksPage } from 'services/feedbackService';
 
 const customRatings: {
     [index: number]: {
@@ -97,7 +60,7 @@ const FeedbackListing = () => {
     const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Feedback>>({
         page: 1,
         size: 10,
-        sort_key: 'feedback_id',
+        sort_key: 'rating',
         nested_sort_key: null,
         sort_order: 'asc',
     });
@@ -114,9 +77,9 @@ const FeedbackListing = () => {
     const loadFeedbacks = async () => {
         try {
             setTableLoading(true);
-            setFeedbacks(feedbackData);
+            setFeedbacks(getFeedbacksPage({ page, size, sort_key, sort_order, search_text }));
             setPageInfo({
-                total: feedbackData.length,
+                total: feedbacks.length,
             });
             setTableLoading(false);
         } catch (error) {
@@ -133,37 +96,28 @@ const FeedbackListing = () => {
 
     const headCells: HeadCell<Feedback>[] = [
         {
-            key: 'feedback_id',
+            key: 'rating',
             numeric: true,
             disablePadding: true,
             label: 'Feedback',
             allowSort: true,
-            getValue: (row: Feedback) => customRatings[row.feedback_id].icon,
+            getValue: (row: Feedback) => customRatings[row.rating].icon,
         },
         {
-            key: 'published_date',
-            nestedSortKey: '',
-            numeric: false,
-            disablePadding: false,
-            label: 'Date Published',
-            allowSort: true,
-            getValue: (row: Feedback) => formatDate(row.published_date),
-        },
-        {
-            key: 'feedback_type',
+            key: 'comment_type',
             numeric: false,
             disablePadding: false,
             label: 'Feedback Type',
             allowSort: true,
-            getValue: (row: Feedback) => row.feedback_type,
+            getValue: (row: Feedback) => row.comment_type,
         },
         {
-            key: 'message',
+            key: 'comment',
             numeric: true,
             disablePadding: false,
             label: 'Message',
             allowSort: true,
-            getValue: (row: Feedback) => row.message,
+            getValue: (row: Feedback) => row.comment,
         },
     ];
 
