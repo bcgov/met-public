@@ -136,11 +136,7 @@ const FeedbackListing = () => {
                     width="100%"
                     justifyContent="flex-end"
                     sx={{ p: 2 }}
-                >
-                    <PrimaryButton component={Link} to="/feedback" data-testid="feedback">
-                        View Report
-                    </PrimaryButton>
-                </Stack>
+                ></Stack>
             </Grid>
             <Grid item xs={12} lg={10}>
                 <MetTable
