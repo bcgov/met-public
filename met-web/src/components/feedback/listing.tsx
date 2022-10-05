@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import SvgIcon from '@mui/material/SvgIcon';
 import { MetPageGridContainer } from 'components/common';
-import { Feedback } from 'models/feedback';
+import { CommentTypeEnum, Feedback } from 'models/feedback';
 import { useAppDispatch } from 'hooks';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { ReactComponent as VeryDissatisfiedIcon } from 'assets/images/emojiVeryDissatisfied.svg';
@@ -14,6 +14,7 @@ import Stack from '@mui/material/Stack';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import MetTable from 'components/common/Table';
 import { getFeedbacksPage } from 'services/feedbackService';
+import { formatDate } from 'components/common/dateHelper';
 
 const customRatings: {
     [index: number]: {
@@ -102,16 +103,24 @@ const FeedbackListing = () => {
             getValue: (row: Feedback) => customRatings[row.rating].icon,
         },
         {
+            key: 'created_date',
+            numeric: false,
+            disablePadding: false,
+            label: 'Date Published',
+            allowSort: true,
+            getValue: (row: Feedback) => formatDate(row.created_date),
+        },
+        {
             key: 'comment_type',
             numeric: false,
             disablePadding: false,
             label: 'Feedback Type',
             allowSort: true,
-            getValue: (row: Feedback) => row.comment_type,
+            getValue: (row: Feedback) => CommentTypeEnum[row.comment_type].toString(),
         },
         {
             key: 'comment',
-            numeric: true,
+            numeric: false,
             disablePadding: false,
             label: 'Message',
             allowSort: true,

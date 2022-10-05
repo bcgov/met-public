@@ -53,7 +53,7 @@ describe('Feedback modal tests', () => {
 
     test('Submit shows thank you message', async () => {
         createFeedbackMock.mockReturnValue(
-            Promise.resolve({ comment_type: CommentTypeEnum.None, comment: '', rating: 1 }),
+            Promise.resolve({ comment_type: CommentTypeEnum.None, comment: '', rating: 1, created_date: '' }),
         );
         const { getByTestId } = render(<FeedbackModal />);
         const feedbackButton = getByTestId('feedback-button');

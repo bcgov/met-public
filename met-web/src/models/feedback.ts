@@ -1,4 +1,5 @@
 export interface Feedback {
+    created_date: string;
     rating: number;
     comment: string;
     comment_type: CommentTypeEnum;
@@ -16,5 +17,6 @@ export const createDefaultFeedback = (): Feedback => {
         rating: 0,
         comment: '',
         comment_type: CommentTypeEnum.None,
+        created_date: '',
     };
 };
