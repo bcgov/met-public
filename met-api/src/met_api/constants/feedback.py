@@ -28,6 +28,7 @@ class RatingType(IntEnum):
 class CommentType(IntEnum):
     """Comment types enum."""
 
+    NONE = 0
     Issue = 1
     Idea = 2
     Else = 3
