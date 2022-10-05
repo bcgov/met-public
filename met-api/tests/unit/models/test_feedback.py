@@ -32,7 +32,7 @@ def test_feedback(session):
     assert feedback.id is not None
     feedback_existing = FeedbackModel.get(feedback.id)
     assert feedback.comment == feedback_existing.comment
-    assert feedback.source == FeedbackSourceType.Internal
+    assert feedback.source == FeedbackSourceType.Public
 
 
 def test_get_feedbacks_paginated(session):

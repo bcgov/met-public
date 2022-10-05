@@ -45,7 +45,7 @@ def test_feedback(client, jwt, session):  # pylint:disable=unused-argument
     assert result.get('rating') == feedback.rating
     assert result.get('comment_type') == feedback.comment_type
     assert result.get('comment') == feedback.comment
-    assert result.get('source') == FeedbackSourceType.Public
+    assert result.get('source') == feedback.source
 
 
 def test_invalid_feedback(client, jwt, session):  # pylint:disable=unused-argument
