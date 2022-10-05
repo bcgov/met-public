@@ -1,7 +1,7 @@
 export interface Feedback {
     rating: number;
     comment: string;
-    commentType: CommentTypeEnum;
+    comment_type: CommentTypeEnum;
 }
 
 export enum CommentTypeEnum {
@@ -15,6 +15,6 @@ export const createDefaultFeedback = (): Feedback => {
     return {
         rating: 0,
         comment: '',
-        commentType: CommentTypeEnum.None,
+        comment_type: CommentTypeEnum.None,
     };
 };
