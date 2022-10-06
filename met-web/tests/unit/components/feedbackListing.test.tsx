@@ -67,13 +67,14 @@ describe('Feedback Listing tests', () => {
         });
     });
 
-    test('Search filter works and fetchs feedback with the sort key as the message', async () => {
+    test('fetchs feedback with the sort key as the rating', async () => {
         getFeedbackPageMock.mockReturnValue(
             Promise.resolve({
                 items: [mockFeedbackOne],
                 total: 1,
             }),
         );
+        render(<FeedbackListing />);
 
         await waitFor(() => {
             expect(screen.getByText('Feedback One')).toBeInTheDocument();
