@@ -78,7 +78,7 @@ const FeedbackListing = () => {
             });
             setFeedbacks(response.items);
             setPageInfo({
-                total: feedbacks.length,
+                total: response.total,
             });
             setTableLoading(false);
         } catch (error) {
