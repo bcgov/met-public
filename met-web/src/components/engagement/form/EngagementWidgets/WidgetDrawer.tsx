@@ -5,19 +5,20 @@ import Divider from '@mui/material/Divider';
 import { Grid, Stack } from '@mui/material';
 import { MetHeader3 } from 'components/common';
 import { ActionContext } from '../ActionContext';
-import WidgetOptionCard from './WidgetOptionCard';
-import PersonIcon from '@mui/icons-material/Person';
+import WidgetDrawerTabs from './WidgetDrawerTabs';
 
 const WidgetDrawer = () => {
-    const { widgetDrawerOpen, handleWidgetDrawerOpen } = useContext(ActionContext);
+    const { widgetDrawerOpen, handleWidgetDrawerOpen, handleWidgetDrawerTabValueChange } = useContext(ActionContext);
     return (
         <Drawer
             anchor="right"
             open={widgetDrawerOpen}
             onClose={() => handleWidgetDrawerOpen(false)}
-            sx={{ marginTop: '60px' }}
+            SlideProps={{
+                onExited: () => handleWidgetDrawerTabValueChange('widgetOptions'),
+            }}
         >
-            <Box sx={{ width: '50vw', paddingTop: '10em' }} role="presentation">
+            <Box sx={{ width: '50vw', paddingTop: '7em' }} role="presentation">
                 <Grid
                     container
                     direction="row"
@@ -30,14 +31,7 @@ const WidgetDrawer = () => {
                         <MetHeader3 bold>Select Widget</MetHeader3>
                         <Divider sx={{ marginTop: '1em' }} />
                     </Grid>
-                    <Grid item xs={12} lg={6}>
-                        <WidgetOptionCard
-                            icon={<PersonIcon />}
-                            title={'Who is Listening'}
-                            description={'Add one or a few contact(s) for this engagement'}
-                            onClick={() => console.log('clicked who is listening')}
-                        />
-                    </Grid>
+                    <WidgetDrawerTabs />
                 </Grid>
             </Box>
         </Drawer>

@@ -7,7 +7,6 @@ import {
     EngagementFormModalState,
     EngagementFormUpdate,
     EngagementParams,
-    OpenModalProps,
     WidgetsList,
 } from './types';
 import { createDefaultEngagement, Engagement } from '../../../models/engagement';
@@ -52,6 +51,10 @@ export const ActionContext = createContext<EngagementContext>({
     handleWidgetDrawerOpen: (_open: boolean) => {
         /* empty default method  */
     },
+    widgetDrawerTabValue: 'widgetOptions',
+    handleWidgetDrawerTabValueChange: (_tabValue: string) => {
+        /* empty default method  */
+    },
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
@@ -62,9 +65,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [loadingSavedEngagement, setLoadingSavedEngagement] = useState(true);
 
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
-    const [modalState, setModalState] = useState<EngagementFormModalState>({
-        modalOpen: false,
-    });
 
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
@@ -83,9 +83,14 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         },
     ]);
     const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
+    const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState('widgetOptions');
 
     const handleWidgetDrawerOpen = (open: boolean) => {
         setWidgetDrawerOpen(open);
+    };
+
+    const handleWidgetDrawerTabValueChange = (tabValue: string) => {
+        setWidgetDrawerTabValue(tabValue);
     };
 
     const handleAddBannerImage = (files: File[]) => {
@@ -202,6 +207,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 widgets,
                 widgetDrawerOpen,
                 handleWidgetDrawerOpen,
+                widgetDrawerTabValue,
+                handleWidgetDrawerTabValueChange,
             }}
         >
             {children}
