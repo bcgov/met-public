@@ -23,7 +23,7 @@ import { ReactComponent as NeutralIcon } from 'assets/images/emojiNeutral.svg';
 import { ReactComponent as SatisfiedIcon } from 'assets/images/emojiSatisfied.svg';
 import { ReactComponent as VerySatisfiedIcon } from 'assets/images/emojiVerySatisfied.svg';
 import { useState } from 'react';
-import { MetBody, MetHeader3, MetHeader4, modalStyle, PrimaryButton } from '../..';
+import { MetBody, MetHeader3, MetLabel, modalStyle, PrimaryButton } from '../..';
 import { CommentTypeEnum, createDefaultFeedback } from 'models/feedback';
 import { Else, If, Then, When } from 'react-if';
 import { CommentTypeButton, StyledRating } from './styledComponents';
@@ -86,7 +86,7 @@ export const FeedbackModal = () => {
         2: {
             icon: <SvgIcon component={LightbulbIcon} viewBox="0 0 64 64" fontSize="large" />,
             label: 'An Idea',
-            text: 'I was wondering...',
+            text: 'I would like to see...',
         },
         3: {
             icon: <SvgIcon component={ThinkingIcon} viewBox="0 0 64 64" fontSize="large" />,
@@ -194,9 +194,9 @@ export const FeedbackModal = () => {
                         <Else>
                             <Grid item xs={12} display="flex">
                                 <Box flexGrow={1}>
-                                    <MetHeader4 id="modal-title" data-testid="feedback-title">
+                                    <MetHeader3 id="modal-title" data-testid="feedback-title">
                                         Send us your feedback
-                                    </MetHeader4>
+                                    </MetHeader3>
                                 </Box>
                                 <Box sx={{ marginTop: -1, padding: 0 }}>
                                     <IconButton aria-label="close" onClick={handleClose} sx={{ color: 'black' }}>
@@ -205,7 +205,7 @@ export const FeedbackModal = () => {
                                 </Box>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody>How do you like our engagement platform?</MetBody>
+                                <MetLabel>How do you like our engagement platform?</MetLabel>
                             </Grid>
                             <Grid item xs={12} textAlign="center">
                                 <StyledRating
@@ -223,7 +223,7 @@ export const FeedbackModal = () => {
                                 {customRatings[rating].label}
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody>What else would you like to share with us?</MetBody>
+                                <MetLabel>What else would you like to share with us?</MetLabel>
                             </Grid>
                             <Grid
                                 item
