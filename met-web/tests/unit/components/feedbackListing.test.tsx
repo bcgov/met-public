@@ -5,8 +5,7 @@ import { setupEnv } from './setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as feedbackService from 'services/feedbackService/index';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
-import { createDefaultFeedback } from 'models/feedback';
-import { CommentTypeEnum, SourceTypeEnum } from 'models/feedback';
+import { createDefaultFeedback, CommentTypeEnum, SourceTypeEnum } from 'models/feedback';
 import FeedbackListing from 'components/feedback/listing';
 
 const mockFeedbackOne = {
@@ -75,7 +74,6 @@ describe('Feedback Listing tests', () => {
                 total: 1,
             }),
         );
-        const { container } = render(<FeedbackListing />);
 
         await waitFor(() => {
             expect(screen.getByText('Feedback One')).toBeInTheDocument();
