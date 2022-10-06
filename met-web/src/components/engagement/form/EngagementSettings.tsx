@@ -14,7 +14,7 @@ const EngagementSettings = () => {
     const newEngagement = !savedEngagement.id || isNaN(Number(savedEngagement.id));
     const engagementUrl = newEngagement
         ? 'Link will appear when the engagement is saved'
-        : `${window.location.origin}/engagements/${savedEngagement.id}/view}`;
+        : `${window.location.origin}/engagements/${savedEngagement.id}/view`;
 
     const [copyTooltip, setCopyTooltip] = useState(false);
 
