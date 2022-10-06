@@ -17,7 +17,6 @@ Test suite to ensure that the Engagement service routines are working as expecte
 """
 
 from faker import Faker
-from met_api.schemas.engagement import EngagementSchema
 
 from met_api.services.engagement_service import EngagementService
 from tests.utilities.factory_scenarios import TestEngagementInfo, TestUserInfo
@@ -68,7 +67,7 @@ def test_patch_engagement(session):  # pylint:disable=unused-argument
 
     updated_engagement_record = EngagementService().edit_engagement(engagement_edits)
 
-    ##Assert that only name has changed
+    #Assert that only name has changed
     assert updated_engagement_record.status_id == saved_engagement_dict.get('status_id')
     assert updated_engagement_record.name == engagement_edits.get('name')
     assert updated_engagement_record.start_date.strftime(date_format) == engagement_edits.get('start_date')
