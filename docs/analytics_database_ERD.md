@@ -7,6 +7,7 @@ erDiagram
         timestamp start_date
         timestamp end_date
 		timestamp published_date
+        integer runcycle_id
         timestamp created_date
         timestamp updated_date
         boolean is_active
@@ -16,6 +17,7 @@ erDiagram
 		integer source_survey_id
         string name
         integer engagement_id
+        integer runcycle_id
         timestamp created_date
         timestamp updated_date
         boolean is_active
@@ -26,6 +28,7 @@ erDiagram
         integer survey_id FK "to survey table"
         integer engagement_id
         integer user_id
+        integer runcycle_id
         timestamp created_date
         timestamp updated_date
         boolean is_active
@@ -39,6 +42,7 @@ erDiagram
 		string request_id
         integer survey_id FK "to survey table"
         string postion
+        integer runcycle_id
         timestamp created_date
         timestamp updated_date
         boolean is_active
@@ -51,6 +55,7 @@ erDiagram
 		string value
 		string request_id
         integer survey_id FK "to survey table"
+        integer runcycle_id
         timestamp created_date
         timestamp updated_date
         boolean is_active
@@ -64,6 +69,7 @@ erDiagram
 		string request_id
         integer survey_id FK "to survey table"
         string postion
+        integer runcycle_id
         timestamp created_date
         timestamp updated_date
         boolean is_active
@@ -76,6 +82,7 @@ erDiagram
 		string value
 		string request_id
         integer survey_id FK "to survey table"
+        integer runcycle_id
         timestamp created_date
         timestamp updated_date
         boolean is_active
@@ -89,6 +96,7 @@ erDiagram
 		string request_id
         integer survey_id FK "to survey table"
         string postion
+        integer runcycle_id
         timestamp created_date
         timestamp updated_date
         boolean is_active
@@ -102,6 +110,7 @@ erDiagram
 		string request_id
         integer survey_id FK "to survey table"
 		string sentiment
+        integer runcycle_id
         timestamp created_date
         timestamp updated_date
         boolean is_active
@@ -110,6 +119,7 @@ erDiagram
     user_details {
         integer id PK
         string name
+        integer runcycle_id
         timestamp created_date
         timestamp updated_date 
 		boolean is_active
@@ -122,15 +132,16 @@ erDiagram
 		string sentiment_analysis
 		string label
 		integer source_comment_id
+        integer runcycle_id
         timestamp created_date
         timestamp updated_date 
 		boolean is_active
     }
-    etlruncycle {
+    etl_runcycle {
         integer id PK
         string packagename
-        timestamp runcyclestartdatetime
-        timestamp runcycleenddatetime
+        timestamp startdatetime
+        timestamp enddatetime
 		string description
         boolean success
     }
