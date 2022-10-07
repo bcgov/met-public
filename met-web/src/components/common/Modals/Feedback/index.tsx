@@ -8,6 +8,7 @@ import {
     Stack,
     TextField,
     Theme,
+    SvgIcon,
 } from '@mui/material';
 import * as React from 'react';
 import ModeCommentIcon from '@mui/icons-material/ModeComment';
