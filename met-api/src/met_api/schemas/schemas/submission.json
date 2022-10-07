@@ -7,7 +7,7 @@
     "default": {},
     "examples": [
         {
-            "survey_id": "49",
+            "survey_id": 49,
             "submission_json": {
                 "simpletextarea": "myest"
             },
@@ -22,7 +22,7 @@
     "properties": {
         "survey_id": {
             "$id": "#/properties/survey_id",
-            "type": "string",
+            "type": "number",
             "title": "The Survey Id",
             "description": "The survey to which submission happens.",
             "examples": [
