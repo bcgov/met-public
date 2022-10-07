@@ -33,7 +33,7 @@ export interface WidgetsList {
 export interface WidgetContact {
     id: number;
     name: string;
-    title: string;
+    role: string;
     phoneNumber: string;
     email: string;
     address: string;
