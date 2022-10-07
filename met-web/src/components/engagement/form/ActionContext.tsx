@@ -1,14 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { postEngagement, getEngagement, patchEngagement } from '../../../services/engagementService';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-    EngagementContext,
-    EngagementForm,
-    EngagementFormModalState,
-    EngagementFormUpdate,
-    EngagementParams,
-    WidgetsList,
-} from './types';
+import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams, WidgetsList } from './types';
 import { createDefaultEngagement, Engagement } from '../../../models/engagement';
 import { saveDocument } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -51,6 +44,10 @@ export const ActionContext = createContext<EngagementContext>({
     handleWidgetDrawerOpen: (_open: boolean) => {
         /* empty default method  */
     },
+    addContactDrawerOpen: false,
+    handleAddContactDrawerOpen: (_open: boolean) => {
+        /* empty default method  */
+    },
     widgetDrawerTabValue: 'widgetOptions',
     handleWidgetDrawerTabValueChange: (_tabValue: string) => {
         /* empty default method  */
@@ -85,8 +82,14 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
     const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState('widgetOptions');
 
+    const [addContactDrawerOpen, setAddContactDrawerOpen] = useState(false);
+
     const handleWidgetDrawerOpen = (open: boolean) => {
         setWidgetDrawerOpen(open);
+    };
+
+    const handleAddContactDrawerOpen = (open: boolean) => {
+        setAddContactDrawerOpen(open);
     };
 
     const handleWidgetDrawerTabValueChange = (tabValue: string) => {
@@ -209,6 +212,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 handleWidgetDrawerOpen,
                 widgetDrawerTabValue,
                 handleWidgetDrawerTabValueChange,
+                addContactDrawerOpen,
+                handleAddContactDrawerOpen,
             }}
         >
             {children}

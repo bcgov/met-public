@@ -14,6 +14,8 @@ export interface EngagementContext {
     handleWidgetDrawerOpen: (_open: boolean) => void;
     widgetDrawerTabValue: string;
     handleWidgetDrawerTabValueChange: (_tabValue: string) => void;
+    addContactDrawerOpen: boolean;
+    handleAddContactDrawerOpen: (_open: boolean) => void;
 }
 
 export interface Widget {
@@ -60,11 +62,6 @@ export interface EngagementFormUpdate {
 
 export type EngagementParams = {
     engagementId: string;
-};
-
-export type EngagementFormModalState = {
-    modalOpen: boolean;
-    handleConfirm?: () => void;
 };
 
 export type OpenModalProps = {
