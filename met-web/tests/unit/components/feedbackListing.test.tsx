@@ -1,4 +1,4 @@
-import { render, waitFor, screen } from '@testing-library/react';
+import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import React, { ReactNode } from 'react';
 import '@testing-library/jest-dom';
 import { setupEnv } from './setEnvVars';
@@ -67,6 +67,23 @@ describe('Feedback Listing tests', () => {
         });
     });
 
+    test('Feedback table is empty', async () => {
+        render(<FeedbackListing />);
+        const feedbackListing = screen.getByTestId('feedback-listing-table');
+
+        getFeedbackPageMock.mockReturnValue(
+            Promise.resolve({
+                items: [],
+                total: 0,
+            }),
+        );
+        render(<FeedbackListing />);
+
+        await waitFor(() => {
+            expect(feedbackListing).toBeVisible();
+        });
+    });
+
     test('fetchs feedback with the sort key as the rating', async () => {
         getFeedbackPageMock.mockReturnValue(
             Promise.resolve({
@@ -79,6 +96,44 @@ describe('Feedback Listing tests', () => {
         await waitFor(() => {
             expect(screen.getByText('Feedback One')).toBeInTheDocument();
         });
+
+        await waitFor(() => {
+            expect(getFeedbackPageMock).lastCalledWith({
+                page: 1,
+                size: 10,
+                sort_key: 'rating',
+                sort_order: 'asc',
+            });
+        });
+    });
+
+    test('Test feedback table pagination', async () => {
+        getFeedbackPageMock.mockReturnValue(
+            Promise.resolve({
+                items: [
+                    mockFeedbackOne,
+                    mockFeedbackOne,
+                    mockFeedbackOne,
+                    mockFeedbackOne,
+                    mockFeedbackOne,
+                    mockFeedbackOne,
+                    mockFeedbackOne,
+                    mockFeedbackOne,
+                    mockFeedbackOne,
+                    mockFeedbackOne,
+                    mockFeedbackOne,
+                ],
+                total: 11,
+            }),
+        );
+        render(<FeedbackListing />);
+        screen.getByTestId('Table-Pagination');
+
+        // const GoToNextPageButton = screen.getByTestId('next-page-button');
+        // const GoToPreviousPageButton = screen.getByTestId('previous-page-button');
+
+        // fireEvent.click(GoToNextPageButton);
+        // fireEvent.click(GoToPreviousPageButton);
 
         await waitFor(() => {
             expect(getFeedbackPageMock).lastCalledWith({

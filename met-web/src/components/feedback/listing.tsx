@@ -156,6 +156,7 @@ const FeedbackListing = () => {
             </Grid>
             <Grid item xs={12} lg={10}>
                 <MetTable
+                    data-testid="feedback-listing-table"
                     headCells={headCells}
                     rows={feedbacks}
                     noRowBorder={true}

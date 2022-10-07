@@ -191,6 +191,7 @@ function MetTable<T>({
                     </Table>
                 </TableContainer>
                 <TablePagination
+                    data-testid="Table-Pagination"
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
                     count={total}
