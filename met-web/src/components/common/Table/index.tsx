@@ -119,7 +119,7 @@ function MetTable<T>({
     const emptyRows = page > 1 ? Math.max(0, page * size - total) : 0;
 
     return (
-        <Box>
+        <Box data-testid="listing-table">
             <Paper sx={{ width: '100%', mb: 2 }} elevation={0}>
                 <TableContainer>
                     <Table aria-labelledby="Engagements">

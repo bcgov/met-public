@@ -69,7 +69,7 @@ describe('Feedback Listing tests', () => {
 
     test('Feedback table is empty', async () => {
         render(<FeedbackListing />);
-        const feedbackListing = screen.getByTestId('feedback-listing-table');
+        const feedbackListing = screen.getByTestId('listing-table');
 
         getFeedbackPageMock.mockReturnValue(
             Promise.resolve({

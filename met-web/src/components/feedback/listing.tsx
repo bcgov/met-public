@@ -155,20 +155,17 @@ const FeedbackListing = () => {
                 ></Stack>
             </Grid>
             <Grid item xs={12} lg={10}>
-                <div data-testid="feedback-listing-table">
-                    <MetTable
-                        data-testid="feedback-listing-table"
-                        headCells={headCells}
-                        rows={feedbacks}
-                        noRowBorder={true}
-                        handleChangePagination={(paginationOptions: PaginationOptions<Feedback>) =>
-                            setPaginationOptions(paginationOptions)
-                        }
-                        paginationOptions={paginationOptions}
-                        loading={tableLoading}
-                        pageInfo={pageInfo}
-                    />
-                </div>
+                <MetTable
+                    headCells={headCells}
+                    rows={feedbacks}
+                    noRowBorder={true}
+                    handleChangePagination={(paginationOptions: PaginationOptions<Feedback>) =>
+                        setPaginationOptions(paginationOptions)
+                    }
+                    paginationOptions={paginationOptions}
+                    loading={tableLoading}
+                    pageInfo={pageInfo}
+                />
             </Grid>
         </MetPageGridContainer>
     );
