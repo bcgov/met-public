@@ -127,13 +127,12 @@ describe('Feedback Listing tests', () => {
             }),
         );
         render(<FeedbackListing />);
-        screen.getByTestId('Table-Pagination');
 
-        // const GoToNextPageButton = screen.getByTestId('next-page-button');
-        // const GoToPreviousPageButton = screen.getByTestId('previous-page-button');
+        const GoToNextPageButton = screen.getByLabelText('Go to next page');
+        const GoToPreviousPageButton = screen.getByLabelText('Go to previous page');
 
-        // fireEvent.click(GoToNextPageButton);
-        // fireEvent.click(GoToPreviousPageButton);
+        fireEvent.click(GoToNextPageButton);
+        fireEvent.click(GoToPreviousPageButton);
 
         await waitFor(() => {
             expect(getFeedbackPageMock).lastCalledWith({
