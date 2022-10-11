@@ -1,14 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { postEngagement, getEngagement, patchEngagement } from '../../../services/engagementService';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-    EngagementContext,
-    EngagementForm,
-    EngagementFormModalState,
-    EngagementFormUpdate,
-    EngagementParams,
-    WidgetsList,
-} from './types';
+import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams, WidgetsList } from './types';
 import { createDefaultEngagement, Engagement } from '../../../models/engagement';
 import { saveDocument } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -69,7 +62,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
 
-    const [widgets, setWidgets] = useState<WidgetsList[]>([
+    const [widgets, _setWidgets] = useState<WidgetsList[]>([
         {
             widget_type: 1,
             items: [
