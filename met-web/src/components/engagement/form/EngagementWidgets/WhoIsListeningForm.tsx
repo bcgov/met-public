@@ -6,7 +6,7 @@ import { WidgetContact } from '../types';
 
 const WhoIsListeningForm = () => {
     const { handleWidgetDrawerOpen } = useContext(ActionContext);
-    const [_selectedContact, setSelectedContact] = useState<WidgetContact | null>(null);
+    const [selectedContact, setSelectedContact] = useState<WidgetContact | null>(null);
 
     const testContact = {
         id: 0,
@@ -36,6 +36,7 @@ const WhoIsListeningForm = () => {
                                 }}
                             />
                         )}
+                        defaultValue={selectedContact}
                         getOptionLabel={(contact: WidgetContact) => contact.name}
                         onChange={(_e: React.SyntheticEvent<Element, Event>, contact: WidgetContact | null) =>
                             setSelectedContact(contact)
