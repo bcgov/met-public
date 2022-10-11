@@ -1,14 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { postEngagement, getEngagement, patchEngagement } from '../../../services/engagementService';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-    EngagementContext,
-    EngagementForm,
-    EngagementFormModalState,
-    EngagementFormUpdate,
-    EngagementParams,
-    OpenModalProps,
-} from './types';
+import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams, WidgetsList } from './types';
 import { createDefaultEngagement, Engagement } from '../../../models/engagement';
 import { saveDocument } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -34,13 +27,25 @@ export const ActionContext = createContext<EngagementContext>({
     fetchEngagement: () => {
         /* empty default method  */
     },
-    modalState: {
-        modalOpen: false,
-    },
-    handleOpenModal: (_props: OpenModalProps) => {
+    widgets: [
+        {
+            widget_type: 0,
+            items: [
+                {
+                    id: 0,
+                    widget_type: 0,
+                    engagement_id: 0,
+                    data: {},
+                },
+            ],
+        },
+    ],
+    widgetDrawerOpen: false,
+    handleWidgetDrawerOpen: (_open: boolean) => {
         /* empty default method  */
     },
-    handleCloseModal: () => {
+    widgetDrawerTabValue: 'widgetOptions',
+    handleWidgetDrawerTabValueChange: (_tabValue: string) => {
         /* empty default method  */
     },
 });
@@ -53,12 +58,37 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [loadingSavedEngagement, setLoadingSavedEngagement] = useState(true);
 
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
-    const [modalState, setModalState] = useState<EngagementFormModalState>({
-        modalOpen: false,
-    });
 
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
+
+    const [widgets, setWidgets] = useState<WidgetsList[]>([]);
+    const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
+    const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState('widgetOptions');
+
+    useEffect(() => {
+        setWidgets([
+            {
+                widget_type: 1,
+                items: [
+                    {
+                        id: 1,
+                        widget_type: 1,
+                        engagement_id: Number(engagementId),
+                        data: {},
+                    },
+                ],
+            },
+        ]);
+    }, []);
+
+    const handleWidgetDrawerOpen = (open: boolean) => {
+        setWidgetDrawerOpen(open);
+    };
+
+    const handleWidgetDrawerTabValueChange = (tabValue: string) => {
+        setWidgetDrawerTabValue(tabValue);
+    };
 
     const handleAddBannerImage = (files: File[]) => {
         if (files.length > 0) {
@@ -160,20 +190,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
     };
 
-    const handleOpenModal = ({
-        handleConfirm = () => {
-            /*
-                default empty function
-            */
-        },
-    }: OpenModalProps) => {
-        setModalState({ modalOpen: true, handleConfirm });
-    };
-
-    const handleCloseModal = () => {
-        setModalState({ modalOpen: false });
-    };
-
     return (
         <ActionContext.Provider
             value={{
@@ -185,9 +201,11 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 loadingSavedEngagement,
                 handleAddBannerImage,
                 fetchEngagement,
-                modalState,
-                handleOpenModal,
-                handleCloseModal,
+                widgets,
+                widgetDrawerOpen,
+                handleWidgetDrawerOpen,
+                widgetDrawerTabValue,
+                handleWidgetDrawerTabValueChange,
             }}
         >
             {children}
