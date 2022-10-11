@@ -6,7 +6,7 @@ import { WidgetContact } from '../types';
 
 const WhoIsListeningForm = () => {
     const { handleWidgetDrawerOpen } = useContext(ActionContext);
-    const [selectedContact, setSelectedContact] = useState<WidgetContact | null>(null);
+    const [_selectedContact, setSelectedContact] = useState<WidgetContact | null>(null);
 
     const testContact = {
         id: 0,
@@ -40,7 +40,6 @@ const WhoIsListeningForm = () => {
                         onChange={(_e: React.SyntheticEvent<Element, Event>, contact: WidgetContact | null) =>
                             setSelectedContact(contact)
                         }
-                        // disabled={loadingContacts}
                     />
                 </Grid>
                 <Grid item>
