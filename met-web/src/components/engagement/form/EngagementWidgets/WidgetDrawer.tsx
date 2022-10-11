@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
-import { Grid, Stack } from '@mui/material';
+import { Grid } from '@mui/material';
 import { MetHeader3 } from 'components/common';
 import { ActionContext } from '../ActionContext';
 import WidgetDrawerTabs from './WidgetDrawerTabs';
