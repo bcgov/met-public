@@ -78,6 +78,7 @@ export const MetWidgetPaper = styled(MuiPaper)(() => ({
 }));
 
 interface MetWidgetProps {
+    testId?: string;
     title: string;
     children?: React.ReactNode;
     [prop: string]: unknown;
@@ -86,7 +87,15 @@ interface MetWidgetProps {
     deleting?: boolean;
 }
 
-export const MetWidget = ({ children, title, onEditClick, onDeleteClick, deleting, ...rest }: MetWidgetProps) => {
+export const MetWidget = ({
+    testId,
+    children,
+    title,
+    onEditClick,
+    onDeleteClick,
+    deleting,
+    ...rest
+}: MetWidgetProps) => {
     return (
         <MetWidgetPaper elevation={3} {...rest}>
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
@@ -101,7 +110,11 @@ export const MetWidget = ({ children, title, onEditClick, onDeleteClick, deletin
                             </IconButton>
                         </ConditionalComponent>
                         <ConditionalComponent condition={!!onDeleteClick}>
-                            <IconButton color="inherit" onClick={onDeleteClick} data-testid="survey-widget/remove">
+                            <IconButton
+                                color="inherit"
+                                onClick={onDeleteClick}
+                                data-testid={`survey-widget/remove-${testId}`}
+                            >
                                 {deleting ? <CircularProgress size="1em" color="inherit" /> : <HighlightOffIcon />}
                             </IconButton>
                         </ConditionalComponent>
