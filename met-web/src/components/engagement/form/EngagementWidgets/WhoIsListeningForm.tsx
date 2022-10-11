@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Autocomplete, Grid, TextField } from '@mui/material';
 import { ActionContext } from '../ActionContext';
 import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
-import { WidgetContact } from '../types';
+import { WidgetContact } from 'models/widget';
 
 const WhoIsListeningForm = () => {
     const { handleWidgetDrawerTabValueChange, handleWidgetDrawerOpen, handleAddContactDrawerOpen } =
@@ -24,7 +24,7 @@ const WhoIsListeningForm = () => {
                 <MetLabel>Select Existing Contact</MetLabel>
             </Grid>
             <Grid item xs={12} container direction="row" justifyContent={'flex-start'} spacing={1}>
-                <Grid item xs={4}>
+                <Grid item xs={12}>
                     <Autocomplete
                         id="contact-selector"
                         options={[testContact]}
@@ -46,7 +46,7 @@ const WhoIsListeningForm = () => {
                 </Grid>
                 <Grid item>
                     <PrimaryButton sx={{ height: '100%' }} fullWidth>
-                        Add existing contact
+                        Add selected contact
                     </PrimaryButton>
                 </Grid>
                 <Grid item>

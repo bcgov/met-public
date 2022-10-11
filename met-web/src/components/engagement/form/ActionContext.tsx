@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { postEngagement, getEngagement, patchEngagement } from '../../../services/engagementService';
 import { useNavigate, useParams } from 'react-router-dom';
-import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams, WidgetsList } from './types';
+import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams } from './types';
 import { createDefaultEngagement, Engagement } from '../../../models/engagement';
 import { saveDocument } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -9,6 +9,7 @@ import { useAppDispatch } from 'hooks';
 import { getErrorMessage } from 'utils';
 import { updatedDiff } from 'deep-object-diff';
 import { PatchEngagementRequest } from 'services/engagementService/types';
+import { WidgetsList } from 'models/widget';
 
 export const ActionContext = createContext<EngagementContext>({
     handleCreateEngagementRequest: (_engagement: EngagementForm): Promise<Engagement> => {

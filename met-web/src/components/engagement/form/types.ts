@@ -1,3 +1,4 @@
+import { WidgetsList } from 'models/widget';
 import { Engagement } from '../../../models/engagement';
 
 export interface EngagementContext {
@@ -16,28 +17,6 @@ export interface EngagementContext {
     handleWidgetDrawerTabValueChange: (_tabValue: string) => void;
     addContactDrawerOpen: boolean;
     handleAddContactDrawerOpen: (_open: boolean) => void;
-}
-
-export interface Widget {
-    id: number;
-    widget_type: number;
-    engagement_id: number;
-    data: unknown;
-}
-
-export interface WidgetsList {
-    widget_type: number;
-    items: Widget[];
-}
-
-export interface WidgetContact {
-    id: number;
-    name: string;
-    role: string;
-    phoneNumber: string;
-    email: string;
-    address: string;
-    bio: string;
 }
 
 export interface EngagementForm {

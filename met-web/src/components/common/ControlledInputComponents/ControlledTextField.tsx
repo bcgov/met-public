@@ -1,14 +1,14 @@
 import React, { FC } from 'react';
 import { TextField, TextFieldProps } from '@mui/material';
 import { Control, Controller, ControllerProps, FieldValues } from 'react-hook-form';
-import { WidgetContact } from 'components/engagement/form/types';
+import { WidgetContact } from 'models/widget';
 
 interface ControllerInputProps {
     control: Control<WidgetContact, any>;
     name: keyof WidgetContact;
     defaultValue?: string | number;
 }
-export const ControlledTextField: FC<TextFieldProps & ControllerInputProps> = (
+export const ControlledTextFieldOld: FC<TextFieldProps & ControllerInputProps> = (
     props: TextFieldProps & ControllerInputProps,
 ) => {
     return (
