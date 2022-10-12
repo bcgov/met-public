@@ -108,21 +108,11 @@ describe('Feedback Listing tests', () => {
     });
 
     test('Test feedback table pagination', async () => {
+        const feedbackList = new Array(11);
+
         getFeedbackPageMock.mockReturnValue(
             Promise.resolve({
-                items: [
-                    mockFeedbackOne,
-                    mockFeedbackOne,
-                    mockFeedbackOne,
-                    mockFeedbackOne,
-                    mockFeedbackOne,
-                    mockFeedbackOne,
-                    mockFeedbackOne,
-                    mockFeedbackOne,
-                    mockFeedbackOne,
-                    mockFeedbackOne,
-                    mockFeedbackOne,
-                ],
+                items: feedbackList.fill(mockFeedbackOne),
                 total: 11,
             }),
         );
