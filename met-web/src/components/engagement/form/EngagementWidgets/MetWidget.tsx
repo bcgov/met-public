@@ -5,6 +5,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 
 interface MetWidgetProps {
+    testId?: string;
     title: string;
     children?: React.ReactNode;
     [prop: string]: unknown;
@@ -13,7 +14,7 @@ interface MetWidgetProps {
     deleting?: boolean;
 }
 
-const MetWidget = ({ children, title, onEdit, onDelete, deleting, ...rest }: MetWidgetProps) => {
+const MetWidget = ({ testId, children, title, onEdit, onDelete, deleting, ...rest }: MetWidgetProps) => {
     return (
         <MetWidgetPaper elevation={3} {...rest}>
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
@@ -22,10 +23,10 @@ const MetWidget = ({ children, title, onEdit, onDelete, deleting, ...rest }: Met
                 </Grid>
                 <Grid item xs={6} container direction="row" justifyContent="flex-end">
                     <Stack direction="row" spacing={1}>
-                        <IconButton color="inherit" onClick={onEdit} data-testid="survey-widget/edit">
+                        <IconButton color="inherit" onClick={onEdit} data-testid="widget/edit">
                             <EditIcon />
                         </IconButton>
-                        <IconButton color="inherit" onClick={onDelete} data-testid="survey-widget/remove">
+                        <IconButton color="inherit" onClick={onDelete} data-testid={`widget/remove-${testId}`}>
                             {deleting ? <CircularProgress size="1em" color="inherit" /> : <HighlightOffIcon />}
                         </IconButton>
                     </Stack>

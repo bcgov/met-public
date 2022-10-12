@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
@@ -10,6 +10,9 @@ import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledFormInput';
+import { postContact } from 'services/contactService';
+import { useAppDispatch } from 'hooks';
+import { openNotification } from 'services/notificationService/notificationSlice';
 
 const schema = yup
     .object({
@@ -25,14 +28,30 @@ const schema = yup
 type ContactForm = yup.TypeOf<typeof schema>;
 
 const AddContactDrawer = () => {
+    const dispatch = useAppDispatch();
+
     const methods = useForm<ContactForm>({
         resolver: yupResolver(schema),
     });
 
     const { handleSubmit } = methods;
     const { addContactDrawerOpen, handleAddContactDrawerOpen } = useContext(ActionContext);
+    const [isCreatingContact, setIsCreatingContact] = useState(false);
 
-    const onSubmit: SubmitHandler<ContactForm> = (data: ContactForm) => console.log(data);
+    const onSubmit: SubmitHandler<ContactForm> = async (data: ContactForm) => {
+        try {
+            setIsCreatingContact(true);
+            await postContact(data);
+            setIsCreatingContact(false);
+            handleAddContactDrawerOpen(false);
+            dispatch(openNotification({ severity: 'success', text: 'A new contact was successfully added' }));
+        } catch (err) {
+            console.log(err);
+            dispatch(
+                openNotification({ severity: 'error', text: 'An error occured while trying to create a new contact' }),
+            );
+        }
+    };
 
     return (
         <Drawer anchor="right" open={addContactDrawerOpen} onClose={() => handleAddContactDrawerOpen(false)}>
@@ -164,7 +183,9 @@ const AddContactDrawer = () => {
                             marginTop="8em"
                         >
                             <Grid item>
-                                <PrimaryButton onClick={handleSubmit(onSubmit)}>{`Save & Close`}</PrimaryButton>
+                                <PrimaryButton loading={isCreatingContact} onClick={handleSubmit(onSubmit)}>
+                                    {`Save & Close`}
+                                </PrimaryButton>
                             </Grid>
                             <Grid item>
                                 <SecondaryButton

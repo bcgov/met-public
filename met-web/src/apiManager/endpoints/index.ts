@@ -37,6 +37,13 @@ const Endpoints = {
         GET: `${AppConfig.apiUrl}/email_verification/verification_token`,
         CREATE: `${AppConfig.apiUrl}/email_verification/`,
     },
+    Widgets: {
+        GET_LIST: `${AppConfig.apiUrl}/widgets/engagement/engagement_id`,
+    },
+    Contacts: {
+        GET: `${AppConfig.apiUrl}/contacts/contact_id`,
+        CREATE: `${AppConfig.apiUrl}/contacts/`,
+    },
 };
 
 export default Endpoints;

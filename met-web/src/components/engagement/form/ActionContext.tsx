@@ -1,14 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { postEngagement, getEngagement, patchEngagement } from '../../../services/engagementService';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-    EngagementContext,
-    EngagementForm,
-    EngagementFormModalState,
-    EngagementFormUpdate,
-    EngagementParams,
-    WidgetsList,
-} from './types';
+import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams } from './types';
 import { createDefaultEngagement, Engagement } from '../../../models/engagement';
 import { saveDocument } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -17,6 +10,7 @@ import { getErrorMessage } from 'utils';
 import { updatedDiff } from 'deep-object-diff';
 import { PatchEngagementRequest } from 'services/engagementService/types';
 import { WidgetsList } from 'models/widget';
+import { getWidgets } from 'services/widgetService';
 
 export const ActionContext = createContext<EngagementContext>({
     handleCreateEngagementRequest: (_engagement: EngagementForm): Promise<Engagement> => {
@@ -78,21 +72,25 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
     const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState('widgetOptions');
 
+    const [addContactDrawerOpen, setAddContactDrawerOpen] = useState(false);
+
     useEffect(() => {
-        setWidgets([
-            {
-                widget_type: 1,
-                items: [
-                    {
-                        id: 1,
-                        widget_type: 1,
-                        engagement_id: Number(engagementId),
-                        data: {},
-                    },
-                ],
-            },
-        ]);
-    }, []);
+        loadWidgets();
+    }, [savedEngagement]);
+
+    const loadWidgets = async () => {
+        if (!savedEngagement.id) {
+            return;
+        }
+
+        try {
+            const widgetsList = await getWidgets(savedEngagement.id);
+            setWidgets(widgetsList);
+        } catch (err) {
+            console.log(err);
+            dispatch(openNotification({ severity: 'error', text: 'Error fetching engagement widgets' }));
+        }
+    };
 
     const handleWidgetDrawerOpen = (open: boolean) => {
         setWidgetDrawerOpen(open);

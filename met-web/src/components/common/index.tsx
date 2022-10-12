@@ -78,6 +78,7 @@ export const MetWidgetPaper = styled(MuiPaper)(() => ({
 }));
 
 interface MetSurveyProps {
+    testId?: string;
     title: string;
     children?: React.ReactNode;
     [prop: string]: unknown;
@@ -86,7 +87,15 @@ interface MetSurveyProps {
     deleting?: boolean;
 }
 
-export const MetSurvey = ({ children, title, onEditClick, onDeleteClick, deleting, ...rest }: MetSurveyProps) => {
+export const MetSurvey = ({
+    testId,
+    children,
+    title,
+    onEditClick,
+    onDeleteClick,
+    deleting,
+    ...rest
+}: MetSurveyProps) => {
     return (
         <MetWidgetPaper elevation={3} {...rest}>
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
