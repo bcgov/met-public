@@ -12,6 +12,7 @@ export const WidgetCardSwitch = ({ widget }: WidgetCardSwitchProps) => {
             <Switch>
                 <Case condition={widget.widget_type === 1}>
                     <MetWidget
+                        testId={`who-is-listening-${widget.widget_type}`}
                         title="Who Is Listening"
                         onDelete={() => {
                             /**/

@@ -1,7 +1,14 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { postEngagement, getEngagement, patchEngagement } from '../../../services/engagementService';
 import { useNavigate, useParams } from 'react-router-dom';
-import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams } from './types';
+import {
+    EngagementContext,
+    EngagementForm,
+    EngagementFormModalState,
+    EngagementFormUpdate,
+    EngagementParams,
+    WidgetsList,
+} from './types';
 import { createDefaultEngagement, Engagement } from '../../../models/engagement';
 import { saveDocument } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -67,23 +74,25 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
 
-    const [widgets, setWidgets] = useState<WidgetsList[]>([
-        {
-            widget_type: 1,
-            items: [
-                {
-                    id: 1,
-                    widget_type: 1,
-                    engagement_id: Number(engagementId),
-                    data: {},
-                },
-            ],
-        },
-    ]);
+    const [widgets, setWidgets] = useState<WidgetsList[]>([]);
     const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
     const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState('widgetOptions');
 
-    const [addContactDrawerOpen, setAddContactDrawerOpen] = useState(false);
+    useEffect(() => {
+        setWidgets([
+            {
+                widget_type: 1,
+                items: [
+                    {
+                        id: 1,
+                        widget_type: 1,
+                        engagement_id: Number(engagementId),
+                        data: {},
+                    },
+                ],
+            },
+        ]);
+    }, []);
 
     const handleWidgetDrawerOpen = (open: boolean) => {
         setWidgetDrawerOpen(open);

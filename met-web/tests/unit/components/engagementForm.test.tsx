@@ -152,7 +152,7 @@ describe('Engagement form page tests', () => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
         });
 
-        const removeSurveyButton = screen.getByTestId('survey-widget/remove');
+        const removeSurveyButton = screen.getByTestId('survey-widget/remove-survey-1');
 
         fireEvent.click(removeSurveyButton);
 
@@ -222,7 +222,7 @@ describe('Engagement form page tests', () => {
 
         expect(screen.getByText('Survey 1')).toBeInTheDocument();
 
-        const removeSurveyButton = screen.getByTestId('survey-widget/remove');
+        const removeSurveyButton = screen.getByTestId('survey-widget/remove-survey-1');
 
         fireEvent.click(removeSurveyButton);
 

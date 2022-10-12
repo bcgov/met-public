@@ -101,7 +101,11 @@ export const MetSurvey = ({ children, title, onEditClick, onDeleteClick, deletin
                             </IconButton>
                         </ConditionalComponent>
                         <ConditionalComponent condition={!!onDeleteClick}>
-                            <IconButton color="inherit" onClick={onDeleteClick} data-testid="survey-widget/remove">
+                            <IconButton
+                                color="inherit"
+                                onClick={onDeleteClick}
+                                data-testid={`survey-widget/remove-${testId}`}
+                            >
                                 {deleting ? <CircularProgress size="1em" color="inherit" /> : <HighlightOffIcon />}
                             </IconButton>
                         </ConditionalComponent>
