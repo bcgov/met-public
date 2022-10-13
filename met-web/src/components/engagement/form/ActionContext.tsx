@@ -31,7 +31,7 @@ export const ActionContext = createContext<EngagementContext>({
     },
     widgets: [
         {
-            widget_type: 0,
+            widget_type_id: 0,
             items: [
                 {
                     id: 0,

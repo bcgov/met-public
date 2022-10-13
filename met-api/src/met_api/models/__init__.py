@@ -24,3 +24,4 @@ from .submission import Submission
 from .survey import Survey
 from .user import User
 from .feedback import Feedback
+from .widget import Widget

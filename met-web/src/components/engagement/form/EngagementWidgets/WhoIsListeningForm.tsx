@@ -13,7 +13,7 @@ const WhoIsListeningForm = () => {
         id: 0,
         name: 'Mandy Ming',
         role: 'inspector',
-        phoneNumber: '123-234-2345',
+        phone_number: '123-234-2345',
         email: 'mandy@gov.bc.ca',
         address: '123 Main St. Victoria, BC, V0V 1B1',
         bio: 'Mandy is always happy to answer your questions and...',

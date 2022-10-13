@@ -25,8 +25,8 @@ const WidgetsBlock = () => {
                         </Grid>
                         {widgets.map((widget, index) => {
                             return (
-                                <Grid item xs={12} key={`Grid-${widget.widget_type}-${index}`}>
-                                    <WidgetCardSwitch key={`${widget.widget_type}-${index}`} widget={widget} />
+                                <Grid item xs={12} key={`Grid-${widget.widget_type_id}-${index}`}>
+                                    <WidgetCardSwitch key={`${widget.widget_type_id}-${index}`} widget={widget} />
                                 </Grid>
                             );
                         })}

@@ -6,7 +6,7 @@ export interface Widget {
 }
 
 export interface WidgetsList {
-    widget_type: number;
+    widget_type_id: number;
     items: Widget[];
 }
 
@@ -14,7 +14,7 @@ export interface WidgetContact {
     id: number;
     name: string;
     role: string;
-    phoneNumber: string;
+    phone_number: string;
     email: string;
     address: string;
     bio: string;
