@@ -5,7 +5,6 @@ from contextlib import contextmanager
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import Session
 
 # DB initialize in __init__ file
 # db variable use for create models from here
@@ -18,6 +17,7 @@ migrate = Migrate()
 # Marshmallow for database model schema
 ma = Marshmallow()
 
+
 @contextmanager
 def session_scope():
     """Provide a transactional scope around a series of operations."""
@@ -26,7 +26,7 @@ def session_scope():
     try:
         yield session
         session.commit()
-    except:
+    except:  # noqa: B901, E722
         session.rollback()
         raise
     finally:

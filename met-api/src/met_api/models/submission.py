@@ -36,7 +36,7 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
         return db.session.query(Submission).filter_by(survey_id=survey_id).all()
 
     @classmethod
-    def create(cls, submission: SubmissionSchema, session = None) -> DefaultMethodResult:
+    def create(cls, submission: SubmissionSchema, session=None) -> DefaultMethodResult:
         """Save submission."""
         new_submission = Submission(
             submission_json=submission.get('submission_json', None),

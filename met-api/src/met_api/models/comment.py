@@ -101,7 +101,7 @@ class Comment(db.Model):
         )
 
     @classmethod
-    def add_all_comments(cls, comments: list, session = None) -> DefaultMethodResult:
+    def add_all_comments(cls, comments: list, session=None) -> DefaultMethodResult:
         """Save comments."""
         new_comments = [cls.__create_new_comment_entity(comment) for comment in comments]
         if session is None:
