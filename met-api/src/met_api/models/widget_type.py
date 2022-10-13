@@ -12,7 +12,8 @@ class WidgetType(db.Model):  # pylint: disable=too-few-public-methods
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
-    description = db.Column(db.String(50))
+    description = db.Column(db.String(200))
+    widget = db.relationship('Widget', backref='widget_type', cascade='all, delete')
 
     @classmethod
     def get_widget_types(cls):

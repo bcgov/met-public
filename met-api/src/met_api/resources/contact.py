@@ -68,8 +68,8 @@ class Surveys(Resource):
             contact_schema['created_by'] = user_id
             contact_schema['updated_by'] = user_id
             result = ContactService().create_contact(contact_schema)
-            contact_schema['id'] = result.identifier
-            return ActionResult.success(result.identifier, contact_schema)
+            contact_schema['id'] = result.id
+            return ActionResult.success(result.id, contact_schema)
         except KeyError as err:
             return ActionResult.error(str(err))
         except ValueError as err:

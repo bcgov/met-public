@@ -33,6 +33,7 @@ from .survey import API as SURVEY_API
 from .user import API as USER_API
 from .feedback import API as FEEDBACK_API
 from .widget import API as WIDGET_API
+from .contact import API as CONTACT_API
 
 
 __all__ = ('API_BLUEPRINT',)
@@ -58,3 +59,4 @@ API.add_namespace(COMMENT_API)
 API.add_namespace(EMAIL_VERIFICATION_API)
 API.add_namespace(FEEDBACK_API)
 API.add_namespace(WIDGET_API)
+API.add_namespace(CONTACT_API)

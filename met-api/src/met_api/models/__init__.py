@@ -25,3 +25,5 @@ from .survey import Survey
 from .user import User
 from .feedback import Feedback
 from .widget import Widget
+from .widget_type import WidgetType
+from .contact import Contact

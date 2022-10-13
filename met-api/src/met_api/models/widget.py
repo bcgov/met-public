@@ -17,7 +17,7 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     widget_type_id = db.Column(db.Integer, ForeignKey('widget_type.id', ondelete='SET NULL'))
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'))
-    widget_data_id = db.Column(db.Integer, ForeignKey('widget_data.id', ondelete='SET NULL'))
+    widget_data_id = db.Column(db.Integer)
 
     @classmethod
     def get_widgets_by_engagement_id(cls, engagement_id):
