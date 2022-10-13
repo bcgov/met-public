@@ -9,9 +9,33 @@ export interface EngagementContext {
     loadingSavedEngagement: boolean;
     handleAddBannerImage: (_files: File[]) => void;
     fetchEngagement: () => void;
-    modalState: EngagementFormModalState;
-    handleOpenModal: (props: OpenModalProps) => void;
-    handleCloseModal: () => void;
+    widgets: WidgetsList[];
+    widgetDrawerOpen: boolean;
+    handleWidgetDrawerOpen: (_open: boolean) => void;
+    widgetDrawerTabValue: string;
+    handleWidgetDrawerTabValueChange: (_tabValue: string) => void;
+}
+
+export interface Widget {
+    id: number;
+    widget_type: number;
+    engagement_id: number;
+    data: unknown;
+}
+
+export interface WidgetsList {
+    widget_type: number;
+    items: Widget[];
+}
+
+export interface WidgetContact {
+    id: number;
+    name: string;
+    title: string;
+    phoneNumber: string;
+    email: string;
+    address: string;
+    bio: string;
 }
 
 export interface EngagementForm {

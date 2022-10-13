@@ -1,52 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
-import SvgIcon from '@mui/material/SvgIcon';
 import { MetPageGridContainer } from 'components/common';
 import { CommentTypeEnum, Feedback, SourceTypeEnum } from 'models/feedback';
 import { useAppDispatch } from 'hooks';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
-import { ReactComponent as VeryDissatisfiedIcon } from 'assets/images/emojiVeryDissatisfied.svg';
-import { ReactComponent as DissatisfiedIcon } from 'assets/images/emojiDissatisfied.svg';
-import { ReactComponent as NeutralIcon } from 'assets/images/emojiNeutral.svg';
-import { ReactComponent as SatisfiedIcon } from 'assets/images/emojiSatisfied.svg';
-import { ReactComponent as VerySatisfiedIcon } from 'assets/images/emojiVerySatisfied.svg';
 import Stack from '@mui/material/Stack';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import MetTable from 'components/common/Table';
 import { getFeedbacksPage } from 'services/feedbackService';
 import { formatDate } from 'components/common/dateHelper';
-
-const customRatings: {
-    [index: number]: {
-        icon: React.ReactElement;
-        label: string;
-    };
-} = {
-    5: {
-        icon: <SvgIcon fontSize="large" component={VeryDissatisfiedIcon} viewBox="0 0 64 64" sx={{ marginX: 1 }} />,
-        label: 'Very Dissatisfied',
-    },
-    4: {
-        icon: <SvgIcon fontSize="large" component={DissatisfiedIcon} viewBox="0 0 64 64" sx={{ marginX: 1 }} />,
-        label: 'Dissatisfied',
-    },
-    3: {
-        icon: <SvgIcon fontSize="large" component={NeutralIcon} viewBox="0 0 64 64" sx={{ marginX: 1 }} />,
-        label: 'Neutral',
-    },
-    2: {
-        icon: <SvgIcon fontSize="large" component={SatisfiedIcon} viewBox="0 0 64 64" sx={{ marginX: 1 }} />,
-        label: 'Satisfied',
-    },
-    1: {
-        icon: <SvgIcon fontSize="large" component={VerySatisfiedIcon} viewBox="0 0 64 64" sx={{ marginX: 1 }} />,
-        label: 'Very Satisfied',
-    },
-    0: {
-        icon: <></>,
-        label: '',
-    },
-};
+import { customRatings } from 'components/common/Modals/Feedback/constants';
 
 const FeedbackListing = () => {
     const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);

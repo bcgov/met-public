@@ -12,6 +12,7 @@ class BaseModel(db.Model):
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
     is_active = db.Column(db.Boolean(), default=True)
+    runcycle_id = db.Column(db.Integer)
 
     @classmethod
     def find_by_id(cls, identifier: int):
