@@ -42,12 +42,12 @@ class CommentService:
         }
 
     @classmethod
-    def create_comments(cls, comments: list):
+    def create_comments(cls, comments: list, session):
         """Create comment."""
         for comment in comments:
             cls.validate_fields(comment)
 
-        return Comment.add_all_comments(comments)
+        return Comment.add_all_comments(comments, session)
 
     @staticmethod
     def validate_fields(data):

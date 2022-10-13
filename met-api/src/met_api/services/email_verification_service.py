@@ -46,7 +46,7 @@ class EmailVerificationService:
         self._send_verification_email(email_verification)
         return email_verification
 
-    def verify(self, verification_token, survey_id):
+    def verify(self, verification_token, survey_id, session):
         """Validate and update an email verification."""
         db_email_verification = EmailVerification.get(verification_token)
         self.validate_object(db_email_verification)
@@ -56,7 +56,7 @@ class EmailVerificationService:
 
         db_email_verification['updated_by'] = db_email_verification['user_id']
         db_email_verification['is_active'] = False
-        result = EmailVerification.update(db_email_verification)
+        result = EmailVerification.update(db_email_verification, session)
         if not result.success:
             raise ValueError('Error updating email verification')
         return db_email_verification
