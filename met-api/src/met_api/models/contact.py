@@ -35,6 +35,11 @@ class Contact(db.Model):  # pylint: disable=too-few-public-methods
         return contact
 
     @classmethod
+    def get_contacts(cls):
+        """Get contacts."""
+        return db.session.query(Contact).order_by(Contact.name).all()
+
+    @classmethod
     def create_contact(cls, contact) -> Contact:
         """Create contact."""
         new_contact = Contact(

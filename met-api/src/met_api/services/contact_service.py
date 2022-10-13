@@ -13,6 +13,12 @@ class ContactService:
         contact_record = Contact.get_contact_by_id(contact_id)
         return ContactSchema().dump(contact_record)
 
+    @staticmethod
+    def get_contacts():
+        """Get contacts."""
+        contacts_records = Contact.get_contacts()        
+        return ContactSchema(many=True).dump(contacts_records)
+
     def create_contact(self, data: ContactSchema):
         """Create contact."""
         return Contact.create_contact(data)

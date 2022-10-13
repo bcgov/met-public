@@ -31,7 +31,7 @@ API = Namespace('contacts', description='Endpoints for Widget Management')
 """
 
 
-@cors_preflight('GET,OPTIONS')
+@cors_preflight('GET, OPTIONS')
 @API.route('/<contact_id>')
 class SurveySubmission(Resource):
     """Resource for managing a contacts."""
@@ -50,7 +50,7 @@ class SurveySubmission(Resource):
             return ActionResult.error(str(err))
 
 
-@cors_preflight('POST')
+@cors_preflight('GET, POST, OPTIONS')
 @API.route('/')
 class Surveys(Resource):
     """Resource for managing contacts."""
@@ -76,3 +76,16 @@ class Surveys(Resource):
             return ActionResult.error(str(err))
         except ValidationError as err:
             return ActionResult.error(str(err.messages))
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def get():
+        """Fetch list of contacts."""
+        try:
+            widgets = ContactService().get_contacts()
+            return ActionResult.success(result=widgets)
+        except KeyError:
+            return ActionResult.error('No submissions not found')
+        except ValueError as err:
+            return ActionResult.error(str(err))
