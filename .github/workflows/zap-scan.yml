@@ -14,9 +14,3 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue_title: 'ZAP Scan Report'
           target: 'https://met-web-dev.apps.gold.devops.gov.bc.ca/'
-      
-      - name: Upload Report as Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: OWASP ZAP - Report
-          path: report_html.html
