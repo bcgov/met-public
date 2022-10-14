@@ -112,6 +112,23 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
         query.update(update_fields)
         db.session.commit()
         return DefaultMethodResult(True, 'Survey Updated', survey_id)
+    
+    @classmethod
+    def clone_survey(cls, survey: SurveySchema) -> DefaultMethodResult:
+        """Clone survey."""
+        record = query.first();
+        new_survey = Survey(
+            name=survey.get('name', record.name),
+            form_json=survey.get('form_json', record.form_json),
+            created_date=datetime.now(),
+            updated_date=datetime.now(),
+            created_by=survey.get('created_by', record.created_by),
+            updated_by=survey.get('updated_by', record.updated_by),
+            engagement_id=survey.get('engagement_id', record.engagement_id),
+        )
+        db.session.add(new_survey)
+        db.session.commit()
+        return DefaultMethodResult(True, 'Survey Cloned', new_survey.id)
 
     @classmethod
     def link_survey(cls, survey_id, engagement_id) -> DefaultMethodResult:

@@ -62,6 +62,14 @@ class SurveyService:
         if engagement and engagement.get('status_id', None) != Status.Draft.value:
             raise ValueError('Engagament already published')
         return SurveyModel.update_survey(data)
+    
+    @classmethod
+    def clone(cls, data: SurveySchema):
+        """Clone a survey."""
+        cls.validate_update_fields(data)
+        survey = cls.get(data.get('id', None))
+        engagement = survey.get('engagement', None)
+        return SurveyModel.clone_survey(data)
 
     @staticmethod
     def validate_update_fields(data):
