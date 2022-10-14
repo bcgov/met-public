@@ -3,7 +3,7 @@ import { Grid, TextField, Stack, Autocomplete } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { useNavigate } from 'react-router-dom';
 import { fetchSurveys, linkSurvey } from 'services/surveyService/form';
-import { fetchAll } from 'services/engagementService';
+import { getEngagements } from 'services/engagementService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
@@ -80,8 +80,12 @@ const CloneOptions = () => {
             return;
         }
         try {
-            const fetchedEngagements = await fetchAll();
-            setAvailableEngagements(fetchedEngagements);
+            const fetchedEngagements = await getEngagements({
+                page: 1,
+                size: 10,
+                sort_order: 'asc',
+            });
+            setAvailableEngagements(fetchedEngagements.items);
             setLoadingEngagements(false);
         } catch (error) {
             dispatch(
