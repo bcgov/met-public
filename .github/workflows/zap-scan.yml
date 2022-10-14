@@ -5,36 +5,18 @@ on:
 jobs:
   zap_scan_web:
     runs-on: ubuntu-latest
-    name: Scan the WEB application
+    name: Scan the application
     steps:
-      - name: ZAP WEB Scan
-        uses: zaproxy/action-full-scan@v0.2.0
+      - name: ZAP Scan
+        uses: zaproxy/action-full-scan@v0.4.0
         with:
           allow_issue_writing: false
           token: ${{ secrets.GITHUB_TOKEN }}
-          issue_title: 'ZAP Scan WEB Report'
+          issue_title: 'ZAP Scan Report'
           target: 'https://met-web-dev.apps.gold.devops.gov.bc.ca/'
       
       - name: Upload Report as Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: OWASP ZAP - Front End Report
-          path: report_html.html
-
-  zap_scan_api:
-    runs-on: ubuntu-latest
-    name: Scan the API application
-    steps:
-      - name: ZAP API Scan
-        uses: zaproxy/action-full-scan@v0.2.0
-        with:
-          allow_issue_writing: false
-          token: ${{ secrets.GITHUB_TOKEN }}
-          issue_title: 'ZAP Scan API Report'
-          target: 'https://met-web-dev.apps.gold.devops.gov.bc.ca/api/'
-      
-      - name: Upload Report as Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: OWASP ZAP - Back End Report
+          name: OWASP ZAP - Report
           path: report_html.html
