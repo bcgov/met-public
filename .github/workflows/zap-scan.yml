@@ -3,18 +3,36 @@ on:
   workflow_dispatch:
 
 jobs:
-  zap_scan:
+  zap_scan_web:
     runs-on: ubuntu-latest
-    name: Scan the application
+    name: Scan the WEB application
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: main
-
-      - name: ZAP Scan
-        uses: zaproxy/action-api-scan@v0.1.1
+      - name: ZAP WEB Scan
+        uses: zaproxy/action-api-scan@v0.2.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          issue_title: 'ZAP Scan Report'
+          issue_title: 'ZAP Scan WEB Report'
           target: 'https://met-web-dev.apps.gold.devops.gov.bc.ca/'
+      
+      - name: Upload Report as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: OWASP ZAP - Front End Report
+          path: report_html.html
+
+  zap_scan_api:
+    runs-on: ubuntu-latest
+    name: Scan the API application
+    steps:
+      - name: ZAP API Scan
+        uses: zaproxy/action-api-scan@v0.2.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue_title: 'ZAP Scan API Report'
+          target: 'https://met-web-dev.apps.gold.devops.gov.bc.ca/api/'
+      
+      - name: Upload Report as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: OWASP ZAP - Back End Report
+          path: report_html.html
