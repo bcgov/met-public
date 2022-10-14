@@ -42,6 +42,7 @@ export const ActionContext = createContext<EngagementContext>({
             ],
         },
     ],
+    isWidgetsLoading: false,
     widgetDrawerOpen: false,
     handleWidgetDrawerOpen: (_open: boolean) => {
         /* empty default method  */
@@ -69,6 +70,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
 
     const [widgets, setWidgets] = useState<WidgetsList[]>([]);
+    const [isWidgetsLoading, setIsWidgetsLoading] = useState(false);
     const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
     const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState('widgetOptions');
 
@@ -84,10 +86,13 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
 
         try {
+            setIsWidgetsLoading(true);
             const widgetsList = await getWidgets(savedEngagement.id);
             setWidgets(widgetsList);
+            setIsWidgetsLoading(false);
         } catch (err) {
             console.log(err);
+            setIsWidgetsLoading(false);
             dispatch(openNotification({ severity: 'error', text: 'Error fetching engagement widgets' }));
         }
     };
@@ -222,6 +227,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 handleWidgetDrawerTabValueChange,
                 addContactDrawerOpen,
                 handleAddContactDrawerOpen,
+                isWidgetsLoading,
             }}
         >
             {children}

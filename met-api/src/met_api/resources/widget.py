@@ -16,11 +16,14 @@
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
+from marshmallow import ValidationError
 
 from met_api.auth import auth
+from met_api.schemas.widget import WidgetSchema
 from met_api.services.widget_service import WidgetService
 from met_api.utils.action_result import ActionResult
 from met_api.utils.util import allowedorigins, cors_preflight
+from met_api.utils.token_info import TokenInfo
 
 
 API = Namespace('widgets', description='Endpoints for Widget Management')
@@ -45,4 +48,29 @@ class SurveySubmission(Resource):
         except KeyError:
             return ActionResult.error('No submissions not found')
         except ValueError as err:
+            return ActionResult.error(str(err))
+
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def post():
+        """Add new widgets for an engagement."""
+        try:
+            user_id = TokenInfo.get_id()
+            requestjson = request.get_json()
+            
+            widget_schema = WidgetSchema(many=True).load(requestjson)
+            widget_schema['created_by'] = user_id
+            widget_schema['updated_by'] = user_id
+            result = WidgetService().create_widgets_bulk(widget_schema)
+            widget_schema['id'] = result.id
+            return ActionResult.success(result.id, widget_schema)
+        except KeyError as err:
+            return ActionResult.error(str(err))
+        except ValueError as err:
+            return ActionResult.error(str(err))
+        except ValidationError as err:
+            return ActionResult.error(str(err.messages))
+        except AssertionError as err:
             return ActionResult.error(str(err))

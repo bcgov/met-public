@@ -24,4 +24,6 @@ class ContactSchema(Schema):
             min=20,
             error='Bio must be atleast 20 characters'))
     created_by = fields.Str(data_key='created_by')
+    created_date = fields.Str(data_key='created_date')
     updated_by = fields.Str(data_key='updated_by')
+    updated_date = fields.Str(data_key='updated_date')

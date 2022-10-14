@@ -39,9 +39,11 @@ const Endpoints = {
     },
     Widgets: {
         GET_LIST: `${AppConfig.apiUrl}/widgets/engagement/engagement_id`,
+        CREATE: `${AppConfig.apiUrl}/widgets/engagement/engagement_id`,
     },
     Contacts: {
         GET: `${AppConfig.apiUrl}/contacts/contact_id`,
+        GET_LIST: `${AppConfig.apiUrl}/contacts/`,
         CREATE: `${AppConfig.apiUrl}/contacts/`,
     },
 };

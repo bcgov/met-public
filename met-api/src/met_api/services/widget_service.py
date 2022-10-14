@@ -22,3 +22,13 @@ class WidgetService:
                                for key, result in groupby(sorted_widgets, key=lambda widget: widget.get('widget_type_id'))]
             return grouped_widgets
         return widgets
+
+    @staticmethod
+    def create_widget(data: WidgetSchema):
+        """Create widget."""
+        return Widget.create_widget(data)
+
+    @staticmethod
+    def create_widgets_bulk(data: WidgetSchema):
+        """Create widget."""
+        return Widget.creat_all_widgets(data)

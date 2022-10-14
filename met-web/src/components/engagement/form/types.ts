@@ -17,6 +17,7 @@ export interface EngagementContext {
     handleWidgetDrawerTabValueChange: (_tabValue: string) => void;
     addContactDrawerOpen: boolean;
     handleAddContactDrawerOpen: (_open: boolean) => void;
+    isWidgetsLoading: boolean;
 }
 
 export interface EngagementForm {

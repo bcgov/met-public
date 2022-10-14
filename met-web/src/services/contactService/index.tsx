@@ -19,6 +19,18 @@ export const getContact = async (contactId: number): Promise<Contact> => {
     }
 };
 
+export const getContacts = async (): Promise<Contact[]> => {
+    try {
+        const response = await http.GetRequest<Contact[]>(Endpoints.Contacts.GET_LIST);
+        if (response.data.result) {
+            return Promise.resolve(response.data.result);
+        }
+        return Promise.reject(response.data.message ?? 'Failed to fetch contact');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
 interface PostContactRequest {
     name?: string;
     role?: string;

@@ -19,6 +19,7 @@ class ContactService:
         contacts_records = Contact.get_contacts()        
         return ContactSchema(many=True).dump(contacts_records)
 
-    def create_contact(self, data: ContactSchema):
+    @staticmethod
+    def create_contact(data: ContactSchema):
         """Create contact."""
         return Contact.create_contact(data)

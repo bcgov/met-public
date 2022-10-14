@@ -1,8 +1,8 @@
-"""Create widget and contact tables
+"""Create widget, widget type, and contact tables
 
-Revision ID: 83d77eb8c697
+Revision ID: dde7b3010ec6
 Revises: 5110026db916
-Create Date: 2022-10-13 14:46:44.445359
+Create Date: 2022-10-14 08:36:54.842167
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '83d77eb8c697'
+revision = 'dde7b3010ec6'
 down_revision = '5110026db916'
 branch_labels = None
 depends_on = None
@@ -26,10 +26,10 @@ def upgrade():
     sa.Column('phone_number', sa.String(length=50), nullable=True),
     sa.Column('address', sa.String(length=50), nullable=True),
     sa.Column('bio', sa.String(length=500), nullable=True),
-    sa.Column('created_date', sa.DateTime(), nullable=True),
-    sa.Column('updated_date', sa.DateTime(), nullable=True),
-    sa.Column('created_by', sa.String(length=50), nullable=True),
-    sa.Column('updated_by', sa.String(length=50), nullable=True),
+    sa.Column('created_date', sa.DateTime(), nullable=False),
+    sa.Column('updated_date', sa.DateTime(), nullable=False),
+    sa.Column('created_by', sa.String(length=50), nullable=False),
+    sa.Column('updated_by', sa.String(length=50), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     widget_type_table = op.create_table('widget_type',
@@ -43,7 +43,11 @@ def upgrade():
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('widget_type_id', sa.Integer(), nullable=True),
     sa.Column('engagement_id', sa.Integer(), nullable=True),
-    sa.Column('widget_data_id', sa.Integer(), nullable=True),
+    sa.Column('widget_data_id', sa.Integer(), nullable=False),
+    sa.Column('created_date', sa.DateTime(), nullable=False),
+    sa.Column('updated_date', sa.DateTime(), nullable=False),
+    sa.Column('created_by', sa.String(length=50), nullable=False),
+    sa.Column('updated_by', sa.String(length=50), nullable=False),
     sa.ForeignKeyConstraint(['engagement_id'], ['engagement.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['widget_type_id'], ['widget_type.id'], ondelete='SET NULL'),
     sa.PrimaryKeyConstraint('id')

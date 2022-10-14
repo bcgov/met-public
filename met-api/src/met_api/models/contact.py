@@ -21,10 +21,10 @@ class Contact(db.Model):  # pylint: disable=too-few-public-methods
     phone_number = db.Column(db.String(50), nullable=True)
     address = db.Column(db.String(50))
     bio = db.Column(db.String(500))
-    created_date = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
-    created_by = db.Column(db.String(50))
-    updated_by = db.Column(db.String(50))
+    created_date = db.Column(db.DateTime, default=datetime.utcnow, nullable= False)
+    updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow, nullable= False)
+    created_by = db.Column(db.String(50), nullable= False)
+    updated_by = db.Column(db.String(50), nullable= False)
 
     @classmethod
     def get_contact_by_id(cls, contact_id) -> Contact:
