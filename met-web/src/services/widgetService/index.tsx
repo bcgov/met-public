@@ -10,7 +10,7 @@ export const getWidgets = async (engagement_id: number): Promise<WidgetsList[]> 
 };
 
 interface PostWidgetRequest {
-    widget_type: number;
+    widget_type_id: number;
     engagement_id: number;
     widget_data_id: number;
 }
@@ -18,6 +18,24 @@ export const postWidget = async (engagement_id: number, data: PostWidgetRequest)
     try {
         const url = replaceUrl(Endpoints.Widgets.GET_LIST, 'engagement_id', String(engagement_id));
         const response = await http.PostRequest<Widget>(url, data);
+        if (response.data.status && response.data.result) {
+            return Promise.resolve(response.data.result);
+        }
+        return Promise.reject(response.data.message ?? 'Failed to create contact');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
+interface PostWidgetsRequest {
+    widget_type_id: number;
+    engagement_id: number;
+    widget_data_id: number;
+}
+export const postWidgets = async (engagement_id: number, data: PostWidgetRequest[]): Promise<Widget[]> => {
+    try {
+        const url = replaceUrl(Endpoints.Widgets.GET_LIST, 'engagement_id', String(engagement_id));
+        const response = await http.PostRequest<Widget[]>(url, data);
         if (response.data.status && response.data.result) {
             return Promise.resolve(response.data.result);
         }

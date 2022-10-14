@@ -31,4 +31,5 @@ class WidgetService:
     @staticmethod
     def create_widgets_bulk(data: WidgetSchema):
         """Create widget."""
-        return Widget.creat_all_widgets(data)
+        created_widgets_records = Widget.creat_all_widgets(data)
+        return WidgetSchema(many=True).dump(created_widgets_records)

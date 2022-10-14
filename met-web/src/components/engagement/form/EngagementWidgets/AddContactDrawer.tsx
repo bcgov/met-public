@@ -18,7 +18,7 @@ const schema = yup
     .object({
         name: yup.string().required(),
         role: yup.string().required(),
-        phoneNumber: yup.string().required(),
+        phone_number: yup.string().required(),
         email: yup.string().email().required(),
         address: yup.string().required(),
         bio: yup.string().min(20).required(),
@@ -50,6 +50,7 @@ const AddContactDrawer = () => {
             dispatch(
                 openNotification({ severity: 'error', text: 'An error occured while trying to create a new contact' }),
             );
+            setIsCreatingContact(false);
         }
     };
 
@@ -122,7 +123,7 @@ const AddContactDrawer = () => {
                                     shrink: false,
                                 }}
                                 fullWidth
-                                name="phoneNumber"
+                                name="phone_number"
                                 size="small"
                             />
                         </Grid>

@@ -54,18 +54,20 @@ class SurveySubmission(Resource):
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
     @auth.require
-    def post():
+    def post(engagement_id):
         """Add new widgets for an engagement."""
         try:
             user_id = TokenInfo.get_id()
             requestjson = request.get_json()
+            print(engagement_id)
             
-            widget_schema = WidgetSchema(many=True).load(requestjson)
-            widget_schema['created_by'] = user_id
-            widget_schema['updated_by'] = user_id
-            result = WidgetService().create_widgets_bulk(widget_schema)
-            widget_schema['id'] = result.id
-            return ActionResult.success(result.id, widget_schema)
+            widgets = WidgetSchema(many=True).load(requestjson)
+            for widget in widgets:
+                widget['created_by'] = user_id
+                widget['updated_by'] = user_id
+                
+            result = WidgetService().create_widgets_bulk(widgets)
+            return ActionResult.success(result=result)
         except KeyError as err:
             return ActionResult.error(str(err))
         except ValueError as err:
