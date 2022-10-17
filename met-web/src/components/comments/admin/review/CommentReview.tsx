@@ -5,7 +5,7 @@ import { getComment, ReviewComment } from 'services/commentService';
 import { useAppDispatch } from 'hooks';
 import { useParams, useNavigate } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { MetLabel, MetLabelBody, MetPageGridContainer, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetLabel, MetParagraph, MetPageGridContainer, PrimaryButton, SecondaryButton } from 'components/common';
 import { Palette } from 'styles/Theme';
 import { CommentStatus } from 'constants/commentStatus';
 import { formatDate } from 'components/common/dateHelper';
@@ -84,7 +84,7 @@ const CommentReview = () => {
                             <MetLabel>Comment ID:</MetLabel>
                         </Grid>
                         <Grid item>
-                            <MetLabelBody sx={{ pl: 2 }}>{id}</MetLabelBody>
+                            <MetParagraph sx={{ pl: 2 }}>{id}</MetParagraph>
                         </Grid>
                     </Grid>
 
@@ -93,7 +93,7 @@ const CommentReview = () => {
                             <MetLabel>Status:</MetLabel>
                         </Grid>
                         <Grid item>
-                            <MetLabelBody sx={{ pl: 2 }}>{comment_status.status_name}</MetLabelBody>
+                            <MetParagraph sx={{ pl: 2 }}>{comment_status.status_name}</MetParagraph>
                         </Grid>
                     </Grid>
 
@@ -102,7 +102,7 @@ const CommentReview = () => {
                             <MetLabel>Reviewed by:</MetLabel>
                         </Grid>
                         <Grid item>
-                            <MetLabelBody sx={{ pl: 2 }}>{reviewed_by}</MetLabelBody>
+                            <MetParagraph sx={{ pl: 2 }}>{reviewed_by}</MetParagraph>
                         </Grid>
                     </Grid>
 
@@ -111,7 +111,7 @@ const CommentReview = () => {
                             <MetLabel>Comment Date:</MetLabel>
                         </Grid>
                         <Grid item>
-                            <MetLabelBody sx={{ pl: 2 }}>{formatDate(submission_date)}</MetLabelBody>
+                            <MetParagraph sx={{ pl: 2 }}>{formatDate(submission_date)}</MetParagraph>
                         </Grid>
                     </Grid>
 
@@ -120,7 +120,7 @@ const CommentReview = () => {
                             <MetLabel>Date Reviewed:</MetLabel>
                         </Grid>
                         <Grid item>
-                            <MetLabelBody sx={{ pl: 2 }}>{formatDate(review_date)}</MetLabelBody>
+                            <MetParagraph sx={{ pl: 2 }}>{formatDate(review_date)}</MetParagraph>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -129,7 +129,7 @@ const CommentReview = () => {
                         <MetLabel>Comment</MetLabel>
                     </Grid>
                     <Grid xs={12} item>
-                        <MetLabelBody>{text}</MetLabelBody>
+                        <MetParagraph>{text}</MetParagraph>
                     </Grid>
                 </Grid>
                 <Grid item xs={12}>
@@ -147,12 +147,12 @@ const CommentReview = () => {
                             <FormControlLabel
                                 value={CommentStatus.Approved}
                                 control={<Radio />}
-                                label={<MetLabelBody>Approve</MetLabelBody>}
+                                label={<MetParagraph>Approve</MetParagraph>}
                             />
                             <FormControlLabel
                                 value={CommentStatus.Rejected}
                                 control={<Radio />}
-                                label={<MetLabelBody>Reject</MetLabelBody>}
+                                label={<MetParagraph>Reject</MetParagraph>}
                             />
                         </RadioGroup>
                     </FormControl>

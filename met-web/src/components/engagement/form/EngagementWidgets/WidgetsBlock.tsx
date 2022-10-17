@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import { Grid, Skeleton } from '@mui/material';
 import { MetHeader2, MetPaper, SecondaryButton } from 'components/common';
-import { ActionContext } from '../ActionContext';
 import { WidgetCardSwitch } from './WidgetCardSwitch';
 import { If, Then, Else } from 'react-if';
+import { WidgetDrawerContext } from './WidgetDrawerContext';
 
 const WidgetsBlock = () => {
-    const { widgets, handleWidgetDrawerOpen, isWidgetsLoading } = useContext(ActionContext);
+    const { widgets, handleWidgetDrawerOpen, isWidgetsLoading } = useContext(WidgetDrawerContext);
     return (
         <Grid container item xs={12} rowSpacing={1}>
             <Grid item xs={12}>

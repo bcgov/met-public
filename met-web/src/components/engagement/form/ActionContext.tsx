@@ -29,32 +29,6 @@ export const ActionContext = createContext<EngagementContext>({
     fetchEngagement: () => {
         /* empty default method  */
     },
-    widgets: [
-        {
-            widget_type_id: 0,
-            items: [
-                {
-                    id: 0,
-                    widget_type: 0,
-                    engagement_id: 0,
-                    data: {},
-                },
-            ],
-        },
-    ],
-    isWidgetsLoading: false,
-    widgetDrawerOpen: false,
-    handleWidgetDrawerOpen: (_open: boolean) => {
-        /* empty default method  */
-    },
-    addContactDrawerOpen: false,
-    handleAddContactDrawerOpen: (_open: boolean) => {
-        /* empty default method  */
-    },
-    widgetDrawerTabValue: 'widgetOptions',
-    handleWidgetDrawerTabValueChange: (_tabValue: string) => {
-        /* empty default method  */
-    },
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
@@ -68,46 +42,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
-
-    const [widgets, setWidgets] = useState<WidgetsList[]>([]);
-    const [isWidgetsLoading, setIsWidgetsLoading] = useState(false);
-    const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
-    const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState('widgetOptions');
-
-    const [addContactDrawerOpen, setAddContactDrawerOpen] = useState(false);
-
-    useEffect(() => {
-        loadWidgets();
-    }, [savedEngagement]);
-
-    const loadWidgets = async () => {
-        if (!savedEngagement.id) {
-            return;
-        }
-
-        try {
-            setIsWidgetsLoading(true);
-            const widgetsList = await getWidgets(savedEngagement.id);
-            setWidgets(widgetsList);
-            setIsWidgetsLoading(false);
-        } catch (err) {
-            console.log(err);
-            setIsWidgetsLoading(false);
-            dispatch(openNotification({ severity: 'error', text: 'Error fetching engagement widgets' }));
-        }
-    };
-
-    const handleWidgetDrawerOpen = (open: boolean) => {
-        setWidgetDrawerOpen(open);
-    };
-
-    const handleAddContactDrawerOpen = (open: boolean) => {
-        setAddContactDrawerOpen(open);
-    };
-
-    const handleWidgetDrawerTabValueChange = (tabValue: string) => {
-        setWidgetDrawerTabValue(tabValue);
-    };
 
     const handleAddBannerImage = (files: File[]) => {
         if (files.length > 0) {
@@ -220,14 +154,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 loadingSavedEngagement,
                 handleAddBannerImage,
                 fetchEngagement,
-                widgets,
-                widgetDrawerOpen,
-                handleWidgetDrawerOpen,
-                widgetDrawerTabValue,
-                handleWidgetDrawerTabValueChange,
-                addContactDrawerOpen,
-                handleAddContactDrawerOpen,
-                isWidgetsLoading,
             }}
         >
             {children}

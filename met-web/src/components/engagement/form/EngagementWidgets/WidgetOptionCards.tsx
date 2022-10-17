@@ -2,10 +2,10 @@ import React, { useContext } from 'react';
 import { Grid } from '@mui/material';
 import WidgetOptionCard from './WidgetOptionCard';
 import PersonIcon from '@mui/icons-material/Person';
-import { ActionContext } from '../ActionContext';
+import { WidgetDrawerContext } from './WidgetDrawerContext';
 
 const WidgetOptionCards = () => {
-    const { handleWidgetDrawerTabValueChange } = useContext(ActionContext);
+    const { handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
     return (
         <Grid container item xs={12} lg={6}>
             <Grid item xs={12}>

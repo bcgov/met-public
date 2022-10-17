@@ -1,38 +1,22 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Autocomplete, Grid, TextField, Typography } from '@mui/material';
 import { ActionContext } from '../ActionContext';
 import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
 import { Contact } from 'models/contact';
-import { getContacts } from 'services/contactService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { postWidgets } from 'services/widgetService';
+import { WidgetDrawerContext } from './WidgetDrawerContext';
+import ContantInfoPaper from './ContactInfoPaper';
 
 const WhoIsListeningForm = () => {
-    const { handleWidgetDrawerOpen, handleAddContactDrawerOpen, savedEngagement } = useContext(ActionContext);
+    const { savedEngagement } = useContext(ActionContext);
+    const { handleWidgetDrawerOpen, handleAddContactDrawerOpen, loadingContacts, contacts } =
+        useContext(WidgetDrawerContext);
     const dispatch = useAppDispatch();
     const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
     const [addedContacts, setAddedContacts] = useState<Contact[]>([]);
-    const [contacts, setContacts] = useState<Contact[]>([]);
-    const [loadingContacts, setLoadingContacts] = useState(false);
     const [addingWidgets, setAddingWidgets] = useState(false);
-
-    useEffect(() => {
-        loadContacts();
-    }, []);
-
-    const loadContacts = async () => {
-        try {
-            setLoadingContacts(true);
-            const loadedContacts = await getContacts();
-            setContacts(loadedContacts);
-            setLoadingContacts(false);
-        } catch (error) {
-            console.log(error);
-            dispatch(openNotification({ severity: 'error', text: 'Error occurred while attempting to load contacts' }));
-            setLoadingContacts(false);
-        }
-    };
 
     const addContact = () => {
         if (!selectedContact || addedContacts.map((contact) => contact.id).includes(selectedContact.id)) {
@@ -56,18 +40,21 @@ const WhoIsListeningForm = () => {
         });
 
         try {
+            setAddingWidgets(true);
             await postWidgets(savedEngagement.id, widgetsToAdd);
             dispatch(openNotification({ severity: 'success', text: 'Widgets successfully added' }));
             handleWidgetDrawerOpen(false);
+            setAddingWidgets(false);
         } catch (error) {
             console.log(error);
             dispatch(
                 openNotification({ severity: 'error', text: 'Error occurred while attempting to add the widgets' }),
             );
+            setAddingWidgets(false);
         }
     };
     return (
-        <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={1}>
+        <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
             <Grid item xs={12}>
                 <MetLabel>Select Existing Contact</MetLabel>
             </Grid>
@@ -85,7 +72,7 @@ const WhoIsListeningForm = () => {
                                 }}
                             />
                         )}
-                        getOptionLabel={(contact: Contact) => contact.name}
+                        getOptionLabel={(contact: Contact) => `${contact.name} - ${contact.role}`}
                         onChange={(_e: React.SyntheticEvent<Element, Event>, contact: Contact | null) =>
                             setSelectedContact(contact)
                         }
@@ -95,7 +82,7 @@ const WhoIsListeningForm = () => {
                 </Grid>
                 <Grid item>
                     <PrimaryButton onClick={() => addContact()} sx={{ height: '100%' }} fullWidth>
-                        Add selected contac
+                        Add selected contact
                     </PrimaryButton>
                 </Grid>
                 <Grid item>
@@ -104,10 +91,10 @@ const WhoIsListeningForm = () => {
                     </SecondaryButton>
                 </Grid>
             </Grid>
-            {addedContacts.map((addedContact, index) => {
+            {addedContacts.map((addedContact) => {
                 return (
                     <Grid key={`added-contact-${addedContact.id}`} item xs={12}>
-                        <Typography>{addedContact.name}</Typography>
+                        <ContantInfoPaper contact={addedContact} />
                     </Grid>
                 );
             })}

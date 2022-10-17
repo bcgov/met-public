@@ -3,9 +3,12 @@ import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
 import { Widget, WidgetsList } from 'models/widget';
 
-export const getWidgets = async (engagement_id: number): Promise<WidgetsList[]> => {
+interface GetWidgetsParams {
+    grouped_by_type: boolean;
+}
+export const getWidgets = async (engagement_id: number, params?: GetWidgetsParams): Promise<WidgetsList[]> => {
     const url = replaceUrl(Endpoints.Widgets.GET_LIST, 'engagement_id', String(engagement_id));
-    const responseData = await http.GetRequest<WidgetsList[]>(url);
+    const responseData = await http.GetRequest<WidgetsList[]>(url, params);
     return responseData.data.result ?? [];
 };
 
@@ -27,11 +30,6 @@ export const postWidget = async (engagement_id: number, data: PostWidgetRequest)
     }
 };
 
-interface PostWidgetsRequest {
-    widget_type_id: number;
-    engagement_id: number;
-    widget_data_id: number;
-}
 export const postWidgets = async (engagement_id: number, data: PostWidgetRequest[]): Promise<Widget[]> => {
     try {
         const url = replaceUrl(Endpoints.Widgets.GET_LIST, 'engagement_id', String(engagement_id));

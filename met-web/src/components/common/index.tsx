@@ -154,8 +154,13 @@ export const MetLabel = styled(Typography)(() => ({
     fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
 }));
 
-export const MetLabelBody = styled(Typography)(() => ({
+export const MetParagraph = styled(Typography)(() => ({
     fontSize: '16px',
+    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+}));
+
+export const MetSmallText = styled(Typography)(() => ({
+    fontSize: '13px',
     fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
 }));
 

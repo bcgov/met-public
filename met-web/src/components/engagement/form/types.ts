@@ -10,14 +10,6 @@ export interface EngagementContext {
     loadingSavedEngagement: boolean;
     handleAddBannerImage: (_files: File[]) => void;
     fetchEngagement: () => void;
-    widgets: WidgetsList[];
-    widgetDrawerOpen: boolean;
-    handleWidgetDrawerOpen: (_open: boolean) => void;
-    widgetDrawerTabValue: string;
-    handleWidgetDrawerTabValueChange: (_tabValue: string) => void;
-    addContactDrawerOpen: boolean;
-    handleAddContactDrawerOpen: (_open: boolean) => void;
-    isWidgetsLoading: boolean;
 }
 
 export interface EngagementForm {

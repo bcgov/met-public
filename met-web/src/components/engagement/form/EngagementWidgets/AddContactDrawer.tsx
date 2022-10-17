@@ -4,7 +4,6 @@ import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import { Grid } from '@mui/material';
 import { MetHeader3, MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
-import { ActionContext } from '../ActionContext';
 import ImageUpload from 'components/imageUpload';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -13,6 +12,7 @@ import ControlledTextField from 'components/common/ControlledInputComponents/Con
 import { postContact } from 'services/contactService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { WidgetDrawerContext } from './WidgetDrawerContext';
 
 const schema = yup
     .object({
@@ -35,7 +35,7 @@ const AddContactDrawer = () => {
     });
 
     const { handleSubmit } = methods;
-    const { addContactDrawerOpen, handleAddContactDrawerOpen } = useContext(ActionContext);
+    const { addContactDrawerOpen, handleAddContactDrawerOpen, loadContacts } = useContext(WidgetDrawerContext);
     const [isCreatingContact, setIsCreatingContact] = useState(false);
 
     const onSubmit: SubmitHandler<ContactForm> = async (data: ContactForm) => {
@@ -45,6 +45,7 @@ const AddContactDrawer = () => {
             setIsCreatingContact(false);
             handleAddContactDrawerOpen(false);
             dispatch(openNotification({ severity: 'success', text: 'A new contact was successfully added' }));
+            loadContacts();
         } catch (err) {
             console.log(err);
             dispatch(

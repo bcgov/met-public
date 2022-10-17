@@ -4,12 +4,13 @@ import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import { Grid } from '@mui/material';
 import { MetHeader3 } from 'components/common';
-import { ActionContext } from '../ActionContext';
 import WidgetDrawerTabs from './WidgetDrawerTabs';
 import AddContactDrawer from './AddContactDrawer';
+import { WidgetDrawerContext } from './WidgetDrawerContext';
 
 const WidgetDrawer = () => {
-    const { widgetDrawerOpen, handleWidgetDrawerOpen, handleWidgetDrawerTabValueChange } = useContext(ActionContext);
+    const { widgetDrawerOpen, handleWidgetDrawerOpen, handleWidgetDrawerTabValueChange } =
+        useContext(WidgetDrawerContext);
 
     return (
         <Drawer
