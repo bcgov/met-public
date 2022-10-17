@@ -13,6 +13,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import MetTable from 'components/common/Table';
+import { SubmissionStatus } from 'constants/engagementStatus';
 
 const EngagementListing = () => {
     const [searchFilter, setSearchFilter] = useState({
@@ -102,7 +103,16 @@ const EngagementListing = () => {
             disablePadding: false,
             label: 'Status',
             allowSort: true,
-            getValue: (row: Engagement) => row.engagement_status.status_name,
+            getValue: (row: Engagement) => {
+                if (row.engagement_status.status_name === 'Published') {
+                    return (
+                        row.engagement_status.status_name +
+                        '/' +
+                        Object.keys(SubmissionStatus)[Object.values(SubmissionStatus).indexOf(row.submission_status)]
+                    );
+                }
+                return row.engagement_status.status_name;
+            },
         },
         {
             key: 'published_date',
