@@ -737,6 +737,37 @@
 			"item": [
 				{
 					"name": "Create Feedback",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 10000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(10000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('should return JSON', function () {\r",
+									"    pm.response.to.have.header('Content-Type', 'application/json');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate Feedback JSON Data\", () => {\r",
+									"    var jsonData = pm.response.json().result;\r",
+									"    pm.expect(jsonData.rating).to.exist\r",
+									"    pm.expect(jsonData.comment).to.exist\r",
+									"    pm.expect(jsonData.comment_type).to.exist\r",
+									"    pm.expect(jsonData.created_date).to.exist\r",
+									"    pm.expect(jsonData.source).to.exist\r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "oauth2",
@@ -810,36 +841,30 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"// pm.test(\"Response time is less than 10000ms\", function () {\r",
-									"//     pm.expect(pm.response.responseTime).to.be.below(10000);\r",
-									"// });\r",
+									"pm.test(\"Response time is less than 10000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(10000);\r",
+									"});\r",
 									"\r",
-									"// pm.test(\"Status code is 200\", function () {\r",
-									"//     pm.response.to.have.status(200);\r",
-									"// });\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
 									"\r",
-									"// pm.test('should return JSON', function () {\r",
-									"//     pm.response.to.have.header('Content-Type', 'application/json');\r",
-									"// });\r",
+									"pm.test('should return JSON', function () {\r",
+									"    pm.response.to.have.header('Content-Type', 'application/json');\r",
+									"});\r",
 									"\r",
-									"// pm.test(\"Validate Engagement JSON Data\", () => {\r",
-									"//     var jsonData = pm.response.json().result;\r",
-									"//     console.log(jsonData);\r",
-									"//     for (var i=0; i<jsonData.items.length; i++) {\r",
-									"//         pm.expect(jsonData.items[i].legalName).to.exist\r",
-									"//            pm.expect(jsonData.id).to.exist\r",
-									"//     pm.expect(jsonData.name).to.exist\r",
-									"//     pm.expect(jsonData.banner_filename).to.exist\r",
-									"//     pm.expect(jsonData.created_by).to.exist\r",
-									"//     pm.expect(jsonData.created_date).to.exist\r",
-									"//     pm.expect(jsonData.updated_date).to.exist\r",
-									"//     pm.expect(jsonData.content).to.exist\r",
-									"//     pm.expect(jsonData.rich_description).to.exist\r",
-									"//     pm.expect(jsonData.description).to.exist\r",
-									"//     }\r",
-									" \r",
+									"pm.test(\"Validate Feedback JSON Data\", () => {\r",
+									"    var jsonData = pm.response.json().result;\r",
+									"      for (var i=0; i<jsonData.items.length; i++) {\r",
+									"    pm.expect(jsonData.items[i].rating).to.exist\r",
+									"    pm.expect(jsonData.items[i].comment).to.exist\r",
+									"    pm.expect(jsonData.items[i].comment_type).to.exist\r",
+									"    pm.expect(jsonData.items[i].created_date).to.exist\r",
+									"    pm.expect(jsonData.items[i].source).to.exist\r",
+									"    }\r",
 									"\r",
-									"// });"
+									"\r",
+									"});"
 								],
 								"type": "text/javascript"
 							}
