@@ -1,7 +1,7 @@
 """Create widget tables
 
 Revision ID: e39d3e01dc22
-Revises: 5110026db916
+Revises: ac4a505ed1e3
 Create Date: 2022-10-18 08:30:48.529328
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = 'e39d3e01dc22'
-down_revision = '5110026db916'
+down_revision = 'ac4a505ed1e3'
 branch_labels = None
 depends_on = None
 
