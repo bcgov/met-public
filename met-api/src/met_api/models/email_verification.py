@@ -52,7 +52,7 @@ class EmailVerification(db.Model):  # pylint: disable=too-few-public-methods
         return DefaultMethodResult(True, 'Email Verification Added', new_email_verification.id)
 
     @classmethod
-    def update(cls, email_verification: EmailVerificationSchema) -> DefaultMethodResult:
+    def update(cls, email_verification: EmailVerificationSchema, session=None) -> DefaultMethodResult:
         """Update an email verification."""
         update_fields = dict(
             is_active=email_verification.get('is_active', None),
@@ -65,5 +65,6 @@ class EmailVerification(db.Model):  # pylint: disable=too-few-public-methods
         if not record:
             return DefaultMethodResult(False, 'Email Verification Not Found', email_verification_id)
         query.update(update_fields)
-        db.session.commit()
+        if session is None:
+            db.session.commit()
         return DefaultMethodResult(True, 'Email Verification Updated', email_verification_id)

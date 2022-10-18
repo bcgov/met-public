@@ -2,6 +2,7 @@
 from met_api.constants.engagement_status import SubmissionStatus
 from met_api.models import Engagement as EngagementModel
 from met_api.models import Survey as SurveyModel
+from met_api.models.db import session_scope
 from met_api.models.submission import Submission
 from met_api.schemas.submission import SubmissionSchema
 from met_api.services.comment_service import CommentService
@@ -32,16 +33,19 @@ class SubmissionService:
         cls._validate_fields(submission)
         verification_token = submission.get('verification_token', None)
         survey_id = submission.get('survey_id', None)
-        email_verification = cls.validate_email_verification(verification_token, survey_id)
-        user_id = email_verification.get('user_id', None)
-        submission['user_id'] = user_id
-        submission['created_by'] = user_id
 
-        survey = SurveyService.get(survey_id)
-        comments = CommentService.extract_comments(submission, survey)
-        CommentService.create_comments(comments)
+        # Creates a scoped session that will be committed when diposed or rolledback if a exception occurs
+        with session_scope() as session:
+            email_verification = EmailVerificationService().verify(verification_token, survey_id, session)
+            user_id = email_verification.get('user_id', None)
+            submission['user_id'] = user_id
+            submission['created_by'] = user_id
 
-        return Submission.create(submission)
+            survey = SurveyService.get(survey_id)
+            comments = CommentService.extract_comments(submission, survey)
+            CommentService().create_comments(comments, session)
+            result = Submission.create(submission, session)
+        return result
 
     @classmethod
     def update(cls, data: SubmissionSchema):
@@ -61,8 +65,3 @@ class SubmissionService:
 
         if engagement.status_id != SubmissionStatus.Open.value:
             raise ValueError('Engagement not open to submissions')
-
-    @staticmethod
-    def validate_email_verification(verification_token, survey_id):
-        """Validate the provided verification token."""
-        return EmailVerificationService().verify(verification_token, survey_id)

@@ -36,7 +36,7 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
         return db.session.query(Submission).filter_by(survey_id=survey_id).all()
 
     @classmethod
-    def create(cls, submission: SubmissionSchema) -> DefaultMethodResult:
+    def create(cls, submission: SubmissionSchema, session=None) -> DefaultMethodResult:
         """Save submission."""
         new_submission = Submission(
             submission_json=submission.get('submission_json', None),
@@ -47,8 +47,11 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
             created_by=submission.get('created_by', None),
             updated_by=submission.get('updated_by', None),
         )
-        db.session.add(new_submission)
-        db.session.commit()
+        if session is None:
+            db.session.add(new_submission)
+            db.session.commit()
+        else:
+            session.add(new_submission)
         return DefaultMethodResult(True, 'Submission Added', new_submission.id)
 
     @classmethod

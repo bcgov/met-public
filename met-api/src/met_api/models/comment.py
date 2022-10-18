@@ -101,11 +101,14 @@ class Comment(db.Model):
         )
 
     @classmethod
-    def add_all_comments(cls, comments: list) -> DefaultMethodResult:
+    def add_all_comments(cls, comments: list, session=None) -> DefaultMethodResult:
         """Save comments."""
         new_comments = [cls.__create_new_comment_entity(comment) for comment in comments]
-        db.session.add_all(new_comments)
-        db.session.commit()
+        if session is None:
+            db.session.add_all(new_comments)
+            db.session.commit()
+        else:
+            session.add_all(new_comments)
         return DefaultMethodResult(True, 'Comments Added', 1)
 
     @classmethod
