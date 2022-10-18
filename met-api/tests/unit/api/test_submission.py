@@ -29,7 +29,7 @@ def test_valid_submission(client, jwt, session):  # pylint:disable=unused-argume
     survey, eng = factory_survey_and_eng_model()
     email_verification = factory_email_verification(survey.id)
     to_dict = {
-        'survey_id': str(survey.id),
+        'survey_id': survey.id,
         'submission_json': {'simplepostalcode': 'abc'},
         'verification_token': email_verification.verification_token
     }

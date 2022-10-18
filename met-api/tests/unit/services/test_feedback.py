@@ -16,14 +16,26 @@
 Test suite to ensure that the Feedback service routines are working as expected.
 """
 
+from met_api.constants.feedback import FeedbackSourceType
 from met_api.services.feedback_service import FeedbackService
 from tests.utilities.factory_scenarios import TestFeedbackInfo
 
 
-def test_create_feedback(session):  # pylint:disable=unused-argument
+def test_create_feedback_public(session):  # pylint:disable=unused-argument
     """Assert that a feedback can be created."""
     feedback_data = TestFeedbackInfo.feedback1
-    saved_feedback = FeedbackService().create_feedback(feedback_data)
+    saved_feedback = FeedbackService().create_feedback(feedback_data, None)
     # fetch the feedback with id and assert
     fetched_feedback = FeedbackService().get_feedback(saved_feedback.get('id'))
     assert fetched_feedback.get('comment') == feedback_data.get('comment')
+    assert fetched_feedback.get('source') == FeedbackSourceType.Public
+
+
+def test_create_feedback_internal(session):  # pylint:disable=unused-argument
+    """Assert that a feedback can be created."""
+    feedback_data = TestFeedbackInfo.feedback1
+    saved_feedback = FeedbackService().create_feedback(feedback_data, 'TestUser')
+    # fetch the feedback with id and assert
+    fetched_feedback = FeedbackService().get_feedback(saved_feedback.get('id'))
+    assert fetched_feedback.get('comment') == feedback_data.get('comment')
+    assert fetched_feedback.get('source') == FeedbackSourceType.Internal

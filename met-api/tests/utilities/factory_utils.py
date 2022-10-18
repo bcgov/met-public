@@ -122,6 +122,7 @@ def factory_feedback_model(feedback_info: dict = TestFeedbackInfo.feedback1, sta
         comment=fake.text(),
         rating=feedback_info.get('rating'),
         comment_type=feedback_info.get('comment_type'),
+        source=feedback_info.get('source'),
     )
     db.session.add(feedback)
     db.session.commit()

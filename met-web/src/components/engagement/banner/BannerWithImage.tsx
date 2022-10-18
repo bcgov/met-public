@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Grid, Box, Typography, Stack, useMediaQuery, Theme } from '@mui/material';
+import { Grid, Box, Typography, Stack } from '@mui/material';
 import { formatDate } from '../../common/dateHelper';
 import BannerWithoutImage from './BannerWithoutImage';
-import { MetHeader1, MetHeader2, MetHeader3 } from 'components/common';
+import { MetHeader1 } from 'components/common';
 import { BannerProps } from '../view/types';
 import { EngagementStatusChip } from '../status';
 import { Editor } from 'react-draft-wysiwyg';
@@ -11,7 +11,6 @@ import { getEditorState } from 'utils';
 const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
     const { name, start_date, end_date, banner_url, submission_status, rich_description } = savedEngagement;
     const [imageError, setImageError] = useState(false);
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const dateFormat = 'MMM dd, yyyy';
 
     const EngagementDate = `Engagement dates: ${formatDate(start_date, dateFormat)} to ${formatDate(
@@ -74,24 +73,13 @@ const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
                         rowSpacing={2}
                     >
                         <Grid item xs={12} sx={{ maxHeight: '20em', overflowY: 'auto', overflowX: 'auto', mb: 2 }}>
-                            {isSmallScreen ? (
-                                <MetHeader2 color="black">{name}</MetHeader2>
-                            ) : (
-                                <MetHeader1 color="black">{name}</MetHeader1>
-                            )}
-
+                            <MetHeader1>{name}</MetHeader1>
                             <Editor editorState={getEditorState(rich_description)} readOnly={true} toolbarHidden />
                         </Grid>
                         <Grid item xs={12}>
-                            {isSmallScreen ? (
-                                <MetHeader3 style={{ fontWeight: 600 }} color="black">
-                                    {EngagementDate}
-                                </MetHeader3>
-                            ) : (
-                                <MetHeader2 style={{ fontWeight: 600 }} color="black">
-                                    {EngagementDate}
-                                </MetHeader2>
-                            )}
+                            <Typography sx={{ fontWeight: 'bold' }} variant="subtitle1" color="black">
+                                {EngagementDate}
+                            </Typography>
                         </Grid>
                         <Grid item xs={12}>
                             <Stack direction="row" spacing={1}>

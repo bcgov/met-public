@@ -6,30 +6,23 @@ import {
     InputAdornment,
     Modal,
     Stack,
-    SvgIcon,
     TextField,
     Theme,
+    SvgIcon,
 } from '@mui/material';
 import * as React from 'react';
 import ModeCommentIcon from '@mui/icons-material/ModeComment';
 import CloseIcon from '@mui/icons-material/Close';
 import { ReactComponent as CheckIcon } from 'assets/images/check.svg';
-import { ReactComponent as ExclamationIcon } from 'assets/images/exclamation.svg';
-import { ReactComponent as LightbulbIcon } from 'assets/images/lightbulb.svg';
-import { ReactComponent as ThinkingIcon } from 'assets/images/thinking.svg';
-import { ReactComponent as VeryDissatisfiedIcon } from 'assets/images/emojiVeryDissatisfied.svg';
-import { ReactComponent as DissatisfiedIcon } from 'assets/images/emojiDissatisfied.svg';
-import { ReactComponent as NeutralIcon } from 'assets/images/emojiNeutral.svg';
-import { ReactComponent as SatisfiedIcon } from 'assets/images/emojiSatisfied.svg';
-import { ReactComponent as VerySatisfiedIcon } from 'assets/images/emojiVerySatisfied.svg';
 import { useState } from 'react';
-import { MetBody, MetHeader3, MetHeader4, modalStyle, PrimaryButton } from '../..';
+import { MetBody, MetHeader3, MetLabel, modalStyle, PrimaryButton } from '../..';
 import { CommentTypeEnum, createDefaultFeedback } from 'models/feedback';
 import { Else, If, Then, When } from 'react-if';
 import { CommentTypeButton, StyledRating } from './styledComponents';
 import { createFeedback } from 'services/feedbackService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
+import { customRatings, commentTypes } from './constants';
 
 export const FeedbackModal = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -38,67 +31,6 @@ export const FeedbackModal = () => {
     const [isSaving, setIsSaving] = useState(false);
     const { comment, rating, comment_type } = feedbackFormData;
     const dispatch = useAppDispatch();
-
-    const customRatings: {
-        [index: number]: {
-            icon: React.ReactElement;
-            label: string;
-        };
-    } = {
-        5: {
-            icon: <SvgIcon fontSize="large" component={VeryDissatisfiedIcon} viewBox="0 0 64 64" sx={{ marginX: 1 }} />,
-            label: 'Very Dissatisfied',
-        },
-        4: {
-            icon: <SvgIcon fontSize="large" component={DissatisfiedIcon} viewBox="0 0 64 64" sx={{ marginX: 2 }} />,
-            label: 'Dissatisfied',
-        },
-        3: {
-            icon: <SvgIcon fontSize="large" component={NeutralIcon} viewBox="0 0 64 64" sx={{ marginX: 1 }} />,
-            label: 'Neutral',
-        },
-        2: {
-            icon: <SvgIcon fontSize="large" component={SatisfiedIcon} viewBox="0 0 64 64" sx={{ marginX: 2 }} />,
-            label: 'Satisfied',
-        },
-        1: {
-            icon: <SvgIcon fontSize="large" component={VerySatisfiedIcon} viewBox="0 0 64 64" sx={{ marginX: 1 }} />,
-            label: 'Very Satisfied',
-        },
-        0: {
-            icon: <></>,
-            label: '',
-        },
-    };
-
-    const commentTypes: {
-        [index: number]: {
-            icon: React.ReactElement;
-            label: string;
-            text: string;
-        };
-    } = {
-        1: {
-            icon: <SvgIcon component={ExclamationIcon} viewBox="0 0 64 64" fontSize="large" />,
-            label: 'An Issue',
-            text: 'Something does not work...',
-        },
-        2: {
-            icon: <SvgIcon component={LightbulbIcon} viewBox="0 0 64 64" fontSize="large" />,
-            label: 'An Idea',
-            text: 'I was wondering...',
-        },
-        3: {
-            icon: <SvgIcon component={ThinkingIcon} viewBox="0 0 64 64" fontSize="large" />,
-            label: 'A Question',
-            text: 'I was wondering...',
-        },
-        0: {
-            icon: <></>,
-            label: '',
-            text: '',
-        },
-    };
 
     const IconContainer = (props: IconContainerProps) => {
         const { value, ...other } = props;
@@ -194,9 +126,9 @@ export const FeedbackModal = () => {
                         <Else>
                             <Grid item xs={12} display="flex">
                                 <Box flexGrow={1}>
-                                    <MetHeader4 id="modal-title" data-testid="feedback-title">
+                                    <MetHeader3 id="modal-title" data-testid="feedback-title">
                                         Send us your feedback
-                                    </MetHeader4>
+                                    </MetHeader3>
                                 </Box>
                                 <Box sx={{ marginTop: -1, padding: 0 }}>
                                     <IconButton aria-label="close" onClick={handleClose} sx={{ color: 'black' }}>
@@ -205,7 +137,7 @@ export const FeedbackModal = () => {
                                 </Box>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody>How do you like our engagement platform?</MetBody>
+                                <MetLabel>How do you like our engagement platform?</MetLabel>
                             </Grid>
                             <Grid item xs={12} textAlign="center">
                                 <StyledRating
@@ -223,7 +155,7 @@ export const FeedbackModal = () => {
                                 {customRatings[rating].label}
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody>What else would you like to share with us?</MetBody>
+                                <MetLabel>What else would you like to share with us?</MetLabel>
                             </Grid>
                             <Grid
                                 item

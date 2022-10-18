@@ -28,6 +28,14 @@ class RatingType(IntEnum):
 class CommentType(IntEnum):
     """Comment types enum."""
 
+    NONE = 0
     Issue = 1
     Idea = 2
     Else = 3
+
+
+class FeedbackSourceType(IntEnum):
+    """Source types enum."""
+
+    Public = 0
+    Internal = 1

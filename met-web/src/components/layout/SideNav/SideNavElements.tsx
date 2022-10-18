@@ -3,4 +3,5 @@ export const Routes = [
     { name: 'Surveys', path: '/surveys', base: '/surveys' },
     { name: 'Calendar', path: '/calendar', base: '/calendar' },
     { name: 'Reporting', path: '/reporting', base: '/reporting' },
+    { name: 'Feedback Tool', path: '/feedback', base: 'feedback' },
 ];

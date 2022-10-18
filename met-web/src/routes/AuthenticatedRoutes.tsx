@@ -14,6 +14,7 @@ import CommentTextListing from 'components/comments/admin/textListing';
 import EngagementDashboard from '../components/engagement/dashboard/report';
 import EngagementComments from '../components/engagement/dashboard/comment';
 import UnderConstruction from './UnderConstruction';
+import FeedbackListing from 'components/feedback/listing';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -30,6 +31,7 @@ const AuthenticatedRoutes = () => {
             <Route path="/engagements/:engagementId/comments" element={<EngagementComments />} />
             <Route path="/engagements/:engagementId/dashboard" element={<EngagementDashboard />} />
             <Route path="/surveys/:surveyId/comments/:commentId/review" element={<CommentReview />} />
+            <Route path="/feedback" element={<FeedbackListing />} />
             <Route path="/calendar" element={<UnderConstruction />} />
             <Route path="/reporting" element={<UnderConstruction />} />
             <Route path="*" element={<NotFound />} />

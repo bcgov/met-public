@@ -43,6 +43,34 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
 
+    const [widgets, setWidgets] = useState<WidgetsList[]>([]);
+    const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
+    const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState('widgetOptions');
+
+    useEffect(() => {
+        setWidgets([
+            {
+                widget_type: 1,
+                items: [
+                    {
+                        id: 1,
+                        widget_type: 1,
+                        engagement_id: Number(engagementId),
+                        data: {},
+                    },
+                ],
+            },
+        ]);
+    }, []);
+
+    const handleWidgetDrawerOpen = (open: boolean) => {
+        setWidgetDrawerOpen(open);
+    };
+
+    const handleWidgetDrawerTabValueChange = (tabValue: string) => {
+        setWidgetDrawerTabValue(tabValue);
+    };
+
     const handleAddBannerImage = (files: File[]) => {
         if (files.length > 0) {
             setBannerImage(files[0]);

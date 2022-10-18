@@ -731,6 +731,224 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Feedback",
+			"item": [
+				{
+					"name": "Create Feedback",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 10000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(10000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('should return JSON', function () {\r",
+									"    pm.response.to.have.header('Content-Type', 'application/json');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate Feedback JSON Data\", () => {\r",
+									"    var jsonData = pm.response.json().result;\r",
+									"    pm.expect(jsonData.rating).to.exist\r",
+									"    pm.expect(jsonData.comment).to.exist\r",
+									"    pm.expect(jsonData.comment_type).to.exist\r",
+									"    pm.expect(jsonData.created_date).to.exist\r",
+									"    pm.expect(jsonData.source).to.exist\r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "useBrowser",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "clientId",
+									"value": "met-web",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/token",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/auth",
+									"type": "string"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "https://met-web-dev.apps.gold.devops.gov.bc.ca/",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "met",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"rating\": {{FEEDBACK_RATING}},\r\n    \"comment\": \"{{FEEDBACK_COMMENT}}\",\r\n    \"comment_type\":{{FEEDBACK_COMMENT_TYPE}},\r\n    \"created_date\": \"{{FEEDBACK_CREATED_DATE}}\",\r\n    \"source\": {{FEEDBACK_SOURCE}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/api/feedbacks/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"api",
+								"feedbacks",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Feedback",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 10000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(10000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('should return JSON', function () {\r",
+									"    pm.response.to.have.header('Content-Type', 'application/json');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate Feedback JSON Data\", () => {\r",
+									"    var jsonData = pm.response.json().result;\r",
+									"      for (var i=0; i<jsonData.items.length; i++) {\r",
+									"    pm.expect(jsonData.items[i].rating).to.exist\r",
+									"    pm.expect(jsonData.items[i].comment).to.exist\r",
+									"    pm.expect(jsonData.items[i].comment_type).to.exist\r",
+									"    pm.expect(jsonData.items[i].created_date).to.exist\r",
+									"    pm.expect(jsonData.items[i].source).to.exist\r",
+									"    }\r",
+									"\r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "useBrowser",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "clientId",
+									"value": "met-web",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/token",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/auth",
+									"type": "string"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "https://met-web-dev.apps.gold.devops.gov.bc.ca/",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "met",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/api/feedbacks?page=1&size=10&sort_key=rating&sort_order= asc",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"api",
+								"feedbacks"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "What page number it is on"
+								},
+								{
+									"key": "size",
+									"value": "10",
+									"description": "How many results"
+								},
+								{
+									"key": "sort_key",
+									"value": "rating",
+									"description": "Sort key"
+								},
+								{
+									"key": "sort_order",
+									"value": " asc",
+									"description": "name to filter by"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
@@ -854,6 +1072,31 @@
 		{
 			"key": "ENGAGEMENT_UPDATED_DATE",
 			"value": "2022-09-23",
+			"type": "string"
+		},
+		{
+			"key": "FEEDBACK_RATING",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "FEEDBACK_COMMENT",
+			"value": "US",
+			"type": "string"
+		},
+		{
+			"key": "FEEDBACK_SOURCE",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "FEEDBACK_CREATED_DATE",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "FEEDBACK_COMMENT_TYPE",
+			"value": "",
 			"type": "string"
 		}
 	]

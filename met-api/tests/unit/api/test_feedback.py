@@ -18,6 +18,8 @@ Test-Suite to ensure that the /Feedbacks endpoint is working as expected.
 """
 import json
 
+from met_api.constants.feedback import FeedbackSourceType
+
 from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import factory_auth_header, factory_feedback_model
 
@@ -43,6 +45,7 @@ def test_feedback(client, jwt, session):  # pylint:disable=unused-argument
     assert result.get('rating') == feedback.rating
     assert result.get('comment_type') == feedback.comment_type
     assert result.get('comment') == feedback.comment
+    assert result.get('source') == FeedbackSourceType.Internal
 
 
 def test_invalid_feedback(client, jwt, session):  # pylint:disable=unused-argument

@@ -1,144 +1,147 @@
 ```mermaid
 erDiagram
     engagement {
-        integer engagement_id PK
-        string engagement_name
+        integer id PK
+		integer source_engagement_id
+        string name
         timestamp start_date
         timestamp end_date
-        string status_name
+		timestamp published_date
+        integer runcycle_id
         timestamp created_date
         timestamp updated_date
-        timestamp published_date
+        boolean is_active
     }
     survey {
-        integer survey_id PK
-        string survey_name
-        integer engagement_id FK "to engagement table"
+        integer id PK
+		integer source_survey_id
+        string name
+        integer engagement_id
+        integer runcycle_id
         timestamp created_date
         timestamp updated_date
-        string version "to maintain the version of a changed survey"
-        string active_flag "soft delete a survey"
+        boolean is_active
     }
     engagement ||--o{ survey : has
     user_response_details{
         id id PK
         integer survey_id FK "to survey table"
-        integer engagement_id FK "to engagement table"
-        integer user_id FK "to user table"
+        integer engagement_id
+        integer user_id
+        integer runcycle_id
         timestamp created_date
         timestamp updated_date
-        string active_flag "soft delete a survey"
+        boolean is_active
     } 
     survey ||--o{ user_response_details : has
-    request_type_radio {
-        string request_id PK
+    request_type_option {
+        integer id PK
+		string key
+		string type
+		string label
+		string request_id
         integer survey_id FK "to survey table"
-        integer engagement_id FK "to survey table"
-        string request_key
-        string request_type
-        string request_label
+        string postion
+        integer runcycle_id
         timestamp created_date
-        timestamp updated_date 
-        string active_flag "soft delete a record"
+        timestamp updated_date
+        boolean is_active
     }
-    survey ||--o{ request_type_radio : has 
-    response_type_radio {
-        integer response_id PK
+    survey ||--o{ request_type_option : has 
+    response_type_option {
+        integer id PK
+		integer user_id
+		string request_key PK
+		string value
+		string request_id
         integer survey_id FK "to survey table"
-        integer engagement_id FK "to survey table"
-        integer user_id FK "to user table"
-        string request_key FK "to request_type_radio table"
-        string response_value
+        integer runcycle_id
         timestamp created_date
-        timestamp updated_date 
-        string active_flag "soft delete a record"
+        timestamp updated_date
+        boolean is_active
     }
-    request_type_radio ||--o{ response_type_radio : has
+    request_type_option ||--o{ response_type_option : has
     request_type_textfield {
-        string request_id PK
+        integer id PK
+		string key
+		string type
+		string label
+		string request_id
         integer survey_id FK "to survey table"
-        integer engagement_id FK "to survey table"
-        string request_key
-        string request_type
-        string request_label
+        string postion
+        integer runcycle_id
         timestamp created_date
-        timestamp updated_date 
-        string active_flag "soft delete a record"
+        timestamp updated_date
+        boolean is_active
     }
     survey ||--o{ request_type_textfield : has 
     response_type_textfield {
-        integer response_id PK
+        integer id PK
+		integer user_id
+		string request_key PK
+		string value
+		string request_id
         integer survey_id FK "to survey table"
-        integer engagement_id FK "to survey table"
-        integer user_id FK "to user table"
-        string request_key FK "to request_type_radio table"
-        string response_value
+        integer runcycle_id
         timestamp created_date
-        timestamp updated_date 
-        string active_flag "soft delete a record"
+        timestamp updated_date
+        boolean is_active
     }
     request_type_textfield ||--o{ response_type_textfield : has
     request_type_textarea {
-        string request_id PK
+        integer id PK
+		string key
+		string type
+		string label
+		string request_id
         integer survey_id FK "to survey table"
-        integer engagement_id FK "to survey table"
-        string request_key
-        string request_type
-        string request_label
+        string postion
+        integer runcycle_id
         timestamp created_date
-        timestamp updated_date 
-        string active_flag "soft delete a record"
+        timestamp updated_date
+        boolean is_active
     }
     survey ||--o{ request_type_textarea : has 
     response_type_textarea {
-        integer response_id PK
+        integer id PK
+		integer user_id
+		string request_key PK
+		string value
+		string request_id
         integer survey_id FK "to survey table"
-        integer engagement_id FK "to survey table"
-        integer user_id FK "to user table"
-        string request_key FK "to request_type_radio table"
-        string response_value
+		string sentiment
+        integer runcycle_id
         timestamp created_date
-        timestamp updated_date 
-        string active_flag "soft delete a record"
+        timestamp updated_date
+        boolean is_active
     }
     request_type_textarea ||--o{ response_type_textarea : has
-    request_type_selectboxes {
-        string request_id PK
-        integer survey_id FK "to survey table"
-        integer engagement_id FK "to survey table"
-        string request_key
-        string request_type
-        string request_label
+    user_details {
+        integer id PK
+        string name
+        integer runcycle_id
         timestamp created_date
         timestamp updated_date 
-        string active_flag "soft delete a record"
-    }
-    survey ||--o{ request_type_selectboxes : has 
-    response_type_selectboxes {
-        integer response_id PK
-        integer survey_id FK "to survey table"
-        integer engagement_id FK "to survey table"
-        integer user_id FK "to user table"
-        string request_key FK "to request_type_radio table"
-        string request_label
-        string request_value 
-        string response_value
-        timestamp created_date
-        timestamp updated_date 
-        string active_flag "soft delete a record"
-    }
-    request_type_selectboxes ||--o{ response_type_selectboxes : has 
-    user_table {
-        integer user_id PK
-        string user_name
-        timestamp created_date
-        timestamp updated_date 
+		boolean is_active
     }
     user_feedback {
-        integer user_id PK
+        integer id PK
         integer survey_id FK "to survey table"
+		integer user_id
         string comments
+		string sentiment_analysis
+		string label
+		integer source_comment_id
+        integer runcycle_id
         timestamp created_date
         timestamp updated_date 
-        string sentiment_analysis
+		boolean is_active
+    }
+    etl_runcycle {
+        integer id PK
+        string packagename
+        timestamp startdatetime
+        timestamp enddatetime
+		string description
+        boolean success
     }
