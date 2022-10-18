@@ -77,7 +77,7 @@ export const MetWidgetPaper = styled(MuiPaper)(() => ({
     padding: '1em',
 }));
 
-interface MetWidgetProps {
+interface MetSurveyProps {
     testId?: string;
     title: string;
     children?: React.ReactNode;
@@ -87,7 +87,7 @@ interface MetWidgetProps {
     deleting?: boolean;
 }
 
-export const MetWidget = ({
+export const MetSurvey = ({
     testId,
     children,
     title,
@@ -95,7 +95,7 @@ export const MetWidget = ({
     onDeleteClick,
     deleting,
     ...rest
-}: MetWidgetProps) => {
+}: MetSurveyProps) => {
     return (
         <MetWidgetPaper elevation={3} {...rest}>
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
@@ -154,8 +154,13 @@ export const MetLabel = styled(Typography)(() => ({
     fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
 }));
 
-export const MetLabelBody = styled(Typography)(() => ({
+export const MetParagraph = styled(Typography)(() => ({
     fontSize: '16px',
+    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+}));
+
+export const MetSmallText = styled(Typography)(() => ({
+    fontSize: '13px',
     fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
 }));
 

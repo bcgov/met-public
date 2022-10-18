@@ -1,3 +1,4 @@
+import { WidgetsList } from 'models/widget';
 import { Engagement } from '../../../models/engagement';
 
 export interface EngagementContext {
@@ -9,11 +10,6 @@ export interface EngagementContext {
     loadingSavedEngagement: boolean;
     handleAddBannerImage: (_files: File[]) => void;
     fetchEngagement: () => void;
-    widgets: WidgetsList[];
-    widgetDrawerOpen: boolean;
-    handleWidgetDrawerOpen: (_open: boolean) => void;
-    widgetDrawerTabValue: string;
-    handleWidgetDrawerTabValueChange: (_tabValue: string) => void;
 }
 
 export interface Widget {
@@ -60,11 +56,6 @@ export interface EngagementFormUpdate {
 
 export type EngagementParams = {
     engagementId: string;
-};
-
-export type EngagementFormModalState = {
-    modalOpen: boolean;
-    handleConfirm?: () => void;
 };
 
 export type OpenModalProps = {

@@ -2,9 +2,8 @@ import React, { useContext } from 'react';
 import { MetPageGridContainer, MidScreenLoader } from 'components/common';
 import EngagementFormTabs from './EngagementFormTabs';
 import { ActionContext } from './ActionContext';
-import WidgetDrawer from './EngagementWidgets/WidgetDrawer';
 import { Grid } from '@mui/material';
-import WidgetsBlock from './EngagementWidgets/WidgetsBlock';
+import WidgetsBlock from './EngagementWidgets';
 
 const EngagementFormWrapper = () => {
     const { loadingSavedEngagement } = useContext(ActionContext);
@@ -21,7 +20,6 @@ const EngagementFormWrapper = () => {
             <Grid item xs={12} lg={4}>
                 <WidgetsBlock />
             </Grid>
-            <WidgetDrawer />
         </MetPageGridContainer>
     );
 };

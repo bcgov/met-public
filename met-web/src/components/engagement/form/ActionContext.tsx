@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { postEngagement, getEngagement, patchEngagement } from '../../../services/engagementService';
 import { useNavigate, useParams } from 'react-router-dom';
-import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams, WidgetsList } from './types';
+import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams } from './types';
 import { createDefaultEngagement, Engagement } from '../../../models/engagement';
 import { saveDocument } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -9,6 +9,8 @@ import { useAppDispatch } from 'hooks';
 import { getErrorMessage } from 'utils';
 import { updatedDiff } from 'deep-object-diff';
 import { PatchEngagementRequest } from 'services/engagementService/types';
+import { WidgetsList } from 'models/widget';
+import { getWidgets } from 'services/widgetService';
 
 export const ActionContext = createContext<EngagementContext>({
     handleCreateEngagementRequest: (_engagement: EngagementForm): Promise<Engagement> => {
@@ -25,27 +27,6 @@ export const ActionContext = createContext<EngagementContext>({
         /* empty default method  */
     },
     fetchEngagement: () => {
-        /* empty default method  */
-    },
-    widgets: [
-        {
-            widget_type: 0,
-            items: [
-                {
-                    id: 0,
-                    widget_type: 0,
-                    engagement_id: 0,
-                    data: {},
-                },
-            ],
-        },
-    ],
-    widgetDrawerOpen: false,
-    handleWidgetDrawerOpen: (_open: boolean) => {
-        /* empty default method  */
-    },
-    widgetDrawerTabValue: 'widgetOptions',
-    handleWidgetDrawerTabValueChange: (_tabValue: string) => {
         /* empty default method  */
     },
 });
@@ -201,11 +182,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 loadingSavedEngagement,
                 handleAddBannerImage,
                 fetchEngagement,
-                widgets,
-                widgetDrawerOpen,
-                handleWidgetDrawerOpen,
-                widgetDrawerTabValue,
-                handleWidgetDrawerTabValueChange,
             }}
         >
             {children}
