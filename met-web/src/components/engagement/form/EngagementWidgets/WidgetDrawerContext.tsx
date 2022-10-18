@@ -7,6 +7,7 @@ import { getWidgets } from 'services/widgetService';
 import { ActionContext } from '../ActionContext';
 import { getContacts } from 'services/contactService';
 import { Contact } from 'models/contact';
+import { WidgetTabValues } from './type';
 
 export interface WidgetDrawerContextProps {
     widgets: WidgetsList[];
@@ -17,7 +18,7 @@ export interface WidgetDrawerContextProps {
     addContactDrawerOpen: boolean;
     handleAddContactDrawerOpen: (_open: boolean) => void;
     isWidgetsLoading: boolean;
-    loadWidgets: () => void;
+    loadWidgets: () => Promise<void>;
     loadingContacts: boolean;
     contacts: Contact[];
     loadContacts: () => void;
@@ -39,13 +40,11 @@ export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
     handleAddContactDrawerOpen: (_open: boolean) => {
         /* empty default method  */
     },
-    widgetDrawerTabValue: 'widgetOptions',
+    widgetDrawerTabValue: WidgetTabValues.WIDGET_OPTIONS,
     handleWidgetDrawerTabValueChange: (_tabValue: string) => {
         /* empty default method  */
     },
-    loadWidgets: () => {
-        /* empty default method  */
-    },
+    loadWidgets: () => Promise.resolve(),
     contacts: [],
     loadContacts: () => {
         /* empty default method  */
@@ -59,7 +58,7 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
     const [widgets, setWidgets] = useState<WidgetsList[]>([]);
     const [isWidgetsLoading, setIsWidgetsLoading] = useState(false);
     const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
-    const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState('widgetOptions');
+    const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState(WidgetTabValues.WIDGET_OPTIONS);
     const [contacts, setContacts] = useState<Contact[]>([]);
     const [loadingContacts, setLoadingContacts] = useState(false);
 
@@ -89,7 +88,7 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
 
         try {
             setIsWidgetsLoading(true);
-            const widgetsList = await getWidgets(savedEngagement.id, { grouped_by_type: true });
+            const widgetsList = await getWidgets(savedEngagement.id);
             setWidgets(widgetsList);
             setIsWidgetsLoading(false);
             console.log(widgetsList);

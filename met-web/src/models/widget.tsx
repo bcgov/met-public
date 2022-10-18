@@ -6,6 +6,7 @@ export interface Widget {
 }
 
 export interface WidgetsList {
+    id: number;
     widget_type_id: number;
     items: Widget[];
 }
@@ -18,4 +19,8 @@ export interface WidgetContact {
     email: string;
     address: string;
     bio: string;
+}
+
+export enum WidgetType {
+    WhoIsListening = 1,
 }

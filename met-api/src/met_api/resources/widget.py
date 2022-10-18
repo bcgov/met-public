@@ -19,6 +19,7 @@ from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
 
 from met_api.auth import auth
+from met_api.schemas.widget_item import WidgetItemSchema
 from met_api.schemas.widget import WidgetSchema
 from met_api.services.widget_service import WidgetService
 from met_api.utils.action_result import ActionResult
@@ -31,9 +32,9 @@ API = Namespace('widgets', description='Endpoints for Widget Management')
 """
 
 
-@cors_preflight('GET,OPTIONS')
+@cors_preflight('GET, POST, OPTIONS')
 @API.route('/engagement/<engagement_id>')
-class SurveySubmission(Resource):
+class Widget(Resource):
     """Resource for managing a survey submissions."""
 
     @staticmethod
@@ -41,9 +42,8 @@ class SurveySubmission(Resource):
     @auth.require
     def get(engagement_id):
         """Fetch a list of widgets by engagement_id."""
-        args = request.args
         try:
-            widgets = WidgetService().get_widgets_by_engagement_id(engagement_id, args.get('grouped_by_type', False, bool))
+            widgets = WidgetService().get_widgets_by_engagement_id(engagement_id)
             return ActionResult.success(engagement_id, widgets)
         except KeyError:
             return ActionResult.error('No submissions not found')
@@ -51,22 +51,66 @@ class SurveySubmission(Resource):
             return ActionResult.error(str(err))
 
     @staticmethod
-    # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
     @auth.require
     def post(engagement_id):
-        """Add new widgets for an engagement."""
+        """Add new widget for an engagement."""
         try:
             user_id = TokenInfo.get_id()
             requestjson = request.get_json()
             print(engagement_id)
             
-            widgets = WidgetSchema(many=True).load(requestjson)
+            widget = WidgetSchema().load(requestjson)
+            widget['created_by'] = user_id
+            widget['updated_by'] = user_id
+                
+            result = WidgetService().create_widget(widget)
+            return ActionResult.success(result=WidgetSchema().dump(result))
+        except KeyError as err:
+            return ActionResult.error(str(err))
+        except ValueError as err:
+            return ActionResult.error(str(err))
+        except ValidationError as err:
+            return ActionResult.error(str(err.messages))
+        except AssertionError as err:
+            return ActionResult.error(str(err))
+        
+@cors_preflight('GET,OPTIONS')
+@API.route('/<widget_id>/items')
+class SurveySubmission(Resource):
+    """Resource for managing a survey submissions."""
+
+    # @staticmethod
+    # @cross_origin(origins=allowedorigins())
+    # @auth.require
+    # def get(engagement_id):
+    #     """Fetch a list of widgets by engagement_id."""
+    #     args = request.args
+    #     try:
+    #         widgets = WidgetService().get_widgets_by_engagement_id(engagement_id, args.get('grouped_by_type', False, bool))
+    #         return ActionResult.success(engagement_id, widgets)
+    #     except KeyError:
+    #         return ActionResult.error('No submissions not found')
+    #     except ValueError as err:
+    #         return ActionResult.error(str(err))
+
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def post(widget_id):
+        """Add new widgets for an engagement."""
+        try:
+            user_id = TokenInfo.get_id()
+            requestjson = request.get_json()
+            print(widget_id)
+            
+            widgets = WidgetItemSchema(many=True).load(requestjson)
             for widget in widgets:
                 widget['created_by'] = user_id
                 widget['updated_by'] = user_id
                 
-            result = WidgetService().create_widgets_bulk(widgets)
+            result = WidgetService().create_widget_items_bulk(widgets)
             return ActionResult.success(result=result)
         except KeyError as err:
             return ActionResult.error(str(err))

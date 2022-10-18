@@ -1,22 +1,26 @@
 import React, { useContext, useState } from 'react';
-import { Autocomplete, Grid, TextField, Typography } from '@mui/material';
+import { Autocomplete, Grid, TextField } from '@mui/material';
 import { ActionContext } from '../ActionContext';
 import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
 import { Contact } from 'models/contact';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { postWidgets } from 'services/widgetService';
+import { postWidgetItems } from 'services/widgetService';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
 import ContantInfoPaper from './ContactInfoPaper';
+import { WidgetType } from 'models/widget';
+import WhoIsListeningCreate from './WhoIsListeningCreate';
 
 const WhoIsListeningForm = () => {
     const { savedEngagement } = useContext(ActionContext);
-    const { handleWidgetDrawerOpen, handleAddContactDrawerOpen, loadingContacts, contacts } =
+    const { handleWidgetDrawerOpen, handleAddContactDrawerOpen, loadingContacts, contacts, widgets } =
         useContext(WidgetDrawerContext);
     const dispatch = useAppDispatch();
     const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
     const [addedContacts, setAddedContacts] = useState<Contact[]>([]);
-    const [addingWidgets, setAddingWidgets] = useState(false);
+    const [addingWidgetItems, setAddingWidgetItems] = useState(false);
+
+    const widgetId = widgets.filter((widget) => widget.widget_type_id === WidgetType.WhoIsListening)[0]?.id || null;
 
     const addContact = () => {
         if (!selectedContact || addedContacts.map((contact) => contact.id).includes(selectedContact.id)) {
@@ -26,33 +30,48 @@ const WhoIsListeningForm = () => {
         setAddedContacts([...addedContacts, selectedContact]);
     };
 
-    const addWidgets = async () => {
+    const addWidgetItems = async () => {
         if (addedContacts.length === 0) {
+            return;
+        }
+
+        if (!widgetId) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'The widget needs to be created before the contacts can be added',
+                }),
+            );
             return;
         }
 
         const widgetsToAdd = addedContacts.map((addedContact) => {
             return {
-                widget_type_id: 1,
+                widget_id: widgetId,
                 widget_data_id: addedContact.id,
                 engagement_id: savedEngagement.id,
             };
         });
 
         try {
-            setAddingWidgets(true);
-            await postWidgets(savedEngagement.id, widgetsToAdd);
+            setAddingWidgetItems(true);
+            await postWidgetItems(savedEngagement.id, widgetsToAdd);
             dispatch(openNotification({ severity: 'success', text: 'Widgets successfully added' }));
             handleWidgetDrawerOpen(false);
-            setAddingWidgets(false);
+            setAddingWidgetItems(false);
         } catch (error) {
             console.log(error);
             dispatch(
                 openNotification({ severity: 'error', text: 'Error occurred while attempting to add the widgets' }),
             );
-            setAddingWidgets(false);
+            setAddingWidgetItems(false);
         }
     };
+
+    if (!widgetId) {
+        return <WhoIsListeningCreate />;
+    }
+
     return (
         <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
             <Grid item xs={12}>
@@ -102,8 +121,8 @@ const WhoIsListeningForm = () => {
                 <Grid item>
                     <PrimaryButton
                         disabled={addedContacts.length === 0}
-                        loading={addingWidgets}
-                        onClick={() => addWidgets()}
+                        loading={addingWidgetItems}
+                        onClick={() => addWidgetItems()}
                     >{`Save & Close`}</PrimaryButton>
                 </Grid>
                 <Grid item>

@@ -1,12 +1,11 @@
 import React, { useContext } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import Divider from '@mui/material/Divider';
 import { Grid } from '@mui/material';
-import { MetHeader3 } from 'components/common';
 import WidgetDrawerTabs from './WidgetDrawerTabs';
 import AddContactDrawer from './AddContactDrawer';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
+import { WidgetTabValues } from './type';
 
 const WidgetDrawer = () => {
     const { widgetDrawerOpen, handleWidgetDrawerOpen, handleWidgetDrawerTabValueChange } =
@@ -18,7 +17,7 @@ const WidgetDrawer = () => {
             open={widgetDrawerOpen}
             onClose={() => handleWidgetDrawerOpen(false)}
             SlideProps={{
-                onExited: () => handleWidgetDrawerTabValueChange('widgetOptions'),
+                onExited: () => handleWidgetDrawerTabValueChange(WidgetTabValues.WIDGET_OPTIONS),
             }}
         >
             <Box sx={{ width: '50vw', paddingTop: '7em' }} role="presentation">
@@ -30,10 +29,6 @@ const WidgetDrawer = () => {
                     spacing={2}
                     padding="2em"
                 >
-                    <Grid item xs={12}>
-                        <MetHeader3 bold>Select Widget</MetHeader3>
-                        <Divider sx={{ marginTop: '1em' }} />
-                    </Grid>
                     <WidgetDrawerTabs />
                     <AddContactDrawer />
                 </Grid>
