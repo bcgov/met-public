@@ -155,9 +155,10 @@ const CloneOptions = () => {
                         />
                     )}
                     getOptionLabel={(engagement: Engagement) => engagement.name}
-                    onChange={(_e: React.SyntheticEvent<Element, Event>, engagement: Engagement | null) =>
-                        setSelectedEngagement(engagement)
-                    }
+                    onChange={(_e: React.SyntheticEvent<Element, Event>, engagement: Engagement | null) => {
+                        if (engagement !== null) setSelectedSurvey(engagement.surveys[0]);
+                        setSelectedEngagement(engagement);
+                    }}
                     disabled={loadingEngagements}
                 />
             </Grid>
