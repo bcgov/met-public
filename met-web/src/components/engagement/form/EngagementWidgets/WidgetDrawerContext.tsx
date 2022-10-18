@@ -1,5 +1,4 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch } from 'hooks';
 import { WidgetsList } from 'models/widget';
 import { openNotification } from 'services/notificationService/notificationSlice';

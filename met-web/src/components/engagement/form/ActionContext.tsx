@@ -9,8 +9,6 @@ import { useAppDispatch } from 'hooks';
 import { getErrorMessage } from 'utils';
 import { updatedDiff } from 'deep-object-diff';
 import { PatchEngagementRequest } from 'services/engagementService/types';
-import { WidgetsList } from 'models/widget';
-import { getWidgets } from 'services/widgetService';
 
 export const ActionContext = createContext<EngagementContext>({
     handleCreateEngagementRequest: (_engagement: EngagementForm): Promise<Engagement> => {
@@ -42,34 +40,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
-
-    const [widgets, setWidgets] = useState<WidgetsList[]>([]);
-    const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
-    const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState('widgetOptions');
-
-    useEffect(() => {
-        setWidgets([
-            {
-                widget_type: 1,
-                items: [
-                    {
-                        id: 1,
-                        widget_type: 1,
-                        engagement_id: Number(engagementId),
-                        data: {},
-                    },
-                ],
-            },
-        ]);
-    }, []);
-
-    const handleWidgetDrawerOpen = (open: boolean) => {
-        setWidgetDrawerOpen(open);
-    };
-
-    const handleWidgetDrawerTabValueChange = (tabValue: string) => {
-        setWidgetDrawerTabValue(tabValue);
-    };
 
     const handleAddBannerImage = (files: File[]) => {
         if (files.length > 0) {

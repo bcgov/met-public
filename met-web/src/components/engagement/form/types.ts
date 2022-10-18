@@ -1,4 +1,3 @@
-import { WidgetsList } from 'models/widget';
 import { Engagement } from '../../../models/engagement';
 
 export interface EngagementContext {
@@ -17,11 +16,6 @@ export interface Widget {
     widget_type: number;
     engagement_id: number;
     data: unknown;
-}
-
-export interface WidgetsList {
-    widget_type: number;
-    items: Widget[];
 }
 
 export interface WidgetContact {

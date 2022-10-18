@@ -5,7 +5,6 @@ import WidgetOptionCards from './WidgetOptionCards';
 import WhoIsListeningForm from './WhoIsListeningForm';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
 import { WidgetTabValues } from './type';
-import WhoIsListeningCreate from './WhoIsListeningCreate';
 
 const WidgetDrawerTabs = () => {
     const { widgetDrawerTabValue } = useContext(WidgetDrawerContext);

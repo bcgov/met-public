@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { TextField, TextFieldProps } from '@mui/material';
-import { Control, Controller, ControllerProps, FieldValues } from 'react-hook-form';
+import { Control, Controller } from 'react-hook-form';
 import { WidgetContact } from 'models/widget';
 
 interface ControllerInputProps {
