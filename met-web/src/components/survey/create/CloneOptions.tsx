@@ -85,8 +85,6 @@ const CloneOptions = () => {
                 size: 100,
                 sort_order: 'asc',
             });
-            console.log(fetchedEngagements.items);
-            console.log(fetchedEngagements.items.filter((engagement) => engagement.surveys.length !== 0));
             setAvailableEngagements(
                 fetchedEngagements.items.filter((engagement, index) => engagement.surveys.length !== 0),
             );
