@@ -105,11 +105,7 @@ const EngagementListing = () => {
             allowSort: true,
             getValue: (row: Engagement) => {
                 if (row.engagement_status.status_name === 'Published') {
-                    return (
-                        row.engagement_status.status_name +
-                        '/' +
-                        Object.keys(SubmissionStatus)[Object.values(SubmissionStatus).indexOf(row.submission_status)]
-                    );
+                    return row.engagement_status.status_name + '/' + SubmissionStatus[row.submission_status];
                 }
                 return row.engagement_status.status_name;
             },
