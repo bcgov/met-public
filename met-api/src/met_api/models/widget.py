@@ -24,21 +24,20 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     widget_type_id = db.Column(db.Integer, ForeignKey('widget_type.id', ondelete='CASCADE'))
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'))
-    created_date = db.Column(db.DateTime, default=datetime.utcnow, nullable= False)
-    updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow, nullable= False)
-    created_by = db.Column(db.String(50), nullable= False)
-    updated_by = db.Column(db.String(50), nullable= False)
+    created_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow, nullable=False)
+    created_by = db.Column(db.String(50), nullable=False)
+    updated_by = db.Column(db.String(50), nullable=False)
     items = db.relationship('WidgetItem', backref='widget', cascade='all, delete')
-
 
     @classmethod
     def get_widgets_by_engagement_id(cls, engagement_id):
         """Get widgets by engagement_id."""
         return db.session.query(Widget)\
-        .join(WidgetItem, Widget.id == WidgetItem.widget_id, isouter=True)\
-        .filter(Widget.engagement_id == engagement_id)\
-        .order_by(Widget.id.desc())\
-        .all()
+            .join(WidgetItem, Widget.id == WidgetItem.widget_id, isouter=True)\
+            .filter(Widget.engagement_id == engagement_id)\
+            .order_by(Widget.id.desc())\
+            .all()
 
     @classmethod
     def create_widget(cls, widget) -> Widget:

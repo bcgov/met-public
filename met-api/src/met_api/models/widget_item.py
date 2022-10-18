@@ -21,17 +21,18 @@ class WidgetItem(db.Model):  # pylint: disable=too-few-public-methods
     )
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    widget_data_id = db.Column(db.Integer, nullable= False)    
+    widget_data_id = db.Column(db.Integer, nullable=False)
     widget_id = db.Column(db.Integer, ForeignKey('widget.id', ondelete='CASCADE'))
-    created_date = db.Column(db.DateTime, default=datetime.utcnow, nullable= False)
-    updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow, nullable= False)
-    created_by = db.Column(db.String(50), nullable= False)
-    updated_by = db.Column(db.String(50), nullable= False)
+    created_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow, nullable=False)
+    created_by = db.Column(db.String(50), nullable=False)
+    updated_by = db.Column(db.String(50), nullable=False)
 
     @classmethod
     def get_widget_items_by_widget_id(cls, widget_id):
         """Get widgets by widget_id."""
-        return db.session.query(WidgetItem).filter(WidgetItem.widget_id == widget_id).order_by(WidgetItem.id.desc()).all()
+        return db.session.query(WidgetItem).filter(WidgetItem.widget_id ==
+                                                   widget_id).order_by(WidgetItem.id.desc()).all()
 
     @classmethod
     def create_widget_item(cls, widget_item) -> WidgetItem:

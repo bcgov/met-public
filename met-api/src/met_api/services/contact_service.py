@@ -16,7 +16,7 @@ class ContactService:
     @staticmethod
     def get_contacts():
         """Get contacts."""
-        contacts_records = Contact.get_contacts()        
+        contacts_records = Contact.get_contacts()
         return ContactSchema(many=True).dump(contacts_records)
 
     @staticmethod

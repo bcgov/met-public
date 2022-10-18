@@ -5,6 +5,7 @@ from met_api.models.widget import Widget
 from met_api.schemas.widget import WidgetSchema
 from met_api.schemas.widget_item import WidgetItemSchema
 
+
 class WidgetService:
     """Widget management service."""
 

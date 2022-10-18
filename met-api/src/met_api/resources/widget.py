@@ -59,11 +59,11 @@ class Widget(Resource):
             user_id = TokenInfo.get_id()
             requestjson = request.get_json()
             print(engagement_id)
-            
+
             widget = WidgetSchema().load(requestjson)
             widget['created_by'] = user_id
             widget['updated_by'] = user_id
-                
+
             result = WidgetService().create_widget(widget)
             return ActionResult.success(result=WidgetSchema().dump(result))
         except KeyError as err:
@@ -74,25 +74,12 @@ class Widget(Resource):
             return ActionResult.error(str(err.messages))
         except AssertionError as err:
             return ActionResult.error(str(err))
-        
-@cors_preflight('GET,OPTIONS')
+
+
+@cors_preflight('POST,OPTIONS')
 @API.route('/<widget_id>/items')
 class SurveySubmission(Resource):
     """Resource for managing a survey submissions."""
-
-    # @staticmethod
-    # @cross_origin(origins=allowedorigins())
-    # @auth.require
-    # def get(engagement_id):
-    #     """Fetch a list of widgets by engagement_id."""
-    #     args = request.args
-    #     try:
-    #         widgets = WidgetService().get_widgets_by_engagement_id(engagement_id, args.get('grouped_by_type', False, bool))
-    #         return ActionResult.success(engagement_id, widgets)
-    #     except KeyError:
-    #         return ActionResult.error('No submissions not found')
-    #     except ValueError as err:
-    #         return ActionResult.error(str(err))
 
     @staticmethod
     # @TRACER.trace()
@@ -104,12 +91,12 @@ class SurveySubmission(Resource):
             user_id = TokenInfo.get_id()
             requestjson = request.get_json()
             print(widget_id)
-            
+
             widgets = WidgetItemSchema(many=True).load(requestjson)
             for widget in widgets:
                 widget['created_by'] = user_id
                 widget['updated_by'] = user_id
-                
+
             result = WidgetService().create_widget_items_bulk(widgets)
             return ActionResult.success(result=result)
         except KeyError as err:
