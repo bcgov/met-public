@@ -4,6 +4,7 @@ import { CreateSurveyContext } from './CreateSurveyContext';
 import { useNavigate } from 'react-router-dom';
 import { fetchSurveys, linkSurvey } from 'services/surveyService/form';
 import { getEngagements } from 'services/engagementService';
+import { postSurvey } from 'services/surveyService/form';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
@@ -14,9 +15,8 @@ import { Engagement } from 'models/engagement';
 const CloneOptions = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-
     const [selectedSurvey, setSelectedSurvey] = useState<Survey | null>(null);
-    const [selectedEngagement, setSelectedEngagement] = useState<Survey | null>(null);
+    const [selectedEngagement, setSelectedEngagement] = useState<Engagement | null>(null);
     const [loadingSurveys, setLoadingSurveys] = useState(true);
     const [loadingEngagements, setLoadingEngagements] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
@@ -82,10 +82,14 @@ const CloneOptions = () => {
         try {
             const fetchedEngagements = await getEngagements({
                 page: 1,
-                size: 10,
+                size: 100,
                 sort_order: 'asc',
             });
-            setAvailableEngagements(fetchedEngagements.items);
+            console.log(fetchedEngagements.items);
+            console.log(fetchedEngagements.items.filter((engagement) => engagement.surveys.length !== 0));
+            setAvailableEngagements(
+                fetchedEngagements.items.filter((engagement, index) => engagement.surveys.length !== 0),
+            );
             setLoadingEngagements(false);
         } catch (error) {
             dispatch(
@@ -104,32 +108,31 @@ const CloneOptions = () => {
 
     const handleSave = async () => {
         if (!selectedSurvey) {
+            if (selectedEngagement) return;
             dispatch(openNotification({ severity: 'error', text: 'Please select a survey first' }));
             return;
         }
-
-        if (!engagementToLink) {
-            dispatch(openNotification({ severity: 'error', text: 'Failed to get the related engagement information' }));
-            return;
-        }
-
         setIsSaving(true);
-
         try {
-            await linkSurvey({
-                id: String(selectedSurvey.id),
-                engagement_id: String(engagementToLink.id),
+            const createdSurvey = await postSurvey({
+                name: surveyForm.name,
+                form_json: selectedEngagement ? selectedEngagement.surveys[0].form_json : selectedSurvey.form_json,
             });
+
             dispatch(
                 openNotification({
                     severity: 'success',
-                    text: `Survey ${selectedSurvey.name} was successfully added to engagement ${engagementToLink.name}`,
+                    text: 'Survey created, please proceed to building it',
                 }),
             );
-            navigate(`/engagements/${engagementToLink.id}/form`);
+            navigate(`/surveys/${createdSurvey.id}/build`);
         } catch (error) {
-            console.log(error);
-            dispatch(openNotification({ severity: 'error', text: 'Failed to link survey to engagement' }));
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while attempting to save survey',
+                }),
+            );
             setIsSaving(false);
         }
     };
@@ -177,7 +180,7 @@ const CloneOptions = () => {
                     onChange={(_e: React.SyntheticEvent<Element, Event>, survey: Survey | null) =>
                         setSelectedSurvey(survey)
                     }
-                    disabled={loadingSurveys}
+                    disabled={loadingSurveys || selectedEngagement !== null}
                 />
             </Grid>
             <Grid item xs={6}>
@@ -193,7 +196,7 @@ const CloneOptions = () => {
                         }}
                         fullWidth
                         name="name"
-                        value={name}
+                        value={surveyForm.name}
                         onChange={handleChange}
                         error={formError.name}
                         helperText={formError.name ? 'Name must be specified' : ' '}
