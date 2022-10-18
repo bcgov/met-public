@@ -5,7 +5,7 @@ on:
 jobs:
   zap_scan_web:
     runs-on: ubuntu-latest
-    name: Scan the application
+    name: Scan the met application
     steps:
       - name: ZAP Scan
         uses: zaproxy/action-full-scan@v0.4.0
@@ -14,3 +14,15 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue_title: 'ZAP Scan Report'
           target: 'https://met-web-dev.apps.gold.devops.gov.bc.ca/'
+
+  zap_scan_notify:
+    runs-on: ubuntu-latest
+    name: Scan the notify application
+    steps:
+      - name: ZAP Scan
+        uses: zaproxy/action-api-scan@v0.2.0
+        with:
+          allow_issue_writing: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue_title: 'ZAP Scan Report'
+          target: 'https://met-notify-api-dev.apps.gold.devops.gov.bc.ca/'

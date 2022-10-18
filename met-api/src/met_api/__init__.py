@@ -36,16 +36,6 @@ secure_headers = secure.Secure(
 )
 
 
-# @app.after_request
-def set_secure_headers(response):
-    """Set CORS headers for security."""
-    secure_headers.framework.flask(response)
-    response.headers.add('Cross-Origin-Resource-Policy', 'same-origin')
-    response.headers['Cross-Origin-Opener-Policy'] = 'same-origin'
-    response.headers['Cross-Origin-Embedder-Policy'] = 'unsafe-none'
-    return response
-
-
 # All Apps routes are registered here
 def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
     """Create flask app."""
@@ -57,14 +47,14 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
     # All configuration are in config file
     app.config.from_object(get_named_config(run_mode))
 
+    CORS(app, supports_credentials=True)
+
     # Register blueprints
     app.register_blueprint(API_BLUEPRINT)
 
     # Setup jwt for keycloak
     if os.getenv('FLASK_ENV', 'production') != 'testing':
         setup_jwt_manager(app, jwt)
-
-    CORS(app, supports_credentials=True)
 
     # Database connection initialize
     db.init_app(app)
@@ -78,6 +68,15 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
     @app.before_request
     def set_origin():
         g.origin_url = request.environ.get('HTTP_ORIGIN', 'localhost')
+
+    @app.after_request
+    def set_secure_headers(response):
+        """Set CORS headers for security."""
+        secure_headers.framework.flask(response)
+        response.headers.add('Cross-Origin-Resource-Policy', '*')
+        response.headers['Cross-Origin-Opener-Policy'] = '*'
+        response.headers['Cross-Origin-Embedder-Policy'] = 'unsafe-none'
+        return response
 
     # Return App for run in run.py file
     return app
