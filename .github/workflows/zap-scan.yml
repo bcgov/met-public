@@ -1,0 +1,16 @@
+name: ZAP Scanner
+on:
+  workflow_dispatch:
+
+jobs:
+  zap_scan_web:
+    runs-on: ubuntu-latest
+    name: Scan the application
+    steps:
+      - name: ZAP Scan
+        uses: zaproxy/action-full-scan@v0.4.0
+        with:
+          allow_issue_writing: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue_title: 'ZAP Scan Report'
+          target: 'https://met-web-dev.apps.gold.devops.gov.bc.ca/'
