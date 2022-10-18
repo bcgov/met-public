@@ -14,7 +14,7 @@ export const EngagementLink = () => {
         return null;
     }
     return (
-        <MuiLink component={Link} to={`/engagement/view/${savedEngagement.id}`}>
+        <MuiLink component={Link} to={`/engagements/${savedEngagement.id}/view`}>
             {`<< Return to ${savedEngagement.name} Engagement`}
         </MuiLink>
     );

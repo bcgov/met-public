@@ -14,6 +14,7 @@ import { getSurveysPage } from 'services/surveyService/form';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { EngagementStatus } from 'constants/engagementStatus';
+import { SubmissionStatus } from 'constants/engagementStatus';
 
 const SurveyListing = () => {
     const [searchFilter, setSearchFilter] = useState({
@@ -147,8 +148,18 @@ const SurveyListing = () => {
             disablePadding: false,
             label: 'Status',
             allowSort: true,
-            getValue: (row: Survey) =>
-                row.engagement?.engagement_status.status_name || EngagementStatus[EngagementStatus.Draft].toString(),
+            getValue: (row: Survey) => {
+                if (row.engagement?.engagement_status.status_name === 'Published') {
+                    return (
+                        row.engagement.engagement_status.status_name +
+                        '/' +
+                        SubmissionStatus[row.engagement.submission_status]
+                    );
+                }
+                return (
+                    row.engagement?.engagement_status.status_name || EngagementStatus[EngagementStatus.Draft].toString()
+                );
+            },
         },
         {
             key: 'id',
