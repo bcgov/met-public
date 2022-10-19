@@ -8,6 +8,7 @@ import { useMediaQuery, Theme } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { ConditionalComponent, MetHeader1, MetHeader2 } from 'components/common';
 import EnvironmentBanner from './EnvironmentBanner';
+import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoLight.svg';
 
 const LoggedOutHeader = () => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
@@ -19,15 +20,13 @@ const LoggedOutHeader = () => {
             <AppBar position="static">
                 <Toolbar>
                     <Box
-                        component="img"
+                        component={BCLogo}
                         sx={{
                             height: '5em',
-                            // width: '15em',
                             width: { xs: '7em', md: '15em' },
                             marginRight: { xs: '1em', md: '3em' },
                         }}
-                        alt="BC Logo."
-                        src="https://www2.gov.bc.ca/StaticWebResources/static/gov3/images/gov_bc_logo.svg"
+                        alt="British Columbia Logo"
                     />
                     <ConditionalComponent condition={loginPage}>
                         {isMediumScreen ? (

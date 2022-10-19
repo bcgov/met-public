@@ -10,6 +10,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { Palette } from 'styles/Theme';
 import EnvironmentBanner from './EnvironmentBanner';
 import { MetHeader1, MetHeader2 } from 'components/common';
+import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
 
 const LoggedInHeader = ({ drawerWidth = 240 }) => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
@@ -27,14 +28,13 @@ const LoggedInHeader = ({ drawerWidth = 240 }) => {
                 <CssBaseline />
                 <Toolbar>
                     <Box
-                        component="img"
+                        component={BCLogo}
                         sx={{
                             height: '5em',
                             width: { xs: '7em', md: '15em' },
                             marginRight: { xs: '1em', md: '3em' },
                         }}
-                        alt="BC Logo"
-                        src="https://marketplacebc.ca/wp-content/themes/sbbc-marketplace/images/bc-logo.svg"
+                        alt="British Columbia Logo"
                     />
                     {isMediumScreen ? (
                         <MetHeader1 sx={{ flexGrow: 1 }}>MET</MetHeader1>
