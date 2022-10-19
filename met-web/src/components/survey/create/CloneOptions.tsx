@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Grid, TextField, Stack, Autocomplete } from '@mui/material';
+import { Grid, TextField, Stack, Autocomplete, Typography } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { useNavigate } from 'react-router-dom';
-import { fetchSurveys, linkSurvey } from 'services/surveyService/form';
+import { fetchSurveys, getSurveysPage, linkSurvey } from 'services/surveyService/form';
 import { getEngagements } from 'services/engagementService';
 import { postSurvey } from 'services/surveyService/form';
 import { useAppDispatch } from 'hooks';
@@ -57,34 +57,41 @@ const CloneOptions = () => {
         return Object.values(surveyForm).some((errorExists) => errorExists);
     };
 
-    const handleFetchSurveys = async () => {
-        if (!!availableSurveys) {
-            setLoadingSurveys(false);
-            return;
-        }
-
+    const handleFetchSurveys = async (
+        page: number,
+        size: number,
+        sort_order: 'asc' | 'desc' | undefined,
+        search_text?: string,
+    ) => {
         try {
-            const fetchedSurveys = await fetchSurveys({
-                unlinked: true,
+            const fetchedSurveys = await getSurveysPage({
+                page: page,
+                size: size,
+                sort_order: sort_order,
+                search_text: search_text,
             });
-            setAvailableSurveys(fetchedSurveys);
+            setAvailableSurveys(fetchedSurveys.items);
             setLoadingSurveys(false);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching available surveys' }));
         }
     };
 
-    const handleFetchEngagements = async () => {
-        if (!!availableEngagements) {
-            setLoadingEngagements(false);
-            return;
-        }
+    const handleFetchEngagements = async (
+        page: number,
+        size: number,
+        sort_order: 'asc' | 'desc' | undefined,
+        search_text?: string,
+    ) => {
         try {
             const fetchedEngagements = await getEngagements({
-                page: 1,
-                size: 100,
-                sort_order: 'asc',
+                page: page,
+                size: size,
+                sort_order: sort_order,
+                search_text: search_text,
             });
+            console.log('FETCH!');
+            console.log(fetchedEngagements);
             setAvailableEngagements(
                 fetchedEngagements.items.filter((engagement, index) => engagement.surveys.length !== 0),
             );
@@ -97,11 +104,15 @@ const CloneOptions = () => {
     };
 
     useEffect(() => {
-        handleFetchSurveys();
+        if (!availableSurveys) {
+            handleFetchSurveys(1, 10, 'asc', '');
+        }
     }, [availableSurveys]);
 
     useEffect(() => {
-        handleFetchEngagements();
+        if (!availableEngagements) {
+            handleFetchEngagements(1, 10, 'asc', '');
+        }
     }, [availableEngagements]);
 
     const handleSave = async () => {
@@ -138,7 +149,10 @@ const CloneOptions = () => {
     return (
         <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" item xs={12} spacing={2}>
             <Grid item xs={6}>
-                <MetLabel sx={{ marginBottom: '2px' }}>Select Engagement (optional)</MetLabel>
+                <MetLabel sx={{ marginBottom: '2px', display: 'flex' }}>
+                    Select Engagement <Typography sx={{ ml: 1, color: '#ACA9A9' }}>(optional)</Typography>
+                </MetLabel>
+
                 <Autocomplete
                     id="engagement-selector"
                     options={availableEngagements || []}
@@ -150,12 +164,15 @@ const CloneOptions = () => {
                                 shrink: false,
                             }}
                             fullWidth
+                            onChange={(e) => {
+                                handleFetchEngagements(1, 10, 'asc', e.target.value);
+                            }}
                         />
                     )}
                     getOptionLabel={(engagement: Engagement) => engagement.name}
                     onChange={(_e: React.SyntheticEvent<Element, Event>, engagement: Engagement | null) => {
-                        if (engagement !== null) setSelectedSurvey(engagement.surveys[0]);
                         setSelectedEngagement(engagement);
+                        if (engagement !== null) setSelectedSurvey(engagement.surveys[0]);
                     }}
                     disabled={loadingEngagements}
                 />
@@ -169,13 +186,17 @@ const CloneOptions = () => {
                         <TextField
                             {...params}
                             label=" "
+                            value={selectedSurvey != null ? selectedSurvey.name : ''}
                             InputLabelProps={{
                                 shrink: false,
+                            }}
+                            onChange={(e) => {
+                                handleFetchSurveys(1, 10, 'asc', e.target.value);
                             }}
                             fullWidth
                         />
                     )}
-                    getOptionLabel={(survey: Survey) => survey.name}
+                    getOptionLabel={(survey: Survey) => (selectedSurvey ? selectedSurvey.name : survey.name)}
                     onChange={(_e: React.SyntheticEvent<Element, Event>, survey: Survey | null) =>
                         setSelectedSurvey(survey)
                     }
