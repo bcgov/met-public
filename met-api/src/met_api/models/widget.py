@@ -1,4 +1,4 @@
-"""Widget model class.widget
+"""Widget model class widget.
 
 Manages the widget
 """
