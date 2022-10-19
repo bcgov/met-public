@@ -15,7 +15,7 @@ import { FormBuilderData } from 'components/Form/types';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { getEngagement } from 'services/engagementService';
 import { Engagement } from 'models/engagement';
-import Formio from 'formiojs';
+import * as Formio from 'formiojs';
 
 const SurveyFormBuilder = () => {
     Formio.Utils.Evaluator.noeval = true;
