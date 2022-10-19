@@ -112,7 +112,6 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
         query.update(update_fields)
         db.session.commit()
         return DefaultMethodResult(True, 'Survey Updated', survey_id)
-    
 
     @classmethod
     def link_survey(cls, survey_id, engagement_id) -> DefaultMethodResult:

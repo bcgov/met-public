@@ -62,7 +62,7 @@ class SurveyService:
         if engagement and engagement.get('status_id', None) != Status.Draft.value:
             raise ValueError('Engagament already published')
         return SurveyModel.update_survey(data)
-    
+
     @staticmethod
     def validate_update_fields(data):
         """Validate all fields."""
