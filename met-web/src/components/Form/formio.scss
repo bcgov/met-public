@@ -2,7 +2,7 @@
 
 @import './formio-bootstrap.scss';
 
-@import url(https://cdn.jsdelivr.net/npm/formiojs@4.13.1/dist/formio.full.min.css);
+@import '../../../node_modules/formiojs/dist/formio.full.min.css';
 
 $btn-primary-main: #FFC107;
 $btn-primary-light: #FFE082;
