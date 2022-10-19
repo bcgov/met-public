@@ -11,6 +11,7 @@ import '@bcgov/bc-sans/css/BCSans.css';
 // import reportWebVitals from './reportWebVitals';
 
 Formio.use(MetFormioComponents);
+Formio.Utils.Evaluator.noeval = true;
 
 // eslint-disable-next-line
 const root = ReactDOM.createRoot(document.getElementById('root')!);
