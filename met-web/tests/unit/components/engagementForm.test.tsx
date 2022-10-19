@@ -1,4 +1,4 @@
-import { render, waitFor, screen, fireEvent } from '@testing-library/react';
+import { render, waitFor, screen, fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
 import EngagementForm from '../../../src/components/engagement/form';
@@ -6,6 +6,8 @@ import { setupEnv } from './setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
+import * as widgetService from 'services/widgetService';
+import * as contactService from 'services/contactService';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
 import { createDefaultSurvey } from 'models/survey';
@@ -59,6 +61,8 @@ describe('Engagement form page tests', () => {
     const postEngagementMock = jest
         .spyOn(engagementService, 'postEngagement')
         .mockReturnValue(Promise.resolve(mockEngagement));
+    jest.spyOn(contactService, 'getContacts').mockReturnValue(Promise.resolve([]));
+    jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([]));
 
     beforeEach(() => {
         setupEnv();
@@ -69,6 +73,7 @@ describe('Engagement form page tests', () => {
         const { container, getByText } = render(<EngagementForm />);
         await waitFor(() => {
             expect(getByText('Engagement Name')).toBeInTheDocument();
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
         expect(screen.getByText('Create Engagement Draft')).toBeInTheDocument();
         expect(getEngagementMock).not.toHaveBeenCalled();
@@ -101,10 +106,11 @@ describe('Engagement form page tests', () => {
 
     test('Engagement form with saved engagement should display saved info', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
-        render(<EngagementForm />);
+        const { container } = render(<EngagementForm />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
 
         expect(getEngagementMock).toHaveBeenCalledOnce();
@@ -116,10 +122,11 @@ describe('Engagement form page tests', () => {
 
     test('Update engagement button should trigger Put call', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
-        render(<EngagementForm />);
+        const { container } = render(<EngagementForm />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
         const updateButton = screen.getByText('Update Engagement');
 
@@ -146,13 +153,14 @@ describe('Engagement form page tests', () => {
 
     test('Modal with warning appears when removing survey', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
-        render(<EngagementForm />);
+        const { container } = render(<EngagementForm />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
 
-        const removeSurveyButton = screen.getByTestId('survey-widget/remove-survey-1');
+        const removeSurveyButton = screen.getByTestId(`survey-widget/remove-${mockSurvey.id}`);
 
         fireEvent.click(removeSurveyButton);
 
@@ -167,10 +175,11 @@ describe('Engagement form page tests', () => {
                 surveys: mockSurveys,
             }),
         );
-        render(<EngagementForm />);
+        const { container } = render(<EngagementForm />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
 
         expect(screen.getByText('Add Survey')).toBeDisabled();
@@ -184,10 +193,11 @@ describe('Engagement form page tests', () => {
                 surveys: mockSurveys,
             }),
         );
-        render(<EngagementForm />);
+        const { container } = render(<EngagementForm />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
 
         const settingsTabButton = screen.getByText('Settings');
@@ -214,15 +224,16 @@ describe('Engagement form page tests', () => {
             }),
         );
 
-        render(<EngagementForm />);
+        const { container } = render(<EngagementForm />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
 
         expect(screen.getByText('Survey 1')).toBeInTheDocument();
 
-        const removeSurveyButton = screen.getByTestId('survey-widget/remove-survey-1');
+        const removeSurveyButton = screen.getByTestId(`survey-widget/remove-${mockSurvey.id}`);
 
         fireEvent.click(removeSurveyButton);
 

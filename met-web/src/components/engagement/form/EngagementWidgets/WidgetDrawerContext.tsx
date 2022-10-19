@@ -55,18 +55,19 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
     const dispatch = useAppDispatch();
 
     const [widgets, setWidgets] = useState<WidgetsList[]>([]);
-    const [isWidgetsLoading, setIsWidgetsLoading] = useState(false);
+    const [isWidgetsLoading, setIsWidgetsLoading] = useState(true);
     const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
     const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState(WidgetTabValues.WIDGET_OPTIONS);
+    const [addContactDrawerOpen, setAddContactDrawerOpen] = useState(false);
     const [contacts, setContacts] = useState<Contact[]>([]);
-    const [loadingContacts, setLoadingContacts] = useState(false);
-
-    useEffect(() => {
-        loadContacts();
-    }, []);
+    const [loadingContacts, setLoadingContacts] = useState(true);
 
     const loadContacts = async () => {
         try {
+            if (!savedEngagement.id) {
+                setLoadingContacts(false);
+                return;
+            }
             setLoadingContacts(true);
             const loadedContacts = await getContacts();
             setContacts(loadedContacts);
@@ -78,10 +79,9 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
         }
     };
 
-    const [addContactDrawerOpen, setAddContactDrawerOpen] = useState(false);
-
     const loadWidgets = async () => {
         if (!savedEngagement.id) {
+            setIsWidgetsLoading(false);
             return;
         }
 
@@ -90,7 +90,6 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
             const widgetsList = await getWidgets(savedEngagement.id);
             setWidgets(widgetsList);
             setIsWidgetsLoading(false);
-            console.log(widgetsList);
         } catch (err) {
             console.log(err);
             setIsWidgetsLoading(false);
@@ -99,8 +98,8 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
     };
 
     useEffect(() => {
-        console.log(savedEngagement);
         loadWidgets();
+        loadContacts();
     }, [savedEngagement]);
 
     const handleWidgetDrawerOpen = (open: boolean) => {

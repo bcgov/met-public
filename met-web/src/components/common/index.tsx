@@ -78,7 +78,7 @@ export const MetWidgetPaper = styled(MuiPaper)(() => ({
 }));
 
 interface MetSurveyProps {
-    testId?: string;
+    testId?: number;
     title: string;
     children?: React.ReactNode;
     [prop: string]: unknown;

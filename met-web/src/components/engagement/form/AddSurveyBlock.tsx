@@ -106,6 +106,7 @@ export const AddSurveyBlock = () => {
                             return (
                                 <MetSurvey
                                     key={survey.id}
+                                    testId={survey.id}
                                     title={survey.name}
                                     onEditClick={() => navigate(`/surveys/${survey.id}/build`)}
                                     onDeleteClick={() => handleDeleteClick(survey.id, survey.name)}
