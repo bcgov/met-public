@@ -1,15 +1,5 @@
 import React, { useContext } from 'react';
-import {
-    Divider,
-    FormControl,
-    FormControlLabel,
-    FormLabel,
-    Grid,
-    RadioGroup,
-    Stack,
-    Typography,
-    Radio,
-} from '@mui/material';
+import { Divider, FormControl, FormControlLabel, FormLabel, Grid, RadioGroup, Stack, Radio } from '@mui/material';
 import {
     ConditionalComponent,
     MetPageGridContainer,

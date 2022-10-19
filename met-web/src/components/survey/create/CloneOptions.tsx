@@ -2,9 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Grid, TextField, Stack, Autocomplete, Typography } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { useNavigate } from 'react-router-dom';
-import { fetchSurveys, getSurveysPage, linkSurvey } from 'services/surveyService/form';
+import { getSurveysPage, postSurvey } from 'services/surveyService/form';
 import { getEngagements } from 'services/engagementService';
-import { postSurvey } from 'services/surveyService/form';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
@@ -28,7 +27,6 @@ const CloneOptions = () => {
         setAvailableSurveys,
         availableEngagements,
         setAvailableEngagements,
-        engagementToLink,
     } = useContext(CreateSurveyContext);
 
     const initialFormError = {
@@ -48,13 +46,6 @@ const CloneOptions = () => {
                 [e.target.name]: false,
             });
         }
-    };
-
-    const validate = () => {
-        setFormError({
-            name: !surveyForm.name,
-        });
-        return Object.values(surveyForm).some((errorExists) => errorExists);
     };
 
     const handleFetchSurveys = async (
