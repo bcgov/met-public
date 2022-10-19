@@ -2,8 +2,8 @@
 
 Manages the widget_item
 """
-from datetime import datetime
 from __future__ import annotations
+from datetime import datetime
 
 from sqlalchemy.sql.schema import ForeignKey
 
