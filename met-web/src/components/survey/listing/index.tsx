@@ -13,8 +13,7 @@ import Stack from '@mui/material/Stack';
 import { getSurveysPage } from 'services/surveyService/form';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { EngagementStatus } from 'constants/engagementStatus';
-import { SubmissionStatus } from 'constants/engagementStatus';
+import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
 
 const SurveyListing = () => {
     const [searchFilter, setSearchFilter] = useState({
@@ -149,9 +148,14 @@ const SurveyListing = () => {
             label: 'Status',
             allowSort: true,
             getValue: (row: Survey) => {
-                if (row.engagement?.engagement_status.status_name === 'Published') {
+                if (
+                    row.engagement?.engagement_status.status_name ===
+                        EngagementStatus[EngagementStatus.Published].toString() ||
+                    row.engagement?.engagement_status.status_name ===
+                        EngagementStatus[EngagementStatus.Closed].toString()
+                ) {
                     return (
-                        row.engagement.engagement_status.status_name +
+                        EngagementStatus[EngagementStatus.Published].toString() +
                         '/' +
                         SubmissionStatus[row.engagement.submission_status]
                     );
