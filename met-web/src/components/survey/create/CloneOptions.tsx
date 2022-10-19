@@ -186,7 +186,7 @@ const CloneOptions = () => {
                         <TextField
                             {...params}
                             label=" "
-                            value={selectedSurvey != null ? selectedSurvey.name : ''}
+                            value={selectedEngagement && selectedSurvey != null ? selectedSurvey.name : ''}
                             InputLabelProps={{
                                 shrink: false,
                             }}
@@ -196,7 +196,10 @@ const CloneOptions = () => {
                             fullWidth
                         />
                     )}
-                    getOptionLabel={(survey: Survey) => (selectedSurvey ? selectedSurvey.name : survey.name)}
+                    getOptionLabel={(survey: Survey) =>
+                        selectedEngagement && selectedSurvey ? selectedSurvey.name : survey.name
+                    }
+                    value={selectedSurvey}
                     onChange={(_e: React.SyntheticEvent<Element, Event>, survey: Survey | null) =>
                         setSelectedSurvey(survey)
                     }
