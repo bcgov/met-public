@@ -1,4 +1,4 @@
-import { WidgetsList } from 'models/widget';
+import { WidgetsList, WidgetType } from 'models/widget';
 import React from 'react';
 import { Switch, Case } from 'react-if';
 import MetWidget from './MetWidget';
@@ -10,7 +10,7 @@ export const WidgetCardSwitch = ({ widget }: WidgetCardSwitchProps) => {
     return (
         <>
             <Switch>
-                <Case condition={widget.widget_type_id === 1}>
+                <Case condition={widget.widget_type_id === WidgetType.WhoIsListening}>
                     <MetWidget
                         testId={`who-is-listening-${widget.widget_type_id}`}
                         title="Who Is Listening"

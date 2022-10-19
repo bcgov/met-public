@@ -23,7 +23,12 @@ const WhoIsListeningForm = () => {
     const widgetId = widgets.filter((widget) => widget.widget_type_id === WidgetType.WhoIsListening)[0]?.id || null;
 
     const addContact = () => {
-        if (!selectedContact || addedContacts.map((contact) => contact.id).includes(selectedContact.id)) {
+        if (!selectedContact) {
+            return;
+        }
+
+        const alreadyAdded = addedContacts.map((contact) => contact.id).includes(selectedContact?.id || 0);
+        if (alreadyAdded) {
             return;
         }
 

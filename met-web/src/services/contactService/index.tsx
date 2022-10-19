@@ -5,9 +5,6 @@ import { Contact } from 'models/contact';
 
 export const getContact = async (contactId: number): Promise<Contact> => {
     const url = replaceUrl(Endpoints.Contacts.GET, 'contact_id', String(contactId));
-    if (!contactId || isNaN(Number(contactId))) {
-        return Promise.reject('Invalid Contact Id ' + contactId);
-    }
     try {
         const response = await http.GetRequest<Contact>(url);
         if (response.data.result) {
