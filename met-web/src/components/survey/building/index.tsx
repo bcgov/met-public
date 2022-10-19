@@ -15,10 +15,8 @@ import { FormBuilderData } from 'components/Form/types';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { getEngagement } from 'services/engagementService';
 import { Engagement } from 'models/engagement';
-import * as Formio from 'formiojs';
 
 const SurveyFormBuilder = () => {
-    Formio.Utils.Evaluator.noeval = true;
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { surveyId } = useParams<SurveyParams>();
