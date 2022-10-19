@@ -2,11 +2,11 @@
 
 Manages the widget
 """
+from datetime import datetime
 from __future__ import annotations
 
 from sqlalchemy.sql.schema import ForeignKey
 
-from datetime import datetime
 
 from .widget_item import WidgetItem
 
