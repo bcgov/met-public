@@ -31,6 +31,14 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
     items = db.relationship('WidgetItem', backref='widget', cascade='all, delete')
 
     @classmethod
+    def get_widget_by_id(cls, widget_id):
+        """Get widgets by engagement_id."""
+        return db.session.query(Widget)\
+            .join(WidgetItem, Widget.id == WidgetItem.widget_id, isouter=True)\
+            .filter(Widget.id == widget_id)\
+            .first()
+
+    @classmethod
     def get_widgets_by_engagement_id(cls, engagement_id):
         """Get widgets by engagement_id."""
         return db.session.query(Widget)\

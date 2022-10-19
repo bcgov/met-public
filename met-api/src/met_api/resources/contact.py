@@ -44,11 +44,8 @@ class SurveySubmission(Resource):
         try:
             contact = ContactService().get_contact_by_id(contact_id)
             return ActionResult.success(contact_id, contact)
-        except KeyError:
-            return ActionResult.error('No submissions not found')
-        except ValueError as err:
+        except (KeyError, ValueError) as err:
             return ActionResult.error(str(err))
-
 
 @cors_preflight('GET, POST, OPTIONS')
 @API.route('/')
@@ -65,14 +62,10 @@ class Surveys(Resource):
             user_id = TokenInfo.get_id()
             requestjson = request.get_json()
             contact_schema = ContactSchema().load(requestjson)
-            contact_schema['created_by'] = user_id
-            contact_schema['updated_by'] = user_id
-            result = ContactService().create_contact(contact_schema)
+            result = ContactService().create_contact(contact_schema, user_id)
             contact_schema['id'] = result.id
             return ActionResult.success(result.id, contact_schema)
-        except KeyError as err:
-            return ActionResult.error(str(err))
-        except ValueError as err:
+        except (KeyError, ValueError) as err:
             return ActionResult.error(str(err))
         except ValidationError as err:
             return ActionResult.error(str(err.messages))
@@ -85,7 +78,5 @@ class Surveys(Resource):
         try:
             widgets = ContactService().get_contacts()
             return ActionResult.success(result=widgets)
-        except KeyError:
-            return ActionResult.error('No submissions not found')
-        except ValueError as err:
+        except (KeyError, ValueError) as err:
             return ActionResult.error(str(err))

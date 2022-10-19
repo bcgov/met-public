@@ -45,9 +45,7 @@ class Widget(Resource):
         try:
             widgets = WidgetService().get_widgets_by_engagement_id(engagement_id)
             return ActionResult.success(engagement_id, widgets)
-        except KeyError:
-            return ActionResult.error('No submissions not found')
-        except ValueError as err:
+        except (KeyError, ValueError) as err:
             return ActionResult.error(str(err))
 
     @staticmethod
@@ -58,22 +56,13 @@ class Widget(Resource):
         try:
             user_id = TokenInfo.get_id()
             requestjson = request.get_json()
-            print(engagement_id)
-
             widget = WidgetSchema().load(requestjson)
-            widget['created_by'] = user_id
-            widget['updated_by'] = user_id
-
-            result = WidgetService().create_widget(widget)
+            result = WidgetService().create_widget(widget, engagement_id, user_id)
             return ActionResult.success(result=WidgetSchema().dump(result))
-        except KeyError as err:
-            return ActionResult.error(str(err))
-        except ValueError as err:
+        except (KeyError, ValueError) as err:
             return ActionResult.error(str(err))
         except ValidationError as err:
             return ActionResult.error(str(err.messages))
-        except AssertionError as err:
-            return ActionResult.error(str(err))
 
 
 @cors_preflight('POST,OPTIONS')
@@ -90,20 +79,12 @@ class SurveySubmission(Resource):
         try:
             user_id = TokenInfo.get_id()
             requestjson = request.get_json()
-            print(widget_id)
 
             widgets = WidgetItemSchema(many=True).load(requestjson)
-            for widget in widgets:
-                widget['created_by'] = user_id
-                widget['updated_by'] = user_id
 
-            result = WidgetService().create_widget_items_bulk(widgets)
+            result = WidgetService().create_widget_items_bulk(widgets, widget_id, user_id)
             return ActionResult.success(result=result)
-        except KeyError as err:
-            return ActionResult.error(str(err))
-        except ValueError as err:
+        except (KeyError, ValueError) as err:
             return ActionResult.error(str(err))
         except ValidationError as err:
             return ActionResult.error(str(err.messages))
-        except AssertionError as err:
-            return ActionResult.error(str(err))

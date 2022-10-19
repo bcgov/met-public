@@ -20,6 +20,8 @@ class ContactService:
         return ContactSchema(many=True).dump(contacts_records)
 
     @staticmethod
-    def create_contact(data: ContactSchema):
+    def create_contact(contact_data, user_id):
         """Create contact."""
-        return Contact.create_contact(data)
+        contact_data['created_by'] = user_id
+        contact_data['updated_by'] = user_id
+        return Contact.create_contact(contact_data)

@@ -30,8 +30,10 @@ class WidgetItem(db.Model):  # pylint: disable=too-few-public-methods
     @classmethod
     def get_widget_items_by_widget_id(cls, widget_id):
         """Get widgets by widget_id."""
-        return db.session.query(WidgetItem).filter(WidgetItem.widget_id ==
-                                                   widget_id).order_by(WidgetItem.id.desc()).all()
+        return db.session.query(WidgetItem)\
+            .filter(WidgetItem.widget_id == widget_id)\
+            .order_by(WidgetItem.id.desc())\
+            .all()
 
     @classmethod
     def create_widget_item(cls, widget_item) -> WidgetItem:
