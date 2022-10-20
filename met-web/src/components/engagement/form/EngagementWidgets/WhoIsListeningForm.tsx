@@ -79,11 +79,9 @@ const WhoIsListeningForm = () => {
 
     return (
         <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
-            <Grid item xs={12}>
-                <MetLabel>Select Existing Contact</MetLabel>
-            </Grid>
             <Grid item xs={12} container direction="row" justifyContent={'flex-start'} spacing={1}>
                 <Grid item xs={12}>
+                    <MetLabel>Select Existing Contact</MetLabel>
                     <Autocomplete
                         id="contact-selector"
                         options={contacts}
@@ -106,7 +104,7 @@ const WhoIsListeningForm = () => {
                 </Grid>
                 <Grid item>
                     <PrimaryButton onClick={() => addContact()} sx={{ height: '100%' }} fullWidth>
-                        Add selected contact
+                        Add This contact
                     </PrimaryButton>
                 </Grid>
                 <Grid item>

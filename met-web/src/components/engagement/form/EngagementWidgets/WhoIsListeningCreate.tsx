@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Divider, Grid } from '@mui/material';
 import { ActionContext } from '../ActionContext';
-import { MetHeader3, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetHeader4, PrimaryButton, SecondaryButton } from 'components/common';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { postWidget } from 'services/widgetService';
@@ -41,7 +41,7 @@ const WhoIsListeningCreate = () => {
     return (
         <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
             <Grid item xs={12}>
-                <MetHeader3 bold>Who is Listening</MetHeader3>
+                <MetHeader4 bold>Who is Listening</MetHeader4>
                 <Divider sx={{ marginTop: '1em' }} />
             </Grid>
             <Grid item xs={12} container direction="row" justifyContent={'flex-start'} spacing={1}>

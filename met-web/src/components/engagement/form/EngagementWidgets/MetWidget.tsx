@@ -1,5 +1,5 @@
 import React from 'react';
-import { MetHeader4, MetWidgetPaper } from 'components/common';
+import { MetLabel, MetWidgetPaper } from 'components/common';
 import { Grid, CircularProgress, Stack, IconButton } from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
@@ -19,7 +19,7 @@ const MetWidget = ({ testId, children, title, onEdit, onDelete, deleting, ...res
         <MetWidgetPaper elevation={3} {...rest}>
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
                 <Grid item xs={6}>
-                    <MetHeader4 bold={true}>{title}</MetHeader4>
+                    <MetLabel>{title}</MetLabel>
                 </Grid>
                 <Grid item xs={6} container direction="row" justifyContent="flex-end">
                     <Stack direction="row" spacing={1}>

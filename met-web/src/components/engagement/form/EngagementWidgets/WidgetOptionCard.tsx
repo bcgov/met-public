@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { MetPaper, MetHeader3, MetBody } from 'components/common';
+import { MetPaper, MetBody, MetHeader4 } from 'components/common';
 import { Grid } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import { When } from 'react-if';
@@ -33,7 +33,7 @@ const WidgetOptionCard = ({ title, description, icon, onClick }: WidgetOptionCar
                     xs={Boolean(icon) ? 8 : 12}
                 >
                     <Grid item xs={12}>
-                        <MetHeader3>{title}</MetHeader3>
+                        <MetHeader4>{title}</MetHeader4>
                     </Grid>
                     <Grid item xs={12}>
                         <MetBody>{description}</MetBody>
