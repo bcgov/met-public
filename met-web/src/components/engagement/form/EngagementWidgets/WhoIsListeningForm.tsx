@@ -9,7 +9,6 @@ import { postWidgetItems } from 'services/widgetService';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
 import ContantInfoPaper from './ContactInfoPaper';
 import { WidgetType } from 'models/widget';
-import WhoIsListeningCreate from './WhoIsListeningCreate';
 
 const WhoIsListeningForm = () => {
     const { savedEngagement } = useContext(ActionContext);
@@ -47,6 +46,7 @@ const WhoIsListeningForm = () => {
                     text: 'The widget needs to be created before the contacts can be added',
                 }),
             );
+            handleWidgetDrawerOpen(false);
             return;
         }
 
@@ -60,7 +60,7 @@ const WhoIsListeningForm = () => {
 
         try {
             setAddingWidgetItems(true);
-            await postWidgetItems(savedEngagement.id, widgetsToAdd);
+            await postWidgetItems(widgetId, widgetsToAdd);
             dispatch(openNotification({ severity: 'success', text: 'Widgets successfully added' }));
             handleWidgetDrawerOpen(false);
             setAddingWidgetItems(false);
@@ -72,10 +72,6 @@ const WhoIsListeningForm = () => {
             setAddingWidgetItems(false);
         }
     };
-
-    if (!widgetId) {
-        return <WhoIsListeningCreate />;
-    }
 
     return (
         <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
