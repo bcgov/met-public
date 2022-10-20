@@ -51,8 +51,6 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
     def create_widget(cls, widget) -> Widget:
         """Create widget."""
         new_widget = cls.__create_new_widget_entity(widget)
-        print('here')
-        print(new_widget)
         db.session.add(new_widget)
         db.session.commit()
         return new_widget

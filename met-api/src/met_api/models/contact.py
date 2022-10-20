@@ -20,7 +20,7 @@ class Contact(db.Model):  # pylint: disable=too-few-public-methods
     email = db.Column(db.String(50))
     phone_number = db.Column(db.String(50), nullable=True)
     address = db.Column(db.String(50))
-    bio = db.Column(db.String(500))
+    bio = db.Column(db.String(500), comment='A biography or short biographical profile of someone.')
     created_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow, nullable=False)
     created_by = db.Column(db.String(50), nullable=False)
@@ -35,7 +35,7 @@ class Contact(db.Model):  # pylint: disable=too-few-public-methods
         return contact
 
     @classmethod
-    def get_contacts(cls):
+    def get_contacts(cls) -> list[Contact]:
         """Get contacts."""
         return db.session.query(Contact).order_by(Contact.name).all()
 
