@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Grid, TextField, Stack, Autocomplete, Typography } from '@mui/material';
+import { Grid, TextField, Stack, Autocomplete, Typography, createFilterOptions } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getSurveysPage, postSurvey } from 'services/surveyService/form';
 import { getEngagements } from 'services/engagementService';
 import { useAppDispatch } from 'hooks';
@@ -11,9 +11,20 @@ import { Survey } from 'models/survey';
 import { hasKey } from 'utils';
 import { Engagement } from 'models/engagement';
 
+export type EngagementParams = {
+    engagementId: string;
+};
+
+const PAGE = 1;
+
+const PAGE_SIZE = 2000;
+
+const SORT_ORDER = 'asc';
+
 const CloneOptions = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const { engagementId } = useParams<EngagementParams>();
     const [selectedSurvey, setSelectedSurvey] = useState<Survey | null>(null);
     const [selectedEngagement, setSelectedEngagement] = useState<Engagement | null>(null);
     const [loadingSurveys, setLoadingSurveys] = useState(true);
@@ -48,18 +59,12 @@ const CloneOptions = () => {
         }
     };
 
-    const handleFetchSurveys = async (
-        page: number,
-        size: number,
-        sort_order: 'asc' | 'desc' | undefined,
-        search_text?: string,
-    ) => {
+    const handleFetchSurveys = async (page: number, size: number, sort_order: 'asc' | 'desc' | undefined) => {
         try {
             const fetchedSurveys = await getSurveysPage({
                 page: page,
                 size: size,
                 sort_order: sort_order,
-                search_text: search_text,
             });
             setAvailableSurveys(fetchedSurveys.items);
             setLoadingSurveys(false);
@@ -68,24 +73,14 @@ const CloneOptions = () => {
         }
     };
 
-    const handleFetchEngagements = async (
-        page: number,
-        size: number,
-        sort_order: 'asc' | 'desc' | undefined,
-        search_text?: string,
-    ) => {
+    const handleFetchEngagements = async (page: number, size: number, sort_order: 'asc' | 'desc' | undefined) => {
         try {
             const fetchedEngagements = await getEngagements({
                 page: page,
                 size: size,
                 sort_order: sort_order,
-                search_text: search_text,
             });
-            console.log('FETCH!');
-            console.log(fetchedEngagements);
-            setAvailableEngagements(
-                fetchedEngagements.items.filter((engagement, index) => engagement.surveys.length !== 0),
-            );
+            setAvailableEngagements(fetchedEngagements.items.filter((engagement) => engagement.surveys.length !== 0));
             setLoadingEngagements(false);
         } catch (error) {
             dispatch(
@@ -96,19 +91,18 @@ const CloneOptions = () => {
 
     useEffect(() => {
         if (!availableSurveys) {
-            handleFetchSurveys(1, 10, 'asc', '');
+            handleFetchSurveys(PAGE, PAGE_SIZE, SORT_ORDER);
         }
     }, [availableSurveys]);
 
     useEffect(() => {
         if (!availableEngagements) {
-            handleFetchEngagements(1, 10, 'asc', '');
+            handleFetchEngagements(PAGE, PAGE_SIZE, SORT_ORDER);
         }
     }, [availableEngagements]);
 
     const handleSave = async () => {
         if (!selectedSurvey) {
-            if (selectedEngagement) return;
             dispatch(openNotification({ severity: 'error', text: 'Please select a survey first' }));
             return;
         }
@@ -116,7 +110,7 @@ const CloneOptions = () => {
         try {
             const createdSurvey = await postSurvey({
                 name: surveyForm.name,
-                form_json: selectedEngagement ? selectedEngagement.surveys[0].form_json : selectedSurvey.form_json,
+                form_json: selectedSurvey.form_json,
             });
 
             dispatch(
@@ -155,9 +149,6 @@ const CloneOptions = () => {
                                 shrink: false,
                             }}
                             fullWidth
-                            onChange={(e) => {
-                                handleFetchEngagements(1, 10, 'asc', e.target.value);
-                            }}
                         />
                     )}
                     getOptionLabel={(engagement: Engagement) => engagement.name}
@@ -172,7 +163,7 @@ const CloneOptions = () => {
                 <MetLabel sx={{ marginBottom: '2px' }}>Select Survey</MetLabel>
                 <Autocomplete
                     id="survey-selector"
-                    options={availableSurveys || []}
+                    options={selectedEngagement ? selectedEngagement.surveys : availableSurveys || []}
                     renderInput={(params) => (
                         <TextField
                             {...params}
@@ -180,9 +171,6 @@ const CloneOptions = () => {
                             value={selectedEngagement && selectedSurvey != null ? selectedSurvey.name : ''}
                             InputLabelProps={{
                                 shrink: false,
-                            }}
-                            onChange={(e) => {
-                                handleFetchSurveys(1, 10, 'asc', e.target.value);
                             }}
                             fullWidth
                         />
@@ -194,7 +182,7 @@ const CloneOptions = () => {
                     onChange={(_e: React.SyntheticEvent<Element, Event>, survey: Survey | null) =>
                         setSelectedSurvey(survey)
                     }
-                    disabled={loadingSurveys || selectedEngagement !== null}
+                    disabled={loadingSurveys}
                 />
             </Grid>
             <Grid item xs={6}>
