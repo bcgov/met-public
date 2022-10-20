@@ -21,7 +21,7 @@ def upgrade():
     op.create_table('contact',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('name', sa.String(length=50), nullable=True),
-    sa.Column('role', sa.String(length=50), nullable=True),
+    sa.Column('title', sa.String(length=50), nullable=True),
     sa.Column('email', sa.String(length=50), nullable=True),
     sa.Column('phone_number', sa.String(length=50), nullable=True),
     sa.Column('address', sa.String(length=50), nullable=True),

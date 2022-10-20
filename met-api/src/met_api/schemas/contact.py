@@ -13,7 +13,7 @@ class ContactSchema(Schema):
 
     id = fields.Int(data_key='id')
     name = fields.Str(data_key='name', required=True)
-    role = fields.Str(data_key='role', required=True)
+    title = fields.Str(data_key='title', required=True)
     phone_number = fields.Str(data_key='phone_number', required=True)
     email = fields.Str(data_key='email', required=True)
     address = fields.Str(data_key='address', required=True)

@@ -16,7 +16,7 @@ class Contact(db.Model):  # pylint: disable=too-few-public-methods
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50))
-    role = db.Column(db.String(50))
+    title = db.Column(db.String(50))
     email = db.Column(db.String(50))
     phone_number = db.Column(db.String(50), nullable=True)
     address = db.Column(db.String(50))
@@ -44,7 +44,7 @@ class Contact(db.Model):  # pylint: disable=too-few-public-methods
         """Create contact."""
         new_contact = Contact(
             name=contact.get('name', None),
-            role=contact.get('role', None),
+            title=contact.get('title', None),
             email=contact.get('email', None),
             phone_number=contact.get('phone_number', None),
             address=contact.get('address', None),
