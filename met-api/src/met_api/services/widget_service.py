@@ -22,7 +22,7 @@ class WidgetService:
         """Create widget item."""
         widget_data['created_by'] = user_id
         widget_data['updated_by'] = user_id
-        if widget_data.get('engagement_id', None) != engagement_id:
+        if widget_data.get('engagement_id', None) != int(engagement_id):
             raise ValueError('widget data has engagement id for a different engagement')
         return Widget.create_widget(widget_data)
 
