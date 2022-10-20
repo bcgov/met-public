@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Grid, TextField, Stack, Autocomplete, Typography, createFilterOptions } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getSurveysPage, postSurvey } from 'services/surveyService/form';
+import { getSurveysPage, postSurvey, linkSurvey } from 'services/surveyService/form';
 import { getEngagements } from 'services/engagementService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -24,7 +24,8 @@ const SORT_ORDER = 'asc';
 const CloneOptions = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { engagementId } = useParams<EngagementParams>();
+    const searchParams = new URLSearchParams(location.search);
+    const engagementId = searchParams.get('engagementId');
     const [selectedSurvey, setSelectedSurvey] = useState<Survey | null>(null);
     const [selectedEngagement, setSelectedEngagement] = useState<Engagement | null>(null);
     const [loadingSurveys, setLoadingSurveys] = useState(true);
@@ -112,6 +113,10 @@ const CloneOptions = () => {
                 name: surveyForm.name,
                 form_json: selectedSurvey.form_json,
             });
+
+            if (engagementId && createdSurvey) {
+                const linkedRequest = await linkSurvey({ id: String(createdSurvey.id), engagement_id: engagementId });
+            }
 
             dispatch(
                 openNotification({
