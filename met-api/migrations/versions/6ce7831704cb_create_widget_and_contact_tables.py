@@ -1,8 +1,8 @@
-"""Create widget tables
+"""Create widget, widget item, widget type and contact tables
 
-Revision ID: e39d3e01dc22
+Revision ID: 6ce7831704cb
 Revises: ac4a505ed1e3
-Create Date: 2022-10-18 08:30:48.529328
+Create Date: 2022-10-19 17:20:12.126201
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e39d3e01dc22'
+revision = '6ce7831704cb'
 down_revision = 'ac4a505ed1e3'
 branch_labels = None
 depends_on = None
@@ -25,7 +25,7 @@ def upgrade():
     sa.Column('email', sa.String(length=50), nullable=True),
     sa.Column('phone_number', sa.String(length=50), nullable=True),
     sa.Column('address', sa.String(length=50), nullable=True),
-    sa.Column('bio', sa.String(length=500), nullable=True),
+    sa.Column('bio', sa.String(length=500), nullable=True, comment='A biography or short biographical profile of someone.'),
     sa.Column('created_date', sa.DateTime(), nullable=False),
     sa.Column('updated_date', sa.DateTime(), nullable=False),
     sa.Column('created_by', sa.String(length=50), nullable=False),
@@ -54,7 +54,7 @@ def upgrade():
     )
     op.create_table('widget_item',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('widget_data_id', sa.Integer(), nullable=False),
+    sa.Column('widget_data_id', sa.Integer(), nullable=False, comment='A dynamic foreign key that could be to any table where the widget data is hosted.'),
     sa.Column('widget_id', sa.Integer(), nullable=True),
     sa.Column('created_date', sa.DateTime(), nullable=False),
     sa.Column('updated_date', sa.DateTime(), nullable=False),
@@ -63,8 +63,7 @@ def upgrade():
     sa.ForeignKeyConstraint(['widget_id'], ['widget.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('widget_data_id', 'widget_id', name='unique_widget_data')
-    )
-    
+    )    
     op.bulk_insert(widget_type_table, [
         {'id': 1, 'name': 'Who is Listening', 'description': 'Displays contact information for someone who is monitoring the engagement'}
     ])
