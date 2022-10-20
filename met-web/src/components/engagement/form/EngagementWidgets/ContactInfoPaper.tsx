@@ -17,7 +17,7 @@ const ContantInfoPaper = ({ testId, contact, ...rest }: ContantInfoPaperProps) =
                         <MetLabel>{contact.name}</MetLabel>
                     </Grid>
                     <Grid item xs={12}>
-                        <MetParagraph>{contact.role}</MetParagraph>
+                        <MetParagraph>{contact.title}</MetParagraph>
                     </Grid>
                 </Grid>
                 <Grid

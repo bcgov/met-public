@@ -30,7 +30,7 @@ export const getContacts = async (): Promise<Contact[]> => {
 
 interface PostContactRequest {
     name?: string;
-    role?: string;
+    title?: string;
     phoneNumber?: string;
     email?: string;
     address?: string;

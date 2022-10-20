@@ -18,16 +18,6 @@ export interface Widget {
     data: unknown;
 }
 
-export interface WidgetContact {
-    id: number;
-    name: string;
-    title: string;
-    phoneNumber: string;
-    email: string;
-    address: string;
-    bio: string;
-}
-
 export interface EngagementForm {
     name: string;
     description: string;

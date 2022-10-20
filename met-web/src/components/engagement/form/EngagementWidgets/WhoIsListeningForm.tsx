@@ -96,7 +96,7 @@ const WhoIsListeningForm = () => {
                                 }}
                             />
                         )}
-                        getOptionLabel={(contact: Contact) => `${contact.name} - ${contact.role}`}
+                        getOptionLabel={(contact: Contact) => `${contact.name} - ${contact.title}`}
                         onChange={(_e: React.SyntheticEvent<Element, Event>, contact: Contact | null) =>
                             setSelectedContact(contact)
                         }

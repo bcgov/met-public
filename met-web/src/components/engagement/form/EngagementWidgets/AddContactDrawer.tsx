@@ -8,7 +8,7 @@ import ImageUpload from 'components/imageUpload';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import ControlledTextField from 'components/common/ControlledInputComponents/ControlledFormInput';
+import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
 import { postContact } from 'services/contactService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -17,7 +17,7 @@ import { WidgetDrawerContext } from './WidgetDrawerContext';
 const schema = yup
     .object({
         name: yup.string().required(),
-        role: yup.string().required(),
+        title: yup.string().required(),
         phone_number: yup.string().required(),
         email: yup.string().email().required(),
         address: yup.string().required(),
@@ -98,17 +98,17 @@ const AddContactDrawer = () => {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Role</MetLabel>
+                                <MetLabel sx={{ marginBottom: '2px' }}>Title</MetLabel>
                                 <ControlledTextField
-                                    id="contact-role"
-                                    data-testid="contact-form/role"
+                                    id="contact-title"
+                                    data-testid="contact-form/title"
                                     variant="outlined"
                                     label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
                                     fullWidth
-                                    name="role"
+                                    name="title"
                                     size="small"
                                 />
                             </Grid>

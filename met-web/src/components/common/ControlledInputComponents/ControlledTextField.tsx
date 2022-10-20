@@ -1,32 +1,32 @@
 import React, { FC } from 'react';
 import { TextField, TextFieldProps } from '@mui/material';
-import { Control, Controller } from 'react-hook-form';
-import { WidgetContact } from 'models/widget';
+import { Controller, useFormContext } from 'react-hook-form';
 
-interface ControllerInputProps {
-    control: Control<WidgetContact, any>;
-    name: keyof WidgetContact;
-    defaultValue?: string | number;
-}
-export const ControlledTextFieldOld: FC<TextFieldProps & ControllerInputProps> = (
-    props: TextFieldProps & ControllerInputProps,
-) => {
+type IFormInputProps = {
+    name: string;
+} & TextFieldProps;
+
+const ControlledTextField: FC<IFormInputProps> = ({ name, ...otherProps }) => {
+    const {
+        control,
+        formState: { errors, defaultValues },
+    } = useFormContext();
+
     return (
         <Controller
-            name={props.name}
-            control={props.control}
-            defaultValue={props.defaultValue}
-            render={({ field: { onChange, onBlur, name: fieldName, value }, fieldState: { error } }) => (
+            control={control}
+            name={name}
+            defaultValue={defaultValues?.[name] || ''}
+            render={({ field }) => (
                 <TextField
-                    {...props}
-                    onChange={onChange}
-                    value={value}
-                    onBlur={onBlur}
-                    name={fieldName}
-                    error={Boolean(error?.message)}
-                    helperText={error?.message}
+                    {...otherProps}
+                    {...field}
+                    error={!!errors[name]}
+                    helperText={String(errors[name]?.message || '')}
                 />
             )}
         />
     );
 };
+
+export default ControlledTextField;
