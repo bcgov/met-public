@@ -1,11 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Divider, Grid } from '@mui/material';
 import WhoIsListeningOptionCard from './WhoIsListeningOptionCard';
-import { WidgetDrawerContext } from './WidgetDrawerContext';
 import { MetHeader4 } from 'components/common';
 
 const WidgetOptionCards = () => {
-    const { handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
     return (
         <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
             <Grid item xs={12}>
