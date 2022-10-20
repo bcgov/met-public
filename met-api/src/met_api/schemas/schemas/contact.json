@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://met.gov.bc.ca/.well_known/schemas/contact",
+  "type": "object",
+  "title": "The root schema",
+  "description": "The root schema comprises the entire JSON document.",
+  "default": {},
+  "examples": [
+    {
+      "name": "Jace",
+      "title": "inspector",
+      "phone_number": "123-123-1234",
+      "email": "jace@email.com",
+      "address": "Dragonstone, westeros",
+      "bio": "Jacaerys Targaryen is the son of Rhaenyra Targaryen"
+    }
+  ],
+  "required": ["name", "title", "phone_number", "email", "address", "bio"],
+  "properties": {
+    "name": {
+      "$id": "#/properties/name",
+      "type": "string",
+      "title": "Contact Name",
+      "description": "The name of the contact.",
+      "examples": ["Jace"]
+    },
+    "title": {
+      "$id": "#/properties/title",
+      "type": "string",
+      "title": "The designation",
+      "description": "The designation or job title of the contact.",
+      "examples": ["Inspector"]
+    },
+    "phone_number": {
+      "$id": "#/properties/phone_number",
+      "type": "string",
+      "title": "Phone number",
+      "description": "The phone number of the contact.",
+      "examples": ["123-123-1234"]
+    },
+    "email": {
+      "$id": "#/properties/email",
+      "type": "string",
+      "title": "Email",
+      "description": "The email of the contact.",
+      "examples": ["jace@email.com"]
+    },
+    "address": {
+      "$id": "#/properties/address",
+      "type": "string",
+      "title": "Address",
+      "description": "The address of the contact.",
+      "examples": ["Dragonstone, Westeros"]
+    },
+    "bio": {
+      "$id": "#/properties/bio",
+      "type": "string",
+      "minLength": 20,
+      "title": "Personal biography",
+      "description": "A short text describing the contact.",
+      "examples": ["Jace is a prince of house Targaryen."]
+    }
+  }
+}

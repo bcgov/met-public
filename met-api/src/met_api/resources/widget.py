@@ -13,6 +13,7 @@
 # limitations under the License.
 """API endpoints for managing an user resource."""
 
+from http import HTTPStatus
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
@@ -20,6 +21,7 @@ from marshmallow import ValidationError
 
 from met_api.auth import auth
 from met_api.schemas.widget_item import WidgetItemSchema
+from met_api.schemas import utils as schema_utils
 from met_api.schemas.widget import WidgetSchema
 from met_api.services.widget_service import WidgetService
 from met_api.utils.action_result import ActionResult
@@ -55,8 +57,12 @@ class Widget(Resource):
         """Add new widget for an engagement."""
         try:
             user_id = TokenInfo.get_id()
-            requestjson = request.get_json()
-            widget = WidgetSchema().load(requestjson)
+            request_json = request.get_json()
+            valid_format, errors = schema_utils.validate(request_json, 'widget')
+            if not valid_format:
+                return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
+            
+            widget = WidgetSchema().load(request_json)
             result = WidgetService().create_widget(widget, engagement_id, user_id)
             return ActionResult.success(result=WidgetSchema().dump(result))
         except (KeyError, ValueError) as err:
@@ -75,12 +81,15 @@ class SurveySubmission(Resource):
     @cross_origin(origins=allowedorigins())
     @auth.require
     def post(widget_id):
-        """Add new widgets for an engagement."""
+        """Add new widgets to an engagement."""
         try:
             user_id = TokenInfo.get_id()
-            requestjson = request.get_json()
+            request_json = request.get_json()
+            valid_format, errors = schema_utils.validate(request_json, 'widget_item')
+            if not valid_format:
+                return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
 
-            widgets = WidgetItemSchema(many=True).load(requestjson)
+            widgets = WidgetItemSchema(many=True).load(request_json)
 
             result = WidgetService().create_widget_items_bulk(widgets, widget_id, user_id)
             return ActionResult.success(result=result)
