@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { postEngagement, getEngagement, patchEngagement } from '../../../services/engagementService';
 import { useNavigate, useParams } from 'react-router-dom';
-import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams, WidgetsList } from './types';
+import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams } from './types';
 import { createDefaultEngagement, Engagement } from '../../../models/engagement';
 import { saveDocument } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -27,27 +27,6 @@ export const ActionContext = createContext<EngagementContext>({
     fetchEngagement: () => {
         /* empty default method  */
     },
-    widgets: [
-        {
-            widget_type: 0,
-            items: [
-                {
-                    id: 0,
-                    widget_type: 0,
-                    engagement_id: 0,
-                    data: {},
-                },
-            ],
-        },
-    ],
-    widgetDrawerOpen: false,
-    handleWidgetDrawerOpen: (_open: boolean) => {
-        /* empty default method  */
-    },
-    widgetDrawerTabValue: 'widgetOptions',
-    handleWidgetDrawerTabValueChange: (_tabValue: string) => {
-        /* empty default method  */
-    },
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
@@ -61,34 +40,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
-
-    const [widgets, setWidgets] = useState<WidgetsList[]>([]);
-    const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
-    const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState('widgetOptions');
-
-    useEffect(() => {
-        setWidgets([
-            {
-                widget_type: 1,
-                items: [
-                    {
-                        id: 1,
-                        widget_type: 1,
-                        engagement_id: Number(engagementId),
-                        data: {},
-                    },
-                ],
-            },
-        ]);
-    }, []);
-
-    const handleWidgetDrawerOpen = (open: boolean) => {
-        setWidgetDrawerOpen(open);
-    };
-
-    const handleWidgetDrawerTabValueChange = (tabValue: string) => {
-        setWidgetDrawerTabValue(tabValue);
-    };
 
     const handleAddBannerImage = (files: File[]) => {
         if (files.length > 0) {
@@ -201,11 +152,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 loadingSavedEngagement,
                 handleAddBannerImage,
                 fetchEngagement,
-                widgets,
-                widgetDrawerOpen,
-                handleWidgetDrawerOpen,
-                widgetDrawerTabValue,
-                handleWidgetDrawerTabValueChange,
             }}
         >
             {children}

@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { ActionContext } from './ActionContext';
 import { Grid } from '@mui/material';
-import { MetHeader4, MetPaper, MetWidget, SecondaryButton } from 'components/common';
+import { MetHeader4, MetPaper, MetSurvey, SecondaryButton } from 'components/common';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -104,9 +104,9 @@ export const AddSurveyBlock = () => {
                     <Grid item xs={12}>
                         {savedEngagement.surveys.map((survey) => {
                             return (
-                                <MetWidget
-                                    testId={`survey-${survey.id}`}
+                                <MetSurvey
                                     key={survey.id}
+                                    testId={survey.id}
                                     title={survey.name}
                                     onEditClick={() => navigate(`/surveys/${survey.id}/build`)}
                                     onDeleteClick={() => handleDeleteClick(survey.id, survey.name)}
