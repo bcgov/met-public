@@ -61,7 +61,7 @@ class Widget(Resource):
             valid_format, errors = schema_utils.validate(request_json, 'widget')
             if not valid_format:
                 return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
-            
+
             widget = WidgetSchema().load(request_json)
             result = WidgetService().create_widget(widget, engagement_id, user_id)
             return ActionResult.success(result=WidgetSchema().dump(result))

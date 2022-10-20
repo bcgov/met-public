@@ -64,11 +64,11 @@ class Surveys(Resource):
         try:
             user_id = TokenInfo.get_id()
             request_json = request.get_json()
-            
+
             valid_format, errors = schema_utils.validate(request_json, 'contact')
             if not valid_format:
                 return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
-            
+
             contact_schema = ContactSchema().load(request_json)
             result = ContactService().create_contact(contact_schema, user_id)
             contact_schema['id'] = result.id
