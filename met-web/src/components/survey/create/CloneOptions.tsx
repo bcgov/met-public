@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Grid, TextField, Stack, Autocomplete, Typography, createFilterOptions } from '@mui/material';
+import { Grid, TextField, Stack, Autocomplete, Typography } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getSurveysPage, postSurvey, linkSurvey } from 'services/surveyService/form';
 import { getEngagements } from 'services/engagementService';
 import { useAppDispatch } from 'hooks';
@@ -115,7 +115,7 @@ const CloneOptions = () => {
             });
 
             if (engagementId && createdSurvey) {
-                const linkedRequest = await linkSurvey({ id: String(createdSurvey.id), engagement_id: engagementId });
+                await linkSurvey({ id: String(createdSurvey.id), engagement_id: engagementId });
             }
 
             dispatch(
