@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://met.gov.bc.ca/.well_known/schemas/widget",
+  "type": "object",
+  "title": "The root schema",
+  "description": "The root schema comprises the entire JSON document.",
+  "default": {},
+  "examples": [
+    {
+      "widget_type_id": 1,
+      "engagement_id": 1
+    }
+  ],
+  "required": ["widget_type_id", "engagement_id"],
+  "properties": {
+    "widget_type_id": {
+      "$id": "#/properties/widget_type_id",
+      "type": "number",
+      "title": "Widget type id",
+      "description": "The type of this widget.",
+      "examples": [1]
+    },
+    "engagement_id": {
+      "$id": "#/properties/engagement_id",
+      "type": "number",
+      "title": "Engagement id",
+      "description": "The engagement to which this widget belongs.",
+      "examples": [1]
+    }
+  }
+}
