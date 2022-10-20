@@ -34,10 +34,10 @@ class WidgetService:
     @staticmethod
     def create_widget_items_bulk(widget_items: list, widget_id, user_id):
         """Create widget items in bulk."""
-        widget = Widget.get_widget_by_id(widget_id)        
+        widget = Widget.get_widget_by_id(widget_id)
         if not widget:
-            raise KeyError('Widget ' + widget_id + ' does not exist')        
-        
+            raise KeyError('Widget ' + widget_id + ' does not exist')
+
         for item in widget_items:
             item['created_by'] = user_id
             item['updated_by'] = user_id

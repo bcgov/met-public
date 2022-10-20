@@ -21,8 +21,8 @@ class WidgetItem(db.Model):  # pylint: disable=too-few-public-methods
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     widget_data_id = db.Column(
-        db.Integer, 
-        nullable=False, 
+        db.Integer,
+        nullable=False,
         comment='A dynamic foreign key that could be to any table where the widget data is hosted.'
     )
     widget_id = db.Column(db.Integer, ForeignKey('widget.id', ondelete='CASCADE'))
