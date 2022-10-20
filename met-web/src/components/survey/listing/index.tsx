@@ -148,12 +148,11 @@ const SurveyListing = () => {
             label: 'Status',
             allowSort: true,
             getValue: (row: Survey) => {
-                if (
-                    row.engagement?.engagement_status.status_name ===
-                        EngagementStatus[EngagementStatus.Published].toString() ||
-                    row.engagement?.engagement_status.status_name ===
-                        EngagementStatus[EngagementStatus.Closed].toString()
-                ) {
+                const acceptable_status = [
+                    EngagementStatus[EngagementStatus.Published],
+                    EngagementStatus[EngagementStatus.Closed],
+                ];
+                if (row.engagement && acceptable_status.includes(row.engagement.engagement_status.status_name)) {
                     return (
                         EngagementStatus[EngagementStatus.Published].toString() +
                         '/' +

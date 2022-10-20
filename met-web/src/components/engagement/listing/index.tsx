@@ -104,15 +104,12 @@ const EngagementListing = () => {
             label: 'Status',
             allowSort: true,
             getValue: (row: Engagement) => {
-                if (
-                    row.engagement_status.status_name === EngagementStatus[EngagementStatus.Published].toString() ||
-                    row.engagement_status.status_name === EngagementStatus[EngagementStatus.Closed].toString()
-                ) {
-                    return (
-                        EngagementStatus[EngagementStatus.Published].toString() +
-                        '/' +
-                        SubmissionStatus[row.submission_status]
-                    );
+                const acceptable_status = [
+                    EngagementStatus[EngagementStatus.Published],
+                    EngagementStatus[EngagementStatus.Closed],
+                ];
+                if (acceptable_status.includes(row.engagement_status.status_name)) {
+                    return `${EngagementStatus[EngagementStatus.Published]}/${SubmissionStatus[row.submission_status]}`;
                 }
                 return row.engagement_status.status_name;
             },
