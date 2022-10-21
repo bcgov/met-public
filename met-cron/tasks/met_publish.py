@@ -1,4 +1,4 @@
-# Copyright © 2021 Province of British Columbia
+# Copyright © 2019 Province of British Columbia
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
@@ -11,22 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Constants of engagement status."""
-from enum import IntEnum
+"""MET Publish Scheduled Engagements."""
+from datetime import datetime
+
+from met_api.services.engagement_service import EngagementService
 
 
-class Status(IntEnum):
-    """Enum of engagement status."""
+class MetEngagementPublish:  # pylint:disable=too-few-public-methods
+    """Task to publish scheduled Engagements due."""
 
-    Draft = 1
-    Published = 2
-    Closed = 3
-    Scheduled = 4
+    @classmethod
+    def do_publish(cls):
+        """Publish the scheduled engagements."""
+        print('Starting Met Engagement Publish at------------------------', datetime.now())
 
-
-class SubmissionStatus(IntEnum):
-    """Enum of engagement submission status."""
-
-    Upcoming = 1
-    Open = 2
-    Closed = 3
+        EngagementService.close_engagements_due()

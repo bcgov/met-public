@@ -36,6 +36,7 @@ class Engagement(db.Model):
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow())
     updated_by = db.Column(db.String(50), nullable=False)
     published_date = db.Column(db.DateTime, nullable=True)
+    scheduled_date = db.Column(db.DateTime, nullable=True)
     content = db.Column(db.Text, unique=False, nullable=False)
     rich_content = db.Column(JSON, unique=False, nullable=False)
     banner_filename = db.Column(db.String(), unique=False, nullable=True)
@@ -170,6 +171,30 @@ class Engagement(db.Model):
         query = Engagement.query \
             .filter(Engagement.status_id == Status.Published.value) \
             .filter(Engagement.end_date < date_due)
+        records = query.all()
+        if not records:
+            return []
+        query.update(update_fields)
+        db.session.commit()
+        return engagements_schema.dump(records)
+
+    @classmethod
+    def publish_scheduled_engagements_due(cls) -> List[EngagementSchema]:
+        """Update scheduled engagements to published."""
+        now = local_datetime()
+        # Strip the time off the datetime object
+        date_due = datetime(now.year, now.month, now.day)
+        engagements_schema = EngagementSchema(many=True)
+        update_fields = dict(
+            status_id=Status.Published.value,
+            published_date = datetime.now(),
+            updated_date=datetime.now(),
+            updated_by=SYSTEM_USER
+        )
+        # Publish scheduled engagements where scheduled datetime is prior than now
+        query = Engagement.query \
+            .filter(Engagement.status_id == Status.Scheduled.value) \
+            .filter(Engagement.scheduled_date < date_due)
         records = query.all()
         if not records:
             return []
