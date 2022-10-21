@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Grid, TextField, Stack, Autocomplete, Typography } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { useNavigate } from 'react-router-dom';
-import { getSurveysPage, postSurvey, linkSurvey } from 'services/surveyService/form';
+import { getSurveysPage, postSurvey } from 'services/surveyService/form';
 import { getEngagements } from 'services/engagementService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -112,11 +112,8 @@ const CloneOptions = () => {
             const createdSurvey = await postSurvey({
                 name: surveyForm.name,
                 form_json: selectedSurvey.form_json,
+                engagement_id: engagementId ? String(engagementId) : undefined,
             });
-
-            if (engagementId && createdSurvey) {
-                await linkSurvey({ id: String(createdSurvey.id), engagement_id: engagementId });
-            }
 
             dispatch(
                 openNotification({
@@ -173,16 +170,13 @@ const CloneOptions = () => {
                         <TextField
                             {...params}
                             label=" "
-                            value={selectedEngagement && selectedSurvey != null ? selectedSurvey.name : ''}
                             InputLabelProps={{
                                 shrink: false,
                             }}
                             fullWidth
                         />
                     )}
-                    getOptionLabel={(survey: Survey) =>
-                        selectedEngagement && selectedSurvey ? selectedSurvey.name : survey.name
-                    }
+                    getOptionLabel={(survey: Survey) => survey.name}
                     value={selectedSurvey}
                     onChange={(_e: React.SyntheticEvent<Element, Event>, survey: Survey | null) =>
                         setSelectedSurvey(survey)
