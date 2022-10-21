@@ -24,6 +24,7 @@ from faker import Faker
 from met_api.config import get_named_config
 from met_api.constants.engagement_status import SubmissionStatus
 from met_api.constants.feedback import CommentType, FeedbackSourceType, RatingType
+from met_api.constants.widget import WidgetType
 
 fake = Faker()
 
@@ -129,3 +130,29 @@ class TestJwtClaims(dict, Enum):
             ]
         }
     }
+
+class TestWidgetInfo(dict, Enum):
+    """Test scenarios of widget."""
+
+    widget1 = {
+        'widget_type_id': WidgetType.WHO_IS_LISTENING,
+        'engagement_id':  1,
+        'created_by': '123',
+        'updated_by': '123',
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+    }
+
+
+class TestWidgetItemInfo(dict, Enum):
+    """Test scenarios of widget."""
+
+    widget_item1 = {
+        'widget_data_id': 1,
+        'widget_id':  1,
+        'created_by': '123',
+        'updated_by': '123',
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+    }
+

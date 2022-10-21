@@ -11,7 +11,6 @@ import ContantInfoPaper from './ContactInfoPaper';
 import { WidgetType } from 'models/widget';
 
 const WhoIsListeningForm = () => {
-    const { savedEngagement } = useContext(ActionContext);
     const { handleWidgetDrawerOpen, handleAddContactDrawerOpen, loadingContacts, contacts, widgets } =
         useContext(WidgetDrawerContext);
     const dispatch = useAppDispatch();
@@ -54,7 +53,6 @@ const WhoIsListeningForm = () => {
             return {
                 widget_id: widgetId,
                 widget_data_id: addedContact.id,
-                engagement_id: savedEngagement.id,
             };
         });
 
