@@ -105,6 +105,7 @@ class Engagement(db.Model):
             updated_by=engagement.get('updated_by', None),
             updated_date=datetime.utcnow(),
             published_date=None,
+            scheduled_date=None,
             banner_filename=engagement.get('banner_filename', None),
             content=engagement.get('content', None),
             rich_content=engagement.get('rich_content', None)
@@ -132,6 +133,7 @@ class Engagement(db.Model):
             # to fix the bug with UI not passing published date always.
             # Defaulting to existing
             published_date=engagement.get('published_date', record.published_date),
+            scheduled_date=engagement.get('scheduled_date', record.scheduled_date),
             updated_date=datetime.utcnow(),
             updated_by=engagement.get('updated_by', None),
             banner_filename=engagement.get('banner_filename', None),
