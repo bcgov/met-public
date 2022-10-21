@@ -13,7 +13,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import MetTable from 'components/common/Table';
-import { SubmissionStatus } from 'constants/engagementStatus';
+import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
 
 const EngagementListing = () => {
     const [searchFilter, setSearchFilter] = useState({
@@ -104,8 +104,12 @@ const EngagementListing = () => {
             label: 'Status',
             allowSort: true,
             getValue: (row: Engagement) => {
-                if (row.engagement_status.status_name === 'Published') {
-                    return row.engagement_status.status_name + '/' + SubmissionStatus[row.submission_status];
+                const acceptable_status = [
+                    EngagementStatus[EngagementStatus.Published],
+                    EngagementStatus[EngagementStatus.Closed],
+                ];
+                if (acceptable_status.includes(row.engagement_status.status_name)) {
+                    return `${EngagementStatus[EngagementStatus.Published]}/${SubmissionStatus[row.submission_status]}`;
                 }
                 return row.engagement_status.status_name;
             },
