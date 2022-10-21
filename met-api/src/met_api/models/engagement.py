@@ -187,7 +187,7 @@ class Engagement(db.Model):
         engagements_schema = EngagementSchema(many=True)
         update_fields = dict(
             status_id=Status.Published.value,
-            published_date = datetime.now(),
+            published_date=datetime.now(),
             updated_date=datetime.now(),
             updated_by=SYSTEM_USER
         )
