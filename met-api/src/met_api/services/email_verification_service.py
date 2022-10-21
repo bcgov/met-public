@@ -23,15 +23,23 @@ class EmailVerificationService:
     full_date_format = ' %B %d, %Y'
     date_format = '%Y-%m-%d'
 
-    def get_active(self, verification_token):
+    @classmethod
+    def get(cls, verification_token):
         """Get an active email verification matching the provided token."""
         db_email_verification = EmailVerification.get(verification_token)
-        self.validate_object(db_email_verification)
         return db_email_verification
 
-    def create(self, email_verification: EmailVerificationSchema) -> None:
+    @classmethod
+    def get_active(cls, verification_token):
+        """Get an active email verification matching the provided token."""
+        db_email_verification = EmailVerification.get(verification_token)
+        cls.validate_object(db_email_verification)
+        return db_email_verification
+
+    @classmethod
+    def create(cls, email_verification: EmailVerificationSchema) -> None:
         """Create an email verification."""
-        self.validate_fields(email_verification)
+        cls.validate_fields(email_verification)
         email_address = email_verification.get('email_address')
 
         user = UserService.get_or_create_user(email_address)
@@ -43,13 +51,14 @@ class EmailVerificationService:
         if not create_verification_result.success:
             raise ValueError('Error creating email verification')
 
-        self._send_verification_email(email_verification)
+        cls._send_verification_email(email_verification)
         return email_verification
 
-    def verify(self, verification_token, survey_id, session):
+    @classmethod
+    def verify(cls, verification_token, survey_id, session):
         """Validate and update an email verification."""
         db_email_verification = EmailVerification.get(verification_token)
-        self.validate_object(db_email_verification)
+        cls.validate_object(db_email_verification)
 
         if db_email_verification.get('survey_id', None) != survey_id:
             raise ValueError('Email verification invalid for survey')
