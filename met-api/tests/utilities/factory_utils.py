@@ -138,7 +138,7 @@ def factory_auth_header(jwt, claims):
     return {'Authorization': 'Bearer ' + jwt.create_jwt(claims=claims, header=JWT_HEADER)}
 
 
-def factory_widget_model(widget_info: dict = TestWidgetInfo.widget1, status=None):
+def factory_widget_model(widget_info: dict = TestWidgetInfo.widget1):
     """Produce a widget model."""
     widget = WidgetModal(
         widget_type_id=WidgetType.WHO_IS_LISTENING,
@@ -153,7 +153,7 @@ def factory_widget_model(widget_info: dict = TestWidgetInfo.widget1, status=None
     return widget
 
 
-def factory_widget_item_model(widget_info: dict = TestWidgetItemInfo.widget_item1, status=None):
+def factory_widget_item_model(widget_info: dict = TestWidgetItemInfo.widget_item1):
     """Produce a widget model."""
     widget = WidgetItemModal(
         widget_id=widget_info.get('widget_id'),
