@@ -146,7 +146,7 @@ def factory_widget_model(widget_info: dict = TestWidgetInfo.widget1):
         created_by=widget_info.get('created_by'),
         updated_by=widget_info.get('updated_by'),
         created_date=widget_info.get('created_date'),
-        updated_date=widget_info.get('updated_date'),    
+        updated_date=widget_info.get('updated_date'),
     )
     db.session.add(widget)
     db.session.commit()
@@ -161,7 +161,7 @@ def factory_widget_item_model(widget_info: dict = TestWidgetItemInfo.widget_item
         created_by=widget_info.get('created_by'),
         updated_by=widget_info.get('updated_by'),
         created_date=widget_info.get('created_date'),
-        updated_date=widget_info.get('updated_date'),   
+        updated_date=widget_info.get('updated_date'),
     )
     db.session.add(widget)
     db.session.commit()

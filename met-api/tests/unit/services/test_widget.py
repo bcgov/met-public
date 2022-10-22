@@ -27,9 +27,10 @@ from met_api.constants.widget import WidgetType
 fake = Faker()
 date_format = '%Y-%m-%d'
 
+
 def test_create_widget(session):  # pylint:disable=unused-argument
     """Assert that a widget can be created."""
-    engagement = factory_engagement_model()    
+    engagement = factory_engagement_model()
     user_id = TestUserInfo.user['id']
 
     widget_to_create = {
@@ -42,6 +43,7 @@ def test_create_widget(session):  # pylint:disable=unused-argument
     # Assert that was created
     assert widget_record.engagement_id == widget_to_create.get('engagement_id')
     assert widget_record.widget_type_id == widget_to_create.get('widget_type_id')
+
 
 def test_create_widget_items(session):  # pylint:disable=unused-argument
     """Assert that widget items can be created in bulk."""
@@ -60,7 +62,11 @@ def test_create_widget_items(session):  # pylint:disable=unused-argument
         'widget_data_id': fake.pyint()
     }
 
-    widget_item_records = WidgetService().create_widget_items_bulk([widget_item_to_create_1, widget_item_to_create_2], widget.id, user_id)
+    widget_item_records = WidgetService()\
+        .create_widget_items_bulk(
+            [widget_item_to_create_1, widget_item_to_create_2],
+            widget.id, user_id
+        )
 
     # Assert that was created
     assert len(widget_item_records) == 2
@@ -68,4 +74,3 @@ def test_create_widget_items(session):  # pylint:disable=unused-argument
     assert widget_item_records[0].get('widget_data_id') == widget_item_to_create_1.get('widget_data_id')
     assert widget_item_records[1].get('widget_id')  == widget_item_to_create_2.get('widget_id')
     assert widget_item_records[1].get('widget_data_id') == widget_item_to_create_2.get('widget_data_id')
-
