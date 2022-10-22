@@ -1,14 +1,14 @@
-export interface Widget {
+export interface WidgetItem {
     id: number;
-    widget_type: number;
-    engagement_id: number;
-    data: unknown;
+    widget_id: number;
+    widget_data_id: number;
 }
 
-export interface WidgetsList {
+export interface Widget {
     id: number;
     widget_type_id: number;
-    items: Widget[];
+    engagement_id: number;
+    items: WidgetItem[];
 }
 
 export enum WidgetType {

@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import { Autocomplete, Grid, TextField } from '@mui/material';
-import { ActionContext } from '../ActionContext';
 import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
 import { Contact } from 'models/contact';
 import { useAppDispatch } from 'hooks';
@@ -98,7 +97,7 @@ const WhoIsListeningForm = () => {
                 </Grid>
                 <Grid item>
                     <PrimaryButton onClick={() => addContact()} sx={{ height: '100%' }} fullWidth>
-                        Add This contact
+                        Add This Contact
                     </PrimaryButton>
                 </Grid>
                 <Grid item>

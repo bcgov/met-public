@@ -63,8 +63,8 @@ class Widget(Resource):
                 return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
 
             widget = WidgetSchema().load(request_json)
-            result = WidgetService().create_widget(widget, engagement_id, user_id)
-            return ActionResult.success(result=WidgetSchema().dump(result))
+            created_widget = WidgetService().create_widget(widget, engagement_id, user_id)
+            return ActionResult.success(result=created_widget)
         except (KeyError, ValueError) as err:
             return ActionResult.error(str(err))
         except ValidationError as err:

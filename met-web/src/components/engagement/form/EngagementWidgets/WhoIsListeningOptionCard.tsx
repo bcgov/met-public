@@ -48,6 +48,7 @@ const WhoIsListeningOptionCard = () => {
 
     return (
         <MetPaper
+            data-testid={`widget-drawer-option/${WidgetType.WhoIsListening}`}
             elevation={1}
             sx={{ padding: '1px 2px 1px 2px', cursor: 'pointer', '&:hover': { backgroundColor: 'rgb(242, 242, 242)' } }}
             onClick={() => createWidget()}
