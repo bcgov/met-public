@@ -136,8 +136,8 @@ class TestWidgetInfo(dict, Enum):
     """Test scenarios of widget."""
 
     widget1 = {
-        'widget_type_id':  WidgetType.WHO_IS_LISTENING,
-        'engagement_id':  1,
+        'widget_type_id': WidgetType.WHO_IS_LISTENING,
+        'engagement_id': 1,
         'created_by': '123',
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
@@ -149,8 +149,8 @@ class TestWidgetItemInfo(dict, Enum):
     """Test scenarios of widget."""
 
     widget_item1 = {
-        'widget_data_id':  1,
-        'widget_id':  1,
+        'widget_data_id': 1,
+        'widget_id': 1,
         'created_by': '123',
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),

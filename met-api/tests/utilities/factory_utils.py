@@ -21,15 +21,16 @@ from met_api import db
 from met_api.config import get_named_config
 from met_api.constants.engagement_status import Status
 from met_api.constants.widget import WidgetType
+from met_api.models.email_verification import EmailVerification as EmailVerificationModel
 from met_api.models.engagement import Engagement as EngagementModel
+from met_api.models.feedback import Feedback as FeedbackModel
 from met_api.models.survey import Survey as SurveyModel
+from met_api.models.user import User as UserModel
 from met_api.models.widget import Widget as WidgetModal
 from met_api.models.widget_item import WidgetItem as WidgetItemModal
-from met_api.models.email_verification import EmailVerification as EmailVerificationModel
-from met_api.models.user import User as UserModel
-from met_api.models.feedback import Feedback as FeedbackModel
-from tests.utilities.factory_scenarios import TestEngagementInfo, TestFeedbackInfo,\
-    TestSurveyInfo, TestUserInfo, TestWidgetInfo, TestWidgetItemInfo
+from tests.utilities.factory_scenarios import (
+    TestEngagementInfo, TestFeedbackInfo, TestSurveyInfo, TestUserInfo, TestWidgetInfo, TestWidgetItemInfo)
+
 
 CONFIG = get_named_config('testing')
 fake = Faker()

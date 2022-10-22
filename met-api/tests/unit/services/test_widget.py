@@ -18,10 +18,10 @@ Test suite to ensure that the Engagement service routines are working as expecte
 
 from faker import Faker
 
-from met_api.services.widget_service import WidgetService
-from tests.utilities.factory_scenarios import TestWidgetInfo, TestUserInfo
-from tests.utilities.factory_utils import factory_engagement_model, factory_widget_model
 from met_api.constants.widget import WidgetType
+from met_api.services.widget_service import WidgetService
+from tests.utilities.factory_scenarios import TestUserInfo, TestWidgetInfo
+from tests.utilities.factory_utils import factory_engagement_model, factory_widget_model
 
 
 fake = Faker()
@@ -65,12 +65,11 @@ def test_create_widget_items(session):  # pylint:disable=unused-argument
     widget_item_records = WidgetService()\
         .create_widget_items_bulk(
             [widget_item_to_create_1, widget_item_to_create_2],
-            widget.id, user_id
-        )
+            widget.id, user_id)
 
     # Assert that was created
     assert len(widget_item_records) == 2
     assert widget_item_records[0].get('widget_id') == widget_item_to_create_1.get('widget_id')
     assert widget_item_records[0].get('widget_data_id') == widget_item_to_create_1.get('widget_data_id')
-    assert widget_item_records[1].get('widget_id')  == widget_item_to_create_2.get('widget_id')
+    assert widget_item_records[1].get('widget_id') == widget_item_to_create_2.get('widget_id')
     assert widget_item_records[1].get('widget_data_id') == widget_item_to_create_2.get('widget_data_id')
