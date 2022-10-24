@@ -28,7 +28,7 @@ def upgrade():
         sa.column('updated_date', sa.DateTime))
 
     op.bulk_insert(engagement_status, [
-        {'id': 4, 'status_name': 'Scheduled', 'description': 'Scheduled to the published', 'created_date': datetime.utcnow(), 'updated_date': datetime.utcnow()}
+        {'id': 4, 'status_name': 'Scheduled', 'description': 'Scheduled to be published', 'created_date': datetime.utcnow(), 'updated_date': datetime.utcnow()}
     ])
 
 

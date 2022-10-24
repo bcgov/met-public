@@ -25,4 +25,4 @@ class MetEngagementPublish:  # pylint:disable=too-few-public-methods
         """Publish the scheduled engagements."""
         print('Starting Met Engagement Publish at------------------------', datetime.now())
 
-        EngagementService.close_engagements_due()
+        EngagementService.publish_scheduled_engagements()

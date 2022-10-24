@@ -71,7 +71,7 @@ class EngagementService:
 
     @staticmethod
     def publish_scheduled_engagements():
-        """Close published engagements that are due for a closeout."""
+        """Publish scheduled engagement due."""
         engagements = EngagementModel.publish_scheduled_engagements_due()
         print('Engagements published: ', engagements)
         return engagements
