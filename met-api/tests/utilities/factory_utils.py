@@ -142,7 +142,7 @@ def factory_auth_header(jwt, claims):
 def factory_widget_model(widget_info: dict = TestWidgetInfo.widget1):
     """Produce a widget model."""
     widget = WidgetModal(
-        widget_type_id=WidgetType.WHO_IS_LISTENING,
+        widget_type_id=WidgetType.WHO_IS_LISTENING.value,
         engagement_id=widget_info.get('engagement_id'),
         created_by=widget_info.get('created_by'),
         updated_by=widget_info.get('updated_by'),

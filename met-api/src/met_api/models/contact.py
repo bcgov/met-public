@@ -19,7 +19,7 @@ class Contact(db.Model):  # pylint: disable=too-few-public-methods
     title = db.Column(db.String(50))
     email = db.Column(db.String(50))
     phone_number = db.Column(db.String(50), nullable=True)
-    address = db.Column(db.String(50))
+    address = db.Column(db.String(150))
     bio = db.Column(db.String(500), comment='A biography or short biographical profile of someone.')
     created_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow, nullable=False)

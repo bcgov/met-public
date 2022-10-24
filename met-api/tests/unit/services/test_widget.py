@@ -35,14 +35,14 @@ def test_create_widget(session):  # pylint:disable=unused-argument
 
     widget_to_create = {
         'engagement_id': engagement.id,
-        'widget_type_id': WidgetType.WHO_IS_LISTENING
+        'widget_type_id': WidgetType.WHO_IS_LISTENING.value
     }
 
     widget_record = WidgetService().create_widget(widget_to_create, engagement.id, user_id)
 
     # Assert that was created
-    assert widget_record.engagement_id == widget_to_create.get('engagement_id')
-    assert widget_record.widget_type_id == widget_to_create.get('widget_type_id')
+    assert widget_record.get('engagement_id') == widget_to_create.get('engagement_id')
+    assert widget_record.get('widget_type_id') == widget_to_create.get('widget_type_id')
 
 
 def test_create_widget_items(session):  # pylint:disable=unused-argument

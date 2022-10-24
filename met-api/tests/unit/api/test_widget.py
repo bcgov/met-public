@@ -26,7 +26,7 @@ from tests.utilities.factory_utils import factory_auth_header, factory_engagemen
 
 @pytest.mark.parametrize('widget_info', [TestWidgetInfo.widget1])
 def test_create_widget(client, jwt, session, widget_info):  # pylint:disable=unused-argument
-    """Assert that an survey can be POSTed."""
+    """Assert that a widget can be POSTed."""
     engagement = factory_engagement_model()
     widget_info['engagement_id'] = engagement.id
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
@@ -37,7 +37,7 @@ def test_create_widget(client, jwt, session, widget_info):  # pylint:disable=unu
 
 @pytest.mark.parametrize('widget_item_info', [TestWidgetItemInfo.widget_item1])
 def test_create_widget_items(client, jwt, session, widget_item_info):  # pylint:disable=unused-argument
-    """Assert that an survey can be POSTed."""
+    """Assert that widget items can be POSTed."""
     engagement = factory_engagement_model()
     TestWidgetInfo.widget1['engagement_id'] = engagement.id
     widget = factory_widget_model(TestWidgetInfo.widget1)
