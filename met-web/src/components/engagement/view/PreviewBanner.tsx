@@ -10,11 +10,13 @@ import ImageIcon from '@mui/icons-material/Image';
 import PollIcon from '@mui/icons-material/Poll';
 import UnpublishedIcon from '@mui/icons-material/Unpublished';
 import IconButton from '@mui/material/IconButton';
+import ScheduleModal from 'components/common/Modals/Schedule';
 
 export const PreviewBanner = () => {
     const isSmallScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const [isOpen, setIsOpen] = useState(false);
     const { isEngagementLoading, savedEngagement, publishEngagement } = useContext(ActionContext);
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
@@ -23,23 +25,24 @@ export const PreviewBanner = () => {
     const imageExists = !!savedEngagement.banner_url;
 
     const handlePublishEngagement = async () => {
-        if (savedEngagement.surveys.length === 0) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Please add a survey to the engagement before publishing it',
-                }),
-            );
-            return;
-        }
-        setIsPublishing(true);
-        await publishEngagement({
-            ...savedEngagement,
-            status_id: EngagementStatus.Published,
-            published_date: new Date().toUTCString(),
-            surveys: [],
-        });
-        setIsPublishing(false);
+        setIsOpen(true);
+        // if (savedEngagement.surveys.length === 0) {
+        //     dispatch(
+        //         openNotification({
+        //             severity: 'error',
+        //             text: 'Please add a survey to the engagement before publishing it',
+        //         }),
+        //     );
+        //     return;
+        // }
+        // setIsPublishing(true);
+        // await publishEngagement({
+        //     ...savedEngagement,
+        //     status_id: EngagementStatus.Published,
+        //     published_date: new Date().toUTCString(),
+        //     surveys: [],
+        // });
+        // setIsPublishing(false);
     };
 
     const handleClosePreview = async () => {
@@ -61,8 +64,17 @@ export const PreviewBanner = () => {
             }}
         >
             <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start" padding={4}>
-                <Grid item container direction="row" xs={12}>
-                    <MetHeader1 sx={{ mb: 2 }}>Preview Engagement{!isDraft && ' - Published'}</MetHeader1>
+                <ScheduleModal
+                    reschedule={savedEngagement.start_date ? true : false}
+                    open={isOpen}
+                    updateModal={setIsOpen}
+                />
+                <Grid item container direction="row" xs={12} sx={{ pt: 2, mb: 2 }}>
+                    <MetHeader1 sx={{ mb: 2 }}>
+                        {savedEngagement.start_date
+                            ? 'Engagement scheduled - ' + new Date(savedEngagement.start_date).toDateString()
+                            : `Preview Engagement` + !isDraft && ' - Published'}
+                    </MetHeader1>
                     <ConditionalComponent condition={isDraft}>
                         <Grid item container direction="row" rowSpacing={isSmallScreen ? 2 : 0.5}>
                             <ConditionalComponent condition={!imageExists}>
@@ -113,7 +125,7 @@ export const PreviewBanner = () => {
                     </ConditionalComponent>
                 </Grid>
                 <Grid sx={{ pt: 2 }} item xs={12} container direction="row" justifyContent="flex-end" spacing={1}>
-                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
+                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-start">
                         <SecondaryButton
                             sx={{
                                 backgroundColor: 'background.paper',
@@ -130,12 +142,12 @@ export const PreviewBanner = () => {
                                 onClick={() => handlePublishEngagement()}
                                 loading={isPublishing}
                             >
-                                Publish
+                                Schedule Engagement
                             </PrimaryButton>
                         </ConditionalComponent>
                         <ConditionalComponent condition={!isDraft}>
-                            <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => handleClosePreview()}>
-                                Close Preview
+                            <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => handlePublishEngagement()}>
+                                Schedule Engagement
                             </PrimaryButton>
                         </ConditionalComponent>
                     </Stack>
