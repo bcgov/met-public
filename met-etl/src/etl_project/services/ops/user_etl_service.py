@@ -17,7 +17,7 @@ def extract_user_data() -> List[Dict[str, str]]:
                 'Y' as is_active,
                 email_id as name,
                 1 as runcycle_id
-            from public.user where id = 8
+            from public.user
             '''
         )
         user_data = curr.fetchall()
