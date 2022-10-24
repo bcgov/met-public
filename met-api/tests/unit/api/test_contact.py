@@ -20,7 +20,7 @@ import json
 
 import pytest
 
-from tests.utilities.factory_scenarios import TestJwtClaims, TestContactInfo
+from tests.utilities.factory_scenarios import TestContactInfo, TestJwtClaims
 from tests.utilities.factory_utils import factory_auth_header
 
 

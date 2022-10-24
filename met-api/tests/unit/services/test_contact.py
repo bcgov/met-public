@@ -28,7 +28,6 @@ date_format = '%Y-%m-%d'
 
 def test_create_contact(session):  # pylint:disable=unused-argument
     """Assert that a contact can be created."""
-
     contact_info = TestContactInfo.contact1
     user_id = TestUserInfo.user['id']
 
