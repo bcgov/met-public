@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Tests to verify the Widget API end-point.
+"""Tests to verify the Contact API end-point.
 
-Test-Suite to ensure that the Widget endpoint is working as expected.
+Test-Suite to ensure that the Contact endpoint is working as expected.
 """
 import json
 
