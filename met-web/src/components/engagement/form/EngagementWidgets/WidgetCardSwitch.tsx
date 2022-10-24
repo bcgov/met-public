@@ -13,7 +13,7 @@ export const WidgetCardSwitch = ({ widget }: WidgetCardSwitchProps) => {
                 <Case condition={widget.widget_type_id === WidgetType.WhoIsListening}>
                     <MetWidget
                         testId={`who-is-listening-${widget.widget_type_id}`}
-                        title="Who Is Listening"
+                        title="Who is Listening"
                         onDelete={() => {
                             /**/
                         }}
