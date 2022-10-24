@@ -69,6 +69,13 @@ class EngagementService:
         results = [EngagementService._send_closeout_emails(engagement) for engagement in engagements]
         return results
 
+    @staticmethod
+    def publish_scheduled_engagements():
+        """Publish scheduled engagement due."""
+        engagements = EngagementModel.publish_scheduled_engagements_due()
+        print('Engagements published: ', engagements)
+        return engagements
+
     def create_engagement(self, data: EngagementSchema):
         """Create engagement."""
         self.validate_fields(data)
