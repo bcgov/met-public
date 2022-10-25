@@ -22,7 +22,7 @@ export const PreviewBanner = () => {
     const [isPublishing, setIsPublishing] = useState(false);
     const imageExists = !!savedEngagement.banner_url;
     const isScheduled = savedEngagement.status_id === EngagementStatus.Scheduled;
-
+    const scheduledDate = new Date(savedEngagement.scheduled_date);
     if (!isLoggedIn) {
         return null;
     }
@@ -42,7 +42,7 @@ export const PreviewBanner = () => {
                 <Grid item container direction="row" xs={12} sx={{ pt: 2, mb: 2 }}>
                     <MetHeader1 sx={{ mb: 2 }}>
                         {isScheduled
-                            ? 'Engagement scheduled - ' + new Date(savedEngagement.scheduled_date).toDateString()
+                            ? 'Engagement scheduled - ' + new Date(scheduledDate).toDateString()
                             : `Preview Engagement` + !isDraft && ' - Published'}
                     </MetHeader1>
                     <ConditionalComponent condition={isDraft}>

@@ -13,7 +13,7 @@ export interface Engagement {
     user_id: string;
     created_date: string;
     updated_date: string;
-    scheduled_date: string | null;
+    scheduled_date: string;
     content: string;
     rich_content: string;
     banner_url: string;

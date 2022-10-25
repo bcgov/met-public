@@ -25,7 +25,6 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
 
     const handleChange = (newDate: Dayjs | null) => {
         if (newDate != null) {
-            console.log('DATE DATA::::' + newDate.format('DD-MM-YYYY HH:mm:ss'));
             setScheduledDate(newDate);
         }
     };
