@@ -45,7 +45,7 @@ const mockEngagementTwo = {
     name: 'Engagement Two',
     engagement_status: {
         id: EngagementStatus.Published,
-        status_name: 'Published/Open',
+        status_name: 'Open',
     },
     created_date: '2022-09-15 00:00:00',
     published_date: '2022-09-19 00:00:00',
@@ -94,7 +94,7 @@ describe('Engagement form page tests', () => {
 
             expect(screen.getByText('Engagement Two')).toBeInTheDocument();
             expect(screen.getByText('2022-09-15')).toBeInTheDocument();
-            expect(screen.getByText('Published/Open')).toBeInTheDocument();
+            expect(screen.getByText('Open')).toBeInTheDocument();
             expect(screen.getByText('2022-09-19')).toBeInTheDocument();
             expect(screen.getByText('View Survey')).toBeInTheDocument();
             expect(screen.getByText('View Report')).toBeInTheDocument();
