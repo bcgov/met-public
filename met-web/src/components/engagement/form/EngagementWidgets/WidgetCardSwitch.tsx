@@ -1,10 +1,10 @@
-import { WidgetsList, WidgetType } from 'models/widget';
+import { Widget, WidgetType } from 'models/widget';
 import React from 'react';
 import { Switch, Case } from 'react-if';
 import MetWidget from './MetWidget';
 
 interface WidgetCardSwitchProps {
-    widget: WidgetsList;
+    widget: Widget;
 }
 export const WidgetCardSwitch = ({ widget }: WidgetCardSwitchProps) => {
     return (
@@ -13,7 +13,7 @@ export const WidgetCardSwitch = ({ widget }: WidgetCardSwitchProps) => {
                 <Case condition={widget.widget_type_id === WidgetType.WhoIsListening}>
                     <MetWidget
                         testId={`who-is-listening-${widget.widget_type_id}`}
-                        title="Who Is Listening"
+                        title="Who is Listening"
                         onDelete={() => {
                             /**/
                         }}

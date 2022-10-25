@@ -34,7 +34,7 @@ const WhoIsListeningOptionCard = () => {
             dispatch(
                 openNotification({
                     severity: 'success',
-                    text: 'Widget successfully created, you may proceed to add contacts',
+                    text: 'Widget successfully created. Proceed to Add Contacts.',
                 }),
             );
             handleWidgetDrawerTabValueChange(WidgetTabValues.WHO_IS_LISTENING_FORM);
@@ -48,8 +48,13 @@ const WhoIsListeningOptionCard = () => {
 
     return (
         <MetPaper
+            data-testid={`widget-drawer-option/${WidgetType.WhoIsListening}`}
             elevation={1}
-            sx={{ padding: '1px 2px 1px 2px', cursor: 'pointer', '&:hover': { backgroundColor: 'rgb(242, 242, 242)' } }}
+            sx={{
+                padding: '10px 2px 10px 2px',
+                cursor: 'pointer',
+                '&:hover': { backgroundColor: 'rgb(242, 242, 242)' },
+            }}
             onClick={() => createWidget()}
         >
             <If condition={creatingWidget}>
@@ -65,7 +70,7 @@ const WhoIsListeningOptionCard = () => {
                         justifyContent="flex-start"
                         direction="row"
                         columnSpacing={2}
-                        height="5.5em"
+                        spacing={1}
                     >
                         <Grid item>
                             <PersonIcon sx={{ fontSize: '5em' }} />
@@ -80,7 +85,7 @@ const WhoIsListeningOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetHeader4>Who Is Listening</MetHeader4>
+                                <MetHeader4>Who is Listening</MetHeader4>
                             </Grid>
                             <Grid item xs={12}>
                                 <MetBody>Add one or a few contacts to this engagement</MetBody>
