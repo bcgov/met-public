@@ -1,14 +1,20 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getEngagement, putEngagement } from '../../../services/engagementService';
+import { getEngagement, patchEngagement } from '../../../services/engagementService';
 import { createDefaultEngagement, Engagement } from '../../../models/engagement';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
+interface EngagementSchedule {
+    id: number;
+    status_id: number;
+    scheduled_date: string;
+}
+
 export interface EngagementViewContext {
     savedEngagement: Engagement;
     isEngagementLoading: boolean;
-    scheduleEngagement: (_engagement: Engagement) => Promise<Engagement>;
+    scheduleEngagement: (_engagement: EngagementSchedule) => Promise<Engagement>;
 }
 
 export type EngagementParams = {
@@ -16,7 +22,7 @@ export type EngagementParams = {
 };
 
 export const ActionContext = createContext<EngagementViewContext>({
-    scheduleEngagement: (_engagement: Engagement): Promise<Engagement> => {
+    scheduleEngagement: (_engagement: EngagementSchedule): Promise<Engagement> => {
         return Promise.reject();
     },
     savedEngagement: createDefaultEngagement(),
@@ -31,9 +37,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
     const [isEngagementLoading, setEngagementLoading] = useState(true);
 
-    const scheduleEngagement = async (engagement: Engagement): Promise<Engagement> => {
+    const scheduleEngagement = async (engagement: EngagementSchedule): Promise<Engagement> => {
         try {
-            const updateResult = await putEngagement(engagement);
+            const updateResult = await patchEngagement(engagement);
             const getResult = await getEngagement(Number(engagementId));
             setSavedEngagement({ ...getResult });
             setEngagementLoading(false);
