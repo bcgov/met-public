@@ -10,6 +10,7 @@ export interface Engagement {
     start_date: string;
     end_date: string;
     published_date: string | null;
+    scheduled_date: string;
     user_id: string;
     created_date: string;
     updated_date: string;
@@ -33,6 +34,7 @@ export const createDefaultEngagement = (): Engagement => {
         start_date: '',
         end_date: '',
         published_date: '',
+        scheduled_date: '',
         user_id: '',
         created_date: '',
         updated_date: '',

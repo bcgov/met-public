@@ -2,6 +2,7 @@ export enum EngagementStatus {
     Draft = 1,
     Published = 2,
     Closed = 3,
+    Scheduled = 4,
 }
 
 export enum SubmissionStatus {
