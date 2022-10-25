@@ -19,7 +19,6 @@ export const PreviewBanner = () => {
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
     const engagementId = savedEngagement.id || '';
-    const [isPublishing, setIsPublishing] = useState(false);
     const imageExists = !!savedEngagement.banner_url;
     const isScheduled = savedEngagement.status_id === EngagementStatus.Scheduled;
     const engagementBannerText = isScheduled
@@ -105,11 +104,7 @@ export const PreviewBanner = () => {
                         </SecondaryButton>
 
                         <ConditionalComponent condition={!isScheduled}>
-                            <PrimaryButton
-                                sx={{ marginLeft: '1em' }}
-                                onClick={() => setIsOpen(true)}
-                                loading={isPublishing}
-                            >
+                            <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => setIsOpen(true)}>
                                 Schedule Engagement
                             </PrimaryButton>
                         </ConditionalComponent>
