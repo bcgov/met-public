@@ -44,7 +44,6 @@ class EngagementSchema(Schema):
     updated_by = fields.Str(data_key='updated_by')
     updated_date = fields.Str(data_key='updated_date')
     published_date = fields.Str(data_key='published_date')
-    scheduled_date = fields.Str(data_key='scheduled_date')
     content = fields.Str(
         data_key='content',
         required=True,
