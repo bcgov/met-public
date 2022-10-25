@@ -1,7 +1,7 @@
 """alter engagement add scheduled
 
 Revision ID: c19bc1af9f2b
-Revises: 6ce7831704cb
+Revises: 2aa7554dde59
 Create Date: 2022-10-21 11:43:06.798995
 
 """
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = 'c19bc1af9f2b'
-down_revision = '6ce7831704cb'
+down_revision = '2aa7554dde59'
 branch_labels = None
 depends_on = None
 
