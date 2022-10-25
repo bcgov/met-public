@@ -13,6 +13,7 @@ export interface Engagement {
     user_id: string;
     created_date: string;
     updated_date: string;
+    scheduled_date: string;
     content: string;
     rich_content: string;
     banner_url: string;
@@ -33,6 +34,7 @@ export const createDefaultEngagement = (): Engagement => {
         start_date: '',
         end_date: '',
         published_date: '',
+        scheduled_date: '',
         user_id: '',
         created_date: '',
         updated_date: '',
