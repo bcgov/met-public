@@ -98,23 +98,6 @@ const EngagementListing = () => {
             getValue: (row: Engagement) => formatDate(row.created_date),
         },
         {
-            key: 'status_id',
-            numeric: true,
-            disablePadding: false,
-            label: 'Status',
-            allowSort: true,
-            getValue: (row: Engagement) => {
-                const acceptable_status = [
-                    EngagementStatus[EngagementStatus.Published],
-                    EngagementStatus[EngagementStatus.Closed],
-                ];
-                if (acceptable_status.includes(row.engagement_status.status_name)) {
-                    return `${EngagementStatus[EngagementStatus.Published]}/${SubmissionStatus[row.submission_status]}`;
-                }
-                return row.engagement_status.status_name;
-            },
-        },
-        {
             key: 'published_date',
             numeric: true,
             disablePadding: false,
@@ -125,6 +108,31 @@ const EngagementListing = () => {
                     return '';
                 }
                 return formatDate(row.published_date);
+            },
+        },
+        {
+            key: 'status_id',
+            numeric: true,
+            disablePadding: false,
+            label: 'Status',
+            allowSort: true,
+            getValue: (row: Engagement) => {
+                const acceptable_status = [
+                    SubmissionStatus[SubmissionStatus.Open],
+                    SubmissionStatus[SubmissionStatus.Closed],
+                ];
+                if (row.engagement_status.status_name === EngagementStatus[EngagementStatus.Published]) {
+                    if (acceptable_status.includes(SubmissionStatus[row.submission_status])) {
+                        return SubmissionStatus[row.submission_status];
+                    } else {
+                        return (
+                            EngagementStatus[EngagementStatus.Published] +
+                            ' - ' +
+                            SubmissionStatus[row.submission_status]
+                        );
+                    }
+                }
+                return row.engagement_status.status_name;
             },
         },
         {
