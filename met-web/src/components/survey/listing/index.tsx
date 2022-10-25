@@ -103,6 +103,37 @@ const SurveyListing = () => {
         },
         {
             key: 'engagement',
+            nestedSortKey: 'engagement.status_id',
+            numeric: true,
+            disablePadding: false,
+            label: 'Status',
+            allowSort: true,
+            getValue: (row: Survey) => {
+                const acceptable_status = [
+                    SubmissionStatus[SubmissionStatus.Open],
+                    SubmissionStatus[SubmissionStatus.Closed],
+                ];
+                if (
+                    row.engagement &&
+                    row.engagement.engagement_status.status_name === EngagementStatus[EngagementStatus.Published]
+                ) {
+                    if (acceptable_status.includes(SubmissionStatus[row.engagement.submission_status])) {
+                        return SubmissionStatus[row.engagement.submission_status];
+                    } else {
+                        return (
+                            EngagementStatus[EngagementStatus.Published].toString() +
+                            ' - ' +
+                            SubmissionStatus[row.engagement.submission_status]
+                        );
+                    }
+                }
+                return (
+                    row.engagement?.engagement_status.status_name || EngagementStatus[EngagementStatus.Draft].toString()
+                );
+            },
+        },
+        {
+            key: 'engagement',
             nestedSortKey: 'engagement.name',
             numeric: true,
             disablePadding: false,
@@ -137,30 +168,6 @@ const SurveyListing = () => {
                         {`${total}`}
                         {pending ? ` (${pending} New)` : ''}
                     </MuiLink>
-                );
-            },
-        },
-        {
-            key: 'engagement',
-            nestedSortKey: 'engagement.status_id',
-            numeric: true,
-            disablePadding: false,
-            label: 'Status',
-            allowSort: true,
-            getValue: (row: Survey) => {
-                const acceptable_status = [
-                    EngagementStatus[EngagementStatus.Published],
-                    EngagementStatus[EngagementStatus.Closed],
-                ];
-                if (row.engagement && acceptable_status.includes(row.engagement.engagement_status.status_name)) {
-                    return (
-                        EngagementStatus[EngagementStatus.Published].toString() +
-                        '/' +
-                        SubmissionStatus[row.engagement.submission_status]
-                    );
-                }
-                return (
-                    row.engagement?.engagement_status.status_name || EngagementStatus[EngagementStatus.Draft].toString()
                 );
             },
         },
