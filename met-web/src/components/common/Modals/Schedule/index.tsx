@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Grid, Stack, useMediaQuery, Theme, TextField, Modal } from '@mui/material';
 import { modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody, MetLabel } from 'components/common';
 import dayjs, { Dayjs } from 'dayjs';
-import { useAppDispatch, useAppSelector } from 'hooks';
+import { useAppDispatch } from 'hooks';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
@@ -20,7 +20,7 @@ interface ScheduleModalProps {
 const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) => {
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const [scheduledDate, setScheduledDate] = useState<Dayjs | null>(dayjs('2014-08-18T21:11:54'));
-    const { savedEngagement, publishEngagement } = useContext(ActionContext);
+    const { savedEngagement, scheduleEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
 
     const handleChange = (newDate: Dayjs | null) => {
@@ -35,17 +35,18 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
             dispatch(
                 openNotification({
                     severity: 'error',
-                    text: 'Please add a survey to the engagement before publishing it',
+                    text: 'Please add a survey to the engagement before scheduling it',
                 }),
             );
             return;
         }
-        await publishEngagement({
-            ...savedEngagement,
-            scheduled_date: scheduledDate.format('DD-MM-YYYY HH:mm:ss'),
-            status_id: EngagementStatus.Scheduled,
-            surveys: [],
-        });
+        if (scheduledDate)
+            await scheduleEngagement({
+                ...savedEngagement,
+                scheduled_date: scheduledDate.format('DD-MM-YYYY HH:mm:ss'),
+                status_id: EngagementStatus.Scheduled,
+                surveys: [],
+            });
         updateModal(false);
     };
 

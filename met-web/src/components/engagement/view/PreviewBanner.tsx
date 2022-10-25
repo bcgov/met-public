@@ -4,8 +4,7 @@ import { Box, Grid, Skeleton, Stack, useMediaQuery, Theme } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { ConditionalComponent, MetHeader1, PrimaryButton, SecondaryButton, MetBody } from 'components/common';
-import { useAppDispatch, useAppSelector } from 'hooks';
-import { openNotification } from 'services/notificationService/notificationSlice';
+import { useAppSelector } from 'hooks';
 import ImageIcon from '@mui/icons-material/Image';
 import PollIcon from '@mui/icons-material/Poll';
 import UnpublishedIcon from '@mui/icons-material/Unpublished';
@@ -15,18 +14,14 @@ import ScheduleModal from 'components/common/Modals/Schedule';
 export const PreviewBanner = () => {
     const isSmallScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const navigate = useNavigate();
-    const dispatch = useAppDispatch();
     const [isOpen, setIsOpen] = useState(false);
-    const { isEngagementLoading, savedEngagement, publishEngagement } = useContext(ActionContext);
+    const { isEngagementLoading, savedEngagement } = useContext(ActionContext);
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
     const engagementId = savedEngagement.id || '';
     const [isPublishing, setIsPublishing] = useState(false);
     const imageExists = !!savedEngagement.banner_url;
-
-    const handleClosePreview = async () => {
-        navigate(`/`);
-    };
+    const isScheduled = savedEngagement.status_id === EngagementStatus.Scheduled;
 
     if (!isLoggedIn) {
         return null;
@@ -43,14 +38,10 @@ export const PreviewBanner = () => {
             }}
         >
             <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start" padding={4}>
-                <ScheduleModal
-                    reschedule={savedEngagement.scheduled_date ? true : false}
-                    open={isOpen}
-                    updateModal={setIsOpen}
-                />
+                <ScheduleModal reschedule={isScheduled ? true : false} open={isOpen} updateModal={setIsOpen} />
                 <Grid item container direction="row" xs={12} sx={{ pt: 2, mb: 2 }}>
                     <MetHeader1 sx={{ mb: 2 }}>
-                        {savedEngagement.start_date
+                        {isScheduled
                             ? 'Engagement scheduled - ' + new Date(savedEngagement.scheduled_date).toDateString()
                             : `Preview Engagement` + !isDraft && ' - Published'}
                     </MetHeader1>
@@ -97,7 +88,7 @@ export const PreviewBanner = () => {
                                     </IconButton>
                                 </Grid>
                                 <Grid item xs={10} sm={10}>
-                                    <MetBody>Please publish the engagement when ready.</MetBody>
+                                    <MetBody>Please schedule the engagement when ready.</MetBody>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -115,7 +106,7 @@ export const PreviewBanner = () => {
                             Edit Engagement
                         </SecondaryButton>
 
-                        <ConditionalComponent condition={!savedEngagement.scheduled_date}>
+                        <ConditionalComponent condition={!isScheduled}>
                             <PrimaryButton
                                 sx={{ marginLeft: '1em' }}
                                 onClick={() => setIsOpen(true)}
@@ -124,7 +115,7 @@ export const PreviewBanner = () => {
                                 Schedule Engagement
                             </PrimaryButton>
                         </ConditionalComponent>
-                        <ConditionalComponent condition={!!savedEngagement.scheduled_date}>
+                        <ConditionalComponent condition={isScheduled}>
                             <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => setIsOpen(true)}>
                                 Reschedule Engagement
                             </PrimaryButton>

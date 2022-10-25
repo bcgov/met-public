@@ -8,7 +8,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 export interface EngagementViewContext {
     savedEngagement: Engagement;
     isEngagementLoading: boolean;
-    publishEngagement: (_engagement: Engagement) => Promise<Engagement>;
+    scheduleEngagement: (_engagement: Engagement) => Promise<Engagement>;
 }
 
 export type EngagementParams = {
@@ -16,7 +16,7 @@ export type EngagementParams = {
 };
 
 export const ActionContext = createContext<EngagementViewContext>({
-    publishEngagement: (_engagement: Engagement): Promise<Engagement> => {
+    scheduleEngagement: (_engagement: Engagement): Promise<Engagement> => {
         return Promise.reject();
     },
     savedEngagement: createDefaultEngagement(),
@@ -31,7 +31,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
     const [isEngagementLoading, setEngagementLoading] = useState(true);
 
-    const publishEngagement = async (engagement: Engagement): Promise<Engagement> => {
+    const scheduleEngagement = async (engagement: Engagement): Promise<Engagement> => {
         try {
             const updateResult = await putEngagement(engagement);
             const getResult = await getEngagement(Number(engagementId));
@@ -74,7 +74,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
             value={{
                 savedEngagement,
                 isEngagementLoading,
-                publishEngagement,
+                scheduleEngagement,
             }}
         >
             {children}
