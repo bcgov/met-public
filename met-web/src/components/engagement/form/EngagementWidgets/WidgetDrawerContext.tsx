@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { useAppDispatch } from 'hooks';
-import { WidgetsList } from 'models/widget';
+import { Widget } from 'models/widget';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getWidgets } from 'services/widgetService';
 import { ActionContext } from '../ActionContext';
@@ -9,7 +9,7 @@ import { Contact } from 'models/contact';
 import { WidgetTabValues } from './type';
 
 export interface WidgetDrawerContextProps {
-    widgets: WidgetsList[];
+    widgets: Widget[];
     widgetDrawerOpen: boolean;
     handleWidgetDrawerOpen: (_open: boolean) => void;
     widgetDrawerTabValue: string;
@@ -54,7 +54,7 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
 
-    const [widgets, setWidgets] = useState<WidgetsList[]>([]);
+    const [widgets, setWidgets] = useState<Widget[]>([]);
     const [isWidgetsLoading, setIsWidgetsLoading] = useState(true);
     const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
     const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState(WidgetTabValues.WIDGET_OPTIONS);
