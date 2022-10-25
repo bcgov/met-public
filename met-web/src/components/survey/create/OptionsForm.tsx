@@ -1,5 +1,15 @@
 import React, { useContext } from 'react';
-import { Divider, FormControl, FormControlLabel, FormLabel, Grid, RadioGroup, Stack, Radio } from '@mui/material';
+import {
+    Divider,
+    FormControl,
+    FormControlLabel,
+    FormLabel,
+    Grid,
+    RadioGroup,
+    Stack,
+    Typography,
+    Radio,
+} from '@mui/material';
 import {
     ConditionalComponent,
     MetPageGridContainer,
@@ -7,7 +17,6 @@ import {
     SecondaryButton,
     MetHeader3,
 } from 'components/common';
-import CloneOptions from './CloneOptions';
 import { CreateOptions } from './CreateOptions';
 import { useNavigate } from 'react-router-dom';
 import { Palette } from 'styles/Theme';
@@ -53,7 +62,12 @@ const OptionsForm = () => {
                         onChange={handleChange}
                     >
                         <FormControlLabel value="CREATE" control={<Radio />} label="Create a new Survey" />
-                        <FormControlLabel value="CLONE" control={<Radio />} label="Clone an existing Survey" />
+                        <FormControlLabel
+                            value="CLONE"
+                            control={<Radio />}
+                            label="Clone an existing Survey"
+                            disabled={true}
+                        />
                         <ConditionalComponent condition={!!engagementToLink}>
                             <FormControlLabel
                                 value="LINK"
@@ -71,7 +85,7 @@ const OptionsForm = () => {
 
             <ConditionalComponent condition={value === 'CLONE'}>
                 <Grid item xs={12}>
-                    <CloneOptions />
+                    <Typography>This is where clone options would go</Typography>
                 </Grid>
             </ConditionalComponent>
 

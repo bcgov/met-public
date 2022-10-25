@@ -20,17 +20,12 @@ from faker import Faker
 from met_api import db
 from met_api.config import get_named_config
 from met_api.constants.engagement_status import Status
-from met_api.constants.widget import WidgetType
-from met_api.models.email_verification import EmailVerification as EmailVerificationModel
 from met_api.models.engagement import Engagement as EngagementModel
-from met_api.models.feedback import Feedback as FeedbackModel
 from met_api.models.survey import Survey as SurveyModel
+from met_api.models.email_verification import EmailVerification as EmailVerificationModel
 from met_api.models.user import User as UserModel
-from met_api.models.widget import Widget as WidgetModal
-from met_api.models.widget_item import WidgetItem as WidgetItemModal
-from tests.utilities.factory_scenarios import (
-    TestEngagementInfo, TestFeedbackInfo, TestSurveyInfo, TestUserInfo, TestWidgetInfo, TestWidgetItemInfo)
-
+from met_api.models.feedback import Feedback as FeedbackModel
+from tests.utilities.factory_scenarios import TestEngagementInfo, TestFeedbackInfo, TestSurveyInfo, TestUserInfo
 
 CONFIG = get_named_config('testing')
 fake = Faker()
@@ -137,33 +132,3 @@ def factory_feedback_model(feedback_info: dict = TestFeedbackInfo.feedback1, sta
 def factory_auth_header(jwt, claims):
     """Produce JWT tokens for use in tests."""
     return {'Authorization': 'Bearer ' + jwt.create_jwt(claims=claims, header=JWT_HEADER)}
-
-
-def factory_widget_model(widget_info: dict = TestWidgetInfo.widget1):
-    """Produce a widget model."""
-    widget = WidgetModal(
-        widget_type_id=WidgetType.WHO_IS_LISTENING.value,
-        engagement_id=widget_info.get('engagement_id'),
-        created_by=widget_info.get('created_by'),
-        updated_by=widget_info.get('updated_by'),
-        created_date=widget_info.get('created_date'),
-        updated_date=widget_info.get('updated_date'),
-    )
-    db.session.add(widget)
-    db.session.commit()
-    return widget
-
-
-def factory_widget_item_model(widget_info: dict = TestWidgetItemInfo.widget_item1):
-    """Produce a widget model."""
-    widget = WidgetItemModal(
-        widget_id=widget_info.get('widget_id'),
-        widget_data_id=widget_info.get('widget_data_id'),
-        created_by=widget_info.get('created_by'),
-        updated_by=widget_info.get('updated_by'),
-        created_date=widget_info.get('created_date'),
-        updated_date=widget_info.get('updated_date'),
-    )
-    db.session.add(widget)
-    db.session.commit()
-    return widget

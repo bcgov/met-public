@@ -10,22 +10,20 @@ import * as widgetService from 'services/widgetService';
 import * as contactService from 'services/contactService';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
-import { createDefaultSurvey, Survey } from 'models/survey';
-import { createDefaultEngagement, Engagement } from 'models/engagement';
+import { createDefaultSurvey } from 'models/survey';
+import { createDefaultEngagement } from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
-import { Widget, WidgetItem, WidgetType } from 'models/widget';
-import { Contact } from 'models/contact';
 
-const survey: Survey = {
+const mockSurvey = {
     ...createDefaultSurvey(),
     id: 1,
     name: 'Survey 1',
     engagement_id: 1,
 };
 
-const surveys = [survey];
+const mockSurveys = [mockSurvey];
 
-const engagement: Engagement = {
+const mockEngagement = {
     ...createDefaultEngagement(),
     id: 1,
     name: 'Test Engagement',
@@ -38,34 +36,11 @@ const engagement: Engagement = {
     description: 'Test description',
     start_date: '2022-09-01',
     end_date: '2022-09-30',
-    surveys: surveys,
+    surveys: mockSurveys,
     engagement_status: {
         id: EngagementStatus.Draft,
         status_name: 'Draft',
     },
-};
-
-const mockContact: Contact = {
-    id: 1,
-    name: 'Jace',
-    title: 'prince',
-    phone_number: '123-123-1234',
-    email: 'jace@gmail.com',
-    address: 'Dragonstone, Westeros',
-    bio: 'Jacaerys Targaryen is the son and heir of Rhaenyra Targaryen',
-};
-
-const widgetItem: WidgetItem = {
-    id: 1,
-    widget_id: 1,
-    widget_data_id: 1,
-};
-
-const widget: Widget = {
-    id: 1,
-    widget_type_id: WidgetType.WhoIsListening,
-    engagement_id: 1,
-    items: [widgetItem],
 };
 
 describe('Engagement form page tests', () => {
@@ -79,16 +54,15 @@ describe('Engagement form page tests', () => {
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
-        .mockReturnValue(Promise.resolve(engagement));
+        .mockReturnValue(Promise.resolve(mockEngagement));
     const patchEngagementMock = jest
         .spyOn(engagementService, 'patchEngagement')
-        .mockReturnValue(Promise.resolve(engagement));
+        .mockReturnValue(Promise.resolve(mockEngagement));
     const postEngagementMock = jest
         .spyOn(engagementService, 'postEngagement')
-        .mockReturnValue(Promise.resolve(engagement));
-    const getContactsMock = jest.spyOn(contactService, 'getContacts').mockReturnValue(Promise.resolve([mockContact]));
-    const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([widget]));
-    const postWidgetMock = jest.spyOn(widgetService, 'postWidget').mockReturnValue(Promise.resolve(widget));
+        .mockReturnValue(Promise.resolve(mockEngagement));
+    jest.spyOn(contactService, 'getContacts').mockReturnValue(Promise.resolve([]));
+    jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([]));
 
     beforeEach(() => {
         setupEnv();
@@ -186,7 +160,7 @@ describe('Engagement form page tests', () => {
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
 
-        const removeSurveyButton = screen.getByTestId(`survey-widget/remove-${survey.id}`);
+        const removeSurveyButton = screen.getByTestId(`survey-widget/remove-${mockSurvey.id}`);
 
         fireEvent.click(removeSurveyButton);
 
@@ -197,8 +171,8 @@ describe('Engagement form page tests', () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
-                ...engagement,
-                surveys: surveys,
+                ...mockEngagement,
+                surveys: mockSurveys,
             }),
         );
         const { container } = render(<EngagementForm />);
@@ -215,8 +189,8 @@ describe('Engagement form page tests', () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
-                ...engagement,
-                surveys: surveys,
+                ...mockEngagement,
+                surveys: mockSurveys,
             }),
         );
         const { container } = render(<EngagementForm />);
@@ -238,14 +212,14 @@ describe('Engagement form page tests', () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
-                ...engagement,
-                surveys: surveys,
+                ...mockEngagement,
+                surveys: mockSurveys,
             }),
         );
 
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
-                ...engagement,
+                ...mockEngagement,
                 surveys: [],
             }),
         );
@@ -259,138 +233,12 @@ describe('Engagement form page tests', () => {
 
         expect(screen.getByText('Survey 1')).toBeInTheDocument();
 
-        const removeSurveyButton = screen.getByTestId(`survey-widget/remove-${survey.id}`);
+        const removeSurveyButton = screen.getByTestId(`survey-widget/remove-${mockSurvey.id}`);
 
         fireEvent.click(removeSurveyButton);
 
         await waitFor(() => {
             expect(openNotificationModalMock).toHaveBeenCalledOnce();
-        });
-    });
-
-    test('Widget block appears', async () => {
-        useParamsMock.mockReturnValue({ engagementId: '1' });
-        getEngagementMock.mockReturnValueOnce(
-            Promise.resolve({
-                ...engagement,
-                surveys: surveys,
-            }),
-        );
-        const { container } = render(<EngagementForm />);
-
-        await waitFor(() => {
-            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-        });
-
-        expect(screen.getByText('Add Widget')).toBeVisible();
-        expect(screen.getByText('Who is Listening')).toBeVisible();
-        expect(getContactsMock).toHaveBeenCalled();
-        expect(getWidgetsMock).toHaveBeenCalled();
-    });
-
-    test('Widget drawer appears', async () => {
-        useParamsMock.mockReturnValue({ engagementId: '1' });
-        getEngagementMock.mockReturnValueOnce(
-            Promise.resolve({
-                ...engagement,
-                surveys: surveys,
-            }),
-        );
-        getWidgetsMock.mockReturnValue(Promise.resolve([]));
-        const { container } = render(<EngagementForm />);
-
-        await waitFor(() => {
-            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-        });
-
-        const addWidgetButton = screen.getByText('Add Widget');
-        fireEvent.click(addWidgetButton);
-
-        await waitFor(() => {
-            expect(screen.getByText('Select Widget')).toBeVisible();
-            expect(screen.getByTestId(`widget-drawer-option/${WidgetType.WhoIsListening}`));
-        });
-    });
-
-    test('Who is listening widget is created when option is clicked', async () => {
-        useParamsMock.mockReturnValue({ engagementId: '1' });
-        getEngagementMock.mockReturnValueOnce(
-            Promise.resolve({
-                ...engagement,
-                surveys: surveys,
-            }),
-        );
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
-        postWidgetMock.mockReturnValue(Promise.resolve(widget));
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([widget]));
-        const { container } = render(<EngagementForm />);
-
-        await waitFor(() => {
-            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-        });
-
-        const addWidgetButton = screen.getByText('Add Widget');
-        fireEvent.click(addWidgetButton);
-
-        await waitFor(() => {
-            expect(screen.getByText('Select Widget')).toBeVisible();
-        });
-
-        const whoIsListeningOption = screen.getByTestId(`widget-drawer-option/${WidgetType.WhoIsListening}`);
-        fireEvent.click(whoIsListeningOption);
-
-        await waitFor(() => {
-            expect(screen.getByText('Add This Contact')).toBeVisible();
-        });
-        expect(postWidgetMock).toHaveBeenNthCalledWith(1, engagement.id, {
-            widget_type_id: WidgetType.WhoIsListening,
-            engagement_id: engagement.id,
-        });
-        expect(getWidgetsMock).toHaveBeenCalledTimes(2);
-        expect(screen.getByText('Add This Contact')).toBeVisible();
-        expect(screen.getByText('Select Existing Contact')).toBeVisible();
-    });
-
-    test('Add contact drawer appears', async () => {
-        useParamsMock.mockReturnValue({ engagementId: '1' });
-        getEngagementMock.mockReturnValueOnce(
-            Promise.resolve({
-                ...engagement,
-                surveys: surveys,
-            }),
-        );
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
-        postWidgetMock.mockReturnValue(Promise.resolve(widget));
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([widget]));
-        const { container } = render(<EngagementForm />);
-
-        await waitFor(() => {
-            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-        });
-
-        const addWidgetButton = screen.getByText('Add Widget');
-        fireEvent.click(addWidgetButton);
-
-        await waitFor(() => {
-            expect(screen.getByText('Select Widget')).toBeVisible();
-        });
-
-        const whoIsListeningOption = screen.getByTestId(`widget-drawer-option/${WidgetType.WhoIsListening}`);
-        fireEvent.click(whoIsListeningOption);
-
-        await waitFor(() => {
-            expect(screen.getByText('Add This Contact')).toBeVisible();
-        });
-
-        const createContactButton = screen.getByText('Create New Contact');
-        fireEvent.click(createContactButton);
-
-        await waitFor(() => {
-            expect(screen.getByText('Add Contact')).toBeVisible();
         });
     });
 });

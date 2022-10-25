@@ -1,4 +1,0 @@
-dagster
-dagit
-dagster-docker
-python-dotenv==0.20.0

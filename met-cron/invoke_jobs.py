@@ -60,7 +60,6 @@ def register_shellcontext(app):
 def run(job_name):
     from tasks.met_extractor import MetExtractor
     from tasks.met_closeout import MetEngagementCloseout
-    from tasks.met_publish import MetEngagementPublish
     application = create_app()
 
     application.app_context().push()
@@ -72,9 +71,6 @@ def run(job_name):
     elif job_name == 'ENGAGEMENT_CLOSEOUT':
         MetEngagementCloseout.do_closeout()
         application.logger.info(f'<<<< Completed MET Engagement Closeout >>>>')
-    elif job_name == 'ENGAGEMENT_PUBLISH':
-        MetEngagementPublish.do_publish()
-        application.logger.info(f'<<<< Completed MET Engagement Publish >>>>')
     else:
         application.logger.debug('No valid args passed.Exiting job without running any ***************')
 

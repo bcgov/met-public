@@ -129,11 +129,8 @@ run: ## Run the project in local
 run_etl: ## Run the etl task in local
 	. venv/bin/activate && python invoke_jobs.py EXTRACT_MET
 
-run_closeout: ## Run the closeout task in local
+run_closeout: ## Run the etl task in local
 	. venv/bin/activate && python invoke_jobs.py ENGAGEMENT_CLOSEOUT
-
-run_publish: ## Run the publish task in local
-	. venv/bin/activate && python invoke_jobs.py ENGAGEMENT_Publish
 
 db: ## Update the local database
 	. venv/bin/activate && python manage.py db upgrade

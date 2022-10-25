@@ -13,8 +13,6 @@ interface CreateSurveyContextValues {
     loading: boolean;
     availableSurveys: Survey[] | null;
     setAvailableSurveys: (surveys: Survey[]) => void;
-    availableEngagements: Engagement[] | null;
-    setAvailableEngagements: (engagements: Engagement[]) => void;
 }
 
 const initialSurveyForm = {
@@ -31,10 +29,6 @@ export const CreateSurveyContext = createContext<CreateSurveyContextValues>({
     setAvailableSurveys: (_surveys: Survey[]) => {
         //empty method
     },
-    availableEngagements: null,
-    setAvailableEngagements: (_engagements: Engagement[]) => {
-        //empty method
-    },
 });
 
 interface SurveyForm {
@@ -49,7 +43,7 @@ export const CreateSurveyContextProvider = ({ children }: { children: JSX.Elemen
     const [loading, setLoading] = useState(true);
     const [engagementToLink, setEngagementToLink] = useState<Engagement | null>(null);
     const [availableSurveys, setAvailableSurveys] = useState<Survey[] | null>(null);
-    const [availableEngagements, setAvailableEngagements] = useState<Engagement[] | null>(null);
+
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const engagementId = searchParams.get('engagementId');
@@ -96,8 +90,6 @@ export const CreateSurveyContextProvider = ({ children }: { children: JSX.Elemen
                 loading,
                 availableSurveys,
                 setAvailableSurveys,
-                setAvailableEngagements,
-                availableEngagements,
             }}
         >
             {children}

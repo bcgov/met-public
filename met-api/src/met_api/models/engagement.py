@@ -36,7 +36,6 @@ class Engagement(db.Model):
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow())
     updated_by = db.Column(db.String(50), nullable=False)
     published_date = db.Column(db.DateTime, nullable=True)
-    scheduled_date = db.Column(db.DateTime, nullable=True)
     content = db.Column(db.Text, unique=False, nullable=False)
     rich_content = db.Column(JSON, unique=False, nullable=False)
     banner_filename = db.Column(db.String(), unique=False, nullable=True)
@@ -105,7 +104,6 @@ class Engagement(db.Model):
             updated_by=engagement.get('updated_by', None),
             updated_date=datetime.utcnow(),
             published_date=None,
-            scheduled_date=None,
             banner_filename=engagement.get('banner_filename', None),
             content=engagement.get('content', None),
             rich_content=engagement.get('rich_content', None)
@@ -133,7 +131,6 @@ class Engagement(db.Model):
             # to fix the bug with UI not passing published date always.
             # Defaulting to existing
             published_date=engagement.get('published_date', record.published_date),
-            scheduled_date=engagement.get('scheduled_date', record.scheduled_date),
             updated_date=datetime.utcnow(),
             updated_by=engagement.get('updated_by', None),
             banner_filename=engagement.get('banner_filename', None),
@@ -173,30 +170,6 @@ class Engagement(db.Model):
         query = Engagement.query \
             .filter(Engagement.status_id == Status.Published.value) \
             .filter(Engagement.end_date < date_due)
-        records = query.all()
-        if not records:
-            return []
-        query.update(update_fields)
-        db.session.commit()
-        return engagements_schema.dump(records)
-
-    @classmethod
-    def publish_scheduled_engagements_due(cls) -> List[EngagementSchema]:
-        """Update scheduled engagements to published."""
-        now = local_datetime()
-        # Strip the time off the datetime object
-        date_due = datetime(now.year, now.month, now.day)
-        engagements_schema = EngagementSchema(many=True)
-        update_fields = dict(
-            status_id=Status.Published.value,
-            published_date=datetime.now(),
-            updated_date=datetime.now(),
-            updated_by=SYSTEM_USER
-        )
-        # Publish scheduled engagements where scheduled datetime is prior than now
-        query = Engagement.query \
-            .filter(Engagement.status_id == Status.Scheduled.value) \
-            .filter(Engagement.scheduled_date < date_due)
         records = query.all()
         if not records:
             return []
