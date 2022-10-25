@@ -19,7 +19,7 @@ interface ScheduleModalProps {
 
 const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) => {
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
-    const [scheduledDate, setScheduledDate] = useState<Dayjs | null>(dayjs('2014-08-18T21:11:54'));
+    const [scheduledDate, setScheduledDate] = useState<Dayjs | null>(dayjs(Date.now()));
     const { savedEngagement, scheduleEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
 
@@ -46,6 +46,7 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
                 status_id: EngagementStatus.Scheduled,
                 surveys: [],
             });
+
         updateModal(false);
     };
 

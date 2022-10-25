@@ -22,7 +22,9 @@ export const PreviewBanner = () => {
     const [isPublishing, setIsPublishing] = useState(false);
     const imageExists = !!savedEngagement.banner_url;
     const isScheduled = savedEngagement.status_id === EngagementStatus.Scheduled;
-    const scheduledDate = new Date(savedEngagement.scheduled_date);
+    const engagementBannerText = isScheduled
+        ? 'Engagement scheduled - ' + new Date(savedEngagement.scheduled_date).toDateString()
+        : `Preview Engagement`;
     if (!isLoggedIn) {
         return null;
     }
@@ -40,11 +42,7 @@ export const PreviewBanner = () => {
             <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start" padding={4}>
                 <ScheduleModal reschedule={isScheduled ? true : false} open={isOpen} updateModal={setIsOpen} />
                 <Grid item container direction="row" xs={12} sx={{ pt: 2, mb: 2 }}>
-                    <MetHeader1 sx={{ mb: 2 }}>
-                        {isScheduled
-                            ? 'Engagement scheduled - ' + new Date(scheduledDate).toDateString()
-                            : `Preview Engagement` + !isDraft && ' - Published'}
-                    </MetHeader1>
+                    <MetHeader1 sx={{ mb: 2 }}>{engagementBannerText}</MetHeader1>
                     <ConditionalComponent condition={isDraft}>
                         <Grid item container direction="row" rowSpacing={isSmallScreen ? 2 : 0.5}>
                             <ConditionalComponent condition={!imageExists}>
