@@ -3,5 +3,5 @@
 # ENGAGEMENT CLOSEOUT Runs At 17:00 on every day-of-week from Monday through Friday (UTC).
 0 17 * * 1-5 default cd /met-cron && ./run_met_closeout.sh
 # ENGAGEMENT PUBLISH Runs At every 15th minute.
-0 1/5 * * * * default cd /met-cron && ./run_met_publish.sh
+*/5 * * * * default cd /met-cron && ./run_met_publish.sh
 # An empty line is required at the end of this file for a valid cron file
