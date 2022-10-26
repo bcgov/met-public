@@ -133,7 +133,7 @@ run_closeout: ## Run the closeout task in local
 	. venv/bin/activate && python invoke_jobs.py ENGAGEMENT_CLOSEOUT
 
 run_publish: ## Run the publish task in local
-	. venv/bin/activate && python invoke_jobs.py ENGAGEMENT_Publish
+	. venv/bin/activate && python invoke_jobs.py ENGAGEMENT_PUBLISH
 
 db: ## Update the local database
 	. venv/bin/activate && python manage.py db upgrade
