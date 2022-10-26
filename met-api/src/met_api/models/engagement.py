@@ -183,9 +183,7 @@ class Engagement(db.Model):
     @classmethod
     def publish_scheduled_engagements_due(cls) -> List[EngagementSchema]:
         """Update scheduled engagements to published."""
-        now = local_datetime()
-        # Strip the time off the datetime object
-        date_due = datetime(now.year, now.month, now.day)
+        datetime_due = local_datetime()
         engagements_schema = EngagementSchema(many=True)
         update_fields = dict(
             status_id=Status.Published.value,
@@ -196,7 +194,7 @@ class Engagement(db.Model):
         # Publish scheduled engagements where scheduled datetime is prior than now
         query = Engagement.query \
             .filter(Engagement.status_id == Status.Scheduled.value) \
-            .filter(Engagement.scheduled_date < date_due)
+            .filter(Engagement.scheduled_date < datetime_due)
         records = query.all()
         if not records:
             return []
