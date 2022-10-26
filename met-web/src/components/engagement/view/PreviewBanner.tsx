@@ -93,17 +93,19 @@ export const PreviewBanner = () => {
                 </Grid>
                 <Grid sx={{ pt: 2 }} item xs={12} container direction="row" justifyContent="flex-end" spacing={1}>
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-start">
-                        <SecondaryButton
-                            sx={{
-                                backgroundColor: 'background.paper',
-                                borderRadius: '4px',
-                            }}
-                            onClick={() => navigate(`/engagements/${engagementId}/form`)}
-                        >
-                            Edit Engagement
-                        </SecondaryButton>
+                        <ConditionalComponent condition={isScheduled || isDraft}>
+                            <SecondaryButton
+                                sx={{
+                                    backgroundColor: 'background.paper',
+                                    borderRadius: '4px',
+                                }}
+                                onClick={() => navigate(`/engagements/${engagementId}/form`)}
+                            >
+                                Edit Engagement
+                            </SecondaryButton>
+                        </ConditionalComponent>
 
-                        <ConditionalComponent condition={!isScheduled}>
+                        <ConditionalComponent condition={isDraft}>
                             <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => setIsOpen(true)}>
                                 Schedule Engagement
                             </PrimaryButton>
