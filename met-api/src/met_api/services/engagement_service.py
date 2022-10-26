@@ -28,8 +28,8 @@ class EngagementService:
 
         if engagement_model:
             if user_id is None \
-                and (engagement_model.status_id != Status.Published.value \
-                    or engagement_model.status_id != Status.Closed.value):
+                and (engagement_model.status_id != Status.Published.value or
+                     engagement_model.status_id != Status.Closed.value):
                 # Non authenticated users only have access to published and closed engagements
                 return None
             engagement = EngagementSchema().dump(engagement_model)
