@@ -196,7 +196,7 @@ class Engagement(db.Model):
         # Publish scheduled engagements where scheduled datetime is prior than now
         query = Engagement.query \
             .filter(Engagement.status_id == Status.Scheduled.value) \
-            .filter(Engagement.scheduled_date < datetime_due)
+            .filter(Engagement.scheduled_date <= datetime_due)
         records = query.all()
         if not records:
             return []
