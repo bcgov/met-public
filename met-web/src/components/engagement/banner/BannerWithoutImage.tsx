@@ -7,13 +7,15 @@ import { EngagementStatusChip } from '../status';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorState } from 'utils';
+import { format } from 'path';
+import { date } from 'yup';
 
 const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
-    const { rich_description, name, scheduled_date, end_date, submission_status } = savedEngagement;
+    const { rich_description, name, start_date, end_date, submission_status } = savedEngagement;
     const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
     const dateFormat = 'MMM dd, yyyy';
 
-    const EngagementDate = `Engagement dates: ${formatDate(scheduled_date, dateFormat)} to ${formatDate(
+    const EngagementDate = `Engagement dates: ${formatDate(start_date, dateFormat)} to ${formatDate(
         end_date,
         dateFormat,
     )}`;
