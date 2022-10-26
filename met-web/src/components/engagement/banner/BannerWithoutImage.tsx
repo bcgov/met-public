@@ -7,8 +7,6 @@ import { EngagementStatusChip } from '../status';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorState } from 'utils';
-import { format } from 'path';
-import { date } from 'yup';
 
 const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
     const { rich_description, name, start_date, end_date, submission_status } = savedEngagement;
