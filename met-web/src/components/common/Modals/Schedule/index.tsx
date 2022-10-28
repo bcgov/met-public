@@ -56,7 +56,7 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
         if (validateDate())
             await scheduleEngagement({
                 id: savedEngagement.id,
-                scheduled_date: scheduledDate.format('YYYY-MM-DD HH:mm:ss'),
+                scheduled_date: scheduledDate !== null ? scheduledDate.format('YYYY-MM-DD HH:mm:ss') : '',
                 status_id: EngagementStatus.Scheduled,
             });
 
