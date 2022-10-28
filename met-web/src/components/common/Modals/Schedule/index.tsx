@@ -30,7 +30,7 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
     };
 
     const validateDate = () => {
-        if (scheduledDate != null && scheduledDate >= dayjs(savedEngagement.end_date)) {
+        if (scheduledDate && scheduledDate >= dayjs(savedEngagement.end_date)) {
             dispatch(
                 openNotification({
                     severity: 'error',
@@ -53,7 +53,7 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
             );
             return;
         }
-        if (scheduledDate && validateDate())
+        if (validateDate())
             await scheduleEngagement({
                 id: savedEngagement.id,
                 scheduled_date: scheduledDate.format('YYYY-MM-DD HH:mm:ss'),
