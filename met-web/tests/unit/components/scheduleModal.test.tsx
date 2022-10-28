@@ -15,13 +15,12 @@ describe('Schedule modal tests', () => {
     });
 
     test('Reschedule shows ', async () => {
-        const [open, setOpen] = React.useState(true);
         const { getByTestId } = render(
             <ScheduleModal
                 updateModal={() => {
-                    setOpen(false);
+                    console.log('schedule modal');
                 }}
-                open={open}
+                open={true}
                 reschedule={false}
             />,
         );
