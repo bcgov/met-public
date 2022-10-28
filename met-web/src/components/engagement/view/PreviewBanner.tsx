@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { ActionContext } from './ActionContext';
-import { Box, Grid, Skeleton, Stack, useMediaQuery, Theme } from '@mui/material';
+import { Box, Grid, Skeleton, Stack, useMediaQuery, Theme, Link } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { ConditionalComponent, MetHeader1, PrimaryButton, SecondaryButton, MetBody } from 'components/common';
@@ -21,9 +21,8 @@ export const PreviewBanner = () => {
     const engagementId = savedEngagement.id || '';
     const imageExists = !!savedEngagement.banner_url;
     const isScheduled = savedEngagement.status_id === EngagementStatus.Scheduled;
-    const engagementBannerText = isScheduled
-        ? 'Engagement scheduled - ' + new Date(savedEngagement.scheduled_date).toDateString()
-        : `Preview Engagement`;
+    const scheduledDate = new Date(savedEngagement.scheduled_date).toDateString();
+    const engagementBannerText = isScheduled ? 'Engagement scheduled - ' + scheduledDate : `Preview Engagement`;
     if (!isLoggedIn) {
         return null;
     }
@@ -42,6 +41,15 @@ export const PreviewBanner = () => {
                 <ScheduleModal reschedule={isScheduled ? true : false} open={isOpen} updateModal={setIsOpen} />
                 <Grid item container direction="row" xs={12} sx={{ pt: 2, mb: 2 }}>
                     <MetHeader1 sx={{ mb: 2 }}>{engagementBannerText}</MetHeader1>
+                    <ConditionalComponent condition={isScheduled}>
+                        <Grid item container direction="row" rowSpacing={1}>
+                            <MetBody>
+                                This engagement is scheduled to go live on
+                                {' ' + scheduledDate}. <Link onClick={() => setIsOpen(true)}>Click here </Link> to edit
+                                the date this Engagement page will go live.
+                            </MetBody>
+                        </Grid>
+                    </ConditionalComponent>
                     <ConditionalComponent condition={isDraft}>
                         <Grid item container direction="row" rowSpacing={isSmallScreen ? 2 : 0.5}>
                             <ConditionalComponent condition={!imageExists}>

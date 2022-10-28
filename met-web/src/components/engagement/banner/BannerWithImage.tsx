@@ -9,11 +9,11 @@ import { Editor } from 'react-draft-wysiwyg';
 import { getEditorState } from 'utils';
 
 const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
-    const { name, end_date, banner_url, scheduled_date, submission_status, rich_description } = savedEngagement;
+    const { name, end_date, banner_url, start_date, submission_status, rich_description } = savedEngagement;
     const [imageError, setImageError] = useState(false);
     const dateFormat = 'MMM dd, yyyy';
 
-    const EngagementDate = `Engagement dates: ${formatDate(scheduled_date, dateFormat)} to ${formatDate(
+    const EngagementDate = `Engagement dates: ${formatDate(start_date, dateFormat)} to ${formatDate(
         end_date,
         dateFormat,
     )}`;
