@@ -49,8 +49,9 @@ export const PreviewBanner = () => {
                         <Grid item container direction="row" rowSpacing={1}>
                             <MetBody>
                                 This engagement is scheduled to go live on
-                                {' ' + scheduledDate}. <Link onClick={() => setIsOpen(true)}>Click here </Link> to edit
-                                the date this Engagement page will go live.
+                                {' ' + scheduledDate} at {new Date(savedEngagement.scheduled_date).toTimeString()}.{' '}
+                                <Link onClick={() => setIsOpen(true)}>Click here</Link> to edit the date this Engagement
+                                page will go live.
                             </MetBody>
                         </Grid>
                     </ConditionalComponent>
