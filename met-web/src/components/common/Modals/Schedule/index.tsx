@@ -89,20 +89,18 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
                         sx={{ mt: '1em' }}
                     >
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <Grid item xs={6}>
+                            <Grid data-testid={'desktop-datepicker'} item xs={6}>
                                 <MetLabel>Date</MetLabel>
                                 <DesktopDatePicker
-                                    data-testid={'desktop-datepicker'}
                                     inputFormat="MM/DD/YYYY"
                                     value={scheduledDate}
                                     onChange={handleChange}
                                     renderInput={(params) => <TextField {...params} />}
                                 />
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid data-testid={'time-picker'} item xs={6}>
                                 <MetLabel>Time</MetLabel>
                                 <TimePicker
-                                    data-testid={'timepicker'}
                                     value={scheduledDate}
                                     onChange={handleChange}
                                     renderInput={(params) => <TextField {...params} />}

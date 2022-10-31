@@ -5,6 +5,7 @@ import * as notificationSlice from 'services/notificationService/notificationSli
 import '@testing-library/jest-dom';
 import { setupEnv } from './setEnvVars';
 import ScheduleModal from 'components/common/Modals/Schedule';
+import ProviderShell from './ProviderShell';
 
 describe('Schedule modal tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
@@ -16,16 +17,18 @@ describe('Schedule modal tests', () => {
 
     test('Reschedule shows ', async () => {
         const { getByTestId } = render(
-            <ScheduleModal
-                updateModal={() => {
-                    console.log('schedule modal');
-                }}
-                open={true}
-                reschedule={false}
-            />,
+            <ProviderShell>
+                <ScheduleModal
+                    updateModal={() => {
+                        console.log('schedule modal');
+                    }}
+                    open={true}
+                    reschedule={false}
+                />
+            </ProviderShell>,
         );
         const scheduleButton = getByTestId('schedule-button');
-        const timePicker = getByTestId('timepicker');
+        const timePicker = getByTestId('time-picker');
         const datePicker = getByTestId('desktop-datepicker');
 
         //set up date
