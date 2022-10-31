@@ -21,8 +21,12 @@ export const PreviewBanner = () => {
     const engagementId = savedEngagement.id || '';
     const imageExists = !!savedEngagement.banner_url;
     const isScheduled = savedEngagement.status_id === EngagementStatus.Scheduled;
-    const scheduledDate = new Date(savedEngagement.scheduled_date).toDateString();
-    const engagementBannerText = isScheduled ? 'Engagement scheduled - ' + scheduledDate : `Preview Engagement`;
+    const engagementBannerText = isScheduled
+        ? 'Engagement scheduled - ' +
+          new Date(savedEngagement.scheduled_date).toDateString() +
+          'at ' +
+          new Date(savedEngagement.scheduled_date).toTimeString()
+        : `Preview Engagement`;
     if (!isLoggedIn) {
         return null;
     }
@@ -109,7 +113,7 @@ export const PreviewBanner = () => {
                                 }}
                                 onClick={() => navigate(`/engagements/${engagementId}/form`)}
                             >
-                                Edit Engagement
+                                Close Preview
                             </SecondaryButton>
                         </ConditionalComponent>
 
