@@ -66,6 +66,7 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
     return (
         <Modal aria-labelledby="modal-title" open={open} onClose={() => updateModal(false)}>
             <Grid
+                data-testid={'schedule-modal'}
                 container
                 direction="row"
                 justifyContent="flex-start"
@@ -102,7 +103,7 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
                         sx={{ mt: '1em' }}
                     >
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <Grid item xs={6}>
+                            <Grid data-testid={'desktop-datepicker'} item xs={6}>
                                 <MetLabel>Date</MetLabel>
                                 <DesktopDatePicker
                                     inputFormat="MM/DD/YYYY"
@@ -111,7 +112,7 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
                                     renderInput={(params) => <TextField {...params} />}
                                 />
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid data-testid={'time-picker'} item xs={6}>
                                 <MetLabel>Time</MetLabel>
                                 <TimePicker
                                     value={scheduledDate}
@@ -138,15 +139,29 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
                         >
                             {isSmallScreen ? (
                                 <>
-                                    <PrimaryButton onClick={handleSchedule} type="submit" variant={'contained'}>
+                                    <PrimaryButton
+                                        data-testid={'schedule-button'}
+                                        onClick={handleSchedule}
+                                        type="submit"
+                                        variant={'contained'}
+                                    >
                                         Submit
                                     </PrimaryButton>
-                                    <SecondaryButton onClick={() => updateModal(false)}>Cancel</SecondaryButton>
+                                    <SecondaryButton data-testid={'cancel-button'} onClick={() => updateModal(false)}>
+                                        Cancel
+                                    </SecondaryButton>
                                 </>
                             ) : (
                                 <>
-                                    <SecondaryButton onClick={() => updateModal(false)}>Cancel</SecondaryButton>
-                                    <PrimaryButton onClick={handleSchedule} type="submit" variant={'contained'}>
+                                    <SecondaryButton data-testid={'cancel-button'} onClick={() => updateModal(false)}>
+                                        Cancel
+                                    </SecondaryButton>
+                                    <PrimaryButton
+                                        data-testid={'schedule-button'}
+                                        onClick={handleSchedule}
+                                        type="submit"
+                                        variant={'contained'}
+                                    >
                                         Submit
                                     </PrimaryButton>
                                 </>
