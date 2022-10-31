@@ -29,6 +29,20 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
         }
     };
 
+    const validateDate = () => {
+        if (scheduledDate && scheduledDate >= dayjs(savedEngagement.end_date)) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Please make the scheduled date before the engagement end date',
+                }),
+            );
+            return false;
+        } else {
+            return true;
+        }
+    };
+
     const handleSchedule = async () => {
         if (savedEngagement.surveys.length === 0) {
             dispatch(
@@ -39,10 +53,10 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
             );
             return;
         }
-        if (scheduledDate)
+        if (validateDate())
             await scheduleEngagement({
                 id: savedEngagement.id,
-                scheduled_date: scheduledDate.format('YYYY-MM-DD HH:mm:ss'),
+                scheduled_date: scheduledDate !== null ? scheduledDate.format('YYYY-MM-DD HH:mm:ss') : '',
                 status_id: EngagementStatus.Scheduled,
             });
 

@@ -21,8 +21,10 @@ export const PreviewBanner = () => {
     const engagementId = savedEngagement.id || '';
     const imageExists = !!savedEngagement.banner_url;
     const isScheduled = savedEngagement.status_id === EngagementStatus.Scheduled;
-    const scheduledDate = new Date(savedEngagement.scheduled_date).toDateString();
-    const engagementBannerText = isScheduled ? 'Engagement scheduled - ' + scheduledDate : `Preview Engagement`;
+    const scheduledDate = new Date(savedEngagement.scheduled_date);
+    const engagementBannerText = isScheduled
+        ? 'Engagement scheduled - ' + scheduledDate.toDateString() + 'at ' + scheduledDate.toTimeString()
+        : `Preview Engagement`;
     if (!isLoggedIn) {
         return null;
     }
@@ -45,8 +47,9 @@ export const PreviewBanner = () => {
                         <Grid item container direction="row" rowSpacing={1}>
                             <MetBody>
                                 This engagement is scheduled to go live on
-                                {' ' + scheduledDate}. <Link onClick={() => setIsOpen(true)}>Click here </Link> to edit
-                                the date this Engagement page will go live.
+                                {' ' + scheduledDate.toDateString()} at {scheduledDate.toTimeString()}.{' '}
+                                <Link onClick={() => setIsOpen(true)}>Click here</Link> to edit the date this Engagement
+                                page will go live.
                             </MetBody>
                         </Grid>
                     </ConditionalComponent>
@@ -109,7 +112,7 @@ export const PreviewBanner = () => {
                                 }}
                                 onClick={() => navigate(`/engagements/${engagementId}/form`)}
                             >
-                                Edit Engagement
+                                Close Preview
                             </SecondaryButton>
                         </ConditionalComponent>
 
