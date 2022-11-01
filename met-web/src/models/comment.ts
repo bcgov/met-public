@@ -19,6 +19,8 @@ export interface Comment {
     review_date: string;
     comment_status: Status;
     survey: string;
+    submission_id: number;
+    question: string;
 }
 
 export const createDefaultComment = (): Comment => {
@@ -33,5 +35,7 @@ export const createDefaultComment = (): Comment => {
         review_date: '',
         comment_status: { id: 0, status_name: '' },
         survey: '',
+        submission_id: 0,
+        question: '',
     };
 };

@@ -52,16 +52,36 @@ class Comment(Resource):
         except ValueError as err:
             return ActionResult.error(str(err))
 
+
+@cors_preflight('GET, OPTIONS')
+@API.route('/submission/<submission_id>')
+class SubmissionComments(Resource):
+    """Resource for managing multiple comments."""
+
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @auth.require
-    def put(comment_id):
-        """Fetch a single comment matching the provided id."""
+    def get(submission_id):
+        """Get comments by submission id."""
+        try:
+            comment_records = CommentService()\
+                .get_comments_by_submission(
+                    submission_id,
+            )
+            return ActionResult.success(result=comment_records)
+        except ValueError as err:
+            return ActionResult.error(str(err))
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def put(submission_id):
+        """Update comments by submission id."""
         try:
             requestjson = request.get_json()
             status_id = requestjson.get('status_id', None)
             external_user_id = TokenInfo.get_id()
-            result = CommentService().review_comment(comment_id, status_id, external_user_id)
+            result = CommentService().review_comment(submission_id, status_id, external_user_id)
             return ActionResult.success(result.identifier, requestjson)
         except KeyError:
             return ActionResult.error('Comment was not found')
@@ -71,7 +91,7 @@ class Comment(Resource):
 
 @cors_preflight('GET, POST, PUT, OPTIONS')
 @API.route('/survey/<survey_id>')
-class Comments(Resource):
+class SurveyComments(Resource):
     """Resource for managing multiple comments."""
 
     @staticmethod

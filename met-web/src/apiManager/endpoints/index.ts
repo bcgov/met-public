@@ -26,7 +26,8 @@ const Endpoints = {
     },
     Comment: {
         GET_LIST: `${AppConfig.apiUrl}/comments/survey/survey_id`,
-        REVIEW: `${AppConfig.apiUrl}/comments/comment_id `,
+        GET_SUBMISSION: `${AppConfig.apiUrl}/comments/submission/submission_id`,
+        REVIEW: `${AppConfig.apiUrl}/comments/submission/submission_id`,
         GET: `${AppConfig.apiUrl}/comments/comment_id`,
     },
     Feedback: {
