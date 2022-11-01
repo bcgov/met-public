@@ -11,11 +11,12 @@ import { WidgetTabValues } from './type';
 export interface WidgetDrawerContextProps {
     widgets: Widget[];
     widgetDrawerOpen: boolean;
+    selectedContact: Contact | null | undefined;
     handleWidgetDrawerOpen: (_open: boolean) => void;
     widgetDrawerTabValue: string;
     handleWidgetDrawerTabValueChange: (_tabValue: string) => void;
     addContactDrawerOpen: boolean;
-    handleAddContactDrawerOpen: (_open: boolean) => void;
+    handleAddContactDrawerOpen: (_open: boolean, _data?: Contact) => void;
     isWidgetsLoading: boolean;
     loadWidgets: () => Promise<void>;
     loadingContacts: boolean;
@@ -32,6 +33,7 @@ export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
     isWidgetsLoading: false,
     loadingContacts: false,
     widgetDrawerOpen: false,
+    selectedContact: null,
     handleWidgetDrawerOpen: (_open: boolean) => {
         /* empty default method  */
     },
@@ -53,7 +55,7 @@ export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
 export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
-
+    const [selectedContact, setSelectedContact] = useState<Contact | null | undefined>(null);
     const [widgets, setWidgets] = useState<Widget[]>([]);
     const [isWidgetsLoading, setIsWidgetsLoading] = useState(true);
     const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
@@ -106,7 +108,10 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
         setWidgetDrawerOpen(open);
     };
 
-    const handleAddContactDrawerOpen = (open: boolean) => {
+    const handleAddContactDrawerOpen = (open: boolean, data?: Contact) => {
+        if (data !== null) {
+            setSelectedContact(data);
+        }
         setAddContactDrawerOpen(open);
     };
 
@@ -129,6 +134,7 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
                 loadingContacts,
                 contacts,
                 loadContacts,
+                selectedContact,
             }}
         >
             {children}

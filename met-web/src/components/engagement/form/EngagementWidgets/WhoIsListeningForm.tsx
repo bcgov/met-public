@@ -32,6 +32,11 @@ const WhoIsListeningForm = () => {
         setAddedContacts([...addedContacts, selectedContact]);
     };
 
+    const removeContact = (contact: Contact) => {
+        const filteredContacts = addedContacts.filter((c) => contact.id != c.id);
+        setAddedContacts(filteredContacts);
+    };
+
     const addWidgetItems = async () => {
         if (addedContacts.length === 0) {
             return;
@@ -109,7 +114,7 @@ const WhoIsListeningForm = () => {
             {addedContacts.map((addedContact) => {
                 return (
                     <Grid key={`added-contact-${addedContact.id}`} item xs={12}>
-                        <ContantInfoPaper contact={addedContact} />
+                        <ContantInfoPaper removeContact={removeContact} contact={addedContact} />
                     </Grid>
                 );
             })}

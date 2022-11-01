@@ -35,7 +35,8 @@ const AddContactDrawer = () => {
     });
 
     const { handleSubmit } = methods;
-    const { addContactDrawerOpen, handleAddContactDrawerOpen, loadContacts } = useContext(WidgetDrawerContext);
+    const { addContactDrawerOpen, handleAddContactDrawerOpen, loadContacts, selectedContact } =
+        useContext(WidgetDrawerContext);
     const [isCreatingContact, setIsCreatingContact] = useState(false);
 
     const onSubmit: SubmitHandler<ContactForm> = async (data: ContactForm) => {
@@ -68,7 +69,7 @@ const AddContactDrawer = () => {
                         padding="2em"
                     >
                         <Grid item xs={12}>
-                            <MetHeader3 bold>Add Contact</MetHeader3>
+                            <MetHeader3 bold>{selectedContact ? 'Edit' : 'Add'} Contact</MetHeader3>
                             <Divider sx={{ marginTop: '1em' }} />
                         </Grid>
                         <Grid item xs={12} lg={4}>
@@ -90,6 +91,7 @@ const AddContactDrawer = () => {
                                     data-testid="contact-form/name"
                                     variant="outlined"
                                     label=" "
+                                    defaultValue={selectedContact ? selectedContact.name : ''}
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -103,7 +105,7 @@ const AddContactDrawer = () => {
                                     id="contact-title"
                                     data-testid="contact-form/title"
                                     variant="outlined"
-                                    label=" "
+                                    defaultValue={selectedContact ? selectedContact.title : ''}
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -120,6 +122,7 @@ const AddContactDrawer = () => {
                                 data-testid="contact-form/phone"
                                 variant="outlined"
                                 label=" "
+                                defaultValue={selectedContact ? selectedContact.phone_number : ''}
                                 InputLabelProps={{
                                     shrink: false,
                                 }}
@@ -135,6 +138,7 @@ const AddContactDrawer = () => {
                                 data-testid="contact-form/email"
                                 variant="outlined"
                                 label=" "
+                                defaultValue={selectedContact ? selectedContact.email : ''}
                                 InputLabelProps={{
                                     shrink: false,
                                 }}
@@ -150,6 +154,7 @@ const AddContactDrawer = () => {
                                 data-testid="contact-form/address"
                                 variant="outlined"
                                 label=" "
+                                defaultValue={selectedContact ? selectedContact.address : ''}
                                 InputLabelProps={{
                                     shrink: false,
                                 }}
@@ -168,6 +173,7 @@ const AddContactDrawer = () => {
                                 InputLabelProps={{
                                     shrink: false,
                                 }}
+                                defaultValue={selectedContact ? selectedContact.bio : ''}
                                 fullWidth
                                 name="bio"
                                 size="small"
