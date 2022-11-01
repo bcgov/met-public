@@ -79,7 +79,14 @@ In the keycloak app:
 
 ## Database Configuration
 
-Create two instance of a postgresql database (transactional and analytics):
+Inntall an instance of patroni using helm chart:
+
+```
+helm repo add patroni-chart https://bcgov.github.io/nr-patroni-chart
+helm install -n <namespace> met-patroni patroni-chart/patroni
+```
+
+If HA is not necessary create two instances of a postgresql database (transactional and analytics):
 
 ```
 oc new-app --template=postgresql-persistent -p POSTGRESQL_DATABASE=met -p DATABASE_SERVICE_NAME=postgresql-met
@@ -89,9 +96,6 @@ oc new-app --template=postgresql-persistent -p POSTGRESQL_DATABASE=met -p DATABA
 oc new-app --template=postgresql-persistent -p POSTGRESQL_DATABASE=met-analytics -p DATABASE_SERVICE_NAME=postgresql-edw
 ```
 
-Create an instance of patroni:
-
-TODO
 
 ## Deployment Configuration
 
