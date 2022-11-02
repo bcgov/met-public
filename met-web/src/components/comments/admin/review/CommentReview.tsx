@@ -64,17 +64,16 @@ const CommentReview = () => {
         }
     };
 
-    const { submission_id, comment_status, reviewed_by, submission_date, review_date } = comments[0];
+    // The comment display information below is fetched from the first comment from the list
+    // since comment status/review are being stored individually
+    // These values should be exacly the same throughout the array.
+    const { submission_id, comment_status, status_id, reviewed_by, submission_date, review_date } = comments[0];
 
     if (isLoading) {
         return <CommentReviewSkeleton />;
     }
 
-    const filteredVerdict = [CommentStatus.Approved, CommentStatus.Rejected].filter(
-        (verdict) => comments.length > 0 && comments[0].status_id === verdict,
-    );
-    const defaultVerdict = filteredVerdict.length === 0 ? CommentStatus.Approved : filteredVerdict[0];
-
+    const defaultVerdict = status_id !== CommentStatus.Pending ? status_id : CommentStatus.Approved;
     return (
         <MetPageGridContainer>
             <Grid
