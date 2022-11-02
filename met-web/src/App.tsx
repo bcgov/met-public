@@ -13,6 +13,8 @@ import { Notification } from 'components/common/notification';
 import PageViewTracker from 'routes/PageViewTracker';
 import { NotificationModal } from 'components/common/modal';
 import { FeedbackModal } from 'components/common/Modals/Feedback';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const App = () => {
     const drawerWidth = 240;
@@ -57,16 +59,21 @@ const App = () => {
 
     return (
         <Router>
-            <Box sx={{ display: 'flex' }}>
-                <LoggedInHeader drawerWidth={drawerWidth} />
-                <Notification />
-                <NotificationModal />
-                <Box component="main" sx={{ flexGrow: 1, width: `calc(100% - ${drawerWidth}px)`, marginTop: '17px' }}>
-                    <Toolbar />
-                    <AuthenticatedRoutes />
-                    <FeedbackModal />
+            <DndProvider backend={HTML5Backend}>
+                <Box sx={{ display: 'flex' }}>
+                    <LoggedInHeader drawerWidth={drawerWidth} />
+                    <Notification />
+                    <NotificationModal />
+                    <Box
+                        component="main"
+                        sx={{ flexGrow: 1, width: `calc(100% - ${drawerWidth}px)`, marginTop: '17px' }}
+                    >
+                        <Toolbar />
+                        <AuthenticatedRoutes />
+                        <FeedbackModal />
+                    </Box>
                 </Box>
-            </Box>
+            </DndProvider>
         </Router>
     );
 };

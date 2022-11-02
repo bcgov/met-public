@@ -17,11 +17,11 @@ import { WidgetDrawerContext } from './WidgetDrawerContext';
 const schema = yup
     .object({
         name: yup.string().required(),
-        title: yup.string().required(),
-        phone_number: yup.string().required(),
+        title: yup.string(),
+        phone_number: yup.string(),
         email: yup.string().email().required(),
-        address: yup.string().required(),
-        bio: yup.string().min(20).required(),
+        address: yup.string(),
+        bio: yup.string(),
     })
     .required();
 
@@ -29,15 +29,15 @@ type ContactForm = yup.TypeOf<typeof schema>;
 
 const AddContactDrawer = () => {
     const dispatch = useAppDispatch();
-
-    const methods = useForm<ContactForm>({
-        resolver: yupResolver(schema),
-    });
-
-    const { handleSubmit } = methods;
     const { addContactDrawerOpen, handleAddContactDrawerOpen, loadContacts, selectedContact } =
         useContext(WidgetDrawerContext);
     const [isCreatingContact, setIsCreatingContact] = useState(false);
+    const methods = useForm<ContactForm>({
+        resolver: yupResolver(schema),
+        defaultValues: { ...selectedContact },
+    });
+
+    const { handleSubmit } = methods;
 
     const onSubmit: SubmitHandler<ContactForm> = async (data: ContactForm) => {
         try {
@@ -84,14 +84,13 @@ const AddContactDrawer = () => {
                         </Grid>
                         <Grid item xs={12} lg={8} container direction="row" spacing={2}>
                             <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Name</MetLabel>
+                                <MetLabel sx={{ marginBottom: '2px' }}>* Name</MetLabel>
                                 <ControlledTextField
                                     name="name"
                                     id="contact-name"
                                     data-testid="contact-form/name"
                                     variant="outlined"
                                     label=" "
-                                    defaultValue={selectedContact ? selectedContact.name : ''}
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -105,7 +104,6 @@ const AddContactDrawer = () => {
                                     id="contact-title"
                                     data-testid="contact-form/title"
                                     variant="outlined"
-                                    defaultValue={selectedContact ? selectedContact.title : ''}
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -122,7 +120,6 @@ const AddContactDrawer = () => {
                                 data-testid="contact-form/phone"
                                 variant="outlined"
                                 label=" "
-                                defaultValue={selectedContact ? selectedContact.phone_number : ''}
                                 InputLabelProps={{
                                     shrink: false,
                                 }}
@@ -132,13 +129,12 @@ const AddContactDrawer = () => {
                             />
                         </Grid>
                         <Grid item xs={12} lg={8}>
-                            <MetLabel sx={{ marginBottom: '2px' }}>Email</MetLabel>
+                            <MetLabel sx={{ marginBottom: '2px' }}>* Email </MetLabel>
                             <ControlledTextField
                                 id="contact-email"
                                 data-testid="contact-form/email"
                                 variant="outlined"
                                 label=" "
-                                defaultValue={selectedContact ? selectedContact.email : ''}
                                 InputLabelProps={{
                                     shrink: false,
                                 }}
@@ -154,7 +150,6 @@ const AddContactDrawer = () => {
                                 data-testid="contact-form/address"
                                 variant="outlined"
                                 label=" "
-                                defaultValue={selectedContact ? selectedContact.address : ''}
                                 InputLabelProps={{
                                     shrink: false,
                                 }}
@@ -173,7 +168,6 @@ const AddContactDrawer = () => {
                                 InputLabelProps={{
                                     shrink: false,
                                 }}
-                                defaultValue={selectedContact ? selectedContact.bio : ''}
                                 fullWidth
                                 name="bio"
                                 size="small"

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useCallback } from 'react';
 import { Autocomplete, Grid, TextField } from '@mui/material';
 import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
 import { Contact } from 'models/contact';
@@ -8,6 +8,7 @@ import { postWidgetItems } from 'services/widgetService';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
 import ContantInfoPaper from './ContactInfoPaper';
 import { WidgetType } from 'models/widget';
+import update from 'immutability-helper';
 
 const WhoIsListeningForm = () => {
     const { handleWidgetDrawerOpen, handleAddContactDrawerOpen, loadingContacts, contacts, widgets } =
@@ -16,6 +17,17 @@ const WhoIsListeningForm = () => {
     const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
     const [addedContacts, setAddedContacts] = useState<Contact[]>([]);
     const [addingWidgetItems, setAddingWidgetItems] = useState(false);
+
+    const moveContact = useCallback((dragIndex: number, hoverIndex: number) => {
+        setAddedContacts((prevContacts: Contact[]) =>
+            update(prevContacts, {
+                $splice: [
+                    [dragIndex, 1],
+                    [hoverIndex, 0, prevContacts[dragIndex] as Contact],
+                ],
+            }),
+        );
+    }, []);
 
     const widgetId = widgets.filter((widget) => widget.widget_type_id === WidgetType.WhoIsListening)[0]?.id || null;
 
@@ -111,10 +123,16 @@ const WhoIsListeningForm = () => {
                     </SecondaryButton>
                 </Grid>
             </Grid>
-            {addedContacts.map((addedContact) => {
+
+            {addedContacts.map((addedContact, index) => {
                 return (
                     <Grid key={`added-contact-${addedContact.id}`} item xs={12}>
-                        <ContantInfoPaper removeContact={removeContact} contact={addedContact} />
+                        <ContantInfoPaper
+                            moveContact={moveContact}
+                            index={index}
+                            removeContact={removeContact}
+                            contact={addedContact}
+                        />
                     </Grid>
                 );
             })}
