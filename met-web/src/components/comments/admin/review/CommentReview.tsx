@@ -38,7 +38,7 @@ const CommentReview = () => {
             setComments(fetchedComments);
             setIsLoading(false);
         } catch (error) {
-            dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching comment' }));
+            dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching comments' }));
             navigate('/');
         }
     };

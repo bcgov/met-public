@@ -81,8 +81,8 @@ class SubmissionComments(Resource):
             requestjson = request.get_json()
             status_id = requestjson.get('status_id', None)
             external_user_id = TokenInfo.get_id()
-            result = CommentService().review_comment(submission_id, status_id, external_user_id)
-            return ActionResult.success(result.identifier, requestjson)
+            comment_records = CommentService().review_comment(submission_id, status_id, external_user_id)
+            return ActionResult.success(result=comment_records)
         except KeyError:
             return ActionResult.error('Comment was not found')
         except ValueError as err:

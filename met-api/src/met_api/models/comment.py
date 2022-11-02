@@ -129,7 +129,7 @@ class Comment(db.Model):
         return DefaultMethodResult(True, 'Comments Added', 1)
 
     @classmethod
-    def update_comment_status(cls, submission_id, status_id, reviewed_by) -> DefaultMethodResult:
+    def update_comment_status(cls, submission_id, status_id, reviewed_by):
         """Update comment status."""
         query = Comment.query.filter_by(submission_id=submission_id)
 
@@ -143,4 +143,4 @@ class Comment(db.Model):
         )
         query.update(update_fields)
         db.session.commit()
-        return DefaultMethodResult(True, 'Comments Updated', submission_id)
+        return query.all()

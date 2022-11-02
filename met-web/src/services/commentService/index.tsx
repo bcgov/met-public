@@ -42,9 +42,6 @@ export const getCommentsPage = async ({
 
 export const getSubmissionComments = async (submissionId: number): Promise<Comment[]> => {
     const url = replaceUrl(Endpoints.Comment.GET_SUBMISSION, 'submission_id', String(submissionId));
-    if (!submissionId || isNaN(Number(submissionId))) {
-        return Promise.reject('Invalid Submission Id ' + submissionId);
-    }
     try {
         const response = await http.GetRequest<Comment[]>(url);
         if (response.data.result) {
