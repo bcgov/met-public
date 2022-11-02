@@ -27,7 +27,7 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
     const { handleAddContactDrawerOpen } = useContext(WidgetDrawerContext);
     const ref = useRef<HTMLDivElement>(null);
 
-    const [drop] = useDrop<DragItem, void, { handlerId: Identifier | null }>({
+    const [{ handlerId }, drop] = useDrop<DragItem, void, { handlerId: Identifier | null }>({
         accept: 'Contact',
         collect(monitor) {
             return {
@@ -83,7 +83,7 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
         },
     });
 
-    const [drag] = useDrag({
+    const [{ isDragging }, drag] = useDrag({
         type: 'Contact',
         item: () => {
             return { testId, index };
