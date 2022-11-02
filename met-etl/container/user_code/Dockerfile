@@ -1,16 +1,24 @@
 FROM python:3.7-slim
 
-# Checkout and install dagster libraries needed to run the gRPC server
-# exposing your repository to dagit and dagster-daemon, and to load the DagsterInstance
+ARG DAGSTER_VERSION=0.16.13
 
-RUN pip install \
-    dagster \
-    dagster-postgres \
-    dagster-docker
-
-# Add repository code
+RUN pip install --upgrade pip
+# ==> Add Dagster layer
+RUN \
+    pip install \
+        dagster-postgres==0.16.13 \
+        dagster-celery[flower,redis,kubernetes]==${DAGSTER_VERSION} \
+        dagster-aws==${DAGSTER_VERSION} \
+        dagster-k8s==${DAGSTER_VERSION} \
+        dagster-celery-k8s==${DAGSTER_VERSION}
 
 WORKDIR /opt/dagster/app
+
+# Install the requirements
+COPY ./requirements.txt .
+
+RUN apt-get update && apt-get install -y git
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY src/etl_project/services/ /opt/dagster/app
 
