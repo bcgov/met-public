@@ -7,46 +7,66 @@ from sqlalchemy import func
 from utils.config import get_met_db_creds, get_met_analytics_db_creds
 from datetime import datetime, timedelta
 
-@op(out={"userdetailslastruncycledatetime": Out(is_required=True)})
-def get_user_details_last_run_cycle_datetime(context):
-    metanalyticsdbengine = get_met_analytics_db_creds()
-    Session = sessionmaker(bind=metanalyticsdbengine)
-    metanalyticsdbsession = Session()
-    defaultdatetime = datetime(1900, 1, 1, 15, 59, 56, 721228)
-    user_details_last_run_cycle_datetime = metanalyticsdbsession.query(func.coalesce(func.max(EtlRunCycleModel.enddatetime), defaultdatetime)).filter(EtlRunCycleModel.packagename == 'userdetails', EtlRunCycleModel.success == True).first()
-    yield Output(user_details_last_run_cycle_datetime, "userdetailslastruncycledatetime")
+
+@op(out={"last_cycle_time": Out(is_required=True)})
+def get_user_details_last_run_cycle_time(context):
+    met_etl_db_session = _get_met_etl_session()
+    default_datetime = datetime(1900, 1, 1, 15, 59, 56, 721228)
+    user_details_last_run_cycle_datetime = met_etl_db_session.query(
+        func.coalesce(func.max(EtlRunCycleModel.enddatetime), default_datetime)).filter(
+        EtlRunCycleModel.packagename == 'userdetails', EtlRunCycleModel.success == True).first()
+    yield Output(user_details_last_run_cycle_datetime, "last_cycle_time")
     for lastruncycledatetime in user_details_last_run_cycle_datetime:
-        if lastruncycledatetime == defaultdatetime:
+        if lastruncycledatetime == default_datetime:
             context.log.info("No record found in run cycle table")
-            metanalyticsdbsession.add(EtlRunCycleModel(id = 1, packagename = 'userdetails', startdatetime = datetime.utcnow(), enddatetime = None, description='started the load for user_details table', success = False))
-        if lastruncycledatetime != defaultdatetime:
+            met_etl_db_session.add(
+                EtlRunCycleModel(id=1, packagename='userdetails', startdatetime=datetime.utcnow(), enddatetime=None,
+                                 description='started the load for user_details table', success=False))
+        if lastruncycledatetime != default_datetime:
             context.log.info("Latest record found in run cycle table")
             for lastruncycledatetime in user_details_last_run_cycle_datetime:
-                user_details_last_run_cycle_id = metanalyticsdbsession.query(EtlRunCycleModel.id).filter(EtlRunCycleModel.enddatetime == lastruncycledatetime).first()
+                user_details_last_run_cycle_id = met_etl_db_session.query(EtlRunCycleModel.id).filter(
+                    EtlRunCycleModel.enddatetime == lastruncycledatetime).first()
                 for lastruncycleid in user_details_last_run_cycle_id:
                     new_run_cycle_id = lastruncycleid + 1
-                    metanalyticsdbsession.add(EtlRunCycleModel(id = new_run_cycle_id, packagename = 'userdetails', startdatetime = datetime.utcnow(), enddatetime = None, description='started the load for user_details table', success = False))
-    metanalyticsdbsession.commit()
-    metanalyticsdbsession.close()
+                    met_etl_db_session.add(EtlRunCycleModel(id=new_run_cycle_id, packagename='userdetails',
+                                                            startdatetime=datetime.utcnow(), enddatetime=None,
+                                                            description='started the load for user_details table',
+                                                            success=False))
+    met_etl_db_session.commit()
+    met_etl_db_session.close()
 
 
 @op(out={"newusers": Out(is_required=True)})
-def extract_user(context, userdetailslastruncycledatetime):
-    engine = get_met_db_creds()
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    new_users = session.query(MetUserModel).filter(MetUserModel.created_date > userdetailslastruncycledatetime).all()
+def extract_user(context, last_cycle_time):
+    session = _get_met_session()
+    new_users = session.query(MetUserModel).filter(MetUserModel.created_date > last_cycle_time).all()
     context.log.info(new_users)
     yield Output(new_users, "newusers")
     session.commit()
     session.close()
 
-@op
-def load_new_user(context, newusers):
+
+def _get_met_session():
+    engine = get_met_db_creds()
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    return session
+
+
+def _get_met_etl_session():
     engine = get_met_analytics_db_creds()
     Session = sessionmaker(bind=engine)
     session = Session()
+    return session
+
+
+@op
+def load_new_user(context, newusers):
+    session = _get_met_etl_session()
     for user in newusers:
-        session.add(UserDetailsModel(name = user.external_id, is_active = True, created_date = user.created_date, updated_date = user.updated_date, runcycle_id = 1))
+        user_model = UserDetailsModel(name=user.external_id, is_active=True, created_date=user.created_date,
+                                     updated_date=user.updated_date, runcycle_id=1)
+        session.add(user_model)
         session.commit()
     session.close()
