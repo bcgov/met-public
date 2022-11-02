@@ -9,7 +9,7 @@ from sqlalchemy import update
 from .db import db
 
 
-class EtlRunCycle():  # pylint: disable=too-few-public-methods
+class EtlRunCycle(db.Model):  # pylint: disable=too-few-public-methods
     """Definition of the etlruncycle entity."""
 
     __tablename__ = 'etl_runcycle'
