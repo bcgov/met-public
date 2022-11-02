@@ -163,7 +163,7 @@ class TestContactInfo(dict, Enum):
 
     contact1 = {
         'name': fake.name(),
-        'title': fake.job(max_length=50),
+        'title': fake.job(),
         'phone_number': fake.phone_number(),
         'email': fake.email(),
         'address': fake.address(),
