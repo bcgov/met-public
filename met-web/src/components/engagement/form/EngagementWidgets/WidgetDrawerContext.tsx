@@ -17,6 +17,7 @@ export interface WidgetDrawerContextProps {
     handleWidgetDrawerTabValueChange: (_tabValue: string) => void;
     addContactDrawerOpen: boolean;
     handleAddContactDrawerOpen: (_open: boolean, _data?: Contact) => void;
+    clearSelected: () => void;
     isWidgetsLoading: boolean;
     loadWidgets: () => Promise<void>;
     loadingContacts: boolean;
@@ -46,6 +47,9 @@ export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
         /* empty default method  */
     },
     loadWidgets: () => Promise.resolve(),
+    clearSelected: () => {
+        /* empty default method  */
+    },
     contacts: [],
     loadContacts: () => {
         /* empty default method  */
@@ -79,6 +83,10 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while attempting to load contacts' }));
             setLoadingContacts(false);
         }
+    };
+
+    const clearSelected = () => {
+        setSelectedContact(null);
     };
 
     const loadWidgets = async () => {
@@ -135,6 +143,7 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
                 contacts,
                 loadContacts,
                 selectedContact,
+                clearSelected,
             }}
         >
             {children}

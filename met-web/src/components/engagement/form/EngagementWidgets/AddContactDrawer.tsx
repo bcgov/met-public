@@ -91,7 +91,6 @@ const AddContactDrawer = () => {
                                     data-testid="contact-form/name"
                                     variant="outlined"
                                     label=" "
-                                    defaultValue={selectedContact ? selectedContact.name : ''}
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -109,7 +108,6 @@ const AddContactDrawer = () => {
                                         shrink: false,
                                     }}
                                     fullWidth
-                                    defaultValue={selectedContact ? selectedContact.title : ''}
                                     name="title"
                                     size="small"
                                 />
@@ -122,7 +120,6 @@ const AddContactDrawer = () => {
                                 data-testid="contact-form/phone"
                                 variant="outlined"
                                 label=" "
-                                defaultValue={selectedContact ? selectedContact.phone_number : ''}
                                 InputLabelProps={{
                                     shrink: false,
                                 }}
@@ -138,7 +135,6 @@ const AddContactDrawer = () => {
                                 data-testid="contact-form/email"
                                 variant="outlined"
                                 label=" "
-                                defaultValue={selectedContact ? selectedContact.email : ''}
                                 InputLabelProps={{
                                     shrink: false,
                                 }}
@@ -154,7 +150,6 @@ const AddContactDrawer = () => {
                                 data-testid="contact-form/address"
                                 variant="outlined"
                                 label=" "
-                                defaultValue={selectedContact ? selectedContact.address : ''}
                                 InputLabelProps={{
                                     shrink: false,
                                 }}
@@ -174,7 +169,6 @@ const AddContactDrawer = () => {
                                     shrink: false,
                                 }}
                                 fullWidth
-                                defaultValue={selectedContact ? selectedContact.bio : ''}
                                 name="bio"
                                 size="small"
                                 multiline

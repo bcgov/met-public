@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useState, useRef } from 'react';
 import { MetLabel, MetParagraph, MetWidgetPaper } from 'components/common';
 import { Grid, IconButton } from '@mui/material';
 import { Contact } from 'models/contact';
@@ -120,12 +120,18 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
                     justifyContent="flex-start"
                     spacing={1}
                 >
-                    <Grid item xs={2}>
-                        <MetParagraph>Phone:</MetParagraph>
-                    </Grid>
-                    <Grid item xs={10}>
-                        <MetParagraph>{contact.phone_number}</MetParagraph>
-                    </Grid>
+                    {contact.phone_number ? (
+                        <>
+                            <Grid item xs={2}>
+                                <MetParagraph>Phone:</MetParagraph>
+                            </Grid>
+                            <Grid item xs={10}>
+                                <MetParagraph>{contact.phone_number}</MetParagraph>
+                            </Grid>
+                        </>
+                    ) : (
+                        <></>
+                    )}
 
                     <Grid item xs={2}>
                         <MetParagraph>Email:</MetParagraph>
@@ -133,13 +139,18 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
                     <Grid item xs={10}>
                         <MetParagraph>{contact.email}</MetParagraph>
                     </Grid>
-
-                    <Grid item xs={2}>
-                        <MetParagraph>Address:</MetParagraph>
-                    </Grid>
-                    <Grid item xs={10}>
-                        <MetParagraph>{contact.address}</MetParagraph>
-                    </Grid>
+                    {contact.address !== '' ? (
+                        <>
+                            <Grid item xs={2}>
+                                <MetParagraph>Address:</MetParagraph>
+                            </Grid>
+                            <Grid item xs={10}>
+                                <MetParagraph>{contact.address}</MetParagraph>
+                            </Grid>
+                        </>
+                    ) : (
+                        <></>
+                    )}
 
                     <Grid item xs={2}>
                         <MetParagraph>Bio:</MetParagraph>

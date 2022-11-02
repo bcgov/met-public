@@ -11,7 +11,7 @@ import { WidgetType } from 'models/widget';
 import update from 'immutability-helper';
 
 const WhoIsListeningForm = () => {
-    const { handleWidgetDrawerOpen, handleAddContactDrawerOpen, loadingContacts, contacts, widgets } =
+    const { handleWidgetDrawerOpen, handleAddContactDrawerOpen, loadingContacts, contacts, widgets, clearSelected } =
         useContext(WidgetDrawerContext);
     const dispatch = useAppDispatch();
     const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
@@ -46,6 +46,7 @@ const WhoIsListeningForm = () => {
 
     const removeContact = (contact: Contact) => {
         const filteredContacts = addedContacts.filter((c) => contact.id != c.id);
+        clearSelected();
         setAddedContacts(filteredContacts);
     };
 
