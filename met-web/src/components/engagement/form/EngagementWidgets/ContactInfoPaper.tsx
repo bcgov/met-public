@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import { MetLabel, MetParagraph, MetWidgetPaper } from 'components/common';
 import { Grid, IconButton } from '@mui/material';
 import { Contact } from 'models/contact';
@@ -27,7 +27,7 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
     const { handleAddContactDrawerOpen } = useContext(WidgetDrawerContext);
     const ref = useRef<HTMLDivElement>(null);
 
-    const [{ handlerId }, drop] = useDrop<DragItem, void, { handlerId: Identifier | null }>({
+    const [drop] = useDrop<DragItem, void, { handlerId: Identifier | null }>({
         accept: 'Contact',
         collect(monitor) {
             return {
@@ -83,7 +83,7 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
         },
     });
 
-    const [{ isDragging }, drag] = useDrag({
+    const [drag] = useDrag({
         type: 'Contact',
         item: () => {
             return { testId, index };

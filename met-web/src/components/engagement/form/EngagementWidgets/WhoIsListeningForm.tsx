@@ -23,7 +23,7 @@ const WhoIsListeningForm = () => {
             update(prevContacts, {
                 $splice: [
                     [dragIndex, 1],
-                    [hoverIndex, 0, prevContacts[dragIndex] as Contact],
+                    [hoverIndex, 0, prevContacts[dragIndex]],
                 ],
             }),
         );

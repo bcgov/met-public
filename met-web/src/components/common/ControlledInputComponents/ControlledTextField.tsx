@@ -6,21 +6,17 @@ type IFormInputProps = {
     name: string;
 } & TextFieldProps;
 
-const ControlledTextField: FC<IFormInputProps> = ({ name, ...otherProps }) => {
+const ControlledTextField: FC<IFormInputProps> = ({ name, defaultValue, ...otherProps }) => {
     const {
         control,
-        formState: { errors, defaultValues },
+        formState: { errors },
     } = useFormContext();
-
-    React.useEffect(() => {
-        console.log(JSON.stringify(defaultValues));
-    });
 
     return (
         <Controller
             control={control}
             name={name}
-            defaultValue={defaultValues?.[name] || ''}
+            defaultValue={defaultValue}
             render={({ field }) => (
                 <TextField
                     {...otherProps}
