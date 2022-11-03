@@ -110,14 +110,14 @@ def factory_engagement_model(eng_info: dict = TestEngagementInfo.engagement1, st
     return engagement
 
 
-def factory_user_model(user_info: dict = TestUserInfo.user_public_1):
+def factory_user_model(external_id = fake.random_number(digits=5), user_info: dict = TestUserInfo.user_public_1):
     """Produce a user model."""
     user = UserModel(
         first_name=user_info['first_name'],
         last_name=user_info['last_name'],
         middle_name=user_info['middle_name'],
         email_id=user_info['email_id'],
-        external_id=str(fake.random_number(digits=5))
+        external_id=str(external_id)
     )
     db.session.add(user)
     db.session.commit()

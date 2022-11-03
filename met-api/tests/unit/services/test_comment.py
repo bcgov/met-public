@@ -18,38 +18,31 @@ Test-Suite to ensure that the /Comment endpoint is working as expected.
 """
 import json
 
+from met_api.services.comment_service import CommentService
+
 from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_comment_model, factory_submission_model, factory_survey_and_eng_model,
-    factory_user_model)
+    factory_comment_model, factory_submission_model, factory_survey_and_eng_model, factory_user_model)
 
 
-def test_get_comments(client, jwt, session):  # pylint:disable=unused-argument
+def test_get_comments(session):  # pylint:disable=unused-argument
     """Assert that comments can be fetched."""
-    claims = TestJwtClaims.public_user_role
-
     user_details = factory_user_model()
     survey, eng = factory_survey_and_eng_model()
     submission = factory_submission_model(survey.id, user_details.id)
     factory_comment_model(survey.id, submission.id)
-    headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.get(f'/api/comments/submission/{submission.id}', headers=headers, content_type='application/json')
-    assert rv.status_code == 200
+    comment_records = CommentService().get_comments_by_submission(submission.id)
+    assert len(comment_records) == 1
+    assert comment_records[0]['status_id'] == 1
 
 
 def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that a comment can be reviewed."""
-    claims = TestJwtClaims.public_user_role
-
-    factory_user_model(TestJwtClaims.public_user_role.get('sub'))
+    admin_user = factory_user_model(3)
     user_details = factory_user_model()
     survey, eng = factory_survey_and_eng_model()
     submission = factory_submission_model(survey.id, user_details.id)
     factory_comment_model(survey.id, submission.id)
-    to_dict = {
-        'status_id': 2,
-    }
-    headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.put(f'/api/comments/submission/{submission.id}',
-                    data=json.dumps(to_dict), headers=headers, content_type='application/json')
-    assert rv.status_code == 200
+    comment_records = CommentService().review_comment(submission.id, 2, admin_user.external_id)
+    assert len(comment_records) == 1
+    assert comment_records[0]['status_id'] == 2
