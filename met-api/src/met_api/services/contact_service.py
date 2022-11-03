@@ -26,14 +26,14 @@ class ContactService:
         contact_data['updated_by'] = user_id
         return Contact.create_contact(contact_data)
     
-    
-    def create_or_update_user(self, user: UserSchema):
-        """Create or update a user."""
-        self.validate_fields(user)
+    @staticmethod
+    def update_contact(self, contact: ContactSchema):
+        """Update a user."""
+        self.validate_fields(contact)
 
-        external_id = user.get('external_id')
-        db_user = User.get_user_by_external_id(external_id)
-        if db_user is None:
+        id = contact.get('id')
+        db_contact = contact.get()
+        if db_contact is None:
             return User.create_user(user)
         return User.update_user(db_user.id, user)
 
