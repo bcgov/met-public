@@ -12,15 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Tests to verify the comment API end-point.
+"""Tests for the Comment Service class.
 
-Test-Suite to ensure that the /Comment endpoint is working as expected.
+Test-Suite to ensure that the Comment service routines are working as expected.
 """
-import json
-
 from met_api.services.comment_service import CommentService
 
-from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import (
     factory_comment_model, factory_submission_model, factory_survey_and_eng_model, factory_user_model)
 
