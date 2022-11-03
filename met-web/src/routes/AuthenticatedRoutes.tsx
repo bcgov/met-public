@@ -26,11 +26,11 @@ const AuthenticatedRoutes = () => {
             <Route path="/surveys/:surveyId/submit" element={<SurveySubmit />} />
             <Route path="/surveys/:surveyId/comments" element={<CommentReviewListing />} />
             <Route path="/surveys/:surveyId/comments/all" element={<CommentTextListing />} />
+            <Route path="/surveys/:surveyId/submissions/:submissionId/review" element={<CommentReview />} />
             <Route path="/engagements/:engagementId/form" element={<EngagementForm />} />
             <Route path="/engagements/:engagementId/view" element={<EngagementView />} />
             <Route path="/engagements/:engagementId/comments" element={<EngagementComments />} />
             <Route path="/engagements/:engagementId/dashboard" element={<EngagementDashboard />} />
-            <Route path="/surveys/:surveyId/comments/:commentId/review" element={<CommentReview />} />
             <Route path="/feedback" element={<FeedbackListing />} />
             <Route path="/calendar" element={<UnderConstruction />} />
             <Route path="/reporting" element={<UnderConstruction />} />

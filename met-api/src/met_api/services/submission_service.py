@@ -41,11 +41,12 @@ class SubmissionService:
             submission['user_id'] = user_id
             submission['created_by'] = user_id
 
+            submission_result = Submission.create(submission, session)
+            submission['id'] = submission_result.identifier
             survey = SurveyService.get(survey_id)
             comments = CommentService.extract_comments(submission, survey)
             CommentService().create_comments(comments, session)
-            result = Submission.create(submission, session)
-        return result
+        return submission_result
 
     @classmethod
     def update(cls, data: SubmissionSchema):

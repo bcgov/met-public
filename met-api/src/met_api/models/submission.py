@@ -52,6 +52,7 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
             db.session.commit()
         else:
             session.add(new_submission)
+            session.flush()
         return DefaultMethodResult(True, 'Submission Added', new_submission.id)
 
     @classmethod

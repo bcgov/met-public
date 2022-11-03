@@ -30,11 +30,26 @@ class Comment(db.Model):
     status_id = db.Column(db.Integer, ForeignKey('comment_status.id', ondelete='SET NULL'))
     survey_id = db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), nullable=False)
     user_id = db.Column(db.Integer, ForeignKey('user.id', ondelete='SET NULL'), nullable=True)
+    submission_id = db.Column(db.Integer, ForeignKey('submission.id', ondelete='SET NULL'), nullable=True)
+    component_id = db.Column(db.String(10))
 
     @classmethod
     def get_comment(cls, comment_id):
         """Get a comment."""
-        return db.session.query(Comment).join(CommentStatus).join(Survey).filter(Comment.id == comment_id).first()
+        return db.session.query(Comment)\
+            .join(CommentStatus)\
+            .join(Survey)\
+            .filter(Comment.id == comment_id)\
+            .first()
+
+    @classmethod
+    def get_by_submission(cls, submission_id):
+        """Get comments by submission id."""
+        return db.session.query(Comment)\
+            .join(CommentStatus)\
+            .join(Survey)\
+            .filter(Comment.submission_id == submission_id)\
+            .all()
 
     @classmethod
     def get_comments_by_survey_id_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text=''):
@@ -97,7 +112,9 @@ class Comment(db.Model):
             submission_date=datetime.utcnow(),
             status_id=Status.Pending.value,
             survey_id=comment.get('survey_id', None),
-            user_id=comment.get('user_id', None)
+            user_id=comment.get('user_id', None),
+            submission_id=comment.get('submission_id', None),
+            component_id=comment.get('component_id', None)
         )
 
     @classmethod
@@ -112,12 +129,12 @@ class Comment(db.Model):
         return DefaultMethodResult(True, 'Comments Added', 1)
 
     @classmethod
-    def update_comment_status(cls, comment_id, status_id, reviewed_by) -> DefaultMethodResult:
+    def update_comment_status(cls, submission_id, status_id, reviewed_by):
         """Update comment status."""
-        query = Comment.query.filter_by(id=comment_id)
+        query = Comment.query.filter_by(submission_id=submission_id)
 
         if not query.first():
-            return DefaultMethodResult(False, 'Survey Not Found', comment_id)
+            return DefaultMethodResult(False, 'Comments not Found', submission_id)
 
         update_fields = dict(
             status_id=status_id,
@@ -126,4 +143,4 @@ class Comment(db.Model):
         )
         query.update(update_fields)
         db.session.commit()
-        return DefaultMethodResult(True, 'Survey Updated', comment_id)
+        return query.all()
