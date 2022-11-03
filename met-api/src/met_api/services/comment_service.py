@@ -104,4 +104,5 @@ class CommentService:
 
         reviewed_by = ' '.join([user.get('first_name', ''), user.get('last_name', '')])
 
-        return Comment.update_comment_status(submission_id, status_id, reviewed_by)
+        comments = Comment.update_comment_status(submission_id, status_id, reviewed_by)
+        return CommentSchema(many=True).dump(comments)

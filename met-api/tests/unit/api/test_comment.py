@@ -33,7 +33,7 @@ def test_get_comments(client, jwt, session):  # pylint:disable=unused-argument
     submission = factory_submission_model(survey.id, user_details.id)
     factory_comment_model(survey.id, submission.id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.get('/api/comments/submission/{submission.id}', headers=headers, content_type='application/json')
+    rv = client.get(f'/api/comments/submission/{submission.id}', headers=headers, content_type='application/json')
     assert rv.status_code == 200
 
 
@@ -49,6 +49,6 @@ def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
         'status_id': 2,
     }
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.put('/api/comments/submission/{submission.id}',
+    rv = client.put(f'/api/comments/submission/{submission.id}',
                     data=json.dumps(to_dict), headers=headers, content_type='application/json')
     assert rv.status_code == 200
