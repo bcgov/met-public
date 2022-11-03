@@ -21,15 +21,18 @@ from met_api import db
 from met_api.config import get_named_config
 from met_api.constants.engagement_status import Status
 from met_api.constants.widget import WidgetType
+from met_api.models.comment import Comment as CommentModel
 from met_api.models.email_verification import EmailVerification as EmailVerificationModel
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.feedback import Feedback as FeedbackModel
+from met_api.models.submission import Submission as SubmissionModel
 from met_api.models.survey import Survey as SurveyModel
 from met_api.models.user import User as UserModel
 from met_api.models.widget import Widget as WidgetModal
 from met_api.models.widget_item import WidgetItem as WidgetItemModal
 from tests.utilities.factory_scenarios import (
-    TestEngagementInfo, TestFeedbackInfo, TestSurveyInfo, TestUserInfo, TestWidgetInfo, TestWidgetItemInfo)
+    TestCommentInfo, TestEngagementInfo, TestFeedbackInfo, TestSubmissionInfo, TestSurveyInfo, TestUserInfo,
+    TestWidgetInfo, TestWidgetItemInfo)
 
 
 CONFIG = get_named_config('testing')
@@ -167,3 +170,34 @@ def factory_widget_item_model(widget_info: dict = TestWidgetItemInfo.widget_item
     db.session.add(widget)
     db.session.commit()
     return widget
+
+
+def factory_submission_model(survey_id, user_id, submission_info: dict = TestSubmissionInfo.submission1):
+    """Produce a submission model."""
+    submission = SubmissionModel(
+        survey_id=survey_id,
+        user_id=user_id,
+        submission_json=submission_info.get('submission_json'),
+        created_by=submission_info.get('created_by'),
+        updated_by=submission_info.get('updated_by'),
+        created_date=submission_info.get('created_date'),
+        updated_date=submission_info.get('updated_date'),
+    )
+    db.session.add(submission)
+    db.session.commit()
+    return submission
+
+
+def factory_comment_model(survey_id, submission_id, comment_info: dict = TestCommentInfo.comment1):
+    """Produce a comment model."""
+    comment = CommentModel(
+        survey_id=survey_id,
+        submission_id=submission_id,
+        component_id=comment_info.get('component_id'),
+        text=comment_info.get('text'),
+        status_id=comment_info.get('status_id'),
+        submission_date=comment_info.get('submission_date'),
+    )
+    db.session.add(comment)
+    db.session.commit()
+    return comment

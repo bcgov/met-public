@@ -16,8 +16,8 @@
 Test Utility for creating test scenarios.
 """
 
-from enum import Enum
 from datetime import datetime, timedelta
+from enum import Enum
 
 from faker import Faker
 
@@ -25,6 +25,7 @@ from met_api.config import get_named_config
 from met_api.constants.engagement_status import SubmissionStatus
 from met_api.constants.feedback import CommentType, FeedbackSourceType, RatingType
 from met_api.constants.widget import WidgetType
+
 
 fake = Faker()
 
@@ -172,4 +173,27 @@ class TestContactInfo(dict, Enum):
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
+    }
+
+
+class TestSubmissionInfo(dict, Enum):
+    """Test scenarios of submission."""
+
+    submission1 = {
+        'submission_json': '{"simpletextarea": "' + fake.paragraph(nb_sentences=3) + '"}',
+        'created_by': '123',
+        'updated_by': '123',
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+    }
+
+
+class TestCommentInfo(dict, Enum):
+    """Test scenarios of comment."""
+
+    comment1 = {
+        'text': fake.paragraph(nb_sentences=3),
+        'component_id': 'simpletextarea',
+        'status_id': 1,  # Pending
+        'submission_date': datetime.now().strftime('%Y-%m-%d'),
     }
