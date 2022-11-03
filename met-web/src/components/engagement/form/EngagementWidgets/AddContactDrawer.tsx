@@ -34,7 +34,14 @@ const AddContactDrawer = () => {
     const [isCreatingContact, setIsCreatingContact] = useState(false);
     const methods = useForm<ContactForm>({
         resolver: yupResolver(schema),
-        defaultValues: { ...selectedContact },
+        defaultValues: {
+            name: selectedContact ? selectedContact.name : '',
+            phone_number: selectedContact ? selectedContact.phone_number : '',
+            title: selectedContact ? selectedContact.title : '',
+            email: selectedContact ? selectedContact.email : '',
+            address: selectedContact ? selectedContact.address : '',
+            bio: selectedContact ? selectedContact.bio : '',
+        },
     });
 
     const { handleSubmit } = methods;

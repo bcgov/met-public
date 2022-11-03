@@ -58,3 +58,27 @@ class Contact(db.Model):  # pylint: disable=too-few-public-methods
         db.session.commit()
 
         return new_contact
+    
+     
+    @classmethod
+    def update_contact(cls, contact_id, contact_dict) -> Optional[Contact]:
+        """Update contact."""
+        query = Contact.query.filter_by(id=contact_id)
+        contact: Contact = query.first()
+        if not contact:
+            return None
+
+        update_fields = dict(
+            name=contact_dict.get('name', contact.name),
+            title=contact_dict.get('title', contact.title),
+            phone_number=contact_dict.get('phone_number', contact.phone_number),
+            email=contact_dict.get('email', contact.email),
+            phone_number=contact_dict.get('phone_number', contact.phone_number),
+            address=contact_dict.get('address', contact.address),
+            bio=contact_dict.get('bio', contact.bio),
+            updated_date=datetime.utcnow(),
+        )
+
+        query.update(update_fields)
+        db.session.commit()
+        return contact

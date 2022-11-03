@@ -17,11 +17,7 @@ class ContactSchema(Schema):
     phone_number = fields.Str(data_key='phone_number')
     email = fields.Str(data_key='email', required=True)
     address = fields.Str(data_key='address')
-    bio = fields.Str(
-        data_key='bio',
-        validate=validate.Length(
-            min=20,
-            max=500))
+    bio = fields.Str(data_key='bio')
     created_by = fields.Str(data_key='created_by')
     created_date = fields.Str(data_key='created_date')
     updated_by = fields.Str(data_key='updated_by')

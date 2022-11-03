@@ -88,3 +88,26 @@ class Surveys(Resource):
             return ActionResult.success(result=widgets)
         except (KeyError, ValueError) as err:
             return ActionResult.error(str(err))
+
+
+@cors_preflight('PUT')
+@API.route('/')
+class Contact(Resource):
+    """Contact controller class."""
+
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def put():
+        """Update Contact."""
+        try:
+            contact_data = TokenInfo.get_contact_data()
+            contact_schema = ContactSchema().load(user_data)
+            contact = ContactService().create_or_update_contact(contact_schema)
+            contact_schema['id'] = contact.id
+            return ActionResult.success(contact.id, contact_schema)
+        except KeyError as err:
+            return ActionResult.error(str(err))
+        except ValueError as err:
+            return ActionResult.error(str(err))
