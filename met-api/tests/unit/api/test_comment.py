@@ -29,7 +29,7 @@ def test_get_comments(client, jwt, session):  # pylint:disable=unused-argument
     claims = TestJwtClaims.public_user_role
 
     user_details = factory_user_model()
-    survey = factory_survey_and_eng_model()
+    survey, eng = factory_survey_and_eng_model()
     submission = factory_submission_model(survey.id, user_details.id)
     factory_comment_model(survey.id, submission.id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
