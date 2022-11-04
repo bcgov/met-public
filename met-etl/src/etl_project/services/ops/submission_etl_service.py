@@ -238,7 +238,7 @@ def _save_checkbox(metetlsession, context, answer_key, component, survey, user, 
 
             selectbox_mapping[item.get('value')] = item.get('label')
 
-    if answer_key.items() is not None:
+    if answer_key is not None:
         for key, value in answer_key.items():
             # each answer is a row for simplebox.It belongs to answer in a multiple checkbox
             is_yes = _is_truthy(value)
