@@ -47,3 +47,15 @@ export const postContact = async (data: PostContactRequest): Promise<Contact> =>
         return Promise.reject(err);
     }
 };
+
+export const updateContact = async (data: PostContactRequest): Promise<Contact> => {
+    try {
+        const response = await http.PutRequest<Contact>(Endpoints.Contacts.UPDATE, data);
+        if (response.data.status && response.data.result) {
+            return Promise.resolve(response.data.result);
+        }
+        return Promise.reject(response.data.message ?? 'Failed to update contact');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};

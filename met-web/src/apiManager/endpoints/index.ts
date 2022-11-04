@@ -49,6 +49,7 @@ const Endpoints = {
         GET: `${AppConfig.apiUrl}/contacts/contact_id`,
         GET_LIST: `${AppConfig.apiUrl}/contacts/`,
         CREATE: `${AppConfig.apiUrl}/contacts/`,
+        UPDATE: `${AppConfig.apiUrl}/contacts/`,
     },
 };
 

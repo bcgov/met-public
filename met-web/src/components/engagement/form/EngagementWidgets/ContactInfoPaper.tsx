@@ -103,7 +103,7 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
                         <DragIndicatorIcon />
                     </IconButton>
                 </Grid>
-                <Grid item xs={2} container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
+                <Grid item xs={3} container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
                     <Grid item xs={12}>
                         <MetLabel>{contact.name}</MetLabel>
                     </Grid>
@@ -113,7 +113,7 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
                 </Grid>
                 <Grid
                     item
-                    xs={8}
+                    xs={6.5}
                     container
                     direction="row"
                     alignItems={'flex-start'}
@@ -145,7 +145,14 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
                                 <MetParagraph>Address:</MetParagraph>
                             </Grid>
                             <Grid item xs={10}>
-                                <MetParagraph>{contact.address}</MetParagraph>
+                                <MetParagraph
+                                    width={'100%'}
+                                    overflow="hidden"
+                                    textOverflow={'ellipsis'}
+                                    whiteSpace="nowrap"
+                                >
+                                    {contact.address}
+                                </MetParagraph>
                             </Grid>
                         </>
                     ) : (
@@ -161,7 +168,7 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
                         </MetParagraph>
                     </Grid>
                 </Grid>
-                <Grid container item xs={1}>
+                <Grid container item xs={1.5}>
                     <Grid item xs={6}>
                         <IconButton
                             sx={{ padding: 1, margin: 0 }}

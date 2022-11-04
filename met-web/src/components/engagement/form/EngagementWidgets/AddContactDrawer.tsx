@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
@@ -44,21 +44,47 @@ const AddContactDrawer = () => {
         },
     });
 
+    useEffect(() => {
+        methods.setValue('name', selectedContact?.name);
+        methods.setValue('phone_number', selectedContact?.phone_number);
+        methods.setValue('title', selectedContact?.title);
+        methods.setValue('email', selectedContact?.email);
+        methods.setValue('address', selectedContact?.address);
+        methods.setValue('bio', selectedContact?.bio);
+    }, [selectedContact]);
+
     const { handleSubmit } = methods;
 
     const onSubmit: SubmitHandler<ContactForm> = async (data: ContactForm) => {
         try {
-            setIsCreatingContact(true);
-            await postContact(data);
-            setIsCreatingContact(false);
-            handleAddContactDrawerOpen(false);
-            dispatch(openNotification({ severity: 'success', text: 'A new contact was successfully added' }));
-            loadContacts();
+            if (selectedContact) {
+                // setIsCreatingContact(true);
+                // await updateContact(data);
+                // setIsCreatingContact(false);
+                // handleAddContactDrawerOpen(false);
+                // dispatch(openNotification({ severity: 'success', text: 'Contact was successfully updated' }));
+                // loadContacts();
+            } else {
+                setIsCreatingContact(true);
+                await postContact(data);
+                setIsCreatingContact(false);
+                handleAddContactDrawerOpen(false);
+                dispatch(openNotification({ severity: 'success', text: 'A new contact was successfully added' }));
+                loadContacts();
+            }
         } catch (err) {
             console.log(err);
-            dispatch(
-                openNotification({ severity: 'error', text: 'An error occured while trying to create a new contact' }),
-            );
+            !selectedContact
+                ? dispatch(
+                      openNotification({
+                          severity: 'error',
+                          text: 'An error occured while trying to create a new contact',
+                      }),
+                  )
+                : dispatch(
+                      openNotification({ severity: 'error', text: 'An error occured while trying to update contact' }),
+                  );
+
             setIsCreatingContact(false);
         }
     };

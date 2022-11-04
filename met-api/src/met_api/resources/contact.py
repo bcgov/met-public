@@ -35,7 +35,7 @@ API = Namespace('contacts', description='Endpoints for Widget Management')
 
 @cors_preflight('GET, OPTIONS')
 @API.route('/<contact_id>')
-class SurveySubmission(Resource):
+class Contact(Resource):
     """Resource for managing a contacts."""
 
     @staticmethod
@@ -52,7 +52,7 @@ class SurveySubmission(Resource):
 
 @cors_preflight('GET, POST, OPTIONS')
 @API.route('/')
-class Surveys(Resource):
+class Contacts(Resource):
     """Resource for managing contacts."""
 
     @staticmethod
@@ -89,22 +89,18 @@ class Surveys(Resource):
         except (KeyError, ValueError) as err:
             return ActionResult.error(str(err))
 
-
-@cors_preflight('PUT')
-@API.route('/')
-class Contact(Resource):
-    """Contact controller class."""
-
+    
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
     @auth.require
-    def put():
+    def put(contact_id):
         """Update Contact."""
         try:
-            contact_data = TokenInfo.get_contact_data()
-            contact_schema = ContactSchema().load(user_data)
-            contact = ContactService().create_or_update_contact(contact_schema)
+            user_id = TokenInfo.get_id()
+            contact = ContactService().get_contact_by_id(contact_id)
+            contact_schema = ContactSchema().load(contact)
+            contact = ContactService().update_contact(contact_schema, user_id)
             contact_schema['id'] = contact.id
             return ActionResult.success(contact.id, contact_schema)
         except KeyError as err:

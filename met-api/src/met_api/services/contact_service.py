@@ -27,13 +27,12 @@ class ContactService:
         return Contact.create_contact(contact_data)
     
     @staticmethod
-    def update_contact(self, contact: ContactSchema):
+    def update_contact(self, contact: ContactSchema, contact_id):
         """Update a user."""
         self.validate_fields(contact)
-
         id = contact.get('id')
         db_contact = contact.get()
         if db_contact is None:
-            return User.create_user(user)
-        return User.update_user(db_user.id, user)
+            return Contact.create_contact(contact)
+        return Contact.update_contact(db_contact.id, contact)
 

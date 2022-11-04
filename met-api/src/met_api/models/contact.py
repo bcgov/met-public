@@ -3,11 +3,9 @@
 Manages the contact
 """
 from __future__ import annotations
-
 from datetime import datetime
-
 from .db import db
-
+from .default_method_result import DefaultMethodResult
 
 class Contact(db.Model):  # pylint: disable=too-few-public-methods
     """Definition of the Contact entity."""
@@ -61,13 +59,13 @@ class Contact(db.Model):  # pylint: disable=too-few-public-methods
     
      
     @classmethod
-    def update_contact(cls, contact_id, contact_dict) -> Optional[Contact]:
+    def update_contact(cls, contact_id, contact_dict, user_id) -> Contact:
         """Update contact."""
         query = Contact.query.filter_by(id=contact_id)
         contact: Contact = query.first()
         if not contact:
             return None
-
+        
         update_fields = dict(
             name=contact_dict.get('name', contact.name),
             title=contact_dict.get('title', contact.title),
@@ -77,6 +75,7 @@ class Contact(db.Model):  # pylint: disable=too-few-public-methods
             address=contact_dict.get('address', contact.address),
             bio=contact_dict.get('bio', contact.bio),
             updated_date=datetime.utcnow(),
+            updated_by = ('updated_by', user_id) ,
         )
 
         query.update(update_fields)
