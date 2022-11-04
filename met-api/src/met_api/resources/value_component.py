@@ -38,61 +38,61 @@ class GetEngagements(Resource):
     def get():
         """Fetch all value components."""
         try:
-            ##TODO: Create service and models for value components
+            # TODO: Create service and models for value components
             vcs = [
                 {
-                    "id": 1,
-                    "title": "Marine Life",
-                    "icon": "fa-solid fa-shrimp",
-                    "category": "blue"
+                    'id': 1,
+                    'title': 'Marine Life',
+                    'icon': 'fa-solid fa-shrimp',
+                    'category': 'blue'
                 },
                 {
-                    "id": 2,
-                    "title": "Visual Quality",
-                    "icon": 'fa-regular fa-image',
-                    "category": "blue"
+                    'id': 2,
+                    'title': 'Visual Quality',
+                    'icon': 'fa-regular fa-image',
+                    'category': 'blue'
                 },
                 {
-                    "id": 3,
-                    "title": "Health",
-                    "icon": 'fa-solid fa-heart',
-                    "category": "red"
+                    'id': 3,
+                    'title': 'Health',
+                    'icon': 'fa-solid fa-heart',
+                    'category': 'red'
                 },
                 {
-                    "id": 4,
-                    "title": "Fish",
-                    "icon": 'fa-solid fa-fish',
-                    "category": "yellow"
+                    'id': 4,
+                    'title': 'Fish',
+                    'icon': 'fa-solid fa-fish',
+                    'category': 'yellow'
                 },
                 {
-                    "id": 5,
-                    "title": "Environment",
-                    "icon": 'fa-brands fa-envira',
-                    "category": "yellow"
+                    'id': 5,
+                    'title': 'Environment',
+                    'icon': 'fa-brands fa-envira',
+                    'category': 'yellow'
                 },
                 {
-                    "id": 6,
-                    "title": "Trees",
-                    "icon": 'fa-solid fa-tree',
-                    "category": "red"
+                    'id': 6,
+                    'title': 'Trees',
+                    'icon': 'fa-solid fa-tree',
+                    'category': 'red'
                 },
                 {
-                    "id": 7,
-                    "title": "Wildlife",
-                    "icon": 'fa-solid fa-dove',
-                    "category": "blue"
+                    'id': 7,
+                    'title': 'Wildlife',
+                    'icon': 'fa-solid fa-dove',
+                    'category': 'blue'
                 },
                 {
-                    "id": 8,
-                    "title": "Rights",
-                    "icon": 'fa-solid fa-gavel',
-                    "category": "red"
+                    'id': 8,
+                    'title': 'Rights',
+                    'icon': 'fa-solid fa-gavel',
+                    'category': 'red'
                 },
                 {
-                    "id": 9,
-                    "title": "Accidents",
-                    "icon": 'fa-solid fa-triangle-exclamation',
-                    "category": "yellow"
+                    'id': 9,
+                    'title': 'Accidents',
+                    'icon': 'fa-solid fa-triangle-exclamation',
+                    'category': 'yellow'
                 }
             ]
             return ActionResult.success(result=vcs)
