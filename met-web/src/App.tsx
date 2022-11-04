@@ -26,7 +26,7 @@ const App = () => {
         UserService.initKeycloak(dispatch);
     }, [dispatch]);
 
-    localStorage.setItem('apiurl', String(AppConfig.apiUrl));
+    sessionStorage.setItem('apiurl', String(AppConfig.apiUrl));
 
     if (authenticationLoading) {
         return <MidScreenLoader />;
