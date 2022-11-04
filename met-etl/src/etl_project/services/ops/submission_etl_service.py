@@ -16,6 +16,11 @@ from met_cron.models.user_response_detail import UserResponseDetail as UserRespo
 from met_cron.models.survey import Survey as EtlSurveyModel
 from met_cron.utils import FormIoComponentType
 
+# Perform the ETL on submissions.
+# 1.Extract data out of submission.
+# 2.Iterate form_json.components.
+# 3.Check Type and save to db
+
 def _get_met_session():
     engine = get_met_db_creds()
     Session = sessionmaker(bind=engine)
@@ -32,18 +37,21 @@ def _get_met_etl_session():
 @op(out={"submission_last_run_cycle_time": Out(), "submission_new_runcycleid": Out()})
 def get_submission_last_run_cycle_time(context, flag_to_trigger_submission_etl):
     met_etl_db_session = _get_met_etl_session()
+    # default date to load the whole data on first run
     default_datetime = datetime(1900, 1, 1, 0, 0, 0, 0)
 
     submission_last_run_cycle_time = met_etl_db_session.query(
         func.coalesce(func.max(EtlRunCycleModel.enddatetime), default_datetime)).filter(
         EtlRunCycleModel.packagename == 'submission', EtlRunCycleModel.success == True).first()
 
+    # get the latest record id from the run cycle table, in case of first run its considered as zero
     max_run_cycle_id = met_etl_db_session.query(func.coalesce(func.max(EtlRunCycleModel.id), 0)).first()
 
     for last_run_cycle_time in submission_last_run_cycle_time:
 
         for run_cycle_id in max_run_cycle_id:
-
+            # insert the current run cycle details to the table with the success status as false. 
+            # This will be set to true once the job completes
             new_run_cycle_id = run_cycle_id + 1
             met_etl_db_session.add(EtlRunCycleModel(id=new_run_cycle_id, packagename='submission', startdatetime=datetime.utcnow(), 
                         enddatetime=None, description='started the load for tables user response detail and responses', success=False))
@@ -92,11 +100,11 @@ def load_submission(context, new_submission, updated_submission, submission_new_
     all_submissions = new_submission + updated_submission
     metsession = _get_met_session()
     metetlsession = _get_met_etl_session()
-
+    # check if there are any new or updated records
     if len(all_submissions) > 0:
 
         context.log.info("loading new submissions")
-
+        # go thru each submission.
         for submission in all_submissions:
 
             met_survey = metsession.query(MetSurveyModel).filter(MetSurveyModel.id == submission.survey_id).first()
@@ -225,38 +233,41 @@ def _save_checkbox(metetlsession, context, answer_key, component, survey, user, 
 
     selectbox_mapping = {}
 
-    for item in component.get('values'):
+    if component.get('values') is not None:
+        for item in component.get('values'):
 
-        selectbox_mapping[item.get('value')] = item.get('label')
+            selectbox_mapping[item.get('value')] = item.get('label')
 
-    for key, value in answer_key.items():
-        # each answer is a row for simplebox.It belongs to answer in a multiple checkbox
-        is_yes = _is_truthy(value)
+    if answer_key.items() is not None:
+        for key, value in answer_key.items():
+            # each answer is a row for simplebox.It belongs to answer in a multiple checkbox
+            is_yes = _is_truthy(value)
 
-        if is_yes:
-            # need to find the label of the drop down.
-            answer_label = selectbox_mapping.get(key)
+            if is_yes:
+                # need to find the label of the drop down.
+                answer_label = selectbox_mapping.get(key)
 
-            context.log.info('Input type  ResponseTypeSelectboxModel is created:survey id: %s. '
-                            'request_key is %s value:%s request_id:%s', survey.id, component['key'],
-                            answer_label,
-                            component['id'])
+                context.log.info('Input type  ResponseTypeSelectboxModel is created:survey id: %s. '
+                                'request_key is %s value:%s request_id:%s', survey.id, component['key'],
+                                answer_label,
+                                component['id'])
                             
-            selectbox_response = ResponseTypeSelectboxModel(
-                survey_id=survey.id,
-                request_key=component['key'],
-                value=answer_label,
-                request_id=component['id'],
-                user_id=getattr(user, 'id', None),
-                is_active=True,
-                runcycle_id=submission_new_runcycleid,
-                created_date = submission.created_date,
-                updated_date = submission.updated_date
-                )
+                selectbox_response = ResponseTypeSelectboxModel(
+                    survey_id=survey.id,
+                    request_key=component['key'],
+                    value=answer_label,
+                    request_id=component['id'],
+                    user_id=getattr(user, 'id', None),
+                    is_active=True,
+                    runcycle_id=submission_new_runcycleid,
+                    created_date = submission.created_date,
+                    updated_date = submission.updated_date
+                    )
 
-            metetlsession.add(selectbox_response)
+                metetlsession.add(selectbox_response)
 
-            _save_options(metetlsession, survey, component, answer_label, getattr(user, 'id', None), submission_new_runcycleid, submission) 
+                _save_options(metetlsession, survey, component, answer_label, getattr(user, 'id', None), 
+                                                                        submission_new_runcycleid, submission) 
 
 # load data to table response_type_option
 def _save_options(metetlsession, survey, component, value, user, submission_new_runcycleid, submission):
