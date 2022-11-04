@@ -33,7 +33,7 @@
         "formiojs": "^4.14.6",
         "jsonwebtoken": "^8.5.1",
         "keycloak-js": "^10.0.2",
-        "met-formio": "^1.0.8-rc.3",
+        "met-formio": "^1.0.8-rc.5",
         "moment": "^2.29.4",
         "mui-sx": "^1.0.0",
         "node-sass": "^7.0.3",
