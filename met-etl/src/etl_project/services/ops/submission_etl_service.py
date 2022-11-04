@@ -30,7 +30,7 @@ def _get_met_etl_session():
 
 # get the last run cycle id for submission etl
 @op(out={"submission_last_run_cycle_time": Out(), "submission_new_runcycleid": Out()})
-def get_submission_last_run_cycle_time(context, flag_to_run_submission_etl):
+def get_submission_last_run_cycle_time(context, flag_to_trigger_submission_etl):
     met_etl_db_session = _get_met_etl_session()
     default_datetime = datetime(1900, 1, 1, 0, 0, 0, 0)
 
