@@ -38,7 +38,7 @@ class GetEngagements(Resource):
     def get():
         """Fetch all value components."""
         try:
-            ##TODO: Create service and models for value components 
+            ##TODO: Create service and models for value components
             vcs = [
                 {
                     "id": 1,
