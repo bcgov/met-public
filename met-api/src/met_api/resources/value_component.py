@@ -35,7 +35,7 @@ class GetEngagements(Resource):
 
     @staticmethod
     # @TRACER.trace()
-    @cross_origin(origins='*')
+    @cross_origin(origins=allowedorigins())
     # @auth.require
     def get():
         """Fetch all value components."""
