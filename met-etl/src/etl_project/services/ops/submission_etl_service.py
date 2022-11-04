@@ -38,7 +38,7 @@ def _get_met_etl_session():
 def get_submission_last_run_cycle_time(context, flag_to_trigger_submission_etl):
     met_etl_db_session = _get_met_etl_session()
     # default date to load the whole data on first run
-    default_datetime = datetime(1900, 1, 1, 0, 0, 0, 0)
+    default_datetime = datetime(2022, 8, 1, 0, 0, 0, 0)
 
     submission_last_run_cycle_time = met_etl_db_session.query(
         func.coalesce(func.max(EtlRunCycleModel.enddatetime), default_datetime)).filter(
