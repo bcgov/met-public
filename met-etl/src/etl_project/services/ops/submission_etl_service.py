@@ -40,9 +40,9 @@ def get_submission_last_run_cycle_time(context, flag_to_run_submission_etl):
         for run_cycle_id in max_run_cycle_id:
             new_run_cycle_id = run_cycle_id + 1
             met_etl_db_session.add(EtlRunCycleModel(id=new_run_cycle_id, packagename='submission', startdatetime=datetime.utcnow(), 
-                        enddatetime=None, description='started the load for submission table', success=False))
+                        enddatetime=None, description='started the load for tables user response detail and responses', success=False))
             met_etl_db_session.commit()
-            met_etl_db_session.close()
+    met_etl_db_session.close()
     yield Output(submission_last_run_cycle_time, "submission_last_run_cycle_time")
     yield Output(new_run_cycle_id, "submission_new_runcycleid")
 
@@ -277,7 +277,7 @@ def submission_end_run_cycle(context, submission_new_runcycleid):
     met_etl_db_session = _get_met_etl_session()
     met_etl_db_session.query(EtlRunCycleModel).filter(
         EtlRunCycleModel.id == submission_new_runcycleid, EtlRunCycleModel.packagename == 'submission', 
-        EtlRunCycleModel.success == False).update({'success': True, 'description': 'ended the load for submission table'})
+        EtlRunCycleModel.success == False).update({'success': True, 'description': 'ended the load for tables user response detail and responses'})
     context.log.info("run cycle ended for submission table")
     met_etl_db_session.commit()
     met_etl_db_session.close() 

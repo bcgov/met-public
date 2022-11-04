@@ -21,77 +21,66 @@ def _get_met_etl_session():
     session = Session()
     return session
 
-@op(out={"user_details_last_run_cycle_datetime": Out(), "userdetailsnewruncycleid": Out()})
+@op(out={"user_details_last_run_cycle_datetime": Out(), "user_details_new_run_cycle_id": Out()})
 def get_user_details_last_run_cycle_time(context):
     met_etl_db_session = _get_met_etl_session()
     default_datetime = datetime(1900, 1, 1, 0, 0, 0, 0)
     user_details_last_run_cycle_datetime = met_etl_db_session.query(
         func.coalesce(func.max(EtlRunCycleModel.enddatetime), default_datetime)).filter(
         EtlRunCycleModel.packagename == 'userdetails', EtlRunCycleModel.success == True).first()
-    for lastruncycledatetime in user_details_last_run_cycle_datetime:
-        if lastruncycledatetime == default_datetime:
-            context.log.info("No record found in run cycle table")
-            new_run_cycle_id = 1
-            met_etl_db_session.add(
-                EtlRunCycleModel(id=new_run_cycle_id, packagename='userdetails', startdatetime=datetime.utcnow(), enddatetime=None,
-                                 description='started the load for user_details table', success=False))
-        if lastruncycledatetime != default_datetime:
-            context.log.info("Latest record found in run cycle table")
-            user_details_last_run_cycle_id = met_etl_db_session.query(EtlRunCycleModel.id).filter(
-                EtlRunCycleModel.enddatetime == lastruncycledatetime).first()
-            for lastruncycleid in user_details_last_run_cycle_id:
-                new_run_cycle_id = lastruncycleid + 1
-                met_etl_db_session.add(EtlRunCycleModel(id=new_run_cycle_id, packagename='userdetails',
-                                                        startdatetime=datetime.utcnow(), enddatetime=None,
-                                                        description='started the load for user_details table',
-                                                        success=False))
-    met_etl_db_session.commit()
+    max_run_cycle_id = met_etl_db_session.query(func.coalesce(func.max(EtlRunCycleModel.id), 0)).first()
+    for last_run_cycle_time in user_details_last_run_cycle_datetime:
+        for run_cycle_id in max_run_cycle_id:
+            new_run_cycle_id = run_cycle_id + 1
+            met_etl_db_session.add(EtlRunCycleModel(id=new_run_cycle_id, packagename='userdetails', startdatetime=datetime.utcnow(), 
+                        enddatetime=None, description='started the load for table user_details', success=False))
+            met_etl_db_session.commit()
     met_etl_db_session.close()
     yield Output(user_details_last_run_cycle_datetime, "user_details_last_run_cycle_datetime")
-    yield Output(new_run_cycle_id, "userdetailsnewruncycleid")
+    yield Output(new_run_cycle_id, "user_details_new_run_cycle_id")
 
-@op(out={"newusers": Out(), "updatedusers": Out(), "userdetailscurrentruncycleid": Out()})
-def extract_user(context, user_details_last_run_cycle_datetime, userdetailsnewruncycleid):
+@op(out={"new_users": Out(), "updated_users": Out(), "user_details_new_run_cycle_id": Out()})
+def extract_user(context, user_details_last_run_cycle_datetime, user_details_new_run_cycle_id):
     session = _get_met_session()
     default_datetime = datetime(1900, 1, 1, 0, 0, 0, 0)
     new_users = []
     updated_users = []
-    for lastcycletime in user_details_last_run_cycle_datetime:
+    for last_run_cycle_time in user_details_last_run_cycle_datetime:
         context.log.info("started extracting new data from user_details table")
-        new_users = session.query(MetUserModel).filter(MetUserModel.created_date > lastcycletime).all()
-        if lastcycletime > default_datetime:
+        new_users = session.query(MetUserModel).filter(MetUserModel.created_date > last_run_cycle_time).all()
+        if last_run_cycle_time > default_datetime:
             context.log.info("started extracting updated data from user_details table")
-            updated_users = session.query(MetUserModel).filter(MetUserModel.updated_date > lastcycletime, MetUserModel.updated_date!=MetUserModel.created_date).all()
-    yield Output(new_users, "newusers")
-    yield Output(updated_users, "updatedusers")
-    yield Output(userdetailsnewruncycleid, "userdetailscurrentruncycleid")
+            updated_users = session.query(MetUserModel).filter(MetUserModel.updated_date > last_run_cycle_time, MetUserModel.updated_date!=MetUserModel.created_date).all()
+    yield Output(new_users, "new_users")
+    yield Output(updated_users, "updated_users")
+    yield Output(user_details_new_run_cycle_id, "user_details_new_run_cycle_id")
     context.log.info("completed extracting data from user_details table")
     session.commit()
     session.close()
 
-@op(out={"userdetailscurrentruncycleid": Out()})
-def load_user(context, newusers, updatedusers, userdetailsnewruncycleid):
+@op(out={"user_details_new_run_cycle_id": Out()})
+def load_user(context, new_users, updated_users, user_details_new_run_cycle_id):
     session = _get_met_etl_session()
-    allusers = newusers + updatedusers
-    if len(allusers) > 0:
+    all_users = new_users + updated_users
+    if len(all_users) > 0:
         context.log.info("loading new users")
-        for user in allusers:
+        for user in all_users:
             session.query(UserDetailsModel).filter(UserDetailsModel.name == user.external_id).update({'is_active': False})
             user_model = UserDetailsModel(name=user.external_id, is_active=True, created_date=user.created_date,
-                                        updated_date=user.updated_date, runcycle_id=userdetailsnewruncycleid)
+                                        updated_date=user.updated_date, runcycle_id=user_details_new_run_cycle_id)
             session.add(user_model)
             session.commit()
-    yield Output(userdetailsnewruncycleid, "userdetailscurrentruncycleid")
+    yield Output(user_details_new_run_cycle_id, "user_details_new_run_cycle_id")
     context.log.info("completed loading user_details table")
     session.close()
 
-@op(out={"engagementrunsequence": Out()})
-def user_details_end_run_cycle(context, userdetailsnewruncycleid):
+@op(out={"flag_to_run_step_after_user_details": Out()})
+def user_details_end_run_cycle(context, user_details_new_run_cycle_id):
     met_etl_db_session = _get_met_etl_session()
     met_etl_db_session.query(EtlRunCycleModel).filter(
-        EtlRunCycleModel.id == userdetailsnewruncycleid, EtlRunCycleModel.packagename == 'userdetails', 
-        EtlRunCycleModel.success == False).update({'success': True, 'description': 'ended the load for user_details table'})
+        EtlRunCycleModel.id == user_details_new_run_cycle_id, EtlRunCycleModel.packagename == 'userdetails', 
+        EtlRunCycleModel.success == False).update({'success': True, 'description': 'ended the load for table user_details'})
     context.log.info("run cycle ended for user_details table")
-    yield Output(2, "engagementrunsequence")
+    yield Output("userdetails", "flag_to_run_step_after_user_details")
     met_etl_db_session.commit()
     met_etl_db_session.close()
