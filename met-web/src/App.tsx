@@ -13,6 +13,7 @@ import { Notification } from 'components/common/notification';
 import PageViewTracker from 'routes/PageViewTracker';
 import { NotificationModal } from 'components/common/modal';
 import { FeedbackModal } from 'components/common/Modals/Feedback';
+import { AppConfig } from 'config';
 
 const App = () => {
     const drawerWidth = 240;
@@ -24,6 +25,8 @@ const App = () => {
     useEffect(() => {
         UserService.initKeycloak(dispatch);
     }, [dispatch]);
+
+    sessionStorage.setItem('apiurl', String(AppConfig.apiUrl));
 
     if (authenticationLoading) {
         return <MidScreenLoader />;
