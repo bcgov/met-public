@@ -13,12 +13,10 @@
 # limitations under the License.
 """API endpoints for managing a value components resource."""
 
-import json
 
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
-from met_api.auth import auth
 from met_api.utils.action_result import ActionResult
 from met_api.utils.util import allowedorigins, cors_preflight
 
@@ -40,6 +38,7 @@ class GetEngagements(Resource):
     def get():
         """Fetch all value components."""
         try:
+            ##TODO: Create service and models for value components 
             vcs = [
                 {
                     "id": 1,
