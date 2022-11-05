@@ -5,9 +5,13 @@ Manages the Submission
 from datetime import datetime
 from typing import List
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import TEXT, ForeignKey, asc, cast, desc, text
 from sqlalchemy.dialects import postgresql
+from sqlalchemy.orm import aliased
 
+from met_api.models.comment import Comment
+from met_api.models.comment_status import CommentStatus
+from met_api.models.pagination_options import PaginationOptions
 from met_api.models.survey import Survey
 from met_api.models.user import User
 from met_api.schemas.submission import SubmissionSchema
@@ -29,6 +33,7 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
     created_by = db.Column(db.String(50), nullable=True)
     updated_by = db.Column(db.String(50), nullable=True)
+    comments = db.relationship('Comment', backref='submission', cascade='all, delete')
 
     @classmethod
     def get_by_survey_id(cls, survey_id) -> List[SubmissionSchema]:
@@ -81,3 +86,39 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
             .filter(Survey.engagement_id == engagement_id)\
             .all()
         return users
+
+    @classmethod
+    def get_by_survey_id_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text=''):
+        """Get submissions paginated."""
+        # Subquery to return only the first comment of the submission
+        # this is necessary due to the order by of the comment columns
+        first_comment = aliased(Comment, name='first_comment')
+        first_comment_id = (
+            db.session.query(first_comment.id)
+            .filter(first_comment.submission_id == Submission.id)
+            .limit(1)
+            .correlate(Submission)
+            .as_scalar()
+        )
+        query = db.session.query(Submission)\
+            .join(Comment, Comment.id == first_comment_id)\
+            .join(CommentStatus)\
+            .filter(Submission.survey_id == survey_id)\
+
+        if search_text:
+            # Remove all non-digit characters from search text
+            query = query.filter(cast(Submission.id, TEXT).like('%' + search_text + '%'))
+
+        sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == 'asc'\
+            else desc(text(pagination_options.sort_key))
+
+        query = query.order_by(sort)
+
+        no_pagination_options = not pagination_options.page or not pagination_options.size
+        if no_pagination_options:
+            items = query.all()
+            return items, len(items)
+
+        page = query.paginate(page=pagination_options.page, per_page=pagination_options.size)
+
+        return page.items, page.total

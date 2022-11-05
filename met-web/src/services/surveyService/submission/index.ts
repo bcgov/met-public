@@ -9,7 +9,7 @@ interface PostSurveySubmissionRequest {
 }
 export const submitSurvey = async (requestData: PostSurveySubmissionRequest): Promise<SurveySubmission> => {
     try {
-        const response = await http.PostRequest<SurveySubmission>(Endpoints.SurveySubmission.CREATE, requestData);
+        const response = await http.PostRequest<SurveySubmission>(Endpoints.Submission.CREATE, requestData);
         if (response.data.status && response.data.result) {
             return Promise.resolve(response.data.result);
         }

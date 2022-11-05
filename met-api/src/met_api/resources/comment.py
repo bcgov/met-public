@@ -30,7 +30,7 @@ API = Namespace('comments', description='Endpoints for Comments Management')
 """
 
 
-@cors_preflight('GET, PUT, OPTIONS')
+@cors_preflight('GET, OPTIONS')
 @API.route('/<comment_id>')
 class Comment(Resource):
     """Resource for managing a single comment."""
@@ -53,7 +53,7 @@ class Comment(Resource):
             return ActionResult.error(str(err))
 
 
-@cors_preflight('GET, OPTIONS')
+@cors_preflight('GET, PUT, OPTIONS')
 @API.route('/submission/<submission_id>')
 class SubmissionComments(Resource):
     """Resource for managing multiple comments."""
@@ -89,7 +89,7 @@ class SubmissionComments(Resource):
             return ActionResult.error(str(err))
 
 
-@cors_preflight('GET, POST, PUT, OPTIONS')
+@cors_preflight('GET, OPTIONS')
 @API.route('/survey/<survey_id>')
 class SurveyComments(Resource):
     """Resource for managing multiple comments."""

@@ -21,8 +21,9 @@ const Endpoints = {
         UNLINK_FROM_ENGAGEMENT: `${AppConfig.apiUrl}/surveys/survey_id/unlink/engagement/engagement_id`,
         GET: `${AppConfig.apiUrl}/surveys/survey_id`,
     },
-    SurveySubmission: {
+    Submission: {
         CREATE: `${AppConfig.apiUrl}/submission/`,
+        GET_LIST: `${AppConfig.apiUrl}/submission/survey/survey_id`,
     },
     Comment: {
         GET_LIST: `${AppConfig.apiUrl}/comments/survey/survey_id`,

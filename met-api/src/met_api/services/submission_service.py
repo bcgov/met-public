@@ -3,6 +3,7 @@ from met_api.constants.engagement_status import SubmissionStatus
 from met_api.models import Engagement as EngagementModel
 from met_api.models import Survey as SurveyModel
 from met_api.models.db import session_scope
+from met_api.models.pagination_options import PaginationOptions
 from met_api.models.submission import Submission
 from met_api.schemas.submission import SubmissionSchema
 from met_api.services.comment_service import CommentService
@@ -53,6 +54,19 @@ class SubmissionService:
         """Update submission."""
         cls._validate_fields(data)
         return Submission.update(data)
+
+    @classmethod
+    def get_comments_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text=''):
+        """Get submission and comments paginated."""
+        items, total = Submission.get_by_survey_id_paginated(
+            survey_id,
+            pagination_options,
+            search_text,
+        )
+        return {
+            'items': SubmissionSchema(many=True).dump(items),
+            'total': total
+        }
 
     @staticmethod
     def _validate_fields(submission):

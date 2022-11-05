@@ -20,6 +20,7 @@ from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
 from met_api.auth import auth
+from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas import utils as schema_utils
 from met_api.schemas.submission import SubmissionSchema
 from met_api.services.submission_service import SubmissionService
@@ -33,7 +34,7 @@ API = Namespace('submission', description='Endpoints for submission Management')
 """
 
 
-@cors_preflight('GET,OPTIONS')
+@cors_preflight('GET, OPTIONS')
 @API.route('/<submission_id>')
 class Submission(Resource):
     """Resource for managing a submission."""
@@ -49,6 +50,36 @@ class Submission(Resource):
             return ActionResult.success(submission_id, submission)
         except KeyError:
             return ActionResult.error('Submission not found')
+        except ValueError as err:
+            return ActionResult.error(str(err))
+
+
+@cors_preflight('GET, OPTIONS')
+@API.route('/survey/<survey_id>')
+class SurveySubmissionsComments(Resource):
+    """Resource for managing submissions with comments for a survey."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def get(survey_id):
+        """Get submissions and comments page."""
+        try:
+            args = request.args
+
+            pagination_options = PaginationOptions(
+                page=args.get('page', None, int),
+                size=args.get('size', None, int),
+                sort_key=args.get('sort_key', 'name', str),
+                sort_order=args.get('sort_order', 'asc', str),
+            )
+            submission_records = SubmissionService()\
+                .get_comments_paginated(
+                    survey_id,
+                    pagination_options,
+                    args.get('search_text', '', str),
+            )
+            return ActionResult.success(result=submission_records)
         except ValueError as err:
             return ActionResult.error(str(err))
 
