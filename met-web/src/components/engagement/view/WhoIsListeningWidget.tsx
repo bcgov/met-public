@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { MetPaper, MetHeader2, MetHeader3, MetBody, MetSmallText } from 'components/common';
-import { Grid, Avatar, Link, useMediaQuery, Theme } from '@mui/material';
+import { Grid, Avatar, Link } from '@mui/material';
 import { ActionContext } from './ActionContext';
 
 const WhoIsListeningWidget = () => {
