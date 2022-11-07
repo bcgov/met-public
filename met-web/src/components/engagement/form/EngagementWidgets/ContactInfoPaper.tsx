@@ -8,7 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
 import { useDrag, useDrop } from 'react-dnd';
-import { If } from 'react-if';
+import { If, Then } from 'react-if';
 
 interface ContantInfoPaperProps {
     testId?: string;
@@ -106,7 +106,7 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
                 </Grid>
                 <Grid item xs={3} container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
                     <Grid item xs={12}>
-                        <MetLabel>{contact.name}</MetLabel>
+                        <MetLabel noWrap={true}>{contact.name}</MetLabel>
                     </Grid>
                     <Grid item xs={12}>
                         <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
@@ -123,42 +123,46 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
                     justifyContent="flex-start"
                     spacing={1}
                 >
-                    <If condition={contact.phone_number}>
-                        <Grid item xs={2}>
-                            <MetParagraph>Phone:</MetParagraph>
-                        </Grid>
-                        <Grid item xs={10}>
-                            <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
-                                {contact.phone_number}
-                            </MetParagraph>
-                        </Grid>
+                    <If condition={!!contact.phone_number}>
+                        <Then>
+                            <Grid item xs={3}>
+                                <MetParagraph>Phone:</MetParagraph>
+                            </Grid>
+                            <Grid item xs={9}>
+                                <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                                    {contact.phone_number}
+                                </MetParagraph>
+                            </Grid>
+                        </Then>
                     </If>
 
-                    <Grid item xs={2}>
+                    <Grid item xs={3}>
                         <MetParagraph>Email:</MetParagraph>
                     </Grid>
-                    <Grid item xs={10}>
+                    <Grid item xs={9}>
                         <MetParagraph>{contact.email}</MetParagraph>
                     </Grid>
-                    <If condition={contact.address}>
-                        <Grid item xs={2}>
-                            <MetParagraph>Address:</MetParagraph>
-                        </Grid>
-                        <Grid item xs={10}>
-                            <MetParagraph
-                                width={'100%'}
-                                overflow="hidden"
-                                textOverflow={'ellipsis'}
-                                whiteSpace="nowrap"
-                            >
-                                {contact.address}
-                            </MetParagraph>
-                        </Grid>
+                    <If condition={!!contact.address}>
+                        <Then>
+                            <Grid item xs={3}>
+                                <MetParagraph>Address:</MetParagraph>
+                            </Grid>
+                            <Grid item xs={9}>
+                                <MetParagraph
+                                    width={'100%'}
+                                    overflow="hidden"
+                                    textOverflow={'ellipsis'}
+                                    whiteSpace="nowrap"
+                                >
+                                    {contact.address}
+                                </MetParagraph>
+                            </Grid>
+                        </Then>
                     </If>
-                    <Grid item xs={2}>
+                    <Grid item xs={3}>
                         <MetParagraph>Bio:</MetParagraph>
                     </Grid>
-                    <Grid item xs={10}>
+                    <Grid item xs={9}>
                         <MetParagraph width={'100%'} overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                             {contact.bio}
                         </MetParagraph>

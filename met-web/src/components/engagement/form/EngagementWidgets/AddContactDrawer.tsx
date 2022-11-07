@@ -56,7 +56,7 @@ const AddContactDrawer = () => {
 
     const { handleSubmit } = methods;
 
-    const updateContact = async (data: ContactForm) => {
+    const updateContact = async () => {
         if (selectedContact) {
             const contactUpdatesToPatch = updatedDiff(selectedContact, {
                 ...methods.getValues(),
@@ -68,10 +68,8 @@ const AddContactDrawer = () => {
             });
             updateSelectedContact(updatedContact);
             dispatch(openNotification({ severity: 'success', text: 'Contact was successfully updated' }));
-        } else {
-            dispatch(openNotification({ severity: 'error', text: 'Contact does not exist' }));
+            loadContacts();
         }
-        loadContacts();
     };
 
     const createContact = async (data: ContactForm) => {
@@ -83,22 +81,12 @@ const AddContactDrawer = () => {
     const onSubmit: SubmitHandler<ContactForm> = async (data: ContactForm) => {
         try {
             setIsCreatingContact(true);
-            selectedContact ? updateContact(data) : createContact(data);
+            selectedContact ? updateContact() : createContact(data);
             setIsCreatingContact(false);
             handleAddContactDrawerOpen(false);
         } catch (err) {
             console.log(err);
-            !selectedContact
-                ? dispatch(
-                      openNotification({
-                          severity: 'error',
-                          text: 'An error occured while trying to create a new contact',
-                      }),
-                  )
-                : dispatch(
-                      openNotification({ severity: 'error', text: 'An error occured while trying to update contact' }),
-                  );
-
+            dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to save contact' }));
             setIsCreatingContact(false);
         }
     };
