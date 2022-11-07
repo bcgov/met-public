@@ -10,6 +10,7 @@ import { useAppSelector } from 'hooks';
 import { useNavigate, useLocation } from 'react-router';
 import WhoIsListeningWidget from './WhoIsListeningWidget';
 import { RouteState } from './types';
+import WidgetBlock from './widgets/WidgetBlock';
 
 export const EngagementView = () => {
     const { state } = useLocation() as RouteState;
@@ -64,7 +65,7 @@ export const EngagementView = () => {
                         <EngagementContent />
                     </Grid>
                     <Grid item xs={12} lg={4}>
-                        <WhoIsListeningWidget />
+                        <WidgetBlock />
                     </Grid>
                     <Grid item xs={12} lg={8}>
                         <SurveyBlock startSurvey={handleStartSurvey} />

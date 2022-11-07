@@ -5,8 +5,7 @@ import { createDefaultEngagement, Engagement } from '../../../models/engagement'
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getWidgets } from 'services/widgetService';
-import { WhoIsListeningWidget, WidgetType } from 'models/widget';
-import { getContact } from 'services/contactService';
+import { Widget } from 'models/widget';
 
 interface EngagementSchedule {
     id: number;
@@ -18,7 +17,7 @@ export interface EngagementViewContext {
     savedEngagement: Engagement;
     isEngagementLoading: boolean;
     scheduleEngagement: (_engagement: EngagementSchedule) => Promise<Engagement>;
-    whoIsListeningWidget?: WhoIsListeningWidget;
+    widgets: Widget[];
 }
 
 export type EngagementParams = {
@@ -31,6 +30,7 @@ export const ActionContext = createContext<EngagementViewContext>({
     },
     savedEngagement: createDefaultEngagement(),
     isEngagementLoading: true,
+    widgets: [],
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -39,7 +39,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const dispatch = useAppDispatch();
 
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
-    const [whoIsListeningWidget, setWhoIsListeningWidget] = useState<WhoIsListeningWidget>();
+    const [widgets, setWidgets] = useState<Widget[]>([]);
     const [isEngagementLoading, setEngagementLoading] = useState(true);
 
     const scheduleEngagement = async (engagement: EngagementSchedule): Promise<Engagement> => {
@@ -57,54 +57,42 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         }
     };
 
+    const fetchEngagement = async () => {
+        if (isNaN(Number(engagementId))) {
+            navigate('/404');
+            return;
+        }
+        try {
+            const result = await getEngagement(Number(engagementId));
+            setSavedEngagement({ ...result });
+            setEngagementLoading(false);
+        } catch (error) {
+            console.log(error);
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while fetching Engagement information',
+                }),
+            );
+        }
+    };
+
+    const fetchWidgets = async () => {
+        try {
+            const result = await getWidgets(Number(engagementId));
+            setWidgets(result);
+        } catch (error) {
+            console.log(error);
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while fetching Engagement wdigets',
+                }),
+            );
+        }
+    };
+
     useEffect(() => {
-        const fetchEngagement = async () => {
-            if (isNaN(Number(engagementId))) {
-                navigate('/404');
-                return;
-            }
-            try {
-                const result = await getEngagement(Number(engagementId));
-                setSavedEngagement({ ...result });
-                setEngagementLoading(false);
-            } catch (error) {
-                console.log(error);
-                dispatch(
-                    openNotification({
-                        severity: 'error',
-                        text: 'Error occurred while fetching Engagement information',
-                    }),
-                );
-            }
-        };
-
-        const fetchWidgets = async () => {
-            try {
-                const result = await getWidgets(Number(engagementId));
-                const whoIsListeningWidget = result.find((w) => w.widget_type_id === WidgetType.WhoIsListening);
-                if (!whoIsListeningWidget) return;
-
-                const contacts = await Promise.all(
-                    whoIsListeningWidget.items.map((widgetItem) => {
-                        return getContact(widgetItem.widget_data_id);
-                    }),
-                );
-
-                setWhoIsListeningWidget({
-                    ...whoIsListeningWidget,
-                    contacts: contacts,
-                });
-            } catch (error) {
-                console.log(error);
-                dispatch(
-                    openNotification({
-                        severity: 'error',
-                        text: 'Error occurred while fetching Engagement wdigets information',
-                    }),
-                );
-            }
-        };
-
         fetchEngagement();
         fetchWidgets();
     }, [engagementId]);
@@ -115,7 +103,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 savedEngagement,
                 isEngagementLoading,
                 scheduleEngagement,
-                whoIsListeningWidget,
+                widgets,
             }}
         >
             {children}
