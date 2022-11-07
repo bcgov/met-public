@@ -8,7 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
 import { useDrag, useDrop } from 'react-dnd';
-import { If, Then } from 'react-if';
+import { When } from 'react-if';
 
 interface ContantInfoPaperProps {
     testId?: string;
@@ -28,7 +28,7 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
     const { handleAddContactDrawerOpen } = useContext(WidgetDrawerContext);
     const ref = useRef<HTMLDivElement>(null);
 
-    const [{ handlerId }, drop] = useDrop<DragItem, void, { handlerId: Identifier | null }>({
+    const [{ _handlerId }, drop] = useDrop<DragItem, void, { handlerId: Identifier | null }>({
         accept: 'Contact',
         collect(monitor) {
             return {
@@ -84,7 +84,7 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
         },
     });
 
-    const [{ isDragging }, drag] = useDrag({
+    const [{ _isDragging }, drag] = useDrag({
         type: 'Contact',
         item: () => {
             return { testId, index };
@@ -123,18 +123,17 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
                     justifyContent="flex-start"
                     spacing={1}
                 >
-                    <If condition={!!contact.phone_number}>
-                        <Then>
-                            <Grid item xs={3}>
-                                <MetParagraph>Phone:</MetParagraph>
-                            </Grid>
-                            <Grid item xs={9}>
-                                <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
-                                    {contact.phone_number}
-                                </MetParagraph>
-                            </Grid>
-                        </Then>
-                    </If>
+                    <When condition={!!contact.phone_number}>
+                        =
+                        <Grid item xs={3}>
+                            <MetParagraph>Phone:</MetParagraph>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                                {contact.phone_number}
+                            </MetParagraph>
+                        </Grid>
+                    </When>
 
                     <Grid item xs={3}>
                         <MetParagraph>Email:</MetParagraph>
@@ -142,23 +141,21 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
                     <Grid item xs={9}>
                         <MetParagraph>{contact.email}</MetParagraph>
                     </Grid>
-                    <If condition={!!contact.address}>
-                        <Then>
-                            <Grid item xs={3}>
-                                <MetParagraph>Address:</MetParagraph>
-                            </Grid>
-                            <Grid item xs={9}>
-                                <MetParagraph
-                                    width={'100%'}
-                                    overflow="hidden"
-                                    textOverflow={'ellipsis'}
-                                    whiteSpace="nowrap"
-                                >
-                                    {contact.address}
-                                </MetParagraph>
-                            </Grid>
-                        </Then>
-                    </If>
+                    <When condition={!!contact.address}>
+                        <Grid item xs={3}>
+                            <MetParagraph>Address:</MetParagraph>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <MetParagraph
+                                width={'100%'}
+                                overflow="hidden"
+                                textOverflow={'ellipsis'}
+                                whiteSpace="nowrap"
+                            >
+                                {contact.address}
+                            </MetParagraph>
+                        </Grid>
+                    </When>
                     <Grid item xs={3}>
                         <MetParagraph>Bio:</MetParagraph>
                     </Grid>
