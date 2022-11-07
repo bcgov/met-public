@@ -1,5 +1,5 @@
-import { Widget, WidgetType } from 'models/widget';
 import React from 'react';
+import { Widget, WidgetType } from 'models/widget';
 import { Switch, Case } from 'react-if';
 import WhoIsListeningWidget from '../WhoIsListeningWidget';
 
