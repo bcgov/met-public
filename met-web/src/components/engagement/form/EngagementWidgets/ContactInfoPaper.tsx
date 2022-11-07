@@ -8,6 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
 import { useDrag, useDrop } from 'react-dnd';
+import { Else, If, Then, When } from 'react-if';
 
 interface ContantInfoPaperProps {
     testId?: string;
@@ -122,20 +123,16 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
                     justifyContent="flex-start"
                     spacing={1}
                 >
-                    {contact.phone_number ? (
-                        <>
-                            <Grid item xs={2}>
-                                <MetParagraph>Phone:</MetParagraph>
-                            </Grid>
-                            <Grid item xs={10}>
-                                <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
-                                    {contact.phone_number}
-                                </MetParagraph>
-                            </Grid>
-                        </>
-                    ) : (
-                        <></>
-                    )}
+                    <If condition={contact.phone_number}>
+                        <Grid item xs={2}>
+                            <MetParagraph>Phone:</MetParagraph>
+                        </Grid>
+                        <Grid item xs={10}>
+                            <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                                {contact.phone_number}
+                            </MetParagraph>
+                        </Grid>
+                    </If>
 
                     <Grid item xs={2}>
                         <MetParagraph>Email:</MetParagraph>
@@ -143,26 +140,21 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
                     <Grid item xs={10}>
                         <MetParagraph>{contact.email}</MetParagraph>
                     </Grid>
-                    {contact.address !== '' ? (
-                        <>
-                            <Grid item xs={2}>
-                                <MetParagraph>Address:</MetParagraph>
-                            </Grid>
-                            <Grid item xs={10}>
-                                <MetParagraph
-                                    width={'100%'}
-                                    overflow="hidden"
-                                    textOverflow={'ellipsis'}
-                                    whiteSpace="nowrap"
-                                >
-                                    {contact.address}
-                                </MetParagraph>
-                            </Grid>
-                        </>
-                    ) : (
-                        <></>
-                    )}
-
+                    <If condition={contact.address}>
+                        <Grid item xs={2}>
+                            <MetParagraph>Address:</MetParagraph>
+                        </Grid>
+                        <Grid item xs={10}>
+                            <MetParagraph
+                                width={'100%'}
+                                overflow="hidden"
+                                textOverflow={'ellipsis'}
+                                whiteSpace="nowrap"
+                            >
+                                {contact.address}
+                            </MetParagraph>
+                        </Grid>
+                    </If>
                     <Grid item xs={2}>
                         <MetParagraph>Bio:</MetParagraph>
                     </Grid>
