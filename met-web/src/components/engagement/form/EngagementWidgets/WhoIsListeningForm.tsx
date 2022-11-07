@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback } from 'react';
+import React, { useContext, useState, useCallback, useEffect } from 'react';
 import { Autocomplete, Grid, TextField } from '@mui/material';
 import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
 import { Contact } from 'models/contact';
@@ -17,6 +17,13 @@ const WhoIsListeningForm = () => {
     const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
     const [addedContacts, setAddedContacts] = useState<Contact[]>([]);
     const [addingWidgetItems, setAddingWidgetItems] = useState(false);
+
+    useEffect(() => {
+        const filteredContacts = contacts.filter((c: Contact) =>
+            addedContacts.map((contact) => contact.id).includes(c.id),
+        );
+        setAddedContacts(filteredContacts);
+    }, [contacts]);
 
     const moveContact = useCallback((dragIndex: number, hoverIndex: number) => {
         setAddedContacts((prevContacts: Contact[]) =>

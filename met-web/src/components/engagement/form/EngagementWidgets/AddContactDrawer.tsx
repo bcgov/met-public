@@ -9,11 +9,12 @@ import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
-import { postContact } from 'services/contactService';
+import { patchContact, postContact } from 'services/contactService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
-
+import { updatedDiff } from 'deep-object-diff';
+import { PatchContactRequest } from 'services/contactService';
 const schema = yup
     .object({
         name: yup.string().required(),
@@ -29,7 +30,7 @@ type ContactForm = yup.TypeOf<typeof schema>;
 
 const AddContactDrawer = () => {
     const dispatch = useAppDispatch();
-    const { addContactDrawerOpen, handleAddContactDrawerOpen, loadContacts, selectedContact } =
+    const { addContactDrawerOpen, handleAddContactDrawerOpen, loadContacts, selectedContact, updateSelectedContact } =
         useContext(WidgetDrawerContext);
     const [isCreatingContact, setIsCreatingContact] = useState(false);
     const methods = useForm<ContactForm>({
@@ -55,23 +56,35 @@ const AddContactDrawer = () => {
 
     const { handleSubmit } = methods;
 
+    const updateContact = async (data: ContactForm) => {
+        if (selectedContact) {
+            const contactUpdatesToPatch = updatedDiff(selectedContact, {
+                ...methods.getValues(),
+            }) as PatchContactRequest;
+
+            const updatedContact = await patchContact({
+                ...contactUpdatesToPatch,
+                id: selectedContact.id,
+            });
+            updateSelectedContact(updatedContact);
+            dispatch(openNotification({ severity: 'success', text: 'Contact was successfully updated' }));
+        } else {
+            dispatch(openNotification({ severity: 'error', text: 'Contact does not exist' }));
+        }
+    };
+
+    const createContact = async (data: ContactForm) => {
+        await postContact(data);
+        dispatch(openNotification({ severity: 'success', text: 'A new contact was successfully added' }));
+    };
+
     const onSubmit: SubmitHandler<ContactForm> = async (data: ContactForm) => {
         try {
-            if (selectedContact) {
-                // setIsCreatingContact(true);
-                // await updateContact(data);
-                // setIsCreatingContact(false);
-                // handleAddContactDrawerOpen(false);
-                // dispatch(openNotification({ severity: 'success', text: 'Contact was successfully updated' }));
-                // loadContacts();
-            } else {
-                setIsCreatingContact(true);
-                await postContact(data);
-                setIsCreatingContact(false);
-                handleAddContactDrawerOpen(false);
-                dispatch(openNotification({ severity: 'success', text: 'A new contact was successfully added' }));
-                loadContacts();
-            }
+            setIsCreatingContact(true);
+            selectedContact ? updateContact(data) : createContact(data);
+            setIsCreatingContact(false);
+            handleAddContactDrawerOpen(false);
+            loadContacts();
         } catch (err) {
             console.log(err);
             !selectedContact

@@ -23,6 +23,7 @@ export interface WidgetDrawerContextProps {
     loadingContacts: boolean;
     contacts: Contact[];
     loadContacts: () => void;
+    updateSelectedContact: (_contact: Contact) => void;
 }
 
 export type EngagementParams = {
@@ -52,6 +53,9 @@ export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
     },
     contacts: [],
     loadContacts: () => {
+        /* empty default method  */
+    },
+    updateSelectedContact: () => {
         /* empty default method  */
     },
 });
@@ -116,6 +120,10 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
         setWidgetDrawerOpen(open);
     };
 
+    const updateSelectedContact = (contact: Contact) => {
+        setSelectedContact(contact);
+    };
+
     const handleAddContactDrawerOpen = (open: boolean, data?: Contact) => {
         if (data !== null) {
             setSelectedContact(data);
@@ -146,6 +154,7 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
                 loadContacts,
                 selectedContact,
                 clearSelected,
+                updateSelectedContact,
             }}
         >
             {children}

@@ -48,9 +48,11 @@ class Contact(Resource):
             return ActionResult.success(contact_id, contact)
         except (KeyError, ValueError) as err:
             return ActionResult.error(str(err))
+        
+        
 
 
-@cors_preflight('GET, POST, OPTIONS')
+@cors_preflight('GET, POST, OPTIONS, PATCH')
 @API.route('/')
 class Contacts(Resource):
     """Resource for managing contacts."""
@@ -88,22 +90,33 @@ class Contacts(Resource):
             return ActionResult.success(result=widgets)
         except (KeyError, ValueError) as err:
             return ActionResult.error(str(err))
-
-    
+        
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
     @auth.require
-    def put(contact_id):
-        """Update Contact."""
+    def patch():
+        """Update saved contact partially."""
         try:
+            requestjson = request.get_json()
             user_id = TokenInfo.get_id()
-            contact = ContactService().get_contact_by_id(contact_id)
-            contact_schema = ContactSchema().load(contact)
-            contact = ContactService().update_contact(contact_schema, user_id)
-            contact_schema['id'] = contact.id
-            return ActionResult.success(contact.id, contact_schema)
+            requestjson['updated_by'] = user_id
+
+            contact_schema = ContactSchema()
+            contact_schema.load(requestjson, partial=True)
+            contact = ContactService().update_contact(requestjson)
+
+            return ActionResult.success(contact.id, contact_schema.dump(contact))
         except KeyError as err:
             return ActionResult.error(str(err))
         except ValueError as err:
             return ActionResult.error(str(err))
+        except ValidationError as err:
+            return ActionResult.error(str(err.messages))
+
+        
+        
+        
+
+    
+ 

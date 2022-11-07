@@ -36,6 +36,17 @@ interface PostContactRequest {
     address?: string;
     bio?: string;
 }
+
+export interface PatchContactRequest {
+    id: number;
+    name?: string;
+    title?: string;
+    phoneNumber?: string;
+    email?: string;
+    address?: string;
+    bio?: string;
+}
+
 export const postContact = async (data: PostContactRequest): Promise<Contact> => {
     try {
         const response = await http.PostRequest<Contact>(Endpoints.Contacts.CREATE, data);
@@ -47,10 +58,9 @@ export const postContact = async (data: PostContactRequest): Promise<Contact> =>
         return Promise.reject(err);
     }
 };
-
-export const updateContact = async (data: PostContactRequest): Promise<Contact> => {
+export const patchContact = async (data: PatchContactRequest): Promise<Contact> => {
     try {
-        const response = await http.PutRequest<Contact>(Endpoints.Contacts.UPDATE, data);
+        const response = await http.PatchRequest<Contact>(Endpoints.Contacts.UPDATE, data);
         if (response.data.status && response.data.result) {
             return Promise.resolve(response.data.result);
         }
