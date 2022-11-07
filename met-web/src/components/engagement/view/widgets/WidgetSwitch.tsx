@@ -3,10 +3,10 @@ import React from 'react';
 import { Switch, Case } from 'react-if';
 import WhoIsListeningWidget from '../WhoIsListeningWidget';
 
-interface WidgetCardSwitchProps {
+interface WidgetSwitchProps {
     widget: Widget;
 }
-export const WidgetSwitch = ({ widget }: WidgetCardSwitchProps) => {
+export const WidgetSwitch = ({ widget }: WidgetSwitchProps) => {
     return (
         <>
             <Switch>
