@@ -82,7 +82,10 @@ const CommentTextListing = () => {
             label: 'ID',
             allowSort: true,
             getValue: (row: Comment) => (
-                <MuiLink component={Link} to={`/surveys/${Number(row.survey_id)}/comments/${row.id}/review`}>
+                <MuiLink
+                    component={Link}
+                    to={`/surveys/${Number(row.survey_id)}/submissions/${row.submission_id}/review`}
+                >
                     {row.id}
                 </MuiLink>
             ),

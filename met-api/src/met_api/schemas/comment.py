@@ -24,5 +24,22 @@ class CommentSchema(Schema):
     review_date = fields.Str(data_key='review_date')
     status_id = fields.Int(data_key='status_id')
     survey_id = fields.Int(data_key='survey_id')
+    submission_id = fields.Int(data_key='submission_id')
     comment_status = fields.Nested(CommentStatusSchema)
     survey = fields.Pluck(SurveySchema, 'name')
+    question = fields.Method('get_comment_question')
+
+    def get_comment_question(self, obj):
+        """Get the associated question of the comment."""
+        components = list(obj.survey.form_json.get('components', []))
+        if len(components) == 0:
+            return None
+        component_label = [
+            component.get(
+                'label',
+                None) for component in components if component.get(
+                'key',
+                None) == obj.component_id]
+        if len(component_label) == 0:
+            return None
+        return component_label[0]

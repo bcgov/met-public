@@ -15,6 +15,7 @@ import { NotificationModal } from 'components/common/modal';
 import { FeedbackModal } from 'components/common/Modals/Feedback';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { AppConfig } from 'config';
 
 const App = () => {
     const drawerWidth = 240;
@@ -26,6 +27,8 @@ const App = () => {
     useEffect(() => {
         UserService.initKeycloak(dispatch);
     }, [dispatch]);
+
+    sessionStorage.setItem('apiurl', String(AppConfig.apiUrl));
 
     if (authenticationLoading) {
         return <MidScreenLoader />;

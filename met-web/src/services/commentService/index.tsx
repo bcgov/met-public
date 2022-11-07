@@ -40,6 +40,19 @@ export const getCommentsPage = async ({
     );
 };
 
+export const getSubmissionComments = async (submissionId: number): Promise<Comment[]> => {
+    const url = replaceUrl(Endpoints.Comment.GET_SUBMISSION, 'submission_id', String(submissionId));
+    try {
+        const response = await http.GetRequest<Comment[]>(url);
+        if (response.data.result) {
+            return Promise.resolve(response.data.result);
+        }
+        return Promise.reject(response.data.message ?? 'Failed to fetch comments');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
 export const getComment = async (commentId: number): Promise<Comment> => {
     const url = replaceUrl(Endpoints.Comment.GET, 'comment_id', String(commentId));
     if (!commentId || isNaN(Number(commentId))) {
@@ -58,16 +71,16 @@ export const getComment = async (commentId: number): Promise<Comment> => {
 
 interface ReviewCommentRequest {
     status_id: number;
-    comment_id: number;
+    submission_id: number;
 }
-export const ReviewComment = async ({ comment_id, status_id }: ReviewCommentRequest): Promise<Comment> => {
+export const ReviewComment = async ({ submission_id, status_id }: ReviewCommentRequest): Promise<Comment> => {
     try {
-        const url = replaceUrl(Endpoints.Comment.REVIEW, 'comment_id', String(comment_id));
+        const url = replaceUrl(Endpoints.Comment.REVIEW, 'submission_id', String(submission_id));
         const response = await http.PutRequest<Comment>(url, { status_id });
         if (response.data.status && response.data.result) {
             return Promise.resolve(response.data.result);
         }
-        return Promise.reject(response.data.message ?? 'Failed to update comment');
+        return Promise.reject(response.data.message ?? 'Failed to update comments');
     } catch (err) {
         return Promise.reject(err);
     }

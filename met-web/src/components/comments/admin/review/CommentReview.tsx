@@ -1,44 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, FormControl, RadioGroup, FormControlLabel, Radio, Stack, FormLabel } from '@mui/material';
 import { Comment, createDefaultComment } from 'models/comment';
-import { getComment, ReviewComment } from 'services/commentService';
+import { getSubmissionComments, ReviewComment } from 'services/commentService';
 import { useAppDispatch } from 'hooks';
 import { useParams, useNavigate } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { MetLabel, MetParagraph, MetPageGridContainer, PrimaryButton, SecondaryButton } from 'components/common';
+import {
+    MetLabel,
+    MetParagraph,
+    MetPageGridContainer,
+    PrimaryButton,
+    SecondaryButton,
+    MetHeader3,
+} from 'components/common';
 import { Palette } from 'styles/Theme';
 import { CommentStatus } from 'constants/commentStatus';
 import { formatDate } from 'components/common/dateHelper';
 import { CommentReviewSkeleton } from './CommentReviewSkeleton';
 
 const CommentReview = () => {
-    const [comment, setComment] = useState<Comment>(createDefaultComment());
+    const [comments, setComments] = useState<Comment[]>([createDefaultComment()]);
     const [review, setReview] = useState(CommentStatus.Approved);
     const [isSaving, setIsSaving] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { commentId } = useParams();
+    const { submissionId } = useParams();
 
-    const callGetComment = async () => {
+    const fetchComments = async () => {
         try {
-            if (isNaN(Number(commentId))) {
+            if (isNaN(Number(submissionId))) {
                 throw new Error();
             }
 
-            const fetchedComment = await getComment(Number(commentId));
-            setComment(fetchedComment);
+            const fetchedComments = await getSubmissionComments(Number(submissionId));
+            setComments(fetchedComments);
             setIsLoading(false);
         } catch (error) {
-            dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching comment' }));
+            dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching comments' }));
             navigate('/');
         }
     };
 
     useEffect(() => {
-        callGetComment();
-    }, [commentId]);
+        fetchComments();
+    }, [submissionId]);
 
     const handleReviewChange = (verdict: number) => {
         setReview(verdict);
@@ -47,27 +54,26 @@ const CommentReview = () => {
     const handleSave = async () => {
         setIsSaving(true);
         try {
-            await ReviewComment({ comment_id: Number(commentId), status_id: review });
+            await ReviewComment({ submission_id: Number(submissionId), status_id: review });
             setIsSaving(false);
-            dispatch(openNotification({ severity: 'success', text: 'Comment successfully reviewed.' }));
-            navigate(`/surveys/${comment.survey_id}/comments`);
+            dispatch(openNotification({ severity: 'success', text: 'Comments successfully reviewed.' }));
+            navigate(`/surveys/${comments[0].survey_id}/comments`);
         } catch (error) {
-            dispatch(openNotification({ severity: 'error', text: 'Error occurred while sending comment review.' }));
+            dispatch(openNotification({ severity: 'error', text: 'Error occurred while sending comments review.' }));
             setIsSaving(false);
         }
     };
 
-    const { id, comment_status, reviewed_by, submission_date, review_date, text } = comment;
+    // The comment display information below is fetched from the first comment from the list
+    // since comment status/review are being stored individually
+    // These values should be exacly the same throughout the array.
+    const { submission_id, comment_status, status_id, reviewed_by, submission_date, review_date } = comments[0];
 
     if (isLoading) {
         return <CommentReviewSkeleton />;
     }
 
-    const filteredVerdict = [CommentStatus.Approved, CommentStatus.Rejected].filter(
-        (verdict) => comment.status_id === verdict,
-    );
-    const defaultVerdict = filteredVerdict.length === 0 ? CommentStatus.Approved : filteredVerdict[0];
-
+    const defaultVerdict = status_id !== CommentStatus.Pending ? status_id : CommentStatus.Approved;
     return (
         <MetPageGridContainer>
             <Grid
@@ -81,10 +87,10 @@ const CommentReview = () => {
                 <Grid container direction="row" item rowSpacing={3}>
                     <Grid container direction="row" item xs={6} spacing={1}>
                         <Grid item>
-                            <MetLabel>Comment ID:</MetLabel>
+                            <MetLabel>Submission ID:</MetLabel>
                         </Grid>
                         <Grid item>
-                            <MetParagraph sx={{ pl: 2 }}>{id}</MetParagraph>
+                            <MetParagraph sx={{ pl: 2 }}>{submission_id}</MetParagraph>
                         </Grid>
                     </Grid>
 
@@ -126,12 +132,21 @@ const CommentReview = () => {
                 </Grid>
                 <Grid container direction="row" item xs={12} spacing={2}>
                     <Grid xs={12} item>
-                        <MetLabel>Comment</MetLabel>
-                    </Grid>
-                    <Grid xs={12} item>
-                        <MetParagraph>{text}</MetParagraph>
+                        <MetHeader3>Comment(s)</MetHeader3>
                     </Grid>
                 </Grid>
+                {comments.map((comment) => {
+                    return (
+                        <Grid container direction="row" item xs={12} spacing={2}>
+                            <Grid xs={12} item>
+                                <MetLabel>{comment.question ?? 'Question not available.'}</MetLabel>
+                            </Grid>
+                            <Grid xs={12} item>
+                                <MetParagraph>{comment.text}</MetParagraph>
+                            </Grid>
+                        </Grid>
+                    );
+                })}
                 <Grid item xs={12}>
                     <FormControl>
                         <FormLabel

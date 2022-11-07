@@ -74,7 +74,7 @@ flake8: ## Linting with flake8
 	. venv/bin/activate && flake8 src/$(PROJECT_NAME) tests
 
 lintfix: ## Linting fix
-	. venv/bin/activate && autopep8 -i -a src/$(PROJECT_NAME)/**/*.py
+	. venv/bin/activate && autopep8 -i -a src/**/*.py tests/**/*.py
 
 lint: pylint flake8 ## run all lint type scripts
 
@@ -143,6 +143,9 @@ run: db ## Run the project in local
 
 db: ## Update the local database
 	. venv/bin/activate && python manage.py db upgrade
+
+db-downgrade: ## Update the local database
+	. venv/bin/activate && python manage.py db downgrade
 
 #################################################################################
 # Self Documenting Commands                                                     #
