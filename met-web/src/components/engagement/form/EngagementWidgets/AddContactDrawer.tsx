@@ -71,11 +71,13 @@ const AddContactDrawer = () => {
         } else {
             dispatch(openNotification({ severity: 'error', text: 'Contact does not exist' }));
         }
+        loadContacts();
     };
 
     const createContact = async (data: ContactForm) => {
         await postContact(data);
         dispatch(openNotification({ severity: 'success', text: 'A new contact was successfully added' }));
+        loadContacts();
     };
 
     const onSubmit: SubmitHandler<ContactForm> = async (data: ContactForm) => {
@@ -84,7 +86,6 @@ const AddContactDrawer = () => {
             selectedContact ? updateContact(data) : createContact(data);
             setIsCreatingContact(false);
             handleAddContactDrawerOpen(false);
-            loadContacts();
         } catch (err) {
             console.log(err);
             !selectedContact

@@ -108,7 +108,9 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
                         <MetLabel>{contact.name}</MetLabel>
                     </Grid>
                     <Grid item xs={12}>
-                        <MetParagraph>{contact.title}</MetParagraph>
+                        <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                            {contact.title}
+                        </MetParagraph>
                     </Grid>
                 </Grid>
                 <Grid
@@ -126,7 +128,9 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
                                 <MetParagraph>Phone:</MetParagraph>
                             </Grid>
                             <Grid item xs={10}>
-                                <MetParagraph>{contact.phone_number}</MetParagraph>
+                                <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                                    {contact.phone_number}
+                                </MetParagraph>
                             </Grid>
                         </>
                     ) : (
