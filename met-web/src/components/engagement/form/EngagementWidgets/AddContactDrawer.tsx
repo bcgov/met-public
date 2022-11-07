@@ -9,12 +9,12 @@ import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
-import { patchContact, postContact } from 'services/contactService';
+import { patchContact, postContact, PatchContactRequest } from 'services/contactService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
 import { updatedDiff } from 'deep-object-diff';
-import { PatchContactRequest } from 'services/contactService';
+
 const schema = yup
     .object({
         name: yup.string().required(),
