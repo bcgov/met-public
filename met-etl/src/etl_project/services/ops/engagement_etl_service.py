@@ -87,3 +87,22 @@ def load_engagement(context, updated_engagements, engagement_new_runcycleid):
     context.log.info("completed loading engagement table")
 
     session.close()
+
+
+# update the status for survey etl in run cycle table as successful
+@op(required_resource_keys={"met_db_session", "met_etl_db_session"}, out={"flag_to_run_step_after_engagement": Out()})
+def engagement_end_run_cycle(context, survey_new_runcycleid):
+    met_etl_db_session = context.resources.met_etl_db_session
+
+    met_etl_db_session.query(EtlRunCycleModel).filter(
+        EtlRunCycleModel.id == survey_new_runcycleid, EtlRunCycleModel.packagename == 'engagement',
+        EtlRunCycleModel.success is False).update(
+        {'success': True, 'description': 'ended the load for tables Engagement'})
+
+    context.log.info("run cycle ended for Engagement table")
+
+    met_etl_db_session.commit()
+
+    met_etl_db_session.close()
+
+    yield Output("survey", "flag_to_run_step_after_engagement")
