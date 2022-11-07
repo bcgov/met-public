@@ -8,7 +8,6 @@ import EmailModal from './EmailModal';
 import { PreviewBanner } from './PreviewBanner';
 import { useAppSelector } from 'hooks';
 import { useNavigate, useLocation } from 'react-router';
-import WhoIsListeningWidget from './WhoIsListeningWidget';
 import { RouteState } from './types';
 import WidgetBlock from './widgets/WidgetBlock';
 
