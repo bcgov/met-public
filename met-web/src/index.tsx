@@ -8,7 +8,8 @@ import { BaseTheme } from 'styles/Theme';
 import { Formio } from '@formio/react';
 import MetFormioComponents from 'met-formio';
 import '@bcgov/bc-sans/css/BCSans.css';
-// import reportWebVitals from './reportWebVitals';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 Formio.use(MetFormioComponents);
 Formio.Utils.Evaluator.noeval = false;
@@ -18,11 +19,13 @@ const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
     // <React.StrictMode>
     <Provider store={store}>
-        <ThemeProvider theme={BaseTheme}>
-            <StyledEngineProvider injectFirst>
-                <App />
-            </StyledEngineProvider>
-        </ThemeProvider>
+        <DndProvider backend={HTML5Backend}>
+            <ThemeProvider theme={BaseTheme}>
+                <StyledEngineProvider injectFirst>
+                    <App />
+                </StyledEngineProvider>
+            </ThemeProvider>
+        </DndProvider>
     </Provider>,
     // </React.StrictMode>
 );
