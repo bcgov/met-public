@@ -4,6 +4,9 @@ import { getEngagement, patchEngagement } from '../../../services/engagementServ
 import { createDefaultEngagement, Engagement } from '../../../models/engagement';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { getWidgets } from 'services/widgetService';
+import { WhoIsListeningWidget, WidgetType } from 'models/widget';
+import { getContact } from 'services/contactService';
 
 interface EngagementSchedule {
     id: number;
@@ -15,6 +18,7 @@ export interface EngagementViewContext {
     savedEngagement: Engagement;
     isEngagementLoading: boolean;
     scheduleEngagement: (_engagement: EngagementSchedule) => Promise<Engagement>;
+    whoIsListeningWidget?: WhoIsListeningWidget;
 }
 
 export type EngagementParams = {
@@ -35,6 +39,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const dispatch = useAppDispatch();
 
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
+    const [whoIsListeningWidget, setWhoIsListeningWidget] = useState<WhoIsListeningWidget>();
     const [isEngagementLoading, setEngagementLoading] = useState(true);
 
     const scheduleEngagement = async (engagement: EngagementSchedule): Promise<Engagement> => {
@@ -72,7 +77,36 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 );
             }
         };
+
+        const fetchWidgets = async () => {
+            try {
+                const result = await getWidgets(Number(engagementId));
+                const whoIsListeningWidget = result.find((w) => w.widget_type_id === WidgetType.WhoIsListening);
+                if (!whoIsListeningWidget) return;
+
+                const contacts = await Promise.all(
+                    whoIsListeningWidget.items.map((widgetItem) => {
+                        return getContact(widgetItem.widget_data_id);
+                    }),
+                );
+
+                setWhoIsListeningWidget({
+                    ...whoIsListeningWidget,
+                    contacts: contacts,
+                });
+            } catch (error) {
+                console.log(error);
+                dispatch(
+                    openNotification({
+                        severity: 'error',
+                        text: 'Error occurred while fetching Engagement wdigets information',
+                    }),
+                );
+            }
+        };
+
         fetchEngagement();
+        fetchWidgets();
     }, [engagementId]);
 
     return (
@@ -81,6 +115,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 savedEngagement,
                 isEngagementLoading,
                 scheduleEngagement,
+                whoIsListeningWidget,
             }}
         >
             {children}
