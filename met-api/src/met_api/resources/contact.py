@@ -48,8 +48,6 @@ class Contact(Resource):
             return ActionResult.success(contact_id, contact)
         except (KeyError, ValueError) as err:
             return ActionResult.error(str(err))
-        
-
 
 @cors_preflight('GET, POST, OPTIONS, PATCH')
 @API.route('/')
@@ -89,7 +87,7 @@ class Contacts(Resource):
             return ActionResult.success(result=widgets)
         except (KeyError, ValueError) as err:
             return ActionResult.error(str(err))
-        
+
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())

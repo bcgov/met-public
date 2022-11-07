@@ -16,7 +16,7 @@ export interface WidgetDrawerContextProps {
     widgetDrawerTabValue: string;
     handleWidgetDrawerTabValueChange: (_tabValue: string) => void;
     addContactDrawerOpen: boolean;
-    handleAddContactDrawerOpen: (_open: boolean, _data?: Contact) => void;
+    handleAddContactDrawerOpen: (_open: boolean, _contact?: Contact) => void;
     clearSelected: () => void;
     isWidgetsLoading: boolean;
     loadWidgets: () => Promise<void>;
