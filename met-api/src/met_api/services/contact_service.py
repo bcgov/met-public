@@ -3,6 +3,7 @@
 from met_api.models.contact import Contact
 from met_api.schemas.contact import ContactSchema
 
+
 class ContactService:
     """Contact management service."""
 

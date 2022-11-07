@@ -49,6 +49,7 @@ class Contact(Resource):
         except (KeyError, ValueError) as err:
             return ActionResult.error(str(err))
 
+
 @cors_preflight('GET, POST, OPTIONS, PATCH')
 @API.route('/')
 class Contacts(Resource):

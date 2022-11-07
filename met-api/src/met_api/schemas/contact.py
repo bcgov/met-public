@@ -1,6 +1,6 @@
 """Widget schema class."""
 
-from marshmallow import EXCLUDE, Schema, fields, validate
+from marshmallow import EXCLUDE, Schema, fields
 
 
 class ContactSchema(Schema):

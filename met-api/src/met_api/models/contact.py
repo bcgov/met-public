@@ -59,7 +59,6 @@ class Contact(db.Model):  # pylint: disable=too-few-public-methods
 
         return new_contact
 
-
     @classmethod
     def update_contact(cls, contact_data: dict) -> Optional[Contact or DefaultMethodResult]:
         """Update engagement."""
