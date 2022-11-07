@@ -5,6 +5,7 @@ Manages the contact
 from __future__ import annotations
 from datetime import datetime
 from .db import db
+from .default_method_result import DefaultMethodResult
 from typing import Optional
 
 class Contact(db.Model):  # pylint: disable=too-few-public-methods
@@ -65,7 +66,7 @@ class Contact(db.Model):  # pylint: disable=too-few-public-methods
         query = Contact.query.filter_by(id=contact_id)
         contact: Contact = query.first()
         if not contact:
-            return None
+            return DefaultMethodResult(False, 'Contact Not Found', contact_id)
 
         query.update(contact_data)
         db.session.commit()

@@ -16,7 +16,7 @@ const ControlledTextField: FC<IFormInputProps> = ({ name, ...otherProps }) => {
         <Controller
             control={control}
             name={name}
-            defaultValue={defaultValues?.[name]}
+            defaultValue={defaultValues?.[name] || ''}
             render={({ field }) => (
                 <TextField
                     {...otherProps}

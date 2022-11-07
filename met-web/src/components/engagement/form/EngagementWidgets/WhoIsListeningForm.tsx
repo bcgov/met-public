@@ -19,8 +19,8 @@ const WhoIsListeningForm = () => {
     const [addingWidgetItems, setAddingWidgetItems] = useState(false);
 
     useEffect(() => {
-        const filteredContacts = contacts.filter((c: Contact) =>
-            addedContacts.map((contact) => contact.id).includes(c.id),
+        const filteredContacts = contacts.filter((contact: Contact) =>
+            addedContacts.map((addedContact: Contact) => addedContact.id).includes(contact.id),
         );
         setAddedContacts(filteredContacts);
     }, [contacts]);
@@ -52,7 +52,7 @@ const WhoIsListeningForm = () => {
     };
 
     const removeContact = (contact: Contact) => {
-        const filteredContacts = addedContacts.filter((c) => contact.id != c.id);
+        const filteredContacts = addedContacts.filter((addedContact) => contact.id != addedContact.id);
         clearSelected();
         setAddedContacts(filteredContacts);
     };

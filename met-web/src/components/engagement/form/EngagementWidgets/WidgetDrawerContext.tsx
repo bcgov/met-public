@@ -11,7 +11,7 @@ import { WidgetTabValues } from './type';
 export interface WidgetDrawerContextProps {
     widgets: Widget[];
     widgetDrawerOpen: boolean;
-    selectedContact: Contact | null | undefined;
+    selectedContact: Contact | null;
     handleWidgetDrawerOpen: (_open: boolean) => void;
     widgetDrawerTabValue: string;
     handleWidgetDrawerTabValueChange: (_tabValue: string) => void;
@@ -63,7 +63,7 @@ export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
 export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
-    const [selectedContact, setSelectedContact] = useState<Contact | null | undefined>(null);
+    const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
     const [widgets, setWidgets] = useState<Widget[]>([]);
     const [isWidgetsLoading, setIsWidgetsLoading] = useState(true);
     const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
@@ -124,8 +124,8 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
         setSelectedContact(contact);
     };
 
-    const handleAddContactDrawerOpen = (open: boolean, data?: Contact) => {
-        setSelectedContact(data);
+    const handleAddContactDrawerOpen = (open: boolean, contact?: Contact) => {
+        setSelectedContact(contact ? contact : null);
         setAddContactDrawerOpen(open);
     };
 

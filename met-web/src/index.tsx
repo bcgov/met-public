@@ -10,7 +10,6 @@ import MetFormioComponents from 'met-formio';
 import '@bcgov/bc-sans/css/BCSans.css';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-// import reportWebVitals from './reportWebVitals';
 
 Formio.use(MetFormioComponents);
 Formio.Utils.Evaluator.noeval = false;
