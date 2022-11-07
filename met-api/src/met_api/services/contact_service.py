@@ -23,8 +23,8 @@ class ContactService:
         """Create contact."""
         contact_data['created_by'] = user_id
         contact_data['updated_by'] = user_id
-        return Contact.create_contact(contact_data)    
-    
+        return Contact.create_contact(contact_data)
+
     @staticmethod
     def update_contact(data: dict):
         """Update contact partially."""
@@ -32,4 +32,3 @@ class ContactService:
         if not updated_contact:
             raise ValueError('Contact to update was not found')
         return Contact.update_contact(data)
-

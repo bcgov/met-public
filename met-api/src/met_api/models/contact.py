@@ -5,7 +5,7 @@ Manages the contact
 from __future__ import annotations
 from datetime import datetime
 from .db import db
-from .default_method_result import DefaultMethodResult
+from typing import Optional
 
 class Contact(db.Model):  # pylint: disable=too-few-public-methods
     """Definition of the Contact entity."""
@@ -56,8 +56,8 @@ class Contact(db.Model):  # pylint: disable=too-few-public-methods
         db.session.commit()
 
         return new_contact
+
     
-     
     @classmethod
     def update_contact(cls, contact_data: dict) -> Optional[Contact]:
         """Update engagement."""

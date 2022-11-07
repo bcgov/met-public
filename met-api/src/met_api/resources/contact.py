@@ -49,7 +49,6 @@ class Contact(Resource):
         except (KeyError, ValueError) as err:
             return ActionResult.error(str(err))
         
-        
 
 
 @cors_preflight('GET, POST, OPTIONS, PATCH')
@@ -113,10 +112,3 @@ class Contacts(Resource):
             return ActionResult.error(str(err))
         except ValidationError as err:
             return ActionResult.error(str(err.messages))
-
-        
-        
-        
-
-    
- 

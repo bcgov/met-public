@@ -8,7 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
 import { useDrag, useDrop } from 'react-dnd';
-import { Else, If, Then, When } from 'react-if';
+import { If } from 'react-if';
 
 interface ContantInfoPaperProps {
     testId?: string;
