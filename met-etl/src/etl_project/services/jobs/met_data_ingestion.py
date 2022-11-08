@@ -29,17 +29,20 @@ def met_data_ingestion():
 
 
     # etl for engagement
-    engagement_last_run_cycle_time, engagement_new_runcycleid_created = get_engagement_last_run_cycle_time()
-    updated_engagement, engagement_new_runcycleid_passed_to_load = extract_engagement(engagement_last_run_cycle_time,
-                                                                          engagement_new_runcycleid_created)
-    engagement_new_runcycleid_passed_to_end = load_engagement(updated_engagement,
-                                                      engagement_new_runcycleid_passed_to_load)
+    engagement_last_run_cycle_time, engagement_new_runcycleid_created = get_engagement_last_run_cycle_time(
+                                                                                    flag_to_run_step_after_user)
+    new_engagements, updated_engagement, engagement_new_runcycleid_passed_to_load = extract_engagement(
+                                                                                    engagement_last_run_cycle_time,
+                                                                                    engagement_new_runcycleid_created)
+    engagement_new_runcycleid_passed_to_end = load_engagement(new_engagements, updated_engagement,
+                                                                                    engagement_new_runcycleid_passed_to_load)
 
-    flag_to_run_step_after_engagament = engagement_end_run_cycle(engagement_new_runcycleid_passed_to_end)
+    flag_to_run_step_after_engagement = engagement_end_run_cycle(engagement_new_runcycleid_passed_to_end)
 
 
     # etl run for survey
-    survey_last_run_cycle_time, survey_new_runcycleid_created = get_survey_last_run_cycle_time()
+    survey_last_run_cycle_time, survey_new_runcycleid_created = get_survey_last_run_cycle_time(
+                                                                                    flag_to_run_step_after_engagement)
 
     new_survey, updated_survey, survey_new_runcycleid_passed_to_load = extract_survey(survey_last_run_cycle_time,
                                                                                       survey_new_runcycleid_created)
@@ -64,14 +67,3 @@ def met_data_ingestion():
                                                                          submission_new_runcycleid_passed_to_load_reponse)
 
     flag_to_run_step_after_submission = submission_end_run_cycle(submission_new_runcycleid_passed_to_end)
-
-    # etl run for comments
-    comments_last_run_cycle_time, comments_new_runcycleid_created = get_comments_last_run_cycle_time(
-        flag_to_run_step_after_submission)
-
-    new_comments, comments_new_runcycleid_passed_to_load = extract_comments(comments_last_run_cycle_time,
-                                                                            comments_new_runcycleid_created)
-
-    comments_new_runcycleid_passed_to_end = load_comments(new_comments, comments_new_runcycleid_passed_to_load)
-
-    flag_to_run_step_after_comments = comments_end_run_cycle(comments_new_runcycleid_passed_to_end)

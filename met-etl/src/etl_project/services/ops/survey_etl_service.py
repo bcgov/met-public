@@ -16,7 +16,7 @@ from met_cron.utils import FormIoComponentType
 # get the last run cycle id for survey etl
 @op(required_resource_keys={"met_db_session", "met_etl_db_session"},
     out={"survey_last_run_cycle_time": Out(), "survey_new_runcycleid": Out()})
-def get_survey_last_run_cycle_time(context):
+def get_survey_last_run_cycle_time(context, flag_to_run_step_after_engagement):
     met_etl_db_session = context.resources.met_etl_db_session
     default_datetime = datetime(1900, 1, 1, 0, 0, 0, 0)
 
@@ -221,7 +221,7 @@ def survey_end_run_cycle(context, survey_new_runcycleid):
     met_etl_db_session.query(EtlRunCycleModel).filter(
         EtlRunCycleModel.id == survey_new_runcycleid, EtlRunCycleModel.packagename == 'survey',
         EtlRunCycleModel.success == False).update(
-        {'success': True, 'description': 'ended the load for tables survey and requests'})
+        {'success': True, 'enddatetime': datetime.utcnow(), 'description': 'ended the load for tables survey and requests'})
 
     context.log.info("run cycle ended for survey table")
 
