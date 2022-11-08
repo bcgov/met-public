@@ -12,7 +12,6 @@ import {
     SecondaryButton,
     MetHeader3,
 } from 'components/common';
-import { Palette } from 'styles/Theme';
 import { CommentStatus } from 'constants/commentStatus';
 import { formatDate } from 'components/common/dateHelper';
 import { CommentReviewSkeleton } from './CommentReviewSkeleton';
