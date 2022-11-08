@@ -65,7 +65,7 @@ class Submission(Resource):
             submission = SubmissionService().review_comment(submission_id, status_id, external_user_id)
             return ActionResult.success(submission_id, submission)
         except KeyError:
-            return ActionResult.error('Comment was not found')
+            return ActionResult.error('Submission was not found')
         except ValueError as err:
             return ActionResult.error(str(err))
 

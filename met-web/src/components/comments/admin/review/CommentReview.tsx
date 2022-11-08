@@ -37,6 +37,11 @@ const CommentReview = () => {
 
             const fetchedSubmission = await getSubmission(Number(submissionId));
             setSubmission(fetchedSubmission);
+            setReview(
+                fetchedSubmission.comment_status_id == CommentStatus.Pending
+                    ? CommentStatus.Approved
+                    : fetchedSubmission.comment_status_id,
+            );
             setIsLoading(false);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching comments' }));

@@ -84,7 +84,7 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
         return DefaultMethodResult(True, 'Submission Updated', submission_id)
 
     @classmethod
-    def update_comment_status(cls, submission_id, status_id, reviewed_by):
+    def update_comment_status(cls, submission_id, status_id, reviewed_by, user_id):
         """Update comment status."""
         query = Submission.query.filter_by(id=submission_id)
 
@@ -94,11 +94,13 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
         update_fields = dict(
             comment_status_id=status_id,
             reviewed_by=reviewed_by,
-            review_date=datetime.utcnow()
+            review_date=datetime.utcnow(),
+            updated_by=user_id,
+            updated_date=datetime.utcnow(),
         )
         query.update(update_fields)
         db.session.commit()
-        return query.all()
+        return query.first()
 
     @classmethod
     def get_by_survey_id_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text=''):

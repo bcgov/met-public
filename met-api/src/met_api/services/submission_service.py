@@ -66,7 +66,7 @@ class SubmissionService:
             raise ValueError('Engagement not open to submissions')
 
     @classmethod
-    def review_comment(cls, submission_id, status_id, external_user_id):
+    def review_comment(cls, submission_id, status_id, external_user_id) -> SubmissionSchema:
         """Review comment."""
         user = UserService.get_user_by_external_id(external_user_id)
 
@@ -77,7 +77,7 @@ class SubmissionService:
 
         reviewed_by = ' '.join([user.get('first_name', ''), user.get('last_name', '')])
 
-        submission = Submission.update_comment_status(submission_id, status_id, reviewed_by)
+        submission = Submission.update_comment_status(submission_id, status_id, reviewed_by, user.get('id'))
         return SubmissionSchema().dump(submission)
 
     @classmethod

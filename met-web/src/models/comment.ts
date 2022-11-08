@@ -1,5 +1,3 @@
-import { createDefaultSubmission, SurveySubmission } from './surveySubmission';
-
 export interface Comment {
     id: number;
     survey_id: number;

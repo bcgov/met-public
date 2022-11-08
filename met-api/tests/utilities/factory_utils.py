@@ -183,6 +183,8 @@ def factory_submission_model(survey_id, user_id, submission_info: dict = TestSub
         created_date=submission_info.get('created_date'),
         updated_date=submission_info.get('updated_date'),
         comment_status_id=submission_info.get('comment_status_id'),
+        reviewed_by=submission_info.get('reviewed_by'),
+        review_date=submission_info.get('review_date'),
     )
     db.session.add(submission)
     db.session.commit()
