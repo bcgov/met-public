@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, FormControl, RadioGroup, FormControlLabel, Radio, Stack, FormLabel } from '@mui/material';
+import { Grid, FormControl, RadioGroup, FormControlLabel, Radio, Stack, FormLabel, Divider } from '@mui/material';
 import { getSubmission, reviewComments } from 'services/submissionService';
 import { useAppDispatch } from 'hooks';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -136,23 +136,29 @@ const CommentReview = () => {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid container direction="row" item xs={12} spacing={2}>
-                    <Grid xs={12} item>
-                        <MetHeader3>Comment(s)</MetHeader3>
+                <Grid container rowSpacing={2} xs={12} paddingTop={5}>
+                    <Grid item xs={12} spacing={2}>
+                        <Grid xs={12} item>
+                            <MetHeader3>Comment(s)</MetHeader3>
+                        </Grid>
+                    </Grid>
+                    {submission.comments?.map((comment) => {
+                        return (
+                            <Grid item xs={12}>
+                                <Divider />
+                                <Grid xs={12} item paddingTop={2}>
+                                    <MetLabel>{comment.label ?? 'Label not available.'}</MetLabel>
+                                </Grid>
+                                <Grid xs={12} item>
+                                    <MetParagraph>{comment.text}</MetParagraph>
+                                </Grid>
+                            </Grid>
+                        );
+                    })}
+                    <Grid item xs={12}>
+                        <Divider />
                     </Grid>
                 </Grid>
-                {submission.comments?.map((comment) => {
-                    return (
-                        <Grid container direction="row" item xs={12} spacing={2}>
-                            <Grid xs={12} item>
-                                <MetLabel>{comment.label ?? 'Label not available.'}</MetLabel>
-                            </Grid>
-                            <Grid xs={12} item>
-                                <MetParagraph>{comment.text}</MetParagraph>
-                            </Grid>
-                        </Grid>
-                    );
-                })}
                 <If condition={!submission.comments || submission.comments.length == 0}>
                     <Then>
                         <Grid container direction="row" item xs={12} spacing={2}>
@@ -164,11 +170,8 @@ const CommentReview = () => {
                     <Else>
                         <Grid item xs={12}>
                             <FormControl>
-                                <FormLabel
-                                    id="controlled-radio-buttons-group"
-                                    sx={{ fontWeight: 'bold', color: Palette.text.primary, fontSize: '16px' }}
-                                >
-                                    Comment Approval
+                                <FormLabel id="controlled-radio-buttons-group">
+                                    <MetHeader3>Comment Approval</MetHeader3>
                                 </FormLabel>
                                 <RadioGroup
                                     defaultValue={defaultVerdict}
