@@ -35,7 +35,7 @@ API = Namespace('contacts', description='Endpoints for Widget Management')
 
 @cors_preflight('GET, OPTIONS')
 @API.route('/<contact_id>')
-class SurveySubmission(Resource):
+class Contact(Resource):
     """Resource for managing a contacts."""
 
     @staticmethod
@@ -50,9 +50,9 @@ class SurveySubmission(Resource):
             return ActionResult.error(str(err))
 
 
-@cors_preflight('GET, POST, OPTIONS')
+@cors_preflight('GET, POST, OPTIONS, PATCH')
 @API.route('/')
-class Surveys(Resource):
+class Contacts(Resource):
     """Resource for managing contacts."""
 
     @staticmethod
@@ -88,3 +88,26 @@ class Surveys(Resource):
             return ActionResult.success(result=widgets)
         except (KeyError, ValueError) as err:
             return ActionResult.error(str(err))
+
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def patch():
+        """Update saved contact partially."""
+        try:
+            requestjson = request.get_json()
+            user_id = TokenInfo.get_id()
+            requestjson['updated_by'] = user_id
+
+            contact_schema = ContactSchema()
+            contact_schema.load(requestjson, partial=True)
+            contact = ContactService().update_contact(requestjson)
+
+            return ActionResult.success(contact.id, contact_schema.dump(contact))
+        except KeyError as err:
+            return ActionResult.error(str(err))
+        except ValueError as err:
+            return ActionResult.error(str(err))
+        except ValidationError as err:
+            return ActionResult.error(str(err.messages))

@@ -353,7 +353,7 @@ def submission_end_run_cycle(context, submission_new_runcycleid):
 
     met_etl_db_session.query(EtlRunCycleModel).filter(
         EtlRunCycleModel.id == submission_new_runcycleid, EtlRunCycleModel.packagename == 'submission',
-        EtlRunCycleModel.success == False).update({'success': True,
+        EtlRunCycleModel.success == False).update({'success': True, 'enddatetime': datetime.utcnow(),
                                                    'description': 'ended the load for tables user response detail and responses'})
 
     context.log.info("run cycle ended for submission table")

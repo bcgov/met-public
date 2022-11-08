@@ -11,7 +11,7 @@ from met_cron.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 # get the last run cycle id for user detail etl
 @op(required_resource_keys={"met_db_session", "met_etl_db_session"},
     out={"user_details_last_run_cycle_datetime": Out(), "user_details_new_run_cycle_id": Out()})
-def get_user_details_last_run_cycle_time(context):
+def get_user_last_run_cycle_time(context):
     met_etl_db_session = context.resources.met_etl_db_session
     default_datetime = datetime(1900, 1, 1, 0, 0, 0, 0)
 
@@ -98,18 +98,18 @@ def load_user(context, new_users, updated_users, user_details_new_run_cycle_id):
 
 
 # update the status for user detail etl in run cycle table as successful
-@op(required_resource_keys={"met_db_session", "met_etl_db_session"}, out={"flag_to_run_step_after_user_details": Out()})
-def user_details_end_run_cycle(context, user_details_new_run_cycle_id):
+@op(required_resource_keys={"met_db_session", "met_etl_db_session"}, out={"flag_to_run_step_after_user": Out()})
+def user_end_run_cycle(context, user_details_new_run_cycle_id):
     met_etl_db_session = context.resources.met_etl_db_session
 
     met_etl_db_session.query(EtlRunCycleModel).filter(
         EtlRunCycleModel.id == user_details_new_run_cycle_id, EtlRunCycleModel.packagename == 'userdetails',
         EtlRunCycleModel.success == False).update(
-        {'success': True, 'description': 'ended the load for table user_details'})
+        {'success': True, 'enddatetime': datetime.utcnow(), 'description': 'ended the load for table user_details'})
 
     context.log.info("run cycle ended for user_details table")
 
-    yield Output("userdetails", "flag_to_run_step_after_user_details")
+    yield Output("userdetails", "flag_to_run_step_after_user")
 
     met_etl_db_session.commit()
 

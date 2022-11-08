@@ -11,16 +11,19 @@ import { WidgetTabValues } from './type';
 export interface WidgetDrawerContextProps {
     widgets: Widget[];
     widgetDrawerOpen: boolean;
+    selectedContact: Contact | null;
     handleWidgetDrawerOpen: (_open: boolean) => void;
     widgetDrawerTabValue: string;
     handleWidgetDrawerTabValueChange: (_tabValue: string) => void;
     addContactDrawerOpen: boolean;
-    handleAddContactDrawerOpen: (_open: boolean) => void;
+    handleAddContactDrawerOpen: (_open: boolean, _contact?: Contact) => void;
+    clearSelected: () => void;
     isWidgetsLoading: boolean;
     loadWidgets: () => Promise<void>;
     loadingContacts: boolean;
     contacts: Contact[];
     loadContacts: () => void;
+    updateSelectedContact: (_contact: Contact) => void;
 }
 
 export type EngagementParams = {
@@ -32,6 +35,7 @@ export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
     isWidgetsLoading: false,
     loadingContacts: false,
     widgetDrawerOpen: false,
+    selectedContact: null,
     handleWidgetDrawerOpen: (_open: boolean) => {
         /* empty default method  */
     },
@@ -44,8 +48,14 @@ export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
         /* empty default method  */
     },
     loadWidgets: () => Promise.resolve(),
+    clearSelected: () => {
+        /* empty default method  */
+    },
     contacts: [],
     loadContacts: () => {
+        /* empty default method  */
+    },
+    updateSelectedContact: () => {
         /* empty default method  */
     },
 });
@@ -53,7 +63,7 @@ export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
 export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
-
+    const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
     const [widgets, setWidgets] = useState<Widget[]>([]);
     const [isWidgetsLoading, setIsWidgetsLoading] = useState(true);
     const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
@@ -77,6 +87,10 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while attempting to load contacts' }));
             setLoadingContacts(false);
         }
+    };
+
+    const clearSelected = () => {
+        setSelectedContact(null);
     };
 
     const loadWidgets = async () => {
@@ -106,7 +120,12 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
         setWidgetDrawerOpen(open);
     };
 
-    const handleAddContactDrawerOpen = (open: boolean) => {
+    const updateSelectedContact = (contact: Contact) => {
+        setSelectedContact(contact);
+    };
+
+    const handleAddContactDrawerOpen = (open: boolean, contact?: Contact) => {
+        setSelectedContact(contact ? contact : null);
         setAddContactDrawerOpen(open);
     };
 
@@ -129,6 +148,9 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
                 loadingContacts,
                 contacts,
                 loadContacts,
+                selectedContact,
+                clearSelected,
+                updateSelectedContact,
             }}
         >
             {children}

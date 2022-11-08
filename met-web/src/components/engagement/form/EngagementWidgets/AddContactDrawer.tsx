@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
@@ -9,19 +9,20 @@ import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
-import { postContact } from 'services/contactService';
+import { patchContact, postContact, PatchContactRequest } from 'services/contactService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
+import { updatedDiff } from 'deep-object-diff';
 
 const schema = yup
     .object({
         name: yup.string().required(),
-        title: yup.string().required(),
-        phone_number: yup.string().required(),
+        title: yup.string(),
+        phone_number: yup.string(),
         email: yup.string().email().required(),
-        address: yup.string().required(),
-        bio: yup.string().min(20).required(),
+        address: yup.string(),
+        bio: yup.string(),
     })
     .required();
 
@@ -29,28 +30,63 @@ type ContactForm = yup.TypeOf<typeof schema>;
 
 const AddContactDrawer = () => {
     const dispatch = useAppDispatch();
-
+    const { addContactDrawerOpen, handleAddContactDrawerOpen, loadContacts, selectedContact, updateSelectedContact } =
+        useContext(WidgetDrawerContext);
+    const [isCreatingContact, setIsCreatingContact] = useState(false);
     const methods = useForm<ContactForm>({
         resolver: yupResolver(schema),
+        defaultValues: {
+            name: selectedContact ? selectedContact.name : '',
+            phone_number: selectedContact ? selectedContact.phone_number : '',
+            title: selectedContact ? selectedContact.title : '',
+            email: selectedContact ? selectedContact.email : '',
+            address: selectedContact ? selectedContact.address : '',
+            bio: selectedContact ? selectedContact.bio : '',
+        },
     });
 
+    useEffect(() => {
+        methods.setValue('name', selectedContact?.name);
+        methods.setValue('phone_number', selectedContact?.phone_number);
+        methods.setValue('title', selectedContact?.title);
+        methods.setValue('email', selectedContact?.email);
+        methods.setValue('address', selectedContact?.address);
+        methods.setValue('bio', selectedContact?.bio);
+    }, [selectedContact]);
+
     const { handleSubmit } = methods;
-    const { addContactDrawerOpen, handleAddContactDrawerOpen, loadContacts } = useContext(WidgetDrawerContext);
-    const [isCreatingContact, setIsCreatingContact] = useState(false);
+
+    const updateContact = async () => {
+        if (selectedContact) {
+            const contactUpdatesToPatch = updatedDiff(selectedContact, {
+                ...methods.getValues(),
+            }) as PatchContactRequest;
+
+            const updatedContact = await patchContact({
+                ...contactUpdatesToPatch,
+                id: selectedContact.id,
+            });
+            updateSelectedContact(updatedContact);
+            dispatch(openNotification({ severity: 'success', text: 'Contact was successfully updated' }));
+            loadContacts();
+        }
+    };
+
+    const createContact = async (data: ContactForm) => {
+        await postContact(data);
+        dispatch(openNotification({ severity: 'success', text: 'A new contact was successfully added' }));
+        loadContacts();
+    };
 
     const onSubmit: SubmitHandler<ContactForm> = async (data: ContactForm) => {
         try {
             setIsCreatingContact(true);
-            await postContact(data);
+            selectedContact ? updateContact() : createContact(data);
             setIsCreatingContact(false);
             handleAddContactDrawerOpen(false);
-            dispatch(openNotification({ severity: 'success', text: 'A new contact was successfully added' }));
-            loadContacts();
         } catch (err) {
             console.log(err);
-            dispatch(
-                openNotification({ severity: 'error', text: 'An error occured while trying to create a new contact' }),
-            );
+            dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to save contact' }));
             setIsCreatingContact(false);
         }
     };
@@ -68,7 +104,7 @@ const AddContactDrawer = () => {
                         padding="2em"
                     >
                         <Grid item xs={12}>
-                            <MetHeader3 bold>Add Contact</MetHeader3>
+                            <MetHeader3 bold>{selectedContact ? 'Edit' : 'Add'} Contact</MetHeader3>
                             <Divider sx={{ marginTop: '1em' }} />
                         </Grid>
                         <Grid item xs={12} lg={4}>
@@ -83,7 +119,7 @@ const AddContactDrawer = () => {
                         </Grid>
                         <Grid item xs={12} lg={8} container direction="row" spacing={2}>
                             <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Name</MetLabel>
+                                <MetLabel sx={{ marginBottom: '2px' }}>* Name</MetLabel>
                                 <ControlledTextField
                                     name="name"
                                     id="contact-name"
@@ -103,7 +139,6 @@ const AddContactDrawer = () => {
                                     id="contact-title"
                                     data-testid="contact-form/title"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -129,7 +164,7 @@ const AddContactDrawer = () => {
                             />
                         </Grid>
                         <Grid item xs={12} lg={8}>
-                            <MetLabel sx={{ marginBottom: '2px' }}>Email</MetLabel>
+                            <MetLabel sx={{ marginBottom: '2px' }}>* Email </MetLabel>
                             <ControlledTextField
                                 id="contact-email"
                                 data-testid="contact-form/email"
