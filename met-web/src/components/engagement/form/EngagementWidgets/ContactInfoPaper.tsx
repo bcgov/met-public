@@ -125,7 +125,6 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
                     spacing={1}
                 >
                     <When condition={!!contact.phone_number}>
-                        =
                         <Grid item xs={3}>
                             <MetParagraph>Phone:</MetParagraph>
                         </Grid>
