@@ -27,7 +27,7 @@ interface DragItem {
 const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, ...rest }: ContantInfoPaperProps) => {
     const { handleAddContactDrawerOpen } = useContext(WidgetDrawerContext);
     const ref = useRef<HTMLDivElement>(null);
-
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [{ handlerId }, drop] = useDrop<DragItem, void, { handlerId: Identifier | null }>({
         accept: 'Contact',
         collect(monitor) {
@@ -83,12 +83,13 @@ const ContantInfoPaper = ({ testId, contact, removeContact, index, moveContact, 
             item.index = hoverIndex;
         },
     });
-
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [{ isDragging }, drag] = useDrag({
         type: 'Contact',
         item: () => {
             return { testId, index };
         },
+        // eslint-disable-next-line
         collect: (monitor: any) => ({
             isDragging: monitor.isDragging(),
         }),

@@ -78,6 +78,9 @@ const config: Config.InitialOptions = {
     moduleNameMapper: {
         // formiojs: '<rootDir>/node_modules/formiojs/providers/storage/indexeddb.js',
         '^uuid$': require.resolve('uuid'),
+        'react-dnd': 'react-dnd-cjs',
+        'react-dnd-html5-backend': 'react-dnd-html5-backend-cjs',
+        'dnd-core': 'dnd-core-cjs',
         '\\.(css|scss)$': '<rootDir>/tests/unit/components/styleMock.tsx',
     },
 
@@ -163,13 +166,13 @@ const config: Config.InitialOptions = {
     // timers: "real",
 
     // A map from regular expressions to paths to transformers
-    transform: { 
+    transform: {
         '^.+\\.ts?$': 'ts-jest',
-        "^.+\\.svg$": "jest-transform-stub",
+        '^.+\\.svg$': 'jest-transform-stub',
     },
 
     // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-    transformIgnorePatterns: ['<rootDir>/node_modules/(?!uuid)'],
+    transformIgnorePatterns: ['/node_modules/(?!react-dnd|core-dnd|@react-dnd|dnd-core|react-dnd-html5-backend|uuid)'],
 
     modulePaths: ['src'],
 
