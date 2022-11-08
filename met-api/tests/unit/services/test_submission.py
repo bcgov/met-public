@@ -16,11 +16,14 @@
 Test suite to ensure that the Submission service routines are working as expected.
 """
 from unittest.mock import patch
+
 from met_api.schemas.submission import SubmissionSchema
 from met_api.services.comment_service import CommentService
-from met_api.services.submission_service import SubmissionService
 from met_api.services.email_verification_service import EmailVerificationService
-from tests.utilities.factory_utils import factory_email_verification, factory_survey_and_eng_model, factory_user_model
+from met_api.services.submission_service import SubmissionService
+from tests.utilities.factory_utils import (
+    factory_comment_model, factory_email_verification, factory_submission_model, factory_survey_and_eng_model,
+    factory_user_model)
 
 
 def test_create_submission(session):  # pylint:disable=unused-argument
@@ -62,3 +65,15 @@ def test_create_submission_rollback(session):  # pylint:disable=unused-argument
             mock.assert_called()
         actual_email_verification = EmailVerificationService().get(email_verification.verification_token)
         assert actual_email_verification['is_active'] is True
+
+
+def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that a comment can be reviewed."""
+    admin_user = factory_user_model(3)
+    user_details = factory_user_model()
+    survey, eng = factory_survey_and_eng_model()
+    submission = factory_submission_model(survey.id, user_details.id)
+    factory_comment_model(survey.id, submission.id)
+    comment_records = SubmissionService().review_comment(submission.id, 2, admin_user.external_id)
+    assert len(comment_records) == 1
+    assert comment_records[0]['status_id'] == 2
