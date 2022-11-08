@@ -71,16 +71,16 @@ class Widget(Resource):
 
 
 @cors_preflight('POST,OPTIONS')
-@API.route('/<widget_id>/items')
+@API.route('/<widget_id>/items/bulk')
 class SurveySubmission(Resource):
-    """Resource for managing a survey submissions."""
+    """Resource for managing widget items."""
 
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
     @auth.require
     def post(widget_id):
-        """Add new widgets to an engagement."""
+        """Add new widget items to a widget."""
         try:
             user_id = TokenInfo.get_id()
             request_json = request.get_json()
@@ -91,6 +91,79 @@ class SurveySubmission(Resource):
             widgets = WidgetItemSchema(many=True).load(request_json)
 
             result = WidgetService().create_widget_items_bulk(widgets, widget_id, user_id)
+            return ActionResult.success(result=result)
+        except (KeyError, ValueError) as err:
+            return ActionResult.error(str(err))
+        except ValidationError as err:
+            return ActionResult.error(str(err.messages))
+
+
+@cors_preflight('POST,OPTIONS')
+@API.route('/<widget_id>/items/bulk')
+class SurveySubmission(Resource):
+    """Resource for managing widget items."""
+
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def patch(widget_id):
+        """Add new widget items to a widget."""
+        try:
+            user_id = TokenInfo.get_id()
+            request_json = request.get_json()
+
+            widgets = WidgetItemSchema(many=True, partial=True).load(request_json)
+
+            result = WidgetService().update_widget_items_sorting(widgets, widget_id, user_id)
+            return ActionResult.success(result=result)
+        except (KeyError, ValueError) as err:
+            return ActionResult.error(str(err))
+        except ValidationError as err:
+            return ActionResult.error(str(err.messages))
+
+
+@cors_preflight('POST,OPTIONS')
+@API.route('/<widget_id>/items/create')
+class SurveySubmission(Resource):
+    """Resource for managing widget item."""
+
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def post(widget_id):
+        """Add new widget items to a widget."""
+        try:
+            user_id = TokenInfo.get_id()
+            request_json = request.get_json()
+            valid_format, errors = schema_utils.validate(request_json, 'widget_item')
+            if not valid_format:
+                return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
+
+            widget = WidgetItemSchema().load(request_json)
+
+            result = WidgetService().create_widget_item(widget, widget_id, user_id)
+            return ActionResult.success(result=result)
+        except (KeyError, ValueError) as err:
+            return ActionResult.error(str(err))
+        except ValidationError as err:
+            return ActionResult.error(str(err.messages))
+
+
+@cors_preflight('POST,OPTIONS')
+@API.route('/<widget_id>/items/<widget_item_id>')
+class SurveySubmission(Resource):
+    """Resource for managing widget item."""
+
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def delete(_widget_id, widget_item_id):
+        """Add new widget items to a widget."""
+        try:
+            result = WidgetService().delete_widget_item(widget_item_id)
             return ActionResult.success(result=result)
         except (KeyError, ValueError) as err:
             return ActionResult.error(str(err))

@@ -28,8 +28,14 @@ class WidgetService:
         return WidgetSchema().dump(created_widget)
 
     @staticmethod
-    def create_widget_item(widget_item_data):
+    def create_widget_item(widget_item_data, widget_id, user_id):
         """Create widget item."""
+        widget = Widget.get_widget_by_id(widget_id)
+        if not widget:
+            raise KeyError('Widget ' + widget_id + ' does not exist')
+
+        widget_item_data['created_by'] = user_id
+        widget_item_data['updated_by'] = user_id
         return WidgetItem.create_widget_item(widget_item_data)
 
     @staticmethod
@@ -44,4 +50,26 @@ class WidgetService:
             item['updated_by'] = user_id
 
         created_widgets_records = WidgetItem.creat_all_widget_items(widget_items)
+        return WidgetItemSchema(many=True).dump(created_widgets_records)
+
+    @staticmethod
+    def delete_widget_item(widget_item_id):
+        """Delete widget item."""
+        widget_item = Widget.get_widget_item_by_id(widget_item_id)
+        if not widget_item:
+            raise KeyError('Widget item' + widget_item_id + ' does not exist')
+        return WidgetItem.delete_widget_item(widget_item_id)
+
+    @staticmethod
+    def update_widget_items_sorting(widget_items: list, widget_id, user_id):
+        """Create widget items in bulk."""
+        widget = Widget.get_widget_by_id(widget_id)
+        if not widget:
+            raise KeyError('Widget ' + widget_id + ' does not exist')
+
+        for item in widget_items:
+            item['created_by'] = user_id
+            item['updated_by'] = user_id
+
+        created_widgets_records = WidgetItem.saved_widget_items_sorting(widget_items)
         return WidgetItemSchema(many=True).dump(created_widgets_records)

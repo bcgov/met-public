@@ -1,24 +1,46 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { MetLabel, MetParagraph, MetWidgetPaper } from 'components/common';
-import { Grid, IconButton } from '@mui/material';
+import { CircularProgress, Grid, IconButton } from '@mui/material';
 import { Contact } from 'models/contact';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { WidgetDrawerContext } from './WidgetDrawerContext';
+import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { When } from 'react-if';
+import { WidgetType } from 'models/widget';
+import { deleteWidgetItem } from 'services/widgetService';
+import { useAppDispatch } from 'hooks';
+import { openNotification } from 'services/notificationService/notificationSlice';
+import { WhoIsListeningContext } from './WhoIsListeningContext';
 
 interface ContantInfoPaperProps {
     contact: Contact;
+    removeContact: (contactId: number) => void;
 }
 
-const ContantInfoPaper = ({ contact, ...rest }: ContantInfoPaperProps) => {
-    const { handleAddContactDrawerOpen } = useContext(WidgetDrawerContext);
+const ContantInfoPaper = ({ contact, removeContact, ...rest }: ContantInfoPaperProps) => {
+    const { widgets } = useContext(WidgetDrawerContext);
+    const { handleChangeContactToEdit, handleAddContactDrawerOpen } = useContext(WhoIsListeningContext);
+    const dispatch = useAppDispatch();
 
-    const removeContact = (contact: Contact) => {
-        //
+    const [removingContact, setRemovingContact] = useState(false);
+    const widget = widgets.filter((widget) => widget.widget_type_id === WidgetType.WhoIsListening)[0] || null;
+
+    const handleRemoveContact = async () => {
+        try {
+            setRemovingContact(true);
+            await deleteWidgetItem(widget.id, contact.id);
+            dispatch(openNotification({ severity: 'success', text: 'Contact successfully removed' }));
+            removeContact(contact.id);
+            setRemovingContact(false);
+        } catch (error) {
+            setRemovingContact(false);
+            console.log(error);
+            dispatch(
+                openNotification({ severity: 'error', text: 'Error occurred while attempting to add the contact' }),
+            );
+        }
     };
-
     return (
         <MetWidgetPaper elevation={3} {...rest}>
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
@@ -91,7 +113,10 @@ const ContantInfoPaper = ({ contact, ...rest }: ContantInfoPaperProps) => {
                     <Grid item xs={6}>
                         <IconButton
                             sx={{ padding: 1, margin: 0 }}
-                            onClick={() => handleAddContactDrawerOpen(true, { ...contact })}
+                            onClick={() => {
+                                handleChangeContactToEdit(contact);
+                                handleAddContactDrawerOpen(true);
+                            }}
                             color="info"
                             aria-label="edit-icon"
                         >
@@ -101,11 +126,12 @@ const ContantInfoPaper = ({ contact, ...rest }: ContantInfoPaperProps) => {
                     <Grid item xs={6}>
                         <IconButton
                             sx={{ padding: 1, margin: 0 }}
-                            onClick={() => removeContact(contact)}
+                            onClick={() => handleRemoveContact()}
                             color="info"
                             aria-label="delete-icon"
+                            disabled={removingContact}
                         >
-                            <DeleteIcon />
+                            {removingContact ? <CircularProgress /> : <DeleteIcon />}
                         </IconButton>
                     </Grid>
                 </Grid>

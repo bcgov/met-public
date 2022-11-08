@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import { Grid } from '@mui/material';
 import WidgetDrawerTabs from './WidgetDrawerTabs';
-import AddContactDrawer from './AddContactDrawer';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
 import { WidgetTabValues } from './type';
 
@@ -30,7 +29,6 @@ const WidgetDrawer = () => {
                     padding="2em"
                 >
                     <WidgetDrawerTabs />
-                    <AddContactDrawer />
                 </Grid>
             </Box>
         </Drawer>

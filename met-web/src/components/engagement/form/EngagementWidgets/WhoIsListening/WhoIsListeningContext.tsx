@@ -1,0 +1,102 @@
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import { useAppDispatch } from 'hooks';
+import { openNotification } from 'services/notificationService/notificationSlice';
+import { ActionContext } from '../../ActionContext';
+import { getContacts } from 'services/contactService';
+import { Contact } from 'models/contact';
+
+export interface WhoIsListeningContextProps {
+    contactToEdit: Contact | null;
+    addContactDrawerOpen: boolean;
+    handleAddContactDrawerOpen: (_open: boolean) => void;
+    clearSelected: () => void;
+    loadingContacts: boolean;
+    contacts: Contact[];
+    loadContacts: () => void;
+    handleChangeContactToEdit: (_contact: Contact | null) => void;
+}
+
+export type EngagementParams = {
+    engagementId: string;
+};
+
+export const WhoIsListeningContext = createContext<WhoIsListeningContextProps>({
+    loadingContacts: false,
+    contactToEdit: null,
+    addContactDrawerOpen: false,
+    handleAddContactDrawerOpen: (_open: boolean) => {
+        /* empty default method  */
+    },
+    clearSelected: () => {
+        /* empty default method  */
+    },
+    contacts: [],
+    loadContacts: () => {
+        /* empty default method  */
+    },
+    handleChangeContactToEdit: () => {
+        /* empty default method  */
+    },
+});
+
+export const WhoIsListeningProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
+    const { savedEngagement } = useContext(ActionContext);
+    const dispatch = useAppDispatch();
+    const [contactToEdit, setContactToEdit] = useState<Contact | null>(null);
+    const [addContactDrawerOpen, setAddContactDrawerOpen] = useState(false);
+    const [contacts, setContacts] = useState<Contact[]>([]);
+    const [loadingContacts, setLoadingContacts] = useState(true);
+
+    const loadContacts = async () => {
+        try {
+            if (!savedEngagement.id) {
+                setLoadingContacts(false);
+                return;
+            }
+            setLoadingContacts(true);
+            const loadedContacts = await getContacts();
+            setContacts(loadedContacts);
+            setLoadingContacts(false);
+        } catch (error) {
+            console.log(error);
+            dispatch(openNotification({ severity: 'error', text: 'Error occurred while attempting to load contacts' }));
+            setLoadingContacts(false);
+        }
+    };
+
+    const clearSelected = () => {
+        setContactToEdit(null);
+    };
+
+    useEffect(() => {
+        loadContacts();
+    }, [savedEngagement]);
+
+    const handleChangeContactToEdit = (contact: Contact | null) => {
+        setContactToEdit(contact);
+    };
+
+    const handleAddContactDrawerOpen = (open: boolean) => {
+        setAddContactDrawerOpen(open);
+        if (!open && contactToEdit) {
+            setContactToEdit(null);
+        }
+    };
+
+    return (
+        <WhoIsListeningContext.Provider
+            value={{
+                addContactDrawerOpen,
+                handleAddContactDrawerOpen,
+                loadingContacts,
+                contacts,
+                loadContacts,
+                contactToEdit,
+                clearSelected,
+                handleChangeContactToEdit,
+            }}
+        >
+            {children}
+        </WhoIsListeningContext.Provider>
+    );
+};
