@@ -41,7 +41,6 @@ class Widget(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.require
     def get(engagement_id):
         """Fetch a list of widgets by engagement_id."""
         try:

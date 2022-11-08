@@ -40,7 +40,6 @@ class Contact(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.require
     def get(contact_id):
         """Fetch a contact by id."""
         try:
@@ -80,7 +79,6 @@ class Contacts(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.require
     def get():
         """Fetch list of contacts."""
         try:
