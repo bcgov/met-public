@@ -34,7 +34,7 @@ def test_valid_submission(client, jwt, session):  # pylint:disable=unused-argume
         'verification_token': email_verification.verification_token
     }
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.post('/api/submission/', data=json.dumps(to_dict),
+    rv = client.post('/api/submissions/', data=json.dumps(to_dict),
                      headers=headers, content_type='application/json')
     assert rv.status_code == 200
 
@@ -51,7 +51,7 @@ def test_invalid_submission(client, jwt, session):  # pylint:disable=unused-argu
         'verification_token': email_verification.verification_token
     }
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.post('/api/submission/', data=json.dumps(to_dict),
+    rv = client.post('/api/submissions/', data=json.dumps(to_dict),
                      headers=headers, content_type='application/json')
     survey_id_error_msg = "'survey_id' is a required property"
     submission_json_error_msg = "'submission_json' is a required property"
@@ -64,7 +64,7 @@ def test_invalid_submission(client, jwt, session):  # pylint:disable=unused-argu
     to_dict = {
     }
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.post('/api/submission/', data=json.dumps(to_dict),
+    rv = client.post('/api/submissions/', data=json.dumps(to_dict),
                      headers=headers, content_type='application/json')
     print(rv.json.get('message'))
     assert survey_id_error_msg in rv.json.get('message')
