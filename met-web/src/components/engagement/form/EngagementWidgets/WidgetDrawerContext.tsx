@@ -124,8 +124,7 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
         setSelectedContact(contact);
     };
 
-    const handleAddContactDrawerOpen = (open: boolean, contact?: Contact) => {
-        setSelectedContact(contact ? contact : null);
+    const handleAddContactDrawerOpen = (open: boolean) => {
         setAddContactDrawerOpen(open);
     };
 
