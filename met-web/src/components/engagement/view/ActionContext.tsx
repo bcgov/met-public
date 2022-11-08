@@ -78,6 +78,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     };
 
     const fetchWidgets = async () => {
+        if (!savedEngagement.id) {
+            return;
+        }
         try {
             const result = await getWidgets(Number(engagementId));
             setWidgets(result);
@@ -94,8 +97,11 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
 
     useEffect(() => {
         fetchEngagement();
-        fetchWidgets();
     }, [engagementId]);
+
+    useEffect(() => {
+        fetchWidgets();
+    }, [savedEngagement]);
 
     return (
         <ActionContext.Provider
