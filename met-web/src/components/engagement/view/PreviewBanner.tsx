@@ -10,6 +10,7 @@ import PollIcon from '@mui/icons-material/Poll';
 import UnpublishedIcon from '@mui/icons-material/Unpublished';
 import IconButton from '@mui/material/IconButton';
 import ScheduleModal from 'components/common/Modals/Schedule';
+import { formatDate } from 'components/common/dateHelper';
 
 export const PreviewBanner = () => {
     const isSmallScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
@@ -21,9 +22,10 @@ export const PreviewBanner = () => {
     const engagementId = savedEngagement.id || '';
     const imageExists = !!savedEngagement.banner_url;
     const isScheduled = savedEngagement.status_id === EngagementStatus.Scheduled;
-    const scheduledDate = new Date(savedEngagement.scheduled_date);
+    const scheduledDate = formatDate(savedEngagement.scheduled_date, 'MMM dd yyyy');
+    const scheduledTime = formatDate(savedEngagement.scheduled_date, 'HH:mm');
     const engagementBannerText = isScheduled
-        ? 'Engagement scheduled - ' + scheduledDate.toDateString() + 'at ' + scheduledDate.toTimeString()
+        ? 'Engagement scheduled - ' + scheduledDate + ' at ' + scheduledTime
         : `Preview Engagement`;
     if (!isLoggedIn) {
         return null;
@@ -47,7 +49,7 @@ export const PreviewBanner = () => {
                         <Grid item container direction="row" rowSpacing={1}>
                             <MetBody>
                                 This engagement is scheduled to go live on
-                                {' ' + scheduledDate.toDateString()} at {scheduledDate.toTimeString()}.{' '}
+                                {' ' + scheduledDate + ' at ' + scheduledTime}.{' '}
                                 <Link onClick={() => setIsOpen(true)}>Click here</Link> to edit the date this Engagement
                                 page will go live.
                             </MetBody>
