@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, FormControl, RadioGroup, FormControlLabel, Radio, Stack, FormLabel } from '@mui/material';
-import { Comment, createDefaultComment } from 'models/comment';
-import { getSubmissionComments, ReviewComment } from 'services/commentService';
+import { getSubmission, reviewComments } from 'services/submissionService';
 import { useAppDispatch } from 'hooks';
 import { useParams, useNavigate } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -17,9 +16,11 @@ import { Palette } from 'styles/Theme';
 import { CommentStatus } from 'constants/commentStatus';
 import { formatDate } from 'components/common/dateHelper';
 import { CommentReviewSkeleton } from './CommentReviewSkeleton';
+import { createDefaultSubmission, SurveySubmission } from 'models/surveySubmission';
+import { If, Then, Else } from 'react-if';
 
 const CommentReview = () => {
-    const [comments, setComments] = useState<Comment[]>([createDefaultComment()]);
+    const [submission, setSubmission] = useState<SurveySubmission>(createDefaultSubmission());
     const [review, setReview] = useState(CommentStatus.Approved);
     const [isSaving, setIsSaving] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -28,14 +29,14 @@ const CommentReview = () => {
     const navigate = useNavigate();
     const { submissionId } = useParams();
 
-    const fetchComments = async () => {
+    const fetchSubmission = async () => {
         try {
             if (isNaN(Number(submissionId))) {
                 throw new Error();
             }
 
-            const fetchedComments = await getSubmissionComments(Number(submissionId));
-            setComments(fetchedComments);
+            const fetchedSubmission = await getSubmission(Number(submissionId));
+            setSubmission(fetchedSubmission);
             setIsLoading(false);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching comments' }));
@@ -44,7 +45,7 @@ const CommentReview = () => {
     };
 
     useEffect(() => {
-        fetchComments();
+        fetchSubmission();
     }, [submissionId]);
 
     const handleReviewChange = (verdict: number) => {
@@ -54,10 +55,10 @@ const CommentReview = () => {
     const handleSave = async () => {
         setIsSaving(true);
         try {
-            await ReviewComment({ submission_id: Number(submissionId), status_id: review });
+            await reviewComments({ submission_id: Number(submissionId), status_id: review });
             setIsSaving(false);
             dispatch(openNotification({ severity: 'success', text: 'Comments successfully reviewed.' }));
-            navigate(`/surveys/${comments[0].survey_id}/comments`);
+            navigate(`/surveys/${submission.survey_id}/comments`);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while sending comments review.' }));
             setIsSaving(false);
@@ -67,13 +68,13 @@ const CommentReview = () => {
     // The comment display information below is fetched from the first comment from the list
     // since comment status/review are being stored individually
     // These values should be exacly the same throughout the array.
-    const { submission_id, comment_status, status_id, reviewed_by, submission_date, review_date } = comments[0];
+    const { id, comment_status_id, reviewed_by, created_date, review_date } = submission;
 
     if (isLoading) {
         return <CommentReviewSkeleton />;
     }
 
-    const defaultVerdict = status_id !== CommentStatus.Pending ? status_id : CommentStatus.Approved;
+    const defaultVerdict = comment_status_id !== CommentStatus.Pending ? comment_status_id : CommentStatus.Approved;
     return (
         <MetPageGridContainer>
             <Grid
@@ -90,7 +91,7 @@ const CommentReview = () => {
                             <MetLabel>Submission ID:</MetLabel>
                         </Grid>
                         <Grid item>
-                            <MetParagraph sx={{ pl: 2 }}>{submission_id}</MetParagraph>
+                            <MetParagraph sx={{ pl: 2 }}>{id}</MetParagraph>
                         </Grid>
                     </Grid>
 
@@ -99,7 +100,7 @@ const CommentReview = () => {
                             <MetLabel>Status:</MetLabel>
                         </Grid>
                         <Grid item>
-                            <MetParagraph sx={{ pl: 2 }}>{comment_status.status_name}</MetParagraph>
+                            <MetParagraph sx={{ pl: 2 }}>{CommentStatus[comment_status_id]}</MetParagraph>
                         </Grid>
                     </Grid>
 
@@ -117,7 +118,7 @@ const CommentReview = () => {
                             <MetLabel>Comment Date:</MetLabel>
                         </Grid>
                         <Grid item>
-                            <MetParagraph sx={{ pl: 2 }}>{formatDate(submission_date)}</MetParagraph>
+                            <MetParagraph sx={{ pl: 2 }}>{formatDate(created_date)}</MetParagraph>
                         </Grid>
                     </Grid>
 
@@ -135,11 +136,11 @@ const CommentReview = () => {
                         <MetHeader3>Comment(s)</MetHeader3>
                     </Grid>
                 </Grid>
-                {comments.map((comment) => {
+                {submission.comments?.map((comment) => {
                     return (
                         <Grid container direction="row" item xs={12} spacing={2}>
                             <Grid xs={12} item>
-                                <MetLabel>{comment.question ?? 'Question not available.'}</MetLabel>
+                                <MetLabel>{comment.label ?? 'Label not available.'}</MetLabel>
                             </Grid>
                             <Grid xs={12} item>
                                 <MetParagraph>{comment.text}</MetParagraph>
@@ -147,40 +148,51 @@ const CommentReview = () => {
                         </Grid>
                     );
                 })}
-                <Grid item xs={12}>
-                    <FormControl>
-                        <FormLabel
-                            id="controlled-radio-buttons-group"
-                            sx={{ fontWeight: 'bold', color: Palette.text.primary, fontSize: '16px' }}
-                        >
-                            Comment Approval
-                        </FormLabel>
-                        <RadioGroup
-                            defaultValue={defaultVerdict}
-                            onChange={(e) => handleReviewChange(Number(e.target.value))}
-                        >
-                            <FormControlLabel
-                                value={CommentStatus.Approved}
-                                control={<Radio />}
-                                label={<MetParagraph>Approve</MetParagraph>}
-                            />
-                            <FormControlLabel
-                                value={CommentStatus.Rejected}
-                                control={<Radio />}
-                                label={<MetParagraph>Reject</MetParagraph>}
-                            />
-                        </RadioGroup>
-                    </FormControl>
-                </Grid>
+                <If condition={!submission.comments || submission.comments.length == 0}>
+                    <Then>
+                        <Grid container direction="row" item xs={12} spacing={2}>
+                            <Grid xs={12} item>
+                                <MetLabel>This submission has no comments.</MetLabel>
+                            </Grid>
+                        </Grid>
+                    </Then>
+                    <Else>
+                        <Grid item xs={12}>
+                            <FormControl>
+                                <FormLabel
+                                    id="controlled-radio-buttons-group"
+                                    sx={{ fontWeight: 'bold', color: Palette.text.primary, fontSize: '16px' }}
+                                >
+                                    Comment Approval
+                                </FormLabel>
+                                <RadioGroup
+                                    defaultValue={defaultVerdict}
+                                    onChange={(e) => handleReviewChange(Number(e.target.value))}
+                                >
+                                    <FormControlLabel
+                                        value={CommentStatus.Approved}
+                                        control={<Radio />}
+                                        label={<MetParagraph>Approve</MetParagraph>}
+                                    />
+                                    <FormControlLabel
+                                        value={CommentStatus.Rejected}
+                                        control={<Radio />}
+                                        label={<MetParagraph>Reject</MetParagraph>}
+                                    />
+                                </RadioGroup>
+                            </FormControl>
+                        </Grid>
 
-                <Grid item xs={12}>
-                    <Stack direction="row" spacing={2}>
-                        <PrimaryButton loading={isSaving} onClick={handleSave}>
-                            {'Save & Continue'}
-                        </PrimaryButton>
-                        <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
-                    </Stack>
-                </Grid>
+                        <Grid item xs={12}>
+                            <Stack direction="row" spacing={2}>
+                                <PrimaryButton loading={isSaving} onClick={handleSave}>
+                                    {'Save & Continue'}
+                                </PrimaryButton>
+                                <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
+                            </Stack>
+                        </Grid>
+                    </Else>
+                </If>
             </Grid>
         </MetPageGridContainer>
     );

@@ -182,6 +182,7 @@ def factory_submission_model(survey_id, user_id, submission_info: dict = TestSub
         updated_by=submission_info.get('updated_by'),
         created_date=submission_info.get('created_date'),
         updated_date=submission_info.get('updated_date'),
+        comment_status_id=submission_info.get('comment_status_id'),
     )
     db.session.add(submission)
     db.session.commit()
@@ -195,7 +196,6 @@ def factory_comment_model(survey_id, submission_id, comment_info: dict = TestCom
         submission_id=submission_id,
         component_id=comment_info.get('component_id'),
         text=comment_info.get('text'),
-        status_id=comment_info.get('status_id'),
         submission_date=comment_info.get('submission_date'),
     )
     db.session.add(comment)

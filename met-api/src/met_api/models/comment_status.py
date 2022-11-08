@@ -17,7 +17,7 @@ class CommentStatus(db.Model):  # pylint: disable=too-few-public-methods
     description = db.Column(db.String(50))
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
-    comment = db.relationship('Comment', backref='comment_status', cascade='all, delete')
+    submission = db.relationship('Submission', backref='comment_status', cascade='all, delete')
 
     @classmethod
     def get_comment_statuses(cls):

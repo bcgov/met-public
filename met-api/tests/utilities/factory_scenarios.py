@@ -185,6 +185,7 @@ class TestSubmissionInfo(dict, Enum):
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
+        'comment_status_id': 1,  # Pending
     }
 
 
@@ -194,6 +195,5 @@ class TestCommentInfo(dict, Enum):
     comment1 = {
         'text': fake.paragraph(nb_sentences=3),
         'component_id': 'simpletextarea',
-        'status_id': 1,  # Pending
         'submission_date': datetime.now().strftime('%Y-%m-%d'),
     }

@@ -5,9 +5,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { SurveyParams } from '../types';
 import { getEmailVerification } from 'services/emailVerificationService';
-import { getSurvey } from 'services/surveyService/form';
-import { submitSurvey } from 'services/surveyService/submission';
 import { getEngagement } from 'services/engagementService';
+import { getSurvey } from 'services/surveyService';
+import { submitSurvey } from 'services/submissionService';
 import { Engagement } from 'models/engagement';
 
 interface SubmitSurveyContext {

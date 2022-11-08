@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import SurveyListing from '../../../src/components/survey/listing';
 import { setupEnv } from './setEnvVars';
 import * as reactRedux from 'react-redux';
-import * as surveyService from 'services/surveyService/form';
+import * as surveyService from 'services/surveyService';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
 import { createDefaultSurvey } from 'models/survey';
 import { createDefaultEngagement } from 'models/engagement';

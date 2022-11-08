@@ -4,6 +4,7 @@ Manages the submission
 """
 
 from marshmallow import EXCLUDE, Schema, fields
+from met_api.schemas.comment import CommentSchema
 
 from .survey import SurveySchema
 
@@ -25,4 +26,8 @@ class SubmissionSchema(Schema):
     survey_id = fields.Int(data_key='survey_id')
     user_id = fields.Int(data_key='user_id')
     verification_token = fields.Str(data_key='verification_token')
-    survey = fields.Nested(SurveySchema)
+    reviewed_by = fields.Str(data_key='reviewed_by')
+    review_date = fields.Str(data_key='review_date')
+    comment_status_id = fields.Int(data_key='comment_status_id')
+    survey_name = fields.Pluck(SurveySchema, 'name')
+    comments = fields.List(fields.Nested(CommentSchema))

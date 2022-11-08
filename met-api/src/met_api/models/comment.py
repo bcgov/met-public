@@ -9,8 +9,10 @@ from sqlalchemy.sql import text
 from sqlalchemy.sql.schema import ForeignKey
 
 from met_api.constants.comment_status import Status
+from met_api.constants.engagement_status import Status as EngStatus
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement import Engagement
+from met_api.models.submission import Submission
 from met_api.models.survey import Survey
 
 from .comment_status import CommentStatus
@@ -25,9 +27,6 @@ class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     text = db.Column(db.Text, unique=False, nullable=False)
     submission_date = db.Column(db.DateTime)
-    reviewed_by = db.Column(db.String(50))
-    review_date = db.Column(db.DateTime)
-    status_id = db.Column(db.Integer, ForeignKey('comment_status.id', ondelete='SET NULL'))
     survey_id = db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), nullable=False)
     user_id = db.Column(db.Integer, ForeignKey('user.id', ondelete='SET NULL'), nullable=True)
     submission_id = db.Column(db.Integer, ForeignKey('submission.id', ondelete='SET NULL'), nullable=True)
@@ -37,7 +36,6 @@ class Comment(db.Model):
     def get_comment(cls, comment_id):
         """Get a comment."""
         return db.session.query(Comment)\
-            .join(CommentStatus)\
             .join(Survey)\
             .filter(Comment.id == comment_id)\
             .first()
@@ -46,7 +44,6 @@ class Comment(db.Model):
     def get_by_submission(cls, submission_id):
         """Get comments by submission id."""
         return db.session.query(Comment)\
-            .join(CommentStatus)\
             .join(Survey)\
             .filter(Comment.submission_id == submission_id)\
             .all()
@@ -55,7 +52,6 @@ class Comment(db.Model):
     def get_comments_by_survey_id_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text=''):
         """Get comments paginated."""
         query = db.session.query(Comment)\
-            .join(CommentStatus)\
             .join(Survey)\
             .filter(Comment.survey_id == survey_id)\
 
@@ -81,15 +77,15 @@ class Comment(db.Model):
     def get_accepted_comments_by_survey_id_where_engagement_closed_paginated(
             cls, survey_id, pagination_options: PaginationOptions):
         """Get comments for closed engagements."""
-        now = datetime.now()
         query = db.session.query(Comment)\
+            .join(Submission)\
             .join(CommentStatus)\
             .join(Survey)\
             .join(Engagement, Engagement.id == Survey.engagement_id)\
             .filter(
                 and_(
                     Comment.survey_id == survey_id,
-                    Engagement.end_date < now,
+                    Engagement.status_id == EngStatus.Closed.value,
                     CommentStatus.id == Status.Approved.value
                 ))\
 
@@ -110,7 +106,6 @@ class Comment(db.Model):
         return Comment(
             text=comment.get('text', None),
             submission_date=datetime.utcnow(),
-            status_id=Status.Pending.value,
             survey_id=comment.get('survey_id', None),
             user_id=comment.get('user_id', None),
             submission_id=comment.get('submission_id', None),
@@ -127,20 +122,3 @@ class Comment(db.Model):
         else:
             session.add_all(new_comments)
         return DefaultMethodResult(True, 'Comments Added', 1)
-
-    @classmethod
-    def update_comment_status(cls, submission_id, status_id, reviewed_by):
-        """Update comment status."""
-        query = Comment.query.filter_by(submission_id=submission_id)
-
-        if not query.first():
-            return DefaultMethodResult(False, 'Comments not Found', submission_id)
-
-        update_fields = dict(
-            status_id=status_id,
-            reviewed_by=reviewed_by,
-            review_date=datetime.utcnow()
-        )
-        query.update(update_fields)
-        db.session.commit()
-        return query.all()

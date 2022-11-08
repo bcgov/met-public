@@ -20,6 +20,7 @@ from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
 from met_api.auth import auth
+from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas import utils as schema_utils
 from met_api.schemas.submission import SubmissionSchema
 from met_api.services.submission_service import SubmissionService
@@ -28,7 +29,7 @@ from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
-API = Namespace('submission', description='Endpoints for submission Management')
+API = Namespace('submissions', description='Endpoints for submission Management')
 """Custom exception messages
 """
 
@@ -52,8 +53,24 @@ class Submission(Resource):
         except ValueError as err:
             return ActionResult.error(str(err))
 
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def put(submission_id):
+        """Update comment status by submission id."""
+        try:
+            requestjson = request.get_json()
+            status_id = requestjson.get('status_id', None)
+            external_user_id = TokenInfo.get_id()
+            submission = SubmissionService().review_comment(submission_id, status_id, external_user_id)
+            return ActionResult.success(submission_id, submission)
+        except KeyError:
+            return ActionResult.error('Comment was not found')
+        except ValueError as err:
+            return ActionResult.error(str(err))
 
-@cors_preflight('GET, POST, PUT, OPTIONS')
+
+@cors_preflight('POST, OPTIONS')
 @API.route('/')
 class Submissions(Resource):
     """Resource for managing all submissions."""
@@ -78,20 +95,32 @@ class Submissions(Resource):
         except ValueError as err:
             return ActionResult.error(str(err))
 
+
+@cors_preflight('GET, OPTIONS')
+@API.route('/survey/<survey_id>')
+class SurveySubmissions(Resource):
+    """Resource for managing multiple submissions."""
+
     @staticmethod
-    # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
     @auth.require
-    def put():
-        """Update a existing submission."""
+    def get(survey_id):
+        """Get submissions page."""
         try:
-            requestjson = request.get_json()
-            schema = SubmissionSchema().load(requestjson)
-            user_id = TokenInfo.get_id()
-            schema['updated_by'] = user_id
-            result = SubmissionService().update(schema)
-            return ActionResult.success(result.identifier, schema)
-        except KeyError as err:
-            return ActionResult.error(str(err))
+            args = request.args
+
+            pagination_options = PaginationOptions(
+                page=args.get('page', None, int),
+                size=args.get('size', None, int),
+                sort_key=args.get('sort_key', 'name', str),
+                sort_order=args.get('sort_order', 'asc', str),
+            )
+            submission_page = SubmissionService()\
+                .get_paginated(
+                    survey_id,
+                    pagination_options,
+                    args.get('search_text', '', str),
+            )
+            return ActionResult.success(result=submission_page)
         except ValueError as err:
             return ActionResult.error(str(err))

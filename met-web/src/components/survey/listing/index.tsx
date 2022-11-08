@@ -10,7 +10,7 @@ import { Link as MuiLink } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
-import { getSurveysPage } from 'services/surveyService/form';
+import { getSurveysPage } from 'services/surveyService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
