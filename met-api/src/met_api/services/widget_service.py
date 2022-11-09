@@ -47,16 +47,26 @@ class WidgetService:
             self.create_widget_items_bulk(widget_items_to_add, user_id)
         return widget_items_to_add
 
-    def delete_removed_widget_items(self, widget_items: list, widget_items_db: list):
+    def create_added_widget_items(self, widget_items: list, widget_items_db: list, user_id):
+        widget_items_db_data_ids = [widget_item.widget_data_id for widget_item in widget_items_db]
+
+        widget_items_to_add = [widget_item for widget_item in widget_items
+                               if widget_item.get('widget_data_id') not in widget_items_db_data_ids]
+        if len(widget_items_to_add) > 0:
+            self.create_widget_items_bulk(widget_items_to_add, user_id)
+        return widget_items_to_add
+
+    @staticmethod
+    def delete_removed_widget_items(widget_items: list, widget_items_db: list):
         """Delete widget items."""
         widget_items_data_ids = [widget_item.get('widget_data_id') for widget_item in widget_items]
 
         # Delete widgets
-        wiget_items_ids_to_delete = [widget_item.id for widget_item in widget_items_db 
+        wiget_items_ids_to_delete = [widget_item.id for widget_item in widget_items_db
                                      if widget_item.widget_data_id not in widget_items_data_ids]
         if len(wiget_items_ids_to_delete) > 0:
             WidgetItem.delete_widget_items(wiget_items_ids_to_delete)
-            
+
         return wiget_items_ids_to_delete
 
     @staticmethod
@@ -84,7 +94,7 @@ class WidgetService:
 
     def save_widget_items_bulk(self, widget_items: list, widget_id, user_id):
         """Save widget items."""
-        
+
         self.get_widget_by_id(widget_id)
 
         widget_items_db = WidgetItem.get_widget_items_by_widget_id(widget_id)
