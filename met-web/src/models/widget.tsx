@@ -2,6 +2,7 @@ export interface WidgetItem {
     id: number;
     widget_id: number;
     widget_data_id: number;
+    sort_index: number;
 }
 
 export interface Widget {
