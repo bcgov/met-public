@@ -72,7 +72,7 @@ class Widget(Resource):
 
 @cors_preflight('POST,OPTIONS')
 @API.route('/<widget_id>/items')
-class Widget(Resource):
+class WidgetItems(Resource):
     """Resource for managing widget items."""
 
     @staticmethod
