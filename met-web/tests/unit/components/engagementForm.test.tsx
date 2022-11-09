@@ -59,6 +59,7 @@ const widgetItem: WidgetItem = {
     id: 1,
     widget_id: 1,
     widget_data_id: 1,
+    sort_index: 1,
 };
 
 const widget: Widget = {
