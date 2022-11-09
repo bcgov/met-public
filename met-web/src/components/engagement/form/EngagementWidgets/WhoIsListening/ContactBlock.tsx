@@ -1,18 +1,17 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 import { Grid } from '@mui/material';
 import ContantInfoPaper from './ContactInfoPaper';
 import update from 'immutability-helper';
 import DragItem from 'components/common/dragndrop/DragItem';
-import { WidgetDrawerContext } from '../WidgetDrawerContext';
-import { AddedContact } from './WhoIsListeningForm';
+import { Contact } from 'models/contact';
 
 interface ContactBlockProps {
-    addedContacts: AddedContact[];
-    setAddedContacts: React.Dispatch<React.SetStateAction<AddedContact[]>>;
+    addedContacts: Contact[];
+    setAddedContacts: React.Dispatch<React.SetStateAction<Contact[]>>;
 }
 const ContactBlock = ({ addedContacts, setAddedContacts }: ContactBlockProps) => {
     const moveContact = useCallback((dragIndex: number, hoverIndex: number) => {
-        setAddedContacts((prevContacts: AddedContact[]) =>
+        setAddedContacts((prevContacts: Contact[]) =>
             update(prevContacts, {
                 $splice: [
                     [dragIndex, 1],

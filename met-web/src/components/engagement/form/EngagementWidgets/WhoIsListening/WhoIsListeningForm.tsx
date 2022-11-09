@@ -4,38 +4,31 @@ import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
 import { Contact } from 'models/contact';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { postWidgetItem, updateWidgetItemsSorting } from 'services/widgetService';
+import { postWidgetItems } from 'services/widgetService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType } from 'models/widget';
 import ContactBlock from './ContactBlock';
 import { WhoIsListeningContext } from './WhoIsListeningContext';
 
-export interface AddedContact extends Contact {
-    widget_item_id: number;
-}
 const WhoIsListeningForm = () => {
-    const { handleWidgetDrawerOpen, widgets } = useContext(WidgetDrawerContext);
+    const { handleWidgetDrawerOpen, widgets, loadWidgets } = useContext(WidgetDrawerContext);
     const { handleAddContactDrawerOpen, loadingContacts, contacts } = useContext(WhoIsListeningContext);
 
     const dispatch = useAppDispatch();
     const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
-    const [addedContacts, setAddedContacts] = useState<AddedContact[]>([]);
-    const [addingWidgetItems, setAddingWidgetItems] = useState(false);
-    const [addingContact, setAddingContact] = useState(false);
+    const [addedContacts, setAddedContacts] = useState<Contact[]>([]);
+    const [savingWidgetItems, setSavingWidgetItems] = useState(false);
 
     const widget = widgets.filter((widget) => widget.widget_type_id === WidgetType.WhoIsListening)[0] || null;
     useEffect(() => {
-        const savedContacts = contacts
-            .filter((contact) => widget.items.find((widget) => widget.widget_data_id === contact.id))
-            .map((contact) => {
-                const widgetItem = widget.items.find((widget) => widget.widget_data_id === contact.id);
+        widget.items.sort((left, right) => left.sort_index - right.sort_index);
+        const savedContacts = widget.items
+            .map((widget_item) => {
+                return contacts.find((contact) => contact.id === widget_item.widget_data_id);
+            })
+            .filter((contact) => !!contact);
 
-                return {
-                    ...contact,
-                    widget_item_id: widgetItem?.id || 0,
-                };
-            });
-        setAddedContacts(savedContacts);
+        setAddedContacts(savedContacts as Contact[]);
     }, [contacts, widget]);
 
     const addContact = async () => {
@@ -48,43 +41,30 @@ const WhoIsListeningForm = () => {
             return;
         }
 
-        try {
-            setAddingContact(true);
-            const widgetItem = await postWidgetItem(widget.id, {
-                widget_id: widget.id,
-                widget_data_id: selectedContact.id,
-            });
-            dispatch(openNotification({ severity: 'success', text: 'Contact successfully added' }));
-            setAddedContacts([...addedContacts, { ...selectedContact, widget_item_id: widgetItem.id }]);
-            setAddingContact(false);
-        } catch (error) {
-            console.log(error);
-            setAddingContact(false);
-            dispatch(
-                openNotification({ severity: 'error', text: 'Error occurred while attempting to add the contact' }),
-            );
-        }
+        setAddedContacts([...addedContacts, { ...selectedContact }]);
     };
 
-    const addWidgetItems = async () => {
+    const saveWidgetItems = async () => {
         // TODO Update sorting only
-        const widgetsToUpdate = addedContacts.map(() => {
+        const widgetsToUpdate = addedContacts.map((addedContact) => {
             return {
                 widget_id: widget.id,
+                widget_data_id: addedContact.id,
             };
         });
         try {
-            setAddingWidgetItems(true);
-            await updateWidgetItemsSorting(widget.id, widgetsToUpdate);
+            setSavingWidgetItems(true);
+            await postWidgetItems(widget.id, widgetsToUpdate);
+            await loadWidgets();
             dispatch(openNotification({ severity: 'success', text: 'Widgets successfully added' }));
             handleWidgetDrawerOpen(false);
-            setAddingWidgetItems(false);
+            setSavingWidgetItems(false);
         } catch (error) {
             console.log(error);
             dispatch(
                 openNotification({ severity: 'error', text: 'Error occurred while attempting to add the widgets' }),
             );
-            setAddingWidgetItems(false);
+            setSavingWidgetItems(false);
         }
     };
 
@@ -117,12 +97,7 @@ const WhoIsListeningForm = () => {
                         />
                     </Grid>
                     <Grid item>
-                        <PrimaryButton
-                            loading={addingContact}
-                            onClick={() => addContact()}
-                            sx={{ height: '100%' }}
-                            fullWidth
-                        >
+                        <PrimaryButton onClick={() => addContact()} sx={{ height: '100%' }} fullWidth>
                             Add This Contact
                         </PrimaryButton>
                     </Grid>
@@ -143,8 +118,8 @@ const WhoIsListeningForm = () => {
                     <Grid item>
                         <PrimaryButton
                             disabled={addedContacts.length === 0}
-                            loading={addingWidgetItems}
-                            onClick={() => addWidgetItems()}
+                            loading={savingWidgetItems}
+                            onClick={() => saveWidgetItems()}
                         >{`Save & Close`}</PrimaryButton>
                     </Grid>
                     <Grid item>
