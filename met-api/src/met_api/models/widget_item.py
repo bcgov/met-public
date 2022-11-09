@@ -48,13 +48,6 @@ class WidgetItem(db.Model):  # pylint: disable=too-few-public-methods
             .all()
 
     @classmethod
-    def delete_widget_item(cls, widget_item_id) -> WidgetItem:
-        """Create widget_item."""
-        WidgetItem.query().filter(WidgetItem.id == widget_item_id).delete()
-        db.session.commit()
-        return widget_item_id
-
-    @classmethod
     def delete_widget_items(cls, widget_item_ids: list) -> WidgetItem:
         """Create widget_item."""
         db.session\
