@@ -31,7 +31,7 @@ const ContactBlock = ({ addedContacts, setAddedContacts }: ContactBlockProps) =>
             {addedContacts.map((addedContact, index) => {
                 return (
                     <Grid key={`added-contact-${addedContact.id}`} item xs={12}>
-                        <DragItem moveItem={moveContact} index={index}>
+                        <DragItem name="Contact" moveItem={moveContact} index={index}>
                             <ContantInfoPaper contact={addedContact} removeContact={removeContact} />
                         </DragItem>
                     </Grid>

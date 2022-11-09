@@ -7,6 +7,7 @@ interface DragItem {
     index: number;
     testId?: string;
     moveItem: (dragIndex: number, hoverIndex: number) => void;
+    name: string;
     children: React.ReactNode;
 }
 
@@ -16,11 +17,11 @@ interface Draggable {
     type: string;
 }
 
-const DragItem = ({ index, moveItem, testId, children }: DragItem) => {
+const DragItem = ({ index, moveItem, testId, name, children }: DragItem) => {
     const ref = useRef<HTMLDivElement>(null);
 
     const [{ handlerId }, drop] = useDrop<Draggable, void, { handlerId: Identifier | null }>({
-        accept: 'Contact',
+        accept: name,
         collect(monitor) {
             return {
                 handlerId: monitor.getHandlerId(),
@@ -76,7 +77,7 @@ const DragItem = ({ index, moveItem, testId, children }: DragItem) => {
     });
 
     const [{ isDragging }, drag] = useDrag({
-        type: 'Contact',
+        type: name,
         item: () => {
             return { testId, index };
         },
