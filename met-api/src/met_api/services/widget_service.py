@@ -47,15 +47,6 @@ class WidgetService:
             self.create_widget_items_bulk(widget_items_to_add, user_id)
         return widget_items_to_add
 
-    def create_added_widget_items(self, widget_items: list, widget_items_db: list, user_id):
-        widget_items_db_data_ids = [widget_item.widget_data_id for widget_item in widget_items_db]
-
-        widget_items_to_add = [widget_item for widget_item in widget_items
-                               if widget_item.get('widget_data_id') not in widget_items_db_data_ids]
-        if len(widget_items_to_add) > 0:
-            self.create_widget_items_bulk(widget_items_to_add, user_id)
-        return widget_items_to_add
-
     @staticmethod
     def delete_removed_widget_items(widget_items: list, widget_items_db: list):
         """Delete widget items."""
