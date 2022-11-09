@@ -18,3 +18,4 @@ class WidgetItemSchema(Schema):
     created_date = fields.Str(data_key='created_date')
     updated_by = fields.Str(data_key='updated_by')
     updated_date = fields.Str(data_key='updated_date')
+    sort_index = fields.Int(data_key='sort_index')

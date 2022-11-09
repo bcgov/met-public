@@ -72,15 +72,15 @@ class Widget(Resource):
 
 @cors_preflight('POST,OPTIONS')
 @API.route('/<widget_id>/items')
-class SurveySubmission(Resource):
-    """Resource for managing a survey submissions."""
+class Widget(Resource):
+    """Resource for managing widget items."""
 
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
     @auth.require
     def post(widget_id):
-        """Add new widgets to an engagement."""
+        """Add new widget items to a widget."""
         try:
             user_id = TokenInfo.get_id()
             request_json = request.get_json()
@@ -88,9 +88,9 @@ class SurveySubmission(Resource):
             if not valid_format:
                 return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
 
-            widgets = WidgetItemSchema(many=True).load(request_json)
+            widget_items = WidgetItemSchema(many=True).load(request_json)
 
-            result = WidgetService().create_widget_items_bulk(widgets, widget_id, user_id)
+            result = WidgetService().save_widget_items_bulk(widget_items, widget_id, user_id)
             return ActionResult.success(result=result)
         except (KeyError, ValueError) as err:
             return ActionResult.error(str(err))
