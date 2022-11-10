@@ -16,7 +16,6 @@ import { EngagementStatus } from 'constants/engagementStatus';
 import { Widget, WidgetItem, WidgetType } from 'models/widget';
 import { Contact } from 'models/contact';
 import { Box } from '@mui/material';
-import { DragItemProps } from 'components/common/Dragndrop';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
