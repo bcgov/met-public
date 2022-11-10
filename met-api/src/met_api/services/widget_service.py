@@ -52,7 +52,6 @@ class WidgetService:
         """Get the widgets to be deleted and send them to be deleted from DB."""
         widget_items_data_ids = [widget_item.get('widget_data_id') for widget_item in widget_items]
 
-        # Delete widgets
         wiget_items_ids_to_delete = [widget_item.id for widget_item in widget_items_db
                                      if widget_item.widget_data_id not in widget_items_data_ids]
         if len(wiget_items_ids_to_delete) > 0:
