@@ -20,6 +20,7 @@ interface Draggable {
 const DragItem = ({ index, moveItem, testId, name, children }: DragItemProps) => {
     const ref = useRef<HTMLDivElement>(null);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [{ handlerId }, drop] = useDrop<Draggable, void, { handlerId: Identifier | null }>({
         accept: name,
         collect(monitor) {
@@ -76,11 +77,14 @@ const DragItem = ({ index, moveItem, testId, name, children }: DragItemProps) =>
         },
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [{ isDragging }, drag] = useDrag({
         type: name,
         item: () => {
             return { testId, index };
         },
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         collect: (monitor: any) => ({
             isDragging: monitor.isDragging(),
         }),
