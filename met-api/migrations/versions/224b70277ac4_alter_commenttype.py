@@ -18,8 +18,8 @@ depends_on = None
 
 def upgrade():
     op.alter_column('feedback', 'comment_type', type_=sa.Text())
-    op.execute('DROP TYPE commenttype;')
-    op.execute('CREATE TYPE commenttype AS ENUM (\'Issue\', \'Idea\', \'Else\', \'NONE\');')    
+    op.execute('DROP TYPE public.commenttype;')
+    op.execute('CREATE TYPE public.commenttype AS ENUM (\'Issue\', \'Idea\', \'Else\', \'NONE\');')    
     op.alter_column('feedback', 'comment_type', type_=sa.Enum('Issue', 'Idea', 'Else', 'NONE', name='commenttype'), postgresql_using='comment_type::commenttype')
 
 

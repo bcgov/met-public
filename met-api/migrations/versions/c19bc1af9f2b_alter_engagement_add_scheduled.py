@@ -35,4 +35,4 @@ def upgrade():
 def downgrade():
     conn = op.get_bind()
     op.drop_column('engagement', 'scheduled_date')
-    conn.execute('DELETE FROM engagement_status WHERE id=4')
+    conn.execute('DELETE FROM public.engagement_status WHERE id=4')
