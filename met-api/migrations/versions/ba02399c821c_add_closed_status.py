@@ -37,5 +37,5 @@ def upgrade():
 def downgrade():
     conn = op.get_bind()
 
-    conn.execute('DELETE FROM public.engagement_status WHERE id=3')    
+    conn.execute('DELETE FROM engagement_status WHERE id=3')    
     conn.execute('SELECT setval(\'engagement_status_id_seq\', 2);')

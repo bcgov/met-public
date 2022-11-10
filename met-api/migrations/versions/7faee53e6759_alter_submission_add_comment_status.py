@@ -24,11 +24,11 @@ def upgrade():
     op.add_column('submission', sa.Column('comment_status_id', sa.Integer(), nullable=True))
     op.create_foreign_key(None, 'submission', 'comment_status', ['comment_status_id'], ['id'], ondelete='SET NULL')
 
-    conn.execute('UPDATE public.submission s \
+    conn.execute('UPDATE submission s \
                 SET reviewed_by=c.reviewed_by, \
                     review_date=c.review_date,\
                     comment_status_id=c.status_id\
-                FROM public.comment c \
+                FROM comment c \
                 WHERE \
                 s.comment_status_id is null AND \
                 s.id = c.submission_id')
@@ -46,11 +46,11 @@ def downgrade():
     op.add_column('comment', sa.Column('reviewed_by', sa.String(length=50), nullable=True))
     op.create_foreign_key('comment_status_id_fkey', 'comment', 'comment_status', ['status_id'], ['id'], ondelete='SET NULL')
     
-    conn.execute('UPDATE public.comment c \
+    conn.execute('UPDATE comment c \
             SET reviewed_by=s.reviewed_by, \
                 review_date=s.review_date,\
                 status_id=s.comment_status_id\
-            FROM public.submission s \
+            FROM submission s \
             WHERE \
             c.status_id is null AND \
             c.submission_id = s.id')
