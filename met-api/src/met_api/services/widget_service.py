@@ -30,15 +30,15 @@ class WidgetService:
     @staticmethod
     def create_widget_items_bulk(widget_items: list, user_id):
         """Create widget items in bulk."""
-
         for item in widget_items:
             item['created_by'] = user_id
             item['updated_by'] = user_id
 
         created_widgets_records = WidgetItem.creat_all_widget_items(widget_items)
         return WidgetItemSchema(many=True).dump(created_widgets_records)
-    
-    def create_added_widget_items(self, widget_items: list, widget_items_db: list, user_id):        
+
+    def create_added_widget_items(self, widget_items: list, widget_items_db: list, user_id):
+        """Get the widgets to add and send them to be inserted in DB."""
         widget_items_db_data_ids = [widget_item.widget_data_id for widget_item in widget_items_db]
         
         widget_items_to_add = [widget_item for widget_item in widget_items
@@ -49,7 +49,7 @@ class WidgetService:
 
     @staticmethod
     def delete_removed_widget_items(widget_items: list, widget_items_db: list):
-        """Delete widget items."""
+        """Get the widgets to be deleted and send them to be deleted from DB."""
         widget_items_data_ids = [widget_item.get('widget_data_id') for widget_item in widget_items]
 
         # Delete widgets
@@ -63,7 +63,6 @@ class WidgetService:
     @staticmethod
     def update_widget_items_sorting(widget_items: list, widget_id, user_id):
         """Update widget items sorting in bulk."""
-
         widget_data_ids = [widget_item.get('widget_data_id') for widget_item in widget_items]
         widget_items_db = WidgetItem.get_widget_items_by_widget_id(widget_id)
 
@@ -78,6 +77,7 @@ class WidgetService:
 
     @staticmethod
     def get_widget_by_id(widget_id):
+        """Get widget by id."""
         widget = Widget.get_widget_by_id(widget_id)
         if not widget:
             raise KeyError('Widget ' + widget_id + ' does not exist')
@@ -85,7 +85,6 @@ class WidgetService:
 
     def save_widget_items_bulk(self, widget_items: list, widget_id, user_id):
         """Save widget items."""
-
         self.get_widget_by_id(widget_id)
 
         widget_items_db = WidgetItem.get_widget_items_by_widget_id(widget_id)
