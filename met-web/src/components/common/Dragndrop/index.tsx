@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import type { Identifier, XYCoord } from 'dnd-core';
 import { useDrag, useDrop } from 'react-dnd';
 
-interface DragItem {
+export interface DragItemProps {
     index: number;
     testId?: string;
     moveItem: (dragIndex: number, hoverIndex: number) => void;
@@ -17,9 +17,10 @@ interface Draggable {
     type: string;
 }
 
-const DragItem = ({ index, moveItem, testId, name, children }: DragItem) => {
+const DragItem = ({ index, moveItem, testId, name, children }: DragItemProps) => {
     const ref = useRef<HTMLDivElement>(null);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [{ handlerId }, drop] = useDrop<Draggable, void, { handlerId: Identifier | null }>({
         accept: name,
         collect(monitor) {
@@ -76,11 +77,14 @@ const DragItem = ({ index, moveItem, testId, name, children }: DragItem) => {
         },
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [{ isDragging }, drag] = useDrag({
         type: name,
         item: () => {
             return { testId, index };
         },
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         collect: (monitor: any) => ({
             isDragging: monitor.isDragging(),
         }),
@@ -91,4 +95,4 @@ const DragItem = ({ index, moveItem, testId, name, children }: DragItem) => {
     return <Box ref={ref}>{children}</Box>;
 };
 
-export default DragItem;
+export { DragItem };

@@ -45,7 +45,6 @@ const WhoIsListeningForm = () => {
     };
 
     const saveWidgetItems = async () => {
-        // TODO Update sorting only
         const widgetsToUpdate = addedContacts.map((addedContact) => {
             return {
                 widget_id: widget.id,
