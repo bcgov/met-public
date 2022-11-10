@@ -73,22 +73,3 @@ export const deleteWidgetItem = async (widget_id: number, widget_item_id: number
         return Promise.reject(err);
     }
 };
-
-interface UpdateWidgetItemsSortingRequest {
-    widget_id: number;
-}
-export const updateWidgetItemsSorting = async (
-    widget_id: number,
-    data: UpdateWidgetItemsSortingRequest[],
-): Promise<WidgetItem[]> => {
-    try {
-        const url = replaceUrl(Endpoints.Widget_items.CREATE, 'widget_id', String(widget_id));
-        const response = await http.PostRequest<WidgetItem[]>(url, data);
-        if (response.data.status && response.data.result) {
-            return Promise.resolve(response.data.result);
-        }
-        return Promise.reject(response.data.message ?? 'Failed to create contact');
-    } catch (err) {
-        return Promise.reject(err);
-    }
-};
