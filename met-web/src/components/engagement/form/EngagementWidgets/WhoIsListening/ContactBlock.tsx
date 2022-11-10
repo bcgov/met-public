@@ -2,8 +2,8 @@ import React, { useCallback } from 'react';
 import { Grid } from '@mui/material';
 import ContantInfoPaper from './ContactInfoPaper';
 import update from 'immutability-helper';
-import DragItem from 'components/common/dragndrop/DragItem';
 import { Contact } from 'models/contact';
+import { DragItem } from 'components/common/Dragndrop';
 
 interface ContactBlockProps {
     addedContacts: Contact[];

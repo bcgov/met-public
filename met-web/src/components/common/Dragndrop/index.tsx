@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import type { Identifier, XYCoord } from 'dnd-core';
 import { useDrag, useDrop } from 'react-dnd';
 
-interface DragItem {
+export interface DragItemProps {
     index: number;
     testId?: string;
     moveItem: (dragIndex: number, hoverIndex: number) => void;
@@ -17,7 +17,7 @@ interface Draggable {
     type: string;
 }
 
-const DragItem = ({ index, moveItem, testId, name, children }: DragItem) => {
+const DragItem = ({ index, moveItem, testId, name, children }: DragItemProps) => {
     const ref = useRef<HTMLDivElement>(null);
 
     const [{ handlerId }, drop] = useDrop<Draggable, void, { handlerId: Identifier | null }>({
@@ -91,4 +91,4 @@ const DragItem = ({ index, moveItem, testId, name, children }: DragItem) => {
     return <Box ref={ref}>{children}</Box>;
 };
 
-export default DragItem;
+export { DragItem };
