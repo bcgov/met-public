@@ -30,14 +30,32 @@ class WidgetItem(db.Model):  # pylint: disable=too-few-public-methods
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow, nullable=False)
     created_by = db.Column(db.String(50), nullable=False)
     updated_by = db.Column(db.String(50), nullable=False)
+    sort_index = db.Column(db.Integer, nullable=False, default=1)
+
+    @classmethod
+    def get_widget_item_by_id(cls, widget_item_id):
+        """Get widget item by id."""
+        return db.session.query(WidgetItem)\
+            .filter(WidgetItem.id == widget_item_id)\
+            .first()
 
     @classmethod
     def get_widget_items_by_widget_id(cls, widget_id):
         """Get widgets by widget_id."""
         return db.session.query(WidgetItem)\
             .filter(WidgetItem.widget_id == widget_id)\
-            .order_by(WidgetItem.id.desc())\
+            .order_by(WidgetItem.sort_index.asc())\
             .all()
+
+    @classmethod
+    def delete_widget_items(cls, widget_item_ids: list) -> WidgetItem:
+        """Create widget_item."""
+        db.session\
+            .query(WidgetItem)\
+            .filter(WidgetItem.id.in_(widget_item_ids))\
+            .delete(synchronize_session='fetch')
+        db.session.commit()
+        return widget_item_ids
 
     @classmethod
     def create_widget_item(cls, widget_item) -> WidgetItem:
@@ -66,3 +84,10 @@ class WidgetItem(db.Model):  # pylint: disable=too-few-public-methods
         db.session.add_all(new_widgets)
         db.session.commit()
         return new_widgets
+
+    @classmethod
+    def update_widget_items_bulk(cls, update_mappings: list) -> list[WidgetItem]:
+        """Save widget items sorting."""
+        db.session.bulk_update_mappings(WidgetItem, update_mappings)
+        db.session.commit()
+        return update_mappings

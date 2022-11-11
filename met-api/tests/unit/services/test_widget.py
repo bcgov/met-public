@@ -65,7 +65,7 @@ def test_create_widget_items(session):  # pylint:disable=unused-argument
     widget_item_records = WidgetService()\
         .create_widget_items_bulk(
             [widget_item_to_create_1, widget_item_to_create_2],
-            widget.id, user_id)
+            user_id)
 
     # Assert that was created
     assert len(widget_item_records) == 2
