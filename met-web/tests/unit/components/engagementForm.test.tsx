@@ -15,6 +15,7 @@ import { createDefaultEngagement, Engagement } from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { Widget, WidgetItem, WidgetType } from 'models/widget';
 import { Contact } from 'models/contact';
+import { Box } from '@mui/material';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
@@ -59,6 +60,7 @@ const widgetItem: WidgetItem = {
     id: 1,
     widget_id: 1,
     widget_data_id: 1,
+    sort_index: 1,
 };
 
 const widget: Widget = {
@@ -67,6 +69,17 @@ const widget: Widget = {
     engagement_id: 1,
     items: [widgetItem],
 };
+
+jest.mock('react-dnd', () => ({
+    ...jest.requireActual('react-dnd'),
+    useDrag: jest.fn(),
+    useDrop: jest.fn(),
+}));
+
+jest.mock('components/common/Dragndrop', () => ({
+    ...jest.requireActual('components/common/Dragndrop'),
+    DragItem: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
+}));
 
 describe('Engagement form page tests', () => {
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
@@ -285,7 +298,6 @@ describe('Engagement form page tests', () => {
 
         expect(screen.getByText('Add Widget')).toBeVisible();
         expect(screen.getByText('Who is Listening')).toBeVisible();
-        expect(getContactsMock).toHaveBeenCalled();
         expect(getWidgetsMock).toHaveBeenCalled();
     });
 
@@ -383,8 +395,11 @@ describe('Engagement form page tests', () => {
         fireEvent.click(whoIsListeningOption);
 
         await waitFor(() => {
-            expect(screen.getByText('Add This Contact')).toBeVisible();
+            expect(screen.getByText('Create New Contact')).toBeVisible();
+            expect(screen.getByText(mockContact.email)).toBeVisible();
         });
+
+        expect(getContactsMock).toHaveBeenCalled();
 
         const createContactButton = screen.getByText('Create New Contact');
         fireEvent.click(createContactButton);
