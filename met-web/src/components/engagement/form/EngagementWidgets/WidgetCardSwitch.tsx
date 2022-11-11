@@ -1,12 +1,15 @@
 import { Widget, WidgetType } from 'models/widget';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Switch, Case } from 'react-if';
 import MetWidget from './MetWidget';
+import { WidgetDrawerContext } from './WidgetDrawerContext';
 
 interface WidgetCardSwitchProps {
     widget: Widget;
 }
 export const WidgetCardSwitch = ({ widget }: WidgetCardSwitchProps) => {
+    const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
+
     return (
         <>
             <Switch>
@@ -19,6 +22,7 @@ export const WidgetCardSwitch = ({ widget }: WidgetCardSwitchProps) => {
                         }}
                         onEdit={() => {
                             /**/
+                            handleWidgetDrawerOpen(true);
                         }}
                     />
                 </Case>
