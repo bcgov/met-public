@@ -18,6 +18,7 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
 
     const fetchContacts = async () => {
         try {
+            console.log(widget.items);
             const contacts = await Promise.all(
                 widget.items.map((widgetItem) => {
                     return getContact(widgetItem.widget_data_id);
@@ -59,7 +60,13 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
                 return (
                     <Grid key={contact.id} container item spacing={1} rowSpacing={1} xs={12} paddingTop={2}>
                         <Grid item justifyContent="center" display="flex" xs={12} sm={3} md={3} lg={12} xl={4}>
-                            <Avatar alt={contact.name} sizes="lg" variant="square" sx={{ height: 100, width: 100 }} />
+                            <Avatar
+                                src={contact.avatar_url}
+                                alt={contact.name}
+                                sizes="lg"
+                                variant="square"
+                                sx={{ height: 100, width: 100 }}
+                            />
                         </Grid>
                         <Grid
                             container

@@ -25,6 +25,7 @@ class Contact(db.Model):  # pylint: disable=too-few-public-methods
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow, nullable=False)
     created_by = db.Column(db.String(50), nullable=False)
     updated_by = db.Column(db.String(50), nullable=False)
+    avatar_filename = db.Column(db.String(), unique=False, nullable=True)
 
     @classmethod
     def get_contact_by_id(cls, contact_id) -> Contact:

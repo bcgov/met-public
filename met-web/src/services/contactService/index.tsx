@@ -35,6 +35,7 @@ interface PostContactRequest {
     email?: string;
     address?: string;
     bio?: string;
+    avatar_filename?: string;
 }
 
 export interface PatchContactRequest {
@@ -45,6 +46,7 @@ export interface PatchContactRequest {
     email?: string;
     address?: string;
     bio?: string;
+    avatar_filename?: string;
 }
 
 export const postContact = async (data: PostContactRequest): Promise<Contact> => {

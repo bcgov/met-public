@@ -12,7 +12,7 @@ export interface WhoIsListeningContextProps {
     clearSelected: () => void;
     loadingContacts: boolean;
     contacts: Contact[];
-    loadContacts: () => void;
+    loadContacts: () => Promise<Contact[] | undefined>;
     handleChangeContactToEdit: (_contact: Contact | null) => void;
 }
 
@@ -31,9 +31,7 @@ export const WhoIsListeningContext = createContext<WhoIsListeningContextProps>({
         /* empty default method  */
     },
     contacts: [],
-    loadContacts: () => {
-        /* empty default method  */
-    },
+    loadContacts: () => Promise.resolve([]),
     handleChangeContactToEdit: () => {
         /* empty default method  */
     },
@@ -51,12 +49,13 @@ export const WhoIsListeningProvider = ({ children }: { children: JSX.Element | J
         try {
             if (!savedEngagement.id) {
                 setLoadingContacts(false);
-                return;
+                return Promise.resolve([]);
             }
             setLoadingContacts(true);
             const loadedContacts = await getContacts();
             setContacts(loadedContacts);
             setLoadingContacts(false);
+            return loadedContacts;
         } catch (error) {
             console.log(error);
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while attempting to load contacts' }));
