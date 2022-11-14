@@ -138,6 +138,14 @@ const WidgetsBlock = () => {
         );
     }, []);
 
+    const removeWidget = useCallback((widgetIndex: number) => {
+        setTempWidgets((prevWidgets: Widget[]) =>
+            update(prevWidgets, {
+                $splice: [[widgetIndex, 1]],
+            }),
+        );
+    }, []);
+
     return (
         <Grid container item xs={12} rowSpacing={1}>
             <Grid item xs={12}>
@@ -170,6 +178,7 @@ const WidgetsBlock = () => {
                                                 widget={widget}
                                                 index={index}
                                                 moveWidget={moveWidget}
+                                                removeWidget={removeWidget}
                                             />
                                         </Grid>
                                     );
