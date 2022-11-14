@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { Grid, Skeleton } from '@mui/material';
 import { MetHeader2, MetPaper, SecondaryButton } from 'components/common';
 import { WidgetCardSwitch } from './WidgetCardSwitch';
@@ -8,12 +8,14 @@ import { ActionContext } from '../ActionContext';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { Widget } from 'models/widget';
+import update from 'immutability-helper';
 
 const WidgetsBlock = () => {
     const { widgets, handleWidgetDrawerOpen, isWidgetsLoading } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
-    const tempWidgets: Widget[] = [
+
+    const [tempWidgets, setTempWidgets] = useState<Widget[]>([
         {
             created_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
             created_date: '2022-11-02 13:26:57.528836',
@@ -107,9 +109,10 @@ const WidgetsBlock = () => {
             ],
             updated_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
             updated_date: '2022-11-02 13:26:57.528843',
-            widget_type_id: 1,
+            widget_type_id: 2,
         },
-    ];
+    ]);
+
     useEffect(() => {
         console.log(widgets);
     }, [widgets]);
@@ -123,6 +126,18 @@ const WidgetsBlock = () => {
         }
         handleWidgetDrawerOpen(true);
     };
+
+    const moveWidget = useCallback((dragIndex: number, hoverIndex: number) => {
+        setTempWidgets((prevWidgets: Widget[]) =>
+            update(prevWidgets, {
+                $splice: [
+                    [dragIndex, 1],
+                    [hoverIndex, 0, prevWidgets[dragIndex]],
+                ],
+            }),
+        );
+    }, []);
+
     return (
         <Grid container item xs={12} rowSpacing={1}>
             <Grid item xs={12}>
@@ -153,6 +168,8 @@ const WidgetsBlock = () => {
                                             <WidgetCardSwitch
                                                 key={`${widget.widget_type_id}-${index}`}
                                                 widget={widget}
+                                                index={index}
+                                                moveWidget={moveWidget}
                                             />
                                         </Grid>
                                     );

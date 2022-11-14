@@ -8,12 +8,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import { When } from 'react-if';
 import { WhoIsListeningContext } from './WhoIsListeningContext';
 
-interface ContantInfoPaperProps {
+interface ContactInfoPaperProps {
     contact: Contact;
     removeContact: (contactId: number) => void;
 }
 
-const ContantInfoPaper = ({ contact, removeContact, ...rest }: ContantInfoPaperProps) => {
+const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperProps) => {
     const { handleChangeContactToEdit, handleAddContactDrawerOpen } = useContext(WhoIsListeningContext);
 
     return (
@@ -114,4 +114,4 @@ const ContantInfoPaper = ({ contact, removeContact, ...rest }: ContantInfoPaperP
     );
 };
 
-export default ContantInfoPaper;
+export default ContactInfoPaper;

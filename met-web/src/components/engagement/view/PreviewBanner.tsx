@@ -52,7 +52,11 @@ export const PreviewBanner = () => {
                                 {' ' + scheduledDate + ' at ' + scheduledTime}.{' '}
                                 <Link onClick={() => setIsOpen(true)}>Click here</Link> to edit the date this Engagement
                                 page will go live.
+                            </MetBody>
                         </Grid>
+                    </ConditionalComponent>
+                    <ConditionalComponent condition={isDraft}>
+                        <Grid item container direction="row" rowSpacing={isSmallScreen ? 2 : 0.5}>
                             <ConditionalComponent condition={!imageExists}>
                                 <Grid item container direction="row" xs={12} lg={8}>
                                     <Grid container direction="row" alignItems="center" item sm={0.5} xs={2}>
