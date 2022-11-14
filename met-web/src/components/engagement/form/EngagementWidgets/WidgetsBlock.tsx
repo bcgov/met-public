@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback } from 'react';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { Grid, Skeleton } from '@mui/material';
 import { MetHeader2, MetPaper, SecondaryButton } from 'components/common';
 import { WidgetCardSwitch } from './WidgetCardSwitch';
@@ -11,107 +11,15 @@ import { Widget } from 'models/widget';
 import update from 'immutability-helper';
 
 const WidgetsBlock = () => {
-    const { handleWidgetDrawerOpen, isWidgetsLoading } = useContext(WidgetDrawerContext);
+    const { widgets, updateWidgets, handleWidgetDrawerOpen, isWidgetsLoading } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
 
-    const [tempWidgets, setTempWidgets] = useState<Widget[]>([
-        {
-            created_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
-            created_date: '2022-11-02 13:26:57.528836',
-            engagement_id: 80,
-            id: 4,
-            items: [
-                {
-                    created_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
-                    created_date: '2022-11-02 13:36:30.988877',
-                    id: 1,
-                    updated_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
-                    updated_date: '2022-11-02 13:36:30.988881',
-                    widget_data_id: 1,
-                    widget_id: 4,
-                },
-                {
-                    created_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
-                    created_date: '2022-11-02 14:34:33.445205',
-                    id: 2,
-                    updated_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
-                    updated_date: '2022-11-02 14:34:33.445208',
-                    widget_data_id: 3,
-                    widget_id: 4,
-                },
-                {
-                    created_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
-                    created_date: '2022-11-07 20:26:11.617105',
-                    id: 3,
-                    updated_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
-                    updated_date: '2022-11-07 20:26:11.617107',
-                    widget_data_id: 2,
-                    widget_id: 4,
-                },
-                {
-                    created_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
-                    created_date: '2022-11-07 20:26:11.617166',
-                    id: 4,
-                    updated_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
-                    updated_date: '2022-11-07 20:26:11.617166',
-                    widget_data_id: 5,
-                    widget_id: 4,
-                },
-            ],
-            updated_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
-            updated_date: '2022-11-02 13:26:57.528843',
-            widget_type_id: 1,
-        },
+    const [tempWidgets, setTempWidgets] = useState<Widget[]>([widgets]);
 
-        {
-            created_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
-            created_date: '2022-11-02 13:26:57.528836',
-            engagement_id: 80,
-            id: 4,
-            items: [
-                {
-                    created_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
-                    created_date: '2022-11-02 13:36:30.988877',
-                    id: 1,
-                    updated_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
-                    updated_date: '2022-11-02 13:36:30.988881',
-                    widget_data_id: 1,
-                    widget_id: 4,
-                },
-                {
-                    created_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
-                    created_date: '2022-11-02 14:34:33.445205',
-                    id: 2,
-                    updated_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
-                    updated_date: '2022-11-02 14:34:33.445208',
-                    widget_data_id: 3,
-                    widget_id: 4,
-                },
-                {
-                    created_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
-                    created_date: '2022-11-07 20:26:11.617105',
-                    id: 3,
-                    updated_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
-                    updated_date: '2022-11-07 20:26:11.617107',
-                    widget_data_id: 2,
-                    widget_id: 4,
-                },
-                {
-                    created_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
-                    created_date: '2022-11-07 20:26:11.617166',
-                    id: 4,
-                    updated_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
-                    updated_date: '2022-11-07 20:26:11.617166',
-                    widget_data_id: 5,
-                    widget_id: 4,
-                },
-            ],
-            updated_by: 'd1eb5858-1311-4dd9-8e7a-6ff9a9398a00',
-            updated_date: '2022-11-02 13:26:57.528843',
-            widget_type_id: 2,
-        },
-    ]);
+    useEffect(() => {
+        setTempWidgets(widgets);
+    }, [widgets]);
 
     const handleAddWidgetClick = () => {
         if (!savedEngagement.id) {
@@ -132,6 +40,7 @@ const WidgetsBlock = () => {
                 ],
             }),
         );
+        updateWidgets(tempWidgets);
     }, []);
 
     const removeWidget = useCallback((widgetIndex: number) => {
@@ -140,6 +49,7 @@ const WidgetsBlock = () => {
                 $splice: [[widgetIndex, 1]],
             }),
         );
+        updateWidgets(tempWidgets);
     }, []);
 
     return (

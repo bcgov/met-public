@@ -14,6 +14,7 @@ export interface WidgetDrawerContextProps {
     handleWidgetDrawerTabValueChange: (_tabValue: string) => void;
     isWidgetsLoading: boolean;
     loadWidgets: () => Promise<void>;
+    updateWidgets: (_widgets: Widget[]) => void;
 }
 
 export type EngagementParams = {
@@ -32,6 +33,9 @@ export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
         /* empty default method  */
     },
     loadWidgets: () => Promise.resolve(),
+    updateWidgets: (_widgets: Widget[]) => {
+        /* empty default method  */
+    },
 });
 
 export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -41,6 +45,10 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
     const [isWidgetsLoading, setIsWidgetsLoading] = useState(true);
     const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
     const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState(WidgetTabValues.WIDGET_OPTIONS);
+
+    const updateWidgets = (widgets: Widget[]) => {
+        setWidgets(widgets);
+    };
 
     const loadWidgets = async () => {
         if (!savedEngagement.id) {
@@ -76,6 +84,7 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
         <WidgetDrawerContext.Provider
             value={{
                 widgets,
+                updateWidgets,
                 widgetDrawerOpen,
                 handleWidgetDrawerOpen,
                 widgetDrawerTabValue,
