@@ -34,7 +34,7 @@ class WidgetService:
             item['created_by'] = user_id
             item['updated_by'] = user_id
 
-        created_widgets_records = WidgetItem.creat_all_widget_items(widget_items)
+        created_widgets_records = WidgetItem.create_all_widget_items(widget_items)
         return WidgetItemSchema(many=True).dump(created_widgets_records)
 
     def create_added_widget_items(self, widget_items: list, widget_items_db: list, user_id):
@@ -92,3 +92,12 @@ class WidgetService:
         self.create_added_widget_items(widget_items, widget_items_db, user_id)
         self.update_widget_items_sorting(widget_items, widget_id, user_id)
         return widget_items
+    
+    @staticmethod
+    def update_widgets(data: dict):
+        """Update engagement partially."""
+        updated_widgets = Widget.update_widgets(data)
+        if not updated_widgets:
+            raise ValueError('Engagement to update was not found')
+        return Widget.update_widgets(data)
+

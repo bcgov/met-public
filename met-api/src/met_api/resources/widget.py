@@ -34,7 +34,7 @@ API = Namespace('widgets', description='Endpoints for Widget Management')
 """
 
 
-@cors_preflight('GET, POST, OPTIONS')
+@cors_preflight('GET, POST, OPTIONS, PATCH')
 @API.route('/engagement/<engagement_id>')
 class Widget(Resource):
     """Resource for managing a survey submissions."""
@@ -68,6 +68,31 @@ class Widget(Resource):
             return ActionResult.error(str(err))
         except ValidationError as err:
             return ActionResult.error(str(err.messages))
+        
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def patch(engagement_id):
+        """update a new widget for an engagement."""
+        try:
+            requestjson = request.get_json()
+            user_id = TokenInfo.get_id()
+            requestjson['updated_by'] = user_id
+            valid_format, errors = schema_utils.validate(requestjson, 'widget')
+            widget_schema = WidgetSchema().load(requestjson, partial=True)
+            widget = WidgetService().update_widgets(requestjson)
+
+            return ActionResult.success(widget.id, widget_schema.dump(widget))
+        except KeyError as err:
+            return ActionResult.error(str(err))
+        except ValueError as err:
+            return ActionResult.error(str(err))
+        except ValidationError as err:
+            return ActionResult.error(str(err.messages))
+
+
+
+
 
 
 @cors_preflight('POST,OPTIONS')

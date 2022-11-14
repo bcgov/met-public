@@ -66,11 +66,32 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
             created_by=widget.get('created_by', None),
             updated_by=widget.get('updated_by', None),
         )
+        
+    @staticmethod
+    def __update_widget_entity(widget):
+        """Update widget entity."""
+        return Widget(
+            widget_type_id=widget.get('widget_type_id', None),
+            engagement_id=widget.get('engagement_id', None),
+            created_date=datetime.utcnow(),
+            updated_date=datetime.utcnow(),
+            created_by=widget.get('created_by', None),
+            updated_by=widget.get('updated_by', None),
+        )
 
     @classmethod
-    def creat_all_widgets(cls, widgets: list) -> list[Widget]:
+    def create_all_widgets(cls, widgets: list) -> list[Widget]:
         """Save widgets."""
         new_widgets = [cls.__create_new_widget_entity(widget) for widget in widgets]
         db.session.add_all(new_widgets)
         db.session.commit()
         return new_widgets
+    
+    
+    @classmethod
+    def update_all_widgets(cls, widgets: list) -> list[Widget]:
+        """Update widgets."""
+        updated_widgets = [cls.__create_new_widget_entity(widget) for widget in widgets]
+        db.session.add_all(updated_widgets)
+        db.session.commit()
+        return updated_widgets
