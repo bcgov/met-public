@@ -9,8 +9,9 @@ interface WidgetCardSwitchProps {
     widget: Widget;
     index: number;
     moveWidget: (dragIndex: number, hoverIndex: number) => void;
+    removeWidget: (widgetIndex: number) => void;
 }
-export const WidgetCardSwitch = ({ widget, index, moveWidget }: WidgetCardSwitchProps) => {
+export const WidgetCardSwitch = ({ widget, index, moveWidget, removeWidget }: WidgetCardSwitchProps) => {
     const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
 
     return (
@@ -23,6 +24,23 @@ export const WidgetCardSwitch = ({ widget, index, moveWidget }: WidgetCardSwitch
                             title="Who is Listening"
                             onDelete={() => {
                                 /**/
+                                removeWidget(index);
+                            }}
+                            onEdit={() => {
+                                /**/
+                                handleWidgetDrawerOpen(true);
+                            }}
+                        />
+                    </DragItem>
+                </Case>
+                <Case condition={widget.widget_type_id === WidgetType.IsListening}>
+                    <DragItem name="Who is Listening" moveItem={moveWidget} index={index}>
+                        <MetWidget
+                            testId={`who-is-listening-${widget.widget_type_id}`}
+                            title="Listening"
+                            onDelete={() => {
+                                /**/
+                                removeWidget(index);
                             }}
                             onEdit={() => {
                                 /**/
