@@ -113,10 +113,6 @@ const WidgetsBlock = () => {
         },
     ]);
 
-    useEffect(() => {
-        console.log(widgets);
-    }, [widgets]);
-
     const handleAddWidgetClick = () => {
         if (!savedEngagement.id) {
             dispatch(
