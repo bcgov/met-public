@@ -27,7 +27,7 @@ def upgrade():
         sa.column('created_date', sa.DateTime),
         sa.column('updated_date', sa.DateTime))
 
-    conn.execute('UPDATE public.user SET first_name=\'MET\', middle_name=\'\', last_name=\'System\' WHERE id=1')
+    conn.execute('UPDATE "user" SET first_name=\'MET\', middle_name=\'\', last_name=\'System\' WHERE id=1')
 
     conn.execute(
         engagement_status.update()
@@ -45,9 +45,9 @@ def upgrade():
 def downgrade():
     conn = op.get_bind()
 
-    conn.execute('UPDATE public.engagement_status SET status_name=\'draft\', description=\'Test Description\' WHERE id=1')
-    conn.execute('UPDATE public.user SET first_name=\'A\', middle_name=\'B\', last_name=\'C\' WHERE id=1')
-    conn.execute('DELETE FROM public.engagement_status WHERE id=2')
+    conn.execute('UPDATE engagement_status SET status_name=\'draft\', description=\'Test Description\' WHERE id=1')
+    conn.execute('UPDATE "user" SET first_name=\'A\', middle_name=\'B\', last_name=\'C\' WHERE id=1')
+    conn.execute('DELETE FROM engagement_status WHERE id=2')
     
     conn.execute('SELECT setval(\'engagement_status_id_seq\', 1);')
     # ### end Alembic commands ###

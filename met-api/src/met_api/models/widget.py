@@ -44,7 +44,7 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
         return db.session.query(Widget)\
             .join(WidgetItem, Widget.id == WidgetItem.widget_id, isouter=True)\
             .filter(Widget.engagement_id == engagement_id)\
-            .order_by(Widget.id.desc())\
+            .order_by(Widget.id.desc(), WidgetItem.sort_index.asc())\
             .all()
 
     @classmethod

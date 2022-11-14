@@ -40,7 +40,7 @@ class WidgetService:
     def create_added_widget_items(self, widget_items: list, widget_items_db: list, user_id):
         """Get the widgets to add and send them to be inserted in DB."""
         widget_items_db_data_ids = [widget_item.widget_data_id for widget_item in widget_items_db]
-        
+
         widget_items_to_add = [widget_item for widget_item in widget_items
                                if widget_item.get('widget_data_id') not in widget_items_db_data_ids]
         if len(widget_items_to_add) > 0:
@@ -52,7 +52,6 @@ class WidgetService:
         """Get the widgets to be deleted and send them to be deleted from DB."""
         widget_items_data_ids = [widget_item.get('widget_data_id') for widget_item in widget_items]
 
-        # Delete widgets
         wiget_items_ids_to_delete = [widget_item.id for widget_item in widget_items_db
                                      if widget_item.widget_data_id not in widget_items_data_ids]
         if len(wiget_items_ids_to_delete) > 0:
