@@ -23,11 +23,9 @@ export const WidgetCardSwitch = ({ widget, index, moveWidget, removeWidget }: Wi
                             testId={`who-is-listening-${widget.widget_type_id}`}
                             title="Who is Listening"
                             onDelete={() => {
-                                /**/
                                 removeWidget(index);
                             }}
                             onEdit={() => {
-                                /**/
                                 handleWidgetDrawerOpen(true);
                             }}
                         />
