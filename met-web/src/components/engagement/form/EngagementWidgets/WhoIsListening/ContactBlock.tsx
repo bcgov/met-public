@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { Grid } from '@mui/material';
-import ContantInfoPaper from './ContactInfoPaper';
+import ContactInfoPaper from './ContactInfoPaper';
 import update from 'immutability-helper';
 import { Contact } from 'models/contact';
 import { DragItem } from 'components/common/Dragndrop';
@@ -32,7 +32,7 @@ const ContactBlock = ({ addedContacts, setAddedContacts }: ContactBlockProps) =>
                 return (
                     <Grid key={`added-contact-${addedContact.id}`} item xs={12}>
                         <DragItem name="Contact" moveItem={moveContact} index={index}>
-                            <ContantInfoPaper contact={addedContact} removeContact={removeContact} />
+                            <ContactInfoPaper contact={addedContact} removeContact={removeContact} />
                         </DragItem>
                     </Grid>
                 );
