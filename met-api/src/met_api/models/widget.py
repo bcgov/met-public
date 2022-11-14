@@ -28,7 +28,7 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow, nullable=False)
     created_by = db.Column(db.String(50), nullable=False)
     updated_by = db.Column(db.String(50), nullable=False)
-    items = db.relationship('WidgetItem', backref='widget', cascade='all, delete', order_by="WidgetItem.sort_index")
+    items = db.relationship('WidgetItem', backref='widget', cascade='all, delete', order_by='WidgetItem.sort_index')
 
     @classmethod
     def get_widget_by_id(cls, widget_id):

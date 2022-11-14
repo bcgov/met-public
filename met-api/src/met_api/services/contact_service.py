@@ -24,7 +24,7 @@ class ContactService:
         contacts = [{
             **contact,
             'avatar_url': ObjectStorageService.get_url(contact.get('avatar_filename', None))
-            } for contact in contacts]
+        } for contact in contacts]
         return contacts
 
     @staticmethod
