@@ -54,3 +54,16 @@ export const postWidgetItems = async (widget_id: number, data: PostWidgetItemReq
         return Promise.reject(err);
     }
 };
+
+export const patchWidgets = async (engagement_id: number, data: Widget[]): Promise<Widget[]> => {
+    try {
+        const url = replaceUrl(Endpoints.Widgets.UPDATE, 'engagement_id', String(engagement_id));
+        const response = await http.PatchRequest<Widget[]>(url, data);
+        if (response.data.status && response.data.result) {
+            return Promise.resolve(response.data.result);
+        }
+        return Promise.reject(response.data.message ?? 'Failed to update widget');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};

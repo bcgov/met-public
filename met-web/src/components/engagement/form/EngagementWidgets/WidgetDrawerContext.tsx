@@ -2,9 +2,10 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import { useAppDispatch } from 'hooks';
 import { Widget } from 'models/widget';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { getWidgets } from 'services/widgetService';
+import { getWidgets, patchWidgets } from 'services/widgetService';
 import { ActionContext } from '../ActionContext';
 import { WidgetTabValues } from './type';
+import { updatedDiff } from 'deep-object-diff';
 
 export interface WidgetDrawerContextProps {
     widgets: Widget[];
@@ -46,8 +47,16 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
     const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
     const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState(WidgetTabValues.WIDGET_OPTIONS);
 
-    const updateWidgets = (widgets: Widget[]) => {
-        setWidgets(widgets);
+    const updateWidgets = async (_widgets: Widget[]) => {
+        const updatedWidgets = updatedDiff(widgets, {
+            ..._widgets,
+        }) as Widget[];
+
+        await patchWidgets(savedEngagement.id, {
+            ...updatedWidgets,
+        });
+
+        loadWidgets();
     };
 
     const loadWidgets = async () => {
