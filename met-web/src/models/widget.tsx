@@ -14,5 +14,4 @@ export interface Widget {
 
 export enum WidgetType {
     WhoIsListening = 1,
-    IsListening = 2,
 }

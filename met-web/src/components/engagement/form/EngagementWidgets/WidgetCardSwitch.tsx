@@ -33,22 +33,6 @@ export const WidgetCardSwitch = ({ widget, index, moveWidget, removeWidget }: Wi
                         />
                     </DragItem>
                 </Case>
-                <Case condition={widget.widget_type_id === WidgetType.IsListening}>
-                    <DragItem name="Who is Listening" moveItem={moveWidget} index={index}>
-                        <MetWidget
-                            testId={`who-is-listening-${widget.widget_type_id}`}
-                            title="Listening"
-                            onDelete={() => {
-                                /**/
-                                removeWidget(index);
-                            }}
-                            onEdit={() => {
-                                /**/
-                                handleWidgetDrawerOpen(true);
-                            }}
-                        />
-                    </DragItem>
-                </Case>
             </Switch>
         </>
     );
