@@ -15,7 +15,7 @@ const WidgetsBlock = () => {
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
 
-    const [tempWidgets, setTempWidgets] = useState<Widget[]>([widgets]);
+    const [tempWidgets, setTempWidgets] = useState<Widget[]>(widgets);
 
     useEffect(() => {
         setTempWidgets(widgets);
