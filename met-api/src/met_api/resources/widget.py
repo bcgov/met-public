@@ -12,13 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """API endpoints for managing an user resource."""
-
+import json
 from http import HTTPStatus
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
-
 from met_api.auth import auth
 from met_api.schemas.widget_item import WidgetItemSchema
 from met_api.schemas import utils as schema_utils
@@ -80,7 +79,7 @@ class Widget(Resource):
             requestjson['updated_by'] = user_id
             valid_format, errors = schema_utils.validate(requestjson, 'widget')
             widget_schema = WidgetSchema().load(requestjson, partial=True)
-            widget = WidgetService().update_widgets(requestjson)
+            widget = WidgetService().update_widgets(json.loads(requestjson))
 
             return ActionResult.success(widget.id, widget_schema.dump(widget))
         except KeyError as err:

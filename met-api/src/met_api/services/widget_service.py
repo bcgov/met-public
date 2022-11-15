@@ -94,10 +94,9 @@ class WidgetService:
         return widget_items
     
     @staticmethod
-    def update_widgets(data: dict):
+    def update_widgets(widgets: list):
         """Update engagement partially."""
-        updated_widgets = Widget.update_widgets(data)
+        updated_widgets = Widget.update_all_widgets(widgets)
         if not updated_widgets:
             raise ValueError('Engagement to update was not found')
-        return Widget.update_widgets(data)
-
+        return updated_widgets

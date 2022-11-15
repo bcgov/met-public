@@ -7,11 +7,11 @@ from datetime import datetime
 
 from sqlalchemy.sql.schema import ForeignKey
 
-
+from typing import Optional
 from .widget_item import WidgetItem
 
 from .db import db
-
+from .default_method_result import DefaultMethodResult
 
 class Widget(db.Model):  # pylint: disable=too-few-public-methods
     """Definition of the Widget entity."""
@@ -66,18 +66,6 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
             created_by=widget.get('created_by', None),
             updated_by=widget.get('updated_by', None),
         )
-        
-    @staticmethod
-    def __update_widget_entity(widget):
-        """Update widget entity."""
-        return Widget(
-            widget_type_id=widget.get('widget_type_id', None),
-            engagement_id=widget.get('engagement_id', None),
-            created_date=datetime.utcnow(),
-            updated_date=datetime.utcnow(),
-            created_by=widget.get('created_by', None),
-            updated_by=widget.get('updated_by', None),
-        )
 
     @classmethod
     def create_all_widgets(cls, widgets: list) -> list[Widget]:
@@ -88,10 +76,10 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
         return new_widgets
     
     
-    @classmethod
-    def update_all_widgets(cls, widgets: list) -> list[Widget]:
+    @staticmethod
+    def update_all_widgets(widgets: list) -> list[Widget]:
         """Update widgets."""
-        updated_widgets = [cls.__create_new_widget_entity(widget) for widget in widgets]
-        db.session.add_all(updated_widgets)
+        db.session.add_all(widgets)
         db.session.commit()
-        return updated_widgets
+        return widgets
+

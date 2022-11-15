@@ -48,15 +48,19 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
     const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState(WidgetTabValues.WIDGET_OPTIONS);
 
     const updateWidgets = async (_widgets: Widget[]) => {
-        const updatedWidgets = updatedDiff(widgets, {
-            ..._widgets,
-        }) as Widget[];
+        try {
+            const updatedWidgets = updatedDiff(widgets, {
+                ..._widgets,
+            }) as Widget[];
 
-        await patchWidgets(savedEngagement.id, {
-            ...updatedWidgets,
-        });
-
-        loadWidgets();
+            await patchWidgets(savedEngagement.id, {
+                ...updatedWidgets,
+            });
+            dispatch(openNotification({ severity: 'success', text: 'Update Widgets' }));
+            loadWidgets();
+        } catch (err) {
+            dispatch(openNotification({ severity: 'error', text: 'Error updating engagement widgets' }));
+        }
     };
 
     const loadWidgets = async () => {
