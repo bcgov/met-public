@@ -5,9 +5,6 @@ Manages the comment
 
 from marshmallow import EXCLUDE, Schema, fields
 
-from met_api.schemas.survey import SurveySchema
-from .comment_status import CommentStatusSchema
-
 
 class CommentSchema(Schema):
     """Schema for comment."""
@@ -25,12 +22,20 @@ class CommentSchema(Schema):
     status_id = fields.Int(data_key='status_id')
     survey_id = fields.Int(data_key='survey_id')
     submission_id = fields.Int(data_key='submission_id')
-    comment_status = fields.Nested(CommentStatusSchema)
-    survey = fields.Pluck(SurveySchema, 'name')
-    question = fields.Method('get_comment_question')
+    status_id = fields.Method('get_comment_status_id')
+    reviewed_by = fields.Method('get_comment_reviewed_by')
+    label = fields.Method('get_comment_label')
 
-    def get_comment_question(self, obj):
-        """Get the associated question of the comment."""
+    def get_comment_status_id(self, obj):
+        """Get the associated status of the comment."""
+        return obj.submission.comment_status_id
+
+    def get_comment_reviewed_by(self, obj):
+        """Get the associated reviewed by of the comment."""
+        return obj.submission.reviewed_by
+
+    def get_comment_label(self, obj):
+        """Get the associated label of the comment."""
         components = list(obj.survey.form_json.get('components', []))
         if len(components) == 0:
             return None

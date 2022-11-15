@@ -3,7 +3,6 @@ import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
 import { Link, useParams } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton, MetHeader1 } from 'components/common';
-import { Comment } from 'models/comment';
 import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink } from '@mui/material';
@@ -12,20 +11,25 @@ import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { getCommentsPage } from 'services/commentService';
+import { getSubmissionPage } from 'services/submissionService';
+import { SurveySubmission } from 'models/surveySubmission';
+import { createDefaultSurvey, Survey } from 'models/survey';
+import { getSurvey } from 'services/surveyService';
+import { CommentStatus } from 'constants/commentStatus';
 
-const CommentListing = () => {
+const SubmissionListing = () => {
     const [searchFilter, setSearchFilter] = useState({
         key: 'id',
         value: '',
     });
     const [searchText, setSearchText] = useState('');
-    const [comments, setComments] = useState<Comment[]>([]);
-    const [paginationOptions, setPagination] = useState<PaginationOptions<Comment>>({
+    const [survey, setSurvey] = useState<Survey>(createDefaultSurvey());
+    const [submissions, setSubmissions] = useState<SurveySubmission[]>([]);
+    const [paginationOptions, setPagination] = useState<PaginationOptions<SurveySubmission>>({
         page: 1,
         size: 10,
         sort_key: 'id',
-        nested_sort_key: 'comment.id',
+        nested_sort_key: 'submission.id',
         sort_order: 'desc',
     });
     const [pageInfo, setPageInfo] = useState<PageInfo>({
@@ -38,14 +42,21 @@ const CommentListing = () => {
 
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
-    const loadComments = async () => {
+    const loadSurvey = async () => {
         try {
-            if (isNaN(Number(surveyId))) {
-                dispatch(openNotification({ severity: 'error', text: 'Invalid surveyId' }));
-            }
+            const survey = await getSurvey(Number(surveyId));
+            setSurvey(survey);
+        } catch (error) {
+            console.log(error);
+            dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching survey information' }));
+            setTableLoading(false);
+        }
+    };
 
+    const loadSubmissions = async () => {
+        try {
             setTableLoading(true);
-            const response = await getCommentsPage({
+            const response = await getSubmissionPage({
                 survey_id: Number(surveyId),
                 page,
                 size,
@@ -53,20 +64,26 @@ const CommentListing = () => {
                 sort_order,
                 search_text: searchFilter.value,
             });
-            setComments(response.items);
+            setSubmissions(response.items);
             setPageInfo({
                 total: response.total,
             });
             setTableLoading(false);
         } catch (error) {
             console.log(error);
-            dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching comments' }));
+            dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching submissions' }));
             setTableLoading(false);
         }
     };
 
     useEffect(() => {
-        loadComments();
+        if (isNaN(Number(surveyId))) {
+            dispatch(openNotification({ severity: 'error', text: 'Invalid surveyId' }));
+            return;
+        }
+
+        loadSurvey();
+        loadSubmissions();
     }, [surveyId, paginationOptions, searchFilter]);
 
     const handleSearchBarClick = (filter: string) => {
@@ -76,30 +93,27 @@ const CommentListing = () => {
         });
     };
 
-    const headCells: HeadCell<Comment>[] = [
+    const headCells: HeadCell<SurveySubmission>[] = [
         {
             key: 'id',
-            nestedSortKey: 'comment.id',
+            nestedSortKey: 'submission.id',
             numeric: true,
             disablePadding: false,
             label: 'ID',
             allowSort: true,
-            getValue: (row: Comment) => (
-                <MuiLink
-                    component={Link}
-                    to={`/surveys/${Number(row.survey_id)}/submissions/${row.submission_id}/review`}
-                >
+            getValue: (row) => (
+                <MuiLink component={Link} to={`/surveys/${Number(row.survey_id)}/submissions/${row.id}/review`}>
                     {row.id}
                 </MuiLink>
             ),
         },
         {
-            key: 'submission_date',
+            key: 'created_date',
             numeric: true,
             disablePadding: false,
             label: 'Comment Date',
             allowSort: true,
-            getValue: (row: Comment) => formatDate(row.submission_date || ''),
+            getValue: (row) => formatDate(row.created_date || ''),
         },
         {
             key: 'reviewed_by',
@@ -107,7 +121,7 @@ const CommentListing = () => {
             disablePadding: false,
             label: 'Reviewed By',
             allowSort: true,
-            getValue: (row: Comment) => row.reviewed_by,
+            getValue: (row) => row.reviewed_by,
         },
 
         {
@@ -116,15 +130,15 @@ const CommentListing = () => {
             disablePadding: false,
             label: 'Date Reviewed',
             allowSort: true,
-            getValue: (row: Comment) => formatDate(row.review_date || ''),
+            getValue: (row) => formatDate(row.review_date || ''),
         },
         {
-            key: 'comment_status',
+            key: 'comment_status_id',
             numeric: false,
             disablePadding: true,
             label: 'Status',
             allowSort: true,
-            getValue: (row: Comment) => row.comment_status.status_name,
+            getValue: (row) => CommentStatus[row.comment_status_id],
         },
     ];
 
@@ -158,18 +172,20 @@ const CommentListing = () => {
 
             <Grid item xs={12}>
                 <MetHeader1>
-                    <strong>{`${comments[0]?.survey || ''} Comments`}</strong>
+                    <strong>{`${survey.name} Comments`}</strong>
                 </MetHeader1>
                 <MetTable
                     headCells={headCells}
-                    rows={comments}
+                    rows={submissions}
                     noRowBorder={true}
-                    handleChangePagination={(pagination: PaginationOptions<Comment>) => setPagination(pagination)}
+                    handleChangePagination={(pagination: PaginationOptions<SurveySubmission>) =>
+                        setPagination(pagination)
+                    }
                     paginationOptions={paginationOptions}
                     pageInfo={pageInfo}
                     loading={tableLoading}
                 />
-                <PrimaryButton component={Link} to={`/surveys/${comments[0]?.survey_id || 0}/comments/all`}>
+                <PrimaryButton component={Link} to={`/surveys/${survey.id}/comments/all`}>
                     Read All Comments
                 </PrimaryButton>
             </Grid>
@@ -177,4 +193,4 @@ const CommentListing = () => {
     );
 };
 
-export default CommentListing;
+export default SubmissionListing;

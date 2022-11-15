@@ -99,7 +99,7 @@ const CommentTextListing = () => {
             getValue: (row: Comment) => row.text,
         },
         {
-            key: 'submission_date',
+            key: 'status_id',
             numeric: false,
             disablePadding: false,
             label: 'Comment Date',
@@ -112,14 +112,14 @@ const CommentTextListing = () => {
                             <b>Comment Date: </b>
                             {row.submission_date}
                         </Typography>
-                        <ConditionalComponent condition={row.comment_status.id !== CommentStatus.Pending}>
+                        <ConditionalComponent condition={row.status_id !== CommentStatus.Pending}>
                             <Typography variant="subtitle2">
                                 <b>Reviewed By: </b> {row.reviewed_by}
                             </Typography>
                         </ConditionalComponent>
                     </Grid>
                     <Grid item>
-                        <CommentStatusChip commentStatus={row.comment_status.id} />
+                        <CommentStatusChip commentStatus={row.status_id} />
                     </Grid>
                 </Grid>
             ),

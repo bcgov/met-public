@@ -180,11 +180,14 @@ class TestSubmissionInfo(dict, Enum):
     """Test scenarios of submission."""
 
     submission1 = {
-        'submission_json': '{"simpletextarea": "' + fake.paragraph(nb_sentences=3) + '"}',
+        'submission_json': {'simpletextarea': fake.paragraph(nb_sentences=3)},
         'created_by': '123',
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
+        'comment_status_id': 1,  # Pending
+        'review_by': 'John Doe',
+        'review_date': datetime.now().strftime('%Y-%m-%d'),
     }
 
 
@@ -194,6 +197,5 @@ class TestCommentInfo(dict, Enum):
     comment1 = {
         'text': fake.paragraph(nb_sentences=3),
         'component_id': 'simpletextarea',
-        'status_id': 1,  # Pending
         'submission_date': datetime.now().strftime('%Y-%m-%d'),
     }

@@ -1,13 +1,10 @@
 
 """Service for comment management."""
-from met_api.constants.comment_status import Status
 from met_api.models.comment import Comment
-from met_api.models.comment_status import CommentStatus
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.comment import CommentSchema
 from met_api.schemas.submission import SubmissionSchema
 from met_api.schemas.survey import SurveySchema
-from met_api.services.user_service import UserService
 
 
 class CommentService:
@@ -91,18 +88,3 @@ class CommentService:
         comments = [cls.__form_comment(key, submission.get(key, ''), survey_submission, survey)
                     for key in text_component_keys if submission.get(key, '') != '']
         return comments
-
-    @classmethod
-    def review_comment(cls, submission_id, status_id, external_user_id):
-        """Review comment."""
-        user = UserService.get_user_by_external_id(external_user_id)
-
-        valid_statuses = [status.id for status in CommentStatus.get_comment_statuses()]
-
-        if not status_id or status_id == Status.Pending.value or status_id not in valid_statuses or not user:
-            raise ValueError('Invalid review')
-
-        reviewed_by = ' '.join([user.get('first_name', ''), user.get('last_name', '')])
-
-        comments = Comment.update_comment_status(submission_id, status_id, reviewed_by)
-        return CommentSchema(many=True).dump(comments)

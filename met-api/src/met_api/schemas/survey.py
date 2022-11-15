@@ -30,6 +30,7 @@ class SurveySchema(Schema):
     def get_comments_meta_data(self, obj):
         """Get the meta data of the comments made in the survey."""
         return {
-            'total': len(obj.comments),
-            'pending': len([comment for comment in obj.comments if comment.status_id == Status.Pending.value])
+            'total': len(obj.submissions),
+            'pending': len([submission for submission in obj.submissions
+                            if submission.comment_status_id == Status.Pending.value])
         }

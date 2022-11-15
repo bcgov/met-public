@@ -5,7 +5,7 @@ import FormBuilder from 'components/Form/FormBuilder';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import ClearIcon from '@mui/icons-material/Clear';
 import { SurveyParams } from '../types';
-import { getSurvey, putSurvey } from 'services/surveyService/form';
+import { getSurvey, putSurvey } from 'services/surveyService';
 import { Survey } from 'models/survey';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';

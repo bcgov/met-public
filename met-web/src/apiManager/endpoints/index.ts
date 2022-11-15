@@ -22,13 +22,13 @@ const Endpoints = {
         GET: `${AppConfig.apiUrl}/surveys/survey_id`,
     },
     SurveySubmission: {
-        CREATE: `${AppConfig.apiUrl}/submission/`,
+        CREATE: `${AppConfig.apiUrl}/submissions/`,
+        REVIEW: `${AppConfig.apiUrl}/submissions/submission_id`,
+        GET_LIST: `${AppConfig.apiUrl}/submissions/survey/survey_id`,
+        GET: `${AppConfig.apiUrl}/submissions/submission_id`,
     },
     Comment: {
         GET_LIST: `${AppConfig.apiUrl}/comments/survey/survey_id`,
-        GET_SUBMISSION: `${AppConfig.apiUrl}/comments/submission/submission_id`,
-        REVIEW: `${AppConfig.apiUrl}/comments/submission/submission_id`,
-        GET: `${AppConfig.apiUrl}/comments/comment_id`,
     },
     Feedback: {
         GET_LIST: `${AppConfig.apiUrl}/feedbacks/`,

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Grid, TextField, Stack, Autocomplete, Typography } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { useNavigate } from 'react-router-dom';
-import { getSurveysPage, postSurvey } from 'services/surveyService/form';
+import { getSurveysPage, postSurvey } from 'services/surveyService';
 import { getEngagements } from 'services/engagementService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
