@@ -1,7 +1,7 @@
 """alter submission add comment_status
 
 Revision ID: 7faee53e6759
-Revises: f2b3f08c8d60
+Revises: 03ee1815f6a6
 Create Date: 2022-11-08 10:31:39.240317
 
 """
@@ -11,7 +11,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = '7faee53e6759'
-down_revision = 'f2b3f08c8d60'
+down_revision = '03ee1815f6a6'
 branch_labels = None
 depends_on = None
 
