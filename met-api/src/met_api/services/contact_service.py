@@ -2,6 +2,7 @@
 """Service for contact management."""
 from met_api.models.contact import Contact
 from met_api.schemas.contact import ContactSchema
+from met_api.services.object_storage_service import ObjectStorageService
 
 
 class ContactService:
@@ -11,13 +12,20 @@ class ContactService:
     def get_contact_by_id(contact_id):
         """Get contact by id."""
         contact_record = Contact.get_contact_by_id(contact_id)
-        return ContactSchema().dump(contact_record)
+        contact = ContactSchema().dump(contact_record)
+        contact['avatar_url'] = ObjectStorageService.get_url(contact.get('avatar_filename', None))
+        return contact
 
     @staticmethod
     def get_contacts():
         """Get contacts."""
         contacts_records = Contact.get_contacts()
-        return ContactSchema(many=True).dump(contacts_records)
+        contacts = ContactSchema(many=True).dump(contacts_records)
+        contacts = [{
+            **contact,
+            'avatar_url': ObjectStorageService.get_url(contact.get('avatar_filename', None))
+        } for contact in contacts]
+        return contacts
 
     @staticmethod
     def create_contact(contact_data, user_id):

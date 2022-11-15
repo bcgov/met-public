@@ -14,6 +14,7 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { updatedDiff } from 'deep-object-diff';
 import { WhoIsListeningContext } from './WhoIsListeningContext';
+import { saveDocument } from 'services/objectStorageService';
 
 const schema = yup
     .object({
@@ -34,25 +35,43 @@ const AddContactDrawer = () => {
         useContext(WhoIsListeningContext);
 
     const [isCreatingContact, setIsCreatingContact] = useState(false);
+    const [avatarFileName, setAvatarFileName] = useState(contactToEdit?.avatar_filename || '');
+    const [avatarImage, setAvatarImage] = useState<File | null>(null);
+
     const methods = useForm<ContactForm>({
         resolver: yupResolver(schema),
     });
 
     useEffect(() => {
-        methods.resetField('name', { defaultValue: contactToEdit?.name || '' });
-        methods.resetField('phone_number', { defaultValue: contactToEdit?.phone_number || '' });
-        methods.resetField('title', { defaultValue: contactToEdit?.title || '' });
-        methods.resetField('email', { defaultValue: contactToEdit?.email || '' });
-        methods.resetField('address', { defaultValue: contactToEdit?.address || '' });
-        methods.resetField('bio', { defaultValue: contactToEdit?.bio || '' });
+        methods.setValue('name', contactToEdit?.name || '');
+        methods.setValue('phone_number', contactToEdit?.phone_number || '');
+        methods.setValue('title', contactToEdit?.title || '');
+        methods.setValue('email', contactToEdit?.email || '');
+        methods.setValue('address', contactToEdit?.address || '');
+        methods.setValue('bio', contactToEdit?.bio || '');
     }, [contactToEdit]);
 
     const { handleSubmit } = methods;
 
+    const handleUploadAvatarImage = async () => {
+        if (!avatarImage) {
+            return avatarFileName;
+        }
+        try {
+            const savedDocumentDetails = await saveDocument(avatarImage, { filename: avatarImage.name });
+            return savedDocumentDetails?.uniquefilename || '';
+        } catch (error) {
+            console.log(error);
+            throw new Error('Error occurred during avatar image upload');
+        }
+    };
+
     const updateContact = async (data: ContactForm) => {
         if (contactToEdit) {
+            const uploadedAvatarImageFileName = await handleUploadAvatarImage();
             const contactUpdatesToPatch = updatedDiff(contactToEdit, {
                 ...data,
+                avatar_filename: uploadedAvatarImageFileName,
             }) as PatchContactRequest;
 
             await patchContact({
@@ -66,22 +85,43 @@ const AddContactDrawer = () => {
     };
 
     const createContact = async (data: ContactForm) => {
-        await postContact(data);
+        const uploadedAvatarImageFileName = await handleUploadAvatarImage();
+        await postContact({
+            ...data,
+            avatar_filename: uploadedAvatarImageFileName,
+        });
         dispatch(openNotification({ severity: 'success', text: 'A new contact was successfully added' }));
+    };
+
+    const saveContact = async (data: ContactForm) => {
+        if (contactToEdit) {
+            return updateContact(data);
+        }
+        return createContact(data);
     };
 
     const onSubmit: SubmitHandler<ContactForm> = async (data: ContactForm) => {
         try {
             setIsCreatingContact(true);
-            contactToEdit ? updateContact(data) : createContact(data);
+            await saveContact(data);
+            await loadContacts();
             setIsCreatingContact(false);
             handleAddContactDrawerOpen(false);
-            loadContacts();
         } catch (err) {
             console.log(err);
             dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to save contact' }));
             setIsCreatingContact(false);
         }
+    };
+
+    const handleAddAvatarImage = (files: File[]) => {
+        if (files.length > 0) {
+            setAvatarImage(files[0]);
+            return;
+        }
+
+        setAvatarImage(null);
+        setAvatarFileName('');
     };
 
     return (
@@ -110,11 +150,9 @@ const AddContactDrawer = () => {
                         <Grid item xs={12} lg={4}>
                             <MetLabel sx={{ marginBottom: '2px' }}>Profile Picture</MetLabel>
                             <ImageUpload
-                                data-testid="engagement-form /image-upload"
-                                handleAddFile={() => {
-                                    /***/
-                                }}
-                                savedImageUrl={''}
+                                data-testid="contact/image-upload"
+                                handleAddFile={handleAddAvatarImage}
+                                savedImageUrl={contactToEdit?.avatar_url || ''}
                             />
                         </Grid>
                         <Grid item xs={12} lg={8} container direction="row" spacing={2}>

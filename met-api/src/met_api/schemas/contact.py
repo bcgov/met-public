@@ -18,6 +18,7 @@ class ContactSchema(Schema):
     email = fields.Str(data_key='email', required=True)
     address = fields.Str(data_key='address')
     bio = fields.Str(data_key='bio')
+    avatar_filename = fields.Str(data_key='avatar_filename')
     created_by = fields.Str(data_key='created_by')
     created_date = fields.Str(data_key='created_date')
     updated_by = fields.Str(data_key='updated_by')

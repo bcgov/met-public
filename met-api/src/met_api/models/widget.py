@@ -28,11 +28,11 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow, nullable=False)
     created_by = db.Column(db.String(50), nullable=False)
     updated_by = db.Column(db.String(50), nullable=False)
-    items = db.relationship('WidgetItem', backref='widget', cascade='all, delete')
+    items = db.relationship('WidgetItem', backref='widget', cascade='all, delete', order_by='WidgetItem.sort_index')
 
     @classmethod
     def get_widget_by_id(cls, widget_id):
-        """Get widgets by engagement_id."""
+        """Get widgets by widget_id."""
         return db.session.query(Widget)\
             .join(WidgetItem, Widget.id == WidgetItem.widget_id, isouter=True)\
             .filter(Widget.id == widget_id)\

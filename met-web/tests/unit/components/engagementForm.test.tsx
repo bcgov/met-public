@@ -54,6 +54,8 @@ const mockContact: Contact = {
     email: 'jace@gmail.com',
     address: 'Dragonstone, Westeros',
     bio: 'Jacaerys Targaryen is the son and heir of Rhaenyra Targaryen',
+    avatar_filename: '',
+    avatar_url: '',
 };
 
 const widgetItem: WidgetItem = {

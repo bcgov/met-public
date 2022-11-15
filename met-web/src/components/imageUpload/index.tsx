@@ -21,7 +21,7 @@ const ImageUpload = ({ handleAddFile, savedImageUrl = '' }: ImageUploadProps) =>
 
     if (objectUrl || existingImageUrl) {
         return (
-            <Grid container direction="row" alignItems="flex-start" justifyContent={'flex-end'} spacing={1}>
+            <Grid container direction="row" alignItems="flex-start" justifyContent={'flex-end'} spacing={1} padding={1}>
                 <Grid
                     item
                     xs={12}
@@ -53,8 +53,9 @@ const ImageUpload = ({ handleAddFile, savedImageUrl = '' }: ImageUploadProps) =>
                             handleAddFile([]);
                             URL.revokeObjectURL(objectUrl);
                         }}
+                        size="small"
                     >
-                        Remove Image
+                        Remove
                     </SecondaryButton>
                 </Grid>
             </Grid>
