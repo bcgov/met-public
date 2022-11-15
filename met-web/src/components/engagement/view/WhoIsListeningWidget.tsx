@@ -18,7 +18,6 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
 
     const fetchContacts = async () => {
         try {
-            console.log(widget.items);
             const contacts = await Promise.all(
                 widget.items.map((widgetItem) => {
                     return getContact(widgetItem.widget_data_id);
