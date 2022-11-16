@@ -1,6 +1,6 @@
 import http from 'apiManager/httpRequestHandler';
 import Endpoints from 'apiManager/endpoints';
-import { replaceUrl } from 'helper';
+import { replaceUrl, replaceAllInURL } from 'helper';
 import { WidgetItem, Widget } from 'models/widget';
 
 export const getWidgets = async (engagement_id: number): Promise<Widget[]> => {
@@ -50,6 +50,25 @@ export const postWidgetItems = async (widget_id: number, data: PostWidgetItemReq
             return Promise.resolve(response.data.result);
         }
         return Promise.reject(response.data.message ?? 'Failed to create contact');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
+export const removeWidget = async (engagement_id: number, widget_id: number): Promise<Widget[]> => {
+    try {
+        const url = replaceAllInURL({
+            URL: Endpoints.Widgets.DELETE,
+            params: {
+                engagement_id: String(engagement_id),
+                widget_id: String(widget_id),
+            },
+        });
+        const response = await http.DeleteRequest<Widget[]>(url);
+        if (response.data.status && response.data.result) {
+            return Promise.resolve(response.data.result);
+        }
+        return Promise.reject(response.data.message ?? 'Failed to delete widget');
     } catch (err) {
         return Promise.reject(err);
     }

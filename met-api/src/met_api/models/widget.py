@@ -11,7 +11,7 @@ from sqlalchemy.sql.schema import ForeignKey
 from .widget_item import WidgetItem
 
 from .db import db
-
+from .default_method_result import DefaultMethodResult
 
 class Widget(db.Model):  # pylint: disable=too-few-public-methods
     """Definition of the Widget entity."""
@@ -74,3 +74,13 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
         db.session.add_all(new_widgets)
         db.session.commit()
         return new_widgets
+    
+    @classmethod
+    def remove_widget(cls, engagement_id, widget_id,) -> DefaultMethodResult:
+        """remove widget from engagement."""
+        widget = Widget.query.filter_by(id=widget_id,engagement_id=engagement_id).delete()
+        print(widget)
+        db.session.commit()
+        deletedWidget = Widget.query.filter_by(id=widget_id,engagement_id=engagement_id).first()
+        print(deletedWidget)
+        return DefaultMethodResult(True, 'Widget Unlinked', widget)

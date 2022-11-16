@@ -92,3 +92,11 @@ class WidgetService:
         self.create_added_widget_items(widget_items, widget_items_db, user_id)
         self.update_widget_items_sorting(widget_items, widget_id, user_id)
         return widget_items
+    
+    @staticmethod
+    def delete_widget(engagement_id, widget_id):
+        """Remove widget from engagement"""
+        updated_widgets = Widget.remove_widget(engagement_id, widget_id)
+        if not updated_widgets:
+            raise ValueError('Widget to update was not found')
+        return updated_widgets

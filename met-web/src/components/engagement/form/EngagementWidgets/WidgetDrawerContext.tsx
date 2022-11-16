@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import { useAppDispatch } from 'hooks';
 import { Widget } from 'models/widget';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { getWidgets } from 'services/widgetService';
+import { getWidgets, removeWidget } from 'services/widgetService';
 import { ActionContext } from '../ActionContext';
 import { WidgetTabValues } from './type';
 
@@ -14,7 +14,7 @@ export interface WidgetDrawerContextProps {
     handleWidgetDrawerTabValueChange: (_tabValue: string) => void;
     isWidgetsLoading: boolean;
     loadWidgets: () => Promise<void>;
-    updateWidgets: (_widgets: Widget[]) => void;
+    deleteWidget: (widgetIndex: number) => void;
 }
 
 export type EngagementParams = {
@@ -33,7 +33,7 @@ export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
         /* empty default method  */
     },
     loadWidgets: () => Promise.resolve(),
-    updateWidgets: (_widgets: Widget[]) => {
+    deleteWidget: (widgetIndex: number) => {
         /* empty default method  */
     },
 });
@@ -46,8 +46,14 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
     const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
     const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState(WidgetTabValues.WIDGET_OPTIONS);
 
-    const updateWidgets = (widgets: Widget[]) => {
-        setWidgets(widgets);
+    const deleteWidget = async (widgetId: number) => {
+        try {
+            await removeWidget(savedEngagement.id, widgetId);
+            dispatch(openNotification({ severity: 'success', text: 'Removed Widget' }));
+            loadWidgets();
+        } catch (err) {
+            dispatch(openNotification({ severity: 'error', text: 'Error removing widgets' }));
+        }
     };
 
     const loadWidgets = async () => {
@@ -84,7 +90,7 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
         <WidgetDrawerContext.Provider
             value={{
                 widgets,
-                updateWidgets,
+                deleteWidget,
                 widgetDrawerOpen,
                 handleWidgetDrawerOpen,
                 widgetDrawerTabValue,
