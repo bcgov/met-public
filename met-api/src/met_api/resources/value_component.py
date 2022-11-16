@@ -93,6 +93,13 @@ class GetEngagements(Resource):
                     'title': 'Accidents',
                     'icon': 'fa-solid fa-triangle-exclamation',
                     'category': 'yellow'
+                },
+                {
+                    'id': 10,
+                    'custom_key': 'other',
+                    'title': 'Other',
+                    'icon': 'fa-solid fa-lightbulb',
+                    'category': 'other',
                 }
             ]
             return ActionResult.success(result=vcs)
