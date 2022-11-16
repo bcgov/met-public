@@ -299,7 +299,6 @@ describe('Engagement form page tests', () => {
         });
 
         expect(screen.getByText('Add Widget')).toBeVisible();
-        expect(screen.getByText('Who is Listening')).toBeVisible();
         expect(getWidgetsMock).toHaveBeenCalled();
     });
 

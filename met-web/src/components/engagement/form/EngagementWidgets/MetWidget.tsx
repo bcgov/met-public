@@ -3,6 +3,7 @@ import { MetLabel, MetWidgetPaper } from 'components/common';
 import { Grid, CircularProgress, Stack, IconButton } from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
 interface MetWidgetProps {
     testId?: string;
@@ -18,15 +19,30 @@ const MetWidget = ({ testId, children, title, onEdit, onDelete, deleting, ...res
     return (
         <MetWidgetPaper elevation={3} {...rest}>
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
-                <Grid item xs={6}>
+                <Grid item xs={2} sx={{ alignItems: 'center', justifyContent: 'center' }}>
+                    <IconButton sx={{ margin: 0, padding: 0 }} color="info" aria-label="drag-indicator">
+                        <DragIndicatorIcon />
+                    </IconButton>
+                </Grid>
+                <Grid item container direction="row" alignItems="center" justifyContent="flex-start" xs={8}>
                     <MetLabel>{title}</MetLabel>
                 </Grid>
-                <Grid item xs={6} container direction="row" justifyContent="flex-end">
+                <Grid item xs={2} container direction="row" alignItems="flex-start" justifyContent="center">
                     <Stack direction="row" spacing={1}>
-                        <IconButton color="inherit" onClick={onEdit} data-testid="widget/edit">
+                        <IconButton
+                            sx={{ margin: 0, padding: 0 }}
+                            color="inherit"
+                            onClick={onEdit}
+                            data-testid="widget/edit"
+                        >
                             <EditIcon />
                         </IconButton>
-                        <IconButton color="inherit" onClick={onDelete} data-testid={`widget/remove-${testId}`}>
+                        <IconButton
+                            sx={{ margin: 0, padding: 0 }}
+                            color="inherit"
+                            onClick={onDelete}
+                            data-testid={`widget/remove-${testId}`}
+                        >
                             {deleting ? <CircularProgress size="1em" color="inherit" /> : <HighlightOffIcon />}
                         </IconButton>
                     </Stack>

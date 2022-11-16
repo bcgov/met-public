@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { Grid, Skeleton } from '@mui/material';
 import { MetHeader2, MetPaper, SecondaryButton } from 'components/common';
 import { WidgetCardSwitch } from './WidgetCardSwitch';
@@ -7,11 +7,19 @@ import { WidgetDrawerContext } from './WidgetDrawerContext';
 import { ActionContext } from '../ActionContext';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { Widget } from 'models/widget';
+import update from 'immutability-helper';
 
 const WidgetsBlock = () => {
-    const { widgets, handleWidgetDrawerOpen, isWidgetsLoading } = useContext(WidgetDrawerContext);
+    const { widgets, updateWidgets, handleWidgetDrawerOpen, isWidgetsLoading } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
+
+    const [tempWidgets, setTempWidgets] = useState<Widget[]>(widgets);
+
+    useEffect(() => {
+        setTempWidgets(widgets);
+    }, [widgets]);
 
     const handleAddWidgetClick = () => {
         if (!savedEngagement.id) {
@@ -22,6 +30,28 @@ const WidgetsBlock = () => {
         }
         handleWidgetDrawerOpen(true);
     };
+
+    const moveWidget = useCallback((dragIndex: number, hoverIndex: number) => {
+        setTempWidgets((prevWidgets: Widget[]) =>
+            update(prevWidgets, {
+                $splice: [
+                    [dragIndex, 1],
+                    [hoverIndex, 0, prevWidgets[dragIndex]],
+                ],
+            }),
+        );
+        updateWidgets(tempWidgets);
+    }, []);
+
+    const removeWidget = useCallback((widgetIndex: number) => {
+        setTempWidgets((prevWidgets: Widget[]) =>
+            update(prevWidgets, {
+                $splice: [[widgetIndex, 1]],
+            }),
+        );
+        updateWidgets(tempWidgets);
+    }, []);
+
     return (
         <Grid container item xs={12} rowSpacing={1}>
             <Grid item xs={12}>
@@ -46,12 +76,15 @@ const WidgetsBlock = () => {
                                 </Grid>
                             </Then>
                             <Else>
-                                {widgets.map((widget, index) => {
+                                {tempWidgets.map((widget: Widget, index) => {
                                     return (
                                         <Grid item xs={12} key={`Grid-${widget.widget_type_id}-${index}`}>
                                             <WidgetCardSwitch
                                                 key={`${widget.widget_type_id}-${index}`}
                                                 widget={widget}
+                                                index={index}
+                                                moveWidget={moveWidget}
+                                                removeWidget={removeWidget}
                                             />
                                         </Grid>
                                     );
