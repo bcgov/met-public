@@ -73,7 +73,8 @@ class Widget(Resource):
 @cors_preflight('DELETE')
 @API.route('/engagement/<engagement_id>/widget/<widget_id>')
 class EngagementWidget(Resource):
-    """Resource for managing widgets with engagements"""
+    """Resource for managing widgets with engagements."""
+    
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @auth.require
@@ -81,7 +82,7 @@ class EngagementWidget(Resource):
         """Remove widget for an engagement."""
         try:
 
-            result = WidgetService().delete_widget(engagement_id,widget_id)
+            result = WidgetService().delete_widget(engagement_id, widget_id)
 
             if result.success:
                 return ActionResult.success(widget_id, 'Widget successfully removed')

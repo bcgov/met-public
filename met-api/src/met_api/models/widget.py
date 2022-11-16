@@ -13,6 +13,7 @@ from .widget_item import WidgetItem
 from .db import db
 from .default_method_result import DefaultMethodResult
 
+
 class Widget(db.Model):  # pylint: disable=too-few-public-methods
     """Definition of the Widget entity."""
 
@@ -77,7 +78,7 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
 
     @classmethod
     def remove_widget(cls, engagement_id, widget_id,) -> DefaultMethodResult:
-        """remove widget from engagement."""
-        widget = Widget.query.filter_by(id=widget_id,engagement_id=engagement_id).delete()
+        """Remove widget from engagement."""
+        widget = Widget.query.filter_by(id=widget_id, engagement_id=engagement_id).delete()
         db.session.commit()
         return DefaultMethodResult(True, 'Widget Removed', widget)
