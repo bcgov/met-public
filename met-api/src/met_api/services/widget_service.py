@@ -96,7 +96,7 @@ class WidgetService:
     @staticmethod
     def delete_widget(engagement_id, widget_id):
         """Remove widget from engagement."""
-        updated_widgets = Widget.remove_widget(engagement_id, widget_id)
-        if not updated_widgets:
-            raise ValueError('Widget to update was not found')
-        return updated_widgets
+        widgets = Widget.remove_widget(engagement_id, widget_id)
+        if not widgets:
+            raise ValueError('Widget to remove was not found')
+        return widgets

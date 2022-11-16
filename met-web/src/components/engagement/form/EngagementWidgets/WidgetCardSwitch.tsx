@@ -4,6 +4,7 @@ import React, { useContext } from 'react';
 import { Switch, Case } from 'react-if';
 import MetWidget from './MetWidget';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
+import { WidgetTabValues } from './type';
 
 interface WidgetCardSwitchProps {
     widget: Widget;
@@ -12,7 +13,7 @@ interface WidgetCardSwitchProps {
     removeWidget: (widgetId: number) => void;
 }
 export const WidgetCardSwitch = ({ widget, index, moveWidget, removeWidget }: WidgetCardSwitchProps) => {
-    const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
+    const { handleWidgetDrawerOpen, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
 
     return (
         <>
@@ -26,6 +27,7 @@ export const WidgetCardSwitch = ({ widget, index, moveWidget, removeWidget }: Wi
                                 removeWidget(widget.id);
                             }}
                             onEdit={() => {
+                                handleWidgetDrawerTabValueChange(WidgetTabValues.WHO_IS_LISTENING_FORM);
                                 handleWidgetDrawerOpen(true);
                             }}
                         />
