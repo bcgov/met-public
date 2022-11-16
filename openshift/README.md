@@ -55,10 +55,6 @@ roleRef:
 
 Create an instance of a postgresql database:
 
-```
-oc new-app --template=postgresql-persistent -p POSTGRESQL_DATABASE=keycloak -p DATABASE_SERVICE_NAME=postgresql-keycloak
-```
-
 In each environment namespace (dev, test, prod) use the following:
 
 Deploy the web application:
@@ -86,16 +82,16 @@ helm repo add patroni-chart https://bcgov.github.io/nr-patroni-chart
 helm install -n <namespace> met-patroni patroni-chart/patroni
 ```
 
-If HA is not necessary create two instances of a postgresql database (transactional and analytics):
+If HA is not necessary create a instance of a postgresql database:
 
 ```
-oc new-app --template=postgresql-persistent -p POSTGRESQL_DATABASE=met -p DATABASE_SERVICE_NAME=postgresql-met
+oc new-app --template=postgresql-persistent -p POSTGRESQL_DATABASE=app -p DATABASE_SERVICE_NAME=met-postgresql
 ```
 
-```
-oc new-app --template=postgresql-persistent -p POSTGRESQL_DATABASE=met-analytics -p DATABASE_SERVICE_NAME=postgresql-edw
-```
+### Setup
 
+1. Setup script is located at ./postgresql-setup.sql
+1. Openshift secret yaml is located at ./database-users.secret.yml
 
 ## Deployment Configuration
 
