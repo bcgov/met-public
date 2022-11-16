@@ -74,7 +74,7 @@ class Widget(Resource):
 @API.route('/engagement/<engagement_id>/widget/<widget_id>')
 class EngagementWidget(Resource):
     """Resource for managing widgets with engagements."""
-    
+
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @auth.require
