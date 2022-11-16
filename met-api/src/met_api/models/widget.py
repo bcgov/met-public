@@ -77,9 +77,18 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
     
     
     @staticmethod
-    def update_all_widgets(widgets: list) -> list[Widget]:
-        """Update widgets."""
-        db.session.add_all(widgets)
+    def update_widget_sorting(update_mappings: list) -> list[Widget]:
+        """Save widget items sorting."""
+        db.session.bulk_update_mappings(Widget,  update_mappings)
         db.session.commit()
-        return widgets
+        return update_mappings
+    
+    @classmethod
+    def remove_widget(cls, widget_id) -> DefaultMethodResult:
+        """remove widget from engagement."""
+        widget1 = Widget.query.filter_by(id=widget_id).first()
+        widget = Widget.query.filter_by(id=widget_id).delete()
+        print(widget1)
+        db.session.commit()
+        return DefaultMethodResult(True, 'Widget Unlinked', widget)
 

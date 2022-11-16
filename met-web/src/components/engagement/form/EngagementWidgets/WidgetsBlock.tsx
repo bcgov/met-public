@@ -11,13 +11,14 @@ import { Widget } from 'models/widget';
 import update from 'immutability-helper';
 
 const WidgetsBlock = () => {
-    const { widgets, updateWidgets, handleWidgetDrawerOpen, isWidgetsLoading } = useContext(WidgetDrawerContext);
+    const { widgets, deleteWidget, handleWidgetDrawerOpen, isWidgetsLoading } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
 
     const [tempWidgets, setTempWidgets] = useState<Widget[]>(widgets);
 
     useEffect(() => {
+        console.log('WIDGETS!!!!!!!!!!!!!!' + widgets);
         setTempWidgets(widgets);
     }, [widgets]);
 
@@ -32,6 +33,7 @@ const WidgetsBlock = () => {
     };
 
     const moveWidget = useCallback((dragIndex: number, hoverIndex: number) => {
+        console.log(widgets);
         setTempWidgets((prevWidgets: Widget[]) =>
             update(prevWidgets, {
                 $splice: [
@@ -40,16 +42,21 @@ const WidgetsBlock = () => {
                 ],
             }),
         );
-        updateWidgets(tempWidgets);
+        console.log(tempWidgets);
     }, []);
 
-    const removeWidget = useCallback((widgetIndex: number) => {
+    const removeWidget = useCallback(async (widgetIndex: number) => {
+        console.log('UNDEFINED????' + JSON.stringify(widgets[widgetIndex]) + JSON.stringify(widgets));
+        const deletionId = widgets[widgetIndex].id;
+        console.log(widgets[widgetIndex]);
+        console.log(deletionId);
+        deleteWidget(deletionId);
         setTempWidgets((prevWidgets: Widget[]) =>
             update(prevWidgets, {
                 $splice: [[widgetIndex, 1]],
             }),
         );
-        updateWidgets(tempWidgets);
+        console.log(tempWidgets);
     }, []);
 
     return (

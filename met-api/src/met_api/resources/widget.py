@@ -74,14 +74,10 @@ class Widget(Resource):
     def patch(engagement_id):
         """update a new widget for an engagement."""
         try:
-            requestjson = request.get_json()
-            user_id = TokenInfo.get_id()
-            requestjson['updated_by'] = user_id
-            valid_format, errors = schema_utils.validate(requestjson, 'widget')
-            widget_schema = WidgetSchema().load(requestjson, partial=True)
-            widget = WidgetService().update_widgets(json.loads(requestjson))
-
-            return ActionResult.success(widget.id, widget_schema.dump(widget))
+            print(request.get_json())
+            updated_sorting = json.loads(request.get_json())
+            widget = WidgetService().update_widgets(updated_sorting)
+            return ActionResult.success(engagement_id, widget)
         except KeyError as err:
             return ActionResult.error(str(err))
         except ValueError as err:
@@ -90,7 +86,25 @@ class Widget(Resource):
             return ActionResult.error(str(err.messages))
 
 
+@cors_preflight('DELETE')
+@API.route('/engagement/<engagement_id>/widget/<widget_id>')
+class EngagementWidget(Resource):
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def delete(engagement_id, widget_id):  
+        try:
 
+            result = WidgetService().delete_widget(widget_id)
+
+            if result.success:
+                return ActionResult.success(widget_id, 'Widget successfully removed')
+
+            return ActionResult.error('Error occurred while removing Widget from engagement')
+        except KeyError as err:
+            return ActionResult.error(str(err))
+        except ValueError as err:
+            return ActionResult.error(str(err))
 
 
 

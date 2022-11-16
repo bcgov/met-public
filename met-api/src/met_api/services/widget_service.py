@@ -93,10 +93,21 @@ class WidgetService:
         self.update_widget_items_sorting(widget_items, widget_id, user_id)
         return widget_items
     
+    
     @staticmethod
     def update_widgets(widgets: list):
         """Update engagement partially."""
-        updated_widgets = Widget.update_all_widgets(widgets)
+        updated_widgets = Widget.update_widget_sorting(widgets)
         if not updated_widgets:
             raise ValueError('Engagement to update was not found')
         return updated_widgets
+    
+    @staticmethod
+    def delete_widget(widget_id):
+        """Remove widget from engagement"""
+        updated_widgets = Widget.remove_widget(widget_id)
+        if not updated_widgets:
+            raise ValueError('Widget to update was not found')
+        return updated_widgets
+        
+
