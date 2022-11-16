@@ -23,7 +23,7 @@ const schema = yup
         phone_number: yup.string(),
         email: yup.string().email().required(),
         address: yup.string(),
-        bio: yup.string(),
+        bio: yup.string().max(240, 'Bio should not exceed 240 characters'),
     })
     .required();
 
