@@ -8,10 +8,12 @@ import { ActionContext } from '../ActionContext';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { Widget } from 'models/widget';
+import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import update from 'immutability-helper';
 
 const WidgetsBlock = () => {
-    const { widgets, updateWidgets, handleWidgetDrawerOpen, isWidgetsLoading } = useContext(WidgetDrawerContext);
+    const { widgets, deleteWidget, updateWidgets, handleWidgetDrawerOpen, isWidgetsLoading } =
+        useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
 
@@ -43,14 +45,24 @@ const WidgetsBlock = () => {
         updateWidgets(tempWidgets);
     }, []);
 
-    const removeWidget = useCallback((widgetIndex: number) => {
-        setTempWidgets((prevWidgets: Widget[]) =>
-            update(prevWidgets, {
-                $splice: [[widgetIndex, 1]],
+    const removeWidget = (widgetId: number) => {
+        dispatch(
+            openNotificationModal({
+                open: true,
+                data: {
+                    header: 'Remove Widget',
+                    subText: [
+                        'You will be removing this widget from the engagement.',
+                        'Do you want to remove this widget?',
+                    ],
+                    handleConfirm: () => {
+                        deleteWidget(widgetId);
+                    },
+                },
+                type: 'confirm',
             }),
         );
-        updateWidgets(tempWidgets);
-    }, []);
+    };
 
     return (
         <Grid container item xs={12} rowSpacing={1}>
@@ -76,7 +88,7 @@ const WidgetsBlock = () => {
                                 </Grid>
                             </Then>
                             <Else>
-                                {tempWidgets.map((widget: Widget, index) => {
+                                {widgets.map((widget: Widget, index) => {
                                     return (
                                         <Grid item xs={12} key={`Grid-${widget.widget_type_id}-${index}`}>
                                             <WidgetCardSwitch

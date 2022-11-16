@@ -4,15 +4,16 @@ import React, { useContext } from 'react';
 import { Switch, Case } from 'react-if';
 import MetWidget from './MetWidget';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
+import { WidgetTabValues } from './type';
 
 interface WidgetCardSwitchProps {
     widget: Widget;
     index: number;
     moveWidget: (dragIndex: number, hoverIndex: number) => void;
-    removeWidget: (widgetIndex: number) => void;
+    removeWidget: (widgetId: number) => void;
 }
 export const WidgetCardSwitch = ({ widget, index, moveWidget, removeWidget }: WidgetCardSwitchProps) => {
-    const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
+    const { handleWidgetDrawerOpen, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
 
     return (
         <>
@@ -23,9 +24,10 @@ export const WidgetCardSwitch = ({ widget, index, moveWidget, removeWidget }: Wi
                             testId={`who-is-listening-${widget.widget_type_id}`}
                             title="Who is Listening"
                             onDelete={() => {
-                                removeWidget(index);
+                                removeWidget(widget.id);
                             }}
                             onEdit={() => {
+                                handleWidgetDrawerTabValueChange(WidgetTabValues.WHO_IS_LISTENING_FORM);
                                 handleWidgetDrawerOpen(true);
                             }}
                         />
