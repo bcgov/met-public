@@ -76,7 +76,7 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
         return new_widgets
 
     @classmethod
-    def remove_widget(cls, engagement_id, widget_id,) -> DefaultMethodResult:
+    def remove_widget(cls, engagement_id, widget_id,) -> Widget:
         """Remove widget from engagement."""
         widget = Widget.query.filter_by(id=widget_id, engagement_id=engagement_id).delete()
         db.session.commit()
