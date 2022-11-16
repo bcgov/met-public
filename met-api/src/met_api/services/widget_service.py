@@ -96,10 +96,10 @@ class WidgetService:
     
     @staticmethod
     def update_widgets(widgets: list):
-        """Update engagement partially."""
+        """Update widgets partially."""
         updated_widgets = Widget.update_widget_sorting(widgets)
         if not updated_widgets:
-            raise ValueError('Engagement to update was not found')
+            raise ValueError('widgets to update was not found')
         return updated_widgets
     
     @staticmethod
