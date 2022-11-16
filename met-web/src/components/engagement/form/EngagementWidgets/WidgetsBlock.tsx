@@ -1,4 +1,4 @@
-import React, { useContext, useCallback } from 'react';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { Grid, Skeleton } from '@mui/material';
 import { MetHeader2, MetPaper, SecondaryButton } from 'components/common';
 import { WidgetCardSwitch } from './WidgetCardSwitch';
@@ -9,11 +9,18 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { Widget } from 'models/widget';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+import update from 'immutability-helper';
 
 const WidgetsBlock = () => {
-    const { widgets, deleteWidget, handleWidgetDrawerOpen, isWidgetsLoading } = useContext(WidgetDrawerContext);
+    const { widgets, deleteWidget, updateWidgets, handleWidgetDrawerOpen, isWidgetsLoading } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
+
+    const [tempWidgets, setTempWidgets] = useState<Widget[]>(widgets);
+
+    useEffect(() => {
+        setTempWidgets(widgets);
+    }, [widgets]);
 
     const handleAddWidgetClick = () => {
         if (!savedEngagement.id) {
@@ -26,7 +33,15 @@ const WidgetsBlock = () => {
     };
 
     const moveWidget = useCallback((dragIndex: number, hoverIndex: number) => {
-        //Addressed in another pr
+        setTempWidgets((prevWidgets: Widget[]) =>
+            update(prevWidgets, {
+                $splice: [
+                    [dragIndex, 1],
+                    [hoverIndex, 0, prevWidgets[dragIndex]],
+                ],
+            }),
+        );
+        //send tempWidgets to sorting function
     }, []);
 
     const removeWidget = (widgetId: number) => {

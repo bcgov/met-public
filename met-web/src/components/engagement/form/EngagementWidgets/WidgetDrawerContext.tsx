@@ -15,6 +15,7 @@ export interface WidgetDrawerContextProps {
     isWidgetsLoading: boolean;
     loadWidgets: () => Promise<void>;
     deleteWidget: (widgetIndex: number) => void;
+    updateWidgets: (_widgets: Widget[]) => void;
 }
 
 export type EngagementParams = {
@@ -36,6 +37,9 @@ export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
     deleteWidget: (widgetIndex: number) => {
         /* empty default method  */
     },
+    updateWidgets: (_widgets: Widget[]) => {
+        /* empty default method  */
+    },
 });
 
 export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -54,6 +58,10 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
         } catch (err) {
             dispatch(openNotification({ severity: 'error', text: 'Error removing widgets' }));
         }
+    };
+    
+     const updateWidget = async => {
+        //TODO: setup sort
     };
 
     const loadWidgets = async () => {
@@ -91,6 +99,7 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
             value={{
                 widgets,
                 deleteWidget,
+                updateWidgets,
                 widgetDrawerOpen,
                 handleWidgetDrawerOpen,
                 widgetDrawerTabValue,
