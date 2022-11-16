@@ -84,11 +84,12 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
         return update_mappings
     
     @classmethod
-    def remove_widget(cls, widget_id) -> DefaultMethodResult:
+    def remove_widget(cls, engagement_id, widget_id,) -> DefaultMethodResult:
         """remove widget from engagement."""
-        widget1 = Widget.query.filter_by(id=widget_id).first()
-        widget = Widget.query.filter_by(id=widget_id).delete()
-        print(widget1)
+        widget = Widget.query.filter_by(id=widget_id,engagement_id=engagement_id).delete()
+        print(widget)
         db.session.commit()
+        deletedWidget = Widget.query.filter_by(id=widget_id,engagement_id=engagement_id).first()
+        print(deletedWidget)
         return DefaultMethodResult(True, 'Widget Unlinked', widget)
 

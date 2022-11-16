@@ -60,9 +60,9 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
         }
     };
 
-    const deleteWidget = async (widgetIndex: number) => {
+    const deleteWidget = async (widgetId: number) => {
         try {
-            removeWidget(savedEngagement.id, widgetIndex);
+            await removeWidget(savedEngagement.id, widgetId);
             dispatch(openNotification({ severity: 'success', text: 'Removed Widget' }));
             loadWidgets();
         } catch (err) {

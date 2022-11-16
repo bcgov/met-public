@@ -95,7 +95,7 @@ class EngagementWidget(Resource):
     def delete(engagement_id, widget_id):  
         try:
 
-            result = WidgetService().delete_widget(widget_id)
+            result = WidgetService().delete_widget(engagement_id,widget_id)
 
             if result.success:
                 return ActionResult.success(widget_id, 'Widget successfully removed')

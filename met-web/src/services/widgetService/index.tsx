@@ -71,6 +71,7 @@ export const patchWidgets = async (engagement_id: number, data: Widget[]): Promi
 
 export const removeWidget = async (engagement_id: number, widget_id: number): Promise<Widget[]> => {
     try {
+        console.log('REMOVE WIDGET!');
         const url = replaceAllInURL({
             URL: Endpoints.Widgets.DELETE,
             params: {

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useCallback } from 'react';
+import React, { useContext, useEffect, useCallback } from 'react';
 import { Grid, Skeleton } from '@mui/material';
 import { MetHeader2, MetPaper, SecondaryButton } from 'components/common';
 import { WidgetCardSwitch } from './WidgetCardSwitch';
@@ -8,18 +8,15 @@ import { ActionContext } from '../ActionContext';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { Widget } from 'models/widget';
-import update from 'immutability-helper';
+import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
 const WidgetsBlock = () => {
     const { widgets, deleteWidget, handleWidgetDrawerOpen, isWidgetsLoading } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
 
-    const [tempWidgets, setTempWidgets] = useState<Widget[]>(widgets);
-
     useEffect(() => {
-        console.log('WIDGETS!!!!!!!!!!!!!!' + widgets);
-        setTempWidgets(widgets);
+        console.log(widgets);
     }, [widgets]);
 
     const handleAddWidgetClick = () => {
@@ -33,31 +30,34 @@ const WidgetsBlock = () => {
     };
 
     const moveWidget = useCallback((dragIndex: number, hoverIndex: number) => {
-        console.log(widgets);
-        setTempWidgets((prevWidgets: Widget[]) =>
-            update(prevWidgets, {
-                $splice: [
-                    [dragIndex, 1],
-                    [hoverIndex, 0, prevWidgets[dragIndex]],
-                ],
-            }),
-        );
-        console.log(tempWidgets);
+        // updateWidgets((prevWidgets: Widget[]) =>
+        //     update(prevWidgets, {
+        //         $splice: [
+        //             [dragIndex, 1],
+        //             [hoverIndex, 0, prevWidgets[dragIndex]],
+        //         ],
+        //     }),
+        // );
     }, []);
 
-    const removeWidget = useCallback(async (widgetIndex: number) => {
-        console.log('UNDEFINED????' + JSON.stringify(widgets[widgetIndex]) + JSON.stringify(widgets));
-        const deletionId = widgets[widgetIndex].id;
-        console.log(widgets[widgetIndex]);
-        console.log(deletionId);
-        deleteWidget(deletionId);
-        setTempWidgets((prevWidgets: Widget[]) =>
-            update(prevWidgets, {
-                $splice: [[widgetIndex, 1]],
+    const removeWidget = (widgetId: number) => {
+        dispatch(
+            openNotificationModal({
+                open: true,
+                data: {
+                    header: 'Remove Widget',
+                    subText: [
+                        'You will be removing this widget from the engagement.',
+                        'Do you want to remove this widget?',
+                    ],
+                    handleConfirm: () => {
+                        deleteWidget(widgetId);
+                    },
+                },
+                type: 'confirm',
             }),
         );
-        console.log(tempWidgets);
-    }, []);
+    };
 
     return (
         <Grid container item xs={12} rowSpacing={1}>
@@ -83,7 +83,7 @@ const WidgetsBlock = () => {
                                 </Grid>
                             </Then>
                             <Else>
-                                {tempWidgets.map((widget: Widget, index) => {
+                                {widgets.map((widget: Widget, index) => {
                                     return (
                                         <Grid item xs={12} key={`Grid-${widget.widget_type_id}-${index}`}>
                                             <WidgetCardSwitch
