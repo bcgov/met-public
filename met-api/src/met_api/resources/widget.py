@@ -86,26 +86,6 @@ class Widget(Resource):
             return ActionResult.error(str(err.messages))
 
 
-@cors_preflight('DELETE')
-@API.route('/engagement/<engagement_id>/widget/<widget_id>')
-class EngagementWidget(Resource):
-    @staticmethod
-    @cross_origin(origins=allowedorigins())
-    @auth.require
-    def delete(engagement_id, widget_id):  
-        try:
-
-            result = WidgetService().delete_widget(engagement_id,widget_id)
-
-            if result.success:
-                return ActionResult.success(widget_id, 'Widget successfully removed')
-
-            return ActionResult.error('Error occurred while removing Widget from engagement')
-        except KeyError as err:
-            return ActionResult.error(str(err))
-        except ValueError as err:
-            return ActionResult.error(str(err))
-
 
 
 @cors_preflight('POST,OPTIONS')

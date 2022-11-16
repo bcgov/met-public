@@ -11,13 +11,9 @@ import { Widget } from 'models/widget';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
 const WidgetsBlock = () => {
-    const { widgets, deleteWidget, handleWidgetDrawerOpen, isWidgetsLoading } = useContext(WidgetDrawerContext);
+    const { widgets, handleWidgetDrawerOpen, isWidgetsLoading } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        console.log(widgets);
-    }, [widgets]);
 
     const handleAddWidgetClick = () => {
         if (!savedEngagement.id) {
@@ -30,6 +26,7 @@ const WidgetsBlock = () => {
     };
 
     const moveWidget = useCallback((dragIndex: number, hoverIndex: number) => {
+        //TODO: figure out sorting algorithim without useCallback hook
         // updateWidgets((prevWidgets: Widget[]) =>
         //     update(prevWidgets, {
         //         $splice: [
@@ -41,22 +38,7 @@ const WidgetsBlock = () => {
     }, []);
 
     const removeWidget = (widgetId: number) => {
-        dispatch(
-            openNotificationModal({
-                open: true,
-                data: {
-                    header: 'Remove Widget',
-                    subText: [
-                        'You will be removing this widget from the engagement.',
-                        'Do you want to remove this widget?',
-                    ],
-                    handleConfirm: () => {
-                        deleteWidget(widgetId);
-                    },
-                },
-                type: 'confirm',
-            }),
-        );
+        //Addressed in separate PR
     };
 
     return (

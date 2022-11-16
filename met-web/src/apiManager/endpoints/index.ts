@@ -42,7 +42,6 @@ const Endpoints = {
         GET_LIST: `${AppConfig.apiUrl}/widgets/engagement/engagement_id`,
         CREATE: `${AppConfig.apiUrl}/widgets/engagement/engagement_id`,
         UPDATE: `${AppConfig.apiUrl}/widgets/engagement/engagement_id`,
-        DELETE: `${AppConfig.apiUrl}/widgets/engagement/engagement_id/widget/widget_id`,
     },
     Widget_items: {
         GET_LIST: `${AppConfig.apiUrl}/widgets/widget_id/items`,

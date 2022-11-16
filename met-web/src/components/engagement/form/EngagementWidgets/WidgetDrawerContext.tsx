@@ -2,10 +2,9 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import { useAppDispatch } from 'hooks';
 import { Widget } from 'models/widget';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { getWidgets, patchWidgets, removeWidget } from 'services/widgetService';
+import { getWidgets } from 'services/widgetService';
 import { ActionContext } from '../ActionContext';
 import { WidgetTabValues } from './type';
-import { updatedDiff } from 'deep-object-diff';
 
 export interface WidgetDrawerContextProps {
     widgets: Widget[];
@@ -16,7 +15,6 @@ export interface WidgetDrawerContextProps {
     isWidgetsLoading: boolean;
     loadWidgets: () => Promise<void>;
     updateWidgets: (_widgets: Widget[]) => void;
-    deleteWidget: (widgetIndex: number) => void;
 }
 
 export type EngagementParams = {
@@ -38,9 +36,6 @@ export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
     updateWidgets: (_widgets: Widget[]) => {
         /* empty default method  */
     },
-    deleteWidget: (widgetIndex: number) => {
-        /* empty default method  */
-    },
 });
 
 export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -57,16 +52,6 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
             loadWidgets();
         } catch (err) {
             dispatch(openNotification({ severity: 'error', text: 'Error updating engagement widgets' }));
-        }
-    };
-
-    const deleteWidget = async (widgetId: number) => {
-        try {
-            await removeWidget(savedEngagement.id, widgetId);
-            dispatch(openNotification({ severity: 'success', text: 'Removed Widget' }));
-            loadWidgets();
-        } catch (err) {
-            dispatch(openNotification({ severity: 'error', text: 'Error removing widgets' }));
         }
     };
 
@@ -104,7 +89,6 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
         <WidgetDrawerContext.Provider
             value={{
                 widgets,
-                deleteWidget,
                 updateWidgets,
                 widgetDrawerOpen,
                 handleWidgetDrawerOpen,
