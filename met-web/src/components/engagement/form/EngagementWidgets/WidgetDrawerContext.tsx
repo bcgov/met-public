@@ -59,8 +59,8 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
             dispatch(openNotification({ severity: 'error', text: 'Error removing widgets' }));
         }
     };
-    
-     const updateWidget = async => {
+
+    const updateWidgets = (_widgets: Widget[]) => {
         //TODO: setup sort
     };
 

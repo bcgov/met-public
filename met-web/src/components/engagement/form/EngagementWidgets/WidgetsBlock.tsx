@@ -12,7 +12,8 @@ import { openNotificationModal } from 'services/notificationModalService/notific
 import update from 'immutability-helper';
 
 const WidgetsBlock = () => {
-    const { widgets, deleteWidget, updateWidgets, handleWidgetDrawerOpen, isWidgetsLoading } = useContext(WidgetDrawerContext);
+    const { widgets, deleteWidget, updateWidgets, handleWidgetDrawerOpen, isWidgetsLoading } =
+        useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
 
@@ -41,7 +42,7 @@ const WidgetsBlock = () => {
                 ],
             }),
         );
-        //send tempWidgets to sorting function
+        updateWidgets(tempWidgets);
     }, []);
 
     const removeWidget = (widgetId: number) => {
