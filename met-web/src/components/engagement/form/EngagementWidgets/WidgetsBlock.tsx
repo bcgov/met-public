@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useCallback } from 'react';
+import React, { useContext, useCallback } from 'react';
 import { Grid, Skeleton } from '@mui/material';
 import { MetHeader2, MetPaper, SecondaryButton } from 'components/common';
 import { WidgetCardSwitch } from './WidgetCardSwitch';
@@ -26,15 +26,7 @@ const WidgetsBlock = () => {
     };
 
     const moveWidget = useCallback((dragIndex: number, hoverIndex: number) => {
-        // setTempWidgets((prevWidgets: Widget[]) =>
-        //     update(prevWidgets, {
-        //         $splice: [
-        //             [dragIndex, 1],
-        //             [hoverIndex, 0, prevWidgets[dragIndex]],
-        //         ],
-        //     }),
-        // );
-        // updateWidgets(tempWidgets);
+        //Addressed in another pr
     }, []);
 
     const removeWidget = (widgetId: number) => {

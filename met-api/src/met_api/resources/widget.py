@@ -68,15 +68,17 @@ class Widget(Resource):
             return ActionResult.error(str(err))
         except ValidationError as err:
             return ActionResult.error(str(err.messages))
-        
-        
+
+    
 @cors_preflight('DELETE')
 @API.route('/engagement/<engagement_id>/widget/<widget_id>')
 class EngagementWidget(Resource):
+    """Resource for managing widgets with engagements"""
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @auth.require
-    def delete(engagement_id, widget_id):  
+    def delete(engagement_id, widget_id):   
+        """Remove widget for an engagement."""
         try:
 
             result = WidgetService().delete_widget(engagement_id,widget_id)
