@@ -55,7 +55,7 @@
     "bio": {
       "$id": "#/properties/bio",
       "type": "string",
-      "minLength": 20,
+      "maxLength": 240,
       "title": "Personal biography",
       "description": "A short text describing the contact.",
       "examples": ["Jace is a prince of house Targaryen."]
