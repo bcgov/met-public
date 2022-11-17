@@ -80,8 +80,11 @@ def test_delete_removed_widget_items(session):  # pylint:disable=unused-argument
     """Assert that widget items can be created in bulk."""
     engagement = factory_engagement_model()
     TestWidgetInfo.widget1['engagement_id'] = engagement.id
-    factory_widget_model(TestWidgetInfo.widget1)
-    widget_item = factory_widget_item_model(TestWidgetItemInfo.widget_item1)
+    widget = factory_widget_model(TestWidgetInfo.widget1)
+    widget_item = factory_widget_item_model({
+        **TestWidgetItemInfo.widget_item1,
+        'widget_id': widget.id
+    })
 
     widget_items_remaining = []
     widget_items_in_db = [widget_item]
@@ -99,11 +102,11 @@ def test_create_added_widget_items(session):  # pylint:disable=unused-argument
     """Assert that widget items can be created in bulk."""
     engagement = factory_engagement_model()
     TestWidgetInfo.widget1['engagement_id'] = engagement.id
-    factory_widget_model(TestWidgetInfo.widget1)
+    widget = factory_widget_model(TestWidgetInfo.widget1)
     user_id = TestUserInfo.user['id']
     
     widget_items_to_be_added = [{
-        'widget_id': TestWidgetItemInfo.widget_item1['widget_id'],
+        'widget_id': widget.id,
         'widget_data_id': TestWidgetItemInfo.widget_item1['widget_data_id']
     }]
     widget_items_in_db = []
