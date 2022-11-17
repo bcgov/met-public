@@ -43,13 +43,31 @@ export const StyledSecondaryButton = styled(MuiButton)(() => ({
     },
 }));
 
-export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
+export const StyledGreyButton = styled(MuiButton)(() => ({
+    backgroundColor: 'transparent',
+    color: Palette.text.primary,
+    border: `2px solid ${Palette.text.primary}`,
+    '&:hover': {
+        opacity: '0.8',
+        textDecoration: 'underline',
+        backgroundColor: Palette.primary.main,
+        color: '#FFFFFF',
+    },
+}));
+
+export const GreyButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
+    <StyledGreyButton {...rest} variant="contained">
+        {children}
+    </StyledGreyButton>
+);
+
+export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
     <StyledSecondaryButton {...rest} variant="outlined">
         {children}
     </StyledSecondaryButton>
 );
 
-export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
+export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
     <StyledPrimaryButton
         {...rest}
         variant="contained"
@@ -64,7 +82,7 @@ export const StyledPaper = styled(MuiPaper)(() => ({
     borderRadius: '4px',
 }));
 
-export const MetPaper = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => {
+export const MetPaper = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => {
     return (
         <StyledPaper elevation={0} {...rest}>
             {children}
