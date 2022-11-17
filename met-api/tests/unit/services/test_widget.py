@@ -92,7 +92,7 @@ def test_delete_removed_widget_items(session):  # pylint:disable=unused-argument
         .delete_removed_widget_items(
             widget_items_remaining,
             widget_items_in_db
-        )
+    )
 
     # Assert that the saved widget item was deleted
     assert len(widget_items_deleted) == 1
@@ -104,7 +104,7 @@ def test_create_added_widget_items(session):  # pylint:disable=unused-argument
     TestWidgetInfo.widget1['engagement_id'] = engagement.id
     widget = factory_widget_model(TestWidgetInfo.widget1)
     user_id = TestUserInfo.user['id']
-    
+
     widget_items_to_be_added = [{
         'widget_id': widget.id,
         'widget_data_id': TestWidgetItemInfo.widget_item1['widget_data_id']
@@ -115,7 +115,7 @@ def test_create_added_widget_items(session):  # pylint:disable=unused-argument
             widget_items_to_be_added,
             widget_items_in_db,
             user_id
-        )
+    )
 
     # Assert that was created
     assert len(widget_items_added) == 1
@@ -140,7 +140,7 @@ def test_update_widget_items_sorting(session):  # pylint:disable=unused-argument
     })
 
     widget_items_resorted = WidgetItemSchema(many=True).dump([widget_item_2, widget_item_1])
-    WidgetService().update_widget_items_sorting(        
+    WidgetService().update_widget_items_sorting(
         widget_items_resorted,
         widget.id,
         user_id
@@ -149,13 +149,13 @@ def test_update_widget_items_sorting(session):  # pylint:disable=unused-argument
     widget_items = WidgetService.get_widget_items_by_widget_id(widget.id)
 
     widget_item_1_db = next((
-        widget_item for widget_item in widget_items 
-            if widget_item.get('id') == widget_item_1.id
+        widget_item for widget_item in widget_items
+        if widget_item.get('id') == widget_item_1.id
     ), None)
 
     widget_item_2_db = next((
-        widget_item for widget_item in widget_items 
-            if widget_item.get('id') == widget_item_2.id
+        widget_item for widget_item in widget_items
+        if widget_item.get('id') == widget_item_2.id
     ), None)
 
     # Assert that widget items were resorted
