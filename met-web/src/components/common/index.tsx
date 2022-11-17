@@ -82,7 +82,7 @@ export const StyledPaper = styled(MuiPaper)(() => ({
     borderRadius: '4px',
 }));
 
-export const MetPaper = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => {
+export const MetPaper = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => {
     return (
         <StyledPaper elevation={0} {...rest}>
             {children}

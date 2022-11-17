@@ -45,7 +45,7 @@ const DocumentForm = () => {
             <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
                 <Grid item xs={12} container direction="row" justifyContent={'flex-start'} spacing={1}>
                     <Grid item xs={12}>
-                        <Grid container item xs={4}>
+                        <Grid container item xs={12}>
                             <MetHeader3 bold={true} sx={{ mb: 2, mr: 1, color: '#323232' }}>
                                 Documents
                             </MetHeader3>
