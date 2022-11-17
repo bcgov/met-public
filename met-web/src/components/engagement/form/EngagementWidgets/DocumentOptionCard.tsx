@@ -4,16 +4,13 @@ import { Grid, CircularProgress } from '@mui/material';
 import ArticleIcon from '@mui/icons-material/Article';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
 import { WidgetTabValues } from './type';
-import { ActionContext } from '../ActionContext';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
 import { WidgetType } from 'models/widget';
-import { postWidget } from 'services/widgetService';
 import { Else, If, Then } from 'react-if';
 
 const DocumentOptionCard = () => {
-    const { savedEngagement } = useContext(ActionContext);
-    const { widgets, loadWidgets, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
+    const { widgets, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
     const dispatch = useAppDispatch();
     const [creatingWidget, setCreatingWidget] = useState(false);
 

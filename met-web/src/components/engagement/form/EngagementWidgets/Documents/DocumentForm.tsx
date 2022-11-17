@@ -4,59 +4,30 @@ import { MetHeader3, PrimaryButton, SecondaryButton, GreyButton } from 'componen
 import { Document } from 'models/document';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { postWidgetItems } from 'services/widgetService';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType } from 'models/widget';
 import { DocumentsContext } from './DocumentsContext';
 
 const DocumentForm = () => {
-    const { handleWidgetDrawerOpen, widgets, loadWidgets } = useContext(WidgetDrawerContext);
-    const { handleAddDocumentDrawerOpen, loadingDocuments, documents } = useContext(DocumentsContext);
+    const { handleWidgetDrawerOpen, widgets } = useContext(WidgetDrawerContext);
+    const { handleAddDocumentDrawerOpen, documents } = useContext(DocumentsContext);
 
     const dispatch = useAppDispatch();
-    const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
     const [addedDocuments, setAddedDocuments] = useState<Document[]>([]);
     const [savingWidgetItems, setSavingWidgetItems] = useState(false);
 
     const widget = widgets.filter((widget) => widget.widget_type_id === WidgetType.Document)[0] || null;
     useEffect(() => {
-        console.log(widget);
-        console.log(widgets);
-        // widget.items.sort((left, right) => left.sort_index - right.sort_index);
-        // const savedDocuments = widget.items
-        //     .map((widget_item) => {
-        //         return documents.find((document) => document.id === widget_item.widget_data_id);
-        //     })
-        //     .filter((document) => !!document);
-
         setAddedDocuments([]);
     }, [documents, widget]);
 
     const addDocument = async () => {
-        if (!selectedDocument) {
-            return;
-        }
-
-        const alreadyAdded = addedDocuments.map((document) => document.id).includes(selectedDocument?.id || 0);
-        if (alreadyAdded) {
-            return;
-        }
-
-        setAddedDocuments([...addedDocuments, { ...selectedDocument }]);
+        setAddedDocuments([]);
     };
 
     const saveWidgetItems = async () => {
-        const widgetsToUpdate = addedDocuments.map((addedDocument) => {
-            return {
-                widget_id: widget.id,
-                widget_data_id: addedDocument.id,
-            };
-        });
         try {
-            // setSavingWidgetItems(true);
-            // await postWidgetItems(widget.id, widgetsToUpdate);
-            // await loadWidgets();
             dispatch(openNotification({ severity: 'success', text: 'Widgets successfully added' }));
             handleWidgetDrawerOpen(false);
             setSavingWidgetItems(false);

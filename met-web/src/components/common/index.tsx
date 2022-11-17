@@ -55,19 +55,19 @@ export const StyledGreyButton = styled(MuiButton)(() => ({
     },
 }));
 
-export const GreyButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
+export const GreyButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
     <StyledGreyButton {...rest} variant="contained">
         {children}
     </StyledGreyButton>
 );
 
-export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
+export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
     <StyledSecondaryButton {...rest} variant="outlined">
         {children}
     </StyledSecondaryButton>
 );
 
-export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
+export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
     <StyledPrimaryButton
         {...rest}
         variant="contained"
