@@ -23,11 +23,6 @@ const DocumentOptionCard = () => {
 
         try {
             setCreatingWidget(!creatingWidget);
-            // await postWidget(savedEngagement.id, {
-            //     widget_type_id: WidgetType.Document,
-            //     engagement_id: savedEngagement.id,
-            // });
-            // await loadWidgets();
             dispatch(
                 openNotification({
                     severity: 'success',
