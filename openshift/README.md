@@ -55,10 +55,6 @@ roleRef:
 
 Create an instance of a postgresql database:
 
-```
-oc new-app --template=postgresql-persistent -p POSTGRESQL_DATABASE=keycloak -p DATABASE_SERVICE_NAME=postgresql-keycloak
-```
-
 In each environment namespace (dev, test, prod) use the following:
 
 Deploy the web application:
@@ -86,16 +82,62 @@ helm repo add patroni-chart https://bcgov.github.io/nr-patroni-chart
 helm install -n <namespace> met-patroni patroni-chart/patroni
 ```
 
-If HA is not necessary create two instances of a postgresql database (transactional and analytics):
+If HA is not necessary create a instance of a postgresql database:
 
 ```
-oc new-app --template=postgresql-persistent -p POSTGRESQL_DATABASE=met -p DATABASE_SERVICE_NAME=postgresql-met
+oc new-app --template=postgresql-persistent -p POSTGRESQL_DATABASE=app -p DATABASE_SERVICE_NAME=met-postgresql
 ```
 
-```
-oc new-app --template=postgresql-persistent -p POSTGRESQL_DATABASE=met-analytics -p DATABASE_SERVICE_NAME=postgresql-edw
-```
+### Setup
 
+1. Users Setup script is located at ./postgresql-user-setup.sql
+1. Initial database setup script is located at ./postgresql-schema-setup.sql
+1. Openshift secret yaml is located at ./database-users.secret.yml
+
+## Restore Backup Script
+
+Backups are generated daily by the dc "backup" in the test and production realms and are composed by a SQL script containing the database structure + data.
+
+To restore the backup follow these steps:
+
+1. Connect to openshift using the terminal/bash and set the project (test/prod).
+1. Transfer the backup file to your local using the command below:
+
+    ```bash
+    oc rsync <backup-pod-name>:/backups/daily/<date> <local-folder>
+    ```
+
+    This copies the folder and contents from the pod to the local folder.
+
+1. Extract backup script using gzip:
+
+    ```bash
+    gzip -d <file-name>
+    ```
+
+1. Connect to the patroni database pod using port-forward:
+
+    ```bash
+    oc port-forward met-patroni-<master_pod> 5432:5432
+    ```
+
+1. Manually create the database (drop if necessary):
+
+    ```bash
+    psql -h localhost -p 5432 -U postgres -c 'create database app;'
+    ```
+
+1. Manually update with passwords and run the users setup script (if new server):
+
+    ```bash
+    psql -h localhost -U postgres -p 5432 -a -q -f ./postgresql-user-setup.sql
+    ```
+
+1. Execute the script to restore the database:
+
+    ```bash
+    psql -h localhost -d app -U postgres -p 5432 -a -q -f <path-to-file>
+    ```
 
 ## Deployment Configuration
 

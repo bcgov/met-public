@@ -38,18 +38,18 @@ objects:
           - name: DB_DATABASE
             valueFrom:
               secretKeyRef:
-                key: database-name
+                key: app-db-name
                 name: ${DB_APP_NAME}
           - name: DB_USER
             valueFrom:
               secretKeyRef:
-                key: database-user
-                name: ${DB_APP_NAME}
+                key: keycloak-username
+                name: met-database-users
           - name: DB_PASSWORD
             valueFrom:
               secretKeyRef:
-                key: database-password
-                name: ${DB_APP_NAME}
+                key: keycloak-password
+                name: met-database-users
           envFrom:
           - configMapRef:
               name: ${APP}
@@ -143,6 +143,7 @@ objects:
     name: ${APP}
   data:
     DB_ADDR: ${DB_APP_NAME}
+    DB_SCHEMA: keycloak
     DB_VENDOR: POSTGRES
     JAVA_OPTS: -Dkeycloak.profile.feature.scripts=enabled -Dkeycloak.profile.feature.upload_scripts=enabled
     JGROUPS_DISCOVERY_EXTERNAL_IP: keycloak
@@ -166,4 +167,4 @@ parameters:
     value: dev
   - name: DB_APP_NAME
     description: "The postgresql application name"
-    value: postgresql-keycloak
+    value: met-patroni
