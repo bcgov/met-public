@@ -78,9 +78,9 @@ class Comment(db.Model):
             cls, survey_id, pagination_options: PaginationOptions):
         """Get comments for closed engagements."""
         query = db.session.query(Comment)\
-            .join(Submission)\
-            .join(CommentStatus)\
-            .join(Survey)\
+            .join(Submission, Submission.id == Comment.submission_id)\
+            .join(CommentStatus, Submission.comment_status_id == CommentStatus.id)\
+            .join(Survey, Survey.id == Submission.survey_id)\
             .join(Engagement, Engagement.id == Survey.engagement_id)\
             .filter(
                 and_(
