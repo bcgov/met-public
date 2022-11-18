@@ -1,30 +1,18 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { Grid, Divider } from '@mui/material';
-import { MetHeader3, PrimaryButton, SecondaryButton, GreyButton } from 'components/common';
-import { Document } from 'models/document';
+import { MetHeader3, PrimaryButton, SecondaryButton } from 'components/common';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
-import { WidgetType } from 'models/widget';
 import { DocumentsContext } from './DocumentsContext';
 
 const DocumentForm = () => {
-    const { handleWidgetDrawerOpen, widgets } = useContext(WidgetDrawerContext);
-    const { handleAddDocumentDrawerOpen, documents } = useContext(DocumentsContext);
+    const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
+    const { handleAddDocumentDrawerOpen } = useContext(DocumentsContext);
 
     const dispatch = useAppDispatch();
-    const [addedDocuments, setAddedDocuments] = useState<Document[]>([]);
     const [savingWidgetItems, setSavingWidgetItems] = useState(false);
-
-    const widget = widgets.filter((widget) => widget.widget_type_id === WidgetType.Document)[0] || null;
-    useEffect(() => {
-        setAddedDocuments([]);
-    }, [documents, widget]);
-
-    const addDocument = async () => {
-        setAddedDocuments([]);
-    };
 
     const saveWidgetItems = async () => {
         try {
@@ -56,20 +44,23 @@ const DocumentForm = () => {
                         </Grid>
                     </Grid>
                     <Grid item sx={{ mt: 3 }}>
-                        <GreyButton onClick={() => addDocument()} sx={{ height: '100%' }} fullWidth>
+                        <PrimaryButton sx={{ height: '100%' }} fullWidth>
                             Create Folder
-                        </GreyButton>
+                        </PrimaryButton>
                     </Grid>
                     <Grid item sx={{ mt: 3 }}>
-                        <GreyButton sx={{ height: '100%' }} fullWidth onClick={() => handleAddDocumentDrawerOpen(true)}>
+                        <SecondaryButton
+                            sx={{ height: '100%' }}
+                            fullWidth
+                            onClick={() => handleAddDocumentDrawerOpen(true)}
+                        >
                             Add Document
-                        </GreyButton>
+                        </SecondaryButton>
                     </Grid>
                 </Grid>
                 <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'} marginTop="8em">
                     <Grid item>
                         <PrimaryButton
-                            disabled={addedDocuments.length === 0}
                             loading={savingWidgetItems}
                             onClick={() => saveWidgetItems()}
                         >{`Save & Close`}</PrimaryButton>
