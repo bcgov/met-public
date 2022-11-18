@@ -158,6 +158,15 @@ class TestWidgetItemInfo(dict, Enum):
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
     }
 
+    widget_item2 = {
+        'widget_data_id': 2,
+        'widget_id': 1,
+        'created_by': '123',
+        'updated_by': '123',
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+    }
+
 
 class TestContactInfo(dict, Enum):
     """Test scenarios of contact."""

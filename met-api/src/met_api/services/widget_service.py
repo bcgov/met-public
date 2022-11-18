@@ -18,6 +18,14 @@ class WidgetService:
         return widgets
 
     @staticmethod
+    def get_widget_items_by_widget_id(widget_id):
+        """Get widget items by widget id."""
+        widget_item_schema = WidgetItemSchema(many=True)
+        widget_items_records = WidgetItem.get_widget_items_by_widget_id(widget_id)
+        widget_items = widget_item_schema.dump(widget_items_records)
+        return widget_items
+
+    @staticmethod
     def create_widget(widget_data, engagement_id, user_id):
         """Create widget item."""
         widget_data['created_by'] = user_id
@@ -48,12 +56,12 @@ class WidgetService:
         return widget_items_to_add
 
     @staticmethod
-    def delete_removed_widget_items(widget_items: list, widget_items_db: list):
+    def delete_removed_widget_items(widget_items_to_remain: list, widget_items_db: list):
         """Get the widgets to be deleted and send them to be deleted from DB."""
-        widget_items_data_ids = [widget_item.get('widget_data_id') for widget_item in widget_items]
+        widget_items_to_remain_data_ids = [widget_item.get('widget_data_id') for widget_item in widget_items_to_remain]
 
         wiget_items_ids_to_delete = [widget_item.id for widget_item in widget_items_db
-                                     if widget_item.widget_data_id not in widget_items_data_ids]
+                                     if widget_item.widget_data_id not in widget_items_to_remain_data_ids]
         if len(wiget_items_ids_to_delete) > 0:
             WidgetItem.delete_widget_items(wiget_items_ids_to_delete)
 
