@@ -43,18 +43,6 @@ export const StyledSecondaryButton = styled(MuiButton)(() => ({
     },
 }));
 
-export const StyledGreyButton = styled(MuiButton)(() => ({
-    backgroundColor: 'transparent',
-    color: Palette.text.primary,
-    border: `2px solid ${Palette.text.primary}`,
-    '&:hover': {
-        opacity: '0.8',
-        textDecoration: 'underline',
-        backgroundColor: Palette.primary.main,
-        color: '#FFFFFF',
-    },
-}));
-
 export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
     <StyledSecondaryButton {...rest} variant="outlined">
         {children}
