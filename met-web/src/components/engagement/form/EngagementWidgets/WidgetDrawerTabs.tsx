@@ -5,6 +5,7 @@ import WidgetOptionCards from './WidgetOptionCards';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
 import { WidgetTabValues } from './type';
 import WhoIsListening from './WhoIsListening';
+import Documents from './Documents';
 
 const WidgetDrawerTabs = () => {
     const { widgetDrawerTabValue } = useContext(WidgetDrawerContext);
@@ -16,6 +17,9 @@ const WidgetDrawerTabs = () => {
                 </TabPanel>
                 <TabPanel sx={{ width: '100%' }} value={WidgetTabValues.WHO_IS_LISTENING_FORM}>
                     <WhoIsListening />
+                </TabPanel>
+                <TabPanel sx={{ width: '100%' }} value={WidgetTabValues.DOCUMENT_FORM}>
+                    <Documents />
                 </TabPanel>
             </TabContext>
         </>
