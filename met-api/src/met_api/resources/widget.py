@@ -20,6 +20,7 @@ from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
 
 from met_api.auth import auth
+from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas.widget_item import WidgetItemSchema
 from met_api.schemas import utils as schema_utils
 from met_api.schemas.widget import WidgetSchema
@@ -27,7 +28,6 @@ from met_api.services.widget_service import WidgetService
 from met_api.utils.action_result import ActionResult
 from met_api.utils.util import allowedorigins, cors_preflight
 from met_api.utils.token_info import TokenInfo
-
 
 API = Namespace('widgets', description='Endpoints for Widget Management')
 """Custom exception messages
@@ -68,6 +68,24 @@ class Widget(Resource):
             return ActionResult.error(str(err))
         except ValidationError as err:
             return ActionResult.error(str(err.messages))
+
+
+@cors_preflight('PATCH')
+@API.route('/engagement/<engagement_id>/sort_index')
+class EngagementWidgetSort(Resource):
+    """Resource for managing widgets sort order with engagements."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def patch(engagement_id):
+        """Sort widget for an engagement."""
+        try:
+            request_json = request.get_json()
+            WidgetService().sort_widget(engagement_id, request_json, user_id=TokenInfo.get_id())
+            return {}, HTTPStatus.NO_CONTENT
+        except BusinessException as err:
+            return {'message': err.error}, err.status_code
 
 
 @cors_preflight('DELETE')

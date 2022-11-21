@@ -29,6 +29,7 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
     created_by = db.Column(db.String(50), nullable=False)
     updated_by = db.Column(db.String(50), nullable=False)
     items = db.relationship('WidgetItem', backref='widget', cascade='all, delete', order_by='WidgetItem.sort_index')
+    sort_index = db.Column(db.Integer, nullable=False, default=1)
 
     @classmethod
     def get_widget_by_id(cls, widget_id):
@@ -61,6 +62,7 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
         return Widget(
             widget_type_id=widget.get('widget_type_id', None),
             engagement_id=widget.get('engagement_id', None),
+            sort_index=widget.get('sort_index', 1),
             created_date=datetime.utcnow(),
             updated_date=datetime.utcnow(),
             created_by=widget.get('created_by', None),
@@ -81,3 +83,9 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
         widget = Widget.query.filter_by(id=widget_id, engagement_id=engagement_id).delete()
         db.session.commit()
         return widget
+
+    @classmethod
+    def update_widgets(cls, update_mappings: list) -> None:
+        """Update widgets.."""
+        db.session.bulk_update_mappings(Widget, update_mappings)
+        db.session.commit()

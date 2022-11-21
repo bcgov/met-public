@@ -17,9 +17,11 @@
 Test-Suite to ensure that the Widget endpoint is working as expected.
 """
 import json
+from http import HTTPStatus
 
 import pytest
 
+from met_api.constants.widget import WidgetType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestWidgetInfo, TestWidgetItemInfo
 from tests.utilities.factory_utils import factory_auth_header, factory_engagement_model, factory_widget_model
 
@@ -33,6 +35,81 @@ def test_create_widget(client, jwt, session, widget_info):  # pylint:disable=unu
     rv = client.post('/api/widgets/engagement/' + str(engagement.id), data=json.dumps(widget_info),
                      headers=headers, content_type='application/json')
     assert rv.status_code == 200
+
+    rv = client.get('/api/widgets/engagement/' + str(engagement.id),
+                    headers=headers, content_type='application/json')
+    assert rv.status_code == 200
+    assert rv.json.get('result')[0].get('sort_index') == 1
+
+
+def test_create_widget_sort(client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that a widget can be POSTed."""
+    engagement = factory_engagement_model()
+    widget_info_1 = TestWidgetInfo.widget1
+    widget_info_1['engagement_id'] = engagement.id
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+    rv = client.post(f'/api/widgets/engagement/{engagement.id}', data=json.dumps(widget_info_1),
+                     headers=headers, content_type='application/json')
+    assert rv.status_code == 200
+
+    widget_info_2 = TestWidgetInfo.widget2
+    widget_info_2['engagement_id'] = engagement.id
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+    rv = client.post(f'/api/widgets/engagement/{engagement.id}', data=json.dumps(widget_info_2),
+                     headers=headers, content_type='application/json')
+    assert rv.status_code == 200
+
+    rv = client.get('/api/widgets/engagement/' + str(engagement.id),
+                    headers=headers, content_type='application/json')
+    assert rv.status_code == 200
+    assert len(rv.json.get('result')) == 2, 'Two Widgets Should exist.'
+    widgets = rv.json.get('result')
+    who_is_widget = _find_widget(widgets, WidgetType.WHO_IS_LISTENING)
+    assert who_is_widget.get('sort_index') == 1
+
+    doc_widget = _find_widget(widgets, WidgetType.DOCUMENTS)
+    assert doc_widget.get('sort_index') == 2
+
+    # Do reorder
+
+    reorder_dict = [{
+        'id': who_is_widget.get('id'),
+        'sort_index': 2
+    }, {
+        'id': doc_widget.get('id'),
+        'sort_index': 1
+    }
+    ]
+    rv = client.patch(f'/api/widgets/engagement/{engagement.id}/sort_index', data=json.dumps(reorder_dict),
+                      headers=headers, content_type='application/json')
+    assert rv.status_code == 204
+
+    rv = client.get(f'/api/widgets/engagement/{engagement.id}',
+                    headers=headers, content_type='application/json')
+    widgets = rv.json.get('result')
+    who_is_widget = _find_widget(widgets, WidgetType.WHO_IS_LISTENING)
+    assert who_is_widget.get('sort_index') == 2
+
+    doc_widget = _find_widget(widgets, WidgetType.DOCUMENTS)
+    assert doc_widget.get('sort_index') == 1
+
+    # invalid reorder
+    reorder_dict = [{
+        'id': 123,
+        'sort_index': 2
+    }, {
+        'id': doc_widget.get('id'),
+        'sort_index': 1
+    }
+    ]
+    rv = client.patch(f'/api/widgets/engagement/{engagement.id}/sort_index', data=json.dumps(reorder_dict),
+                      headers=headers, content_type='application/json')
+    assert rv.status_code == HTTPStatus.BAD_REQUEST
+
+
+def _find_widget(widgets, widget_type):
+    who_is_widget = next(x for x in widgets if x.get('widget_type_id') == widget_type.value)
+    return who_is_widget
 
 
 @pytest.mark.parametrize('widget_item_info', [TestWidgetItemInfo.widget_item1])
