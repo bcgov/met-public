@@ -1,8 +1,8 @@
 import React from 'react';
 import { Divider, Grid } from '@mui/material';
-import WhoIsListeningOptionCard from './WhoIsListeningOptionCard';
-import DocumentOptionCard from './DocumentOptionCard';
+import WhoIsListeningOptionCard from './WhoIsListening/WhoIsListeningOptionCard';
 import { MetHeader3 } from 'components/common';
+import DocumentOptionCard from './Documents/DocumentOptionCard';
 
 const WidgetOptionCards = () => {
     return (

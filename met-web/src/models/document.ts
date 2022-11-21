@@ -1,6 +1,7 @@
-export interface Document {
+export interface DocumentItem {
     id: number;
-    title: string;
-    document_filename: string;
-    document_url: string;
+    name: string;
+    folder: boolean;
+    document_url?: string;
+    items?: DocumentItem[];
 }

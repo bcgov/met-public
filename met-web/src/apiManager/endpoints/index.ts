@@ -53,6 +53,10 @@ const Endpoints = {
         CREATE: `${AppConfig.apiUrl}/contacts/`,
         UPDATE: `${AppConfig.apiUrl}/contacts/`,
     },
+    Documents: {
+        GET_LIST: `${AppConfig.apiUrl}/documents/widgets/widget_id`,
+        CREATE: `${AppConfig.apiUrl}/documents/`,
+    },
 };
 
 export default Endpoints;
