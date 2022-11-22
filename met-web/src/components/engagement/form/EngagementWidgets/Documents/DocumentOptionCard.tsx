@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { MetPaper, MetBody, MetHeader4 } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
@@ -6,12 +6,44 @@ import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetTabValues } from '../type';
 import { WidgetType } from 'models/widget';
 import { Else, If, Then } from 'react-if';
+import { ActionContext } from '../../ActionContext';
+import { useAppDispatch } from 'hooks';
+import { postWidget } from 'services/widgetService';
+import { openNotification } from 'services/notificationService/notificationSlice';
 
 const DocumentOptionCard = () => {
-    const { handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
+    const { widgets, loadWidgets, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
+    const { savedEngagement } = useContext(ActionContext);
+    const dispatch = useAppDispatch();
+    const [creatingWidget, setCreatingWidget] = useState(false);
 
     const createWidget = async () => {
-        handleWidgetDrawerTabValueChange(WidgetTabValues.DOCUMENT_FORM);
+        const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Document);
+        if (alreadyExists) {
+            handleWidgetDrawerTabValueChange(WidgetTabValues.DOCUMENT_FORM);
+            return;
+        }
+
+        try {
+            setCreatingWidget(!creatingWidget);
+            await postWidget(savedEngagement.id, {
+                widget_type_id: WidgetType.Document,
+                engagement_id: savedEngagement.id,
+            });
+            await loadWidgets();
+            dispatch(
+                openNotification({
+                    severity: 'success',
+                    text: 'Widget successfully created. Proceed to Add Contacts.',
+                }),
+            );
+            handleWidgetDrawerTabValueChange(WidgetTabValues.DOCUMENT_FORM);
+        } catch (error) {
+            setCreatingWidget(false);
+            dispatch(
+                openNotification({ severity: 'error', text: 'Error occurred while creating who is listening widget' }),
+            );
+        }
     };
 
     return (
@@ -25,7 +57,7 @@ const DocumentOptionCard = () => {
             }}
             onClick={() => createWidget()}
         >
-            <If condition={false}>
+            <If condition={creatingWidget}>
                 <Then>
                     <Grid container alignItems="center" justifyContent="center" direction="row" height="5.5em">
                         <CircularProgress color="inherit" />
