@@ -66,11 +66,11 @@ class WidgetService:
         WidgetModel.update_widgets(widget_sort_mappings)
 
     @staticmethod
-    def _validate_widget_ids(engagement_id, widget_items):
+    def _validate_widget_ids(engagement_id, widgets):
         """Validate if widget ids belong to the engagement."""
-        widgets = WidgetModel.get_widgets_by_engagement_id(engagement_id)
-        widget_ids = [widget.id for widget in widgets]
-        input_widget_ids = [widget_item.get('id') for widget_item in widget_items]
+        eng_widgets = WidgetModel.get_widgets_by_engagement_id(engagement_id)
+        widget_ids = [widget.id for widget in eng_widgets]
+        input_widget_ids = [widget_item.get('id') for widget_item in widgets]
         if len(set(widget_ids) - set(input_widget_ids)) > 0:
             raise BusinessException(
                 error='Invalid widgets.',
