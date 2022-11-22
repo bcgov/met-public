@@ -84,8 +84,8 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
         new_survey = Survey(
             name=survey.get('name', None),
             form_json=survey.get('form_json', None),
-            created_date=datetime.now(),
-            updated_date=datetime.now(),
+            created_date=datetime.utcnow(),
+            updated_date=None,
             created_by=survey.get('created_by', None),
             updated_by=survey.get('updated_by', None),
             engagement_id=survey.get('engagement_id', None),
@@ -105,7 +105,7 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
             return DefaultMethodResult(False, 'Survey Not Found', survey_id)
         update_fields = dict(
             form_json=survey.get('form_json', record.form_json),
-            updated_date=datetime.now(),
+            updated_date=datetime.utcnow(),
             updated_by=survey.get('updated_by', record.updated_by),
             name=survey.get('name', record.name),
         )
