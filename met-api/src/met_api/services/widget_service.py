@@ -52,15 +52,15 @@ class WidgetService:
         return sort_index
 
     @staticmethod
-    def sort_widget(engagement_id, widget_items: list, user_id=None):
+    def sort_widget(engagement_id, widgets: list, user_id=None):
         """Sort widgets."""
-        WidgetService._validate_widget_ids(engagement_id, widget_items)
+        WidgetService._validate_widget_ids(engagement_id, widgets)
 
         widget_sort_mappings = [{
             'id': widget_item.get('id'),
             'sort_index': widget_item.get('sort_index'),
             'updated_by': user_id
-        } for widget_item in widget_items
+        } for widget_item in widgets
         ]
 
         WidgetModel.update_widgets(widget_sort_mappings)
