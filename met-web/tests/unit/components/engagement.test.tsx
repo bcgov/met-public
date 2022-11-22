@@ -1,4 +1,4 @@
-import { render, waitFor, screen, fireEvent } from '@testing-library/react';
+import { render, waitFor, screen } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
 import * as EngagementView from '../../../src/components/engagement/view';
@@ -8,31 +8,12 @@ import { setupEnv } from './setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
-import * as notificationSlice from 'services/notificationService/notificationSlice';
-import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
 import * as widgetService from 'services/widgetService';
 import * as contactService from 'services/contactService';
 import { Widget, WidgetItem, WidgetType } from 'models/widget';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { createDefaultEngagement, Engagement } from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
-
-const createDefaultWidgets = (): Widget => {
-    return {
-        id: 1,
-        widget_type_id: 1,
-        engagement_id: 1,
-        items: [],
-    };
-};
-
-const mockEngagement = {
-    ...createDefaultEngagement(),
-};
-
-const mockWidgets = {
-    ...createDefaultWidgets(),
-};
 
 const survey: Survey = {
     ...createDefaultSurvey(),
@@ -93,10 +74,6 @@ describe('Engagement View page tests', () => {
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
-    const openNotificationMock = jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
-    const openNotificationModalMock = jest
-        .spyOn(notificationModalSlice, 'openNotificationModal')
-        .mockImplementation(jest.fn());
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
@@ -118,14 +95,14 @@ describe('Engagement View page tests', () => {
         );
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([widget]));
         getContactsMock.mockReturnValueOnce(Promise.resolve([mockContact]));
-        expect(getContactsMock).toHaveBeenCalled();
-        const { container, getByText } = render(<EngagementView.Engagement />);
+        render(
+            <ProviderShell>
+                <EngagementView.Engagement />
+            </ProviderShell>,
+        );
         await waitFor(() => {
-            expect(screen.getByDisplayValue(mockEngagement.name)).toBeInTheDocument();
-            expect(screen.getByDisplayValue(mockEngagement.description)).toBeInTheDocument();
+            expect(screen.getByTestId(`engagement-content`)).toBeVisible();
         });
-
-
     });
 
     test('Who is listening widget block appears', async () => {
@@ -138,14 +115,14 @@ describe('Engagement View page tests', () => {
         );
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([widget]));
         getContactsMock.mockReturnValueOnce(Promise.resolve([mockContact]));
-        expect(getContactsMock).toHaveBeenCalled();
-        expect(getContactsMock).toHaveBeenCalled();
-        const { container } = render(<EngagementView.Engagement />);
+        render(
+            <ProviderShell>
+                <EngagementView.Engagement />
+            </ProviderShell>,
+        );
 
         await waitFor(() => {
-            expect(screen.getByText('Who is Listening')).toBeVisible();
-            expect(screen.getByText(mockContact.name)).toBeVisible();
+            expect(screen.getByTestId(`widget-block`)).toBeVisible();
         });
-        expect(getWidgetsMock).toHaveBeenCalled();
     });
 });

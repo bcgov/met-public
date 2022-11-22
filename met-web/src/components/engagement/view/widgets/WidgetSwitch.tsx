@@ -11,7 +11,7 @@ export const WidgetSwitch = ({ widget }: WidgetSwitchProps) => {
         <>
             <Switch>
                 <Case condition={widget.widget_type_id === WidgetType.WhoIsListening}>
-                    <WhoIsListeningWidget widget={widget} />
+                    <WhoIsListeningWidget data-testid={'who-is-listening'} widget={widget} />
                 </Case>
             </Switch>
         </>
