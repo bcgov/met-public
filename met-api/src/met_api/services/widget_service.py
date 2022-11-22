@@ -1,7 +1,9 @@
-
 """Service for widget management."""
+from http import HTTPStatus
+
+from met_api.exceptions.business_exception import BusinessException
 from met_api.models.widget_item import WidgetItem
-from met_api.models.widget import Widget
+from met_api.models.widget import Widget as WidgetModel
 from met_api.schemas.widget import WidgetSchema
 from met_api.schemas.widget_item import WidgetItemSchema
 
@@ -13,7 +15,7 @@ class WidgetService:
     def get_widgets_by_engagement_id(engagement_id):
         """Get widgets by engagement id."""
         widget_schema = WidgetSchema(many=True)
-        widgets_records = Widget.get_widgets_by_engagement_id(engagement_id)
+        widgets_records = WidgetModel.get_widgets_by_engagement_id(engagement_id)
         widgets = widget_schema.dump(widgets_records)
         return widgets
 
@@ -32,8 +34,47 @@ class WidgetService:
         widget_data['updated_by'] = user_id
         if widget_data.get('engagement_id', None) != int(engagement_id):
             raise ValueError('widget data has engagement id for a different engagement')
-        created_widget = Widget.create_widget(widget_data)
+
+        sort_index = WidgetService._find_higest_sort_index(engagement_id)
+
+        widget_data['sort_index'] = sort_index + 1
+        created_widget = WidgetModel.create_widget(widget_data)
         return WidgetSchema().dump(created_widget)
+
+    @staticmethod
+    def _find_higest_sort_index(engagement_id):
+        # find the highest sort order of the engagement
+        sort_index = 0
+        widgets = WidgetModel.get_widgets_by_engagement_id(engagement_id)
+        if widgets:
+            # Find the largest in the existing widgest
+            sort_index = max(widget.sort_index for widget in widgets)
+        return sort_index
+
+    @staticmethod
+    def sort_widget(engagement_id, widgets: list, user_id=None):
+        """Sort widgets."""
+        WidgetService._validate_widget_ids(engagement_id, widgets)
+
+        widget_sort_mappings = [{
+            'id': widget_item.get('id'),
+            'sort_index': widget_item.get('sort_index'),
+            'updated_by': user_id
+        } for widget_item in widgets
+        ]
+
+        WidgetModel.update_widgets(widget_sort_mappings)
+
+    @staticmethod
+    def _validate_widget_ids(engagement_id, widgets):
+        """Validate if widget ids belong to the engagement."""
+        eng_widgets = WidgetModel.get_widgets_by_engagement_id(engagement_id)
+        widget_ids = [widget.id for widget in eng_widgets]
+        input_widget_ids = [widget_item.get('id') for widget_item in widgets]
+        if len(set(widget_ids) - set(input_widget_ids)) > 0:
+            raise BusinessException(
+                error='Invalid widgets.',
+                status_code=HTTPStatus.BAD_REQUEST)
 
     @staticmethod
     def create_widget_items_bulk(widget_items: list, user_id):
@@ -85,7 +126,7 @@ class WidgetService:
     @staticmethod
     def get_widget_by_id(widget_id):
         """Get widget by id."""
-        widget = Widget.get_widget_by_id(widget_id)
+        widget = WidgetModel.get_widget_by_id(widget_id)
         if not widget:
             raise KeyError('Widget ' + widget_id + ' does not exist')
         return widget
@@ -104,7 +145,7 @@ class WidgetService:
     @staticmethod
     def delete_widget(engagement_id, widget_id):
         """Remove widget from engagement."""
-        widgets = Widget.remove_widget(engagement_id, widget_id)
+        widgets = WidgetModel.remove_widget(engagement_id, widget_id)
         if not widgets:
             raise ValueError('Widget to remove was not found')
         return widgets
