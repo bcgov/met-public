@@ -1,12 +1,10 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Grid, IconButton, Stack, Typography } from '@mui/material';
 import { MetWidgetPaper } from 'components/common';
-import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { DocumentItem } from 'models/document';
 import FolderIcon from '@mui/icons-material/Folder';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { When } from 'react-if';
-import DocumentFile from './DocumentFile';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
 import DocumentSwitch from './DocumentSwitch';
