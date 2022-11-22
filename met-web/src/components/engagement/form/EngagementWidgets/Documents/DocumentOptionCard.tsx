@@ -2,53 +2,51 @@ import React, { useContext, useState } from 'react';
 import { MetPaper, MetBody, MetHeader4 } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
-import { WidgetDrawerContext } from './WidgetDrawerContext';
-import { WidgetTabValues } from './type';
-import { ActionContext } from '../ActionContext';
-import { openNotification } from 'services/notificationService/notificationSlice';
-import { useAppDispatch } from 'hooks';
+import { WidgetDrawerContext } from '../WidgetDrawerContext';
+import { WidgetTabValues } from '../type';
 import { WidgetType } from 'models/widget';
-import { postWidget } from 'services/widgetService';
 import { Else, If, Then } from 'react-if';
+import { ActionContext } from '../../ActionContext';
+import { useAppDispatch } from 'hooks';
+import { postWidget } from 'services/widgetService';
+import { openNotification } from 'services/notificationService/notificationSlice';
 
-const WhoIsListeningOptionCard = () => {
-    const { savedEngagement } = useContext(ActionContext);
+const DocumentOptionCard = () => {
     const { widgets, loadWidgets, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
+    const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
     const [creatingWidget, setCreatingWidget] = useState(false);
 
     const createWidget = async () => {
-        const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.WhoIsListening);
+        const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Document);
         if (alreadyExists) {
-            handleWidgetDrawerTabValueChange(WidgetTabValues.WHO_IS_LISTENING_FORM);
+            handleWidgetDrawerTabValueChange(WidgetTabValues.DOCUMENT_FORM);
             return;
         }
 
         try {
             setCreatingWidget(!creatingWidget);
             await postWidget(savedEngagement.id, {
-                widget_type_id: WidgetType.WhoIsListening,
+                widget_type_id: WidgetType.Document,
                 engagement_id: savedEngagement.id,
             });
             await loadWidgets();
             dispatch(
                 openNotification({
                     severity: 'success',
-                    text: 'Widget successfully created. Proceed to Add Contacts.',
+                    text: 'Widget successfully created. Proceed to add documents',
                 }),
             );
-            handleWidgetDrawerTabValueChange(WidgetTabValues.WHO_IS_LISTENING_FORM);
+            handleWidgetDrawerTabValueChange(WidgetTabValues.DOCUMENT_FORM);
         } catch (error) {
             setCreatingWidget(false);
-            dispatch(
-                openNotification({ severity: 'error', text: 'Error occurred while creating who is listening widget' }),
-            );
+            dispatch(openNotification({ severity: 'error', text: 'Error occurred while creating document widget' }));
         }
     };
 
     return (
         <MetPaper
-            data-testid={`widget-drawer-option/${WidgetType.WhoIsListening}`}
+            data-testid={`widget-drawer-option/${WidgetType.Document}`}
             elevation={1}
             sx={{
                 padding: '10px 2px 10px 2px',
@@ -85,10 +83,10 @@ const WhoIsListeningOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetHeader4>Who is Listening</MetHeader4>
+                                <MetHeader4>Document</MetHeader4>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody>Add one or a few contacts to this engagement</MetBody>
+                                <MetBody>Add a document</MetBody>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -98,4 +96,4 @@ const WhoIsListeningOptionCard = () => {
     );
 };
 
-export default WhoIsListeningOptionCard;
+export default DocumentOptionCard;
