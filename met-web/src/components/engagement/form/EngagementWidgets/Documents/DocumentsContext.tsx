@@ -2,7 +2,10 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { ActionContext } from '../../ActionContext';
-import { Document } from 'models/document';
+import { DocumentItem } from 'models/document';
+import { WidgetDrawerContext } from '../WidgetDrawerContext';
+import { Widget, WidgetType } from 'models/widget';
+import { fetchDocuments } from 'services/widgetService/DocumentService.tsx';
 
 export interface DocumentsContextProps {
     documentToEdit: Document | null;
@@ -10,9 +13,11 @@ export interface DocumentsContextProps {
     handleAddDocumentDrawerOpen: (_open: boolean) => void;
     clearSelected: () => void;
     loadingDocuments: boolean;
-    documents: Document[];
-    loadDocuments: () => Promise<Document[] | undefined>;
-    handleChangeDocumentToEdit: (_document: Document | null) => void;
+    documents: DocumentItem[];
+    loadDocuments: () => Promise<DocumentItem[] | undefined>;
+    fileDrawerOpen: boolean;
+    handleFileDrawerOpen: (_open: boolean) => void;
+    widget: Widget | null;
 }
 
 export type EngagementParams = {
@@ -31,9 +36,11 @@ export const DocumentsContext = createContext<DocumentsContextProps>({
     },
     documents: [],
     loadDocuments: () => Promise.resolve([]),
-    handleChangeDocumentToEdit: () => {
+    fileDrawerOpen: false,
+    handleFileDrawerOpen: (_open: boolean) => {
         /* empty default method  */
     },
+    widget: null,
 });
 
 export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -43,6 +50,18 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
     const [addDocumentDrawerOpen, setAddDocumentDrawerOpen] = useState(false);
     const [documents, setDocuments] = useState<Document[]>([]);
     const [loadingDocuments, setLoadingDocuments] = useState(true);
+    const [fileDrawerOpen, setDrawerFileOpen] = useState(false);
+
+    const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Document) || null;
+
+    const mockDocuments = [
+        {
+            id: 1,
+            name: 'Folder One',
+            folder: true,
+            items: [],
+        },
+    ];
 
     const loadDocuments = async () => {
         try {
@@ -52,7 +71,8 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
             }
             setLoadingDocuments(true);
             //TODO: setDocuments to fetched Data
-            setDocuments([]);
+            // const savedDocuments = await fetchDocuments(widget.id);
+            setDocuments(mockDocuments);
             setLoadingDocuments(false);
             return documents;
         } catch (error) {
@@ -72,15 +92,8 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
         loadDocuments();
     }, [savedEngagement]);
 
-    const handleChangeDocumentToEdit = (document: Document | null) => {
-        setDocumentToEdit(document);
-    };
-
-    const handleAddDocumentDrawerOpen = (open: boolean) => {
-        setAddDocumentDrawerOpen(open);
-        if (!open && documentToEdit) {
-            setDocumentToEdit(null);
-        }
+    const handleFileDrawerOpen = (open: boolean) => {
+        setDrawerFileOpen(open);
     };
 
     return (
@@ -91,9 +104,9 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
                 loadingDocuments,
                 documents,
                 loadDocuments,
-                documentToEdit,
-                clearSelected,
-                handleChangeDocumentToEdit,
+                fileDrawerOpen,
+                handleFileDrawerOpen,
+                widget,
             }}
         >
             {children}

@@ -31,32 +31,9 @@ const DocumentForm = () => {
     return (
         <>
             <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
-                <Grid item xs={12} container direction="row" justifyContent={'flex-start'} spacing={1}>
-                    <Grid item xs={12}>
-                        <Grid container item xs={12}>
-                            <MetHeader3 bold={true} sx={{ mb: 2, mr: 1, color: '#323232' }}>
-                                Documents
-                            </MetHeader3>
-                            <BorderColorIcon />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Divider variant="middle" />
-                        </Grid>
-                    </Grid>
-                    <Grid item sx={{ mt: 3 }}>
-                        <PrimaryButton sx={{ height: '100%' }} fullWidth>
-                            Create Folder
-                        </PrimaryButton>
-                    </Grid>
-                    <Grid item sx={{ mt: 3 }}>
-                        <SecondaryButton
-                            sx={{ height: '100%' }}
-                            fullWidth
-                            onClick={() => handleAddDocumentDrawerOpen(true)}
-                        >
-                            Add Document
-                        </SecondaryButton>
-                    </Grid>
+                <Grid item xs={12}>
+                    <MetHeader3>Documents</MetHeader3>
+                    <Divider sx={{ marginTop: '1em' }} />
                 </Grid>
                 <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'} marginTop="8em">
                     <Grid item>

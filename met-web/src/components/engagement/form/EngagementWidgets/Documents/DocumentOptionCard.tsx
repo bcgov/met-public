@@ -1,16 +1,19 @@
 import React, { useContext, useState } from 'react';
 import { MetPaper, MetBody, MetHeader4 } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
-import ArticleIcon from '@mui/icons-material/Article';
-import { WidgetDrawerContext } from './WidgetDrawerContext';
-import { WidgetTabValues } from './type';
-import { openNotification } from 'services/notificationService/notificationSlice';
-import { useAppDispatch } from 'hooks';
+import PersonIcon from '@mui/icons-material/Person';
+import { WidgetDrawerContext } from '../WidgetDrawerContext';
+import { WidgetTabValues } from '../type';
 import { WidgetType } from 'models/widget';
 import { Else, If, Then } from 'react-if';
+import { ActionContext } from '../../ActionContext';
+import { useAppDispatch } from 'hooks';
+import { postWidget } from 'services/widgetService';
+import { openNotification } from 'services/notificationService/notificationSlice';
 
 const DocumentOptionCard = () => {
-    const { widgets, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
+    const { widgets, loadWidgets, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
+    const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
     const [creatingWidget, setCreatingWidget] = useState(false);
 
@@ -18,15 +21,24 @@ const DocumentOptionCard = () => {
         const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Document);
         if (alreadyExists) {
             handleWidgetDrawerTabValueChange(WidgetTabValues.DOCUMENT_FORM);
+            console.log('A');
             return;
         }
 
         try {
             setCreatingWidget(!creatingWidget);
+            console.log('B');
+            await postWidget(savedEngagement.id, {
+                widget_type_id: WidgetType.Document,
+                engagement_id: savedEngagement.id,
+            });
+            console.log('C');
+            await loadWidgets();
+            console.log('D');
             dispatch(
                 openNotification({
                     severity: 'success',
-                    text: 'Widget successfully created. Proceed to Add Documents.',
+                    text: 'Widget successfully created. Proceed to add documents',
                 }),
             );
             handleWidgetDrawerTabValueChange(WidgetTabValues.DOCUMENT_FORM);
@@ -63,7 +75,7 @@ const DocumentOptionCard = () => {
                         spacing={1}
                     >
                         <Grid item>
-                            <ArticleIcon sx={{ fontSize: '5em' }} />
+                            <PersonIcon sx={{ fontSize: '5em' }} />
                         </Grid>
                         <Grid
                             container
@@ -78,7 +90,7 @@ const DocumentOptionCard = () => {
                                 <MetHeader4>Document</MetHeader4>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody>Add documents to this engagement</MetBody>
+                                <MetBody>Add a document</MetBody>
                             </Grid>
                         </Grid>
                     </Grid>
