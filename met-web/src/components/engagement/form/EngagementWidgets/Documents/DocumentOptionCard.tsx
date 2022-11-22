@@ -34,15 +34,13 @@ const DocumentOptionCard = () => {
             dispatch(
                 openNotification({
                     severity: 'success',
-                    text: 'Widget successfully created. Proceed to Add Contacts.',
+                    text: 'Widget successfully created. Proceed to add documents',
                 }),
             );
             handleWidgetDrawerTabValueChange(WidgetTabValues.DOCUMENT_FORM);
         } catch (error) {
             setCreatingWidget(false);
-            dispatch(
-                openNotification({ severity: 'error', text: 'Error occurred while creating who is listening widget' }),
-            );
+            dispatch(openNotification({ severity: 'error', text: 'Error occurred while creating document widget' }));
         }
     };
 
