@@ -8,10 +8,6 @@ import { Widget, WidgetType } from 'models/widget';
 import { fetchDocuments } from 'services/widgetService/DocumentService.tsx';
 
 export interface DocumentsContextProps {
-    documentToEdit: Document | null;
-    addDocumentDrawerOpen: boolean;
-    handleAddDocumentDrawerOpen: (_open: boolean) => void;
-    clearSelected: () => void;
     loadingDocuments: boolean;
     documents: DocumentItem[];
     loadDocuments: () => Promise<DocumentItem[] | undefined>;
@@ -26,14 +22,6 @@ export type EngagementParams = {
 
 export const DocumentsContext = createContext<DocumentsContextProps>({
     loadingDocuments: false,
-    documentToEdit: null,
-    addDocumentDrawerOpen: false,
-    handleAddDocumentDrawerOpen: (_open: boolean) => {
-        /* empty default method  */
-    },
-    clearSelected: () => {
-        /* empty default method  */
-    },
     documents: [],
     loadDocuments: () => Promise.resolve([]),
     fileDrawerOpen: false,
@@ -44,11 +32,10 @@ export const DocumentsContext = createContext<DocumentsContextProps>({
 });
 
 export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
+    const { widgets } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
-    const [documentToEdit, setDocumentToEdit] = useState<Document | null>(null);
-    const [addDocumentDrawerOpen, setAddDocumentDrawerOpen] = useState(false);
-    const [documents, setDocuments] = useState<Document[]>([]);
+    const [documents, setDocuments] = useState<DocumentItem[]>([]);
     const [loadingDocuments, setLoadingDocuments] = useState(true);
     const [fileDrawerOpen, setDrawerFileOpen] = useState(false);
 
@@ -65,7 +52,7 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
 
     const loadDocuments = async () => {
         try {
-            if (!savedEngagement.id) {
+            if (!savedEngagement.id || !widget) {
                 setLoadingDocuments(false);
                 return Promise.resolve([]);
             }
@@ -84,13 +71,9 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
         }
     };
 
-    const clearSelected = () => {
-        setDocumentToEdit(null);
-    };
-
     useEffect(() => {
         loadDocuments();
-    }, [savedEngagement]);
+    }, [savedEngagement, widget]);
 
     const handleFileDrawerOpen = (open: boolean) => {
         setDrawerFileOpen(open);
@@ -99,8 +82,6 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
     return (
         <DocumentsContext.Provider
             value={{
-                addDocumentDrawerOpen,
-                handleAddDocumentDrawerOpen,
                 loadingDocuments,
                 documents,
                 loadDocuments,
