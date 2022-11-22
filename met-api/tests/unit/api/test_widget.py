@@ -93,12 +93,23 @@ def test_create_widget_sort(client, jwt, session):  # pylint:disable=unused-argu
     doc_widget = _find_widget(widgets, WidgetType.DOCUMENTS)
     assert doc_widget.get('sort_index') == 1
 
+
+def test_create_widget_sort_invalid(client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that a widget can be POSTed."""
+    engagement = factory_engagement_model()
+    widget_info_1 = TestWidgetInfo.widget1
+    widget_info_1['engagement_id'] = engagement.id
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+    rv = client.post(f'/api/widgets/engagement/{engagement.id}', data=json.dumps(widget_info_1),
+                     headers=headers, content_type='application/json')
+    assert rv.status_code == 200
+
     # invalid reorder
     reorder_dict = [{
         'id': 123,
         'sort_index': 2
     }, {
-        'id': doc_widget.get('id'),
+        'id': 1234,
         'sort_index': 1
     }
     ]
