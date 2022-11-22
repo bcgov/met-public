@@ -53,7 +53,7 @@ class WidgetService:
 
     @staticmethod
     def sort_widget(engagement_id, widget_items: list, user_id=None):
-        """Sort widget items."""
+        """Sort widgets."""
         WidgetService._validate_widget_ids(engagement_id, widget_items)
 
         widget_sort_mappings = [{
