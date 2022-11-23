@@ -1,20 +1,19 @@
 import React from 'react';
 import { Grid, Box, Typography, Stack } from '@mui/material';
 import { MetHeader1 } from 'components/common';
-import { formatDate } from '../../common/dateHelper';
 import { BannerProps } from '../view/types';
 import { EngagementStatusChip } from '../status';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorState } from 'utils';
+import moment from 'moment';
 
 const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
     const { rich_description, name, start_date, end_date, submission_status } = savedEngagement;
     const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
-    const dateFormat = 'MMM dd, yyyy';
+    const dateFormat = 'MMM DD, yyyy';
 
-    const EngagementDate = `Engagement dates: ${formatDate(start_date, dateFormat)} to ${formatDate(
-        end_date,
+    const EngagementDate = `Engagement dates: ${moment(start_date).format(dateFormat)} to ${moment(end_date).format(
         dateFormat,
     )}`;
 

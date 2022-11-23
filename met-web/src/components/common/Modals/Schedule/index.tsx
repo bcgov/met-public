@@ -10,6 +10,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { ActionContext } from 'components/engagement/view/ActionContext';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { formatToUTC } from 'components/common/dateHelper';
 
 interface ScheduleModalProps {
     reschedule: boolean;
@@ -56,7 +57,10 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
         if (validateDate())
             await scheduleEngagement({
                 id: savedEngagement.id,
-                scheduled_date: scheduledDate !== null ? scheduledDate.format('YYYY-MM-DD HH:mm:ss') : '',
+                scheduled_date:
+                    scheduledDate !== null
+                        ? formatToUTC(scheduledDate.format('YYYY-MM-DD HH:mm:ss'), 'yyyy-MM-DD HH:mm:ss')
+                        : '',
                 status_id: EngagementStatus.Scheduled,
             });
 
@@ -113,7 +117,7 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
                                 />
                             </Grid>
                             <Grid data-testid={'time-picker'} item xs={6}>
-                                <MetLabel>Time</MetLabel>
+                                <MetLabel>Time (PST)</MetLabel>
                                 <TimePicker
                                     value={scheduledDate}
                                     onChange={handleChange}

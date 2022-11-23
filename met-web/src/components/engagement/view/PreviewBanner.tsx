@@ -25,7 +25,7 @@ export const PreviewBanner = () => {
     const scheduledDate = formatDate(savedEngagement.scheduled_date, 'MMM dd yyyy');
     const scheduledTime = formatDate(savedEngagement.scheduled_date, 'HH:mm');
     const engagementBannerText = isScheduled
-        ? 'Engagement scheduled - ' + scheduledDate + ' at ' + scheduledTime
+        ? 'Engagement scheduled - ' + scheduledDate + ' at ' + scheduledTime + ' PST'
         : `Preview Engagement`;
     if (!isLoggedIn) {
         return null;
@@ -49,7 +49,7 @@ export const PreviewBanner = () => {
                         <Grid item container direction="row" rowSpacing={1}>
                             <MetBody>
                                 This engagement is scheduled to go live on
-                                {' ' + scheduledDate + ' at ' + scheduledTime}.{' '}
+                                {' ' + scheduledDate + ' at ' + scheduledTime + ' PST'}.{' '}
                                 <Link onClick={() => setIsOpen(true)}>Click here</Link> to edit the date this Engagement
                                 page will go live.
                             </MetBody>

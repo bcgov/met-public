@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 import { Grid, Box, Typography, Stack } from '@mui/material';
-import { formatDate } from '../../common/dateHelper';
 import BannerWithoutImage from './BannerWithoutImage';
 import { MetHeader1 } from 'components/common';
 import { BannerProps } from '../view/types';
 import { EngagementStatusChip } from '../status';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorState } from 'utils';
+import moment from 'moment';
 
 const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
     const { name, end_date, banner_url, start_date, submission_status, rich_description } = savedEngagement;
     const [imageError, setImageError] = useState(false);
-    const dateFormat = 'MMM dd, yyyy';
+    const dateFormat = 'MMM DD, yyyy';
 
-    const EngagementDate = `Engagement dates: ${formatDate(start_date, dateFormat)} to ${formatDate(
-        end_date,
+    const EngagementDate = `Engagement dates: ${moment(start_date).format(dateFormat)} to ${moment(end_date).format(
         dateFormat,
     )}`;
 
