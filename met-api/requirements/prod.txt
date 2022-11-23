@@ -31,3 +31,4 @@ secure
 python-dotenv
 aws-requests-auth
 requests
+anytree
