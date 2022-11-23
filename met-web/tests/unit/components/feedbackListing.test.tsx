@@ -13,7 +13,7 @@ const mockFeedbackOne = {
     rating: 2,
     comment: 'Feedback One',
     comment_type: CommentTypeEnum.None,
-    created_date: '2022-09-17',
+    created_date: '2022-09-17 10:00:00',
     source: SourceTypeEnum.Public,
 };
 
