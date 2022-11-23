@@ -152,15 +152,8 @@ class Engagement(db.Model):
         engagement: Engagement = query.first()
         if not engagement:
             return None
-
+        engagement_data['updated_date'] = datetime.utcnow()
         query.update(engagement_data)
-
-        update_fields = dict(
-            updated_date=datetime.utcnow(),
-            updated_by=engagement_data.get('updated_by', None)
-        )
-        query.update(update_fields)
-
         db.session.commit()
         return engagement
 

@@ -51,7 +51,7 @@ class Contact(db.Model):  # pylint: disable=too-few-public-methods
             address=contact.get('address', None),
             bio=contact.get('bio', None),
             created_date=datetime.utcnow(),
-            updated_date=None,
+            updated_date=datetime.utcnow(),
             created_by=contact.get('created_by', None),
             updated_by=contact.get('updated_by', None),
         )
@@ -68,11 +68,7 @@ class Contact(db.Model):  # pylint: disable=too-few-public-methods
         contact: Contact = query.first()
         if not contact:
             return DefaultMethodResult(False, 'Contact Not Found', contact_id)
-
+        contact_data['updated_date'] = datetime.utcnow()
         query.update(contact_data)
-        update_fields = dict(
-            updated_date=datetime.utcnow()
-        )
-        query.update(update_fields)
         db.session.commit()
         return contact
