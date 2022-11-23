@@ -42,7 +42,7 @@ const WidgetsBlock = () => {
                 ],
             }),
         );
-        updateWidgets(tempWidgets);
+        updateWidgets(dragIndex);
     }, []);
 
     const removeWidget = (widgetId: number) => {
