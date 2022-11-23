@@ -20,9 +20,10 @@ interface PostDocumentRequest {
     parent_document_id?: number;
     document_url?: string;
 }
-export const postDocument = async (data: PostDocumentRequest): Promise<DocumentItem> => {
+export const postDocument = async (widget_id: number, data: PostDocumentRequest): Promise<DocumentItem> => {
     try {
-        const response = await http.PostRequest<DocumentItem>(Endpoints.Documents.CREATE, data);
+        const url = replaceUrl(Endpoints.Documents.CREATE, 'widget_id', String(widget_id));
+        const response = await http.PostRequest<DocumentItem>(url, data);
         if (response.data.status && response.data.result) {
             return Promise.resolve(response.data.result);
         }

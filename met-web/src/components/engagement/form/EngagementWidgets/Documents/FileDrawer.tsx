@@ -43,7 +43,7 @@ const FileDrawer = () => {
 
         try {
             setIsCreatingDocument(true);
-            await postDocument({
+            await postDocument(widget.id, {
                 name: data.name,
                 parent_document_id: data.folderId,
                 document_url: data.link,

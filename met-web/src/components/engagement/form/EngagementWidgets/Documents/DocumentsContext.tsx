@@ -58,7 +58,7 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
             }
             setLoadingDocuments(true);
             //TODO: setDocuments to fetched Data
-            // const savedDocuments = await fetchDocuments(widget.id);
+            const savedDocuments = await fetchDocuments(widget.id);
             setDocuments(mockDocuments);
             setLoadingDocuments(false);
             return documents;
