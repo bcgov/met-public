@@ -41,15 +41,6 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
 
     const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Document) || null;
 
-    const mockDocuments = [
-        {
-            id: 1,
-            name: 'Folder One',
-            folder: true,
-            items: [],
-        },
-    ];
-
     const loadDocuments = async () => {
         try {
             if (!savedEngagement.id || !widget) {
@@ -59,7 +50,7 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
             setLoadingDocuments(true);
             //TODO: setDocuments to fetched Data
             const savedDocuments = await fetchDocuments(widget.id);
-            setDocuments(mockDocuments);
+            setDocuments(savedDocuments);
             setLoadingDocuments(false);
             return documents;
         } catch (error) {
