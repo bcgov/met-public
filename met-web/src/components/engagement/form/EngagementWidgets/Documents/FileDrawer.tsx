@@ -53,7 +53,7 @@ const FileDrawer = () => {
             handleFileDrawerOpen(false);
         } catch (err) {
             console.log(err);
-            dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to save contact' }));
+            dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to save File' }));
         }
     };
 
