@@ -32,9 +32,9 @@ export const DocumentsContext = createContext<DocumentsContextProps>({
 });
 
 export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
+    const dispatch = useAppDispatch();
     const { widgets } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
-    const dispatch = useAppDispatch();
     const [documents, setDocuments] = useState<DocumentItem[]>([]);
     const [loadingDocuments, setLoadingDocuments] = useState(true);
     const [fileDrawerOpen, setDrawerFileOpen] = useState(false);

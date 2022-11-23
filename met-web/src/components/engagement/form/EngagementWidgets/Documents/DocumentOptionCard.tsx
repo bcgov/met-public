@@ -21,20 +21,16 @@ const DocumentOptionCard = () => {
         const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Document);
         if (alreadyExists) {
             handleWidgetDrawerTabValueChange(WidgetTabValues.DOCUMENT_FORM);
-            console.log('A');
             return;
         }
 
         try {
             setCreatingWidget(!creatingWidget);
-            console.log('B');
             await postWidget(savedEngagement.id, {
                 widget_type_id: WidgetType.Document,
                 engagement_id: savedEngagement.id,
             });
-            console.log('C');
             await loadWidgets();
-            console.log('D');
             dispatch(
                 openNotification({
                     severity: 'success',
