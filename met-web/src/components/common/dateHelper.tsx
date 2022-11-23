@@ -21,10 +21,7 @@ export const formatDate = (date: string, formatString = 'yyyy-MM-dd') => {
 
 export const formatToUTC = (date: string, formatString = 'yyyy-MM-dd') => {
     if (date) {
-        const utcDate = formatToUTCTimeZone(date, formatString, 'PST');
-        console.log(zonedTimeToUtc(date, 'PST').toISOString());
-        console.log(utcDate);
-        return utcDate.substring(0, 10) + ' ' + utcDate.substring(11, 25);
+        return formatToUTCTimeZone(date, formatString, 'PST');
     } else {
         return '';
     }

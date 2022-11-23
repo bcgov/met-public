@@ -24,7 +24,7 @@ const mockEngagementOne = {
     ...createDefaultEngagement(),
     id: 1,
     name: 'Engagement One',
-    created_date: '2022-09-14 00:00:00',
+    created_date: '2022-09-14 10:00:00',
     rich_content:
         '{"blocks":[{"key":"29p4m","text":"Test content","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
     content: 'Test content',
@@ -47,8 +47,8 @@ const mockEngagementTwo = {
         id: EngagementStatus.Published,
         status_name: 'Open',
     },
-    created_date: '2022-09-15 00:00:00',
-    published_date: '2022-09-19 00:00:00',
+    created_date: '2022-09-15 10:00:00',
+    published_date: '2022-09-19 10:00:00',
     surveys: mockSurveys,
     submissions_meta_data: {
         total: 1,
