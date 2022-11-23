@@ -61,7 +61,6 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
     };
 
     const updateWidgets = async (sort_index: number) => {
-        //TODO: setup sort
         try {
             await sortWidgets(savedEngagement.id, sort_index);
             dispatch(openNotification({ severity: 'success', text: 'updated sorting of widgets' }));
