@@ -70,11 +70,12 @@ def extract_submission(context, submission_last_run_cycle_time, submission_new_r
         new_submission = session.query(MetSubmissionModel).filter(
             MetSubmissionModel.created_date > last_run_cycle_time).all()
 
-        if last_run_cycle_time > default_datetime:
-            context.log.info("started extracting updated data from submission table")
-            updated_submission = session.query(MetSubmissionModel).filter(MetSubmissionModel.updated_date >
-                                                                          last_run_cycle_time,
-                                                                          MetSubmissionModel.updated_date != MetSubmissionModel.created_date).all()
+# commenting out the logic for updated submission, this is not needed as of now
+#       if last_run_cycle_time > default_datetime:
+#           context.log.info("started extracting updated data from submission table")
+#           updated_submission = session.query(MetSubmissionModel).filter(MetSubmissionModel.updated_date >
+#                                                                         last_run_cycle_time,
+#                                                                         MetSubmissionModel.updated_date != MetSubmissionModel.created_date).all()
 
     yield Output(new_submission, "new_submission")
 
