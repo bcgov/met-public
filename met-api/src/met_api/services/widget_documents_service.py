@@ -86,7 +86,6 @@ class WidgetDocumentService:
         if docs:
             # Find the largest in the existing widgest
             sort_index = max(doc.sort_index for doc in docs) or 0
-        print(sort_index)
         return sort_index
 
     @staticmethod
