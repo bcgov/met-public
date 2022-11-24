@@ -4,6 +4,7 @@ import { Grid, CircularProgress, Stack, IconButton } from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import { When } from 'react-if';
 
 interface MetWidgetProps {
     testId?: string;
@@ -13,16 +14,19 @@ interface MetWidgetProps {
     onEdit: () => void;
     onDelete: () => void;
     deleting?: boolean;
+    sortable?: boolean;
 }
 
-const MetWidget = ({ testId, children, title, onEdit, onDelete, deleting, ...rest }: MetWidgetProps) => {
+const MetWidget = ({ testId, children, title, onEdit, onDelete, deleting, sortable, ...rest }: MetWidgetProps) => {
     return (
         <MetWidgetPaper elevation={3} {...rest}>
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
                 <Grid item xs={2} sx={{ alignItems: 'center', justifyContent: 'center' }}>
-                    <IconButton sx={{ margin: 0, padding: 0 }} color="info" aria-label="drag-indicator">
-                        <DragIndicatorIcon />
-                    </IconButton>
+                    <When condition={sortable !== false}>
+                        <IconButton sx={{ margin: 0, padding: 0 }} color="info" aria-label="drag-indicator">
+                            <DragIndicatorIcon />
+                        </IconButton>
+                    </When>
                 </Grid>
                 <Grid item container direction="row" alignItems="center" justifyContent="flex-start" xs={8}>
                     <MetLabel>{title}</MetLabel>
