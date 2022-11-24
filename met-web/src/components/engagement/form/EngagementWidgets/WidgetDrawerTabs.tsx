@@ -6,6 +6,7 @@ import { WidgetDrawerContext } from './WidgetDrawerContext';
 import { WidgetTabValues } from './type';
 import WhoIsListening from './WhoIsListening';
 import Documents from './Documents';
+import Phases from './Phases';
 
 const WidgetDrawerTabs = () => {
     const { widgetDrawerTabValue } = useContext(WidgetDrawerContext);
@@ -20,6 +21,9 @@ const WidgetDrawerTabs = () => {
                 </TabPanel>
                 <TabPanel sx={{ width: '100%' }} value={WidgetTabValues.DOCUMENT_FORM}>
                     <Documents />
+                </TabPanel>
+                <TabPanel sx={{ width: '100%' }} value={WidgetTabValues.PHASES_FORM}>
+                    <Phases />
                 </TabPanel>
             </TabContext>
         </>

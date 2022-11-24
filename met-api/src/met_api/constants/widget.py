@@ -20,3 +20,4 @@ class WidgetType(IntEnum):
 
     WHO_IS_LISTENING = 1
     DOCUMENTS = 2
+    PHASES = 3
