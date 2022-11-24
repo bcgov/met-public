@@ -1,5 +1,6 @@
 import { format, utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
 import moment from 'moment';
+import { Dayjs } from 'dayjs';
 
 const formatToPSTTimeZone = (date: Date, fmt: string, tz: string) =>
     format(utcToZonedTime(date, tz), fmt, { timeZone: tz });
@@ -15,9 +16,9 @@ export const formatDate = (date: string, formatString = 'yyyy-MM-dd') => {
     }
 };
 
-export const formatToUTC = (date: string, formatString = 'yyyy-MM-dd') => {
+export const formatToUTC = (date: Dayjs | string, formatString = 'yyyy-MM-DD HH:mm:ss') => {
     if (date) {
-        return formatToUTCTimeZone(new Date(date), formatString, 'PST');
+        return formatToUTCTimeZone(new Date(date.toString()), formatString, 'PST');
     } else {
         return '';
     }

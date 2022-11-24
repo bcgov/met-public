@@ -57,10 +57,7 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
         if (validateDate())
             await scheduleEngagement({
                 id: savedEngagement.id,
-                scheduled_date:
-                    scheduledDate !== null
-                        ? formatToUTC(scheduledDate.format('YYYY-MM-DD HH:mm:ss'), 'yyyy-MM-DD HH:mm:ss')
-                        : '',
+                scheduled_date: scheduledDate !== null ? formatToUTC(scheduledDate) : '',
                 status_id: EngagementStatus.Scheduled,
             });
 
