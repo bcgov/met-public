@@ -6,6 +6,7 @@ import MetWidget from './MetWidget';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
 import { WidgetTabValues } from './type';
 
+
 interface WidgetCardSwitchProps {
     widget: Widget;
     index: number;
@@ -17,9 +18,9 @@ export const WidgetCardSwitch = ({ widget, index, moveWidget, removeWidget }: Wi
 
     return (
         <>
-            <Switch>
-                <Case condition={widget.widget_type_id === WidgetType.WhoIsListening}>
-                    <DragItem name="Who is Listening" moveItem={moveWidget} index={index}>
+            <DragItem name={WidgetType[widget.widget_type_id]} moveItem={moveWidget} index={index}>
+                <Switch>
+                    <Case condition={widget.widget_type_id === WidgetType.WhoIsListening}>
                         <MetWidget
                             testId={`who-is-listening-${widget.widget_type_id}`}
                             title="Who is Listening"
@@ -31,10 +32,8 @@ export const WidgetCardSwitch = ({ widget, index, moveWidget, removeWidget }: Wi
                                 handleWidgetDrawerOpen(true);
                             }}
                         />
-                    </DragItem>
-                </Case>
-                <Case condition={widget.widget_type_id === WidgetType.Document}>
-                    <DragItem name="Document" moveItem={moveWidget} index={index}>
+                    </Case>
+                    <Case condition={widget.widget_type_id === WidgetType.Document}>
                         <MetWidget
                             testId={`document-${widget.widget_type_id}`}
                             title="Document"
@@ -46,9 +45,9 @@ export const WidgetCardSwitch = ({ widget, index, moveWidget, removeWidget }: Wi
                                 handleWidgetDrawerOpen(true);
                             }}
                         />
-                    </DragItem>
-                </Case>
-            </Switch>
+                    </Case>
+                </Switch>
+            </DragItem>
         </>
     );
 };
