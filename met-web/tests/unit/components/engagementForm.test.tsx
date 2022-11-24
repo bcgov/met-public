@@ -469,7 +469,7 @@ describe('Engagement form page tests', () => {
             engagement_id: engagement.id,
         });
         expect(getWidgetsMock).toHaveBeenCalledTimes(2);
-
+                
         const saveWidgetButton = screen.getByTestId('savePhasesWidgetButton');
         fireEvent.click(saveWidgetButton);
 
