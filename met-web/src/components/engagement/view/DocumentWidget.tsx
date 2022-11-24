@@ -71,7 +71,7 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                                                     {folderItem.name}
                                                 </Link>
                                             </MetLabel>
-                                        </Grid>;
+                                        </Grid>
                                     })
                                 ) : (
                                     <></>
