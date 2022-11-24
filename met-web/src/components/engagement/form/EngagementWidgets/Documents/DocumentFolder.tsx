@@ -11,7 +11,7 @@ import DocumentSwitch from './DocumentSwitch';
 
 const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
     return (
-        <Grid item xs={12} container justifyContent={'flex-start'} spacing={2}>
+        <Grid item xs={12} container justifyContent={'flex-start'} spacing={2} mb={2}>
             <MetWidgetPaper elevation={2} sx={{ width: '100%' }}>
                 <Grid container direction="row" alignItems={'center'} justifyContent="flex-start">
                     <Grid item xs>
@@ -22,7 +22,7 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
                             <IconButton sx={{ padding: 0, margin: 0 }} color="info" aria-label="drag-indicator">
                                 <FolderIcon />
                             </IconButton>
-                            <Typography>{documentItem.name}</Typography>
+                            <Typography>{documentItem.title}</Typography>
                         </Stack>
                     </Grid>
                     <Grid item xs container justifyContent={'flex-end'}>
@@ -32,9 +32,9 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
                     </Grid>
                 </Grid>
             </MetWidgetPaper>
-            <When condition={documentItem.items && documentItem.items.length > 0}>
+            <When condition={documentItem.children && documentItem.children.length > 0}>
                 <Grid item xs={12} container justifyContent={'flex-end'} spacing={2}>
-                    {documentItem.items?.map((item) => {
+                    {documentItem.children?.map((item) => {
                         return (
                             <>
                                 <Grid item xs={12}>

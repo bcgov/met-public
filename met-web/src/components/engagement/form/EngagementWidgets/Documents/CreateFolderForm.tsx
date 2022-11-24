@@ -8,9 +8,10 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { postDocument } from 'services/widgetService/DocumentService.tsx';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType } from 'models/widget';
+import { DOCUMENT_TYPE } from 'models/document';
 
 const CreateFolderForm = () => {
-    const { loadDocuments } = useContext(DocumentsContext);
+    const { loadDocuments, handleFileDrawerOpen } = useContext(DocumentsContext);
     const { widgets } = useContext(WidgetDrawerContext);
     const dispatch = useAppDispatch();
     const [createFolderMode, setCreateFolderMode] = useState(false);
@@ -27,14 +28,17 @@ const CreateFolderForm = () => {
 
         try {
             setCreatingFolder(true);
-            await postDocument({
-                name: folderName,
+            await postDocument(widget.id, {
+                title: folderName,
                 widget_id: widget.id,
+                type: DOCUMENT_TYPE.FOLDER,
             });
             await loadDocuments();
             setCreatingFolder(false);
+            setCreateFolderMode(false);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'An error occured while creating the folder' }));
+            setCreatingFolder(false);
         }
     };
 
@@ -53,12 +57,12 @@ const CreateFolderForm = () => {
                     <SecondaryButton onClick={() => setCreateFolderMode(true)}>Create Folder</SecondaryButton>
                 </Grid>
                 <Grid item>
-                    <SecondaryButton>Add Document</SecondaryButton>
+                    <SecondaryButton onClick={() => handleFileDrawerOpen(true)}>Add Document</SecondaryButton>
                 </Grid>
             </Grid>
 
             <When condition={createFolderMode}>
-                <Grid item xs={12} container direction="row" justifyContent={'flex-start'}>
+                <Grid item xs={12} container direction="row" justifyContent={'flex-start'} mb={5}>
                     <Grid item xs={12}>
                         <MetLabel>Folder name</MetLabel>
                     </Grid>

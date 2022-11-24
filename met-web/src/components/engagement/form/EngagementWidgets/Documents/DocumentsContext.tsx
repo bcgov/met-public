@@ -4,13 +4,16 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { ActionContext } from '../../ActionContext';
 import { DocumentItem } from 'models/document';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
-import { WidgetType } from 'models/widget';
+import { Widget, WidgetType } from 'models/widget';
 import { fetchDocuments } from 'services/widgetService/DocumentService.tsx';
 
 export interface DocumentsContextProps {
     loadingDocuments: boolean;
     documents: DocumentItem[];
     loadDocuments: () => Promise<DocumentItem[] | undefined>;
+    fileDrawerOpen: boolean;
+    handleFileDrawerOpen: (_open: boolean) => void;
+    widget: Widget | null;
 }
 
 export type EngagementParams = {
@@ -21,16 +24,22 @@ export const DocumentsContext = createContext<DocumentsContextProps>({
     loadingDocuments: false,
     documents: [],
     loadDocuments: () => Promise.resolve([]),
+    fileDrawerOpen: false,
+    handleFileDrawerOpen: (_open: boolean) => {
+        /* empty default method  */
+    },
+    widget: null,
 });
 
 export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
+    const dispatch = useAppDispatch();
     const { widgets } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
-    const dispatch = useAppDispatch();
     const [documents, setDocuments] = useState<DocumentItem[]>([]);
     const [loadingDocuments, setLoadingDocuments] = useState(true);
+    const [fileDrawerOpen, setDrawerFileOpen] = useState(false);
 
-    const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Document);
+    const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Document) || null;
 
     const loadDocuments = async () => {
         try {
@@ -57,12 +66,19 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
         loadDocuments();
     }, [savedEngagement, widget]);
 
+    const handleFileDrawerOpen = (open: boolean) => {
+        setDrawerFileOpen(open);
+    };
+
     return (
         <DocumentsContext.Provider
             value={{
                 loadingDocuments,
                 documents,
                 loadDocuments,
+                fileDrawerOpen,
+                handleFileDrawerOpen,
+                widget,
             }}
         >
             {children}

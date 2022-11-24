@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """API endpoints for managing an user resource."""
-import json
-from http import HTTPStatus
 
 from flask import request
 from flask_cors import cross_origin
@@ -40,7 +38,7 @@ class WidgetDocuments(Resource):
         """Fetch a list of widgets by engagement_id."""
         try:
             documents = WidgetDocumentService().get_document_by_widget_id(widget_id)
-            return json.dumps(documents), HTTPStatus.OK
+            return ActionResult.success(result=documents)
         except (KeyError, ValueError) as err:
             return ActionResult.error(str(err))
 
@@ -51,4 +49,4 @@ class WidgetDocuments(Resource):
         """Add new documents to the widgets."""
         request_json = request.get_json()
         document = WidgetDocumentService.create_document(widget_id, request_json)
-        return WidgetDocumentsSchema().dump(document), HTTPStatus.OK
+        return ActionResult.success(result=WidgetDocumentsSchema().dump(document))

@@ -1,7 +1,14 @@
+export type DocumentType = 'file' | 'folder';
+
+export const DOCUMENT_TYPE: { [x: string]: DocumentType } = {
+    FOLDER: 'folder',
+    FILE: 'file',
+};
+
 export interface DocumentItem {
     id: number;
-    name: string;
-    folder: boolean;
+    title: string;
+    type: DocumentType;
     document_url?: string;
-    items?: DocumentItem[];
+    children?: DocumentItem[];
 }
