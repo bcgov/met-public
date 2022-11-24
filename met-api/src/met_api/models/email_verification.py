@@ -44,7 +44,7 @@ class EmailVerification(db.Model):  # pylint: disable=too-few-public-methods
             user_id=email_verification.get('user_id', None),
             is_active=True,
             survey_id=email_verification.get('survey_id', None),
-            created_date=datetime.now(),
+            created_date=datetime.utcnow(),
             created_by=email_verification.get('created_by', None),
         )
         db.session.add(new_email_verification)
@@ -56,7 +56,7 @@ class EmailVerification(db.Model):  # pylint: disable=too-few-public-methods
         """Update an email verification."""
         update_fields = dict(
             is_active=email_verification.get('is_active', None),
-            updated_date=datetime.now(),
+            updated_date=datetime.utcnow(),
             updated_by=email_verification.get('updated_by', None),
         )
         email_verification_id = email_verification.get('id', None)

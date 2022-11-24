@@ -132,7 +132,7 @@ def load_survey(context, new_survey, updated_survey, survey_new_runcycleid):
 # inactivate if record is existing in analytics database
 def _inactivate_old_questions(session, source_survey_id):
     etl_survey_model = session.query(EtlSurveyModel.id).filter(EtlSurveyModel.source_survey_id == source_survey_id,
-                                                               EtlSurveyModel.is_active == True)
+                                                               EtlSurveyModel.is_active == False)
     if not etl_survey_model:
         return
 

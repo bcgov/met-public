@@ -28,3 +28,4 @@ from .widget import Widget
 from .widget_item import WidgetItem
 from .widget_type import WidgetType
 from .contact import Contact
+from .widget_documents import WidgetDocuments

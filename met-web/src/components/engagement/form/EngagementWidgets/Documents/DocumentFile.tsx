@@ -7,7 +7,7 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
 const DocumentFile = ({ documentItem }: { documentItem: DocumentItem }) => {
     return (
-        <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={2}>
+        <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={2} mb={2}>
             <MetWidgetPaper elevation={1} sx={{ width: '100%' }}>
                 <Grid container direction="row" alignItems={'center'} justifyContent="flex-start">
                     <Grid item xs>
@@ -15,7 +15,7 @@ const DocumentFile = ({ documentItem }: { documentItem: DocumentItem }) => {
                             <IconButton sx={{ padding: 0, margin: 0 }} color="info" aria-label="drag-indicator">
                                 <DragIndicatorIcon />
                             </IconButton>
-                            <Typography>{documentItem.name}</Typography>
+                            <Typography>{documentItem.title}</Typography>
                         </Stack>
                     </Grid>
                     <Grid item xs container justifyContent={'flex-end'}>

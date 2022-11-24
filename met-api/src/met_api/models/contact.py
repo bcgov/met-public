@@ -68,7 +68,7 @@ class Contact(db.Model):  # pylint: disable=too-few-public-methods
         contact: Contact = query.first()
         if not contact:
             return DefaultMethodResult(False, 'Contact Not Found', contact_id)
-
+        contact_data['updated_date'] = datetime.utcnow()
         query.update(contact_data)
         db.session.commit()
         return contact
