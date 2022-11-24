@@ -52,8 +52,8 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
             submission_json=submission.get('submission_json', None),
             survey_id=submission.get('survey_id', None),
             user_id=submission.get('user_id', None),
-            created_date=submission.get('created_date', None),
-            updated_date=submission.get('updated_date', None),
+            created_date=datetime.utcnow(),
+            updated_date=None,
             created_by=submission.get('created_by', None),
             updated_by=submission.get('updated_by', None),
             comment_status_id=Status.Pending.value,
@@ -71,7 +71,7 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
         """Update submission."""
         update_fields = dict(
             submission_json=submission.get('submission_json', None),
-            updated_date=submission.get('updated_date', None),
+            updated_date=datetime.utcnow(),
             updated_by=submission.get('updated_by', None),
         )
         submission_id = submission.get('id', None)
