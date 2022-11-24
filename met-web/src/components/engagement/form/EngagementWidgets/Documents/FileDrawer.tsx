@@ -44,10 +44,11 @@ const FileDrawer = () => {
         try {
             setIsCreatingDocument(true);
             await postDocument(widget.id, {
-                name: data.name,
+                title: data.name,
                 parent_document_id: data.folderId,
-                document_url: data.link,
+                url: data.link,
                 widget_id: widget.id,
+                type: 'file',
             });
             setIsCreatingDocument(false);
             handleFileDrawerOpen(false);

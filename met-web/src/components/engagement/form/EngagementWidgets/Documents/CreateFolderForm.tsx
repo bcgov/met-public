@@ -28,8 +28,9 @@ const CreateFolderForm = () => {
         try {
             setCreatingFolder(true);
             await postDocument(widget.id, {
-                name: folderName,
+                title: folderName,
                 widget_id: widget.id,
+                type: 'folder',
             });
             await loadDocuments();
             setCreatingFolder(false);

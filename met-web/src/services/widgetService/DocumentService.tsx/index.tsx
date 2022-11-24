@@ -15,10 +15,11 @@ export const fetchDocuments = async (widget_id: number): Promise<DocumentItem[]>
 };
 
 interface PostDocumentRequest {
-    name?: string;
+    title?: string;
     widget_id?: number;
     parent_document_id?: number;
-    document_url?: string;
+    url?: string;
+    type: 'file' | 'folder';
 }
 export const postDocument = async (widget_id: number, data: PostDocumentRequest): Promise<DocumentItem> => {
     try {
