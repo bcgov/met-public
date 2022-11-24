@@ -33,6 +33,21 @@ export const WidgetCardSwitch = ({ widget, index, moveWidget, removeWidget }: Wi
                         />
                     </DragItem>
                 </Case>
+                <Case condition={widget.widget_type_id === WidgetType.Document}>
+                    <DragItem name="Document" moveItem={moveWidget} index={index}>
+                        <MetWidget
+                            testId={`document-${widget.widget_type_id}`}
+                            title="Document"
+                            onDelete={() => {
+                                removeWidget(widget.id);
+                            }}
+                            onEdit={() => {
+                                handleWidgetDrawerTabValueChange(WidgetTabValues.DOCUMENT_FORM);
+                                handleWidgetDrawerOpen(true);
+                            }}
+                        />
+                    </DragItem>
+                </Case>
             </Switch>
         </>
     );
