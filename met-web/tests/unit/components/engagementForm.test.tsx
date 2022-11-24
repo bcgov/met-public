@@ -58,18 +58,32 @@ const mockContact: Contact = {
     avatar_url: '',
 };
 
-const widgetItem: WidgetItem = {
+const contactWidgetItem: WidgetItem = {
     id: 1,
     widget_id: 1,
     widget_data_id: 1,
     sort_index: 1,
 };
 
-const widget: Widget = {
+const whoIsListeningWidget: Widget = {
     id: 1,
     widget_type_id: WidgetType.WhoIsListening,
     engagement_id: 1,
-    items: [widgetItem],
+    items: [contactWidgetItem],
+};
+
+const phaseWidgetItem: WidgetItem = {
+    id: 2,
+    widget_id: 2,
+    widget_data_id: 0,
+    sort_index: 1,
+};
+
+const phasesWidget: Widget = {
+    id: 2,
+    widget_type_id: WidgetType.Phases,
+    engagement_id: 1,
+    items: [phaseWidgetItem],
 };
 
 jest.mock('react-dnd', () => ({
@@ -102,8 +116,9 @@ describe('Engagement form page tests', () => {
         .spyOn(engagementService, 'postEngagement')
         .mockReturnValue(Promise.resolve(engagement));
     const getContactsMock = jest.spyOn(contactService, 'getContacts').mockReturnValue(Promise.resolve([mockContact]));
-    const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([widget]));
-    const postWidgetMock = jest.spyOn(widgetService, 'postWidget').mockReturnValue(Promise.resolve(widget));
+    const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([whoIsListeningWidget, phasesWidget]));
+    const postWidgetMock = jest.spyOn(widgetService, 'postWidget').mockReturnValue(Promise.resolve(whoIsListeningWidget));
+    const postWidgetItemMock = jest.spyOn(widgetService, 'postWidgetItem').mockReturnValue(Promise.resolve(contactWidgetItem));
 
     beforeEach(() => {
         setupEnv();
@@ -324,6 +339,7 @@ describe('Engagement form page tests', () => {
         await waitFor(() => {
             expect(screen.getByText('Select Widget')).toBeVisible();
             expect(screen.getByTestId(`widget-drawer-option/${WidgetType.WhoIsListening}`));
+            expect(screen.getByTestId(`widget-drawer-option/${WidgetType.Phases}`));
         });
     });
 
@@ -336,8 +352,8 @@ describe('Engagement form page tests', () => {
             }),
         );
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
-        postWidgetMock.mockReturnValue(Promise.resolve(widget));
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([widget]));
+        postWidgetMock.mockReturnValue(Promise.resolve(whoIsListeningWidget));
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
         const { container } = render(<EngagementForm />);
 
         await waitFor(() => {
@@ -376,8 +392,8 @@ describe('Engagement form page tests', () => {
             }),
         );
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
-        postWidgetMock.mockReturnValue(Promise.resolve(widget));
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([widget]));
+        postWidgetMock.mockReturnValue(Promise.resolve(whoIsListeningWidget));
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
         const { container } = render(<EngagementForm />);
 
         await waitFor(() => {
@@ -407,6 +423,53 @@ describe('Engagement form page tests', () => {
 
         await waitFor(() => {
             expect(screen.getByText('Add Contact')).toBeVisible();
+        });
+    });
+
+    test('Phases widget is created when option is clicked', async () => {
+        useParamsMock.mockReturnValue({ engagementId: '1' });
+        getEngagementMock.mockReturnValueOnce(
+            Promise.resolve({
+                ...engagement,
+                surveys: surveys,
+            }),
+        );
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
+        postWidgetMock.mockReturnValue(Promise.resolve(phasesWidget));
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([phasesWidget]));
+        const { container } = render(<EngagementForm />);
+
+        await waitFor(() => {
+            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
+        });
+
+        const addWidgetButton = screen.getByText('Add Widget');
+        fireEvent.click(addWidgetButton);
+
+        await waitFor(() => {
+            expect(screen.getByText('Select Widget')).toBeVisible();
+        });
+
+        const phasesOption = screen.getByTestId(`widget-drawer-option/${WidgetType.Phases}`);
+        fireEvent.click(phasesOption);
+
+        await waitFor(() => {
+            expect(screen.getByTestId('engagementPhaseSelect')).toBeVisible();
+        });
+
+        expect(postWidgetMock).toHaveBeenNthCalledWith(1, engagement.id, {
+            widget_type_id: WidgetType.Phases,
+            engagement_id: engagement.id,
+        });
+        expect(getWidgetsMock).toHaveBeenCalledTimes(2);
+                
+        const saveWidgetButton = screen.getByTestId('savePhasesWidgetButton');
+        fireEvent.click(saveWidgetButton);
+
+        expect(postWidgetItemMock).toHaveBeenNthCalledWith(1, phasesWidget.id, {
+            widget_id: phasesWidget.id,
+            widget_data_id: 0,
         });
     });
 });

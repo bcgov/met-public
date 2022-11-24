@@ -37,7 +37,7 @@ export const postWidgetItem = async (widget_id: number, data: PostWidgetItemRequ
         if (response.data.status && response.data.result) {
             return Promise.resolve(response.data.result);
         }
-        return Promise.reject(response.data.message ?? 'Failed to create contact');
+        return Promise.reject(response.data.message ?? 'Failed to create widget item');
     } catch (err) {
         return Promise.reject(err);
     }
@@ -49,7 +49,7 @@ export const postWidgetItems = async (widget_id: number, data: PostWidgetItemReq
         if (response.data.status && response.data.result) {
             return Promise.resolve(response.data.result);
         }
-        return Promise.reject(response.data.message ?? 'Failed to create contact');
+        return Promise.reject(response.data.message ?? 'Failed to create wdiget item');
     } catch (err) {
         return Promise.reject(err);
     }
