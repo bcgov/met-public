@@ -1,19 +1,19 @@
 import React from 'react';
-import { DocumentItem } from 'models/document';
-import { Else, If, Then } from 'react-if';
+import { DocumentItem, DOCUMENT_TYPE } from 'models/document';
+import { Case, Default, Switch } from 'react-if';
 import DocumentFolder from './DocumentFolder';
 import DocumentFile from './DocumentFile';
-
 const DocumentSwitch = ({ documentItem }: { documentItem: DocumentItem }) => {
     return (
-        <If condition={documentItem.folder}>
-            <Then>
+        <Switch>
+            <Case condition={documentItem.type === DOCUMENT_TYPE.FOLDER}>
                 <DocumentFolder documentItem={documentItem} />
-            </Then>
-            <Else>
+            </Case>
+            <Case condition={documentItem.type === DOCUMENT_TYPE.FILE}>
                 <DocumentFile documentItem={documentItem} />
-            </Else>
-        </If>
+            </Case>
+            <Default>{null}</Default>
+        </Switch>
     );
 };
 

@@ -13,6 +13,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { DocumentsContext } from './DocumentsContext';
 import ControlledSelect from 'components/common/ControlledInputComponents/ControlledSelect';
 import { postDocument } from 'services/widgetService/DocumentService.tsx';
+import { DOCUMENT_TYPE } from 'models/document';
 
 const schema = yup
     .object({
@@ -22,21 +23,26 @@ const schema = yup
     })
     .required();
 
-type ContactForm = yup.TypeOf<typeof schema>;
+type FileForm = yup.TypeOf<typeof schema>;
 
 const FileDrawer = () => {
     const dispatch = useAppDispatch();
-    const { documents, handleFileDrawerOpen, fileDrawerOpen, widget } = useContext(DocumentsContext);
+    const { documents, handleFileDrawerOpen, fileDrawerOpen, widget, loadDocuments } = useContext(DocumentsContext);
 
     const [isCreatingFile, setIsCreatingDocument] = useState(false);
 
-    const methods = useForm<ContactForm>({
+    const methods = useForm<FileForm>({
         resolver: yupResolver(schema),
+        defaultValues: {
+            name: '',
+            link: '',
+            folderId: 0,
+        },
     });
 
     const { handleSubmit } = methods;
 
-    const onSubmit: SubmitHandler<ContactForm> = async (data: ContactForm) => {
+    const onSubmit: SubmitHandler<FileForm> = async (data: FileForm) => {
         if (!widget) {
             return;
         }
@@ -45,11 +51,12 @@ const FileDrawer = () => {
             setIsCreatingDocument(true);
             await postDocument(widget.id, {
                 title: data.name,
-                parent_document_id: data.folderId,
+                parent_document_id: data.folderId === 0 ? null : data.folderId,
                 url: data.link,
                 widget_id: widget.id,
                 type: 'file',
             });
+            await loadDocuments();
             setIsCreatingDocument(false);
             handleFileDrawerOpen(false);
         } catch (err) {
@@ -132,10 +139,11 @@ const FileDrawer = () => {
                                     fullWidth
                                     size="small"
                                 >
+                                    <MenuItem value={0} sx={{ height: '2em' }}></MenuItem>
                                     {documents
-                                        .filter((document) => document.folder)
+                                        .filter((document) => document.type === DOCUMENT_TYPE.FOLDER)
                                         .map((document) => {
-                                            return <MenuItem value={document.id}>{document.name}</MenuItem>;
+                                            return <MenuItem value={document.id}>{document.title}</MenuItem>;
                                         })}
                                 </ControlledSelect>
                             </Grid>
