@@ -1,19 +1,15 @@
 import { format, utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
 import moment from 'moment';
 
-const formatToPSTTimeZone = (date: string, fmt: string, tz: string) =>
+const formatToPSTTimeZone = (date: Date, fmt: string, tz: string) =>
     format(utcToZonedTime(date, tz), fmt, { timeZone: tz });
 
-const formatToUTCTimeZone = (date: string, fmt: string, tz: string) =>
-    moment(
-        zonedTimeToUtc(date, tz).toISOString().substring(0, 10) +
-            ' ' +
-            zonedTimeToUtc(date, tz).toISOString().substring(11, 19),
-    ).format(fmt);
+const formatToUTCTimeZone = (date: Date, fmt: string, tz: string) =>
+    moment(date.setHours(date.getHours() + zonedTimeToUtc(date, tz).getTimezoneOffset() / 60)).format(fmt);
 
 export const formatDate = (date: string, formatString = 'yyyy-MM-dd') => {
     if (date) {
-        return formatToPSTTimeZone(date.substring(0, 10) + 'T' + date.substring(11, 25) + 'Z', formatString, 'PST');
+        return formatToPSTTimeZone(new Date(date + ' UTC'), formatString, 'PST');
     } else {
         return '';
     }
@@ -21,7 +17,7 @@ export const formatDate = (date: string, formatString = 'yyyy-MM-dd') => {
 
 export const formatToUTC = (date: string, formatString = 'yyyy-MM-dd') => {
     if (date) {
-        return formatToUTCTimeZone(date, formatString, 'PST');
+        return formatToUTCTimeZone(new Date(date), formatString, 'PST');
     } else {
         return '';
     }
