@@ -397,7 +397,7 @@ describe('Engagement form page tests', () => {
 
         await waitFor(() => {
             expect(screen.getByText('Create New Contact')).toBeVisible();
-            expect(screen.getByText('jace@gmail.com')).toBeVisible();
+            expect(screen.getByText(mockContact.email)).toBeVisible();
         });
 
         expect(getContactsMock).toHaveBeenCalled();
