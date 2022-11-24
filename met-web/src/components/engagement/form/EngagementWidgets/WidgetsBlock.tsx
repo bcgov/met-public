@@ -42,7 +42,7 @@ const WidgetsBlock = () => {
                 ],
             }),
         );
-        updateWidgets(dragIndex);
+        updateWidgets(widgets[dragIndex].id, dragIndex);
     }, []);
 
     const removeWidget = (widgetId: number) => {

@@ -15,7 +15,7 @@ export interface WidgetDrawerContextProps {
     isWidgetsLoading: boolean;
     loadWidgets: () => Promise<void>;
     deleteWidget: (widgetIndex: number) => void;
-    updateWidgets: (sort_index: number) => void;
+    updateWidgets: (widget_id: number, sort_index: number) => void;
 }
 
 export type EngagementParams = {
@@ -37,7 +37,7 @@ export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
     deleteWidget: (widgetIndex: number) => {
         /* empty default method  */
     },
-    updateWidgets: (sort_index: number) => {
+    updateWidgets: (widget_id: number, sort_index: number) => {
         /* empty default method  */
     },
 });
@@ -60,9 +60,9 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
         }
     };
 
-    const updateWidgets = async (sort_index: number) => {
+    const updateWidgets = async (widget_id: number, sort_index: number) => {
         try {
-            await sortWidgets(savedEngagement.id, sort_index);
+            await sortWidgets(savedEngagement.id, { widget_id: widget_id, sort_index: sort_index });
             dispatch(openNotification({ severity: 'success', text: 'updated sorting of widgets' }));
             loadWidgets();
         } catch (err) {

@@ -75,16 +75,15 @@ export const removeWidget = async (engagement_id: number, widget_id: number): Pr
     }
 };
 
-export const sortWidgets = async (engagement_id: number, sort_index: number): Promise<Widget> => {
+interface SortWidgetRequest {
+    widget_id: number;
+    sort_index: number;
+}
+
+export const sortWidgets = async (engagement_id: number, data: SortWidgetRequest): Promise<Widget> => {
     try {
-        const url = replaceAllInURL({
-            URL: Endpoints.Widgets.SORT,
-            params: {
-                engagement_id: String(engagement_id),
-                sort_index: String(sort_index),
-            },
-        });
-        const response = await http.PatchRequest<Widget>(url);
+        const url = replaceUrl(Endpoints.Widgets.SORT, 'engagement_id', String(engagement_id));
+        const response = await http.PatchRequest<Widget>(url, data);
         if (response.data.status && response.data.result) {
             return Promise.resolve(response.data.result);
         }
