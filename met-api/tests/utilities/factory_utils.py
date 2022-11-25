@@ -216,6 +216,5 @@ def factory_document_model(document_info: dict = TestWidgetDocumentInfo.document
         sort_index=document_info.get('sort_index'),
         widget_id=document_info.get('widget_id'),
     )
-    db.session.add(document)
-    db.session.commit()
+    document.save()
     return document

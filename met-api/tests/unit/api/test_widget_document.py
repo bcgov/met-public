@@ -40,7 +40,7 @@ def test_create_documents(client, jwt, session, document_info):  # pylint:disabl
     }
 
     rv = client.post(
-        f'/api/widgets/{str(widget.id)}/documents',
+        f'/api/widgets/{widget.id}/documents',
         data=json.dumps(data),
         headers=headers,
         content_type='application/json'
@@ -63,7 +63,7 @@ def test_get_document(client, jwt, session, document_info):  # pylint:disable=un
     })
 
     rv = client.get(
-        f'/api/widgets/{str(widget.id)}/documents',
+        f'/api/widgets/{widget.id}/documents',
         headers=headers,
         content_type='application/json'
     )
