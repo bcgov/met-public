@@ -58,4 +58,4 @@ def test_create_document(session):  # pylint:disable=unused-argument
 
     document = WidgetDocumentService.create_document(widget.id, TestWidgetDocumentInfo.document1)
 
-    assert document != None
+    assert document is not None

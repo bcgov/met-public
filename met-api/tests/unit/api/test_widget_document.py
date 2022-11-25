@@ -41,7 +41,8 @@ def test_create_documents(client, jwt, session, document_info):  # pylint:disabl
     rv = client.post('/api/widgets/' + str(widget.id) + '/documents', data=json.dumps(data),
                      headers=headers, content_type='application/json')
     assert rv.status_code == 200
-    
+
+
 @pytest.mark.parametrize('document_info', [TestWidgetItemInfo.widget_item1])
 def test_get_document(client, jwt, session, document_info):  # pylint:disable=unused-argument
     """Assert that widget items can be POSTed."""
@@ -49,15 +50,18 @@ def test_get_document(client, jwt, session, document_info):  # pylint:disable=un
     TestWidgetInfo.widget1['engagement_id'] = engagement.id
     widget = factory_widget_model(TestWidgetInfo.widget1)
 
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)    
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
 
     document = factory_document_model({
         **TestWidgetDocumentInfo.document1,
         'widget_id': widget.id,
     })
-    
-    rv = client.get('/api/widgets/' + str(widget.id) + '/documents',
-                     headers=headers, content_type='application/json')
-    
+
+    rv = client.get(
+        '/api/widgets/' + str(widget.id) + '/documents',
+        headers=headers,
+        content_type='application/json'
+    )
+
     assert rv.json.get('result').get('children')[0].get('id') == document.id
     assert rv.status_code == 200
