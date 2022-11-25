@@ -216,3 +216,25 @@ class TestCommentInfo(dict, Enum):
         'component_id': 'simpletextarea',
         'submission_date': datetime.now().strftime('%Y-%m-%d'),
     }
+
+
+class TestWidgetDocumentInfo(dict, Enum):
+    """Test scenarios of contact."""
+
+    document1 = {
+        'title': fake.word(),
+        'type': 'folder',
+        'parent_document_id': None,
+        'url': None,
+        'sort_index': 1,
+        'widget_id': 1,
+    }
+
+    document2 = {
+        'title': fake.file_name(extension='pdf'),
+        'type': 'file',
+        'parent_document_id': None,
+        'url': fake.image_url(),
+        'sort_index': 1,
+        'widget_id': 1,
+    }

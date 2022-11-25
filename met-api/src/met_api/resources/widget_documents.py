@@ -37,7 +37,7 @@ class WidgetDocuments(Resource):
     def get(widget_id):
         """Fetch a list of widgets by engagement_id."""
         try:
-            documents = WidgetDocumentService().get_document_by_widget_id(widget_id)
+            documents = WidgetDocumentService().get_documents_by_widget_id(widget_id)
             return ActionResult.success(result=documents)
         except (KeyError, ValueError) as err:
             return ActionResult.error(str(err))

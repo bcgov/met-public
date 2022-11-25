@@ -29,10 +29,11 @@ from met_api.models.submission import Submission as SubmissionModel
 from met_api.models.survey import Survey as SurveyModel
 from met_api.models.user import User as UserModel
 from met_api.models.widget import Widget as WidgetModal
+from met_api.models.widget_documents import WidgetDocuments as WidgetDocumentModel
 from met_api.models.widget_item import WidgetItem as WidgetItemModal
 from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementInfo, TestFeedbackInfo, TestSubmissionInfo, TestSurveyInfo, TestUserInfo,
-    TestWidgetInfo, TestWidgetItemInfo)
+    TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo)
 
 
 CONFIG = get_named_config('testing')
@@ -203,3 +204,17 @@ def factory_comment_model(survey_id, submission_id, comment_info: dict = TestCom
     db.session.add(comment)
     db.session.commit()
     return comment
+
+
+def factory_document_model(document_info: dict = TestWidgetDocumentInfo.document1):
+    """Produce a comment model."""
+    document = WidgetDocumentModel(
+        title=document_info.get('title'),
+        type=document_info.get('type'),
+        parent_document_id=document_info.get('parent_document_id'),
+        url=document_info.get('url'),
+        sort_index=document_info.get('sort_index'),
+        widget_id=document_info.get('widget_id'),
+    )
+    document.save()
+    return document

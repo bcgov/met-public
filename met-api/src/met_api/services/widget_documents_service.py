@@ -13,7 +13,7 @@ class WidgetDocumentService:
     """Widget Documents management service."""
 
     @staticmethod
-    def get_document_by_widget_id(widget_id):
+    def get_documents_by_widget_id(widget_id):
         """Get documents by widget id."""
         docs = WidgetDocumentsModel.get_all_by_widget_id(widget_id)
         if not docs:
