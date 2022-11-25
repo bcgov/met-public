@@ -17,7 +17,7 @@ export const WidgetCardSwitch = ({ widget, index, moveWidget, removeWidget }: Wi
 
     return (
         <>
-            <DragItem name={WidgetType[widget.widget_type_id]} moveItem={moveWidget} index={index}>
+            <DragItem name={'Widgets'} moveItem={moveWidget} index={index}>
                 <Switch>
                     <Case condition={widget.widget_type_id === WidgetType.Phases}>
                         <MetWidget
