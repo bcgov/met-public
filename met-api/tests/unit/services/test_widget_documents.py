@@ -43,7 +43,7 @@ def test_get_document_by_widget_id(session):  # pylint:disable=unused-argument
         'widget_id': widget.id,
     })
 
-    documents_root = WidgetDocumentService.get_document_by_widget_id(widget.id)
+    documents_root = WidgetDocumentService.get_documents_by_widget_id(widget.id)
 
     documents = documents_root.get('children')
 
@@ -57,5 +57,10 @@ def test_create_document(session):  # pylint:disable=unused-argument
     widget = factory_widget_model(TestWidgetInfo.widget1)
 
     document = WidgetDocumentService.create_document(widget.id, TestWidgetDocumentInfo.document1)
+    documents_root = WidgetDocumentService.get_documents_by_widget_id(widget.id)
+    documents = documents_root.get('children')
+    document_fetched = documents[0]
 
     assert document is not None
+    assert document.id == document_fetched.get('id')
+    assert document.title == document_fetched.get('title')
