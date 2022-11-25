@@ -6,7 +6,6 @@ import MetWidget from './MetWidget';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
 import { WidgetTabValues } from './type';
 
-
 interface WidgetCardSwitchProps {
     widget: Widget;
     index: number;
@@ -19,23 +18,22 @@ export const WidgetCardSwitch = ({ widget, index, moveWidget, removeWidget }: Wi
     return (
         <>
             <DragItem name={WidgetType[widget.widget_type_id]} moveItem={moveWidget} index={index}>
-            <Switch>
-                <Case condition={widget.widget_type_id === WidgetType.Phases}>
-                    <MetWidget
-                        sortable={false}
-                        testId={`phases-${widget.widget_type_id}`}
-                        title="EA Process"
-                        onDelete={() => {
-                            removeWidget(widget.id);
-                        }}
-                        onEdit={() => {
-                            handleWidgetDrawerTabValueChange(WidgetTabValues.PHASES_FORM);
-                            handleWidgetDrawerOpen(true);
-                        }}
-                    />
-                </Case>
-                <Case condition={widget.widget_type_id === WidgetType.WhoIsListening}>
-                    <DragItem name="Who is Listening" moveItem={moveWidget} index={index}>
+                <Switch>
+                    <Case condition={widget.widget_type_id === WidgetType.Phases}>
+                        <MetWidget
+                            sortable={false}
+                            testId={`phases-${widget.widget_type_id}`}
+                            title="EA Process"
+                            onDelete={() => {
+                                removeWidget(widget.id);
+                            }}
+                            onEdit={() => {
+                                handleWidgetDrawerTabValueChange(WidgetTabValues.PHASES_FORM);
+                                handleWidgetDrawerOpen(true);
+                            }}
+                        />
+                    </Case>
+                    <Case condition={widget.widget_type_id === WidgetType.WhoIsListening}>
                         <MetWidget
                             testId={`who-is-listening-${widget.widget_type_id}`}
                             title="Who is Listening"
