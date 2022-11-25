@@ -31,16 +31,8 @@ interface PostWidgetItemRequest {
     widget_data_id: number;
 }
 export const postWidgetItem = async (widget_id: number, data: PostWidgetItemRequest): Promise<WidgetItem> => {
-    try {
-        const url = replaceUrl(Endpoints.Widget_items.CREATE, 'widget_id', String(widget_id));
-        const response = await http.PostRequest<WidgetItem>(url, data);
-        if (response.data.status && response.data.result) {
-            return Promise.resolve(response.data.result);
-        }
-        return Promise.reject(response.data.message ?? 'Failed to create widget item');
-    } catch (err) {
-        return Promise.reject(err);
-    }
+    const result = await postWidgetItems(widget_id, [data]);
+    return result[0];
 };
 export const postWidgetItems = async (widget_id: number, data: PostWidgetItemRequest[]): Promise<WidgetItem[]> => {
     try {

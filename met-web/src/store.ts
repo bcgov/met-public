@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import loginReducer from 'components/Login/loginSlice';
 import userSlice from 'services/userService/userSlice';
 import engagementSlice from 'services/engagementService/engagementSlice';
@@ -13,6 +13,7 @@ export const store = configureStore({
         notification: notificationSlice,
         notificationModal: notificationModalSlice,
     },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
