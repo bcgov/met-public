@@ -2,7 +2,6 @@ import { render, waitFor, screen } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
 import * as EngagementView from '../../../src/components/engagement/view';
-import ProviderShell from './ProviderShell';
 import { Contact } from 'models/contact';
 import { setupEnv } from './setEnvVars';
 import * as reactRedux from 'react-redux';
@@ -96,9 +95,7 @@ describe('Engagement View page tests', () => {
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([widget]));
         getContactsMock.mockReturnValueOnce(Promise.resolve([mockContact]));
         render(
-            <ProviderShell>
-                <EngagementView.Engagement />
-            </ProviderShell>,
+            <EngagementView.Engagement />
         );
         await waitFor(() => {
             expect(screen.getByTestId(`engagement-content`)).toBeVisible();
@@ -116,9 +113,7 @@ describe('Engagement View page tests', () => {
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([widget]));
         getContactsMock.mockReturnValueOnce(Promise.resolve([mockContact]));
         render(
-            <ProviderShell>
-                <EngagementView.Engagement />
-            </ProviderShell>,
+            <EngagementView.Engagement />
         );
 
         await waitFor(() => {
