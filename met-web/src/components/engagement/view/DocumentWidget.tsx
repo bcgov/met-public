@@ -9,7 +9,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import FolderIcon from '@mui/icons-material/Folder';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import { If, When, Else, Then } from 'react-if';
+import { If, Else, Then } from 'react-if';
 
 interface DocumentWidgetProps {
     widget: Widget;
