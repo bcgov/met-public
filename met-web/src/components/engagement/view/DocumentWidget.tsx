@@ -8,6 +8,8 @@ import { fetchDocuments } from 'services/widgetService/DocumentService.tsx';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import FolderIcon from '@mui/icons-material/Folder';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { DOCUMENT_TYPE } from 'models/document';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 
 interface DocumentWidgetProps {
     widget: Widget;
@@ -21,6 +23,7 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
     const getDocuments = async () => {
         try {
             const fetchedDocuments = await fetchDocuments(widget.id);
+            console.log(fetchedDocuments);
             setDocuments(fetchedDocuments);
             setIsLoading(false);
         } catch (error) {
@@ -54,24 +57,44 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
             {documents.map((document) => {
                 return (
                     <Grid key={document.id} container item spacing={1} rowSpacing={1} xs={12} paddingTop={2}>
-                        {document.folder ? (
+                        {document.type === DOCUMENT_TYPE.FOLDER ? (
                             <>
-                                <Grid item justifyContent="flex-start" display="flex" xs={12}>
-                                    <Icon>
-                                        <FolderIcon />
-                                    </Icon>
-                                    <MetLabel>{document.name}</MetLabel>
+                                <Grid
+                                    sx={{ border: '2px solid red' }}
+                                    item
+                                    container
+                                    justifyContent="flex-start"
+                                    alignItems="center"
+                                    xs={12}
+                                >
+                                    <Grid item xs={1}>
+                                        <Icon sx={{ pb: 0, m: 0 }}>
+                                            <FolderIcon />
+                                        </Icon>
+                                    </Grid>
+                                    <Grid item xs={11}>
+                                        <MetLabel sx={{ p: 0, m: 0 }}>{document.title}</MetLabel>
+                                    </Grid>
                                 </Grid>
-                                {document.items ? (
-                                    document.items.map((folderItem) => {
-                                        <Grid item justifyContent="center" display="flex" xs={12}>
-                                            <MetLabel>
-                                                <Link href={folderItem.document_url}>
-                                                    <OpenInNewIcon />
-                                                    {folderItem.name}
-                                                </Link>
-                                            </MetLabel>
-                                        </Grid>
+                                {document.children ? (
+                                    document.children.map((folderItem: DocumentItem) => {
+                                        return (
+                                            <Grid item justifyContent="flex-start" container xs={12}>
+                                                <Grid item xs={11}>
+                                                    <Icon>
+                                                        <InsertDriveFileIcon />
+                                                    </Icon>
+                                                    <MetLabel sx={{ ml: 2 }}>
+                                                        <Link href={folderItem.document_url}>
+                                                            {folderItem.title}
+                                                            <Icon>
+                                                                <OpenInNewIcon />
+                                                            </Icon>
+                                                        </Link>
+                                                    </MetLabel>
+                                                </Grid>
+                                            </Grid>
+                                        );
                                     })
                                 ) : (
                                     <></>
@@ -79,7 +102,12 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                             </>
                         ) : (
                             <MetLabel>
-                                <Link href={document.document_url}>{document.name}</Link>
+                                <Link href={document.document_url}>
+                                    {document.title}
+                                    <Icon>
+                                        <OpenInNewIcon />
+                                    </Icon>
+                                </Link>
                             </MetLabel>
                         )}
                     </Grid>
