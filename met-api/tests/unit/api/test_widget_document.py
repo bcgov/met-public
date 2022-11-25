@@ -38,8 +38,13 @@ def test_create_documents(client, jwt, session, document_info):  # pylint:disabl
         **TestWidgetDocumentInfo.document1,
         'widget_id': widget.id,
     }
-    rv = client.post('/api/widgets/' + str(widget.id) + '/documents', data=json.dumps(data),
-                     headers=headers, content_type='application/json')
+
+    rv = client.post(
+        f'/api/widgets/{str(widget.id)}/documents',
+        data=json.dumps(data),
+        headers=headers,
+        content_type='application/json'
+    )
     assert rv.status_code == 200
 
 
@@ -58,10 +63,10 @@ def test_get_document(client, jwt, session, document_info):  # pylint:disable=un
     })
 
     rv = client.get(
-        '/api/widgets/' + str(widget.id) + '/documents',
+        f'/api/widgets/{str(widget.id)}/documents',
         headers=headers,
         content_type='application/json'
     )
 
-    assert rv.json.get('result').get('children')[0].get('id') == document.id
     assert rv.status_code == 200
+    assert rv.json.get('result').get('children')[0].get('id') == document.id
