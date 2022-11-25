@@ -9,6 +9,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import FolderIcon from '@mui/icons-material/Folder';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import { If, When, Else, Then } from 'react-if';
 
 interface DocumentWidgetProps {
     widget: Widget;
@@ -22,6 +23,7 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
     const getDocuments = async () => {
         try {
             const fetchedDocuments = await fetchDocuments(widget.id);
+            console.log(fetchedDocuments);
             setDocuments(fetchedDocuments);
             setIsLoading(false);
         } catch (error) {
@@ -55,20 +57,21 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
             {documents.map((document) => {
                 return (
                     <Grid key={document.id} container item spacing={1} rowSpacing={1} xs={12} paddingTop={2}>
-                        {document.type === DOCUMENT_TYPE.FOLDER ? (
-                            <>
+                        <If condition={document.type === DOCUMENT_TYPE.FOLDER}>
+                            <Then>
                                 <Grid item container justifyContent="flex-start" alignItems="center" xs={12}>
                                     <Grid item xs={1}>
-                                        <Icon sx={{ pb: 0, m: 0 }}>
+                                        <Icon sx={{ p: 0, m: 0 }}>
                                             <FolderIcon />
                                         </Icon>
                                     </Grid>
-                                    <Grid item xs={11}>
+                                    <Grid item xs={11} >
                                         <MetHeader4 bold={true} sx={{ p: 0, m: 0 }}>
                                             {document.title}
                                         </MetHeader4>
                                     </Grid>
                                 </Grid>
+
                                 {document.children ? (
                                     document.children.map((folderItem: DocumentItem) => {
                                         return (
@@ -79,7 +82,7 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                                                         <InsertDriveFileIcon />
                                                     </Icon>
 
-                                                    <Link target="_blank" href={`${folderItem.document_url}`}>
+                                                    <Link target="_blank" href={`${folderItem.url}`}>
                                                         {folderItem.title}
                                                         <Icon sx={{ ml: 0.5 }}>
                                                             <OpenInNewIcon />
@@ -92,18 +95,19 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                                 ) : (
                                     <></>
                                 )}
-                            </>
-                        ) : (
-                            <Grid item justifyContent="flex-start" container xs={12}>
-                                <InsertDriveFileIcon sx={{ mr: 1 }} />
-                                <Link target="_blank" href={`${document.document_url}`}>
-                                    {document.title}
-                                    <Icon sx={{ ml: 0.5 }}>
-                                        <OpenInNewIcon />
-                                    </Icon>
-                                </Link>
-                            </Grid>
-                        )}
+                            </Then>
+                            <Else>
+                                <Grid item justifyContent="flex-start" container xs={12}>
+                                    <InsertDriveFileIcon sx={{ mr: 1 }} />
+                                    <Link target="_blank" href={`${document.url}`}>
+                                        {document.title}
+                                        <Icon sx={{ ml: 0.5 }}>
+                                            <OpenInNewIcon />
+                                        </Icon>
+                                    </Link>
+                                </Grid>
+                            </Else>
+                        </If>
                     </Grid>
                 );
             })}
