@@ -183,8 +183,7 @@ class Engagement(db.Model):
     @classmethod
     def publish_scheduled_engagements_due(cls) -> List[EngagementSchema]:
         """Update scheduled engagements to published."""
-        now = utc_datetime()
-        datetime_due = datetime(now.year, now.month, now.day, now.hour, now.minute)
+        datetime_due = datetime.now()
         print('Publish due date ------------------------', datetime_due)
         engagements_schema = EngagementSchema(many=True)
         update_fields = dict(
