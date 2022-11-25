@@ -48,7 +48,7 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
             contact_number=user.get('contact_number', None),
             external_id=user.get('external_id', None),
             created_date=datetime.utcnow(),
-            updated_date=datetime.utcnow(),
+            updated_date=None,
         )
         db.session.add(new_user)
         db.session.commit()

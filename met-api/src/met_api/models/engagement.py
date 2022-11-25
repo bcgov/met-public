@@ -14,7 +14,7 @@ from met_api.constants.engagement_status import Status
 from met_api.constants.user import SYSTEM_USER
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.engagement import EngagementSchema
-from met_api.utils.datetime import local_datetime
+from met_api.utils.datetime import local_datetime, utc_datetime
 from .db import db
 from .default_method_result import DefaultMethodResult
 from .engagement_status import EngagementStatus
@@ -103,7 +103,7 @@ class Engagement(db.Model):
             created_by=engagement.get('created_by', None),
             created_date=datetime.utcnow(),
             updated_by=engagement.get('updated_by', None),
-            updated_date=datetime.utcnow(),
+            updated_date=None,
             published_date=None,
             scheduled_date=None,
             banner_filename=engagement.get('banner_filename', None),
@@ -152,7 +152,7 @@ class Engagement(db.Model):
         engagement: Engagement = query.first()
         if not engagement:
             return None
-
+        engagement_data['updated_date'] = datetime.utcnow()
         query.update(engagement_data)
         db.session.commit()
         return engagement
@@ -166,7 +166,7 @@ class Engagement(db.Model):
         engagements_schema = EngagementSchema(many=True)
         update_fields = dict(
             status_id=Status.Closed.value,
-            updated_date=datetime.now(),
+            updated_date=datetime.utcnow(),
             updated_by=SYSTEM_USER
         )
         # Close published engagements where end date is prior than today
@@ -183,14 +183,14 @@ class Engagement(db.Model):
     @classmethod
     def publish_scheduled_engagements_due(cls) -> List[EngagementSchema]:
         """Update scheduled engagements to published."""
-        now = local_datetime()
+        now = utc_datetime()
         datetime_due = datetime(now.year, now.month, now.day, now.hour, now.minute)
         print('Publish due date ------------------------', datetime_due)
         engagements_schema = EngagementSchema(many=True)
         update_fields = dict(
             status_id=Status.Published.value,
-            published_date=datetime.now(),
-            updated_date=datetime.now(),
+            published_date=datetime.utcnow(),
+            updated_date=datetime.utcnow(),
             updated_by=SYSTEM_USER
         )
         # Publish scheduled engagements where scheduled datetime is prior than now

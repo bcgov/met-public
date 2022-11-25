@@ -1,44 +1,52 @@
 import React, { useContext, useState } from 'react';
 import { MetPaper, MetBody, MetHeader4 } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
-import ArticleIcon from '@mui/icons-material/Article';
-import { WidgetDrawerContext } from './WidgetDrawerContext';
-import { WidgetTabValues } from './type';
+import CommentIcon from '@mui/icons-material/Comment';
+import { WidgetDrawerContext } from '../WidgetDrawerContext';
+import { WidgetTabValues } from '../type';
+import { ActionContext } from '../../ActionContext';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
 import { WidgetType } from 'models/widget';
+import { postWidget } from 'services/widgetService';
 import { Else, If, Then } from 'react-if';
 
-const DocumentOptionCard = () => {
-    const { widgets, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
+const PhasesOptionCard = () => {
+    const { savedEngagement } = useContext(ActionContext);
+    const { widgets, loadWidgets, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
     const dispatch = useAppDispatch();
     const [creatingWidget, setCreatingWidget] = useState(false);
 
     const createWidget = async () => {
-        const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Document);
+        const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Phases);
         if (alreadyExists) {
-            handleWidgetDrawerTabValueChange(WidgetTabValues.DOCUMENT_FORM);
+            handleWidgetDrawerTabValueChange(WidgetTabValues.PHASES_FORM);
             return;
         }
 
         try {
             setCreatingWidget(!creatingWidget);
+            await postWidget(savedEngagement.id, {
+                widget_type_id: WidgetType.Phases,
+                engagement_id: savedEngagement.id,
+            });
+            await loadWidgets();
             dispatch(
                 openNotification({
                     severity: 'success',
-                    text: 'Widget successfully created. Proceed to Add Documents.',
+                    text: 'Widget successfully added.',
                 }),
             );
-            handleWidgetDrawerTabValueChange(WidgetTabValues.DOCUMENT_FORM);
+            handleWidgetDrawerTabValueChange(WidgetTabValues.PHASES_FORM);
         } catch (error) {
             setCreatingWidget(false);
-            dispatch(openNotification({ severity: 'error', text: 'Error occurred while creating document widget' }));
+            dispatch(openNotification({ severity: 'error', text: 'Error occurred while adding phases widget' }));
         }
     };
 
     return (
         <MetPaper
-            data-testid={`widget-drawer-option/${WidgetType.Document}`}
+            data-testid={`widget-drawer-option/${WidgetType.Phases}`}
             elevation={1}
             sx={{
                 padding: '10px 2px 10px 2px',
@@ -63,7 +71,7 @@ const DocumentOptionCard = () => {
                         spacing={1}
                     >
                         <Grid item>
-                            <ArticleIcon sx={{ fontSize: '5em' }} />
+                            <CommentIcon sx={{ fontSize: '5em' }} />
                         </Grid>
                         <Grid
                             container
@@ -75,10 +83,10 @@ const DocumentOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetHeader4>Document</MetHeader4>
+                                <MetHeader4>EA Process</MetHeader4>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody>Add documents to this engagement</MetBody>
+                                <MetBody>Add the environment assessment process information to this engagement</MetBody>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -88,4 +96,4 @@ const DocumentOptionCard = () => {
     );
 };
 
-export default DocumentOptionCard;
+export default PhasesOptionCard;

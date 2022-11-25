@@ -22,7 +22,7 @@ def upgrade():
     op.add_column('submission', sa.Column('reviewed_by', sa.String(length=50), nullable=True))
     op.add_column('submission', sa.Column('review_date', sa.DateTime(), nullable=True))
     op.add_column('submission', sa.Column('comment_status_id', sa.Integer(), nullable=True))
-    op.create_foreign_key(None, 'submission', 'comment_status', ['comment_status_id'], ['id'], ondelete='SET NULL')
+    op.create_foreign_key('submission_comment_status_id_fkey', 'submission', 'comment_status', ['comment_status_id'], ['id'], ondelete='SET NULL')
 
     conn.execute('UPDATE submission s \
                 SET reviewed_by=c.reviewed_by, \
@@ -40,7 +40,7 @@ def upgrade():
 
 def downgrade():
     conn = op.get_bind()
-    op.drop_constraint(None, 'submission', type_='foreignkey')
+    op.drop_constraint('submission_comment_status_id_fkey', 'submission', type_='foreignkey')
     op.add_column('comment', sa.Column('status_id', sa.Integer(), nullable=True))
     op.add_column('comment', sa.Column('review_date', sa.DateTime(), nullable=True))
     op.add_column('comment', sa.Column('reviewed_by', sa.String(length=50), nullable=True))

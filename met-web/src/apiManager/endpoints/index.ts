@@ -54,8 +54,8 @@ const Endpoints = {
         UPDATE: `${AppConfig.apiUrl}/contacts/`,
     },
     Documents: {
-        GET_LIST: `${AppConfig.apiUrl}/documents/widgets/widget_id`,
-        CREATE: `${AppConfig.apiUrl}/documents/`,
+        GET_LIST: `${AppConfig.apiUrl}/widgets/widget_id/documents`,
+        CREATE: `${AppConfig.apiUrl}/widgets/widget_id/documents`,
     },
 };
 

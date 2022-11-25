@@ -148,7 +148,7 @@ db-downgrade: ## Update the local database to the previous migration
 	. venv/bin/activate && python manage.py db downgrade
 
 db-migrate: ## Create a new migration
-	. venv/bin/activate && flask db migrate -m $(message)
+	. venv/bin/activate && flask db migrate -m "$(message)"
 
 #################################################################################
 # Self Documenting Commands                                                     #
