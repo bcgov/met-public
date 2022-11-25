@@ -116,9 +116,15 @@ describe('Engagement form page tests', () => {
         .spyOn(engagementService, 'postEngagement')
         .mockReturnValue(Promise.resolve(engagement));
     const getContactsMock = jest.spyOn(contactService, 'getContacts').mockReturnValue(Promise.resolve([mockContact]));
-    const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([whoIsListeningWidget, phasesWidget]));
-    const postWidgetMock = jest.spyOn(widgetService, 'postWidget').mockReturnValue(Promise.resolve(whoIsListeningWidget));
-    const postWidgetItemMock = jest.spyOn(widgetService, 'postWidgetItem').mockReturnValue(Promise.resolve(contactWidgetItem));
+    const getWidgetsMock = jest
+        .spyOn(widgetService, 'getWidgets')
+        .mockReturnValue(Promise.resolve([whoIsListeningWidget, phasesWidget]));
+    const postWidgetMock = jest
+        .spyOn(widgetService, 'postWidget')
+        .mockReturnValue(Promise.resolve(whoIsListeningWidget));
+    const postWidgetItemMock = jest
+        .spyOn(widgetService, 'postWidgetItem')
+        .mockReturnValue(Promise.resolve(contactWidgetItem));
 
     beforeEach(() => {
         setupEnv();
@@ -463,7 +469,7 @@ describe('Engagement form page tests', () => {
             engagement_id: engagement.id,
         });
         expect(getWidgetsMock).toHaveBeenCalledTimes(2);
-                
+
         const saveWidgetButton = screen.getByTestId('savePhasesWidgetButton');
         fireEvent.click(saveWidgetButton);
 
