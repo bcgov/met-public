@@ -65,7 +65,7 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                                             <FolderIcon />
                                         </Icon>
                                     </Grid>
-                                    <Grid item xs={11} >
+                                    <Grid item xs={11}>
                                         <MetHeader4 bold={true} sx={{ p: 0, m: 0 }}>
                                             {document.title}
                                         </MetHeader4>
