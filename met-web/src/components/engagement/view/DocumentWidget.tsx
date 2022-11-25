@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MetPaper, MetHeader2, MetLabel } from 'components/common';
+import { MetPaper, MetHeader2, MetLabel, MetHeader4 } from 'components/common';
 import { Grid, Skeleton, Icon, Link } from '@mui/material';
 import { Widget } from 'models/widget';
 import { DocumentItem } from 'models/document';
@@ -59,39 +59,34 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                     <Grid key={document.id} container item spacing={1} rowSpacing={1} xs={12} paddingTop={2}>
                         {document.type === DOCUMENT_TYPE.FOLDER ? (
                             <>
-                                <Grid
-                                    sx={{ border: '2px solid red' }}
-                                    item
-                                    container
-                                    justifyContent="flex-start"
-                                    alignItems="center"
-                                    xs={12}
-                                >
+                                <Grid item container justifyContent="flex-start" alignItems="center" xs={12}>
                                     <Grid item xs={1}>
                                         <Icon sx={{ pb: 0, m: 0 }}>
                                             <FolderIcon />
                                         </Icon>
                                     </Grid>
                                     <Grid item xs={11}>
-                                        <MetLabel sx={{ p: 0, m: 0 }}>{document.title}</MetLabel>
+                                        <MetHeader4 bold={true} sx={{ p: 0, m: 0 }}>
+                                            {document.title}
+                                        </MetHeader4>
                                     </Grid>
                                 </Grid>
                                 {document.children ? (
                                     document.children.map((folderItem: DocumentItem) => {
                                         return (
                                             <Grid item justifyContent="flex-start" container xs={12}>
-                                                <Grid item xs={11}>
-                                                    <Icon>
+                                                <Grid item xs={1}></Grid>
+                                                <Grid display="flex" item xs={11}>
+                                                    <Icon sx={{ mr: 1 }}>
                                                         <InsertDriveFileIcon />
                                                     </Icon>
-                                                    <MetLabel sx={{ ml: 2 }}>
-                                                        <Link href={folderItem.document_url}>
-                                                            {folderItem.title}
-                                                            <Icon>
-                                                                <OpenInNewIcon />
-                                                            </Icon>
-                                                        </Link>
-                                                    </MetLabel>
+
+                                                    <Link target="_blank" href={`${folderItem.document_url}`}>
+                                                        {folderItem.title}
+                                                        <Icon sx={{ ml: 0.5 }}>
+                                                            <OpenInNewIcon />
+                                                        </Icon>
+                                                    </Link>
                                                 </Grid>
                                             </Grid>
                                         );
@@ -101,14 +96,15 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                                 )}
                             </>
                         ) : (
-                            <MetLabel>
-                                <Link href={document.document_url}>
+                            <Grid item justifyContent="flex-start" container xs={12}>
+                                <InsertDriveFileIcon sx={{ mr: 1 }} />
+                                <Link target="_blank" href={`${document.document_url}`}>
                                     {document.title}
-                                    <Icon>
+                                    <Icon sx={{ ml: 0.5 }}>
                                         <OpenInNewIcon />
                                     </Icon>
                                 </Link>
-                            </MetLabel>
+                            </Grid>
                         )}
                     </Grid>
                 );
