@@ -9,6 +9,6 @@ export interface DocumentItem {
     id: number;
     title: string;
     type: DocumentType;
-    document_url?: string;
+    url?: string;
     children?: DocumentItem[];
 }
