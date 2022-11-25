@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { MetPaper, MetHeader2, MetLabel, MetHeader4 } from 'components/common';
+import { MetPaper, MetHeader2, MetHeader4 } from 'components/common';
 import { Grid, Skeleton, Icon, Link } from '@mui/material';
 import { Widget } from 'models/widget';
-import { DocumentItem } from 'models/document';
+import { DocumentItem, DOCUMENT_TYPE } from 'models/document';
 import { useAppDispatch } from 'hooks';
 import { fetchDocuments } from 'services/widgetService/DocumentService.tsx';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import FolderIcon from '@mui/icons-material/Folder';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { DOCUMENT_TYPE } from 'models/document';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 
 interface DocumentWidgetProps {
