@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import { useAppDispatch } from 'hooks';
 import { Widget } from 'models/widget';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { getWidgets, removeWidget } from 'services/widgetService';
+import { getWidgets, removeWidget, sortWidgets } from 'services/widgetService';
 import { ActionContext } from '../ActionContext';
 import { WidgetTabValues } from './type';
 
@@ -15,7 +15,7 @@ export interface WidgetDrawerContextProps {
     isWidgetsLoading: boolean;
     loadWidgets: () => Promise<void>;
     deleteWidget: (widgetIndex: number) => void;
-    updateWidgets: (_widgets: Widget[]) => void;
+    updateWidgets: (widget_id: number, sort_index: number) => void;
 }
 
 export type EngagementParams = {
@@ -37,7 +37,7 @@ export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
     deleteWidget: (widgetIndex: number) => {
         /* empty default method  */
     },
-    updateWidgets: (_widgets: Widget[]) => {
+    updateWidgets: (widget_id: number, sort_index: number) => {
         /* empty default method  */
     },
 });
@@ -60,8 +60,14 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
         }
     };
 
-    const updateWidgets = (_widgets: Widget[]) => {
-        //TODO: setup sort
+    const updateWidgets = async (widget_id: number, sort_index: number) => {
+        try {
+            await sortWidgets(savedEngagement.id, { widget_id: widget_id, sort_index: sort_index });
+            dispatch(openNotification({ severity: 'success', text: 'updated sorting of widgets' }));
+            loadWidgets();
+        } catch (err) {
+            dispatch(openNotification({ severity: 'error', text: 'Error sorting widgets' }));
+        }
     };
 
     const loadWidgets = async () => {
