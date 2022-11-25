@@ -99,13 +99,8 @@ class EngagementWidget(Resource):
     def delete(engagement_id, widget_id):
         """Remove widget for an engagement."""
         try:
-
-            result = WidgetService().delete_widget(engagement_id, widget_id)
-
-            if result.success:
-                return ActionResult.success(widget_id, 'Widget successfully removed')
-
-            return ActionResult.error('Error occurred while removing Widget from engagement')
+            WidgetService().delete_widget(engagement_id, widget_id)
+            return ActionResult.success(widget_id, 'Widget successfully removed')
         except KeyError as err:
             return ActionResult.error(str(err))
         except ValueError as err:

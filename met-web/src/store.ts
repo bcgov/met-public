@@ -13,6 +13,7 @@ export const store = configureStore({
         notification: notificationSlice,
         notificationModal: notificationModalSlice,
     },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
