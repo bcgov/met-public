@@ -15,7 +15,7 @@ export interface WidgetDrawerContextProps {
     isWidgetsLoading: boolean;
     loadWidgets: () => Promise<void>;
     deleteWidget: (widgetIndex: number) => void;
-    updateWidgets: (widget_id: number, sort_index: number) => void;
+    updateWidgetsSorting: (widgets: Widget[]) => void;
 }
 
 export type EngagementParams = {
@@ -37,7 +37,7 @@ export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
     deleteWidget: (widgetIndex: number) => {
         /* empty default method  */
     },
-    updateWidgets: (widget_id: number, sort_index: number) => {
+    updateWidgetsSorting: (widgets: Widget[]) => {
         /* empty default method  */
     },
 });
@@ -60,10 +60,9 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
         }
     };
 
-    const updateWidgets = async (widget_id: number, sort_index: number) => {
+    const updateWidgetsSorting = async (resortedWidgets: Widget[]) => {
         try {
-            await sortWidgets(savedEngagement.id, { widget_id: widget_id, sort_index: sort_index });
-            dispatch(openNotification({ severity: 'success', text: 'updated sorting of widgets' }));
+            await sortWidgets(savedEngagement.id, resortedWidgets);
             loadWidgets();
         } catch (err) {
             dispatch(openNotification({ severity: 'error', text: 'Error sorting widgets' }));
@@ -77,7 +76,6 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
         }
 
         try {
-            setIsWidgetsLoading(true);
             const widgetsList = await getWidgets(savedEngagement.id);
             setWidgets(widgetsList);
             setIsWidgetsLoading(false);
@@ -105,7 +103,7 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
             value={{
                 widgets,
                 deleteWidget,
-                updateWidgets,
+                updateWidgetsSorting,
                 widgetDrawerOpen,
                 handleWidgetDrawerOpen,
                 widgetDrawerTabValue,

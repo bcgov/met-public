@@ -67,19 +67,10 @@ export const removeWidget = async (engagement_id: number, widget_id: number): Pr
     }
 };
 
-interface SortWidgetRequest {
-    widget_id: number;
-    sort_index: number;
-}
-
-export const sortWidgets = async (engagement_id: number, data: SortWidgetRequest): Promise<Widget> => {
+export const sortWidgets = async (engagement_id: number, data: Widget[]): Promise<void> => {
     try {
         const url = replaceUrl(Endpoints.Widgets.SORT, 'engagement_id', String(engagement_id));
-        const response = await http.PatchRequest<Widget>(url, data);
-        if (response.data.status && response.data.result) {
-            return Promise.resolve(response.data.result);
-        }
-        return Promise.reject(response.data.message ?? 'Failed to sort widgets');
+        await http.PatchRequest<Widget>(url, data);
     } catch (err) {
         return Promise.reject(err);
     }

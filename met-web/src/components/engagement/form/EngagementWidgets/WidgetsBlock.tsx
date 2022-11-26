@@ -12,7 +12,7 @@ import { openNotificationModal } from 'services/notificationModalService/notific
 import update from 'immutability-helper';
 
 const WidgetsBlock = () => {
-    const { widgets, deleteWidget, updateWidgets, handleWidgetDrawerOpen, isWidgetsLoading } =
+    const { widgets, deleteWidget, updateWidgetsSorting, handleWidgetDrawerOpen, isWidgetsLoading } =
         useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
@@ -34,15 +34,16 @@ const WidgetsBlock = () => {
     };
 
     const moveWidget = useCallback((dragIndex: number, hoverIndex: number) => {
-        setTempWidgets((prevWidgets: Widget[]) =>
-            update(prevWidgets, {
+        setTempWidgets((prevWidgets: Widget[]) => {
+            const resortedWidgets = update(prevWidgets, {
                 $splice: [
                     [dragIndex, 1],
                     [hoverIndex, 0, prevWidgets[dragIndex]],
                 ],
-            }),
-        );
-        updateWidgets(widgets[dragIndex].id, dragIndex);
+            });
+            updateWidgetsSorting(resortedWidgets);
+            return resortedWidgets;
+        });
     }, []);
 
     const removeWidget = (widgetId: number) => {
