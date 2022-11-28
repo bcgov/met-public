@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Grid } from '@mui/material';
+import { Grid, useMediaQuery, Theme } from '@mui/material';
 import { EngagementBanner } from './EngagementBanner';
 import { ActionContext } from './ActionContext';
 import { EngagementContent } from './EngagementContent';
@@ -10,6 +10,7 @@ import { useAppSelector } from 'hooks';
 import { useNavigate, useLocation } from 'react-router';
 import { RouteState } from './types';
 import WidgetBlock from './widgets/WidgetBlock';
+import { Else, If, Then } from 'react-if';
 
 export const EngagementView = () => {
     const { state } = useLocation() as RouteState;
@@ -22,6 +23,8 @@ export const EngagementView = () => {
     const navigate = useNavigate();
     //Clear state on window refresh
     window.history.replaceState({}, document.title);
+
+    const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 
     const handleStartSurvey = () => {
         if (!isPreview) {
@@ -60,15 +63,41 @@ export const EngagementView = () => {
                     m={{ lg: '0 8em 1em 3em', md: '2em', xs: '1em' }}
                     spacing={2}
                 >
-                    <Grid data-testid={'engagement-content'} item xs={12} lg={8}>
-                        <EngagementContent />
-                    </Grid>
-                    <Grid item data-testid={'widget-block'} xs={12} lg={4}>
-                        <WidgetBlock />
-                    </Grid>
-                    <Grid item xs={12} lg={8}>
-                        <SurveyBlock startSurvey={handleStartSurvey} />
-                    </Grid>
+                    <If condition={isMediumScreen}>
+                        <Then>
+                            <Grid
+                                container
+                                item
+                                xs={12}
+                                lg={8}
+                                direction="row"
+                                justifyContent={'flex-start'}
+                                alignItems="flex-start"
+                                spacing={2}
+                            >
+                                <Grid data-testid={'engagement-content'} item xs={12}>
+                                    <EngagementContent />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <SurveyBlock startSurvey={handleStartSurvey} />
+                                </Grid>
+                            </Grid>
+                            <Grid item data-testid={'widget-block'} xs={12} lg={4}>
+                                <WidgetBlock />
+                            </Grid>
+                        </Then>
+                        <Else>
+                            <Grid data-testid={'engagement-content'} item xs={12}>
+                                <EngagementContent />
+                            </Grid>
+                            <Grid item data-testid={'widget-block'} xs={12}>
+                                <WidgetBlock />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <SurveyBlock startSurvey={handleStartSurvey} />
+                            </Grid>
+                        </Else>
+                    </If>
                 </Grid>
             </Grid>
         </>
