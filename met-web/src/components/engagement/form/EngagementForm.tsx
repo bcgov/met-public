@@ -3,7 +3,6 @@ import { Typography, Grid, TextField, Stack } from '@mui/material';
 import { MetPaper, MetLabel, PrimaryButton, SecondaryButton, MetHeader4 } from '../../common';
 import RichTextEditor from './RichTextEditor';
 import { ActionContext } from './ActionContext';
-import { formatDate } from '../../common/dateHelper';
 import ImageUpload from 'components/imageUpload';
 import { useNavigate } from 'react-router-dom';
 import { AddSurveyBlock } from './AddSurveyBlock';
@@ -35,8 +34,8 @@ const EngagementForm = () => {
     useEffect(() => {
         setEngagementFormData({
             name: savedEngagement?.name || '',
-            start_date: formatDate(savedEngagement.start_date),
-            end_date: formatDate(savedEngagement.end_date),
+            start_date: savedEngagement.start_date,
+            end_date: savedEngagement.end_date,
             description: savedEngagement?.description || '',
             content: savedEngagement?.content || '',
         });

@@ -14,7 +14,7 @@ from met_api.constants.engagement_status import Status
 from met_api.constants.user import SYSTEM_USER
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.engagement import EngagementSchema
-from met_api.utils.datetime import local_datetime, utc_datetime
+from met_api.utils.datetime import local_datetime
 from .db import db
 from .default_method_result import DefaultMethodResult
 from .engagement_status import EngagementStatus
@@ -183,8 +183,7 @@ class Engagement(db.Model):
     @classmethod
     def publish_scheduled_engagements_due(cls) -> List[EngagementSchema]:
         """Update scheduled engagements to published."""
-        now = utc_datetime()
-        datetime_due = datetime(now.year, now.month, now.day, now.hour, now.minute)
+        datetime_due = datetime.now()
         print('Publish due date ------------------------', datetime_due)
         engagements_schema = EngagementSchema(many=True)
         update_fields = dict(

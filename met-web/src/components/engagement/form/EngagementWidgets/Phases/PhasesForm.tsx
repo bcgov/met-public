@@ -4,7 +4,7 @@ import { MetHeader3, MetLabel, PrimaryButton, SecondaryButton } from 'components
 import { EngagementPhases } from 'models/engagementPhases';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { postWidgetItems } from 'services/widgetService';
+import { postWidgetItem } from 'services/widgetService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType } from 'models/widget';
 
@@ -21,7 +21,7 @@ const PhasesForm = () => {
     const widget = widgets.filter((widget) => widget.widget_type_id === WidgetType.Phases)[0] || null;
 
     useEffect(() => {
-        if (widget) {
+        if (widget && widget.items.length > 0) {
             setSelectedOption(options.find((o) => o.id === widget.items[0].widget_data_id) || null);
         }
     }, [widget]);
@@ -45,18 +45,16 @@ const PhasesForm = () => {
         },
     ];
 
-    const saveWidgetItems = async () => {
-        const widgetsToUpdate = [
-            {
-                widget_id: widget.id,
-                widget_data_id: selectedOption?.id || EngagementPhases.Standalone,
-            },
-        ];
+    const saveWidgetItem = async () => {
+        const widgetsToUpdate = {
+            widget_id: widget.id,
+            widget_data_id: selectedOption?.id || EngagementPhases.Standalone,
+        };
         try {
             setSavingWidgetItems(true);
-            await postWidgetItems(widget.id, widgetsToUpdate);
+            await postWidgetItem(widget.id, widgetsToUpdate);
             await loadWidgets();
-            dispatch(openNotification({ severity: 'success', text: 'Widgets successfully added' }));
+            dispatch(openNotification({ severity: 'success', text: 'Widget successfully added' }));
             handleWidgetDrawerOpen(false);
             setSavingWidgetItems(false);
         } catch (error) {
@@ -79,6 +77,7 @@ const PhasesForm = () => {
                     <Grid item xs={12}>
                         <MetLabel>Engagement Phase</MetLabel>
                         <Autocomplete
+                            data-testid="engagementPhaseSelect"
                             id="option-selector"
                             options={options}
                             value={selectedOption}
@@ -122,8 +121,9 @@ const PhasesForm = () => {
                 <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'} marginTop="8em">
                     <Grid item>
                         <PrimaryButton
+                            data-testid="savePhasesWidgetButton"
                             loading={savingWidgetItems}
-                            onClick={() => saveWidgetItems()}
+                            onClick={() => saveWidgetItem()}
                         >{`Save & Close`}</PrimaryButton>
                     </Grid>
                     <Grid item>

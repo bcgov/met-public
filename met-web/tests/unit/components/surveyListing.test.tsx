@@ -15,7 +15,7 @@ const mockEngagementOne = {
     ...createDefaultEngagement(),
     id: 1,
     name: 'Engagement One',
-    created_date: '2022-09-14 00:00:00',
+    created_date: '2022-09-14 10:00:00',
     rich_content:
         '{"blocks":[{"key":"29p4m","text":"Test content","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
     content: 'Test content',
@@ -35,7 +35,7 @@ const mockSurveyOne = {
     name: 'Survey One',
     engagement_id: 1,
     engagement: mockEngagementOne,
-    created_date: '2022-09-14 00:00:00',
+    created_date: '2022-09-14 10:00:00',
 };
 
 const mockEngagementTwo = {
@@ -46,8 +46,8 @@ const mockEngagementTwo = {
         id: EngagementStatus.Published,
         status_name: 'Open',
     },
-    created_date: '2022-09-15 00:00:00',
-    published_date: '2022-09-19 00:00:00',
+    created_date: '2022-09-15 10:00:00',
+    published_date: '2022-09-19 10:00:00',
     submissions_meta_data: {
         total: 1,
     },
@@ -59,7 +59,7 @@ const mockSurveyTwo = {
     name: 'Survey Two',
     engagement_id: 2,
     engagement: mockEngagementTwo,
-    created_date: '2022-09-15 00:00:00',
+    created_date: '2022-09-15 10:00:00',
     comments_meta_data: {
         pending: 1,
         total: 12,

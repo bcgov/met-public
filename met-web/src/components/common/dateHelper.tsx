@@ -1,17 +1,24 @@
-import dayjs from 'dayjs';
-import { format, utcToZonedTime } from 'date-fns-tz';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
+import { format, utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
+import moment from 'moment';
+import { Dayjs } from 'dayjs';
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
-
-const formatInTimeZone = (date: string, fmt: string, tz: string) =>
+const formatToPSTTimeZone = (date: Date, fmt: string, tz: string) =>
     format(utcToZonedTime(date, tz), fmt, { timeZone: tz });
 
-export const formatDate = (d: string, formatString = 'yyyy-MM-dd') => {
-    if (d) {
-        return formatInTimeZone(d, formatString, 'UTC');
+const formatToUTCTimeZone = (date: Date, fmt: string, tz: string) =>
+    moment(date.setHours(date.getHours() + zonedTimeToUtc(date, tz).getTimezoneOffset() / 60)).format(fmt);
+
+export const formatDate = (date: string, formatString = 'yyyy-MM-dd') => {
+    if (date) {
+        return formatToPSTTimeZone(new Date(date + ' UTC'), formatString, 'PST');
+    } else {
+        return '';
+    }
+};
+
+export const formatToUTC = (date: Dayjs | string, formatString = 'yyyy-MM-DD HH:mm:ss') => {
+    if (date) {
+        return formatToUTCTimeZone(new Date(date.toString()), formatString, 'PST');
     } else {
         return '';
     }
