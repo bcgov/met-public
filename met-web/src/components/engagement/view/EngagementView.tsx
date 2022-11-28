@@ -60,10 +60,10 @@ export const EngagementView = () => {
                     m={{ lg: '0 8em 1em 3em', md: '2em', xs: '1em' }}
                     spacing={2}
                 >
-                    <Grid item xs={12} lg={8}>
+                    <Grid data-testid={'engagement-content'} item xs={12} lg={8}>
                         <EngagementContent />
                     </Grid>
-                    <Grid item xs={12} lg={4}>
+                    <Grid item data-testid={'widget-block'} xs={12} lg={4}>
                         <WidgetBlock />
                     </Grid>
                     <Grid item xs={12} lg={8}>
