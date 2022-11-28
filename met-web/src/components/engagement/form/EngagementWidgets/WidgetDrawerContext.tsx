@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import { useAppDispatch } from 'hooks';
 import { Widget } from 'models/widget';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { getWidgets, removeWidget } from 'services/widgetService';
+import { getWidgets, removeWidget, sortWidgets } from 'services/widgetService';
 import { ActionContext } from '../ActionContext';
 import { WidgetTabValues } from './type';
 
@@ -15,7 +15,7 @@ export interface WidgetDrawerContextProps {
     isWidgetsLoading: boolean;
     loadWidgets: () => Promise<void>;
     deleteWidget: (widgetIndex: number) => void;
-    updateWidgets: (_widgets: Widget[]) => void;
+    updateWidgetsSorting: (widgets: Widget[]) => void;
 }
 
 export type EngagementParams = {
@@ -37,7 +37,7 @@ export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
     deleteWidget: (widgetIndex: number) => {
         /* empty default method  */
     },
-    updateWidgets: (_widgets: Widget[]) => {
+    updateWidgetsSorting: (widgets: Widget[]) => {
         /* empty default method  */
     },
 });
@@ -60,8 +60,13 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
         }
     };
 
-    const updateWidgets = (_widgets: Widget[]) => {
-        //TODO: setup sort
+    const updateWidgetsSorting = async (resortedWidgets: Widget[]) => {
+        try {
+            await sortWidgets(savedEngagement.id, resortedWidgets);
+            loadWidgets();
+        } catch (err) {
+            dispatch(openNotification({ severity: 'error', text: 'Error sorting widgets' }));
+        }
     };
 
     const loadWidgets = async () => {
@@ -71,7 +76,6 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
         }
 
         try {
-            setIsWidgetsLoading(true);
             const widgetsList = await getWidgets(savedEngagement.id);
             setWidgets(widgetsList);
             setIsWidgetsLoading(false);
@@ -99,7 +103,7 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
             value={{
                 widgets,
                 deleteWidget,
-                updateWidgets,
+                updateWidgetsSorting,
                 widgetDrawerOpen,
                 handleWidgetDrawerOpen,
                 widgetDrawerTabValue,

@@ -72,14 +72,15 @@ def test_create_widget_sort(client, jwt, session):  # pylint:disable=unused-argu
 
     # Do reorder
 
-    reorder_dict = [{
-        'id': who_is_widget.get('id'),
-        'sort_index': 2
-    }, {
-        'id': doc_widget.get('id'),
-        'sort_index': 1
-    }
+    reorder_dict = [
+        {
+            'id': doc_widget.get('id'),
+        },
+        {
+            'id': who_is_widget.get('id'),
+        }
     ]
+
     rv = client.patch(f'/api/widgets/engagement/{engagement.id}/sort_index', data=json.dumps(reorder_dict),
                       headers=headers, content_type='application/json')
     assert rv.status_code == 204
