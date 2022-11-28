@@ -34,6 +34,7 @@ export const postWidgetItem = async (widget_id: number, data: PostWidgetItemRequ
     const result = await postWidgetItems(widget_id, [data]);
     return result[0];
 };
+
 export const postWidgetItems = async (widget_id: number, data: PostWidgetItemRequest[]): Promise<WidgetItem[]> => {
     try {
         const url = replaceUrl(Endpoints.Widget_items.CREATE, 'widget_id', String(widget_id));
@@ -61,6 +62,15 @@ export const removeWidget = async (engagement_id: number, widget_id: number): Pr
             return Promise.resolve(response.data.result);
         }
         return Promise.reject(response.data.message ?? 'Failed to delete widget');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
+export const sortWidgets = async (engagement_id: number, data: Widget[]): Promise<void> => {
+    try {
+        const url = replaceUrl(Endpoints.Widgets.SORT, 'engagement_id', String(engagement_id));
+        await http.PatchRequest<Widget>(url, data);
     } catch (err) {
         return Promise.reject(err);
     }

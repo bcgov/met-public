@@ -57,10 +57,10 @@ class WidgetService:
         WidgetService._validate_widget_ids(engagement_id, widgets)
 
         widget_sort_mappings = [{
-            'id': widget_item.get('id'),
-            'sort_index': widget_item.get('sort_index'),
+            'id': widget.get('id'),
+            'sort_index': index + 1,
             'updated_by': user_id
-        } for widget_item in widgets
+        } for index, widget in enumerate(widgets)
         ]
 
         WidgetModel.update_widgets(widget_sort_mappings)
