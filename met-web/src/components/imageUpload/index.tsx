@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import Dropzone from 'react-dropzone';
 import { SecondaryButton } from 'components/common';
 
 interface ImageUploadProps {
     handleAddFile: (_files: File[]) => void;
     savedImageUrl?: string;
+    helpText?: string;
 }
-const ImageUpload = ({ handleAddFile, savedImageUrl = '' }: ImageUploadProps) => {
+const ImageUpload = ({
+    handleAddFile,
+    savedImageUrl = '',
+    helpText = 'Drag and drop some files here, or click to select files',
+}: ImageUploadProps) => {
     const [objectUrl, setObjectUrl] = useState('');
     const [existingImageUrl, setExistingImageURL] = useState(savedImageUrl);
 
@@ -85,7 +90,7 @@ const ImageUpload = ({ handleAddFile, savedImageUrl = '' }: ImageUploadProps) =>
                         }}
                     >
                         <input {...getInputProps()} multiple={false} accept={'image/*'} />
-                        <p>Drag 'n' drop some files here, or click to select files</p>
+                        <Typography m={4}>{helpText}</Typography>
                     </Grid>
                 </section>
             )}

@@ -153,11 +153,12 @@ const AddContactDrawer = () => {
                                 data-testid="contact/image-upload"
                                 handleAddFile={handleAddAvatarImage}
                                 savedImageUrl={contactToEdit?.avatar_url || ''}
+                                helpText="Drap and drop an image here or click to select one"
                             />
                         </Grid>
                         <Grid item xs={12} lg={8} container direction="row" spacing={2}>
                             <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>* Name</MetLabel>
+                                <MetLabel sx={{ marginBottom: '2px' }}>Name *</MetLabel>
                                 <ControlledTextField
                                     name="name"
                                     id="contact-name"
@@ -202,7 +203,7 @@ const AddContactDrawer = () => {
                             />
                         </Grid>
                         <Grid item xs={12} lg={8}>
-                            <MetLabel sx={{ marginBottom: '2px' }}>* Email </MetLabel>
+                            <MetLabel sx={{ marginBottom: '2px' }}>Email *</MetLabel>
                             <ControlledTextField
                                 id="contact-email"
                                 data-testid="contact-form/email"

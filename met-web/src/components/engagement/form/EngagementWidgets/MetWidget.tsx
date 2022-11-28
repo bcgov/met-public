@@ -1,9 +1,9 @@
 import React from 'react';
 import { MetLabel, MetWidgetPaper } from 'components/common';
 import { Grid, CircularProgress, Stack, IconButton } from '@mui/material';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { When } from 'react-if';
 
 interface MetWidgetProps {
@@ -47,7 +47,7 @@ const MetWidget = ({ testId, children, title, onEdit, onDelete, deleting, sortab
                             onClick={onDelete}
                             data-testid={`widget/remove-${testId}`}
                         >
-                            {deleting ? <CircularProgress size="1em" color="inherit" /> : <HighlightOffIcon />}
+                            {deleting ? <CircularProgress size="1em" color="inherit" /> : <DeleteIcon />}
                         </IconButton>
                     </Stack>
                 </Grid>

@@ -28,11 +28,13 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
                     <Grid item xs={12}>
                         <MetLabel noWrap={true}>{contact.name}</MetLabel>
                     </Grid>
-                    <Grid item xs={12}>
-                        <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
-                            {contact.title}
-                        </MetParagraph>
-                    </Grid>
+                    <When condition={Boolean(contact.title)}>
+                        <Grid item xs={12}>
+                            <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                                {contact.title}
+                            </MetParagraph>
+                        </Grid>
+                    </When>
                 </Grid>
                 <Grid
                     item
@@ -75,14 +77,21 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
                             </MetParagraph>
                         </Grid>
                     </When>
-                    <Grid item xs={3}>
-                        <MetParagraph>Bio:</MetParagraph>
-                    </Grid>
-                    <Grid item xs={9}>
-                        <MetParagraph width={'100%'} overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
-                            {contact.bio}
-                        </MetParagraph>
-                    </Grid>
+                    <When condition={Boolean(contact.bio)}>
+                        <Grid item xs={3}>
+                            <MetParagraph>Bio:</MetParagraph>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <MetParagraph
+                                width={'100%'}
+                                overflow="hidden"
+                                textOverflow={'ellipsis'}
+                                whiteSpace="nowrap"
+                            >
+                                {contact.bio}
+                            </MetParagraph>
+                        </Grid>
+                    </When>
                 </Grid>
                 <Grid container item xs={1.5}>
                     <Grid item xs={6}>
