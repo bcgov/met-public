@@ -59,7 +59,7 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                     <Grid key={document.id} container item spacing={1} rowSpacing={1} xs={12} paddingTop={2}>
                         <If condition={document.type === DOCUMENT_TYPE.FOLDER}>
                             <Then>
-                                <Grid item container justifyContent="flex-start" alignItems="center" xs={12}>
+                                <Grid item container justifyContent="center" alignItems="center" xs={12}>
                                     <Grid item xs={1}>
                                         <Icon sx={{ p: 0, m: 0 }}>
                                             <FolderIcon />
@@ -75,28 +75,29 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                                 {document.children ? (
                                     document.children.map((folderItem: DocumentItem) => {
                                         return (
-                                            <Grid item justifyContent="flex-start" container xs={12}>
+                                            <Grid item justifyContent="center" container xs={12}>
                                                 <Grid item xs={1}></Grid>
-                                                <Stack direction="row">
-                                                    <Icon sx={{ mr: 1 }}>
-                                                        <InsertDriveFileIcon />
-                                                    </Icon>
-
-                                                    <Link
-                                                        sx={{
-                                                            alignItems: 'center',
-                                                            display: 'flex',
-                                                            justifyContent: 'center',
-                                                        }}
-                                                        target="_blank"
-                                                        href={`${folderItem.url}`}
-                                                    >
-                                                        {folderItem.title}
-                                                        <Icon sx={{ mb: 1, ml: 0.5 }}>
-                                                            <OpenInNewIcon />
-                                                        </Icon>
-                                                    </Link>
-                                                </Stack>
+                                                <Grid item xs={11}>
+                                                    <Stack direction="row">
+                                                        <InsertDriveFileIcon sx={{ mr: 0.5 }} fontSize="small" />
+                                                        <Link
+                                                            sx={{
+                                                                alignItems: 'center',
+                                                                display: 'flex',
+                                                                justifyContent: 'center',
+                                                            }}
+                                                            target="_blank"
+                                                            href={`${folderItem.url}`}
+                                                        >
+                                                            {folderItem.title}
+                                                        </Link>
+                                                        <Link target="_blank" href={`${folderItem.url}`}>
+                                                            <Icon fontSize="small" sx={{ ml: 0.5 }}>
+                                                                <OpenInNewIcon fontSize="small" />
+                                                            </Icon>
+                                                        </Link>
+                                                    </Stack>
+                                                </Grid>
                                             </Grid>
                                         );
                                     })
@@ -107,7 +108,7 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                             <Else>
                                 <Grid item justifyContent="flex-start" container xs={12}>
                                     <Stack direction="row">
-                                        <InsertDriveFileIcon sx={{ mr: 1 }} />
+                                        <InsertDriveFileIcon sx={{ mr: 0.5 }} fontSize="small" />
                                         <Link
                                             sx={{
                                                 alignItems: 'center',
@@ -118,8 +119,10 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                                             href={`${document.url}`}
                                         >
                                             {document.title}
-                                            <Icon sx={{ mb: 1, ml: 0.5 }}>
-                                                <OpenInNewIcon />
+                                        </Link>
+                                        <Link target="_blank" href={`${document.url}`}>
+                                            <Icon fontSize="small" sx={{ ml: 0.5 }}>
+                                                <OpenInNewIcon fontSize="small" />
                                             </Icon>
                                         </Link>
                                     </Stack>

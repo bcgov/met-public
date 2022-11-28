@@ -79,7 +79,7 @@ const CreateFolderForm = () => {
                             <SecondaryButton onClick={() => setCreateFolderMode(false)}>Cancel</SecondaryButton>
 
                             <PrimaryButton loading={creatingFolder} onClick={handleCreateFolder}>
-                                Submit
+                                Add Folder
                             </PrimaryButton>
                         </Stack>
                     </Grid>
