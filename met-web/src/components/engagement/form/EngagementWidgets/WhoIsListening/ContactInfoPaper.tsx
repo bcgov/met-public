@@ -3,7 +3,7 @@ import { MetLabel, MetParagraph, MetWidgetPaper } from 'components/common';
 import { Grid, IconButton } from '@mui/material';
 import { Contact } from 'models/contact';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import DeleteIcon from '@mui/icons-material/Delete';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 import { When } from 'react-if';
 import { WhoIsListeningContext } from './WhoIsListeningContext';
@@ -114,7 +114,7 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
                             color="info"
                             aria-label="delete-icon"
                         >
-                            <DeleteIcon />
+                            <HighlightOffIcon />
                         </IconButton>
                     </Grid>
                 </Grid>
