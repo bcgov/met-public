@@ -12,11 +12,10 @@ import { WhoIsListeningContext } from './WhoIsListeningContext';
 
 const WhoIsListeningForm = () => {
     const { handleWidgetDrawerOpen, widgets, loadWidgets } = useContext(WidgetDrawerContext);
-    const { handleAddContactDrawerOpen, loadingContacts, contacts } = useContext(WhoIsListeningContext);
-
+    const { handleAddContactDrawerOpen, loadingContacts, contacts, addedContacts, setAddedContacts } =
+        useContext(WhoIsListeningContext);
     const dispatch = useAppDispatch();
     const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
-    const [addedContacts, setAddedContacts] = useState<Contact[]>([]);
     const [savingWidgetItems, setSavingWidgetItems] = useState(false);
 
     const widget = widgets.filter((widget) => widget.widget_type_id === WidgetType.WhoIsListening)[0] || null;
@@ -26,9 +25,26 @@ const WhoIsListeningForm = () => {
             .map((widget_item) => {
                 return contacts.find((contact) => contact.id === widget_item.widget_data_id);
             })
-            .filter((contact) => !!contact);
+            .filter((contact) => !!contact) as Contact[];
 
-        setAddedContacts(savedContacts as Contact[]);
+        setAddedContacts((prevContacts: Contact[]) => {
+            if (prevContacts.length === 0) {
+                return savedContacts;
+            }
+
+            const prevContactIds = new Set(prevContacts.map((prevContact) => prevContact.id));
+
+            const contactsToSet = [
+                ...prevContacts,
+                ...savedContacts.filter((savedContact) => !prevContactIds.has(savedContact.id)),
+            ];
+
+            const contactsMap = new Map(contacts.map((contact) => [contact.id, contact]));
+
+            return contactsToSet
+                .map((contactToSet) => contactsMap.get(contactToSet.id))
+                .filter((contact) => Boolean(contact)) as Contact[];
+        });
     }, [contacts, widget]);
 
     const addContact = async () => {
@@ -111,7 +127,7 @@ const WhoIsListeningForm = () => {
                     </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                    <ContactBlock addedContacts={addedContacts} setAddedContacts={setAddedContacts} />
+                    <ContactBlock />
                 </Grid>
                 <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'} marginTop="8em">
                     <Grid item>

@@ -14,6 +14,8 @@ export interface WhoIsListeningContextProps {
     contacts: Contact[];
     loadContacts: () => Promise<Contact[] | undefined>;
     handleChangeContactToEdit: (_contact: Contact | null) => void;
+    setAddedContacts: React.Dispatch<React.SetStateAction<Contact[]>>;
+    addedContacts: Contact[];
 }
 
 export type EngagementParams = {
@@ -35,6 +37,8 @@ export const WhoIsListeningContext = createContext<WhoIsListeningContextProps>({
     handleChangeContactToEdit: () => {
         /* empty default method  */
     },
+    setAddedContacts: (updatedContacts: React.SetStateAction<Contact[]>) => [],
+    addedContacts: [],
 });
 
 export const WhoIsListeningProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -43,6 +47,7 @@ export const WhoIsListeningProvider = ({ children }: { children: JSX.Element | J
     const [contactToEdit, setContactToEdit] = useState<Contact | null>(null);
     const [addContactDrawerOpen, setAddContactDrawerOpen] = useState(false);
     const [contacts, setContacts] = useState<Contact[]>([]);
+    const [addedContacts, setAddedContacts] = useState<Contact[]>([]);
     const [loadingContacts, setLoadingContacts] = useState(true);
 
     const loadContacts = async () => {
@@ -93,6 +98,8 @@ export const WhoIsListeningProvider = ({ children }: { children: JSX.Element | J
                 contactToEdit,
                 clearSelected,
                 handleChangeContactToEdit,
+                setAddedContacts,
+                addedContacts,
             }}
         >
             {children}

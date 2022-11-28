@@ -15,6 +15,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { updatedDiff } from 'deep-object-diff';
 import { WhoIsListeningContext } from './WhoIsListeningContext';
 import { saveDocument } from 'services/objectStorageService';
+import { Contact } from 'models/contact';
 
 const schema = yup
     .object({
@@ -31,8 +32,14 @@ type ContactForm = yup.TypeOf<typeof schema>;
 
 const AddContactDrawer = () => {
     const dispatch = useAppDispatch();
-    const { addContactDrawerOpen, handleAddContactDrawerOpen, loadContacts, contactToEdit, handleChangeContactToEdit } =
-        useContext(WhoIsListeningContext);
+    const {
+        addContactDrawerOpen,
+        handleAddContactDrawerOpen,
+        loadContacts,
+        contactToEdit,
+        handleChangeContactToEdit,
+        setAddedContacts,
+    } = useContext(WhoIsListeningContext);
 
     const [isCreatingContact, setIsCreatingContact] = useState(false);
     const [avatarFileName, setAvatarFileName] = useState(contactToEdit?.avatar_filename || '');
@@ -86,10 +93,11 @@ const AddContactDrawer = () => {
 
     const createContact = async (data: ContactForm) => {
         const uploadedAvatarImageFileName = await handleUploadAvatarImage();
-        await postContact({
+        const createdContact = await postContact({
             ...data,
             avatar_filename: uploadedAvatarImageFileName,
         });
+        setAddedContacts((prevContacts: Contact[]) => [...prevContacts, createdContact]);
         dispatch(openNotification({ severity: 'success', text: 'A new contact was successfully added' }));
     };
 
