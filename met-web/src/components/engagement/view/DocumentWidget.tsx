@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MetPaper, MetHeader2, MetHeader4 } from 'components/common';
-import { Grid, Skeleton, Icon, Link } from '@mui/material';
+import { Grid, Skeleton, Icon, Link, Stack } from '@mui/material';
 import { Widget } from 'models/widget';
 import { DocumentItem, DOCUMENT_TYPE } from 'models/document';
 import { useAppDispatch } from 'hooks';
@@ -77,18 +77,26 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                                         return (
                                             <Grid item justifyContent="flex-start" container xs={12}>
                                                 <Grid item xs={1}></Grid>
-                                                <Grid display="flex" item xs={11}>
+                                                <Stack direction="row">
                                                     <Icon sx={{ mr: 1 }}>
                                                         <InsertDriveFileIcon />
                                                     </Icon>
 
-                                                    <Link target="_blank" href={`${folderItem.url}`}>
+                                                    <Link
+                                                        sx={{
+                                                            alignItems: 'center',
+                                                            display: 'flex',
+                                                            justifyContent: 'center',
+                                                        }}
+                                                        target="_blank"
+                                                        href={`${folderItem.url}`}
+                                                    >
                                                         {folderItem.title}
-                                                        <Icon sx={{ ml: 0.5 }}>
+                                                        <Icon sx={{ mb: 1, ml: 0.5 }}>
                                                             <OpenInNewIcon />
                                                         </Icon>
                                                     </Link>
-                                                </Grid>
+                                                </Stack>
                                             </Grid>
                                         );
                                     })
@@ -98,13 +106,23 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                             </Then>
                             <Else>
                                 <Grid item justifyContent="flex-start" container xs={12}>
-                                    <InsertDriveFileIcon sx={{ mr: 1 }} />
-                                    <Link target="_blank" href={`${document.url}`}>
-                                        {document.title}
-                                        <Icon sx={{ ml: 0.5 }}>
-                                            <OpenInNewIcon />
-                                        </Icon>
-                                    </Link>
+                                    <Stack direction="row">
+                                        <InsertDriveFileIcon sx={{ mr: 1 }} />
+                                        <Link
+                                            sx={{
+                                                alignItems: 'center',
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                            }}
+                                            target="_blank"
+                                            href={`${document.url}`}
+                                        >
+                                            {document.title}
+                                            <Icon sx={{ mb: 1, ml: 0.5 }}>
+                                                <OpenInNewIcon />
+                                            </Icon>
+                                        </Link>
+                                    </Stack>
                                 </Grid>
                             </Else>
                         </If>
