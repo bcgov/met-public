@@ -3,7 +3,7 @@ import { MetLabel, MetParagraph, MetWidgetPaper } from 'components/common';
 import { Grid, IconButton } from '@mui/material';
 import { Contact } from 'models/contact';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import DeleteIcon from '@mui/icons-material/Delete';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 import { When } from 'react-if';
 import { WhoIsListeningContext } from './WhoIsListeningContext';
@@ -28,11 +28,13 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
                     <Grid item xs={12}>
                         <MetLabel noWrap={true}>{contact.name}</MetLabel>
                     </Grid>
-                    <Grid item xs={12}>
-                        <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
-                            {contact.title}
-                        </MetParagraph>
-                    </Grid>
+                    <When condition={Boolean(contact.title)}>
+                        <Grid item xs={12}>
+                            <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                                {contact.title}
+                            </MetParagraph>
+                        </Grid>
+                    </When>
                 </Grid>
                 <Grid
                     item
@@ -75,14 +77,21 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
                             </MetParagraph>
                         </Grid>
                     </When>
-                    <Grid item xs={3}>
-                        <MetParagraph>Bio:</MetParagraph>
-                    </Grid>
-                    <Grid item xs={9}>
-                        <MetParagraph width={'100%'} overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
-                            {contact.bio}
-                        </MetParagraph>
-                    </Grid>
+                    <When condition={Boolean(contact.bio)}>
+                        <Grid item xs={3}>
+                            <MetParagraph>Bio:</MetParagraph>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <MetParagraph
+                                width={'100%'}
+                                overflow="hidden"
+                                textOverflow={'ellipsis'}
+                                whiteSpace="nowrap"
+                            >
+                                {contact.bio}
+                            </MetParagraph>
+                        </Grid>
+                    </When>
                 </Grid>
                 <Grid container item xs={1.5}>
                     <Grid item xs={6}>
@@ -105,7 +114,7 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
                             color="info"
                             aria-label="delete-icon"
                         >
-                            <DeleteIcon />
+                            <HighlightOffIcon />
                         </IconButton>
                     </Grid>
                 </Grid>

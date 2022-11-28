@@ -3,7 +3,7 @@ import { Grid, IconButton, Stack, Typography } from '@mui/material';
 import { MetWidgetPaper } from 'components/common';
 import { DocumentItem } from 'models/document';
 import FolderIcon from '@mui/icons-material/Folder';
-import DeleteIcon from '@mui/icons-material/Delete';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { When } from 'react-if';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
@@ -27,7 +27,7 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
                     </Grid>
                     <Grid item xs container justifyContent={'flex-end'}>
                         <IconButton sx={{ padding: 0, margin: 0 }} color="info" aria-label="drag-indicator">
-                            <DeleteIcon />
+                            <HighlightOffIcon />
                         </IconButton>
                     </Grid>
                 </Grid>

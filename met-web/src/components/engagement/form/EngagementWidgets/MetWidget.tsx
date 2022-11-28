@@ -1,9 +1,9 @@
 import React from 'react';
 import { MetLabel, MetWidgetPaper } from 'components/common';
 import { Grid, CircularProgress, Stack, IconButton } from '@mui/material';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { When } from 'react-if';
 
 interface MetWidgetProps {

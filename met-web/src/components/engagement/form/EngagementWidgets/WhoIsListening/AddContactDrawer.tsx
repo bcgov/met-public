@@ -15,6 +15,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { updatedDiff } from 'deep-object-diff';
 import { WhoIsListeningContext } from './WhoIsListeningContext';
 import { saveDocument } from 'services/objectStorageService';
+import { Contact } from 'models/contact';
 
 const schema = yup
     .object({
@@ -31,8 +32,14 @@ type ContactForm = yup.TypeOf<typeof schema>;
 
 const AddContactDrawer = () => {
     const dispatch = useAppDispatch();
-    const { addContactDrawerOpen, handleAddContactDrawerOpen, loadContacts, contactToEdit, handleChangeContactToEdit } =
-        useContext(WhoIsListeningContext);
+    const {
+        addContactDrawerOpen,
+        handleAddContactDrawerOpen,
+        loadContacts,
+        contactToEdit,
+        handleChangeContactToEdit,
+        setAddedContacts,
+    } = useContext(WhoIsListeningContext);
 
     const [isCreatingContact, setIsCreatingContact] = useState(false);
     const [avatarFileName, setAvatarFileName] = useState(contactToEdit?.avatar_filename || '');
@@ -86,10 +93,11 @@ const AddContactDrawer = () => {
 
     const createContact = async (data: ContactForm) => {
         const uploadedAvatarImageFileName = await handleUploadAvatarImage();
-        await postContact({
+        const createdContact = await postContact({
             ...data,
             avatar_filename: uploadedAvatarImageFileName,
         });
+        setAddedContacts((prevContacts: Contact[]) => [...prevContacts, createdContact]);
         dispatch(openNotification({ severity: 'success', text: 'A new contact was successfully added' }));
     };
 
@@ -153,11 +161,12 @@ const AddContactDrawer = () => {
                                 data-testid="contact/image-upload"
                                 handleAddFile={handleAddAvatarImage}
                                 savedImageUrl={contactToEdit?.avatar_url || ''}
+                                helpText="Drag and drop an image here or click to select one"
                             />
                         </Grid>
                         <Grid item xs={12} lg={8} container direction="row" spacing={2}>
                             <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>* Name</MetLabel>
+                                <MetLabel sx={{ marginBottom: '2px' }}>Name *</MetLabel>
                                 <ControlledTextField
                                     name="name"
                                     id="contact-name"
@@ -202,7 +211,7 @@ const AddContactDrawer = () => {
                             />
                         </Grid>
                         <Grid item xs={12} lg={8}>
-                            <MetLabel sx={{ marginBottom: '2px' }}>* Email </MetLabel>
+                            <MetLabel sx={{ marginBottom: '2px' }}>Email *</MetLabel>
                             <ControlledTextField
                                 id="contact-email"
                                 data-testid="contact-form/email"
