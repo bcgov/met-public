@@ -9,7 +9,6 @@ import * as engagementService from 'services/engagementService';
 import * as widgetService from 'services/widgetService';
 import * as documentService from 'services/widgetService/DocumentService.tsx';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
-import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
 import { createDefaultEngagement, Engagement } from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { Widget, WidgetType } from 'models/widget';
