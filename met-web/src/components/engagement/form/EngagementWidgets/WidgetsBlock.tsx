@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useCallback } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Divider, Grid, Skeleton } from '@mui/material';
 import { MetHeader2, MetPaper, SecondaryButton } from 'components/common';
 import { WidgetCardSwitch } from './WidgetCardSwitch';
