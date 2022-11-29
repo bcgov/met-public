@@ -22,8 +22,9 @@ const WidgetsBlock = () => {
     const [fixedWidgets, setFixedWidgets] = useState<Widget[]>([]);
 
     useEffect(() => {
-        const widgetsFixedList = widgets.filter((w) => w.widget_type_id == WidgetType.Phases);
-        const widgetsSortedList = widgets.filter((w) => w.widget_type_id !== WidgetType.Phases);
+        const fixedWidgetTypes = [WidgetType.Phases];
+        const widgetsFixedList = widgets.filter((w) => fixedWidgetTypes.includes(w.widget_type_id));
+        const widgetsSortedList = widgets.filter((w) => !fixedWidgetTypes.includes(w.widget_type_id));
         setFixedWidgets(widgetsFixedList);
         setSortableWidgets(widgetsSortedList);
     }, [widgets]);
@@ -38,7 +39,7 @@ const WidgetsBlock = () => {
         handleWidgetDrawerOpen(true);
     };
 
-    const moveWidget = useCallback((dragIndex: number, hoverIndex: number) => {
+    const moveWidget = (dragIndex: number, hoverIndex: number) => {
         setSortableWidgets((prevWidgets: Widget[]) => {
             const resortedWidgets = update(prevWidgets, {
                 $splice: [
@@ -46,10 +47,11 @@ const WidgetsBlock = () => {
                     [hoverIndex, 0, prevWidgets[dragIndex]],
                 ],
             });
-            updateWidgetsSorting(resortedWidgets);
+            const widgets = fixedWidgets.concat(resortedWidgets);
+            updateWidgetsSorting(widgets);
             return resortedWidgets;
         });
-    }, []);
+    };
 
     const removeWidget = (widgetId: number) => {
         dispatch(
