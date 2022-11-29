@@ -152,7 +152,7 @@ describe('Document widget in engagement page tests', () => {
         });
     });
 
-    test('Creat folder appears', async () => {
+    test('Creat file appears', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
         postWidgetMock.mockReturnValue(Promise.resolve(documentWidget));
