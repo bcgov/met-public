@@ -10,11 +10,9 @@ import * as widgetService from 'services/widgetService';
 import * as documentService from 'services/widgetService/DocumentService.tsx';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
-import { createDefaultSurvey, Survey } from 'models/survey';
 import { createDefaultEngagement, Engagement } from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
-import { Widget, WidgetItem, WidgetType } from 'models/widget';
-import { Contact } from 'models/contact';
+import { Widget, WidgetType } from 'models/widget';
 import { Box } from '@mui/material';
 import { DocumentItem } from 'models/document';
 
@@ -73,20 +71,12 @@ describe('Document widget in engagement page tests', () => {
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
-    const openNotificationMock = jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
-    const openNotificationModalMock = jest
-        .spyOn(notificationModalSlice, 'openNotificationModal')
-        .mockImplementation(jest.fn());
+    jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
+    jest.spyOn(engagementService, 'getEngagement').mockReturnValue(Promise.resolve(engagement));
+    jest.spyOn(documentService, 'fetchDocuments').mockReturnValue(Promise.resolve([mockFolder]));
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
-    const getEngagementMock = jest
-        .spyOn(engagementService, 'getEngagement')
-        .mockReturnValue(Promise.resolve(engagement));
     const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([documentWidget]));
     const postWidgetMock = jest.spyOn(widgetService, 'postWidget').mockReturnValue(Promise.resolve(documentWidget));
-
-    const getDocumentsMock = jest
-        .spyOn(documentService, 'fetchDocuments')
-        .mockReturnValue(Promise.resolve([mockFolder]));
 
     beforeEach(() => {
         setupEnv();
