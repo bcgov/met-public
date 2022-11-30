@@ -10,9 +10,6 @@ import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
 import { Survey } from 'models/survey';
 import { hasKey } from 'utils';
 import { Engagement } from 'models/engagement';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 
 export type EngagementParams = {
     engagementId: string;
@@ -24,21 +21,6 @@ const PAGE_SIZE = 2000;
 
 const SORT_ORDER = 'asc';
 
-const schema = yup
-    .object({
-        name: yup.string().max(50, 'Survey name should not exceed 50 characters').required(),
-        engagement_id: yup.number().required(),
-        form_json: yup
-            .object({
-                display: 'form',
-                components: [],
-            })
-            .required(),
-    })
-    .required();
-
-type SurveyForm = yup.TypeOf<typeof schema>;
-
 const CloneOptions = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -49,51 +31,7 @@ const CloneOptions = () => {
     const [loadingSurveys, setLoadingSurveys] = useState(true);
     const [loadingEngagements, setLoadingEngagements] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
-
-    const methods = useForm<SurveyForm>({
-        resolver: yupResolver(schema),
-        defaultValues: {
-            name: '',
-            engagement_id: 0,
-            form_json: {
-                display: 'form',
-                components: [],
-            },
-        },
-    });
-
-    const { handleSubmit } = methods;
-
-    const onSubmit: SubmitHandler<SurveyForm> = async (data: SurveyForm) => {
-        try {
-            setIsSaving(true);
-            const createdSurvey = await postSurvey({
-                name: data.name,
-                engagement_id: engagementToLink?.id ? String(engagementToLink.id) : undefined,
-                form_json: {
-                    display: 'form',
-                    components: [],
-                },
-            });
-
-            dispatch(
-                openNotification({
-                    severity: 'success',
-                    text: 'Survey created, please proceed to building it',
-                }),
-            );
-            navigate(`/surveys/${createdSurvey.id}/build`);
-        } catch (error) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred while attempting to save survey',
-                }),
-            );
-            setIsSaving(false);
-        }
-    };
-
+    const { name } = surveyForm;
     const {
         surveyForm,
         handleSurveyFormChange,
@@ -113,13 +51,13 @@ const CloneOptions = () => {
             ...surveyForm,
             [e.target.name]: e.target.value,
         });
+    };
 
-        if (hasKey(formError, e.target.name) && formError[e.target.name]) {
-            setFormError({
-                ...formError,
-                [e.target.name]: false,
-            });
-        }
+    const validate = () => {
+        setFormError({
+            name: !(surveyForm.name && surveyForm.name.length < 50),
+        });
+        return Object.values(surveyForm).some((errorExists) => errorExists);
     };
 
     const handleFetchSurveys = async (page: number, size: number, sort_order: 'asc' | 'desc' | undefined) => {
@@ -167,6 +105,9 @@ const CloneOptions = () => {
     const handleSave = async () => {
         if (!selectedSurvey) {
             dispatch(openNotification({ severity: 'error', text: 'Please select a survey first' }));
+            return;
+        }
+        if (validate()) {
             return;
         }
         setIsSaving(true);
@@ -259,10 +200,16 @@ const CloneOptions = () => {
                         }}
                         fullWidth
                         name="name"
-                        value={surveyForm.name}
+                        value={name}
                         onChange={handleChange}
-                        error={formError.name}
-                        helperText={formError.name ? 'Name must be specified' : ' '}
+                        error={formError.name || name.length > 50}
+                        helperText={
+                            name.length > 50
+                                ? 'Name must not exceed 50 characters'
+                                : formError.name
+                                ? 'Name must be specified'
+                                : ' '
+                        }
                     />
                 </Stack>
             </Grid>

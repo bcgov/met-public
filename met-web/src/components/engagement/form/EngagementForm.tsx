@@ -101,10 +101,9 @@ const EngagementForm = () => {
             name: !(name && name.length < 50),
             start_date: !start_date,
             end_date: !end_date,
-            description: !(description && description.length < 500),
-            content: !(content && content.length < 500),
+            description: !description,
+            content: !content,
         };
-        console.log(errors);
         setEngagementFormError(errors);
 
         return Object.values(errors).some((isError: unknown) => isError);
@@ -200,8 +199,8 @@ const EngagementForm = () => {
                             name.length > 50
                                 ? 'Engagement name can not exceed 50 characters'
                                 : engagementFormError.name
-                                    ? 'Engagement name can not be empty'
-                                    : ''
+                                ? 'Engagement name can not be empty'
+                                : ''
                         }
                     />
                 </Grid>
@@ -247,7 +246,6 @@ const EngagementForm = () => {
                     <Grid item md={6} xs={12}>
                         <Stack direction="row" alignItems="center" spacing={2}>
                             <Typography minWidth={{ xs: '2.5em', md: 'auto' }}>To</Typography>
-
                             <TextField
                                 id="from-date"
                                 type="date"
@@ -272,12 +270,8 @@ const EngagementForm = () => {
                         setRawText={handleDescriptionChange}
                         handleEditorStateChange={handleRichDescriptionChange}
                         initialRawEditorState={savedEngagement.rich_description || ''}
-                        error={engagementFormError.description || description.length > 500}
-                        helperText={
-                            description.length > 500
-                                ? 'Description can not exceed 500 characters'
-                                : 'Description cannot be empty'
-                        }
+                        error={engagementFormError.description}
+                        helperText="Description cannot be empty"
                     />
                 </Grid>
 
@@ -300,12 +294,8 @@ const EngagementForm = () => {
                                     setRawText={handleContentChange}
                                     handleEditorStateChange={handleRichContentChange}
                                     initialRawEditorState={savedEngagement.rich_content || ''}
-                                    error={engagementFormError.content || content.length > 500}
-                                    helperText={
-                                        content.length > 500
-                                            ? 'Content can not exceed 500 characters'
-                                            : 'Content cannot be empty'
-                                    }
+                                    error={engagementFormError.content}
+                                    helperText="Content cannot be empty"
                                 />
                             </Grid>
                         </Grid>
