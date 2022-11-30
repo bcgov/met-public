@@ -1,8 +1,8 @@
 import React from 'react';
 import { Widget, WidgetType } from 'models/widget';
 import { Switch, Case } from 'react-if';
-import WhoIsListeningWidget from '../WhoIsListeningWidget';
-import DocumentWidget from '../DocumentWidget';
+import WhoIsListeningWidget from './WhoIsListeningWidget';
+import DocumentWidget from './DocumentWidget';
 
 interface WidgetSwitchProps {
     widget: Widget;

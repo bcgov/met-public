@@ -17,12 +17,14 @@ const PhasesForm = () => {
 
     const dispatch = useAppDispatch();
     const [selectedOption, setSelectedOption] = useState<ISelectOptions | null>(null);
+    const [isStandalone, setIsStandalone] = useState<boolean>(false);
     const [savingWidgetItems, setSavingWidgetItems] = useState(false);
     const widget = widgets.filter((widget) => widget.widget_type_id === WidgetType.Phases)[0] || null;
 
     useEffect(() => {
         if (widget && widget.items.length > 0) {
             setSelectedOption(options.find((o) => o.id === widget.items[0].widget_data_id) || null);
+            setIsStandalone(widget.items[0].widget_data_id === EngagementPhases.Standalone);
         }
     }, [widget]);
 
@@ -58,7 +60,6 @@ const PhasesForm = () => {
             handleWidgetDrawerOpen(false);
             setSavingWidgetItems(false);
         } catch (error) {
-            console.log(error);
             dispatch(
                 openNotification({ severity: 'error', text: 'Error occurred while attempting to add the widgets' }),
             );
@@ -104,12 +105,11 @@ const PhasesForm = () => {
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={selectedOption === null}
-                                        disabled={selectedOption === null}
-                                        onChange={(value) => {
-                                            if (value) {
-                                                setSelectedOption(null);
-                                            }
+                                        data-testid="standalonePhaseCheckbox"
+                                        checked={isStandalone}
+                                        onChange={(event, checked) => {
+                                            setSelectedOption(null);
+                                            setIsStandalone(checked);
                                         }}
                                     />
                                 }
@@ -123,6 +123,7 @@ const PhasesForm = () => {
                         <PrimaryButton
                             data-testid="savePhasesWidgetButton"
                             loading={savingWidgetItems}
+                            disabled={!selectedOption?.id && !isStandalone}
                             onClick={() => saveWidgetItem()}
                         >{`Save & Close`}</PrimaryButton>
                     </Grid>

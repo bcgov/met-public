@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { MetPaper, MetBody, MetHeader4 } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
-import PersonIcon from '@mui/icons-material/Person';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetTabValues } from '../type';
 import { WidgetType } from 'models/widget';
@@ -71,7 +71,7 @@ const DocumentOptionCard = () => {
                         spacing={1}
                     >
                         <Grid item>
-                            <PersonIcon sx={{ fontSize: '5em' }} />
+                            <InsertDriveFileIcon sx={{ fontSize: '5em' }} />
                         </Grid>
                         <Grid
                             container
