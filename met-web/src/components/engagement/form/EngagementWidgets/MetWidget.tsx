@@ -1,10 +1,11 @@
 import React from 'react';
 import { MetLabel, MetWidgetPaper } from 'components/common';
-import { Grid, CircularProgress, Stack, IconButton } from '@mui/material';
+import { Grid, CircularProgress, Stack, IconButton, Tooltip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import PushPinIcon from '@mui/icons-material/PushPin';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { When } from 'react-if';
+import { If, Then, Else } from 'react-if';
 
 interface MetWidgetProps {
     testId?: string;
@@ -17,16 +18,32 @@ interface MetWidgetProps {
     sortable?: boolean;
 }
 
-const MetWidget = ({ testId, children, title, onEdit, onDelete, deleting, sortable, ...rest }: MetWidgetProps) => {
+const MetWidget = ({
+    testId,
+    children,
+    title,
+    onEdit,
+    onDelete,
+    deleting,
+    sortable = true,
+    ...rest
+}: MetWidgetProps) => {
     return (
         <MetWidgetPaper elevation={3} {...rest}>
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
                 <Grid item xs={2} sx={{ alignItems: 'center', justifyContent: 'center' }}>
-                    <When condition={sortable !== false}>
-                        <IconButton sx={{ margin: 0, padding: 0 }} color="info" aria-label="drag-indicator">
-                            <DragIndicatorIcon />
-                        </IconButton>
-                    </When>
+                    <If condition={sortable}>
+                        <Then>
+                            <IconButton sx={{ margin: 0, padding: 0 }} color="info" aria-label="drag-indicator">
+                                <DragIndicatorIcon />
+                            </IconButton>
+                        </Then>
+                        <Else>
+                            <Tooltip title="This widget has a fixed position.">
+                                <PushPinIcon />
+                            </Tooltip>
+                        </Else>
+                    </If>
                 </Grid>
                 <Grid item container direction="row" alignItems="center" justifyContent="flex-start" xs={8}>
                     <MetLabel>{title}</MetLabel>
