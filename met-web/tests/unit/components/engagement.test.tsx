@@ -12,8 +12,6 @@ import * as widgetService from 'services/widgetService';
 import * as contactService from 'services/contactService';
 import { Widget, WidgetItem, WidgetType } from 'models/widget';
 import { createDefaultSurvey, Survey } from 'models/survey';
-import { createDefaultEngagement, Engagement } from 'models/engagement';
-import { EngagementStatus } from 'constants/engagementStatus';
 import { engagement } from '../components/factory';
 
 const survey: Survey = {

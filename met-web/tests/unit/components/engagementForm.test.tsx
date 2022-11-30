@@ -11,8 +11,6 @@ import * as contactService from 'services/contactService';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
 import { createDefaultSurvey, Survey } from 'models/survey';
-import { createDefaultEngagement, Engagement } from 'models/engagement';
-import { EngagementStatus } from 'constants/engagementStatus';
 import { Widget, WidgetItem, WidgetType } from 'models/widget';
 import { Contact } from 'models/contact';
 import { Box } from '@mui/material';
