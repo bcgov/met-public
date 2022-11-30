@@ -17,8 +17,8 @@ import { DOCUMENT_TYPE } from 'models/document';
 
 const schema = yup
     .object({
-        name: yup.string().required(),
-        link: yup.string().required(),
+        name: yup.string().max(50, 'Folder name should not exceed 50 characters').required(),
+        link: yup.string().max(2000, 'URL should not exceed 2000 characters').required(),
         folderId: yup.number(),
     })
     .required();

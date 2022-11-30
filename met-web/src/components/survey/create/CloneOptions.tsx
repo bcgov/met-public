@@ -10,6 +10,9 @@ import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
 import { Survey } from 'models/survey';
 import { hasKey } from 'utils';
 import { Engagement } from 'models/engagement';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 
 export type EngagementParams = {
     engagementId: string;
@@ -21,6 +24,21 @@ const PAGE_SIZE = 2000;
 
 const SORT_ORDER = 'asc';
 
+const schema = yup
+    .object({
+        name: yup.string().max(50, 'Survey name should not exceed 50 characters').required(),
+        engagement_id: yup.number().required(),
+        form_json: yup
+            .object({
+                display: 'form',
+                components: [],
+            })
+            .required(),
+    })
+    .required();
+
+type SurveyForm = yup.TypeOf<typeof schema>;
+
 const CloneOptions = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -31,6 +49,50 @@ const CloneOptions = () => {
     const [loadingSurveys, setLoadingSurveys] = useState(true);
     const [loadingEngagements, setLoadingEngagements] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
+
+    const methods = useForm<SurveyForm>({
+        resolver: yupResolver(schema),
+        defaultValues: {
+            name: '',
+            engagement_id: 0,
+            form_json: {
+                display: 'form',
+                components: [],
+            },
+        },
+    });
+
+    const { handleSubmit } = methods;
+
+    const onSubmit: SubmitHandler<SurveyForm> = async (data: SurveyForm) => {
+        try {
+            setIsSaving(true);
+            const createdSurvey = await postSurvey({
+                name: data.name,
+                engagement_id: engagementToLink?.id ? String(engagementToLink.id) : undefined,
+                form_json: {
+                    display: 'form',
+                    components: [],
+                },
+            });
+
+            dispatch(
+                openNotification({
+                    severity: 'success',
+                    text: 'Survey created, please proceed to building it',
+                }),
+            );
+            navigate(`/surveys/${createdSurvey.id}/build`);
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while attempting to save survey',
+                }),
+            );
+            setIsSaving(false);
+        }
+    };
 
     const {
         surveyForm,
