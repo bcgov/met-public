@@ -18,8 +18,14 @@ export const CreateOptions = () => {
     };
     const [formError, setFormError] = useState(initialFormError);
     const [isSaving, setIsSaving] = useState(false);
-    const errorText =
-        name.length > 50 ? 'Name must not exceed 50 characters' : formError.name ? 'Name must be specified' : ' ';
+    const getErrorMessage = () => {
+        if (name.length > 50) {
+            return 'Name must not exceed 50 characters';
+        } else if (formError.name) {
+            return 'Name must be specified';
+        }
+        return '';
+    };
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         handleSurveyFormChange({
             ...surveyForm,
@@ -92,7 +98,7 @@ export const CreateOptions = () => {
                     value={name}
                     onChange={handleChange}
                     error={formError.name || name.length > 50}
-                    helperText={errorText}
+                    helperText={getErrorMessage()}
                 />
             </Grid>
             <Grid item xs={12}>

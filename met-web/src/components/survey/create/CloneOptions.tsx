@@ -43,9 +43,6 @@ const CloneOptions = () => {
         name: false,
     };
     const [formError, setFormError] = useState(initialFormError);
-    const errorText =
-        name.length > 50 ? 'Name must not exceed 50 characters' : formError.name ? 'Name must be specified' : ' ';
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         handleSurveyFormChange({
             ...surveyForm,
@@ -58,6 +55,15 @@ const CloneOptions = () => {
             name: !(surveyForm.name && surveyForm.name.length < 50),
         });
         return Object.values(surveyForm).some((errorExists) => errorExists);
+    };
+
+    const getErrorMessage = () => {
+        if (name.length > 50) {
+            return 'Name must not exceed 50 characters';
+        } else if (formError.name) {
+            return 'Name must be specified';
+        }
+        return '';
     };
 
     const handleFetchSurveys = async (page: number, size: number, sort_order: 'asc' | 'desc' | undefined) => {
@@ -203,7 +209,7 @@ const CloneOptions = () => {
                         value={name}
                         onChange={handleChange}
                         error={formError.name || name.length > 50}
-                        helperText={errorText}
+                        helperText={getErrorMessage()}
                     />
                 </Stack>
             </Grid>
