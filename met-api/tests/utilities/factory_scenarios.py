@@ -138,7 +138,6 @@ class TestWidgetInfo(dict, Enum):
 
     widget1 = {
         'widget_type_id': WidgetType.WHO_IS_LISTENING.value,
-        'engagement_id': 1,
         'created_by': '123',
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
@@ -146,7 +145,6 @@ class TestWidgetInfo(dict, Enum):
     }
     widget2 = {
         'widget_type_id': WidgetType.DOCUMENTS.value,
-        'engagement_id': 1,
         'created_by': '123',
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
@@ -159,7 +157,6 @@ class TestWidgetItemInfo(dict, Enum):
 
     widget_item1 = {
         'widget_data_id': 1,
-        'widget_id': 1,
         'created_by': '123',
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
@@ -168,7 +165,6 @@ class TestWidgetItemInfo(dict, Enum):
 
     widget_item2 = {
         'widget_data_id': 2,
-        'widget_id': 1,
         'created_by': '123',
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
@@ -227,7 +223,6 @@ class TestWidgetDocumentInfo(dict, Enum):
         'parent_document_id': None,
         'url': None,
         'sort_index': 1,
-        'widget_id': 1,
     }
 
     document2 = {
@@ -236,5 +231,4 @@ class TestWidgetDocumentInfo(dict, Enum):
         'parent_document_id': None,
         'url': fake.image_url(),
         'sort_index': 1,
-        'widget_id': 1,
     }

@@ -20,12 +20,13 @@ import json
 
 import pytest
 
-from tests.utilities.factory_scenarios import TestJwtClaims, TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo
+from met_api.utils.enums import DocumentType
+from tests.utilities.factory_scenarios import TestJwtClaims, TestWidgetDocumentInfo, TestWidgetInfo
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_document_model, factory_engagement_model, factory_widget_model)
 
 
-@pytest.mark.parametrize('document_info', [TestWidgetItemInfo.widget_item1])
+@pytest.mark.parametrize('document_info', [TestWidgetDocumentInfo.document1, TestWidgetDocumentInfo.document2])
 def test_create_documents(client, jwt, session, document_info):  # pylint:disable=unused-argument
     """Assert that widget items can be POSTed."""
     engagement = factory_engagement_model()
@@ -35,7 +36,7 @@ def test_create_documents(client, jwt, session, document_info):  # pylint:disabl
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
 
     data = {
-        **TestWidgetDocumentInfo.document1,
+        **document_info,
         'widget_id': widget.id,
     }
 
@@ -48,8 +49,7 @@ def test_create_documents(client, jwt, session, document_info):  # pylint:disabl
     assert rv.status_code == 200
 
 
-@pytest.mark.parametrize('document_info', [TestWidgetItemInfo.widget_item1])
-def test_get_document(client, jwt, session, document_info):  # pylint:disable=unused-argument
+def test_get_document(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that widget items can be POSTed."""
     engagement = factory_engagement_model()
     TestWidgetInfo.widget1['engagement_id'] = engagement.id
@@ -70,3 +70,62 @@ def test_get_document(client, jwt, session, document_info):  # pylint:disable=un
 
     assert rv.status_code == 200
     assert rv.json.get('result').get('children')[0].get('id') == document.id
+
+
+def test_assert_tree_structure_invalid(client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that widget items can be POSTed."""
+    engagement = factory_engagement_model()
+    TestWidgetInfo.widget1['engagement_id'] = engagement.id
+    widget = factory_widget_model(TestWidgetInfo.widget1)
+
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+
+    file = factory_document_model({
+        **TestWidgetDocumentInfo.document2,
+        'widget_id': widget.id
+    })
+
+    folder = {**TestWidgetDocumentInfo.document1, 'widget_id': widget.id, 'parent_document_id': file.id}
+
+    rv = client.post(
+        f'/api/widgets/{widget.id}/documents',
+        data=json.dumps(folder),
+        headers=headers,
+        content_type='application/json'
+    )
+    # TODO once we remove action result , this should be HTTP 400
+    assert rv.status_code == 500
+
+
+def test_assert_tree_structure(client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that widget items can be POSTed."""
+    engagement = factory_engagement_model()
+    TestWidgetInfo.widget1['engagement_id'] = engagement.id
+    widget = factory_widget_model(TestWidgetInfo.widget1)
+
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+
+    folder = factory_document_model({
+        **TestWidgetDocumentInfo.document1,
+        'widget_id': widget.id,
+    })
+    document_file = dict(TestWidgetDocumentInfo.document2)
+    document_file['parent_document_id'] = folder.id
+    document_file['widget_id'] = widget.id
+    file = factory_document_model(document_file)
+
+    rv = client.get(
+        f'/api/widgets/{widget.id}/documents',
+        headers=headers,
+        content_type='application/json'
+    )
+
+    assert rv.status_code == 200
+    expected_folder_element = rv.json.get('result').get('children')[0]
+    assert expected_folder_element.get('id') == folder.id
+    assert expected_folder_element.get('title') == folder.title
+    assert expected_folder_element.get('type') == DocumentType.FOLDER.value
+    expected_file_element = expected_folder_element.get('children')[0]
+    assert expected_file_element.get('id') == file.id
+    assert expected_file_element.get('title') == file.title
+    assert expected_file_element.get('type') == DocumentType.FILE.value

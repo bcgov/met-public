@@ -17,6 +17,7 @@ from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from met_api.auth import auth
+from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas.widget_documents import WidgetDocumentsSchema
 from met_api.services.widget_documents_service import WidgetDocumentService
 from met_api.utils.action_result import ActionResult
@@ -48,5 +49,8 @@ class WidgetDocuments(Resource):
     def post(widget_id):
         """Add new documents to the widgets."""
         request_json = request.get_json()
-        document = WidgetDocumentService.create_document(widget_id, request_json)
-        return ActionResult.success(result=WidgetDocumentsSchema().dump(document))
+        try:
+            document = WidgetDocumentService.create_document(widget_id, request_json)
+            return ActionResult.success(result=WidgetDocumentsSchema().dump(document))
+        except BusinessException as err:
+            return ActionResult.error(str(err))
