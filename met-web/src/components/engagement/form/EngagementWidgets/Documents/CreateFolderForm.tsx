@@ -16,13 +16,31 @@ const CreateFolderForm = () => {
     const dispatch = useAppDispatch();
     const [createFolderMode, setCreateFolderMode] = useState(false);
     const [creatingFolder, setCreatingFolder] = useState(false);
-
     const [folderName, setFolderName] = useState('');
-
+    const initialFormError = {
+        name: false,
+    };
+    const [formError, setFormError] = useState(initialFormError);
     const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Document);
 
+    const validate = () => {
+        setFormError({
+            name: !(folderName && folderName.length < 50),
+        });
+        return Object.values(formError).some((errorExists) => errorExists);
+    };
+
+    const getErrorMessage = () => {
+        if (folderName.length > 50) {
+            return 'Folder name must not exceed 50 characters';
+        } else if (formError.name) {
+            return 'Folder name must be specified';
+        }
+        return '';
+    };
+
     const handleCreateFolder = async () => {
-        if (!folderName || !widget) {
+        if (!widget || validate()) {
             return;
         }
 
@@ -74,6 +92,8 @@ const CreateFolderForm = () => {
                                     shrink: false,
                                 }}
                                 onChange={(e) => setFolderName(e.target.value)}
+                                error={formError.name || folderName.length > 50}
+                                helperText={getErrorMessage()}
                             />
 
                             <SecondaryButton onClick={() => setCreateFolderMode(false)}>Cancel</SecondaryButton>

@@ -11,16 +11,21 @@ import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
 export const CreateOptions = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-
     const { surveyForm, handleSurveyFormChange, engagementToLink } = useContext(CreateSurveyContext);
     const { name } = surveyForm;
-
     const initialFormError = {
         name: false,
     };
     const [formError, setFormError] = useState(initialFormError);
     const [isSaving, setIsSaving] = useState(false);
-
+    const getErrorMessage = () => {
+        if (name.length > 50) {
+            return 'Name must not exceed 50 characters';
+        } else if (formError.name) {
+            return 'Name must be specified';
+        }
+        return '';
+    };
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         handleSurveyFormChange({
             ...surveyForm,
@@ -37,13 +42,13 @@ export const CreateOptions = () => {
 
     const validate = () => {
         setFormError({
-            name: !surveyForm.name,
+            name: !(surveyForm.name && surveyForm.name.length < 50),
         });
         return Object.values(surveyForm).some((errorExists) => errorExists);
     };
 
     const handleSaveClick = async () => {
-        if (!validate()) {
+        if (validate()) {
             return;
         }
 
@@ -92,8 +97,8 @@ export const CreateOptions = () => {
                     name="name"
                     value={name}
                     onChange={handleChange}
-                    error={formError.name}
-                    helperText={formError.name ? 'Name must be specified' : ' '}
+                    error={formError.name || name.length > 50}
+                    helperText={getErrorMessage()}
                 />
             </Grid>
             <Grid item xs={12}>

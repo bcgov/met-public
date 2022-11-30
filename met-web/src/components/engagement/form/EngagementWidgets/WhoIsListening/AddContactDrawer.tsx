@@ -19,11 +19,11 @@ import { Contact } from 'models/contact';
 
 const schema = yup
     .object({
-        name: yup.string().required(),
-        title: yup.string(),
-        phone_number: yup.string(),
-        email: yup.string().email().required(),
-        address: yup.string(),
+        name: yup.string().max(50, 'Name should not exceed 50 characters').required(),
+        title: yup.string().max(50, 'Title should not exceed 50 characters'),
+        phone_number: yup.string().max(50, 'Phone Number should not exceed 50 characters'),
+        email: yup.string().email().max(50, 'Email should not exceed 50 characters').required(),
+        address: yup.string().max(150, 'Address should not exceed 150 characters'),
         bio: yup.string().max(240, 'Bio should not exceed 240 characters'),
     })
     .required();

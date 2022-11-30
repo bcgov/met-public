@@ -8,7 +8,6 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
 import { Survey } from 'models/survey';
-import { hasKey } from 'utils';
 import { Engagement } from 'models/engagement';
 
 export type EngagementParams = {
@@ -31,7 +30,6 @@ const CloneOptions = () => {
     const [loadingSurveys, setLoadingSurveys] = useState(true);
     const [loadingEngagements, setLoadingEngagements] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
-
     const {
         surveyForm,
         handleSurveyFormChange,
@@ -40,24 +38,32 @@ const CloneOptions = () => {
         availableEngagements,
         setAvailableEngagements,
     } = useContext(CreateSurveyContext);
-
+    const { name } = surveyForm;
     const initialFormError = {
         name: false,
     };
     const [formError, setFormError] = useState(initialFormError);
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         handleSurveyFormChange({
             ...surveyForm,
             [e.target.name]: e.target.value,
         });
+    };
 
-        if (hasKey(formError, e.target.name) && formError[e.target.name]) {
-            setFormError({
-                ...formError,
-                [e.target.name]: false,
-            });
+    const validate = () => {
+        setFormError({
+            name: !(surveyForm.name && surveyForm.name.length < 50),
+        });
+        return Object.values(surveyForm).some((errorExists) => errorExists);
+    };
+
+    const getErrorMessage = () => {
+        if (name.length > 50) {
+            return 'Name must not exceed 50 characters';
+        } else if (formError.name) {
+            return 'Name must be specified';
         }
+        return '';
     };
 
     const handleFetchSurveys = async (page: number, size: number, sort_order: 'asc' | 'desc' | undefined) => {
@@ -105,6 +111,9 @@ const CloneOptions = () => {
     const handleSave = async () => {
         if (!selectedSurvey) {
             dispatch(openNotification({ severity: 'error', text: 'Please select a survey first' }));
+            return;
+        }
+        if (validate()) {
             return;
         }
         setIsSaving(true);
@@ -197,10 +206,10 @@ const CloneOptions = () => {
                         }}
                         fullWidth
                         name="name"
-                        value={surveyForm.name}
+                        value={name}
                         onChange={handleChange}
-                        error={formError.name}
-                        helperText={formError.name ? 'Name must be specified' : ' '}
+                        error={formError.name || name.length > 50}
+                        helperText={getErrorMessage()}
                     />
                 </Stack>
             </Grid>

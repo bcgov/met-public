@@ -6,7 +6,7 @@ import { ActionContext } from './ActionContext';
 import ImageUpload from 'components/imageUpload';
 import { useNavigate } from 'react-router-dom';
 import { AddSurveyBlock } from './AddSurveyBlock';
-
+import { If, Then, Else } from 'react-if';
 const EngagementForm = () => {
     const {
         handleCreateEngagementRequest,
@@ -42,7 +42,7 @@ const EngagementForm = () => {
         setRichDescription(savedEngagement?.rich_description || '');
         setRichContent(savedEngagement?.rich_content || '');
     }, [savedEngagement]);
-
+    const { name, start_date, end_date, description, content } = engagementFormData;
     const [engagementFormError, setEngagementFormError] = useState({
         name: false,
         start_date: false,
@@ -50,6 +50,15 @@ const EngagementForm = () => {
         description: false,
         content: false,
     });
+
+    const getErrorMessage = () => {
+        if (name.length > 50) {
+            return 'Name must not exceed 50 characters';
+        } else if (engagementFormError.name) {
+            return 'Name must be specified';
+        }
+        return '';
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setEngagementFormData({
@@ -94,17 +103,14 @@ const EngagementForm = () => {
         setRichContent(newState);
     };
 
-    const { name, start_date, end_date, description, content } = engagementFormData;
-
     const validateForm = () => {
         const errors = {
-            name: !name,
+            name: !(name && name.length < 50),
             start_date: !start_date,
             end_date: !end_date,
             description: !description,
             content: !content,
         };
-
         setEngagementFormError(errors);
 
         return Object.values(errors).some((isError: unknown) => isError);
@@ -195,8 +201,8 @@ const EngagementForm = () => {
                         name="name"
                         value={name}
                         onChange={handleChange}
-                        error={engagementFormError.name}
-                        helperText={engagementFormError.name ? 'Name must be specified' : ''}
+                        error={engagementFormError.name || name.length > 50}
+                        helperText={getErrorMessage()}
                     />
                 </Grid>
                 <Grid
@@ -241,7 +247,6 @@ const EngagementForm = () => {
                     <Grid item md={6} xs={12}>
                         <Stack direction="row" alignItems="center" spacing={2}>
                             <Typography minWidth={{ xs: '2.5em', md: 'auto' }}>To</Typography>
-
                             <TextField
                                 id="from-date"
                                 type="date"
@@ -303,16 +308,19 @@ const EngagementForm = () => {
                 </Grid>
 
                 <Grid item xs={12}>
-                    {isNewEngagement ? (
-                        <PrimaryButton
-                            sx={{ marginRight: 1 }}
-                            data-testid="engagement-form/create-engagement-button"
-                            onClick={() => handleCreateEngagement()}
-                            loading={isSaving}
-                        >
-                            Create Engagement Draft
-                        </PrimaryButton>
-                    ) : (
+                    <If condition={isNewEngagement}>
+                        <Then>
+                            <PrimaryButton
+                                sx={{ marginRight: 1 }}
+                                data-testid="engagement-form/create-engagement-button"
+                                onClick={() => handleCreateEngagement()}
+                                loading={isSaving}
+                            >
+                                Create Engagement Draft
+                            </PrimaryButton>
+                        </Then>
+                    </If>
+                    <Else>
                         <PrimaryButton
                             data-testid="engagement-form/update-engagement-button"
                             sx={{ marginRight: 1 }}
@@ -322,7 +330,7 @@ const EngagementForm = () => {
                         >
                             Update Engagement
                         </PrimaryButton>
-                    )}
+                    </Else>
                     <SecondaryButton
                         data-testid="engagement-form/preview-engagement-button"
                         onClick={() => handlePreviewEngagement()}
