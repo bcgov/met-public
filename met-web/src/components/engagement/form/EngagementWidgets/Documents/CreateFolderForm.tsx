@@ -18,7 +18,11 @@ const CreateFolderForm = () => {
     const [creatingFolder, setCreatingFolder] = useState(false);
 
     const [folderName, setFolderName] = useState('');
-
+    const errorText = folderName.length > 50
+        ? 'Folder name must not exceed 50 characters'
+        : formError.name
+        ? 'Folder name must be specified'
+        : ' '
     const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Document);
     const initialFormError = {
         name: false,
@@ -87,13 +91,7 @@ const CreateFolderForm = () => {
                                 }}
                                 onChange={(e) => setFolderName(e.target.value)}
                                 error={formError.name || folderName.length > 50}
-                                helperText={
-                                    folderName.length > 50
-                                        ? 'Folder name must not exceed 50 characters'
-                                        : formError.name
-                                        ? 'Folder name must be specified'
-                                        : ' '
-                                }
+                                helperText={errorText}
                             />
 
                             <SecondaryButton onClick={() => setCreateFolderMode(false)}>Cancel</SecondaryButton>

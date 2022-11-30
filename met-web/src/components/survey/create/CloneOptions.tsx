@@ -8,7 +8,6 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
 import { Survey } from 'models/survey';
-import { hasKey } from 'utils';
 import { Engagement } from 'models/engagement';
 
 export type EngagementParams = {
@@ -39,6 +38,8 @@ const CloneOptions = () => {
         availableEngagements,
         setAvailableEngagements,
     } = useContext(CreateSurveyContext);
+    const errorText =
+        name.length > 50 ? 'Name must not exceed 50 characters' : formError.name ? 'Name must be specified' : ' ';
     const { name } = surveyForm;
     const initialFormError = {
         name: false,
@@ -202,13 +203,7 @@ const CloneOptions = () => {
                         value={name}
                         onChange={handleChange}
                         error={formError.name || name.length > 50}
-                        helperText={
-                            name.length > 50
-                                ? 'Name must not exceed 50 characters'
-                                : formError.name
-                                ? 'Name must be specified'
-                                : ' '
-                        }
+                        helperText={errorText}
                     />
                 </Stack>
             </Grid>

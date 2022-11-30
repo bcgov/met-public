@@ -50,6 +50,12 @@ const EngagementForm = () => {
         description: false,
         content: false,
     });
+    const errorText =
+        name.length > 50
+            ? 'Name must not exceed 50 characters'
+            : engagementFormError.name
+            ? 'Name must be specified'
+            : '';
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setEngagementFormData({
@@ -195,13 +201,7 @@ const EngagementForm = () => {
                         value={name}
                         onChange={handleChange}
                         error={engagementFormError.name || name.length > 50}
-                        helperText={
-                            name.length > 50
-                                ? 'Engagement name can not exceed 50 characters'
-                                : engagementFormError.name
-                                ? 'Engagement name can not be empty'
-                                : ''
-                        }
+                        helperText={errorText}
                     />
                 </Grid>
                 <Grid
