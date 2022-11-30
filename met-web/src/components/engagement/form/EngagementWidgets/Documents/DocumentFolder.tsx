@@ -36,22 +36,20 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
                 <Grid item xs={12} container justifyContent={'flex-end'} spacing={2}>
                     {documentItem.children?.map((item) => {
                         return (
-                            <>
-                                <Grid item xs={12}>
-                                    <Stack direction="row" spacing={1} alignItems="flex-start">
-                                        <IconButton
-                                            sx={{ padding: 0, margin: 0, height: '2em' }}
-                                            style={{ color: 'inherit' }}
-                                            color="info"
-                                            aria-label="drag-indicator"
-                                            disabled={true}
-                                        >
-                                            <SubdirectoryArrowRightIcon />
-                                        </IconButton>
-                                        <DocumentSwitch documentItem={item} />
-                                    </Stack>
-                                </Grid>
-                            </>
+                            <Grid key={`child-document-${item.id}`} item xs={12}>
+                                <Stack direction="row" spacing={1} alignItems="flex-start">
+                                    <IconButton
+                                        sx={{ padding: 0, margin: 0, height: '2em' }}
+                                        style={{ color: 'inherit' }}
+                                        color="info"
+                                        aria-label="drag-indicator"
+                                        disabled={true}
+                                    >
+                                        <SubdirectoryArrowRightIcon />
+                                    </IconButton>
+                                    <DocumentSwitch documentItem={item} />
+                                </Stack>
+                            </Grid>
                         );
                     })}
                 </Grid>

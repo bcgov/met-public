@@ -128,8 +128,8 @@ const FileDrawer = () => {
                             <Grid item xs={12}>
                                 <MetLabel sx={{ marginBottom: '2px' }}>Folder</MetLabel>
                                 <ControlledSelect
-                                    name="folderId"
                                     id="document-folder"
+                                    name="folderId"
                                     data-testid="document-form/folderId"
                                     variant="outlined"
                                     label=" "
@@ -139,11 +139,15 @@ const FileDrawer = () => {
                                     fullWidth
                                     size="small"
                                 >
-                                    <MenuItem value={0} sx={{ height: '2em' }}></MenuItem>
+                                    <MenuItem key={`folder-option-0`} value={0} sx={{ height: '2em' }}></MenuItem>
                                     {documents
                                         .filter((document) => document.type === DOCUMENT_TYPE.FOLDER)
                                         .map((document) => {
-                                            return <MenuItem value={document.id}>{document.title}</MenuItem>;
+                                            return (
+                                                <MenuItem key={`folder-option-${document.id}`} value={document.id}>
+                                                    {document.title}
+                                                </MenuItem>
+                                            );
                                         })}
                                 </ControlledSelect>
                             </Grid>

@@ -9,7 +9,7 @@ const DocumentsBlock = () => {
     return (
         <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={2}>
             {documents.map((document) => {
-                return <DocumentSwitch documentItem={document} />;
+                return <DocumentSwitch key={`document-${document.id}`} documentItem={document} />;
             })}
         </Grid>
     );
