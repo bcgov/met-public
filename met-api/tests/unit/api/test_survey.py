@@ -20,6 +20,7 @@ import json
 
 import pytest
 
+from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestSurveyInfo
 from tests.utilities.factory_utils import factory_auth_header, factory_engagement_model, factory_survey_model
 
@@ -29,7 +30,7 @@ def test_create_survey(client, jwt, session, survey_info):  # pylint:disable=unu
     """Assert that an survey can be POSTed."""
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
     rv = client.post('/api/surveys/', data=json.dumps(survey_info),
-                     headers=headers, content_type='application/json')
+                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json.get('status') is True
     assert rv.json.get('result').get('form_json') == survey_info.get('form_json')
@@ -43,12 +44,12 @@ def test_put_survey(client, jwt, session, survey_info):  # pylint:disable=unused
     survey_id = str(survey.id)
     new_survey_name = 'new_survey_name'
     rv = client.put('/api/surveys/', data=json.dumps({'id': survey_id, 'name': new_survey_name}),
-                    headers=headers, content_type='application/json')
+                    headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.status_code == 200
 
     rv = client.get(f'/api/surveys/{survey_id}',
-                    headers=headers, content_type='application/json')
+                    headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json.get('status') is True
     assert rv.json.get('result').get('form_json') == survey_info.get('form_json')
@@ -67,14 +68,14 @@ def test_survey_link(client, jwt, session):  # pylint:disable=unused-argument
     # assert eng id is none in GET Survey
 
     rv = client.get(f'/api/surveys/{survey_id}',
-                    headers=headers, content_type='application/json')
+                    headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.json.get('result').get('engagement_id') is None
     # link them togother
     rv = client.put(f'/api/surveys/{survey_id}/link/engagement/{eng_id}',
-                    headers=headers, content_type='application/json')
+                    headers=headers, content_type=ContentType.JSON.value)
 
     rv = client.get(f'/api/surveys/{survey_id}',
-                    headers=headers, content_type='application/json')
+                    headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.json.get('result').get('engagement_id') == str(eng_id)

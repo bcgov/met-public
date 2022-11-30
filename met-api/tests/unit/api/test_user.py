@@ -16,7 +16,7 @@
 
 Test-Suite to ensure that the /user endpoint is working as expected.
 """
-
+from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import factory_auth_header
 
@@ -26,7 +26,7 @@ def test_create_user(client, jwt, session, ):  # pylint:disable=unused-argument
     claims = TestJwtClaims.public_user_role
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.put('/api/user/',
-                    headers=headers, content_type='application/json')
+                    headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     print(rv.json)
     assert rv.json.get('status') is True

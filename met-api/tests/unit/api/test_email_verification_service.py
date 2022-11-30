@@ -18,6 +18,7 @@ Test-Suite to ensure that the /user endpoint is working as expected.
 """
 import json
 
+from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import factory_auth_header, factory_survey_and_eng_model
 
@@ -33,6 +34,6 @@ def test_email_verification(client, jwt, session, notify_mock, ):  # pylint:disa
     }
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/email_verification/', data=json.dumps(to_dict),
-                     headers=headers, content_type='application/json')
+                     headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.status_code == 200

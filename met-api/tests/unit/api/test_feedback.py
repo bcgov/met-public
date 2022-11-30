@@ -19,6 +19,7 @@ Test-Suite to ensure that the /Feedbacks endpoint is working as expected.
 import json
 
 from met_api.constants.feedback import FeedbackSourceType
+from met_api.utils.enums import ContentType
 
 from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import factory_auth_header, factory_feedback_model
@@ -36,7 +37,7 @@ def test_feedback(client, jwt, session):  # pylint:disable=unused-argument
     }
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/feedbacks/', data=json.dumps(to_dict),
-                     headers=headers, content_type='application/json')
+                     headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.status_code == 200
     result = rv.json.get('result')
@@ -60,7 +61,7 @@ def test_invalid_feedback(client, jwt, session):  # pylint:disable=unused-argume
     }
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/feedbacks/', data=json.dumps(to_dict),
-                     headers=headers, content_type='application/json')
+                     headers=headers, content_type=ContentType.JSON.value)
     rating_error_msg = "'rating' is a required property"
 
     assert rating_error_msg in rv.json.get('message')
@@ -69,6 +70,6 @@ def test_invalid_feedback(client, jwt, session):  # pylint:disable=unused-argume
     }
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/feedbacks/', data=json.dumps(to_dict),
-                     headers=headers, content_type='application/json')
+                     headers=headers, content_type=ContentType.JSON.value)
     print(rv.json.get('message'))
     assert rating_error_msg in rv.json.get('message')

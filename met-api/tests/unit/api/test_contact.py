@@ -20,6 +20,7 @@ import json
 
 import pytest
 
+from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestContactInfo, TestJwtClaims
 from tests.utilities.factory_utils import factory_auth_header
 
@@ -29,7 +30,7 @@ def test_create_contact(client, jwt, session, contact_info):  # pylint:disable=u
     """Assert that a contact can be POSTed."""
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
     rv = client.post('/api/contacts/', data=json.dumps(contact_info),
-                     headers=headers, content_type='application/json')
+                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json.get('result').get('name') == contact_info.get('name')
     assert rv.json.get('result').get('title') == contact_info.get('title')
