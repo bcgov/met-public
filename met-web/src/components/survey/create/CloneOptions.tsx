@@ -31,7 +31,6 @@ const CloneOptions = () => {
     const [loadingSurveys, setLoadingSurveys] = useState(true);
     const [loadingEngagements, setLoadingEngagements] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
-    const { name } = surveyForm;
     const {
         surveyForm,
         handleSurveyFormChange,
@@ -40,7 +39,7 @@ const CloneOptions = () => {
         availableEngagements,
         setAvailableEngagements,
     } = useContext(CreateSurveyContext);
-
+    const { name } = surveyForm;
     const initialFormError = {
         name: false,
     };
