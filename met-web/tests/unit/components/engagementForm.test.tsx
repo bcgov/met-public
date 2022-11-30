@@ -16,7 +16,7 @@ import { EngagementStatus } from 'constants/engagementStatus';
 import { Widget, WidgetItem, WidgetType } from 'models/widget';
 import { Contact } from 'models/contact';
 import { Box } from '@mui/material';
-import { engagement } from '../components/factory'
+import { engagement } from '../components/factory';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
