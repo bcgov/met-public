@@ -12,12 +12,12 @@ const DocumentFile = ({ documentItem }: { documentItem: DocumentItem }) => {
                 <Grid container direction="row" alignItems={'center'} justifyContent="flex-start">
                     <Grid item xs>
                         <Stack spacing={2} direction="row" alignItems="center">
-                            <LinkIcon />
+                            <LinkIcon color="info" />
                             <Typography>{documentItem.title}</Typography>
                         </Stack>
                     </Grid>
                     <Grid item xs container justifyContent={'flex-end'}>
-                        <IconButton sx={{ padding: 0, margin: 0 }} color="info" aria-label="Remove File">
+                        <IconButton sx={{ padding: 0, margin: 0 }} color="inherit" aria-label="Remove File">
                             <HighlightOffIcon />
                         </IconButton>
                     </Grid>

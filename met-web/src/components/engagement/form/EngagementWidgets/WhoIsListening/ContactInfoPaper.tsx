@@ -20,7 +20,7 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
         <MetWidgetPaper elevation={3} {...rest}>
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
                 <Grid item xs={1}>
-                    <IconButton sx={{ padding: 0, margin: 0 }} color="info" aria-label="drag-indicator">
+                    <IconButton sx={{ padding: 0, margin: 0 }} color="inherit" aria-label="drag-indicator">
                         <DragIndicatorIcon />
                     </IconButton>
                 </Grid>
@@ -101,7 +101,7 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
                                 handleChangeContactToEdit(contact);
                                 handleAddContactDrawerOpen(true);
                             }}
-                            color="info"
+                            color="inherit"
                             aria-label="edit-icon"
                         >
                             <EditIcon />
@@ -111,7 +111,7 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
                         <IconButton
                             sx={{ padding: 1, margin: 0 }}
                             onClick={() => removeContact(contact.id)}
-                            color="info"
+                            color="inherit"
                             aria-label="delete-icon"
                         >
                             <HighlightOffIcon />

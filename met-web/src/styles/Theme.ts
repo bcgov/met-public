@@ -38,7 +38,7 @@ export const BaseTheme = createTheme({
             active: Palette.action.active,
         },
         info: {
-            main: '#404040',
+            main: '#707070',
         },
     },
     components: {

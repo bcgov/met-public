@@ -62,7 +62,7 @@ export const PreviewBanner = () => {
                                     <Grid container direction="row" alignItems="center" item sm={0.5} xs={2}>
                                         <IconButton
                                             sx={{ padding: 0, margin: 0 }}
-                                            color="info"
+                                            color="inherit"
                                             onClick={() => navigate(`/engagements/${engagementId}/form`)}
                                             aria-label="no image"
                                         >
@@ -79,7 +79,7 @@ export const PreviewBanner = () => {
                                     <Grid item sm={0.5} xs={2}>
                                         <IconButton
                                             sx={{ padding: 0, margin: 0 }}
-                                            color="info"
+                                            color="inherit"
                                             onClick={() => navigate(`/surveys/create?engagementId=${engagementId}`)}
                                             aria-label="no survey"
                                         >
@@ -93,7 +93,11 @@ export const PreviewBanner = () => {
                             </ConditionalComponent>
                             <Grid container direction="row" alignItems="center" item xs={12} lg={8}>
                                 <Grid item sm={0.5} xs={2}>
-                                    <IconButton sx={{ padding: 0, margin: 0 }} color="info" aria-label="not published">
+                                    <IconButton
+                                        sx={{ padding: 0, margin: 0 }}
+                                        color="inherit"
+                                        aria-label="not published"
+                                    >
                                         <UnpublishedIcon />
                                     </IconButton>
                                 </Grid>
