@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { MetPaper, MetBody, MetHeader4 } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
-import CommentIcon from '@mui/icons-material/Comment';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetTabValues } from '../type';
 import { ActionContext } from '../../ActionContext';
@@ -71,7 +71,7 @@ const PhasesOptionCard = () => {
                         spacing={1}
                     >
                         <Grid item>
-                            <CommentIcon sx={{ fontSize: '5em' }} />
+                            <ChatBubbleIcon sx={{ fontSize: '5em' }} />
                         </Grid>
                         <Grid
                             container
@@ -86,7 +86,7 @@ const PhasesOptionCard = () => {
                                 <MetHeader4>EA Process</MetHeader4>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody>Add the environment assessment process information to this engagement</MetBody>
+                                <MetBody>Add the EA process info to this engagement</MetBody>
                             </Grid>
                         </Grid>
                     </Grid>
