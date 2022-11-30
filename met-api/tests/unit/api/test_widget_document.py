@@ -80,12 +80,12 @@ def test_assert_tree_structure_invalid(client, jwt, session):  # pylint:disable=
 
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
 
-    file = factory_document_model({
+    file_doc = factory_document_model({
         **TestWidgetDocumentInfo.document2,
         'widget_id': widget.id
     })
 
-    folder = {**TestWidgetDocumentInfo.document1, 'widget_id': widget.id, 'parent_document_id': file.id}
+    folder = {**TestWidgetDocumentInfo.document1, 'widget_id': widget.id, 'parent_document_id': file_doc.id}
 
     rv = client.post(
         f'/api/widgets/{widget.id}/documents',
@@ -112,7 +112,7 @@ def test_assert_tree_structure(client, jwt, session):  # pylint:disable=unused-a
     document_file = dict(TestWidgetDocumentInfo.document2)
     document_file['parent_document_id'] = folder.id
     document_file['widget_id'] = widget.id
-    file = factory_document_model(document_file)
+    file_doc = factory_document_model(document_file)
 
     rv = client.get(
         f'/api/widgets/{widget.id}/documents',
@@ -126,6 +126,6 @@ def test_assert_tree_structure(client, jwt, session):  # pylint:disable=unused-a
     assert expected_folder_element.get('title') == folder.title
     assert expected_folder_element.get('type') == DocumentType.FOLDER.value
     expected_file_element = expected_folder_element.get('children')[0]
-    assert expected_file_element.get('id') == file.id
-    assert expected_file_element.get('title') == file.title
+    assert expected_file_element.get('id') == file_doc.id
+    assert expected_file_element.get('title') == file_doc.title
     assert expected_file_element.get('type') == DocumentType.FILE.value
