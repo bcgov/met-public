@@ -60,7 +60,7 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                         <If condition={document.type === DOCUMENT_TYPE.FOLDER}>
                             <Then>
                                 <Stack sx={{ ml: 1 }} spacing={2} direction="row" alignItems="center">
-                                    <FolderIcon />
+                                    <FolderIcon color="info" />
                                     <MetHeader4 bold={true} sx={{ p: 0, m: 0 }}>
                                         {document.title}
                                     </MetHeader4>
@@ -73,7 +73,11 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                                                 <Grid item xs={1}></Grid>
                                                 <Grid item xs={11}>
                                                     <Stack direction="row">
-                                                        <InsertDriveFileIcon sx={{ mr: 0.5 }} fontSize="small" />
+                                                        <InsertDriveFileIcon
+                                                            color="info"
+                                                            sx={{ mr: 0.5 }}
+                                                            fontSize="small"
+                                                        />
                                                         <Link
                                                             sx={{
                                                                 alignItems: 'center',
