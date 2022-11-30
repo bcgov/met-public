@@ -38,13 +38,13 @@ const CloneOptions = () => {
         availableEngagements,
         setAvailableEngagements,
     } = useContext(CreateSurveyContext);
-    const errorText =
-        name.length > 50 ? 'Name must not exceed 50 characters' : formError.name ? 'Name must be specified' : ' ';
     const { name } = surveyForm;
     const initialFormError = {
         name: false,
     };
     const [formError, setFormError] = useState(initialFormError);
+    const errorText =
+        name.length > 50 ? 'Name must not exceed 50 characters' : formError.name ? 'Name must be specified' : ' ';
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         handleSurveyFormChange({

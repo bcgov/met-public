@@ -16,18 +16,17 @@ const CreateFolderForm = () => {
     const dispatch = useAppDispatch();
     const [createFolderMode, setCreateFolderMode] = useState(false);
     const [creatingFolder, setCreatingFolder] = useState(false);
-
     const [folderName, setFolderName] = useState('');
+    const initialFormError = {
+        name: false,
+    };
+    const [formError, setFormError] = useState(initialFormError);
     const errorText = folderName.length > 50
         ? 'Folder name must not exceed 50 characters'
         : formError.name
         ? 'Folder name must be specified'
         : ' '
     const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Document);
-    const initialFormError = {
-        name: false,
-    };
-    const [formError, setFormError] = useState(initialFormError);
 
     const validate = () => {
         setFormError({

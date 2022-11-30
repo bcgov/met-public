@@ -42,7 +42,7 @@ const EngagementForm = () => {
         setRichDescription(savedEngagement?.rich_description || '');
         setRichContent(savedEngagement?.rich_content || '');
     }, [savedEngagement]);
-
+    const { name, start_date, end_date, description, content } = engagementFormData;
     const [engagementFormError, setEngagementFormError] = useState({
         name: false,
         start_date: false,
@@ -99,8 +99,6 @@ const EngagementForm = () => {
     const handleRichContentChange = (newState: string) => {
         setRichContent(newState);
     };
-
-    const { name, start_date, end_date, description, content } = engagementFormData;
 
     const validateForm = () => {
         const errors = {
