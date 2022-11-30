@@ -105,6 +105,7 @@ const PhasesForm = () => {
                             <FormControlLabel
                                 control={
                                     <Checkbox
+                                        data-testid="standalonePhaseCheckbox"
                                         checked={isStandalone}
                                         onChange={(event, checked) => {
                                             setSelectedOption(null);

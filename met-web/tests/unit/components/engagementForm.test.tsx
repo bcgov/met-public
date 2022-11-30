@@ -471,11 +471,17 @@ describe('Engagement form page tests', () => {
         expect(getWidgetsMock).toHaveBeenCalledTimes(2);
 
         const saveWidgetButton = screen.getByTestId('savePhasesWidgetButton');
+        expect(saveWidgetButton).toBeDisabled();
+
+        const standalonePhaseCheckbox = screen.getByTestId('standalonePhaseCheckbox');
+        fireEvent.click(standalonePhaseCheckbox);
+        
         fireEvent.click(saveWidgetButton);
 
         expect(postWidgetItemMock).toHaveBeenNthCalledWith(1, phasesWidget.id, {
             widget_id: phasesWidget.id,
             widget_data_id: 0,
         });
+
     });
 });
