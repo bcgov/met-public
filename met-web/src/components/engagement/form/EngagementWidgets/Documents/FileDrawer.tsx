@@ -27,7 +27,7 @@ type FileForm = yup.TypeOf<typeof schema>;
 
 const FileDrawer = () => {
     const dispatch = useAppDispatch();
-    const { documents, handleFileDrawerOpen, fileDrawerOpen, widget, loadDocuments } = useContext(DocumentsContext);
+    const { documents, handleFileDrawerOpen, fileDrawerOpen, loadDocuments, widget } = useContext(DocumentsContext);
 
     const [isCreatingFile, setIsCreatingDocument] = useState(false);
 
@@ -40,13 +40,17 @@ const FileDrawer = () => {
         },
     });
 
-    const { handleSubmit } = methods;
+    const { handleSubmit, reset } = methods;
+
+    const handleClose = () => {
+        reset();
+        handleFileDrawerOpen(false);
+    };
 
     const onSubmit: SubmitHandler<FileForm> = async (data: FileForm) => {
         if (!widget) {
             return;
         }
-
         try {
             setIsCreatingDocument(true);
             await postDocument(widget.id, {
@@ -58,7 +62,7 @@ const FileDrawer = () => {
             });
             await loadDocuments();
             setIsCreatingDocument(false);
-            handleFileDrawerOpen(false);
+            handleClose();
         } catch (err) {
             console.log(err);
             dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to save File' }));
@@ -164,9 +168,7 @@ const FileDrawer = () => {
                                 </PrimaryButton>
                             </Grid>
                             <Grid item>
-                                <SecondaryButton
-                                    onClick={() => handleFileDrawerOpen(false)}
-                                >{`Cancel`}</SecondaryButton>
+                                <SecondaryButton onClick={() => handleClose()}>{`Cancel`}</SecondaryButton>
                             </Grid>
                         </Grid>
                     </Grid>

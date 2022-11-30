@@ -5,7 +5,6 @@ import { DocumentItem } from 'models/document';
 import FolderIcon from '@mui/icons-material/Folder';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { When } from 'react-if';
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
 import DocumentSwitch from './DocumentSwitch';
 
@@ -16,17 +15,12 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
                 <Grid container direction="row" alignItems={'center'} justifyContent="flex-start">
                     <Grid item xs>
                         <Stack spacing={2} direction="row" alignItems="center">
-                            <IconButton sx={{ padding: 0, margin: 0 }} color="info" aria-label="drag-indicator">
-                                <DragIndicatorIcon />
-                            </IconButton>
-                            <IconButton sx={{ padding: 0, margin: 0 }} color="info" aria-label="drag-indicator">
-                                <FolderIcon />
-                            </IconButton>
+                            <FolderIcon />
                             <Typography>{documentItem.title}</Typography>
                         </Stack>
                     </Grid>
                     <Grid item xs container justifyContent={'flex-end'}>
-                        <IconButton sx={{ padding: 0, margin: 0 }} color="info" aria-label="drag-indicator">
+                        <IconButton sx={{ padding: 0, margin: 0 }} color="info" aria-label="Remove Folder">
                             <HighlightOffIcon />
                         </IconButton>
                     </Grid>
