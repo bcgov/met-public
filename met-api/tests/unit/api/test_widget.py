@@ -22,6 +22,7 @@ from http import HTTPStatus
 import pytest
 
 from met_api.constants.widget import WidgetType
+from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestWidgetInfo, TestWidgetItemInfo
 from tests.utilities.factory_utils import factory_auth_header, factory_engagement_model, factory_widget_model
 
@@ -33,11 +34,11 @@ def test_create_widget(client, jwt, session, widget_info):  # pylint:disable=unu
     widget_info['engagement_id'] = engagement.id
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
     rv = client.post('/api/widgets/engagement/' + str(engagement.id), data=json.dumps(widget_info),
-                     headers=headers, content_type='application/json')
+                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
 
     rv = client.get('/api/widgets/engagement/' + str(engagement.id),
-                    headers=headers, content_type='application/json')
+                    headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json.get('result')[0].get('sort_index') == 1
 
@@ -49,18 +50,18 @@ def test_create_widget_sort(client, jwt, session):  # pylint:disable=unused-argu
     widget_info_1['engagement_id'] = engagement.id
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
     rv = client.post(f'/api/widgets/engagement/{engagement.id}', data=json.dumps(widget_info_1),
-                     headers=headers, content_type='application/json')
+                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
 
     widget_info_2 = TestWidgetInfo.widget2
     widget_info_2['engagement_id'] = engagement.id
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
     rv = client.post(f'/api/widgets/engagement/{engagement.id}', data=json.dumps(widget_info_2),
-                     headers=headers, content_type='application/json')
+                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
 
     rv = client.get('/api/widgets/engagement/' + str(engagement.id),
-                    headers=headers, content_type='application/json')
+                    headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert len(rv.json.get('result')) == 2, 'Two Widgets Should exist.'
     widgets = rv.json.get('result')
@@ -82,11 +83,11 @@ def test_create_widget_sort(client, jwt, session):  # pylint:disable=unused-argu
     ]
 
     rv = client.patch(f'/api/widgets/engagement/{engagement.id}/sort_index', data=json.dumps(reorder_dict),
-                      headers=headers, content_type='application/json')
+                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 204
 
     rv = client.get(f'/api/widgets/engagement/{engagement.id}',
-                    headers=headers, content_type='application/json')
+                    headers=headers, content_type=ContentType.JSON.value)
     widgets = rv.json.get('result')
     who_is_widget = _find_widget(widgets, WidgetType.WHO_IS_LISTENING)
     assert who_is_widget.get('sort_index') == 2
@@ -102,7 +103,7 @@ def test_create_widget_sort_invalid(client, jwt, session):  # pylint:disable=unu
     widget_info_1['engagement_id'] = engagement.id
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
     rv = client.post(f'/api/widgets/engagement/{engagement.id}', data=json.dumps(widget_info_1),
-                     headers=headers, content_type='application/json')
+                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
 
     # invalid reorder
@@ -115,7 +116,7 @@ def test_create_widget_sort_invalid(client, jwt, session):  # pylint:disable=unu
     }
     ]
     rv = client.patch(f'/api/widgets/engagement/{engagement.id}/sort_index', data=json.dumps(reorder_dict),
-                      headers=headers, content_type='application/json')
+                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.BAD_REQUEST
 
 
@@ -138,5 +139,5 @@ def test_create_widget_items(client, jwt, session, widget_item_info):  # pylint:
         'widget_id': widget.id,
     }
     rv = client.post('/api/widgets/' + str(widget.id) + '/items', data=json.dumps([data]),
-                     headers=headers, content_type='application/json')
+                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200

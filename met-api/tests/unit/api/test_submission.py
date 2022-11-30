@@ -18,6 +18,7 @@ Test-Suite to ensure that the /Submission endpoint is working as expected.
 """
 import json
 
+from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import factory_auth_header, factory_email_verification, factory_survey_and_eng_model
 
@@ -35,7 +36,7 @@ def test_valid_submission(client, jwt, session):  # pylint:disable=unused-argume
     }
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/submissions/', data=json.dumps(to_dict),
-                     headers=headers, content_type='application/json')
+                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
 
 
@@ -52,7 +53,7 @@ def test_invalid_submission(client, jwt, session):  # pylint:disable=unused-argu
     }
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/submissions/', data=json.dumps(to_dict),
-                     headers=headers, content_type='application/json')
+                     headers=headers, content_type=ContentType.JSON.value)
     survey_id_error_msg = "'survey_id' is a required property"
     submission_json_error_msg = "'submission_json' is a required property"
     verification_token_error_msg = "'verification_token' is a required property"
@@ -65,7 +66,7 @@ def test_invalid_submission(client, jwt, session):  # pylint:disable=unused-argu
     }
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/submissions/', data=json.dumps(to_dict),
-                     headers=headers, content_type='application/json')
+                     headers=headers, content_type=ContentType.JSON.value)
     print(rv.json.get('message'))
     assert survey_id_error_msg in rv.json.get('message')
     assert submission_json_error_msg in rv.json.get('message')

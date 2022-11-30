@@ -18,6 +18,7 @@ Test-Suite to ensure that the /Comment endpoint is working as expected.
 """
 import json
 
+from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_comment_model, factory_submission_model, factory_survey_and_eng_model,
@@ -33,7 +34,7 @@ def test_get_comments(client, jwt, session):  # pylint:disable=unused-argument
     submission = factory_submission_model(survey.id, user_details.id)
     factory_comment_model(survey.id, submission.id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.get(f'/api/comments/survey/{survey.id}', headers=headers, content_type='application/json')
+    rv = client.get(f'/api/comments/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
 
 
@@ -51,5 +52,5 @@ def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
     }
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.put(f'/api/submissions/{submission.id}',
-                    data=json.dumps(to_dict), headers=headers, content_type='application/json')
+                    data=json.dumps(to_dict), headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200

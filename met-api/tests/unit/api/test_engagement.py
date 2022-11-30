@@ -22,6 +22,7 @@ import json
 from faker import Faker
 import pytest
 
+from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestEngagementInfo, TestJwtClaims
 from tests.utilities.factory_utils import factory_auth_header, factory_engagement_model
 
@@ -33,7 +34,7 @@ def test_add_engagements(client, jwt, session, engagement_info):  # pylint:disab
     """Assert that an engagement can be POSTed."""
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
-                     headers=headers, content_type='application/json')
+                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json.get('status') is True
 
@@ -43,13 +44,13 @@ def test_get_engagements(client, jwt, session, engagement_info):  # pylint:disab
     """Assert that an engagement can be POSTed."""
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
-                     headers=headers, content_type='application/json')
+                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json.get('status') is True
     created_eng = rv.json
 
     rv = client.get(f'/api/engagements/{created_eng.get("id")}', data=json.dumps(engagement_info),
-                    headers=headers, content_type='application/json')
+                    headers=headers, content_type=ContentType.JSON.value)
 
     assert created_eng.get('result').get('name') == rv.json.get('result').get('name')
     assert created_eng.get('result').get('content') == rv.json.get('result').get('content')
@@ -73,12 +74,12 @@ def test_patch_engagement(client, jwt, session, engagement_info):  # pylint:disa
     }
 
     rv = client.patch('/api/engagements/', data=json.dumps(engagement_edits),
-                      headers=headers, content_type='application/json')
+                      headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.status_code == 200
 
     rv = client.get(f'/api/engagements/{engagement_id}',
-                    headers=headers, content_type='application/json')
+                    headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json.get('status') is True
     assert rv.json.get('result').get('name') == engagement_edits.get('name')

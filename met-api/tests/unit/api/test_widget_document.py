@@ -20,7 +20,7 @@ import json
 
 import pytest
 
-from met_api.utils.enums import DocumentType
+from met_api.utils.enums import ContentType, DocumentType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestWidgetDocumentInfo, TestWidgetInfo
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_document_model, factory_engagement_model, factory_widget_model)
@@ -44,7 +44,7 @@ def test_create_documents(client, jwt, session, document_info):  # pylint:disabl
         f'/api/widgets/{widget.id}/documents',
         data=json.dumps(data),
         headers=headers,
-        content_type='application/json'
+        content_type=ContentType.JSON.value
     )
     assert rv.status_code == 200
 
@@ -65,7 +65,7 @@ def test_get_document(client, jwt, session):  # pylint:disable=unused-argument
     rv = client.get(
         f'/api/widgets/{widget.id}/documents',
         headers=headers,
-        content_type='application/json'
+        content_type=ContentType.JSON.value
     )
 
     assert rv.status_code == 200
@@ -91,7 +91,7 @@ def test_assert_tree_structure_invalid(client, jwt, session):  # pylint:disable=
         f'/api/widgets/{widget.id}/documents',
         data=json.dumps(folder),
         headers=headers,
-        content_type='application/json'
+        content_type=ContentType.JSON.value
     )
     # TODO once we remove action result , this should be HTTP 400
     assert rv.status_code == 500
@@ -117,7 +117,7 @@ def test_assert_tree_structure(client, jwt, session):  # pylint:disable=unused-a
     rv = client.get(
         f'/api/widgets/{widget.id}/documents',
         headers=headers,
-        content_type='application/json'
+        content_type=ContentType.JSON.value
     )
 
     assert rv.status_code == 200
