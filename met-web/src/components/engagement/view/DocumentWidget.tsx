@@ -59,18 +59,12 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                     <Grid key={document.id} container item spacing={1} rowSpacing={1} xs={12} paddingTop={2}>
                         <If condition={document.type === DOCUMENT_TYPE.FOLDER}>
                             <Then>
-                                <Grid item container justifyContent="center" alignItems="center" xs={12}>
-                                    <Grid item xs={1}>
-                                        <Icon sx={{ p: 0, m: 0 }}>
-                                            <FolderIcon />
-                                        </Icon>
-                                    </Grid>
-                                    <Grid item xs={11}>
-                                        <MetHeader4 bold={true} sx={{ p: 0, m: 0 }}>
-                                            {document.title}
-                                        </MetHeader4>
-                                    </Grid>
-                                </Grid>
+                                <Stack sx={{ ml: 1 }} spacing={2} direction="row" alignItems="center">
+                                    <FolderIcon />
+                                    <MetHeader4 bold={true} sx={{ p: 0, m: 0 }}>
+                                        {document.title}
+                                    </MetHeader4>
+                                </Stack>
 
                                 {document.children ? (
                                     document.children.map((folderItem: DocumentItem) => {
