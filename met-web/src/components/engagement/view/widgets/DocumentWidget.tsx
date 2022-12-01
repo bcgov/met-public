@@ -106,7 +106,7 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                             <Else>
                                 <Grid item justifyContent="flex-start" container xs={12}>
                                     <Stack direction="row">
-                                        <InsertDriveFileIcon sx={{ mr: 0.5 }} fontSize="small" />
+                                        <InsertDriveFileIcon color="info" sx={{ mr: 0.5 }} fontSize="small" />
                                         <Link
                                             sx={{
                                                 alignItems: 'center',
