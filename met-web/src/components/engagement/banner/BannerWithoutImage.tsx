@@ -6,14 +6,14 @@ import { EngagementStatusChip } from '../status';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorState } from 'utils';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
     const { rich_description, name, start_date, end_date, submission_status } = savedEngagement;
     const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
-    const dateFormat = 'MMM DD, yyyy';
+    const dateFormat = 'MMM DD, YYYY';
 
-    const EngagementDate = `Engagement dates: ${moment(start_date).format(dateFormat)} to ${moment(end_date).format(
+    const EngagementDate = `Engagement dates: ${dayjs(start_date).format(dateFormat)} to ${dayjs(end_date).format(
         dateFormat,
     )}`;
 

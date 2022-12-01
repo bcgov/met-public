@@ -6,14 +6,14 @@ import { BannerProps } from '../view/types';
 import { EngagementStatusChip } from '../status';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorState } from 'utils';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
     const { name, end_date, banner_url, start_date, submission_status, rich_description } = savedEngagement;
     const [imageError, setImageError] = useState(false);
-    const dateFormat = 'MMM DD, yyyy';
+    const dateFormat = 'MMM DD, YYYY';
 
-    const EngagementDate = `Engagement dates: ${moment(start_date).format(dateFormat)} to ${moment(end_date).format(
+    const EngagementDate = `Engagement dates: ${dayjs(start_date).format(dateFormat)} to ${dayjs(end_date).format(
         dateFormat,
     )}`;
 
