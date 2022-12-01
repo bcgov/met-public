@@ -1,24 +1,24 @@
-import { format, utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
-import moment from 'moment';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import tz from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(tz);
 
-const formatToPSTTimeZone = (date: Date, fmt: string, tz: string) =>
-    format(utcToZonedTime(date, tz), fmt, { timeZone: tz });
+const formatToPSTTimeZone = (date: string, fmt: string, tz: string) => dayjs.utc(date).tz(tz).format(fmt);
 
-const formatToUTCTimeZone = (date: Date, fmt: string, tz: string) =>
-    moment(date.setHours(date.getHours() + zonedTimeToUtc(date, tz).getTimezoneOffset() / 60)).format(fmt);
+const formatToUTCTimeZone = (date: string, fmt: string) => dayjs(date).utc().format(fmt);
 
-export const formatDate = (date: string, formatString = 'yyyy-MM-dd') => {
+export const formatDate = (date: string, formatString = 'YYYY-MM-DD') => {
     if (date) {
-        return formatToPSTTimeZone(new Date(date + ' UTC'), formatString, 'PST');
+        return formatToPSTTimeZone(date, formatString, 'America/Vancouver');
     } else {
         return '';
     }
 };
 
-export const formatToUTC = (date: Dayjs | string, formatString = 'yyyy-MM-DD HH:mm:ss') => {
+export const formatToUTC = (date: Dayjs | string, formatString = 'YYYY-MM-DD HH:mm:ss') => {
     if (date) {
-        return formatToUTCTimeZone(new Date(date.toString()), formatString, 'PST');
+        return formatToUTCTimeZone(date.toString(), formatString);
     } else {
         return '';
     }

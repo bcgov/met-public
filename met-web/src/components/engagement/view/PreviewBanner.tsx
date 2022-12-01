@@ -22,7 +22,7 @@ export const PreviewBanner = () => {
     const engagementId = savedEngagement.id || '';
     const imageExists = !!savedEngagement.banner_url;
     const isScheduled = savedEngagement.status_id === EngagementStatus.Scheduled;
-    const scheduledDate = formatDate(savedEngagement.scheduled_date, 'MMM dd yyyy');
+    const scheduledDate = formatDate(savedEngagement.scheduled_date, 'MMM DD YYYY');
     const scheduledTime = formatDate(savedEngagement.scheduled_date, 'HH:mm');
     const engagementBannerText = isScheduled
         ? 'Engagement scheduled - ' + scheduledDate + ' at ' + scheduledTime + ' PST'
