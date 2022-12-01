@@ -180,7 +180,7 @@ const SurveyFormBuilder = () => {
                                 onClick={() => {
                                     setIsNamedFocused(!isNameFocused);
                                 }}
-                                color="info"
+                                color="inherit"
                             >
                                 <BorderColorIcon sx={{ fontSize: '1rem' }} />
                             </IconButton>
@@ -197,7 +197,7 @@ const SurveyFormBuilder = () => {
                                 onClick={() => {
                                     setIsNamedFocused(!isNameFocused);
                                 }}
-                                color="info"
+                                color="inherit"
                             >
                                 <ClearIcon />
                             </IconButton>

@@ -34,7 +34,7 @@ const MetWidget = ({
                 <Grid item xs={2} sx={{ alignItems: 'center', justifyContent: 'center' }}>
                     <If condition={sortable}>
                         <Then>
-                            <IconButton sx={{ margin: 0, padding: 0 }} color="info" aria-label="drag-indicator">
+                            <IconButton sx={{ margin: 0, padding: 0 }} color="inherit" aria-label="drag-indicator">
                                 <DragIndicatorIcon />
                             </IconButton>
                         </Then>
