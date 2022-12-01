@@ -95,9 +95,10 @@ const PhasesForm = () => {
                                 option.id == value.id
                             }
                             getOptionLabel={(option: ISelectOptions) => option.label}
-                            onChange={(_e: React.SyntheticEvent<Element, Event>, option: ISelectOptions | null) =>
-                                setSelectedOption(option)
-                            }
+                            onChange={(_e: React.SyntheticEvent<Element, Event>, option: ISelectOptions | null) => {
+                                setSelectedOption(option);
+                                setIsStandalone(false);
+                            }}
                         />
                     </Grid>
                     <Grid item xs={12}>
