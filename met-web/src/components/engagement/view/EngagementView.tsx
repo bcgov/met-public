@@ -11,6 +11,7 @@ import { useNavigate, useLocation } from 'react-router';
 import { RouteState } from './types';
 import WidgetBlock from './widgets/WidgetBlock';
 import { Else, If, Then } from 'react-if';
+import { PhasesWidget } from './widgets/PhasesWidget';
 
 export const EngagementView = () => {
     const { state } = useLocation() as RouteState;
@@ -59,10 +60,12 @@ export const EngagementView = () => {
                     direction="row"
                     justifyContent={'flex-start'}
                     alignItems="flex-start"
-                    sx={{ margin: '1em 2em 1em 3em' }}
-                    m={{ lg: '0 8em 1em 3em', md: '2em', xs: '1em' }}
+                    m={{ md: '2em', xs: '1em' }}
                     spacing={2}
                 >
+                    <Grid item xs={12}>
+                        <PhasesWidget />
+                    </Grid>
                     <If condition={isMediumScreen}>
                         <Then>
                             <Grid
@@ -82,9 +85,9 @@ export const EngagementView = () => {
                                     <SurveyBlock startSurvey={handleStartSurvey} />
                                 </Grid>
                             </Grid>
-                            <Grid item data-testid={'widget-block'} xs={12} lg={4}>
+                            {/* <Grid item data-testid={'widget-block'} xs={12} lg={4}>
                                 <WidgetBlock />
-                            </Grid>
+                            </Grid> */}
                         </Then>
                         <Else>
                             <Grid data-testid={'engagement-content'} item xs={12}>
