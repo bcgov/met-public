@@ -54,7 +54,7 @@ const CloneOptions = () => {
         setFormError({
             name: !(surveyForm.name && surveyForm.name.length < 50),
         });
-        return Object.values(surveyForm).some((errorExists) => errorExists);
+        return Object.values(formError).some((errorExists) => errorExists);
     };
 
     const getErrorMessage = () => {
