@@ -99,12 +99,16 @@ const CloneOptions = () => {
     useEffect(() => {
         if (!availableSurveys) {
             handleFetchSurveys(PAGE, PAGE_SIZE, SORT_ORDER);
+        } else {
+            setLoadingSurveys(false);
         }
     }, [availableSurveys]);
 
     useEffect(() => {
         if (!availableEngagements) {
             handleFetchEngagements(PAGE, PAGE_SIZE, SORT_ORDER);
+        } else {
+            setLoadingEngagements(false);
         }
     }, [availableEngagements]);
 
