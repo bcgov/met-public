@@ -4,6 +4,9 @@ Commands and notes to deploy MET to a Openshift environment.
 
 ## Build Configuration
 
+Github actions are being used for building images but if necessary to use openshift, 
+follow the steps below:
+
 In the tools namespace use the following to create the build configurations:
 
 ```
@@ -26,6 +29,7 @@ In the tools namespace use the following to create the build configurations:
     oc process -f ./met-analytics.bc.yml | oc create -f -
 ```
 
+## Image Puller Configuration
 
 Allow image pullers from the other namespaces to pull images from tools namespace:
 
@@ -50,28 +54,6 @@ roleRef:
   kind: ClusterRole
   name: 'system:image-puller'
 ```
-
-## Keycloak Configuration
-
-Create an instance of a postgresql database:
-
-In each environment namespace (dev, test, prod) use the following:
-
-Deploy the web application:
-```
-oc process -f ./keycloak.dc.yml -p ENV=test | oc create -f -
-```
-
-The create the initial credentials use port forwarding to access the url as localhost:8080
-```
-oc port-forward keycloak-<PODNAME> 8080:8080
-```
-
-In the keycloak app:
-1. create a new realm and click import json, select the file "keycloak-realm-export.json"
-1. Request a new client configuration in sso-requests (https://bcgov.github.io/sso-requests/)
-1. Update the identity provider client secret and url domains.
-
 
 ## Database Configuration
 
@@ -139,53 +121,74 @@ To restore the backup follow these steps:
     psql -h localhost -d app -U postgres -p 5432 -a -q -f <path-to-file>
     ```
 
+## Keycloak Configuration
+
+Create an instance of a postgresql database:
+
+In each environment namespace (dev, test, prod) use the following:
+
+Deploy the web application:
+```
+oc process -f ./keycloak.dc.yml -p ENV=test | oc create -f -
+```
+
+The create the initial credentials use port forwarding to access the url as localhost:8080
+```
+oc port-forward keycloak-<PODNAME> 8080:8080
+```
+
+In the keycloak app:
+1. create a new realm and click import json, select the file "keycloak-realm-export.json"
+1. Request a new client configuration in sso-requests (https://bcgov.github.io/sso-requests/)
+1. Update the identity provider client secret and url domains.
+
+
 ## Deployment Configuration
 
 In each environment namespace (dev, test, prod) use the following:
 
 Deploy the web application:
 ```
-oc process -f ./web.dc.yml 
-  -p ENV=test 
-  -p IMAGE_TAG=test 
+oc process -f ./web.dc.yml \
+  -p ENV=test \
+  -p IMAGE_TAG=test \
   | oc create -f -
 ```
 
 Deploy the api application:
 ```
-oc process -f ./api.dc.yml 
-  -p ENV=test 
-  -p IMAGE_TAG=test 
-  -p KC_DOMAIN=met-oidc-test.apps.gold.devops.gov.bc.ca 
-  -p S3_BUCKET=met-test 
-  -p SITE_URL=https://met-web-test.apps.gold.devops.gov.bc.ca 
-  -p S3_ACCESS_KEY=<S3_KEY> 
-  -p MET_ADMIN_CLIENT_SECRET=<SERVICE_ACCOUNT_SECRET> 
-  -p NOTIFICATIONS_EMAIL_ENDPOINT=https://met-notify-api-test.apps.gold.devops.gov.bc.ca/api/v1/notifications/email 
+oc process -f ./api.dc.yml \
+  -p ENV=test \
+  -p IMAGE_TAG=test \
+  -p KC_DOMAIN=met-oidc-test.apps.gold.devops.gov.bc.ca \
+  -p S3_BUCKET=met-test \
+  -p SITE_URL=https://met-web-test.apps.gold.devops.gov.bc.ca \
+  -p MET_ADMIN_CLIENT_SECRET=<SERVICE_ACCOUNT_SECRET> \
+  -p NOTIFICATIONS_EMAIL_ENDPOINT=https://met-notify-api-test.apps.gold.devops.gov.bc.ca/api/v1/notifications/email \
   | oc create -f -
 
 ```
 
 Deploy the notify api application:
 ```
-oc process -f ./notify-api.dc.yml 
-  -p ENV=test 
-  -p IMAGE_TAG=test 
-  -p KC_DOMAIN=met-oidc-test.apps.gold.devops.gov.bc.ca 
-  -p GC_NOTIFY_API_KEY=<GC_NOTIFY_API_KEY>
+oc process -f ./notify-api.dc.yml \
+  -p ENV=test \
+  -p IMAGE_TAG=test \
+  -p KC_DOMAIN=met-oidc-test.apps.gold.devops.gov.bc.ca \
+  -p GC_NOTIFY_API_KEY=<GC_NOTIFY_API_KEY> \
   | oc create -f -
 
 ```
 
 Deploy the cron job application:
 ```
-oc process -f ./cron.dc.yml 
-  -p ENV=test 
-  -p IMAGE_TAG=test 
-  -p KC_DOMAIN=met-oidc-test.apps.gold.devops.gov.bc.ca 
-  -p SITE_URL=https://met-web-test.apps.gold.devops.gov.bc.ca 
-  -p MET_ADMIN_CLIENT_SECRET=<SERVICE_ACCOUNT_SECRET> 
-  -p NOTIFICATIONS_EMAIL_ENDPOINT=https://met-notify-api-test.apps.gold.devops.gov.bc.ca/api/v1/notifications/email 
+oc process -f ./cron.dc.yml \
+  -p ENV=test \
+  -p IMAGE_TAG=test \
+  -p KC_DOMAIN=met-oidc-test.apps.gold.devops.gov.bc.ca \
+  -p SITE_URL=https://met-web-test.apps.gold.devops.gov.bc.ca \
+  -p MET_ADMIN_CLIENT_SECRET=<SERVICE_ACCOUNT_SECRET> \
+  -p NOTIFICATIONS_EMAIL_ENDPOINT=https://met-notify-api-test.apps.gold.devops.gov.bc.ca/api/v1/notifications/email \
   | oc create -f -
 
 ```

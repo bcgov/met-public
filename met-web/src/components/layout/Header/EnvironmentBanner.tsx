@@ -5,7 +5,7 @@ import { Palette } from 'styles/Theme';
 const EnvironmentBanner = () => {
     const host = window.location.hostname;
     const isTestEnvironment =
-        host.startsWith('met-web-dev') || host.startsWith('met-web-test') || host.startsWith('localhost');
+        host.startsWith('met-web-dev') || host.startsWith('met-web-test') || host.startsWith('met-web-demo') || host.startsWith('localhost');
     if (!isTestEnvironment) {
         return <></>;
     }

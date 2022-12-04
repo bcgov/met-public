@@ -19,12 +19,12 @@ objects:
         "NODE_ENV": "production",
         "REACT_APP_API_URL": "https://${APP}-${ENV}.apps.gold.devops.gov.bc.ca/api/",
         // Keycloak
-        "REACT_APP_KEYCLOAK_URL": "https://met-oidc-${ENV}.apps.gold.devops.gov.bc.ca/auth",
+        "REACT_APP_KEYCLOAK_URL": "https://met-oidc.apps.gold.devops.gov.bc.ca/auth",
         "REACT_APP_KEYCLOAK_CLIENT": "${KC_CLIENT}",
         "REACT_APP_KEYCLOAK_REALM": "${KC_REALM}",
         // Redash
-        "REACT_APP_REDASH_PUBLIC_URL": "https://met-analytics-e903c2-${ENV}.apps.gold.devops.gov.bc.ca/public/dashboards/<PUBLIC_DASHBOARD_ID>?p_Engagement%20Name=",
-        "REACT_APP_REDASH_COMMENTS_PUBLIC_URL": "https://met-analytics-e903c2-${ENV}.apps.gold.devops.gov.bc.ca/public/dashboards/<COMMENTS_ASHBOARD_ID>?p_Engagement%20Name=",
+        "REACT_APP_REDASH_PUBLIC_URL": "https://met-analytics.apps.gold.devops.gov.bc.ca/public/dashboards/<PUBLIC_DASHBOARD_ID>?p_Engagement%20Name=",
+        "REACT_APP_REDASH_COMMENTS_PUBLIC_URL": "https://met-analytics.apps.gold.devops.gov.bc.ca/public/dashboards/<COMMENTS_ASHBOARD_ID>?p_Engagement%20Name=",
       }
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
@@ -56,46 +56,46 @@ objects:
           app-group: met-app
           environment: ${ENV}
       spec:
+        volumes:
+          - name: ${APP}-config
+            configMap:
+              defaultMode: 420
+              name: ${APP}
         containers:
-          imagePullPolicy: Always
-          name: ${APP}
-          ports:
-          - containerPort: 3000
-            protocol: TCP
-          resources:
-            limits:
-              cpu: 300m
-              memory: 1Gi
-            requests:
-              cpu: 150m
-              memory: 250Mi
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 8080
-              scheme: HTTP
-            timeoutSeconds: 1
-            periodSeconds: 10
-            successThreshold: 1
-            failureThreshold: 3
-          stdin: true
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-          tty: true
-          volumeMounts:
-          - mountPath: /usr/share/nginx/html/config/
-            name: ${APP}-config
-            readOnly: true
+          - resources:
+              limits:
+                cpu: 300m
+                memory: 1Gi
+              requests:
+                cpu: 150m
+                memory: 250Mi
+            readinessProbe:
+              httpGet:
+                path: /
+                port: 8080
+                scheme: HTTP
+              timeoutSeconds: 1
+              periodSeconds: 10
+              successThreshold: 1
+              failureThreshold: 3
+            stdin: true
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
+            imagePullPolicy: Always
+            name: ${APP}
+            ports:
+              - containerPort: 3000
+                protocol: TCP
+            tty: true
+            volumeMounts:
+            - mountPath: /usr/share/nginx/html/config/
+              name: ${APP}-config
+              readOnly: true
         dnsPolicy: ClusterFirst
         restartPolicy: Always
         schedulerName: default-scheduler
         securityContext: {}
         terminationGracePeriodSeconds: 30
-        volumes:
-        - configMap:
-            defaultMode: 420
-            name: ${APP}
-          name: ${APP}-config
     test: false
     triggers:
     - type: ConfigChange
