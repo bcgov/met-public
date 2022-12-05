@@ -35,10 +35,10 @@ class WidgetDocuments(BaseModel):  # pylint: disable=too-few-public-methods
         return docs
 
     @classmethod
-    def edit_widget_document(cls, widget_id, id, widget_document_data: dict) -> WidgetDocuments:
+    def edit_widget_document(cls, widget_id, document_id, widget_document_data: dict) -> WidgetDocuments:
         """Update document."""
         widget_document = db.session.query(WidgetDocuments) \
-            .filter(WidgetDocuments.widget_id == widget_id, WidgetDocuments.id == id)
+            .filter(WidgetDocuments.widget_id == widget_id, WidgetDocuments.id == document_id)
         widgetdocuments: WidgetDocuments = widget_document.first()
         if not widgetdocuments:
             return None
@@ -47,11 +47,11 @@ class WidgetDocuments(BaseModel):  # pylint: disable=too-few-public-methods
         return widgetdocuments
 
     @classmethod
-    def remove_widget_document(cls, widget_id, id) -> WidgetDocuments:
+    def remove_widget_document(cls, widget_id, document_id) -> WidgetDocuments:
         """Remove document from a document widget."""
         deletedocument = db.session.query(WidgetDocuments) \
             .filter(WidgetDocuments.widget_id == widget_id, \
-                sa.or_(WidgetDocuments.id == id , WidgetDocuments.parent_document_id == id)) \
+                sa.or_(WidgetDocuments.id == document_id , WidgetDocuments.parent_document_id == document_id)) \
             .delete()
         db.session.commit()
         return deletedocument

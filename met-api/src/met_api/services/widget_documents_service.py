@@ -101,17 +101,17 @@ class WidgetDocumentService:
                 status_code=HTTPStatus.BAD_REQUEST)
 
     @staticmethod
-    def edit_document(widget_id, id, data: dict):
+    def edit_document(widget_id, document_id, data: dict):
         """Update document from a document widget."""
-        updated_document = WidgetDocumentsModel.edit_widget_document(widget_id, id, data)
+        updated_document = WidgetDocumentsModel.edit_widget_document(widget_id, document_id, data)
         if not updated_document:
             raise ValueError('Document to update was not found')
         return updated_document
 
     @staticmethod
-    def delete_document(widget_id, id):
+    def delete_document(widget_id, document_id):
         """Remove document from a document widget."""
-        deleteDocument = WidgetDocumentsModel.remove_widget_document(widget_id, id)
-        if not deleteDocument:
+        delete_document = WidgetDocumentsModel.remove_widget_document(widget_id, document_id)
+        if not delete_document:
             raise ValueError('Document to remove was not found')
-        return deleteDocument
+        return delete_document
