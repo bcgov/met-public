@@ -55,7 +55,7 @@ export const PhasesWidget = () => {
                         </MetBody>
                     </Grid>
                     <Grid item xs={12} sx={{ maxWidth: '99%' }}>
-                        <Stack direction="row" sx={{ overflowX: 'auto' }}>
+                        <Stack direction="row" sx={{ overflowX: 'auto', overflowY: 'clip' }}>
                             <EarlyEngagement />
                             <ReadinessDecision />
                             <ProcessPlanning />
