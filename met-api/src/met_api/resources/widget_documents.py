@@ -57,6 +57,7 @@ class WidgetDocuments(Resource):
         except BusinessException as err:
             return ActionResult.error(str(err))
 
+
 @cors_preflight('PATCH, DELETE')
 @API.route('/<document_id>')
 class WidgetDocumentsChanges(Resource):
