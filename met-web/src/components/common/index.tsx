@@ -7,6 +7,7 @@ import {
     Typography,
     Stack,
     IconButton,
+    Theme,
 } from '@mui/material';
 import { SxProps, styled } from '@mui/system';
 import EditIcon from '@mui/icons-material/Edit';
@@ -14,7 +15,11 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Palette } from 'styles/Theme';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { MET_Header_Font_Family, MET_Header_Font_Weight } from './constants';
-
+import { TreeItem } from '@mui/lab';
+import { TreeItemProps, treeItemClasses } from '@mui/lab/TreeItem';
+import { SvgIconProps } from '@mui/material/SvgIcon';
+import { DocumentItem } from 'models/document';
+import { BaseTheme } from 'styles/Theme';
 export const RoundedButton = styled(MuiButton)(() => ({
     borderRadius: '23px',
 }));
@@ -43,13 +48,13 @@ export const StyledSecondaryButton = styled(MuiButton)(() => ({
     },
 }));
 
-export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
+export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
     <StyledSecondaryButton {...rest} variant="outlined">
         {children}
     </StyledSecondaryButton>
 );
 
-export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
+export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
     <StyledPrimaryButton
         {...rest}
         variant="contained"
@@ -64,7 +69,7 @@ export const StyledPaper = styled(MuiPaper)(() => ({
     borderRadius: '4px',
 }));
 
-export const MetPaper = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => {
+export const MetPaper = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => {
     return (
         <StyledPaper elevation={0} {...rest}>
             {children}
@@ -284,4 +289,41 @@ export const ModalSubtitle = ({
     [prop: string]: unknown;
 }) => {
     return <Typography variant={'subtitle1'}>{children}</Typography>;
+};
+
+export const DocumentTreeItemRoot = styled(TreeItem)(() => ({
+    color: Palette.text.primary,
+    [`& .${treeItemClasses.content}`]: {
+        color: Palette.text.primary,
+        borderTopRightRadius: BaseTheme.spacing(2),
+        borderBottomRightRadius: BaseTheme.spacing(2),
+        paddingRight: BaseTheme.spacing(1),
+        fontWeight: BaseTheme.typography.fontWeightMedium,
+        '&.Mui-expanded': {
+            fontWeight: BaseTheme.typography.fontWeightRegular,
+        },
+        '&:hover': {
+            backgroundColor: BaseTheme.palette.action.hover,
+        },
+        '&.Mui-focused, &.Mui-selected, &.Mui-selected.Mui-focused': {
+            backgroundColor: `var(--tree-view-bg-color, ${Palette.action.active})`,
+            color: 'var(--tree-view-color)',
+        },
+        [`& .${treeItemClasses.label}`]: {
+            fontWeight: 'inherit',
+            color: 'inherit',
+        },
+    },
+    [`& .${treeItemClasses.group}`]: {
+        marginLeft: 0,
+        [`& .${treeItemClasses.content}`]: {
+            paddingLeft: BaseTheme.spacing(2),
+        },
+    },
+}));
+
+export type DocumentTreeItemProps = TreeItemProps & {
+    labelIcon: React.ElementType<SvgIconProps>;
+    document: DocumentItem;
+    nodeId: string;
 };

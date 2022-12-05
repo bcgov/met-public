@@ -10,6 +10,8 @@ import FolderIcon from '@mui/icons-material/Folder';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { If, Else, Then } from 'react-if';
+import TreeView from '@mui/lab/TreeView';
+import GmailTreeView from 'components/engagement/form/EngagementWidgets/Documents/TreeView';
 
 interface DocumentWidgetProps {
     widget: Widget;
@@ -50,87 +52,88 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
     }
 
     return (
-        <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
-            <Grid item justifyContent="flex-start" alignItems="center" xs={12}>
-                <MetHeader2 bold={true}>Documents</MetHeader2>
-            </Grid>
-            {documents.map((document) => {
-                return (
-                    <Grid key={document.id} container item spacing={1} rowSpacing={1} xs={12} paddingTop={2}>
-                        <If condition={document.type === DOCUMENT_TYPE.FOLDER}>
-                            <Then>
-                                <Stack sx={{ ml: 1 }} spacing={2} direction="row" alignItems="center">
-                                    <FolderIcon color="info" />
-                                    <MetHeader4 bold={true} sx={{ p: 0, m: 0 }}>
-                                        {document.title}
-                                    </MetHeader4>
-                                </Stack>
-
-                                {document.children ? (
-                                    document.children.map((folderItem: DocumentItem) => {
-                                        return (
-                                            <Grid item justifyContent="center" container xs={12}>
-                                                <Grid item xs={1}></Grid>
-                                                <Grid item xs={11}>
-                                                    <Stack direction="row">
-                                                        <InsertDriveFileIcon
-                                                            color="info"
-                                                            sx={{ mr: 0.5 }}
-                                                            fontSize="small"
-                                                        />
-                                                        <Link
-                                                            sx={{
-                                                                alignItems: 'center',
-                                                                display: 'flex',
-                                                                justifyContent: 'center',
-                                                            }}
-                                                            target="_blank"
-                                                            href={`${folderItem.url}`}
-                                                        >
-                                                            {folderItem.title}
-                                                        </Link>
-                                                        <Link target="_blank" href={`${folderItem.url}`}>
-                                                            <Icon fontSize="small" sx={{ ml: 0.5 }}>
-                                                                <OpenInNewIcon fontSize="small" />
-                                                            </Icon>
-                                                        </Link>
-                                                    </Stack>
-                                                </Grid>
-                                            </Grid>
-                                        );
-                                    })
-                                ) : (
-                                    <></>
-                                )}
-                            </Then>
-                            <Else>
-                                <Grid item justifyContent="flex-start" container xs={12}>
-                                    <Stack direction="row">
-                                        <InsertDriveFileIcon color="info" sx={{ mr: 0.5 }} fontSize="small" />
-                                        <Link
-                                            sx={{
-                                                alignItems: 'center',
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                            }}
-                                            target="_blank"
-                                            href={`${document.url}`}
-                                        >
+        <>
+            <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
+                <Grid item justifyContent="flex-start" alignItems="center" xs={12}>
+                    <MetHeader2 bold={true}>Documents</MetHeader2>
+                </Grid>
+                {documents.map((document) => {
+                    return (
+                        <Grid key={document.id} container item spacing={1} rowSpacing={1} xs={12} paddingTop={2}>
+                            <If condition={document.type === DOCUMENT_TYPE.FOLDER}>
+                                <Then>
+                                    <Stack sx={{ ml: 1 }} spacing={2} direction="row" alignItems="center">
+                                        <FolderIcon color="info" />
+                                        <MetHeader4 bold={true} sx={{ p: 0, m: 0 }}>
                                             {document.title}
-                                        </Link>
-                                        <Link target="_blank" href={`${document.url}`}>
-                                            <Icon fontSize="small" sx={{ ml: 0.5 }}>
-                                                <OpenInNewIcon fontSize="small" />
-                                            </Icon>
-                                        </Link>
+                                        </MetHeader4>
                                     </Stack>
-                                </Grid>
-                            </Else>
-                        </If>
-                    </Grid>
-                );
-            })}
-        </MetPaper>
+                                    {document.children ? (
+                                        document.children.map((folderItem: DocumentItem) => {
+                                            return (
+                                                <Grid item justifyContent="center" container xs={12}>
+                                                    <Grid item xs={1}></Grid>
+                                                    <Grid item xs={11}>
+                                                        <Stack direction="row">
+                                                            <InsertDriveFileIcon
+                                                                color="info"
+                                                                sx={{ mr: 0.5 }}
+                                                                fontSize="small"
+                                                            />
+                                                            <Link
+                                                                sx={{
+                                                                    alignItems: 'center',
+                                                                    display: 'flex',
+                                                                    justifyContent: 'center',
+                                                                }}
+                                                                target="_blank"
+                                                                href={`${folderItem.url}`}
+                                                            >
+                                                                {folderItem.title}
+                                                            </Link>
+                                                            <Link target="_blank" href={`${folderItem.url}`}>
+                                                                <Icon fontSize="small" sx={{ ml: 0.5 }}>
+                                                                    <OpenInNewIcon fontSize="small" />
+                                                                </Icon>
+                                                            </Link>
+                                                        </Stack>
+                                                    </Grid>
+                                                </Grid>
+                                            );
+                                        })
+                                    ) : (
+                                        <></>
+                                    )}
+                                </Then>
+                                <Else>
+                                    <Grid item justifyContent="flex-start" container xs={12}>
+                                        <Stack direction="row">
+                                            <InsertDriveFileIcon color="info" sx={{ mr: 0.5 }} fontSize="small" />
+                                            <Link
+                                                sx={{
+                                                    alignItems: 'center',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                }}
+                                                target="_blank"
+                                                href={`${document.url}`}
+                                            >
+                                                {document.title}
+                                            </Link>
+                                            <Link target="_blank" href={`${document.url}`}>
+                                                <Icon fontSize="small" sx={{ ml: 0.5 }}>
+                                                    <OpenInNewIcon fontSize="small" />
+                                                </Icon>
+                                            </Link>
+                                        </Stack>
+                                    </Grid>
+                                </Else>
+                            </If>
+                        </Grid>
+                    );
+                })}
+            </MetPaper>
+        </>
     );
 };
 
