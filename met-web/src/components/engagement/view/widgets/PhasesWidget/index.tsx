@@ -1,14 +1,33 @@
 import { Grid, Link, Stack } from '@mui/material';
-import { MetBody, MetHeader3, MetHeader4, MetPaper, MetSmallText } from 'components/common';
+import { MetBody, MetHeader3, MetHeader4, MetPaper, MetParagraph, MetSmallText } from 'components/common';
 import { EngagementPhases } from 'models/engagementPhases';
 import { WidgetType } from 'models/widget';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { ActionContext } from '../../ActionContext';
 import { PhaseBox } from './PhaseBox';
+import { AppDevReview } from './phaseItems/AppDevReview';
+import { Decision } from './phaseItems/Decision';
+import { EarlyEngagement } from './phaseItems/EarlyEngagement';
+import { EffectAssessmentReview } from './phaseItems/EffectAssessmentRec';
+import { PostCertificate } from './phaseItems/PostCertificate';
+import { ProcessPlanning } from './phaseItems/ProcessPlanning';
+import { ReadinessDecision } from './phaseItems/ReadinessDecision';
+import { ReadMoreBox } from './ReadMoreBox';
 
-export const PhaseContext = React.createContext({});
+interface PhaseContextProps {
+    anchorEl: HTMLButtonElement | null;
+    setAnchorEl: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>;
+}
+
+export const PhaseContext = React.createContext<PhaseContextProps>({
+    anchorEl: null,
+    setAnchorEl: () => {
+        throw new Error('Not implemented');
+    },
+});
 export const PhasesWidget = () => {
     const { widgets } = useContext(ActionContext);
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
     const phasesWidget = widgets.find((widget) => widget.widget_type_id === WidgetType.Phases);
     const currentPhase = phasesWidget?.items[0]?.widget_data_id || EngagementPhases.Standalone;
@@ -18,7 +37,12 @@ export const PhasesWidget = () => {
     }
 
     return (
-        <PhaseContext.Provider value={{}}>
+        <PhaseContext.Provider
+            value={{
+                anchorEl,
+                setAnchorEl,
+            }}
+        >
             <MetPaper elevation={1} sx={{ padding: '2em' }}>
                 <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" rowSpacing={2}>
                     <Grid item xs={12}>
@@ -32,13 +56,13 @@ export const PhasesWidget = () => {
                     </Grid>
                     <Grid item xs={12} sx={{ maxWidth: '99%' }}>
                         <Stack direction="row" sx={{ overflowX: 'auto' }}>
-                            <PhaseBox key={1} title="Early Engagement" backgroundColor="#54858D" />
-                            <PhaseBox key={2} title="Readiness Decision" backgroundColor="#DA6D65" />
-                            <PhaseBox key={3} title="Process Planning" backgroundColor="#043673" />
-                            <PhaseBox key={4} title="Application Development & Review" backgroundColor="#4D95D0" />
-                            <PhaseBox key={5} title="Effect Assessment & Recommendation" backgroundColor="#E7A913" />
-                            <PhaseBox key={6} title="Decision" backgroundColor="#6A54A3" />
-                            <PhaseBox key={7} title="Post-Certificate" backgroundColor="#A6BB2E" />
+                            <EarlyEngagement />
+                            <ReadinessDecision />
+                            <ProcessPlanning />
+                            <AppDevReview />
+                            <EffectAssessmentReview />
+                            <Decision />
+                            <PostCertificate />
                         </Stack>
                     </Grid>
                 </Grid>

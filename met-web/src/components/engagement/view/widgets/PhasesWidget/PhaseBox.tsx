@@ -2,27 +2,23 @@ import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react
 import { Box, Grid, Link, Popover, Typography } from '@mui/material';
 import { MetHeader4, MetPaper, MetSmallText } from 'components/common';
 import { PhaseContext } from '.';
+import { When } from 'react-if';
 
 interface PhaseBoxProps {
     title: string;
     backgroundColor?: string;
+    readMoreBox?: ReactNode;
     children?: ReactNode;
 }
-export const PhaseBox = ({ title, backgroundColor = 'white' }: PhaseBoxProps) => {
+export const PhaseBox = ({ title, backgroundColor = 'white', readMoreBox }: PhaseBoxProps) => {
     const [readMoreOpen, setReadMoreOpen] = useState(false);
-    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-    const {} = useContext(PhaseContext);
+    // const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+    const { anchorEl, setAnchorEl } = useContext(PhaseContext);
 
     const PhaseBoxRef = useRef<HTMLButtonElement | null>(null);
 
-    useEffect(() => {
-        if (PhaseBoxRef.current) {
-            setAnchorEl(PhaseBoxRef.current);
-        }
-    }, [PhaseBoxRef]);
-
     const handleReadMoreClick = () => {
-        // setAnchorEl(e.currentTarget);
+        setAnchorEl(PhaseBoxRef.current);
         setReadMoreOpen(true);
     };
     return (
@@ -33,7 +29,6 @@ export const PhaseBox = ({ title, backgroundColor = 'white' }: PhaseBoxProps) =>
                     border: 'none',
                     height: '10em',
                 }}
-                elevation={title === 'Decision' ? 3 : 0}
                 m={1}
             >
                 <Box
@@ -64,18 +59,21 @@ export const PhaseBox = ({ title, backgroundColor = 'white' }: PhaseBoxProps) =>
                     </Grid>
                 </Box>
             </MetPaper>
-            <Popover
-                id={readMoreOpen ? `${title}-readmore-popover` : undefined}
-                open={readMoreOpen}
-                anchorEl={anchorEl}
-                onClose={() => setReadMoreOpen(false)}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-            >
-                <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
-            </Popover>
+
+            <When condition={Boolean(readMoreBox)}>
+                <Popover
+                    id={readMoreOpen ? `${title}-readmore-popover` : undefined}
+                    open={readMoreOpen}
+                    anchorEl={anchorEl}
+                    onClose={() => setReadMoreOpen(false)}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                >
+                    {readMoreBox}
+                </Popover>
+            </When>
         </>
     );
 };
