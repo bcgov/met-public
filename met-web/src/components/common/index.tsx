@@ -7,7 +7,6 @@ import {
     Typography,
     Stack,
     IconButton,
-    Theme,
 } from '@mui/material';
 import { SxProps, styled } from '@mui/system';
 import EditIcon from '@mui/icons-material/Edit';
@@ -15,11 +14,11 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Palette } from 'styles/Theme';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { MET_Header_Font_Family, MET_Header_Font_Weight } from './constants';
-import { TreeItem } from '@mui/lab';
-import { TreeItemProps, treeItemClasses } from '@mui/lab/TreeItem';
+import TreeItem, { TreeItemProps, treeItemClasses } from '@mui/lab/TreeItem';
 import { SvgIconProps } from '@mui/material/SvgIcon';
 import { DocumentItem } from 'models/document';
 import { BaseTheme } from 'styles/Theme';
+
 export const RoundedButton = styled(MuiButton)(() => ({
     borderRadius: '23px',
 }));
@@ -291,10 +290,28 @@ export const ModalSubtitle = ({
     return <Typography variant={'subtitle1'}>{children}</Typography>;
 };
 
-export const DocumentTreeItemRoot = styled(TreeItem)(() => ({
-    color: Palette.text.primary,
+export type DocumentTreeItemProps = TreeItemProps & {
+    labelIcon: React.ElementType<SvgIconProps>;
+    labelUrl: string | undefined;
+    nodeId: string;
+};
+
+export type DocumentTreeProps = TreeItemProps & {
+    documentItem: DocumentItem;
+};
+
+export type StyledTreeItemProps = TreeItemProps & {
+    bgColor?: string;
+    color?: string;
+    labelIcon: React.ElementType<SvgIconProps>;
+    labelInfo?: string;
+    labelText: string;
+};
+
+export const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
+    color: BaseTheme.palette.text.secondary,
     [`& .${treeItemClasses.content}`]: {
-        color: Palette.text.primary,
+        color: BaseTheme.palette.text.secondary,
         borderTopRightRadius: BaseTheme.spacing(2),
         borderBottomRightRadius: BaseTheme.spacing(2),
         paddingRight: BaseTheme.spacing(1),
@@ -303,11 +320,10 @@ export const DocumentTreeItemRoot = styled(TreeItem)(() => ({
             fontWeight: BaseTheme.typography.fontWeightRegular,
         },
         '&:hover': {
-            backgroundColor: BaseTheme.palette.action.hover,
+            backgroundColor: 'transparent',
         },
         '&.Mui-focused, &.Mui-selected, &.Mui-selected.Mui-focused': {
-            backgroundColor: `var(--tree-view-bg-color, ${Palette.action.active})`,
-            color: 'var(--tree-view-color)',
+            backgroundColor: 'transparent',
         },
         [`& .${treeItemClasses.label}`]: {
             fontWeight: 'inherit',
@@ -321,9 +337,3 @@ export const DocumentTreeItemRoot = styled(TreeItem)(() => ({
         },
     },
 }));
-
-export type DocumentTreeItemProps = TreeItemProps & {
-    labelIcon: React.ElementType<SvgIconProps>;
-    document: DocumentItem;
-    nodeId: string;
-};
