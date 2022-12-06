@@ -13,7 +13,6 @@
 # limitations under the License.
 """API endpoints for managing an user resource."""
 
-from datetime import datetime
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
@@ -23,7 +22,6 @@ from met_api.schemas.widget_documents import WidgetDocumentsSchema
 from met_api.services.widget_documents_service import WidgetDocumentService
 from met_api.utils.action_result import ActionResult
 from met_api.utils.util import allowedorigins, cors_preflight
-from met_api.utils.token_info import TokenInfo
 
 API = Namespace('widgets_documents', description='Endpoints for Widget Document Management')
 """Widget Documents
