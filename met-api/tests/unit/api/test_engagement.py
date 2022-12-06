@@ -32,7 +32,7 @@ fake = Faker()
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
 def test_add_engagements(client, jwt, session, engagement_info):  # pylint:disable=unused-argument
     """Assert that an engagement can be POSTed."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -42,7 +42,7 @@ def test_add_engagements(client, jwt, session, engagement_info):  # pylint:disab
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
 def test_get_engagements(client, jwt, session, engagement_info):  # pylint:disable=unused-argument
     """Assert that an engagement can be POSTed."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -59,7 +59,7 @@ def test_get_engagements(client, jwt, session, engagement_info):  # pylint:disab
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
 def test_patch_engagement(client, jwt, session, engagement_info):  # pylint:disable=unused-argument
     """Assert that an survey can be POSTed."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
     engagement = factory_engagement_model()
     engagement_id = str(engagement.id)
 

@@ -21,6 +21,8 @@ from met_api.schemas.document import Document
 from met_api.services.object_storage_service import ObjectStorageService
 from met_api.utils.util import allowedorigins, cors_preflight
 from met_api.utils.action_result import ActionResult
+from met_api.auth import jwt as _jwt
+from met_api.utils.roles import Role
 
 
 API = Namespace('document', description='Endpoints for Document Storage Management')
@@ -34,7 +36,7 @@ class DocumentStorage(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    #  @auth.require
+    @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
     def post():
         """Retrieve authentication properties for document storage."""
         try:
