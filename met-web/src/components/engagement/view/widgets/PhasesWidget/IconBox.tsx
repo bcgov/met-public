@@ -1,13 +1,12 @@
 import React, { ReactNode, useRef, useState } from 'react';
-import { Box, ClickAwayListener, IconButton, Paper, Popper, useTheme } from '@mui/material';
+import { Box, ClickAwayListener, IconButton, Paper } from '@mui/material';
 import ForumIcon from '@mui/icons-material/Forum';
+import { Arrow, PopperArrow } from 'components/common/MetPopper';
 
 export const IconBox = ({ children }: { children: ReactNode }) => {
     const iconRef = useRef<HTMLButtonElement | null>(null);
     const [open, setOpen] = useState(false);
     const [arrowRef, setArrowRef] = React.useState<HTMLElement | null>(null);
-
-    const theme = useTheme();
 
     return (
         <>
@@ -18,7 +17,7 @@ export const IconBox = ({ children }: { children: ReactNode }) => {
             >
                 <ForumIcon fontSize="large" />
             </IconButton>
-            <Popper
+            <PopperArrow
                 anchorEl={iconRef.current}
                 open={open}
                 placement="bottom-start"
@@ -31,9 +30,6 @@ export const IconBox = ({ children }: { children: ReactNode }) => {
                         },
                     },
                 ]}
-                sx={{
-                    zIndex: theme.zIndex.tooltip,
-                }}
             >
                 <ClickAwayListener onClickAway={() => setOpen(false)}>
                     <Paper
@@ -41,46 +37,14 @@ export const IconBox = ({ children }: { children: ReactNode }) => {
                         sx={{ bgcolor: '#F5FCFC', borderColor: '#9BE2DF', border: '3px solid #9BE2DF' }}
                     >
                         <Box sx={{ position: 'relative', margin: 0 }}>
-                            <Box
-                                component="span"
-                                ref={setArrowRef}
-                                sx={[
-                                    {
-                                        overflow: 'hidden',
-                                        position: 'absolute',
-                                        width: '1em',
-                                        height: '0.71em' /* = width / sqrt(2) = (length of the hypotenuse) */,
-                                        boxSizing: 'border-box',
-                                        color: '#9BE2DF',
-                                    },
-                                    {
-                                        '&::before': {
-                                            content: '""',
-                                            margin: 'auto',
-                                            display: 'block',
-                                            width: '100%',
-                                            height: '100%',
-                                            backgroundColor: 'currentColor',
-                                            transform: 'rotate(45deg)',
-                                        },
-                                    },
-                                    {
-                                        top: 0,
-                                        left: 0,
-                                        marginTop: '-0.71em',
-                                        '&::before': {
-                                            transformOrigin: '0 100%',
-                                        },
-                                    },
-                                ]}
-                            />
+                            <Arrow ref={setArrowRef} />
                             <Box maxWidth={'30em'} padding="1em">
                                 {children}
                             </Box>
                         </Box>
                     </Paper>
                 </ClickAwayListener>
-            </Popper>
+            </PopperArrow>
         </>
     );
 };

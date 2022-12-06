@@ -15,7 +15,6 @@ interface PhaseBoxProps {
 }
 export const PhaseBox = ({ title, backgroundColor = 'white', readMoreBox, iconBox }: PhaseBoxProps) => {
     const [readMoreOpen, setReadMoreOpen] = useState(false);
-    // const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const { anchorEl, setAnchorEl } = useContext(PhaseContext);
 
     const PhaseBoxRef = useRef<HTMLButtonElement | null>(null);
@@ -32,7 +31,7 @@ export const PhaseBox = ({ title, backgroundColor = 'white', readMoreBox, iconBo
                     border: 'none',
                     backgroundColor: backgroundColor,
                     height: '10em',
-                    marginBottom: '1.5em',
+                    marginBottom: '2em',
                 }}
             >
                 <Grid container direction="row" spacing={0}>
