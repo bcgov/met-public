@@ -7,8 +7,18 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { When } from 'react-if';
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
 import DocumentSwitch from './DocumentSwitch';
+import { useAppDispatch } from 'hooks';
+import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+import { deleteDocument } from 'services/widgetService/DocumentService.tsx';
+import { WidgetDrawerContext } from '../WidgetDrawerContext';
+import { WidgetType, Widget } from 'models/widget';
+import { useContext } from 'react';
 
 const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
+    const dispatch = useAppDispatch();
+    const { widgets } = useContext(WidgetDrawerContext);
+    const documentWidget = widgets.find((widget: Widget) => widget.widget_type_id === WidgetType.Document);
+
     return (
         <Grid item xs={12} container justifyContent={'flex-start'} spacing={2} mb={2}>
             <MetWidgetPaper elevation={2} sx={{ width: '100%' }}>
@@ -20,7 +30,29 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
                         </Stack>
                     </Grid>
                     <Grid item xs container justifyContent={'flex-end'}>
-                        <IconButton sx={{ padding: 0, margin: 0 }} color="inherit" aria-label="Remove Folder">
+                        <IconButton
+                            onClick={() =>
+                                dispatch(
+                                    openNotificationModal({
+                                        open: true,
+                                        data: {
+                                            header: 'Remove Folder',
+                                            subText: [
+                                                'You will be removing this folder from the engagement.',
+                                                'Do you want to remove this folder?',
+                                            ],
+                                            handleConfirm: () => {
+                                                deleteDocument(documentWidget.id, documentItem.id);
+                                            },
+                                        },
+                                        type: 'confirm',
+                                    }),
+                                )
+                            }
+                            sx={{ padding: 0, margin: 0 }}
+                            color="inherit"
+                            aria-label="Remove Folder"
+                        >
                             <HighlightOffIcon />
                         </IconButton>
                     </Grid>
