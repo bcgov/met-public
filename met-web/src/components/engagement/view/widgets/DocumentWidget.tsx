@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { MetPaper, MetHeader2, MetHeader4 } from 'components/common';
-import { Grid, Skeleton, Icon, Link, Stack } from '@mui/material';
+import { MetPaper, MetHeader2 } from 'components/common';
+import { Grid, Skeleton, Link, Stack, Box } from '@mui/material';
 import { Widget } from 'models/widget';
 import { DocumentItem, DOCUMENT_TYPE } from 'models/document';
 import { useAppDispatch } from 'hooks';
 import { fetchDocuments } from 'services/widgetService/DocumentService.tsx';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import FolderIcon from '@mui/icons-material/Folder';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import { If, Else, Then } from 'react-if';
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import DocumentTree from 'components/engagement/form/EngagementWidgets/Documents/TreeView';
+import { If, Then, Else } from 'react-if';
 
 interface DocumentWidgetProps {
     widget: Widget;
@@ -50,87 +50,65 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
     }
 
     return (
-        <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
-            <Grid item justifyContent="flex-start" alignItems="center" xs={12}>
-                <MetHeader2 bold={true}>Documents</MetHeader2>
-            </Grid>
-            {documents.map((document) => {
-                return (
-                    <Grid key={document.id} container item spacing={1} rowSpacing={1} xs={12} paddingTop={2}>
-                        <If condition={document.type === DOCUMENT_TYPE.FOLDER}>
-                            <Then>
-                                <Stack sx={{ ml: 1 }} spacing={2} direction="row" alignItems="center">
-                                    <FolderIcon color="info" />
-                                    <MetHeader4 bold={true} sx={{ p: 0, m: 0 }}>
-                                        {document.title}
-                                    </MetHeader4>
-                                </Stack>
-
-                                {document.children ? (
-                                    document.children.map((folderItem: DocumentItem) => {
-                                        return (
-                                            <Grid item justifyContent="center" container xs={12}>
-                                                <Grid item xs={1}></Grid>
-                                                <Grid item xs={11}>
-                                                    <Stack direction="row">
-                                                        <InsertDriveFileIcon
-                                                            color="info"
-                                                            sx={{ mr: 0.5 }}
-                                                            fontSize="small"
-                                                        />
-                                                        <Link
-                                                            sx={{
-                                                                alignItems: 'center',
-                                                                display: 'flex',
-                                                                justifyContent: 'center',
-                                                            }}
-                                                            target="_blank"
-                                                            href={`${folderItem.url}`}
-                                                        >
-                                                            {folderItem.title}
-                                                        </Link>
-                                                        <Link target="_blank" href={`${folderItem.url}`}>
-                                                            <Icon fontSize="small" sx={{ ml: 0.5 }}>
-                                                                <OpenInNewIcon fontSize="small" />
-                                                            </Icon>
-                                                        </Link>
-                                                    </Stack>
-                                                </Grid>
-                                            </Grid>
-                                        );
-                                    })
-                                ) : (
-                                    <></>
-                                )}
-                            </Then>
-                            <Else>
-                                <Grid item justifyContent="flex-start" container xs={12}>
-                                    <Stack direction="row">
-                                        <InsertDriveFileIcon color="info" sx={{ mr: 0.5 }} fontSize="small" />
-                                        <Link
+        <>
+            <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
+                <Grid item justifyContent="flex-start" alignItems="center" xs={12}>
+                    <MetHeader2 bold={true}>Documents</MetHeader2>
+                </Grid>
+                {documents.map((document: DocumentItem) => {
+                    return (
+                        <Grid key={document.id} container item spacing={1} rowSpacing={1} xs={12} paddingTop={2}>
+                            <If condition={document.type === DOCUMENT_TYPE.FOLDER}>
+                                <Then>
+                                    <DocumentTree nodeId={`${document.id}`} documentItem={document} />
+                                </Then>
+                                <Else>
+                                    <Grid item justifyContent="flex-start" container xs={12}>
+                                        <Stack
+                                            direction="row"
                                             sx={{
                                                 alignItems: 'center',
-                                                display: 'flex',
                                                 justifyContent: 'center',
                                             }}
-                                            target="_blank"
-                                            href={`${document.url}`}
                                         >
-                                            {document.title}
-                                        </Link>
-                                        <Link target="_blank" href={`${document.url}`}>
-                                            <Icon fontSize="small" sx={{ ml: 0.5 }}>
-                                                <OpenInNewIcon fontSize="small" />
-                                            </Icon>
-                                        </Link>
-                                    </Stack>
-                                </Grid>
-                            </Else>
-                        </If>
-                    </Grid>
-                );
-            })}
-        </MetPaper>
+                                            <Box
+                                                component={DescriptionOutlinedIcon}
+                                                color="inherit"
+                                                sx={{ p: 0.3, mr: 1 }}
+                                            />
+                                            <Link
+                                                sx={{
+                                                    alignItems: 'center',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                }}
+                                                target="_blank"
+                                                href={`${document.url}`}
+                                            >
+                                                {document.title}
+                                            </Link>
+                                            <Link
+                                                sx={{
+                                                    alignItems: 'center',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    p: 0,
+                                                    m: 0,
+                                                }}
+                                                target="_blank"
+                                                href={`${document.url}`}
+                                            >
+                                                <Box sx={{ p: 0.5, m: 0 }} component={OpenInNewIcon} color="inherit" />
+                                            </Link>
+                                        </Stack>
+                                    </Grid>
+                                </Else>
+                            </If>
+                        </Grid>
+                    );
+                })}
+            </MetPaper>
+        </>
     );
 };
 

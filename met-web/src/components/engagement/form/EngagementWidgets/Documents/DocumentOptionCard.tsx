@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { MetPaper, MetBody, MetHeader4 } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetTabValues } from '../type';
 import { WidgetType } from 'models/widget';
@@ -71,7 +71,7 @@ const DocumentOptionCard = () => {
                         spacing={1}
                     >
                         <Grid item>
-                            <InsertDriveFileIcon sx={{ fontSize: '5em' }} />
+                            <DescriptionOutlinedIcon sx={{ pl: '25px', fontSize: '5em' }} />
                         </Grid>
                         <Grid
                             container
@@ -83,10 +83,10 @@ const DocumentOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetHeader4>Document</MetHeader4>
+                                <MetHeader4 sx={{ pl: '10px' }}>Documents</MetHeader4>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody>Add a document</MetBody>
+                                <MetBody sx={{ pl: '10px' }}>Add a document</MetBody>
                             </Grid>
                         </Grid>
                     </Grid>
