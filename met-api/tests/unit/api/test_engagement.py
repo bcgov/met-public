@@ -39,6 +39,15 @@ def test_add_engagements(client, jwt, session, engagement_info):  # pylint:disab
     assert rv.json.get('status') is True
 
 
+@pytest.mark.parametrize('role', [TestJwtClaims.no_role, TestJwtClaims.public_user_role])
+def test_add_engagements_invalid(client, jwt, session, role):  # pylint:disable=unused-argument
+    """Assert that an engagement can not be POSTed without authorisaiton."""
+    headers = factory_auth_header(jwt=jwt, claims=role)
+    rv = client.post('/api/engagements/', data=json.dumps(TestEngagementInfo.engagement1),
+                     headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 401
+
+
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
 def test_get_engagements(client, jwt, session, engagement_info):  # pylint:disable=unused-argument
     """Assert that an engagement can be POSTed."""
