@@ -13,7 +13,7 @@ import { useContext } from 'react';
 
 const DocumentFile = ({ documentItem }: { documentItem: DocumentItem }) => {
     const dispatch = useAppDispatch();
-    const { widgets } = useContext(WidgetDrawerContext);
+    const { widgets, loadWidgets } = useContext(WidgetDrawerContext);
     const documentWidget = widgets.find((widget: Widget) => widget.widget_type_id === WidgetType.Document);
 
     return (
@@ -33,13 +33,13 @@ const DocumentFile = ({ documentItem }: { documentItem: DocumentItem }) => {
                                     openNotificationModal({
                                         open: true,
                                         data: {
-                                            header: 'Remove Document',
+                                            header: 'Remove File',
                                             subText: [
-                                                'You will be removing this document from the engagement.',
-                                                'Do you want to remove this document?',
+                                                'You will be removing this file from the engagement.',
+                                                'Do you want to remove this file?',
                                             ],
                                             handleConfirm: () => {
-                                                deleteDocument(documentWidget.id, documentItem.id);
+                                                deleteDocument(documentWidget.id, documentItem.id), loadWidgets();
                                             },
                                         },
                                         type: 'confirm',

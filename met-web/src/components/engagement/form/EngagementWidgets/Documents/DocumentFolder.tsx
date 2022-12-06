@@ -16,7 +16,7 @@ import { useContext } from 'react';
 
 const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
     const dispatch = useAppDispatch();
-    const { widgets } = useContext(WidgetDrawerContext);
+    const { widgets, loadWidgets } = useContext(WidgetDrawerContext);
     const documentWidget = widgets.find((widget: Widget) => widget.widget_type_id === WidgetType.Document);
 
     return (
@@ -42,7 +42,7 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
                                                 'Do you want to remove this folder?',
                                             ],
                                             handleConfirm: () => {
-                                                deleteDocument(documentWidget.id, documentItem.id);
+                                                deleteDocument(documentWidget.id, documentItem.id), loadWidgets();
                                             },
                                         },
                                         type: 'confirm',
