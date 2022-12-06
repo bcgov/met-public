@@ -10,9 +10,12 @@ import { deleteDocument } from 'services/widgetService/DocumentService.tsx';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType, Widget } from 'models/widget';
 import { useContext } from 'react';
+import Edit from '@mui/icons-material/Edit';
+import { DocumentsContext } from './DocumentsContext';
 
 const DocumentFile = ({ documentItem }: { documentItem: DocumentItem }) => {
     const dispatch = useAppDispatch();
+    const { loadDocuments, handleFileDrawerOpen } = useContext(DocumentsContext);
     const { widgets, loadWidgets } = useContext(WidgetDrawerContext);
     const documentWidget = widgets.find((widget: Widget) => widget.widget_type_id === WidgetType.Document);
 
@@ -27,6 +30,14 @@ const DocumentFile = ({ documentItem }: { documentItem: DocumentItem }) => {
                         </Stack>
                     </Grid>
                     <Grid item xs container justifyContent={'flex-end'}>
+                        <IconButton
+                            onClick={() => handleFileDrawerOpen(true)}
+                            sx={{ padding: 0, mr: 1 }}
+                            color="inherit"
+                            aria-label="Edit Folder"
+                        >
+                            <Edit />
+                        </IconButton>
                         <IconButton
                             onClick={() =>
                                 dispatch(

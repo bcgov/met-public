@@ -1,10 +1,10 @@
-import React from 'react';
-import { Grid, IconButton, Stack, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { Grid, IconButton, Stack, TextField, Typography } from '@mui/material';
 import { MetWidgetPaper } from 'components/common';
 import { DocumentItem } from 'models/document';
 import FolderIcon from '@mui/icons-material/Folder';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { When } from 'react-if';
+import { If, Then, Else, When } from 'react-if';
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
 import DocumentSwitch from './DocumentSwitch';
 import { useAppDispatch } from 'hooks';
@@ -13,11 +13,15 @@ import { deleteDocument } from 'services/widgetService/DocumentService.tsx';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType, Widget } from 'models/widget';
 import { useContext } from 'react';
+import Edit from '@mui/icons-material/Edit';
+import { DocumentsContext } from './DocumentsContext';
 
 const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
     const dispatch = useAppDispatch();
     const { widgets, loadWidgets } = useContext(WidgetDrawerContext);
     const documentWidget = widgets.find((widget: Widget) => widget.widget_type_id === WidgetType.Document);
+    const [edit, setEdit] = useState<boolean>(false);
+    const [document, setDocument] = useState<DocumentItem>(documentItem);
 
     return (
         <Grid item xs={12} container justifyContent={'flex-start'} spacing={2} mb={2}>
@@ -26,10 +30,30 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
                     <Grid item xs>
                         <Stack spacing={2} direction="row" alignItems="center">
                             <FolderIcon color="info" />
-                            <Typography>{documentItem.title}</Typography>
+                            <If condition={edit}>
+                                <Then>
+                                    <Typography onClick={() => setEdit(true)}>{documentItem.title}</Typography>
+                                </Then>
+                                <Else>
+                                    <TextField
+                                        autoFocus
+                                        value={documentItem.title}
+                                        onChange={(event) => setDocument({ ...document, title: event.target.value })}
+                                        onBlur={(event) => setEdit(false)}
+                                    />
+                                </Else>
+                            </If>
                         </Stack>
                     </Grid>
                     <Grid item xs container justifyContent={'flex-end'}>
+                        <IconButton
+                            onClick={() => setEdit(!edit)}
+                            sx={{ padding: 0, mr: 1 }}
+                            color="inherit"
+                            aria-label="Edit Folder"
+                        >
+                            <Edit />
+                        </IconButton>
                         <IconButton
                             onClick={() =>
                                 dispatch(
