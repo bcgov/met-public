@@ -54,7 +54,7 @@ const CloneOptions = () => {
         setFormError({
             name: !(surveyForm.name && surveyForm.name.length < 50),
         });
-        return Object.values(surveyForm).some((errorExists) => errorExists);
+        return Object.values(formError).some((errorExists) => errorExists);
     };
 
     const getErrorMessage = () => {
@@ -99,12 +99,16 @@ const CloneOptions = () => {
     useEffect(() => {
         if (!availableSurveys) {
             handleFetchSurveys(PAGE, PAGE_SIZE, SORT_ORDER);
+        } else {
+            setLoadingSurveys(false);
         }
     }, [availableSurveys]);
 
     useEffect(() => {
         if (!availableEngagements) {
             handleFetchEngagements(PAGE, PAGE_SIZE, SORT_ORDER);
+        } else {
+            setLoadingEngagements(false);
         }
     }, [availableEngagements]);
 

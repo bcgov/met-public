@@ -7,6 +7,7 @@ from __future__ import annotations
 from typing import List
 
 from sqlalchemy.sql.schema import ForeignKey
+import sqlalchemy as sa
 
 from .base_model import BaseModel
 from .db import db
@@ -32,3 +33,25 @@ class WidgetDocuments(BaseModel):  # pylint: disable=too-few-public-methods
             .filter(WidgetDocuments.widget_id == widget_id) \
             .all()
         return docs
+
+    @classmethod
+    def edit_widget_document(cls, widget_id, document_id, widget_document_data: dict) -> WidgetDocuments:
+        """Update document."""
+        widget_document = db.session.query(WidgetDocuments) \
+            .filter(WidgetDocuments.widget_id == widget_id, WidgetDocuments.id == document_id)
+        widgetdocuments: WidgetDocuments = widget_document.first()
+        if not widgetdocuments:
+            return None
+        widget_document.update(widget_document_data)
+        db.session.commit()
+        return widgetdocuments
+
+    @classmethod
+    def remove_widget_document(cls, widget_id, document_id) -> WidgetDocuments:
+        """Remove document from a document widget."""
+        deletedocument = db.session.query(WidgetDocuments) \
+            .filter(WidgetDocuments.widget_id == widget_id,
+                    sa.or_(WidgetDocuments.id == document_id, WidgetDocuments.parent_document_id == document_id)) \
+            .delete()
+        db.session.commit()
+        return deletedocument

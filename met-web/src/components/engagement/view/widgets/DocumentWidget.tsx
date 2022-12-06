@@ -58,7 +58,56 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                 {documents.map((document: DocumentItem) => {
                     return (
                         <Grid key={document.id} container item spacing={1} rowSpacing={1} xs={12} paddingTop={2}>
+<<<<<<< HEAD
                             <DocumentTree nodeId={`${document.id}`} documentItem={document} />
+=======
+                            <If condition={document.type === DOCUMENT_TYPE.FOLDER}>
+                                <Then>
+                                    <DocumentTree nodeId={`${document.id}`} documentItem={document} />
+                                </Then>
+                                <Else>
+                                    <Grid item justifyContent="flex-start" container xs={12}>
+                                        <Stack
+                                            direction="row"
+                                            sx={{
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                            }}
+                                        >
+                                            <Box
+                                                component={DescriptionOutlinedIcon}
+                                                color="inherit"
+                                                sx={{ p: 0.3, mr: 1 }}
+                                            />
+                                            <Link
+                                                sx={{
+                                                    alignItems: 'center',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                }}
+                                                target="_blank"
+                                                href={`${document.url}`}
+                                            >
+                                                {document.title}
+                                            </Link>
+                                            <Link
+                                                sx={{
+                                                    alignItems: 'center',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    p: 0,
+                                                    m: 0,
+                                                }}
+                                                target="_blank"
+                                                href={`${document.url}`}
+                                            >
+                                                <Box sx={{ p: 0.5, m: 0 }} component={OpenInNewIcon} color="inherit" />
+                                            </Link>
+                                        </Stack>
+                                    </Grid>
+                                </Else>
+                            </If>
+>>>>>>> main
                         </Grid>
                     );
                 })}

@@ -4,7 +4,11 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { DocumentTreeProps } from 'components/common';
 import { If, Then, Else } from 'react-if';
+<<<<<<< HEAD
 import { DocumentItem, DOCUMENT_TYPE } from 'models/document';
+=======
+import { DocumentItem } from 'models/document';
+>>>>>>> main
 import { StyledTreeItem } from './StyledTreeItem';
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
@@ -33,9 +37,13 @@ export default function DocumentTree({ documentItem }: DocumentTreeProps) {
                                     nodeId={`${document.id}`}
                                     labelText={document.title}
                                     labelIcon={
+<<<<<<< HEAD
                                         document.type === DOCUMENT_TYPE.FOLDER
                                             ? FolderOutlinedIcon
                                             : DescriptionOutlinedIcon
+=======
+                                        document.type === 'folder' ? FolderOutlinedIcon : DescriptionOutlinedIcon
+>>>>>>> main
                                     }
                                     labelUrl={document.url}
                                 />

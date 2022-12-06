@@ -162,10 +162,26 @@ export const MetParagraph = styled(Typography)(() => ({
     fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
 }));
 
-export const MetSmallText = styled(Typography)(() => ({
+export const StyledSmallText = styled(Typography)(() => ({
     fontSize: '13px',
     fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
 }));
+
+export const MetSmallText = ({ bold, children, sx, ...rest }: HeaderProps) => {
+    return (
+        <Typography
+            sx={{
+                ...sx,
+                fontSize: '13px',
+                fontFamily: MET_Header_Font_Family,
+            }}
+            variant="subtitle1"
+            {...rest}
+        >
+            {children}
+        </Typography>
+    );
+};
 
 interface RepeatedGridProps {
     times: number;
@@ -286,7 +302,29 @@ export const ModalSubtitle = ({
     children: JSX.Element[] | JSX.Element | string;
     [prop: string]: unknown;
 }) => {
-    return <Typography variant={'subtitle1'}>{children}</Typography>;
+    return (
+        <Typography variant={'subtitle1'} {...rest}>
+            {children}
+        </Typography>
+    );
+};
+
+export type DocumentTreeItemProps = TreeItemProps & {
+    labelIcon: React.ElementType<SvgIconProps>;
+    labelUrl: string | undefined;
+    nodeId: string;
+};
+
+export type DocumentTreeProps = TreeItemProps & {
+    documentItem: DocumentItem;
+};
+
+export type StyledTreeItemProps = TreeItemProps & {
+    bgColor?: string;
+    color?: string;
+    labelIcon: React.ElementType<SvgIconProps>;
+    labelInfo?: string;
+    labelText: string;
 };
 
 export type DocumentTreeItemProps = TreeItemProps & {

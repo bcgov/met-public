@@ -319,18 +319,18 @@ const EngagementForm = () => {
                                 Create Engagement Draft
                             </PrimaryButton>
                         </Then>
+                        <Else>
+                            <PrimaryButton
+                                data-testid="engagement-form/update-engagement-button"
+                                sx={{ marginRight: 1 }}
+                                onClick={() => handleUpdateEngagement()}
+                                disabled={isSaving}
+                                loading={isSaving}
+                            >
+                                Update Engagement
+                            </PrimaryButton>
+                        </Else>
                     </If>
-                    <Else>
-                        <PrimaryButton
-                            data-testid="engagement-form/update-engagement-button"
-                            sx={{ marginRight: 1 }}
-                            onClick={() => handleUpdateEngagement()}
-                            disabled={isSaving}
-                            loading={isSaving}
-                        >
-                            Update Engagement
-                        </PrimaryButton>
-                    </Else>
                     <SecondaryButton
                         data-testid="engagement-form/preview-engagement-button"
                         onClick={() => handlePreviewEngagement()}
