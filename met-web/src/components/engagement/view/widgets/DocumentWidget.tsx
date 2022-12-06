@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { MetPaper, MetHeader2 } from 'components/common';
-import { Grid, Skeleton, Link, Stack, Box } from '@mui/material';
+import { Grid, Skeleton } from '@mui/material';
 import { Widget } from 'models/widget';
-import { DocumentItem, DOCUMENT_TYPE } from 'models/document';
+import { DocumentItem } from 'models/document';
 import { useAppDispatch } from 'hooks';
 import { fetchDocuments } from 'services/widgetService/DocumentService.tsx';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import DocumentTree from 'components/engagement/form/EngagementWidgets/Documents/TreeView';
-import { If, Then, Else } from 'react-if';
 
 interface DocumentWidgetProps {
     widget: Widget;
