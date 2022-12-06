@@ -85,9 +85,9 @@ export const EngagementView = () => {
                                     <SurveyBlock startSurvey={handleStartSurvey} />
                                 </Grid>
                             </Grid>
-                            {/* <Grid item data-testid={'widget-block'} xs={12} lg={4}>
+                            <Grid item data-testid={'widget-block'} xs={12} lg={4}>
                                 <WidgetBlock />
-                            </Grid> */}
+                            </Grid>
                         </Then>
                         <Else>
                             <Grid data-testid={'engagement-content'} item xs={12}>
