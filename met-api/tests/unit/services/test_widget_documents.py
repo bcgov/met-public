@@ -64,3 +64,53 @@ def test_create_document(session):  # pylint:disable=unused-argument
     assert document is not None
     assert document.id == document_fetched.get('id')
     assert document.title == document_fetched.get('title')
+
+
+def test_patch_document(session):  # pylint:disable=unused-argument
+    """Assert that documents can be patched."""
+    engagement = factory_engagement_model()
+    TestWidgetInfo.widget1['engagement_id'] = engagement.id
+    widget = factory_widget_model(TestWidgetInfo.widget1)
+    TestWidgetDocumentInfo.document1['widget_id'] = widget.id
+    document = factory_document_model(TestWidgetDocumentInfo.document1)
+
+    saved_document_dict = {
+        'id': document.id,
+        'title': document.title,
+        'type': document.type,
+        'parent_document_id': document.parent_document_id,
+        'url': document.url,
+        'sort_index': document.sort_index,
+    }
+
+    document_edits = {
+        'title': fake.word(),
+        'url': None,
+    }
+
+    updated_document_record = WidgetDocumentService().edit_document(widget.id, document.id, document_edits)
+
+    # Assert that only edited fields have changed
+    assert updated_document_record.title == document_edits.get('title')
+    assert updated_document_record.type == saved_document_dict.get('type')
+    assert updated_document_record.parent_document_id == saved_document_dict.get('parent_document_id')
+    assert updated_document_record.url == document_edits.get('url')
+    assert updated_document_record.sort_index == saved_document_dict.get('sort_index')
+
+
+def test_delete_document(session):  # pylint:disable=unused-argument
+    """Assert that documents can be patched."""
+    engagement = factory_engagement_model()
+    TestWidgetInfo.widget1['engagement_id'] = engagement.id
+    widget = factory_widget_model(TestWidgetInfo.widget1)
+    TestWidgetDocumentInfo.document1['widget_id'] = widget.id
+    document = factory_document_model(TestWidgetDocumentInfo.document1)
+
+    deleted_document_record = WidgetDocumentService().delete_document(widget.id, document.id)
+
+    documents_root = WidgetDocumentService.get_documents_by_widget_id(widget.id)
+
+    documents = documents_root.get('children')
+
+    # Assert that the deleted document is not longer available
+    assert documents == None

@@ -58,6 +58,43 @@ def test_get_all_by_widget_id(session):
     assert len(expected_docs) == 2
 
 
+def test_edit_widget_document(session):
+    """Assert that only edited fields have changed."""
+    widget = _create_widget()
+    document1 = WidgetDocumentsModel(
+        **TestWidgetDocumentInfo.document1
+    )
+    document1.widget_id = widget.id
+    session.add(document1)
+    session.commit()
+
+    new_title = fake.word()
+
+    updated_docs = WidgetDocumentsModel.edit_widget_document(widget.id, document1.id, {'title': new_title
+                                                       })
+    assert updated_docs.title == new_title
+
+
+def test_remove_widget_document(session):
+    """Assert that deleted widget document cannot be fetched."""
+    widget = _create_widget()
+    document1 = WidgetDocumentsModel(
+        **TestWidgetDocumentInfo.document1
+    )
+    document2 = WidgetDocumentsModel(
+        **TestWidgetDocumentInfo.document2
+    )
+    document1.widget_id = widget.id
+    document2.widget_id = widget.id
+    session.add(document1)
+    session.add(document2)
+    session.commit()
+
+    delete_docs = WidgetDocumentsModel.remove_widget_document(widget.id, document1.id)
+    expected_docs = WidgetDocumentsModel.get_all_by_widget_id(widget.id)
+    assert len(expected_docs) == 1
+
+
 def _create_widget():
     engagement = factory_engagement_model()
     TestWidgetInfo.widget2['engagement_id'] = engagement.id

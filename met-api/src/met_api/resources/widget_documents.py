@@ -69,9 +69,6 @@ class WidgetDocumentsChanges(Resource):
     def patch(widget_id, document_id):
         """Update saved documents."""
         request_json = request.get_json()
-        user_id = TokenInfo.get_id()
-        request_json['modified_by_id'] = user_id
-        request_json['updated_date'] = datetime.utcnow()
         try:
             document = WidgetDocumentService.edit_document(widget_id, document_id, request_json)
             return ActionResult.success(result=WidgetDocumentsSchema().dump(document))
