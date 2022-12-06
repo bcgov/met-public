@@ -113,5 +113,5 @@ def test_delete_document(session):  # pylint:disable=unused-argument
     documents = documents_root.get('children')
 
     # Assert that the deleted document is not longer available
-    if (documents == None):
+    if (documents is None):
         print('Record deleted successfully')

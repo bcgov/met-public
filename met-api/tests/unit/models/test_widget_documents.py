@@ -89,9 +89,8 @@ def test_remove_widget_document(session):
     session.add(document2)
     session.commit()
 
-    delete_docs = WidgetDocumentsModel.remove_widget_document(widget.id, document1.id)
+    WidgetDocumentsModel.remove_widget_document(widget.id, document1.id)
     expected_docs = WidgetDocumentsModel.get_all_by_widget_id(widget.id)
-    assert len(delete_docs) == 1
     assert len(expected_docs) == 1
 
 
