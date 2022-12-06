@@ -2,12 +2,10 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import TreeItem, { treeItemClasses } from '@mui/lab/TreeItem';
-import { DocumentTreeItemProps } from 'components/common';
+import { DocumentTreeItemProps, MetHeader4, StyledTreeItemProps } from 'components/common';
 import { If, Then, Else } from 'react-if';
 import { Link } from '@mui/material';
 import OpenInNew from '@mui/icons-material/OpenInNew';
-import { MetHeader4 } from 'components/common';
-import { StyledTreeItemProps } from 'components/common';
 
 const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
     color: theme.palette.text.secondary,
