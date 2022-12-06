@@ -4,11 +4,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { DocumentTreeProps } from 'components/common';
 import { If, Then, Else } from 'react-if';
-<<<<<<< HEAD
 import { DocumentItem, DOCUMENT_TYPE } from 'models/document';
-=======
-import { DocumentItem } from 'models/document';
->>>>>>> main
 import { StyledTreeItem } from './StyledTreeItem';
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
