@@ -14,10 +14,9 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Palette } from 'styles/Theme';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { MET_Header_Font_Family, MET_Header_Font_Weight } from './constants';
-import TreeItem, { TreeItemProps, treeItemClasses } from '@mui/lab/TreeItem';
+import { TreeItemProps } from '@mui/lab/TreeItem';
 import { SvgIconProps } from '@mui/material/SvgIcon';
 import { DocumentItem } from 'models/document';
-import { BaseTheme } from 'styles/Theme';
 
 export const RoundedButton = styled(MuiButton)(() => ({
     borderRadius: '23px',
@@ -47,13 +46,13 @@ export const StyledSecondaryButton = styled(MuiButton)(() => ({
     },
 }));
 
-export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
+export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
     <StyledSecondaryButton {...rest} variant="outlined">
         {children}
     </StyledSecondaryButton>
 );
 
-export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
+export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
     <StyledPrimaryButton
         {...rest}
         variant="contained"
@@ -68,7 +67,7 @@ export const StyledPaper = styled(MuiPaper)(() => ({
     borderRadius: '4px',
 }));
 
-export const MetPaper = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => {
+export const MetPaper = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => {
     return (
         <StyledPaper elevation={0} {...rest}>
             {children}
@@ -307,33 +306,3 @@ export type StyledTreeItemProps = TreeItemProps & {
     labelInfo?: string;
     labelText: string;
 };
-
-export const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
-    color: BaseTheme.palette.text.secondary,
-    [`& .${treeItemClasses.content}`]: {
-        color: BaseTheme.palette.text.secondary,
-        borderTopRightRadius: BaseTheme.spacing(2),
-        borderBottomRightRadius: BaseTheme.spacing(2),
-        paddingRight: BaseTheme.spacing(1),
-        fontWeight: BaseTheme.typography.fontWeightMedium,
-        '&.Mui-expanded': {
-            fontWeight: BaseTheme.typography.fontWeightRegular,
-        },
-        '&:hover': {
-            backgroundColor: 'transparent',
-        },
-        '&.Mui-focused, &.Mui-selected, &.Mui-selected.Mui-focused': {
-            backgroundColor: 'transparent',
-        },
-        [`& .${treeItemClasses.label}`]: {
-            fontWeight: 'inherit',
-            color: 'inherit',
-        },
-    },
-    [`& .${treeItemClasses.group}`]: {
-        marginLeft: 0,
-        [`& .${treeItemClasses.content}`]: {
-            paddingLeft: BaseTheme.spacing(2),
-        },
-    },
-}));
