@@ -37,13 +37,9 @@ export default function DocumentTree({ documentItem }: DocumentTreeProps) {
                                     nodeId={`${document.id}`}
                                     labelText={document.title}
                                     labelIcon={
-<<<<<<< HEAD
                                         document.type === DOCUMENT_TYPE.FOLDER
                                             ? FolderOutlinedIcon
                                             : DescriptionOutlinedIcon
-=======
-                                        document.type === 'folder' ? FolderOutlinedIcon : DescriptionOutlinedIcon
->>>>>>> main
                                     }
                                     labelUrl={document.url}
                                 />
