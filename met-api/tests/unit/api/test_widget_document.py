@@ -173,6 +173,6 @@ def test_delete_documents(client, jwt, session):  # pylint:disable=unused-argume
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
 
     rv = client.delete(f'/api/widgets/{widget.id}/documents/{document.id}',
-                      headers=headers, content_type=ContentType.JSON.value)
+                       headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.status_code == 200

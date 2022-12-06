@@ -70,8 +70,7 @@ def test_edit_widget_document(session):
 
     new_title = fake.word()
 
-    updated_docs = WidgetDocumentsModel.edit_widget_document(widget.id, document1.id, {'title': new_title
-                                                       })
+    updated_docs = WidgetDocumentsModel.edit_widget_document(widget.id, document1.id, {'title': new_title})
     assert updated_docs.title == new_title
 
 
@@ -92,6 +91,7 @@ def test_remove_widget_document(session):
 
     delete_docs = WidgetDocumentsModel.remove_widget_document(widget.id, document1.id)
     expected_docs = WidgetDocumentsModel.get_all_by_widget_id(widget.id)
+    assert len(delete_docs) == 1
     assert len(expected_docs) == 1
 
 

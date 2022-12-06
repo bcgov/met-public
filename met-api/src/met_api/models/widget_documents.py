@@ -49,7 +49,9 @@ class WidgetDocuments(BaseModel):  # pylint: disable=too-few-public-methods
     @classmethod
     def remove_widget_document(cls, widget_id, document_id) -> WidgetDocuments:
         """Remove document from a document widget.
-           Using an 'or' condition to handle nested deletion of files within the folder."""
+
+        Using an 'or' condition to handle nested deletion of files within the folder.
+        """
         delete_document_query = db.session.query(WidgetDocuments) \
             .filter(WidgetDocuments.widget_id == widget_id,
                     sa.or_(WidgetDocuments.id == document_id, WidgetDocuments.parent_document_id == document_id)) \
