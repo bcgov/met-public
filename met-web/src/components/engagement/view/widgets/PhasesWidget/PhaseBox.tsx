@@ -1,9 +1,8 @@
-import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react';
-import { Box, Grid, IconButton, Link, Popover, Typography } from '@mui/material';
+import React, { ReactNode, useContext, useRef, useState } from 'react';
+import { Box, Grid, Link, Popover } from '@mui/material';
 import { MetHeader4, MetPaper, MetSmallText } from 'components/common';
 import { PhaseContext } from '.';
 import { When } from 'react-if';
-import ForumIcon from '@mui/icons-material/Forum';
 import { IconBox } from './IconBox';
 
 interface PhaseBoxProps {

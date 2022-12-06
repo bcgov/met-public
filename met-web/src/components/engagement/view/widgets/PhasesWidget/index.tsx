@@ -1,10 +1,8 @@
-import { Grid, Link, Stack } from '@mui/material';
-import { MetBody, MetHeader3, MetHeader4, MetPaper, MetParagraph, MetSmallText } from 'components/common';
-import { EngagementPhases } from 'models/engagementPhases';
+import { Grid, Stack } from '@mui/material';
+import { MetBody, MetHeader3, MetPaper } from 'components/common';
 import { WidgetType } from 'models/widget';
 import React, { useContext, useState } from 'react';
 import { ActionContext } from '../../ActionContext';
-import { PhaseBox } from './PhaseBox';
 import { AppDevReview } from './phaseItems/AppDevReview';
 import { Decision } from './phaseItems/Decision';
 import { EarlyEngagement } from './phaseItems/EarlyEngagement';
@@ -12,7 +10,6 @@ import { EffectAssessmentReview } from './phaseItems/EffectAssessmentRec';
 import { PostCertificate } from './phaseItems/PostCertificate';
 import { ProcessPlanning } from './phaseItems/ProcessPlanning';
 import { ReadinessDecision } from './phaseItems/ReadinessDecision';
-import { ReadMoreBox } from './ReadMoreBox';
 
 interface PhaseContextProps {
     anchorEl: HTMLButtonElement | null;
@@ -30,7 +27,6 @@ export const PhasesWidget = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
     const phasesWidget = widgets.find((widget) => widget.widget_type_id === WidgetType.Phases);
-    const currentPhase = phasesWidget?.items[0]?.widget_data_id || EngagementPhases.Standalone;
 
     if (!phasesWidget) {
         return null;
