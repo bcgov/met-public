@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { MetPaper, MetBody, MetHeader4 } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
-import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetTabValues } from '../type';
 import { ActionContext } from '../../ActionContext';
@@ -10,6 +9,7 @@ import { useAppDispatch } from 'hooks';
 import { WidgetType } from 'models/widget';
 import { postWidget } from 'services/widgetService';
 import { Else, If, Then } from 'react-if';
+import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 
 const PhasesOptionCard = () => {
     const { savedEngagement } = useContext(ActionContext);
@@ -71,7 +71,7 @@ const PhasesOptionCard = () => {
                         spacing={1}
                     >
                         <Grid item>
-                            <ChatBubbleIcon sx={{ fontSize: '5em' }} />
+                            <ChatBubbleOutlineOutlinedIcon sx={{ pl: '25px', fontSize: '5em' }} />
                         </Grid>
                         <Grid
                             container
@@ -83,10 +83,10 @@ const PhasesOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetHeader4>EA Process</MetHeader4>
+                                <MetHeader4 sx={{ pl: '10px' }}>EA Process</MetHeader4>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody>Add the EA process info to this engagement</MetBody>
+                                <MetBody sx={{ pl: '10px' }}>Add the EA process info to this engagement</MetBody>
                             </Grid>
                         </Grid>
                     </Grid>
