@@ -326,21 +326,3 @@ export type StyledTreeItemProps = TreeItemProps & {
     labelInfo?: string;
     labelText: string;
 };
-
-export type DocumentTreeItemProps = TreeItemProps & {
-    labelIcon: React.ElementType<SvgIconProps>;
-    labelUrl: string | undefined;
-    nodeId: string;
-};
-
-export type DocumentTreeProps = TreeItemProps & {
-    documentItem: DocumentItem;
-};
-
-export type StyledTreeItemProps = TreeItemProps & {
-    bgColor?: string;
-    color?: string;
-    labelIcon: React.ElementType<SvgIconProps>;
-    labelInfo?: string;
-    labelText: string;
-};
