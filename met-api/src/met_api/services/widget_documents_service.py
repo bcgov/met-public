@@ -99,3 +99,19 @@ class WidgetDocumentService:
             raise BusinessException(
                 error='Cant nest inside file',
                 status_code=HTTPStatus.BAD_REQUEST)
+
+    @staticmethod
+    def edit_document(widget_id, document_id, data: dict):
+        """Update document from a document widget."""
+        updated_document = WidgetDocumentsModel.edit_widget_document(widget_id, document_id, data)
+        if not updated_document:
+            raise ValueError('Document to update was not found')
+        return updated_document
+
+    @staticmethod
+    def delete_document(widget_id, document_id):
+        """Remove document from a document widget."""
+        delete_document = WidgetDocumentsModel.remove_widget_document(widget_id, document_id)
+        if not delete_document:
+            raise ValueError('Document to remove was not found')
+        return delete_document
