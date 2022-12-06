@@ -58,11 +58,9 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                 {documents.map((document: DocumentItem) => {
                     return (
                         <Grid key={document.id} container item spacing={1} rowSpacing={1} xs={12} paddingTop={2}>
-                            <If condition={document.type === DOCUMENT_TYPE.FOLDER}>
-                                <Then>
-                                    <DocumentTree nodeId={`${document.id}`} documentItem={document} />
-                                </Then>
-                                <Else>
+                            <DocumentTree nodeId={`${document.id}`} documentItem={document} />
+
+                            {/* <Else>
                                     <Grid item justifyContent="flex-start" container xs={12}>
                                         <Stack
                                             direction="row"
@@ -102,8 +100,7 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                                             </Link>
                                         </Stack>
                                     </Grid>
-                                </Else>
-                            </If>
+                                </Else> */}
                         </Grid>
                     );
                 })}
