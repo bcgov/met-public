@@ -2,12 +2,12 @@ import * as React from 'react';
 import TreeView from '@mui/lab/TreeView';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import FolderIcon from '@mui/icons-material/Folder';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { DocumentTreeProps } from 'components/common';
 import { If, Then, Else } from 'react-if';
 import { DocumentItem } from 'models/document';
 import { StyledTreeItem } from './StyledTreeItem';
+import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 
 export default function DocumentTree({ documentItem }: DocumentTreeProps) {
     return (
@@ -25,14 +25,16 @@ export default function DocumentTree({ documentItem }: DocumentTreeProps) {
                         labelUrl={documentItem.url}
                         nodeId={`${documentItem.id}`}
                         labelText={documentItem.title}
-                        labelIcon={FolderIcon}
+                        labelIcon={FolderOutlinedIcon}
                     >
                         {documentItem.children?.map((document: DocumentItem) => {
                             return (
                                 <StyledTreeItem
                                     nodeId={`${document.id}`}
                                     labelText={document.title}
-                                    labelIcon={document.type === 'folder' ? FolderIcon : InsertDriveFileIcon}
+                                    labelIcon={
+                                        document.type === 'folder' ? FolderOutlinedIcon : DescriptionOutlinedIcon
+                                    }
                                     labelUrl={document.url}
                                 />
                             );
@@ -43,7 +45,7 @@ export default function DocumentTree({ documentItem }: DocumentTreeProps) {
                     <StyledTreeItem
                         nodeId={`${documentItem.id}`}
                         labelText={documentItem.title}
-                        labelIcon={InsertDriveFileIcon}
+                        labelIcon={DescriptionOutlinedIcon}
                         labelUrl={documentItem.url}
                     />
                 </Else>

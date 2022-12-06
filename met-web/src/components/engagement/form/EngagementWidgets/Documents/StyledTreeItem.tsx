@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import TreeItem, { treeItemClasses } from '@mui/lab/TreeItem';
 import { DocumentTreeItemProps } from 'components/common';
 import { If, Then, Else } from 'react-if';
-import { Link, Icon } from '@mui/material';
+import { Link } from '@mui/material';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import { MetHeader4 } from 'components/common';
 import { StyledTreeItemProps } from 'components/common';
@@ -48,7 +48,7 @@ export function StyledTreeItem(props: StyledTreeItemProps & DocumentTreeItemProp
                 <Box sx={{ display: 'flex', alignItems: 'center', p: 0.5, pr: 0 }}>
                     <If condition={labelUrl}>
                         <Then>
-                            <Box component={LabelIcon} color="inherit" sx={{ mr: 1 }} />
+                            <Box component={LabelIcon} color="inherit" sx={{ p: 0.3, mr: 1 }} />
                             <Link
                                 sx={{
                                     alignItems: 'center',
@@ -60,14 +60,20 @@ export function StyledTreeItem(props: StyledTreeItemProps & DocumentTreeItemProp
                             >
                                 {labelText}
                             </Link>
-                            <Link target="_blank" href={`${labelUrl}`}>
-                                <Icon fontSize="small" sx={{ ml: 0.5 }}>
-                                    <OpenInNew fontSize="small" />
-                                </Icon>
+                            <Link
+                                sx={{
+                                    alignItems: 'center',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                }}
+                                target="_blank"
+                                href={`${labelUrl}`}
+                            >
+                                <Box component={OpenInNew} color="inherit" sx={{ p: 0.5, mr: 1 }} />
                             </Link>
                         </Then>
                         <Else>
-                            <Box component={LabelIcon} color="inherit" sx={{ mr: 1 }} />
+                            <Box component={LabelIcon} color="inherit" sx={{ p: 0.3, mr: 1 }} />
                             <MetHeader4 bold={true}>{labelText}</MetHeader4>
                         </Else>
                     </If>

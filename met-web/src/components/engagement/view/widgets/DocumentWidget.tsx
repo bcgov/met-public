@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { MetPaper, MetHeader2 } from 'components/common';
-import { Grid, Skeleton, Icon, Link, Stack } from '@mui/material';
+import { Grid, Skeleton, Link, Stack, Box } from '@mui/material';
 import { Widget } from 'models/widget';
 import { DocumentItem, DOCUMENT_TYPE } from 'models/document';
 import { useAppDispatch } from 'hooks';
 import { fetchDocuments } from 'services/widgetService/DocumentService.tsx';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import DocumentTree from 'components/engagement/form/EngagementWidgets/Documents/TreeView';
 import { If, Then, Else } from 'react-if';
 
@@ -64,8 +64,18 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                                 </Then>
                                 <Else>
                                     <Grid item justifyContent="flex-start" container xs={12}>
-                                        <Stack direction="row">
-                                            <InsertDriveFileIcon color="info" sx={{ mr: 0.5 }} fontSize="small" />
+                                        <Stack
+                                            direction="row"
+                                            sx={{
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                            }}
+                                        >
+                                            <Box
+                                                component={DescriptionOutlinedIcon}
+                                                color="inherit"
+                                                sx={{ p: 0.3, mr: 1 }}
+                                            />
                                             <Link
                                                 sx={{
                                                     alignItems: 'center',
@@ -77,10 +87,18 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                                             >
                                                 {document.title}
                                             </Link>
-                                            <Link target="_blank" href={`${document.url}`}>
-                                                <Icon fontSize="small" sx={{ ml: 0.5 }}>
-                                                    <OpenInNewIcon fontSize="small" />
-                                                </Icon>
+                                            <Link
+                                                sx={{
+                                                    alignItems: 'center',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    p: 0,
+                                                    m: 0,
+                                                }}
+                                                target="_blank"
+                                                href={`${document.url}`}
+                                            >
+                                                <Box sx={{ p: 0.5, m: 0 }} component={OpenInNewIcon} color="inherit" />
                                             </Link>
                                         </Stack>
                                     </Grid>
