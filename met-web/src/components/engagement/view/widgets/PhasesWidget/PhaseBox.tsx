@@ -31,6 +31,8 @@ export const PhaseBox = ({ title, backgroundColor = 'white', readMoreBox, iconBo
                     backgroundColor: backgroundColor,
                     height: '10em',
                     marginBottom: '2em',
+                    maxWidth: { xl: '16%', xs: 'auto' },
+                    minWidth: { xl: '10%', xs: 'auto' },
                 }}
             >
                 <Grid container direction="row" spacing={0}>
