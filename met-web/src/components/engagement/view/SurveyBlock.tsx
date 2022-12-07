@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Grid, Typography } from '@mui/material';
+import { Grid, Skeleton, Typography } from '@mui/material';
 import { MetPaper, PrimaryButton, MetHeader1 } from '../../common';
 import { ActionContext } from './ActionContext';
 import { SubmissionStatus } from 'constants/engagementStatus';
@@ -7,12 +7,16 @@ import { SurveyBlockProps } from './types';
 import { useAppSelector } from 'hooks';
 
 const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
-    const { savedEngagement } = useContext(ActionContext);
+    const { savedEngagement, isEngagementLoading } = useContext(ActionContext);
 
     const isOpen = savedEngagement.submission_status === SubmissionStatus.Open;
     const surveyId = savedEngagement.surveys[0]?.id || '';
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isPreview = isLoggedIn;
+
+    if (isEngagementLoading) {
+        return <Skeleton variant="rectangular" height={'15em'} />;
+    }
 
     return (
         <MetPaper elevation={1} sx={{ padding: '2em' }}>

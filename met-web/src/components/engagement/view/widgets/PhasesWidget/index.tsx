@@ -1,7 +1,7 @@
-import { Grid, Stack } from '@mui/material';
+import React, { useContext, useState } from 'react';
+import { Grid, Skeleton, Stack } from '@mui/material';
 import { MetBody, MetHeader3, MetPaper } from 'components/common';
 import { WidgetType } from 'models/widget';
-import React, { useContext, useState } from 'react';
 import { ActionContext } from '../../ActionContext';
 import { AppDevReview } from './phaseItems/AppDevReview';
 import { Decision } from './phaseItems/Decision';
@@ -23,10 +23,14 @@ export const PhaseContext = React.createContext<PhaseContextProps>({
     },
 });
 export const PhasesWidget = () => {
-    const { widgets } = useContext(ActionContext);
+    const { widgets, isWidgetsLoading } = useContext(ActionContext);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
     const phasesWidget = widgets.find((widget) => widget.widget_type_id === WidgetType.Phases);
+
+    if (isWidgetsLoading) {
+        return <Skeleton variant="rectangular" height={'20em'} />;
+    }
 
     if (!phasesWidget) {
         return null;
