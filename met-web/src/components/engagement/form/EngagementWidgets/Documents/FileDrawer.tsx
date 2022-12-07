@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
@@ -12,8 +12,10 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { DocumentsContext } from './DocumentsContext';
 import ControlledSelect from 'components/common/ControlledInputComponents/ControlledSelect';
-import { postDocument } from 'services/widgetService/DocumentService.tsx';
+import { postDocument, patchDocument, PatchDocumentRequest } from 'services/widgetService/DocumentService.tsx';
 import { DOCUMENT_TYPE } from 'models/document';
+import { If, Then, Else } from 'react-if';
+import { updatedDiff } from 'deep-object-diff';
 
 const schema = yup
     .object({
@@ -27,7 +29,8 @@ type FileForm = yup.TypeOf<typeof schema>;
 
 const FileDrawer = () => {
     const dispatch = useAppDispatch();
-    const { documents, handleFileDrawerOpen, fileDrawerOpen, loadDocuments, widget } = useContext(DocumentsContext);
+    const { documentToEdit, documents, handleFileDrawerOpen, fileDrawerOpen, loadDocuments, widget } =
+        useContext(DocumentsContext);
 
     const [isCreatingFile, setIsCreatingDocument] = useState(false);
 
@@ -42,6 +45,12 @@ const FileDrawer = () => {
 
     const { handleSubmit, reset } = methods;
 
+    useEffect(() => {
+        methods.setValue('name', documentToEdit?.title || '');
+        methods.setValue('link', documentToEdit?.url || '');
+        methods.setValue('folderId', documentToEdit?.id || 0);
+    }, [documentToEdit]);
+
     const handleClose = () => {
         reset();
         handleFileDrawerOpen(false);
@@ -52,17 +61,36 @@ const FileDrawer = () => {
             return;
         }
         try {
-            setIsCreatingDocument(true);
-            await postDocument(widget.id, {
-                title: data.name,
-                parent_document_id: data.folderId === 0 ? null : data.folderId,
-                url: data.link,
-                widget_id: widget.id,
-                type: 'file',
-            });
-            await loadDocuments();
-            setIsCreatingDocument(false);
-            handleClose();
+            if (documentToEdit) {
+                setIsCreatingDocument(true);
+                const documentEditsToPatch = updatedDiff(documentToEdit, {
+                    title: data.name,
+                    parent_document_id: data.folderId === 0 ? null : data.folderId,
+                    url: data.link,
+                    widget_id: widget.id,
+                    type: 'file',
+                }) as PatchDocumentRequest;
+
+                await patchDocument(documentToEdit.id, widget.id, {
+                    ...documentEditsToPatch,
+                });
+
+                await loadDocuments();
+                setIsCreatingDocument(false);
+                handleClose();
+            } else {
+                setIsCreatingDocument(true);
+                await postDocument(widget.id, {
+                    title: data.name,
+                    parent_document_id: data.folderId === 0 ? null : data.folderId,
+                    url: data.link,
+                    widget_id: widget.id,
+                    type: 'file',
+                });
+                await loadDocuments();
+                setIsCreatingDocument(false);
+                handleClose();
+            }
         } catch (err) {
             console.log(err);
             dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to save File' }));
@@ -88,7 +116,14 @@ const FileDrawer = () => {
                         padding="2em"
                     >
                         <Grid item xs={12}>
-                            <MetHeader3 bold>Add File</MetHeader3>
+                            <If condition={!!documentToEdit}>
+                                <Then>
+                                    <MetHeader3 bold>Edit File</MetHeader3>
+                                </Then>
+                                <Else>
+                                    <MetHeader3 bold>Add File</MetHeader3>
+                                </Else>
+                            </If>
                             <Divider sx={{ marginTop: '1em' }} />
                         </Grid>
 

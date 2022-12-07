@@ -15,7 +15,7 @@ import { DocumentsContext } from './DocumentsContext';
 
 const DocumentFile = ({ documentItem }: { documentItem: DocumentItem }) => {
     const dispatch = useAppDispatch();
-    const { loadDocuments, handleFileDrawerOpen } = useContext(DocumentsContext);
+    const { handleFileDrawerOpen, handleChangeDocumentToEdit } = useContext(DocumentsContext);
     const { widgets, loadWidgets } = useContext(WidgetDrawerContext);
     const documentWidget = widgets.find((widget: Widget) => widget.widget_type_id === WidgetType.Document);
 
@@ -31,7 +31,9 @@ const DocumentFile = ({ documentItem }: { documentItem: DocumentItem }) => {
                     </Grid>
                     <Grid item xs container justifyContent={'flex-end'}>
                         <IconButton
-                            onClick={() => handleFileDrawerOpen(true)}
+                            onClick={() => {
+                                handleChangeDocumentToEdit(documentItem), handleFileDrawerOpen(true);
+                            }}
                             sx={{ padding: 0, mr: 1 }}
                             color="inherit"
                             aria-label="Edit Folder"

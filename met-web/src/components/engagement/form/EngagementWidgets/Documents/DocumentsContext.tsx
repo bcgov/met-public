@@ -8,12 +8,15 @@ import { Widget, WidgetType } from 'models/widget';
 import { fetchDocuments } from 'services/widgetService/DocumentService.tsx';
 
 export interface DocumentsContextProps {
+    documentToEdit: DocumentItem | null;
     loadingDocuments: boolean;
     documents: DocumentItem[];
     loadDocuments: () => Promise<DocumentItem[] | undefined>;
     fileDrawerOpen: boolean;
     handleFileDrawerOpen: (_open: boolean) => void;
     widget: Widget | null;
+    clearSelected: () => void;
+    handleChangeDocumentToEdit: (_document: DocumentItem | null) => void;
 }
 
 export type EngagementParams = {
@@ -21,11 +24,18 @@ export type EngagementParams = {
 };
 
 export const DocumentsContext = createContext<DocumentsContextProps>({
+    documentToEdit: null,
     loadingDocuments: false,
     documents: [],
     loadDocuments: () => Promise.resolve([]),
     fileDrawerOpen: false,
     handleFileDrawerOpen: (_open: boolean) => {
+        /* empty default method  */
+    },
+    clearSelected: () => {
+        /* empty default method  */
+    },
+    handleChangeDocumentToEdit: () => {
         /* empty default method  */
     },
     widget: null,
@@ -35,6 +45,7 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
     const dispatch = useAppDispatch();
     const { widgets } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
+    const [documentToEdit, setDocumentToEdit] = useState<DocumentItem | null>(null);
     const [documents, setDocuments] = useState<DocumentItem[]>([]);
     const [loadingDocuments, setLoadingDocuments] = useState(true);
     const [fileDrawerOpen, setDrawerFileOpen] = useState(false);
@@ -62,17 +73,30 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
         }
     };
 
-    useEffect(() => {
-        loadDocuments();
-    }, [savedEngagement, widget]);
+    const clearSelected = () => {
+        setDocumentToEdit(null);
+    };
+
+    const handleChangeDocumentToEdit = (document: DocumentItem | null) => {
+        setDocumentToEdit(document);
+    };
 
     const handleFileDrawerOpen = (open: boolean) => {
         setDrawerFileOpen(open);
+        if (!open && documentToEdit) {
+            setDocumentToEdit(null);
+        }
     };
 
+    useEffect(() => {
+        loadDocuments();
+    }, [savedEngagement, widget]);
     return (
         <DocumentsContext.Provider
             value={{
+                clearSelected,
+                handleChangeDocumentToEdit,
+                documentToEdit,
                 loadingDocuments,
                 documents,
                 loadDocuments,

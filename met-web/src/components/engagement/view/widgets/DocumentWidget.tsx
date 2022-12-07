@@ -23,7 +23,6 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
     const getDocuments = async () => {
         try {
             const fetchedDocuments = await fetchDocuments(widget.id);
-            console.log(fetchedDocuments);
             setDocuments(fetchedDocuments);
             setIsLoading(false);
         } catch (error) {
