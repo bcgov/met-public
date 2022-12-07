@@ -7,10 +7,10 @@ import { Page } from 'services/type';
 interface ReviewCommentRequest {
     submission_id: number;
     status_id: number;
-    has_personal_info: boolean;
-    has_profanity: boolean;
-    has_threat: boolean;
-    rejected_reason_other: string;
+    has_personal_info?: boolean;
+    has_profanity?: boolean;
+    has_threat?: boolean;
+    rejected_reason_other?: string;
 }
 export const reviewComments = async (requestData: ReviewCommentRequest): Promise<SurveySubmission> => {
     try {

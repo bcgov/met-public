@@ -8,7 +8,10 @@ export interface SurveySubmission {
     reviewed_by: string;
     review_date: string;
     comment_status_id: number;
-
+    has_personal_info?: boolean;
+    has_profanity?: boolean;
+    has_threat?: boolean;
+    rejected_reason_other?: string;
     comments?: Comment[];
 }
 
