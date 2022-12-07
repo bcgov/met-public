@@ -30,7 +30,7 @@ Arrow.defaultProps = {
 };
 
 export const PopperArrow = styled(Popper)(({ theme }: { theme?: Theme }) => ({
-    zIndex: theme?.zIndex.tooltip,
+    zIndex: theme?.zIndex?.tooltip || 1500,
     [`&[data-popper-placement*="bottom"] .${metPopperClasses.arrow}`]: {
         top: 0,
         left: 0,

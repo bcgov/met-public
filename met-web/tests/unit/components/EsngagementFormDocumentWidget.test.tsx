@@ -89,7 +89,7 @@ describe('Document widget in engagement page tests', () => {
         const { container } = render(<EngagementForm />);
 
         await waitFor(() => {
-            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(screen.getByText('Add Widget')).toBeInTheDocument();
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
 
@@ -124,7 +124,7 @@ describe('Document widget in engagement page tests', () => {
         const { container } = render(<EngagementForm />);
 
         await waitFor(() => {
-            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(screen.getByText('Add Widget')).toBeInTheDocument();
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
 
@@ -160,7 +160,7 @@ describe('Document widget in engagement page tests', () => {
         const { container } = render(<EngagementForm />);
 
         await waitFor(() => {
-            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(screen.getByText('Add Widget')).toBeInTheDocument();
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
 

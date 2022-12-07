@@ -14,7 +14,7 @@ import { createDefaultSurvey, Survey } from 'models/survey';
 import { Widget, WidgetItem, WidgetType } from 'models/widget';
 import { Contact } from 'models/contact';
 import { Box } from '@mui/material';
-import { engagement } from '../components/factory';
+import { engagement } from './factory';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
@@ -456,6 +456,10 @@ describe('Engagement form page tests', () => {
         fireEvent.click(standalonePhaseCheckbox);
 
         fireEvent.click(saveWidgetButton);
+
+        await waitFor(() => {
+            expect(saveWidgetButton).not.toBeVisible();
+        });
 
         expect(postWidgetItemMock).toHaveBeenNthCalledWith(1, phasesWidget.id, {
             widget_id: phasesWidget.id,

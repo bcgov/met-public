@@ -44,7 +44,23 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
     }, [widget]);
 
     if (isLoading) {
-        return <Skeleton height="5em" width="100%" />;
+        return (
+            <MetPaper elevation={1} sx={{ padding: '1em' }}>
+                <Grid container justifyContent="flex-start" spacing={3}>
+                    <Grid item xs={12}>
+                        <MetHeader2>
+                            <Skeleton variant="rectangular" />
+                        </MetHeader2>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Skeleton variant="rectangular" height="10em" />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Skeleton variant="rectangular" height="10em" />
+                    </Grid>
+                </Grid>
+            </MetPaper>
+        );
     }
 
     if (contacts.length === 0) {

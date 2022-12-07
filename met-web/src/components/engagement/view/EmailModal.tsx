@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Modal } from '@mui/material';
+import { Box, Modal } from '@mui/material';
 import SuccessPanel from './SuccessPanel';
 import FailurePanel from './FailurePanel';
 import EmailPanel from './EmailPanel';
@@ -71,26 +71,32 @@ const EmailModal = ({ defaultPanel, open, handleClose }: EmailModalProps) => {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
-            <TabContext value={formIndex}>
-                <TabPanel value="email">
-                    <EmailPanel
-                        email={email}
-                        checkEmail={updateTabValue}
-                        handleClose={() => close()}
-                        updateEmail={setEmail}
-                        isSaving={isSaving}
-                    />
-                </TabPanel>
-                <TabPanel value="success">
-                    <SuccessPanel handleClose={() => close()} email={email} />
-                </TabPanel>
-                <TabPanel value="thank you">
-                    <ThankYouPanel handleClose={() => close()} />
-                </TabPanel>
-                <TabPanel value="error">
-                    <FailurePanel tryAgain={() => setFormIndex('email')} handleClose={() => close()} email={email} />
-                </TabPanel>
-            </TabContext>
+            <Box>
+                <TabContext value={formIndex}>
+                    <TabPanel value="email">
+                        <EmailPanel
+                            email={email}
+                            checkEmail={updateTabValue}
+                            handleClose={() => close()}
+                            updateEmail={setEmail}
+                            isSaving={isSaving}
+                        />
+                    </TabPanel>
+                    <TabPanel value="success">
+                        <SuccessPanel handleClose={() => close()} email={email} />
+                    </TabPanel>
+                    <TabPanel value="thank you">
+                        <ThankYouPanel handleClose={() => close()} />
+                    </TabPanel>
+                    <TabPanel value="error">
+                        <FailurePanel
+                            tryAgain={() => setFormIndex('email')}
+                            handleClose={() => close()}
+                            email={email}
+                        />
+                    </TabPanel>
+                </TabContext>
+            </Box>
         </Modal>
     );
 };
