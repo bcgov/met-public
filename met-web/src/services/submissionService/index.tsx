@@ -5,13 +5,17 @@ import { SurveySubmission } from 'models/surveySubmission';
 import { Page } from 'services/type';
 
 interface ReviewCommentRequest {
-    status_id: number;
     submission_id: number;
+    status_id: number;
+    has_personal_info: boolean;
+    has_profanity: boolean;
+    has_threat: boolean;
+    rejected_reason_other: string;
 }
-export const reviewComments = async ({ submission_id, status_id }: ReviewCommentRequest): Promise<SurveySubmission> => {
+export const reviewComments = async (requestData: ReviewCommentRequest): Promise<SurveySubmission> => {
     try {
-        const url = replaceUrl(Endpoints.SurveySubmission.REVIEW, 'submission_id', String(submission_id));
-        const response = await http.PutRequest<SurveySubmission>(url, { status_id });
+        const url = replaceUrl(Endpoints.SurveySubmission.REVIEW, 'submission_id', String(requestData.submission_id));
+        const response = await http.PutRequest<SurveySubmission>(url, requestData);
         if (response.data.status && response.data.result) {
             return Promise.resolve(response.data.result);
         }

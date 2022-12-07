@@ -186,6 +186,7 @@ objects:
     NOTIFICATIONS_EMAIL_ENDPOINT: ${NOTIFICATIONS_EMAIL_ENDPOINT}    
     SITE_URL: ${SITE_URL}
     VERIFICATION_EMAIL_TEMPLATE_ID: ${VERIFICATION_EMAIL_TEMPLATE_ID}
+    REJECTED_EMAIL_TEMPLATE_ID: ${REJECTED_EMAIL_TEMPLATE_ID}
 - kind: Secret
   apiVersion: v1
   type: Opaque
@@ -236,6 +237,10 @@ parameters:
     description: "The email verification template id"
     required: true
     value: 'c4cc1633-321a-4400-8a22-272acecd836a'
+  - name: REJECTED_EMAIL_TEMPLATE_ID
+    description: "The rejected comment email template id"
+    required: true
+    value: '8410c055-587b-4788-bd2f-b563562bcb2d'
   - name: S3_BUCKET
     description: "The s3 object store bucket"
     required: true

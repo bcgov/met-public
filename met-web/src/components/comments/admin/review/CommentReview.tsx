@@ -59,7 +59,14 @@ const CommentReview = () => {
     const handleSave = async () => {
         setIsSaving(true);
         try {
-            await reviewComments({ submission_id: Number(submissionId), status_id: review });
+            await reviewComments({
+                submission_id: Number(submissionId),
+                status_id: review,
+                has_personal_info: true,
+                has_profanity: false,
+                has_threat: false,
+                rejected_reason_other: '',
+            });
             setIsSaving(false);
             dispatch(openNotification({ severity: 'success', text: 'Comments successfully reviewed.' }));
             navigate(`/surveys/${submission.survey_id}/comments`);
