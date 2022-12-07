@@ -57,6 +57,7 @@ export interface PatchDocumentRequest {
     title?: string;
     type?: DocumentType;
     url?: string;
+    parent_document_id?: number | null;
     children?: DocumentItem[];
 }
 

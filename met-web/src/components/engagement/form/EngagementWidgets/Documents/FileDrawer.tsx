@@ -16,7 +16,7 @@ import { postDocument, patchDocument, PatchDocumentRequest } from 'services/widg
 import { DOCUMENT_TYPE } from 'models/document';
 import { If, Then, Else } from 'react-if';
 import { updatedDiff } from 'deep-object-diff';
-
+import { WidgetDrawerContext } from '../WidgetDrawerContext';
 const schema = yup
     .object({
         name: yup.string().max(50, 'Document name should not exceed 50 characters').required(),
@@ -31,9 +31,11 @@ const FileDrawer = () => {
     const dispatch = useAppDispatch();
     const { documentToEdit, documents, handleFileDrawerOpen, fileDrawerOpen, loadDocuments, widget } =
         useContext(DocumentsContext);
-
+    const { loadWidgets } = useContext(WidgetDrawerContext);
     const [isCreatingFile, setIsCreatingDocument] = useState(false);
-
+    const parentDocument = documents.find(
+        (document: DocumentItem) => document.id === documentToEdit?.parent_document_id,
+    );
     const methods = useForm<FileForm>({
         resolver: yupResolver(schema),
         defaultValues: {
@@ -48,7 +50,7 @@ const FileDrawer = () => {
     useEffect(() => {
         methods.setValue('name', documentToEdit?.title || '');
         methods.setValue('link', documentToEdit?.url || '');
-        methods.setValue('folderId', documentToEdit?.id || 0);
+        methods.setValue('folderId', documentToEdit?.parent_document_id || 0);
     }, [documentToEdit]);
 
     const handleClose = () => {
@@ -61,8 +63,8 @@ const FileDrawer = () => {
             return;
         }
         try {
+            setIsCreatingDocument(true);
             if (documentToEdit) {
-                setIsCreatingDocument(true);
                 const documentEditsToPatch = updatedDiff(documentToEdit, {
                     title: data.name,
                     parent_document_id: data.folderId === 0 ? null : data.folderId,
@@ -71,13 +73,9 @@ const FileDrawer = () => {
                     type: 'file',
                 }) as PatchDocumentRequest;
 
-                await patchDocument(documentToEdit.id, widget.id, {
+                await patchDocument(widget.id, documentToEdit.id, {
                     ...documentEditsToPatch,
                 });
-
-                await loadDocuments();
-                setIsCreatingDocument(false);
-                handleClose();
             } else {
                 setIsCreatingDocument(true);
                 await postDocument(widget.id, {
@@ -87,10 +85,11 @@ const FileDrawer = () => {
                     widget_id: widget.id,
                     type: 'file',
                 });
-                await loadDocuments();
-                setIsCreatingDocument(false);
-                handleClose();
             }
+            dispatch(openNotification({ severity: 'success', text: 'document was successfully updated' }));
+            await loadDocuments();
+            setIsCreatingDocument(false);
+            handleClose();
         } catch (err) {
             console.log(err);
             dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to save File' }));
@@ -175,10 +174,13 @@ const FileDrawer = () => {
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
+                                    defaultValue={parentDocument?.title}
                                     fullWidth
                                     size="small"
                                 >
-                                    <MenuItem key={`folder-option-0`} value={0} sx={{ height: '2em' }}></MenuItem>
+                                    <MenuItem key={`folder-option-0`} value={0} sx={{ height: '2em' }}>
+                                        none
+                                    </MenuItem>
                                     {documents
                                         .filter((document) => document.type === DOCUMENT_TYPE.FOLDER)
                                         .map((document) => {

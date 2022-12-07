@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid, IconButton, Stack, TextField, Typography } from '@mui/material';
 import { MetWidgetPaper } from 'components/common';
 import { DocumentItem } from 'models/document';
@@ -9,19 +9,42 @@ import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRig
 import DocumentSwitch from './DocumentSwitch';
 import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
-import { deleteDocument } from 'services/widgetService/DocumentService.tsx';
+import { deleteDocument, patchDocument, PatchDocumentRequest } from 'services/widgetService/DocumentService.tsx';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType, Widget } from 'models/widget';
 import { useContext } from 'react';
 import Edit from '@mui/icons-material/Edit';
 import { DocumentsContext } from './DocumentsContext';
+import { updatedDiff } from 'deep-object-diff';
+import { openNotification } from 'services/notificationService/notificationSlice';
 
 const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
     const dispatch = useAppDispatch();
+    const { documents, loadDocuments } = useContext(DocumentsContext);
     const { widgets, loadWidgets } = useContext(WidgetDrawerContext);
     const documentWidget = widgets.find((widget: Widget) => widget.widget_type_id === WidgetType.Document);
     const [edit, setEdit] = useState<boolean>(false);
     const [document, setDocument] = useState<DocumentItem>(documentItem);
+
+    useEffect(() => {
+        setDocument(documents.find((document: DocumentItem) => document.id === documentItem.id));
+    }, [documents]);
+
+    const updatedDocument = async () => {
+        setEdit(false);
+        if (document.title !== documentItem.title) {
+            const documentUpdatesToPatch = updatedDiff(documentItem, {
+                ...document,
+            }) as PatchDocumentRequest;
+            await patchDocument(documentWidget.id, document.id, {
+                ...documentUpdatesToPatch,
+            });
+
+            loadWidgets();
+            loadDocuments();
+            dispatch(openNotification({ severity: 'success', text: 'Document was successfully updated' }));
+        }
+    };
 
     return (
         <Grid item xs={12} container justifyContent={'flex-start'} spacing={2} mb={2}>
@@ -30,16 +53,18 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
                     <Grid item xs>
                         <Stack spacing={2} direction="row" alignItems="center">
                             <FolderIcon color="info" />
-                            <If condition={edit}>
+                            <If condition={!edit}>
                                 <Then>
-                                    <Typography onClick={() => setEdit(true)}>{documentItem.title}</Typography>
+                                    <Typography onClick={() => setEdit(true)}>{document.title}</Typography>
                                 </Then>
                                 <Else>
                                     <TextField
+                                        size="small"
                                         autoFocus
-                                        value={documentItem.title}
+                                        sx={{ p: 0, m: 0 }}
+                                        value={document.title}
                                         onChange={(event) => setDocument({ ...document, title: event.target.value })}
-                                        onBlur={(event) => setEdit(false)}
+                                        onBlur={(event) => updatedDocument()}
                                     />
                                 </Else>
                             </If>

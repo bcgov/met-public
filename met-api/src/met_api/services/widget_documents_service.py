@@ -52,6 +52,7 @@ class WidgetDocumentService:
             'title': doc.title,
             'sort_index': doc.sort_index,
             'url': doc.url,
+            'parent_document_id': doc.parent_document_id,
         }
         # remove null
         return {k: v for k, v in props.items() if v}
