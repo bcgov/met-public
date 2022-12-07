@@ -1,7 +1,10 @@
-
 """Service for user management."""
-from met_api.models.user import User
+from met_api.models.user import User as UserModel
+from met_api.services.keycloak import KeycloakService
 from met_api.schemas.user import UserSchema
+from met_api.utils.enums import UserType
+
+KEYCLOAK_SERVICE = KeycloakService()
 
 
 class UserService:
@@ -10,24 +13,39 @@ class UserService:
     @staticmethod
     def get_user_by_external_id(_external_id):
         """Get user by external id."""
-        user = UserSchema()
-        db_user = User.get_user_by_external_id(_external_id)
-        return user.dump(db_user)
+        user_schema = UserSchema()
+        db_user = UserModel.get_user_by_external_id(_external_id)
+        return user_schema.dump(db_user)
 
     def create_or_update_user(self, user: UserSchema):
         """Create or update a user."""
         self.validate_fields(user)
 
         external_id = user.get('external_id')
-        db_user = User.get_user_by_external_id(external_id)
+        db_user = UserModel.get_user_by_external_id(external_id)
         if db_user is None:
-            return User.create_user(user)
-        return User.update_user(db_user.id, user)
+            return UserModel.create_user(user)
+        return UserModel.update_user(db_user.id, user)
+
+    @staticmethod
+    def find_users(user_type=UserType.STAFF.value):
+        """Return a list of users."""
+        users = UserModel.find_users_by_acess_type(user_type)
+        user: UserModel
+        user_schema = UserSchema()
+        user_collection = []
+        for user in users:
+            groups = KEYCLOAK_SERVICE.get_user_groups(user.external_id)
+            user_detail = user_schema.dump(user)
+            user_detail['groups'] = groups
+            user_collection.append(user_detail)
+
+        return user_collection
 
     @staticmethod
     def get_or_create_user(email_address):
         """Get or create a user matching the email address."""
-        db_user = User.get_user_by_external_id(email_address)
+        db_user = UserModel.get_user_by_external_id(email_address)
         if db_user is not None:
             return db_user
 
@@ -39,11 +57,11 @@ class UserService:
             'contact_number': '',
             'external_id': email_address,
         }
-        user = User.create_user(new_user)
+        user = UserModel.create_user(new_user)
         if not user:
             raise ValueError('Error creating user')
 
-        db_user = User.get_user_by_external_id(email_address)
+        db_user = UserModel.get_user_by_external_id(email_address)
         return db_user
 
     @staticmethod
