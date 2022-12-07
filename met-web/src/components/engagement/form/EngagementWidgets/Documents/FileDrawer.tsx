@@ -13,7 +13,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { DocumentsContext } from './DocumentsContext';
 import ControlledSelect from 'components/common/ControlledInputComponents/ControlledSelect';
 import { postDocument, patchDocument, PatchDocumentRequest } from 'services/widgetService/DocumentService.tsx';
-import { DOCUMENT_TYPE } from 'models/document';
+import { DOCUMENT_TYPE, DocumentItem } from 'models/document';
 import { If, Then, Else } from 'react-if';
 import { updatedDiff } from 'deep-object-diff';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
