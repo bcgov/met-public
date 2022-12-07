@@ -24,6 +24,7 @@ class Role(Enum):
     # STAFF Based roles
     CREATE_TENANT = 'create_tenant'
     VIEW_TENANT = 'view_tenant'
+    VIEW_USERS = 'view_users'
     CREATE_ADMIN_USER = 'create_admin_user'
     CREATE_TEAM = 'create_team'
     CREATE_ENGAGEMENT = 'create_engagement'
