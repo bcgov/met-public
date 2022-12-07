@@ -11,9 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Tests for the Widget service.
+"""Tests for the document widget service.
 
-Test suite to ensure that the Widget service routines are working as expected.
+Test suite to ensure that the document widget service routines are working as expected.
 """
 
 from faker import Faker
@@ -51,7 +51,7 @@ def test_get_document_by_widget_id(session):  # pylint:disable=unused-argument
 
 
 def test_create_document(session):  # pylint:disable=unused-argument
-    """Assert that documents can be fetched."""
+    """Assert that documents can be created."""
     engagement = factory_engagement_model()
     TestWidgetInfo.widget1['engagement_id'] = engagement.id
     widget = factory_widget_model(TestWidgetInfo.widget1)
@@ -99,7 +99,7 @@ def test_patch_document(session):  # pylint:disable=unused-argument
 
 
 def test_delete_document(session):  # pylint:disable=unused-argument
-    """Assert that documents can be patched."""
+    """Assert that documents can be deleted."""
     engagement = factory_engagement_model()
     TestWidgetInfo.widget1['engagement_id'] = engagement.id
     widget = factory_widget_model(TestWidgetInfo.widget1)
@@ -114,4 +114,4 @@ def test_delete_document(session):  # pylint:disable=unused-argument
 
     # Assert that the deleted document is not longer available
     if (documents is None):
-        print('Record deleted successfully')
+        assert documents is None
