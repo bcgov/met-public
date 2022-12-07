@@ -19,11 +19,13 @@ from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
 
 from met_api.auth import auth
+from met_api.auth import jwt as _jwt
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services.engagement_service import EngagementService
 from met_api.utils.action_result import ActionResult
 from met_api.utils.token_info import TokenInfo
+from met_api.utils.roles import Role
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
@@ -89,8 +91,8 @@ class Engagements(Resource):
             return ActionResult.error(str(err))
 
     @staticmethod
-    # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
+    @_jwt.has_one_of_roles([Role.CREATE_ENGAGEMENT.value])
     @auth.require
     def post():
         """Create a new engagement."""
@@ -113,6 +115,7 @@ class Engagements(Resource):
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
+    @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
     @auth.require
     def put():
         """Update saved engagement."""
@@ -133,6 +136,7 @@ class Engagements(Resource):
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
+    @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
     @auth.require
     def patch():
         """Update saved engagement partially."""

@@ -28,7 +28,7 @@ from tests.utilities.factory_utils import factory_auth_header, factory_engagemen
 @pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey2])
 def test_create_survey(client, jwt, session, survey_info):  # pylint:disable=unused-argument
     """Assert that an survey can be POSTed."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
     rv = client.post('/api/surveys/', data=json.dumps(survey_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -39,7 +39,7 @@ def test_create_survey(client, jwt, session, survey_info):  # pylint:disable=unu
 @pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey2])
 def test_put_survey(client, jwt, session, survey_info):  # pylint:disable=unused-argument
     """Assert that an survey can be POSTed."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
     survey = factory_survey_model()
     survey_id = str(survey.id)
     new_survey_name = 'new_survey_name'

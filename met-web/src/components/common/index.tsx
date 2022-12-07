@@ -14,6 +14,9 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Palette } from 'styles/Theme';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { MET_Header_Font_Family, MET_Header_Font_Weight } from './constants';
+import { TreeItemProps } from '@mui/lab/TreeItem';
+import { SvgIconProps } from '@mui/material/SvgIcon';
+import { DocumentItem } from 'models/document';
 
 export const RoundedButton = styled(MuiButton)(() => ({
     borderRadius: '23px',
@@ -304,4 +307,22 @@ export const ModalSubtitle = ({
             {children}
         </Typography>
     );
+};
+
+export type DocumentTreeItemProps = TreeItemProps & {
+    labelIcon: React.ElementType<SvgIconProps>;
+    labelUrl: string | undefined;
+    nodeId: string;
+};
+
+export type DocumentTreeProps = TreeItemProps & {
+    documentItem: DocumentItem;
+};
+
+export type StyledTreeItemProps = TreeItemProps & {
+    bgColor?: string;
+    color?: string;
+    labelIcon: React.ElementType<SvgIconProps>;
+    labelInfo?: string;
+    labelText: string;
 };

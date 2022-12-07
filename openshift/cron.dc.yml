@@ -73,18 +73,18 @@ objects:
             - name: DATABASE_USERNAME
               valueFrom:
                 secretKeyRef:
-                  key: database-user
-                  name: ${DATABASE_HOST}
+                  key: analytics-username
+                  name: met-database-users
             - name: DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: ${DATABASE_HOST}
-                  key: database-password
+                  name: met-database-users
+                  key: analytics-password
             - name: DATABASE_NAME
               valueFrom:
                 secretKeyRef:
                   name: ${DATABASE_HOST}
-                  key: database-name
+                  key: app-db-name
             - name: DATABASE_HOST
               value: ${DATABASE_HOST}
             - name: DATABASE_PORT
@@ -92,22 +92,22 @@ objects:
             - name: MET_DATABASE_USERNAME
               valueFrom:
                 secretKeyRef:
-                  key: database-user
-                  name: ${MET_DATABASE_HOST}
+                  key: met-username
+                  name: met-database-users
             - name: MET_DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  key: database-password
-                  name: ${MET_DATABASE_HOST}
+                  key: met-password
+                  name: met-database-users
             - name: MET_DB_NAME
               valueFrom:
                 secretKeyRef:
-                  key: database-name
-                  name: ${MET_DATABASE_HOST}
+                  key: app-db-name
+                  name: ${DATABASE_HOST}
             - name: MET_DATABASE_HOST
-              value: ${MET_DATABASE_HOST}
+              value: ${DATABASE_HOST}
             - name: MET_DATABASE_PORT
-              value: ${MET_DATABASE_PORT}
+              value: ${DATABASE_PORT}
           envFrom:
             - configMapRef:
                 name: ${NAME}
@@ -202,20 +202,10 @@ parameters:
 - name: DATABASE_HOST
   description: "The analytics postgresql application name."
   required: true
-  value: postgresql-edw
+  value: met-patroni
 - name: DATABASE_PORT
   description: "The analytics postgresql application port."
   required: true
-  value: '5432'
-- name: DATABASE_NAME
-  description: "The database name used by the analytics service."
-  required: true
-  value: 'met-analytics'
-- name: MET_DATABASE_HOST
-  description: "The transactional postgresql application name."
-  value: 'postgresql-met'
-- name: MET_DATABASE_PORT
-  description: "The transactional postgresql application port."
   value: '5432'
 - name: CPU_REQUEST
   description: "The resources CPU request (in cores) for this build."
