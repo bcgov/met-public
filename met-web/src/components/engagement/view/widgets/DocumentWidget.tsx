@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { MetPaper, MetHeader2 } from 'components/common';
-import { Grid, Skeleton, Link, Stack, Box } from '@mui/material';
+import { Grid, Skeleton } from '@mui/material';
 import { Widget } from 'models/widget';
-import { DocumentItem, DOCUMENT_TYPE } from 'models/document';
+import { DocumentItem } from 'models/document';
 import { useAppDispatch } from 'hooks';
 import { fetchDocuments } from 'services/widgetService/DocumentService.tsx';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import DocumentTree from 'components/engagement/form/EngagementWidgets/Documents/TreeView';
-import { If, Then, Else } from 'react-if';
 
 interface DocumentWidgetProps {
     widget: Widget;
@@ -58,52 +55,7 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                 {documents.map((document: DocumentItem) => {
                     return (
                         <Grid key={document.id} container item spacing={1} rowSpacing={1} xs={12} paddingTop={2}>
-                            <If condition={document.type === DOCUMENT_TYPE.FOLDER}>
-                                <Then>
-                                    <DocumentTree nodeId={`${document.id}`} documentItem={document} />
-                                </Then>
-                                <Else>
-                                    <Grid item justifyContent="flex-start" container xs={12}>
-                                        <Stack
-                                            direction="row"
-                                            sx={{
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                            }}
-                                        >
-                                            <Box
-                                                component={DescriptionOutlinedIcon}
-                                                color="inherit"
-                                                sx={{ p: 0.3, mr: 1 }}
-                                            />
-                                            <Link
-                                                sx={{
-                                                    alignItems: 'center',
-                                                    display: 'flex',
-                                                    justifyContent: 'center',
-                                                }}
-                                                target="_blank"
-                                                href={`${document.url}`}
-                                            >
-                                                {document.title}
-                                            </Link>
-                                            <Link
-                                                sx={{
-                                                    alignItems: 'center',
-                                                    display: 'flex',
-                                                    justifyContent: 'center',
-                                                    p: 0,
-                                                    m: 0,
-                                                }}
-                                                target="_blank"
-                                                href={`${document.url}`}
-                                            >
-                                                <Box sx={{ p: 0.5, m: 0 }} component={OpenInNewIcon} color="inherit" />
-                                            </Link>
-                                        </Stack>
-                                    </Grid>
-                                </Else>
-                            </If>
+                            <DocumentTree nodeId={`${document.id}`} documentItem={document} />
                         </Grid>
                     );
                 })}
