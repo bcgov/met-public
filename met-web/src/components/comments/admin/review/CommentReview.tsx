@@ -142,15 +142,15 @@ const CommentReview = () => {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid container rowSpacing={2} xs={12} paddingTop={5}>
-                    <Grid item xs={12} spacing={2}>
+                <Grid container rowSpacing={2} paddingTop={5}>
+                    <Grid item xs={12}>
                         <Grid xs={12} item>
                             <MetHeader3>Comment(s)</MetHeader3>
                         </Grid>
                     </Grid>
-                    {submission.comments?.map((comment) => {
+                    {submission.comments?.map((comment, index) => {
                         return (
-                            <Grid item xs={12}>
+                            <Grid key={index} item xs={12}>
                                 <Divider />
                                 <Grid xs={12} item paddingTop={2}>
                                     <MetLabel>{comment.label ?? 'Label not available.'}</MetLabel>
