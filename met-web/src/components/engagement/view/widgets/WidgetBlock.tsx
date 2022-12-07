@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Box, Grid, Skeleton } from '@mui/material';
+import { Grid, Skeleton } from '@mui/material';
 import { ActionContext } from '../ActionContext';
 import { WidgetSwitch } from './WidgetSwitch';
 
