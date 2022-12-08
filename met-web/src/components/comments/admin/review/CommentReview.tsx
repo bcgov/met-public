@@ -10,6 +10,7 @@ import {
     Divider,
     Checkbox,
     TextField,
+    FormHelperText,
 } from '@mui/material';
 import { getSubmission, reviewComments } from 'services/submissionService';
 import { useAppDispatch } from 'hooks';
@@ -40,6 +41,7 @@ const CommentReview = () => {
     const [hasProfanity, setHasProfanity] = useState(false);
     const [hasThreat, setHasThreat] = useState(false);
     const [otherReason, setOtherReason] = useState('');
+    const [hasError, setHasError] = useState(false);
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -85,7 +87,19 @@ const CommentReview = () => {
         }
     };
 
+    const validate = () => {
+        if (review == CommentStatus.Rejected) {
+            // At least one reason is selected
+            return (hasOtherReason && otherReason) || hasPersonalInfo || hasProfanity || hasThreat;
+        }
+        return true;
+    };
     const handleSave = async () => {
+        const isValid = validate();
+        setHasError(!isValid);
+        if (!isValid) {
+            return;
+        }
         setIsSaving(true);
         try {
             await reviewComments({
@@ -273,6 +287,7 @@ const CommentReview = () => {
                                         disabled={!hasOtherReason}
                                         value={otherReason}
                                         sx={{ marginLeft: '2em' }}
+                                        FormHelperTextProps={{ error: true }}
                                         onChange={(event) => setOtherReason(event.target.value)}
                                     />
                                     <br />
@@ -293,6 +308,11 @@ const CommentReview = () => {
                                             />
                                         }
                                     />
+                                    <FormHelperText error={true}>
+                                        {hasError
+                                            ? 'Please enter at least one reason for rejecting the comment(s).'
+                                            : ''}
+                                    </FormHelperText>
                                 </FormControl>
                             </Grid>
                         </When>

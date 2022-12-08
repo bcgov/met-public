@@ -1,4 +1,4 @@
-"""add
+"""add reject reason
 
 Revision ID: ffac8f5b4288
 Revises: 2b12a6cd987a
