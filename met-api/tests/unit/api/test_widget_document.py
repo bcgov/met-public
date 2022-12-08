@@ -18,12 +18,15 @@ Test-Suite to ensure that the Widget endpoint is working as expected.
 """
 import json
 
+from faker import Faker
 import pytest
 
 from met_api.utils.enums import ContentType, DocumentType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestWidgetDocumentInfo, TestWidgetInfo
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_document_model, factory_engagement_model, factory_widget_model)
+
+fake = Faker()
 
 
 @pytest.mark.parametrize('document_info', [TestWidgetDocumentInfo.document1, TestWidgetDocumentInfo.document2])
@@ -129,3 +132,47 @@ def test_assert_tree_structure(client, jwt, session):  # pylint:disable=unused-a
     assert expected_file_element.get('id') == file_doc.id
     assert expected_file_element.get('title') == file_doc.title
     assert expected_file_element.get('type') == DocumentType.FILE.value
+
+
+def test_patch_documents(client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that a document can be PATCHed."""
+    engagement = factory_engagement_model()
+    TestWidgetInfo.widget1['engagement_id'] = engagement.id
+    widget = factory_widget_model(TestWidgetInfo.widget1)
+    TestWidgetDocumentInfo.document1['widget_id'] = widget.id
+    document = factory_document_model(TestWidgetDocumentInfo.document1)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+
+    document_edits = {
+        'title': fake.word(),
+        'url': None,
+    }
+
+    rv = client.patch(f'/api/widgets/{widget.id}/documents/{document.id}',
+                      data=json.dumps(document_edits),
+                      headers=headers, content_type=ContentType.JSON.value)
+
+    assert rv.status_code == 200
+
+    rv = client.get(
+        f'/api/widgets/{widget.id}/documents',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == 200
+    assert rv.json.get('result').get('children')[0].get('title') == document_edits.get('title')
+
+
+def test_delete_documents(client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that a document can be PATCHed."""
+    engagement = factory_engagement_model()
+    TestWidgetInfo.widget1['engagement_id'] = engagement.id
+    widget = factory_widget_model(TestWidgetInfo.widget1)
+    TestWidgetDocumentInfo.document1['widget_id'] = widget.id
+    document = factory_document_model(TestWidgetDocumentInfo.document1)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+
+    rv = client.delete(f'/api/widgets/{widget.id}/documents/{document.id}',
+                       headers=headers, content_type=ContentType.JSON.value)
+
+    assert rv.status_code == 200
