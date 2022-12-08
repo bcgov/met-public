@@ -39,11 +39,34 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
             await patchDocument(documentWidget.id, document.id, {
                 ...documentUpdatesToPatch,
             });
-
-            loadWidgets();
             loadDocuments();
             dispatch(openNotification({ severity: 'success', text: 'Document was successfully updated' }));
         }
+    };
+
+    const handleDeleteDocument = async () => {
+        /* tslint:disable */
+        deleteDocument(documentWidget.id, documentItem.id);
+        loadWidgets();
+    };
+
+    const callRemoveModal = () => {
+        dispatch(
+            openNotificationModal({
+                open: true,
+                data: {
+                    header: 'Remove Folder',
+                    subText: [
+                        'You will be removing this folder from the engagement.',
+                        'Do you want to remove this folder?',
+                    ],
+                    handleConfirm: () => {
+                        handleDeleteDocument();
+                    },
+                },
+                type: 'confirm',
+            }),
+        );
     };
 
     return (
@@ -63,8 +86,8 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
                                         autoFocus
                                         sx={{ p: 0, m: 0 }}
                                         value={document.title}
-                                        onChange={(event) => setDocument({ ...document, title: event.target.value })}
-                                        onBlur={(event) => updatedDocument()}
+                                        onChange={setDocument({ ...document, title: event.target.value })}
+                                        onBlur={updatedDocument}
                                     />
                                 </Else>
                             </If>
@@ -80,24 +103,7 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
                             <Edit />
                         </IconButton>
                         <IconButton
-                            onClick={() =>
-                                dispatch(
-                                    openNotificationModal({
-                                        open: true,
-                                        data: {
-                                            header: 'Remove Folder',
-                                            subText: [
-                                                'You will be removing this folder from the engagement.',
-                                                'Do you want to remove this folder?',
-                                            ],
-                                            handleConfirm: () => {
-                                                deleteDocument(documentWidget.id, documentItem.id), loadWidgets();
-                                            },
-                                        },
-                                        type: 'confirm',
-                                    }),
-                                )
-                            }
+                            onClick={callRemoveModal}
                             sx={{ padding: 0, margin: 0 }}
                             color="inherit"
                             aria-label="Remove Folder"

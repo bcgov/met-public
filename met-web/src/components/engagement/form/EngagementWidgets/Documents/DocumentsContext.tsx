@@ -15,7 +15,6 @@ export interface DocumentsContextProps {
     fileDrawerOpen: boolean;
     handleFileDrawerOpen: (_open: boolean) => void;
     widget: Widget | null;
-    clearSelected: () => void;
     handleChangeDocumentToEdit: (_document: DocumentItem | null) => void;
 }
 
@@ -30,9 +29,6 @@ export const DocumentsContext = createContext<DocumentsContextProps>({
     loadDocuments: () => Promise.resolve([]),
     fileDrawerOpen: false,
     handleFileDrawerOpen: (_open: boolean) => {
-        /* empty default method  */
-    },
-    clearSelected: () => {
         /* empty default method  */
     },
     handleChangeDocumentToEdit: () => {
@@ -72,11 +68,6 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
             setLoadingDocuments(false);
         }
     };
-
-    const clearSelected = () => {
-        setDocumentToEdit(null);
-    };
-
     const handleChangeDocumentToEdit = (document: DocumentItem | null) => {
         setDocumentToEdit(document);
     };
@@ -94,7 +85,6 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
     return (
         <DocumentsContext.Provider
             value={{
-                clearSelected,
                 handleChangeDocumentToEdit,
                 documentToEdit,
                 loadingDocuments,
