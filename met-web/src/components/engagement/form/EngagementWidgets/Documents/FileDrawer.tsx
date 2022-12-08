@@ -69,8 +69,6 @@ const FileDrawer = () => {
                     title: data.name,
                     parent_document_id: data.folderId === 0 ? null : data.folderId,
                     url: data.link,
-                    widget_id: widget.id,
-                    type: 'file',
                 }) as PatchDocumentRequest;
 
                 await patchDocument(widget.id, documentToEdit.id, {
@@ -86,7 +84,7 @@ const FileDrawer = () => {
                     type: 'file',
                 });
             }
-            dispatch(openNotification({ severity: 'success', text: 'document was successfully updated' }));
+            dispatch(openNotification({ severity: 'success', text: 'Document was successfully updated' }));
             await loadDocuments();
             setIsCreatingDocument(false);
             handleClose();

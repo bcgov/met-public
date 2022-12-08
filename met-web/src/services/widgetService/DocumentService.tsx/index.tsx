@@ -53,12 +53,9 @@ export const deleteDocument = async (widget_id: number, document_id: number): Pr
 };
 
 export interface PatchDocumentRequest {
-    id: number;
     title?: string;
-    type?: DocumentType;
     url?: string;
     parent_document_id?: number | null;
-    children?: DocumentItem[];
 }
 
 export const patchDocument = async (
@@ -78,7 +75,7 @@ export const patchDocument = async (
         if (response.data.status && response.data.result) {
             return Promise.resolve(response.data.result);
         }
-        return Promise.reject(response.data.message ?? 'Failed to update engagement');
+        return Promise.reject(response.data.message ?? 'Failed to update document');
     } catch (err) {
         return Promise.reject(err);
     }
