@@ -1,7 +1,7 @@
 """add reject reason
 
 Revision ID: ffac8f5b4288
-Revises: 2b12a6cd987a
+Revises: 46490dc02be5
 Create Date: 2022-12-07 12:11:33.172817
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = 'ffac8f5b4288'
-down_revision = '2b12a6cd987a'
+down_revision = '46490dc02be5'
 branch_labels = None
 depends_on = None
 
