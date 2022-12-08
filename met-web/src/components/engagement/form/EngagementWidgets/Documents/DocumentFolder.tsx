@@ -27,11 +27,17 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
     const [document, setDocument] = useState<DocumentItem>(documentItem);
 
     useEffect(() => {
+        if (!documents.find((document: DocumentItem) => document.id === documentItem.id)) {
+            return;
+        }
         setDocument(documents.find((document: DocumentItem) => document.id === documentItem.id));
     }, [documents]);
 
-    const updatedDocument = async () => {
+    const updateDocument = async () => {
         setEdit(false);
+        if (!documentWidget) {
+            return;
+        }
         if (document.title !== documentItem.title) {
             const documentUpdatesToPatch = updatedDiff(documentItem, {
                 ...document,
@@ -42,6 +48,14 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
             loadDocuments();
             dispatch(openNotification({ severity: 'success', text: 'Document was successfully updated' }));
         }
+    };
+
+    const handleDeleteDocument = async () => {
+        if (!documentWidget) {
+            return;
+        }
+        deleteDocument(documentWidget.id, documentItem.id);
+        loadWidgets();
     };
 
     return (
@@ -62,7 +76,7 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
                                         sx={{ p: 0, m: 0 }}
                                         value={document.title}
                                         onChange={(event) => setDocument({ ...document, title: event.target.value })}
-                                        onBlur={updatedDocument}
+                                        onBlur={updateDocument}
                                     />
                                 </Else>
                             </If>
@@ -89,7 +103,7 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
                                                 'Do you want to remove this folder?',
                                             ],
                                             handleConfirm: () => {
-                                                deleteDocument(documentWidget.id, documentItem.id), loadWidgets();
+                                                handleDeleteDocument();
                                             },
                                         },
                                         type: 'confirm',

@@ -57,20 +57,24 @@ const FileDrawer = () => {
     };
 
     const updateDocument = async (data: FileForm) => {
-        /* tslint:disable */
+        if (!(documentToEdit && widget)) {
+            return;
+        }
         const documentEditsToPatch = updatedDiff(documentToEdit, {
             title: data.name,
             parent_document_id: data.folderId === 0 ? null : data.folderId,
             url: data.link,
         }) as PatchDocumentRequest;
-        /* tslint:disable */
         await patchDocument(widget.id, documentToEdit.id, {
             ...documentEditsToPatch,
+            parent_document_id: data.folderId === 0 ? null : data.folderId,
         });
     };
 
     const createDocument = async (data: FileForm) => {
-        /* tslint:disable */
+        if (!widget) {
+            return;
+        }
         await postDocument(widget.id, {
             title: data.name,
             parent_document_id: data.folderId === 0 ? null : data.folderId,

@@ -24,7 +24,9 @@ const DocumentFile = ({ documentItem }: { documentItem: DocumentItem }) => {
     };
 
     const handleDeleteDocument = async () => {
-        /* tslint:disable */
+        if (!documentWidget) {
+            return;
+        }
         deleteDocument(documentWidget.id, documentItem.id);
         loadWidgets();
     };
