@@ -23,7 +23,7 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
     const { widgets, loadWidgets } = useContext(WidgetDrawerContext);
     const documentWidget = widgets.find((widget: Widget) => widget.widget_type_id === WidgetType.Document);
     const [edit, setEdit] = useState<boolean>(false);
-    const [document, setDocument] = useState(documentItem);
+    const [document, setDocument] = useState<DocumentItem | undefined>(documentItem);
 
     useEffect(() => {
         const updatedDocument = documents.find((document: DocumentItem) => document.id === documentItem.id);
@@ -76,7 +76,13 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
                                         autoFocus
                                         sx={{ p: 0, m: 0 }}
                                         value={document ? document.title : ''}
-                                        onChange={(event) => setDocument({ ...document, title: event.target.value })}
+                                        onChange={(event) =>
+                                            setDocument(
+                                                document
+                                                    ? { ...document, title: event.target.value }
+                                                    : { ...documentItem, title: event.target.value },
+                                            )
+                                        }
                                         onBlur={updateDocument}
                                     />
                                 </Else>
