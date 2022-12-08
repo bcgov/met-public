@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Grid, IconButton, Stack, Typography } from '@mui/material';
 import { MetWidgetPaper } from 'components/common';
 import { DocumentItem } from 'models/document';
@@ -9,7 +9,6 @@ import { openNotificationModal } from 'services/notificationModalService/notific
 import { deleteDocument } from 'services/widgetService/DocumentService.tsx';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType, Widget } from 'models/widget';
-import { useContext } from 'react';
 import Edit from '@mui/icons-material/Edit';
 import { DocumentsContext } from './DocumentsContext';
 
@@ -18,6 +17,17 @@ const DocumentFile = ({ documentItem }: { documentItem: DocumentItem }) => {
     const { handleFileDrawerOpen, handleChangeDocumentToEdit } = useContext(DocumentsContext);
     const { widgets, loadWidgets } = useContext(WidgetDrawerContext);
     const documentWidget = widgets.find((widget: Widget) => widget.widget_type_id === WidgetType.Document);
+
+    const handleEditDocument = () => {
+        handleChangeDocumentToEdit(documentItem);
+        handleFileDrawerOpen(true);
+    };
+
+    const handleDeleteDocument = async () => {
+        /* tslint:disable */
+        deleteDocument(documentWidget.id, documentItem.id);
+        loadWidgets();
+    };
 
     return (
         <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={2} mb={2}>
@@ -31,9 +41,7 @@ const DocumentFile = ({ documentItem }: { documentItem: DocumentItem }) => {
                     </Grid>
                     <Grid item xs container justifyContent={'flex-end'}>
                         <IconButton
-                            onClick={() => {
-                                handleChangeDocumentToEdit(documentItem), handleFileDrawerOpen(true);
-                            }}
+                            onClick={() => handleEditDocument()}
                             sx={{ padding: 0, mr: 1 }}
                             color="inherit"
                             aria-label="Edit Folder"
@@ -52,7 +60,7 @@ const DocumentFile = ({ documentItem }: { documentItem: DocumentItem }) => {
                                                 'Do you want to remove this file?',
                                             ],
                                             handleConfirm: () => {
-                                                deleteDocument(documentWidget.id, documentItem.id), loadWidgets();
+                                                handleDeleteDocument();
                                             },
                                         },
                                         type: 'confirm',

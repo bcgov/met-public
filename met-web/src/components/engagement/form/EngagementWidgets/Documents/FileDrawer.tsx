@@ -14,9 +14,8 @@ import { DocumentsContext } from './DocumentsContext';
 import ControlledSelect from 'components/common/ControlledInputComponents/ControlledSelect';
 import { postDocument, patchDocument, PatchDocumentRequest } from 'services/widgetService/DocumentService.tsx';
 import { DOCUMENT_TYPE, DocumentItem } from 'models/document';
-import { If, Then, Else } from 'react-if';
 import { updatedDiff } from 'deep-object-diff';
-import { WidgetDrawerContext } from '../WidgetDrawerContext';
+
 const schema = yup
     .object({
         name: yup.string().max(50, 'Document name should not exceed 50 characters').required(),
@@ -31,7 +30,6 @@ const FileDrawer = () => {
     const dispatch = useAppDispatch();
     const { documentToEdit, documents, handleFileDrawerOpen, fileDrawerOpen, loadDocuments, widget } =
         useContext(DocumentsContext);
-    const { loadWidgets } = useContext(WidgetDrawerContext);
     const [isCreatingFile, setIsCreatingDocument] = useState(false);
     const parentDocument = documents.find(
         (document: DocumentItem) => document.id === documentToEdit?.parent_document_id,
@@ -58,6 +56,30 @@ const FileDrawer = () => {
         handleFileDrawerOpen(false);
     };
 
+    const updateDocument = async (data: FileForm) => {
+        /* tslint:disable */
+        const documentEditsToPatch = updatedDiff(documentToEdit, {
+            title: data.name,
+            parent_document_id: data.folderId === 0 ? null : data.folderId,
+            url: data.link,
+        }) as PatchDocumentRequest;
+        /* tslint:disable */
+        await patchDocument(widget.id, documentToEdit.id, {
+            ...documentEditsToPatch,
+        });
+    };
+
+    const createDocument = async (data: FileForm) => {
+        /* tslint:disable */
+        await postDocument(widget.id, {
+            title: data.name,
+            parent_document_id: data.folderId === 0 ? null : data.folderId,
+            url: data.link,
+            widget_id: widget.id,
+            type: 'file',
+        });
+    };
+
     const onSubmit: SubmitHandler<FileForm> = async (data: FileForm) => {
         if (!widget) {
             return;
@@ -65,26 +87,16 @@ const FileDrawer = () => {
         try {
             setIsCreatingDocument(true);
             if (documentToEdit) {
-                const documentEditsToPatch = updatedDiff(documentToEdit, {
-                    title: data.name,
-                    parent_document_id: data.folderId === 0 ? null : data.folderId,
-                    url: data.link,
-                }) as PatchDocumentRequest;
-
-                await patchDocument(widget.id, documentToEdit.id, {
-                    ...documentEditsToPatch,
-                });
+                updateDocument(data);
             } else {
-                setIsCreatingDocument(true);
-                await postDocument(widget.id, {
-                    title: data.name,
-                    parent_document_id: data.folderId === 0 ? null : data.folderId,
-                    url: data.link,
-                    widget_id: widget.id,
-                    type: 'file',
-                });
+                createDocument(data);
             }
-            dispatch(openNotification({ severity: 'success', text: 'Document was successfully updated' }));
+            dispatch(
+                openNotification({
+                    severity: 'success',
+                    text: documentToEdit ? 'Document was successfully updated' : 'Document was sucessfully created',
+                }),
+            );
             await loadDocuments();
             setIsCreatingDocument(false);
             handleClose();
@@ -113,14 +125,7 @@ const FileDrawer = () => {
                         padding="2em"
                     >
                         <Grid item xs={12}>
-                            <If condition={!!documentToEdit}>
-                                <Then>
-                                    <MetHeader3 bold>Edit File</MetHeader3>
-                                </Then>
-                                <Else>
-                                    <MetHeader3 bold>Add File</MetHeader3>
-                                </Else>
-                            </If>
+                            <MetHeader3 bold>{documentToEdit ? 'Edit File' : 'Add File'}</MetHeader3>
                             <Divider sx={{ marginTop: '1em' }} />
                         </Grid>
 
@@ -177,7 +182,7 @@ const FileDrawer = () => {
                                     size="small"
                                 >
                                     <MenuItem key={`folder-option-0`} value={0} sx={{ height: '2em' }}>
-                                        none
+                                        <i>none</i>
                                     </MenuItem>
                                     {documents
                                         .filter((document) => document.type === DOCUMENT_TYPE.FOLDER)
