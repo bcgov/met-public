@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { MetPaper, MetBody, MetHeader4 } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
-import PersonIcon from '@mui/icons-material/Person';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetTabValues } from '../type';
 import { ActionContext } from '../../ActionContext';
@@ -10,6 +9,7 @@ import { useAppDispatch } from 'hooks';
 import { WidgetType } from 'models/widget';
 import { postWidget } from 'services/widgetService';
 import { Else, If, Then } from 'react-if';
+import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 
 const WhoIsListeningOptionCard = () => {
     const { savedEngagement } = useContext(ActionContext);
@@ -73,7 +73,7 @@ const WhoIsListeningOptionCard = () => {
                         spacing={1}
                     >
                         <Grid item>
-                            <PersonIcon sx={{ fontSize: '5em' }} />
+                            <PeopleAltOutlinedIcon sx={{ pl: '25px', fontSize: '5em' }} />
                         </Grid>
                         <Grid
                             container
@@ -85,10 +85,10 @@ const WhoIsListeningOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetHeader4>Who is Listening</MetHeader4>
+                                <MetHeader4 sx={{ pl: '10px' }}>Who is Listening</MetHeader4>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody>Add one or a few contacts to this engagement</MetBody>
+                                <MetBody sx={{ pl: '10px' }}>Add one or a few contacts to this engagement</MetBody>
                             </Grid>
                         </Grid>
                     </Grid>

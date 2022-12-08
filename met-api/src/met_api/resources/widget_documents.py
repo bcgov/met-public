@@ -54,3 +54,32 @@ class WidgetDocuments(Resource):
             return ActionResult.success(result=WidgetDocumentsSchema().dump(document))
         except BusinessException as err:
             return ActionResult.error(str(err))
+
+
+@cors_preflight('PATCH, DELETE')
+@API.route('/<document_id>')
+class WidgetDocumentsChanges(Resource):
+    """Resource for managing documents with documents widget."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def patch(widget_id, document_id):
+        """Update saved documents."""
+        request_json = request.get_json()
+        try:
+            document = WidgetDocumentService.edit_document(widget_id, document_id, request_json)
+            return ActionResult.success(result=WidgetDocumentsSchema().dump(document))
+        except BusinessException as err:
+            return ActionResult.error(str(err))
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def delete(widget_id, document_id):
+        """Remove folder from a document widget."""
+        try:
+            WidgetDocumentService().delete_document(widget_id, document_id)
+            return ActionResult.success(widget_id, 'Document successfully removed')
+        except (KeyError, ValueError) as err:
+            return ActionResult.error(str(err))

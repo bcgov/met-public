@@ -11,27 +11,25 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Enum definitions."""
+"""Role definitions."""
 from enum import Enum
 
 
-class ContentType(Enum):
-    """Http Content Types."""
+class Role(Enum):
+    """User Role."""
 
-    JSON = 'application/json'
-    FORM_URL_ENCODED = 'application/x-www-form-urlencoded'
-    PDF = 'application/pdf'
-
-
-class DocumentType(Enum):
-    """Document Types."""
-
-    FILE = 'file'
-    FOLDER = 'folder'
-
-
-class UserType(Enum):
-    """User Types."""
-
-    STAFF = 'staff'
     PUBLIC_USER = 'public_user'
+    ANONYMOUS_USER = 'anonymous_user'
+
+    # STAFF Based roles
+    CREATE_TENANT = 'create_tenant'
+    VIEW_TENANT = 'view_tenant'
+    VIEW_USERS = 'view_users'
+    CREATE_ADMIN_USER = 'create_admin_user'
+    CREATE_TEAM = 'create_team'
+    CREATE_ENGAGEMENT = 'create_engagement'
+    CREATE_SURVEY = 'create_survey'
+    PUBLISH_ENGAGEMENT = 'publish_engagement'
+    VIEW_ENGAGEMENT = 'view_engagement'
+    EDIT_ENGAGEMENT = 'edit_engagement'
+    REVIEW_COMMENTS = 'review_comments'

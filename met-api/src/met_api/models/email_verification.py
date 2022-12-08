@@ -19,7 +19,7 @@ class EmailVerification(db.Model):  # pylint: disable=too-few-public-methods
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     verification_token = db.Column(db.String(50), nullable=False)
-    user_id = db.Column(db.Integer, ForeignKey('user.id'), nullable=True)
+    user_id = db.Column(db.Integer, ForeignKey('met_users.id'), nullable=True)
     is_active = db.Column(db.Boolean, nullable=False)
     survey_id = db.Column(db.Integer, ForeignKey('survey.id'), nullable=True)
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
