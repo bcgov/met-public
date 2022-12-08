@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Grid, IconButton, Stack, TextField, Typography } from '@mui/material';
 import { MetWidgetPaper } from 'components/common';
 import { DocumentItem } from 'models/document';
@@ -12,7 +12,6 @@ import { openNotificationModal } from 'services/notificationModalService/notific
 import { deleteDocument, patchDocument, PatchDocumentRequest } from 'services/widgetService/DocumentService.tsx';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType, Widget } from 'models/widget';
-import { useContext } from 'react';
 import Edit from '@mui/icons-material/Edit';
 import { DocumentsContext } from './DocumentsContext';
 import { updatedDiff } from 'deep-object-diff';
@@ -24,18 +23,17 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
     const { widgets, loadWidgets } = useContext(WidgetDrawerContext);
     const documentWidget = widgets.find((widget: Widget) => widget.widget_type_id === WidgetType.Document);
     const [edit, setEdit] = useState<boolean>(false);
-    const [document, setDocument] = useState<DocumentItem>(documentItem);
+    const [document, setDocument] = useState(documentItem);
 
     useEffect(() => {
-        if (!documents.find((document: DocumentItem) => document.id === documentItem.id)) {
-            return;
-        }
-        setDocument(documents.find((document: DocumentItem) => document.id === documentItem.id));
+        const updatedDocument = documents.find((document: DocumentItem) => document.id === documentItem.id);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        setDocument(updatedDocument);
     }, [documents]);
 
     const updateDocument = async () => {
         setEdit(false);
-        if (!documentWidget) {
+        if (!documentWidget || !document) {
             return;
         }
         if (document.title !== documentItem.title) {
@@ -67,14 +65,16 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
                             <FolderIcon color="info" />
                             <If condition={!edit}>
                                 <Then>
-                                    <Typography onClick={() => setEdit(true)}>{document.title}</Typography>
+                                    <Typography onClick={() => setEdit(true)}>
+                                        {document ? document.title : ''}
+                                    </Typography>
                                 </Then>
                                 <Else>
                                     <TextField
                                         size="small"
                                         autoFocus
                                         sx={{ p: 0, m: 0 }}
-                                        value={document.title}
+                                        value={document ? document.title : ''}
                                         onChange={(event) => setDocument({ ...document, title: event.target.value })}
                                         onBlur={updateDocument}
                                     />

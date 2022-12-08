@@ -15,7 +15,7 @@ import ControlledSelect from 'components/common/ControlledInputComponents/Contro
 import { postDocument, patchDocument, PatchDocumentRequest } from 'services/widgetService/DocumentService.tsx';
 import { DOCUMENT_TYPE, DocumentItem } from 'models/document';
 import { updatedDiff } from 'deep-object-diff';
-
+import { WidgetDrawerContext } from '../WidgetDrawerContext';
 const schema = yup
     .object({
         name: yup.string().max(50, 'Document name should not exceed 50 characters').required(),
@@ -28,9 +28,9 @@ type FileForm = yup.TypeOf<typeof schema>;
 
 const FileDrawer = () => {
     const dispatch = useAppDispatch();
-    const { documentToEdit, documents, handleFileDrawerOpen, fileDrawerOpen, loadDocuments, widget } =
-        useContext(DocumentsContext);
+    const { documentToEdit, documents, handleFileDrawerOpen, fileDrawerOpen, widget } = useContext(DocumentsContext);
     const [isCreatingFile, setIsCreatingDocument] = useState(false);
+    const { loadWidgets } = useContext(WidgetDrawerContext);
     const parentDocument = documents.find(
         (document: DocumentItem) => document.id === documentToEdit?.parent_document_id,
     );
@@ -101,7 +101,7 @@ const FileDrawer = () => {
                     text: documentToEdit ? 'Document was successfully updated' : 'Document was sucessfully created',
                 }),
             );
-            await loadDocuments();
+            await loadWidgets();
             setIsCreatingDocument(false);
             handleClose();
         } catch (err) {
