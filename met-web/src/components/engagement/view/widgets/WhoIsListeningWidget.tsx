@@ -2,17 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { MetPaper, MetHeader2, MetHeader3, MetBody, MetSmallText } from 'components/common';
 import { Grid, Avatar, Link, Skeleton } from '@mui/material';
 import { Widget } from 'models/widget';
-import { getContact } from 'services/contactService';
 import { Contact } from 'models/contact';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { When } from 'react-if';
+import { useLazyGetContactQuery } from 'apiManager/apiSlices/contacts';
 
 interface WhoIsListeningWidgetProps {
     widget: Widget;
 }
 const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
     const dispatch = useAppDispatch();
+    const [getContactTrigger] = useLazyGetContactQuery();
 
     const [isLoading, setIsLoading] = useState(true);
     const [contacts, setContacts] = useState<Contact[]>([]);
@@ -21,7 +22,8 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
         try {
             const contacts = await Promise.all(
                 widget.items.map((widgetItem) => {
-                    return getContact(widgetItem.widget_data_id);
+                    const contact = getContactTrigger(widgetItem.widget_data_id, true).unwrap();
+                    return contact;
                 }),
             );
 

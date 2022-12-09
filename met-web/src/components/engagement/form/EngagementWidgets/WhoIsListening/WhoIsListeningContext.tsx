@@ -4,6 +4,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { ActionContext } from '../../ActionContext';
 import { getContacts } from 'services/contactService';
 import { Contact } from 'models/contact';
+import { useLazyGetContactsQuery } from 'apiManager/apiSlices/contacts';
 
 export interface WhoIsListeningContextProps {
     contactToEdit: Contact | null;
@@ -43,7 +44,9 @@ export const WhoIsListeningContext = createContext<WhoIsListeningContextProps>({
 
 export const WhoIsListeningProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     const { savedEngagement } = useContext(ActionContext);
+    const [getContactsTrigger] = useLazyGetContactsQuery();
     const dispatch = useAppDispatch();
+
     const [contactToEdit, setContactToEdit] = useState<Contact | null>(null);
     const [addContactDrawerOpen, setAddContactDrawerOpen] = useState(false);
     const [contacts, setContacts] = useState<Contact[]>([]);
@@ -57,7 +60,7 @@ export const WhoIsListeningProvider = ({ children }: { children: JSX.Element | J
                 return Promise.resolve([]);
             }
             setLoadingContacts(true);
-            const loadedContacts = await getContacts();
+            const loadedContacts = await getContactsTrigger(undefined, false).unwrap();
             setContacts(loadedContacts);
             setLoadingContacts(false);
             return loadedContacts;

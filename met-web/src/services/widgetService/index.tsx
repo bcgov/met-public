@@ -3,6 +3,9 @@ import Endpoints from 'apiManager/endpoints';
 import { replaceUrl, replaceAllInURL } from 'helper';
 import { WidgetItem, Widget } from 'models/widget';
 
+/**
+ * @deprecated The method was replaced by Redux RTK query to have caching behaviour
+ */
 export const getWidgets = async (engagement_id: number): Promise<Widget[]> => {
     const url = replaceUrl(Endpoints.Widgets.GET_LIST, 'engagement_id', String(engagement_id));
     const responseData = await http.GetRequest<Widget[]>(url);
