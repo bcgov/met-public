@@ -3,12 +3,14 @@ import { Grid } from '@mui/material';
 import { MetHeader4, MetParagraph } from 'components/common';
 import { PhaseBox } from '../PhaseBox';
 import { ReadMoreBox } from '../ReadMoreBox';
+import { ProcessStageProps } from '../PhasesWidgetMobile';
 
-export const EarlyEngagement = () => {
+export const EarlyEngagement = ({ mobile }: ProcessStageProps) => {
     return (
         <PhaseBox
             title="Early Engagement"
             backgroundColor="#54858D"
+            mobile={mobile}
             readMoreBox={
                 <ReadMoreBox backgroundColor="#D1D9DD" sx={{ border: '3px solid #54858D', margin: 0 }}>
                     <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2}>

@@ -4,11 +4,16 @@ import { MetHeader4, MetParagraph } from 'components/common';
 import { PhaseBox } from '../PhaseBox';
 import { ReadMoreBox } from '../ReadMoreBox';
 
-export const ProcessPlanning = () => {
+interface ProcessStageProps {
+    mobile?: boolean;
+}
+
+export const ProcessPlanning = ({ mobile }: ProcessStageProps) => {
     return (
         <PhaseBox
             title="Process Planning"
             backgroundColor="#043673"
+            mobile={mobile}
             readMoreBox={
                 <ReadMoreBox backgroundColor="#C8CAD6" sx={{ border: '3px solid #043673', margin: 0 }}>
                     <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2}>

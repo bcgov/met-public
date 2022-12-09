@@ -12,6 +12,7 @@ import { RouteState } from './types';
 import WidgetBlock from './widgets/WidgetBlock';
 import { Else, If, Then } from 'react-if';
 import { PhasesWidget } from './widgets/PhasesWidget';
+import { PhasesWidgetMobile } from './widgets/PhasesWidget/PhasesWidgetMobile';
 
 export const EngagementView = () => {
     const { state } = useLocation() as RouteState;
@@ -21,6 +22,7 @@ export const EngagementView = () => {
     const isPreview = isLoggedIn;
     const { savedEngagement } = useContext(ActionContext);
     const surveyId = savedEngagement.surveys[0]?.id || '';
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const navigate = useNavigate();
     //Clear state on window refresh
     window.history.replaceState({}, document.title);
@@ -64,7 +66,14 @@ export const EngagementView = () => {
                     spacing={2}
                 >
                     <Grid item xs={12}>
-                        <PhasesWidget />
+                        <If condition={isSmallScreen}>
+                            <Then>
+                                <PhasesWidgetMobile />
+                            </Then>
+                            <Else>
+                                <PhasesWidget />
+                            </Else>
+                        </If>
                     </Grid>
                     <If condition={isMediumScreen}>
                         <Then>

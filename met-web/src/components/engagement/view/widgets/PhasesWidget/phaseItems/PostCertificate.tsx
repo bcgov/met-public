@@ -3,12 +3,14 @@ import { Grid } from '@mui/material';
 import { MetHeader4, MetParagraph } from 'components/common';
 import { PhaseBox } from '../PhaseBox';
 import { ReadMoreBox } from '../ReadMoreBox';
+import { ProcessStageProps } from '../PhasesWidgetMobile';
 
-export const PostCertificate = () => {
+export const PostCertificate = ({ mobile }: ProcessStageProps) => {
     return (
         <PhaseBox
             title="Post-Certificate"
             backgroundColor="#A6BB2E"
+            mobile={mobile}
             readMoreBox={
                 <ReadMoreBox backgroundColor="#EDF2D4" sx={{ border: '3px solid #A6BB2E', margin: 0 }}>
                     <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2}>

@@ -3,12 +3,14 @@ import { Grid } from '@mui/material';
 import { MetHeader4, MetParagraph } from 'components/common';
 import { PhaseBox } from '../PhaseBox';
 import { ReadMoreBox } from '../ReadMoreBox';
+import { ProcessStageProps } from '../PhasesWidgetMobile';
 
-export const Decision = () => {
+export const Decision = ({ mobile }: ProcessStageProps) => {
     return (
         <PhaseBox
             title="Decision"
             backgroundColor="#6A54A3"
+            mobile={mobile}
             readMoreBox={
                 <ReadMoreBox backgroundColor="#D6D1E7" sx={{ border: '3px solid #6A54A3', margin: 0 }}>
                     <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2}>
