@@ -60,6 +60,7 @@ const FileDrawer = () => {
         if (!(documentToEdit && widget)) {
             return;
         }
+        setIsCreatingDocument(true);
         const documentEditsToPatch = updatedDiff(documentToEdit, {
             title: data.name,
             parent_document_id: data.folderId === 0 ? null : data.folderId,
@@ -67,14 +68,23 @@ const FileDrawer = () => {
         }) as PatchDocumentRequest;
         await patchDocument(widget.id, documentToEdit.id, {
             ...documentEditsToPatch,
-            parent_document_id: data.folderId === 0 ? null : data.folderId,
         });
+        dispatch(
+            openNotification({
+                severity: 'success',
+                text: 'Document was successfully updated',
+            }),
+        );
+        await loadWidgets();
+        setIsCreatingDocument(false);
+        handleClose();
     };
 
     const createDocument = async (data: FileForm) => {
         if (!widget) {
             return;
         }
+        setIsCreatingDocument(true);
         await postDocument(widget.id, {
             title: data.name,
             parent_document_id: data.folderId === 0 ? null : data.folderId,
@@ -82,6 +92,15 @@ const FileDrawer = () => {
             widget_id: widget.id,
             type: 'file',
         });
+        dispatch(
+            openNotification({
+                severity: 'success',
+                text: 'Document was successfully created',
+            }),
+        );
+        await loadWidgets();
+        setIsCreatingDocument(false);
+        handleClose();
     };
 
     const onSubmit: SubmitHandler<FileForm> = async (data: FileForm) => {
@@ -89,21 +108,10 @@ const FileDrawer = () => {
             return;
         }
         try {
-            setIsCreatingDocument(true);
             if (documentToEdit) {
-                updateDocument(data);
-            } else {
-                createDocument(data);
+                return updateDocument(data);
             }
-            dispatch(
-                openNotification({
-                    severity: 'success',
-                    text: documentToEdit ? 'Document was successfully updated' : 'Document was sucessfully created',
-                }),
-            );
-            await loadWidgets();
-            setIsCreatingDocument(false);
-            handleClose();
+            return createDocument(data);
         } catch (err) {
             console.log(err);
             dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to save File' }));
@@ -185,8 +193,12 @@ const FileDrawer = () => {
                                     fullWidth
                                     size="small"
                                 >
-                                    <MenuItem key={`folder-option-0`} value={0} sx={{ height: '2em' }}>
-                                        <i>none</i>
+                                    <MenuItem
+                                        key={`folder-option-0`}
+                                        value={0}
+                                        sx={{ fontStyle: 'italic', height: '2em' }}
+                                    >
+                                        none
                                     </MenuItem>
                                     {documents
                                         .filter((document) => document.type === DOCUMENT_TYPE.FOLDER)

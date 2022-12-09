@@ -27,8 +27,6 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
 
     useEffect(() => {
         const updatedDocument = documents.find((document: DocumentItem) => document.id === documentItem.id);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // ts-ignore:
         setDocument(updatedDocument);
     }, [documents]);
 
