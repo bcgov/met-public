@@ -60,6 +60,8 @@ const FileDrawer = () => {
         if (!(documentToEdit && widget)) {
             return;
         }
+        console.log(data);
+        console.log(documentToEdit);
         setIsCreatingDocument(true);
         const documentEditsToPatch = updatedDiff(documentToEdit, {
             title: data.name,
@@ -103,15 +105,19 @@ const FileDrawer = () => {
         handleClose();
     };
 
+    const saveDocument = async (data: FileForm) => {
+        if (documentToEdit) {
+            return await updateDocument(data);
+        }
+        return await createDocument(data);
+    };
+
     const onSubmit: SubmitHandler<FileForm> = async (data: FileForm) => {
         if (!widget) {
             return;
         }
         try {
-            if (documentToEdit) {
-                return updateDocument(data);
-            }
-            return createDocument(data);
+            return await saveDocument(data);
         } catch (err) {
             console.log(err);
             dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to save File' }));
@@ -200,6 +206,7 @@ const FileDrawer = () => {
                                     >
                                         none
                                     </MenuItem>
+                                    {console.log(documents)}
                                     {documents
                                         .filter((document) => document.type === DOCUMENT_TYPE.FOLDER)
                                         .map((document) => {
