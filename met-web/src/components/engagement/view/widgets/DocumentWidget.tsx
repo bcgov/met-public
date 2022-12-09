@@ -6,7 +6,6 @@ import { DocumentItem } from 'models/document';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import DocumentTree from 'components/engagement/form/EngagementWidgets/Documents/TreeView';
-import { If, Then, Else } from 'react-if';
 import { useLazyGetDocumentsQuery } from 'apiManager/apiSlices/documents';
 
 interface DocumentWidgetProps {

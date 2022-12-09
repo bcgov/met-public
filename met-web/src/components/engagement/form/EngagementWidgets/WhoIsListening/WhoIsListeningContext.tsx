@@ -2,7 +2,6 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { ActionContext } from '../../ActionContext';
-import { getContacts } from 'services/contactService';
 import { Contact } from 'models/contact';
 import { useLazyGetContactsQuery } from 'apiManager/apiSlices/contacts';
 
