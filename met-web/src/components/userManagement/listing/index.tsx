@@ -48,7 +48,7 @@ const UserManagementListing = () => {
             dispatch(
                 openNotification({
                     severity: 'error',
-                    text: 'Error occurred while trying to fetch engagements, please refresh the page or try again at a later time',
+                    text: 'Error occurred while trying to fetch users, please refresh the page or try again at a later time',
                 }),
             );
             setTableLoading(false);
