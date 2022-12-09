@@ -39,7 +39,8 @@ describe('Phases widget tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
-    const getEngagementMock = jest.spyOn(engagementService, 'getEngagement')
+    const getEngagementMock = jest
+        .spyOn(engagementService, 'getEngagement')
         .mockReturnValue(Promise.resolve(engagement));
 
     beforeEach(() => {

@@ -95,9 +95,7 @@ describe('Engagement form page tests', () => {
     const postEngagementMock = jest
         .spyOn(engagementService, 'postEngagement')
         .mockReturnValue(Promise.resolve(engagement));
-    const getWidgetsMock = jest
-        .spyOn(widgetService, 'getWidgets')
-        .mockReturnValue(Promise.resolve([]));
+    const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([]));
 
     beforeEach(() => {
         setupEnv();

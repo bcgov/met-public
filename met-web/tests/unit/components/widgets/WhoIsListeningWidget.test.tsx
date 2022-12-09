@@ -68,8 +68,7 @@ describe('Who is Listening widget  tests', () => {
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
         .mockReturnValue(Promise.resolve(engagement));
-    const getContactsMock = jest.spyOn(contactService, 'getContacts')
-        .mockReturnValue(Promise.resolve([mockContact]));
+    const getContactsMock = jest.spyOn(contactService, 'getContacts').mockReturnValue(Promise.resolve([mockContact]));
     const getWidgetsMock = jest
         .spyOn(widgetService, 'getWidgets')
         .mockReturnValue(Promise.resolve([whoIsListeningWidget]));
@@ -80,7 +79,7 @@ describe('Who is Listening widget  tests', () => {
     beforeEach(() => {
         setupEnv();
     });
-   
+
     async function addWhosIsListeningWidget(container: HTMLElement) {
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
