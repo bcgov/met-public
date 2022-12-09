@@ -1,7 +1,7 @@
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import React, { ReactNode } from 'react';
 import '@testing-library/jest-dom';
-import { setupEnv } from './setEnvVars';
+import { setupEnv } from '../setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as feedbackService from 'services/feedbackService/index';
 import * as notificationSlice from 'services/notificationService/notificationSlice';

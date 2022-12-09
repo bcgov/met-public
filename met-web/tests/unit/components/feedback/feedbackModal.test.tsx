@@ -4,7 +4,7 @@ import * as reactRedux from 'react-redux';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
 import * as feedbackService from 'services/feedbackService';
 import '@testing-library/jest-dom';
-import { setupEnv } from './setEnvVars';
+import { setupEnv } from '../setEnvVars';
 import { FeedbackModal } from 'components/common/Modals/Feedback';
 import { CommentTypeEnum, SourceTypeEnum } from 'models/feedback';
 
