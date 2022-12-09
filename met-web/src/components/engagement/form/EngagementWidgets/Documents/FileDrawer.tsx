@@ -60,8 +60,6 @@ const FileDrawer = () => {
         if (!(documentToEdit && widget)) {
             return;
         }
-        console.log(data);
-        console.log(documentToEdit);
         setIsCreatingDocument(true);
         const documentEditsToPatch = updatedDiff(documentToEdit, {
             title: data.name,
@@ -206,7 +204,6 @@ const FileDrawer = () => {
                                     >
                                         none
                                     </MenuItem>
-                                    {console.log(documents)}
                                     {documents
                                         .filter((document) => document.type === DOCUMENT_TYPE.FOLDER)
                                         .map((document) => {
