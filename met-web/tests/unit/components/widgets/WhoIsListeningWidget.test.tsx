@@ -68,7 +68,8 @@ describe('Who is Listening widget  tests', () => {
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
         .mockReturnValue(Promise.resolve(engagement));
-    const getContactsMock = jest.spyOn(contactService, 'getContacts').mockReturnValue(Promise.resolve([mockContact]));
+    const getContactsMock = jest.spyOn(contactService, 'getContacts')
+        .mockReturnValue(Promise.resolve([mockContact]));
     const getWidgetsMock = jest
         .spyOn(widgetService, 'getWidgets')
         .mockReturnValue(Promise.resolve([whoIsListeningWidget]));
@@ -80,19 +81,7 @@ describe('Who is Listening widget  tests', () => {
         setupEnv();
     });
    
-    test('Who is listening widget is created when option is clicked', async () => {
-        useParamsMock.mockReturnValue({ engagementId: '1' });
-        getEngagementMock.mockReturnValueOnce(
-            Promise.resolve({
-                ...engagement,
-                surveys: surveys,
-            }),
-        );
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
-        postWidgetMock.mockReturnValue(Promise.resolve(whoIsListeningWidget));
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
-        const { container } = render(<EngagementForm />);
-
+    async function addWhosIsListeningWidget(container: HTMLElement) {
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
@@ -111,6 +100,23 @@ describe('Who is Listening widget  tests', () => {
         await waitFor(() => {
             expect(screen.getByText('Add This Contact')).toBeVisible();
         });
+    }
+
+    test('Who is listening widget is created when option is clicked', async () => {
+        useParamsMock.mockReturnValue({ engagementId: '1' });
+        getEngagementMock.mockReturnValueOnce(
+            Promise.resolve({
+                ...engagement,
+                surveys: surveys,
+            }),
+        );
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
+        postWidgetMock.mockReturnValue(Promise.resolve(whoIsListeningWidget));
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
+        const { container } = render(<EngagementForm />);
+
+        await addWhosIsListeningWidget(container);
+
         expect(postWidgetMock).toHaveBeenNthCalledWith(1, engagement.id, {
             widget_type_id: WidgetType.WhoIsListening,
             engagement_id: engagement.id,
@@ -133,20 +139,7 @@ describe('Who is Listening widget  tests', () => {
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
         const { container } = render(<EngagementForm />);
 
-        await waitFor(() => {
-            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-        });
-
-        const addWidgetButton = screen.getByText('Add Widget');
-        fireEvent.click(addWidgetButton);
-
-        await waitFor(() => {
-            expect(screen.getByText('Select Widget')).toBeVisible();
-        });
-
-        const whoIsListeningOption = screen.getByTestId(`widget-drawer-option/${WidgetType.WhoIsListening}`);
-        fireEvent.click(whoIsListeningOption);
+        await addWhosIsListeningWidget(container);
 
         await waitFor(() => {
             expect(screen.getByText('Create New Contact')).toBeVisible();
