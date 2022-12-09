@@ -37,9 +37,8 @@ const UserManagementListing = () => {
     const loadUsers = async () => {
         try {
             setTableLoading(true);
-            await UserService.getUserList().then((response: any) => {
-                setUsers(response.data.map((data: any) => data));
-            });
+            const response = await UserService.getUserList();
+            setUsers(JSON.parse(JSON.stringify(response)).data);
             setPageInfo({
                 total: 0,
             });

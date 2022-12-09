@@ -122,7 +122,7 @@ const updateUser = async () => {
 
 const getUserList = async () => {
     try {
-        return await http.GetRequest<User[]>(Endpoints.User.GET_LIST);
+        return await http.GetRequest(Endpoints.User.GET_LIST);
     } catch (e: unknown) {
         console.error(e);
         return Promise.reject(e);
