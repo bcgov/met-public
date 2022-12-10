@@ -52,8 +52,10 @@ class WidgetDocuments(BaseModel):  # pylint: disable=too-few-public-methods
 
         Using an 'or' condition to handle nested deletion of files within the folder.
         """
-        db.session.query(WidgetDocuments) \
+        query = db.session.query(WidgetDocuments) \
             .filter(WidgetDocuments.widget_id == widget_id,
-                    sa.or_(WidgetDocuments.id == document_id, WidgetDocuments.parent_document_id == document_id)) \
-            .delete()
+                    sa.or_(WidgetDocuments.id == document_id, WidgetDocuments.parent_document_id == document_id))
+        widgetDocument = query.first()
+        query.delete()
         db.session.commit()
+        return widgetDocument
