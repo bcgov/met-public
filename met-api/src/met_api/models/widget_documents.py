@@ -55,7 +55,7 @@ class WidgetDocuments(BaseModel):  # pylint: disable=too-few-public-methods
         query = db.session.query(WidgetDocuments) \
             .filter(WidgetDocuments.widget_id == widget_id,
                     sa.or_(WidgetDocuments.id == document_id, WidgetDocuments.parent_document_id == document_id))
-        widgetDocument = query.first()
+        widget_document = query.first()
         query.delete()
         db.session.commit()
-        return widgetDocument
+        return widget_document
