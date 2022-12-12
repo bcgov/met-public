@@ -27,7 +27,6 @@ const CreateFolderForm = () => {
         setFormError({
             name: !folderName || folderName.length > 50,
         });
-        console.log(formError);
         return Object.values(formError).some((errorExists) => errorExists);
     };
 
