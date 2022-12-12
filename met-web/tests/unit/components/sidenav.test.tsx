@@ -6,7 +6,7 @@ import ProviderShell from './ProviderShell';
 import { setupEnv } from './setEnvVars';
 import { Routes } from '../../../src/components/layout/SideNav/SideNavElements';
 
-const drawerWidth = 240;
+const drawerWidth = 280;
 
 test('Load SideNav', async () => {
     setupEnv();

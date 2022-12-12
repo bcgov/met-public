@@ -51,7 +51,7 @@ const DrawerBox = () => {
     );
 };
 
-const SideNav = ({ open, isMediumScreen, drawerWidth = 240 }: SideNavProps) => {
+const SideNav = ({ open, isMediumScreen, drawerWidth = 280 }: SideNavProps) => {
     return (
         <>
             {isMediumScreen ? (
