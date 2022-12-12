@@ -35,16 +35,16 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
         if (!documentWidget || !document) {
             return;
         }
-        if (document.title !== documentItem.title) {
-            const documentUpdatesToPatch = updatedDiff(documentItem, {
-                ...document,
-            }) as PatchDocumentRequest;
+        const documentUpdatesToPatch = updatedDiff(documentItem, {
+            ...document,
+        }) as PatchDocumentRequest;
+
+        if (Object.values(documentUpdatesToPatch).length > 0)
             await patchDocument(documentWidget.id, document.id, {
                 ...documentUpdatesToPatch,
             });
-            loadDocuments();
-            dispatch(openNotification({ severity: 'success', text: 'Document was successfully updated' }));
-        }
+        loadDocuments();
+        dispatch(openNotification({ severity: 'success', text: 'Document was successfully updated' }));
     };
 
     const handleDeleteDocument = async () => {
