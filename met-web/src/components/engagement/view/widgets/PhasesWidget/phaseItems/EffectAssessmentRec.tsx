@@ -3,7 +3,7 @@ import { Grid } from '@mui/material';
 import { MetHeader4, MetParagraph } from 'components/common';
 import { PhaseBox } from '../PhaseBox';
 import { ReadMoreBox } from '../ReadMoreBox';
-import { ProcessStageProps } from '../PhasesWidgetMobile';
+import { ProcessStageProps } from '../PhasesWidgetMobile/PhasesWidgetMobile';
 
 export const EffectAssessmentReview = ({ mobile }: ProcessStageProps) => {
     return (

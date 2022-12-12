@@ -12,7 +12,7 @@ import { RouteState } from './types';
 import WidgetBlock from './widgets/WidgetBlock';
 import { Else, If, Then } from 'react-if';
 import { PhasesWidget } from './widgets/PhasesWidget';
-import { PhasesWidgetMobile } from './widgets/PhasesWidget/PhasesWidgetMobile';
+import { PhasesWidgetMobile } from './widgets/PhasesWidget/PhasesWidgetMobile/PhasesWidgetMobile';
 
 export const EngagementView = () => {
     const { state } = useLocation() as RouteState;
