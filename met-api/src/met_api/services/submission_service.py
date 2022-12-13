@@ -98,7 +98,10 @@ class SubmissionService:
 
         valid_statuses = [status.id for status in CommentStatus.get_comment_statuses()]
 
-        if not status_id or status_id == Status.Pending.value or status_id not in valid_statuses or not user:
+        if not user:
+            raise ValueError('Invalid user.')
+
+        if not status_id or status_id == Status.Pending.value or status_id not in valid_statuses:
             raise ValueError('Invalid review status.')
 
         if status_id == Status.Rejected.value and\
