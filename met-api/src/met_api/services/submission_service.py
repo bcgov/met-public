@@ -88,10 +88,8 @@ class SubmissionService:
         if not status_id or status_id == Status.Pending.value or status_id not in valid_statuses or not user:
             raise ValueError('Invalid review status.')
 
-        if status_id == Status.Rejected.value and \
-           has_personal_info is not True and \
-           has_profanity is not True and \
-           has_threat is not True and \
+        if status_id == Status.Rejected.value and\
+           not any(set((has_personal_info, has_profanity, has_threat))) and\
            not rejected_reason_other:
             raise ValueError('A rejection reason is required.')
 
