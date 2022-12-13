@@ -1,8 +1,8 @@
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
-import EngagementForm from '../../../src/components/engagement/form';
-import { setupEnv } from './setEnvVars';
+import EngagementForm from '../../../../src/components/engagement/form';
+import { setupEnv } from '../setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
@@ -97,15 +97,17 @@ describe('Document widget in engagement page tests', () => {
 
     beforeEach(() => {
         setupEnv();
+        setupMock();
     });
 
-    test('Document widget is created when option is clicked', async () => {
+    function setupMock() {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
         postWidgetMock.mockReturnValue(Promise.resolve(documentWidget));
         mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([documentWidget]));
-        const { container } = render(<EngagementForm />);
+    }
 
+    async function openAddWidgetDrawer(container: HTMLElement) {
         await waitFor(() => {
             expect(screen.getByText('Add Widget')).toBeInTheDocument();
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
@@ -117,7 +119,9 @@ describe('Document widget in engagement page tests', () => {
         await waitFor(() => {
             expect(screen.getByText('Select Widget')).toBeVisible();
         });
+    }
 
+    async function openAddDocumentWidgetDrawer() {
         const documentOption = screen.getByTestId(`widget-drawer-option/${WidgetType.Document}`);
         fireEvent.click(documentOption);
 
@@ -125,6 +129,14 @@ describe('Document widget in engagement page tests', () => {
             expect(screen.getByText('Test file')).toBeVisible();
             expect(screen.getByText('Test folder')).toBeVisible();
         });
+    }
+
+    test('Document widget is created when option is clicked', async () => {
+        const { container } = render(<EngagementForm />);
+
+        await openAddWidgetDrawer(container);
+        await openAddDocumentWidgetDrawer();
+
         expect(postWidgetMock).toHaveBeenNthCalledWith(1, engagement.id, {
             widget_type_id: WidgetType.Document,
             engagement_id: engagement.id,
@@ -141,25 +153,8 @@ describe('Document widget in engagement page tests', () => {
         mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([documentWidget]));
         const { container } = render(<EngagementForm />);
 
-        await waitFor(() => {
-            expect(screen.getByText('Add Widget')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-        });
-
-        const addWidgetButton = screen.getByText('Add Widget');
-        fireEvent.click(addWidgetButton);
-
-        await waitFor(() => {
-            expect(screen.getByText('Select Widget')).toBeVisible();
-        });
-
-        const documentOption = screen.getByTestId(`widget-drawer-option/${WidgetType.Document}`);
-        fireEvent.click(documentOption);
-
-        await waitFor(() => {
-            expect(screen.getByText('Test file')).toBeVisible();
-            expect(screen.getByText('Test folder')).toBeVisible();
-        });
+        await openAddWidgetDrawer(container);
+        await openAddDocumentWidgetDrawer();
 
         const createFolderButton = screen.getByText('Create Folder');
         fireEvent.click(createFolderButton);
@@ -177,25 +172,8 @@ describe('Document widget in engagement page tests', () => {
         mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([documentWidget]));
         const { container } = render(<EngagementForm />);
 
-        await waitFor(() => {
-            expect(screen.getByText('Add Widget')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-        });
-
-        const addWidgetButton = screen.getByText('Add Widget');
-        fireEvent.click(addWidgetButton);
-
-        await waitFor(() => {
-            expect(screen.getByText('Select Widget')).toBeVisible();
-        });
-
-        const documentOption = screen.getByTestId(`widget-drawer-option/${WidgetType.Document}`);
-        fireEvent.click(documentOption);
-
-        await waitFor(() => {
-            expect(screen.getByText('Test file')).toBeVisible();
-            expect(screen.getByText('Test folder')).toBeVisible();
-        });
+        await openAddWidgetDrawer(container);
+        await openAddDocumentWidgetDrawer();
 
         const addDocumentButton = screen.getByText('Add Document');
         fireEvent.click(addDocumentButton);

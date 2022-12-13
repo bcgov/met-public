@@ -60,9 +60,8 @@ class Submission(Resource):
         """Update comment status by submission id."""
         try:
             requestjson = request.get_json()
-            status_id = requestjson.get('status_id', None)
             external_user_id = TokenInfo.get_id()
-            submission = SubmissionService().review_comment(submission_id, status_id, external_user_id)
+            submission = SubmissionService().review_comment(submission_id, requestjson, external_user_id)
             return ActionResult.success(submission_id, submission)
         except KeyError:
             return ActionResult.error('Submission was not found')

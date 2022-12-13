@@ -1,5 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, FormControl, RadioGroup, FormControlLabel, Radio, Stack, FormLabel, Divider } from '@mui/material';
+import {
+    Grid,
+    FormControl,
+    RadioGroup,
+    FormControlLabel,
+    Radio,
+    Stack,
+    FormLabel,
+    Divider,
+    Checkbox,
+    TextField,
+    FormHelperText,
+} from '@mui/material';
 import { getSubmission, reviewComments } from 'services/submissionService';
 import { useAppDispatch } from 'hooks';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -11,18 +23,25 @@ import {
     PrimaryButton,
     SecondaryButton,
     MetHeader3,
+    MetHeader4,
 } from 'components/common';
 import { CommentStatus } from 'constants/commentStatus';
 import { formatDate } from 'components/common/dateHelper';
 import { CommentReviewSkeleton } from './CommentReviewSkeleton';
 import { createDefaultSubmission, SurveySubmission } from 'models/surveySubmission';
-import { If, Then, Else } from 'react-if';
+import { If, Then, Else, When } from 'react-if';
 
 const CommentReview = () => {
     const [submission, setSubmission] = useState<SurveySubmission>(createDefaultSubmission());
     const [review, setReview] = useState(CommentStatus.Approved);
     const [isSaving, setIsSaving] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [hasOtherReason, setHasOtherReason] = useState(false);
+    const [hasPersonalInfo, setHasPersonalInfo] = useState(false);
+    const [hasProfanity, setHasProfanity] = useState(false);
+    const [hasThreat, setHasThreat] = useState(false);
+    const [otherReason, setOtherReason] = useState('');
+    const [hasError, setHasError] = useState(false);
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -36,6 +55,11 @@ const CommentReview = () => {
 
             const fetchedSubmission = await getSubmission(Number(submissionId));
             setSubmission(fetchedSubmission);
+            setHasOtherReason(!!fetchedSubmission.rejected_reason_other);
+            setOtherReason(fetchedSubmission.rejected_reason_other ?? '');
+            setHasPersonalInfo(fetchedSubmission.has_personal_info ?? false);
+            setHasProfanity(fetchedSubmission.has_profanity ?? false);
+            setHasThreat(fetchedSubmission.has_threat ?? false);
             setReview(
                 fetchedSubmission.comment_status_id == CommentStatus.Pending
                     ? CommentStatus.Approved
@@ -54,12 +78,38 @@ const CommentReview = () => {
 
     const handleReviewChange = (verdict: number) => {
         setReview(verdict);
+        if (review === CommentStatus.Approved) {
+            setHasOtherReason(false);
+            setOtherReason('');
+            setHasPersonalInfo(false);
+            setHasProfanity(false);
+            setHasThreat(false);
+        }
     };
 
+    const validate = () => {
+        if (review == CommentStatus.Rejected) {
+            // At least one reason is selected
+            return (hasOtherReason && otherReason) || hasPersonalInfo || hasProfanity || hasThreat;
+        }
+        return true;
+    };
     const handleSave = async () => {
+        const isValid = validate();
+        setHasError(!isValid);
+        if (!isValid) {
+            return;
+        }
         setIsSaving(true);
         try {
-            await reviewComments({ submission_id: Number(submissionId), status_id: review });
+            await reviewComments({
+                submission_id: Number(submissionId),
+                status_id: review,
+                has_personal_info: hasPersonalInfo,
+                has_profanity: hasProfanity,
+                has_threat: hasThreat,
+                rejected_reason_other: otherReason,
+            });
             setIsSaving(false);
             dispatch(openNotification({ severity: 'success', text: 'Comments successfully reviewed.' }));
             navigate(`/surveys/${submission.survey_id}/comments`);
@@ -135,15 +185,15 @@ const CommentReview = () => {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid container rowSpacing={2} xs={12} paddingTop={5}>
-                    <Grid item xs={12} spacing={2}>
+                <Grid container rowSpacing={2} paddingTop={5}>
+                    <Grid item xs={12}>
                         <Grid xs={12} item>
                             <MetHeader3>Comment(s)</MetHeader3>
                         </Grid>
                     </Grid>
-                    {submission.comments?.map((comment) => {
+                    {submission.comments?.map((comment, index) => {
                         return (
-                            <Grid item xs={12}>
+                            <Grid key={index} item xs={12}>
                                 <Divider />
                                 <Grid xs={12} item paddingTop={2}>
                                     <MetLabel>{comment.label ?? 'Label not available.'}</MetLabel>
@@ -189,7 +239,83 @@ const CommentReview = () => {
                                 </RadioGroup>
                             </FormControl>
                         </Grid>
-
+                        <When condition={review == CommentStatus.Rejected}>
+                            <Grid item xs={12}>
+                                <FormControl>
+                                    <FormLabel id="controlled-checkbox-group">
+                                        <MetHeader4>Reason for rejection</MetHeader4>
+                                    </FormLabel>
+                                    <FormControlLabel
+                                        label={<MetParagraph>Contains personal information</MetParagraph>}
+                                        control={
+                                            <Checkbox
+                                                checked={hasPersonalInfo}
+                                                onChange={(event, checked) => setHasPersonalInfo(checked)}
+                                            />
+                                        }
+                                    />
+                                    <FormControlLabel
+                                        label={<MetParagraph>Contains profanity or swear words</MetParagraph>}
+                                        control={
+                                            <Checkbox
+                                                checked={hasProfanity}
+                                                onChange={(event, checked) => setHasProfanity(checked)}
+                                            />
+                                        }
+                                    />
+                                    <FormControlLabel
+                                        label={
+                                            <MetParagraph>
+                                                Other (this will be inserted in the email sent to the respondent in the
+                                                following sentence: One of your comments can't be published because of
+                                                "other")
+                                            </MetParagraph>
+                                        }
+                                        control={
+                                            <Checkbox
+                                                checked={hasOtherReason}
+                                                onChange={(event, checked) => {
+                                                    setHasOtherReason(checked);
+                                                    if (!checked) {
+                                                        setOtherReason('');
+                                                    }
+                                                }}
+                                            />
+                                        }
+                                    />
+                                    <TextField
+                                        disabled={!hasOtherReason}
+                                        value={otherReason}
+                                        sx={{ marginLeft: '2em' }}
+                                        FormHelperTextProps={{ error: true }}
+                                        onChange={(event) => setOtherReason(event.target.value)}
+                                    />
+                                    <br />
+                                    <MetParagraph>
+                                        Clicking the "Save" button will trigger an automatic email to be sent to the
+                                        person who made this comment.
+                                    </MetParagraph>
+                                    <MetParagraph color="error">
+                                        If there is a threat/menace in the comments, select the checkbox below. No email
+                                        will be sent. Contact TBD.
+                                    </MetParagraph>
+                                    <FormControlLabel
+                                        label={<MetParagraph>Contains threat/menace</MetParagraph>}
+                                        control={
+                                            <Checkbox
+                                                checked={hasThreat}
+                                                onChange={(event, checked) => setHasThreat(checked)}
+                                            />
+                                        }
+                                    />
+                                    <FormHelperText error={true}>
+                                        {hasError
+                                            ? 'Please enter at least one reason for rejecting the comment(s).'
+                                            : ''}
+                                    </FormHelperText>
+                                </FormControl>
+                            </Grid>
+                        </When>
                         <Grid item xs={12}>
                             <Stack direction="row" spacing={2}>
                                 <PrimaryButton loading={isSaving} onClick={handleSave}>

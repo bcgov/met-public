@@ -1,8 +1,8 @@
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import React, { ReactNode } from 'react';
 import '@testing-library/jest-dom';
-import EngagementListing from '../../../src/components/engagement/listing';
-import { setupEnv } from './setEnvVars';
+import EngagementListing from '../../../../src/components/engagement/listing';
+import { setupEnv } from '../setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as engagementService from 'services/engagementService';
 import * as notificationSlice from 'services/notificationService/notificationSlice';

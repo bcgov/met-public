@@ -2,6 +2,7 @@
 
 Manages the Submission
 """
+from __future__ import annotations
 from datetime import datetime
 from typing import List
 from sqlalchemy import TEXT, ForeignKey, asc, cast, desc, text
@@ -33,6 +34,10 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
     reviewed_by = db.Column(db.String(50))
     review_date = db.Column(db.DateTime)
     comment_status_id = db.Column(db.Integer, ForeignKey('comment_status.id', ondelete='SET NULL'))
+    has_personal_info = db.Column(db.Boolean, nullable=True)
+    has_profanity = db.Column(db.Boolean, nullable=True)
+    rejected_reason_other = db.Column(db.String(50), nullable=True)
+    has_threat = db.Column(db.Boolean, nullable=True)
     comments = db.relationship('Comment', backref='submission', cascade='all, delete')
 
     @classmethod
@@ -84,8 +89,14 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
         return DefaultMethodResult(True, 'Submission Updated', submission_id)
 
     @classmethod
-    def update_comment_status(cls, submission_id, status_id, reviewed_by, user_id):
+    def update_comment_status(cls, submission_id, reasons: dict, reviewed_by, user_id) -> Submission:
         """Update comment status."""
+        status_id = reasons.get('status_id', None)
+        has_personal_info = reasons.get('has_personal_info', None)
+        has_profanity = reasons.get('has_profanity', None)
+        has_threat = reasons.get('has_threat', None)
+        rejected_reason_other = reasons.get('rejected_reason_other', None)
+
         query = Submission.query.filter_by(id=submission_id)
 
         if not query.first():
@@ -93,6 +104,10 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
 
         update_fields = dict(
             comment_status_id=status_id,
+            has_personal_info=has_personal_info,
+            has_profanity=has_profanity,
+            has_threat=has_threat,
+            rejected_reason_other=rejected_reason_other,
             reviewed_by=reviewed_by,
             review_date=datetime.utcnow(),
             updated_by=user_id,

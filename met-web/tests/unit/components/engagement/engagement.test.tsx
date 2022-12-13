@@ -3,13 +3,13 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import EngagementView from 'components/engagement/view';
 import { Contact } from 'models/contact';
-import { setupEnv } from './setEnvVars';
+import { setupEnv } from '../setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import { Widget, WidgetItem, WidgetType } from 'models/widget';
 import { createDefaultSurvey, Survey } from 'models/survey';
-import { engagement } from '../components/factory';
+import { engagement } from '../factory';
 
 const survey: Survey = {
     ...createDefaultSurvey(),

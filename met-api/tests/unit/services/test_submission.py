@@ -74,5 +74,8 @@ def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
     survey, eng = factory_survey_and_eng_model()
     submission = factory_submission_model(survey.id, user_details.id)
     factory_comment_model(survey.id, submission.id)
-    submission_record = SubmissionService().review_comment(submission.id, 2, admin_user.external_id)
+    reasons = {
+        'status_id': 2,
+    }
+    submission_record = SubmissionService().review_comment(submission.id, reasons, admin_user.external_id)
     assert submission_record.get('comment_status_id') == 2
