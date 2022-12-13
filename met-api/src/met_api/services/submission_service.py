@@ -83,7 +83,7 @@ class SubmissionService:
 
         submission = Submission.update_comment_status(submission_id, values, reviewed_by, user.get('id'))
 
-        if submission.status_id == Status.Rejected.value and submission.has_threat is not True:
+        if submission.comment_status_id == Status.Rejected.value and submission.has_threat is not True:
             cls._send_rejected_email(submission)
 
         return SubmissionSchema().dump(submission)
