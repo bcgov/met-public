@@ -18,8 +18,16 @@ interface PhaseBoxProps {
     iconBox?: ReactNode;
     children?: ReactNode;
     mobile?: boolean;
+    readMoreBackground?: string;
 }
-export const PhaseBoxMobile = ({ title, backgroundColor = 'white', readMoreBox, iconBox, mobile }: PhaseBoxProps) => {
+export const PhaseBoxMobile = ({
+    title,
+    backgroundColor = 'white',
+    readMoreBox,
+    readMoreBackground,
+    iconBox,
+    mobile,
+}: PhaseBoxProps) => {
     const [readMoreOpen, setReadMoreOpen] = useState(false);
     const { anchorEl, setAnchorEl } = useContext(PhaseContext);
 
@@ -39,7 +47,6 @@ export const PhaseBoxMobile = ({ title, backgroundColor = 'white', readMoreBox, 
                     height: '100%',
                     minHeight: '10em',
                     minWidth: { xl: '10%', xs: 'auto' },
-                    maxWidth: { xl: '16%', xs: 'auto' },
                 }}
             >
                 <Grid container direction={'column'} spacing={0}>
@@ -48,7 +55,7 @@ export const PhaseBoxMobile = ({ title, backgroundColor = 'white', readMoreBox, 
                             ref={PhaseBoxRef}
                             sx={{
                                 padding: '1em',
-                                height: mobile ? '100%' : '10em',
+                                height: '100%',
                                 width: '100%',
                             }}
                         >
@@ -70,7 +77,7 @@ export const PhaseBoxMobile = ({ title, backgroundColor = 'white', readMoreBox, 
                                             aria-controls="panel1a-content"
                                             id="panel1a-header"
                                         >
-                                            <Typography>Read More</Typography>
+                                            <Typography>Learn More</Typography>
                                         </AccordionSummary>
                                         <AccordionDetails>
                                             <Typography>{readMoreBox}</Typography>
@@ -87,6 +94,7 @@ export const PhaseBoxMobile = ({ title, backgroundColor = 'white', readMoreBox, 
                     id={readMoreOpen ? `${title}-readmore-popover` : undefined}
                     open={readMoreOpen}
                     anchorEl={anchorEl}
+                    sx={{ border: '2px solid red' }}
                     onClose={() => setReadMoreOpen(false)}
                     anchorOrigin={{
                         vertical: 'bottom',

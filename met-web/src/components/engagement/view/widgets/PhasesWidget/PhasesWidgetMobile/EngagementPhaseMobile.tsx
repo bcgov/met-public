@@ -26,7 +26,7 @@ export const EngagementPhaseMobile = ({
                     </Grid>
                 </ReadMoreBox>
             }
-            iconBox={popOverText ? <MetParagraph>{popOverText}</MetParagraph> : <></>}
+            iconBox={popOverText ? <MetParagraph>{popOverText}</MetParagraph> : false}
         />
     );
 };

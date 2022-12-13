@@ -22,6 +22,7 @@ export const ENGAGEMENT_PHASES = {
     EarlyEngagement: {
         title: 'Early Engagement',
         backgroundColor: '#54858D',
+        accordionBackground: '#A8D5DD',
         learnMoreBackgroundColor: '#D1D9DD',
         learnMoreText: (
             <Grid item xs={12}>
@@ -38,6 +39,7 @@ export const ENGAGEMENT_PHASES = {
         title: 'Readiness Decision',
         backgroundColor: '#DA6D65',
         learnMoreBackgroundColor: '#FCE5E4',
+        accordionBackground: '#EFBDB9',
         learnMoreText: (
             <Grid item xs={12}>
                 <MetParagraph>
@@ -52,6 +54,7 @@ export const ENGAGEMENT_PHASES = {
     ProcessPlanning: {
         title: 'Process Planning',
         backgroundColor: '#043673',
+        accordionBackground: '#89A4C4',
         learnMoreBackgroundColor: '#C8CAD6',
         learnMoreText: (
             <Grid item xs={12}>
@@ -68,6 +71,7 @@ export const ENGAGEMENT_PHASES = {
     AppDevReview: {
         title: 'Application Development & Review',
         backgroundColor: '#4D95D0',
+        accordionBackground: '#9AC0E0',
         learnMoreBackgroundColor: '#D7EBF8',
         learnMoreText: (
             <>
@@ -96,6 +100,7 @@ export const ENGAGEMENT_PHASES = {
     EffectAssessmentReview: {
         title: 'Effect Assessment & Review',
         backgroundColor: '#E7A913',
+        accordionBackground: '#EDC970',
         learnMoreBackgroundColor: '#FAEACC',
         learnMoreText: (
             <>
@@ -120,7 +125,8 @@ export const ENGAGEMENT_PHASES = {
     },
     Decision: {
         title: 'Decision',
-        backgroundColor: '#6A54A3"',
+        backgroundColor: '#6A54A3',
+        accordionBackground: '#AAA2BF',
         learnMoreBackgroundColor: '#D6D1E7',
         learnMoreText: (
             <Grid item xs={12}>
@@ -133,7 +139,8 @@ export const ENGAGEMENT_PHASES = {
     },
     PostCertificate: {
         title: 'Post-Certificate',
-        backgroundColor: '#A6BB2E"',
+        backgroundColor: '#A6BB2E',
+        accordionBackground: '#D5DE9E',
         learnMoreBackgroundColor: '#EDF2D4',
         learnMoreText: (
             <>
