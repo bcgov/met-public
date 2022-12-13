@@ -3,7 +3,7 @@ import { Grid } from '@mui/material';
 import { MetHeader4, MetParagraph } from 'components/common';
 import { PhaseBox } from '../PhaseBox';
 import { ReadMoreBox } from '../ReadMoreBox';
-import { ProcessStageProps } from '../PhasesWidgetMobile/PhasesWidgetMobile';
+import { ProcessStageProps } from 'models/engagementPhases';
 
 export const ReadinessDecision = ({ mobile }: ProcessStageProps) => {
     return (

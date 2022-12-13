@@ -4,6 +4,12 @@ import { MetHeader4, MetPaper, MetSmallText } from 'components/common';
 import { PhaseContext } from '.';
 import { When } from 'react-if';
 import { IconBox } from './IconBox';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { If, Then, Else } from 'react-if';
 
 interface PhaseBoxProps {
     title: string;
@@ -11,8 +17,9 @@ interface PhaseBoxProps {
     readMoreBox?: ReactNode;
     iconBox?: ReactNode;
     children?: ReactNode;
+    mobile?: boolean;
 }
-export const PhaseBox = ({ title, backgroundColor = 'white', readMoreBox, iconBox }: PhaseBoxProps) => {
+export const PhaseBoxMobile = ({ title, backgroundColor = 'white', readMoreBox, iconBox, mobile }: PhaseBoxProps) => {
     const [readMoreOpen, setReadMoreOpen] = useState(false);
     const { anchorEl, setAnchorEl } = useContext(PhaseContext);
 
@@ -29,49 +36,52 @@ export const PhaseBox = ({ title, backgroundColor = 'white', readMoreBox, iconBo
                     borderRadius: 0,
                     border: 'none',
                     backgroundColor: backgroundColor,
-                    height: '10em',
-                    marginBottom: '2em',
-                    maxWidth: { xl: '16%', xs: 'auto' },
+                    height: '100%',
+                    minHeight: '10em',
                     minWidth: { xl: '10%', xs: 'auto' },
+                    maxWidth: { xl: '16%', xs: 'auto' },
                 }}
             >
-                <Grid container direction="row" spacing={0}>
+                <Grid container direction={'column'} spacing={0}>
                     <Grid item xs={12}>
                         <Box
                             ref={PhaseBoxRef}
                             sx={{
                                 padding: '1em',
-                                height: '10em',
+                                height: mobile ? '100%' : '10em',
+                                width: '100%',
                             }}
                         >
-                            <Grid container direction="column" justifyContent="space-between" height="100%">
+                            <Grid container direction="column" justifyContent="space-between" height="100%" spacing={2}>
                                 <Grid item>
                                     <MetHeader4 bold sx={{ color: 'white' }}>
                                         {title}
                                     </MetHeader4>
                                 </Grid>
-                                <Grid item container direction="row" justifyContent="flex-end">
-                                    <Grid item>
-                                        <MetSmallText
-                                            component={Link}
-                                            sx={{ color: 'white', cursor: 'pointer' }}
-                                            onClick={handleReadMoreClick}
+                                <Grid item sx={{ alignItems: 'flex-end', justifyContent: 'center' }} xs={12}>
+                                    <When condition={Boolean(iconBox)}>
+                                        <IconBox>{iconBox}</IconBox>
+                                    </When>
+                                </Grid>
+                                <Grid item container direction="row" xs={12} justifyContent="flex-start">
+                                    <Accordion>
+                                        <AccordionSummary
+                                            expandIcon={<ExpandMoreIcon />}
+                                            aria-controls="panel1a-content"
+                                            id="panel1a-header"
                                         >
-                                            Read more
-                                        </MetSmallText>
-                                    </Grid>
+                                            <Typography>Read More</Typography>
+                                        </AccordionSummary>
+                                        <AccordionDetails>
+                                            <Typography>{readMoreBox}</Typography>
+                                        </AccordionDetails>
+                                    </Accordion>
                                 </Grid>
                             </Grid>
                         </Box>
                     </Grid>
-                    <Grid item xs={12}>
-                        <When condition={Boolean(iconBox)}>
-                            <IconBox>{iconBox}</IconBox>
-                        </When>
-                    </Grid>
                 </Grid>
             </MetPaper>
-
             <When condition={Boolean(readMoreBox)}>
                 <Popover
                     id={readMoreOpen ? `${title}-readmore-popover` : undefined}

@@ -23,7 +23,7 @@ export const ENGAGEMENT_PHASES = {
     EarlyEngagement: {
         title: 'Early Engagement',
         backgroundColor: '#54858D',
-        learnMoreBackGroundColor: '#D1D9DD',
+        learnMoreBackgroundColor: '#D1D9DD',
         learnMoreText: (
             <Grid item xs={12}>
                 <MetParagraph>
@@ -38,7 +38,7 @@ export const ENGAGEMENT_PHASES = {
     ReadinessDecision: {
         title: 'Readiness Decision',
         backgroundColor: '#DA6D65',
-        learnMoreBackGroundColor: '#FCE5E4',
+        learnMoreBackgroundColor: '#FCE5E4',
         learnMoreText: (
             <Grid item xs={12}>
                 <MetParagraph>
@@ -53,7 +53,7 @@ export const ENGAGEMENT_PHASES = {
     ProcessPlanning: {
         title: 'Process Planning',
         backgroundColor: '#043673',
-        learnMoreBackGroundColor: '#C8CAD6',
+        learnMoreBackgroundColor: '#C8CAD6',
         learnMoreText: (
             <Grid item xs={12}>
                 <MetParagraph>
@@ -69,7 +69,7 @@ export const ENGAGEMENT_PHASES = {
     AppDevReview: {
         title: 'Application Development & Review',
         backgroundColor: '#4D95D0',
-        learnMoreBackGroundColor: '#D7EBF8',
+        learnMoreBackgroundColor: '#D7EBF8',
         learnMoreText: (
             <>
                 <Grid item xs={12}>
@@ -97,7 +97,7 @@ export const ENGAGEMENT_PHASES = {
     EffectAssessmentReview: {
         title: 'Effect Assessment & Review',
         backgroundColor: '#E7A913',
-        learnMoreBackGroundColor: '#FAEACC',
+        learnMoreBackgroundColor: '#FAEACC',
         learnMoreText: (
             <>
                 <Grid item xs={12}>
@@ -122,7 +122,7 @@ export const ENGAGEMENT_PHASES = {
     Decision: {
         title: 'Decision',
         backgroundColor: '#6A54A3"',
-        learnMoreBackGroundColor: '#D6D1E7',
+        learnMoreBackgroundColor: '#D6D1E7',
         learnMoreText: (
             <Grid item xs={12}>
                 <MetParagraph sx={{ fontStyle: 'italic' }}>
@@ -135,7 +135,7 @@ export const ENGAGEMENT_PHASES = {
     PostCertificate: {
         title: 'Post-Certificate',
         backgroundColor: '#A6BB2E"',
-        learnMoreBackGroundColor: '#EDF2D4',
+        learnMoreBackgroundColor: '#EDF2D4',
         learnMoreText: (
             <>
                 <Grid item xs={12}>

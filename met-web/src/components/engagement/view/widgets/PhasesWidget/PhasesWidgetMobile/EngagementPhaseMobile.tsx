@@ -1,11 +1,11 @@
 import React from 'react';
 import { Grid } from '@mui/material';
 import { MetHeader4, MetParagraph } from 'components/common';
+import { PhaseBoxMobile } from '../PhaseBoxMobile';
 import { ReadMoreBox } from '../ReadMoreBox';
 import { ProcessStageProps } from 'models/engagementPhases';
-import { PhaseBox } from '../PhaseBox';
 
-export const EngagementPhase = ({
+export const EngagementPhaseMobile = ({
     mobile,
     backgroundColor,
     learnMoreBackgroundColor,
@@ -14,7 +14,7 @@ export const EngagementPhase = ({
     popOverText,
 }: ProcessStageProps) => {
     return (
-        <PhaseBox
+        <PhaseBoxMobile
             title={title}
             backgroundColor={backgroundColor}
             mobile={mobile}

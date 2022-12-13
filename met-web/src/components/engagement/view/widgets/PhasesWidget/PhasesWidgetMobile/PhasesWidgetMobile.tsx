@@ -5,7 +5,7 @@ import { WidgetType } from 'models/widget';
 import { styled } from '@mui/material/styles';
 import { ActionContext } from '../../../ActionContext';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
-import { EngagementPhase } from './EngagementPhase';
+import { EngagementPhaseMobile } from './EngagementPhaseMobile';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import MuiAccordionSummary, { AccordionSummaryProps } from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
@@ -96,7 +96,7 @@ export const PhasesWidgetMobile = () => {
                                 <Typography>The EA Process</Typography>
                             </AccordionSummary>
                             <AccordionDetails>
-                                <EngagementPhase
+                                <EngagementPhaseMobile
                                     title={ENGAGEMENT_PHASES.EarlyEngagement.title}
                                     backgroundColor={ENGAGEMENT_PHASES.EarlyEngagement.backgroundColor}
                                     learnMoreBackgroundColor={
@@ -106,7 +106,7 @@ export const PhasesWidgetMobile = () => {
                                     popOverText={ENGAGEMENT_PHASES.EarlyEngagement.popOverText}
                                     mobile={true}
                                 />
-                                <EngagementPhase
+                                <EngagementPhaseMobile
                                     title={ENGAGEMENT_PHASES.ReadinessDecision.title}
                                     backgroundColor={ENGAGEMENT_PHASES.ReadinessDecision.backgroundColor}
                                     learnMoreBackgroundColor={
@@ -116,7 +116,7 @@ export const PhasesWidgetMobile = () => {
                                     popOverText={ENGAGEMENT_PHASES.ReadinessDecision.popOverText}
                                     mobile={true}
                                 />
-                                <EngagementPhase
+                                <EngagementPhaseMobile
                                     title={ENGAGEMENT_PHASES.ProcessPlanning.title}
                                     backgroundColor={ENGAGEMENT_PHASES.ProcessPlanning.backgroundColor}
                                     learnMoreBackgroundColor={
@@ -126,7 +126,7 @@ export const PhasesWidgetMobile = () => {
                                     popOverText={ENGAGEMENT_PHASES.ProcessPlanning.popOverText}
                                     mobile={true}
                                 />
-                                <EngagementPhase
+                                <EngagementPhaseMobile
                                     title={ENGAGEMENT_PHASES.AppDevReview.title}
                                     backgroundColor={ENGAGEMENT_PHASES.AppDevReview.backgroundColor}
                                     learnMoreBackgroundColor={ENGAGEMENT_PHASES.AppDevReview.learnMoreBackgroundColor}
@@ -134,7 +134,7 @@ export const PhasesWidgetMobile = () => {
                                     popOverText={ENGAGEMENT_PHASES.AppDevReview.popOverText}
                                     mobile={true}
                                 />
-                                <EngagementPhase
+                                <EngagementPhaseMobile
                                     title={ENGAGEMENT_PHASES.EffectAssessmentReview.title}
                                     backgroundColor={ENGAGEMENT_PHASES.EffectAssessmentReview.backgroundColor}
                                     learnMoreBackgroundColor={
@@ -144,21 +144,20 @@ export const PhasesWidgetMobile = () => {
                                     popOverText={ENGAGEMENT_PHASES.EffectAssessmentReview.popOverText}
                                     mobile={true}
                                 />
-                                <EngagementPhase
+                                <EngagementPhaseMobile
                                     title={ENGAGEMENT_PHASES.Decision.title}
                                     backgroundColor={ENGAGEMENT_PHASES.Decision.backgroundColor}
                                     learnMoreBackgroundColor={ENGAGEMENT_PHASES.Decision.learnMoreBackgroundColor}
                                     learnMoreText={ENGAGEMENT_PHASES.Decision.learnMoreText}
                                     mobile={true}
                                 />
-                                <EngagementPhase
+                                <EngagementPhaseMobile
                                     title={ENGAGEMENT_PHASES.PostCertificate.title}
                                     backgroundColor={ENGAGEMENT_PHASES.PostCertificate.backgroundColor}
                                     learnMoreBackgroundColor={
                                         ENGAGEMENT_PHASES.PostCertificate.learnMoreBackgroundColor
                                     }
                                     learnMoreText={ENGAGEMENT_PHASES.PostCertificate.learnMoreText}
-                                    popOverText={ENGAGEMENT_PHASES.PostCertificate.popOverText}
                                     mobile={true}
                                 />
                             </AccordionDetails>
