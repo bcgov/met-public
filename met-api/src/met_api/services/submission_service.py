@@ -74,14 +74,28 @@ class SubmissionService:
             raise ValueError('Engagement not open to submissions')
 
     @classmethod
-    def review_comment(cls, submission_id, reasons: dict, external_user_id) -> SubmissionSchema:
+    def review_comment(cls, submission_id, values: dict, external_user_id) -> SubmissionSchema:
         """Review comment."""
         user = UserService.get_user_by_external_id(external_user_id)
-        status_id = reasons.get('status_id', None)
-        has_personal_info = reasons.get('has_personal_info', None)
-        has_profanity = reasons.get('has_profanity', None)
-        has_threat = reasons.get('has_threat', None)
-        rejected_reason_other = reasons.get('rejected_reason_other', None)
+        status_id = values.get('status_id', None)
+
+        cls.validate_review(values, user)
+        reviewed_by = ' '.join([user.get('first_name', ''), user.get('last_name', '')])
+
+        submission = Submission.update_comment_status(submission_id, values, reviewed_by, user.get('id'))
+
+        if status_id == Status.Rejected.value and submission.has_threat is not True:
+            cls._send_rejected_email(submission)
+
+        return SubmissionSchema().dump(submission)
+
+    @classmethod
+    def validate_review(cls, values: dict, user):
+        status_id = values.get('status_id', None)
+        has_personal_info = values.get('has_personal_info', None)
+        has_profanity = values.get('has_profanity', None)
+        has_threat = values.get('has_threat', None)
+        rejected_reason_other = values.get('rejected_reason_other', None)
 
         valid_statuses = [status.id for status in CommentStatus.get_comment_statuses()]
 
@@ -93,14 +107,6 @@ class SubmissionService:
            not rejected_reason_other:
             raise ValueError('A rejection reason is required.')
 
-        reviewed_by = ' '.join([user.get('first_name', ''), user.get('last_name', '')])
-
-        submission = Submission.update_comment_status(submission_id, reasons, reviewed_by, user.get('id'))
-
-        if status_id == Status.Rejected.value and submission.has_threat is not True:
-            cls._send_rejected_email(submission)
-
-        return SubmissionSchema().dump(submission)
 
     @classmethod
     def get_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text=''):
