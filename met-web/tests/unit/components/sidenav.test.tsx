@@ -6,7 +6,7 @@ import ProviderShell from './ProviderShell';
 import { setupEnv } from './setEnvVars';
 import { Routes } from '../../../src/components/layout/SideNav/SideNavElements';
 
-const drawerWidth = 240;
+const drawerWidth = 280;
 
 jest.mock('@reduxjs/toolkit/query/react', () => ({
     ...jest.requireActual('@reduxjs/toolkit/query/react'),
