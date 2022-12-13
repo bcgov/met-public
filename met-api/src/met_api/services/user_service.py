@@ -1,4 +1,5 @@
 """Service for user management."""
+from met_api.models.pagination_options import PaginationOptions
 from met_api.models.user import User as UserModel
 from met_api.services.keycloak import KeycloakService
 from met_api.schemas.user import UserSchema
@@ -24,13 +25,16 @@ class UserService:
         external_id = user.get('external_id')
         db_user = UserModel.get_user_by_external_id(external_id)
         if db_user is None:
+            is_staff_user = user.get('email_id', '').endswith('gov.bc.ca')
+            access_type = UserType.STAFF.value if is_staff_user else UserType.PUBLIC_USER.value
+            user['access_type'] = access_type
             return UserModel.create_user(user)
         return UserModel.update_user(db_user.id, user)
 
     @staticmethod
-    def find_users(user_type=UserType.STAFF.value):
+    def find_users(user_type=UserType.STAFF.value, pagination_options: PaginationOptions = None):
         """Return a list of users."""
-        users = UserModel.find_users_by_acess_type(user_type)
+        users, total = UserModel.find_users_by_access_type(user_type, pagination_options)
         user: UserModel
         user_schema = UserSchema()
         user_collection = []
@@ -40,7 +44,10 @@ class UserService:
             user_detail['groups'] = groups
             user_collection.append(user_detail)
 
-        return user_collection
+        return {
+            'items': user_collection,
+            'total': total
+        }
 
     @staticmethod
     def get_or_create_user(email_address):

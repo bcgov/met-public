@@ -25,7 +25,7 @@ from met_api.config import get_named_config
 from met_api.constants.engagement_status import SubmissionStatus
 from met_api.constants.feedback import CommentType, FeedbackSourceType, RatingType
 from met_api.constants.widget import WidgetType
-
+from met_api.utils.enums import UserType
 
 fake = Faker()
 
@@ -45,6 +45,7 @@ class TestUserInfo(dict, Enum):
         'middle_name': fake.name(),
         'last_name': fake.name(),
         'email_id': fake.email(),
+        'access_type': UserType.PUBLIC_USER.value
     }
 
     user_public_2 = {
@@ -52,6 +53,15 @@ class TestUserInfo(dict, Enum):
         'middle_name': fake.name(),
         'last_name': fake.name(),
         'email_id': fake.email(),
+        'access_type': UserType.PUBLIC_USER.value
+    }
+
+    user_staff_1 = {
+        'first_name': fake.name(),
+        'middle_name': fake.name(),
+        'last_name': fake.name(),
+        'email_id': fake.email(),
+        'access_type': UserType.STAFF.value
     }
 
 
@@ -136,16 +146,19 @@ class TestJwtClaims(dict, Enum):
         'iss': CONFIG.JWT_OIDC_TEST_ISSUER,
         'sub': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302064',
         'idp_userid': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302064',
-        'firstname': fake.first_name(),
-        'lastname': fake.last_name(),
         'preferred_username': fake.user_name(),
+        'given_name': fake.first_name(),
+        'family_name': fake.last_name(),
+        'email': 'staff@gov.bc.ca',
         'realm_access': {
             'roles': [
                 'staff',
                 'view_engagement',
                 'create_engagement',
                 'edit_engagement',
-                'create_survey'
+                'create_survey',
+                'view_users'
+                ''
             ]
         }
     }
