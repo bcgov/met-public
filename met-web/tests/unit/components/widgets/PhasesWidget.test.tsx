@@ -34,6 +34,25 @@ const phasesWidget: Widget = {
     items: [],
 };
 
+jest.mock('@reduxjs/toolkit/query/react', () => ({
+    ...jest.requireActual('@reduxjs/toolkit/query/react'),
+    fetchBaseQuery: jest.fn(),
+}));
+
+const mockWidgetsRtkUnwrap = jest.fn(() => Promise.resolve([phasesWidget]));
+const mockWidgetsRtkTrigger = () => {
+    return {
+        unwrap: mockWidgetsRtkUnwrap,
+    };
+};
+export const mockWidgetsRtkQuery = () => [mockWidgetsRtkTrigger];
+
+const mockLazyGetWidgetsQuery = jest.fn(mockWidgetsRtkQuery);
+jest.mock('apiManager/apiSlices/widgets', () => ({
+    ...jest.requireActual('apiManager/apiSlices/widgets'),
+    useLazyGetWidgetsQuery: () => [...mockLazyGetWidgetsQuery()],
+}));
+
 describe('Phases widget tests', () => {
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
@@ -55,10 +74,9 @@ describe('Phases widget tests', () => {
                 surveys: surveys,
             }),
         );
-        const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets');
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
         const postWidgetMock = jest.spyOn(widgetService, 'postWidget');
         const postWidgetItemMock = jest.spyOn(widgetService, 'postWidgetItem');
-        getWidgetsMock.mockReturnValue(Promise.resolve([]));
         postWidgetMock.mockReturnValue(Promise.resolve(phasesWidget));
         postWidgetItemMock.mockReturnValue(Promise.resolve(phaseWidgetItem));
         const { container } = render(<EngagementForm />);
@@ -75,7 +93,7 @@ describe('Phases widget tests', () => {
             expect(screen.getByText('Select Widget')).toBeVisible();
         });
 
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([phasesWidget]));
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([phasesWidget]));
 
         const phasesOption = screen.getByTestId(`widget-drawer-option/${WidgetType.Phases}`);
         fireEvent.click(phasesOption);
@@ -88,7 +106,7 @@ describe('Phases widget tests', () => {
             widget_type_id: WidgetType.Phases,
             engagement_id: engagement.id,
         });
-        expect(getWidgetsMock).toHaveBeenCalledTimes(2);
+        expect(mockWidgetsRtkUnwrap).toHaveBeenCalledTimes(2);
 
         const saveWidgetButton = screen.getByTestId('savePhasesWidgetButton');
         expect(saveWidgetButton).toBeDisabled();

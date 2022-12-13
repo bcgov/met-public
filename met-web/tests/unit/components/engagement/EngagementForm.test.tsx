@@ -39,29 +39,6 @@ jest.mock('@reduxjs/toolkit/query/react', () => ({
     fetchBaseQuery: jest.fn(),
 }));
 
-const mockContactsRtkUnwrap = jest.fn(() => Promise.resolve([mockContact]));
-const mockContactsRtkTrigger = () => {
-    return {
-        unwrap: mockContactsRtkUnwrap,
-    };
-};
-export const mockContactsRtkQuery = () => [mockContactsRtkTrigger];
-
-const mockContactRtkUnwrap = jest.fn(() => Promise.resolve(mockContact));
-const mockContactRtkTrigger = () => {
-    return {
-        unwrap: mockContactRtkUnwrap,
-    };
-};
-export const mockContactRtkQuery = () => [mockContactRtkTrigger];
-
-const mockLazyGetContactsQuery = jest.fn(mockContactsRtkQuery);
-const mockLazyGetContactQuery = jest.fn(mockContactRtkQuery);
-jest.mock('apiManager/apiSlices/contacts', () => ({
-    ...jest.requireActual('apiManager/apiSlices/contacts'),
-    useLazyGetContactsQuery: () => [...mockLazyGetContactsQuery()],
-    useLazyGetContactQuery: () => [...mockLazyGetContactQuery()],
-}));
 
 const mockWidgetsRtkUnwrap = jest.fn(() => Promise.resolve([]));
 const mockWidgetsRtkTrigger = () => {
