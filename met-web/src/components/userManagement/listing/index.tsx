@@ -27,20 +27,27 @@ const UserManagementListing = () => {
         size: 10,
         sort_key: 'first_name',
         nested_sort_key: 'first_name',
-        sort_order: 'desc',
+        sort_order: 'asc',
     });
 
     useEffect(() => {
         loadUsers();
-    }, []);
+    }, [paginationOptions]);
+
+    const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
     const loadUsers = async () => {
         try {
             setTableLoading(true);
-            const response = await UserService.getUserList();
-            setUsers(JSON.parse(JSON.stringify(response)).data);
+            const response = await UserService.getUserList({
+                page,
+                size,
+                sort_key: nested_sort_key || sort_key,
+                sort_order,
+            });
+            setUsers(response.items);
             setPageInfo({
-                total: 0,
+                total: response.total,
             });
             setTableLoading(false);
         } catch (error) {
@@ -64,7 +71,7 @@ const UserManagementListing = () => {
             allowSort: true,
             getValue: (row: User) => (
                 <MuiLink component={Link} to={``}>
-                    {row.first_name + ' ' + row.last_name}
+                    {row.last_name + ', ' + row.first_name}
                 </MuiLink>
             ),
         },
@@ -83,6 +90,16 @@ const UserManagementListing = () => {
             label: 'Date Added',
             allowSort: true,
             getValue: (row: User) => formatDate(row.created_date),
+        },
+        {
+            key: 'status',
+            numeric: false,
+            disablePadding: true,
+            label: 'Status',
+            allowSort: true,
+            /* TODO Hardcoded value since currently we have all users as active. 
+            Need to change once we have different user status */
+            getValue: () => 'Active',
         },
     ];
 

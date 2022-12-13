@@ -7,6 +7,7 @@ import { AppConfig } from 'config';
 import Endpoints from 'apiManager/endpoints';
 import http from 'apiManager/httpRequestHandler';
 import { User } from 'models/user';
+import { Page } from 'services/type';
 
 const KeycloakData = _kc;
 
@@ -120,13 +121,20 @@ const updateUser = async () => {
     }
 };
 
-const getUserList = async () => {
-    try {
-        return await http.GetRequest(Endpoints.User.GET_LIST);
-    } catch (e: unknown) {
-        console.error(e);
-        return Promise.reject(e);
-    }
+interface GetUserParams {
+    page?: number;
+    size?: number;
+    sort_key?: string;
+    sort_order?: 'asc' | 'desc';
+}
+const getUserList = async (params: GetUserParams = {}): Promise<Page<User>> => {
+    const responseData = await http.GetRequest<Page<User>>(Endpoints.User.GET_LIST, params);
+    return (
+        JSON.parse(JSON.stringify(responseData)).data ?? {
+            items: [],
+            total: 0,
+        }
+    );
 };
 
 const UserService = {
