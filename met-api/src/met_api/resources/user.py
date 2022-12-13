@@ -45,7 +45,6 @@ class User(Resource):
         """Update or create a user."""
         try:
             user_data = TokenInfo.get_user_data()
-            print('-----user_datauser_datauser_data-----',user_data)
             user_schema = UserSchema().load(user_data)
             user = UserService().create_or_update_user(user_schema)
             user_schema['id'] = user.id

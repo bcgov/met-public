@@ -114,7 +114,6 @@ def factory_user_model(external_id=None, user_info: dict = TestUserInfo.user_pub
     """Produce a user model."""
     # Generate a external id if not passed
     external_id = fake.random_number(digits=5) if external_id is None else external_id
-    print('---------', external_id)
     user = UserModel(
         first_name=user_info['first_name'],
         last_name=user_info['last_name'],

@@ -65,7 +65,6 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
     @classmethod
     def create_user(cls, user) -> User:
         """Create user."""
-        print('-----mode',user.get('username', None))
         new_user = User(
             first_name=user.get('first_name', None),
             middle_name=user.get('middle_name', None),
