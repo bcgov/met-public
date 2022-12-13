@@ -1,12 +1,11 @@
 import './App.scss';
 import React, { useEffect } from 'react';
-import LoggedOutHeader from './components/layout/Header/LoggedOutHeader';
 import { BrowserRouter as Router } from 'react-router-dom';
 import UserService from './services/userService';
 import { useAppSelector, useAppDispatch } from './hooks';
 import { MidScreenLoader } from './components/common';
 import { Box, Container, useMediaQuery, Toolbar, Theme } from '@mui/material';
-import LoggedInHeader from './components/layout/Header/LoggedInHeader';
+import Header from './components/layout/Header';
 import UnauthenticatedRoutes from './routes/UnauthenticatedRoutes';
 import AuthenticatedRoutes from './routes/AuthenticatedRoutes';
 import { Notification } from 'components/common/notification';
@@ -38,7 +37,7 @@ const App = () => {
                 <PageViewTracker />
                 <Notification />
                 <NotificationModal />
-                <LoggedOutHeader />
+                <Header />
                 <UnauthenticatedRoutes />
                 <FeedbackModal />
             </Router>
@@ -48,7 +47,7 @@ const App = () => {
     if (!isMediumScreen) {
         return (
             <Router>
-                <LoggedInHeader />
+                <Header />
                 <Container>
                     <Toolbar />
                     <AuthenticatedRoutes />
@@ -61,7 +60,7 @@ const App = () => {
     return (
         <Router>
             <Box sx={{ display: 'flex' }}>
-                <LoggedInHeader drawerWidth={drawerWidth} />
+                <Header drawerWidth={drawerWidth} />
                 <Notification />
                 <NotificationModal />
                 <Box component="main" sx={{ flexGrow: 1, width: `calc(100% - ${drawerWidth}px)`, marginTop: '17px' }}>

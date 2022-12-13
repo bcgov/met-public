@@ -1,18 +1,23 @@
 @charset "UTF-8";
 
   
-  #main {
-    margin-top: 10px;
-  }
+#main {
+  margin-top: 10px;
+}
 
-  body {
-    margin: 0;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
-    color: #494949
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
+  color: #494949
 }
 
 code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+.MuiContainer-root {
+  padding-left: 0;
+  padding-right: 0;
 }
