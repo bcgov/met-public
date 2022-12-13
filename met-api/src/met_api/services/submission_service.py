@@ -77,14 +77,13 @@ class SubmissionService:
     def review_comment(cls, submission_id, values: dict, external_user_id) -> SubmissionSchema:
         """Review comment."""
         user = UserService.get_user_by_external_id(external_user_id)
-        status_id = values.get('status_id', None)
 
         cls.validate_review(values, user)
         reviewed_by = ' '.join([user.get('first_name', ''), user.get('last_name', '')])
 
         submission = Submission.update_comment_status(submission_id, values, reviewed_by, user.get('id'))
 
-        if status_id == Status.Rejected.value and submission.has_threat is not True:
+        if submission.status_id == Status.Rejected.value and submission.has_threat is not True:
             cls._send_rejected_email(submission)
 
         return SubmissionSchema().dump(submission)
