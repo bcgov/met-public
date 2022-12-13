@@ -9,7 +9,7 @@ import { EngagementPhaseMobile } from './EngagementPhaseMobile';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import MuiAccordionSummary, { AccordionSummaryProps } from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
-import { ENGAGEMENT_PHASES } from 'models/engagementPhases';
+import { ENGAGEMENT_PHASES, ProcessStageProps } from 'models/engagementPhases';
 
 const Accordion = styled((props: AccordionProps) => <MuiAccordion disableGutters elevation={0} square {...props} />)(
     ({ theme }) => ({
@@ -41,21 +41,9 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
     borderTop: '1px solid rgba(0, 0, 0, .125)',
 }));
 
-interface PhaseContextProps {
-    anchorEl: HTMLButtonElement | null;
-    setAnchorEl: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>;
-}
-
-export const PhaseContext = React.createContext<PhaseContextProps>({
-    anchorEl: null,
-    setAnchorEl: () => {
-        throw new Error('Not implemented');
-    },
-});
 export const PhasesWidgetMobile = () => {
     const phases = Object.values(ENGAGEMENT_PHASES);
     const { widgets, isWidgetsLoading } = useContext(ActionContext);
-    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
     const phasesWidget = widgets.find((widget) => widget.widget_type_id === WidgetType.Phases);
 
@@ -74,37 +62,30 @@ export const PhasesWidgetMobile = () => {
     }
 
     return (
-        <PhaseContext.Provider
-            value={{
-                anchorEl,
-                setAnchorEl,
-            }}
-        >
-            <MetPaper elevation={1} sx={{ padding: '2em' }}>
-                <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" rowSpacing={2}>
-                    <Grid item xs={12}>
-                        <MetHeader3 bold>The EA Process</MetHeader3>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <MetBody>
-                            Click on the sections below to expand them and learn more about each EA process phase. You
-                            can also learn more about each engagement period by clicking the engagement icon.
-                        </MetBody>
-                    </Grid>
-                    <Grid item xs={12} sx={{ maxWidth: '99%' }}>
-                        <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
-                            <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-                                <Typography>The EA Process</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                {phases.map((phase) => (
-                                    <EngagementPhaseMobile key={phase.title} {...phase} />
-                                ))}
-                            </AccordionDetails>
-                        </Accordion>
-                    </Grid>
+        <MetPaper elevation={1} sx={{ padding: '2em' }}>
+            <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" rowSpacing={2}>
+                <Grid item xs={12}>
+                    <MetHeader3 bold>The EA Process</MetHeader3>
                 </Grid>
-            </MetPaper>
-        </PhaseContext.Provider>
+                <Grid item xs={12}>
+                    <MetBody>
+                        Click on the sections below to expand them and learn more about each EA process phase. You can
+                        also learn more about each engagement period by clicking the engagement icon.
+                    </MetBody>
+                </Grid>
+                <Grid item xs={12} sx={{ maxWidth: '99%' }}>
+                    <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+                        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
+                            <Typography>The EA Process</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            {phases.map((phase: ProcessStageProps) => (
+                                <EngagementPhaseMobile key={phase.title} {...phase} />
+                            ))}
+                        </AccordionDetails>
+                    </Accordion>
+                </Grid>
+            </Grid>
+        </MetPaper>
     );
 };
