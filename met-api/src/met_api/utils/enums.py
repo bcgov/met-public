@@ -28,3 +28,10 @@ class DocumentType(Enum):
 
     FILE = 'file'
     FOLDER = 'folder'
+
+
+class UserType(Enum):
+    """User Types."""
+
+    STAFF = 'staff'
+    PUBLIC_USER = 'public_user'

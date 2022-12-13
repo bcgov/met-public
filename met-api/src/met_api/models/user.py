@@ -7,7 +7,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import func
+from sqlalchemy import Column, ForeignKey, String, func
 
 from .db import db, ma
 
@@ -15,22 +15,32 @@ from .db import db, ma
 class User(db.Model):  # pylint: disable=too-few-public-methods
     """Definition of the User entity."""
 
-    __tablename__ = 'user'
+    __tablename__ = 'met_users'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    first_name = db.Column(db.String(50))
-    middle_name = db.Column(db.String(50), nullable=True)
-    last_name = db.Column(db.String(50))
-    email_id = db.Column(db.String(50))
-    contact_number = db.Column(db.String(50), nullable=True)
-    external_id = db.Column(db.String(50), nullable=False, unique=True)
-    created_date = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
+    id = Column(db.Integer, primary_key=True, autoincrement=True)
+    first_name = Column(db.String(50))
+    middle_name = Column(db.String(50), nullable=True)
+    last_name = Column(db.String(50))
+    # To store the IDP user name..ie IDIR username
+    username = Column('username', String(100), index=True)
+    email_id = Column(db.String(50))
+    contact_number = Column(db.String(50), nullable=True)
+    external_id = Column(db.String(50), nullable=False, unique=True)
+    created_date = Column(db.DateTime, default=datetime.utcnow)
+    updated_date = Column(db.DateTime, onupdate=datetime.utcnow)
+    # a type for the user to identify what kind of user it is..STAFF/PUBLIC_USER etc
+    access_type = Column('access_type', String(200), nullable=True)
+    status_id = db.Column(db.Integer, ForeignKey('user_status.id'))
 
     @classmethod
     def get_user(cls, _id):
         """Get a user with the provided id."""
         return cls.query.filter_by(id=_id).first()
+
+    @classmethod
+    def find_users_by_acess_type(cls, user_access_type):
+        """Get a user with the provided id."""
+        return cls.query.filter_by(access_type=user_access_type).all()
 
     @classmethod
     def get_user_by_external_id(cls, _external_id) -> User:

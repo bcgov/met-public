@@ -106,7 +106,9 @@ class WidgetDocumentService:
         """Update document from a document widget."""
         updated_document = WidgetDocumentsModel.edit_widget_document(widget_id, document_id, data)
         if not updated_document:
-            raise ValueError('Document to update was not found')
+            raise BusinessException(
+                error='Document to update was not found.',
+                status_code=HTTPStatus.BAD_REQUEST)
         return updated_document
 
     @staticmethod
@@ -114,5 +116,7 @@ class WidgetDocumentService:
         """Remove document from a document widget."""
         delete_document = WidgetDocumentsModel.remove_widget_document(widget_id, document_id)
         if not delete_document:
-            raise ValueError('Document to remove was not found')
+            raise BusinessException(
+                error='Document to remove was not found.',
+                status_code=HTTPStatus.BAD_REQUEST)
         return delete_document

@@ -28,7 +28,7 @@ class Comment(db.Model):
     text = db.Column(db.Text, unique=False, nullable=False)
     submission_date = db.Column(db.DateTime)
     survey_id = db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), nullable=False)
-    user_id = db.Column(db.Integer, ForeignKey('user.id', ondelete='SET NULL'), nullable=True)
+    user_id = db.Column(db.Integer, ForeignKey('met_users.id', ondelete='SET NULL'), nullable=True)
     submission_id = db.Column(db.Integer, ForeignKey('submission.id', ondelete='SET NULL'), nullable=True)
     component_id = db.Column(db.String(10))
 

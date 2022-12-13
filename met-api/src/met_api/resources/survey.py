@@ -24,7 +24,8 @@ from met_api.services.survey_service import SurveyService
 from met_api.utils.action_result import ActionResult
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
-
+from met_api.auth import jwt as _jwt
+from met_api.utils.roles import Role
 
 API = Namespace('surveys', description='Endpoints for Survey Management')
 """Custom exception messages
@@ -91,7 +92,7 @@ class Surveys(Resource):
             return ActionResult.error(str(err))
 
     @staticmethod
-    # @TRACER.trace()
+    @_jwt.has_one_of_roles([Role.CREATE_SURVEY.value])
     @cross_origin(origins=allowedorigins())
     @auth.require
     def post():

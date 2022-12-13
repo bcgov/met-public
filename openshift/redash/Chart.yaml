@@ -3,9 +3,6 @@ apiVersion: v2
 dependencies:
   - name: redis-exporter
     version: 1.0.1
-  - name: postgresql
-    repository: https://charts.bitnami.com/bitnami/postgresql
-    version: 11.6.15
 name: met-analytics
 tags: met-analytics
 version: v1.0.1

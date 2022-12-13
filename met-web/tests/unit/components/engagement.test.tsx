@@ -1,15 +1,12 @@
 import { render, waitFor, screen } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
-import * as EngagementView from '../../../src/components/engagement/view';
-import ProviderShell from './ProviderShell';
+import EngagementView from 'components/engagement/view';
 import { Contact } from 'models/contact';
 import { setupEnv } from './setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
-import * as widgetService from 'services/widgetService';
-import * as contactService from 'services/contactService';
 import { Widget, WidgetItem, WidgetType } from 'models/widget';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { engagement } from '../components/factory';
@@ -42,66 +39,159 @@ const widgetItem: WidgetItem = {
     sort_index: 1,
 };
 
-const widget: Widget = {
+const whoIsListeningWidget: Widget = {
     id: 1,
     widget_type_id: WidgetType.WhoIsListening,
     engagement_id: 1,
     items: [widgetItem],
 };
 
+const engagementPhasesWidget: Widget = {
+    id: 2,
+    widget_type_id: WidgetType.Phases,
+    engagement_id: 1,
+    items: [],
+};
+
+const mockLocationData = { state: { open: true }, pathname: '', search: '', hash: '', key: '' };
+
+jest.mock('hooks', () => ({
+    ...jest.requireActual('hooks'),
+    useAppSelector: jest.fn(() => true),
+}));
+
+jest.mock('@mui/material', () => ({
+    ...jest.requireActual('@mui/material'),
+    useMediaQuery: jest.fn(() => true),
+}));
+
+jest.mock('@reduxjs/toolkit/query/react', () => ({
+    ...jest.requireActual('@reduxjs/toolkit/query/react'),
+    fetchBaseQuery: jest.fn(),
+}));
+
+const mockWidgetsRtkUnwrap = jest.fn(() => Promise.resolve([whoIsListeningWidget]));
+const mockWidgetsRtkTrigger = () => {
+    return {
+        unwrap: mockWidgetsRtkUnwrap,
+    };
+};
+export const mockWidgetsRtkQuery = () => [mockWidgetsRtkTrigger];
+
+const mockLazyGetWidgetsQuery = jest.fn(mockWidgetsRtkQuery);
+jest.mock('apiManager/apiSlices/widgets', () => ({
+    ...jest.requireActual('apiManager/apiSlices/widgets'),
+    useLazyGetWidgetsQuery: () => [...mockLazyGetWidgetsQuery()],
+}));
+
+const mockContactRtkUnwrap = jest.fn(() => Promise.resolve(mockContact));
+const mockContactRtkTrigger = () => {
+    return {
+        unwrap: mockContactRtkUnwrap,
+    };
+};
+export const mockContactRtkQuery = () => [mockContactRtkTrigger];
+
+const mockLazyGetContactQuery = jest.fn(mockContactRtkQuery);
+jest.mock('apiManager/apiSlices/contacts', () => ({
+    ...jest.requireActual('apiManager/apiSlices/contacts'),
+    useLazyGetContactQuery: () => [...mockLazyGetContactQuery()],
+}));
+
 describe('Engagement View page tests', () => {
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
-    const useParamsMock = jest.spyOn(reactRouter, 'useParams');
+    jest.spyOn(reactRouter, 'useLocation').mockReturnValue(mockLocationData);
+    jest.spyOn(reactRouter, 'useParams').mockReturnValue({ engagementId: '1' });
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
         .mockReturnValue(Promise.resolve(engagement));
-    const getContactsMock = jest.spyOn(contactService, 'getContacts').mockReturnValue(Promise.resolve([mockContact]));
-    const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([widget]));
 
     beforeEach(() => {
         setupEnv();
     });
 
     test('Look at Engagement view', async () => {
-        useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
                 ...engagement,
                 surveys: surveys,
             }),
         );
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([widget]));
-        getContactsMock.mockReturnValueOnce(Promise.resolve([mockContact]));
-        render(
-            <ProviderShell>
-                <EngagementView.Engagement />
-            </ProviderShell>,
-        );
+        render(<EngagementView />);
         await waitFor(() => {
             expect(screen.getByTestId(`engagement-content`)).toBeVisible();
         });
+
+        expect(getEngagementMock).toHaveBeenCalledOnce();
     });
 
-    test('Who is listening widget block appears', async () => {
-        useParamsMock.mockReturnValue({ engagementId: '1' });
+    test('Widget block appears', async () => {
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
                 ...engagement,
                 surveys: surveys,
             }),
         );
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([widget]));
-        getContactsMock.mockReturnValueOnce(Promise.resolve([mockContact]));
-        render(
-            <ProviderShell>
-                <EngagementView.Engagement />
-            </ProviderShell>,
-        );
+        render(<EngagementView />);
 
         await waitFor(() => {
             expect(screen.getByTestId(`widget-block`)).toBeVisible();
         });
+
+        expect(getEngagementMock).toHaveBeenCalledOnce();
+    });
+
+    test('Who is listening widget appears', async () => {
+        getEngagementMock.mockReturnValueOnce(
+            Promise.resolve({
+                ...engagement,
+                surveys: surveys,
+            }),
+        );
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
+        mockContactRtkUnwrap.mockReturnValueOnce(Promise.resolve(mockContact));
+        const { container } = render(<EngagementView />);
+
+        await waitFor(() => {
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
+            expect(screen.getByText('Who is Listening')).toBeVisible();
+        });
+
+        expect(screen.getByText(mockContact.name)).toBeVisible();
+        expect(screen.getByText(mockContact.email)).toBeVisible();
+
+        expect(getEngagementMock).toHaveBeenCalledOnce();
+        expect(mockWidgetsRtkUnwrap).toHaveBeenCalledOnce();
+        expect(mockContactRtkUnwrap).toHaveBeenCalledOnce();
+    });
+
+    test('Phases widget appears', async () => {
+        getEngagementMock.mockReturnValueOnce(
+            Promise.resolve({
+                ...engagement,
+                surveys: surveys,
+            }),
+        );
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([engagementPhasesWidget]));
+        const { container } = render(<EngagementView />);
+
+        await waitFor(() => {
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
+            expect(mockWidgetsRtkUnwrap).toHaveReturned();
+        });
+
+        expect(mockWidgetsRtkUnwrap).toHaveBeenCalledOnce();
+        expect(getEngagementMock).toHaveBeenCalledOnce();
+
+        expect(screen.getByText('The EA Process')).toBeVisible();
+        expect(screen.getByText('Early Engagement')).toBeVisible();
+        expect(screen.getByText('Readiness Decision')).toBeVisible();
+        expect(screen.getByText('Process Planning')).toBeVisible();
+        expect(screen.getByText('Application Development & Review')).toBeVisible();
+        expect(screen.getByText('Effect Assessment & Review')).toBeVisible();
+        expect(screen.getByText('Decision')).toBeVisible();
+        expect(screen.getByText('Post-Certificate')).toBeVisible();
     });
 });

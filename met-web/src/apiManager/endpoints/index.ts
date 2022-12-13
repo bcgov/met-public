@@ -9,6 +9,7 @@ const Endpoints = {
     },
     User: {
         CREATE_UPDATE: `${AppConfig.apiUrl}/user/`,
+        GET_LIST: `${AppConfig.apiUrl}/user/`,
     },
     Document: {
         OSS_HEADER: `${AppConfig.apiUrl}/document/`,

@@ -120,6 +120,15 @@ const updateUser = async () => {
     }
 };
 
+const getUserList = async () => {
+    try {
+        return await http.GetRequest(Endpoints.User.GET_LIST);
+    } catch (e: unknown) {
+        console.error(e);
+        return Promise.reject(e);
+    }
+};
+
 const UserService = {
     initKeycloak,
     updateUser,
@@ -129,6 +138,7 @@ const UserService = {
     getToken,
     hasRole,
     hasAdminRole,
+    getUserList,
 };
 
 export default UserService;

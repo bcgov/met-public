@@ -7,14 +7,13 @@ import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as widgetService from 'services/widgetService';
-import * as contactService from 'services/contactService';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { Widget, WidgetItem, WidgetType } from 'models/widget';
 import { Contact } from 'models/contact';
 import { Box } from '@mui/material';
-import { engagement } from '../components/factory';
+import { engagement } from './factory';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
@@ -76,6 +75,49 @@ jest.mock('components/common/Dragndrop', () => ({
     DragItem: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
 }));
 
+jest.mock('@reduxjs/toolkit/query/react', () => ({
+    ...jest.requireActual('@reduxjs/toolkit/query/react'),
+    fetchBaseQuery: jest.fn(),
+}));
+
+const mockContactsRtkUnwrap = jest.fn(() => Promise.resolve([mockContact]));
+const mockContactsRtkTrigger = () => {
+    return {
+        unwrap: mockContactsRtkUnwrap,
+    };
+};
+export const mockContactsRtkQuery = () => [mockContactsRtkTrigger];
+
+const mockContactRtkUnwrap = jest.fn(() => Promise.resolve(mockContact));
+const mockContactRtkTrigger = () => {
+    return {
+        unwrap: mockContactRtkUnwrap,
+    };
+};
+export const mockContactRtkQuery = () => [mockContactRtkTrigger];
+
+const mockLazyGetContactsQuery = jest.fn(mockContactsRtkQuery);
+const mockLazyGetContactQuery = jest.fn(mockContactRtkQuery);
+jest.mock('apiManager/apiSlices/contacts', () => ({
+    ...jest.requireActual('apiManager/apiSlices/contacts'),
+    useLazyGetContactsQuery: () => [...mockLazyGetContactsQuery()],
+    useLazyGetContactQuery: () => [...mockLazyGetContactQuery()],
+}));
+
+const mockWidgetsRtkUnwrap = jest.fn(() => Promise.resolve([whoIsListeningWidget, phasesWidget]));
+const mockWidgetsRtkTrigger = () => {
+    return {
+        unwrap: mockWidgetsRtkUnwrap,
+    };
+};
+export const mockWidgetsRtkQuery = () => [mockWidgetsRtkTrigger];
+
+const mockLazyGetWidgetsQuery = jest.fn(mockWidgetsRtkQuery);
+jest.mock('apiManager/apiSlices/widgets', () => ({
+    ...jest.requireActual('apiManager/apiSlices/widgets'),
+    useLazyGetWidgetsQuery: () => [...mockLazyGetWidgetsQuery()],
+}));
+
 describe('Engagement form page tests', () => {
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
@@ -94,10 +136,6 @@ describe('Engagement form page tests', () => {
     const postEngagementMock = jest
         .spyOn(engagementService, 'postEngagement')
         .mockReturnValue(Promise.resolve(engagement));
-    const getContactsMock = jest.spyOn(contactService, 'getContacts').mockReturnValue(Promise.resolve([mockContact]));
-    const getWidgetsMock = jest
-        .spyOn(widgetService, 'getWidgets')
-        .mockReturnValue(Promise.resolve([whoIsListeningWidget, phasesWidget]));
     const postWidgetMock = jest
         .spyOn(widgetService, 'postWidget')
         .mockReturnValue(Promise.resolve(whoIsListeningWidget));
@@ -299,7 +337,7 @@ describe('Engagement form page tests', () => {
         });
 
         expect(screen.getByText('Add Widget')).toBeVisible();
-        expect(getWidgetsMock).toHaveBeenCalled();
+        expect(mockWidgetsRtkUnwrap).toHaveBeenCalled();
     });
 
     test('Widget drawer appears', async () => {
@@ -310,7 +348,7 @@ describe('Engagement form page tests', () => {
                 surveys: surveys,
             }),
         );
-        getWidgetsMock.mockReturnValue(Promise.resolve([]));
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
         const { container } = render(<EngagementForm />);
 
         await waitFor(() => {
@@ -336,9 +374,9 @@ describe('Engagement form page tests', () => {
                 surveys: surveys,
             }),
         );
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
         postWidgetMock.mockReturnValue(Promise.resolve(whoIsListeningWidget));
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
         const { container } = render(<EngagementForm />);
 
         await waitFor(() => {
@@ -363,7 +401,7 @@ describe('Engagement form page tests', () => {
             widget_type_id: WidgetType.WhoIsListening,
             engagement_id: engagement.id,
         });
-        expect(getWidgetsMock).toHaveBeenCalledTimes(2);
+        expect(mockWidgetsRtkUnwrap).toHaveBeenCalledTimes(2);
         expect(screen.getByText('Add This Contact')).toBeVisible();
         expect(screen.getByText('Select Existing Contact')).toBeVisible();
     });
@@ -376,9 +414,9 @@ describe('Engagement form page tests', () => {
                 surveys: surveys,
             }),
         );
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
         postWidgetMock.mockReturnValue(Promise.resolve(whoIsListeningWidget));
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
         const { container } = render(<EngagementForm />);
 
         await waitFor(() => {
@@ -401,7 +439,7 @@ describe('Engagement form page tests', () => {
             expect(screen.getByText(mockContact.email)).toBeVisible();
         });
 
-        expect(getContactsMock).toHaveBeenCalled();
+        expect(mockContactsRtkUnwrap).toHaveBeenCalled();
 
         const createContactButton = screen.getByText('Create New Contact');
         fireEvent.click(createContactButton);
@@ -419,9 +457,9 @@ describe('Engagement form page tests', () => {
                 surveys: surveys,
             }),
         );
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
         postWidgetMock.mockReturnValue(Promise.resolve(phasesWidget));
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([phasesWidget]));
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([phasesWidget]));
         const { container } = render(<EngagementForm />);
 
         await waitFor(() => {
@@ -447,7 +485,7 @@ describe('Engagement form page tests', () => {
             widget_type_id: WidgetType.Phases,
             engagement_id: engagement.id,
         });
-        expect(getWidgetsMock).toHaveBeenCalledTimes(2);
+        expect(mockWidgetsRtkUnwrap).toHaveBeenCalledTimes(2);
 
         const saveWidgetButton = screen.getByTestId('savePhasesWidgetButton');
         expect(saveWidgetButton).toBeDisabled();
@@ -456,6 +494,10 @@ describe('Engagement form page tests', () => {
         fireEvent.click(standalonePhaseCheckbox);
 
         fireEvent.click(saveWidgetButton);
+
+        await waitFor(() => {
+            expect(saveWidgetButton).not.toBeVisible();
+        });
 
         expect(postWidgetItemMock).toHaveBeenNthCalledWith(1, phasesWidget.id, {
             widget_id: phasesWidget.id,

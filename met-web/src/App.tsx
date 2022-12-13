@@ -16,7 +16,7 @@ import { FeedbackModal } from 'components/common/Modals/Feedback';
 import { AppConfig } from 'config';
 
 const App = () => {
-    const drawerWidth = 240;
+    const drawerWidth = 280;
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const dispatch = useAppDispatch();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);

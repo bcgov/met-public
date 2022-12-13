@@ -37,21 +37,25 @@ class WidgetDocuments(BaseModel):  # pylint: disable=too-few-public-methods
     @classmethod
     def edit_widget_document(cls, widget_id, document_id, widget_document_data: dict) -> WidgetDocuments:
         """Update document."""
-        widget_document = db.session.query(WidgetDocuments) \
+        widget_document_query = db.session.query(WidgetDocuments) \
             .filter(WidgetDocuments.widget_id == widget_id, WidgetDocuments.id == document_id)
-        widgetdocuments: WidgetDocuments = widget_document.first()
-        if not widgetdocuments:
+        widget_documents: WidgetDocuments = widget_document_query.first()
+        if not widget_documents:
             return None
-        widget_document.update(widget_document_data)
+        widget_document_query.update(widget_document_data)
         db.session.commit()
-        return widgetdocuments
+        return widget_documents
 
     @classmethod
-    def remove_widget_document(cls, widget_id, document_id) -> WidgetDocuments:
-        """Remove document from a document widget."""
-        deletedocument = db.session.query(WidgetDocuments) \
+    def remove_widget_document(cls, widget_id, document_id) -> List[WidgetDocuments]:
+        """Remove document from a document widget.
+
+        Using an 'or' condition to handle nested deletion of files within the folder.
+        """
+        query = db.session.query(WidgetDocuments) \
             .filter(WidgetDocuments.widget_id == widget_id,
-                    sa.or_(WidgetDocuments.id == document_id, WidgetDocuments.parent_document_id == document_id)) \
-            .delete()
+                    sa.or_(WidgetDocuments.id == document_id, WidgetDocuments.parent_document_id == document_id))
+        widget_documents = query.all()
+        query.delete()
         db.session.commit()
-        return deletedocument
+        return widget_documents
