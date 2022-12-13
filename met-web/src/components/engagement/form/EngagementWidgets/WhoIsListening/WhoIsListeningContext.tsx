@@ -9,7 +9,6 @@ export interface WhoIsListeningContextProps {
     contactToEdit: Contact | null;
     addContactDrawerOpen: boolean;
     handleAddContactDrawerOpen: (_open: boolean) => void;
-    clearSelected: () => void;
     loadingContacts: boolean;
     contacts: Contact[];
     loadContacts: () => Promise<Contact[] | undefined>;
@@ -27,9 +26,6 @@ export const WhoIsListeningContext = createContext<WhoIsListeningContextProps>({
     contactToEdit: null,
     addContactDrawerOpen: false,
     handleAddContactDrawerOpen: (_open: boolean) => {
-        /* empty default method  */
-    },
-    clearSelected: () => {
         /* empty default method  */
     },
     contacts: [],
@@ -70,10 +66,6 @@ export const WhoIsListeningProvider = ({ children }: { children: JSX.Element | J
         }
     };
 
-    const clearSelected = () => {
-        setContactToEdit(null);
-    };
-
     useEffect(() => {
         loadContacts();
     }, [savedEngagement]);
@@ -98,7 +90,6 @@ export const WhoIsListeningProvider = ({ children }: { children: JSX.Element | J
                 contacts,
                 loadContacts,
                 contactToEdit,
-                clearSelected,
                 handleChangeContactToEdit,
                 setAddedContacts,
                 addedContacts,

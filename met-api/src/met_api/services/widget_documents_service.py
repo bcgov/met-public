@@ -52,9 +52,10 @@ class WidgetDocumentService:
             'title': doc.title,
             'sort_index': doc.sort_index,
             'url': doc.url,
+            'parent_document_id': doc.parent_document_id,
         }
         # remove null
-        return {k: v for k, v in props.items() if v}
+        return dict(props.items())
 
     @staticmethod
     def create_document(widget_id, doc_details):
@@ -74,12 +75,12 @@ class WidgetDocumentService:
         doc.parent_document_id = parent_id
         doc.url = doc_details.get('url')
         doc.widget_id = widget_id
-        sort_index = WidgetDocumentService._find_higest_sort_index(widget_id)
+        sort_index = WidgetDocumentService._find_highest_sort_index(widget_id)
         doc.sort_index = sort_index + 1
         return doc
 
     @staticmethod
-    def _find_higest_sort_index(widget_id):
+    def _find_highest_sort_index(widget_id):
         # find the highest sort order of the engagement
         sort_index = 0
         docs = WidgetDocumentsModel.get_all_by_widget_id(widget_id)

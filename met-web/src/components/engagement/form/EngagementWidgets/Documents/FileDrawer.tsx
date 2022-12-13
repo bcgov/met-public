@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
@@ -12,8 +12,9 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { DocumentsContext } from './DocumentsContext';
 import ControlledSelect from 'components/common/ControlledInputComponents/ControlledSelect';
-import { postDocument } from 'services/widgetService/DocumentService.tsx';
-import { DOCUMENT_TYPE } from 'models/document';
+import { postDocument, patchDocument, PatchDocumentRequest } from 'services/widgetService/DocumentService.tsx';
+import { DOCUMENT_TYPE, DocumentItem } from 'models/document';
+import { updatedDiff } from 'deep-object-diff';
 
 const schema = yup
     .object({
@@ -27,10 +28,12 @@ type FileForm = yup.TypeOf<typeof schema>;
 
 const FileDrawer = () => {
     const dispatch = useAppDispatch();
-    const { documents, handleFileDrawerOpen, fileDrawerOpen, loadDocuments, widget } = useContext(DocumentsContext);
-
+    const { documentToEdit, documents, loadDocuments, handleFileDrawerOpen, fileDrawerOpen, widget } =
+        useContext(DocumentsContext);
     const [isCreatingFile, setIsCreatingDocument] = useState(false);
-
+    const parentDocument = documents.find(
+        (document: DocumentItem) => document.id === documentToEdit?.parent_document_id,
+    );
     const methods = useForm<FileForm>({
         resolver: yupResolver(schema),
         defaultValues: {
@@ -42,9 +45,69 @@ const FileDrawer = () => {
 
     const { handleSubmit, reset } = methods;
 
+    useEffect(() => {
+        methods.setValue('name', documentToEdit?.title || '');
+        methods.setValue('link', documentToEdit?.url || '');
+        methods.setValue('folderId', documentToEdit?.parent_document_id || 0);
+    }, [documentToEdit]);
+
     const handleClose = () => {
         reset();
         handleFileDrawerOpen(false);
+    };
+
+    const updateDocument = async (data: FileForm) => {
+        if (!(documentToEdit && widget)) {
+            return;
+        }
+        setIsCreatingDocument(true);
+        const documentEditsToPatch = updatedDiff(documentToEdit, {
+            title: data.name,
+            parent_document_id: data.folderId === 0 ? null : data.folderId,
+            url: data.link,
+        }) as PatchDocumentRequest;
+        await patchDocument(widget.id, documentToEdit.id, {
+            ...documentEditsToPatch,
+        });
+        dispatch(
+            openNotification({
+                severity: 'success',
+                text: 'Document was successfully updated',
+            }),
+        );
+        await loadDocuments();
+        setIsCreatingDocument(false);
+        handleClose();
+    };
+
+    const createDocument = async (data: FileForm) => {
+        if (!widget) {
+            return;
+        }
+        setIsCreatingDocument(true);
+        await postDocument(widget.id, {
+            title: data.name,
+            parent_document_id: data.folderId === 0 ? null : data.folderId,
+            url: data.link,
+            widget_id: widget.id,
+            type: 'file',
+        });
+        dispatch(
+            openNotification({
+                severity: 'success',
+                text: 'Document was successfully created',
+            }),
+        );
+        await loadDocuments();
+        setIsCreatingDocument(false);
+        handleClose();
+    };
+
+    const saveDocument = async (data: FileForm) => {
+        if (documentToEdit) {
+            return await updateDocument(data);
+        }
+        return await createDocument(data);
     };
 
     const onSubmit: SubmitHandler<FileForm> = async (data: FileForm) => {
@@ -52,17 +115,7 @@ const FileDrawer = () => {
             return;
         }
         try {
-            setIsCreatingDocument(true);
-            await postDocument(widget.id, {
-                title: data.name,
-                parent_document_id: data.folderId === 0 ? null : data.folderId,
-                url: data.link,
-                widget_id: widget.id,
-                type: 'file',
-            });
-            await loadDocuments();
-            setIsCreatingDocument(false);
-            handleClose();
+            return await saveDocument(data);
         } catch (err) {
             console.log(err);
             dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to save File' }));
@@ -88,7 +141,7 @@ const FileDrawer = () => {
                         padding="2em"
                     >
                         <Grid item xs={12}>
-                            <MetHeader3 bold>Add File</MetHeader3>
+                            <MetHeader3 bold>{documentToEdit ? 'Edit File' : 'Add File'}</MetHeader3>
                             <Divider sx={{ marginTop: '1em' }} />
                         </Grid>
 
@@ -140,10 +193,17 @@ const FileDrawer = () => {
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
+                                    defaultValue={parentDocument?.title}
                                     fullWidth
                                     size="small"
                                 >
-                                    <MenuItem key={`folder-option-0`} value={0} sx={{ height: '2em' }}></MenuItem>
+                                    <MenuItem
+                                        key={`folder-option-0`}
+                                        value={0}
+                                        sx={{ fontStyle: 'italic', height: '2em' }}
+                                    >
+                                        none
+                                    </MenuItem>
                                     {documents
                                         .filter((document) => document.type === DOCUMENT_TYPE.FOLDER)
                                         .map((document) => {
