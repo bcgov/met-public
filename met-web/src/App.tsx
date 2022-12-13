@@ -38,7 +38,7 @@ const App = () => {
                 <PageViewTracker />
                 <Notification />
                 <NotificationModal />
-                <LoggedOutHeader />
+                <Header />
                 <UnauthenticatedRoutes />
                 <FeedbackModal />
             </Router>
@@ -48,7 +48,7 @@ const App = () => {
     if (!isMediumScreen) {
         return (
             <Router>
-                <LoggedInHeader />
+                <Header />
                 <Container>
                     <Toolbar />
                     <AuthenticatedRoutes />
@@ -61,7 +61,7 @@ const App = () => {
     return (
         <Router>
             <Box sx={{ display: 'flex' }}>
-                <LoggedInHeader drawerWidth={drawerWidth} />
+                <Header drawerWidth={drawerWidth} />
                 <Notification />
                 <NotificationModal />
                 <Box component="main" sx={{ flexGrow: 1, width: `calc(100% - ${drawerWidth}px)`, marginTop: '17px' }}>

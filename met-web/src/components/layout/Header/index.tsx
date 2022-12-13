@@ -11,11 +11,15 @@ import { Palette } from 'styles/Theme';
 import EnvironmentBanner from './EnvironmentBanner';
 import { MetHeader1, MetHeader2 } from 'components/common';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
+import { useAppSelector } from 'hooks';
+import { Else, If, Then, When } from 'react-if';
 
-const LoggedInHeader = ({ drawerWidth = 280 }) => {
+const Header = ({ drawerWidth = 280 }) => {
+    const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     return (
         <>
+            <CssBaseline />
             <AppBar
                 position="fixed"
                 color="default"
@@ -25,14 +29,13 @@ const LoggedInHeader = ({ drawerWidth = 280 }) => {
                 }}
                 data-testid="appbar-header"
             >
-                <CssBaseline />
-                <Toolbar>
+                <Toolbar sx={{ padding: '0 !important' }}>
                     <Box
                         component={BCLogo}
                         sx={{
                             height: '5em',
                             width: { xs: '7em', md: '15em' },
-                            marginRight: { xs: '1em', md: '3em' },
+                            marginRight: { xs: '1em', md: '7em' },
                         }}
                         alt="British Columbia Logo"
                     />
@@ -41,20 +44,31 @@ const LoggedInHeader = ({ drawerWidth = 280 }) => {
                     ) : (
                         <MetHeader2 sx={{ flexGrow: 1 }}>MET</MetHeader2>
                     )}
-                    <Button data-testid="button-header" color="inherit" onClick={() => UserService.doLogout()}>
-                        Logout
-                    </Button>
+                    <If condition={isLoggedIn}>
+                        <Then>
+                            <Button data-testid="button-header" color="inherit" onClick={() => UserService.doLogout()}>
+                                Logout
+                            </Button>
+                        </Then>
+                        <Else>
+                            <Button color="inherit" onClick={() => UserService.doLogin()}>
+                                Login
+                            </Button>
+                        </Else>
+                    </If>
                 </Toolbar>
                 <EnvironmentBanner />
             </AppBar>
-            <SideNav
-                data-testid="sidenav-header"
-                isMediumScreen={isMediumScreen}
-                open={false}
-                drawerWidth={drawerWidth}
-            />
+            <When condition={isLoggedIn}>
+                <SideNav
+                    data-testid="sidenav-header"
+                    isMediumScreen={isMediumScreen}
+                    open={false}
+                    drawerWidth={drawerWidth}
+                />
+            </When>
         </>
     );
 };
 
-export default LoggedInHeader;
+export default Header;
