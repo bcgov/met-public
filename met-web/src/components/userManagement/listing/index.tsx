@@ -81,7 +81,9 @@ const UserManagementListing = () => {
             disablePadding: true,
             label: 'Role',
             allowSort: true,
-            getValue: (row: User) => row.groups,
+            getValue: (row: User) => {
+                return row.groups[0];
+            },
         },
         {
             key: 'created_date',

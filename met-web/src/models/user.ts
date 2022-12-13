@@ -5,10 +5,10 @@ export interface User {
     email_id: string;
     external_id: string;
     first_name: string;
-    groups: any;
+    groups: string;
     id: number;
     last_name: string;
     updated_date: string;
-    status: any;
+    status: string;
     access_type: string;
 }
