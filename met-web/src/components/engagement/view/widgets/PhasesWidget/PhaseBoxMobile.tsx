@@ -17,8 +17,8 @@ interface PhaseBoxProps {
     readMoreBox?: ReactNode;
     iconBox?: ReactNode;
     children?: ReactNode;
-    mobile?: boolean;
     readMoreBackground?: string;
+    accordionBackground?: string;
 }
 export const PhaseBoxMobile = ({
     title,
@@ -26,7 +26,7 @@ export const PhaseBoxMobile = ({
     readMoreBox,
     readMoreBackground,
     iconBox,
-    mobile,
+    accordionBackground,
 }: PhaseBoxProps) => {
     const [readMoreOpen, setReadMoreOpen] = useState(false);
     const { anchorEl, setAnchorEl } = useContext(PhaseContext);
@@ -65,19 +65,22 @@ export const PhaseBoxMobile = ({
                                         {title}
                                     </MetHeader4>
                                 </Grid>
-                                <Grid item sx={{ alignItems: 'flex-end', justifyContent: 'center' }} xs={12}>
+                                <Grid item container xs={12}>
+                                    <Grid item xs={8}></Grid>
                                     <When condition={Boolean(iconBox)}>
-                                        <IconBox>{iconBox}</IconBox>
+                                        <Grid item xs={4} sx={{ mt: 1 }}>
+                                            <IconBox>{iconBox}</IconBox>
+                                        </Grid>
                                     </When>
                                 </Grid>
                                 <Grid item container direction="row" xs={12} justifyContent="flex-start">
-                                    <Accordion>
+                                    <Accordion sx={{ background: accordionBackground }}>
                                         <AccordionSummary
-                                            expandIcon={<ExpandMoreIcon />}
+                                            expandIcon={<ExpandMoreIcon htmlColor="#000000" />}
                                             aria-controls="panel1a-content"
                                             id="panel1a-header"
                                         >
-                                            <Typography>Learn More</Typography>
+                                            <Typography sx={{ color: 'black' }}>Learn More</Typography>
                                         </AccordionSummary>
                                         <AccordionDetails>
                                             <Typography>{readMoreBox}</Typography>
@@ -94,11 +97,10 @@ export const PhaseBoxMobile = ({
                     id={readMoreOpen ? `${title}-readmore-popover` : undefined}
                     open={readMoreOpen}
                     anchorEl={anchorEl}
-                    sx={{ border: '2px solid red' }}
                     onClose={() => setReadMoreOpen(false)}
                     anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left',
+                        vertical: 'top',
+                        horizontal: 'right',
                     }}
                     elevation={0}
                     PaperProps={{

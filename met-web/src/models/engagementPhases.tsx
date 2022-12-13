@@ -16,6 +16,7 @@ export interface ProcessStageProps {
     title: string;
     learnMoreText: ReactNode;
     popOverText?: string;
+    accordionBackground?: string;
 }
 
 export const ENGAGEMENT_PHASES = {
