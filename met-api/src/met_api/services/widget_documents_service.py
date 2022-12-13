@@ -55,7 +55,7 @@ class WidgetDocumentService:
             'parent_document_id': doc.parent_document_id,
         }
         # remove null
-        return {k: v for k, v in props.items()}
+        return dict(props.items())
 
     @staticmethod
     def create_document(widget_id, doc_details):
