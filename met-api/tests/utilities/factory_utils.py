@@ -35,7 +35,6 @@ from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementInfo, TestFeedbackInfo, TestSubmissionInfo, TestSurveyInfo, TestUserInfo,
     TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo)
 
-
 CONFIG = get_named_config('testing')
 fake = Faker()
 
@@ -111,14 +110,18 @@ def factory_engagement_model(eng_info: dict = TestEngagementInfo.engagement1, st
     return engagement
 
 
-def factory_user_model(external_id=fake.random_number(digits=5), user_info: dict = TestUserInfo.user_public_1):
+def factory_user_model(external_id=None, user_info: dict = TestUserInfo.user_public_1):
     """Produce a user model."""
+    # Generate a external id if not passed
+    external_id = fake.random_number(digits=5) if external_id is None else external_id
+    print('---------', external_id)
     user = UserModel(
         first_name=user_info['first_name'],
         last_name=user_info['last_name'],
         middle_name=user_info['middle_name'],
         email_id=user_info['email_id'],
-        external_id=str(external_id)
+        external_id=str(external_id),
+        access_type=user_info['access_type']
     )
     db.session.add(user)
     db.session.commit()

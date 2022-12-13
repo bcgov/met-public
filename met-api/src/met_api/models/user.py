@@ -7,9 +7,11 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import Column, ForeignKey, String, func
+from sqlalchemy import Column, ForeignKey, String, asc, desc, func
+from sqlalchemy.sql import text
 
 from .db import db, ma
+from .pagination_options import PaginationOptions
 
 
 class User(db.Model):  # pylint: disable=too-few-public-methods
@@ -38,9 +40,22 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
         return cls.query.filter_by(id=_id).first()
 
     @classmethod
-    def find_users_by_acess_type(cls, user_access_type):
+    def find_users_by_access_type(cls, user_access_type, pagination_options: PaginationOptions):
         """Get a user with the provided id."""
-        return cls.query.filter_by(access_type=user_access_type).all()
+        query = cls.query.filter_by(access_type=user_access_type)
+        if pagination_options.sort_key:
+            sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == 'asc' \
+                else desc(text(pagination_options.sort_key))
+
+            query = query.order_by(sort)
+
+        no_pagination_options = not pagination_options.page or not pagination_options.size
+        if no_pagination_options:
+            items = query.all()
+            return items, len(items)
+
+        page = query.paginate(page=pagination_options.page, per_page=pagination_options.size)
+        return page.items, page.total
 
     @classmethod
     def get_user_by_external_id(cls, _external_id) -> User:
@@ -50,6 +65,7 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
     @classmethod
     def create_user(cls, user) -> User:
         """Create user."""
+        print('-----mode',user.get('username', None))
         new_user = User(
             first_name=user.get('first_name', None),
             middle_name=user.get('middle_name', None),
@@ -57,8 +73,11 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
             email_id=user.get('email_id', None),
             contact_number=user.get('contact_number', None),
             external_id=user.get('external_id', None),
+            access_type=user.get('access_type', None),
+            username=user.get('username', None),
             created_date=datetime.utcnow(),
             updated_date=None,
+
         )
         db.session.add(new_user)
         db.session.commit()
@@ -81,6 +100,8 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
             contact_number=user_dict.get('contact_number', user.contact_number),
             external_id=user_dict.get('external_id', user.external_id),
             updated_date=datetime.utcnow(),
+            access_type=user.get('access_type', None),
+            username=user.get('username', None),
         )
 
         query.update(update_fields)

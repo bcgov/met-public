@@ -20,6 +20,9 @@ class UserSchema(Schema):
     last_name = fields.Str(data_key='last_name')
     email_id = fields.Str(data_key='email_id')
     contact_number = fields.Str(data_key='contact_number')
+    username = fields.Str(data_key='username')
     external_id = fields.Str(data_key='external_id')
     created_date = fields.Str(data_key='created_date')
     updated_date = fields.Str(data_key='updated_date')
+    access_type = fields.Str(data_key='access_type')
+
