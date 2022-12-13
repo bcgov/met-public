@@ -7,7 +7,6 @@ import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as widgetService from 'services/widgetService';
-import * as contactService from 'services/contactService';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { Widget, WidgetItem, WidgetType } from 'models/widget';
 import { Contact } from 'models/contact';
@@ -172,7 +171,7 @@ describe('Who is Listening widget  tests', () => {
                 surveys: surveys,
             }),
         );
-        
+
         mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
         postWidgetMock.mockReturnValue(Promise.resolve(whoIsListeningWidget));
         mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));

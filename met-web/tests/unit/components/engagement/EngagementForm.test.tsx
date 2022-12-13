@@ -6,7 +6,6 @@ import { setupEnv } from '../setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
-import * as widgetService from 'services/widgetService';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
 import { createDefaultSurvey, Survey } from 'models/survey';
@@ -38,7 +37,6 @@ jest.mock('@reduxjs/toolkit/query/react', () => ({
     ...jest.requireActual('@reduxjs/toolkit/query/react'),
     fetchBaseQuery: jest.fn(),
 }));
-
 
 const mockWidgetsRtkUnwrap = jest.fn(() => Promise.resolve([]));
 const mockWidgetsRtkTrigger = () => {
@@ -72,7 +70,6 @@ describe('Engagement form page tests', () => {
     const postEngagementMock = jest
         .spyOn(engagementService, 'postEngagement')
         .mockReturnValue(Promise.resolve(engagement));
-    const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([]));
 
     beforeEach(() => {
         setupEnv();

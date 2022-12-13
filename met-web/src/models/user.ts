@@ -5,7 +5,7 @@ export interface User {
     email_id: string;
     external_id: string;
     first_name: string;
-    groups: any;
+    groups: unknown;
     id: number;
     last_name: string;
     updated_date: string;

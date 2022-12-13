@@ -90,6 +90,7 @@ class SubmissionService:
 
     @classmethod
     def validate_review(cls, values: dict, user):
+        """Validate a review comment request."""
         status_id = values.get('status_id', None)
         has_personal_info = values.get('has_personal_info', None)
         has_profanity = values.get('has_profanity', None)
@@ -108,7 +109,6 @@ class SubmissionService:
            not any(set((has_personal_info, has_profanity, has_threat))) and\
            not rejected_reason_other:
             raise ValueError('A rejection reason is required.')
-
 
     @classmethod
     def get_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text=''):
