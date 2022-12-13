@@ -3,13 +3,8 @@ import { Grid, Skeleton, Stack } from '@mui/material';
 import { MetBody, MetHeader3, MetPaper } from 'components/common';
 import { WidgetType } from 'models/widget';
 import { ActionContext } from '../../ActionContext';
-import { AppDevReview } from './phaseItems/AppDevReview';
-import { Decision } from './phaseItems/Decision';
-import { EarlyEngagement } from './phaseItems/EarlyEngagement';
-import { EffectAssessmentReview } from './phaseItems/EffectAssessmentRec';
-import { PostCertificate } from './phaseItems/PostCertificate';
-import { ProcessPlanning } from './phaseItems/ProcessPlanning';
-import { ReadinessDecision } from './phaseItems/ReadinessDecision';
+import { EngagementPhase } from './PhasesWidgetMobile/EngagementPhase';
+import { ENGAGEMENT_PHASES } from 'models/engagementPhases';
 
 interface PhaseContextProps {
     anchorEl: HTMLButtonElement | null;
@@ -25,7 +20,7 @@ export const PhaseContext = React.createContext<PhaseContextProps>({
 export const PhasesWidget = () => {
     const { widgets, isWidgetsLoading } = useContext(ActionContext);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
+    const phases = Object.values(ENGAGEMENT_PHASES);
     const phasesWidget = widgets.find((widget) => widget.widget_type_id === WidgetType.Phases);
 
     if (isWidgetsLoading) {
@@ -56,13 +51,9 @@ export const PhasesWidget = () => {
                     </Grid>
                     <Grid item xs={12} sx={{ maxWidth: '99%' }}>
                         <Stack direction="row" sx={{ overflowX: 'auto', overflowY: 'clip' }}>
-                            <EarlyEngagement />
-                            <ReadinessDecision />
-                            <ProcessPlanning />
-                            <AppDevReview />
-                            <EffectAssessmentReview />
-                            <Decision />
-                            <PostCertificate />
+                            {phases.map((phase) => (
+                                <EngagementPhase key={phase.title} {...phase} />
+                            ))}
                         </Stack>
                     </Grid>
                 </Grid>
