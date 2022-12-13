@@ -20,7 +20,7 @@ export const PhaseContext = React.createContext<PhaseContextProps>({
 export const PhasesWidget = () => {
     const { widgets, isWidgetsLoading } = useContext(ActionContext);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
+    const phases = Object.values(ENGAGEMENT_PHASES);
     const phasesWidget = widgets.find((widget) => widget.widget_type_id === WidgetType.Phases);
 
     if (isWidgetsLoading) {
@@ -51,62 +51,9 @@ export const PhasesWidget = () => {
                     </Grid>
                     <Grid item xs={12} sx={{ maxWidth: '99%' }}>
                         <Stack direction="row" sx={{ overflowX: 'auto', overflowY: 'clip' }}>
-                            <EngagementPhase
-                                title={ENGAGEMENT_PHASES.EarlyEngagement.title}
-                                backgroundColor={ENGAGEMENT_PHASES.EarlyEngagement.backgroundColor}
-                                learnMoreBackgroundColor={ENGAGEMENT_PHASES.EarlyEngagement.learnMoreBackgroundColor}
-                                learnMoreText={ENGAGEMENT_PHASES.EarlyEngagement.learnMoreText}
-                                popOverText={ENGAGEMENT_PHASES.EarlyEngagement.popOverText}
-                                mobile={true}
-                            />
-                            <EngagementPhase
-                                title={ENGAGEMENT_PHASES.ReadinessDecision.title}
-                                backgroundColor={ENGAGEMENT_PHASES.ReadinessDecision.backgroundColor}
-                                learnMoreBackgroundColor={ENGAGEMENT_PHASES.ReadinessDecision.learnMoreBackgroundColor}
-                                learnMoreText={ENGAGEMENT_PHASES.ReadinessDecision.learnMoreText}
-                                popOverText={ENGAGEMENT_PHASES.ReadinessDecision.popOverText}
-                                mobile={true}
-                            />
-                            <EngagementPhase
-                                title={ENGAGEMENT_PHASES.ProcessPlanning.title}
-                                backgroundColor={ENGAGEMENT_PHASES.ProcessPlanning.backgroundColor}
-                                learnMoreBackgroundColor={ENGAGEMENT_PHASES.ProcessPlanning.learnMoreBackgroundColor}
-                                learnMoreText={ENGAGEMENT_PHASES.ProcessPlanning.learnMoreText}
-                                popOverText={ENGAGEMENT_PHASES.ProcessPlanning.popOverText}
-                                mobile={true}
-                            />
-                            <EngagementPhase
-                                title={ENGAGEMENT_PHASES.AppDevReview.title}
-                                backgroundColor={ENGAGEMENT_PHASES.AppDevReview.backgroundColor}
-                                learnMoreBackgroundColor={ENGAGEMENT_PHASES.AppDevReview.learnMoreBackgroundColor}
-                                learnMoreText={ENGAGEMENT_PHASES.AppDevReview.learnMoreText}
-                                popOverText={ENGAGEMENT_PHASES.AppDevReview.popOverText}
-                                mobile={true}
-                            />
-                            <EngagementPhase
-                                title={ENGAGEMENT_PHASES.EffectAssessmentReview.title}
-                                backgroundColor={ENGAGEMENT_PHASES.EffectAssessmentReview.backgroundColor}
-                                learnMoreBackgroundColor={
-                                    ENGAGEMENT_PHASES.EffectAssessmentReview.learnMoreBackgroundColor
-                                }
-                                learnMoreText={ENGAGEMENT_PHASES.EffectAssessmentReview.learnMoreText}
-                                popOverText={ENGAGEMENT_PHASES.EffectAssessmentReview.popOverText}
-                                mobile={true}
-                            />
-                            <EngagementPhase
-                                title={ENGAGEMENT_PHASES.Decision.title}
-                                backgroundColor={ENGAGEMENT_PHASES.Decision.backgroundColor}
-                                learnMoreBackgroundColor={ENGAGEMENT_PHASES.Decision.learnMoreBackgroundColor}
-                                learnMoreText={ENGAGEMENT_PHASES.Decision.learnMoreText}
-                                mobile={true}
-                            />
-                            <EngagementPhase
-                                title={ENGAGEMENT_PHASES.PostCertificate.title}
-                                backgroundColor={ENGAGEMENT_PHASES.PostCertificate.backgroundColor}
-                                learnMoreBackgroundColor={ENGAGEMENT_PHASES.PostCertificate.learnMoreBackgroundColor}
-                                learnMoreText={ENGAGEMENT_PHASES.PostCertificate.learnMoreText}
-                                mobile={true}
-                            />
+                            {phases.map((phase) => (
+                                <EngagementPhase {...phase} />
+                            ))}
                         </Stack>
                     </Grid>
                 </Grid>

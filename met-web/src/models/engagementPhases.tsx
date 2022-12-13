@@ -11,7 +11,6 @@ export enum EngagementPhases {
 }
 
 export interface ProcessStageProps {
-    mobile?: boolean;
     backgroundColor: string;
     learnMoreBackgroundColor: string;
     title: string;

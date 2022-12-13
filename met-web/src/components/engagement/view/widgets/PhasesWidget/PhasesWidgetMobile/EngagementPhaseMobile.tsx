@@ -6,7 +6,6 @@ import { ReadMoreBox } from '../ReadMoreBox';
 import { ProcessStageProps } from 'models/engagementPhases';
 
 export const EngagementPhaseMobile = ({
-    mobile,
     backgroundColor,
     learnMoreBackgroundColor,
     title,
@@ -17,7 +16,6 @@ export const EngagementPhaseMobile = ({
         <PhaseBoxMobile
             title={title}
             backgroundColor={backgroundColor}
-            mobile={mobile}
             readMoreBox={
                 <ReadMoreBox backgroundColor={learnMoreBackgroundColor} sx={{ border: '3px solid #54858D', margin: 0 }}>
                     <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2}>

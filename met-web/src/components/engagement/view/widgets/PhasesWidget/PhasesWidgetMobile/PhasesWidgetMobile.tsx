@@ -1,6 +1,6 @@
-import React, { ReactNode, useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Grid, Skeleton, Typography } from '@mui/material';
-import { MetBody, MetHeader3, MetPaper, MetParagraph } from 'components/common';
+import { MetBody, MetHeader3, MetPaper } from 'components/common';
 import { WidgetType } from 'models/widget';
 import { styled } from '@mui/material/styles';
 import { ActionContext } from '../../../ActionContext';
@@ -53,6 +53,7 @@ export const PhaseContext = React.createContext<PhaseContextProps>({
     },
 });
 export const PhasesWidgetMobile = () => {
+    const phases = Object.values(ENGAGEMENT_PHASES);
     const { widgets, isWidgetsLoading } = useContext(ActionContext);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -96,70 +97,9 @@ export const PhasesWidgetMobile = () => {
                                 <Typography>The EA Process</Typography>
                             </AccordionSummary>
                             <AccordionDetails>
-                                <EngagementPhaseMobile
-                                    title={ENGAGEMENT_PHASES.EarlyEngagement.title}
-                                    backgroundColor={ENGAGEMENT_PHASES.EarlyEngagement.backgroundColor}
-                                    learnMoreBackgroundColor={
-                                        ENGAGEMENT_PHASES.EarlyEngagement.learnMoreBackgroundColor
-                                    }
-                                    learnMoreText={ENGAGEMENT_PHASES.EarlyEngagement.learnMoreText}
-                                    popOverText={ENGAGEMENT_PHASES.EarlyEngagement.popOverText}
-                                    mobile={true}
-                                />
-                                <EngagementPhaseMobile
-                                    title={ENGAGEMENT_PHASES.ReadinessDecision.title}
-                                    backgroundColor={ENGAGEMENT_PHASES.ReadinessDecision.backgroundColor}
-                                    learnMoreBackgroundColor={
-                                        ENGAGEMENT_PHASES.ReadinessDecision.learnMoreBackgroundColor
-                                    }
-                                    learnMoreText={ENGAGEMENT_PHASES.ReadinessDecision.learnMoreText}
-                                    popOverText={ENGAGEMENT_PHASES.ReadinessDecision.popOverText}
-                                    mobile={true}
-                                />
-                                <EngagementPhaseMobile
-                                    title={ENGAGEMENT_PHASES.ProcessPlanning.title}
-                                    backgroundColor={ENGAGEMENT_PHASES.ProcessPlanning.backgroundColor}
-                                    learnMoreBackgroundColor={
-                                        ENGAGEMENT_PHASES.ProcessPlanning.learnMoreBackgroundColor
-                                    }
-                                    learnMoreText={ENGAGEMENT_PHASES.ProcessPlanning.learnMoreText}
-                                    popOverText={ENGAGEMENT_PHASES.ProcessPlanning.popOverText}
-                                    mobile={true}
-                                />
-                                <EngagementPhaseMobile
-                                    title={ENGAGEMENT_PHASES.AppDevReview.title}
-                                    backgroundColor={ENGAGEMENT_PHASES.AppDevReview.backgroundColor}
-                                    learnMoreBackgroundColor={ENGAGEMENT_PHASES.AppDevReview.learnMoreBackgroundColor}
-                                    learnMoreText={ENGAGEMENT_PHASES.AppDevReview.learnMoreText}
-                                    popOverText={ENGAGEMENT_PHASES.AppDevReview.popOverText}
-                                    mobile={true}
-                                />
-                                <EngagementPhaseMobile
-                                    title={ENGAGEMENT_PHASES.EffectAssessmentReview.title}
-                                    backgroundColor={ENGAGEMENT_PHASES.EffectAssessmentReview.backgroundColor}
-                                    learnMoreBackgroundColor={
-                                        ENGAGEMENT_PHASES.EffectAssessmentReview.learnMoreBackgroundColor
-                                    }
-                                    learnMoreText={ENGAGEMENT_PHASES.EffectAssessmentReview.learnMoreText}
-                                    popOverText={ENGAGEMENT_PHASES.EffectAssessmentReview.popOverText}
-                                    mobile={true}
-                                />
-                                <EngagementPhaseMobile
-                                    title={ENGAGEMENT_PHASES.Decision.title}
-                                    backgroundColor={ENGAGEMENT_PHASES.Decision.backgroundColor}
-                                    learnMoreBackgroundColor={ENGAGEMENT_PHASES.Decision.learnMoreBackgroundColor}
-                                    learnMoreText={ENGAGEMENT_PHASES.Decision.learnMoreText}
-                                    mobile={true}
-                                />
-                                <EngagementPhaseMobile
-                                    title={ENGAGEMENT_PHASES.PostCertificate.title}
-                                    backgroundColor={ENGAGEMENT_PHASES.PostCertificate.backgroundColor}
-                                    learnMoreBackgroundColor={
-                                        ENGAGEMENT_PHASES.PostCertificate.learnMoreBackgroundColor
-                                    }
-                                    learnMoreText={ENGAGEMENT_PHASES.PostCertificate.learnMoreText}
-                                    mobile={true}
-                                />
+                                {phases.map((phase) => (
+                                    <EngagementPhaseMobile {...phase} />
+                                ))}
                             </AccordionDetails>
                         </Accordion>
                     </Grid>
