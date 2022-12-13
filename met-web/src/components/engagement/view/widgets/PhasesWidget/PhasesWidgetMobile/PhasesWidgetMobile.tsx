@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { Grid, Skeleton, Typography } from '@mui/material';
 import { MetBody, MetHeader3, MetPaper } from 'components/common';
 import { WidgetType } from 'models/widget';

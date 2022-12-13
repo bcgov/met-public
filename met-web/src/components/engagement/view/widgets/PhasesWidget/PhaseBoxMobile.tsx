@@ -1,7 +1,6 @@
-import React, { ReactNode, useContext, useRef, useState } from 'react';
+import React, { ReactNode, useRef, useState } from 'react';
 import { Box, Grid, Popover } from '@mui/material';
 import { MetHeader4, MetPaper } from 'components/common';
-import { PhaseContext } from '.';
 import { When } from 'react-if';
 import { IconBox } from './IconBox';
 import Accordion from '@mui/material/Accordion';
@@ -28,8 +27,6 @@ export const PhaseBoxMobile = ({
     accordionBackground,
 }: PhaseBoxProps) => {
     const [readMoreOpen, setReadMoreOpen] = useState(false);
-    const { anchorEl } = useContext(PhaseContext);
-
     const PhaseBoxRef = useRef<HTMLButtonElement | null>(null);
 
     return (
@@ -91,7 +88,6 @@ export const PhaseBoxMobile = ({
                 <Popover
                     id={readMoreOpen ? `${title}-readmore-popover` : undefined}
                     open={readMoreOpen}
-                    anchorEl={anchorEl}
                     onClose={() => setReadMoreOpen(false)}
                     anchorOrigin={{
                         vertical: 'top',
