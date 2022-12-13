@@ -26,10 +26,7 @@ const DocumentForm = () => {
 
                 <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'} marginTop="8em">
                     <Grid item>
-                        <PrimaryButton onClick={() => handleWidgetDrawerOpen(false)}>{`Save & Close`}</PrimaryButton>
-                    </Grid>
-                    <Grid item>
-                        <SecondaryButton onClick={() => handleWidgetDrawerOpen(false)}>{`Cancel`}</SecondaryButton>
+                        <PrimaryButton onClick={() => handleWidgetDrawerOpen(false)}>{`Close`}</PrimaryButton>
                     </Grid>
                 </Grid>
             </Grid>

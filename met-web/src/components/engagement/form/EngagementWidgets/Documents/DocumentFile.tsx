@@ -14,8 +14,8 @@ import { DocumentsContext } from './DocumentsContext';
 
 const DocumentFile = ({ documentItem }: { documentItem: DocumentItem }) => {
     const dispatch = useAppDispatch();
-    const { handleFileDrawerOpen, handleChangeDocumentToEdit } = useContext(DocumentsContext);
-    const { widgets, loadWidgets } = useContext(WidgetDrawerContext);
+    const { handleFileDrawerOpen, handleChangeDocumentToEdit, loadDocuments } = useContext(DocumentsContext);
+    const { widgets } = useContext(WidgetDrawerContext);
     const documentWidget = widgets.find((widget: Widget) => widget.widget_type_id === WidgetType.Document);
 
     const handleEditDocument = () => {
@@ -28,7 +28,7 @@ const DocumentFile = ({ documentItem }: { documentItem: DocumentItem }) => {
             return;
         }
         deleteDocument(documentWidget.id, documentItem.id);
-        loadWidgets();
+        await loadDocuments();
     };
 
     return (

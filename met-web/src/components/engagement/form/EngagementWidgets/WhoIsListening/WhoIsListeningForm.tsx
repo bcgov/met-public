@@ -20,7 +20,6 @@ const WhoIsListeningForm = () => {
 
     const widget = widgets.filter((widget) => widget.widget_type_id === WidgetType.WhoIsListening)[0] || null;
     useEffect(() => {
-        widget.items.sort((left, right) => left.sort_index - right.sort_index);
         const savedContacts = widget.items
             .map((widget_item) => {
                 return contacts.find((contact) => contact.id === widget_item.widget_data_id);

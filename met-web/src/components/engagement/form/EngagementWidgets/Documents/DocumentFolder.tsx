@@ -20,7 +20,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
     const dispatch = useAppDispatch();
     const { documents, loadDocuments } = useContext(DocumentsContext);
-    const { widgets, loadWidgets } = useContext(WidgetDrawerContext);
+    const { widgets } = useContext(WidgetDrawerContext);
     const documentWidget = widgets.find((widget: Widget) => widget.widget_type_id === WidgetType.Document);
     const [edit, setEdit] = useState<boolean>(false);
     const [document, setDocument] = useState<DocumentItem | undefined>(documentItem);
@@ -43,7 +43,7 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
             await patchDocument(documentWidget.id, document.id, {
                 ...documentUpdatesToPatch,
             });
-        loadDocuments();
+        await loadDocuments();
         dispatch(openNotification({ severity: 'success', text: 'Document was successfully updated' }));
     };
 
@@ -52,7 +52,7 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
             return;
         }
         deleteDocument(documentWidget.id, documentItem.id);
-        loadWidgets();
+        await loadDocuments();
     };
 
     return (
