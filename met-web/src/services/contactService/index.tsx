@@ -3,6 +3,9 @@ import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
 import { Contact } from 'models/contact';
 
+/**
+ * @deprecated The method was replaced by Redux RTK query to have caching behaviour
+ */
 export const getContact = async (contactId: number): Promise<Contact> => {
     const url = replaceUrl(Endpoints.Contacts.GET, 'contact_id', String(contactId));
     try {
@@ -16,6 +19,9 @@ export const getContact = async (contactId: number): Promise<Contact> => {
     }
 };
 
+/**
+ * @deprecated The method was replaced by Redux RTK query to have caching behaviour
+ */
 export const getContacts = async (): Promise<Contact[]> => {
     try {
         const response = await http.GetRequest<Contact[]>(Endpoints.Contacts.GET_LIST);

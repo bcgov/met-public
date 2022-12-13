@@ -8,6 +8,10 @@ import { Routes } from '../../../src/components/layout/SideNav/SideNavElements';
 
 const drawerWidth = 280;
 
+jest.mock('@reduxjs/toolkit/query/react', () => ({
+    ...jest.requireActual('@reduxjs/toolkit/query/react'),
+    fetchBaseQuery: jest.fn(),
+}));
 test('Load SideNav', async () => {
     setupEnv();
     render(

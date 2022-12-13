@@ -4,8 +4,8 @@ import { getEngagement, patchEngagement } from '../../../services/engagementServ
 import { createDefaultEngagement, Engagement } from '../../../models/engagement';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { getWidgets } from 'services/widgetService';
 import { Widget } from 'models/widget';
+import { useLazyGetWidgetsQuery } from 'apiManager/apiSlices/widgets';
 
 interface EngagementSchedule {
     id: number;
@@ -44,6 +44,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const [widgets, setWidgets] = useState<Widget[]>([]);
     const [isEngagementLoading, setEngagementLoading] = useState(true);
     const [isWidgetsLoading, setIsWidgetsLoading] = useState(true);
+
+    const [getWidgetsTrigger] = useLazyGetWidgetsQuery();
 
     const scheduleEngagement = async (engagement: EngagementSchedule): Promise<Engagement> => {
         try {
@@ -85,7 +87,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
             return;
         }
         try {
-            const result = await getWidgets(Number(engagementId));
+            const result = await getWidgetsTrigger(Number(engagementId), true).unwrap();
             setWidgets(result);
             setIsWidgetsLoading(false);
         } catch (error) {

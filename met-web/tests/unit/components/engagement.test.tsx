@@ -7,8 +7,6 @@ import { setupEnv } from './setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
-import * as widgetService from 'services/widgetService';
-import * as contactService from 'services/contactService';
 import { Widget, WidgetItem, WidgetType } from 'models/widget';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { engagement } from '../components/factory';
@@ -67,6 +65,39 @@ jest.mock('@mui/material', () => ({
     useMediaQuery: jest.fn(() => true),
 }));
 
+jest.mock('@reduxjs/toolkit/query/react', () => ({
+    ...jest.requireActual('@reduxjs/toolkit/query/react'),
+    fetchBaseQuery: jest.fn(),
+}));
+
+const mockWidgetsRtkUnwrap = jest.fn(() => Promise.resolve([whoIsListeningWidget]));
+const mockWidgetsRtkTrigger = () => {
+    return {
+        unwrap: mockWidgetsRtkUnwrap,
+    };
+};
+export const mockWidgetsRtkQuery = () => [mockWidgetsRtkTrigger];
+
+const mockLazyGetWidgetsQuery = jest.fn(mockWidgetsRtkQuery);
+jest.mock('apiManager/apiSlices/widgets', () => ({
+    ...jest.requireActual('apiManager/apiSlices/widgets'),
+    useLazyGetWidgetsQuery: () => [...mockLazyGetWidgetsQuery()],
+}));
+
+const mockContactRtkUnwrap = jest.fn(() => Promise.resolve(mockContact));
+const mockContactRtkTrigger = () => {
+    return {
+        unwrap: mockContactRtkUnwrap,
+    };
+};
+export const mockContactRtkQuery = () => [mockContactRtkTrigger];
+
+const mockLazyGetContactQuery = jest.fn(mockContactRtkQuery);
+jest.mock('apiManager/apiSlices/contacts', () => ({
+    ...jest.requireActual('apiManager/apiSlices/contacts'),
+    useLazyGetContactQuery: () => [...mockLazyGetContactQuery()],
+}));
+
 describe('Engagement View page tests', () => {
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
@@ -76,8 +107,6 @@ describe('Engagement View page tests', () => {
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
         .mockReturnValue(Promise.resolve(engagement));
-    const getContactMock = jest.spyOn(contactService, 'getContact').mockReturnValue(Promise.resolve(mockContact));
-    const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets');
 
     beforeEach(() => {
         setupEnv();
@@ -121,8 +150,8 @@ describe('Engagement View page tests', () => {
                 surveys: surveys,
             }),
         );
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
-        getContactMock.mockReturnValueOnce(Promise.resolve(mockContact));
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
+        mockContactRtkUnwrap.mockReturnValueOnce(Promise.resolve(mockContact));
         const { container } = render(<EngagementView />);
 
         await waitFor(() => {
@@ -134,8 +163,8 @@ describe('Engagement View page tests', () => {
         expect(screen.getByText(mockContact.email)).toBeVisible();
 
         expect(getEngagementMock).toHaveBeenCalledOnce();
-        expect(getWidgetsMock).toHaveBeenCalledOnce();
-        expect(getContactMock).toHaveBeenCalledOnce();
+        expect(mockWidgetsRtkUnwrap).toHaveBeenCalledOnce();
+        expect(mockContactRtkUnwrap).toHaveBeenCalledOnce();
     });
 
     test('Phases widget appears', async () => {
@@ -145,15 +174,15 @@ describe('Engagement View page tests', () => {
                 surveys: surveys,
             }),
         );
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([engagementPhasesWidget]));
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([engagementPhasesWidget]));
         const { container } = render(<EngagementView />);
 
         await waitFor(() => {
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-            expect(getWidgetsMock).toHaveReturned();
+            expect(mockWidgetsRtkUnwrap).toHaveReturned();
         });
 
-        expect(getWidgetsMock).toHaveBeenCalledOnce();
+        expect(mockWidgetsRtkUnwrap).toHaveBeenCalledOnce();
         expect(getEngagementMock).toHaveBeenCalledOnce();
 
         expect(screen.getByText('The EA Process')).toBeVisible();

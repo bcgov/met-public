@@ -5,6 +5,10 @@ import { Notification } from '../../../src/components/common/notification';
 import ProviderShell from './ProviderShell';
 import { setupEnv } from './setEnvVars';
 
+jest.mock('@reduxjs/toolkit/query/react', () => ({
+    ...jest.requireActual('@reduxjs/toolkit/query/react'),
+    fetchBaseQuery: jest.fn(),
+}));
 test('render notification', async () => {
     setupEnv();
     render(

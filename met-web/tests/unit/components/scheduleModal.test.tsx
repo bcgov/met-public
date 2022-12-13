@@ -7,6 +7,10 @@ import { setupEnv } from './setEnvVars';
 import ScheduleModal from 'components/common/Modals/Schedule';
 import ProviderShell from './ProviderShell';
 
+jest.mock('@reduxjs/toolkit/query/react', () => ({
+    ...jest.requireActual('@reduxjs/toolkit/query/react'),
+    fetchBaseQuery: jest.fn(),
+}));
 describe('Schedule modal tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());

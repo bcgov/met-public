@@ -3,6 +3,9 @@ import { DocumentItem, DocumentType } from 'models/document';
 import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
 
+/**
+ * @deprecated The method was replaced by Redux RTK query to have caching behaviour
+ */
 export const fetchDocuments = async (widget_id: number): Promise<DocumentItem[]> => {
     try {
         const url = replaceUrl(Endpoints.Documents.GET_LIST, 'widget_id', String(widget_id));

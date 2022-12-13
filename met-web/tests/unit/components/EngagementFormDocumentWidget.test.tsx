@@ -66,6 +66,25 @@ jest.mock('components/common/Dragndrop', () => ({
     DragItem: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
 }));
 
+jest.mock('@reduxjs/toolkit/query/react', () => ({
+    ...jest.requireActual('@reduxjs/toolkit/query/react'),
+    fetchBaseQuery: jest.fn(),
+}));
+
+const mockWidgetsRtkUnwrap = jest.fn(() => Promise.resolve([documentWidget]));
+const mockWidgetsRtkTrigger = () => {
+    return {
+        unwrap: mockWidgetsRtkUnwrap,
+    };
+};
+export const mockWidgetsRtkQuery = () => [mockWidgetsRtkTrigger];
+
+const mockLazyGetWidgetsQuery = jest.fn(mockWidgetsRtkQuery);
+jest.mock('apiManager/apiSlices/widgets', () => ({
+    ...jest.requireActual('apiManager/apiSlices/widgets'),
+    useLazyGetWidgetsQuery: () => [...mockLazyGetWidgetsQuery()],
+}));
+
 describe('Document widget in engagement page tests', () => {
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
@@ -74,7 +93,6 @@ describe('Document widget in engagement page tests', () => {
     jest.spyOn(engagementService, 'getEngagement').mockReturnValue(Promise.resolve(engagement));
     jest.spyOn(documentService, 'fetchDocuments').mockReturnValue(Promise.resolve([mockFolder]));
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
-    const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([documentWidget]));
     const postWidgetMock = jest.spyOn(widgetService, 'postWidget').mockReturnValue(Promise.resolve(documentWidget));
 
     beforeEach(() => {
@@ -83,9 +101,9 @@ describe('Document widget in engagement page tests', () => {
 
     test('Document widget is created when option is clicked', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
         postWidgetMock.mockReturnValue(Promise.resolve(documentWidget));
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([documentWidget]));
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([documentWidget]));
         const { container } = render(<EngagementForm />);
 
         await waitFor(() => {
@@ -111,16 +129,16 @@ describe('Document widget in engagement page tests', () => {
             widget_type_id: WidgetType.Document,
             engagement_id: engagement.id,
         });
-        expect(getWidgetsMock).toHaveBeenCalledTimes(2);
+        expect(mockWidgetsRtkUnwrap).toHaveBeenCalledTimes(2);
         expect(screen.getByText('Create Folder')).toBeVisible();
         expect(screen.getByText('Add Document')).toBeVisible();
     });
 
     test('Creat folder appears', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
         postWidgetMock.mockReturnValue(Promise.resolve(documentWidget));
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([documentWidget]));
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([documentWidget]));
         const { container } = render(<EngagementForm />);
 
         await waitFor(() => {
@@ -154,9 +172,9 @@ describe('Document widget in engagement page tests', () => {
 
     test('Creat file appears', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
         postWidgetMock.mockReturnValue(Promise.resolve(documentWidget));
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([documentWidget]));
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([documentWidget]));
         const { container } = render(<EngagementForm />);
 
         await waitFor(() => {
