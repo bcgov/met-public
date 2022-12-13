@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MetPaper, MetHeader2, MetHeader3, MetBody, MetSmallText } from 'components/common';
-import { Grid, Avatar, Link, Skeleton } from '@mui/material';
+import { Grid, Avatar, Link, Skeleton, useTheme } from '@mui/material';
 import { Widget } from 'models/widget';
 import { getContact } from 'services/contactService';
 import { Contact } from 'models/contact';
@@ -13,6 +13,7 @@ interface WhoIsListeningWidgetProps {
 }
 const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
     const dispatch = useAppDispatch();
+    const theme = useTheme();
 
     const [isLoading, setIsLoading] = useState(true);
     const [contacts, setContacts] = useState<Contact[]>([]);
@@ -69,13 +70,13 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
 
     return (
         <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
-            <Grid item justifyContent="flex-start" alignItems="center" xs={12}>
+            <Grid item container justifyContent={{ xs: 'center', md: 'flex-start' }} xs={12}>
                 <MetHeader2 bold={true}>Who is Listening</MetHeader2>
             </Grid>
             {contacts.map((contact) => {
                 return (
-                    <Grid key={contact.id} container item spacing={1} rowSpacing={1} xs={12} paddingTop={2}>
-                        <Grid item justifyContent="center" display="flex" xs={12} sm={3} md={3} lg={12} xl={4}>
+                    <Grid key={contact.id} container item columnSpacing={3} rowSpacing={1} xs={12} paddingTop={2}>
+                        <Grid item container justifyContent={{ xs: 'center', md: 'flex-start' }} xs={12} md="auto">
                             <Avatar
                                 src={contact.avatar_url}
                                 alt={contact.name}
@@ -85,36 +86,49 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
                             />
                         </Grid>
                         <Grid
-                            container
                             item
+                            container
+                            justifyContent={{ xs: 'center', md: 'flex-start' }}
                             alignItems="flex-start"
-                            justifyContent="flex-start"
                             direction="row"
                             rowSpacing={1}
                             xs={12}
-                            md={9}
-                            sm={9}
-                            lg={12}
-                            xl={8}
+                            md={8}
                         >
-                            <Grid item xs={12}>
+                            <Grid item container justifyContent={{ xs: 'center', md: 'flex-start' }} xs={12}>
                                 <MetHeader3 bold>{contact.name}</MetHeader3>
                             </Grid>
                             <When condition={Boolean(contact.title)}>
-                                <Grid item xs={12}>
+                                <Grid container justifyContent={{ xs: 'center', md: 'flex-start' }} item xs={12}>
                                     <MetBody>{contact.title}</MetBody>
                                 </Grid>
                             </When>
                             <When condition={Boolean(contact.bio)}>
-                                <Grid item xs={12} sx={{ whiteSpace: 'pre-line' }}>
-                                    <MetSmallText>{contact.bio}</MetSmallText>
+                                <Grid
+                                    container
+                                    justifyContent={{ xs: 'center', md: 'flex-start' }}
+                                    item
+                                    xs={12}
+                                    sm={8}
+                                    sx={{ whiteSpace: 'pre-line' }}
+                                >
+                                    <MetSmallText
+                                        sx={{
+                                            textAlign: 'left',
+                                            [theme.breakpoints.down('md')]: {
+                                                textAlign: 'center',
+                                            },
+                                        }}
+                                    >
+                                        {contact.bio}
+                                    </MetSmallText>
                                 </Grid>
                             </When>
-                            <Grid item xs={12}>
+                            <Grid container justifyContent={{ xs: 'center', md: 'flex-start' }} item xs={12}>
                                 <Link href={`mailto:${contact.email}`}>{contact.email}</Link>
                             </Grid>
                             <When condition={Boolean(contact.phone_number)}>
-                                <Grid item xs={12}>
+                                <Grid container justifyContent={{ xs: 'center', md: 'flex-start' }} item xs={12}>
                                     Phone: <Link href={`tel:${contact.phone_number}`}>{contact.phone_number}</Link>
                                 </Grid>
                             </When>
