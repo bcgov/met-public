@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid } from '@mui/material';
-import { MetHeader4, MetParagraph } from 'components/common';
+import { MetParagraph } from 'components/common';
 import { PhaseBoxMobile } from '../PhaseBoxMobile';
 import { ReadMoreBox } from '../ReadMoreBox';
 import { ProcessStageProps } from 'models/engagementPhases';
@@ -28,9 +28,9 @@ export const EngagementPhaseMobile = ({
                         spacing={1}
                     >
                         <Grid item xs={12}>
-                            <MetHeader4 sx={{ color: 'black' }} bold>
+                            <MetParagraph sx={{ fontWeight: 'bold', fontSize: '1.3rem', color: 'black' }}>
                                 {title}
-                            </MetHeader4>
+                            </MetParagraph>
                         </Grid>
                         {learnMoreText}
                     </Grid>

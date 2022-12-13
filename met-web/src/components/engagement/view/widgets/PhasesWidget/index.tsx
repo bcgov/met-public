@@ -52,7 +52,7 @@ export const PhasesWidget = () => {
                     <Grid item xs={12} sx={{ maxWidth: '99%' }}>
                         <Stack direction="row" sx={{ overflowX: 'auto', overflowY: 'clip' }}>
                             {phases.map((phase) => (
-                                <EngagementPhase {...phase} />
+                                <EngagementPhase key={phase.title} {...phase} />
                             ))}
                         </Stack>
                     </Grid>

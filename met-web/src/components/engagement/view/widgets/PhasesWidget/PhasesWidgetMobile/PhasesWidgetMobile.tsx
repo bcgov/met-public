@@ -98,7 +98,7 @@ export const PhasesWidgetMobile = () => {
                             </AccordionSummary>
                             <AccordionDetails>
                                 {phases.map((phase) => (
-                                    <EngagementPhaseMobile {...phase} />
+                                    <EngagementPhaseMobile key={phase.title} {...phase} />
                                 ))}
                             </AccordionDetails>
                         </Accordion>
