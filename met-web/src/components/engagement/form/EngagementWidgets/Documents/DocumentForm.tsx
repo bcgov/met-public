@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Divider, Grid } from '@mui/material';
-import { MetHeader3, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetHeader3, PrimaryButton } from 'components/common';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import CreateFolderForm from './CreateFolderForm';
 import DocumentsBlock from './DocumentsBlock';
