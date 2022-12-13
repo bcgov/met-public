@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import { Grid, TextField, Stack } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { useNavigate } from 'react-router-dom';
-import { hasKey } from 'utils';
 import { postSurvey } from 'services/surveyService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -21,28 +20,23 @@ export const CreateOptions = () => {
     const getErrorMessage = () => {
         if (name.length > 50) {
             return 'Name must not exceed 50 characters';
-        } else if (formError.name) {
+        } else if (formError.name && !name) {
             return 'Name must be specified';
         }
         return '';
     };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         handleSurveyFormChange({
             ...surveyForm,
             [e.target.name]: e.target.value,
         });
-
-        if (hasKey(formError, e.target.name) && formError[e.target.name]) {
-            setFormError({
-                ...formError,
-                [e.target.name]: false,
-            });
-        }
+        validate();
     };
 
     const validate = () => {
         setFormError({
-            name: !(surveyForm.name && surveyForm.name.length < 50),
+            name: !surveyForm.name || surveyForm.name.length > 50,
         });
         return Object.values(formError).some((errorExists) => errorExists);
     };
@@ -51,7 +45,6 @@ export const CreateOptions = () => {
         if (validate()) {
             return;
         }
-
         try {
             setIsSaving(true);
             const createdSurvey = await postSurvey({

@@ -25,7 +25,7 @@ const CreateFolderForm = () => {
 
     const validate = () => {
         setFormError({
-            name: !(folderName && folderName.length < 50),
+            name: !folderName || folderName.length > 50,
         });
         return Object.values(formError).some((errorExists) => errorExists);
     };
@@ -33,7 +33,7 @@ const CreateFolderForm = () => {
     const getErrorMessage = () => {
         if (folderName.length > 50) {
             return 'Folder name must not exceed 50 characters';
-        } else if (formError.name) {
+        } else if (!folderName && formError.name) {
             return 'Folder name must be specified';
         }
         return '';
@@ -58,6 +58,11 @@ const CreateFolderForm = () => {
             dispatch(openNotification({ severity: 'error', text: 'An error occured while creating the folder' }));
             setCreatingFolder(false);
         }
+    };
+
+    const handleFolderNameChange = (name: string) => {
+        validate();
+        setFolderName(name);
     };
 
     return (
@@ -91,7 +96,7 @@ const CreateFolderForm = () => {
                                 InputLabelProps={{
                                     shrink: false,
                                 }}
-                                onChange={(e) => setFolderName(e.target.value)}
+                                onChange={(e) => handleFolderNameChange(e.target.value)}
                                 error={formError.name || folderName.length > 50}
                                 helperText={getErrorMessage()}
                             />
