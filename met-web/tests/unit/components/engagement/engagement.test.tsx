@@ -1,4 +1,4 @@
-import { render, waitFor, screen } from '@testing-library/react';
+import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
 import EngagementView from 'components/engagement/view';
@@ -185,12 +185,7 @@ describe('Engagement View page tests', () => {
         expect(mockWidgetsRtkUnwrap).toHaveBeenCalledOnce();
         expect(getEngagementMock).toHaveBeenCalledOnce();
 
-        expect(screen.getAllByText('Early Engagement')[0]).toBeVisible();
-        expect(screen.getAllByText('Readiness Decision')[0]).toBeVisible();
-        expect(screen.getAllByText('Process Planning')[0]).toBeVisible();
-        expect(screen.getAllByText('Application Development & Review')[0]).toBeVisible();
-        expect(screen.getAllByText('Effect Assessment & Review')[0]).toBeVisible();
-        expect(screen.getAllByText('Decision')[0]).toBeVisible();
-        expect(screen.getAllByText('Post-Certificate')[0]).toBeVisible();
+        const eaProcessAccordion = screen.getByTestId('eaProcessAccordion');
+        expect(eaProcessAccordion).toBeVisible();
     });
 });

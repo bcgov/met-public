@@ -74,13 +74,13 @@ export const PhasesWidgetMobile = () => {
                     </MetBody>
                 </Grid>
                 <Grid item xs={12} sx={{ maxWidth: '99%' }}>
-                    <Accordion expanded={expanded} onChange={handleChange(!expanded)}>
+                    <Accordion expanded={expanded} onChange={handleChange(!expanded)} data-testid="eaProcessAccordion">
                         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
                             <Typography>The EA Process</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             {phases.map((phase: ProcessStageProps) => (
-                                <EngagementPhaseMobile key={phase.title} {...phase} />
+                                <EngagementPhaseMobile key={phase.title} data-testid={`${phase.title}`} {...phase} />
                             ))}
                         </AccordionDetails>
                     </Accordion>

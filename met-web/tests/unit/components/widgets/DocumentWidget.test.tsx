@@ -110,7 +110,6 @@ describe('Document widget in engagement page tests', () => {
     async function openAddWidgetDrawer(container: HTMLElement) {
         await waitFor(() => {
             expect(screen.getByText('Add Widget')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
 
         const addWidgetButton = screen.getByText('Add Widget');

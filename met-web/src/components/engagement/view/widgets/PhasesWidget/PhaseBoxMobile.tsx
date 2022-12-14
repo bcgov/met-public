@@ -74,9 +74,7 @@ export const PhaseBoxMobile = ({
                                         >
                                             <Typography sx={{ color: 'black' }}>Learn More</Typography>
                                         </AccordionSummary>
-                                        <AccordionDetails>
-                                            <Typography>{readMoreBox}</Typography>
-                                        </AccordionDetails>
+                                        <AccordionDetails>{readMoreBox}</AccordionDetails>
                                     </Accordion>
                                 </Grid>
                             </Grid>
