@@ -47,10 +47,10 @@ export const PhasesWidgetMobile = () => {
 
     const phasesWidget = widgets.find((widget) => widget.widget_type_id === WidgetType.Phases);
 
-    const [expanded, setExpanded] = React.useState<string | false>('panel1');
+    const [expanded, setExpanded] = React.useState<boolean>(false);
 
-    const handleChange = (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
-        setExpanded(newExpanded ? panel : false);
+    const handleChange = (state: boolean) => (event: React.SyntheticEvent, newExpanded: boolean) => {
+        setExpanded(newExpanded);
     };
 
     if (isWidgetsLoading) {
@@ -74,7 +74,7 @@ export const PhasesWidgetMobile = () => {
                     </MetBody>
                 </Grid>
                 <Grid item xs={12} sx={{ maxWidth: '99%' }}>
-                    <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+                    <Accordion expanded={expanded} onChange={handleChange(!expanded)}>
                         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
                             <Typography>The EA Process</Typography>
                         </AccordionSummary>
