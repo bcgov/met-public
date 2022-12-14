@@ -5,7 +5,8 @@ import UserService from './services/userService';
 import { useAppSelector, useAppDispatch } from './hooks';
 import { MidScreenLoader } from './components/common';
 import { Box, Container, useMediaQuery, Toolbar, Theme } from '@mui/material';
-import Header from './components/layout/Header';
+import LoggedInHeader from './components/layout/Header/LoggedInHeader';
+import LoggedOutHeader from './components/layout/Header/LoggedOutHeader';
 import UnauthenticatedRoutes from './routes/UnauthenticatedRoutes';
 import AuthenticatedRoutes from './routes/AuthenticatedRoutes';
 import { Notification } from 'components/common/notification';
@@ -37,7 +38,7 @@ const App = () => {
                 <PageViewTracker />
                 <Notification />
                 <NotificationModal />
-                <Header />
+                <LoggedOutHeader />
                 <UnauthenticatedRoutes />
                 <FeedbackModal />
             </Router>
@@ -47,7 +48,7 @@ const App = () => {
     if (!isMediumScreen) {
         return (
             <Router>
-                <Header />
+                <LoggedInHeader />
                 <Container>
                     <Toolbar />
                     <AuthenticatedRoutes />
@@ -60,7 +61,7 @@ const App = () => {
     return (
         <Router>
             <Box sx={{ display: 'flex' }}>
-                <Header drawerWidth={drawerWidth} />
+                <LoggedInHeader drawerWidth={drawerWidth} />
                 <Notification />
                 <NotificationModal />
                 <Box component="main" sx={{ flexGrow: 1, width: `calc(100% - ${drawerWidth}px)`, marginTop: '17px' }}>
