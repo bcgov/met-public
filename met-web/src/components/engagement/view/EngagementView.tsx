@@ -63,7 +63,8 @@ export const EngagementView = () => {
                     justifyContent={'flex-start'}
                     alignItems="flex-start"
                     m={{ md: '2em', xs: '1em' }}
-                    spacing={2}
+                    rowSpacing={2}
+                    columnSpacing={1}
                 >
                     <Grid item xs={12}>
                         <If condition={isSmallScreen}>
@@ -85,9 +86,10 @@ export const EngagementView = () => {
                                 direction="row"
                                 justifyContent={'flex-start'}
                                 alignItems="flex-start"
-                                spacing={2}
+                                rowSpacing={2}
+                                columnSpacing={1}
                             >
-                                <Grid data-testid={'engagement-content'} item xs={12}>
+                                <Grid data-testid={'engagement-content'} item xs={12} mt={2}>
                                     <EngagementContent />
                                 </Grid>
                                 <Grid item xs={12}>

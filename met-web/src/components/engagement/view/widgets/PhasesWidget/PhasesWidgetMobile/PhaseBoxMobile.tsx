@@ -2,7 +2,7 @@ import React, { ReactNode, useRef, useState } from 'react';
 import { Box, Grid, Popover } from '@mui/material';
 import { MetHeader4, MetPaper } from 'components/common';
 import { When } from 'react-if';
-import { IconBox } from './IconBox';
+import { IconBox } from '../IconBox';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';

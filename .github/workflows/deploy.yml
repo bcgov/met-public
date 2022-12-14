@@ -1,4 +1,4 @@
-name: Deploy to TEST
+name: Deploy
 
 on:
   workflow_dispatch:
@@ -17,7 +17,7 @@ jobs:
   met-deployment:
     runs-on: ubuntu-20.04
     environment: 
-      name: test
+      name: ${{ github.event.inputs.environment }}
     steps:
       - uses: actions/checkout@v2
 

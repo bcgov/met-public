@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid } from '@mui/material';
 import { MetParagraph } from 'components/common';
-import { PhaseBoxMobile } from '../PhaseBoxMobile';
+import { PhaseBoxMobile } from './PhaseBoxMobile';
 import { ReadMoreBox } from '../ReadMoreBox';
 import { ProcessStageProps } from 'models/engagementPhases';
 

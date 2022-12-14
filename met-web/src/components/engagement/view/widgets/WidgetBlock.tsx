@@ -11,7 +11,7 @@ const WidgetBlock = () => {
     }
 
     return (
-        <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2}>
+        <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={0} rowSpacing={2}>
             {widgets.map((widget) => {
                 return (
                     <Grid key={`grid-widget-${widget.id}`} item xs={12}>

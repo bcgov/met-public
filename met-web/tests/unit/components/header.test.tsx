@@ -9,6 +9,7 @@ jest.mock('@reduxjs/toolkit/query/react', () => ({
     ...jest.requireActual('@reduxjs/toolkit/query/react'),
     fetchBaseQuery: jest.fn(),
 }));
+
 test('Load Header', async () => {
     setupEnv();
     render(
