@@ -9,4 +9,6 @@ export interface User {
     id: number;
     last_name: string;
     updated_date: string;
+    status: string;
+    access_type: string;
 }
