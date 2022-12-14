@@ -11,6 +11,7 @@ import { Palette } from 'styles/Theme';
 import EnvironmentBanner from './EnvironmentBanner';
 import { MetHeader1, MetHeader2 } from 'components/common';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
+import { ReactComponent as BCLogoLight } from 'assets/images/BritishColumbiaLogoLight.svg';
 import { useAppSelector } from 'hooks';
 import { Else, If, Then, When } from 'react-if';
 
@@ -21,17 +22,17 @@ const Header = ({ drawerWidth = 280 }) => {
         <>
             <CssBaseline />
             <AppBar
-                position="fixed"
-                color="default"
+                position={isLoggedIn ? 'fixed' : 'static'}
+                color={isLoggedIn ? 'default' : 'primary'}
                 sx={{
                     zIndex: (theme) => theme.zIndex.drawer + 1,
-                    color: Palette.text.primary,
+                    color: isLoggedIn ? Palette.text.primary : '',
                 }}
                 data-testid="appbar-header"
             >
-                <Toolbar sx={{ padding: '0 !important' }}>
+                <Toolbar>
                     <Box
-                        component={BCLogo}
+                        component={isLoggedIn ? BCLogo : BCLogoLight}
                         sx={{
                             height: '5em',
                             width: { xs: '7em', md: '15em' },
@@ -40,9 +41,9 @@ const Header = ({ drawerWidth = 280 }) => {
                         alt="British Columbia Logo"
                     />
                     {isMediumScreen ? (
-                        <MetHeader1 sx={{ flexGrow: 1 }}>MET</MetHeader1>
+                        <MetHeader1 sx={{ flexGrow: 1 }}>{isLoggedIn ? 'MET' : 'Login to MET'}</MetHeader1>
                     ) : (
-                        <MetHeader2 sx={{ flexGrow: 1 }}>MET</MetHeader2>
+                        <MetHeader2 sx={{ flexGrow: 1 }}>{isLoggedIn ? 'MET' : 'Login to MET'}</MetHeader2>
                     )}
                     <If condition={isLoggedIn}>
                         <Then>
