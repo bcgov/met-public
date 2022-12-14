@@ -3,7 +3,7 @@ import { Grid, Skeleton, Stack } from '@mui/material';
 import { MetBody, MetHeader3, MetPaper } from 'components/common';
 import { WidgetType } from 'models/widget';
 import { ActionContext } from '../../ActionContext';
-import { EngagementPhase } from './PhasesWidgetMobile/EngagementPhase';
+import { EngagementPhase } from './EngagementPhase';
 import { ENGAGEMENT_PHASES } from 'models/engagementPhases';
 
 interface PhaseContextProps {

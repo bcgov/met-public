@@ -57,13 +57,12 @@ export const EngagementView = () => {
                 </Grid>
                 <Grid
                     container
-                    item
                     xs={12}
                     direction="row"
                     justifyContent={'flex-start'}
                     alignItems="flex-start"
                     m={{ md: '2em', xs: '1em' }}
-                    spacing={2}
+                    rowSpacing={2}
                 >
                     <Grid item xs={12}>
                         <If condition={isSmallScreen}>
@@ -79,7 +78,6 @@ export const EngagementView = () => {
                         <Then>
                             <Grid
                                 container
-                                item
                                 xs={12}
                                 lg={8}
                                 direction="row"
@@ -87,14 +85,14 @@ export const EngagementView = () => {
                                 alignItems="flex-start"
                                 spacing={2}
                             >
-                                <Grid data-testid={'engagement-content'} item xs={12}>
+                                <Grid data-testid={'engagement-content'} item xs={12} mt={4}>
                                     <EngagementContent />
                                 </Grid>
                                 <Grid item xs={12}>
                                     <SurveyBlock startSurvey={handleStartSurvey} />
                                 </Grid>
                             </Grid>
-                            <Grid item data-testid={'widget-block'} xs={12} lg={4}>
+                            <Grid item data-testid={'widget-block'} xs={12} lg={4} ml={{ lg: 2, md: 0 }}>
                                 <WidgetBlock />
                             </Grid>
                         </Then>

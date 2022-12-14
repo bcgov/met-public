@@ -1,9 +1,9 @@
 import React from 'react';
 import { Grid } from '@mui/material';
 import { MetHeader4, MetParagraph } from 'components/common';
-import { ReadMoreBox } from '../ReadMoreBox';
+import { ReadMoreBox } from './ReadMoreBox';
 import { ProcessStageProps } from 'models/engagementPhases';
-import { PhaseBox } from '../PhaseBox';
+import { PhaseBox } from './PhaseBox';
 
 export const EngagementPhase = ({
     backgroundColor,
