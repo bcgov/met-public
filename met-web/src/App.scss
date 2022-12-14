@@ -17,7 +17,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-.MuiContainer-root {
-  padding-left: 0;
-  padding-right: 0;
+@media (max-width:576px){
+  .MuiContainer-root {
+    padding-left: 0;
+    padding-right: 0;
+  }  
 }
