@@ -146,7 +146,7 @@ class TestJwtClaims(dict, Enum):
         'iss': CONFIG.JWT_OIDC_TEST_ISSUER,
         'sub': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302064',
         'idp_userid': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302064',
-        'preferred_username': fake.user_name(),
+        'preferred_username': f'{fake.user_name()}@idir',
         'given_name': fake.first_name(),
         'family_name': fake.last_name(),
         'email': 'staff@gov.bc.ca',
