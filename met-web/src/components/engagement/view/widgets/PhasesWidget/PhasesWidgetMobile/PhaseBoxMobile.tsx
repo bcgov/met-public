@@ -82,25 +82,6 @@ export const PhaseBoxMobile = ({
                     </Grid>
                 </Grid>
             </MetPaper>
-            <When condition={Boolean(readMoreBox)}>
-                <Popover
-                    id={readMoreOpen ? `${title}-readmore-popover` : undefined}
-                    open={readMoreOpen}
-                    onClose={() => setReadMoreOpen(false)}
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    elevation={0}
-                    PaperProps={{
-                        sx: {
-                            borderRadius: 0,
-                        },
-                    }}
-                >
-                    {readMoreBox}
-                </Popover>
-            </When>
         </>
     );
 };
