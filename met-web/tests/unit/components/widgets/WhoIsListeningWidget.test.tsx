@@ -120,7 +120,7 @@ describe('Who is Listening widget  tests', () => {
 
     async function addWhosIsListeningWidget(container: HTMLElement) {
         await waitFor(() => {
-            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(screen.getByText('Add Widget')).toBeInTheDocument();
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
 
