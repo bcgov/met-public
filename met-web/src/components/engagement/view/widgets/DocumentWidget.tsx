@@ -20,7 +20,7 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
 
     const getDocuments = async () => {
         try {
-            const fetchedDocuments = await getDocumentsTrigger(widget.id, true).unwrap();
+            const fetchedDocuments = await getDocumentsTrigger(widget.id, false).unwrap();
             setDocuments(fetchedDocuments);
             setIsLoading(false);
         } catch (error) {

@@ -27,7 +27,7 @@ const DocumentFile = ({ documentItem }: { documentItem: DocumentItem }) => {
         if (!documentWidget) {
             return;
         }
-        deleteDocument(documentWidget.id, documentItem.id);
+        await deleteDocument(documentWidget.id, documentItem.id);
         await loadDocuments();
     };
 
