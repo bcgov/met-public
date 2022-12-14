@@ -185,13 +185,12 @@ describe('Engagement View page tests', () => {
         expect(mockWidgetsRtkUnwrap).toHaveBeenCalledOnce();
         expect(getEngagementMock).toHaveBeenCalledOnce();
 
-        expect(screen.getByText('The EA Process')).toBeVisible();
-        expect(screen.getByText('Early Engagement')).toBeVisible();
-        expect(screen.getByText('Readiness Decision')).toBeVisible();
-        expect(screen.getByText('Process Planning')).toBeVisible();
-        expect(screen.getByText('Application Development & Review')).toBeVisible();
-        expect(screen.getByText('Effect Assessment & Review')).toBeVisible();
-        expect(screen.getByText('Decision')).toBeVisible();
-        expect(screen.getByText('Post-Certificate')).toBeVisible();
+        expect(screen.getAllByText('Early Engagement')[0]).toBeVisible();
+        expect(screen.getAllByText('Readiness Decision')[0]).toBeVisible();
+        expect(screen.getAllByText('Process Planning')[0]).toBeVisible();
+        expect(screen.getAllByText('Application Development & Review')[0]).toBeVisible();
+        expect(screen.getAllByText('Effect Assessment & Review')[0]).toBeVisible();
+        expect(screen.getAllByText('Decision')[0]).toBeVisible();
+        expect(screen.getAllByText('Post-Certificate')[0]).toBeVisible();
     });
 });
