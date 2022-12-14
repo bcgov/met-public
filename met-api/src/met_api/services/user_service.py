@@ -25,7 +25,7 @@ class UserService:
         external_id = user.get('external_id')
         db_user = UserModel.get_user_by_external_id(external_id)
         if db_user is None:
-            is_staff_user = user.get('email_id', '').endswith('gov.bc.ca')
+            is_staff_user = user.get('username', '').endswith('@idir')
             access_type = UserType.STAFF.value if is_staff_user else UserType.PUBLIC_USER.value
             user['access_type'] = access_type
             return UserModel.create_user(user)

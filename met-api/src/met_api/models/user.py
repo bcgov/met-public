@@ -99,8 +99,8 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
             contact_number=user_dict.get('contact_number', user.contact_number),
             external_id=user_dict.get('external_id', user.external_id),
             updated_date=datetime.utcnow(),
-            access_type=user_dict.get('access_type', None),
-            username=user_dict.get('username', None),
+            access_type=user_dict.get('access_type', user.access_type),
+            username=user_dict.get('username', user.username),
         )
 
         query.update(update_fields)
