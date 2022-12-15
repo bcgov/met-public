@@ -11,8 +11,8 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Paper from '@mui/material/Paper';
 import { visuallyHidden } from '@mui/utils';
 import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
-import { ConditionalComponent } from '..';
 import { LinearProgress } from '@mui/material';
+import { When } from 'react-if';
 
 type Order = 'asc' | 'desc';
 
@@ -123,7 +123,7 @@ function MetTable<T>({
             <Paper sx={{ width: '100%', mb: 2 }} elevation={0}>
                 <TableContainer>
                     <Table aria-labelledby="Engagements">
-                        <ConditionalComponent condition={!hideHeader}>
+                        <When condition={!hideHeader}>
                             <MetTableHead
                                 order={order}
                                 orderBy={orderBy}
@@ -133,7 +133,7 @@ function MetTable<T>({
                                 headCells={headCells}
                                 loading={loading}
                             />
-                        </ConditionalComponent>
+                        </When>
 
                         <TableBody>
                             <TableRow
@@ -145,9 +145,9 @@ function MetTable<T>({
                                     sx={{ padding: 0, border: 'none', verticalAlign: 'top' }}
                                     colSpan={headCells.length}
                                 >
-                                    <ConditionalComponent condition={loading}>
+                                    <When condition={loading}>
                                         <LinearProgress />
-                                    </ConditionalComponent>
+                                    </When>
                                 </TableCell>
                             </TableRow>
 

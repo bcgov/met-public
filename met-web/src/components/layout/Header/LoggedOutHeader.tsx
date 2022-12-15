@@ -6,9 +6,10 @@ import Button from '@mui/material/Button';
 import UserService from 'services/userService';
 import { useMediaQuery, Theme } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-import { ConditionalComponent, MetHeader1, MetHeader2 } from 'components/common';
+import { MetHeader1, MetHeader2 } from 'components/common';
 import EnvironmentBanner from './EnvironmentBanner';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoLight.svg';
+import { When } from 'react-if';
 
 const LoggedOutHeader = () => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
@@ -28,7 +29,7 @@ const LoggedOutHeader = () => {
                         }}
                         alt="British Columbia Logo"
                     />
-                    <ConditionalComponent condition={loginPage}>
+                    <When condition={loginPage}>
                         {isMediumScreen ? (
                             <MetHeader1 sx={{ flexGrow: 1 }}> Login to MET</MetHeader1>
                         ) : (
@@ -38,7 +39,7 @@ const LoggedOutHeader = () => {
                         <Button color="inherit" onClick={() => UserService.doLogin()}>
                             Login
                         </Button>
-                    </ConditionalComponent>
+                    </When>
                 </Toolbar>
                 <EnvironmentBanner />
             </AppBar>

@@ -1,12 +1,6 @@
 import React, { useContext } from 'react';
 import { Divider, FormControl, FormControlLabel, FormLabel, Grid, RadioGroup, Stack, Radio } from '@mui/material';
-import {
-    ConditionalComponent,
-    MetPageGridContainer,
-    PrimaryButton,
-    SecondaryButton,
-    MetHeader3,
-} from 'components/common';
+import { MetPageGridContainer, PrimaryButton, SecondaryButton, MetHeader3 } from 'components/common';
 import CloneOptions from './CloneOptions';
 import { CreateOptions } from './CreateOptions';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +8,7 @@ import { Palette } from 'styles/Theme';
 import LinkOptions from './LinkOptions';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { OptionsFormSkeleton } from './OptionsFormSkeleton';
+import { When } from 'react-if';
 
 const OptionsForm = () => {
     const navigate = useNavigate();
@@ -54,41 +49,41 @@ const OptionsForm = () => {
                     >
                         <FormControlLabel value="CREATE" control={<Radio />} label="Create a new Survey" />
                         <FormControlLabel value="CLONE" control={<Radio />} label="Clone an existing Survey" />
-                        <ConditionalComponent condition={!!engagementToLink}>
+                        <When condition={!!engagementToLink}>
                             <FormControlLabel
                                 value="LINK"
                                 control={<Radio />}
                                 label="Add an existing survey to my engagement"
                             />
-                        </ConditionalComponent>
+                        </When>
                     </RadioGroup>
                 </FormControl>
             </Grid>
 
-            <ConditionalComponent condition={value === 'CREATE'}>
+            <When condition={value === 'CREATE'}>
                 <CreateOptions />
-            </ConditionalComponent>
+            </When>
 
-            <ConditionalComponent condition={value === 'CLONE'}>
+            <When condition={value === 'CLONE'}>
                 <Grid item xs={12}>
                     <CloneOptions />
                 </Grid>
-            </ConditionalComponent>
+            </When>
 
-            <ConditionalComponent condition={value === 'LINK'}>
+            <When condition={value === 'LINK'}>
                 <Grid item xs={12}>
                     <LinkOptions />
                 </Grid>
-            </ConditionalComponent>
+            </When>
 
-            <ConditionalComponent condition={!value}>
+            <When condition={!value}>
                 <Grid item xs={12}>
                     <Stack direction="row" spacing={2}>
                         <PrimaryButton disabled={true}>{'Save & Continue'}</PrimaryButton>
                         <SecondaryButton onClick={() => navigate('/surveys')}>Cancel</SecondaryButton>
                     </Stack>
                 </Grid>
-            </ConditionalComponent>
+            </When>
         </MetPageGridContainer>
     );
 };
