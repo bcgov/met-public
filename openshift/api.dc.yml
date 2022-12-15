@@ -268,4 +268,11 @@ parameters:
   - name: MET_ADMIN_CLIENT_SECRET
     description: "The MET admin service account secret"
     required: true
-    
+  - name: KEYCLOAK_BASE_URL
+    description: "Keycloak base url"
+    required: true
+    value: 'https://met-oidc-dev.apps.gold.devops.gov.bc.ca'
+  - name: KEYCLOAK_REALMNAME
+    description: "Realm name for the project"
+    required: true
+    value: 'met'

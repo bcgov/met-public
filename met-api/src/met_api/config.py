@@ -85,8 +85,14 @@ class _Config():  # pylint: disable=too-few-public-methods
     print(f'SQLAlchemy URL (_Config): {SQLALCHEMY_DATABASE_URI}')
 
     # Service account details
+    KEYCLOAK_BASE_URL = os.getenv('KEYCLOAK_BASE_URL')
+    KEYCLOAK_REALMNAME = os.getenv('KEYCLOAK_REALMNAME')
     KEYCLOAK_SERVICE_ACCOUNT_ID = os.getenv('MET_ADMIN_CLIENT_ID')
     KEYCLOAK_SERVICE_ACCOUNT_SECRET = os.getenv('MET_ADMIN_CLIENT_SECRET')
+    # TODO separate out clients for APIs and user management.
+    # TODO API client wont need user management roles in keycloak.
+    KEYCLOAK_ADMIN_USERNAME = os.getenv('MET_ADMIN_CLIENT_ID')
+    KEYCLOAK_ADMIN_SECRET = os.getenv('MET_ADMIN_CLIENT_SECRET')
 
     # front end urls
     SURVEY_PATH = os.getenv('SURVEY_PATH', '/surveys/submit/{survey_id}/{token}')
