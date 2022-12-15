@@ -25,7 +25,7 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def get_user_groups(user_id):
-        """Get user from Keycloak by username."""
+        """Get user group from Keycloak by userid."""
         base_url = current_app.config.get('KEYCLOAK_BASE_URL')
         realm = current_app.config.get('KEYCLOAK_REALMNAME')
         timeout = current_app.config.get('CONNECT_TIMEOUT', 60)
@@ -43,7 +43,7 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def get_users_groups(user_ids: List):
-        """Get user from Keycloak by username."""
+        """Get user groups from Keycloak by user ids.For bulk purposes."""
         # TODO if List is bigger than a number ; if so reject.
         base_url = current_app.config.get('KEYCLOAK_BASE_URL')
         # TODO fix this during tests and remove below
