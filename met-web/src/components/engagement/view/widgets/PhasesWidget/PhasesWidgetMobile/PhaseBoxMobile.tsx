@@ -1,14 +1,15 @@
-import React, { ReactNode, useRef, useState } from 'react';
-import { Box, Grid, Popover } from '@mui/material';
+import React, { ReactNode, useRef } from 'react';
+import { Box, Grid, Stack } from '@mui/material';
 import { MetHeader4, MetPaper } from 'components/common';
-import { When } from 'react-if';
 import { IconBox } from '../IconBox';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
+import { If, Then, When } from 'react-if';
+import LocationOn from '@mui/icons-material/LocationOn';
+import { EngagementPhases } from 'models/engagementPhases';
 interface PhaseBoxProps {
     title: string;
     backgroundColor?: string;
@@ -17,6 +18,9 @@ interface PhaseBoxProps {
     children?: ReactNode;
     readMoreBackground?: string;
     accordionBackground?: string;
+    isCurrentPhase: boolean;
+    currentPhase: number;
+    isCurrent: boolean;
 }
 export const PhaseBoxMobile = ({
     title,
@@ -25,8 +29,10 @@ export const PhaseBoxMobile = ({
     readMoreBackground,
     iconBox,
     accordionBackground,
+    isCurrentPhase = false,
+    currentPhase,
+    isCurrent,
 }: PhaseBoxProps) => {
-    const [readMoreOpen, setReadMoreOpen] = useState(false);
     const PhaseBoxRef = useRef<HTMLButtonElement | null>(null);
 
     return (
@@ -53,9 +59,20 @@ export const PhaseBoxMobile = ({
                         >
                             <Grid container direction="column" justifyContent="space-between" height="100%" spacing={2}>
                                 <Grid item>
-                                    <MetHeader4 bold sx={{ color: 'white' }}>
-                                        {title}
-                                    </MetHeader4>
+                                    <Stack direction="row">
+                                        <MetHeader4 bold sx={{ color: 'white' }}>
+                                            {title}
+                                        </MetHeader4>
+                                        <When condition={currentPhase !== EngagementPhases.Standalone}>
+                                            <If condition={isCurrentPhase}>
+                                                <Then>
+                                                    <Box marginLeft={'1em'} color="#D8292F">
+                                                        <LocationOn fontSize="large" />
+                                                    </Box>
+                                                </Then>
+                                            </If>
+                                        </When>
+                                    </Stack>
                                 </Grid>
                                 <Grid item container xs={12}>
                                     <Grid item xs={8}></Grid>
@@ -68,11 +85,15 @@ export const PhaseBoxMobile = ({
                                 <Grid item container direction="row" xs={12} justifyContent="flex-start">
                                     <Accordion sx={{ background: accordionBackground }}>
                                         <AccordionSummary
-                                            expandIcon={<ExpandMoreIcon htmlColor="#000000" />}
+                                            expandIcon={
+                                                <ExpandMoreIcon htmlColor={isCurrent ? '#000000' : '#FFFFFF'} />
+                                            }
                                             aria-controls="panel1a-content"
                                             id="panel1a-header"
                                         >
-                                            <Typography sx={{ color: 'black' }}>Learn More</Typography>
+                                            <Typography sx={{ color: isCurrent ? 'black' : 'white' }}>
+                                                Learn More
+                                            </Typography>
                                         </AccordionSummary>
                                         <AccordionDetails>{learnMoreBox}</AccordionDetails>
                                     </Accordion>
