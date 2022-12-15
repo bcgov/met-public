@@ -6,8 +6,8 @@ RUN pip install --upgrade pip
 # ==> Add Dagster layer
 RUN \
     pip install \
-        dagster==1.0.13 \
-        dagster-postgres==0.16.13 \
+        dagster==1.1.6 \
+        dagster-postgres==0.17.6 \
         dagster-celery[flower,redis,kubernetes]==${DAGSTER_VERSION} \
         dagster-aws==${DAGSTER_VERSION} \
         dagster-k8s==${DAGSTER_VERSION} \
