@@ -1,5 +1,5 @@
 import React, { ReactNode, useContext, useRef, useState } from 'react';
-import { Box, Grid, Link, Popover } from '@mui/material';
+import { Box, Grid, Link, Popover, SxProps, Theme } from '@mui/material';
 import { MetHeader4, MetPaper, MetSmallText } from 'components/common';
 import { PhaseContext } from '.';
 import { When } from 'react-if';
@@ -8,11 +8,20 @@ import { IconBox } from './IconBox';
 interface PhaseBoxProps {
     title: string;
     backgroundColor?: string;
-    readMoreBox?: ReactNode;
+    learnMoreBox?: ReactNode;
     iconBox?: ReactNode;
     children?: ReactNode;
+    border?: string;
+    sx?: SxProps<Theme>;
 }
-export const PhaseBox = ({ title, backgroundColor = 'white', readMoreBox, iconBox }: PhaseBoxProps) => {
+export const PhaseBox = ({
+    title,
+    backgroundColor = 'white',
+    learnMoreBox,
+    iconBox,
+    border = 'none',
+    sx = {},
+}: PhaseBoxProps) => {
     const [readMoreOpen, setReadMoreOpen] = useState(false);
     const { anchorEl, setAnchorEl } = useContext(PhaseContext);
 
@@ -25,15 +34,18 @@ export const PhaseBox = ({ title, backgroundColor = 'white', readMoreBox, iconBo
     return (
         <>
             <MetPaper
-                sx={{
-                    borderRadius: 0,
-                    border: 'none',
-                    backgroundColor: backgroundColor,
-                    height: '10em',
-                    marginBottom: '2em',
-                    maxWidth: { xl: '16%', xs: 'auto' },
-                    minWidth: { xl: '10%', xs: 'auto' },
-                }}
+                sx={[
+                    {
+                        borderRadius: 0,
+                        border: border,
+                        backgroundColor: backgroundColor,
+                        height: '10em',
+                        marginBottom: '2em',
+                        maxWidth: { xl: '16%', xs: 'auto' },
+                        minWidth: { xl: '10%', xs: 'auto' },
+                    },
+                    { ...sx },
+                ]}
             >
                 <Grid container direction="row" spacing={0}>
                     <Grid item xs={12}>
@@ -52,13 +64,15 @@ export const PhaseBox = ({ title, backgroundColor = 'white', readMoreBox, iconBo
                                 </Grid>
                                 <Grid item container direction="row" justifyContent="flex-end">
                                     <Grid item>
-                                        <MetSmallText
-                                            component={Link}
-                                            sx={{ color: 'white', cursor: 'pointer' }}
+                                        <Link
+                                            component={MetSmallText}
+                                            sx={{ cursor: 'pointer', color: 'white', ':hover': { fontWeight: 'bold' } }}
                                             onClick={handleReadMoreClick}
+                                            color="inherit"
+                                            underline="always"
                                         >
-                                            Read more
-                                        </MetSmallText>
+                                            Learn more
+                                        </Link>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -72,7 +86,7 @@ export const PhaseBox = ({ title, backgroundColor = 'white', readMoreBox, iconBo
                 </Grid>
             </MetPaper>
 
-            <When condition={Boolean(readMoreBox)}>
+            <When condition={Boolean(learnMoreBox)}>
                 <Popover
                     id={readMoreOpen ? `${title}-readmore-popover` : undefined}
                     open={readMoreOpen}
@@ -89,7 +103,7 @@ export const PhaseBox = ({ title, backgroundColor = 'white', readMoreBox, iconBo
                         },
                     }}
                 >
-                    {readMoreBox}
+                    {learnMoreBox}
                 </Popover>
             </When>
         </>

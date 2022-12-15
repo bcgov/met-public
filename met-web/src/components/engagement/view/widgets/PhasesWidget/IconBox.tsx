@@ -1,8 +1,8 @@
 import React, { ReactNode, useRef, useState } from 'react';
 import { Box, ClickAwayListener, IconButton, Paper } from '@mui/material';
-import ForumIcon from '@mui/icons-material/Forum';
 import { Arrow, PopperArrow } from 'components/common/MetPopper';
 import CloseIcon from '@mui/icons-material/Close';
+import { ForumIcon } from './ForumIcon';
 
 export const IconBox = ({ children }: { children: ReactNode }) => {
     const iconRef = useRef<HTMLButtonElement | null>(null);

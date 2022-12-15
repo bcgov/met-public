@@ -174,6 +174,7 @@ export const MetSmallText = ({ bold, children, sx, ...rest }: HeaderProps) => {
                 ...sx,
                 fontSize: '13px',
                 fontFamily: MET_Header_Font_Family,
+                fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
             }}
             variant="subtitle1"
             {...rest}

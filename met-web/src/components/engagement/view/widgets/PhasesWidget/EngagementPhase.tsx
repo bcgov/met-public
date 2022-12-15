@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Grid } from '@mui/material';
 import { MetHeader4, MetParagraph } from 'components/common';
 import { ReadMoreBox } from './ReadMoreBox';
-import { ProcessStageProps } from 'models/engagementPhases';
+import { EngagementPhases, PAST_PHASE, ProcessStageProps } from 'models/engagementPhases';
 import { PhaseBox } from './PhaseBox';
+import { ActionContext } from '../../ActionContext';
+import { WidgetType } from 'models/widget';
 
 export const EngagementPhase = ({
     backgroundColor,
@@ -11,13 +13,30 @@ export const EngagementPhase = ({
     title,
     learnMoreText,
     popOverText,
+    phaseId,
 }: ProcessStageProps) => {
+    const { widgets } = useContext(ActionContext);
+    const phasesWidget = widgets.find((widget) => widget.widget_type_id === WidgetType.Phases);
+    const currentPhase = phasesWidget?.items[0]?.widget_data_id || EngagementPhases.Standalone;
+    const isCurrent = phaseId >= currentPhase;
+
     return (
         <PhaseBox
             title={title}
-            backgroundColor={backgroundColor}
-            readMoreBox={
-                <ReadMoreBox backgroundColor={learnMoreBackgroundColor} sx={{ border: '3px solid #54858D', margin: 0 }}>
+            backgroundColor={isCurrent ? backgroundColor : PAST_PHASE.backgroundColor}
+            sx={{ borderRight: isCurrent ? 'none' : `1px solid ${PAST_PHASE.borderColor}` }}
+            learnMoreBox={
+                <ReadMoreBox
+                    backgroundColor={isCurrent ? learnMoreBackgroundColor : PAST_PHASE.backgroundColor}
+                    sx={[
+                        { margin: 0 },
+                        isCurrent && { border: `3px solid ${backgroundColor}` },
+                        !isCurrent && {
+                            color: 'white',
+                            border: `3px solid ${PAST_PHASE.borderColor}`,
+                        },
+                    ]}
+                >
                     <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2}>
                         <Grid item xs={12}>
                             <MetHeader4 bold>{title}</MetHeader4>
