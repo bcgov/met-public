@@ -1,9 +1,11 @@
 import React, { ReactNode, useContext, useRef, useState } from 'react';
-import { Box, Grid, Link, Popover, SxProps, Theme } from '@mui/material';
+import { Box, Grid, Link, Popover, Stack, SxProps, Theme } from '@mui/material';
 import { MetHeader4, MetPaper, MetSmallText } from 'components/common';
 import { PhaseContext } from '.';
-import { When } from 'react-if';
+import { Else, If, Then, When } from 'react-if';
 import { IconBox } from './IconBox';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { EngagementPhases } from 'models/engagementPhases';
 
 interface PhaseBoxProps {
     title: string;
@@ -13,14 +15,18 @@ interface PhaseBoxProps {
     children?: ReactNode;
     border?: string;
     sx?: SxProps<Theme>;
+    isCurrentPhase: boolean;
+    currentPhase: number;
 }
 export const PhaseBox = ({
     title,
     backgroundColor = 'white',
     learnMoreBox,
     iconBox,
+    currentPhase,
     border = 'none',
     sx = {},
+    isCurrentPhase = false,
 }: PhaseBoxProps) => {
     const [readMoreOpen, setReadMoreOpen] = useState(false);
     const { anchorEl, setAnchorEl } = useContext(PhaseContext);
@@ -32,7 +38,28 @@ export const PhaseBox = ({
         setReadMoreOpen(true);
     };
     return (
-        <>
+        <Stack
+            direction="column"
+            sx={{
+                maxWidth: { xl: '20%', md: 'auto' },
+                minWidth: { xl: '10%', md: 'auto' },
+            }}
+        >
+            <When condition={currentPhase !== EngagementPhases.Standalone}>
+                <If condition={isCurrentPhase}>
+                    <Then>
+                        <Stack direction="row" height="3em" alignItems={'center'}>
+                            <Box marginLeft={'1em'} color="#D8292F">
+                                <LocationOnIcon fontSize="large" />
+                            </Box>
+                            <MetSmallText sx={{ fontStyle: 'italic', overflow: 'visible' }}>Current Phase</MetSmallText>
+                        </Stack>
+                    </Then>
+                    <Else>
+                        <span style={{ marginBottom: '3em' }} />
+                    </Else>
+                </If>
+            </When>
             <MetPaper
                 sx={[
                     {
@@ -40,9 +67,6 @@ export const PhaseBox = ({
                         border: border,
                         backgroundColor: backgroundColor,
                         height: '10em',
-                        marginBottom: '2em',
-                        maxWidth: { xl: '16%', xs: 'auto' },
-                        minWidth: { xl: '10%', xs: 'auto' },
                     },
                     { ...sx },
                 ]}
@@ -78,13 +102,13 @@ export const PhaseBox = ({
                             </Grid>
                         </Box>
                     </Grid>
-                    <Grid item xs={12}>
-                        <When condition={Boolean(iconBox)}>
-                            <IconBox>{iconBox}</IconBox>
-                        </When>
-                    </Grid>
                 </Grid>
             </MetPaper>
+            <When condition={Boolean(iconBox)}>
+                <Box>
+                    <IconBox>{iconBox}</IconBox>
+                </Box>
+            </When>
 
             <When condition={Boolean(learnMoreBox)}>
                 <Popover
@@ -106,6 +130,6 @@ export const PhaseBox = ({
                     {learnMoreBox}
                 </Popover>
             </When>
-        </>
+        </Stack>
     );
 };

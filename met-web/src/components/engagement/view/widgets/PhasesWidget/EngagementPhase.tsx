@@ -46,6 +46,8 @@ export const EngagementPhase = ({
                 </ReadMoreBox>
             }
             iconBox={popOverText ? <MetParagraph>{popOverText}</MetParagraph> : false}
+            isCurrentPhase={phaseId === currentPhase}
+            currentPhase={currentPhase}
         />
     );
 };

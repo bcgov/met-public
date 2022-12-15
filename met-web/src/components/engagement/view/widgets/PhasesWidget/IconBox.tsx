@@ -13,7 +13,7 @@ export const IconBox = ({ children }: { children: ReactNode }) => {
         <>
             <IconButton
                 ref={iconRef}
-                sx={{ marginTop: '-0.8em', marginLeft: '1em', color: '#458686' }}
+                sx={{ marginTop: '-0.5em', marginLeft: '1em', color: '#458686' }}
                 onClick={() => setOpen(!open)}
             >
                 <ForumIcon fontSize="large" />
