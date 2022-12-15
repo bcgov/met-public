@@ -17,7 +17,7 @@ export const EngagementPhaseMobile = ({
         <PhaseBoxMobile
             title={title}
             backgroundColor={backgroundColor}
-            readMoreBox={
+            learnMoreBox={
                 <ReadMoreBox backgroundColor={accordionBackground} sx={{ p: 0, margin: 0 }}>
                     <Grid
                         sx={{ color: 'black' }}
