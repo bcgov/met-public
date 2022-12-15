@@ -49,7 +49,7 @@ export const PhaseBox = ({
                 <If condition={isCurrentPhase}>
                     <Then>
                         <Stack direction="row" height="3em" alignItems={'center'}>
-                            <Box marginLeft={'1em'} color="#D8292F">
+                            <Box marginLeft={{ xs: '0', lg: '1em' }} color="#D8292F">
                                 <LocationOnIcon fontSize="large" />
                             </Box>
                             <MetSmallText sx={{ fontStyle: 'italic', overflow: 'visible' }}>Current Phase</MetSmallText>
