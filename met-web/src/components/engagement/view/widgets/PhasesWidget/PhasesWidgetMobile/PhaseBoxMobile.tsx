@@ -91,9 +91,7 @@ export const PhaseBoxMobile = ({
                                             aria-controls="panel1a-content"
                                             id="panel1a-header"
                                         >
-                                            <Typography sx={{ color: isCurrent ? 'black' : 'white' }}>
-                                                Learn More
-                                            </Typography>
+                                            <Typography sx={[!isCurrent && { color: 'white' }]}>Learn More</Typography>
                                         </AccordionSummary>
                                         <AccordionDetails>{learnMoreBox}</AccordionDetails>
                                     </Accordion>

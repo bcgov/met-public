@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Grid } from '@mui/material';
-import { MetParagraph } from 'components/common';
+import { MetHeader4, MetParagraph } from 'components/common';
 import { EngagementPhases, PAST_PHASE, ProcessStageProps } from 'models/engagementPhases';
 import { PhaseBoxMobile } from './PhaseBoxMobile';
 import { ReadMoreBox } from '../ReadMoreBox';
@@ -31,7 +31,7 @@ export const EngagementPhaseMobile = ({
                     sx={{ p: 0, margin: 0 }}
                 >
                     <Grid
-                        sx={{ color: isCurrent ? 'black' : 'white' }}
+                        sx={[!isCurrent && { color: 'white' }]}
                         container
                         direction="row"
                         justifyContent="flex-start"
@@ -39,7 +39,7 @@ export const EngagementPhaseMobile = ({
                         spacing={1}
                     >
                         <Grid item xs={12}>
-                            <MetParagraph sx={{ fontWeight: 'bold', fontSize: '1.3rem' }}>{title}</MetParagraph>
+                            <MetHeader4 bold>{title}</MetHeader4>
                         </Grid>
                         {learnMoreText}
                     </Grid>
