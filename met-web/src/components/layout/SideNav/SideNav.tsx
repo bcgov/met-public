@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListItemButton, List, ListItem, ListItemText, Box, Drawer, Toolbar } from '@mui/material';
+import { ListItemButton, List, ListItem, Box, Drawer, Toolbar } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Routes } from './SideNavElements';
 import { Palette } from '../../../styles/Theme';
