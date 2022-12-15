@@ -1,6 +1,6 @@
 FROM python:3.7.13-slim
 
-ARG DAGSTER_VERSION=0.16.13
+ARG DAGSTER_VERSION=0.17.6
 
 RUN pip install --upgrade pip
 # ==> Add Dagster layer
