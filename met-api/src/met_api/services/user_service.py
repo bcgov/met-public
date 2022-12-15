@@ -49,7 +49,9 @@ class UserService:
             # TODO etc;Arrive at a better implementation than keeping a static list
             # TODO Probably add a custom attribute in the keycloak as title against a group?
             groups = group_user_details.get(user.external_id)
-            user_detail['groups'] = ','.join([GROUP_NAME_MAPPING.get(group, '') for group in groups])
+            user_detail['groups'] = ''
+            if groups:
+                user_detail['groups'] = ','.join([GROUP_NAME_MAPPING.get(group, '') for group in groups])
             user_collection.append(user_detail)
 
         return {
