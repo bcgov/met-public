@@ -4,6 +4,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Routes } from './SideNavElements';
 import { Palette } from '../../../styles/Theme';
 import { SideNavProps } from './types';
+import { MetHeader4 } from 'components/common';
+import { When, Unless } from 'react-if';
 
 const DrawerBox = () => {
     const navigate = useNavigate();
@@ -25,24 +27,21 @@ const DrawerBox = () => {
                 background: Palette.primary.main,
             }}
         >
-            <List sx={{ paddingTop: '2em' }}>
+            <List sx={{ paddingTop: '2.5em' }}>
                 {Routes.map((route) => (
                     <ListItem key={route.name}>
                         <ListItemButton
                             data-testid={`SideNav/${route.name}-button`}
                             onClick={() => navigate(route.path)}
                         >
-                            <ListItemText
-                                primaryTypographyProps={{
-                                    variant: 'h6',
-                                    sx: [
-                                        currentBaseRoute === route.base
-                                            ? { color: Palette.secondary.main, fontWeight: 700 }
-                                            : { color: 'white' },
-                                    ],
-                                }}
-                                primary={route.name}
-                            />
+                            <When condition={currentBaseRoute === route.base}>
+                                <MetHeader4 color={Palette.secondary.main} bold>
+                                    {route.name}
+                                </MetHeader4>
+                            </When>
+                            <Unless condition={currentBaseRoute === route.base}>
+                                <MetHeader4 color={'white'}>{route.name}</MetHeader4>
+                            </Unless>
                         </ListItemButton>
                     </ListItem>
                 ))}

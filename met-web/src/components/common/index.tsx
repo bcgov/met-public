@@ -213,6 +213,7 @@ export const modalStyle = {
 
 interface HeaderProps {
     sx?: SxProps;
+    color?: string;
     bold?: boolean;
     children?: React.ReactNode | string;
     [prop: string]: unknown;
@@ -266,9 +267,10 @@ export const MetHeader3 = ({ bold, children, sx, ...rest }: HeaderProps) => {
         </Typography>
     );
 };
-export const MetHeader4 = ({ bold, children, sx, ...rest }: HeaderProps) => {
+export const MetHeader4 = ({ bold, color, children, sx, ...rest }: HeaderProps) => {
     return (
         <Typography
+            color={color}
             sx={{
                 ...sx,
                 fontSize: '1.3rem',
