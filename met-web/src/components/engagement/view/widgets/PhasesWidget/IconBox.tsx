@@ -1,8 +1,8 @@
 import React, { ReactNode, useRef, useState } from 'react';
 import { Box, ClickAwayListener, IconButton, Paper } from '@mui/material';
-import ForumIcon from '@mui/icons-material/Forum';
 import { Arrow, PopperArrow } from 'components/common/MetPopper';
 import CloseIcon from '@mui/icons-material/Close';
+import { ForumIcon } from './ForumIcon';
 
 export const IconBox = ({ children }: { children: ReactNode }) => {
     const iconRef = useRef<HTMLButtonElement | null>(null);
@@ -13,7 +13,7 @@ export const IconBox = ({ children }: { children: ReactNode }) => {
         <>
             <IconButton
                 ref={iconRef}
-                sx={{ marginTop: '-0.8em', marginLeft: '1em', color: '#458686' }}
+                sx={{ marginTop: '-0.5em', marginLeft: '1em', color: '#458686' }}
                 onClick={() => setOpen(!open)}
             >
                 <ForumIcon fontSize="large" />

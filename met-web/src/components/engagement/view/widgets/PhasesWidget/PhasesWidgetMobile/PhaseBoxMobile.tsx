@@ -12,7 +12,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 interface PhaseBoxProps {
     title: string;
     backgroundColor?: string;
-    readMoreBox?: ReactNode;
+    learnMoreBox?: ReactNode;
     iconBox?: ReactNode;
     children?: ReactNode;
     readMoreBackground?: string;
@@ -21,7 +21,7 @@ interface PhaseBoxProps {
 export const PhaseBoxMobile = ({
     title,
     backgroundColor = 'white',
-    readMoreBox,
+    learnMoreBox,
     readMoreBackground,
     iconBox,
     accordionBackground,
@@ -74,7 +74,7 @@ export const PhaseBoxMobile = ({
                                         >
                                             <Typography sx={{ color: 'black' }}>Learn More</Typography>
                                         </AccordionSummary>
-                                        <AccordionDetails>{readMoreBox}</AccordionDetails>
+                                        <AccordionDetails>{learnMoreBox}</AccordionDetails>
                                     </Accordion>
                                 </Grid>
                             </Grid>

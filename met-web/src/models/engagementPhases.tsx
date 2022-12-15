@@ -1,16 +1,20 @@
+import React, { ReactNode } from 'react';
 import { Grid } from '@mui/material';
 import { MetParagraph } from 'components/common';
-import React, { ReactNode } from 'react';
 
 export enum EngagementPhases {
     Standalone = 0,
     EarlyEngagement = 1,
-    ProcessPlanning = 2,
-    ApplicationDevelopmentReview = 3,
-    EffectsAssessmentRecomendation = 4,
+    ReadinessDecision = 2,
+    ProcessPlanning = 3,
+    ApplicationDevelopmentReview = 4,
+    Recommendation = 5,
+    Decision = 6,
+    PostCertificate = 7,
 }
 
 export interface ProcessStageProps {
+    phaseId: number;
     backgroundColor: string;
     learnMoreBackgroundColor: string;
     title: string;
@@ -19,12 +23,18 @@ export interface ProcessStageProps {
     accordionBackground?: string;
 }
 
+export const PAST_PHASE = {
+    backgroundColor: '#7B8283',
+    borderColor: '#565656',
+};
+
 export const ENGAGEMENT_PHASES = {
     EarlyEngagement: {
+        phaseId: EngagementPhases.EarlyEngagement,
         title: 'Early Engagement',
         backgroundColor: '#54858D',
         accordionBackground: '#A8D5DD',
-        learnMoreBackgroundColor: '#D1D9DD',
+        learnMoreBackgroundColor: '#A8D5DD',
         learnMoreText: (
             <Grid item xs={12}>
                 <MetParagraph>
@@ -37,9 +47,10 @@ export const ENGAGEMENT_PHASES = {
             'Tell us about your interests, issues and concerns about the initial proposal for the project. How would the project as proposed personally affect you, your family, or your community? Tell us how you want to provide feedback and be involved in the rest of the assessment process.',
     },
     ReadinessDecision: {
+        phaseId: EngagementPhases.ReadinessDecision,
         title: 'Readiness Decision',
         backgroundColor: '#DA6D65',
-        learnMoreBackgroundColor: '#FCE5E4',
+        learnMoreBackgroundColor: '#EFBDB9',
         accordionBackground: '#EFBDB9',
         learnMoreText: (
             <Grid item xs={12}>
@@ -53,10 +64,11 @@ export const ENGAGEMENT_PHASES = {
             'Decision point: EAO can recommend project proceed to assessment, be exempted or terminated from the process.',
     },
     ProcessPlanning: {
+        phaseId: EngagementPhases.ProcessPlanning,
         title: 'Process Planning',
         backgroundColor: '#043673',
         accordionBackground: '#89A4C4',
-        learnMoreBackgroundColor: '#C8CAD6',
+        learnMoreBackgroundColor: '#89A4C4',
         learnMoreText: (
             <Grid item xs={12}>
                 <MetParagraph>
@@ -70,10 +82,11 @@ export const ENGAGEMENT_PHASES = {
             'Tell us what you think of the draft process order and assessment plan. Have we captured everything that should be assessed and the information required? Are the timelines and assessment methods appropriate? What do you think of how we plan to collect feedback from the public?',
     },
     AppDevReview: {
+        phaseId: EngagementPhases.ApplicationDevelopmentReview,
         title: 'Application Development & Review',
         backgroundColor: '#4D95D0',
         accordionBackground: '#9AC0E0',
-        learnMoreBackgroundColor: '#D7EBF8',
+        learnMoreBackgroundColor: '#9AC0E0',
         learnMoreText: (
             <>
                 <Grid item xs={12}>
@@ -98,11 +111,12 @@ export const ENGAGEMENT_PHASES = {
         popOverText:
             'Tell us what you think about the proponent’s application. Are there effects that haven’t been fully considered? Now that you have the proponent’s full assessment, is there anything new or is still raising concerns for you ? Do you think something has been assessed inaccurately?',
     },
-    EffectAssessmentReview: {
-        title: 'Effect Assessment & Review',
+    Recommendation: {
+        phaseId: EngagementPhases.Recommendation,
+        title: 'Recommendation',
         backgroundColor: '#E7A913',
         accordionBackground: '#EDC970',
-        learnMoreBackgroundColor: '#FAEACC',
+        learnMoreBackgroundColor: '#EDC970',
         learnMoreText: (
             <>
                 <Grid item xs={12}>
@@ -125,10 +139,11 @@ export const ENGAGEMENT_PHASES = {
             ' Tell us what you think about the package of draft decision materials that will be provided to Ministers, who will decide whether or not to issue an environmental assessment certificate. Is anything missing? Has something been assessed incorrectly? What should the ministers consider that isn’t already included?',
     },
     Decision: {
+        phaseId: EngagementPhases.Decision,
         title: 'Decision',
         backgroundColor: '#6A54A3',
         accordionBackground: '#AAA2BF',
-        learnMoreBackgroundColor: '#D6D1E7',
+        learnMoreBackgroundColor: '#AAA2BF',
         learnMoreText: (
             <Grid item xs={12}>
                 <MetParagraph sx={{ fontStyle: 'italic' }}>
@@ -139,10 +154,11 @@ export const ENGAGEMENT_PHASES = {
         ),
     },
     PostCertificate: {
+        phaseId: EngagementPhases.PostCertificate,
         title: 'Post-Certificate',
         backgroundColor: '#A6BB2E',
         accordionBackground: '#D5DE9E',
-        learnMoreBackgroundColor: '#EDF2D4',
+        learnMoreBackgroundColor: '#D5DE9E',
         learnMoreText: (
             <>
                 <Grid item xs={12}>
