@@ -42,13 +42,11 @@ const EngagementForm = () => {
         setRichDescription(savedEngagement?.rich_description || '');
         setRichContent(savedEngagement?.rich_content || '');
     }, [savedEngagement]);
-    const { name, start_date, end_date, description, content } = engagementFormData;
+    const { name, start_date, end_date } = engagementFormData;
     const [engagementFormError, setEngagementFormError] = useState({
         name: false,
         start_date: false,
         end_date: false,
-        description: false,
-        content: false,
     });
 
     const getErrorMessage = () => {
@@ -79,7 +77,6 @@ const EngagementForm = () => {
 
         setEngagementFormError({
             ...engagementFormError,
-            description: false,
         });
     };
 
@@ -108,8 +105,6 @@ const EngagementForm = () => {
             name: !(name && name.length < 50),
             start_date: !start_date,
             end_date: !end_date,
-            description: false,
-            content: false,
         };
         setEngagementFormError(errors);
 
