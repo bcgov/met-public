@@ -51,12 +51,12 @@ objects:
             valueFrom:
               secretKeyRef:
                 key: met-username
-                name: met-database-users
+                name: met-patroni
           - name: DATABASE_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: met-password
-                name: met-database-users
+                name: met-patroni
           - name: DATABASE_NAME
             valueFrom:
               secretKeyRef:
@@ -187,6 +187,8 @@ objects:
     SITE_URL: ${SITE_URL}
     VERIFICATION_EMAIL_TEMPLATE_ID: ${VERIFICATION_EMAIL_TEMPLATE_ID}
     REJECTED_EMAIL_TEMPLATE_ID: ${REJECTED_EMAIL_TEMPLATE_ID}
+    KEYCLOAK_REALMNAME: ${KEYCLOAK_REALMNAME}
+    KEYCLOAK_BASE_URL: ${KEYCLOAK_BASE_URL}
 - kind: Secret
   apiVersion: v1
   type: Opaque
@@ -268,6 +270,7 @@ parameters:
   - name: MET_ADMIN_CLIENT_SECRET
     description: "The MET admin service account secret"
     required: true
+    value: "59ada1aa-9fc0-484c-81d3-f5a7e14a64a7"
   - name: KEYCLOAK_BASE_URL
     description: "Keycloak base url"
     required: true

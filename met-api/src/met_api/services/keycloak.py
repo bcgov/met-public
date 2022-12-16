@@ -47,7 +47,7 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         # TODO if List is bigger than a number ; if so reject.
         base_url = current_app.config.get('KEYCLOAK_BASE_URL')
         # TODO fix this during tests and remove below
-        if base_url:
+        if not base_url:
             return {}
         realm = current_app.config.get('KEYCLOAK_REALMNAME')
         timeout = current_app.config.get('CONNECT_TIMEOUT', 60)
@@ -61,8 +61,11 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         for user_id in user_ids:
             query_user_url = f'{base_url}/auth/admin/realms/{realm}/users/{user_id}/groups'
             response = requests.get(query_user_url, headers=headers, timeout=timeout)
-            if (groups := response.json()) is not None:
-                user_group_mapping[user_id] = [group.get('name') for group in groups]
+            if response.status_code == 200:
+                if (groups := response.json()) is not None:
+                    user_group_mapping[user_id] = [group.get('name') for group in groups]
+            else:
+                user_group_mapping[user_id] = []
         return user_group_mapping
 
     @staticmethod
@@ -104,7 +107,6 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
             'Content-Type': 'application/x-www-form-urlencoded'
         }
         token_url = f'{base_url}/auth/realms/{realm}/protocol/openid-connect/token'
-
         response = requests.post(token_url,
                                  data=f'client_id={admin_client_id}&grant_type=client_credentials'
                                       f'&client_secret={admin_secret}', headers=headers,
