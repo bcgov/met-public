@@ -108,8 +108,8 @@ const EngagementForm = () => {
             name: !(name && name.length < 50),
             start_date: !start_date,
             end_date: !end_date,
-            description: !description,
-            content: !content,
+            description: false,
+            content: false,
         };
         setEngagementFormError(errors);
 

@@ -98,8 +98,7 @@ class EngagementService:
     @staticmethod
     def validate_fields(data):
         """Validate all fields."""
-        empty_fields = [not data[field] for field in ['name', 'description', 'rich_description',
-                                                      'start_date', 'end_date']]
+        empty_fields = [not data[field] for field in ['name', 'start_date', 'end_date']]
 
         if data['start_date'] > data['end_date']:
             raise ValueError('Start date cannot be after End date')
