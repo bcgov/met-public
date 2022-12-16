@@ -1,8 +1,11 @@
 """Service for user management."""
+from typing import List
+
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.user import User as UserModel
 from met_api.services.keycloak import KeycloakService
 from met_api.schemas.user import UserSchema
+from met_api.utils.constants import GROUP_NAME_MAPPING
 from met_api.utils.enums import UserType
 
 KEYCLOAK_SERVICE = KeycloakService()
@@ -38,10 +41,17 @@ class UserService:
         user: UserModel
         user_schema = UserSchema()
         user_collection = []
+        user_ids = [user.external_id for user in users]
+        group_user_details: List = KEYCLOAK_SERVICE.get_users_groups(user_ids)
         for user in users:
-            groups = KEYCLOAK_SERVICE.get_user_groups(user.external_id)
             user_detail = user_schema.dump(user)
-            user_detail['groups'] = groups
+            # Transform group name from EAO_ADMINISTRATOR to Administrator
+            # TODO etc;Arrive at a better implementation than keeping a static list
+            # TODO Probably add a custom attribute in the keycloak as title against a group?
+            groups = group_user_details.get(user.external_id)
+            user_detail['groups'] = ''
+            if groups:
+                user_detail['groups'] = ','.join([GROUP_NAME_MAPPING.get(group, '') for group in groups])
             user_collection.append(user_detail)
 
         return {

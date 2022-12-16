@@ -82,11 +82,15 @@ class _Config():  # pylint: disable=too-few-public-methods
     S3_REGION = os.getenv('S3_REGION')
     S3_SERVICE = os.getenv('S3_SERVICE')
 
-    print(f'SQLAlchemy URL (_Config): {SQLALCHEMY_DATABASE_URI}')
-
     # Service account details
+    KEYCLOAK_BASE_URL = os.getenv('KEYCLOAK_BASE_URL')
+    KEYCLOAK_REALMNAME = os.getenv('KEYCLOAK_REALMNAME')
     KEYCLOAK_SERVICE_ACCOUNT_ID = os.getenv('MET_ADMIN_CLIENT_ID')
     KEYCLOAK_SERVICE_ACCOUNT_SECRET = os.getenv('MET_ADMIN_CLIENT_SECRET')
+    # TODO separate out clients for APIs and user management.
+    # TODO API client wont need user management roles in keycloak.
+    KEYCLOAK_ADMIN_USERNAME = os.getenv('MET_ADMIN_CLIENT_ID')
+    KEYCLOAK_ADMIN_SECRET = os.getenv('MET_ADMIN_CLIENT_SECRET')
 
     # front end urls
     SURVEY_PATH = os.getenv('SURVEY_PATH', '/surveys/submit/{survey_id}/{token}')
@@ -187,10 +191,10 @@ class TestConfig(_Config):  # pylint: disable=too-few-public-methods
     4H8UZcVFN95vEKxJiLRjAmj6g273pu9kK4ymXNEjWWJn
     -----END RSA PRIVATE KEY-----"""
 
-    KEYCLOAK_ADMIN_USERNAME = KEYCLOAK_BCROS_ADMIN_CLIENTID = os.getenv('KEYCLOAK_TEST_ADMIN_CLIENTID')
-    KEYCLOAK_ADMIN_SECRET = KEYCLOAK_BCROS_ADMIN_SECRET = os.getenv('KEYCLOAK_TEST_ADMIN_SECRET')
-    KEYCLOAK_BASE_URL = KEYCLOAK_BCROS_BASE_URL = os.getenv('KEYCLOAK_TEST_BASE_URL')
-    KEYCLOAK_REALMNAME = KEYCLOAK_BCROS_REALMNAME = os.getenv('KEYCLOAK_TEST_REALMNAME')
+    KEYCLOAK_ADMIN_USERNAME = os.getenv('KEYCLOAK_TEST_ADMIN_CLIENTID')
+    KEYCLOAK_ADMIN_SECRET = os.getenv('KEYCLOAK_TEST_ADMIN_SECRET')
+    KEYCLOAK_BASE_URL = os.getenv('KEYCLOAK_TEST_BASE_URL')
+    KEYCLOAK_REALMNAME = os.getenv('KEYCLOAK_TEST_REALMNAME')
     JWT_OIDC_AUDIENCE = os.getenv('JWT_OIDC_TEST_AUDIENCE')
     JWT_OIDC_CLIENT_SECRET = os.getenv('JWT_OIDC_TEST_CLIENT_SECRET')
     JWT_OIDC_ISSUER = os.getenv('JWT_OIDC_TEST_ISSUER')
