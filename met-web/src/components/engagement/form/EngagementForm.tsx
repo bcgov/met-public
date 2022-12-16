@@ -88,7 +88,6 @@ const EngagementForm = () => {
 
         setEngagementFormError({
             ...engagementFormError,
-            content: false,
         });
     };
 
@@ -266,8 +265,6 @@ const EngagementForm = () => {
                         setRawText={handleDescriptionChange}
                         handleEditorStateChange={handleRichDescriptionChange}
                         initialRawEditorState={savedEngagement.rich_description || ''}
-                        error={engagementFormError.description}
-                        helperText="Description cannot be empty"
                     />
                 </Grid>
 
@@ -290,8 +287,6 @@ const EngagementForm = () => {
                                     setRawText={handleContentChange}
                                     handleEditorStateChange={handleRichContentChange}
                                     initialRawEditorState={savedEngagement.rich_content || ''}
-                                    error={engagementFormError.content}
-                                    helperText="Content cannot be empty"
                                 />
                             </Grid>
                         </Grid>
