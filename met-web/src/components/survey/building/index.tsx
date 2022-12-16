@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Stack, Divider, TextField, IconButton } from '@mui/material';
+import { Grid, Stack, Divider, TextField, IconButton, Switch, FormGroup, FormControlLabel } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import FormBuilder from 'components/Form/FormBuilder';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
@@ -20,13 +20,17 @@ const SurveyFormBuilder = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { surveyId } = useParams<SurveyParams>();
+
     const [savedSurvey, setSavedSurvey] = useState<Survey | null>(null);
     const [formData, setFormData] = useState<unknown>(null);
+
     const [loading, setLoading] = useState(true);
     const [isNameFocused, setIsNamedFocused] = useState(false);
     const [name, setName] = useState(savedSurvey ? savedSurvey.name : '');
     const [isSaving, setIsSaving] = useState(false);
     const [savedEngagement, setSavedEngagement] = useState<Engagement | null>(null);
+
+    const [formDefinition, setFormDefinition] = useState<FormBuilderData>({ display: 'form', components: [] });
 
     const hasEngagement = Boolean(savedSurvey?.engagement_id);
     const isEngagementDraft = savedEngagement?.status_id === EngagementStatus.Draft;
@@ -61,6 +65,7 @@ const SurveyFormBuilder = () => {
         try {
             const loadedSurvey = await getSurvey(Number(surveyId));
             setSavedSurvey(loadedSurvey);
+            setFormDefinition(loadedSurvey?.form_json || { display: 'form', components: [] });
             setName(loadedSurvey.name);
         } catch (error) {
             dispatch(
@@ -78,6 +83,7 @@ const SurveyFormBuilder = () => {
             loadEngagement();
         }
     }, [savedSurvey]);
+
     const loadEngagement = async () => {
         if (!savedSurvey?.engagement_id) {
             setLoading(false);
@@ -100,6 +106,7 @@ const SurveyFormBuilder = () => {
     };
 
     const handleFormChange = (form: FormBuilderData) => {
+        console.log(form);
         if (!form.components) {
             return;
         }
@@ -207,7 +214,26 @@ const SurveyFormBuilder = () => {
                 <Divider />
             </Grid>
             <Grid item xs={12}>
-                <FormBuilder handleFormChange={handleFormChange} savedForm={savedSurvey?.form_json} />
+                <FormGroup>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={formDefinition.display === 'wizard'}
+                                onChange={(e) => {
+                                    if (e.target.checked) {
+                                        setFormDefinition({ display: 'wizard', components: [] });
+                                        return;
+                                    }
+                                    setFormDefinition({ display: 'form', components: [] });
+                                }}
+                            />
+                        }
+                        label="Multi-page"
+                    />
+                </FormGroup>
+            </Grid>
+            <Grid item xs={12}>
+                <FormBuilder handleFormChange={handleFormChange} savedForm={formDefinition} />
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
