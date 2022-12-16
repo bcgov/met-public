@@ -106,7 +106,6 @@ const SurveyFormBuilder = () => {
     };
 
     const handleFormChange = (form: FormBuilderData) => {
-        console.log(form);
         if (!form.components) {
             return;
         }
