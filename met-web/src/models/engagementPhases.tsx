@@ -60,8 +60,6 @@ export const ENGAGEMENT_PHASES = {
                 </MetParagraph>
             </Grid>
         ),
-        popOverText:
-            'Decision point: EAO can recommend project proceed to assessment, be exempted or terminated from the process.',
     },
     ProcessPlanning: {
         phaseId: EngagementPhases.ProcessPlanning,
@@ -113,7 +111,7 @@ export const ENGAGEMENT_PHASES = {
     },
     Recommendation: {
         phaseId: EngagementPhases.Recommendation,
-        title: 'Recommendation',
+        title: 'Effects Assessment & Recommendation',
         backgroundColor: '#E7A913',
         accordionBackground: '#EDC970',
         learnMoreBackgroundColor: '#EDC970',
