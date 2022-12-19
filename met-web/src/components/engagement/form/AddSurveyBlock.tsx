@@ -8,6 +8,18 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { EngagementStatus } from 'constants/engagementStatus';
 import { unlinkSurvey } from 'services/surveyService';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+import Box from '@mui/material/Box';
+import MetTabs from 'components/common/MetTabs/MetTabs';
+import RichTextEditor from './RichTextEditor';
+import { If, Then } from 'react-if';
+import {
+    headerUpcoming,
+    headerClosed,
+    paragraphUpcoming,
+    paragraphOpen,
+    paragraphClosed,
+    style,
+} from 'constants/submissionStatusText';
 
 export const AddSurveyBlock = () => {
     const { savedEngagement, fetchEngagement } = useContext(ActionContext);
@@ -81,6 +93,29 @@ export const AddSurveyBlock = () => {
         );
     };
 
+    const tabs = [{ upcoming: 'Upcoming' }, { open: 'Open' }, { closed: 'Closed' }];
+    const [selectedTabName, setselectedTabName] = useState('');
+    const updateTabName = (name: string): void => {
+        setselectedTabName(name);
+    };
+
+    const richtexteditor = (Header: string, Paragraph: string) => {
+        return (
+            <RichTextEditor
+                initialRawEditorState={
+                    '{"blocks":[{"text":"' +
+                    Header +
+                    '", "inlineStyleRanges":[' +
+                    style +
+                    ']}, {"text":"' +
+                    Paragraph +
+                    '"}],"entityMap":{}}'
+                }
+                helperText="Description cannot be empty"
+            />
+        );
+    };
+
     return (
         <>
             <MetHeader4 bold={true} sx={{ marginBottom: '2px' }}>
@@ -95,6 +130,20 @@ export const AddSurveyBlock = () => {
                     spacing={2}
                     sx={{ padding: '1em' }}
                 >
+                    <Grid item xs={12}>
+                        <Box sx={{ width: '100%', typography: 'body1' }}>
+                            <MetTabs tabs={tabs} updateTabName={updateTabName} />
+                        </Box>
+                        <If condition={selectedTabName == 'upcoming'}>
+                            <Then> {richtexteditor(headerUpcoming, paragraphUpcoming)} </Then>
+                        </If>
+                        <If condition={selectedTabName == 'open'}>
+                            <Then> {richtexteditor(headerUpcoming, paragraphOpen)} </Then>
+                        </If>
+                        <If condition={selectedTabName == 'closed'}>
+                            <Then> {richtexteditor(headerClosed, paragraphClosed)} </Then>
+                        </If>
+                    </Grid>
                     <Grid item xs={12} container direction="row" justifyContent="flex-end">
                         <SecondaryButton onClick={handleAddSurvey} disabled={savedEngagement.surveys.length > 0}>
                             Add Survey
