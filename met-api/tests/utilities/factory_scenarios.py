@@ -18,8 +18,6 @@ Test Utility for creating test scenarios.
 
 from datetime import datetime, timedelta
 from enum import Enum
-from random import choice
-from string import ascii_lowercase
 
 from faker import Faker
 
