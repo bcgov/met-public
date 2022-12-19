@@ -6,6 +6,7 @@ import { FormSubmissionData } from 'components/Form/types';
 import { useAppSelector } from 'hooks';
 import { PrimaryButton, SecondaryButton } from 'components/common';
 import { SurveyFormProps } from '../types';
+import { When } from 'react-if';
 
 export const SurveyForm = ({ handleClose }: SurveyFormProps) => {
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
@@ -33,35 +34,41 @@ export const SurveyForm = ({ handleClose }: SurveyFormProps) => {
             padding={'2em 2em 1em 2em'}
         >
             <Grid item xs={12}>
-                <FormSubmit savedForm={savedSurvey.form_json} handleFormChange={handleChange} />
+                <FormSubmit
+                    savedForm={savedSurvey.form_json}
+                    handleFormChange={handleChange}
+                    handleFormSubmit={handleSubmit}
+                />
             </Grid>
-            <Grid item container xs={12} direction="row" justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
-                    {isSmallScreen ? (
-                        <>
-                            <PrimaryButton
-                                disabled={!isValid || isLoggedIn || isSubmitting}
-                                onClick={() => handleSubmit(submissionData)}
-                                loading={isSubmitting}
-                            >
-                                Submit Survey
-                            </PrimaryButton>
-                            <SecondaryButton onClick={() => handleClose()}>Cancel</SecondaryButton>
-                        </>
-                    ) : (
-                        <>
-                            <SecondaryButton onClick={() => handleClose()}>Cancel</SecondaryButton>
-                            <PrimaryButton
-                                disabled={!isValid || isLoggedIn || isSubmitting}
-                                onClick={() => handleSubmit(submissionData)}
-                                loading={isSubmitting}
-                            >
-                                Submit Survey
-                            </PrimaryButton>
-                        </>
-                    )}
-                </Stack>
-            </Grid>
+            <When condition={savedSurvey.form_json?.display === 'form'}>
+                <Grid item container xs={12} direction="row" justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
+                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
+                        {isSmallScreen ? (
+                            <>
+                                <PrimaryButton
+                                    disabled={!isValid || isLoggedIn || isSubmitting}
+                                    onClick={() => handleSubmit(submissionData)}
+                                    loading={isSubmitting}
+                                >
+                                    Submit Survey
+                                </PrimaryButton>
+                                <SecondaryButton onClick={() => handleClose()}>Cancel</SecondaryButton>
+                            </>
+                        ) : (
+                            <>
+                                <SecondaryButton onClick={() => handleClose()}>Cancel</SecondaryButton>
+                                <PrimaryButton
+                                    disabled={!isValid || isLoggedIn || isSubmitting}
+                                    onClick={() => handleSubmit(submissionData)}
+                                    loading={isSubmitting}
+                                >
+                                    Submit Survey
+                                </PrimaryButton>
+                            </>
+                        )}
+                    </Stack>
+                </Grid>
+            </When>
         </Grid>
     );
 };

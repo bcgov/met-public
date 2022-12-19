@@ -1,5 +1,6 @@
 
 """Service for comment management."""
+import itertools
 from met_api.models.comment import Comment
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.comment import CommentSchema
@@ -11,6 +12,9 @@ class CommentService:
     """Comment management service."""
 
     otherdateformat = '%Y-%m-%d'
+    
+    wizard_display = 'wizard'
+    form_display = 'form'
 
     @staticmethod
     def get_comment(comment_id) -> CommentSchema:
@@ -74,10 +78,23 @@ class CommentService:
         }
 
     @classmethod
+    def extract_components(cls, survey_form: dict):
+        """Extract components from survey form."""        
+        components = list(survey_form.get('components', []))
+        
+        if survey_form.get('display') == cls.form_display:
+            return components
+        
+        if survey_form.get('display') == cls.wizard_display:
+            return list(itertools.chain.from_iterable([page.get('components', []) for page in components]))
+        return []     
+
+    @classmethod
     def extract_comments(cls, survey_submission: SubmissionSchema, survey: SurveySchema):
         """Extract comments from survey submission."""
         survey_form = survey.get('form_json', {})
-        components = list(survey_form.get('components', []))
+        components = cls.extract_components(survey_form)
+        print(components)
         if len(components) == 0:
             return []
         # get the 'id' for each component that has 'inputType' text and filter out the rest.
@@ -87,4 +104,5 @@ class CommentService:
         submission = survey_submission.get('submission_json', {})
         comments = [cls.__form_comment(key, submission.get(key, ''), survey_submission, survey)
                     for key in text_component_keys if submission.get(key, '') != '']
+        print(comments)
         return comments
