@@ -164,7 +164,7 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def add_user(user: dict):
-        """Add user to Keycloak.Mainly used for Tests."""
+        """Add user to Keycloak.Mainly used for Tests;Dont use it for actual user creation in application."""
         config = current_app.config
         # Add user and set password
         admin_token = KeycloakService._get_admin_token()
@@ -188,7 +188,7 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def get_user_by_username(username, admin_token=None):
-        """Get user from Keycloak by username..Mainly used for Tests."""
+        """Get user from Keycloak by username."""
         base_url = current_app.config.get('KEYCLOAK_BASE_URL')
         realm = current_app.config.get('KEYCLOAK_REALMNAME')
         timeout = current_app.config.get('CONNECT_TIMEOUT', 60)

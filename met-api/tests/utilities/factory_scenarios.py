@@ -87,7 +87,7 @@ class KeycloakScenario:
 
     @staticmethod
     def create_user_request():
-        """Return create user request."""
+        """Return create user request.Sample request just to mock the data."""
         user_name = fake.simple_profile().get('username')
         create_user_request = {
             'username': user_name,
