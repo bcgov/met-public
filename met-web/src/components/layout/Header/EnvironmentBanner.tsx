@@ -14,7 +14,7 @@ const EnvironmentBanner = () => {
     }
     return (
         <Box sx={{ backgroundColor: Palette.secondary.main, color: Palette.text.primary }} textAlign="center">
-            You are using a non-production environment (<strong>{host}</strong>)
+            You are using a TEST environment (<strong>{host}</strong>)
         </Box>
     );
 };
