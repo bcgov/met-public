@@ -18,6 +18,8 @@ Test Utility for creating test scenarios.
 
 from datetime import datetime, timedelta
 from enum import Enum
+from random import choice
+from string import ascii_lowercase
 
 from faker import Faker
 
@@ -80,6 +82,23 @@ class TestSurveyInfo(dict, Enum):
         'name': fake.name(),
         'form_json': {'display': 'form', 'components': []}
     }
+
+
+class KeycloakScenario:
+    """Keycloak scenario."""
+
+    @staticmethod
+    def create_user_request():
+        """Return create user request."""
+        user_name = ''.join(choice(ascii_lowercase) for i in range(5))
+        create_user_request = {
+            'username': user_name,
+            'email': f'{user_name}@gov.bc.ca',
+            'attributes': {},
+            'enabled': True
+        }
+
+        return create_user_request
 
 
 class TestEngagementInfo(dict, Enum):

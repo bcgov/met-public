@@ -51,12 +51,12 @@ objects:
             valueFrom:
               secretKeyRef:
                 key: met-username
-                name: met-patroni
+                name: met-database-users
           - name: DATABASE_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: met-password
-                name: met-patroni
+                name: met-database-users
           - name: DATABASE_NAME
             valueFrom:
               secretKeyRef:
