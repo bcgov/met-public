@@ -29,6 +29,7 @@ class WidgetDocumentService:
     @staticmethod
     def _attach_file_nodes(docs, root):
         files = list(filter(lambda doc: doc.type == DocumentType.FILE.value, docs))
+        files.sort(key=lambda doc: doc.id)
         for file in files:
             props = WidgetDocumentService._fetch_props(file)
             parent_node = root
