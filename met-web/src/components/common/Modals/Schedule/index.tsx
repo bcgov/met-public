@@ -23,11 +23,16 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
     const [scheduledDate, setScheduledDate] = useState<Dayjs | null>(dayjs(Date.now()));
     const { savedEngagement, scheduleEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
-    const isValid =
-        savedEngagement.surveys.length === 0 &&
-        savedEngagement.content &&
-        savedEngagement.description &&
-        savedEngagement.banner_url;
+
+    const isEngagementReady = () => {
+        return (
+            savedEngagement.surveys.length === 0 &&
+            savedEngagement.content &&
+            savedEngagement.description &&
+            savedEngagement.banner_url
+        );
+    };
+
     const handleChange = (newDate: Dayjs | null) => {
         if (newDate != null) {
             setScheduledDate(newDate);
@@ -49,7 +54,7 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
     };
 
     const handleSchedule = async () => {
-        if (!isValid) {
+        if (!isEngagementReady()) {
             dispatch(
                 openNotification({
                     severity: 'error',

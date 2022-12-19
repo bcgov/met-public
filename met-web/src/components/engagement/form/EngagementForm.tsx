@@ -74,20 +74,12 @@ const EngagementForm = () => {
             ...engagementFormData,
             description: rawText,
         });
-
-        setEngagementFormError({
-            ...engagementFormError,
-        });
     };
 
     const handleContentChange = (rawText: string) => {
         setEngagementFormData({
             ...engagementFormData,
             content: rawText,
-        });
-
-        setEngagementFormError({
-            ...engagementFormError,
         });
     };
 
@@ -182,7 +174,7 @@ const EngagementForm = () => {
                     />
                 </Grid>
                 <Grid item xs={12} lg={8} md={6}>
-                    <MetLabel sx={{ marginBottom: '2px' }}>Engagement Name {isNewEngagement ? '*' : ''}</MetLabel>
+                    <MetLabel sx={{ marginBottom: '2px' }}>Engagement Name *</MetLabel>
                     <TextField
                         id="engagement-name"
                         data-testid="engagement-form/name"
@@ -211,7 +203,7 @@ const EngagementForm = () => {
                     columnSpacing={2}
                 >
                     <Grid item xs={12}>
-                        <MetLabel>Engagement Date {isNewEngagement ? '*' : ''}</MetLabel>
+                        <MetLabel>Engagement Date *</MetLabel>
                     </Grid>
 
                     <Grid item md={6} xs={12}>
