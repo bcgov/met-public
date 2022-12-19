@@ -40,6 +40,7 @@ class WidgetDocumentService:
     def _attach_folder_nodes(docs, root):
 
         folders = list(filter(lambda doc: doc.type == DocumentType.FOLDER.value, docs))
+        folders.sort(key=lambda doc: doc.id)
         for folder in folders:
             props = WidgetDocumentService._fetch_props(folder)
             AnyNode(**props, parent=root)
