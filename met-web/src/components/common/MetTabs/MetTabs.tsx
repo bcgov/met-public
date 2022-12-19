@@ -4,6 +4,7 @@ import TabContext from '@mui/lab/TabContext';
 import { MetTab, MetTabList } from './StyledTabComponents';
 
 interface MetTabProps {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     tabs: any | undefined;
     updateTabName: (arg: string) => void;
 }
@@ -24,7 +25,7 @@ const MetTabs: React.FC<MetTabProps> = ({ tabs, updateTabName }) => {
                             style: { transition: 'none', display: 'none' },
                         }}
                     >
-                        {tabs?.map((tab: any) => {
+                        {tabs?.map((tab: string) => {
                             return (
                                 <MetTab
                                     key={`${Object.keys(tab)}`}
