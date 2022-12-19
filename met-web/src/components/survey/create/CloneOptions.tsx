@@ -166,6 +166,7 @@ const CloneOptions = () => {
                             fullWidth
                         />
                     )}
+                    size="small"
                     getOptionLabel={(engagement: Engagement) => engagement.name}
                     onChange={(_e: React.SyntheticEvent<Element, Event>, engagement: Engagement | null) => {
                         setSelectedEngagement(engagement);
@@ -174,7 +175,8 @@ const CloneOptions = () => {
                     disabled={loadingEngagements}
                 />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={6}></Grid>
+            <Grid item xs={6}>
                 <MetLabel sx={{ marginBottom: '2px' }}>Select Survey</MetLabel>
                 <Autocomplete
                     id="survey-selector"
@@ -189,6 +191,7 @@ const CloneOptions = () => {
                             fullWidth
                         />
                     )}
+                    size="small"
                     getOptionLabel={(survey: Survey) => survey.name}
                     value={selectedSurvey}
                     onChange={(_e: React.SyntheticEvent<Element, Event>, survey: Survey | null) =>
@@ -197,6 +200,7 @@ const CloneOptions = () => {
                     disabled={loadingSurveys}
                 />
             </Grid>
+            <Grid item xs={6}></Grid>
             <Grid item xs={6}>
                 <Stack direction="column" spacing={2}>
                     <MetLabel>Enter Survey Name</MetLabel>
