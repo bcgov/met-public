@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Utils for keycloak administration."""
+
 import json
 from typing import List
 
@@ -62,11 +63,13 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         for user_id in user_ids:
             query_user_url = f'{base_url}/auth/admin/realms/{realm}/users/{user_id}/groups'
             response = requests.get(query_user_url, headers=headers, timeout=timeout)
+
             if response.status_code == 200:
                 if (groups := response.json()) is not None:
                     user_group_mapping[user_id] = [group.get('name') for group in groups]
             else:
                 user_group_mapping[user_id] = []
+
         return user_group_mapping
 
     @staticmethod
@@ -108,6 +111,7 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
             'Content-Type': 'application/x-www-form-urlencoded'
         }
         token_url = f'{base_url}/auth/realms/{realm}/protocol/openid-connect/token'
+
         response = requests.post(token_url,
                                  data=f'client_id={admin_client_id}&grant_type=client_credentials'
                                       f'&client_secret={admin_secret}', headers=headers,
@@ -200,3 +204,4 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         query_user_url = f'{base_url}/auth/admin/realms/{realm}/users?username={username}'
         response = requests.get(query_user_url, headers=headers, timeout=timeout)
         return response.json()[0]
+

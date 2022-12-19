@@ -3,10 +3,11 @@ import { Grid } from '@mui/material';
 import { SurveyBanner } from './SurveyBanner';
 import { SurveyForm } from './SurveyForm';
 import { ActionContext } from './ActionContext';
-import { ConditionalComponent, MetPaper } from 'components/common';
+import { MetPaper } from 'components/common';
 import { InvalidTokenModal } from './InvalidTokenModal';
 import { useNavigate } from 'react-router';
 import { EngagementLink } from './EngagementLink';
+import { When } from 'react-if';
 
 const SurveySubmitWrapped = () => {
     const { savedSurvey, isTokenValid } = useContext(ActionContext);
@@ -30,13 +31,13 @@ const SurveySubmitWrapped = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <MetPaper elevation={2}>
-                        <ConditionalComponent condition={isTokenValid && Boolean(savedSurvey.engagement)}>
+                        <When condition={isTokenValid && Boolean(savedSurvey.engagement)}>
                             <SurveyForm
                                 handleClose={() => {
                                     navigate(`/engagements/${savedSurvey.engagement?.id}/view`);
                                 }}
                             />
-                        </ConditionalComponent>
+                        </When>
                         <InvalidTokenModal
                             open={!isTokenValid && Boolean(savedSurvey.engagement)}
                             handleClose={() => {

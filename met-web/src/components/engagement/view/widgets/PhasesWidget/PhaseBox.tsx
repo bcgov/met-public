@@ -1,18 +1,33 @@
 import React, { ReactNode, useContext, useRef, useState } from 'react';
-import { Box, Grid, Link, Popover } from '@mui/material';
+import { Box, Grid, Link, Popover, Stack, SxProps, Theme } from '@mui/material';
 import { MetHeader4, MetPaper, MetSmallText } from 'components/common';
 import { PhaseContext } from '.';
-import { When } from 'react-if';
+import { Else, If, Then, When } from 'react-if';
 import { IconBox } from './IconBox';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { EngagementPhases } from 'models/engagementPhases';
 
 interface PhaseBoxProps {
     title: string;
     backgroundColor?: string;
-    readMoreBox?: ReactNode;
+    learnMoreBox?: ReactNode;
     iconBox?: ReactNode;
     children?: ReactNode;
+    border?: string;
+    sx?: SxProps<Theme>;
+    isCurrentPhase: boolean;
+    currentPhase: number;
 }
-export const PhaseBox = ({ title, backgroundColor = 'white', readMoreBox, iconBox }: PhaseBoxProps) => {
+export const PhaseBox = ({
+    title,
+    backgroundColor = 'white',
+    learnMoreBox,
+    iconBox,
+    currentPhase,
+    border = 'none',
+    sx = {},
+    isCurrentPhase = false,
+}: PhaseBoxProps) => {
     const [readMoreOpen, setReadMoreOpen] = useState(false);
     const { anchorEl, setAnchorEl } = useContext(PhaseContext);
 
@@ -23,17 +38,38 @@ export const PhaseBox = ({ title, backgroundColor = 'white', readMoreBox, iconBo
         setReadMoreOpen(true);
     };
     return (
-        <>
+        <Stack
+            direction="column"
+            sx={{
+                maxWidth: { xl: '20%', md: 'auto' },
+                minWidth: { xl: '10%', md: 'auto' },
+            }}
+        >
+            <When condition={currentPhase !== EngagementPhases.Standalone}>
+                <If condition={isCurrentPhase}>
+                    <Then>
+                        <Stack direction="row" height="3em" alignItems={'center'}>
+                            <Box marginLeft={{ xs: '0', lg: '1em' }} color="#D8292F">
+                                <LocationOnIcon fontSize="large" />
+                            </Box>
+                            <MetSmallText sx={{ fontStyle: 'italic', overflow: 'visible' }}>Current Phase</MetSmallText>
+                        </Stack>
+                    </Then>
+                    <Else>
+                        <span style={{ marginBottom: '3em' }} />
+                    </Else>
+                </If>
+            </When>
             <MetPaper
-                sx={{
-                    borderRadius: 0,
-                    border: 'none',
-                    backgroundColor: backgroundColor,
-                    height: '10em',
-                    marginBottom: '2em',
-                    maxWidth: { xl: '16%', xs: 'auto' },
-                    minWidth: { xl: '10%', xs: 'auto' },
-                }}
+                sx={[
+                    {
+                        borderRadius: 0,
+                        border: border,
+                        backgroundColor: backgroundColor,
+                        height: '10em',
+                    },
+                    { ...sx },
+                ]}
             >
                 <Grid container direction="row" spacing={0}>
                     <Grid item xs={12}>
@@ -52,27 +88,29 @@ export const PhaseBox = ({ title, backgroundColor = 'white', readMoreBox, iconBo
                                 </Grid>
                                 <Grid item container direction="row" justifyContent="flex-end">
                                     <Grid item>
-                                        <MetSmallText
-                                            component={Link}
-                                            sx={{ color: 'white', cursor: 'pointer' }}
+                                        <Link
+                                            component={MetSmallText}
+                                            sx={{ cursor: 'pointer', color: 'white', ':hover': { fontWeight: 'bold' } }}
                                             onClick={handleReadMoreClick}
+                                            color="inherit"
+                                            underline="always"
                                         >
-                                            Read more
-                                        </MetSmallText>
+                                            Learn more
+                                        </Link>
                                     </Grid>
                                 </Grid>
                             </Grid>
                         </Box>
                     </Grid>
-                    <Grid item xs={12}>
-                        <When condition={Boolean(iconBox)}>
-                            <IconBox>{iconBox}</IconBox>
-                        </When>
-                    </Grid>
                 </Grid>
             </MetPaper>
+            <When condition={Boolean(iconBox)}>
+                <Box>
+                    <IconBox>{iconBox}</IconBox>
+                </Box>
+            </When>
 
-            <When condition={Boolean(readMoreBox)}>
+            <When condition={Boolean(learnMoreBox)}>
                 <Popover
                     id={readMoreOpen ? `${title}-readmore-popover` : undefined}
                     open={readMoreOpen}
@@ -89,9 +127,9 @@ export const PhaseBox = ({ title, backgroundColor = 'white', readMoreBox, iconBo
                         },
                     }}
                 >
-                    {readMoreBox}
+                    {learnMoreBox}
                 </Popover>
             </When>
-        </>
+        </Stack>
     );
 };

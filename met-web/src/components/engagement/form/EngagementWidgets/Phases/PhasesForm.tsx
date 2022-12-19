@@ -34,6 +34,10 @@ const PhasesForm = () => {
             label: 'Early Engagement',
         },
         {
+            id: EngagementPhases.ReadinessDecision,
+            label: 'Readiness Decision',
+        },
+        {
             id: EngagementPhases.ProcessPlanning,
             label: 'Process Planning',
         },
@@ -42,8 +46,16 @@ const PhasesForm = () => {
             label: 'Application Development & Review',
         },
         {
-            id: EngagementPhases.EffectsAssessmentRecomendation,
-            label: 'Effects Assessment & Recommendation',
+            id: EngagementPhases.Recommendation,
+            label: 'Recommendation',
+        },
+        {
+            id: EngagementPhases.Decision,
+            label: 'Decision',
+        },
+        {
+            id: EngagementPhases.PostCertificate,
+            label: 'Post-certificate',
         },
     ];
 

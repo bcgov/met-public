@@ -17,6 +17,7 @@ import { MET_Header_Font_Family, MET_Header_Font_Weight } from './constants';
 import { TreeItemProps } from '@mui/lab/TreeItem';
 import { SvgIconProps } from '@mui/material/SvgIcon';
 import { DocumentItem } from 'models/document';
+import { When } from 'react-if';
 
 export const RoundedButton = styled(MuiButton)(() => ({
     borderRadius: '23px',
@@ -107,12 +108,12 @@ export const MetSurvey = ({
                 </Grid>
                 <Grid item xs={6} container direction="row" justifyContent="flex-end">
                     <Stack direction="row" spacing={1}>
-                        <ConditionalComponent condition={!!onEditClick}>
+                        <When condition={!!onEditClick}>
                             <IconButton color="inherit" onClick={onEditClick} data-testid="survey-widget/edit">
                                 <EditIcon />
                             </IconButton>
-                        </ConditionalComponent>
-                        <ConditionalComponent condition={!!onDeleteClick}>
+                        </When>
+                        <When condition={!!onDeleteClick}>
                             <IconButton
                                 color="inherit"
                                 onClick={onDeleteClick}
@@ -120,7 +121,7 @@ export const MetSurvey = ({
                             >
                                 {deleting ? <CircularProgress size="1em" color="inherit" /> : <HighlightOffIcon />}
                             </IconButton>
-                        </ConditionalComponent>
+                        </When>
                     </Stack>
                 </Grid>
                 <Grid item xs={12}>
@@ -142,14 +143,6 @@ export const MidScreenLoader = () => (
 export const MetPageGridContainer = styled(Grid)(() => ({
     padding: '3em',
 }));
-
-export const ConditionalComponent = ({ condition, children }: { condition: boolean; children: React.ReactNode }) => {
-    if (!condition) {
-        return null;
-    }
-
-    return <>{children}</>;
-};
 
 export const MetLabel = styled(Typography)(() => ({
     fontSize: '16px',
@@ -174,6 +167,7 @@ export const MetSmallText = ({ bold, children, sx, ...rest }: HeaderProps) => {
                 ...sx,
                 fontSize: '13px',
                 fontFamily: MET_Header_Font_Family,
+                fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
             }}
             variant="subtitle1"
             {...rest}

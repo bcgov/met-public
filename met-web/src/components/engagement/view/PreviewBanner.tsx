@@ -3,7 +3,7 @@ import { ActionContext } from './ActionContext';
 import { Box, Grid, Skeleton, Stack, useMediaQuery, Theme, Link } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { EngagementStatus } from 'constants/engagementStatus';
-import { ConditionalComponent, MetHeader1, PrimaryButton, SecondaryButton, MetBody } from 'components/common';
+import { MetHeader1, PrimaryButton, SecondaryButton, MetBody } from 'components/common';
 import { useAppSelector } from 'hooks';
 import ImageIcon from '@mui/icons-material/Image';
 import PollIcon from '@mui/icons-material/Poll';
@@ -11,6 +11,7 @@ import UnpublishedIcon from '@mui/icons-material/Unpublished';
 import IconButton from '@mui/material/IconButton';
 import ScheduleModal from 'components/common/Modals/Schedule';
 import { formatDate } from 'components/common/dateHelper';
+import { When } from 'react-if';
 
 export const PreviewBanner = () => {
     const isSmallScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
@@ -45,7 +46,7 @@ export const PreviewBanner = () => {
                 <ScheduleModal reschedule={isScheduled ? true : false} open={isOpen} updateModal={setIsOpen} />
                 <Grid item container direction="row" xs={12} sx={{ pt: 2, mb: 2 }}>
                     <MetHeader1 sx={{ mb: 2 }}>{engagementBannerText}</MetHeader1>
-                    <ConditionalComponent condition={isScheduled}>
+                    <When condition={isScheduled}>
                         <Grid item container direction="row" rowSpacing={1}>
                             <MetBody>
                                 This engagement is scheduled to go live on
@@ -54,10 +55,10 @@ export const PreviewBanner = () => {
                                 page will go live.
                             </MetBody>
                         </Grid>
-                    </ConditionalComponent>
-                    <ConditionalComponent condition={isDraft}>
+                    </When>
+                    <When condition={isDraft}>
                         <Grid item container direction="row" rowSpacing={isSmallScreen ? 2 : 0.5}>
-                            <ConditionalComponent condition={!imageExists}>
+                            <When condition={!imageExists}>
                                 <Grid item container direction="row" xs={12} lg={8}>
                                     <Grid container direction="row" alignItems="center" item sm={0.5} xs={2}>
                                         <IconButton
@@ -73,8 +74,8 @@ export const PreviewBanner = () => {
                                         <MetBody>This engagement is missing a header image.</MetBody>
                                     </Grid>
                                 </Grid>
-                            </ConditionalComponent>
-                            <ConditionalComponent condition={savedEngagement.surveys.length === 0}>
+                            </When>
+                            <When condition={savedEngagement.surveys.length === 0}>
                                 <Grid container direction="row" alignItems="center" item xs={12} lg={8}>
                                     <Grid item sm={0.5} xs={2}>
                                         <IconButton
@@ -90,7 +91,7 @@ export const PreviewBanner = () => {
                                         <MetBody>This engagement is missing a survey.</MetBody>
                                     </Grid>
                                 </Grid>
-                            </ConditionalComponent>
+                            </When>
                             <Grid container direction="row" alignItems="center" item xs={12} lg={8}>
                                 <Grid item sm={0.5} xs={2}>
                                     <IconButton
@@ -106,32 +107,30 @@ export const PreviewBanner = () => {
                                 </Grid>
                             </Grid>
                         </Grid>
-                    </ConditionalComponent>
+                    </When>
                 </Grid>
                 <Grid sx={{ pt: 2 }} item xs={12} container direction="row" justifyContent="flex-end" spacing={1}>
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-start">
-                        <ConditionalComponent condition={isScheduled || isDraft}>
-                            <SecondaryButton
-                                sx={{
-                                    backgroundColor: 'background.paper',
-                                    borderRadius: '4px',
-                                }}
-                                onClick={() => navigate(`/engagements/${engagementId}/form`)}
-                            >
-                                Close Preview
-                            </SecondaryButton>
-                        </ConditionalComponent>
+                        <SecondaryButton
+                            sx={{
+                                backgroundColor: 'background.paper',
+                                borderRadius: '4px',
+                            }}
+                            onClick={() => navigate(`/engagements/${engagementId}/form`)}
+                        >
+                            Close Preview
+                        </SecondaryButton>
 
-                        <ConditionalComponent condition={isDraft}>
+                        <When condition={isDraft}>
                             <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => setIsOpen(true)}>
                                 Schedule Engagement
                             </PrimaryButton>
-                        </ConditionalComponent>
-                        <ConditionalComponent condition={isScheduled}>
+                        </When>
+                        <When condition={isScheduled}>
                             <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => setIsOpen(true)}>
                                 Reschedule Engagement
                             </PrimaryButton>
-                        </ConditionalComponent>
+                        </When>
                     </Stack>
                 </Grid>
             </Grid>

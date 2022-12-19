@@ -5,6 +5,7 @@ import { WidgetType } from 'models/widget';
 import { ActionContext } from '../../ActionContext';
 import { EngagementPhase } from './EngagementPhase';
 import { ENGAGEMENT_PHASES } from 'models/engagementPhases';
+import { ForumIcon } from './ForumIcon';
 
 interface PhaseContextProps {
     anchorEl: HTMLButtonElement | null;
@@ -47,6 +48,7 @@ export const PhasesWidget = () => {
                         <MetBody>
                             Click on the sections below to expand them and learn more about each EA process phase. You
                             can also learn more about each engagement period by clicking the engagement icon.
+                            {<ForumIcon />}
                         </MetBody>
                     </Grid>
                     <Grid item xs={12} sx={{ maxWidth: '99%' }}>

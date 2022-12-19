@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
 import { Link, useParams } from 'react-router-dom';
-import { ConditionalComponent, MetPageGridContainer, PrimaryButton } from 'components/common';
+import { MetPageGridContainer, PrimaryButton } from 'components/common';
 import { Comment } from 'models/comment';
 import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { Link as MuiLink, Typography, Grid, Stack, TextField } from '@mui/material';
@@ -11,6 +11,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { CommentStatusChip } from '../../status';
 import { CommentStatus } from 'constants/commentStatus';
 import { getCommentsPage } from 'services/commentService';
+import { When } from 'react-if';
 
 const CommentTextListing = () => {
     const [comments, setComments] = useState<Comment[]>([]);
@@ -112,11 +113,11 @@ const CommentTextListing = () => {
                             <b>Comment Date: </b>
                             {row.submission_date}
                         </Typography>
-                        <ConditionalComponent condition={row.status_id !== CommentStatus.Pending}>
+                        <When condition={row.status_id !== CommentStatus.Pending}>
                             <Typography variant="subtitle2">
                                 <b>Reviewed By: </b> {row.reviewed_by}
                             </Typography>
-                        </ConditionalComponent>
+                        </When>
                     </Grid>
                     <Grid item>
                         <CommentStatusChip commentStatus={row.status_id} />

@@ -4,7 +4,7 @@ import Modal from '@mui/material/Modal';
 import { closeNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import UpdateModal from './Modals/UpdateModal';
 import ConfirmModal from './Modals/ConfirmModal';
-import { ConditionalComponent } from '.';
+import { When } from 'react-if';
 
 export const NotificationModal = () => {
     const dispatch = useAppDispatch();
@@ -30,17 +30,17 @@ export const NotificationModal = () => {
             aria-describedby="modal-modal-description"
         >
             <>
-                <ConditionalComponent condition={type === 'update'}>
+                <When condition={type === 'update'}>
                     <UpdateModal header={header} subText={subText} handleClose={_handleClose} />
-                </ConditionalComponent>
-                <ConditionalComponent condition={type === 'confirm'}>
+                </When>
+                <When condition={type === 'confirm'}>
                     <ConfirmModal
                         header={header}
                         subText={subText}
                         handleConfirm={_handleConfirm}
                         handleClose={_handleClose}
                     />
-                </ConditionalComponent>
+                </When>
             </>
         </Modal>
     );

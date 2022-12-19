@@ -195,6 +195,7 @@ class TestConfig(_Config):  # pylint: disable=too-few-public-methods
     KEYCLOAK_ADMIN_SECRET = os.getenv('KEYCLOAK_TEST_ADMIN_SECRET', '2222222222')
     KEYCLOAK_BASE_URL = os.getenv('KEYCLOAK_TEST_BASE_URL', 'http://localhost:8088')
     KEYCLOAK_REALMNAME = os.getenv('KEYCLOAK_TEST_REALMNAME', 'demo')
+
     JWT_OIDC_AUDIENCE = os.getenv('JWT_OIDC_TEST_AUDIENCE')
     JWT_OIDC_CLIENT_SECRET = os.getenv('JWT_OIDC_TEST_CLIENT_SECRET')
     JWT_OIDC_ISSUER = os.getenv('JWT_OIDC_TEST_ISSUER')

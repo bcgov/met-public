@@ -270,7 +270,6 @@ parameters:
   - name: MET_ADMIN_CLIENT_SECRET
     description: "The MET admin service account secret"
     required: true
-    value: "59ada1aa-9fc0-484c-81d3-f5a7e14a64a7"
   - name: KEYCLOAK_BASE_URL
     description: "Keycloak base url"
     required: true

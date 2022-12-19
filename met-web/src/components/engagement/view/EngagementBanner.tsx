@@ -2,10 +2,11 @@ import React, { useContext } from 'react';
 import { ActionContext } from './ActionContext';
 import { Grid, Skeleton } from '@mui/material';
 import { Banner } from '../banner/Banner';
-import { ConditionalComponent, PrimaryButton } from 'components/common';
+import { PrimaryButton } from 'components/common';
 import { EngagementBannerProps } from './types';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { useAppSelector } from 'hooks';
+import { When } from 'react-if';
 
 export const EngagementBanner = ({ startSurvey }: EngagementBannerProps) => {
     const { isEngagementLoading, savedEngagement } = useContext(ActionContext);
@@ -20,13 +21,13 @@ export const EngagementBanner = ({ startSurvey }: EngagementBannerProps) => {
 
     return (
         <Banner savedEngagement={savedEngagement}>
-            <ConditionalComponent condition={!!surveyId && (isOpen || isPreview)}>
+            <When condition={!!surveyId && (isOpen || isPreview)}>
                 <Grid item container direction={{ xs: 'column', sm: 'row' }} xs={12} justifyContent="flex-end">
                     <PrimaryButton data-testid="EngagementBanner/share-your-thoughts-button" onClick={startSurvey}>
                         Share your thoughts
                     </PrimaryButton>
                 </Grid>
-            </ConditionalComponent>
+            </When>
         </Banner>
     );
 };

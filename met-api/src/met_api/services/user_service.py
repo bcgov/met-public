@@ -51,7 +51,8 @@ class UserService:
             groups = group_user_details.get(user.external_id)
             user_detail['groups'] = ''
             if groups:
-                user_detail['groups'] = [GROUP_NAME_MAPPING.get(group, '') for group in groups]
+              user_detail['groups'] = [GROUP_NAME_MAPPING.get(group, '') for group in groups]
+
             user_collection.append(user_detail)
 
         return {
