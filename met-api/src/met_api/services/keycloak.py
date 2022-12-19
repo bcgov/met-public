@@ -204,4 +204,3 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         query_user_url = f'{base_url}/auth/admin/realms/{realm}/users?username={username}'
         response = requests.get(query_user_url, headers=headers, timeout=timeout)
         return response.json()[0]
-
