@@ -90,10 +90,9 @@ class KeycloakScenario:
     @staticmethod
     def create_user_request():
         """Return create user request."""
-        user_name = ''.join(choice(ascii_lowercase) for i in range(5))
+        user_name = fake.simple_profile().get('username')
         create_user_request = {
             'username': user_name,
-            'password': 'password',
             'email': f'{user_name}@gov.bc.ca',
             'attributes': {},
             'enabled': True
