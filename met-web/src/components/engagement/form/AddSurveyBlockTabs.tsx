@@ -24,13 +24,13 @@ const AddSurveyBlockTabs = () => {
                     </MetTabList>
                 </Box>
                 <MetTabPanel value="upcoming">
-                    <RichTextEditor initialPlainText={upcomingText} />
+                    <RichTextEditor initialHTMLText={upcomingText} />
                 </MetTabPanel>
                 <MetTabPanel value="open">
-                    <RichTextEditor initialPlainText={openText} />
+                    <RichTextEditor initialHTMLText={openText} />
                 </MetTabPanel>
                 <MetTabPanel value="closed">
-                    <RichTextEditor initialPlainText={closedText} />
+                    <RichTextEditor initialHTMLText={closedText} />
                 </MetTabPanel>
             </TabContext>
         </Box>

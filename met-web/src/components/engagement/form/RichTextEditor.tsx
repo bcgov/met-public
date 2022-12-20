@@ -14,10 +14,27 @@ const RichTextEditor = ({
         /* empty default method  */
     },
     initialRawEditorState = '',
-    initialPlainText = '',
+    initialHTMLText = '',
     error = false,
     helperText = 'Field cannot be empty',
 }) => {
+    const getStateFromInitialValue = (initialRawEditorState: string, initialHTMLText: string) => {
+        if (initialRawEditorState) {
+            setEditorState(getEditorState(initialRawEditorState));
+            return;
+        }
+
+        if (initialHTMLText) {
+            const blocksFromHTML = convertFromHTML(initialHTMLText);
+            const contentState = ContentState.createFromBlockArray(
+                blocksFromHTML.contentBlocks,
+                blocksFromHTML.entityMap,
+            );
+            setEditorState(EditorState.createWithContent(contentState));
+            return;
+        }
+    };
+
     const getEditorState = (rawTextToConvert: string) => {
         if (!rawTextToConvert) {
             return EditorState.createEmpty();
@@ -38,14 +55,8 @@ const RichTextEditor = ({
     };
 
     useEffect(() => {
-        setEditorState(getEditorState(initialRawEditorState));
-    }, [initialRawEditorState]);
-
-    useEffect(() => {
-        const blocksFromHTML = convertFromHTML(initialPlainText);
-        const contentState = ContentState.createFromBlockArray(blocksFromHTML.contentBlocks, blocksFromHTML.entityMap);
-        setEditorState(EditorState.createWithContent(contentState));
-    }, []);
+        getStateFromInitialValue(initialRawEditorState, initialHTMLText);
+    }, [initialRawEditorState, initialHTMLText]);
 
     return (
         <FormControl fullWidth>
