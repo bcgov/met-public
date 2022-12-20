@@ -1,6 +1,5 @@
 import axios from 'axios';
 import UserService from 'services/userService';
-import { ApiResponse } from './types';
 
 const GetRequest = <T>(url: string, params = {}) => {
     return axios.get<T>(url, {
