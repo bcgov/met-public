@@ -13,7 +13,7 @@ class CommentService:
     """Comment management service."""
 
     otherdateformat = '%Y-%m-%d'
-    
+
     wizard_display = 'wizard'
     form_display = 'form'
 
@@ -80,15 +80,15 @@ class CommentService:
 
     @classmethod
     def extract_components(cls, survey_form: dict):
-        """Extract components from survey form."""        
+        """Extract components from survey form."""
         components = list(survey_form.get('components', []))
-        
+
         if survey_form.get('display') == cls.form_display:
             return components
-        
+
         if survey_form.get('display') == cls.wizard_display:
             return list(itertools.chain.from_iterable([page.get('components', []) for page in components]))
-        return []     
+        return []
 
     @classmethod
     def extract_comments(cls, survey_submission: SubmissionSchema, survey: SurveySchema):
