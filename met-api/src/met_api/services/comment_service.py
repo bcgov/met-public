@@ -83,10 +83,12 @@ class CommentService:
         """Extract components from survey form."""
         components = list(survey_form.get('components', []))
 
-        if survey_form.get('display') == cls.form_display:
+        is_comments_from_form_survey = survey_form.get('display') == cls.form_display
+        if is_comments_from_form_survey:
             return components
 
-        if survey_form.get('display') == cls.wizard_display:
+        is_comments_from_wizard_survey = survey_form.get('display') == cls.wizard_display
+        if is_comments_from_wizard_survey:
             return list(itertools.chain.from_iterable([page.get('components', []) for page in components]))
         return []
 
