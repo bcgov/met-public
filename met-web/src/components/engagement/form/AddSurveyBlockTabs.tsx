@@ -1,12 +1,12 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import TabContext from '@mui/lab/TabContext';
-import EngagementForm from './EngagementForm';
-import EngagementSettings from './EngagementSettings';
+import RichTextEditor from './RichTextEditor';
 import { MetTab, MetTabList, MetTabPanel } from './StyledTabComponents';
+import { upcomingText, openText, closedText } from 'constants/submissionStatusText';
 
-const EngagementFormTabs = () => {
-    const [value, setValue] = React.useState('details');
+const AddSurveyBlockTabs = () => {
+    const [value, setValue] = React.useState('upcoming');
 
     return (
         <Box sx={{ width: '100%', typography: 'body1' }}>
@@ -18,19 +18,23 @@ const EngagementFormTabs = () => {
                             style: { transition: 'none', display: 'none' },
                         }}
                     >
-                        <MetTab label="Engagement Details" value="details" />
-                        <MetTab label="Settings" value="settings" />
+                        <MetTab label="Upcoming" value="upcoming" />
+                        <MetTab label="Open" value="open" />
+                        <MetTab label="Closed" value="closed" />
                     </MetTabList>
                 </Box>
-                <MetTabPanel value="details">
-                    <EngagementForm />
+                <MetTabPanel value="upcoming">
+                    <RichTextEditor initialPlainText={upcomingText} />
                 </MetTabPanel>
-                <MetTabPanel value="settings">
-                    <EngagementSettings />
+                <MetTabPanel value="open">
+                    <RichTextEditor initialPlainText={openText} />
+                </MetTabPanel>
+                <MetTabPanel value="closed">
+                    <RichTextEditor initialPlainText={closedText} />
                 </MetTabPanel>
             </TabContext>
         </Box>
     );
 };
 
-export default EngagementFormTabs;
+export default AddSurveyBlockTabs;

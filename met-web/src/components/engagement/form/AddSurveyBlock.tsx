@@ -8,19 +8,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { EngagementStatus } from 'constants/engagementStatus';
 import { unlinkSurvey } from 'services/surveyService';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
-import Box from '@mui/material/Box';
-import MetTabs from 'components/common/MetTabs/MetTabs';
-import RichTextEditor from './RichTextEditor';
-import { If, Then } from 'react-if';
-import { SubmissionStatus } from 'constants/engagementStatus';
-import {
-    headerUpcoming,
-    headerClosed,
-    paragraphUpcoming,
-    paragraphOpen,
-    paragraphClosed,
-    style,
-} from 'constants/submissionStatusText';
+import AddSurveyBlockTabs from './AddSurveyBlockTabs';
 
 export const AddSurveyBlock = () => {
     const { savedEngagement, fetchEngagement } = useContext(ActionContext);
@@ -94,33 +82,6 @@ export const AddSurveyBlock = () => {
         );
     };
 
-    const tabs = [
-        { Upcoming: SubmissionStatus[SubmissionStatus.Upcoming] },
-        { Open: SubmissionStatus[SubmissionStatus.Open] },
-        { Closed: SubmissionStatus[SubmissionStatus.Closed] },
-    ];
-    const [selectedTabName, setselectedTabName] = useState('');
-    const updateTabName = (name: string): void => {
-        setselectedTabName(name);
-    };
-
-    const richtexteditor = (Header: string, Paragraph: string) => {
-        return (
-            <RichTextEditor
-                initialRawEditorState={
-                    '{"blocks":[{"text":"' +
-                    Header +
-                    '", "inlineStyleRanges":[' +
-                    style +
-                    ']}, {"text":"' +
-                    Paragraph +
-                    '"}],"entityMap":{}}'
-                }
-                helperText="Description cannot be empty"
-            />
-        );
-    };
-
     return (
         <>
             <MetHeader4 bold={true} sx={{ marginBottom: '2px' }}>
@@ -136,18 +97,7 @@ export const AddSurveyBlock = () => {
                     sx={{ padding: '1em' }}
                 >
                     <Grid item xs={12}>
-                        <Box sx={{ width: '100%', typography: 'body1' }}>
-                            <MetTabs tabs={tabs} updateTabName={updateTabName} />
-                        </Box>
-                        <If condition={selectedTabName == SubmissionStatus[SubmissionStatus.Upcoming]}>
-                            <Then> {richtexteditor(headerUpcoming, paragraphUpcoming)} </Then>
-                        </If>
-                        <If condition={selectedTabName == SubmissionStatus[SubmissionStatus.Open]}>
-                            <Then> {richtexteditor(headerUpcoming, paragraphOpen)} </Then>
-                        </If>
-                        <If condition={selectedTabName == SubmissionStatus[SubmissionStatus.Closed]}>
-                            <Then> {richtexteditor(headerClosed, paragraphClosed)} </Then>
-                        </If>
+                        <AddSurveyBlockTabs />
                     </Grid>
                     <Grid item xs={12} container direction="row" justifyContent="flex-end">
                         <SecondaryButton onClick={handleAddSurvey} disabled={savedEngagement.surveys.length > 0}>

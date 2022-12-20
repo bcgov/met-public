@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { EditorState, convertFromRaw, convertToRaw } from 'draft-js';
+import { EditorState, ContentState, convertFromHTML, convertFromRaw, convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import { FormControl, FormHelperText } from '@mui/material';
 import { MetPaper } from '../../common';
@@ -14,6 +14,7 @@ const RichTextEditor = ({
         /* empty default method  */
     },
     initialRawEditorState = '',
+    initialPlainText = '',
     error = false,
     helperText = 'Field cannot be empty',
 }) => {
@@ -39,6 +40,12 @@ const RichTextEditor = ({
     useEffect(() => {
         setEditorState(getEditorState(initialRawEditorState));
     }, [initialRawEditorState]);
+
+    useEffect(() => {
+        const blocksFromHTML = convertFromHTML(initialPlainText);
+        const contentState = ContentState.createFromBlockArray(blocksFromHTML.contentBlocks, blocksFromHTML.entityMap);
+        setEditorState(EditorState.createWithContent(contentState));
+    });
 
     return (
         <FormControl fullWidth>
