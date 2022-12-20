@@ -32,8 +32,7 @@ def test_create_survey(client, jwt, session, survey_info):  # pylint:disable=unu
     rv = client.post('/api/surveys/', data=json.dumps(survey_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert rv.json.get('status') is True
-    assert rv.json.get('result').get('form_json') == survey_info.get('form_json')
+    assert rv.json.get('form_json') == survey_info.get('form_json')
 
 
 @pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey2])
@@ -51,9 +50,8 @@ def test_put_survey(client, jwt, session, survey_info):  # pylint:disable=unused
     rv = client.get(f'/api/surveys/{survey_id}',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert rv.json.get('status') is True
-    assert rv.json.get('result').get('form_json') == survey_info.get('form_json')
-    assert rv.json.get('result').get('name') == new_survey_name
+    assert rv.json.get('form_json') == survey_info.get('form_json')
+    assert rv.json.get('name') == new_survey_name
 
 
 def test_survey_link(client, jwt, session):  # pylint:disable=unused-argument
@@ -70,7 +68,7 @@ def test_survey_link(client, jwt, session):  # pylint:disable=unused-argument
     rv = client.get(f'/api/surveys/{survey_id}',
                     headers=headers, content_type=ContentType.JSON.value)
 
-    assert rv.json.get('result').get('engagement_id') is None
+    assert rv.json.get('engagement_id') is None
     # link them togother
     rv = client.put(f'/api/surveys/{survey_id}/link/engagement/{eng_id}',
                     headers=headers, content_type=ContentType.JSON.value)
@@ -78,4 +76,4 @@ def test_survey_link(client, jwt, session):  # pylint:disable=unused-argument
     rv = client.get(f'/api/surveys/{survey_id}',
                     headers=headers, content_type=ContentType.JSON.value)
 
-    assert rv.json.get('result').get('engagement_id') == str(eng_id)
+    assert rv.json.get('engagement_id') == str(eng_id)

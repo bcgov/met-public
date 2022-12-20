@@ -40,7 +40,7 @@ def test_feedback(client, jwt, session):  # pylint:disable=unused-argument
                      headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.status_code == 200
-    result = rv.json.get('result')
+    result = rv.json
     assert result is not None
     assert result.get('id') is not None
     assert result.get('rating') == feedback.rating

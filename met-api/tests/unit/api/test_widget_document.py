@@ -72,7 +72,7 @@ def test_get_document(client, jwt, session):  # pylint:disable=unused-argument
     )
 
     assert rv.status_code == 200
-    assert rv.json.get('result').get('children')[0].get('id') == document.id
+    assert rv.json.get('children')[0].get('id') == document.id
 
 
 def test_assert_tree_structure_invalid(client, jwt, session):  # pylint:disable=unused-argument
@@ -124,7 +124,7 @@ def test_assert_tree_structure(client, jwt, session):  # pylint:disable=unused-a
     )
 
     assert rv.status_code == 200
-    expected_folder_element = rv.json.get('result').get('children')[0]
+    expected_folder_element = rv.json.get('children')[0]
     assert expected_folder_element.get('id') == folder.id
     assert expected_folder_element.get('title') == folder.title
     assert expected_folder_element.get('type') == DocumentType.FOLDER.value
@@ -160,7 +160,7 @@ def test_patch_documents(client, jwt, session):  # pylint:disable=unused-argumen
         content_type=ContentType.JSON.value
     )
     assert rv.status_code == 200
-    assert rv.json.get('result').get('children')[0].get('title') == document_edits.get('title')
+    assert rv.json.get('children')[0].get('title') == document_edits.get('title')
 
 
 def test_delete_documents(client, jwt, session):  # pylint:disable=unused-argument

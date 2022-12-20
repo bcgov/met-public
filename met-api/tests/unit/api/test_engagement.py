@@ -36,7 +36,6 @@ def test_add_engagements(client, jwt, session, engagement_info):  # pylint:disab
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert rv.json.get('status') is True
 
 
 @pytest.mark.parametrize('role', [TestJwtClaims.no_role, TestJwtClaims.public_user_role])
@@ -55,14 +54,13 @@ def test_get_engagements(client, jwt, session, engagement_info):  # pylint:disab
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert rv.json.get('status') is True
     created_eng = rv.json
 
     rv = client.get(f'/api/engagements/{created_eng.get("id")}', data=json.dumps(engagement_info),
                     headers=headers, content_type=ContentType.JSON.value)
 
-    assert created_eng.get('result').get('name') == rv.json.get('result').get('name')
-    assert created_eng.get('result').get('content') == rv.json.get('result').get('content')
+    assert created_eng.get('name') == rv.json.get('name')
+    assert created_eng.get('content') == rv.json.get('content')
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
@@ -90,10 +88,9 @@ def test_patch_engagement(client, jwt, session, engagement_info):  # pylint:disa
     rv = client.get(f'/api/engagements/{engagement_id}',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert rv.json.get('status') is True
-    assert rv.json.get('result').get('name') == engagement_edits.get('name')
-    assert engagement_edits.get('start_date') in rv.json.get('result').get('start_date')
-    assert engagement_edits.get('end_date') in rv.json.get('result').get('end_date')
-    assert rv.json.get('result').get('description') == engagement_edits.get('description')
-    assert rv.json.get('result').get('content') == engagement_edits.get('content')
-    assert engagement_edits.get('created_date') in rv.json.get('result').get('created_date')
+    assert rv.json.get('name') == engagement_edits.get('name')
+    assert engagement_edits.get('start_date') in rv.json.get('start_date')
+    assert engagement_edits.get('end_date') in rv.json.get('end_date')
+    assert rv.json.get('description') == engagement_edits.get('description')
+    assert rv.json.get('content') == engagement_edits.get('content')
+    assert engagement_edits.get('created_date') in rv.json.get('created_date')
