@@ -82,6 +82,23 @@ class TestSurveyInfo(dict, Enum):
     }
 
 
+class KeycloakScenario:
+    """Keycloak scenario."""
+
+    @staticmethod
+    def create_user_request():
+        """Return create user request.Sample request just to mock the data."""
+        user_name = fake.simple_profile().get('username')
+        create_user_request = {
+            'username': user_name,
+            'email': f'{user_name}@gov.bc.ca',
+            'attributes': {},
+            'enabled': True
+        }
+
+        return create_user_request
+
+
 class TestEngagementInfo(dict, Enum):
     """Test scenarios of engagement."""
 

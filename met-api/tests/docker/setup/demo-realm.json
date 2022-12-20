@@ -314,60 +314,7 @@
         "public_user",
         "edit"
       ],
-      "clientRoles": {},
-      "subGroups": [
-        {
-          "name": "api_gateway_users",
-          "path": "/public_users/api_gateway_users",
-          "attributes": {},
-          "realmRoles": [],
-          "clientRoles": {},
-          "subGroups": []
-        },
-        {
-          "name": "api_gateway_sandbox_users",
-          "path": "/public_users/api_gateway_sandbox_users",
-          "attributes": {},
-          "realmRoles": [
-            "sandbox"
-          ],
-          "clientRoles": {},
-          "subGroups": []
-        }
-      ]
-    },
-    {
-      "name": "gov_account_users",
-      "path": "/gov_account_users",
-      "attributes": {},
-      "realmRoles": [
-        "edit",
-        "public_user",
-        "gov_account_user"
-      ],
-      "clientRoles": {},
-      "subGroups": []
-    },
-    {
-      "name": "account_holders",
-      "path": "/account_holders",
-      "attributes": {},
-      "realmRoles": [
-        "account_holder"
-      ],
-      "clientRoles": {},
-      "subGroups": []
-    },
-    {
-      "name": "anonymous_users",
-      "path": "/anonymous_users",
-      "attributes": {},
-      "realmRoles": [
-        "edit",
-        "anonymous_user"
-      ],
-      "clientRoles": {},
-      "subGroups": []
+      "clientRoles": {}
     }
   ],
   "defaultRoles": [

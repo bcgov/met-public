@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Utils for keycloak administration."""
+
+import json
 from typing import List
 
 import requests
@@ -61,8 +63,13 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         for user_id in user_ids:
             query_user_url = f'{base_url}/auth/admin/realms/{realm}/users/{user_id}/groups'
             response = requests.get(query_user_url, headers=headers, timeout=timeout)
-            if (groups := response.json()) is not None:
-                user_group_mapping[user_id] = [group.get('name') for group in groups]
+
+            if response.status_code == 200:
+                if (groups := response.json()) is not None:
+                    user_group_mapping[user_id] = [group.get('name') for group in groups]
+            else:
+                user_group_mapping[user_id] = []
+
         return user_group_mapping
 
     @staticmethod
@@ -154,3 +161,46 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         response = requests.put(add_to_group_url, headers=headers,
                                 timeout=timeout)
         response.raise_for_status()
+
+    @staticmethod
+    def add_user(user: dict):
+        """Add user to Keycloak.Mainly used for Tests;Dont use it for actual user creation in application."""
+        config = current_app.config
+        # Add user and set password
+        admin_token = KeycloakService._get_admin_token()
+
+        base_url = config.get('KEYCLOAK_BASE_URL')
+        realm = config.get('KEYCLOAK_REALMNAME')
+        timeout = config.get('CONNECT_TIMEOUT', 60)
+
+        # Add user to the keycloak group '$group_name'
+        headers = {
+            'Content-Type': ContentType.JSON.value,
+            'Authorization': f'Bearer {admin_token}'
+        }
+
+        add_user_url = f'{base_url}/auth/admin/realms/{realm}/users'
+        response = requests.post(add_user_url, data=json.dumps(user), headers=headers,
+                                 timeout=timeout)
+        response.raise_for_status()
+
+        return KeycloakService.get_user_by_username(user.get('username'), admin_token)
+
+    @staticmethod
+    def get_user_by_username(username, admin_token=None):
+        """Get user from Keycloak by username."""
+        base_url = current_app.config.get('KEYCLOAK_BASE_URL')
+        realm = current_app.config.get('KEYCLOAK_REALMNAME')
+        timeout = current_app.config.get('CONNECT_TIMEOUT', 60)
+        if not admin_token:
+            admin_token = KeycloakService._get_admin_token()
+
+        headers = {
+            'Content-Type': ContentType.JSON.value,
+            'Authorization': f'Bearer {admin_token}'
+        }
+
+        # Get the user and return
+        query_user_url = f'{base_url}/auth/admin/realms/{realm}/users?username={username}'
+        response = requests.get(query_user_url, headers=headers, timeout=timeout)
+        return response.json()[0]
