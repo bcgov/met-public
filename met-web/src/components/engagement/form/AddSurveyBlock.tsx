@@ -12,6 +12,7 @@ import Box from '@mui/material/Box';
 import MetTabs from 'components/common/MetTabs/MetTabs';
 import RichTextEditor from './RichTextEditor';
 import { If, Then } from 'react-if';
+import { SubmissionStatus } from 'constants/engagementStatus';
 import {
     headerUpcoming,
     headerClosed,
@@ -93,7 +94,11 @@ export const AddSurveyBlock = () => {
         );
     };
 
-    const tabs = [{ upcoming: 'Upcoming' }, { open: 'Open' }, { closed: 'Closed' }];
+    const tabs = [
+        { Upcoming: SubmissionStatus[SubmissionStatus.Upcoming] },
+        { Open: SubmissionStatus[SubmissionStatus.Open] },
+        { Closed: SubmissionStatus[SubmissionStatus.Closed] },
+    ];
     const [selectedTabName, setselectedTabName] = useState('');
     const updateTabName = (name: string): void => {
         setselectedTabName(name);
@@ -134,13 +139,13 @@ export const AddSurveyBlock = () => {
                         <Box sx={{ width: '100%', typography: 'body1' }}>
                             <MetTabs tabs={tabs} updateTabName={updateTabName} />
                         </Box>
-                        <If condition={selectedTabName == 'upcoming'}>
+                        <If condition={selectedTabName == SubmissionStatus[SubmissionStatus.Upcoming]}>
                             <Then> {richtexteditor(headerUpcoming, paragraphUpcoming)} </Then>
                         </If>
-                        <If condition={selectedTabName == 'open'}>
+                        <If condition={selectedTabName == SubmissionStatus[SubmissionStatus.Open]}>
                             <Then> {richtexteditor(headerUpcoming, paragraphOpen)} </Then>
                         </If>
-                        <If condition={selectedTabName == 'closed'}>
+                        <If condition={selectedTabName == SubmissionStatus[SubmissionStatus.Closed]}>
                             <Then> {richtexteditor(headerClosed, paragraphClosed)} </Then>
                         </If>
                     </Grid>
