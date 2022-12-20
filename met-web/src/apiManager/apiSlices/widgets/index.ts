@@ -9,7 +9,6 @@ export const widgetsApi = createApi({
     endpoints: (builder) => ({
         getWidgets: builder.query<Widget[], number>({
             query: (engagement_id) => `widgets/engagement/${engagement_id}`,
-            transformResponse: (response: { result: Widget[] }) => response.result || [],
         }),
     }),
     refetchOnReconnect: true,

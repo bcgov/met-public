@@ -13,13 +13,13 @@
 # limitations under the License.
 """API endpoints for managing an email verification resource."""
 
+from http import HTTPStatus
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
 from met_api.schemas.email_verification import EmailVerificationSchema
 from met_api.services.email_verification_service import EmailVerificationService
-from met_api.utils.action_result import ActionResult
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
@@ -41,13 +41,13 @@ class EmailVerification(Resource):
         try:
             email_verification = EmailVerificationService().get_active(token)
             if email_verification:
-                return ActionResult.success(email_verification.get('id'), email_verification)
+                return email_verification, HTTPStatus.OK
 
-            return ActionResult.error('Email verification not found')
+            return 'Email verification not found', HTTPStatus.INTERNAL_SERVER_ERROR
         except KeyError:
-            return ActionResult.error('Email verification not found')
+            return 'Email verification not found', HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 @cors_preflight('POST, OPTIONS')
@@ -64,8 +64,8 @@ class EmailVerifications(Resource):
             requestjson = request.get_json()
             email_verification = EmailVerificationSchema().load(requestjson)
             EmailVerificationService().create(email_verification)
-            return ActionResult.success({}, {})
+            return {}, HTTPStatus.OK
         except KeyError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

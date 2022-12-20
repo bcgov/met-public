@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """API endpoints for managing an user resource."""
-from http import HTTPStatus
 
+from http import HTTPStatus
 from flask import jsonify, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
@@ -22,7 +22,6 @@ from met_api.auth import auth
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.user import UserSchema
 from met_api.services.user_service import UserService
-from met_api.utils.action_result import ActionResult
 from met_api.auth import jwt as _jwt
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
@@ -48,11 +47,11 @@ class User(Resource):
             user_schema = UserSchema().load(user_data)
             user = UserService().create_or_update_user(user_schema)
             user_schema['id'] = user.id
-            return ActionResult.success(user.id, user_schema)
+            return user_schema, HTTPStatus.OK
         except KeyError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
     @cross_origin(origins=allowedorigins())

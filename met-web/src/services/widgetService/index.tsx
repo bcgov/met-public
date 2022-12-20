@@ -9,7 +9,7 @@ import { WidgetItem, Widget } from 'models/widget';
 export const getWidgets = async (engagement_id: number): Promise<Widget[]> => {
     const url = replaceUrl(Endpoints.Widgets.GET_LIST, 'engagement_id', String(engagement_id));
     const responseData = await http.GetRequest<Widget[]>(url);
-    return responseData.data.result ?? [];
+    return responseData.data ?? [];
 };
 
 interface PostWidget {
@@ -20,10 +20,10 @@ export const postWidget = async (engagement_id: number, data: PostWidget): Promi
     try {
         const url = replaceUrl(Endpoints.Widgets.CREATE, 'engagement_id', String(engagement_id));
         const response = await http.PostRequest<Widget>(url, data);
-        if (response.data.status && response.data.result) {
-            return Promise.resolve(response.data.result);
+        if (response.data) {
+            return response.data;
         }
-        return Promise.reject(response.data.message ?? 'Failed to create contact');
+        return Promise.reject('Failed to create contact');
     } catch (err) {
         return Promise.reject(err);
     }
@@ -42,10 +42,10 @@ export const postWidgetItems = async (widget_id: number, data: PostWidgetItemReq
     try {
         const url = replaceUrl(Endpoints.Widget_items.CREATE, 'widget_id', String(widget_id));
         const response = await http.PostRequest<WidgetItem[]>(url, data);
-        if (response.data.status && response.data.result) {
-            return Promise.resolve(response.data.result);
+        if (response.data) {
+            return response.data;
         }
-        return Promise.reject(response.data.message ?? 'Failed to create wdiget item');
+        return Promise.reject('Failed to create wdiget item');
     } catch (err) {
         return Promise.reject(err);
     }
@@ -61,10 +61,10 @@ export const removeWidget = async (engagement_id: number, widget_id: number): Pr
             },
         });
         const response = await http.DeleteRequest<Widget[]>(url);
-        if (response.data.status && response.data.result) {
-            return Promise.resolve(response.data.result);
+        if (response.data) {
+            return response.data;
         }
-        return Promise.reject(response.data.message ?? 'Failed to delete widget');
+        return Promise.reject('Failed to delete widget');
     } catch (err) {
         return Promise.reject(err);
     }

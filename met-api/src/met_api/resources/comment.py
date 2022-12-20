@@ -13,6 +13,7 @@
 # limitations under the License.
 """API endpoints for managing an comment resource."""
 
+from http import HTTPStatus
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
@@ -20,7 +21,6 @@ from flask_restx import Namespace, Resource
 from met_api.auth import auth
 from met_api.models.pagination_options import PaginationOptions
 from met_api.services.comment_service import CommentService
-from met_api.utils.action_result import ActionResult
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
@@ -44,13 +44,13 @@ class Comment(Resource):
             comment_record = CommentService().get_comment(comment_id)
 
             if comment_record:
-                return ActionResult.success(comment_id, comment_record)
+                return comment_record, HTTPStatus.OK
 
             raise KeyError('comment record is None')
         except KeyError:
-            return ActionResult.error('Comment was not found')
+            return 'Comment was not found', HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 @cors_preflight('GET, OPTIONS')
@@ -80,6 +80,6 @@ class SurveyComments(Resource):
                     pagination_options,
                     args.get('search_text', '', str),
             )
-            return ActionResult.success(result=comment_records)
+            return comment_records, HTTPStatus.OK
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

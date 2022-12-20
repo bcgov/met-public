@@ -14,7 +14,7 @@
 """API endpoints for managing an user resource."""
 
 from http import HTTPStatus
-from flask import request
+from flask import request, jsonify
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
@@ -25,7 +25,6 @@ from met_api.schemas.widget_item import WidgetItemSchema
 from met_api.schemas import utils as schema_utils
 from met_api.schemas.widget import WidgetSchema
 from met_api.services.widget_service import WidgetService
-from met_api.utils.action_result import ActionResult
 from met_api.utils.util import allowedorigins, cors_preflight
 from met_api.utils.token_info import TokenInfo
 
@@ -45,9 +44,9 @@ class Widget(Resource):
         """Fetch a list of widgets by engagement_id."""
         try:
             widgets = WidgetService().get_widgets_by_engagement_id(engagement_id)
-            return ActionResult.success(engagement_id, widgets)
+            return jsonify(widgets), HTTPStatus.OK
         except (KeyError, ValueError) as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
@@ -63,11 +62,11 @@ class Widget(Resource):
 
             widget = WidgetSchema().load(request_json)
             created_widget = WidgetService().create_widget(widget, engagement_id, user_id)
-            return ActionResult.success(result=created_widget)
+            return created_widget, HTTPStatus.OK
         except (KeyError, ValueError) as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValidationError as err:
-            return ActionResult.error(str(err.messages))
+            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 @cors_preflight('PATCH')
@@ -100,11 +99,11 @@ class EngagementWidget(Resource):
         """Remove widget for an engagement."""
         try:
             WidgetService().delete_widget(engagement_id, widget_id)
-            return ActionResult.success(widget_id, 'Widget successfully removed')
+            return 'Widget successfully removed', HTTPStatus.OK
         except KeyError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 @cors_preflight('POST,OPTIONS')
@@ -128,8 +127,8 @@ class WidgetItems(Resource):
             widget_items = WidgetItemSchema(many=True).load(request_json)
 
             result = WidgetService().save_widget_items_bulk(widget_items, widget_id, user_id)
-            return ActionResult.success(result=result)
+            return jsonify(result), HTTPStatus.OK
         except (KeyError, ValueError) as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValidationError as err:
-            return ActionResult.error(str(err.messages))
+            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR

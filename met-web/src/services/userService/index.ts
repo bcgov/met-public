@@ -31,8 +31,8 @@ const initKeycloak = async (dispatch: Dispatch<AnyAction>) => {
         dispatch(userToken(KeycloakData.token));
         const userDetail: UserDetail = await KeycloakData.loadUserInfo();
         const updateUserResponse = await updateUser();
-        if (updateUserResponse.data.result) {
-            userDetail.user = updateUserResponse.data.result;
+        if (updateUserResponse.data) {
+            userDetail.user = updateUserResponse.data;
             dispatch(userDetails(userDetail));
             dispatch(userAuthorization(true));
         } else {

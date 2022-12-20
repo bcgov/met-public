@@ -9,11 +9,9 @@ export const contactsApi = createApi({
     endpoints: (builder) => ({
         getContacts: builder.query<Contact[], void>({
             query: () => `contacts/`,
-            transformResponse: (response: { result: Contact[] }) => response.result || [],
         }),
         getContact: builder.query<Contact, number>({
             query: (contact_id) => `contacts/${contact_id}`,
-            transformResponse: (response: { result: Contact }) => response.result,
         }),
     }),
     refetchOnReconnect: true,

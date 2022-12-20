@@ -13,6 +13,7 @@
 # limitations under the License.
 """API endpoints for managing an survey resource."""
 
+from http import HTTPStatus
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
@@ -21,7 +22,6 @@ from met_api.auth import auth
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.survey import SurveySchema
 from met_api.services.survey_service import SurveyService
-from met_api.utils.action_result import ActionResult
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 from met_api.auth import jwt as _jwt
@@ -51,13 +51,13 @@ class Survey(Resource):
             else:
                 survey_record = SurveyService().get_open(survey_id)
             if survey_record:
-                return ActionResult.success(survey_id, survey_record)
+                return survey_record, HTTPStatus.OK
 
-            return ActionResult.error('Survey was not found')
+            return 'Survey was not found', HTTPStatus.INTERNAL_SERVER_ERROR
         except KeyError:
-            return ActionResult.error('Survey was not found')
+            return 'Survey was not found', HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 @cors_preflight('GET, POST, PUT, OPTIONS')
@@ -87,9 +87,9 @@ class Surveys(Resource):
                     args.get('search_text', '', str),
                     args.get('unlinked', False, bool)
             )
-            return ActionResult.success(result=survey_records)
+            return survey_records, HTTPStatus.OK
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
     @_jwt.has_one_of_roles([Role.CREATE_SURVEY.value])
@@ -105,11 +105,11 @@ class Surveys(Resource):
             survey_schema['updated_by'] = user_id
             result = SurveyService().create(survey_schema)
             survey_schema['id'] = result.identifier
-            return ActionResult.success(result.identifier, survey_schema)
+            return survey_schema, HTTPStatus.OK
         except KeyError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
     # @TRACER.trace()
@@ -122,12 +122,12 @@ class Surveys(Resource):
             survey_schema = SurveySchema().load(requestjson)
             user_id = TokenInfo.get_id()
             survey_schema['updated_by'] = user_id
-            result = SurveyService().update(survey_schema)
-            return ActionResult.success(result.identifier, survey_schema)
+            SurveyService().update(survey_schema)
+            return survey_schema, HTTPStatus.OK
         except KeyError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 @cors_preflight('PUT,OPTIONS')
@@ -146,13 +146,13 @@ class SurveyLink(Resource):
             result = SurveyService().link(survey_id, engagement_id)
 
             if result.success:
-                return ActionResult.success(survey_id, 'Survey successfully linked')
+                return 'Survey successfully linked', HTTPStatus.OK
 
-            return ActionResult.error('Error occurred while linking survey to engagement')
+            return 'Error occurred while linking survey to engagement', HTTPStatus.INTERNAL_SERVER_ERROR
         except KeyError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 @cors_preflight('DELETE, OPTIONS')
@@ -171,10 +171,10 @@ class SurveyUnlink(Resource):
             result = SurveyService().unlink(survey_id, engagement_id)
 
             if result.success:
-                return ActionResult.success(survey_id, 'Survey successfully unlinked')
+                return 'Survey successfully unlinked', HTTPStatus.OK
 
-            return ActionResult.error('Error occurred while unlinking survey from engagement')
+            return 'Error occurred while unlinking survey from engagement', HTTPStatus.INTERNAL_SERVER_ERROR
         except KeyError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

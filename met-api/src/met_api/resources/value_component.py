@@ -13,11 +13,11 @@
 # limitations under the License.
 """API endpoints for managing a value components resource."""
 
-
+from http import HTTPStatus
+from flask import jsonify
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
-from met_api.utils.action_result import ActionResult
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
@@ -102,6 +102,6 @@ class GetEngagements(Resource):
                     'category': 'other',
                 }
             ]
-            return ActionResult.success(result=vcs)
+            return jsonify(vcs), HTTPStatus.OK
         except ValueError as err:
-            return {'status': False, 'message': str(err)}, 400
+            return {'status': False, 'message': str(err)}, HTTPStatus.BAD_REQUEST
