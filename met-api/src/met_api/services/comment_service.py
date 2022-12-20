@@ -95,7 +95,6 @@ class CommentService:
         """Extract comments from survey submission."""
         survey_form = survey.get('form_json', {})
         components = cls.extract_components(survey_form)
-        print(components)
         if len(components) == 0:
             return []
         # get the 'id' for each component that has 'inputType' text and filter out the rest.
@@ -105,5 +104,4 @@ class CommentService:
         submission = survey_submission.get('submission_json', {})
         comments = [cls.__form_comment(key, submission.get(key, ''), survey_submission, survey)
                     for key in text_component_keys if submission.get(key, '') != '']
-        print(comments)
         return comments
