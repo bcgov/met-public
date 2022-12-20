@@ -14,6 +14,7 @@
 """API endpoints for managing an engagement resource."""
 
 from http import HTTPStatus
+
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
@@ -24,8 +25,8 @@ from met_api.auth import jwt as _jwt
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services.engagement_service import EngagementService
-from met_api.utils.token_info import TokenInfo
 from met_api.utils.roles import Role
+from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
 

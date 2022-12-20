@@ -14,14 +14,15 @@
 """API endpoints for managing an user resource."""
 
 from http import HTTPStatus
-from flask import request, jsonify
+
+from flask import jsonify, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
 
 from met_api.auth import auth
-from met_api.schemas.contact import ContactSchema
 from met_api.schemas import utils as schema_utils
+from met_api.schemas.contact import ContactSchema
 from met_api.services.contact_service import ContactService
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight

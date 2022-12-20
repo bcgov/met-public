@@ -14,14 +14,17 @@
 """API endpoints for managing an user resource."""
 
 from http import HTTPStatus
-from flask import request, jsonify
+
+from flask import jsonify, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
+
 from met_api.auth import auth
 from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas.widget_documents import WidgetDocumentsSchema
 from met_api.services.widget_documents_service import WidgetDocumentService
 from met_api.utils.util import allowedorigins, cors_preflight
+
 
 API = Namespace('widgets_documents', description='Endpoints for Widget Document Management')
 """Widget Documents

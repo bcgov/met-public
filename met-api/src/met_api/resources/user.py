@@ -14,18 +14,20 @@
 """API endpoints for managing an user resource."""
 
 from http import HTTPStatus
+
 from flask import jsonify, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
 from met_api.auth import auth
+from met_api.auth import jwt as _jwt
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.user import UserSchema
 from met_api.services.user_service import UserService
-from met_api.auth import jwt as _jwt
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
+
 
 API = Namespace('user', description='Endpoints for User Management')
 """Custom exception messages

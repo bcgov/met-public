@@ -14,6 +14,7 @@
 """API endpoints for managing a value components resource."""
 
 from http import HTTPStatus
+
 from flask import jsonify
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource

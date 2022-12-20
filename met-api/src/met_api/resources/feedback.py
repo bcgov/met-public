@@ -14,6 +14,7 @@
 """API endpoints for managing an feedback resource."""
 
 from http import HTTPStatus
+
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
@@ -24,6 +25,7 @@ from met_api.schemas import utils as schema_utils
 from met_api.services.feedback_service import FeedbackService
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
+
 
 API = Namespace('feedbacks', description='Endpoints for Feedbacks Management')
 """Custom exception messages

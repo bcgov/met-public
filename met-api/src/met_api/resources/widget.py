@@ -14,19 +14,21 @@
 """API endpoints for managing an user resource."""
 
 from http import HTTPStatus
-from flask import request, jsonify
+
+from flask import jsonify, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
 
 from met_api.auth import auth
 from met_api.exceptions.business_exception import BusinessException
-from met_api.schemas.widget_item import WidgetItemSchema
 from met_api.schemas import utils as schema_utils
 from met_api.schemas.widget import WidgetSchema
+from met_api.schemas.widget_item import WidgetItemSchema
 from met_api.services.widget_service import WidgetService
-from met_api.utils.util import allowedorigins, cors_preflight
 from met_api.utils.token_info import TokenInfo
+from met_api.utils.util import allowedorigins, cors_preflight
+
 
 API = Namespace('widgets', description='Endpoints for Widget Management')
 """Custom exception messages
