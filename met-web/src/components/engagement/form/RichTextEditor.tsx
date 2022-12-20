@@ -45,7 +45,7 @@ const RichTextEditor = ({
         const blocksFromHTML = convertFromHTML(initialPlainText);
         const contentState = ContentState.createFromBlockArray(blocksFromHTML.contentBlocks, blocksFromHTML.entityMap);
         setEditorState(EditorState.createWithContent(contentState));
-    });
+    }, []);
 
     return (
         <FormControl fullWidth>
