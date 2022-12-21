@@ -48,10 +48,15 @@ def test_get_all_by_widget_id(session):
     document2 = WidgetDocumentsModel(
         **TestWidgetDocumentInfo.document2
     )
+    document3 = WidgetDocumentsModel(
+        **TestWidgetDocumentInfo.document3
+    )
     document1.widget_id = widget.id
     document2.widget_id = widget.id
+    document3.widget_id = widget.id
     session.add(document1)
     session.add(document2)
+    session.add(document3)
     session.commit()
 
     expected_docs = WidgetDocumentsModel.get_all_by_widget_id(widget.id)
