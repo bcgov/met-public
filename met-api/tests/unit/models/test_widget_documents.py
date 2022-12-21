@@ -55,6 +55,7 @@ def test_get_all_by_widget_id(session):
     session.commit()
 
     expected_docs = WidgetDocumentsModel.get_all_by_widget_id(widget.id)
+    all(expected_docs[i].id <= expected_docs[i+1].id for i in range(len(expected_docs) - 1))
     assert len(expected_docs) == 2
 
 
