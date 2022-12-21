@@ -4,9 +4,10 @@ import TabContext from '@mui/lab/TabContext';
 import RichTextEditor from './RichTextEditor';
 import { MetTab, MetTabList, MetTabPanel } from './StyledTabComponents';
 import { upcomingText, openText, closedText } from 'constants/submissionStatusText';
+import { SubmissionStatus } from 'constants/engagementStatus';
 
 const AddSurveyBlockTabs = () => {
-    const [value, setValue] = React.useState('upcoming');
+    const [value, setValue] = React.useState(SubmissionStatus[SubmissionStatus.Upcoming]);
 
     return (
         <Box sx={{ width: '100%', typography: 'body1' }}>
@@ -18,18 +19,18 @@ const AddSurveyBlockTabs = () => {
                             style: { transition: 'none', display: 'none' },
                         }}
                     >
-                        <MetTab label="Upcoming" value="upcoming" />
-                        <MetTab label="Open" value="open" />
-                        <MetTab label="Closed" value="closed" />
+                        <MetTab label="Upcoming" value={SubmissionStatus[SubmissionStatus.Upcoming]} />
+                        <MetTab label="Open" value={SubmissionStatus[SubmissionStatus.Open]} />
+                        <MetTab label="Closed" value={SubmissionStatus[SubmissionStatus.Closed]} />
                     </MetTabList>
                 </Box>
-                <MetTabPanel value="upcoming">
+                <MetTabPanel value={SubmissionStatus[SubmissionStatus.Upcoming]}>
                     <RichTextEditor initialHTMLText={upcomingText} />
                 </MetTabPanel>
-                <MetTabPanel value="open">
+                <MetTabPanel value={SubmissionStatus[SubmissionStatus.Open]}>
                     <RichTextEditor initialHTMLText={openText} />
                 </MetTabPanel>
-                <MetTabPanel value="closed">
+                <MetTabPanel value={SubmissionStatus[SubmissionStatus.Closed]}>
                     <RichTextEditor initialHTMLText={closedText} />
                 </MetTabPanel>
             </TabContext>

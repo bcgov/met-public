@@ -18,7 +18,7 @@ const RichTextEditor = ({
     error = false,
     helperText = 'Field cannot be empty',
 }) => {
-    const getStateFromInitialValue = (initialRawEditorState: string, initialHTMLText: string) => {
+    const getStateFromInitialValue = () => {
         if (initialRawEditorState) {
             setEditorState(getEditorState(initialRawEditorState));
             return;
@@ -55,7 +55,7 @@ const RichTextEditor = ({
     };
 
     useEffect(() => {
-        getStateFromInitialValue(initialRawEditorState, initialHTMLText);
+        getStateFromInitialValue();
     }, [initialRawEditorState, initialHTMLText]);
 
     return (
