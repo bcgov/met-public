@@ -24,7 +24,7 @@ export const getCommentsPage = async ({
     const url = replaceUrl(Endpoints.Comment.GET_LIST, 'survey_id', String(survey_id));
     const responseData = await http.GetRequest<Page<Comment>>(url, { page, size, sort_key, sort_order, search_text });
     return (
-        responseData.data.result ?? {
+        responseData.data ?? {
             items: [],
             total: 0,
         }

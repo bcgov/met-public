@@ -13,15 +13,18 @@
 # limitations under the License.
 """API endpoints for managing an user resource."""
 
-from flask import request
+from http import HTTPStatus
+
+from flask import jsonify, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
+
 from met_api.auth import auth
 from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas.widget_documents import WidgetDocumentsSchema
 from met_api.services.widget_documents_service import WidgetDocumentService
-from met_api.utils.action_result import ActionResult
 from met_api.utils.util import allowedorigins, cors_preflight
+
 
 API = Namespace('widgets_documents', description='Endpoints for Widget Document Management')
 """Widget Documents
@@ -39,9 +42,9 @@ class WidgetDocuments(Resource):
         """Fetch a list of widgets by engagement_id."""
         try:
             documents = WidgetDocumentService().get_documents_by_widget_id(widget_id)
-            return ActionResult.success(result=documents)
+            return jsonify(documents), HTTPStatus.OK
         except (KeyError, ValueError) as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
@@ -51,9 +54,9 @@ class WidgetDocuments(Resource):
         request_json = request.get_json()
         try:
             document = WidgetDocumentService.create_document(widget_id, request_json)
-            return ActionResult.success(result=WidgetDocumentsSchema().dump(document))
+            return WidgetDocumentsSchema().dump(document), HTTPStatus.OK
         except BusinessException as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 @cors_preflight('PATCH, DELETE')
@@ -69,9 +72,9 @@ class WidgetDocumentsChanges(Resource):
         request_json = request.get_json()
         try:
             document = WidgetDocumentService.edit_document(widget_id, document_id, request_json)
-            return ActionResult.success(result=WidgetDocumentsSchema().dump(document))
+            return WidgetDocumentsSchema().dump(document), HTTPStatus.OK
         except BusinessException as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
@@ -80,6 +83,6 @@ class WidgetDocumentsChanges(Resource):
         """Remove folder from a document widget."""
         try:
             WidgetDocumentService().delete_document(widget_id, document_id)
-            return ActionResult.success(widget_id, 'Document successfully removed')
+            return 'Document successfully removed', HTTPStatus.OK
         except (KeyError, ValueError) as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

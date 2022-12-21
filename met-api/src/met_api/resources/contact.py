@@ -14,16 +14,16 @@
 """API endpoints for managing an user resource."""
 
 from http import HTTPStatus
-from flask import request
+
+from flask import jsonify, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
 
 from met_api.auth import auth
-from met_api.schemas.contact import ContactSchema
 from met_api.schemas import utils as schema_utils
+from met_api.schemas.contact import ContactSchema
 from met_api.services.contact_service import ContactService
-from met_api.utils.action_result import ActionResult
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
@@ -44,9 +44,9 @@ class Contact(Resource):
         """Fetch a contact by id."""
         try:
             contact = ContactService().get_contact_by_id(contact_id)
-            return ActionResult.success(contact_id, contact)
+            return contact, HTTPStatus.OK
         except (KeyError, ValueError) as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 @cors_preflight('GET, POST, OPTIONS, PATCH')
@@ -71,21 +71,21 @@ class Contacts(Resource):
             contact_schema = ContactSchema().load(request_json)
             result = ContactService().create_contact(contact_schema, user_id)
             contact_schema['id'] = result.id
-            return ActionResult.success(result.id, contact_schema)
+            return contact_schema, HTTPStatus.OK
         except (KeyError, ValueError) as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValidationError as err:
-            return ActionResult.error(str(err.messages))
+            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
     def get():
         """Fetch list of contacts."""
         try:
-            widgets = ContactService().get_contacts()
-            return ActionResult.success(result=widgets)
+            contacts = ContactService().get_contacts()
+            return jsonify(contacts), HTTPStatus.OK
         except (KeyError, ValueError) as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
     # @TRACER.trace()
@@ -102,10 +102,10 @@ class Contacts(Resource):
             contact_schema.load(requestjson, partial=True)
             contact = ContactService().update_contact(requestjson)
 
-            return ActionResult.success(contact.id, contact_schema.dump(contact))
+            return contact_schema.dump(contact), HTTPStatus.OK
         except KeyError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValidationError as err:
-            return ActionResult.error(str(err.messages))
+            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR

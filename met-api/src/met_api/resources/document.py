@@ -13,16 +13,17 @@
 # limitations under the License.
 """API endpoints for managing a FOI Requests resource."""
 
+from http import HTTPStatus
 
-from flask import request
+from flask import jsonify, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
+
+from met_api.auth import jwt as _jwt
 from met_api.schemas.document import Document
 from met_api.services.object_storage_service import ObjectStorageService
-from met_api.utils.util import allowedorigins, cors_preflight
-from met_api.utils.action_result import ActionResult
-from met_api.auth import jwt as _jwt
 from met_api.utils.roles import Role
+from met_api.utils.util import allowedorigins, cors_preflight
 
 
 API = Namespace('document', description='Endpoints for Document Storage Management')
@@ -42,8 +43,8 @@ class DocumentStorage(Resource):
         try:
             requestfilejson = request.get_json()
             documents = Document().load(requestfilejson, many=True)
-            return ActionResult.success(result=ObjectStorageService().get_auth_headers(documents))
+            return jsonify(ObjectStorageService().get_auth_headers(documents)), HTTPStatus.OK
         except KeyError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

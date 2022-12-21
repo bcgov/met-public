@@ -10,10 +10,10 @@ export const getContact = async (contactId: number): Promise<Contact> => {
     const url = replaceUrl(Endpoints.Contacts.GET, 'contact_id', String(contactId));
     try {
         const response = await http.GetRequest<Contact>(url);
-        if (response.data.result) {
-            return Promise.resolve(response.data.result);
+        if (response.data) {
+            return response.data;
         }
-        return Promise.reject(response.data.message ?? 'Failed to fetch contact');
+        return Promise.reject('Failed to fetch contact');
     } catch (err) {
         return Promise.reject(err);
     }
@@ -25,10 +25,10 @@ export const getContact = async (contactId: number): Promise<Contact> => {
 export const getContacts = async (): Promise<Contact[]> => {
     try {
         const response = await http.GetRequest<Contact[]>(Endpoints.Contacts.GET_LIST);
-        if (response.data.result) {
-            return Promise.resolve(response.data.result);
+        if (response.data) {
+            return response.data;
         }
-        return Promise.reject(response.data.message ?? 'Failed to fetch contact');
+        return Promise.reject('Failed to fetch contacts');
     } catch (err) {
         return Promise.reject(err);
     }
@@ -58,10 +58,7 @@ export interface PatchContactRequest {
 export const postContact = async (data: PostContactRequest): Promise<Contact> => {
     try {
         const response = await http.PostRequest<Contact>(Endpoints.Contacts.CREATE, data);
-        if (response.data.status && response.data.result) {
-            return Promise.resolve(response.data.result);
-        }
-        return Promise.reject(response.data.message ?? 'Failed to create contact');
+        return response.data;
     } catch (err) {
         return Promise.reject(err);
     }
@@ -69,10 +66,7 @@ export const postContact = async (data: PostContactRequest): Promise<Contact> =>
 export const patchContact = async (data: PatchContactRequest): Promise<Contact> => {
     try {
         const response = await http.PatchRequest<Contact>(Endpoints.Contacts.UPDATE, data);
-        if (response.data.status && response.data.result) {
-            return Promise.resolve(response.data.result);
-        }
-        return Promise.reject(response.data.message ?? 'Failed to update contact');
+        return response.data;
     } catch (err) {
         return Promise.reject(err);
     }

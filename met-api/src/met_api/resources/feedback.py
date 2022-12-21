@@ -14,6 +14,7 @@
 """API endpoints for managing an feedback resource."""
 
 from http import HTTPStatus
+
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
@@ -22,9 +23,9 @@ from met_api.auth import auth
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas import utils as schema_utils
 from met_api.services.feedback_service import FeedbackService
-from met_api.utils.action_result import ActionResult
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
+
 
 API = Namespace('feedbacks', description='Endpoints for Feedbacks Management')
 """Custom exception messages
@@ -52,9 +53,9 @@ class Feedback(Resource):
             )
             feedback_records = FeedbackService().get_feedback_paginated(pagination_options, search_text)
 
-            return ActionResult.success(result=feedback_records)
+            return feedback_records, HTTPStatus.OK
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
@@ -68,8 +69,8 @@ class Feedback(Resource):
             if not valid_format:
                 return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
             result = FeedbackService().create_feedback(request_json, user_id)
-            return ActionResult.success(result.get('id'), result)
+            return result, HTTPStatus.OK
         except KeyError:
-            return ActionResult.error('feedback was not found')
+            return 'feedback was not found', HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

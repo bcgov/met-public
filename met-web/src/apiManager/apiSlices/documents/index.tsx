@@ -9,7 +9,7 @@ export const documentsApi = createApi({
     endpoints: (builder) => ({
         getDocuments: builder.query<DocumentItem[], number>({
             query: (widget_id) => `widgets/${widget_id}/documents`,
-            transformResponse: (response: { result: DocumentItem }) => response?.result?.children || [],
+            transformResponse: (response: DocumentItem) => response?.children || [],
         }),
     }),
     refetchOnReconnect: true,

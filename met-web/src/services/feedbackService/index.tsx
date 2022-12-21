@@ -12,30 +12,24 @@ export const getFeedbacksPage = async ({
     search_text,
 }: GetFeedbackRequest): Promise<Page<Feedback>> => {
     const url = Endpoints.Feedback.GET_LIST;
-    const responseData = await http.GetRequest<Page<Feedback>>(url, {
+    const response = await http.GetRequest<Page<Feedback>>(url, {
         page,
         size,
         sort_key,
         sort_order,
         search_text,
     });
-    return (
-        responseData.data.result ?? {
-            items: [],
-            total: 0,
-        }
-    );
+    if (response.data) {
+        return response.data;
+    }
+    return Promise.reject('Failed to fetch feedback page');
 };
 
 export const createFeedback = async (feedback: PostFeedbackRequest): Promise<Feedback> => {
-    try {
-        const url = Endpoints.Feedback.CREATE;
-        const response = await http.PostRequest<Feedback>(url, feedback);
-        if (response.data.status && response.data.result) {
-            return Promise.resolve(response.data.result);
-        }
-        return Promise.reject(response.data.message ?? 'Failed to create feedback');
-    } catch (err) {
-        return Promise.reject(err);
+    const url = Endpoints.Feedback.CREATE;
+    const response = await http.PostRequest<Feedback>(url, feedback);
+    if (response.data) {
+        return response.data;
     }
+    return Promise.reject('Failed to create feedback');
 };

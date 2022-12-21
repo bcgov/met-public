@@ -13,6 +13,8 @@
 # limitations under the License.
 """API endpoints for managing an engagement resource."""
 
+from http import HTTPStatus
+
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
@@ -23,9 +25,8 @@ from met_api.auth import jwt as _jwt
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services.engagement_service import EngagementService
-from met_api.utils.action_result import ActionResult
-from met_api.utils.token_info import TokenInfo
 from met_api.utils.roles import Role
+from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
@@ -49,13 +50,13 @@ class Engagement(Resource):
             engagement_record = EngagementService().get_engagement(engagement_id, user_id)
 
             if engagement_record:
-                return ActionResult.success(engagement_id, engagement_record)
+                return engagement_record, HTTPStatus.OK
 
-            return ActionResult.error('Engagement was not found')
+            return 'Engagement was not found', HTTPStatus.INTERNAL_SERVER_ERROR
         except KeyError:
-            return ActionResult.error('Engagement was not found')
+            return 'Engagement was not found', HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 @cors_preflight('GET, POST, PUT, PATCH, OPTIONS')
@@ -86,9 +87,9 @@ class Engagements(Resource):
                     args.get('search_text', '', str)
             )
 
-            return ActionResult.success(result=engagement_records)
+            return engagement_records, HTTPStatus.OK
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
@@ -104,13 +105,13 @@ class Engagements(Resource):
             engagment_schema['updated_by'] = user_id
             result = EngagementService().create_engagement(engagment_schema)
             engagment_schema['id'] = result.identifier
-            return ActionResult.success(result.identifier, engagment_schema)
+            return engagment_schema, HTTPStatus.OK
         except KeyError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValidationError as err:
-            return ActionResult.error(str(err.messages))
+            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
     # @TRACER.trace()
@@ -124,14 +125,14 @@ class Engagements(Resource):
             engagment_schema = EngagementSchema().load(requestjson)
             user_id = TokenInfo.get_id()
             engagment_schema['updated_by'] = user_id
-            result = EngagementService().update_engagement(engagment_schema)
-            return ActionResult.success(result.identifier, engagment_schema)
+            EngagementService().update_engagement(engagment_schema)
+            return engagment_schema, HTTPStatus.OK
         except KeyError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValidationError as err:
-            return ActionResult.error(str(err.messages))
+            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
     # @TRACER.trace()
@@ -149,10 +150,10 @@ class Engagements(Resource):
             engagement_schema.load(requestjson, partial=True)
             engagement = EngagementService().edit_engagement(requestjson)
 
-            return ActionResult.success(engagement.id, engagement_schema.dump(engagement))
+            return engagement_schema.dump(engagement), HTTPStatus.OK
         except KeyError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValidationError as err:
-            return ActionResult.error(str(err.messages))
+            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR

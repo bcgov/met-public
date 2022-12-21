@@ -40,7 +40,7 @@ def test_create_widget(client, jwt, session, widget_info):  # pylint:disable=unu
     rv = client.get('/api/widgets/engagement/' + str(engagement.id),
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert rv.json.get('result')[0].get('sort_index') == 1
+    assert rv.json[0].get('sort_index') == 1
 
 
 def test_create_widget_sort(client, jwt, session):  # pylint:disable=unused-argument
@@ -63,8 +63,8 @@ def test_create_widget_sort(client, jwt, session):  # pylint:disable=unused-argu
     rv = client.get('/api/widgets/engagement/' + str(engagement.id),
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert len(rv.json.get('result')) == 2, 'Two Widgets Should exist.'
-    widgets = rv.json.get('result')
+    assert len(rv.json) == 2, 'Two Widgets Should exist.'
+    widgets = rv.json
     who_is_widget = _find_widget(widgets, WidgetType.WHO_IS_LISTENING)
     assert who_is_widget.get('sort_index') == 1
 
@@ -88,7 +88,7 @@ def test_create_widget_sort(client, jwt, session):  # pylint:disable=unused-argu
 
     rv = client.get(f'/api/widgets/engagement/{engagement.id}',
                     headers=headers, content_type=ContentType.JSON.value)
-    widgets = rv.json.get('result')
+    widgets = rv.json
     who_is_widget = _find_widget(widgets, WidgetType.WHO_IS_LISTENING)
     assert who_is_widget.get('sort_index') == 2
 

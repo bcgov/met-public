@@ -32,9 +32,9 @@ def test_create_contact(client, jwt, session, contact_info):  # pylint:disable=u
     rv = client.post('/api/contacts/', data=json.dumps(contact_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert rv.json.get('result').get('name') == contact_info.get('name')
-    assert rv.json.get('result').get('title') == contact_info.get('title')
-    assert rv.json.get('result').get('phone_number') == contact_info.get('phone_number')
-    assert rv.json.get('result').get('email') == contact_info.get('email')
-    assert rv.json.get('result').get('address') == contact_info.get('address')
-    assert rv.json.get('result').get('bio') == contact_info.get('bio')
+    assert rv.json.get('name') == contact_info.get('name')
+    assert rv.json.get('title') == contact_info.get('title')
+    assert rv.json.get('phone_number') == contact_info.get('phone_number')
+    assert rv.json.get('email') == contact_info.get('email')
+    assert rv.json.get('address') == contact_info.get('address')
+    assert rv.json.get('bio') == contact_info.get('bio')

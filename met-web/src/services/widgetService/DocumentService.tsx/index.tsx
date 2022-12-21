@@ -10,7 +10,7 @@ export const fetchDocuments = async (widget_id: number): Promise<DocumentItem[]>
     try {
         const url = replaceUrl(Endpoints.Documents.GET_LIST, 'widget_id', String(widget_id));
         const responseData = await http.GetRequest<DocumentItem>(url);
-        return responseData.data.result?.children ?? [];
+        return responseData.data?.children ?? [];
     } catch (err) {
         return Promise.reject(err);
     }
@@ -27,10 +27,10 @@ export const postDocument = async (widget_id: number, data: PostDocumentRequest)
     try {
         const url = replaceUrl(Endpoints.Documents.CREATE, 'widget_id', String(widget_id));
         const response = await http.PostRequest<DocumentItem>(url, data);
-        if (response.data.status && response.data.result) {
-            return Promise.resolve(response.data.result);
+        if (response.data) {
+            return response.data;
         }
-        return Promise.reject(response.data.message ?? 'Failed to create document');
+        return Promise.reject('Failed to create document');
     } catch (err) {
         return Promise.reject(err);
     }
@@ -46,10 +46,10 @@ export const deleteDocument = async (widget_id: number, document_id: number): Pr
             },
         });
         const response = await http.DeleteRequest<DocumentItem>(url);
-        if (response.data.status && response.data.result) {
-            return Promise.resolve(response.data.result);
+        if (response.data) {
+            return response.data;
         }
-        return Promise.reject(response.data.message ?? 'Failed to delete document');
+        return Promise.reject('Failed to delete document');
     } catch (err) {
         return Promise.reject(err);
     }
@@ -75,10 +75,10 @@ export const patchDocument = async (
             },
         });
         const response = await http.PatchRequest<DocumentItem>(url, data);
-        if (response.data.status && response.data.result) {
-            return Promise.resolve(response.data.result);
+        if (response.data) {
+            return response.data;
         }
-        return Promise.reject(response.data.message ?? 'Failed to update document');
+        return Promise.reject('Failed to update document');
     } catch (err) {
         return Promise.reject(err);
     }

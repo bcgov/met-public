@@ -24,17 +24,17 @@ That are used to expose operational health information about the service, and me
 from flask import Blueprint
 
 from .apihelper import Api
-from .document import API as DOCUMENT_API
 from .comment import API as COMMENT_API
+from .contact import API as CONTACT_API
+from .document import API as DOCUMENT_API
 from .email_verification import API as EMAIL_VERIFICATION_API
 from .engagement import API as ENGAGEMENT_API
+from .feedback import API as FEEDBACK_API
 from .submission import API as SUBMISSION_API
 from .survey import API as SURVEY_API
 from .user import API as USER_API
-from .feedback import API as FEEDBACK_API
-from .widget import API as WIDGET_API
-from .contact import API as CONTACT_API
 from .value_component import API as VALUE_COMPONENTS_API
+from .widget import API as WIDGET_API
 from .widget_documents import API as WIDGET_DOCUMENTS_API
 
 

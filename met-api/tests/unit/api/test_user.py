@@ -28,13 +28,10 @@ def test_create_public_user(client, jwt, session, ):  # pylint:disable=unused-ar
     rv = client.put('/api/user/',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert rv.json.get('status') is True
-    assert rv.json.get('id') is not None
     # TODO check this
     # assert rv.json.get('username') is not None
-    assert rv.json.get('message') == ''
-    assert rv.json.get('result').get('email_id') == claims.get('email')
-    assert rv.json.get('result').get('access_type') == UserType.PUBLIC_USER.value
+    assert rv.json.get('email_id') == claims.get('email')
+    assert rv.json.get('access_type') == UserType.PUBLIC_USER.value
 
 
 def test_create_staff_user(client, jwt, session, ):  # pylint:disable=unused-argument
@@ -44,11 +41,8 @@ def test_create_staff_user(client, jwt, session, ):  # pylint:disable=unused-arg
     rv = client.put('/api/user/',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert rv.json.get('status') is True
-    assert rv.json.get('id') is not None
-    assert rv.json.get('message') == ''
-    assert rv.json.get('result').get('email_id') == claims.get('email')
-    assert rv.json.get('result').get('access_type') == UserType.STAFF.value
+    assert rv.json.get('email_id') == claims.get('email')
+    assert rv.json.get('access_type') == UserType.STAFF.value
 
 
 def test_get_staff_users(client, jwt, session, ):  # pylint:disable=unused-argument

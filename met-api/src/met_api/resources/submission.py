@@ -24,7 +24,6 @@ from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas import utils as schema_utils
 from met_api.schemas.submission import SubmissionSchema
 from met_api.services.submission_service import SubmissionService
-from met_api.utils.action_result import ActionResult
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
@@ -47,11 +46,11 @@ class Submission(Resource):
         """Fetch a single submission."""
         try:
             submission = SubmissionService().get(submission_id)
-            return ActionResult.success(submission_id, submission)
+            return submission, HTTPStatus.OK
         except KeyError:
-            return ActionResult.error('Submission not found')
+            return 'Submission not found', HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
@@ -62,11 +61,11 @@ class Submission(Resource):
             requestjson = request.get_json()
             external_user_id = TokenInfo.get_id()
             submission = SubmissionService().review_comment(submission_id, requestjson, external_user_id)
-            return ActionResult.success(submission_id, submission)
+            return submission, HTTPStatus.OK
         except KeyError:
-            return ActionResult.error('Submission was not found')
+            return 'Submission was not found', HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 @cors_preflight('POST, OPTIONS')
@@ -88,11 +87,11 @@ class Submissions(Resource):
             schema = SubmissionSchema().load(request_json)
             result = SubmissionService().create(schema)
             schema['id'] = result.identifier
-            return ActionResult.success(result.identifier, schema)
+            return schema, HTTPStatus.OK
         except KeyError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 @cors_preflight('GET, OPTIONS')
@@ -120,6 +119,6 @@ class SurveySubmissions(Resource):
                     pagination_options,
                     args.get('search_text', '', str),
             )
-            return ActionResult.success(result=submission_page)
+            return submission_page, HTTPStatus.OK
         except ValueError as err:
-            return ActionResult.error(str(err))
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
