@@ -54,17 +54,12 @@ export const getSubmissionPage = async ({
 
 export const getSubmission = async (submissionId: number): Promise<SurveySubmission> => {
     const url = replaceUrl(Endpoints.SurveySubmission.GET, 'submission_id', String(submissionId));
-<<<<<<< Updated upstream
-    const response = await http.GetRequest<SurveySubmission>(url);
-    if (response.data) {
-        return response.data;
-=======
     try {
         const response = await http.GetRequest<SurveySubmission>(url);
-        if (response.data.result) {
-            return Promise.resolve(response.data.result);
+        if (response.data) {
+            return Promise.resolve(response.data);
         }
-        return Promise.reject(response.data.message ?? 'Failed to fetch submission');
+        return Promise.reject('Failed to fetch submission');
     } catch (err) {
         return Promise.reject(err);
     }
@@ -74,15 +69,13 @@ export const getSubmissionByToken = async (token: string): Promise<PublicSubmiss
     const url = replaceUrl(Endpoints.PublicSubmission.UPDATE, 'verification_token', token || '');
     try {
         const response = await http.GetRequest<PublicSubmission>(url);
-        if (response.data.result) {
-            return Promise.resolve(response.data.result);
+        if (response.data) {
+            return Promise.resolve(response.data);
         }
-        return Promise.reject(response.data.message ?? 'Failed to fetch submission');
+        return Promise.reject('Failed to fetch submission');
     } catch (err) {
         return Promise.reject(err);
->>>>>>> Stashed changes
     }
-    return Promise.reject('Failed to fetch comments');
 };
 
 interface PostSurveySubmissionRequest {
@@ -90,12 +83,6 @@ interface PostSurveySubmissionRequest {
     submission_json: unknown;
     verification_token: string;
 }
-<<<<<<< Updated upstream
-export const submitSurvey = async (requestData: PostSurveySubmissionRequest): Promise<SurveySubmission> => {
-    const response = await http.PostRequest<SurveySubmission>(Endpoints.SurveySubmission.CREATE, requestData);
-    if (response.data) {
-        return response.data;
-=======
 export const submitSurvey = async (requestData: PostSurveySubmissionRequest): Promise<void> => {
     try {
         const url = replaceUrl(Endpoints.PublicSubmission.UPDATE, 'verification_token', requestData.verification_token);
@@ -103,9 +90,7 @@ export const submitSurvey = async (requestData: PostSurveySubmissionRequest): Pr
         return Promise.resolve();
     } catch (err) {
         return Promise.reject(err);
->>>>>>> Stashed changes
     }
-    return Promise.reject('Failed to submit survey');
 };
 
 interface UpdateSubmissionRequest {
