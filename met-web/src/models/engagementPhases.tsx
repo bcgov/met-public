@@ -8,7 +8,7 @@ export enum EngagementPhases {
     ReadinessDecision = 2,
     ProcessPlanning = 3,
     ApplicationDevelopmentReview = 4,
-    Recommendation = 5,
+    EffectsAssessmentRecommendation = 5,
     Decision = 6,
     PostCertificate = 7,
 }
@@ -110,7 +110,7 @@ export const ENGAGEMENT_PHASES = {
             'Tell us what you think about the proponent’s application. Are there effects that haven’t been fully considered? Now that you have the proponent’s full assessment, is there anything new or is still raising concerns for you ? Do you think something has been assessed inaccurately?',
     },
     Recommendation: {
-        phaseId: EngagementPhases.Recommendation,
+        phaseId: EngagementPhases.EffectsAssessmentRecommendation,
         title: 'Effects Assessment & Recommendation',
         backgroundColor: '#E7A913',
         accordionBackground: '#EDC970',

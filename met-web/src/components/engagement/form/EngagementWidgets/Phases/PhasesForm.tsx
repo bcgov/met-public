@@ -46,8 +46,8 @@ const PhasesForm = () => {
             label: 'Application Development & Review',
         },
         {
-            id: EngagementPhases.Recommendation,
-            label: 'Recommendation',
+            id: EngagementPhases.EffectsAssessmentRecommendation,
+            label: 'Effects Assessment & Recommendation',
         },
         {
             id: EngagementPhases.Decision,
