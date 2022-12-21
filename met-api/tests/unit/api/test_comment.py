@@ -31,7 +31,7 @@ def test_get_comments(client, jwt, session):  # pylint:disable=unused-argument
 
     user_details = factory_user_model()
     survey, eng = factory_survey_and_eng_model()
-    submission = factory_submission_model(survey.id, user_details.id)
+    submission = factory_submission_model(survey.id, eng.id, user_details.id)
     factory_comment_model(survey.id, submission.id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/comments/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
@@ -45,7 +45,7 @@ def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
     factory_user_model(TestJwtClaims.public_user_role.get('sub'))
     user_details = factory_user_model()
     survey, eng = factory_survey_and_eng_model()
-    submission = factory_submission_model(survey.id, user_details.id)
+    submission = factory_submission_model(survey.id, eng.id, user_details.id)
     factory_comment_model(survey.id, submission.id)
     to_dict = {
         'status_id': 2,

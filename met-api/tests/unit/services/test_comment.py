@@ -25,7 +25,7 @@ def test_get_comments(session):  # pylint:disable=unused-argument
     """Assert that comments can be fetched."""
     user_details = factory_user_model()
     survey, eng = factory_survey_and_eng_model()
-    submission = factory_submission_model(survey.id, user_details.id)
+    submission = factory_submission_model(survey.id, eng.id, user_details.id)
     factory_comment_model(survey.id, submission.id)
     comment_records = CommentService().get_comments_by_submission(submission.id)
     assert len(comment_records) == 1
