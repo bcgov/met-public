@@ -8,11 +8,14 @@ from met_api.constants.engagement_status import SubmissionStatus
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models import Engagement as EngagementModel
 from met_api.models import Survey as SurveyModel
+from met_api.models.comment import Comment
 from met_api.models.comment_status import CommentStatus
 from met_api.models.db import session_scope
+from met_api.models.email_verification import EmailVerification
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.submission import Submission
 from met_api.models.user import User as UserModel
+from met_api.schemas.submission import PublicSubmissionSchema
 from met_api.schemas.submission import SubmissionSchema
 from met_api.services.comment_service import CommentService
 from met_api.services.email_verification_service import EmailVerificationService
@@ -34,22 +37,30 @@ class SubmissionService:
         return SubmissionSchema().dump(db_data)
 
     @classmethod
-    def create(cls, submission: SubmissionSchema):
+    def get_by_token(cls, token):
+        """Get submission by the verification token."""
+        email_verification = EmailVerificationService().get_active(token)
+        submission_id = email_verification.get('submission_id')
+        submission = Submission.get(submission_id)
+        return PublicSubmissionSchema().dump(submission)
+
+    @classmethod
+    def create(cls, token, submission: SubmissionSchema):
         """Create submission."""
         cls._validate_fields(submission)
-        verification_token = submission.get('verification_token', None)
-        survey_id = submission.get('survey_id', None)
+        survey_id = submission.get('survey_id')
+        survey = SurveyService.get(survey_id)
 
         # Creates a scoped session that will be committed when diposed or rolledback if a exception occurs
         with session_scope() as session:
-            email_verification = EmailVerificationService().verify(verification_token, survey_id, session)
-            user_id = email_verification.get('user_id', None)
+            email_verification = EmailVerificationService().verify(token, survey_id, None, session)
+            user_id = email_verification.get('user_id')
             submission['user_id'] = user_id
             submission['created_by'] = user_id
+            submission['engagement_id'] = survey.get('engagement_id')
 
             submission_result = Submission.create(submission, session)
-            submission['id'] = submission_result.identifier
-            survey = SurveyService.get(survey_id)
+            submission['id'] = submission_result.id
             comments = CommentService.extract_comments(submission, survey)
             CommentService().create_comments(comments, session)
         return submission_result
@@ -59,6 +70,19 @@ class SubmissionService:
         """Update submission."""
         cls._validate_fields(data)
         return Submission.update(data)
+
+    @classmethod
+    def update_comments(cls, token, data: PublicSubmissionSchema):
+        """Update submission comments."""
+        email_verification = EmailVerificationService().get_active(token)
+        submission_id = email_verification.get('submission_id')
+        submission = Submission.get(submission_id)
+        submission.comment_status_id = Status.Pending
+
+        with session_scope() as session:
+            EmailVerificationService().verify(token, submission.survey_id, submission.id, session)
+            [Comment.update(submission.id, comment, session) for comment in data.get('comments', [])]
+            Submission.update(SubmissionSchema().dump(submission), session)
 
     @staticmethod
     def _validate_fields(submission):
@@ -81,10 +105,15 @@ class SubmissionService:
         cls.validate_review(values, user)
         reviewed_by = ' '.join([user.get('first_name', ''), user.get('last_name', '')])
 
-        submission = Submission.update_comment_status(submission_id, values, reviewed_by, user.get('id'))
-
-        if submission.comment_status_id == Status.Rejected.value and submission.has_threat is not True:
-            cls._send_rejected_email(submission)
+        with session_scope() as session:
+            submission = Submission.update_comment_status(submission_id, values, reviewed_by, user.get('id'), session)
+            if submission.comment_status_id == Status.Rejected.value and submission.has_threat is not True:
+                email_verification = EmailVerificationService().create({
+                    'user_id': submission.user_id,
+                    'survey_id': submission.survey_id,
+                    'submission_id': submission.id,
+                }, session)
+                cls._send_rejected_email(submission, email_verification.get('verification_token'))
 
         return SubmissionSchema().dump(submission)
 
@@ -124,13 +153,13 @@ class SubmissionService:
         }
 
     @staticmethod
-    def _send_rejected_email(submission: Submission) -> None:
+    def _send_rejected_email(submission: Submission, token) -> None:
         """Send an verification email.Throws error if fails."""
         user_id = submission.user_id
         user: UserModel = UserModel.get_user(user_id)
 
         template_id = current_app.config.get('REJECTED_EMAIL_TEMPLATE_ID', None)
-        subject, body, args = SubmissionService._render_email_template(submission)
+        subject, body, args = SubmissionService._render_email_template(submission, token)
         try:
             notification.send_email(subject=subject,
                                     email=user.email_id,
@@ -143,12 +172,16 @@ class SubmissionService:
                 error='Error sending rejected comment notification email.',
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
 
+
     @staticmethod
-    def _render_email_template(submission: Submission):
-        survey: SurveyModel = SurveyModel.get_survey(submission.survey_id)
+    def _render_email_template(submission: Submission, token):
         template = Template.get_template('email_rejected_comment.html')
-        engagement: EngagementModel = EngagementModel.get_engagement(survey.engagement_id)
+        engagement: EngagementModel = EngagementModel.get_engagement(submission.engagement_id)
         engagement_name = engagement.name
+
+        site_url = current_app.config.get('SITE_URL')        
+        submission_path = current_app.config.get('SUBMISSION_PATH'). \
+            format(engagement_id=submission.engagement_id, submission_id=submission.id, token=token)
         subject = current_app.config.get('REJECTED_EMAIL_SUBJECT'). \
             format(engagement_name=engagement_name)
         args = {
@@ -157,6 +190,7 @@ class SubmissionService:
             'has_profanity': 'yes' if submission.has_profanity else '',
             'has_other_reason': 'yes' if submission.rejected_reason_other else '',
             'other_reason': submission.rejected_reason_other,
+            'submission_url': f'{site_url}{submission_path}',
         }
         body = template.render(
             engagement_name=args.get('engagement_name'),

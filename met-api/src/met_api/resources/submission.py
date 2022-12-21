@@ -67,16 +67,28 @@ class Submission(Resource):
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
-
-@cors_preflight('POST, OPTIONS')
-@API.route('/')
-class Submissions(Resource):
-    """Resource for managing all submissions."""
+@cors_preflight('GET,PUT,POST,OPTIONS')
+@API.route('/public/<verification_token>')
+class PublicSubmission(Resource):
+    """Resource for managing public submission."""
 
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
-    def post():
+    def get(verification_token):
+        """Fetch a single submission."""
+        try:
+            submission = SubmissionService().get_by_token(verification_token)
+            return ActionResult.success(0, submission)
+        except KeyError:
+            return 'Submission not found', HTTPStatus.NOT_FOUND
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    def post(verification_token):
         """Create a new submission."""
         try:
             request_json = request.get_json()
@@ -85,14 +97,31 @@ class Submissions(Resource):
                 return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
 
             schema = SubmissionSchema().load(request_json)
-            result = SubmissionService().create(schema)
-            schema['id'] = result.identifier
-            return schema, HTTPStatus.OK
-        except KeyError as err:
+            SubmissionService().create(verification_token, schema)
+            return {}, HTTPStatus.OK
+        except (KeyError, ValueError) as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    def put(verification_token):
+        """Update comment status by submission id."""
+        try:    
+            requestjson = request.get_json()
+            SubmissionService().update_comments(verification_token, requestjson)
+            return {}, HTTPStatus.OK
+        except KeyError:
+            return 'Submission was not found', HTTPStatus.NOT_FOUND
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
+
+@cors_preflight('POST, OPTIONS')
+@API.route('/')
+class Submissions(Resource):
+    """Resource for managing all submissions."""
+
+  
 
 @cors_preflight('GET, OPTIONS')
 @API.route('/survey/<survey_id>')

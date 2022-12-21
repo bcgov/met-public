@@ -14,12 +14,13 @@ class EmailVerificationSchema(Schema):
 
         unknown = EXCLUDE
 
-    id = fields.Str(data_key='id')
+    id = fields.Int(data_key='id')
     verification_token = fields.Str(data_key='verification_token')
     email_address = fields.Str(data_key='email_address')
     user_id = fields.Int(data_key='user_id')
     is_active = fields.Bool(data_key='is_active')
     survey_id = fields.Int(data_key='survey_id')
+    submission_id = fields.Int(data_key='submission_id')
     created_by = fields.Str(data_key='created_by')
     created_date = fields.Str(data_key='created_date')
     updated_by = fields.Str(data_key='updated_by')

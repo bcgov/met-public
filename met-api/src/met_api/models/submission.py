@@ -26,6 +26,7 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     submission_json = db.Column(postgresql.JSONB(astext_type=db.Text()), nullable=False, server_default='{}')
     survey_id = db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), nullable=False)
+    engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), nullable=False)
     user_id = db.Column(db.Integer, ForeignKey('met_users.id'), nullable=True)
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
@@ -41,7 +42,7 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
     comments = db.relationship('Comment', backref='submission', cascade='all, delete')
 
     @classmethod
-    def get(cls, submission_id):
+    def get(cls, submission_id) -> Submission:
         """Get a submission by id."""
         return db.session.query(Submission).filter_by(id=submission_id).first()
 
@@ -51,10 +52,11 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
         return db.session.query(Submission).filter_by(survey_id=survey_id).all()
 
     @classmethod
-    def create(cls, submission: SubmissionSchema, session=None) -> DefaultMethodResult:
+    def create(cls, submission: SubmissionSchema, session=None) -> Submission:
         """Save submission."""
         new_submission = Submission(
             submission_json=submission.get('submission_json', None),
+            engagement_id=submission.get('engagement_id', None),
             survey_id=submission.get('survey_id', None),
             user_id=submission.get('user_id', None),
             created_date=datetime.utcnow(),
@@ -69,10 +71,10 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
         else:
             session.add(new_submission)
             session.flush()
-        return DefaultMethodResult(True, 'Submission Added', new_submission.id)
+        return new_submission
 
     @classmethod
-    def update(cls, submission: SubmissionSchema) -> DefaultMethodResult:
+    def update(cls, submission: SubmissionSchema, session=None) -> Submission:
         """Update submission."""
         update_fields = dict(
             submission_json=submission.get('submission_json', None),
@@ -83,13 +85,16 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
         query = Submission.query.filter_by(id=submission_id)
         record = query.first()
         if not record:
-            return DefaultMethodResult(False, 'Submission Not Found', submission_id)
+            raise ValueError('Submission Not Found')
         query.update(update_fields)
-        db.session.commit()
-        return DefaultMethodResult(True, 'Submission Updated', submission_id)
+        if session is None:
+            db.session.commit()
+        else:
+            session.flush()
+        return query.first()
 
     @classmethod
-    def update_comment_status(cls, submission_id, reasons: dict, reviewed_by, user_id) -> Submission:
+    def update_comment_status(cls, submission_id, reasons: dict, reviewed_by, user_id, session=None) -> Submission:
         """Update comment status."""
         status_id = reasons.get('status_id', None)
         has_personal_info = reasons.get('has_personal_info', None)
@@ -113,8 +118,13 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
             updated_by=user_id,
             updated_date=datetime.utcnow(),
         )
+
         query.update(update_fields)
-        db.session.commit()
+        if session is None:
+            db.session.commit()
+        else:
+            session.flush()
+
         return query.first()
 
     @classmethod

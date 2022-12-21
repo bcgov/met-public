@@ -48,3 +48,31 @@ class CommentSchema(Schema):
         if len(component_label) == 0:
             return None
         return component_label[0]
+
+
+class PublicCommentSchema(Schema):
+    """Schema for public comment."""
+
+    class Meta:  # pylint: disable=too-few-public-methods
+        """Exclude unknown fields in the deserialized output."""
+
+        unknown = EXCLUDE
+
+    id = fields.Int(data_key='id')
+    text = fields.Str(data_key='text')
+    label = fields.Method('get_comment_label')
+
+    def get_comment_label(self, obj):
+        """Get the associated label of the comment."""
+        components = list(obj.survey.form_json.get('components', []))
+        if len(components) == 0:
+            return None
+        component_label = [
+            component.get(
+                'label',
+                None) for component in components if component.get(
+                'key',
+                None) == obj.component_id]
+        if len(component_label) == 0:
+            return None
+        return component_label[0]
