@@ -48,6 +48,23 @@ def test_get_all_by_widget_id(session):
     document2 = WidgetDocumentsModel(
         **TestWidgetDocumentInfo.document2
     )
+    document1.widget_id = widget.id
+    document2.widget_id = widget.id
+    session.add(document1)
+    session.add(document2)
+    session.commit()
+    expected_docs = WidgetDocumentsModel.get_all_by_widget_id(widget.id)
+    assert len(expected_docs) == 2
+    
+    
+def test_documents_by_widget_id(session):
+    widget = _create_widget()
+    document1 = WidgetDocumentsModel(
+        **TestWidgetDocumentInfo.document1
+    )
+    document2 = WidgetDocumentsModel(
+        **TestWidgetDocumentInfo.document2
+    )
     document3 = WidgetDocumentsModel(
         **TestWidgetDocumentInfo.document3
     )
@@ -58,10 +75,9 @@ def test_get_all_by_widget_id(session):
     session.add(document2)
     session.add(document3)
     session.commit()
-
-    expected_docs = WidgetDocumentsModel.get_all_by_widget_id(widget.id)
+    expected_docs = WidgetDocumentsModel.get_documents_by_widget_id(widget.id)
     assert(all(expected_docs[i].id <= expected_docs[i + 1].id for i in range(len(expected_docs) - 1)))
-    assert len(expected_docs) == 2
+
 
 
 def test_edit_widget_document(session):
