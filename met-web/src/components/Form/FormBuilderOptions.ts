@@ -18,7 +18,7 @@ export const formioOptions = {
                 header: true,
                 paragraph: true,
                 simplepostalcode: true,
-                checkboxesvc: true,
+                categorycheckboxes: true,
                 categorycommentcontainer: true,
             },
             default: true,
