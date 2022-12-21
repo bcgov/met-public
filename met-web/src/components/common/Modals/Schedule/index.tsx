@@ -24,6 +24,15 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
     const { savedEngagement, scheduleEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
 
+    const isEngagementReady = () => {
+        return (
+            savedEngagement.surveys.length === 0 &&
+            savedEngagement.content &&
+            savedEngagement.description &&
+            savedEngagement.banner_url
+        );
+    };
+
     const handleChange = (newDate: Dayjs | null) => {
         if (newDate != null) {
             setScheduledDate(newDate);
@@ -45,11 +54,11 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
     };
 
     const handleSchedule = async () => {
-        if (savedEngagement.surveys.length === 0) {
+        if (!isEngagementReady()) {
             dispatch(
                 openNotification({
                     severity: 'error',
-                    text: 'Please add a survey to the engagement before scheduling it',
+                    text: 'Please complete engagement before scheduling it',
                 }),
             );
             return;

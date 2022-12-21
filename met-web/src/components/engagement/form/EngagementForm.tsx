@@ -42,13 +42,11 @@ const EngagementForm = () => {
         setRichDescription(savedEngagement?.rich_description || '');
         setRichContent(savedEngagement?.rich_content || '');
     }, [savedEngagement]);
-    const { name, start_date, end_date, description, content } = engagementFormData;
+    const { name, start_date, end_date } = engagementFormData;
     const [engagementFormError, setEngagementFormError] = useState({
         name: false,
         start_date: false,
         end_date: false,
-        description: false,
-        content: false,
     });
 
     const getErrorMessage = () => {
@@ -76,22 +74,12 @@ const EngagementForm = () => {
             ...engagementFormData,
             description: rawText,
         });
-
-        setEngagementFormError({
-            ...engagementFormError,
-            description: false,
-        });
     };
 
     const handleContentChange = (rawText: string) => {
         setEngagementFormData({
             ...engagementFormData,
             content: rawText,
-        });
-
-        setEngagementFormError({
-            ...engagementFormError,
-            content: false,
         });
     };
 
@@ -108,8 +96,6 @@ const EngagementForm = () => {
             name: !(name && name.length < 50),
             start_date: !start_date,
             end_date: !end_date,
-            description: !description,
-            content: !content,
         };
         setEngagementFormError(errors);
 
@@ -188,7 +174,7 @@ const EngagementForm = () => {
                     />
                 </Grid>
                 <Grid item xs={12} lg={8} md={6}>
-                    <MetLabel sx={{ marginBottom: '2px' }}>Engagement Name</MetLabel>
+                    <MetLabel sx={{ marginBottom: '2px' }}>Engagement Name </MetLabel>
                     <TextField
                         id="engagement-name"
                         data-testid="engagement-form/name"
@@ -217,7 +203,7 @@ const EngagementForm = () => {
                     columnSpacing={2}
                 >
                     <Grid item xs={12}>
-                        <MetLabel>Engagement Date</MetLabel>
+                        <MetLabel>Engagement Date </MetLabel>
                     </Grid>
 
                     <Grid item md={6} xs={12}>
@@ -271,8 +257,6 @@ const EngagementForm = () => {
                         setRawText={handleDescriptionChange}
                         handleEditorStateChange={handleRichDescriptionChange}
                         initialRawEditorState={savedEngagement.rich_description || ''}
-                        error={engagementFormError.description}
-                        helperText="Description cannot be empty"
                     />
                 </Grid>
 
@@ -295,8 +279,6 @@ const EngagementForm = () => {
                                     setRawText={handleContentChange}
                                     handleEditorStateChange={handleRichContentChange}
                                     initialRawEditorState={savedEngagement.rich_content || ''}
-                                    error={engagementFormError.content}
-                                    helperText="Content cannot be empty"
                                 />
                             </Grid>
                         </Grid>

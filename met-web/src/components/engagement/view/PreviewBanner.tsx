@@ -6,10 +6,10 @@ import { EngagementStatus } from 'constants/engagementStatus';
 import { MetHeader1, PrimaryButton, SecondaryButton, MetBody } from 'components/common';
 import { useAppSelector } from 'hooks';
 import ImageIcon from '@mui/icons-material/Image';
-import PollIcon from '@mui/icons-material/Poll';
 import UnpublishedIcon from '@mui/icons-material/Unpublished';
 import IconButton from '@mui/material/IconButton';
 import ScheduleModal from 'components/common/Modals/Schedule';
+import ArticleIcon from '@mui/icons-material/Article';
 import { formatDate } from 'components/common/dateHelper';
 import { When } from 'react-if';
 
@@ -84,11 +84,45 @@ export const PreviewBanner = () => {
                                             onClick={() => navigate(`/surveys/create?engagementId=${engagementId}`)}
                                             aria-label="no survey"
                                         >
-                                            <PollIcon />
+                                            <ArticleIcon />
                                         </IconButton>
                                     </Grid>
                                     <Grid item xs={10} sm={10}>
                                         <MetBody>This engagement is missing a survey.</MetBody>
+                                    </Grid>
+                                </Grid>
+                            </When>
+                            <When condition={!savedEngagement.description}>
+                                <Grid container direction="row" alignItems="center" item xs={12} lg={8}>
+                                    <Grid item sm={0.5} xs={2}>
+                                        <IconButton
+                                            sx={{ padding: 0, margin: 0 }}
+                                            color="inherit"
+                                            onClick={() => navigate(`/engagements/${engagementId}/form`)}
+                                            aria-label="no description"
+                                        >
+                                            <ArticleIcon />
+                                        </IconButton>
+                                    </Grid>
+                                    <Grid item xs={10} sm={10}>
+                                        <MetBody>This engagement is missing a description.</MetBody>
+                                    </Grid>
+                                </Grid>
+                            </When>
+                            <When condition={!savedEngagement.content}>
+                                <Grid container direction="row" alignItems="center" item xs={12} lg={8}>
+                                    <Grid item sm={0.5} xs={2}>
+                                        <IconButton
+                                            sx={{ padding: 0, margin: 0 }}
+                                            color="inherit"
+                                            onClick={() => navigate(`/engagements/${engagementId}/form`)}
+                                            aria-label="no content"
+                                        >
+                                            <ArticleIcon />
+                                        </IconButton>
+                                    </Grid>
+                                    <Grid item xs={10} sm={10}>
+                                        <MetBody>This engagement is missing content.</MetBody>
                                     </Grid>
                                 </Grid>
                             </When>
