@@ -11,12 +11,10 @@ from met_api.models import Survey as SurveyModel
 from met_api.models.comment import Comment
 from met_api.models.comment_status import CommentStatus
 from met_api.models.db import session_scope
-from met_api.models.email_verification import EmailVerification
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.submission import Submission
 from met_api.models.user import User as UserModel
-from met_api.schemas.submission import PublicSubmissionSchema
-from met_api.schemas.submission import SubmissionSchema
+from met_api.schemas.submission import PublicSubmissionSchema, SubmissionSchema
 from met_api.services.comment_service import CommentService
 from met_api.services.email_verification_service import EmailVerificationService
 from met_api.services.survey_service import SurveyService
@@ -81,8 +79,9 @@ class SubmissionService:
 
         with session_scope() as session:
             EmailVerificationService().verify(token, submission.survey_id, submission.id, session)
-            [Comment.update(submission.id, comment, session) for comment in data.get('comments', [])]
+            comments_result = [Comment.update(submission.id, comment, session) for comment in data.get('comments', [])]
             Submission.update(SubmissionSchema().dump(submission), session)
+            return comments_result
 
     @staticmethod
     def _validate_fields(submission):
@@ -105,8 +104,10 @@ class SubmissionService:
         cls.validate_review(values, user)
         reviewed_by = ' '.join([user.get('first_name', ''), user.get('last_name', '')])
 
+        values['review_by'] = reviewed_by
+        values['user_id'] = user.get('id')
         with session_scope() as session:
-            submission = Submission.update_comment_status(submission_id, values, reviewed_by, user.get('id'), session)
+            submission = Submission.update_comment_status(submission_id, values, session)
             if submission.comment_status_id == Status.Rejected.value and submission.has_threat is not True:
                 email_verification = EmailVerificationService().create({
                     'user_id': submission.user_id,
@@ -172,14 +173,13 @@ class SubmissionService:
                 error='Error sending rejected comment notification email.',
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
 
-
     @staticmethod
     def _render_email_template(submission: Submission, token):
         template = Template.get_template('email_rejected_comment.html')
         engagement: EngagementModel = EngagementModel.get_engagement(submission.engagement_id)
         engagement_name = engagement.name
 
-        site_url = current_app.config.get('SITE_URL')        
+        site_url = current_app.config.get('SITE_URL')
         submission_path = current_app.config.get('SUBMISSION_PATH'). \
             format(engagement_id=submission.engagement_id, submission_id=submission.id, token=token)
         subject = current_app.config.get('REJECTED_EMAIL_SUBJECT'). \

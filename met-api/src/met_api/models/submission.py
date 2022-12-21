@@ -94,13 +94,13 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
         return query.first()
 
     @classmethod
-    def update_comment_status(cls, submission_id, reasons: dict, reviewed_by, user_id, session=None) -> Submission:
+    def update_comment_status(cls, submission_id, comment: dict, session=None) -> Submission:
         """Update comment status."""
-        status_id = reasons.get('status_id', None)
-        has_personal_info = reasons.get('has_personal_info', None)
-        has_profanity = reasons.get('has_profanity', None)
-        has_threat = reasons.get('has_threat', None)
-        rejected_reason_other = reasons.get('rejected_reason_other', None)
+        status_id = comment.get('status_id', None)
+        has_personal_info = comment.get('has_personal_info', None)
+        has_profanity = comment.get('has_profanity', None)
+        has_threat = comment.get('has_threat', None)
+        rejected_reason_other = comment.get('rejected_reason_other', None)
 
         query = Submission.query.filter_by(id=submission_id)
 
@@ -113,9 +113,9 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
             has_profanity=has_profanity,
             has_threat=has_threat,
             rejected_reason_other=rejected_reason_other,
-            reviewed_by=reviewed_by,
+            reviewed_by=comment.get('reviewed_by'),
             review_date=datetime.utcnow(),
-            updated_by=user_id,
+            updated_by=comment.get('user_id'),
             updated_date=datetime.utcnow(),
         )
 

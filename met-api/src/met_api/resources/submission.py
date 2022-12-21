@@ -67,6 +67,7 @@ class Submission(Resource):
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
+
 @cors_preflight('GET,PUT,POST,OPTIONS')
 @API.route('/public/<verification_token>')
 class PublicSubmission(Resource):
@@ -79,7 +80,7 @@ class PublicSubmission(Resource):
         """Fetch a single submission."""
         try:
             submission = SubmissionService().get_by_token(verification_token)
-            return ActionResult.success(0, submission)
+            return submission, HTTPStatus.OK
         except KeyError:
             return 'Submission not found', HTTPStatus.NOT_FOUND
         except ValueError as err:
@@ -106,7 +107,7 @@ class PublicSubmission(Resource):
     @cross_origin(origins=allowedorigins())
     def put(verification_token):
         """Update comment status by submission id."""
-        try:    
+        try:
             requestjson = request.get_json()
             SubmissionService().update_comments(verification_token, requestjson)
             return {}, HTTPStatus.OK
@@ -115,13 +116,6 @@ class PublicSubmission(Resource):
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
-
-@cors_preflight('POST, OPTIONS')
-@API.route('/')
-class Submissions(Resource):
-    """Resource for managing all submissions."""
-
-  
 
 @cors_preflight('GET, OPTIONS')
 @API.route('/survey/<survey_id>')

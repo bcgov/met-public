@@ -19,7 +19,6 @@ from met_api.schemas.comment import CommentSchema
 
 from .comment_status import CommentStatus
 from .db import db
-from .default_method_result import DefaultMethodResult
 
 
 class Comment(db.Model):
