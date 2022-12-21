@@ -19,6 +19,7 @@ Test suite to ensure that the Engagement model routines are working as expected.
 from faker import Faker
 
 from met_api.models import WidgetDocuments as WidgetDocumentsModel
+from met_api.services.widget_documents_service import WidgetDocumentService
 from tests.utilities.factory_scenarios import TestWidgetDocumentInfo, TestWidgetInfo
 from tests.utilities.factory_utils import factory_engagement_model, factory_widget_model
 
@@ -75,7 +76,7 @@ def test_documents_by_widget_id(session):
     session.add(document2)
     session.add(document3)
     session.commit()
-    expected_docs = WidgetDocumentsModel.get_documents_by_widget_id(widget.id)
+    expected_docs = WidgetDocumentService.get_documents_by_widget_id(widget.id)
     assert(all(expected_docs[i].id <= expected_docs[i + 1].id for i in range(len(expected_docs) - 1)))
 
 
