@@ -16,6 +16,7 @@
 
 Test-Suite to ensure that the /Submission endpoint is working as expected.
 """
+from http import HTTPStatus
 import json
 
 from met_api.utils.enums import ContentType
@@ -35,7 +36,7 @@ def test_valid_submission(client, jwt, session):  # pylint:disable=unused-argume
         'verification_token': email_verification.verification_token
     }
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.post('/api/submissions/', data=json.dumps(to_dict),
+    rv = client.post(f'/api/submissions/public/{email_verification.verification_token}', data=json.dumps(to_dict),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
 
@@ -52,22 +53,15 @@ def test_invalid_submission(client, jwt, session):  # pylint:disable=unused-argu
         'verification_token': email_verification.verification_token
     }
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.post('/api/submissions/', data=json.dumps(to_dict),
+    rv = client.post(f'/api/submissions/public/{email_verification.verification_token}', data=json.dumps(to_dict),
                      headers=headers, content_type=ContentType.JSON.value)
-    survey_id_error_msg = "'survey_id' is a required property"
-    submission_json_error_msg = "'submission_json' is a required property"
-    verification_token_error_msg = "'verification_token' is a required property"
 
-    assert survey_id_error_msg in rv.json.get('message')
-    assert submission_json_error_msg not in rv.json.get('message')
-    assert verification_token_error_msg not in rv.json.get('message')
-
+    assert rv.status == '400 BAD REQUEST'
+   
     to_dict = {
     }
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.post('/api/submissions/', data=json.dumps(to_dict),
+    rv = client.post('/api/submissions/public/123', data=json.dumps(to_dict),
                      headers=headers, content_type=ContentType.JSON.value)
-    print(rv.json.get('message'))
-    assert survey_id_error_msg in rv.json.get('message')
-    assert submission_json_error_msg in rv.json.get('message')
-    assert verification_token_error_msg in rv.json.get('message')
+    assert rv.status == '400 BAD REQUEST'
+   
