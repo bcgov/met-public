@@ -8,6 +8,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { EngagementStatus } from 'constants/engagementStatus';
 import { unlinkSurvey } from 'services/surveyService';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+import AddSurveyBlockTabs from './AddSurveyBlockTabs';
 
 export const AddSurveyBlock = () => {
     const { savedEngagement, fetchEngagement } = useContext(ActionContext);
@@ -95,6 +96,9 @@ export const AddSurveyBlock = () => {
                     spacing={2}
                     sx={{ padding: '1em' }}
                 >
+                    <Grid item xs={12}>
+                        <AddSurveyBlockTabs />
+                    </Grid>
                     <Grid item xs={12} container direction="row" justifyContent="flex-end">
                         <SecondaryButton onClick={handleAddSurvey} disabled={savedEngagement.surveys.length > 0}>
                             Add Survey

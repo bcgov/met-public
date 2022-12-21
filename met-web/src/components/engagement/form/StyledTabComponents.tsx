@@ -4,7 +4,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import { styled } from '@mui/system';
 import { Palette } from 'styles/Theme';
 
-export const EngagementFormTab = styled(Tab)(() => ({
+export const MetTab = styled(Tab)(() => ({
     height: '0.5em',
     minHeight: 0,
     border: '1px solid transparent',
@@ -19,12 +19,12 @@ export const EngagementFormTab = styled(Tab)(() => ({
     },
 }));
 
-export const EngagementFormTabList = styled(TabList)(() => ({
+export const MetTabList = styled(TabList)(() => ({
     transition: 'none',
     paddingLeft: '1em',
     minHeight: 0,
 }));
 
-export const EngagementFormTabPanel = styled(TabPanel)(() => ({
+export const MetTabPanel = styled(TabPanel)(() => ({
     padding: 0,
 }));
