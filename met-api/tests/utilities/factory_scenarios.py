@@ -274,5 +274,3 @@ class TestWidgetDocumentInfo(dict, Enum):
         'url': fake.image_url(),
         'sort_index': 1,
     }
-    
-    

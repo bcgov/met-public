@@ -56,9 +56,10 @@ def test_get_all_by_widget_id(session):
     session.commit()
     expected_docs = WidgetDocumentsModel.get_all_by_widget_id(widget.id)
     assert len(expected_docs) == 2
-    
+
     
 def test_documents_by_widget_id(session):
+    """Assert that widget documents are sorted in ascending order."""
     widget = _create_widget()
     document1 = WidgetDocumentsModel(
         **TestWidgetDocumentInfo.document1
@@ -78,7 +79,6 @@ def test_documents_by_widget_id(session):
     session.commit()
     expected_docs = WidgetDocumentService.get_documents_by_widget_id(widget.id)
     assert(all(expected_docs[i].id <= expected_docs[i + 1].id for i in range(len(expected_docs) - 1)))
-
 
 
 def test_edit_widget_document(session):
