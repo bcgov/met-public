@@ -16,7 +16,6 @@
 
 Test-Suite to ensure that the /Submission endpoint is working as expected.
 """
-from http import HTTPStatus
 import json
 
 from met_api.utils.enums import ContentType
@@ -57,11 +56,10 @@ def test_invalid_submission(client, jwt, session):  # pylint:disable=unused-argu
                      headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.status == '400 BAD REQUEST'
-   
+
     to_dict = {
     }
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/submissions/public/123', data=json.dumps(to_dict),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status == '400 BAD REQUEST'
-   
