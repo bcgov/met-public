@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Skeleton, Grid, Stack, useMediaQuery, Theme } from '@mui/material';
+import { Skeleton, Grid, Stack } from '@mui/material';
 import { ActionContext } from './ActionContext';
 import FormSubmit from 'components/Form/FormSubmit';
 import { FormSubmissionData } from 'components/Form/types';
@@ -9,7 +9,6 @@ import { SurveyFormProps } from '../types';
 import { When } from 'react-if';
 
 export const SurveyForm = ({ handleClose }: SurveyFormProps) => {
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const { isSurveyLoading, savedSurvey, handleSubmit, isSubmitting } = useContext(ActionContext);
     const [submissionData, setSubmissionData] = useState<unknown>(null);
@@ -34,11 +33,32 @@ export const SurveyForm = ({ handleClose }: SurveyFormProps) => {
             padding={'2em 2em 1em 2em'}
         >
             <Grid item xs={12}>
+<<<<<<< Updated upstream
                 <FormSubmit
                     savedForm={savedSurvey.form_json}
                     handleFormChange={handleChange}
                     handleFormSubmit={handleSubmit}
                 />
+=======
+                <FormSubmit savedForm={savedSurvey.form_json} handleFormChange={handleChange} />
+            </Grid>
+            <Grid item container xs={12} direction="row" justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
+                <Stack
+                    direction={{ md: 'column-reverse', lg: 'row' }}
+                    spacing={1}
+                    width="100%"
+                    justifyContent="flex-end"
+                >
+                    <SecondaryButton onClick={() => handleClose()}>Cancel</SecondaryButton>
+                    <PrimaryButton
+                        disabled={!isValid || isLoggedIn || isSubmitting}
+                        onClick={() => handleSubmit(submissionData)}
+                        loading={isSubmitting}
+                    >
+                        Submit Survey
+                    </PrimaryButton>
+                </Stack>
+>>>>>>> Stashed changes
             </Grid>
             <When condition={savedSurvey.form_json?.display === 'form'}>
                 <Grid item container xs={12} direction="row" justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>

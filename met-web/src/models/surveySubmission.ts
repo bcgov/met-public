@@ -15,6 +15,11 @@ export interface SurveySubmission {
     comments?: Comment[];
 }
 
+export interface PublicSubmission {
+    id: number;
+    engagement_id: number;
+    comments: Comment[];
+}
 export const createDefaultSubmission = (): SurveySubmission => {
     return {
         id: 0,
