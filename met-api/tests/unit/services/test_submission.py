@@ -41,7 +41,7 @@ def test_create_submission(session):  # pylint:disable=unused-argument
     submission = SubmissionService().create(email_verification.verification_token, submission_request)
     actual_email_verification = EmailVerificationService().get(email_verification.verification_token)
 
-    assert submission.success is True
+    assert submission is not None
     assert actual_email_verification['is_active'] is False
 
 
