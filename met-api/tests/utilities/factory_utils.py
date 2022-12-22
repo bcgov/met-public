@@ -175,10 +175,11 @@ def factory_widget_item_model(widget_info: dict = TestWidgetItemInfo.widget_item
     return widget
 
 
-def factory_submission_model(survey_id, user_id, submission_info: dict = TestSubmissionInfo.submission1):
+def factory_submission_model(survey_id, engagement_id, user_id, submission_info: dict = TestSubmissionInfo.submission1):
     """Produce a submission model."""
     submission = SubmissionModel(
         survey_id=survey_id,
+        engagement_id=engagement_id,
         user_id=user_id,
         submission_json=submission_info.get('submission_json'),
         created_by=submission_info.get('created_by'),

@@ -27,48 +27,47 @@ class EmailVerificationService:
     def get(cls, verification_token):
         """Get an active email verification matching the provided token."""
         db_email_verification = EmailVerification.get(verification_token)
-        return db_email_verification
+        return EmailVerificationSchema().dump(db_email_verification)
 
     @classmethod
     def get_active(cls, verification_token):
         """Get an active email verification matching the provided token."""
         db_email_verification = EmailVerification.get(verification_token)
-        cls.validate_object(db_email_verification)
-        return db_email_verification
+        email_verification = EmailVerificationSchema().dump(db_email_verification)
+        cls.validate_object(email_verification)
+        return email_verification
 
     @classmethod
-    def create(cls, email_verification: EmailVerificationSchema) -> None:
+    def create(cls, email_verification: EmailVerificationSchema, session=None) -> None:
         """Create an email verification."""
         cls.validate_fields(email_verification)
         email_address = email_verification.get('email_address')
-
-        user = UserService.get_or_create_user(email_address)
-        email_verification['user_id'] = user.id
-        email_verification['created_by'] = user.id
+        if email_address is not None:
+            user = UserService.get_or_create_user(email_address)
+            email_verification['user_id'] = user.id
+        email_verification['created_by'] = email_verification.get('user_id')
         email_verification['verification_token'] = uuid.uuid4()
-        create_verification_result = EmailVerification.create(email_verification)
-
-        if not create_verification_result.success:
-            raise ValueError('Error creating email verification')
-
+        EmailVerification.create(email_verification, session)
         cls._send_verification_email(email_verification)
         return email_verification
 
     @classmethod
-    def verify(cls, verification_token, survey_id, session):
+    def verify(cls, verification_token, survey_id, submission_id, session):
         """Validate and update an email verification."""
         db_email_verification = EmailVerification.get(verification_token)
-        cls.validate_object(db_email_verification)
+        email_verification = EmailVerificationSchema().dump(db_email_verification)
+        cls.validate_object(email_verification)
 
-        if db_email_verification.get('survey_id', None) != survey_id:
+        if email_verification.get('survey_id', None) != survey_id:
             raise ValueError('Email verification invalid for survey')
 
-        db_email_verification['updated_by'] = db_email_verification['user_id']
-        db_email_verification['is_active'] = False
-        result = EmailVerification.update(db_email_verification, session)
-        if not result.success:
-            raise ValueError('Error updating email verification')
-        return db_email_verification
+        if email_verification.get('submission_id', None) != submission_id:
+            raise ValueError('Email verification invalid for submission')
+
+        email_verification['updated_by'] = email_verification['user_id']
+        email_verification['is_active'] = False
+        EmailVerification.update(email_verification, session)
+        return email_verification
 
     @staticmethod
     def _send_verification_email(email_verification: dict) -> None:
@@ -148,7 +147,7 @@ class EmailVerificationService:
     def validate_fields(data: EmailVerificationSchema):
         """Validate all required fields."""
         empty_fields = [not data[field] for field in [
-            'email_address', 'survey_id'
+            'survey_id'
         ]]
 
         if any(empty_fields):

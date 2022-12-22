@@ -93,6 +93,7 @@ class _Config():  # pylint: disable=too-few-public-methods
     KEYCLOAK_ADMIN_SECRET = os.getenv('MET_ADMIN_CLIENT_SECRET')
 
     # front end urls
+    SUBMISSION_PATH = os.getenv('SUBMISSION_PATH', '/engagements/{engagement_id}/edit/{token}')
     SURVEY_PATH = os.getenv('SURVEY_PATH', '/surveys/submit/{survey_id}/{token}')
     ENGAGEMENT_DASHBOARD_PATH = os.getenv('ENGAGEMENT_DASHBOARD_PATH', '/engagements/{engagement_id}/dashboard')
     SITE_URL = os.getenv('SITE_URL')

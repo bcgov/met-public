@@ -2,6 +2,7 @@
 
 Manages the Email verification
 """
+from __future__ import annotations
 from datetime import datetime
 
 from sqlalchemy import ForeignKey
@@ -9,7 +10,6 @@ from sqlalchemy import ForeignKey
 from met_api.schemas.email_verification import EmailVerificationSchema
 
 from .db import db
-from .default_method_result import DefaultMethodResult
 
 
 class EmailVerification(db.Model):  # pylint: disable=too-few-public-methods
@@ -22,37 +22,41 @@ class EmailVerification(db.Model):  # pylint: disable=too-few-public-methods
     user_id = db.Column(db.Integer, ForeignKey('met_users.id'), nullable=True)
     is_active = db.Column(db.Boolean, nullable=False)
     survey_id = db.Column(db.Integer, ForeignKey('survey.id'), nullable=True)
+    submission_id = db.Column(db.Integer, ForeignKey('submission.id'), nullable=True)
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
     created_by = db.Column(db.String(50), nullable=True)
     updated_by = db.Column(db.String(50), nullable=True)
 
     @classmethod
-    def get(cls, verification_token) -> EmailVerificationSchema:
+    def get(cls, verification_token) -> EmailVerification:
         """Get an email verification."""
-        verification_schema = EmailVerificationSchema()
         db_email_verification = db.session.query(EmailVerification)\
             .filter_by(verification_token=verification_token)\
             .first()
-        return verification_schema.dump(db_email_verification)
+        return db_email_verification
 
     @classmethod
-    def create(cls, email_verification: EmailVerificationSchema) -> DefaultMethodResult:
+    def create(cls, email_verification: EmailVerificationSchema, session=None) -> EmailVerification:
         """Create an email verification."""
         new_email_verification = EmailVerification(
             verification_token=email_verification.get('verification_token', None),
             user_id=email_verification.get('user_id', None),
             is_active=True,
             survey_id=email_verification.get('survey_id', None),
+            submission_id=email_verification.get('submission_id', None),
             created_date=datetime.utcnow(),
             created_by=email_verification.get('created_by', None),
         )
         db.session.add(new_email_verification)
-        db.session.commit()
-        return DefaultMethodResult(True, 'Email Verification Added', new_email_verification.id)
+        if session is None:
+            db.session.commit()
+        else:
+            session.flush()
+        return new_email_verification
 
     @classmethod
-    def update(cls, email_verification: EmailVerificationSchema, session=None) -> DefaultMethodResult:
+    def update(cls, email_verification: EmailVerificationSchema, session=None) -> EmailVerification:
         """Update an email verification."""
         update_fields = dict(
             is_active=email_verification.get('is_active', None),
@@ -63,8 +67,8 @@ class EmailVerification(db.Model):  # pylint: disable=too-few-public-methods
         query = EmailVerification.query.filter_by(id=email_verification_id)
         record = query.first()
         if not record:
-            return DefaultMethodResult(False, 'Email Verification Not Found', email_verification_id)
+            raise ValueError('Email Verification Not Found')
         query.update(update_fields)
         if session is None:
             db.session.commit()
-        return DefaultMethodResult(True, 'Email Verification Updated', email_verification_id)
+        return query.first()

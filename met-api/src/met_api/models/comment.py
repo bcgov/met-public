@@ -2,6 +2,7 @@
 
 Manages the comment
 """
+from __future__ import annotations
 from datetime import datetime
 
 from sqlalchemy import TEXT, and_, asc, cast, desc
@@ -14,10 +15,10 @@ from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement import Engagement
 from met_api.models.submission import Submission
 from met_api.models.survey import Survey
+from met_api.schemas.comment import CommentSchema
 
 from .comment_status import CommentStatus
 from .db import db
-from .default_method_result import DefaultMethodResult
 
 
 class Comment(db.Model):
@@ -31,6 +32,10 @@ class Comment(db.Model):
     user_id = db.Column(db.Integer, ForeignKey('met_users.id', ondelete='SET NULL'), nullable=True)
     submission_id = db.Column(db.Integer, ForeignKey('submission.id', ondelete='SET NULL'), nullable=True)
     component_id = db.Column(db.String(10))
+    created_date = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
+    created_by = db.Column(db.String(50), nullable=True)
+    updated_by = db.Column(db.String(50), nullable=True)
 
     @classmethod
     def get_comment(cls, comment_id):
@@ -101,11 +106,13 @@ class Comment(db.Model):
         return page.items, page.total
 
     @staticmethod
-    def __create_new_comment_entity(comment):
+    def __create_new_comment_entity(comment: CommentSchema):
         """Create new comment entity."""
         return Comment(
             text=comment.get('text', None),
             submission_date=datetime.utcnow(),
+            created_date=datetime.utcnow(),
+            created_by=comment.get('user_id', None),
             survey_id=comment.get('survey_id', None),
             user_id=comment.get('user_id', None),
             submission_id=comment.get('submission_id', None),
@@ -113,12 +120,29 @@ class Comment(db.Model):
         )
 
     @classmethod
-    def add_all_comments(cls, comments: list, session=None) -> DefaultMethodResult:
-        """Save comments."""
+    def add_all_comments(cls, comments: list, session=None) -> list[Comment]:
+        """Create comments."""
         new_comments = [cls.__create_new_comment_entity(comment) for comment in comments]
         if session is None:
             db.session.add_all(new_comments)
             db.session.commit()
         else:
             session.add_all(new_comments)
-        return DefaultMethodResult(True, 'Comments Added', 1)
+        return new_comments
+
+    @classmethod
+    def update(cls, submission_id, comment: CommentSchema, session=None) -> Comment:
+        """Update comment text."""
+        query = Comment.query.filter_by(id=comment.get('id'), submission_id=submission_id)
+        update_fields = dict(
+            text=comment.get('text', None),
+            updated_by=comment.get('user_id', None),
+            updated_date=datetime.utcnow(),
+        )
+
+        query.update(update_fields)
+        if session is None:
+            db.session.commit()
+        else:
+            session.flush()
+        return query.first()

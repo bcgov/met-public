@@ -4,7 +4,7 @@ Manages the submission
 """
 
 from marshmallow import EXCLUDE, Schema, fields
-from met_api.schemas.comment import CommentSchema
+from met_api.schemas.comment import CommentSchema, PublicCommentSchema
 
 from .survey import SurveySchema
 
@@ -24,6 +24,7 @@ class SubmissionSchema(Schema):
     updated_by = fields.Str(data_key='updated_by')
     updated_date = fields.Str(data_key='updated_date')
     survey_id = fields.Int(data_key='survey_id')
+    engagement_id = fields.Int(data_key='engagement_id')
     user_id = fields.Int(data_key='user_id')
     verification_token = fields.Str(data_key='verification_token')
     reviewed_by = fields.Str(data_key='reviewed_by')
@@ -35,3 +36,16 @@ class SubmissionSchema(Schema):
     rejected_reason_other = fields.Str(data_key='rejected_reason_other')
     survey_name = fields.Pluck(SurveySchema, 'name')
     comments = fields.List(fields.Nested(CommentSchema))
+
+
+class PublicSubmissionSchema(Schema):
+    """Schema for a public submission."""
+
+    class Meta:  # pylint: disable=too-few-public-methods
+        """Exclude unknown fields in the deserialized output."""
+
+        unknown = EXCLUDE
+
+    id = fields.Int(data_key='id')
+    engagement_id = fields.Int(data_key='engagement_id')
+    comments = fields.List(fields.Nested(PublicCommentSchema))

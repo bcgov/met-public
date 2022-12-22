@@ -38,10 +38,10 @@ def test_create_submission(session):  # pylint:disable=unused-argument
         'user_id': user_details.id,
         'verification_token': email_verification.verification_token,
     }
-    submission = SubmissionService().create(submission_request)
+    submission = SubmissionService().create(email_verification.verification_token, submission_request)
     actual_email_verification = EmailVerificationService().get(email_verification.verification_token)
 
-    assert submission.success is True
+    assert submission is not None
     assert actual_email_verification['is_active'] is False
 
 
@@ -60,7 +60,7 @@ def test_create_submission_rollback(session):  # pylint:disable=unused-argument
 
     with patch.object(CommentService, 'extract_comments', side_effect=ValueError) as mock:
         try:
-            SubmissionService().create(submission_request)
+            SubmissionService().create(email_verification.verification_token, submission_request)
         except ValueError:
             mock.assert_called()
         actual_email_verification = EmailVerificationService().get(email_verification.verification_token)
@@ -72,7 +72,7 @@ def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
     admin_user = factory_user_model(3)
     user_details = factory_user_model()
     survey, eng = factory_survey_and_eng_model()
-    submission = factory_submission_model(survey.id, user_details.id)
+    submission = factory_submission_model(survey.id, eng.id, user_details.id)
     factory_comment_model(survey.id, submission.id)
     reasons = {
         'status_id': 2,

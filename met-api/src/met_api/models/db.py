@@ -25,6 +25,7 @@ def session_scope():
     try:
         yield session
         session.commit()
-    except:  # noqa: B901, E722
+    except Exception as e:  # noqa: B901, E722
+        print(str(e))
         session.rollback()
         raise
