@@ -86,7 +86,7 @@ class EngagementService:
         eng_model = EngagementService._create_engagement_model(request_json)
         if request_json.get('status_block'):
             EngagementService._create_eng_status_block(eng_model.id, request_json)
-
+        eng_model.commit()
         return eng_model.find_by_id(eng_model.id)
 
     @staticmethod
@@ -115,14 +115,16 @@ class EngagementService:
     @staticmethod
     def _create_eng_status_block(eng_id, engagement_data: dict):
         """Save engagement."""
+        status_blocks = []
         for status in engagement_data.get('status_block'):
             new_status_block: EngagementStatusBlockModel = EngagementStatusBlockModel(
                 engagement_id=eng_id,
                 survey_status=status.get('survey_status'),
                 block_text=status.get('block_text')
             )
+            status_blocks.append(new_status_block)
 
-            new_status_block.save()
+        new_status_block.save_status_blocks(status_blocks)
 
     def update_engagement(self, request_json: dict):
         """Update engagement."""
@@ -140,11 +142,10 @@ class EngagementService:
             # see if there is one existing for the status ;if not create one
             survey_status = survey_block.get('survey_status')
             survey_block = survey_block.get('block_text')
-            status_block: EngagementStatusBlockModel = EngagementStatusBlockModel.get_by_status(engagement_id,
-                                                                                                survey_status)
+            status_block: EngagementStatusBlockModel = EngagementStatusBlockModel.\
+                get_by_status(engagement_id,survey_status)
             if status_block:
                 status_block.block_text = survey_block
-                status_block.flush()
                 status_block.commit()
             else:
                 new_status_block: EngagementStatusBlockModel = EngagementStatusBlockModel(

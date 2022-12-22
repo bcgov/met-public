@@ -34,3 +34,8 @@ class EngagementStatusBlock(BaseModel):
                     EngagementStatusBlock.engagement_id == engagement_id
                     ) \
             .first()
+
+    @classmethod
+    def save_status_blocks(cls, update_mappings: list) -> None:
+        """Update widgets.."""
+        db.session.bulk_save_objects(update_mappings)

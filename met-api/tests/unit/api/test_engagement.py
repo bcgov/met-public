@@ -134,7 +134,7 @@ def test_update_survey_block_engagement(client, jwt, session):  # pylint:disable
         'id': engagement_id,
         'status_block': [{
             'block_text': block_text_for_upcoming,
-            'survey_status': SubmissionStatus.Upcoming.name,
+            'survey_status': SubmissionStatus.Closed.name,
         }, {
             'block_text': '{"foo2":"bar2"}',
             'survey_status': SubmissionStatus.Open.name,
@@ -149,5 +149,5 @@ def test_update_survey_block_engagement(client, jwt, session):  # pylint:disable
     assert rv.status_code == 200
     actual_status_blocks = rv.json.get('status_block')
     assert len(actual_status_blocks) == 2
-    upcoming_block = next(x for x in actual_status_blocks if x.get('survey_status') == SubmissionStatus.Upcoming.name)
+    upcoming_block = next(x for x in actual_status_blocks if x.get('survey_status') == SubmissionStatus.Closed.name)
     assert upcoming_block.get('block_text') == block_text_for_upcoming
