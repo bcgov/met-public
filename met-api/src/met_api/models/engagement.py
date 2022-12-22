@@ -15,12 +15,13 @@ from met_api.constants.user import SYSTEM_USER
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.engagement import EngagementSchema
 from met_api.utils.datetime import local_datetime
+from .base_model import BaseModel
 from .db import db
 from .default_method_result import DefaultMethodResult
 from .engagement_status import EngagementStatus
 
 
-class Engagement(db.Model):
+class Engagement(BaseModel):
     """Definition of the Engagement entity."""
 
     __tablename__ = 'engagement'
@@ -31,22 +32,13 @@ class Engagement(db.Model):
     start_date = db.Column(db.DateTime)
     end_date = db.Column(db.DateTime)
     status_id = db.Column(db.Integer, ForeignKey('engagement_status.id', ondelete='CASCADE'))
-    created_date = db.Column(db.DateTime, default=datetime.utcnow())
-    created_by = db.Column(db.String(50), nullable=False)
-    updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow())
-    updated_by = db.Column(db.String(50), nullable=False)
     published_date = db.Column(db.DateTime, nullable=True)
     scheduled_date = db.Column(db.DateTime, nullable=True)
     content = db.Column(db.Text, unique=False, nullable=False)
     rich_content = db.Column(JSON, unique=False, nullable=False)
     banner_filename = db.Column(db.String(), unique=False, nullable=True)
     surveys = db.relationship('Survey', backref='engagement', cascade='all, delete')
-
-    @classmethod
-    def get_engagement(cls, engagement_id) -> Engagement:
-        """Get an engagement."""
-        engagement = db.session.query(Engagement).filter_by(id=engagement_id).first()
-        return engagement
+    status_block = db.relationship('EngagementStatusBlock', backref='engagement')
 
     @classmethod
     def get_all_engagements(cls):
@@ -89,30 +81,6 @@ class Engagement(db.Model):
             .order_by(Engagement.id.asc()) \
             .all()
         return engagements_schema.dump(data)
-
-    @classmethod
-    def create_engagement(cls, engagement: EngagementSchema) -> DefaultMethodResult:
-        """Save engagement."""
-        new_engagement = Engagement(
-            name=engagement.get('name', None),
-            description=engagement.get('description', None),
-            rich_description=engagement.get('rich_description', None),
-            start_date=engagement.get('start_date', None),
-            end_date=engagement.get('end_date', None),
-            status_id=Status.Draft.value,
-            created_by=engagement.get('created_by', None),
-            created_date=datetime.utcnow(),
-            updated_by=engagement.get('updated_by', None),
-            updated_date=None,
-            published_date=None,
-            scheduled_date=None,
-            banner_filename=engagement.get('banner_filename', None),
-            content=engagement.get('content', None),
-            rich_content=engagement.get('rich_content', None)
-        )
-        db.session.add(new_engagement)
-        db.session.commit()
-        return DefaultMethodResult(True, 'Engagement Added', new_engagement.id)
 
     @classmethod
     def update_engagement(cls, engagement: EngagementSchema) -> DefaultMethodResult:
