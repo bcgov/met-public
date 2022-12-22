@@ -266,6 +266,7 @@ class TestWidgetDocumentInfo(dict, Enum):
     """Test scenarios of contact."""
 
     document1 = {
+        'id': '4',
         'title': fake.word(),
         'type': 'folder',
         'parent_document_id': None,
@@ -274,6 +275,16 @@ class TestWidgetDocumentInfo(dict, Enum):
     }
 
     document2 = {
+        'id': '2',
+        'title': fake.file_name(extension='pdf'),
+        'type': 'file',
+        'parent_document_id': None,
+        'url': fake.image_url(),
+        'sort_index': 1,
+    }
+
+    document3 = {
+        'id': '3',
         'title': fake.file_name(extension='pdf'),
         'type': 'file',
         'parent_document_id': None,
