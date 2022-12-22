@@ -265,7 +265,7 @@ class TestWidgetDocumentInfo(dict, Enum):
         'url': fake.image_url(),
         'sort_index': 1,
     }
-    
+
     document3 = {
         'id': '3',
         'title': fake.file_name(extension='pdf'),

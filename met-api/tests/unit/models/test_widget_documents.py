@@ -57,7 +57,7 @@ def test_get_all_by_widget_id(session):
     expected_docs = WidgetDocumentsModel.get_all_by_widget_id(widget.id)
     assert len(expected_docs) == 2
 
-    
+
 def test_documents_by_widget_id(session):
     """Assert that widget documents are sorted in ascending order."""
     widget = _create_widget()
