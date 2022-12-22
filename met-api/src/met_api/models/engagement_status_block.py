@@ -36,6 +36,6 @@ class EngagementStatusBlock(BaseModel):
             .first()
 
     @classmethod
-    def save_status_blocks(cls, update_mappings: list) -> None:
+    def save_status_blocks(cls, status_blocks: list) -> None:
         """Update widgets.."""
-        db.session.bulk_save_objects(update_mappings)
+        db.session.bulk_save_objects(status_blocks)
