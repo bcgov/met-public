@@ -10,6 +10,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { If, Then, When } from 'react-if';
 import LocationOn from '@mui/icons-material/LocationOn';
 import { EngagementPhases } from 'models/engagementPhases';
+
 interface PhaseBoxProps {
     title: string;
     backgroundColor?: string;
@@ -20,18 +21,15 @@ interface PhaseBoxProps {
     accordionBackground?: string;
     isCurrentPhase: boolean;
     currentPhase: number;
-    isCurrent: boolean;
 }
 export const PhaseBoxMobile = ({
     title,
     backgroundColor = 'white',
     learnMoreBox,
-    readMoreBackground,
     iconBox,
     accordionBackground,
     isCurrentPhase = false,
     currentPhase,
-    isCurrent,
 }: PhaseBoxProps) => {
     const PhaseBoxRef = useRef<HTMLButtonElement | null>(null);
 

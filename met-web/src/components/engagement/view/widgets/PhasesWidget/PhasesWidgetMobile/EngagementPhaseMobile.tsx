@@ -40,7 +40,6 @@ export const EngagementPhaseMobile = ({
             accordionBackground={isCurrent ? accordionBackground : PAST_PHASE.readmoreBackgroundColor}
             iconBox={popOverText ? <MetParagraph>{popOverText}</MetParagraph> : false}
             isCurrentPhase={phaseId === currentPhase}
-            isCurrent={isCurrent}
             currentPhase={currentPhase}
         />
     );
