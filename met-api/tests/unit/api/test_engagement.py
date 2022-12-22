@@ -19,9 +19,10 @@ Test-Suite to ensure that the /Engagement endpoint is working as expected.
 
 import json
 
-from faker import Faker
 import pytest
+from faker import Faker
 
+from met_api.constants.engagement_status import SubmissionStatus
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestEngagementInfo, TestJwtClaims
 from tests.utilities.factory_utils import factory_auth_header, factory_engagement_model
@@ -65,7 +66,7 @@ def test_get_engagements(client, jwt, session, engagement_info):  # pylint:disab
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
 def test_patch_engagement(client, jwt, session, engagement_info):  # pylint:disable=unused-argument
-    """Assert that an survey can be POSTed."""
+    """Assert that an engagement can be updated."""
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
     engagement = factory_engagement_model()
     engagement_id = str(engagement.id)
@@ -94,3 +95,59 @@ def test_patch_engagement(client, jwt, session, engagement_info):  # pylint:disa
     assert rv.json.get('description') == engagement_edits.get('description')
     assert rv.json.get('content') == engagement_edits.get('content')
     assert engagement_edits.get('created_date') in rv.json.get('created_date')
+
+
+def test_patch_new_survey_block_engagement(client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that an engagement's survey status blocks can be updated."""
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    engagement = factory_engagement_model()
+    engagement_id = str(engagement.id)
+
+    engagement_edits = {
+        'id': engagement_id,
+        'status_block': [{
+            'block_text': '{"foo":"bar"}',
+            'survey_status': SubmissionStatus.Upcoming.name,
+        }]}
+    rv = client.patch('/api/engagements/', data=json.dumps(engagement_edits),
+                      headers=headers, content_type=ContentType.JSON.value)
+
+    assert rv.status_code == 200
+
+    rv = client.get(f'/api/engagements/{engagement_id}',
+                    headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+    actual_status_blocks = rv.json.get('status_block')
+    assert len(actual_status_blocks) == 1
+    assert actual_status_blocks[0].get('block_text') == engagement_edits.get('status_block')[0].get('block_text')
+    assert actual_status_blocks[0].get('survey_status') == engagement_edits.get('status_block')[0].get('survey_status')
+
+
+def test_update_survey_block_engagement(client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that an engagement's survey status blocks can be updated."""
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    engagement = factory_engagement_model(TestEngagementInfo.engagement2)
+    engagement_id = str(engagement.id)
+
+    block_text_for_upcoming = '{"foo1":"bar1"}'
+    engagement_edits = {
+        'id': engagement_id,
+        'status_block': [{
+            'block_text': block_text_for_upcoming,
+            'survey_status': SubmissionStatus.Upcoming.name,
+        }, {
+            'block_text': '{"foo2":"bar2"}',
+            'survey_status': SubmissionStatus.Open.name,
+        }]}
+    rv = client.patch('/api/engagements/', data=json.dumps(engagement_edits),
+                      headers=headers, content_type=ContentType.JSON.value)
+
+    assert rv.status_code == 200
+
+    rv = client.get(f'/api/engagements/{engagement_id}',
+                    headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+    actual_status_blocks = rv.json.get('status_block')
+    assert len(actual_status_blocks) == 2
+    upcoming_block = next(x for x in actual_status_blocks if x.get('survey_status') == SubmissionStatus.Upcoming.name)
+    assert upcoming_block.get('block_text') == block_text_for_upcoming
