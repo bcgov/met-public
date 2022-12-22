@@ -143,7 +143,7 @@ class EngagementService:
             survey_status = survey_block.get('survey_status')
             survey_block = survey_block.get('block_text')
             status_block: EngagementStatusBlockModel = EngagementStatusBlockModel.\
-                get_by_status(engagement_id,survey_status)
+                get_by_status(engagement_id, survey_status)
             if status_block:
                 status_block.block_text = survey_block
                 status_block.commit()
