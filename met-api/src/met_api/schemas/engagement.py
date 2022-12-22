@@ -9,8 +9,8 @@ from marshmallow import EXCLUDE, Schema, ValidationError, fields, validate, vali
 
 from met_api.constants.engagement_status import Status, SubmissionStatus
 from met_api.schemas.engagement_survey import EngagementSurveySchema
-from met_api.schemas.engagement_status_block import EngagementStatusBlockSchema
 from met_api.utils.datetime import local_datetime
+from met_api.schemas.engagement_status_block import EngagementStatusBlockSchema
 
 from .engagement_status import EngagementStatusSchema
 
@@ -25,18 +25,8 @@ class EngagementSchema(Schema):
 
     id = fields.Int(data_key='id')
     name = fields.Str(data_key='name', required=True, validate=validate.Length(min=1, error='Name cannot be blank'))
-    description = fields.Str(
-        data_key='description',
-        required=True,
-        validate=validate.Length(
-            min=1,
-            error='Description cannot be blank'))
-    rich_description = fields.Str(
-        data_key='rich_description',
-        required=True,
-        validate=validate.Length(
-            min=1,
-            error='Rich description cannot be blank'))
+    description = fields.Str(data_key='description')
+    rich_description = fields.Str(data_key='rich_description')
     start_date = fields.Date(data_key='start_date', required=True)
     end_date = fields.Date(data_key='end_date', required=True)
     status_id = fields.Int(data_key='status_id')
@@ -46,18 +36,8 @@ class EngagementSchema(Schema):
     updated_date = fields.Str(data_key='updated_date')
     published_date = fields.Str(data_key='published_date')
     scheduled_date = fields.Str(data_key='scheduled_date')
-    content = fields.Str(
-        data_key='content',
-        required=True,
-        validate=validate.Length(
-            min=1,
-            error='Content cannot be blank'))
-    rich_content = fields.Str(
-        data_key='rich_content',
-        required=True,
-        validate=validate.Length(
-            min=1,
-            error='Rich Content cannot be blank'))
+    content = fields.Str(data_key='content')
+    rich_content = fields.Str(data_key='rich_content')
     banner_filename = fields.Str(data_key='banner_filename')
     engagement_status = fields.Nested(EngagementStatusSchema)
     surveys = fields.List(fields.Nested(EngagementSurveySchema))
