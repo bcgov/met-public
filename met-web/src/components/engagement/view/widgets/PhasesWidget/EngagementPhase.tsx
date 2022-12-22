@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Grid } from '@mui/material';
 import { MetHeader4, MetParagraph } from 'components/common';
-import { ReadMoreBox } from './ReadMoreBox';
+import { LearnMoreBox } from './LearnMoreBox';
 import { EngagementPhases, PAST_PHASE, ProcessStageProps } from 'models/engagementPhases';
 import { PhaseBox } from './PhaseBox';
 import { ActionContext } from '../../ActionContext';
@@ -26,13 +26,12 @@ export const EngagementPhase = ({
             backgroundColor={isCurrent ? backgroundColor : PAST_PHASE.backgroundColor}
             sx={{ borderRight: isCurrent ? 'none' : `1px solid ${PAST_PHASE.borderColor}` }}
             learnMoreBox={
-                <ReadMoreBox
-                    backgroundColor={isCurrent ? learnMoreBackgroundColor : PAST_PHASE.backgroundColor}
+                <LearnMoreBox
+                    backgroundColor={isCurrent ? learnMoreBackgroundColor : PAST_PHASE.learnMoreBackgroundColor}
                     sx={[
                         { margin: 0 },
                         isCurrent && { border: `3px solid ${backgroundColor}` },
                         !isCurrent && {
-                            color: 'white',
                             border: `3px solid ${PAST_PHASE.borderColor}`,
                         },
                     ]}
@@ -43,7 +42,7 @@ export const EngagementPhase = ({
                         </Grid>
                         {learnMoreText}
                     </Grid>
-                </ReadMoreBox>
+                </LearnMoreBox>
             }
             iconBox={popOverText ? <MetParagraph>{popOverText}</MetParagraph> : false}
             isCurrentPhase={phaseId === currentPhase}

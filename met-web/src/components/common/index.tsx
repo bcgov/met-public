@@ -147,17 +147,23 @@ export const MetPageGridContainer = styled(Grid)(() => ({
 export const MetLabel = styled(Typography)(() => ({
     fontSize: '16px',
     fontWeight: 'bold',
-    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+    fontFamily: MET_Header_Font_Family,
 }));
 
 export const MetParagraph = styled(Typography)(() => ({
     fontSize: '16px',
-    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+    fontFamily: MET_Header_Font_Family,
 }));
 
 export const StyledSmallText = styled(Typography)(() => ({
     fontSize: '13px',
-    fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+    fontFamily: MET_Header_Font_Family,
+}));
+
+export const MetIconText = styled(Typography)(() => ({
+    fontSize: '11px',
+    fontFamily: MET_Header_Font_Family,
+    lineHeight: '1.2',
 }));
 
 export const MetSmallText = ({ bold, children, sx, ...rest }: HeaderProps) => {

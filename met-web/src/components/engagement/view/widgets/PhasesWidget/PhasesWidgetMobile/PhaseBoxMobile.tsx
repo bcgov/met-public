@@ -10,6 +10,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { If, Then, When } from 'react-if';
 import LocationOn from '@mui/icons-material/LocationOn';
 import { EngagementPhases } from 'models/engagementPhases';
+
 interface PhaseBoxProps {
     title: string;
     backgroundColor?: string;
@@ -20,18 +21,15 @@ interface PhaseBoxProps {
     accordionBackground?: string;
     isCurrentPhase: boolean;
     currentPhase: number;
-    isCurrent: boolean;
 }
 export const PhaseBoxMobile = ({
     title,
     backgroundColor = 'white',
     learnMoreBox,
-    readMoreBackground,
     iconBox,
     accordionBackground,
     isCurrentPhase = false,
     currentPhase,
-    isCurrent,
 }: PhaseBoxProps) => {
     const PhaseBoxRef = useRef<HTMLButtonElement | null>(null);
 
@@ -85,13 +83,11 @@ export const PhaseBoxMobile = ({
                                 <Grid item container direction="row" xs={12} justifyContent="flex-start">
                                     <Accordion sx={{ background: accordionBackground }}>
                                         <AccordionSummary
-                                            expandIcon={
-                                                <ExpandMoreIcon htmlColor={isCurrent ? '#000000' : '#FFFFFF'} />
-                                            }
+                                            expandIcon={<ExpandMoreIcon color="info" />}
                                             aria-controls="panel1a-content"
                                             id="panel1a-header"
                                         >
-                                            <Typography sx={[!isCurrent && { color: 'white' }]}>Learn More</Typography>
+                                            <Typography>Learn More</Typography>
                                         </AccordionSummary>
                                         <AccordionDetails>{learnMoreBox}</AccordionDetails>
                                     </Accordion>

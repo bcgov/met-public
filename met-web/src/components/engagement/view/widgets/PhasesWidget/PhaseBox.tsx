@@ -1,11 +1,11 @@
 import React, { ReactNode, useContext, useRef, useState } from 'react';
-import { Box, Grid, Link, Popover, Stack, SxProps, Theme } from '@mui/material';
-import { MetHeader4, MetPaper, MetSmallText } from 'components/common';
+import { Box, Grid, Link, Popover, Stack, SxProps, Theme, useTheme } from '@mui/material';
+import { MetHeader4, MetIconText, MetPaper, MetSmallText } from 'components/common';
 import { PhaseContext } from '.';
 import { Else, If, Then, When } from 'react-if';
 import { IconBox } from './IconBox';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { EngagementPhases } from 'models/engagementPhases';
+import { CURRENT_PHASE, EngagementPhases } from 'models/engagementPhases';
 
 interface PhaseBoxProps {
     title: string;
@@ -30,6 +30,7 @@ export const PhaseBox = ({
 }: PhaseBoxProps) => {
     const [readMoreOpen, setReadMoreOpen] = useState(false);
     const { anchorEl, setAnchorEl } = useContext(PhaseContext);
+    const theme = useTheme();
 
     const PhaseBoxRef = useRef<HTMLButtonElement | null>(null);
 
@@ -42,17 +43,26 @@ export const PhaseBox = ({
             direction="column"
             sx={{
                 maxWidth: { xl: '20%', md: 'auto' },
-                minWidth: { xl: '10%', md: 'auto' },
             }}
         >
             <When condition={currentPhase !== EngagementPhases.Standalone}>
                 <If condition={isCurrentPhase}>
                     <Then>
-                        <Stack direction="row" height="3em" alignItems={'center'}>
-                            <Box marginLeft={{ xs: '0', lg: '1em' }} color="#D8292F">
-                                <LocationOnIcon fontSize="large" />
-                            </Box>
-                            <MetSmallText sx={{ fontStyle: 'italic', overflow: 'visible' }}>Current Phase</MetSmallText>
+                        <Stack justifyContent={'flex-end'} height="3em">
+                            <Stack
+                                direction="row"
+                                alignItems="center"
+                                sx={{
+                                    [theme.breakpoints.up('lg')]: {
+                                        marginLeft: '1em',
+                                    },
+                                }}
+                            >
+                                <LocationOnIcon fontSize="medium" htmlColor={CURRENT_PHASE.iconColor} />
+                                <MetIconText sx={{ fontStyle: 'italic', overflow: 'visible' }}>
+                                    Current Phase
+                                </MetIconText>
+                            </Stack>
                         </Stack>
                     </Then>
                     <Else>
@@ -66,7 +76,7 @@ export const PhaseBox = ({
                         borderRadius: 0,
                         border: border,
                         backgroundColor: backgroundColor,
-                        height: '10em',
+                        height: '9rem',
                     },
                     { ...sx },
                 ]}
@@ -77,7 +87,7 @@ export const PhaseBox = ({
                             ref={PhaseBoxRef}
                             sx={{
                                 padding: '1em',
-                                height: '10em',
+                                height: '9rem',
                             }}
                         >
                             <Grid container direction="column" justifyContent="space-between" height="100%">
