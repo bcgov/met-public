@@ -85,13 +85,11 @@ export const PhaseBoxMobile = ({
                                 <Grid item container direction="row" xs={12} justifyContent="flex-start">
                                     <Accordion sx={{ background: accordionBackground }}>
                                         <AccordionSummary
-                                            expandIcon={
-                                                <ExpandMoreIcon htmlColor={isCurrent ? '#000000' : '#FFFFFF'} />
-                                            }
+                                            expandIcon={<ExpandMoreIcon color="info" />}
                                             aria-controls="panel1a-content"
                                             id="panel1a-header"
                                         >
-                                            <Typography sx={[!isCurrent && { color: 'white' }]}>Learn More</Typography>
+                                            <Typography>Learn More</Typography>
                                         </AccordionSummary>
                                         <AccordionDetails>{learnMoreBox}</AccordionDetails>
                                     </Accordion>

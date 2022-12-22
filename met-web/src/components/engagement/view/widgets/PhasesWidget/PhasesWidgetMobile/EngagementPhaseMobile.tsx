@@ -9,7 +9,6 @@ import { Widget, WidgetType } from 'models/widget';
 
 export const EngagementPhaseMobile = ({
     backgroundColor,
-    learnMoreBackgroundColor,
     title,
     learnMoreText,
     popOverText,
@@ -27,17 +26,10 @@ export const EngagementPhaseMobile = ({
             backgroundColor={isCurrent ? backgroundColor : PAST_PHASE.backgroundColor}
             learnMoreBox={
                 <ReadMoreBox
-                    backgroundColor={isCurrent ? accordionBackground : PAST_PHASE.backgroundColor}
-                    sx={{ p: 0, margin: 0 }}
+                    backgroundColor={isCurrent ? accordionBackground : PAST_PHASE.readmoreBackgroundColor}
+                    sx={{ p: 0, margin: 0, color: '#494949' }}
                 >
-                    <Grid
-                        sx={[!isCurrent && { color: 'white' }]}
-                        container
-                        direction="row"
-                        justifyContent="flex-start"
-                        alignItems="flex-start"
-                        spacing={1}
-                    >
+                    <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1}>
                         <Grid item xs={12}>
                             <MetHeader4 bold>{title}</MetHeader4>
                         </Grid>
@@ -45,7 +37,7 @@ export const EngagementPhaseMobile = ({
                     </Grid>
                 </ReadMoreBox>
             }
-            accordionBackground={isCurrent ? accordionBackground : PAST_PHASE.backgroundColor}
+            accordionBackground={isCurrent ? accordionBackground : PAST_PHASE.readmoreBackgroundColor}
             iconBox={popOverText ? <MetParagraph>{popOverText}</MetParagraph> : false}
             isCurrentPhase={phaseId === currentPhase}
             isCurrent={isCurrent}
