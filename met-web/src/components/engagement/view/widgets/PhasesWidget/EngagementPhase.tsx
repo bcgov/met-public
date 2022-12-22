@@ -27,12 +27,11 @@ export const EngagementPhase = ({
             sx={{ borderRight: isCurrent ? 'none' : `1px solid ${PAST_PHASE.borderColor}` }}
             learnMoreBox={
                 <ReadMoreBox
-                    backgroundColor={isCurrent ? learnMoreBackgroundColor : PAST_PHASE.backgroundColor}
+                    backgroundColor={isCurrent ? learnMoreBackgroundColor : PAST_PHASE.readmoreBackgroundColor}
                     sx={[
                         { margin: 0 },
                         isCurrent && { border: `3px solid ${backgroundColor}` },
                         !isCurrent && {
-                            color: 'white',
                             border: `3px solid ${PAST_PHASE.borderColor}`,
                         },
                     ]}
