@@ -26,7 +26,7 @@ export interface ProcessStageProps {
 export const PAST_PHASE = {
     backgroundColor: '#7B8283',
     borderColor: '#565656',
-    readmoreBackgroundColor: '#f2f2f2',
+    learnMoreBackgroundColor: '#f2f2f2',
 };
 
 export const CURRENT_PHASE = {

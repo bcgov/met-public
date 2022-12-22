@@ -3,7 +3,7 @@ import { Grid } from '@mui/material';
 import { MetHeader4, MetParagraph } from 'components/common';
 import { EngagementPhases, PAST_PHASE, ProcessStageProps } from 'models/engagementPhases';
 import { PhaseBoxMobile } from './PhaseBoxMobile';
-import { ReadMoreBox } from '../ReadMoreBox';
+import { LearnMoreBox } from '../LearnMoreBox';
 import { ActionContext } from 'components/engagement/view/ActionContext';
 import { Widget, WidgetType } from 'models/widget';
 
@@ -25,8 +25,8 @@ export const EngagementPhaseMobile = ({
             title={title}
             backgroundColor={isCurrent ? backgroundColor : PAST_PHASE.backgroundColor}
             learnMoreBox={
-                <ReadMoreBox
-                    backgroundColor={isCurrent ? accordionBackground : PAST_PHASE.readmoreBackgroundColor}
+                <LearnMoreBox
+                    backgroundColor={isCurrent ? accordionBackground : PAST_PHASE.learnMoreBackgroundColor}
                     sx={{ p: 0, margin: 0, color: '#494949' }}
                 >
                     <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1}>
@@ -35,9 +35,9 @@ export const EngagementPhaseMobile = ({
                         </Grid>
                         {learnMoreText}
                     </Grid>
-                </ReadMoreBox>
+                </LearnMoreBox>
             }
-            accordionBackground={isCurrent ? accordionBackground : PAST_PHASE.readmoreBackgroundColor}
+            accordionBackground={isCurrent ? accordionBackground : PAST_PHASE.learnMoreBackgroundColor}
             iconBox={popOverText ? <MetParagraph>{popOverText}</MetParagraph> : false}
             isCurrentPhase={phaseId === currentPhase}
             currentPhase={currentPhase}
