@@ -17,7 +17,6 @@ from met_api.schemas.engagement import EngagementSchema
 from met_api.utils.datetime import local_datetime
 from .base_model import BaseModel
 from .db import db
-from .default_method_result import DefaultMethodResult
 from .engagement_status import EngagementStatus
 
 
@@ -83,13 +82,13 @@ class Engagement(BaseModel):
         return engagements_schema.dump(data)
 
     @classmethod
-    def update_engagement(cls, engagement: EngagementSchema) -> DefaultMethodResult:
+    def update_engagement(cls, engagement: EngagementSchema) -> Engagement:
         """Update engagement."""
         engagement_id = engagement.get('id', None)
         query = Engagement.query.filter_by(id=engagement_id)
         record: Engagement = query.first()
         if not record:
-            return DefaultMethodResult(False, 'Engagement Not Found', engagement_id)
+            return None
 
         update_fields = dict(
             name=engagement.get('name', None),
@@ -110,7 +109,7 @@ class Engagement(BaseModel):
         )
         query.update(update_fields)
         db.session.commit()
-        return DefaultMethodResult(True, 'Engagement Updated', engagement_id)
+        return record
 
     @classmethod
     def edit_engagement(cls, engagement_data: dict) -> Optional[Engagement]:

@@ -128,11 +128,11 @@ class EngagementService:
         """Update engagement."""
         self.validate_fields(request_json)
         engagement_id = request_json.get('id', None)
-        default_method = EngagementModel.update_engagement(request_json)
+        engagement = EngagementModel.update_engagement(request_json)
         if (status_block := request_json.get('status_block')) is not None:
             EngagementService._save_or_update_eng_block(engagement_id, status_block)
 
-        return default_method
+        return engagement
 
     @staticmethod
     def _save_or_update_eng_block(engagement_id, status_block):
