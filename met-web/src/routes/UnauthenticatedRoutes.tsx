@@ -1,4 +1,5 @@
 import SurveySubmit from 'components/survey/submit';
+import EditSurvey from 'components/survey/edit';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import EngagementView from '../components/engagement/view';
@@ -15,6 +16,7 @@ const UnauthenticatedRoutes = () => {
             <Route path="/engagements/:engagementId/dashboard" element={<EngagementDashboard />} />
             <Route path="/engagements/:engagementId/comments" element={<EngagementComments />} />
             <Route path="/surveys/submit/:surveyId/:token" element={<SurveySubmit />} />
+            <Route path="/engagements/:engagementId/edit/:token" element={<EditSurvey />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
     );
