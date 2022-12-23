@@ -13,8 +13,7 @@ export const EditForm = ({ handleClose }: SurveyFormProps) => {
             return;
         }
 
-        
-        const updatedSubmission = cloneDeep(submission)
+        const updatedSubmission = cloneDeep(submission);
         updatedSubmission.comments[commentIndex].text = value;
         setSubmission(updatedSubmission);
     };
