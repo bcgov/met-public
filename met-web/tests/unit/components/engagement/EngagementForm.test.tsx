@@ -96,6 +96,10 @@ describe('Engagement form page tests', () => {
         const toDateInput = container.querySelector('input[name="end_date"]');
         expect(toDateInput).not.toBeNull();
         expect(toDateInput).toHaveAttribute('value', '');
+		
+        expect(screen.getByText('Upcoming')).toBeInTheDocument();
+		expect(screen.getByText('Open')).toBeInTheDocument();
+		expect(screen.getByText('Closed')).toBeInTheDocument();
 
         expect(container.querySelector('input[type="file"][accept="image/*"]')).not.toBeNull();
     });
