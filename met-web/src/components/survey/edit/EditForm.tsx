@@ -3,6 +3,7 @@ import { Grid, Stack, TextField } from '@mui/material';
 import { ActionContext } from './ActionContext';
 import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
 import { SurveyFormProps } from '../types';
+import { cloneDeep } from 'lodash';
 
 export const EditForm = ({ handleClose }: SurveyFormProps) => {
     const { handleSubmit, isSubmitting, submission, setSubmission } = useContext(ActionContext);
@@ -12,8 +13,10 @@ export const EditForm = ({ handleClose }: SurveyFormProps) => {
             return;
         }
 
-        submission.comments[commentIndex].text = value;
-        setSubmission(submission);
+        
+        const updatedSubmission = cloneDeep(submission)
+        updatedSubmission.comments[commentIndex].text = value;
+        setSubmission(updatedSubmission);
     };
 
     return (
