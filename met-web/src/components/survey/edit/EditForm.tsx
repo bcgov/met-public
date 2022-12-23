@@ -5,7 +5,16 @@ import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
 import { SurveyFormProps } from '../types';
 
 export const EditForm = ({ handleClose }: SurveyFormProps) => {
-    const { handleSubmit, isSubmitting, submission } = useContext(ActionContext);
+    const { handleSubmit, isSubmitting, submission, setSubmission } = useContext(ActionContext);
+
+    const handleChange = (value: string, commentIndex: number) => {
+        if (!submission) {
+            return;
+        }
+
+        submission.comments[commentIndex].text = value;
+        setSubmission(submission)
+    }
 
     return (
         <Grid
@@ -25,9 +34,7 @@ export const EditForm = ({ handleClose }: SurveyFormProps) => {
                             sx={{ width: '100%' }}
                             multiline={true}
                             rows={3}
-                            onChange={(e) => {
-                                comment.text = e.target.value;
-                            }}
+                            onChange={(e) => { handleChange(e.target.value, index); }}
                         />
                     </Grid>
                 );

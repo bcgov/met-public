@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { useAppDispatch } from 'hooks';
 import { useNavigate, useParams } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -22,11 +22,15 @@ interface EditSurveyContext {
     isLoading: boolean;
     loadEngagement: null | (() => void);
     submission: PublicSubmission | null;
+    setSubmission: Dispatch<SetStateAction<PublicSubmission | null>>;
 }
 
 export const ActionContext = createContext<EditSurveyContext>({
     isTokenValid: true,
     handleSubmit: () => {
+        return;
+    },
+    setSubmission: () => {
         return;
     },
     isSubmitting: false,
@@ -80,23 +84,26 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     };
 
     const loadSubmission = async () => {
-        if (token && isTokenValid)
-            try {
-                const loadedSubmission = await getSubmissionByToken(token);
-                if (loadedSubmission) {
-                    if (loadedSubmission.engagement_id !== Number(engagementId)) {
-                        throw 'Invalid engagementId';
-                    }
-                    setSubmission(loadedSubmission);
+        if (!token || !isTokenValid) {
+            return;
+        }
+
+        try {
+            const loadedSubmission = await getSubmissionByToken(token);
+            if (loadedSubmission) {
+                if (loadedSubmission.engagement_id !== Number(engagementId)) {
+                    throw 'Invalid engagementId';
                 }
-            } catch (error) {
-                dispatch(
-                    openNotification({
-                        severity: 'error',
-                        text: 'Error occurred while loading your answers',
-                    }),
-                );
+                setSubmission(loadedSubmission);
             }
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while loading your answers',
+                }),
+            );
+        }
     };
 
     const loadEngagement = async () => {
@@ -115,39 +122,42 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                     text: 'Error occurred while loading engagement',
                 }),
             );
-        }
+        }   
     };
 
     const handleSubmit = async () => {
-        if (token)
-            try {
-                setIsSubmitting(true);
-                await updateSubmission(token, {
-                    comments: submission?.comments ?? [],
-                });
+        if (!token || !isTokenValid) {
+            return;
+        }
 
-                dispatch(
-                    openNotification({
-                        severity: 'success',
-                        text: 'Survey was successfully updated',
-                    }),
-                );
-                navigate(`/engagements/${savedEngagement?.id}/view`, {
-                    state: {
-                        open: true,
-                    },
-                });
-            } catch (error) {
-                dispatch(
-                    openNotification({
-                        severity: 'error',
-                        text: 'Error occurred during survey update',
-                    }),
-                );
-                verifyToken();
-            } finally {
-                setIsSubmitting(false);
-            }
+        try {
+            setIsSubmitting(true);
+            await updateSubmission(token, {
+                comments: submission?.comments ?? [],
+            });
+
+            dispatch(
+                openNotification({
+                    severity: 'success',
+                    text: 'Survey was successfully updated',
+                }),
+            );
+            navigate(`/engagements/${savedEngagement?.id}/view`, {
+                state: {
+                    open: true,
+                },
+            });
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred during survey update',
+                }),
+            );
+            verifyToken();
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -161,6 +171,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 isLoading,
                 loadEngagement,
                 submission,
+                setSubmission,
             }}
         >
             {children}
