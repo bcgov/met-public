@@ -92,7 +92,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             const result = await postEngagement({
                 ...engagement,
                 banner_filename: uploadedBannerImageFileName,
-                status_block: statusBlockContent,
+                status_block: Object.keys(statusBlockContent[0]).length > 0 ? statusBlockContent : undefined,
             });
 
             dispatch(openNotification({ severity: 'success', text: 'Engagement Created Successfully' }));
@@ -129,7 +129,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             const engagementEditsToPatch = updatedDiff(state, {
                 ...engagement,
                 banner_filename: uploadedBannerImageFileName,
-                status_block: statusBlockContent,
+                status_block: Object.keys(statusBlockContent[0]).length > 0 ? statusBlockContent : undefined,
             }) as PatchEngagementRequest;
 
             const updatedEngagement = await patchEngagement({
@@ -151,7 +151,11 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [statusBlockContent, setstatusBlockContent] = useState([{}]);
     const handleStatusBlockChange = React.useCallback(
         (newArray: { survey_status: string; block_text: string }[]) => {
-            setstatusBlockContent(newArray);
+            // exclude content having empty block text
+            const filterContentList = newArray.filter(function (el) {
+                return el.block_text !== '';
+            });
+            setstatusBlockContent(filterContentList);
         },
         [statusBlockContent],
     );

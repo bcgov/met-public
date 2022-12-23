@@ -1,4 +1,5 @@
 import { Survey, SurveySubmissionData } from './survey';
+import { EngagementStatusBlock } from './engagementStatusBlock';
 import { Status } from './status';
 import { SubmissionStatus } from 'constants/engagementStatus';
 export interface Engagement {
@@ -22,6 +23,7 @@ export interface Engagement {
     engagement_status: Status;
     submission_status: SubmissionStatus;
     submissions_meta_data: SurveySubmissionData;
+    status_block: EngagementStatusBlock[];
 }
 
 export const createDefaultEngagement = (): Engagement => {
@@ -48,5 +50,6 @@ export const createDefaultEngagement = (): Engagement => {
         submissions_meta_data: {
             total: 0,
         },
+        status_block: [],
     };
 };
