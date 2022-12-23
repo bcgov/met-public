@@ -13,8 +13,8 @@ export const EditForm = ({ handleClose }: SurveyFormProps) => {
         }
 
         submission.comments[commentIndex].text = value;
-        setSubmission(submission)
-    }
+        setSubmission(submission);
+    };
 
     return (
         <Grid
@@ -34,7 +34,9 @@ export const EditForm = ({ handleClose }: SurveyFormProps) => {
                             sx={{ width: '100%' }}
                             multiline={true}
                             rows={3}
-                            onChange={(e) => { handleChange(e.target.value, index); }}
+                            onChange={(e) => {
+                                handleChange(e.target.value, index);
+                            }}
                         />
                     </Grid>
                 );

@@ -122,7 +122,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                     text: 'Error occurred while loading engagement',
                 }),
             );
-        }   
+        }
     };
 
     const handleSubmit = async () => {

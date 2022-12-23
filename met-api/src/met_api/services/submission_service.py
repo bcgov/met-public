@@ -104,7 +104,7 @@ class SubmissionService:
         cls.validate_review(values, user)
         reviewed_by = ' '.join([user.get('first_name', ''), user.get('last_name', '')])
 
-        values['review_by'] = reviewed_by
+        values['reviewed_by'] = reviewed_by
         values['user_id'] = user.get('id')
         with session_scope() as session:
             submission = Submission.update_comment_status(submission_id, values, session)
