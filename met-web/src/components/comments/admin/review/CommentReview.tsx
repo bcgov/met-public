@@ -293,7 +293,9 @@ const CommentReview = () => {
                                     <br />
                                     <MetParagraph>
                                         Clicking the "Save" button will trigger an automatic email to be sent to the
-                                        person who made this comment.
+                                        person who made this comment. They will have the option to edit and re-submit
+                                        their comment. The edited comment will have to be approved before it is
+                                        published.
                                     </MetParagraph>
                                     <MetParagraph color="error">
                                         If there is a threat/menace in the comments, select the checkbox below. No email
