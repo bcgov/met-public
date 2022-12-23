@@ -89,7 +89,7 @@ class SubmissionService:
         """Validate all fields."""
         survey_id = submission.get('survey_id', None)
         survey: SurveyModel = SurveyModel.get_survey(survey_id)
-        engagement: EngagementModel = EngagementModel.get_engagement(survey.engagement_id)
+        engagement: EngagementModel = EngagementModel.find_by_id(survey.engagement_id)
         if not engagement:
             raise ValueError('Survey not linked to an Engagement')
 

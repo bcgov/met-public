@@ -30,7 +30,7 @@ def test_engagement(session):
     """Assert that an engagement can be created and fetched."""
     eng = factory_engagement_model()
     assert eng.id is not None
-    eng_existing = EngagementModel.get_engagement(eng.id)
+    eng_existing = EngagementModel.find_by_id(eng.id)
     assert eng.name == eng_existing.name
 
 

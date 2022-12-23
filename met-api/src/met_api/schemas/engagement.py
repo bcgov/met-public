@@ -10,6 +10,7 @@ from marshmallow import EXCLUDE, Schema, ValidationError, fields, validate, vali
 from met_api.constants.engagement_status import Status, SubmissionStatus
 from met_api.schemas.engagement_survey import EngagementSurveySchema
 from met_api.utils.datetime import local_datetime
+from met_api.schemas.engagement_status_block import EngagementStatusBlockSchema
 
 from .engagement_status import EngagementStatusSchema
 
@@ -42,6 +43,7 @@ class EngagementSchema(Schema):
     surveys = fields.List(fields.Nested(EngagementSurveySchema))
     submission_status = fields.Method('get_submission_status')
     submissions_meta_data = fields.Method('get_submissions_meta_data')
+    status_block = fields.List(fields.Nested(EngagementStatusBlockSchema))
 
     def get_submissions_meta_data(self, obj):
         """Get the meta data of the submissions made in the survey."""

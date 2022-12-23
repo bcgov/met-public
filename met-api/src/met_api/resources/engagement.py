@@ -98,14 +98,10 @@ class Engagements(Resource):
     def post():
         """Create a new engagement."""
         try:
-            user_id = TokenInfo.get_id()
             requestjson = request.get_json()
-            engagment_schema = EngagementSchema().load(requestjson)
-            engagment_schema['created_by'] = user_id
-            engagment_schema['updated_by'] = user_id
-            result = EngagementService().create_engagement(engagment_schema)
-            engagment_schema['id'] = result.identifier
-            return engagment_schema, HTTPStatus.OK
+            engagement_schema = EngagementSchema()
+            engagement_model = EngagementService().create_engagement(requestjson)
+            return engagement_schema.dump(engagement_model), HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:

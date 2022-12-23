@@ -103,7 +103,7 @@ class EmailVerificationService:
             format(engagement_id=survey.engagement_id)
         # url is origin url excluding context path
         site_url = current_app.config.get('SITE_URL')
-        engagement: EngagementModel = EngagementModel.get_engagement(survey.engagement_id)
+        engagement: EngagementModel = EngagementModel.find_by_id(survey.engagement_id)
         engagement_name = engagement.name
         subject = current_app.config.get('VERIFICATION_EMAIL_SUBJECT'). \
             format(engagement_name=engagement_name)

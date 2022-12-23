@@ -1,4 +1,5 @@
 """Service for engagement management."""
+from datetime import datetime
 from http import HTTPStatus
 from typing import List
 
@@ -6,10 +7,11 @@ from flask import current_app
 
 from met_api.constants.engagement_status import Status
 from met_api.exceptions.business_exception import BusinessException
-from met_api.models.pagination_options import PaginationOptions
-from met_api.models.engagement import Engagement as EngagementModel
-from met_api.models.submission import Submission
 from met_api.models import User as UserModel
+from met_api.models.engagement import Engagement as EngagementModel
+from met_api.models.engagement_status_block import EngagementStatusBlock as EngagementStatusBlockModel
+from met_api.models.pagination_options import PaginationOptions
+from met_api.models.submission import Submission
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services.object_storage_service import ObjectStorageService
 from met_api.utils.notification import send_email
@@ -24,7 +26,7 @@ class EngagementService:
     @staticmethod
     def get_engagement(engagement_id, user_id) -> EngagementSchema:
         """Get Engagement by the id."""
-        engagement_model: EngagementModel = EngagementModel.get_engagement(engagement_id)
+        engagement_model: EngagementModel = EngagementModel.find_by_id(engagement_id)
 
         if engagement_model:
             if user_id is None \
@@ -66,7 +68,6 @@ class EngagementService:
     def close_engagements_due():
         """Close published engagements that are due for a closeout."""
         engagements = EngagementModel.close_engagements_due()
-        print('Engagements to close: ', engagements)
         results = [EngagementService._send_closeout_emails(engagement) for engagement in engagements]
         return results
 
@@ -77,23 +78,96 @@ class EngagementService:
         print('Engagements published: ', engagements)
         return engagements
 
-    def create_engagement(self, data: EngagementSchema):
+    @staticmethod
+    def create_engagement(request_json: dict):
         """Create engagement."""
-        self.validate_fields(data)
-        return EngagementModel.create_engagement(data)
+        # TODO add schema and remove this validation
+        EngagementService.validate_fields(request_json)
+        eng_model = EngagementService._create_engagement_model(request_json)
+        if request_json.get('status_block'):
+            EngagementService._create_eng_status_block(eng_model.id, request_json)
+        eng_model.commit()
+        return eng_model.find_by_id(eng_model.id)
 
-    def update_engagement(self, data: EngagementSchema):
+    @staticmethod
+    def _create_engagement_model(engagement_data: dict) -> EngagementModel:
+        """Save engagement."""
+        new_engagement = EngagementModel(
+            name=engagement_data.get('name', None),
+            description=engagement_data.get('description', None),
+            rich_description=engagement_data.get('rich_description', None),
+            start_date=engagement_data.get('start_date', None),
+            end_date=engagement_data.get('end_date', None),
+            status_id=Status.Draft.value,
+            created_by=engagement_data.get('created_by', None),
+            created_date=datetime.utcnow(),
+            updated_by=engagement_data.get('updated_by', None),
+            updated_date=None,
+            published_date=None,
+            scheduled_date=None,
+            banner_filename=engagement_data.get('banner_filename', None),
+            content=engagement_data.get('content', None),
+            rich_content=engagement_data.get('rich_content', None)
+        )
+        new_engagement.save()
+        return new_engagement
+
+    @staticmethod
+    def _create_eng_status_block(eng_id, engagement_data: dict):
+        """Save engagement."""
+        status_blocks = []
+        for status in engagement_data.get('status_block'):
+            new_status_block: EngagementStatusBlockModel = EngagementStatusBlockModel(
+                engagement_id=eng_id,
+                survey_status=status.get('survey_status'),
+                block_text=status.get('block_text')
+            )
+            status_blocks.append(new_status_block)
+
+        new_status_block.save_status_blocks(status_blocks)
+
+    def update_engagement(self, request_json: dict):
         """Update engagement."""
-        self.validate_fields(data)
-        return EngagementModel.update_engagement(data)
+        self.validate_fields(request_json)
+        engagement_id = request_json.get('id', None)
+        engagement = EngagementModel.update_engagement(request_json)
+        if (status_block := request_json.get('status_block')) is not None:
+            EngagementService._save_or_update_eng_block(engagement_id, status_block)
+
+        return engagement
+
+    @staticmethod
+    def _save_or_update_eng_block(engagement_id, status_block):
+        for survey_block in status_block:
+            # see if there is one existing for the status ;if not create one
+            survey_status = survey_block.get('survey_status')
+            survey_block = survey_block.get('block_text')
+            status_block: EngagementStatusBlockModel = EngagementStatusBlockModel.\
+                get_by_status(engagement_id, survey_status)
+            if status_block:
+                status_block.block_text = survey_block
+                status_block.commit()
+            else:
+                new_status_block: EngagementStatusBlockModel = EngagementStatusBlockModel(
+                    engagement_id=engagement_id,
+                    survey_status=survey_status,
+                    block_text=survey_block
+                )
+
+                new_status_block.save()
 
     @staticmethod
     def edit_engagement(data: dict):
         """Update engagement partially."""
-        updated_engagement = EngagementModel.edit_engagement(data)
-        if not updated_engagement:
-            raise ValueError('Engagement to update was not found')
-        return EngagementModel.edit_engagement(data)
+        survey_block = data.pop('status_block', None)
+        engagement_id = data.get('id', None)
+        if data:
+            updated_engagement = EngagementModel.edit_engagement(data)
+            if not updated_engagement:
+                raise ValueError('Engagement to update was not found')
+        if survey_block:
+            EngagementService._save_or_update_eng_block(engagement_id, survey_block)
+        return EngagementModel.find_by_id(engagement_id)
 
     @staticmethod
     def validate_fields(data):
