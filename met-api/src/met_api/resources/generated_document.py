@@ -15,13 +15,11 @@
 
 from http import HTTPStatus
 
-from flask import jsonify, request, Response
+from flask import Response, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
 from met_api.auth import jwt as _jwt
-from met_api.schemas.document import Document
-from met_api.services.object_storage_service import ObjectStorageService
 from met_api.services.document_generation_service import DocumentGenerationService
 from met_api.utils.roles import Role
 from met_api.utils.util import allowedorigins, cors_preflight
@@ -33,7 +31,7 @@ API = Namespace('file', description='Endpoints for Document Storage Management')
 
 @cors_preflight('GET,OPTIONS')
 @API.route('/')
-class Files(Resource):
+class GeneratedDocuments(Resource):
     """Document storage resource controller."""
 
     @staticmethod
@@ -42,8 +40,7 @@ class Files(Resource):
     def post():
         """Retrieve authentication properties for document storage."""
         try:
-            requestfilejson = request.get_json()            
-            print(requestfilejson)
+            requestfilejson = request.get_json()
             response = DocumentGenerationService().generate_comment_sheet(data=requestfilejson)
             return Response(
                 response= response.content,

@@ -18,9 +18,10 @@ import os
 
 from flask import current_app
 
-from met_api.models.document_template import DocumentTemplate
-from met_api.models.document_type import DocumentType
+from met_api.models.generated_document_template import GeneratedDocumentTemplate
+from met_api.models.generated_document_type import GeneratedDocumentType
 from met_api.services.cdogs_api_service import CdogsApiService
+from met_api.utils.enums import GeneratedDocumentType
 
 
 class DocumentGenerationService:
@@ -29,15 +30,11 @@ class DocumentGenerationService:
     def __init__(self):
         self.cdgos_api_service = CdogsApiService()
 
-    def generate_comment_sheet(self, data):
-        document_type : DocumentType = DocumentType.get_document_type_by_name('comment_sheet')
-        if document_type is None:
-            raise ValueError('Data not found')
-        
-        comment_sheet_template : DocumentTemplate = DocumentTemplate() \
-            .get_template_by_type(type_id = document_type.id)
+    def generate_comment_sheet(self, data):        
+        comment_sheet_template : GeneratedDocumentTemplate = GeneratedDocumentTemplate() \
+            .get_template_by_type(type_id = GeneratedDocumentType.COMMENT_SHEET)
         if comment_sheet_template is None:
-            raise ValueError('Data not found')
+            raise ValueError('Template not saved in DB')
 
         template_cached = False
         if comment_sheet_template.cdogs_hash_code:
@@ -52,14 +49,6 @@ class DocumentGenerationService:
             comment_sheet_template.cdogs_hash_code = self.cdgos_api_service.upload_template(template_file_path=comment_sheet_template_path)
             comment_sheet_template.save()
 
-                # "convertTo" : {
-                #     "formatName": 'csv',
-                #     "formatOptions": {
-                #         "fieldSeparator": '+',
-                #         "textDelimiter"  : '"',
-                #         "characterSet": '76'
-                #     },
-                # },
         options = {
                 "cachereport": False,
                 "convertTo" : 'csv',

@@ -9,12 +9,12 @@ from .db import db, ma
 from .base_model import BaseModel
 
 
-class DocumentTemplate(BaseModel):
-    __tablename__ = 'document_template'
+class GeneratedDocumentTemplate(BaseModel):
+    __tablename__ = 'generated_document_template'
     # Defining the columns
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    type_id = db.Column(db.Integer, ForeignKey('document_type.id'), nullable=False)
+    type_id = db.Column(db.Integer, ForeignKey('generated_document_type.id'), nullable=False)
     cdogs_hash_code = db.Column(db.String(64), nullable=True, unique=True)
     extension = db.Column(db.String(10), nullable=False)
     created_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
@@ -25,11 +25,11 @@ class DocumentTemplate(BaseModel):
         """Given a type and optionally an extension, return the template."""
 
         query = cls.query.filter_by(type_id = type_id). \
-            filter(DocumentTemplate.extension == extension)
+            filter(GeneratedDocumentTemplate.extension == extension)
 
         return query.one_or_none()
 
-class DocumentTemplateSchema(ma.Schema):
+class GeneratedDocumentTemplateSchema(ma.Schema):
     class Meta:
-        model = DocumentTemplate
+        model = GeneratedDocumentTemplate
         exclude = []

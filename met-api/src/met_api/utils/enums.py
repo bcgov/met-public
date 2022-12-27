@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Enum definitions."""
-from enum import Enum
+from enum import Enum, IntEnum
 
 
 class ContentType(Enum):
@@ -23,11 +23,17 @@ class ContentType(Enum):
     PDF = 'application/pdf'
 
 
-class DocumentType(Enum):
+class WidgetDocumentType(Enum):
     """Document Types."""
 
     FILE = 'file'
     FOLDER = 'folder'
+
+
+class GeneratedDocumentType(IntEnum):
+    """Document Types."""
+
+    COMMENT_SHEET = 1
 
 
 class UserType(Enum):
