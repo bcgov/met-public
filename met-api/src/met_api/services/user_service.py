@@ -3,10 +3,11 @@ from typing import List
 
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.user import User as UserModel
-from met_api.services.keycloak import KeycloakService
 from met_api.schemas.user import UserSchema
+from met_api.services.keycloak import KeycloakService
 from met_api.utils.constants import GROUP_NAME_MAPPING
 from met_api.utils.enums import UserType
+
 
 KEYCLOAK_SERVICE = KeycloakService()
 

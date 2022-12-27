@@ -2,8 +2,8 @@
 from http import HTTPStatus
 
 from met_api.exceptions.business_exception import BusinessException
-from met_api.models.widget_item import WidgetItem
 from met_api.models.widget import Widget as WidgetModel
+from met_api.models.widget_item import WidgetItem
 from met_api.schemas.widget import WidgetSchema
 from met_api.schemas.widget_item import WidgetItemSchema
 

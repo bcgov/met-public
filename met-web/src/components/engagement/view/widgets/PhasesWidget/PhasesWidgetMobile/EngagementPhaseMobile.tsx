@@ -29,7 +29,14 @@ export const EngagementPhaseMobile = ({
                     backgroundColor={isCurrent ? accordionBackground : PAST_PHASE.learnMoreBackgroundColor}
                     sx={{ p: 0, margin: 0, color: '#494949' }}
                 >
-                    <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1}>
+                    <Grid
+                        container
+                        direction="row"
+                        justifyContent="flex-start"
+                        alignItems="flex-start"
+                        spacing={1}
+                        order={{ xs: 3, sm: 2 }}
+                    >
                         <Grid item xs={12}>
                             <MetHeader4 bold>{title}</MetHeader4>
                         </Grid>
