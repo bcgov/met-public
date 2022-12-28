@@ -13,6 +13,7 @@ export interface PostEngagementRequest {
     content: string;
     rich_content: string;
     banner_filename?: string;
+    status_block?: unknown[];
 }
 
 export interface PutEngagementRequest {
@@ -25,6 +26,7 @@ export interface PutEngagementRequest {
     content: string;
     rich_content: string;
     banner_filename?: string;
+    status_block?: unknown[];
 }
 
 export interface PatchEngagementRequest {
@@ -37,4 +39,5 @@ export interface PatchEngagementRequest {
     content?: string;
     rich_content?: string;
     banner_filename?: string;
+    status_block?: unknown[];
 }

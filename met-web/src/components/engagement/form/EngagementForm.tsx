@@ -15,6 +15,7 @@ const EngagementForm = () => {
         savedEngagement,
         engagementId,
         handleAddBannerImage,
+        handleStatusBlockChange,
     } = useContext(ActionContext);
 
     const navigate = useNavigate();
@@ -286,7 +287,7 @@ const EngagementForm = () => {
                 </Grid>
 
                 <Grid item xs={12}>
-                    <AddSurveyBlock />
+                    <AddSurveyBlock handleStatusBlockChange={handleStatusBlockChange} />
                 </Grid>
 
                 <Grid item xs={12}>
