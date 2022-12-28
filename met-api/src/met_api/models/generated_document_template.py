@@ -17,8 +17,6 @@ class GeneratedDocumentTemplate(BaseModel):
     type_id = db.Column(db.Integer, ForeignKey('generated_document_type.id'), nullable=False)
     cdogs_hash_code = db.Column(db.String(64), nullable=True, unique=True)
     extension = db.Column(db.String(10), nullable=False)
-    created_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow, nullable=False)
 
     @classmethod
     def get_template_by_type(cls, type_id: int, extension: str = "xlsx"):

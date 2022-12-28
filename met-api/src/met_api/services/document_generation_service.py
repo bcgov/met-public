@@ -45,7 +45,7 @@ class DocumentGenerationService:
             current_app.logger.info('Uploading new template')
 
             file_dir = os.path.dirname(os.path.realpath('__file__'))
-            comment_sheet_template_path = os.path.join(file_dir, 'src/met_api/cdogs_templates/staff_comment_sheet.xlsx')
+            comment_sheet_template_path = os.path.join(file_dir, 'src/met_api/cdogs_templates/staff_comments_sheet.xlsx')
             comment_sheet_template.cdogs_hash_code = self.cdgos_api_service.upload_template(template_file_path=comment_sheet_template_path)
             comment_sheet_template.save()
 
