@@ -7,6 +7,7 @@ import ImageUpload from 'components/imageUpload';
 import { useNavigate } from 'react-router-dom';
 import { AddSurveyBlock } from './AddSurveyBlock';
 import { If, Then, Else } from 'react-if';
+import DayCalculatorModal from 'components/common/Modals/DayCalculator';
 const EngagementForm = () => {
     const {
         handleCreateEngagementRequest,
@@ -157,6 +158,8 @@ const EngagementForm = () => {
         window.scrollTo(0, 0);
     };
 
+    const [isOpen, setIsOpen] = useState(false);
+
     return (
         <MetPaper elevation={1}>
             <Grid
@@ -167,6 +170,7 @@ const EngagementForm = () => {
                 rowSpacing={2}
                 sx={{ padding: '2em' }}
             >
+                <DayCalculatorModal open={isOpen} updateModal={setIsOpen} />
                 <Grid item xs={12}>
                     <ImageUpload
                         data-testid="engagement-form/image-upload"
@@ -194,7 +198,6 @@ const EngagementForm = () => {
                 </Grid>
                 <Grid
                     item
-                    lg={8}
                     xs={12}
                     container
                     direction="row"
@@ -207,7 +210,7 @@ const EngagementForm = () => {
                         <MetLabel>Engagement Date </MetLabel>
                     </Grid>
 
-                    <Grid item md={6} xs={12}>
+                    <Grid item md={4} xs={12}>
                         <Stack direction="row" alignItems="center" spacing={2}>
                             <Typography minWidth={{ xs: '2.5em', md: 'auto' }} align="center">
                                 From
@@ -231,7 +234,7 @@ const EngagementForm = () => {
                         </Stack>
                     </Grid>
 
-                    <Grid item md={6} xs={12}>
+                    <Grid item md={4} xs={12}>
                         <Stack direction="row" alignItems="center" spacing={2}>
                             <Typography minWidth={{ xs: '2.5em', md: 'auto' }}>To</Typography>
                             <TextField
@@ -249,6 +252,13 @@ const EngagementForm = () => {
                                 error={engagementFormError.end_date}
                                 helperText={engagementFormError.end_date ? 'To Date must be specified' : ''}
                             />
+                        </Stack>
+                    </Grid>
+                    <Grid item md={4} xs={12}>
+                        <Stack direction="row" alignItems="center">
+                            <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => setIsOpen(true)}>
+                                Day Calculator
+                            </PrimaryButton>
                         </Stack>
                     </Grid>
                 </Grid>
