@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Grid, Stack, IconButton, useMediaQuery, Theme, Divider, TextField, Autocomplete } from '@mui/material';
+import { Modal, Grid, Stack, IconButton, useMediaQuery, Divider, TextField, Autocomplete } from '@mui/material';
 import { modalStyle, MetHeader1, MetHeader3, PrimaryButton } from 'components/common';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { When } from 'react-if';
@@ -17,13 +17,10 @@ interface ISelectOptions {
 }
 
 const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
-    const isSmallScreen = useMediaQuery((theme: Theme) => muitheme.breakpoints.down('lg'));
+    const isSmallScreen = useMediaQuery(muitheme.breakpoints.down('lg'));
 
     // variable to capture the option selected within Calculation Type
-    const [selectedOption, setSelectedOption] = useState('');
-    function handleDropDownChange(event: React.SyntheticEvent<Element, Event>, value: string) {
-        setSelectedOption(value);
-    }
+    const [selectedOption, setSelectedOption] = useState<ISelectOptions | null>(options[0]);
 
     // variable to throw error in case suspension or resumption dates are blank
     const [dayCalcError, setdayCalcError] = useState({
@@ -79,7 +76,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
         let calcStartDate = startDate;
         let calcEndDate = endDate;
         let calcNumberOfDays = numberOfDays;
-        if (selectedOption == options[0].label) {
+        if (selectedOption?.label == options[0].label) {
             if (startDate && endDate && !numberOfDays) {
                 calcNumberOfDays = dayjs(endDate).diff(dayjs(startDate), 'days');
             } else if (startDate && !endDate && numberOfDays) {
@@ -89,7 +86,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
             }
         }
 
-        if (selectedOption == options[1].label) {
+        if (selectedOption?.label == options[1].label) {
             if (startDate && endDate && !numberOfDays) {
                 calcNumberOfDays = dayjs(endDate).add(1, 'day').diff(dayjs(startDate), 'days');
             } else if (startDate && !endDate && numberOfDays) {
@@ -103,7 +100,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
             }
         }
 
-        if (selectedOption == options[2].label) {
+        if (selectedOption?.label == options[2].label) {
             const hasErrors = validateDayCalcInputs();
             if (hasErrors) {
                 return {
@@ -155,7 +152,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                 <Grid container direction="row" item xs={12} wrap="nowrap">
                     <Grid item md={11} xs={12}>
                         <Stack direction="row" alignItems="center" spacing={2}>
-                            <MetHeader1 bold={true} sx={{ mb: 2 }}>
+                            <MetHeader1 bold={true} sx={{ mb: 2 }} data-testid="daycalculator-title">
                                 Day Calculator
                             </MetHeader1>
                         </Stack>
@@ -292,7 +289,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                 {isSmallScreen ? (
                     <>
                         <>
-                            <When condition={selectedOption == options[2].label}>
+                            <When condition={selectedOption?.label == options[2].label}>
                                 {
                                     <Grid container direction="row" item xs={12}>
                                         <Grid item md={6} xs={12}>
@@ -337,7 +334,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                             </When>
                         </>
                         <>
-                            <When condition={selectedOption == options[2].label}>
+                            <When condition={selectedOption?.label == options[2].label}>
                                 {
                                     <Grid container direction="row" item xs={12}>
                                         <Grid item md={6} xs={12}>
@@ -386,7 +383,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                 ) : (
                     <>
                         <>
-                            <When condition={selectedOption == options[2].label}>
+                            <When condition={selectedOption?.label == options[2].label}>
                                 {
                                     <Grid container direction="row" item xs={12}>
                                         <Grid item md={6} xs={12}>
@@ -408,7 +405,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                             </When>
                         </>
                         <>
-                            <When condition={selectedOption == options[2].label}>
+                            <When condition={selectedOption?.label == options[2].label}>
                                 {
                                     <Grid container direction="row" item xs={12}>
                                         <Grid item md={6} xs={12}>
@@ -494,13 +491,27 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                         id="drop-down"
                                         options={options}
                                         getOptionLabel={(option: ISelectOptions) => option.label}
-                                        onInputChange={handleDropDownChange}
-                                        renderInput={(params) => <TextField {...params} variant="outlined" fullWidth />}
+                                        onChange={(
+                                            _e: React.SyntheticEvent<Element, Event>,
+                                            option: ISelectOptions | null,
+                                        ) => {
+                                            setSelectedOption(option);
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                aria-labelledby="drop-down"
+                                                variant="outlined"
+                                                fullWidth
+                                            />
+                                        )}
                                         sx={{ width: '80%' }}
                                         isOptionEqualToValue={(option: ISelectOptions, value: ISelectOptions) =>
                                             option.id == value.id
                                         }
                                         defaultValue={options[0]}
+                                        data-testid={'autocomplete'}
+                                        value={selectedOption}
                                     />
                                 </Stack>
                             </Grid>
@@ -556,13 +567,27 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                         id="drop-down"
                                         options={options}
                                         getOptionLabel={(option: ISelectOptions) => option.label}
-                                        onInputChange={handleDropDownChange}
-                                        renderInput={(params) => <TextField {...params} variant="outlined" fullWidth />}
+                                        onChange={(
+                                            _e: React.SyntheticEvent<Element, Event>,
+                                            option: ISelectOptions | null,
+                                        ) => {
+                                            setSelectedOption(option);
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                aria-labelledby="drop-down"
+                                                variant="outlined"
+                                                fullWidth
+                                            />
+                                        )}
                                         sx={{ width: '80%' }}
                                         isOptionEqualToValue={(option: ISelectOptions, value: ISelectOptions) =>
                                             option.id == value.id
                                         }
                                         defaultValue={options[0]}
+                                        data-testid={'autocomplete'}
+                                        value={selectedOption}
                                     />
                                 </Stack>
                             </Grid>
@@ -592,7 +617,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                 </Grid>
                 <Grid item md={12} xs={12}>
                     <Stack direction="row" alignItems="center" spacing={2}>
-                        <When condition={selectedOption == options[0].label}>
+                        <When condition={selectedOption?.label == options[0].label}>
                             {
                                 <MetHeader3 sx={{ mb: 2 }}>
                                     {options[0].description}
@@ -603,10 +628,10 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                 </MetHeader3>
                             }
                         </When>
-                        <When condition={selectedOption == options[1].label}>
+                        <When condition={selectedOption?.label == options[1].label}>
                             {<MetHeader3 sx={{ mb: 2 }}>{options[1].description}</MetHeader3>}
                         </When>
-                        <When condition={selectedOption == options[2].label}>
+                        <When condition={selectedOption?.label == options[2].label}>
                             {<MetHeader3 sx={{ mb: 2 }}>{options[2].description}</MetHeader3>}
                         </When>
                     </Stack>
@@ -648,7 +673,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                             </PrimaryButton>
                             <PrimaryButton
                                 className="btn btn-success"
-                                data-testid={'cancel-button'}
+                                data-testid={'calculator-button'}
                                 onClick={() => calculator()}
                             >
                                 Calculate
