@@ -1,4 +1,5 @@
 import { Engagement } from '../../../models/engagement';
+import { EngagementStatusBlock } from '../../../models/engagementStatusBlock';
 
 export interface EngagementContext {
     handleCreateEngagementRequest: (_engagement: EngagementForm) => Promise<Engagement>;
@@ -8,6 +9,7 @@ export interface EngagementContext {
     engagementId: string | undefined;
     loadingSavedEngagement: boolean;
     handleAddBannerImage: (_files: File[]) => void;
+    handleStatusBlockChange: (_statusBlock: EngagementStatusBlock[]) => void;
     fetchEngagement: () => void;
 }
 
