@@ -6,6 +6,7 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { Widget } from 'models/widget';
 import { useLazyGetWidgetsQuery } from 'apiManager/apiSlices/widgets';
+import { SubmissionStatus } from 'constants/engagementStatus';
 
 interface EngagementSchedule {
     id: number;
@@ -19,6 +20,8 @@ export interface EngagementViewContext {
     isWidgetsLoading: boolean;
     scheduleEngagement: (_engagement: EngagementSchedule) => Promise<Engagement>;
     widgets: Widget[];
+    mockStatus: SubmissionStatus;
+    updateMockStatus: (status: SubmissionStatus) => void;
 }
 
 export type EngagementParams = {
@@ -33,14 +36,18 @@ export const ActionContext = createContext<EngagementViewContext>({
     isEngagementLoading: true,
     isWidgetsLoading: true,
     widgets: [],
+    mockStatus: SubmissionStatus.Upcoming,
+    updateMockStatus: (status: SubmissionStatus) => {
+        /* nothing returned */
+    },
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     const { engagementId } = useParams<EngagementParams>();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
+    const [mockStatus, setMockStatus] = useState(SubmissionStatus.Upcoming);
     const [widgets, setWidgets] = useState<Widget[]>([]);
     const [isEngagementLoading, setEngagementLoading] = useState(true);
     const [isWidgetsLoading, setIsWidgetsLoading] = useState(true);
@@ -60,6 +67,10 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
             console.log(error);
             return Promise.reject(error);
         }
+    };
+
+    const updateMockStatus = (status: SubmissionStatus) => {
+        setMockStatus(status);
     };
 
     const fetchEngagement = async () => {
@@ -118,6 +129,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 scheduleEngagement,
                 widgets,
                 isWidgetsLoading,
+                updateMockStatus,
+                mockStatus,
             }}
         >
             {children}

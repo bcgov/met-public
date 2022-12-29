@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Grid, Box, Typography, Stack } from '@mui/material';
 import BannerWithoutImage from './BannerWithoutImage';
 import { MetHeader1 } from 'components/common';
@@ -7,9 +7,11 @@ import { EngagementStatusChip } from '../status';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorState } from 'utils';
 import dayjs from 'dayjs';
+import { ActionContext } from '../view/ActionContext';
 
 const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
-    const { name, end_date, banner_url, start_date, submission_status, rich_description } = savedEngagement;
+    const { name, end_date, banner_url, start_date, rich_description } = savedEngagement;
+    const { mockStatus } = useContext(ActionContext);
     const [imageError, setImageError] = useState(false);
     const dateFormat = 'MMM DD, YYYY';
 
@@ -85,7 +87,7 @@ const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
                                 <Typography sx={{ fontWeight: 800 }} variant="subtitle1">
                                     Status:
                                 </Typography>
-                                <EngagementStatusChip submissionStatus={submission_status} />
+                                <EngagementStatusChip submissionStatus={mockStatus} />
                             </Stack>
                         </Grid>
                         {children}
