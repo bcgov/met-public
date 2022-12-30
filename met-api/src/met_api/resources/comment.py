@@ -15,7 +15,7 @@
 
 from http import HTTPStatus
 
-from flask import request, Response
+from flask import Response, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
@@ -105,9 +105,9 @@ class GeneratedCommentsSheet(Resource):
                 'content-disposition': response_headers.get('content-disposition'),
             }
             return Response(
-                response= response.content,
-                status= response.status_code,
-                headers= headers
+                response=response.content,
+                status=response.status_code,
+                headers=headers
             )
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

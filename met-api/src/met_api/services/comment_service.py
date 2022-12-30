@@ -114,20 +114,19 @@ class CommentService:
     @classmethod
     def extract_comments_to_spread_sheet(cls, survey_id):
         """Extract comments to spread sheet."""
-
         comments = Comment.get_comments_by_survey_id(survey_id)
         formatted_comments = [
             {
-                "commentNumber": comment.id,
-                "dateSubmitted": str(comment.submission_date),
-                "author": f'{comment.first_name} {comment.last_name}',
-                "commentText": comment.text,
-                "reviewer": comment.reviewed_by,
-                "exportDate": str(datetime.utcnow())
+                'commentNumber': comment.id,
+                'dateSubmitted': str(comment.submission_date),
+                'author': f'{comment.first_name} {comment.last_name}',
+                'commentText': comment.text,
+                'reviewer': comment.reviewed_by,
+                'exportDate': str(datetime.utcnow())
             }
             for comment in comments]
 
         data = {
-            "comments": formatted_comments
+            'comments': formatted_comments
         }
-        return DocumentGenerationService().generate_comment_sheet(data= data)
+        return DocumentGenerationService().generate_comment_sheet(data=data)

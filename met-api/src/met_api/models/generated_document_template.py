@@ -28,10 +28,9 @@ class GeneratedDocumentTemplate(BaseModel):
         return document_template
 
     @classmethod
-    def get_template_by_type(cls, type_id: int, extension: str = "xlsx"):
+    def get_template_by_type(cls, type_id: int, extension: str = 'xlsx'):
         """Given a type and optionally an extension, return the template."""
-
-        query = cls.query.filter_by(type_id = type_id). \
+        query = cls.query.filter_by(type_id=type_id). \
             filter(GeneratedDocumentTemplate.extension == extension)
 
         return query.one_or_none()

@@ -29,6 +29,7 @@ class CdogsApiService:
     """cdogs api Service class."""
 
     def __init__(self):
+        """Initiate class."""
         self.access_token = self._get_access_token()
 
     file_dir = os.path.dirname(os.path.realpath('__file__'))
@@ -36,8 +37,8 @@ class CdogsApiService:
     def generate_document(self, template_hash_code: str, data, options):
         """Generate document based on template and data."""
         request_body = {
-            "options": options,
-            "data": data
+            'options': options,
+            'data': data
         }
         json_request_body = json.dumps(request_body)
 
@@ -46,32 +47,31 @@ class CdogsApiService:
             'Authorization': f'Bearer {self.access_token}'
         }
 
-        url = f"{_Config.CDOGS_BASE_URL}/api/v2/template/{template_hash_code}/render"
+        url = f'{_Config.CDOGS_BASE_URL}/api/v2/template/{template_hash_code}/render'
         return self._post_generate_document(json_request_body, headers, url)
 
     @staticmethod
     def _post_generate_document(json_request_body, headers, url):
-        response = requests.post(url, data= json_request_body, headers= headers)
+        response = requests.post(url, data=json_request_body, headers=headers)
         return response
 
     def upload_template(self, template_file_path):
         """Upload template and get hashcode."""
-
         headers = {
-        "Authorization": f'Bearer {self.access_token}'
+            'Authorization': f'Bearer {self.access_token}'
         }
 
-        url = f"{_Config.CDOGS_BASE_URL}/api/v2/template"
+        url = f'{_Config.CDOGS_BASE_URL}/api/v2/template'
 
         with open(template_file_path, 'rb') as file_handle:
-            template = {'template':('template', file_handle, "multipart/form-data")}
+            template = {'template': ('template', file_handle, 'multipart/form-data')}
 
             current_app.logger.info('Uploading template %s', template_file_path)
             print('Uploading template %s', template_file_path)
             response = self._post_upload_template(headers, url, template)
 
             if response.status_code == 200:
-                if response.headers.get("X-Template-Hash") is None:
+                if response.headers.get('X-Template-Hash') is None:
                     raise ValueError('Data not found')
 
                 current_app.logger.info('Returning new hash %s', response.headers['X-Template-Hash'])
@@ -92,17 +92,16 @@ class CdogsApiService:
 
     @staticmethod
     def _post_upload_template(headers, url, template):
-        response = requests.post(url, headers= headers, files= template)
+        response = requests.post(url, headers=headers, files=template)
         return response
 
     def check_template_cached(self, template_hash_code: str):
         """Check if template of given hashcode is cached."""
-
         headers = {
-        "Authorization": f'Bearer {self.access_token}'
+        'Authorization': f'Bearer {self.access_token}'
         }
 
-        url = f"{_Config.CDOGS_BASE_URL}/api/v2/template/{template_hash_code}"
+        url = f'{_Config.CDOGS_BASE_URL}/api/v2/template/{template_hash_code}'
 
         response = requests.get(url, headers= headers)
         return response.status_code == 200
