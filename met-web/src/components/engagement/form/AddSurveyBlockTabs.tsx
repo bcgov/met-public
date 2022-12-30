@@ -50,11 +50,10 @@ const AddSurveyBlockTabs = ({
 
     // capture changes in richdescription
     const handleStatusBlockContentChange = (newState: string) => {
-        surveyBlockContent.map((item) => {
+        surveyBlockContent.forEach((item) => {
             if (item.survey_status === value && newState) {
                 item.block_text = newState;
             }
-            return item;
         });
         handleChange(surveyBlockContent);
     };
