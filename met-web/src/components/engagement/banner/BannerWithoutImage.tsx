@@ -10,7 +10,7 @@ import dayjs from 'dayjs';
 import { ActionContext } from '../view/ActionContext';
 
 const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
-    const { rich_description, name, start_date, end_date, submission_status } = savedEngagement;
+    const { rich_description, name, start_date, end_date } = savedEngagement;
     const { mockStatus } = useContext(ActionContext);
     const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
     const dateFormat = 'MMM DD, YYYY';

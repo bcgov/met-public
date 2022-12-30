@@ -26,7 +26,7 @@ export const EngagementStatusChip = ({
     preview,
 }: {
     submissionStatus: SubmissionStatus;
-    preview?: boolean | undefined;
+    preview?: boolean;
 }) => {
     switch (submissionStatus) {
         case SubmissionStatus.Upcoming:

@@ -3,7 +3,7 @@ import { ActionContext } from './ActionContext';
 import { Box, Typography, Grid, Skeleton, Stack, useMediaQuery, Theme, Link } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { EngagementStatusChip } from '../status';
-import { EngagementStatus } from 'constants/engagementStatus';
+import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
 import { MetHeader1, PrimaryButton, SecondaryButton, MetBody, MetPaper } from 'components/common';
 import { useAppSelector } from 'hooks';
 import ImageIcon from '@mui/icons-material/Image';
@@ -13,7 +13,6 @@ import ScheduleModal from 'components/common/Modals/Schedule';
 import ArticleIcon from '@mui/icons-material/Article';
 import { formatDate } from 'components/common/dateHelper';
 import { When } from 'react-if';
-import { SubmissionStatus } from 'constants/engagementStatus';
 
 export const PreviewBanner = () => {
     const isSmallScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
