@@ -30,6 +30,8 @@ class DocumentGenerationService:
         self.cdgos_api_service = CdogsApiService()
 
     def generate_comment_sheet(self, data):
+        """Generate comment sheet."""
+
         comment_sheet_template : GeneratedDocumentTemplate = GeneratedDocumentTemplate() \
             .get_template_by_type(type_id = GeneratedDocumentTypes.COMMENT_SHEET)
         if comment_sheet_template is None:

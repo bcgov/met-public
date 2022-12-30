@@ -27,7 +27,7 @@ from met_api.config import _Config
 
 class CdogsApiService:
     """cdogs api Service class."""
-    
+
     def __init__(self):
         self.access_token = self._get_access_token()
 
@@ -62,7 +62,7 @@ class CdogsApiService:
         }
 
         url = f"{_Config.CDOGS_BASE_URL}/api/v2/template"
-        
+
         with open(template_file_path, 'rb') as file_handle:
             template = {'template':('template', file_handle, "multipart/form-data")}
 
@@ -89,11 +89,13 @@ class CdogsApiService:
 
                 raise ValueError('Data not found')
 
-    def _post_upload_template(self, headers, url, template):
+    @staticmethod
+    def _post_upload_template(headers, url, template):
         response = requests.post(url, headers= headers, files= template)
         return response
 
     def check_template_cached(self, template_hash_code: str):
+        """Check if template of given hashcode is cached."""
 
         headers = {
         "Authorization": f'Bearer {self.access_token}'
