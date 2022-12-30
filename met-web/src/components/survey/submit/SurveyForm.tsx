@@ -49,7 +49,7 @@ export const SurveyForm = ({ handleClose }: SurveyFormProps) => {
                     >
                         <SecondaryButton onClick={() => handleClose()}>Cancel</SecondaryButton>
                         <PrimaryButton
-                            // disabled={!isValid || isLoggedIn || isSubmitting}
+                            disabled={!isValid || isLoggedIn || isSubmitting}
                             onClick={() => handleSubmit(submissionData)}
                             loading={isSubmitting}
                         >
