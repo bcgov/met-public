@@ -34,7 +34,7 @@ class EmailVerificationService:
         """Get an active email verification matching the provided token."""
         db_email_verification = EmailVerification.get(verification_token)
         email_verification = EmailVerificationSchema().dump(db_email_verification)
-        cls.validate_object(email_verification)
+        cls.validate_email_verification(email_verification)
         return email_verification
 
     @classmethod
@@ -56,7 +56,7 @@ class EmailVerificationService:
         """Validate and update an email verification."""
         db_email_verification = EmailVerification.get(verification_token)
         email_verification = EmailVerificationSchema().dump(db_email_verification)
-        cls.validate_object(email_verification)
+        cls.validate_email_verification(email_verification)
 
         if email_verification.get('survey_id', None) != survey_id:
             raise ValueError('Email verification invalid for survey')
@@ -122,7 +122,7 @@ class EmailVerificationService:
         return subject, body, args
 
     @staticmethod
-    def validate_object(email_verification: EmailVerificationSchema):
+    def validate_email_verification(email_verification: EmailVerificationSchema):
         """Validate an email verification."""
         if email_verification.get('id', None) is None:
             raise ValueError('Email verification not found')
@@ -131,12 +131,14 @@ class EmailVerificationService:
         if not is_active:
             raise ValueError('Email verification already verified')
 
-        verification_created_datetime = datetime.strptime(
-            email_verification.get('created_date'), EmailVerificationService.datetime_format)
-        verification_expiry_datetime = verification_created_datetime + \
-            timedelta(hours=EmailVerificationService.verification_expiry_hours)
-        if datetime.now() >= verification_expiry_datetime:
-            raise ValueError('Email verification is expired')
+        if email_verification.get('submission_id') is None:
+            # New email verification expires in 24 hours
+            verification_created_datetime = datetime.strptime(
+                email_verification.get('created_date'), EmailVerificationService.datetime_format)
+            verification_expiry_datetime = verification_created_datetime + \
+                timedelta(hours=EmailVerificationService.verification_expiry_hours)
+            if datetime.now() >= verification_expiry_datetime:
+                raise ValueError('Email verification is expired')
 
         survey_id = email_verification.get('survey_id')
         survey: SurveyModel = SurveyModel.get_open(survey_id)
