@@ -30,7 +30,7 @@ class WidgetDocumentType(Enum):
     FOLDER = 'folder'
 
 
-class GeneratedDocumentType(IntEnum):
+class GeneratedDocumentTypes(IntEnum):
     """Document Types."""
 
     COMMENT_SHEET = 1

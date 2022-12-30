@@ -88,12 +88,12 @@ class SurveyComments(Resource):
 
 @cors_preflight('GET, OPTIONS')
 @API.route('/survey/<survey_id>/extract')
-class SurveyComments(Resource):
+class GeneratedCommentsSheet(Resource):
     """Resource for managing multiple comments."""
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    # @auth.optional
+    @auth.require
     def get(survey_id):
         """Get comments page."""
         try:

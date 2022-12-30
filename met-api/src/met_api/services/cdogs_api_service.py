@@ -29,61 +29,65 @@ class CdogsApiService:
     """cdogs api Service class."""
     
     def __init__(self):
-        self.access_token = self._get_access_token();
+        self.access_token = self._get_access_token()
 
     file_dir = os.path.dirname(os.path.realpath('__file__'))
 
     def generate_document(self, template_hash_code: str, data, options):
+        """Generate document based on template and data."""
         request_body = {
             "options": options,
             "data": data
         }
         json_request_body = json.dumps(request_body)
-        
+
         headers = {
             'Content-Type': 'application/json',
             'Authorization': f'Bearer {self.access_token}'
         }
-        
+
         url = f"{_Config.CDOGS_BASE_URL}/api/v2/template/{template_hash_code}/render"
         return self._post_generate_document(json_request_body, headers, url)
 
-    def _post_generate_document(self, json_request_body, headers, url):
+    @staticmethod
+    def _post_generate_document(json_request_body, headers, url):
         response = requests.post(url, data= json_request_body, headers= headers)
-        print(response.content)
         return response
 
     def upload_template(self, template_file_path):
-        
+        """Upload template and get hashcode."""
+
         headers = {
         "Authorization": f'Bearer {self.access_token}'
         }
 
         url = f"{_Config.CDOGS_BASE_URL}/api/v2/template"
-        template = {'template':('template', open(template_file_path, 'rb'), "multipart/form-data")}
-
-        current_app.logger.info('Uploading template %s', template_file_path)
-        print('Uploading template %s', template_file_path)
-        response = self._post_upload_template(headers, url, template)
         
-        if response.status_code == 200:
-            if response.headers.get("X-Template-Hash") is None:
+        with open(template_file_path, 'rb') as file_handle:
+            template = {'template':('template', file_handle, "multipart/form-data")}
+
+            current_app.logger.info('Uploading template %s', template_file_path)
+            print('Uploading template %s', template_file_path)
+            response = self._post_upload_template(headers, url, template)
+
+            if response.status_code == 200:
+                if response.headers.get("X-Template-Hash") is None:
+                    raise ValueError('Data not found')
+
+                current_app.logger.info('Returning new hash %s', response.headers['X-Template-Hash'])
+                print('Returning new hash %s', response.headers['X-Template-Hash'])
+                return response.headers['X-Template-Hash']
+
+            response_json = json.loads(response.content)
+
+            if response.status_code == 405 and response_json['detail'] is not None:
+                match = re.findall(r"Hash '(.*?)'", response_json['detail'])
+                if match:
+                    current_app.logger.info('Template already hashed with code %s', match[0])
+                    print('Template already hashed with code %s', match[0])
+                    return match[0]
+
                 raise ValueError('Data not found')
-
-            current_app.logger.info('Returning new hash %s', response.headers['X-Template-Hash'])
-            print('Returning new hash %s', response.headers['X-Template-Hash'])
-            return response.headers['X-Template-Hash'];
-    
-        response_json = json.loads(response.content)
-        
-        if response.status_code == 405 and response_json['detail'] is not None:
-            match = re.findall(r"Hash '(.*?)'", response_json['detail']);
-            if match:
-                current_app.logger.info('Template already hashed with code %s', match[0])
-                print('Template already hashed with code %s', match[0])
-                return match[0]
-
-            raise ValueError('Data not found')
 
     def _post_upload_template(self, headers, url, template):
         response = requests.post(url, headers= headers, files= template)

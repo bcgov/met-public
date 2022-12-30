@@ -3,13 +3,14 @@
 Manages document templates
 """
 from sqlalchemy import ForeignKey
-from datetime import datetime
 
 from .db import db, ma
 from .base_model import BaseModel
 
 
 class GeneratedDocumentTemplate(BaseModel):
+    """Definition of the Generated Document template entity."""
+
     __tablename__ = 'generated_document_template'
     # Defining the columns
 
@@ -19,6 +20,14 @@ class GeneratedDocumentTemplate(BaseModel):
     extension = db.Column(db.String(10), nullable=False)
 
     @classmethod
+    def get_document_template_by_id(cls, document_template_id):
+        """Get a document template bt id."""
+        document_template = db.session.query(GeneratedDocumentTemplate) \
+            .filter(GeneratedDocumentTemplate.id == document_template_id) \
+            .first()
+        return document_template
+
+    @classmethod
     def get_template_by_type(cls, type_id: int, extension: str = "xlsx"):
         """Given a type and optionally an extension, return the template."""
 
@@ -26,6 +35,12 @@ class GeneratedDocumentTemplate(BaseModel):
             filter(GeneratedDocumentTemplate.extension == extension)
 
         return query.one_or_none()
+
+    @classmethod
+    def get_document_templates(cls):
+        """Get a document types."""
+        document_type = db.session.query(GeneratedDocumentTemplate).all()
+        return document_type
 
 class GeneratedDocumentTemplateSchema(ma.Schema):
     class Meta:

@@ -19,9 +19,8 @@ import os
 from flask import current_app
 
 from met_api.models.generated_document_template import GeneratedDocumentTemplate
-from met_api.models.generated_document_type import GeneratedDocumentType
 from met_api.services.cdogs_api_service import CdogsApiService
-from met_api.utils.enums import GeneratedDocumentType
+from met_api.utils.enums import GeneratedDocumentTypes
 
 
 class DocumentGenerationService:
@@ -30,9 +29,9 @@ class DocumentGenerationService:
     def __init__(self):
         self.cdgos_api_service = CdogsApiService()
 
-    def generate_comment_sheet(self, data):        
+    def generate_comment_sheet(self, data):
         comment_sheet_template : GeneratedDocumentTemplate = GeneratedDocumentTemplate() \
-            .get_template_by_type(type_id = GeneratedDocumentType.COMMENT_SHEET)
+            .get_template_by_type(type_id = GeneratedDocumentTypes.COMMENT_SHEET)
         if comment_sheet_template is None:
             raise ValueError('Template not saved in DB')
 

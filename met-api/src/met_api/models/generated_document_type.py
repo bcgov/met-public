@@ -7,6 +7,8 @@ from .base_model import BaseModel
 
 
 class GeneratedDocumentType(BaseModel):
+    """Definition of the Generated Document type entity."""
+
     __tablename__ = 'generated_document_type'
     # Defining the columns
 
@@ -20,6 +22,12 @@ class GeneratedDocumentType(BaseModel):
         document_type = db.session.query(GeneratedDocumentType) \
             .filter(GeneratedDocumentType.id == document_type_id) \
             .first()
+        return document_type
+
+    @classmethod
+    def get_document_types(cls):
+        """Get a document types."""
+        document_type = db.session.query(GeneratedDocumentType).all()
         return document_type
 
 class GeneratedDocumentTypeSchema(ma.Schema):

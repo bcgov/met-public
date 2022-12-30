@@ -109,7 +109,7 @@ class CommentService:
         submission = survey_submission.get('submission_json', {})
         comments = [cls.__form_comment(key, submission.get(key, ''), survey_submission, survey)
                     for key in text_component_keys if submission.get(key, '') != '']
-        return comments    
+        return comments
 
     @classmethod
     def extract_comments_to_spread_sheet(cls, survey_id):
@@ -124,7 +124,7 @@ class CommentService:
                 "commentText": comment.text,
                 "reviewer": comment.reviewed_by,
                 "exportDate": str(datetime.utcnow())
-            } 
+            }
             for comment in comments]
 
         data = {

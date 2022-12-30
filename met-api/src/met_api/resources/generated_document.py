@@ -36,7 +36,7 @@ class GeneratedDocuments(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    # @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
+    @_jwt.has_one_of_roles([Role.REVIEW_COMMENTS.value])
     def post():
         """Retrieve authentication properties for document storage."""
         try:

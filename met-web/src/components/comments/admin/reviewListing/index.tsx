@@ -179,7 +179,7 @@ const SubmissionListing = () => {
                         <SearchIcon />
                     </PrimaryButton>
                 </Stack>
-                <PrimaryButton onClick={() => handleExtractComments()} loading={isExtracting}>
+                <PrimaryButton onClick={handleExtractComments} loading={isExtracting}>
                     Extract to CSV
                 </PrimaryButton>
             </Stack>
