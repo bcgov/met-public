@@ -24,7 +24,7 @@ export const getEditorState = (rawTextToConvert: string) => {
     return EditorState.createWithContent(rawContentFromStore);
 };
 
-export const downloadFile = (response: AxiosResponse<Blob, any>, filename: string) => {
+export const downloadFile = (response: AxiosResponse<Blob, unknown>, filename: string) => {
     if (!filename) {
         throw new Error('Filename must be specified');
     }

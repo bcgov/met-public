@@ -88,6 +88,7 @@ class CdogsApiService:
                     return match[0]
 
                 raise ValueError('Data not found')
+            return ''
 
     @staticmethod
     def _post_upload_template(headers, url, template):
