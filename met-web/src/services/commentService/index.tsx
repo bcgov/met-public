@@ -4,8 +4,6 @@ import Endpoints from 'apiManager/endpoints';
 
 import { replaceUrl } from 'helper';
 import { Page } from 'services/type';
-import { AxiosResponse } from 'axios';
-import { downloadFile } from 'utils';
 
 interface GetCommentsParams {
     survey_id: number;
