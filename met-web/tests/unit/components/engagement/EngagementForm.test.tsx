@@ -346,8 +346,8 @@ describe('Engagement form page tests', () => {
         await waitFor(() => {
             const startDate = screen.getByPlaceholderText('startDate');
             const endDate = screen.getByPlaceholderText('endDate');
-            fireEvent.change(startDate , { target: { value: '2022-12-19' } });
-            fireEvent.change(endDate , { target: { value: '2022-12-25' } });
+            fireEvent.change(startDate, { target: { value: '2022-12-19' } });
+            fireEvent.change(endDate, { target: { value: '2022-12-25' } });
             const calculatorButton = screen.getByText('Calculate');
             fireEvent.click(calculatorButton);
             const numberOfDays = screen.getByPlaceholderText('numberOfDays') as HTMLInputElement;
@@ -371,8 +371,8 @@ describe('Engagement form page tests', () => {
         await waitFor(() => {
             const numberOfDays = screen.getByPlaceholderText('numberOfDays');
             const endDate = screen.getByPlaceholderText('endDate');
-            fireEvent.change(numberOfDays , { target: { value: '6' } });
-            fireEvent.change(endDate , { target: { value: '2022-12-25' } });
+            fireEvent.change(numberOfDays, { target: { value: '6' } });
+            fireEvent.change(endDate, { target: { value: '2022-12-25' } });
             const calculatorButton = screen.getByText('Calculate');
             fireEvent.click(calculatorButton);
             const startDate = screen.getByPlaceholderText('startDate') as HTMLInputElement;
@@ -396,8 +396,8 @@ describe('Engagement form page tests', () => {
         await waitFor(() => {
             const startDate = screen.getByPlaceholderText('startDate');
             const numberOfDays = screen.getByPlaceholderText('numberOfDays');
-            fireEvent.change(startDate , { target: { value: '2022-12-19' } });
-            fireEvent.change(numberOfDays , { target: { value: '6' } });
+            fireEvent.change(startDate, { target: { value: '2022-12-19' } });
+            fireEvent.change(numberOfDays, { target: { value: '6' } });
             const calculatorButton = screen.getByText('Calculate');
             fireEvent.click(calculatorButton);
             const endDate = screen.getByPlaceholderText('endDate') as HTMLInputElement;
