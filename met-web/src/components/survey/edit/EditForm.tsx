@@ -25,7 +25,8 @@ export const EditForm = ({ handleClose }: SurveyFormProps) => {
             justifyContent="flex-start"
             alignItems="flex-start"
             spacing={2}
-            padding={'2em 2em 1em 2em'}
+            mt={2}
+            p={'0 2em 2em 2em'}
         >
             {submission?.comments.map((comment, index) => {
                 return (
