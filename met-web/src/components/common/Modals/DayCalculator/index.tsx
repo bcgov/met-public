@@ -18,6 +18,10 @@ interface ISelectOptions {
 
 const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
     const isSmallScreen = useMediaQuery(muitheme.breakpoints.down('lg'));
+    const dateFormat = 'YYYY-MM-DD';
+    const dayZeroLabel = options[0].label;
+    const calendarLabel = options[1].label;
+    const suspensionLabel = options[2].label;
 
     // variable to capture the option selected within Calculation Type
     const [selectedOption, setSelectedOption] = useState<ISelectOptions | null>(options[0]);
@@ -72,35 +76,68 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
     };
 
     // calculator
+    const isDayZeroSelected = selectedOption?.label == dayZeroLabel;
+    const isCalendarSelected = selectedOption?.label == calendarLabel;
+    const isSuspensionSelected = selectedOption?.label == suspensionLabel;
+    const calculateNumberOfDays = startDate && endDate && !numberOfDays;
+    const calculateEndDate = startDate && !endDate && numberOfDays;
+    const calculateStartDate = !startDate && endDate && numberOfDays;
+    let calculatedStartDate = startDate;
+    let calculatedEndDate = endDate;
+    let calculatedNumberOfDays = numberOfDays;
+
+    const calculatorForDayZero = () => {
+        if (calculateNumberOfDays) {
+            calculatedNumberOfDays = dayjs(endDate).diff(dayjs(startDate), 'days');
+        } else if (calculateEndDate) {
+            calculatedEndDate = dayjs(startDate).add(numberOfDays, 'day').format(dateFormat);
+        } else if (calculateStartDate) {
+            calculatedStartDate = dayjs(endDate).subtract(numberOfDays, 'day').format(dateFormat);
+        }
+    };
+
+    const calculatorForCalendar = () => {
+        if (calculateNumberOfDays) {
+            calculatedNumberOfDays = dayjs(endDate).add(1, 'day').diff(dayjs(startDate), 'days');
+        } else if (calculateEndDate) {
+            calculatedEndDate = dayjs(startDate)
+                .add(numberOfDays - 1, 'day')
+                .format(dateFormat);
+        } else if (calculateStartDate) {
+            calculatedStartDate = dayjs(endDate)
+                .subtract(numberOfDays - 1, 'day')
+                .format(dateFormat);
+        }
+    };
+
+    const calculatorForSuspension = () => {
+        if (suspensionDate && resumptionDate) {
+            const calcNumberOfSuspendedDays = dayjs(resumptionDate).add(1, 'day').diff(dayjs(suspensionDate), 'days');
+            if (calculateNumberOfDays) {
+                calculatedNumberOfDays =
+                    dayjs(endDate).add(1, 'day').diff(dayjs(startDate), 'days') - calcNumberOfSuspendedDays;
+            } else if (calculateEndDate) {
+                calculatedEndDate = dayjs(startDate)
+                    .add(numberOfDays - 1 + calcNumberOfSuspendedDays, 'day')
+                    .format(dateFormat);
+            } else if (calculateStartDate) {
+                calculatedStartDate = dayjs(endDate)
+                    .subtract(numberOfDays - 1 + calcNumberOfSuspendedDays, 'day')
+                    .format(dateFormat);
+            }
+        }
+    };
+
     const calculator = () => {
-        let calcStartDate = startDate;
-        let calcEndDate = endDate;
-        let calcNumberOfDays = numberOfDays;
-        if (selectedOption?.label == options[0].label) {
-            if (startDate && endDate && !numberOfDays) {
-                calcNumberOfDays = dayjs(endDate).diff(dayjs(startDate), 'days');
-            } else if (startDate && !endDate && numberOfDays) {
-                calcEndDate = dayjs(startDate).add(numberOfDays, 'day').format('YYYY-MM-DD');
-            } else if (!startDate && endDate && numberOfDays) {
-                calcStartDate = dayjs(endDate).subtract(numberOfDays, 'day').format('YYYY-MM-DD');
-            }
+        if (isDayZeroSelected) {
+            calculatorForDayZero();
         }
 
-        if (selectedOption?.label == options[1].label) {
-            if (startDate && endDate && !numberOfDays) {
-                calcNumberOfDays = dayjs(endDate).add(1, 'day').diff(dayjs(startDate), 'days');
-            } else if (startDate && !endDate && numberOfDays) {
-                calcEndDate = dayjs(startDate)
-                    .add(numberOfDays - 1, 'day')
-                    .format('YYYY-MM-DD');
-            } else if (!startDate && endDate && numberOfDays) {
-                calcStartDate = dayjs(endDate)
-                    .subtract(numberOfDays - 1, 'day')
-                    .format('YYYY-MM-DD');
-            }
+        if (isCalendarSelected) {
+            calculatorForCalendar();
         }
 
-        if (selectedOption?.label == options[2].label) {
+        if (isSuspensionSelected) {
             const hasErrors = validateDayCalcInputs();
             if (hasErrors) {
                 return {
@@ -111,31 +148,14 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                     numberOfDays: dayCalcData.numberOfDays,
                 };
             }
-
-            if (suspensionDate && resumptionDate) {
-                const calcNumberOfSuspendedDays = dayjs(resumptionDate)
-                    .add(1, 'day')
-                    .diff(dayjs(suspensionDate), 'days');
-                if (startDate && endDate && !numberOfDays) {
-                    calcNumberOfDays =
-                        dayjs(endDate).add(1, 'day').diff(dayjs(startDate), 'days') - calcNumberOfSuspendedDays;
-                } else if (startDate && !endDate && numberOfDays) {
-                    calcEndDate = dayjs(startDate)
-                        .add(numberOfDays - 1 + calcNumberOfSuspendedDays, 'day')
-                        .format('YYYY-MM-DD');
-                } else if (!startDate && endDate && numberOfDays) {
-                    calcStartDate = dayjs(endDate)
-                        .subtract(numberOfDays - 1 + calcNumberOfSuspendedDays, 'day')
-                        .format('YYYY-MM-DD');
-                }
-            }
+            calculatorForSuspension();
         }
 
         setDayCalcData({
             ...dayCalcData,
-            startDate: calcStartDate,
-            endDate: calcEndDate,
-            numberOfDays: calcNumberOfDays,
+            startDate: calculatedStartDate,
+            endDate: calculatedEndDate,
+            numberOfDays: calculatedNumberOfDays,
         });
     };
 
@@ -297,7 +317,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                 {isSmallScreen ? (
                     <>
                         <>
-                            <When condition={selectedOption?.label == options[2].label}>
+                            <When condition={selectedOption?.label == suspensionLabel}>
                                 {
                                     <Grid container direction="row" item xs={12}>
                                         <Grid item md={6} xs={12}>
@@ -342,7 +362,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                             </When>
                         </>
                         <>
-                            <When condition={selectedOption?.label == options[2].label}>
+                            <When condition={selectedOption?.label == suspensionLabel}>
                                 {
                                     <Grid container direction="row" item xs={12}>
                                         <Grid item md={6} xs={12}>
@@ -391,7 +411,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                 ) : (
                     <>
                         <>
-                            <When condition={selectedOption?.label == options[2].label}>
+                            <When condition={selectedOption?.label == suspensionLabel}>
                                 {
                                     <Grid container direction="row" item xs={12}>
                                         <Grid item md={6} xs={12}>
@@ -413,7 +433,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                             </When>
                         </>
                         <>
-                            <When condition={selectedOption?.label == options[2].label}>
+                            <When condition={selectedOption?.label == suspensionLabel}>
                                 {
                                     <Grid container direction="row" item xs={12}>
                                         <Grid item md={6} xs={12}>
@@ -631,7 +651,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                 </Grid>
                 <Grid item md={12} xs={12}>
                     <Stack direction="row" alignItems="center" spacing={2}>
-                        <When condition={selectedOption?.label == options[0].label}>
+                        <When condition={selectedOption?.label == dayZeroLabel}>
                             {
                                 <MetHeader3 sx={{ mb: 2 }}>
                                     {options[0].description}
@@ -642,10 +662,10 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                 </MetHeader3>
                             }
                         </When>
-                        <When condition={selectedOption?.label == options[1].label}>
+                        <When condition={selectedOption?.label == calendarLabel}>
                             {<MetHeader3 sx={{ mb: 2 }}>{options[1].description}</MetHeader3>}
                         </When>
-                        <When condition={selectedOption?.label == options[2].label}>
+                        <When condition={selectedOption?.label == suspensionLabel}>
                             {<MetHeader3 sx={{ mb: 2 }}>{options[2].description}</MetHeader3>}
                         </When>
                     </Stack>
