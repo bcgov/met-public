@@ -2,7 +2,7 @@
 
 Manages document types
 """
-from .db import db, ma
+from .db import db
 from .base_model import BaseModel
 
 
@@ -29,8 +29,3 @@ class GeneratedDocumentType(BaseModel):
         """Get a document types."""
         document_type = db.session.query(GeneratedDocumentType).all()
         return document_type
-
-class GeneratedDocumentTypeSchema(ma.Schema):
-    class Meta:
-        model = GeneratedDocumentType
-        exclude = []

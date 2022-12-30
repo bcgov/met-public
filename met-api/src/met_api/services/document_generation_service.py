@@ -23,7 +23,7 @@ from met_api.services.cdogs_api_service import CdogsApiService
 from met_api.utils.enums import GeneratedDocumentTypes
 
 
-class DocumentGenerationService:
+class DocumentGenerationService: # pylint:disable=too-few-public-methods
     """document generation Service class."""
 
     def __init__(self):

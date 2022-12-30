@@ -4,7 +4,7 @@ Manages document templates
 """
 from sqlalchemy import ForeignKey
 
-from .db import db, ma
+from .db import db
 from .base_model import BaseModel
 
 
@@ -41,8 +41,3 @@ class GeneratedDocumentTemplate(BaseModel):
         """Get a document types."""
         document_type = db.session.query(GeneratedDocumentTemplate).all()
         return document_type
-
-class GeneratedDocumentTemplateSchema(ma.Schema):
-    class Meta:
-        model = GeneratedDocumentTemplate
-        exclude = []
