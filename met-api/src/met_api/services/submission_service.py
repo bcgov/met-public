@@ -45,21 +45,21 @@ class SubmissionService:
     @classmethod
     def create(cls, token, submission: SubmissionSchema):
         """Create submission."""
-        cls._validate_fields(submission)
+        ##cls._validate_fields(submission)
         survey_id = submission.get('survey_id')
         survey = SurveyService.get(survey_id)
 
         # Creates a scoped session that will be committed when diposed or rolledback if a exception occurs
         with session_scope() as session:
-            email_verification = EmailVerificationService().verify(token, survey_id, None, session)
-            user_id = email_verification.get('user_id')
-            submission['user_id'] = user_id
-            submission['created_by'] = user_id
+            #email_verification = EmailVerificationService().verify(token, survey_id, None, session)
+            #user_id = email_verification.get('user_id')
+            submission['user_id'] = 1
+            submission['created_by'] = 1
             submission['engagement_id'] = survey.get('engagement_id')
 
             submission_result = Submission.create(submission, session)
             submission['id'] = submission_result.id
-            comments = CommentService.extract_comments(submission, survey)
+            comments = CommentService.extract_comments_from_survey(submission, survey)
             CommentService().create_comments(comments, session)
         return submission_result
 

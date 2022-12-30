@@ -1,12 +1,13 @@
 import axios from 'axios';
 import UserService from 'services/userService';
 
-const GetRequest = <T>(url: string, params = {}) => {
+const GetRequest = <T>(url: string, params = {}, headers = {}) => {
     return axios.get<T>(url, {
         params: params,
         headers: {
             'Content-type': 'application/json',
             Authorization: `Bearer ${UserService.getToken()}`,
+            ...headers,
         },
     });
 };

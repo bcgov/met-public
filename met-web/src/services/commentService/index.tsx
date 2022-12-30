@@ -4,6 +4,8 @@ import Endpoints from 'apiManager/endpoints';
 
 import { replaceUrl } from 'helper';
 import { Page } from 'services/type';
+import { AxiosResponse } from 'axios';
+import { downloadFile } from 'utils';
 
 interface GetCommentsParams {
     survey_id: number;
@@ -29,4 +31,15 @@ export const getCommentsPage = async ({
             total: 0,
         }
     );
+};
+
+interface GenerateCommentsSheetParams {
+    survey_id: number;
+}
+export const getCommentsSheet = async ({ survey_id }: GenerateCommentsSheetParams) => {
+    const url = replaceUrl(Endpoints.Comment.GET_SPREAD_SHEET, 'survey_id', String(survey_id));
+    const headers = {
+        'Content-type': 'text/csv; charset=utf-8',
+    };
+    return http.GetRequest<Blob>(url, {}, headers);
 };

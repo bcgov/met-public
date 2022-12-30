@@ -2,11 +2,14 @@
 """Service for comment management."""
 import itertools
 
+from datetime import datetime
+
 from met_api.models.comment import Comment
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.comment import CommentSchema
 from met_api.schemas.submission import SubmissionSchema
 from met_api.schemas.survey import SurveySchema
+from met_api.services.document_generation_service import DocumentGenerationService
 
 
 class CommentService:
@@ -93,7 +96,7 @@ class CommentService:
         return []
 
     @classmethod
-    def extract_comments(cls, survey_submission: SubmissionSchema, survey: SurveySchema):
+    def extract_comments_from_survey(cls, survey_submission: SubmissionSchema, survey: SurveySchema):
         """Extract comments from survey submission."""
         survey_form = survey.get('form_json', {})
         components = cls.extract_components(survey_form)
@@ -106,4 +109,25 @@ class CommentService:
         submission = survey_submission.get('submission_json', {})
         comments = [cls.__form_comment(key, submission.get(key, ''), survey_submission, survey)
                     for key in text_component_keys if submission.get(key, '') != '']
-        return comments
+        return comments    
+
+    @classmethod
+    def extract_comments_to_spread_sheet(cls, survey_id):
+        """Extract comments to spread sheet."""
+
+        comments = Comment.get_comments_by_survey_id(survey_id)
+        formatted_comments = [
+            {
+                "commentNumber": comment.id,
+                "dateSubmitted": str(comment.submission_date),
+                "author": f'{comment.first_name} {comment.last_name}',
+                "commentText": comment.text,
+                "reviewer": comment.reviewed_by,
+                "exportDate": str(datetime.utcnow())
+            } 
+            for comment in comments]
+
+        data = {
+            "comments": formatted_comments
+        }
+        return DocumentGenerationService().generate_comment_sheet(data= data)

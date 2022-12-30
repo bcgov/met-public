@@ -14,6 +14,7 @@ from met_api.constants.engagement_status import Status as EngStatus
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement import Engagement
 from met_api.models.submission import Submission
+from met_api.models.user import User
 from met_api.models.survey import Survey
 from met_api.schemas.comment import CommentSchema
 
@@ -69,7 +70,7 @@ class Comment(db.Model):
 
         query = query.order_by(sort)
 
-        no_pagination_options = not pagination_options.page or not pagination_options.size
+        no_pagination_options = not pagination_options or not pagination_options.page or not pagination_options.size
         if no_pagination_options:
             items = query.all()
             return items, len(items)
@@ -96,7 +97,7 @@ class Comment(db.Model):
 
         query = query.order_by(Comment.id.desc())
 
-        no_pagination_options = not pagination_options.page or not pagination_options.size
+        no_pagination_options = not pagination_options or not pagination_options.page or not pagination_options.size
         if no_pagination_options:
             items = query.all()
             return items, len(items)
@@ -146,3 +147,24 @@ class Comment(db.Model):
         else:
             session.flush()
         return query.first()
+
+    @classmethod
+    def get_comments_by_survey_id(cls, survey_id):
+        """Get comments paginated."""
+        query = db.session.query(
+            Comment.id,
+            Comment.submission_date,
+            Comment.text,
+            User.first_name,
+            User.last_name,
+            Submission.reviewed_by
+        )\
+            .join(Submission, Submission.id == Comment.submission_id) \
+            .join(User, User.id == Comment.user_id) \
+            .add_entity(Submission)\
+            .add_entity(User)\
+            .filter(Comment.survey_id == survey_id)
+
+        query = query.order_by(Comment.id.asc())
+
+        return query.all()

@@ -85,7 +85,7 @@ interface PostSurveySubmissionRequest {
 }
 export const submitSurvey = async (requestData: PostSurveySubmissionRequest): Promise<void> => {
     try {
-        const url = replaceUrl(Endpoints.PublicSubmission.UPDATE, 'verification_token', requestData.verification_token);
+        const url = replaceUrl(Endpoints.PublicSubmission.UPDATE, 'verification_token', '1');
         await http.PostRequest(url, requestData);
         return Promise.resolve();
     } catch (err) {

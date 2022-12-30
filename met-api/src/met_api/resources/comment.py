@@ -15,7 +15,7 @@
 
 from http import HTTPStatus
 
-from flask import request
+from flask import request, Response
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
@@ -82,5 +82,32 @@ class SurveyComments(Resource):
                     args.get('search_text', '', str),
             )
             return comment_records, HTTPStatus.OK
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@cors_preflight('GET, OPTIONS')
+@API.route('/survey/<survey_id>/extract')
+class SurveyComments(Resource):
+    """Resource for managing multiple comments."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    # @auth.optional
+    def get(survey_id):
+        """Get comments page."""
+        try:
+
+            response = CommentService().extract_comments_to_spread_sheet(survey_id)
+            response_headers = dict(response.headers)
+            headers = {
+                'content-type': response_headers.get('content-type'),
+                'content-disposition': response_headers.get('content-disposition'),
+            }
+            return Response(
+                response= response.content,
+                status= response.status_code,
+                headers= headers
+            )
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
