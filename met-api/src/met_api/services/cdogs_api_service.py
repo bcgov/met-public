@@ -98,12 +98,12 @@ class CdogsApiService:
     def check_template_cached(self, template_hash_code: str):
         """Check if template of given hashcode is cached."""
         headers = {
-        'Authorization': f'Bearer {self.access_token}'
+            'Authorization': f'Bearer {self.access_token}'
         }
 
         url = f'{_Config.CDOGS_BASE_URL}/api/v2/template/{template_hash_code}'
 
-        response = requests.get(url, headers= headers)
+        response = requests.get(url, headers=headers)
         return response.status_code == 200
 
     @staticmethod

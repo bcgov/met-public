@@ -23,7 +23,7 @@ from met_api.services.cdogs_api_service import CdogsApiService
 from met_api.utils.enums import GeneratedDocumentTypes
 
 
-class DocumentGenerationService: # pylint:disable=too-few-public-methods
+class DocumentGenerationService:  # pylint:disable=too-few-public-methods
     """document generation Service class."""
 
     def __init__(self):
@@ -58,7 +58,7 @@ class DocumentGenerationService: # pylint:disable=too-few-public-methods
 
         options = {
                 'cachereport': False,
-                'convertTo' : 'csv',
+                'convertTo': 'csv',
                 'overwrite': True,
                 'reportName': 'comments_sheet'
         }
