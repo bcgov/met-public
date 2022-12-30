@@ -6,3 +6,5 @@ export const openText =
 
 export const closedText =
     '<h2>We heard you</h2><p>The engagement period is now over. You can view the survey comments anytime and view the survey results by clicking the button below.</p>';
+
+export const submissionStatusArray = [upcomingText, openText, closedText];

@@ -46,7 +46,7 @@ export const PreviewBanner = () => {
         >
             <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start" padding={4}>
                 <ScheduleModal reschedule={isScheduled ? true : false} open={isOpen} updateModal={setIsOpen} />
-                <Grid item container direction="row" xs={8} sx={{ pt: 2, mb: 2, border: '2px solid red' }}>
+                <Grid item container direction="row" xs={8} sx={{ pt: 2, mb: 2 }}>
                     <MetHeader1 sx={{ mb: 2 }}>{engagementBannerText}</MetHeader1>
                     <When condition={isScheduled}>
                         <Grid item container direction="row" rowSpacing={1}>
@@ -145,7 +145,7 @@ export const PreviewBanner = () => {
                         </Grid>
                     </When>
                 </Grid>
-                <Grid item container direction="row" alignItems="flex-end" justifyContent="center" xs={4}>
+                <Grid item container direction="row" alignItems="flex-end" justifyContent="flex-end" xs={4}>
                     <MetPaper sx={{ p: 1 }}>
                         <Typography sx={{ fontWeight: 'bold', pb: 2 }}>View Different Engagement Status:</Typography>
                         <Stack spacing={1} direction={{ md: 'row' }} alignItems="center" justifyContent="center">
