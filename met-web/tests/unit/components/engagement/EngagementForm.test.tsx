@@ -1,4 +1,4 @@
-import { render, waitFor, screen, fireEvent } from '@testing-library/react';
+import { render, waitFor, screen, fireEvent, within } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
 import EngagementForm from '../../../../src/components/engagement/form';
@@ -295,6 +295,115 @@ describe('Engagement form page tests', () => {
             expect(screen.getByText('Select Widget')).toBeVisible();
             expect(screen.getByTestId(`widget-drawer-option/${WidgetType.WhoIsListening}`));
             expect(screen.getByTestId(`widget-drawer-option/${WidgetType.Phases}`));
+        });
+    });
+
+    test('Day Calculator Modal appears', async () => {
+        useParamsMock.mockReturnValue({ engagementId: '1' });
+        const { getByTestId, container, getByText } = render(<EngagementForm />);
+
+        await waitFor(() => {
+            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
+        });
+
+        const dayCalculatorButton = screen.getByText('Day Calculator');
+
+        fireEvent.click(dayCalculatorButton);
+
+        await waitFor(() => {
+            expect(getByTestId('daycalculator-title')).toBeVisible();
+            expect(getByTestId('reset-button')).toBeVisible();
+            expect(getByTestId('cancel-button')).toBeVisible();
+            expect(getByTestId('calculator-button')).toBeVisible();
+            expect(getByText('Start Date')).toBeInTheDocument();
+            expect(getByText('End Date')).toBeInTheDocument();
+            expect(getByText('Calculation Type')).toBeInTheDocument();
+            expect(getByText('Number of Days')).toBeInTheDocument();
+            const autocomplete = getByTestId('autocomplete');
+            const input: HTMLInputElement = within(autocomplete).getByLabelText(
+                "Day Zero"
+            ) as HTMLInputElement;
+            expect(input).not.toBeNull()
+            const suspensiondate = screen.queryByText('Suspension Date')
+            expect(suspensiondate).toBeNull()
+            const ruspensiondate = screen.queryByText('Resumption Date')
+            expect(ruspensiondate).toBeNull()
+        });
+    });
+
+    test('Day Calculator Modal Day Zero Calculation', async () => {
+        useParamsMock.mockReturnValue({ engagementId: '1' });
+        const { container } = render(<EngagementForm />);
+
+        await waitFor(() => {
+            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
+        });
+
+        const dayCalculatorButton = screen.getByText('Day Calculator');
+
+        fireEvent.click(dayCalculatorButton);
+
+        await waitFor(() => {
+            const startDate = screen.getByPlaceholderText('startDate');
+            const endDate = screen.getByPlaceholderText('endDate');
+            fireEvent.change(startDate , {target: { value: '2022-12-19'}});
+            fireEvent.change(endDate , {target: { value: '2022-12-25'}});
+            const calculatorButton = screen.getByText('Calculate');
+            fireEvent.click(calculatorButton);
+            const numberOfDays = screen.getByPlaceholderText('numberOfDays') as HTMLInputElement;
+            expect(numberOfDays.value).toBe('6');
+        });
+    });
+
+    test('Day Calculator Modal Start Date Calculation', async () => {
+        useParamsMock.mockReturnValue({ engagementId: '1' });
+        const { container } = render(<EngagementForm />);
+
+        await waitFor(() => {
+            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
+        });
+
+        const dayCalculatorButton = screen.getByText('Day Calculator');
+
+        fireEvent.click(dayCalculatorButton);
+
+        await waitFor(() => {
+            const numberOfDays = screen.getByPlaceholderText('numberOfDays');
+            const endDate = screen.getByPlaceholderText('endDate');
+            fireEvent.change(numberOfDays , {target: { value: '6'}});
+            fireEvent.change(endDate , {target: { value: '2022-12-25'}});
+            const calculatorButton = screen.getByText('Calculate');
+            fireEvent.click(calculatorButton);
+            const startDate = screen.getByPlaceholderText('startDate') as HTMLInputElement;
+            expect(startDate.value).toBe('2022-12-19');
+        });
+    });
+
+    test('Day Calculator Modal End Date Calculation', async () => {
+        useParamsMock.mockReturnValue({ engagementId: '1' });
+        const { container } = render(<EngagementForm />);
+
+        await waitFor(() => {
+            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
+        });
+
+        const dayCalculatorButton = screen.getByText('Day Calculator');
+
+        fireEvent.click(dayCalculatorButton);
+
+        await waitFor(() => {
+            const startDate = screen.getByPlaceholderText('startDate');
+            const numberOfDays = screen.getByPlaceholderText('numberOfDays');
+            fireEvent.change(startDate , {target: { value: '2022-12-19'}});
+            fireEvent.change(numberOfDays , {target: { value: '6'}});
+            const calculatorButton = screen.getByText('Calculate');
+            fireEvent.click(calculatorButton);
+            const endDate = screen.getByPlaceholderText('endDate') as HTMLInputElement;
+            expect(endDate.value).toBe('2022-12-25');
         });
     });
 });

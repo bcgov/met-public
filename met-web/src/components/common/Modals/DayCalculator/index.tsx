@@ -189,6 +189,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                 <Stack direction="row" alignItems="center" spacing={2}>
                                     <TextField
                                         id="start-date"
+                                        data-testid="start-date"
                                         type="date"
                                         label=" "
                                         InputLabelProps={{
@@ -197,6 +198,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                         sx={{ width: '80%' }}
                                         name="startDate"
                                         value={startDate}
+                                        placeholder="startDate"
                                         InputProps={{ inputProps: { max: endDate || null } }}
                                         onChange={handleChange}
                                     />
@@ -215,6 +217,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                 <Stack direction="row" alignItems="center" spacing={2}>
                                     <TextField
                                         id="end-date"
+                                        data-testid="end-date"
                                         type="date"
                                         label=" "
                                         InputLabelProps={{
@@ -223,6 +226,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                         sx={{ width: '80%' }}
                                         name="endDate"
                                         value={endDate}
+                                        placeholder="endDate"
                                         InputProps={{ inputProps: { min: startDate || null } }}
                                         onChange={handleChange}
                                     />
@@ -253,6 +257,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                 <Stack direction="row" alignItems="center" spacing={2}>
                                     <TextField
                                         id="start-date"
+                                        data-testid="start-date"
                                         type="date"
                                         label=" "
                                         InputLabelProps={{
@@ -261,6 +266,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                         sx={{ width: '80%' }}
                                         name="startDate"
                                         value={startDate}
+                                        placeholder="startDate"
                                         InputProps={{ inputProps: { max: endDate || null } }}
                                         onChange={handleChange}
                                     />
@@ -270,6 +276,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                 <Stack direction="row" alignItems="center" spacing={2}>
                                     <TextField
                                         id="end-date"
+                                        data-testid="end-date"
                                         type="date"
                                         label=" "
                                         InputLabelProps={{
@@ -278,6 +285,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                         sx={{ width: '80%' }}
                                         name="endDate"
                                         value={endDate}
+                                        placeholder="endDate"
                                         InputProps={{ inputProps: { min: startDate || null } }}
                                         onChange={handleChange}
                                     />
@@ -512,6 +520,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                         defaultValue={options[0]}
                                         data-testid={'autocomplete'}
                                         value={selectedOption}
+                                        placeholder="selectedOption"
                                     />
                                 </Stack>
                             </Grid>
@@ -528,6 +537,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                 <Stack direction="row" alignItems="center" spacing={2}>
                                     <TextField
                                         id="number-of-days"
+                                        data-testid="number-of-days"
                                         variant="outlined"
                                         label=" "
                                         InputLabelProps={{
@@ -536,6 +546,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                         sx={{ width: '80%' }}
                                         name="numberOfDays"
                                         value={numberOfDays}
+                                        placeholder="numberOfDays"
                                         onChange={handleChange}
                                     />
                                 </Stack>
@@ -588,6 +599,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                         defaultValue={options[0]}
                                         data-testid={'autocomplete'}
                                         value={selectedOption}
+                                        placeholder="selectedOption"
                                     />
                                 </Stack>
                             </Grid>
@@ -595,6 +607,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                 <Stack direction="row" alignItems="center" spacing={2}>
                                     <TextField
                                         id="number-of-days"
+                                        data-testid="number-of-days"
                                         variant="outlined"
                                         label=" "
                                         InputLabelProps={{
@@ -603,6 +616,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                         sx={{ width: '80%' }}
                                         name="numberOfDays"
                                         value={numberOfDays}
+                                        placeholder="numberOfDays"
                                         onChange={handleChange}
                                     />
                                 </Stack>
