@@ -18,6 +18,7 @@ import base64
 import json
 import os
 import re
+from http import HTTPStatus
 
 import requests
 from flask import current_app
@@ -70,7 +71,7 @@ class CdogsApiService:
             print('Uploading template %s', template_file_path)
             response = self._post_upload_template(headers, url, template)
 
-            if response.status_code == 200:
+            if response.status_code == HTTPStatus.OK:
                 if response.headers.get('X-Template-Hash') is None:
                     raise ValueError('Data not found')
 
@@ -80,7 +81,7 @@ class CdogsApiService:
 
             response_json = json.loads(response.content)
 
-            if response.status_code == 405 and response_json['detail'] is not None:
+            if response.status_code == HTTPStatus.METHOD_NOT_ALLOWED and response_json['detail'] is not None:
                 match = re.findall(r"Hash '(.*?)'", response_json['detail'])
                 if match:
                     current_app.logger.info('Template already hashed with code %s', match[0])
@@ -104,7 +105,7 @@ class CdogsApiService:
         url = f'{_Config.CDOGS_BASE_URL}/api/v2/template/{template_hash_code}'
 
         response = requests.get(url, headers=headers)
-        return response.status_code == 200
+        return response.status_code == HTTPStatus.OK
 
     @staticmethod
     def _get_access_token():

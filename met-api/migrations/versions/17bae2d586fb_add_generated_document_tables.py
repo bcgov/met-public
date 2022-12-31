@@ -34,13 +34,13 @@ def upgrade():
     sa.Column('updated_date', sa.DateTime(), nullable=True),
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('type_id', sa.Integer(), nullable=False),
-    sa.Column('cdogs_hash_code', sa.String(length=64), nullable=True),
+    sa.Column('hash_code', sa.String(length=64), nullable=True),
     sa.Column('extension', sa.String(length=10), nullable=False),
     sa.Column('created_by', sa.String(length=50), nullable=True),
     sa.Column('updated_by', sa.String(length=50), nullable=True),
     sa.ForeignKeyConstraint(['type_id'], ['generated_document_type.id'], ),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('cdogs_hash_code')
+    sa.UniqueConstraint('hash_code')
     )
     op.drop_index('ix_user_username', table_name='met_users')
     op.create_index(op.f('ix_met_users_username'), 'met_users', ['username'], unique=False)
@@ -50,7 +50,7 @@ def upgrade():
     ])
     
     op.bulk_insert(document_template, [
-        {'id': 1, 'type_id': 1, 'cdogs_hash_code': None, "extension": "xlsx", "created_date": datetime.utcnow()}
+        {'id': 1, 'type_id': 1, 'hash_code': None, "extension": "xlsx", "created_date": datetime.utcnow()}
     ])
     # ### end Alembic commands ###
 

@@ -1,7 +1,6 @@
 
 """Service for comment management."""
 import itertools
-
 from datetime import datetime
 
 from met_api.models.comment import Comment

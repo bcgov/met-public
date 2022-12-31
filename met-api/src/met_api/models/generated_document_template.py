@@ -16,7 +16,7 @@ class GeneratedDocumentTemplate(BaseModel):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     type_id = db.Column(db.Integer, ForeignKey('generated_document_type.id'), nullable=False)
-    cdogs_hash_code = db.Column(db.String(64), nullable=True, unique=True)
+    hash_code = db.Column(db.String(64), nullable=True, unique=True)
     extension = db.Column(db.String(10), nullable=False)
 
     @classmethod
