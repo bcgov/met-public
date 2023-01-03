@@ -87,10 +87,14 @@ const CommentReview = () => {
         }
     };
 
-    const validate = () => {
+    const validate = (): boolean => {
         if (review == CommentStatus.Rejected) {
+            if (hasOtherReason && !otherReason) {
+                // Other reason is mandatory if selected
+                return false;
+            }
             // At least one reason is selected
-            return (hasOtherReason && otherReason) || hasPersonalInfo || hasProfanity || hasThreat;
+            return hasOtherReason || hasPersonalInfo || hasProfanity || hasThreat;
         }
         return true;
     };
