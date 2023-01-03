@@ -7,7 +7,7 @@ import { SurveyBlockProps } from './types';
 import { useAppSelector } from 'hooks';
 import { If, Then, Else } from 'react-if';
 import { submissionStatusArray } from 'constants/submissionStatusText';
-import { Editor } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
 import { getEditorState } from 'utils';
 
 const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
