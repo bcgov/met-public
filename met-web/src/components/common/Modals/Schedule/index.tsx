@@ -26,7 +26,7 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
 
     const isEngagementReady = () => {
         return (
-            savedEngagement.surveys.length === 0 &&
+            savedEngagement.surveys.length === 1 &&
             savedEngagement.content &&
             savedEngagement.description &&
             savedEngagement.banner_url
