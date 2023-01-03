@@ -87,7 +87,7 @@ class SurveyComments(Resource):
 
 
 @cors_preflight('GET, OPTIONS')
-@API.route('/survey/<survey_id>/extract')
+@API.route('/survey/<survey_id>/sheet')
 class GeneratedCommentsSheet(Resource):
     """Resource for managing multiple comments."""
 

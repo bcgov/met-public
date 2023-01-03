@@ -34,7 +34,7 @@ const Endpoints = {
     },
     Comment: {
         GET_LIST: `${AppConfig.apiUrl}/comments/survey/survey_id`,
-        GET_SPREAD_SHEET: `${AppConfig.apiUrl}/comments/survey/survey_id/extract`,
+        GET_SPREAD_SHEET: `${AppConfig.apiUrl}/comments/survey/survey_id/sheet`,
     },
     Feedback: {
         GET_LIST: `${AppConfig.apiUrl}/feedbacks/`,
