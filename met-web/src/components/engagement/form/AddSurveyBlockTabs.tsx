@@ -49,11 +49,11 @@ const AddSurveyBlockTabs = ({
         },
         {
             survey_status: SubmissionStatus[SubmissionStatus.Open],
-            block_text: savedUpcomingText ? savedOpenText : '',
+            block_text: savedOpenText ? savedOpenText : '',
         },
         {
             survey_status: SubmissionStatus[SubmissionStatus.Closed],
-            block_text: savedUpcomingText ? savedClosedText : '',
+            block_text: savedClosedText ? savedClosedText : '',
         },
     ];
 
