@@ -10,6 +10,12 @@ import { submissionStatusArray } from 'constants/submissionStatusText';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorState } from 'utils';
 
+const statusMap = {
+    1: 'Upcoming',
+    2: 'Open',
+    3: 'Closed',
+};
+
 const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
     const { savedEngagement, isEngagementLoading, mockStatus } = useContext(ActionContext);
     const isOpen = savedEngagement.submission_status === SubmissionStatus.Open;
@@ -17,6 +23,7 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isPreview = isLoggedIn;
     const status_block = savedEngagement.status_block;
+    const status_text = status_block.find((status) => status.survey_status === statusMap[mockStatus])?.block_text;
     if (isEngagementLoading) {
         return <Skeleton variant="rectangular" height={'15em'} />;
     }
@@ -25,22 +32,24 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
         <MetPaper elevation={1} sx={{ padding: '2em' }}>
             <Grid container direction="row" alignItems="flex-end" justifyContent="flex-end" spacing={2}>
                 <Grid item xs={12}>
-                    <If condition={status_block.length > 0}>
-                        <Then>
-                            <Editor
-                                editorState={getEditorState(savedEngagement.status_block[mockStatus - 1].block_text)}
-                                readOnly={true}
-                                toolbarHidden
-                            />
-                        </Then>
-                        <Else>
-                            <div
-                                dangerouslySetInnerHTML={{
-                                    __html: submissionStatusArray[mockStatus - 1],
-                                }}
-                            />
-                        </Else>
-                    </If>
+                    <>
+                        <If condition={status_text !== undefined}>
+                            <Then>
+                                <Editor
+                                    editorState={getEditorState(status_text ? status_text : '')}
+                                    readOnly={true}
+                                    toolbarHidden
+                                />
+                            </Then>
+                            <Else>
+                                <div
+                                    dangerouslySetInnerHTML={{
+                                        __html: submissionStatusArray[mockStatus - 1],
+                                    }}
+                                />
+                            </Else>
+                        </If>
+                    </>
                 </Grid>
                 <Grid item container direction={{ xs: 'column', sm: 'row' }} xs={12} justifyContent="flex-end">
                     <PrimaryButton
