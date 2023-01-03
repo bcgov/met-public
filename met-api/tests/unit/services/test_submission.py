@@ -58,7 +58,7 @@ def test_create_submission_rollback(session):  # pylint:disable=unused-argument
         'verification_token': email_verification.verification_token,
     }
 
-    with patch.object(CommentService, 'extract_comments', side_effect=ValueError) as mock:
+    with patch.object(CommentService, 'extract_comments_from_survey', side_effect=ValueError) as mock:
         try:
             SubmissionService().create(email_verification.verification_token, submission_request)
         except ValueError:

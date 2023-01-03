@@ -16,6 +16,9 @@ import { SurveySubmission } from 'models/surveySubmission';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { getSurvey } from 'services/surveyService';
 import { CommentStatus } from 'constants/commentStatus';
+import { getCommentsSheet } from 'services/commentService';
+import { downloadFile } from 'utils';
+import { COMMENT_SHEET } from 'components/comments/constants';
 
 const SubmissionListing = () => {
     const [searchFilter, setSearchFilter] = useState({
@@ -36,6 +39,8 @@ const SubmissionListing = () => {
         total: 0,
     });
     const [tableLoading, setTableLoading] = useState(true);
+    const [isExtracting, setIsExtracting] = useState(false);
+
     const { surveyId } = useParams();
 
     const dispatch = useAppDispatch();
@@ -91,6 +96,13 @@ const SubmissionListing = () => {
             ...searchFilter,
             value: filter,
         });
+    };
+
+    const handleExtractComments = async () => {
+        setIsExtracting(true);
+        const response = await getCommentsSheet({ survey_id: survey.id });
+        downloadFile(response, COMMENT_SHEET);
+        setIsExtracting(false);
     };
 
     const headCells: HeadCell<SurveySubmission>[] = [
@@ -150,7 +162,7 @@ const SubmissionListing = () => {
             container
             rowSpacing={1}
         >
-            <Grid item xs={12}>
+            <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="100%" justifyContent="space-between">
                 <Stack direction="row" spacing={1}>
                     <TextField
                         id="comments"
@@ -167,8 +179,10 @@ const SubmissionListing = () => {
                         <SearchIcon />
                     </PrimaryButton>
                 </Stack>
-            </Grid>
-            <Grid item xs={0} md={4} lg={4}></Grid>
+                <PrimaryButton onClick={handleExtractComments} loading={isExtracting}>
+                    Extract to CSV
+                </PrimaryButton>
+            </Stack>
 
             <Grid item xs={12}>
                 <MetHeader1>

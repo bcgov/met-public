@@ -31,3 +31,5 @@ from .contact import Contact
 from .widget_documents import WidgetDocuments
 from .user_status_code import UserStatus
 from .engagement_status_block import EngagementStatusBlock
+from .generated_document_template import GeneratedDocumentTemplate
+from .generated_document_type import GeneratedDocumentType

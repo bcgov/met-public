@@ -21,7 +21,7 @@ import json
 from faker import Faker
 import pytest
 
-from met_api.utils.enums import ContentType, DocumentType
+from met_api.utils.enums import ContentType, WidgetDocumentType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestWidgetDocumentInfo, TestWidgetInfo
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_document_model, factory_engagement_model, factory_widget_model)
@@ -127,11 +127,11 @@ def test_assert_tree_structure(client, jwt, session):  # pylint:disable=unused-a
     expected_folder_element = rv.json.get('children')[0]
     assert expected_folder_element.get('id') == folder.id
     assert expected_folder_element.get('title') == folder.title
-    assert expected_folder_element.get('type') == DocumentType.FOLDER.value
+    assert expected_folder_element.get('type') == WidgetDocumentType.FOLDER.value
     expected_file_element = expected_folder_element.get('children')[0]
     assert expected_file_element.get('id') == file_doc.id
     assert expected_file_element.get('title') == file_doc.title
-    assert expected_file_element.get('type') == DocumentType.FILE.value
+    assert expected_file_element.get('type') == WidgetDocumentType.FILE.value
 
 
 def test_patch_documents(client, jwt, session):  # pylint:disable=unused-argument

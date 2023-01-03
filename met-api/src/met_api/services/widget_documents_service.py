@@ -4,9 +4,10 @@ from http import HTTPStatus
 from anytree import AnyNode
 from anytree.exporter import DictExporter
 from anytree.search import find_by_attr
+
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.widget_documents import WidgetDocuments as WidgetDocumentsModel
-from met_api.utils.enums import DocumentType
+from met_api.utils.enums import WidgetDocumentType
 
 
 class WidgetDocumentService:
@@ -28,7 +29,7 @@ class WidgetDocumentService:
 
     @staticmethod
     def _attach_file_nodes(docs, root):
-        files = list(filter(lambda doc: doc.type == DocumentType.FILE.value, docs))
+        files = list(filter(lambda doc: doc.type == WidgetDocumentType.FILE.value, docs))
         files.sort(key=lambda doc: doc.id)
         for file in files:
             props = WidgetDocumentService._fetch_props(file)
@@ -40,7 +41,7 @@ class WidgetDocumentService:
     @staticmethod
     def _attach_folder_nodes(docs, root):
 
-        folders = list(filter(lambda doc: doc.type == DocumentType.FOLDER.value, docs))
+        folders = list(filter(lambda doc: doc.type == WidgetDocumentType.FOLDER.value, docs))
         folders.sort(key=lambda doc: doc.id)
         for folder in folders:
             props = WidgetDocumentService._fetch_props(folder)
@@ -98,7 +99,7 @@ class WidgetDocumentService:
             raise BusinessException(
                 error='Parent Folder doesnt exist.',
                 status_code=HTTPStatus.BAD_REQUEST)
-        if parent.type == DocumentType.FILE.value:
+        if parent.type == WidgetDocumentType.FILE.value:
             raise BusinessException(
                 error='Cant nest inside file',
                 status_code=HTTPStatus.BAD_REQUEST)

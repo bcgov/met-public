@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import { EditorState, convertFromRaw } from 'draft-js';
 
 export function hasKey<O>(obj: O, key: PropertyKey): key is keyof O {
@@ -21,4 +22,17 @@ export const getEditorState = (rawTextToConvert: string) => {
     }
     const rawContentFromStore = convertFromRaw(JSON.parse(rawTextToConvert));
     return EditorState.createWithContent(rawContentFromStore);
+};
+
+export const downloadFile = (response: AxiosResponse<Blob, unknown>, filename: string) => {
+    if (!filename) {
+        throw new Error('Filename must be specified');
+    }
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
 };

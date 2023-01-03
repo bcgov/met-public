@@ -107,6 +107,13 @@ class _Config():  # pylint: disable=too-few-public-methods
     REJECTED_EMAIL_SUBJECT = os.getenv('REJECTED_EMAIL_SUBJECT', '{engagement_name} - About your Comments')
     NOTIFICATIONS_EMAIL_ENDPOINT = os.getenv('NOTIFICATIONS_EMAIL_ENDPOINT')
 
+    # CDOGS
+    CDOGS_ACCESS_TOKEN = os.getenv('CDOGS_ACCESS_TOKEN')
+    CDOGS_BASE_URL = os.getenv('CDOGS_BASE_URL')
+    CDOGS_SERVICE_CLIENT = os.getenv('CDOGS_SERVICE_CLIENT')
+    CDOGS_SERVICE_CLIENT_SECRET = os.getenv('CDOGS_SERVICE_CLIENT_SECRET')
+    CDOGS_TOKEN_URL = os.getenv('CDOGS_TOKEN_URL')
+
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
     """Dev Config."""

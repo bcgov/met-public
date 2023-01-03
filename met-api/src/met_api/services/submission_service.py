@@ -59,7 +59,7 @@ class SubmissionService:
 
             submission_result = Submission.create(submission, session)
             submission['id'] = submission_result.id
-            comments = CommentService.extract_comments(submission, survey)
+            comments = CommentService.extract_comments_from_survey(submission, survey)
             CommentService().create_comments(comments, session)
         return submission_result
 
