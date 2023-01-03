@@ -43,16 +43,36 @@ const AddSurveyBlockTabs = ({
 
     // array to pass updated content to engagement context
     const surveyBlockContent = [
-        { survey_status: SubmissionStatus[SubmissionStatus.Upcoming], block_text: '' },
-        { survey_status: SubmissionStatus[SubmissionStatus.Open], block_text: '' },
-        { survey_status: SubmissionStatus[SubmissionStatus.Closed], block_text: '' },
+        {
+            survey_status: SubmissionStatus[SubmissionStatus.Upcoming],
+            block_text: savedUpcomingText ? savedUpcomingText : '',
+        },
+        {
+            survey_status: SubmissionStatus[SubmissionStatus.Open],
+            block_text: savedOpenText ? savedOpenText : '',
+        },
+        {
+            survey_status: SubmissionStatus[SubmissionStatus.Closed],
+            block_text: savedClosedText ? savedClosedText : '',
+        },
     ];
 
     // capture changes in richdescription
     const handleStatusBlockContentChange = (newState: string) => {
         surveyBlockContent.forEach((item) => {
             if (item.survey_status === value && newState) {
-                item.block_text = newState;
+                if (item.survey_status === SubmissionStatus[SubmissionStatus.Upcoming]) {
+                    setSavedUpcomingText(newState);
+                    item.block_text = savedUpcomingText;
+                }
+                if (item.survey_status === SubmissionStatus[SubmissionStatus.Open]) {
+                    setSavedOpenText(newState);
+                    item.block_text = savedOpenText;
+                }
+                if (item.survey_status === SubmissionStatus[SubmissionStatus.Closed]) {
+                    setSavedClosedText(newState);
+                    item.block_text = savedClosedText;
+                }
             }
         });
         handleChange(surveyBlockContent);
