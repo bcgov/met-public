@@ -54,6 +54,10 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
 
     const [getWidgetsTrigger] = useLazyGetWidgetsQuery();
 
+    useEffect(() => {
+        setMockStatus(savedEngagement.submission_status);
+    }, [savedEngagement]);
+
     const scheduleEngagement = async (engagement: EngagementSchedule): Promise<Engagement> => {
         try {
             const updateResult = await patchEngagement(engagement);
