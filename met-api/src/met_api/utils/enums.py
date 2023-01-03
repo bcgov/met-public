@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Enum definitions."""
-from enum import Enum, IntEnum, StrEnum
+from enum import Enum, IntEnum
 
 
 class ContentType(Enum):
@@ -43,7 +43,7 @@ class UserType(Enum):
     PUBLIC_USER = 'public_user'
 
 
-class LoginSource(StrEnum):
+class LoginSource(Enum):
     """Login Source."""
 
     IDIR = 'idir'
