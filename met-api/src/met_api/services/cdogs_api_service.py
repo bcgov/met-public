@@ -114,7 +114,7 @@ class CdogsApiService:
         service_client_secret = _Config.CDOGS_SERVICE_CLIENT_SECRET
 
         basic_auth_encoded = base64.b64encode(
-            bytes(service_client + ':' + service_client_secret, 'utf-8')).decode('utf-8')
+            bytes(f'{service_client}:{service_client_secret}', 'utf-8')).decode('utf-8')
         data = 'grant_type=client_credentials'
         response = requests.post(
             token_url,
