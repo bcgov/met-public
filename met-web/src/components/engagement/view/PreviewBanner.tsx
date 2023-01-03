@@ -1,9 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { ActionContext } from './ActionContext';
-import { Box, Grid, Skeleton, Stack, useMediaQuery, Theme, Link } from '@mui/material';
+import { Box, Typography, Grid, Skeleton, Stack, useMediaQuery, Theme, Link } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { EngagementStatus } from 'constants/engagementStatus';
-import { MetHeader1, PrimaryButton, SecondaryButton, MetBody } from 'components/common';
+import { EngagementStatusChip } from '../status';
+import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
+import { MetHeader1, PrimaryButton, SecondaryButton, MetBody, MetPaper } from 'components/common';
 import { useAppSelector } from 'hooks';
 import ImageIcon from '@mui/icons-material/Image';
 import UnpublishedIcon from '@mui/icons-material/Unpublished';
@@ -17,7 +18,7 @@ export const PreviewBanner = () => {
     const isSmallScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
-    const { isEngagementLoading, savedEngagement } = useContext(ActionContext);
+    const { isEngagementLoading, savedEngagement, updateMockStatus, mockStatus } = useContext(ActionContext);
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
     const engagementId = savedEngagement.id || '';
@@ -44,7 +45,7 @@ export const PreviewBanner = () => {
         >
             <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start" padding={4}>
                 <ScheduleModal reschedule={isScheduled ? true : false} open={isOpen} updateModal={setIsOpen} />
-                <Grid item container direction="row" xs={12} sx={{ pt: 2, mb: 2 }}>
+                <Grid item container direction="row" xs={8} sx={{ pt: 2, mb: 2 }}>
                     <MetHeader1 sx={{ mb: 2 }}>{engagementBannerText}</MetHeader1>
                     <When condition={isScheduled}>
                         <Grid item container direction="row" rowSpacing={1}>
@@ -142,6 +143,31 @@ export const PreviewBanner = () => {
                             </Grid>
                         </Grid>
                     </When>
+                </Grid>
+                <Grid item container direction="row" alignItems="flex-end" justifyContent="flex-end" xs={4}>
+                    <MetPaper sx={{ p: 1 }}>
+                        <Typography sx={{ fontWeight: 'bold', pb: 2 }}>View Different Engagement Status:</Typography>
+                        <Stack spacing={1} direction={{ md: 'row' }} alignItems="center" justifyContent="center">
+                            <IconButton onClick={() => updateMockStatus(SubmissionStatus.Upcoming)}>
+                                <EngagementStatusChip
+                                    preview={mockStatus !== SubmissionStatus.Upcoming}
+                                    submissionStatus={SubmissionStatus.Upcoming}
+                                />
+                            </IconButton>
+                            <IconButton onClick={() => updateMockStatus(SubmissionStatus.Open)}>
+                                <EngagementStatusChip
+                                    preview={mockStatus !== SubmissionStatus.Open}
+                                    submissionStatus={SubmissionStatus.Open}
+                                />
+                            </IconButton>
+                            <IconButton onClick={() => updateMockStatus(SubmissionStatus.Closed)}>
+                                <EngagementStatusChip
+                                    preview={mockStatus !== SubmissionStatus.Closed}
+                                    submissionStatus={SubmissionStatus.Closed}
+                                />
+                            </IconButton>
+                        </Stack>
+                    </MetPaper>
                 </Grid>
                 <Grid sx={{ pt: 2 }} item xs={12} container direction="row" justifyContent="flex-end" spacing={1}>
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-start">

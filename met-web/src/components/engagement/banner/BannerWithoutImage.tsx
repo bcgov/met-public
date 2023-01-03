@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Grid, Box, Typography, Stack } from '@mui/material';
 import { MetHeader1 } from 'components/common';
 import { BannerProps } from '../view/types';
@@ -7,9 +7,11 @@ import { EngagementStatus } from 'constants/engagementStatus';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorState } from 'utils';
 import dayjs from 'dayjs';
+import { ActionContext } from '../view/ActionContext';
 
 const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
-    const { rich_description, name, start_date, end_date, submission_status } = savedEngagement;
+    const { rich_description, name, start_date, end_date } = savedEngagement;
+    const { mockStatus } = useContext(ActionContext);
     const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
     const dateFormat = 'MMM DD, YYYY';
 
@@ -74,7 +76,7 @@ const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
                                 <Typography sx={{ fontWeight: 800 }} variant="subtitle1">
                                     Status:
                                 </Typography>
-                                <EngagementStatusChip submissionStatus={submission_status} />
+                                <EngagementStatusChip submissionStatus={mockStatus} />
                             </Stack>
                         </Grid>
                     </Grid>
