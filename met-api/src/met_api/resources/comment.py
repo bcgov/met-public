@@ -95,10 +95,10 @@ class GeneratedCommentsSheet(Resource):
     @cross_origin(origins=allowedorigins())
     @auth.require
     def get(survey_id):
-        """Get comments page."""
+        """Export comments."""
         try:
 
-            response = CommentService().extract_comments_to_spread_sheet(survey_id)
+            response = CommentService().export_comments_to_spread_sheet(survey_id)
             response_headers = dict(response.headers)
             headers = {
                 'content-type': response_headers.get('content-type'),
