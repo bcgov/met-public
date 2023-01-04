@@ -111,8 +111,8 @@ class CommentService:
         return comments
 
     @classmethod
-    def extract_comments_to_spread_sheet(cls, survey_id):
-        """Extract comments to spread sheet."""
+    def export_comments_to_spread_sheet(cls, survey_id):
+        """Export comments to spread sheet."""
         comments = Comment.get_comments_by_survey_id(survey_id)
         formatted_comments = [
             {

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
 import { Link, useParams } from 'react-router-dom';
-import { MetPageGridContainer, PrimaryButton, MetHeader1 } from 'components/common';
+import { MetPageGridContainer, PrimaryButton, MetHeader1, SecondaryButton } from 'components/common';
 import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
-import { formatDate } from 'components/common/dateHelper';
+import { formatDate, formatToUTC } from 'components/common/dateHelper';
 import { Link as MuiLink } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
@@ -18,7 +18,6 @@ import { getSurvey } from 'services/surveyService';
 import { CommentStatus } from 'constants/commentStatus';
 import { getCommentsSheet } from 'services/commentService';
 import { downloadFile } from 'utils';
-import { COMMENT_SHEET } from 'components/comments/constants';
 
 const SubmissionListing = () => {
     const [searchFilter, setSearchFilter] = useState({
@@ -39,7 +38,7 @@ const SubmissionListing = () => {
         total: 0,
     });
     const [tableLoading, setTableLoading] = useState(true);
-    const [isExtracting, setIsExtracting] = useState(false);
+    const [isExporting, setIsExporting] = useState(false);
 
     const { surveyId } = useParams();
 
@@ -98,11 +97,11 @@ const SubmissionListing = () => {
         });
     };
 
-    const handleExtractComments = async () => {
-        setIsExtracting(true);
+    const handleExportComments = async () => {
+        setIsExporting(true);
         const response = await getCommentsSheet({ survey_id: survey.id });
-        downloadFile(response, COMMENT_SHEET);
-        setIsExtracting(false);
+        downloadFile(response, `${survey.engagement?.name || ''} - ${formatToUTC(Date())}`);
+        setIsExporting(false);
     };
 
     const headCells: HeadCell<SurveySubmission>[] = [
@@ -179,9 +178,9 @@ const SubmissionListing = () => {
                         <SearchIcon />
                     </PrimaryButton>
                 </Stack>
-                <PrimaryButton onClick={handleExtractComments} loading={isExtracting}>
-                    Extract to CSV
-                </PrimaryButton>
+                <SecondaryButton onClick={handleExportComments} loading={isExporting}>
+                    Export to CSV
+                </SecondaryButton>
             </Stack>
 
             <Grid item xs={12}>
