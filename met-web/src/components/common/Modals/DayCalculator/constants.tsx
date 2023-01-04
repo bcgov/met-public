@@ -4,7 +4,7 @@ export const options = [
     {
         id: 1,
         label: 'Day Zero',
-        description: 'Start date is excluded from calculation. ',
+        description: 'Start date is excluded from calculation.',
     },
     {
         id: 2,

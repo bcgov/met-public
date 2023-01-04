@@ -316,6 +316,8 @@ describe('Engagement form page tests', () => {
             expect(getByTestId('reset-button')).toBeVisible();
             expect(getByTestId('cancel-button')).toBeVisible();
             expect(getByTestId('calculator-button')).toBeVisible();
+            expect(getByText('Start Date')).toBeInTheDocument();
+            expect(getByText('End Date')).toBeInTheDocument();
             expect(getByText('Calculation Type')).toBeInTheDocument();
             expect(getByText('Number of Days')).toBeInTheDocument();
             const autocomplete = getByTestId('autocomplete');
