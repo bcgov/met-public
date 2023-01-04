@@ -21,9 +21,12 @@ const AddSurveyBlockTabs = ({
     const { status_block } = savedEngagement;
     const [savedUpcomingText, setSavedUpcomingText] = React.useState('');
     const [savedOpenText, setSavedOpenText] = React.useState('');
+    const [changedUpcomingText, setChangedUpcomingText] = React.useState('');
+    const [changedOpenText, setChangedOpenText] = React.useState('');
+    const [changedClosedText, setChangedClosedText] = React.useState('');
     const [savedClosedText, setSavedClosedText] = React.useState('');
     const getsavedRichText = () => {
-        status_block.map((item) => {
+        status_block.forEach((item) => {
             if (item.survey_status === SubmissionStatus[SubmissionStatus.Upcoming]) {
                 setSavedUpcomingText(item.block_text);
             }
@@ -45,15 +48,15 @@ const AddSurveyBlockTabs = ({
     const surveyBlockContent = [
         {
             survey_status: SubmissionStatus[SubmissionStatus.Upcoming],
-            block_text: savedUpcomingText ? savedUpcomingText : '',
+            block_text: changedUpcomingText ? changedUpcomingText : '',
         },
         {
             survey_status: SubmissionStatus[SubmissionStatus.Open],
-            block_text: savedOpenText ? savedOpenText : '',
+            block_text: changedOpenText ? changedOpenText : '',
         },
         {
             survey_status: SubmissionStatus[SubmissionStatus.Closed],
-            block_text: savedClosedText ? savedClosedText : '',
+            block_text: changedClosedText ? changedClosedText : '',
         },
     ];
 
@@ -61,21 +64,27 @@ const AddSurveyBlockTabs = ({
     const handleStatusBlockContentChange = (newState: string) => {
         surveyBlockContent.forEach((item) => {
             if (item.survey_status === value && newState) {
-                if (item.survey_status === SubmissionStatus[SubmissionStatus.Upcoming]) {
-                    setSavedUpcomingText(newState);
-                    item.block_text = savedUpcomingText;
-                }
-                if (item.survey_status === SubmissionStatus[SubmissionStatus.Open]) {
-                    setSavedOpenText(newState);
-                    item.block_text = savedOpenText;
-                }
-                if (item.survey_status === SubmissionStatus[SubmissionStatus.Closed]) {
-                    setSavedClosedText(newState);
-                    item.block_text = savedClosedText;
-                }
+                item.block_text = newState;
             }
+            return item;
         });
+        if (value === SubmissionStatus[SubmissionStatus.Upcoming]) {
+            setChangedUpcomingText(newState);
+        }
+        if (value === SubmissionStatus[SubmissionStatus.Open]) {
+            setChangedOpenText(newState);
+        }
+        if (value === SubmissionStatus[SubmissionStatus.Closed]) {
+            setChangedClosedText(newState);
+        }
         handleChange(surveyBlockContent);
+    };
+
+    // retain the state on tab changes
+    const handleKeepStateOnTabChanges = () => {
+        setSavedUpcomingText(changedUpcomingText ? changedUpcomingText : savedUpcomingText);
+        setSavedOpenText(changedOpenText ? changedOpenText : savedOpenText);
+        setSavedClosedText(changedClosedText ? changedClosedText : savedClosedText);
     };
 
     return (
@@ -83,7 +92,10 @@ const AddSurveyBlockTabs = ({
             <TabContext value={value}>
                 <Box sx={{ marginBottom: '0.25em' }}>
                     <MetTabList
-                        onChange={(_event: React.SyntheticEvent, newValue: string) => setValue(newValue)}
+                        onChange={(_event: React.SyntheticEvent, newValue: string) => {
+                            setValue(newValue);
+                            handleKeepStateOnTabChanges();
+                        }}
                         TabIndicatorProps={{
                             style: { transition: 'none', display: 'none' },
                         }}
@@ -118,5 +130,4 @@ const AddSurveyBlockTabs = ({
         </Box>
     );
 };
-
 export default AddSurveyBlockTabs;
