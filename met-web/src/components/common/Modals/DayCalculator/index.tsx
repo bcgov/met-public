@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
-import { Modal, Grid, Stack, IconButton, useMediaQuery, Divider, TextField, Autocomplete } from '@mui/material';
-import { modalStyle, MetHeader1, MetHeader3, PrimaryButton } from 'components/common';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { Modal, Grid, Stack, useMediaQuery, TextField, Autocomplete, Link as MuiLink, Typography } from '@mui/material';
+import {
+    modalStyle,
+    MetHeader1,
+    MetHeader4,
+    PrimaryButton,
+    SecondaryButton,
+    MetLabel,
+    MetBody,
+} from 'components/common';
 import { When } from 'react-if';
 import dayjs from 'dayjs';
 import { muitheme, options } from './constants';
@@ -177,496 +184,476 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                             </MetHeader1>
                         </Stack>
                     </Grid>
-                    <Grid item md={1} xs={12}>
-                        <Stack direction="row" alignItems="right">
-                            <IconButton
-                                onClick={() => updateModal(false)}
-                                sx={{ paddingLeft: 3, margin: 0 }}
-                                color="inherit"
-                            >
-                                <HighlightOffIcon />
-                            </IconButton>
+                </Grid>
+                <Grid container direction="row" item xs={12}>
+                    <MetHeader4 sx={{ mb: 3 }}>Enter any two fields to calculate the third</MetHeader4>
+                </Grid>
+                <Grid container direction="row" item xs={12}>
+                    <MetLabel sx={{ mb: 0 }}>Engagement Date</MetLabel>
+                </Grid>
+                {isSmallScreen ? (
+                    <>
+                        <Grid container direction="row" item xs={12}>
+                            <Grid item md={6} xs={12}>
+                                <Stack direction="row" alignItems="center" spacing={2}>
+                                    <Typography minWidth={{ xs: '2.5em', md: 'auto' }}>From</Typography>
+                                </Stack>
+                            </Grid>
+                            <Grid item md={6} xs={12}>
+                                <Stack direction="row" alignItems="center" spacing={2}>
+                                    <TextField
+                                        id="start-date"
+                                        data-testid="start-date"
+                                        type="date"
+                                        label=" "
+                                        InputLabelProps={{
+                                            shrink: false,
+                                        }}
+                                        sx={{ width: '80%' }}
+                                        name="startDate"
+                                        value={startDate}
+                                        placeholder="startDate"
+                                        InputProps={{ inputProps: { max: endDate || null } }}
+                                        onChange={handleChange}
+                                    />
+                                </Stack>
+                            </Grid>
+                        </Grid>
+                        <Grid container direction="row" item xs={12}>
+                            <Grid item md={6} xs={12}>
+                                <Stack direction="row" alignItems="center" spacing={2}>
+                                    <Typography minWidth={{ xs: '2.5em', md: 'auto' }}>To</Typography>
+                                </Stack>
+                            </Grid>
+                            <Grid item md={6} xs={12}>
+                                <Stack direction="row" alignItems="center" spacing={2}>
+                                    <TextField
+                                        id="end-date"
+                                        data-testid="end-date"
+                                        type="date"
+                                        label=" "
+                                        InputLabelProps={{
+                                            shrink: false,
+                                        }}
+                                        sx={{ width: '80%' }}
+                                        name="endDate"
+                                        value={endDate}
+                                        placeholder="endDate"
+                                        InputProps={{ inputProps: { min: startDate || null } }}
+                                        onChange={handleChange}
+                                    />
+                                </Stack>
+                            </Grid>
+                        </Grid>
+                    </>
+                ) : (
+                    <>
+                        <Grid container direction="row" item xs={12} columnSpacing={2}>
+                            <Grid item md={6} xs={12}>
+                                <Stack direction="row" alignItems="center" spacing={2}>
+                                    <Typography minWidth={{ xs: '2.5em', md: 'auto' }} align="center">
+                                        From
+                                    </Typography>
+                                    <TextField
+                                        id="start-date"
+                                        data-testid="start-date"
+                                        type="date"
+                                        label=" "
+                                        InputLabelProps={{
+                                            shrink: false,
+                                        }}
+                                        sx={{ width: '95%' }}
+                                        name="startDate"
+                                        value={startDate}
+                                        placeholder="startDate"
+                                        InputProps={{ inputProps: { max: endDate || null } }}
+                                        onChange={handleChange}
+                                    />
+                                </Stack>
+                            </Grid>
+                            <Grid item md={6} xs={12}>
+                                <Stack direction="row" alignItems="center" spacing={2}>
+                                    <Typography minWidth={{ xs: '2.5em', md: 'auto' }} align="center">
+                                        To
+                                    </Typography>
+                                    <TextField
+                                        id="end-date"
+                                        data-testid="end-date"
+                                        type="date"
+                                        label=" "
+                                        InputLabelProps={{
+                                            shrink: false,
+                                        }}
+                                        sx={{ width: '100%' }}
+                                        name="endDate"
+                                        value={endDate}
+                                        placeholder="endDate"
+                                        InputProps={{ inputProps: { min: startDate || null } }}
+                                        onChange={handleChange}
+                                    />
+                                </Stack>
+                            </Grid>
+                        </Grid>
+                    </>
+                )}
+                {isSmallScreen ? (
+                    <>
+                        <>
+                            <When condition={selectedOption?.label == suspensionLabel}>
+                                {
+                                    <Grid container direction="row" item xs={12}>
+                                        <Grid item md={6} xs={12}>
+                                            <Stack direction="row" alignItems="center" spacing={2}>
+                                                <MetLabel sx={{ mb: 0 }}>Suspension Date</MetLabel>
+                                            </Stack>
+                                        </Grid>
+                                        <Grid item md={6} xs={12}>
+                                            <Stack direction="row" alignItems="center" spacing={2}>
+                                                <TextField
+                                                    id="suspension-date"
+                                                    type="date"
+                                                    label=" "
+                                                    InputLabelProps={{
+                                                        shrink: false,
+                                                    }}
+                                                    sx={{ width: '80%' }}
+                                                    name="suspensionDate"
+                                                    value={suspensionDate}
+                                                    InputProps={{
+                                                        inputProps: {
+                                                            max:
+                                                                (resumptionDate < endDate ? endDate : resumptionDate) ||
+                                                                null,
+                                                            min: startDate || null,
+                                                        },
+                                                    }}
+                                                    onChange={handleChange}
+                                                    error={dayCalcError.suspensionDate}
+                                                    helperText={
+                                                        dayCalcError.suspensionDate
+                                                            ? 'Suspension Date must be specified'
+                                                            : ''
+                                                    }
+                                                />
+                                            </Stack>
+                                        </Grid>
+                                    </Grid>
+                                }
+                            </When>
+                        </>
+                        <>
+                            <When condition={selectedOption?.label == suspensionLabel}>
+                                {
+                                    <Grid container direction="row" item xs={12}>
+                                        <Grid item md={6} xs={12}>
+                                            <Stack direction="row" alignItems="center" spacing={2}>
+                                                <MetLabel sx={{ mb: 0 }}>Resumption Date</MetLabel>
+                                            </Stack>
+                                        </Grid>
+                                        <Grid item md={6} xs={12}>
+                                            <Stack direction="row" alignItems="center" spacing={2}>
+                                                <TextField
+                                                    id="resumption-date"
+                                                    type="date"
+                                                    label=" "
+                                                    InputLabelProps={{
+                                                        shrink: false,
+                                                    }}
+                                                    sx={{ width: '80%' }}
+                                                    name="resumptionDate"
+                                                    value={resumptionDate}
+                                                    InputProps={{
+                                                        inputProps: {
+                                                            max: endDate || null,
+                                                            min:
+                                                                (startDate > suspensionDate
+                                                                    ? startDate
+                                                                    : suspensionDate) || null,
+                                                        },
+                                                    }}
+                                                    onChange={handleChange}
+                                                    error={dayCalcError.resumptionDate}
+                                                    helperText={
+                                                        dayCalcError.resumptionDate
+                                                            ? 'Resumption Date must be specified'
+                                                            : ''
+                                                    }
+                                                />
+                                            </Stack>
+                                        </Grid>
+                                    </Grid>
+                                }
+                            </When>
+                        </>
+                    </>
+                ) : (
+                    <>
+                        <>
+                            <When condition={selectedOption?.label == suspensionLabel}>
+                                {
+                                    <Grid container direction="row" item xs={12}>
+                                        <Grid item md={6} xs={12}>
+                                            <Stack direction="row" alignItems="center" spacing={2}>
+                                                <MetLabel sx={{ mb: 0 }}>Suspension Date</MetLabel>
+                                            </Stack>
+                                        </Grid>
+                                        <Grid item md={6} xs={12}>
+                                            <Stack direction="row" alignItems="center" spacing={2}>
+                                                <MetLabel sx={{ mb: 0 }}>Resumption Date</MetLabel>
+                                            </Stack>
+                                        </Grid>
+                                    </Grid>
+                                }
+                            </When>
+                        </>
+                        <>
+                            <When condition={selectedOption?.label == suspensionLabel}>
+                                {
+                                    <Grid container direction="row" item xs={12}>
+                                        <Grid item md={6} xs={12}>
+                                            <Stack direction="row" alignItems="center" spacing={2}>
+                                                <TextField
+                                                    id="suspension-date"
+                                                    type="date"
+                                                    label=" "
+                                                    InputLabelProps={{
+                                                        shrink: false,
+                                                    }}
+                                                    sx={{ width: '95%' }}
+                                                    name="suspensionDate"
+                                                    value={suspensionDate}
+                                                    InputProps={{
+                                                        inputProps: {
+                                                            max:
+                                                                (resumptionDate < endDate ? endDate : resumptionDate) ||
+                                                                null,
+                                                            min: startDate || null,
+                                                        },
+                                                    }}
+                                                    onChange={handleChange}
+                                                    error={dayCalcError.suspensionDate}
+                                                    helperText={
+                                                        dayCalcError.suspensionDate
+                                                            ? 'Suspension Date must be specified'
+                                                            : ''
+                                                    }
+                                                />
+                                            </Stack>
+                                        </Grid>
+                                        <Grid item md={6} xs={12}>
+                                            <Stack direction="row" alignItems="center" spacing={2}>
+                                                <TextField
+                                                    id="resumption-date"
+                                                    type="date"
+                                                    label=" "
+                                                    InputLabelProps={{
+                                                        shrink: false,
+                                                    }}
+                                                    sx={{ width: '100%' }}
+                                                    name="resumptionDate"
+                                                    value={resumptionDate}
+                                                    InputProps={{
+                                                        inputProps: {
+                                                            max: endDate || null,
+                                                            min:
+                                                                (startDate > suspensionDate
+                                                                    ? startDate
+                                                                    : suspensionDate) || null,
+                                                        },
+                                                    }}
+                                                    onChange={handleChange}
+                                                    error={dayCalcError.resumptionDate}
+                                                    helperText={
+                                                        dayCalcError.resumptionDate
+                                                            ? 'Resumption Date must be specified'
+                                                            : ''
+                                                    }
+                                                />
+                                            </Stack>
+                                        </Grid>
+                                    </Grid>
+                                }
+                            </When>
+                        </>
+                    </>
+                )}
+                {isSmallScreen ? (
+                    <>
+                        <Grid container direction="row" item xs={12}>
+                            <Grid item md={6} xs={12}>
+                                <Stack direction="row" alignItems="center" spacing={2}>
+                                    <MetLabel sx={{ mb: 0 }}>Calculation Type</MetLabel>
+                                </Stack>
+                            </Grid>
+                            <Grid item md={6} xs={12}>
+                                <Stack direction="row" alignItems="center" spacing={2}>
+                                    <Autocomplete
+                                        id="drop-down"
+                                        options={options}
+                                        getOptionLabel={(option: ISelectOptions) => option.label}
+                                        onChange={(
+                                            _e: React.SyntheticEvent<Element, Event>,
+                                            option: ISelectOptions | null,
+                                        ) => {
+                                            setSelectedOption(option);
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                aria-labelledby="drop-down"
+                                                variant="outlined"
+                                                fullWidth
+                                            />
+                                        )}
+                                        sx={{ width: '80%' }}
+                                        isOptionEqualToValue={(option: ISelectOptions, value: ISelectOptions) =>
+                                            option.id == value.id
+                                        }
+                                        defaultValue={options[0]}
+                                        data-testid={'autocomplete'}
+                                        value={selectedOption}
+                                        placeholder="selectedOption"
+                                    />
+                                </Stack>
+                            </Grid>
+                        </Grid>
+                        <Grid container direction="row" item xs={12}>
+                            <Grid item md={6} xs={12}>
+                                <Stack direction="row" alignItems="center" spacing={2}>
+                                    <MetLabel sx={{ mb: 0 }}>Number of Days</MetLabel>
+                                </Stack>
+                            </Grid>
+                            <Grid item md={6} xs={12}>
+                                <Stack direction="row" alignItems="center" spacing={2}>
+                                    <TextField
+                                        id="number-of-days"
+                                        data-testid="number-of-days"
+                                        variant="outlined"
+                                        label=" "
+                                        InputLabelProps={{
+                                            shrink: false,
+                                        }}
+                                        sx={{ width: '80%' }}
+                                        name="numberOfDays"
+                                        value={numberOfDays}
+                                        placeholder="numberOfDays"
+                                        onChange={handleChange}
+                                    />
+                                </Stack>
+                            </Grid>
+                        </Grid>
+                    </>
+                ) : (
+                    <>
+                        <Grid container direction="row" item xs={12}>
+                            <Grid item md={6} xs={12}>
+                                <Stack direction="row" alignItems="center" spacing={2}>
+                                    <MetLabel sx={{ mb: 0 }}>Calculation Type</MetLabel>
+                                </Stack>
+                            </Grid>
+                            <Grid item md={6} xs={12}>
+                                <Stack direction="row" alignItems="center" spacing={2}>
+                                    <MetLabel sx={{ mb: 0 }}>Number of Days</MetLabel>
+                                </Stack>
+                            </Grid>
+                        </Grid>
+                        <Grid container direction="row" item xs={12}>
+                            <Grid item md={6} xs={12}>
+                                <Stack direction="row" alignItems="center" spacing={2}>
+                                    <Autocomplete
+                                        id="drop-down"
+                                        options={options}
+                                        getOptionLabel={(option: ISelectOptions) => option.label}
+                                        onChange={(
+                                            _e: React.SyntheticEvent<Element, Event>,
+                                            option: ISelectOptions | null,
+                                        ) => {
+                                            setSelectedOption(option);
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                aria-labelledby="drop-down"
+                                                variant="outlined"
+                                                fullWidth
+                                            />
+                                        )}
+                                        sx={{ width: '95%' }}
+                                        isOptionEqualToValue={(option: ISelectOptions, value: ISelectOptions) =>
+                                            option.id == value.id
+                                        }
+                                        defaultValue={options[0]}
+                                        data-testid={'autocomplete'}
+                                        value={selectedOption}
+                                        placeholder="selectedOption"
+                                    />
+                                </Stack>
+                            </Grid>
+                            <Grid item md={6} xs={12}>
+                                <Stack direction="row" alignItems="center" spacing={2}>
+                                    <TextField
+                                        id="number-of-days"
+                                        data-testid="number-of-days"
+                                        variant="outlined"
+                                        label=" "
+                                        InputLabelProps={{
+                                            shrink: false,
+                                        }}
+                                        sx={{ width: '100%' }}
+                                        name="numberOfDays"
+                                        value={numberOfDays}
+                                        placeholder="numberOfDays"
+                                        onChange={handleChange}
+                                    />
+                                </Stack>
+                            </Grid>
+                        </Grid>
+                    </>
+                )}
+                <Grid container direction="row" item xs={12}>
+                    <Grid
+                        item
+                        container
+                        direction={{ xs: 'column', sm: 'row' }}
+                        xs={12}
+                        justifyContent="flex-end"
+                        spacing={1}
+                    >
+                        <Stack
+                            direction={{ xs: 'column', sm: 'row' }}
+                            spacing={1}
+                            width="100%"
+                            justifyContent="flex-end"
+                        >
+                            <SecondaryButton data-testid={'reset-button'} onClick={() => resetToDefault()}>
+                                Reset All
+                            </SecondaryButton>
                         </Stack>
                     </Grid>
                 </Grid>
-                <Grid container direction="row" item xs={12}>
-                    <Divider style={{ marginTop: '1em', width: '100%' }} />
-                </Grid>
-                <Grid container direction="row" item xs={12}>
-                    <MetHeader3 sx={{ mb: 6 }}>Enter any two fields to calculate the third</MetHeader3>
-                </Grid>
-                {isSmallScreen ? (
-                    <>
-                        <Grid container direction="row" item xs={12}>
-                            <Grid item md={6} xs={12}>
-                                <Stack direction="row" alignItems="center" spacing={2}>
-                                    <MetHeader3 bold={true} sx={{ mb: 0 }}>
-                                        Start Date
-                                    </MetHeader3>
-                                </Stack>
-                            </Grid>
-                            <Grid item md={6} xs={12}>
-                                <Stack direction="row" alignItems="center" spacing={2}>
-                                    <TextField
-                                        id="start-date"
-                                        data-testid="start-date"
-                                        type="date"
-                                        label=" "
-                                        InputLabelProps={{
-                                            shrink: false,
-                                        }}
-                                        sx={{ width: '80%' }}
-                                        name="startDate"
-                                        value={startDate}
-                                        placeholder="startDate"
-                                        InputProps={{ inputProps: { max: endDate || null } }}
-                                        onChange={handleChange}
-                                    />
-                                </Stack>
-                            </Grid>
-                        </Grid>
-                        <Grid container direction="row" item xs={12}>
-                            <Grid item md={6} xs={12}>
-                                <Stack direction="row" alignItems="center" spacing={2}>
-                                    <MetHeader3 bold={true} sx={{ mb: 0 }}>
-                                        End Date
-                                    </MetHeader3>
-                                </Stack>
-                            </Grid>
-                            <Grid item md={6} xs={12}>
-                                <Stack direction="row" alignItems="center" spacing={2}>
-                                    <TextField
-                                        id="end-date"
-                                        data-testid="end-date"
-                                        type="date"
-                                        label=" "
-                                        InputLabelProps={{
-                                            shrink: false,
-                                        }}
-                                        sx={{ width: '80%' }}
-                                        name="endDate"
-                                        value={endDate}
-                                        placeholder="endDate"
-                                        InputProps={{ inputProps: { min: startDate || null } }}
-                                        onChange={handleChange}
-                                    />
-                                </Stack>
-                            </Grid>
-                        </Grid>
-                    </>
-                ) : (
-                    <>
-                        <Grid container direction="row" item xs={12}>
-                            <Grid item md={6} xs={12}>
-                                <Stack direction="row" alignItems="center" spacing={2}>
-                                    <MetHeader3 bold={true} sx={{ mb: 0 }}>
-                                        Start Date
-                                    </MetHeader3>
-                                </Stack>
-                            </Grid>
-                            <Grid item md={6} xs={12}>
-                                <Stack direction="row" alignItems="center" spacing={2}>
-                                    <MetHeader3 bold={true} sx={{ mb: 0 }}>
-                                        End Date
-                                    </MetHeader3>
-                                </Stack>
-                            </Grid>
-                        </Grid>
-                        <Grid container direction="row" item xs={12}>
-                            <Grid item md={6} xs={12}>
-                                <Stack direction="row" alignItems="center" spacing={2}>
-                                    <TextField
-                                        id="start-date"
-                                        data-testid="start-date"
-                                        type="date"
-                                        label=" "
-                                        InputLabelProps={{
-                                            shrink: false,
-                                        }}
-                                        sx={{ width: '80%' }}
-                                        name="startDate"
-                                        value={startDate}
-                                        placeholder="startDate"
-                                        InputProps={{ inputProps: { max: endDate || null } }}
-                                        onChange={handleChange}
-                                    />
-                                </Stack>
-                            </Grid>
-                            <Grid item md={6} xs={12}>
-                                <Stack direction="row" alignItems="center" spacing={2}>
-                                    <TextField
-                                        id="end-date"
-                                        data-testid="end-date"
-                                        type="date"
-                                        label=" "
-                                        InputLabelProps={{
-                                            shrink: false,
-                                        }}
-                                        sx={{ width: '80%' }}
-                                        name="endDate"
-                                        value={endDate}
-                                        placeholder="endDate"
-                                        InputProps={{ inputProps: { min: startDate || null } }}
-                                        onChange={handleChange}
-                                    />
-                                </Stack>
-                            </Grid>
-                        </Grid>
-                    </>
-                )}
-                {isSmallScreen ? (
-                    <>
-                        <>
-                            <When condition={selectedOption?.label == suspensionLabel}>
-                                {
-                                    <Grid container direction="row" item xs={12}>
-                                        <Grid item md={6} xs={12}>
-                                            <Stack direction="row" alignItems="center" spacing={2}>
-                                                <MetHeader3 bold={true} sx={{ mb: 0 }}>
-                                                    Suspension Date
-                                                </MetHeader3>
-                                            </Stack>
-                                        </Grid>
-                                        <Grid item md={6} xs={12}>
-                                            <Stack direction="row" alignItems="center" spacing={2}>
-                                                <TextField
-                                                    id="suspension-date"
-                                                    type="date"
-                                                    label=" "
-                                                    InputLabelProps={{
-                                                        shrink: false,
-                                                    }}
-                                                    sx={{ width: '80%' }}
-                                                    name="suspensionDate"
-                                                    value={suspensionDate}
-                                                    InputProps={{
-                                                        inputProps: {
-                                                            max:
-                                                                (resumptionDate < endDate ? endDate : resumptionDate) ||
-                                                                null,
-                                                            min: startDate || null,
-                                                        },
-                                                    }}
-                                                    onChange={handleChange}
-                                                    error={dayCalcError.suspensionDate}
-                                                    helperText={
-                                                        dayCalcError.suspensionDate
-                                                            ? 'Suspension Date must be specified'
-                                                            : ''
-                                                    }
-                                                />
-                                            </Stack>
-                                        </Grid>
-                                    </Grid>
-                                }
-                            </When>
-                        </>
-                        <>
-                            <When condition={selectedOption?.label == suspensionLabel}>
-                                {
-                                    <Grid container direction="row" item xs={12}>
-                                        <Grid item md={6} xs={12}>
-                                            <Stack direction="row" alignItems="center" spacing={2}>
-                                                <MetHeader3 bold={true} sx={{ mb: 0 }}>
-                                                    Resumption Date
-                                                </MetHeader3>
-                                            </Stack>
-                                        </Grid>
-                                        <Grid item md={6} xs={12}>
-                                            <Stack direction="row" alignItems="center" spacing={2}>
-                                                <TextField
-                                                    id="resumption-date"
-                                                    type="date"
-                                                    label=" "
-                                                    InputLabelProps={{
-                                                        shrink: false,
-                                                    }}
-                                                    sx={{ width: '80%' }}
-                                                    name="resumptionDate"
-                                                    value={resumptionDate}
-                                                    InputProps={{
-                                                        inputProps: {
-                                                            max: endDate || null,
-                                                            min:
-                                                                (startDate > suspensionDate
-                                                                    ? startDate
-                                                                    : suspensionDate) || null,
-                                                        },
-                                                    }}
-                                                    onChange={handleChange}
-                                                    error={dayCalcError.resumptionDate}
-                                                    helperText={
-                                                        dayCalcError.resumptionDate
-                                                            ? 'Resumption Date must be specified'
-                                                            : ''
-                                                    }
-                                                />
-                                            </Stack>
-                                        </Grid>
-                                    </Grid>
-                                }
-                            </When>
-                        </>
-                    </>
-                ) : (
-                    <>
-                        <>
-                            <When condition={selectedOption?.label == suspensionLabel}>
-                                {
-                                    <Grid container direction="row" item xs={12}>
-                                        <Grid item md={6} xs={12}>
-                                            <Stack direction="row" alignItems="center" spacing={2}>
-                                                <MetHeader3 bold={true} sx={{ mb: 0 }}>
-                                                    Suspension Date
-                                                </MetHeader3>
-                                            </Stack>
-                                        </Grid>
-                                        <Grid item md={6} xs={12}>
-                                            <Stack direction="row" alignItems="center" spacing={2}>
-                                                <MetHeader3 bold={true} sx={{ mb: 0 }}>
-                                                    Resumption Date
-                                                </MetHeader3>
-                                            </Stack>
-                                        </Grid>
-                                    </Grid>
-                                }
-                            </When>
-                        </>
-                        <>
-                            <When condition={selectedOption?.label == suspensionLabel}>
-                                {
-                                    <Grid container direction="row" item xs={12}>
-                                        <Grid item md={6} xs={12}>
-                                            <Stack direction="row" alignItems="center" spacing={2}>
-                                                <TextField
-                                                    id="suspension-date"
-                                                    type="date"
-                                                    label=" "
-                                                    InputLabelProps={{
-                                                        shrink: false,
-                                                    }}
-                                                    sx={{ width: '80%' }}
-                                                    name="suspensionDate"
-                                                    value={suspensionDate}
-                                                    InputProps={{
-                                                        inputProps: {
-                                                            max:
-                                                                (resumptionDate < endDate ? endDate : resumptionDate) ||
-                                                                null,
-                                                            min: startDate || null,
-                                                        },
-                                                    }}
-                                                    onChange={handleChange}
-                                                    error={dayCalcError.suspensionDate}
-                                                    helperText={
-                                                        dayCalcError.suspensionDate
-                                                            ? 'Suspension Date must be specified'
-                                                            : ''
-                                                    }
-                                                />
-                                            </Stack>
-                                        </Grid>
-                                        <Grid item md={6} xs={12}>
-                                            <Stack direction="row" alignItems="center" spacing={2}>
-                                                <TextField
-                                                    id="resumption-date"
-                                                    type="date"
-                                                    label=" "
-                                                    InputLabelProps={{
-                                                        shrink: false,
-                                                    }}
-                                                    sx={{ width: '80%' }}
-                                                    name="resumptionDate"
-                                                    value={resumptionDate}
-                                                    InputProps={{
-                                                        inputProps: {
-                                                            max: endDate || null,
-                                                            min:
-                                                                (startDate > suspensionDate
-                                                                    ? startDate
-                                                                    : suspensionDate) || null,
-                                                        },
-                                                    }}
-                                                    onChange={handleChange}
-                                                    error={dayCalcError.resumptionDate}
-                                                    helperText={
-                                                        dayCalcError.resumptionDate
-                                                            ? 'Resumption Date must be specified'
-                                                            : ''
-                                                    }
-                                                />
-                                            </Stack>
-                                        </Grid>
-                                    </Grid>
-                                }
-                            </When>
-                        </>
-                    </>
-                )}
-                {isSmallScreen ? (
-                    <>
-                        <Grid container direction="row" item xs={12}>
-                            <Grid item md={6} xs={12}>
-                                <Stack direction="row" alignItems="center" spacing={2}>
-                                    <MetHeader3 bold={true} sx={{ mb: 0 }}>
-                                        Calculation Type
-                                    </MetHeader3>
-                                </Stack>
-                            </Grid>
-                            <Grid item md={6} xs={12}>
-                                <Stack direction="row" alignItems="center" spacing={2}>
-                                    <Autocomplete
-                                        id="drop-down"
-                                        options={options}
-                                        getOptionLabel={(option: ISelectOptions) => option.label}
-                                        onChange={(
-                                            _e: React.SyntheticEvent<Element, Event>,
-                                            option: ISelectOptions | null,
-                                        ) => {
-                                            setSelectedOption(option);
-                                        }}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                aria-labelledby="drop-down"
-                                                variant="outlined"
-                                                fullWidth
-                                            />
-                                        )}
-                                        sx={{ width: '80%' }}
-                                        isOptionEqualToValue={(option: ISelectOptions, value: ISelectOptions) =>
-                                            option.id == value.id
-                                        }
-                                        defaultValue={options[0]}
-                                        data-testid={'autocomplete'}
-                                        value={selectedOption}
-                                        placeholder="selectedOption"
-                                    />
-                                </Stack>
-                            </Grid>
-                        </Grid>
-                        <Grid container direction="row" item xs={12}>
-                            <Grid item md={6} xs={12}>
-                                <Stack direction="row" alignItems="center" spacing={2}>
-                                    <MetHeader3 bold={true} sx={{ mb: 0 }}>
-                                        Number of Days
-                                    </MetHeader3>
-                                </Stack>
-                            </Grid>
-                            <Grid item md={6} xs={12}>
-                                <Stack direction="row" alignItems="center" spacing={2}>
-                                    <TextField
-                                        id="number-of-days"
-                                        data-testid="number-of-days"
-                                        variant="outlined"
-                                        label=" "
-                                        InputLabelProps={{
-                                            shrink: false,
-                                        }}
-                                        sx={{ width: '80%' }}
-                                        name="numberOfDays"
-                                        value={numberOfDays}
-                                        placeholder="numberOfDays"
-                                        onChange={handleChange}
-                                    />
-                                </Stack>
-                            </Grid>
-                        </Grid>
-                    </>
-                ) : (
-                    <>
-                        <Grid container direction="row" item xs={12}>
-                            <Grid item md={6} xs={12}>
-                                <Stack direction="row" alignItems="center" spacing={2}>
-                                    <MetHeader3 bold={true} sx={{ mb: 0 }}>
-                                        Calculation Type
-                                    </MetHeader3>
-                                </Stack>
-                            </Grid>
-                            <Grid item md={6} xs={12}>
-                                <Stack direction="row" alignItems="center" spacing={2}>
-                                    <MetHeader3 bold={true} sx={{ mb: 0 }}>
-                                        Number of Days
-                                    </MetHeader3>
-                                </Stack>
-                            </Grid>
-                        </Grid>
-                        <Grid container direction="row" item xs={12}>
-                            <Grid item md={6} xs={12}>
-                                <Stack direction="row" alignItems="center" spacing={2}>
-                                    <Autocomplete
-                                        id="drop-down"
-                                        options={options}
-                                        getOptionLabel={(option: ISelectOptions) => option.label}
-                                        onChange={(
-                                            _e: React.SyntheticEvent<Element, Event>,
-                                            option: ISelectOptions | null,
-                                        ) => {
-                                            setSelectedOption(option);
-                                        }}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                aria-labelledby="drop-down"
-                                                variant="outlined"
-                                                fullWidth
-                                            />
-                                        )}
-                                        sx={{ width: '80%' }}
-                                        isOptionEqualToValue={(option: ISelectOptions, value: ISelectOptions) =>
-                                            option.id == value.id
-                                        }
-                                        defaultValue={options[0]}
-                                        data-testid={'autocomplete'}
-                                        value={selectedOption}
-                                        placeholder="selectedOption"
-                                    />
-                                </Stack>
-                            </Grid>
-                            <Grid item md={6} xs={12}>
-                                <Stack direction="row" alignItems="center" spacing={2}>
-                                    <TextField
-                                        id="number-of-days"
-                                        data-testid="number-of-days"
-                                        variant="outlined"
-                                        label=" "
-                                        InputLabelProps={{
-                                            shrink: false,
-                                        }}
-                                        sx={{ width: '80%' }}
-                                        name="numberOfDays"
-                                        value={numberOfDays}
-                                        placeholder="numberOfDays"
-                                        onChange={handleChange}
-                                    />
-                                </Stack>
-                            </Grid>
-                        </Grid>
-                    </>
-                )}
                 <Grid item md={12} xs={12}>
                     <Stack direction="row" alignItems="center" spacing={2}>
-                        <MetHeader3 bold={true}>Description</MetHeader3>
+                        <MetHeader4 bold={true}>Description</MetHeader4>
                     </Stack>
                 </Grid>
                 <Grid item md={12} xs={12}>
                     <Stack direction="row" alignItems="center" spacing={2}>
                         <When condition={selectedOption?.label == dayZeroLabel}>
                             {
-                                <MetHeader3 sx={{ mb: 2 }}>
+                                <MetBody sx={{ mb: 2 }}>
                                     {options[0].description}
-                                    <a style={{ color: 'blue' }} onClick={() => setShowHideStatus(!showHideStatus)}>{`${
-                                        showHideStatus ? ' Hide ' : ' Show '
-                                    }`}</a>
+                                    <MuiLink onClick={() => setShowHideStatus(!showHideStatus)}>{`${
+                                        showHideStatus ? 'Hide' : 'Show'
+                                    }`}</MuiLink>{' '}
                                     Day Zero rules.
-                                </MetHeader3>
+                                </MetBody>
                             }
                         </When>
                         <When condition={selectedOption?.label == calendarLabel}>
-                            {<MetHeader3 sx={{ mb: 2 }}>{options[1].description}</MetHeader3>}
+                            {<MetBody sx={{ mb: 2 }}>{options[1].description}</MetBody>}
                         </When>
                         <When condition={selectedOption?.label == suspensionLabel}>
-                            {<MetHeader3 sx={{ mb: 2 }}>{options[2].description}</MetHeader3>}
+                            {<MetBody sx={{ mb: 2 }}>{options[2].description}</MetBody>}
                         </When>
                     </Stack>
                 </Grid>
@@ -691,25 +678,10 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                             width="100%"
                             justifyContent="flex-end"
                         >
-                            <PrimaryButton
-                                className="btn btn-lg btn-secondary"
-                                data-testid={'reset-button'}
-                                onClick={() => resetToDefault()}
-                            >
-                                Reset
-                            </PrimaryButton>
-                            <PrimaryButton
-                                className="btn btn-lg btn-primary"
-                                data-testid={'cancel-button'}
-                                onClick={() => updateModal(false)}
-                            >
+                            <SecondaryButton data-testid={'cancel-button'} onClick={() => updateModal(false)}>
                                 Close
-                            </PrimaryButton>
-                            <PrimaryButton
-                                className="btn btn-success"
-                                data-testid={'calculator-button'}
-                                onClick={() => calculator()}
-                            >
+                            </SecondaryButton>
+                            <PrimaryButton data-testid={'calculator-button'} onClick={() => calculator()}>
                                 Calculate
                             </PrimaryButton>
                         </Stack>
