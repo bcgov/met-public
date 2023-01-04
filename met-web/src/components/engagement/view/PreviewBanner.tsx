@@ -145,8 +145,10 @@ export const PreviewBanner = () => {
                     </When>
                 </Grid>
                 <Grid item container direction="row" alignItems="flex-end" justifyContent="flex-end" xs={4}>
-                    <MetPaper sx={{ p: 1 }}>
-                        <Typography sx={{ fontWeight: 'bold', pb: 2 }}>View Different Engagement Status:</Typography>
+                    <MetPaper sx={{ p: 1, borderColor: '#cdcdcd' }}>
+                        <Typography sx={{ fontSize: '13px', fontWeight: 'bold', pb: '8px' }}>
+                            Click to View Different Engagement Status:
+                        </Typography>
                         <Stack spacing={1} direction={{ md: 'row' }} alignItems="center" justifyContent="center">
                             <IconButton onClick={() => updateMockStatus(SubmissionStatus.Upcoming)}>
                                 <EngagementStatusChip
