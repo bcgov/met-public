@@ -500,3 +500,83 @@ div[disabled] {
 .alert-success {
   display: none;
 }
+
+.BC-Gov-SecondaryButton {
+  background: none !important;
+  border-radius: 4px;
+  border: 2px solid #003366;
+  padding: 10px 30px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  font-size: 18px;
+  Font-family: ‘BCSans’, ‘Noto Sans’, Verdana, Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  color: #003366 !important;
+  }
+
+.BC-Gov-SecondaryButton:hover {
+  opacity: 0.80;
+  text-decoration: underline;
+  background-color: #003366;
+  color: #FFFFFF;
+  }
+
+  .BC-Gov-PrimaryButton {
+    background-color: #003366 !important;
+    border: none;
+    border-radius: 4px;
+    color: white !important;
+    padding: 12px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 18px;
+    font-family: ‘BCSans’, ‘Noto Sans’, Verdana, Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+.BC-Gov-PrimaryButton:hover {
+  text-decoration: underline;
+  opacity: 0.80;
+}
+
+.btn-wizard-nav-next {
+  @extend .BC-Gov-PrimaryButton;
+}
+
+.btn-wizard-nav-next:hover {
+  @extend .BC-Gov-PrimaryButton;
+  @extend .BC-Gov-PrimaryButton:hover;
+}
+
+.btn-wizard-nav-cancel {
+  @extend .BC-Gov-SecondaryButton;
+}
+
+.btn-wizard-nav-cancel:hover {
+  @extend .BC-Gov-SecondaryButton;
+  @extend .BC-Gov-SecondaryButton:hover;
+}
+
+.btn-wizard-nav-previous {
+  @extend .BC-Gov-SecondaryButton;
+}
+
+.btn-wizard-nav-previous:hover {
+  @extend .BC-Gov-SecondaryButton;
+  @extend .BC-Gov-SecondaryButton:hover;
+}
+
+.btn-wizard-nav-submit {
+  @extend .BC-Gov-PrimaryButton;
+}
+
+.btn-wizard-nav-submit:hover {
+  @extend .BC-Gov-PrimaryButton;
+  @extend .BC-Gov-PrimaryButton:hover;
+}
