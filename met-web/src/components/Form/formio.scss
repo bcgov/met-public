@@ -564,12 +564,12 @@ div[disabled] {
 }
 
 .btn-wizard-nav-previous {
-  @extend .BC-Gov-PrimaryButton;
+  @extend .BC-Gov-SecondaryButton;
 }
 
 .btn-wizard-nav-previous:hover {
-  @extend .BC-Gov-PrimaryButton;
-  @extend .BC-Gov-PrimaryButton:hover;
+  @extend .BC-Gov-SecondaryButton;
+  @extend .BC-Gov-SecondaryButton:hover;
 }
 
 .btn-wizard-nav-submit {
