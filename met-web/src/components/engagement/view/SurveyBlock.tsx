@@ -1,19 +1,29 @@
 import React, { useContext } from 'react';
-import { Grid, Skeleton, Typography } from '@mui/material';
-import { MetPaper, PrimaryButton, MetHeader1 } from '../../common';
+import { Grid, Skeleton } from '@mui/material';
+import { MetPaper, PrimaryButton } from '../../common';
 import { ActionContext } from './ActionContext';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { SurveyBlockProps } from './types';
 import { useAppSelector } from 'hooks';
+import { If, Then, Else } from 'react-if';
+import { submissionStatusArray } from 'constants/submissionStatusText';
+import { Editor } from 'react-draft-wysiwyg';
+import { getEditorState } from 'utils';
+
+const statusMap = {
+    1: 'Upcoming',
+    2: 'Open',
+    3: 'Closed',
+};
 
 const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
-    const { savedEngagement, isEngagementLoading } = useContext(ActionContext);
-
+    const { savedEngagement, isEngagementLoading, mockStatus } = useContext(ActionContext);
     const isOpen = savedEngagement.submission_status === SubmissionStatus.Open;
     const surveyId = savedEngagement.surveys[0]?.id || '';
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isPreview = isLoggedIn;
-
+    const status_block = savedEngagement.status_block;
+    const status_text = status_block.find((status) => status.survey_status === statusMap[mockStatus])?.block_text;
     if (isEngagementLoading) {
         return <Skeleton variant="rectangular" height={'15em'} />;
     }
@@ -22,14 +32,24 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
         <MetPaper elevation={1} sx={{ padding: '2em' }}>
             <Grid container direction="row" alignItems="flex-end" justifyContent="flex-end" spacing={2}>
                 <Grid item xs={12}>
-                    <MetHeader1>Let us know what you think!</MetHeader1>
-                </Grid>
-                <Grid item xs={12}>
-                    <Typography variant="subtitle1">
-                        We would like to hear from you about this project and how it could affect you and your
-                        environment. Please fill in our short survey and leave a comment. Survey takes 3-5min to
-                        complete
-                    </Typography>
+                    <>
+                        <If condition={status_text !== undefined}>
+                            <Then>
+                                <Editor
+                                    editorState={getEditorState(status_text ? status_text : '')}
+                                    readOnly={true}
+                                    toolbarHidden
+                                />
+                            </Then>
+                            <Else>
+                                <div
+                                    dangerouslySetInnerHTML={{
+                                        __html: submissionStatusArray[mockStatus - 1],
+                                    }}
+                                />
+                            </Else>
+                        </If>
+                    </>
                 </Grid>
                 <Grid item container direction={{ xs: 'column', sm: 'row' }} xs={12} justifyContent="flex-end">
                     <PrimaryButton

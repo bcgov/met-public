@@ -38,7 +38,7 @@ const SubmissionListing = () => {
         total: 0,
     });
     const [tableLoading, setTableLoading] = useState(true);
-    const [isExtracting, setIsExtracting] = useState(false);
+    const [isExporting, setIsExporting] = useState(false);
 
     const { surveyId } = useParams();
 
@@ -97,11 +97,11 @@ const SubmissionListing = () => {
         });
     };
 
-    const handleExtractComments = async () => {
-        setIsExtracting(true);
+    const handleExportComments = async () => {
+        setIsExporting(true);
         const response = await getCommentsSheet({ survey_id: survey.id });
         downloadFile(response, `${survey.engagement?.name || ''} - ${formatToUTC(Date())}`);
-        setIsExtracting(false);
+        setIsExporting(false);
     };
 
     const headCells: HeadCell<SurveySubmission>[] = [
@@ -178,7 +178,7 @@ const SubmissionListing = () => {
                         <SearchIcon />
                     </PrimaryButton>
                 </Stack>
-                <SecondaryButton onClick={handleExtractComments} loading={isExtracting}>
+                <SecondaryButton onClick={handleExportComments} loading={isExporting}>
                     Export to CSV
                 </SecondaryButton>
             </Stack>

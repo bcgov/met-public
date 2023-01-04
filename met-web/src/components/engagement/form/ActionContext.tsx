@@ -3,6 +3,7 @@ import { postEngagement, getEngagement, patchEngagement } from '../../../service
 import { useNavigate, useParams } from 'react-router-dom';
 import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams } from './types';
 import { createDefaultEngagement, Engagement } from '../../../models/engagement';
+import { EngagementStatusBlock } from '../../../models/engagementStatusBlock';
 import { saveDocument } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
@@ -22,6 +23,9 @@ export const ActionContext = createContext<EngagementContext>({
     engagementId: 'create',
     loadingSavedEngagement: true,
     handleAddBannerImage: (_files: File[]) => {
+        /* empty default method  */
+    },
+    handleStatusBlockChange: (_statusBlock: EngagementStatusBlock[]) => {
         /* empty default method  */
     },
     fetchEngagement: () => {
@@ -88,6 +92,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             const result = await postEngagement({
                 ...engagement,
                 banner_filename: uploadedBannerImageFileName,
+                status_block: Object.keys(statusBlockContent[0]).length > 0 ? statusBlockContent : undefined,
             });
 
             dispatch(openNotification({ severity: 'success', text: 'Engagement Created Successfully' }));
@@ -120,9 +125,11 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         setSaving(true);
         try {
             const uploadedBannerImageFileName = await handleUploadBannerImage();
-            const engagementEditsToPatch = updatedDiff(savedEngagement, {
+            const state = { ...savedEngagement, status_block: undefined };
+            const engagementEditsToPatch = updatedDiff(state, {
                 ...engagement,
                 banner_filename: uploadedBannerImageFileName,
+                status_block: Object.keys(statusBlockContent[0]).length > 0 ? statusBlockContent : undefined,
             }) as PatchEngagementRequest;
 
             const updatedEngagement = await patchEngagement({
@@ -141,6 +148,18 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
     };
 
+    const [statusBlockContent, setstatusBlockContent] = useState([{}]);
+    const handleStatusBlockChange = React.useCallback(
+        (newArray: { survey_status: string; block_text: string }[]) => {
+            // exclude content having empty block text
+            const filterContentList = newArray.filter(function (el) {
+                return el.block_text !== '';
+            });
+            setstatusBlockContent(filterContentList);
+        },
+        [statusBlockContent],
+    );
+
     return (
         <ActionContext.Provider
             value={{
@@ -152,6 +171,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 loadingSavedEngagement,
                 handleAddBannerImage,
                 fetchEngagement,
+                handleStatusBlockChange,
             }}
         >
             {children}
