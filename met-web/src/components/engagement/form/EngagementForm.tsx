@@ -256,9 +256,9 @@ const EngagementForm = () => {
                     </Grid>
                     <Grid item md={4} xs={12}>
                         <Stack direction="row" alignItems="center">
-                            <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => setIsOpen(true)}>
+                            <SecondaryButton sx={{ marginLeft: '1em' }} onClick={() => setIsOpen(true)}>
                                 Day Calculator
-                            </PrimaryButton>
+                            </SecondaryButton>
                         </Stack>
                     </Grid>
                 </Grid>
