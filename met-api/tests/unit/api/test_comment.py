@@ -66,11 +66,11 @@ def test_get_comments_spreadsheet(mocker, client, jwt, session):  # pylint:disab
     mock_post_generate_document_response.headers = {}
     mock_post_generate_document_response.status_code = 200
     mock_post_generate_document = mocker.patch(
-        'met_api.services.cdogs_api_service.CdogsApiService._post_generate_document', 
+        'met_api.services.cdogs_api_service.CdogsApiService._post_generate_document',
         return_value=mock_post_generate_document_response
     )
     mock_get_access_token = mocker.patch(
-        'met_api.services.cdogs_api_service.CdogsApiService._get_access_token', 
+        'met_api.services.cdogs_api_service.CdogsApiService._get_access_token',
         return_value='token'
     )
 
@@ -80,7 +80,7 @@ def test_get_comments_spreadsheet(mocker, client, jwt, session):  # pylint:disab
     }
     mock_upload_template_response.status_code = 200
     mock_post_upload_template = mocker.patch(
-        'met_api.services.cdogs_api_service.CdogsApiService._post_upload_template', 
+        'met_api.services.cdogs_api_service.CdogsApiService._post_upload_template',
         return_value=mock_upload_template_response
     )
 
