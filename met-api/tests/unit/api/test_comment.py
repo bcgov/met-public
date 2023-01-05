@@ -17,7 +17,7 @@
 Test-Suite to ensure that the /Comment endpoint is working as expected.
 """
 import json
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims
@@ -60,20 +60,29 @@ def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
 def test_get_comments_spreadsheet(mocker, client, jwt, session):  # pylint:disable=unused-argument
     """Assert that comments sheet can be fetched."""
     claims = TestJwtClaims.public_user_role
-    
+
     mock_post_generate_document_response = MagicMock()
     mock_post_generate_document_response.content = b'mock data'
     mock_post_generate_document_response.headers = {}
     mock_post_generate_document_response.status_code = 200
-    mock_post_generate_document = mocker.patch('met_api.services.cdogs_api_service.CdogsApiService._post_generate_document', return_value=mock_post_generate_document_response)
-    mock_get_access_token = mocker.patch('met_api.services.cdogs_api_service.CdogsApiService._get_access_token', return_value='token')
-    
+    mock_post_generate_document = mocker.patch(
+        'met_api.services.cdogs_api_service.CdogsApiService._post_generate_document', 
+        return_value=mock_post_generate_document_response
+    )
+    mock_get_access_token = mocker.patch(
+        'met_api.services.cdogs_api_service.CdogsApiService._get_access_token', 
+        return_value='token'
+    )
+
     mock_upload_template_response = MagicMock()
     mock_upload_template_response.headers = {
         'X-Template-Hash': 'hash_code'
     }
     mock_upload_template_response.status_code = 200
-    mock_post_upload_template = mocker.patch('met_api.services.cdogs_api_service.CdogsApiService._post_upload_template', return_value=mock_upload_template_response)
+    mock_post_upload_template = mocker.patch(
+        'met_api.services.cdogs_api_service.CdogsApiService._post_upload_template', 
+        return_value=mock_upload_template_response
+    )
 
     user_details = factory_user_model()
     survey, eng = factory_survey_and_eng_model()
