@@ -77,10 +77,32 @@ const CreateFolderForm = () => {
                 sx={{ marginBottom: '3em' }}
             >
                 <Grid item>
-                    <SecondaryButton onClick={() => setCreateFolderMode(true)}>Create Folder</SecondaryButton>
+                    <SecondaryButton
+                        sx={{
+                            borderColor: '#707070',
+                            color: '#494949',
+                            '&:hover': {
+                                background: '#f2f2f2',
+                            },
+                        }}
+                        onClick={() => setCreateFolderMode(true)}
+                    >
+                        Create Folder
+                    </SecondaryButton>
                 </Grid>
                 <Grid item>
-                    <SecondaryButton onClick={() => handleFileDrawerOpen(true)}>Add Document</SecondaryButton>
+                    <SecondaryButton
+                        sx={{
+                            borderColor: '#707070',
+                            color: '#494949',
+                            '&:hover': {
+                                background: '#f2f2f2',
+                            },
+                        }}
+                        onClick={() => handleFileDrawerOpen(true)}
+                    >
+                        Add Document
+                    </SecondaryButton>
                 </Grid>
             </Grid>
 
@@ -100,12 +122,10 @@ const CreateFolderForm = () => {
                                 error={formError.name || folderName.length > 50}
                                 helperText={getErrorMessage()}
                             />
-
-                            <SecondaryButton onClick={() => setCreateFolderMode(false)}>Cancel</SecondaryButton>
-
                             <PrimaryButton loading={creatingFolder} onClick={handleCreateFolder}>
-                                Add Folder
+                                Save
                             </PrimaryButton>
+                            <SecondaryButton onClick={() => setCreateFolderMode(false)}>Cancel</SecondaryButton>
                         </Stack>
                     </Grid>
                 </Grid>
