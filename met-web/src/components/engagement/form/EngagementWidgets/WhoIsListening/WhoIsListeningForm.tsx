@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Autocomplete, Grid, TextField } from '@mui/material';
-import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
+import { Autocomplete, Grid, TextField, Divider } from '@mui/material';
+import { MetLabel, PrimaryButton, SecondaryButton, MetHeader3 } from 'components/common';
 import { Contact } from 'models/contact';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -85,6 +85,10 @@ const WhoIsListeningForm = () => {
     return (
         <>
             <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
+                <Grid item xs={12}>
+                    <MetHeader3>Who is Listening</MetHeader3>
+                    <Divider sx={{ marginTop: '1em' }} />
+                </Grid>
                 <Grid item xs={12} container direction="row" justifyContent={'flex-start'} spacing={1}>
                     <Grid item xs={12}>
                         <MetLabel>Select Existing Contact</MetLabel>
