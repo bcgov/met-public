@@ -54,3 +54,17 @@ def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
     rv = client.put(f'/api/submissions/{submission.id}',
                     data=json.dumps(to_dict), headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
+
+
+def test_get_comments_spreadsheet(client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that comments sheet can be fetched."""
+    claims = TestJwtClaims.public_user_role
+
+    user_details = factory_user_model()
+    survey, eng = factory_survey_and_eng_model()
+    submission = factory_submission_model(survey.id, eng.id, user_details.id)
+    factory_comment_model(survey.id, submission.id)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.get(f'/api/comments/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+    
