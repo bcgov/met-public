@@ -67,4 +67,3 @@ def test_get_comments_spreadsheet(client, jwt, session):  # pylint:disable=unuse
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/comments/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    
