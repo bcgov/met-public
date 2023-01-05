@@ -57,7 +57,7 @@ def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
     assert rv.status_code == 200
 
 
-def test_get_comments_spreadsheet(mocker, client, jwt):  # pylint:disable=unused-argument
+def test_get_comments_spreadsheet(mocker, client, jwt, session):  # pylint:disable=unused-argument
     """Assert that comments sheet can be fetched."""
     claims = TestJwtClaims.public_user_role
     
