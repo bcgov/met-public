@@ -53,7 +53,7 @@ jest.mock('components/common', () => ({
     },
 }));
 
-describe('Phases widget tests', () => {
+describe('Comment listing tests', () => {
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
