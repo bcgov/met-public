@@ -111,22 +111,27 @@ const CreateFolderForm = () => {
                     <Grid item xs={12}>
                         <MetLabel>Folder name</MetLabel>
                     </Grid>
-                    <Grid item xs={12}>
-                        <Stack direction="row" justifyContent={'flex-start'} alignItems="stretch" spacing={2}>
+                    <Grid container item justifyContent={'flex-start'} alignItems="space-between" spacing={3} xs={12}>
+                        <Grid item xs={5}>
                             <TextField
                                 label=" "
                                 InputLabelProps={{
                                     shrink: false,
                                 }}
+                                sx={{ width: '100%' }}
                                 onChange={(e) => handleFolderNameChange(e.target.value)}
                                 error={formError.name || folderName.length > 50}
                                 helperText={getErrorMessage()}
                             />
+                        </Grid>
+                        <Grid item xs={1}>
                             <PrimaryButton loading={creatingFolder} onClick={handleCreateFolder}>
                                 Save
                             </PrimaryButton>
+                        </Grid>
+                        <Grid item xs={1}>
                             <SecondaryButton onClick={() => setCreateFolderMode(false)}>Cancel</SecondaryButton>
-                        </Stack>
+                        </Grid>
                     </Grid>
                 </Grid>
             </When>
