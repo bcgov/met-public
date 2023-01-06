@@ -7,8 +7,7 @@ import * as reactRouter from 'react-router';
 import * as commentService from 'services/commentService';
 import * as surveyService from 'services/surveyService';
 import * as submissionService from 'services/submissionService';
-import { createDefaultSurvey, Survey } from 'models/survey';
-
+import { createDefaultSurvey } from 'models/survey';
 import { createDefaultSubmission } from 'models/surveySubmission';
 import { createDefaultComment } from 'models/comment';
 import SubmissionListing from 'components/comments/admin/reviewListing';
