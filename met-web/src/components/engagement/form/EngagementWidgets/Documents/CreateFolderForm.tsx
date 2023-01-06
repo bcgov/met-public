@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Grid, Stack, TextField } from '@mui/material';
+import { Grid, TextField } from '@mui/material';
 import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
 import { When } from 'react-if';
 import { DocumentsContext } from './DocumentsContext';
