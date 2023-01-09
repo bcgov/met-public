@@ -13,6 +13,7 @@ import WidgetBlock from './widgets/WidgetBlock';
 import { Else, If, Then } from 'react-if';
 import { PhasesWidget } from './widgets/PhasesWidget';
 import { PhasesWidgetMobile } from './widgets/PhasesWidget/PhasesWidgetMobile/PhasesWidgetMobile';
+import SubscribeWidget from '../form/EngagementWidgets/Subscribe/SubscribeWidget';
 
 export const EngagementView = () => {
     const { state } = useLocation() as RouteState;
@@ -76,6 +77,7 @@ export const EngagementView = () => {
                             </Else>
                         </If>
                     </Grid>
+
                     <If condition={isMediumScreen}>
                         <Then>
                             <Grid
@@ -96,6 +98,7 @@ export const EngagementView = () => {
                                     <SurveyBlock startSurvey={handleStartSurvey} />
                                 </Grid>
                             </Grid>
+
                             <Grid item data-testid={'widget-block'} xs={12} lg={4}>
                                 <WidgetBlock />
                             </Grid>
