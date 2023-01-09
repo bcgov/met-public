@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Grid, TextField } from '@mui/material';
-import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetLabel, PrimaryButton, SecondaryButton, NeutralButton } from 'components/common';
 import { When } from 'react-if';
 import { DocumentsContext } from './DocumentsContext';
 import { useAppDispatch } from 'hooks';
@@ -9,7 +9,6 @@ import { postDocument } from 'services/widgetService/DocumentService.tsx';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType } from 'models/widget';
 import { DOCUMENT_TYPE } from 'models/document';
-
 const CreateFolderForm = () => {
     const { loadDocuments, handleFileDrawerOpen } = useContext(DocumentsContext);
     const { widgets } = useContext(WidgetDrawerContext);
@@ -77,7 +76,7 @@ const CreateFolderForm = () => {
                 sx={{ marginBottom: '3em' }}
             >
                 <Grid item>
-                    <SecondaryButton
+                    <NeutralButton
                         sx={{
                             borderColor: '#707070',
                             color: '#494949',
@@ -88,10 +87,10 @@ const CreateFolderForm = () => {
                         onClick={() => setCreateFolderMode(true)}
                     >
                         Create Folder
-                    </SecondaryButton>
+                    </NeutralButton>
                 </Grid>
                 <Grid item>
-                    <SecondaryButton
+                    <NeutralButton
                         sx={{
                             borderColor: '#707070',
                             color: '#494949',
@@ -102,7 +101,7 @@ const CreateFolderForm = () => {
                         onClick={() => handleFileDrawerOpen(true)}
                     >
                         Add Document
-                    </SecondaryButton>
+                    </NeutralButton>
                 </Grid>
             </Grid>
 
