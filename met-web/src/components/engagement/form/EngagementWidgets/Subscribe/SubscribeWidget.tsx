@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MetBody, MetHeader2, MetPaper, PrimaryButton } from 'components/common';
 import { Grid } from '@mui/material';
 import { useAppDispatch } from 'hooks';
@@ -6,10 +6,12 @@ import {
     openNotificationModal,
     closeNotificationModal,
 } from 'services/notificationModalService/notificationModalSlice';
+import EmailModal from 'components/common/Modals/EmailModal';
 
 function SubscribeWidget() {
     const dispatch = useAppDispatch();
-
+    const [email, setEmail] = useState('');
+    const [open, setOpen] = useState(true);
     const sendEmail = () => {
         console.log('SEND EMAIL!!!!!!!!!!');
         openNotificationModal({
@@ -43,6 +45,16 @@ function SubscribeWidget() {
 
     return (
         <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
+            <EmailModal
+                open={open}
+                updateModal={setOpen}
+                email={email}
+                updateEmail={setEmail}
+                handleConfirm={sendEmail}
+                tos={''}
+                header={'Sign Up for Updates'}
+                subText={'Sign up to receive news and updates on public engagements at the EAO'}
+            />
             <Grid spacing={2} container xs={12} sx={{ pl: '1em' }}>
                 <Grid item xs={12}>
                     <MetHeader2 bold>Sign Up for Updates</MetHeader2>
