@@ -26,7 +26,8 @@ class TokenInfo:
             'last_name': token_info.get('family_name', None),
             'email_id': token_info.get('email', None),
             'username': token_info.get('preferred_username', None),
-            'roles': TokenInfo.get_user_roles()
+            'identity_provider': token_info.get('identity_provider', ''),
+            'roles': TokenInfo.get_user_roles(),
         }
         return user_data
     

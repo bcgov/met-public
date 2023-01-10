@@ -9,8 +9,8 @@ from met_api.models.user import User as UserModel
 from met_api.schemas.user import UserSchema
 from met_api.services.keycloak import KeycloakService
 from met_api.utils.constants import GROUP_NAME_MAPPING
-from met_api.utils.enums import UserType
 from met_api.utils import notification
+from met_api.utils.enums import LoginSource, UserType
 from met_api.utils.template import Template
 
 
@@ -27,7 +27,7 @@ class UserService:
         db_user = UserModel.get_user_by_external_id(_external_id)
         return user_schema.dump(db_user)
 
-    def create_or_update_user(self, user: UserSchema):
+    def create_or_update_user(self, user: dict):
         """Create or update a user."""
         self.validate_fields(user)
 
@@ -35,7 +35,7 @@ class UserService:
         db_user = UserModel.get_user_by_external_id(external_id)
 
         if db_user is None:
-            is_staff_user = user.get('username', '').endswith('@idir')
+            is_staff_user = user.get('identity_provider', '').lower() == LoginSource.IDIR.value
             access_type = UserType.STAFF.value if is_staff_user else UserType.PUBLIC_USER.value
             user['access_type'] = access_type
             if len(user.get('roles', [])) == 0:
