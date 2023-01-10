@@ -70,8 +70,8 @@ class User(Resource):
 
         users = UserService.find_users(pagination_options=pagination_options)
         return jsonify(users), HTTPStatus.OK
-    
-    
+
+
 @cors_preflight('PUT')
 @API.route('/<user_id>')
 class UserGroup(Resource):
@@ -79,7 +79,7 @@ class UserGroup(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    # @_jwt.has_one_of_roles([Role.CREATE_ADMIN_USER.value])
+    @_jwt.has_one_of_roles([Role.CREATE_ADMIN_USER.value])
     @auth.require
     def put(user_id):
         """Add user to group."""
