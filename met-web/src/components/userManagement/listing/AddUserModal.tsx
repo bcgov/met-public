@@ -27,12 +27,7 @@ import { useAppDispatch } from 'hooks';
 
 const schema = yup
     .object({
-        user: yup
-            .object()
-            .shape({
-                external_id: yup.string().required(),
-            })
-            .required('A user must be selected'),
+        user: yup.object().required('A user must be selected'),
         group: yup.string().required('A role must be specified'),
     })
     .required();
@@ -65,7 +60,7 @@ export const AddUserModel = () => {
     const onSubmit: SubmitHandler<AddUserForm> = async (data: AddUserForm) => {
         try {
             setIsAdding(true);
-            await addUserToGroup({ user_id: data.user.external_id, group: data.group });
+            await addUserToGroup({ user_id: data.user?.external_id, group: data.group });
             dispatch(openNotification({ severity: 'success', text: 'User has been successfully added' }));
             setIsAdding(false);
             handleClose();
@@ -116,7 +111,7 @@ export const AddUserModel = () => {
                                                         fullWidth
                                                         placeholder="(Select one)"
                                                         error={Boolean(userErrors)}
-                                                        helperText={String(userErrors?.message || 'blaa')}
+                                                        helperText={String(userErrors?.message || '')}
                                                     />
                                                 )}
                                                 getOptionLabel={(user: User) => `${user.first_name} ${user.last_name}`}
