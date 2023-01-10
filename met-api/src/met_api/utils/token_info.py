@@ -30,9 +30,10 @@ class TokenInfo:
             'roles': TokenInfo.get_user_roles(),
         }
         return user_data
-    
+
     @staticmethod
     def get_user_roles():
-        valid_roles = set(item.value for item in Role) 
-        token_roles = current_app.config['JWT_ROLE_CALLBACK'](g.token_info);
+        """Get the user roles from token."""
+        valid_roles = set(item.value for item in Role)
+        token_roles = current_app.config['JWT_ROLE_CALLBACK'](g.token_info)
         return valid_roles.intersection(token_roles)

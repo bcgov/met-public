@@ -97,7 +97,8 @@ class _Config():  # pylint: disable=too-few-public-methods
     SURVEY_PATH = os.getenv('SURVEY_PATH', '/surveys/submit/{survey_id}/{token}')
     ENGAGEMENT_DASHBOARD_PATH = os.getenv('ENGAGEMENT_DASHBOARD_PATH', '/engagements/{engagement_id}/dashboard')
     SITE_URL = os.getenv('SITE_URL')
-    KEYCLOAK_GRANT_ROLE_PATH = os.getenv('KEYCLOAK_GRANT_ROLE_PATH', '/auth/admin/master/console/#/realms/met/users/{user_id}/groups')
+    KEYCLOAK_GRANT_ROLE_PATH = \
+        os.getenv('KEYCLOAK_GRANT_ROLE_PATH', '/auth/admin/master/console/#/realms/met/users/{user_id}/groups')
 
     # The GC notify email variables
     # Email address verification
