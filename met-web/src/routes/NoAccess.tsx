@@ -1,6 +1,5 @@
 import { Grid } from '@mui/material';
 import React from 'react';
-import RoofingIcon from '@mui/icons-material/Roofing';
 import { MetHeader2, MetHeader4 } from 'components/common';
 
 const NoAccess = () => {

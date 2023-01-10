@@ -1,7 +1,6 @@
 import { _kc } from 'constants/tenantConstants';
 import { userToken, userDetails, userAuthorization, userAuthentication, userRoles } from './userSlice';
 import { Action, AnyAction, Dispatch } from 'redux';
-import jwt from 'jsonwebtoken';
 import { UserDetail } from './types';
 import { AppConfig } from 'config';
 import Endpoints from 'apiManager/endpoints';

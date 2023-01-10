@@ -1,7 +1,7 @@
 """Service for user management."""
 from http import HTTPStatus
-from flask import current_app
 from typing import List
+from flask import current_app
 
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.pagination_options import PaginationOptions
@@ -68,7 +68,7 @@ class UserService:
     @staticmethod
     def _render_email_template(user: UserSchema):
         template = Template.get_template('email_access_request.html')
-        subject = current_app.config.get('ACCESS_REQUEST_EMAIL_SUBJECT')        
+        subject = current_app.config.get('ACCESS_REQUEST_EMAIL_SUBJECT')
         grant_access_url = current_app.config.get('KEYCLOAK_BASE_URL') + current_app.config.get('KEYCLOAK_GRANT_ROLE_PATH').format(user_id=user.get('external_id'))
         args = {
             'first_name': user.get('first_name'),
