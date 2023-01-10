@@ -34,15 +34,12 @@ class UserService:
         external_id = user.get('external_id')
         db_user = UserModel.get_user_by_external_id(external_id)
 
-        # This will send out the access request email everytime the users login (if they do not have roles)
-        # We might want to change this to only send the email only once based on some sort of flag
-        if len(user.get('roles', [])) == 0:
-            self._send_access_request_email(user)
-
         if db_user is None:
             is_staff_user = user.get('identity_provider', '').lower() == LoginSource.IDIR.value
             access_type = UserType.STAFF.value if is_staff_user else UserType.PUBLIC_USER.value
             user['access_type'] = access_type
+            if len(user.get('roles', [])) == 0:
+                self._send_access_request_email(user)
             return UserModel.create_user(user)
 
         return UserModel.update_user(db_user.id, user)
