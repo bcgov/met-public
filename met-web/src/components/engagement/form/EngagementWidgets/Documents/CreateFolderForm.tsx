@@ -76,32 +76,10 @@ const CreateFolderForm = () => {
                 sx={{ marginBottom: '3em' }}
             >
                 <Grid item>
-                    <WidgetButton
-                        sx={{
-                            borderColor: '#707070',
-                            color: '#494949',
-                            '&:hover': {
-                                background: '#f2f2f2',
-                            },
-                        }}
-                        onClick={() => setCreateFolderMode(true)}
-                    >
-                        Create Folder
-                    </WidgetButton>
+                    <WidgetButton onClick={() => setCreateFolderMode(true)}>Create Folder</WidgetButton>
                 </Grid>
                 <Grid item>
-                    <WidgetButton
-                        sx={{
-                            borderColor: '#707070',
-                            color: '#494949',
-                            '&:hover': {
-                                background: '#f2f2f2',
-                            },
-                        }}
-                        onClick={() => handleFileDrawerOpen(true)}
-                    >
-                        Add Document
-                    </WidgetButton>
+                    <WidgetButton onClick={() => handleFileDrawerOpen(true)}>Add Document</WidgetButton>
                 </Grid>
             </Grid>
 
