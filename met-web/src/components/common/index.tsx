@@ -47,6 +47,25 @@ export const StyledSecondaryButton = styled(MuiButton)(() => ({
     },
 }));
 
+export const StyledWidgetButton = styled(MuiButton)(() => ({
+    backgroundColor: 'transparent',
+    color: '#494949',
+    border: `2px solid ${'#707070'}`,
+    '&:hover': {
+        opacity: '0.8',
+        textDecoration: 'underline',
+        backgroundColor: '#f2f2f2',
+        color: '#494949',
+        border: `2px solid ${'#f2f2f2'}`,
+    },
+}));
+
+export const WidgetButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
+    <StyledWidgetButton {...rest} variant="outlined">
+        {children}
+    </StyledWidgetButton>
+);
+
 export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
     <StyledSecondaryButton {...rest} variant="outlined">
         {children}

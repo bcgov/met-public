@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { Grid, Stack, TextField } from '@mui/material';
-import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
+import { Grid, TextField } from '@mui/material';
+import { MetLabel, PrimaryButton, SecondaryButton, WidgetButton } from 'components/common';
 import { When } from 'react-if';
 import { DocumentsContext } from './DocumentsContext';
 import { useAppDispatch } from 'hooks';
@@ -9,7 +9,6 @@ import { postDocument } from 'services/widgetService/DocumentService.tsx';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType } from 'models/widget';
 import { DOCUMENT_TYPE } from 'models/document';
-
 const CreateFolderForm = () => {
     const { loadDocuments, handleFileDrawerOpen } = useContext(DocumentsContext);
     const { widgets } = useContext(WidgetDrawerContext);
@@ -77,10 +76,10 @@ const CreateFolderForm = () => {
                 sx={{ marginBottom: '3em' }}
             >
                 <Grid item>
-                    <SecondaryButton onClick={() => setCreateFolderMode(true)}>Create Folder</SecondaryButton>
+                    <WidgetButton onClick={() => setCreateFolderMode(true)}>Create Folder</WidgetButton>
                 </Grid>
                 <Grid item>
-                    <SecondaryButton onClick={() => handleFileDrawerOpen(true)}>Add Document</SecondaryButton>
+                    <WidgetButton onClick={() => handleFileDrawerOpen(true)}>Add Document</WidgetButton>
                 </Grid>
             </Grid>
 
@@ -89,24 +88,27 @@ const CreateFolderForm = () => {
                     <Grid item xs={12}>
                         <MetLabel>Folder name</MetLabel>
                     </Grid>
-                    <Grid item xs={12}>
-                        <Stack direction="row" justifyContent={'flex-start'} alignItems="stretch" spacing={2}>
+                    <Grid container item justifyContent={'flex-start'} alignItems="space-between" spacing={3} xs={12}>
+                        <Grid item xs={5}>
                             <TextField
                                 label=" "
                                 InputLabelProps={{
                                     shrink: false,
                                 }}
+                                sx={{ width: '100%' }}
                                 onChange={(e) => handleFolderNameChange(e.target.value)}
                                 error={formError.name || folderName.length > 50}
                                 helperText={getErrorMessage()}
                             />
-
-                            <SecondaryButton onClick={() => setCreateFolderMode(false)}>Cancel</SecondaryButton>
-
+                        </Grid>
+                        <Grid item xs={1}>
                             <PrimaryButton loading={creatingFolder} onClick={handleCreateFolder}>
-                                Add Folder
+                                Save
                             </PrimaryButton>
-                        </Stack>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <SecondaryButton onClick={() => setCreateFolderMode(false)}>Cancel</SecondaryButton>
+                        </Grid>
                     </Grid>
                 </Grid>
             </When>
