@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { useAppDispatch } from 'hooks';
 import Modal from '@mui/material/Modal';
 import {
     Autocomplete,
@@ -13,18 +12,24 @@ import {
     TextField,
 } from '@mui/material';
 import { MetHeader3, MetLabel, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
-import { User } from 'models/user';
+import { User, USER_GROUP } from 'models/user';
 import { UserManagementContext } from './UserManagementContext';
 import { Palette } from 'styles/Theme';
 import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import ControlledRadiGroup from 'components/common/ControlledInputComponents/ControlledRadioGroup';
+import { addUserToGroup } from 'services/userService/api';
 
 const schema = yup
     .object({
         group: yup.string().required(),
-        user: yup.object().required(),
+        user: yup
+            .object()
+            .shape({
+                external_id: yup.string().required(),
+            })
+            .required(),
     })
     .required();
 
@@ -46,6 +51,7 @@ export const AddUserModel = () => {
     };
 
     const onSubmit: SubmitHandler<AddUserForm> = async (data: AddUserForm) => {
+        addUserToGroup({ user_id: data.user.external_id, group: data.group });
         handleClose();
     };
 
@@ -105,9 +111,13 @@ export const AddUserModel = () => {
                                             What role would you like to assign to this user?
                                         </FormLabel>
                                         <ControlledRadiGroup name="group">
-                                            <FormControlLabel value="admin" control={<Radio />} label="Adminstrator" />
                                             <FormControlLabel
-                                                value="teamMember"
+                                                value={USER_GROUP.ADMIN}
+                                                control={<Radio />}
+                                                label="Adminstrator"
+                                            />
+                                            <FormControlLabel
+                                                value={USER_GROUP.VIEWER}
                                                 control={<Radio />}
                                                 label="Team Member"
                                                 disabled

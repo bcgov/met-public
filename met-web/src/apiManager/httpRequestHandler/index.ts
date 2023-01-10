@@ -21,8 +21,9 @@ const PostRequest = <T>(url: string, data = {}) => {
     });
 };
 
-const PutRequest = <T>(url: string, data = {}) => {
+const PutRequest = <T>(url: string, data = {}, params = {}) => {
     return axios.put<T>(url, data, {
+        params,
         headers: {
             'Content-type': 'application/json',
             Authorization: `Bearer ${UserService.getToken()}`,

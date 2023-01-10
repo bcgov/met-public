@@ -3,7 +3,7 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { createDefaultPageInfo, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { User } from 'models/user';
-import UserService from 'services/userService';
+import { getUserList } from 'services/userService/api';
 
 export interface UserManagementContextProps {
     usersLoading: boolean;
@@ -60,7 +60,7 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
     const loadUsers = async () => {
         try {
             setUsersLoading(true);
-            const response = await UserService.getUserList({
+            const response = await getUserList({
                 page,
                 size,
                 sort_key: nested_sort_key || sort_key,
