@@ -1,7 +1,7 @@
 import { _kc } from 'constants/tenantConstants';
 import { userToken, userDetails, userAuthorization, userAuthentication } from './userSlice';
 import { Action, AnyAction, Dispatch } from 'redux';
-import _jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { UserDetail } from './types';
 import { AppConfig } from 'config';
 import Endpoints from 'apiManager/endpoints';
@@ -21,7 +21,6 @@ const initKeycloak = async (dispatch: Dispatch<AnyAction>) => {
             pkceMethod: 'S256',
             checkLoginIframe: false,
         });
-
         if (!authenticated) {
             console.warn('not authenticated!');
             dispatch(userAuthentication(authenticated));
@@ -48,8 +47,7 @@ const initKeycloak = async (dispatch: Dispatch<AnyAction>) => {
     }
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let refreshInterval: any;
+let refreshInterval: NodeJS.Timer;
 const refreshToken = (dispatch: Dispatch<Action>) => {
     refreshInterval = setInterval(async () => {
         if (KeycloakData) {
@@ -64,6 +62,31 @@ const refreshToken = (dispatch: Dispatch<Action>) => {
             }
         }
     }, 60000);
+};
+
+// eslint-disable-next-line
+const authenticateAnonymouslyOnFormio = () => {
+    const user = AppConfig.formio.anonymousUser;
+    const roles = [AppConfig.formio.anonymousId];
+    authenticateFormio(user, roles);
+};
+
+const authenticateFormio = async (user: string, roles: string[]) => {
+    const FORMIO_TOKEN = jwt.sign(
+        {
+            external: true,
+            form: {
+                _id: AppConfig.formio.userResourceFormId, // form.io form Id of user resource
+            },
+            user: {
+                _id: user, // keep it like that
+                roles: roles,
+            },
+        },
+        AppConfig.formio.jwtSecret,
+    ); // TODO Move JWT secret key to COME From ENV
+
+    localStorage.setItem('formioToken', FORMIO_TOKEN);
 };
 
 /**
