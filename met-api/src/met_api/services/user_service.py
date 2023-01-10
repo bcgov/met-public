@@ -98,12 +98,11 @@ class UserService:
     @staticmethod
     def add_user_to_group(external_id: str, group_name: str):
         """Create or update a user."""
-
         db_user = UserModel.get_user_by_external_id(external_id)
         if db_user is None:
             raise KeyError('User not found')
 
-        KEYCLOAK_SERVICE.add_user_to_group(user_id= external_id, group_name= group_name)
+        KEYCLOAK_SERVICE.add_user_to_group(user_id=external_id, group_name=group_name)
 
         user_schema = UserSchema().dump(db_user)
 
