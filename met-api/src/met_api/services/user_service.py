@@ -102,11 +102,8 @@ class UserService:
         if db_user is None:
             raise KeyError('User not found')
 
-        groups = KEYCLOAK_SERVICE.get_user_groups(external_id)
-        if group_name not in [group.get('name', '') for group in groups]:
-            raise KeyError(f'Group {group_name} does not exist')
-
         KEYCLOAK_SERVICE.add_user_to_group(user_id= external_id, group_name= group_name)
+
         user_schema = UserSchema().dump(db_user)
         
         return user_schema

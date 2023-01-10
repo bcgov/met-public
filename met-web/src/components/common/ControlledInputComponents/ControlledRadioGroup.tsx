@@ -9,7 +9,7 @@ type IFormInputProps = {
 const ControlledRadiGroup: FC<IFormInputProps> = ({ name, children, ...otherProps }) => {
     const {
         control,
-        formState: { errors, defaultValues },
+        formState: { defaultValues },
     } = useFormContext();
 
     return (
@@ -18,12 +18,7 @@ const ControlledRadiGroup: FC<IFormInputProps> = ({ name, children, ...otherProp
             name={name}
             defaultValue={defaultValues?.[name] || ''}
             render={({ field }) => (
-                <RadioGroup
-                    {...otherProps}
-                    {...field}
-                    // error={!!errors[name]}
-                    // helperText={String(errors[name]?.message || '')}
-                >
+                <RadioGroup {...otherProps} {...field}>
                     {children}
                 </RadioGroup>
             )}

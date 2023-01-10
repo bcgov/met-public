@@ -1,9 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import {
     Autocomplete,
     FormControl,
     FormControlLabel,
+    FormHelperText,
     FormLabel,
     Grid,
     Paper,
@@ -20,30 +21,41 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import ControlledRadiGroup from 'components/common/ControlledInputComponents/ControlledRadioGroup';
 import { addUserToGroup } from 'services/userService/api';
+import { When } from 'react-if';
+import { openNotification } from 'services/notificationService/notificationSlice';
+import { useAppDispatch } from 'hooks';
 
 const schema = yup
     .object({
-        group: yup.string().required(),
         user: yup
             .object()
             .shape({
                 external_id: yup.string().required(),
             })
-            .required(),
+            .required('A user must be selected'),
+        group: yup.string().required('A role must be specified'),
     })
     .required();
 
 type AddUserForm = yup.TypeOf<typeof schema>;
 
 export const AddUserModel = () => {
-    // const dispatch = useAppDispatch();
+    const dispatch = useAppDispatch();
     const { addUserModalOpen, setAddUserModelOpen, users } = useContext(UserManagementContext);
+    const [isAdding, setIsAdding] = useState(false);
 
     const methods = useForm<AddUserForm>({
         resolver: yupResolver(schema),
     });
 
-    const { handleSubmit, control, reset } = methods;
+    const {
+        handleSubmit,
+        control,
+        reset,
+        formState: { errors },
+    } = methods;
+
+    const { user: userErrors, group: groupErrors } = errors;
 
     const handleClose = () => {
         setAddUserModelOpen(false);
@@ -51,8 +63,16 @@ export const AddUserModel = () => {
     };
 
     const onSubmit: SubmitHandler<AddUserForm> = async (data: AddUserForm) => {
-        addUserToGroup({ user_id: data.user.external_id, group: data.group });
-        handleClose();
+        try {
+            setIsAdding(true);
+            await addUserToGroup({ user_id: data.user.external_id, group: data.group });
+            dispatch(openNotification({ severity: 'success', text: 'User has been successfully added' }));
+            setIsAdding(false);
+            handleClose();
+        } catch (error) {
+            console.log(error);
+            dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add user' }));
+        }
     };
 
     return (
@@ -95,6 +115,8 @@ export const AddUserModel = () => {
                                                         inputRef={ref}
                                                         fullWidth
                                                         placeholder="(Select one)"
+                                                        error={Boolean(userErrors)}
+                                                        helperText={String(userErrors?.message || 'blaa')}
                                                     />
                                                 )}
                                                 getOptionLabel={(user: User) => `${user.first_name} ${user.last_name}`}
@@ -103,7 +125,7 @@ export const AddUserModel = () => {
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <FormControl>
+                                    <FormControl error={Boolean(errors['group'])}>
                                         <FormLabel
                                             id="controlled-radio-buttons-group"
                                             sx={{ fontWeight: 'bold', color: Palette.text.primary }}
@@ -123,6 +145,9 @@ export const AddUserModel = () => {
                                                 disabled
                                             />
                                         </ControlledRadiGroup>
+                                        <When condition={Boolean(groupErrors)}>
+                                            <FormHelperText>{String(groupErrors?.message)}</FormHelperText>
+                                        </When>
                                     </FormControl>
                                 </Grid>
                             </Grid>
@@ -143,7 +168,9 @@ export const AddUserModel = () => {
                                     justifyContent="flex-end"
                                 >
                                     <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
-                                    <PrimaryButton type="submit">Submit</PrimaryButton>
+                                    <PrimaryButton loading={isAdding} type="submit">
+                                        Submit
+                                    </PrimaryButton>
                                 </Stack>
                             </Grid>
                         </Grid>
