@@ -1,5 +1,4 @@
 """Service for user management."""
-from datetime import datetime
 from http import HTTPStatus
 from typing import List
 from flask import current_app
