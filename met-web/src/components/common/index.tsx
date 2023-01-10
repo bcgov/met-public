@@ -47,7 +47,7 @@ export const StyledSecondaryButton = styled(MuiButton)(() => ({
     },
 }));
 
-export const StyledNeutralButton = styled(MuiButton)(() => ({
+export const StyledWidgetButton = styled(MuiButton)(() => ({
     backgroundColor: 'transparent',
     color: '#494949',
     border: `2px solid ${'#707070'}`,
@@ -60,10 +60,10 @@ export const StyledNeutralButton = styled(MuiButton)(() => ({
     },
 }));
 
-export const NeutralButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
-    <StyledNeutralButton {...rest} variant="outlined">
+export const WidgetButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
+    <StyledWidgetButton {...rest} variant="outlined">
         {children}
-    </StyledNeutralButton>
+    </StyledWidgetButton>
 );
 
 export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Grid, TextField } from '@mui/material';
-import { MetLabel, PrimaryButton, SecondaryButton, NeutralButton } from 'components/common';
+import { MetLabel, PrimaryButton, SecondaryButton, WidgetButton } from 'components/common';
 import { When } from 'react-if';
 import { DocumentsContext } from './DocumentsContext';
 import { useAppDispatch } from 'hooks';
@@ -76,7 +76,7 @@ const CreateFolderForm = () => {
                 sx={{ marginBottom: '3em' }}
             >
                 <Grid item>
-                    <NeutralButton
+                    <WidgetButton
                         sx={{
                             borderColor: '#707070',
                             color: '#494949',
@@ -87,10 +87,10 @@ const CreateFolderForm = () => {
                         onClick={() => setCreateFolderMode(true)}
                     >
                         Create Folder
-                    </NeutralButton>
+                    </WidgetButton>
                 </Grid>
                 <Grid item>
-                    <NeutralButton
+                    <WidgetButton
                         sx={{
                             borderColor: '#707070',
                             color: '#494949',
@@ -101,7 +101,7 @@ const CreateFolderForm = () => {
                         onClick={() => handleFileDrawerOpen(true)}
                     >
                         Add Document
-                    </NeutralButton>
+                    </WidgetButton>
                 </Grid>
             </Grid>
 
