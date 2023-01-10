@@ -57,8 +57,8 @@ export const WidgetCardSwitch = ({ widget, removeWidget }: WidgetCardSwitchProps
                 </Case>
                 <Case condition={widget.widget_type_id === WidgetType.Subscribe}>
                     <MetWidget
-                        testId={`document-${widget.widget_type_id}`}
-                        title="Document"
+                        testId={`subscribe-${widget.widget_type_id}`}
+                        title="Subscribe"
                         onDelete={() => {
                             removeWidget(widget.id);
                         }}
