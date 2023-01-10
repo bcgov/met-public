@@ -12,7 +12,7 @@ import EnvironmentBanner from './EnvironmentBanner';
 import { MetHeader1, MetHeader2 } from 'components/common';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
 
-const LoggedInHeader = ({ drawerWidth = 280 }) => {
+const InternalHeader = ({ drawerWidth = 280 }) => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     return (
         <>
@@ -57,4 +57,4 @@ const LoggedInHeader = ({ drawerWidth = 280 }) => {
     );
 };
 
-export default LoggedInHeader;
+export default InternalHeader;

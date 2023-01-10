@@ -11,4 +11,5 @@ export interface User {
     updated_date: string;
     status: string;
     access_type: string;
+    roles: string[];
 }

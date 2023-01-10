@@ -97,16 +97,21 @@ class _Config():  # pylint: disable=too-few-public-methods
     SURVEY_PATH = os.getenv('SURVEY_PATH', '/surveys/submit/{survey_id}/{token}')
     ENGAGEMENT_DASHBOARD_PATH = os.getenv('ENGAGEMENT_DASHBOARD_PATH', '/engagements/{engagement_id}/dashboard')
     SITE_URL = os.getenv('SITE_URL')
+    KEYCLOAK_GRANT_ROLE_PATH = os.getenv('KEYCLOAK_GRANT_ROLE_PATH', '/auth/admin/master/console/#/realms/met/users/{user_id}/groups')
 
-    # Email Service
-    VERIFICATION_EMAIL_SUBJECT = os.getenv('VERIFICATION_EMAIL_SUBJECT', '{engagement_name} - Survey link')
-    # The GC notify email template id for email verification
+    # The GC notify email variables
+    # Email address verification
     VERIFICATION_EMAIL_TEMPLATE_ID = os.getenv('VERIFICATION_EMAIL_TEMPLATE_ID')
-    # The GC notify email template id for rejecting comments
+    VERIFICATION_EMAIL_SUBJECT = os.getenv('VERIFICATION_EMAIL_SUBJECT', '{engagement_name} - Survey link')
+    # Rejected comments
     REJECTED_EMAIL_TEMPLATE_ID = os.getenv('REJECTED_EMAIL_TEMPLATE_ID')
     REJECTED_EMAIL_SUBJECT = os.getenv('REJECTED_EMAIL_SUBJECT', '{engagement_name} - About your Comments')
-    NOTIFICATIONS_EMAIL_ENDPOINT = os.getenv('NOTIFICATIONS_EMAIL_ENDPOINT')
+    # New User Registration
+    ACCESS_REQUEST_EMAIL_TEMPLATE_ID = os.getenv('ACCESS_REQUEST_EMAIL_TEMPLATE_ID')
+    ACCESS_REQUEST_EMAIL_SUBJECT = os.getenv('ACCESS_REQUEST_EMAIL_SUBJECT', 'MET - New User Access Request')
+    ACCESS_REQUEST_EMAIL_ADDRESS = os.getenv('ACCESS_REQUEST_EMAIL_ADDRESS')
 
+    NOTIFICATIONS_EMAIL_ENDPOINT = os.getenv('NOTIFICATIONS_EMAIL_ENDPOINT')
     # CDOGS
     CDOGS_ACCESS_TOKEN = os.getenv('CDOGS_ACCESS_TOKEN')
     CDOGS_BASE_URL = os.getenv('CDOGS_BASE_URL')
