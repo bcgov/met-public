@@ -31,6 +31,7 @@ class TokenInfo:
         }
         return user_data
     
+    @staticmethod
     def get_user_roles():
         valid_roles = set(item.value for item in Role) 
         token_roles = current_app.config['JWT_ROLE_CALLBACK'](g.token_info);
