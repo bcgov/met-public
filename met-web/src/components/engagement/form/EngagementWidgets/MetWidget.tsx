@@ -50,7 +50,7 @@ const MetWidget = ({
                 </Grid>
                 <Grid item xs={2} container direction="row" alignItems="flex-start" justifyContent="center">
                     <Stack direction="row" spacing={1}>
-                        <When condition={typeof onEdit === 'function'}>
+                        <When condition={!!onEdit}>
                             <IconButton
                                 sx={{ margin: 0, padding: 0 }}
                                 color="inherit"
