@@ -114,7 +114,7 @@ class SubmissionService:
 
             submission = Submission.update_comment_status(submission_id, values, session)
 
-            cls.add_or_update_staff_note(submission.survey_id, submission_id, values, user)
+            cls.add_or_update_staff_note(submission.survey_id, submission_id, values)
 
             rejection_review_note = StaffNote.get_staff_note_type(submission_id, StaffNoteType.Review.name)
 
@@ -155,7 +155,7 @@ class SubmissionService:
             raise ValueError('A rejection reason is required.')
 
     @classmethod
-    def add_or_update_staff_note(cls, survey_id, submission_id, values: dict, user):
+    def add_or_update_staff_note(cls, survey_id, submission_id, values: dict):
         """Process staff note for a comment."""
         staff_notes = values.get('staff_note', [])
         if len(staff_notes) != 0:
