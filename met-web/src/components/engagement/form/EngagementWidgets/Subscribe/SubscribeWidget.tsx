@@ -4,7 +4,6 @@ import { ActionContext } from '../../../view/ActionContext';
 import { Grid } from '@mui/material';
 import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
-import { openNotification } from 'services/notificationService/notificationSlice';
 import EmailModal from 'components/common/Modals/EmailModal';
 import { createEmailVerification } from 'services/emailVerificationService';
 
