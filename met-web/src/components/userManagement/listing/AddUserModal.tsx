@@ -19,7 +19,7 @@ import { Palette } from 'styles/Theme';
 import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import ControlledRadiGroup from 'components/common/ControlledInputComponents/ControlledRadioGroup';
+import ControlledRadioGroup from 'components/common/ControlledInputComponents/ControlledRadioGroup';
 import { addUserToGroup } from 'services/userService/api';
 import { When } from 'react-if';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -127,19 +127,19 @@ export const AddUserModel = () => {
                                         >
                                             What role would you like to assign to this user?
                                         </FormLabel>
-                                        <ControlledRadiGroup name="group">
+                                        <ControlledRadioGroup name="group">
                                             <FormControlLabel
-                                                value={USER_GROUP.ADMIN}
+                                                value={USER_GROUP.ADMIN.value}
                                                 control={<Radio />}
-                                                label="Adminstrator"
+                                                label={USER_GROUP.ADMIN.label}
                                             />
                                             <FormControlLabel
-                                                value={USER_GROUP.VIEWER}
+                                                value={USER_GROUP.VIEWER.value}
                                                 control={<Radio />}
-                                                label="Team Member"
+                                                label={USER_GROUP.VIEWER.label}
                                                 disabled
                                             />
-                                        </ControlledRadiGroup>
+                                        </ControlledRadioGroup>
                                         <When condition={Boolean(groupErrors)}>
                                             <FormHelperText>{String(groupErrors?.message)}</FormHelperText>
                                         </When>

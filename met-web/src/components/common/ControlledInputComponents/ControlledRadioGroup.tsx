@@ -6,7 +6,7 @@ type IFormInputProps = {
     name: string;
 } & RadioGroupProps;
 
-const ControlledRadiGroup: FC<IFormInputProps> = ({ name, children, ...otherProps }) => {
+const ControlledRadioGroup: FC<IFormInputProps> = ({ name, children, ...otherProps }) => {
     const {
         control,
         formState: { defaultValues },
@@ -26,4 +26,4 @@ const ControlledRadiGroup: FC<IFormInputProps> = ({ name, children, ...otherProp
     );
 };
 
-export default ControlledRadiGroup;
+export default ControlledRadioGroup;
