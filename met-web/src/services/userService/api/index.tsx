@@ -13,7 +13,7 @@ interface GetUserParams {
 export const getUserList = async (params: GetUserParams = {}): Promise<Page<User>> => {
     const responseData = await http.GetRequest<Page<User>>(Endpoints.User.GET_LIST, params);
     return (
-        JSON.parse(JSON.stringify(responseData)).data ?? {
+        responseData.data ?? {
             items: [],
             total: 0,
         }
@@ -26,6 +26,6 @@ interface AddUserToGroupProps {
 }
 export const addUserToGroup = async ({ user_id, group }: AddUserToGroupProps): Promise<User> => {
     const url = replaceUrl(Endpoints.User.ADD_TO_GROUP, 'user_id', String(user_id));
-    const responseData = await http.PutRequest<User>(url, {}, { group });
+    const responseData = await http.PostRequest<User>(url, {}, { group });
     return responseData.data;
 };

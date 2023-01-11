@@ -72,8 +72,8 @@ class User(Resource):
         return jsonify(users), HTTPStatus.OK
 
 
-@cors_preflight('PUT')
-@API.route('/<user_id>')
+@cors_preflight('POST')
+@API.route('/<user_id>/groups')
 class UserGroup(Resource):
     """Add user to group."""
 
@@ -81,7 +81,7 @@ class UserGroup(Resource):
     @cross_origin(origins=allowedorigins())
     @_jwt.has_one_of_roles([Role.CREATE_ADMIN_USER.value])
     @auth.require
-    def put(user_id):
+    def post(user_id):
         """Add user to group."""
         try:
             args = request.args
