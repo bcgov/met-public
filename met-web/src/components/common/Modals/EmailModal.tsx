@@ -74,7 +74,9 @@ const EmailModal = ({ open, email, updateEmail, updateModal, header, subText, to
                                 fontSize: '0.8rem',
                             }}
                         >
-                            {tos}
+                            {tos.map((text: string) => (
+                                <Typography sx={{ mb: 1 }}>{text}</Typography>
+                            ))}
                         </Typography>
                     </Grid>
                     <Grid

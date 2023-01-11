@@ -28,7 +28,7 @@ export interface ModalProps {
     header: string;
     subText: Array<string>;
     email: string;
-    tos: string | React.ReactFragment;
+    tos: Array<string>;
     handleConfirm: () => void;
     updateEmail: (email: string) => void;
     updateModal: (open: boolean) => void;
