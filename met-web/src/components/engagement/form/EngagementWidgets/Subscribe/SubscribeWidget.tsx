@@ -1,25 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { MetBody, MetHeader2, MetPaper, PrimaryButton } from 'components/common';
+import { ActionContext } from '../../ActionContext';
 import { Grid } from '@mui/material';
 import { useAppDispatch } from 'hooks';
-import {
-    openNotificationModal,
-    closeNotificationModal,
-} from 'services/notificationModalService/notificationModalSlice';
+import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+import { openNotification } from 'services/notificationService/notificationSlice';
 import EmailModal from 'components/common/Modals/EmailModal';
+import { createEmailVerification } from 'services/emailVerificationService';
 
 function SubscribeWidget() {
     const dispatch = useAppDispatch();
+    const { savedEngagement } = useContext(ActionContext);
     const [email, setEmail] = useState('');
     const [open, setOpen] = useState(true);
-    const sendEmail = () => {
-        console.log('SEND EMAIL!!!!!!!!!!');
+
+    const sendEmail = async () => {
+        await createEmailVerification({
+            email_address: email,
+            survey_id: savedEngagement.surveys[0].id,
+        });
+        window.snowplow('trackSelfDescribingEvent', {
+            schema: 'iglu:ca.bc.gov.met/verify-email/jsonschema/1-0-0',
+            data: { survey_id: savedEngagement.surveys[0].id, engagement_id: savedEngagement.id },
+        });
+        dispatch(
+            openNotification({
+                severity: 'success',
+                text: 'Email verification has been sent',
+            }),
+        );
         openNotificationModal({
             open: true,
             data: {
                 header: 'Thank you',
                 subText: [
-                    'We sent a link to confirm your subscription at the following email address email@address.ca',
+                    `We sent a link to confirm your subscription at the following email address ${email}                    `,
                     'Please click the link provided to confirm your interest in receiving news and updates from the EAO.',
                 ],
             },
@@ -51,9 +66,11 @@ function SubscribeWidget() {
                 email={email}
                 updateEmail={setEmail}
                 handleConfirm={sendEmail}
-                tos={''}
+                tos={
+                    'Personal information(your email address is collected under seciton 26(c) and 26(e) of the Freedom of the Information and Protection of Privacy Act, to keep you updated on current engagements and to notify you of future opportunities to participate. If you have any questions about the collection, use and disclosure of your personal information, please contact <TBC>.'
+                }
                 header={'Sign Up for Updates'}
-                subText={'Sign up to receive news and updates on public engagements at the EAO'}
+                subText={['Sign up to receive news and updates on public engagements at the EAO']}
             />
             <Grid spacing={2} container xs={12} sx={{ pl: '1em' }}>
                 <Grid item xs={12}>

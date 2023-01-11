@@ -13,18 +13,9 @@ import {
 } from '@mui/material';
 import { MetLabel, modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody } from 'components/common';
 import Modal from '@mui/material/Modal';
+import { ModalProps } from 'components/engagement/view/types';
 
-const EmailModal = ({
-    open,
-    email,
-    updateEmail,
-    updateModal,
-    header,
-    subText,
-    tos,
-    handleConfirm,
-    handleClose,
-}: any) => {
+const EmailModal = ({ open, email, updateEmail, updateModal, header, subText, tos, handleConfirm }: ModalProps) => {
     const [checked, setChecked] = useState(false);
     const [emailFormError, setEmailFormError] = useState({
         terms: false,
@@ -37,16 +28,13 @@ const EmailModal = ({
             terms: !checked,
             email: !email,
         };
-
         setEmailFormError(errors);
-
         return Object.values(errors).some((isError: unknown) => isError);
     };
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         const hasErrors = validateForm();
-
         if (!hasErrors && handleConfirm) {
             handleConfirm();
         }
