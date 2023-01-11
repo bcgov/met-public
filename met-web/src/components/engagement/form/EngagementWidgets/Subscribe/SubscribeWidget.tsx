@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { MetBody, MetHeader2, MetPaper, PrimaryButton } from 'components/common';
-import { ActionContext } from '../../ActionContext';
+import { ActionContext } from '../../../view/ActionContext';
 import { Grid } from '@mui/material';
 import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
@@ -12,50 +12,49 @@ function SubscribeWidget() {
     const dispatch = useAppDispatch();
     const { savedEngagement } = useContext(ActionContext);
     const [email, setEmail] = useState('');
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
 
     const sendEmail = async () => {
-        await createEmailVerification({
-            email_address: email,
-            survey_id: savedEngagement.surveys[0].id,
-        });
-        window.snowplow('trackSelfDescribingEvent', {
-            schema: 'iglu:ca.bc.gov.met/verify-email/jsonschema/1-0-0',
-            data: { survey_id: savedEngagement.surveys[0].id, engagement_id: savedEngagement.id },
-        });
-        dispatch(
-            openNotification({
-                severity: 'success',
-                text: 'Email verification has been sent',
-            }),
-        );
-        openNotificationModal({
-            open: true,
-            data: {
-                header: 'Thank you',
-                subText: [
-                    `We sent a link to confirm your subscription at the following email address ${email}                    `,
-                    'Please click the link provided to confirm your interest in receiving news and updates from the EAO.',
-                ],
-            },
-            type: 'update',
-        });
-    };
-
-    const confirmSubscription = () => {
-        dispatch(
-            openNotificationModal({
-                open: true,
-                data: {
-                    header: 'Sign Up for Updates',
-                    subText: ['Sign up to receive news and updates on public engagements at the EAO', 'TOS BLOCK'],
-                    handleConfirm: () => {
-                        sendEmail();
+        try {
+            await createEmailVerification({
+                email_address: email,
+                survey_id: savedEngagement.surveys[0].id,
+            });
+            window.snowplow('trackSelfDescribingEvent', {
+                schema: 'iglu:ca.bc.gov.met/verify-email/jsonschema/1-0-0',
+                data: { survey_id: savedEngagement.surveys[0].id, engagement_id: savedEngagement.id },
+            });
+            setOpen(false);
+            dispatch(
+                openNotificationModal({
+                    open: true,
+                    data: {
+                        header: 'Thank you',
+                        subText: [
+                            `We sent a link to confirm your subscription at the following email address ${email}                    `,
+                            'Please click the link provided to confirm your interest in receiving news and updates from the EAO.',
+                        ],
                     },
-                },
-                type: 'confirm',
-            }),
-        );
+                    type: 'update',
+                }),
+            );
+        } catch (error) {
+            setOpen(false);
+            dispatch(
+                openNotificationModal({
+                    open: true,
+                    data: {
+                        header: 'We are sorry',
+                        subText: [
+                            `There was a problem with the email address you provided: ${email}                    `,
+                            'Please verify your email and try again.',
+                            'If this problem persists, contact sample@gmail.com',
+                        ],
+                    },
+                    type: 'update',
+                }),
+            );
+        }
     };
 
     return (
@@ -83,7 +82,7 @@ function SubscribeWidget() {
                     </MetBody>
                 </Grid>
                 <Grid item xs={12}>
-                    <PrimaryButton onClick={() => confirmSubscription()} sx={{ width: '100%' }}>
+                    <PrimaryButton onClick={() => setOpen(true)} sx={{ width: '100%' }}>
                         Sign Up for Updates from the EAO
                     </PrimaryButton>
                 </Grid>
