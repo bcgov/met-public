@@ -25,7 +25,8 @@ from met_api.config import get_named_config
 from met_api.constants.engagement_status import SubmissionStatus
 from met_api.constants.feedback import CommentType, FeedbackSourceType, RatingType
 from met_api.constants.widget import WidgetType
-from met_api.utils.enums import UserType
+from met_api.utils.enums import LoginSource, UserType
+
 
 fake = Faker()
 
@@ -188,6 +189,7 @@ class TestJwtClaims(dict, Enum):
         'given_name': fake.first_name(),
         'family_name': fake.last_name(),
         'email': 'staff@gov.bc.ca',
+        'identity_provider': LoginSource.IDIR.value,
         'realm_access': {
             'roles': [
                 'staff',
