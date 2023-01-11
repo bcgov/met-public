@@ -43,23 +43,6 @@ class StaffNote(BaseModel):
             .all()
 
     @classmethod
-    def add_staff_note(cls, survey_id, submission_id, staff_note: dict, session=None) -> StaffNote:
-        """Add new staff note."""
-        new_note = StaffNote(
-            note=staff_note.get('note', None),
-            note_type=staff_note.get('note_type', None),
-            survey_id=survey_id,
-            submission_id=submission_id,
-        )
-        if session is None:
-            db.session.add(new_note)
-            db.session.commit()
-        else:
-            session.add(new_note)
-            session.flush()
-        return new_note
-
-    @classmethod
     def update_staff_note(cls, staff_note: dict, session=None) -> StaffNote:
         """Update existing staff note."""
         note_id = staff_note.get('id', None)

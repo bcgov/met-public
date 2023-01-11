@@ -162,9 +162,19 @@ class SubmissionService:
             for staff_note in staff_notes:
                 note_exists = StaffNote.get_staff_note(staff_note['id'])
                 if len(note_exists) == 0:
-                    StaffNote.add_staff_note(survey_id, submission_id, staff_note)
+                    doc = SubmissionService._create_staff_notes(survey_id, submission_id, staff_note)
+                    doc.save()
                 else:
                     StaffNote.update_staff_note(staff_note)
+
+    @staticmethod
+    def _create_staff_notes(survey_id, submission_id, staff_note):
+        doc: StaffNote = StaffNote()
+        doc.note = staff_note['note']
+        doc.note_type = staff_note['note_type']
+        doc.survey_id = survey_id
+        doc.submission_id = submission_id
+        return doc
 
     @classmethod
     def check_rejection_reason_changed(cls, submission_id, values: dict):
