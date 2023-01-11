@@ -68,3 +68,24 @@ class User(Resource):
 
         users = UserService.find_users(pagination_options=pagination_options)
         return jsonify(users), HTTPStatus.OK
+
+
+@cors_preflight('POST')
+@API.route('/<user_id>/groups')
+class UserGroup(Resource):
+    """Add user to group."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.has_one_of_roles([Role.CREATE_ADMIN_USER.value])
+    @auth.require
+    def post(user_id):
+        """Add user to group."""
+        try:
+            args = request.args
+            user_schema = UserService().add_user_to_group(user_id, args.get('group'))
+            return user_schema, HTTPStatus.OK
+        except KeyError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
