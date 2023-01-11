@@ -12,7 +12,7 @@ export interface EngagementBannerProps {
 
 export interface EmailModalProps {
     open: boolean;
-    defaultPanel?: string;
+    defaultPanel: string;
     header?: string;
     subText?: string;
     email?: string;
