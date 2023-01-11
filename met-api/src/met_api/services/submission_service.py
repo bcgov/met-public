@@ -110,18 +110,18 @@ class SubmissionService:
         values['user_id'] = user.get('id')
         with session_scope() as session:
             if values.get('status_id', None) == Status.Rejected.value:
-                rejection_reason_changed = cls.check_rejection_reason_changed(submission_id, values, session)
+                rejection_reason_changed = cls.check_rejection_reason_changed(submission_id, values)
 
             submission = Submission.update_comment_status(submission_id, values, session)
 
             cls.add_or_update_staff_note(submission.survey_id, submission_id, values, user)
 
-            rejection_review_note = StaffNote.get_staff_note_by_submission_and_type(submission_id, StaffNoteType.Review.name)
+            rejection_review_note = StaffNote.get_staff_note_type(submission_id, StaffNoteType.Review.name)
 
             if submission.comment_status_id == Status.Rejected.value and\
-                submission.has_threat is not True and\
-                submission.notify_email is True and\
-                rejection_reason_changed is True:
+               submission.has_threat is not True and\
+               submission.notify_email is True and\
+               rejection_reason_changed is True:
                 email_verification = EmailVerificationService().create({
                     'user_id': submission.user_id,
                     'survey_id': submission.survey_id,
@@ -158,45 +158,43 @@ class SubmissionService:
     def add_or_update_staff_note(cls, survey_id, submission_id, values: dict, user):
         """Process staff note for a comment."""
         staff_notes = values.get('staff_note', [])
-        if len(staff_notes) == 0:
-            return []
-
-        for staff_note in staff_notes:
-            note_exists = StaffNote.get_staff_note(staff_note['id'])
-            if len(note_exists) == 0:
-                StaffNote.add_staff_note(survey_id, submission_id, staff_note, user)
-            else:
-                StaffNote.update_staff_note(staff_note, user)
+        if len(staff_notes) != 0:
+            for staff_note in staff_notes:
+                note_exists = StaffNote.get_staff_note(staff_note['id'])
+                if len(note_exists) == 0:
+                    StaffNote.add_staff_note(survey_id, submission_id, staff_note)
+                else:
+                    StaffNote.update_staff_note(staff_note)
 
     @classmethod
-    def check_rejection_reason_changed(cls, submission_id, values, session):
+    def check_rejection_reason_changed(cls, submission_id, values: dict):
+        """Check if rejection reason has changed."""
         review_note_changed = cls.is_review_note_changed(values)
         if review_note_changed is True:
             return True
 
         submission = Submission.get(submission_id)
         if submission.has_personal_info == values['has_personal_info'] and\
-            submission.has_profanity == values['has_profanity'] and\
-            submission.has_threat == values['has_threat'] and\
-            submission.rejected_reason_other == values['rejected_reason_other']:
-                return False
+           submission.has_profanity == values['has_profanity'] and\
+           submission.has_threat == values['has_threat'] and\
+           submission.rejected_reason_other == values['rejected_reason_other']:
+            return False
         return True
 
     @classmethod
     def is_review_note_changed(cls, values: dict):
-        """Checks if review note has changed."""
+        """Check if review note has changed."""
         staff_notes = values.get('staff_note', [])
-        if len(staff_notes) == 0:
-            return False
-
-        for staff_note in staff_notes:
-            if staff_note['note_type'] == StaffNoteType.Review.name:
-                note_exists = StaffNote.get_staff_note(staff_note['id'])
-                if len(note_exists) == 0:
+        if len(staff_notes) != 0:
+            for staff_note in staff_notes:
+                if staff_note['note_type'] == StaffNoteType.Review.name:
+                    note_exists = StaffNote.get_staff_note(staff_note['id'])
+                    if len(note_exists) == 0:
+                        return True
+                    if note_exists[0].note == staff_note['note']:
+                        return False
                     return True
-                if note_exists[0].note == staff_note['note']:
-                    return False
-                return True
+        return False
 
     @classmethod
     def get_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text=''):

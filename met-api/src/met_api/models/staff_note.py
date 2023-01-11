@@ -3,12 +3,9 @@
 Manages the review/internal notes for a comment
 """
 from __future__ import annotations
-from datetime import datetime
 
 from sqlalchemy import and_
 from sqlalchemy.sql.schema import ForeignKey
-
-from met_api.schemas.staff_note import StaffNoteSchema
 
 from .db import db
 from .base_model import BaseModel
@@ -23,8 +20,6 @@ class StaffNote(BaseModel):
     note_type = db.Column(db.String(50), nullable=True)
     survey_id = db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), nullable=False)
     submission_id = db.Column(db.Integer, ForeignKey('submission.id', ondelete='SET NULL'), nullable=False)
-    created_by = db.Column(db.String(50), nullable=True)
-    updated_by = db.Column(db.String(50), nullable=True)
 
     @classmethod
     def get_staff_note(cls, note_id):
@@ -41,24 +36,20 @@ class StaffNote(BaseModel):
             .all()
 
     @classmethod
-    def get_staff_note_by_submission_and_type(cls, submission_id, note_type):
+    def get_staff_note_type(cls, submission_id, note_type):
         """Get staff note by submission id and note type."""
         return db.session.query(StaffNote)\
             .filter(and_(StaffNote.submission_id == submission_id, StaffNote.note_type == note_type))\
             .all()
 
     @classmethod
-    def add_staff_note(cls, survey_id, submission_id, staffNote: dict, user, session=None) -> StaffNote:
-        """add new staff note."""
+    def add_staff_note(cls, survey_id, submission_id, staff_note: dict, session=None) -> StaffNote:
+        """Add new staff note."""
         new_note = StaffNote(
-            note=staffNote.get('note', None),
-            note_type=staffNote.get('note_type', None),
+            note=staff_note.get('note', None),
+            note_type=staff_note.get('note_type', None),
             survey_id=survey_id,
             submission_id=submission_id,
-            created_date=datetime.utcnow(),
-            updated_date=None,
-            created_by=user['id'],
-            updated_by=None,
         )
         if session is None:
             db.session.add(new_note)
@@ -69,15 +60,13 @@ class StaffNote(BaseModel):
         return new_note
 
     @classmethod
-    def update_staff_note(cls, staffNote: dict, user, session=None) -> StaffNote:
-        """update existing staff note."""
-        id = staffNote.get('id', None)
-        query = StaffNote.query.filter_by(id=id)
+    def update_staff_note(cls, staff_note: dict, session=None) -> StaffNote:
+        """Update existing staff note."""
+        note_id = staff_note.get('id', None)
+        query = StaffNote.query.filter_by(id=note_id)
 
         update_note = dict(
-            note=staffNote.get('note', None),
-            updated_date=datetime.utcnow(),
-            updated_by=user['id'],
+            note=staff_note.get('note', None),
         )
 
         query.update(update_note)
