@@ -104,7 +104,7 @@ def test_add_user_to_admin_group(mocker, client, jwt, session):  # pylint:disabl
     claims = TestJwtClaims.staff_admin_role
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post(
-        f'/api/user/{user.external_id}/groups?group=Adminstrator', 
+        f'/api/user/{user.external_id}/groups?group=Adminstrator',
         headers=headers, content_type=ContentType.JSON.value
     )
     assert rv.status_code == HTTPStatus.OK
