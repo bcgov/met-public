@@ -1,11 +1,13 @@
 import { _kc } from 'constants/tenantConstants';
-import { userToken, userDetails, userAuthorization, userAuthentication, userRoles } from './userSlice';
+import { userToken, userDetails, userAuthorization, userAuthentication } from './userSlice';
 import { Action, AnyAction, Dispatch } from 'redux';
+import jwt from 'jsonwebtoken';
 import { UserDetail } from './types';
 import { AppConfig } from 'config';
 import Endpoints from 'apiManager/endpoints';
 import http from 'apiManager/httpRequestHandler';
 import { User } from 'models/user';
+import { Page } from 'services/type';
 
 const KeycloakData = _kc;
 
@@ -32,7 +34,6 @@ const initKeycloak = async (dispatch: Dispatch<AnyAction>) => {
         if (updateUserResponse.data) {
             userDetail.user = updateUserResponse.data;
             dispatch(userDetails(userDetail));
-            dispatch(userRoles(userDetail.user?.roles || []));
             dispatch(userAuthorization(true));
         } else {
             console.error('Missing user object');
@@ -62,6 +63,31 @@ const refreshToken = (dispatch: Dispatch<Action>) => {
             }
         }
     }, 60000);
+};
+
+// eslint-disable-next-line
+const authenticateAnonymouslyOnFormio = () => {
+    const user = AppConfig.formio.anonymousUser;
+    const roles = [AppConfig.formio.anonymousId];
+    authenticateFormio(user, roles);
+};
+
+const authenticateFormio = async (user: string, roles: string[]) => {
+    const FORMIO_TOKEN = jwt.sign(
+        {
+            external: true,
+            form: {
+                _id: AppConfig.formio.userResourceFormId, // form.io form Id of user resource
+            },
+            user: {
+                _id: user, // keep it like that
+                roles: roles,
+            },
+        },
+        AppConfig.formio.jwtSecret,
+    ); // TODO Move JWT secret key to COME From ENV
+
+    localStorage.setItem('formioToken', FORMIO_TOKEN);
 };
 
 /**
@@ -95,6 +121,22 @@ const updateUser = async () => {
     }
 };
 
+interface GetUserParams {
+    page?: number;
+    size?: number;
+    sort_key?: string;
+    sort_order?: 'asc' | 'desc';
+}
+const getUserList = async (params: GetUserParams = {}): Promise<Page<User>> => {
+    const responseData = await http.GetRequest<Page<User>>(Endpoints.User.GET_LIST, params);
+    return (
+        JSON.parse(JSON.stringify(responseData)).data ?? {
+            items: [],
+            total: 0,
+        }
+    );
+};
+
 const UserService = {
     initKeycloak,
     updateUser,
@@ -104,6 +146,7 @@ const UserService = {
     getToken,
     hasRole,
     hasAdminRole,
+    getUserList,
 };
 
 export default UserService;

@@ -5,14 +5,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { When, If, Then, Else } from 'react-if';
+import { If, Then, Else } from 'react-if';
 
 interface MetWidgetProps {
     testId?: string;
     title: string;
     children?: React.ReactNode;
     [prop: string]: unknown;
-    onEdit?: () => void;
+    onEdit: () => void;
     onDelete: () => void;
     deleting?: boolean;
     sortable?: boolean;
@@ -50,16 +50,14 @@ const MetWidget = ({
                 </Grid>
                 <Grid item xs={2} container direction="row" alignItems="flex-start" justifyContent="center">
                     <Stack direction="row" spacing={1}>
-                        <When condition={!!onEdit}>
-                            <IconButton
-                                sx={{ margin: 0, padding: 0 }}
-                                color="inherit"
-                                onClick={onEdit}
-                                data-testid="widget/edit"
-                            >
-                                <EditIcon />
-                            </IconButton>
-                        </When>
+                        <IconButton
+                            sx={{ margin: 0, padding: 0 }}
+                            color="inherit"
+                            onClick={onEdit}
+                            data-testid="widget/edit"
+                        >
+                            <EditIcon />
+                        </IconButton>
                         <IconButton
                             sx={{ margin: 0, padding: 0 }}
                             color="inherit"

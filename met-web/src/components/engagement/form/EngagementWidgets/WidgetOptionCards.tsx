@@ -4,7 +4,6 @@ import WhoIsListeningOptionCard from './WhoIsListening/WhoIsListeningOptionCard'
 import { MetHeader3 } from 'components/common';
 import DocumentOptionCard from './Documents/DocumentOptionCard';
 import PhasesOptionCard from './Phases/PhasesOptionCard';
-import SubscribeOptionCard from './Subscribe/SubscribeOptionCard';
 
 const WidgetOptionCards = () => {
     return (
@@ -21,9 +20,6 @@ const WidgetOptionCards = () => {
             </Grid>
             <Grid item xs={12} lg={6}>
                 <PhasesOptionCard />
-            </Grid>
-            <Grid item xs={12} lg={6}>
-                <SubscribeOptionCard />
             </Grid>
         </Grid>
     );

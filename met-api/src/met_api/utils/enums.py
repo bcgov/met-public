@@ -41,9 +41,3 @@ class UserType(Enum):
 
     STAFF = 'staff'
     PUBLIC_USER = 'public_user'
-
-
-class LoginSource(Enum):
-    """Login Source."""
-
-    IDIR = 'idir'

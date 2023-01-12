@@ -12,9 +12,8 @@ const GetRequest = <T>(url: string, params = {}, headers = {}) => {
     });
 };
 
-const PostRequest = <T>(url: string, data = {}, params = {}) => {
+const PostRequest = <T>(url: string, data = {}) => {
     return axios.post<T>(url, data, {
-        params,
         headers: {
             'Content-type': 'application/json',
             Authorization: `Bearer ${UserService.getToken()}`,
@@ -22,9 +21,8 @@ const PostRequest = <T>(url: string, data = {}, params = {}) => {
     });
 };
 
-const PutRequest = <T>(url: string, data = {}, params = {}) => {
+const PutRequest = <T>(url: string, data = {}) => {
     return axios.put<T>(url, data, {
-        params,
         headers: {
             'Content-type': 'application/json',
             Authorization: `Bearer ${UserService.getToken()}`,

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { useAppSelector, useAppDispatch } from '../../hooks';
 import Modal from '@mui/material/Modal';
 import { closeNotificationModal } from 'services/notificationModalService/notificationModalSlice';

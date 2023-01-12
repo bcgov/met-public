@@ -1,17 +1,12 @@
 """Service for user management."""
-from http import HTTPStatus
 from typing import List
-from flask import current_app
 
-from met_api.exceptions.business_exception import BusinessException
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.user import User as UserModel
 from met_api.schemas.user import UserSchema
 from met_api.services.keycloak import KeycloakService
 from met_api.utils.constants import GROUP_NAME_MAPPING
-from met_api.utils import notification
-from met_api.utils.enums import LoginSource, UserType
-from met_api.utils.template import Template
+from met_api.utils.enums import UserType
 
 
 KEYCLOAK_SERVICE = KeycloakService()
@@ -27,65 +22,18 @@ class UserService:
         db_user = UserModel.get_user_by_external_id(_external_id)
         return user_schema.dump(db_user)
 
-    def create_or_update_user(self, user: dict):
+    def create_or_update_user(self, user: UserSchema):
         """Create or update a user."""
         self.validate_fields(user)
 
         external_id = user.get('external_id')
         db_user = UserModel.get_user_by_external_id(external_id)
-
         if db_user is None:
-            is_staff_user = user.get('identity_provider', '').lower() == LoginSource.IDIR.value
+            is_staff_user = user.get('username', '').endswith('@idir')
             access_type = UserType.STAFF.value if is_staff_user else UserType.PUBLIC_USER.value
             user['access_type'] = access_type
-            if len(user.get('roles', [])) == 0:
-                self._send_access_request_email(user)
             return UserModel.create_user(user)
-
         return UserModel.update_user(db_user.id, user)
-
-    @staticmethod
-    def _send_access_request_email(user: UserSchema) -> None:
-        """Send a new user email.Throws error if fails."""
-        to_email_address = current_app.config.get('ACCESS_REQUEST_EMAIL_ADDRESS', None)
-        if to_email_address is None:
-            return
-
-        template_id = current_app.config.get('ACCESS_REQUEST_EMAIL_TEMPLATE_ID', None)
-        subject, body, args = UserService._render_email_template(user)
-        try:
-            notification.send_email(subject=subject,
-                                    email=to_email_address,
-                                    html_body=body,
-                                    args=args,
-                                    template_id=template_id)
-        except Exception as exc:  # noqa: B902
-            current_app.logger.error('<Notification for new user registration failed', exc)
-            raise BusinessException(
-                error='Error sending new user registration email.',
-                status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
-
-    @staticmethod
-    def _render_email_template(user: UserSchema):
-        template = Template.get_template('email_access_request.html')
-        subject = current_app.config.get('ACCESS_REQUEST_EMAIL_SUBJECT')
-        grant_access_url = current_app.config.get('SITE_URL') + \
-            current_app.config.get('USER_MANAGEMENT_PATH')
-        args = {
-            'first_name': user.get('first_name'),
-            'last_name': user.get('last_name'),
-            'username': user.get('username'),
-            'email_address': user.get('email_id'),
-            'grant_access_url': grant_access_url
-        }
-        body = template.render(
-            first_name=args.get('first_name'),
-            last_name=args.get('last_name'),
-            username=args.get('username'),
-            email_address=args.get('email_address'),
-            grant_access_url=args.get('grant_access_url'),
-        )
-        return subject, body, args
 
     @staticmethod
     def find_users(user_type=UserType.STAFF.value, pagination_options: PaginationOptions = None):
@@ -146,16 +94,3 @@ class UserService:
 
         if any(empty_fields):
             raise ValueError('Some required fields are empty')
-
-    @staticmethod
-    def add_user_to_group(external_id: str, group_name: str):
-        """Create or update a user."""
-        db_user = UserModel.get_user_by_external_id(external_id)
-        if db_user is None:
-            raise KeyError('User not found')
-
-        KEYCLOAK_SERVICE.add_user_to_group(user_id=external_id, group_name=group_name)
-
-        user_schema = UserSchema().dump(db_user)
-
-        return user_schema
