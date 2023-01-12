@@ -80,9 +80,9 @@ const CommentReview = () => {
     };
 
     const extract_staff_note = async () => {
-        staffNote.length === 0
-            ? setUpdatedStaffNote([createDefaultReviewNote(), createDefaultInternalNote()])
-            : setUpdatedStaffNote(staffNote);
+        setUpdatedStaffNote(
+            staffNote.length !== 0 ? staffNote : [createDefaultReviewNote(), createDefaultInternalNote()],
+        );
     };
 
     useEffect(() => {
@@ -158,6 +158,9 @@ const CommentReview = () => {
         newStaffNoteArray[index].survey_id = submission.survey_id;
         setUpdatedStaffNote(newStaffNoteArray);
     };
+
+    const reviewNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Review);
+    const internalNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Internal);
 
     const defaultVerdict = comment_status_id !== CommentStatus.Pending ? comment_status_id : CommentStatus.Approved;
     return (
@@ -332,41 +335,37 @@ const CommentReview = () => {
                                         respondent to help them understand what needs to be edited for their comment(s)
                                         to be approved.)
                                     </MetParagraph>
-                                    {updatedStaffNote.map((staffNote, index) => {
-                                        if (staffNote.note_type == StaffNoteType[StaffNoteType.Review]) {
-                                            return (
-                                                <TextField
-                                                    value={staffNote.note}
-                                                    key={staffNote.note_type}
-                                                    fullWidth
-                                                    multiline={true}
-                                                    rows={4}
-                                                    FormHelperTextProps={{ error: true }}
-                                                    onChange={(event) => {
-                                                        handleNoteChange(event.target.value, index);
-                                                    }}
-                                                />
-                                            );
-                                        }
+                                    {reviewNotes.map((staffNote, index) => {
+                                        return (
+                                            <TextField
+                                                value={staffNote.note}
+                                                key={staffNote.note_type}
+                                                fullWidth
+                                                multiline={true}
+                                                rows={4}
+                                                FormHelperTextProps={{ error: true }}
+                                                onChange={(event) => {
+                                                    handleNoteChange(event.target.value, index);
+                                                }}
+                                            />
+                                        );
                                     })}
                                     <br />
                                     <MetLabel>Internal Note</MetLabel>
-                                    {updatedStaffNote.map((staffNote, index) => {
-                                        if (staffNote.note_type == StaffNoteType[StaffNoteType.Internal]) {
-                                            return (
-                                                <TextField
-                                                    value={staffNote.note}
-                                                    key={staffNote.note_type}
-                                                    fullWidth
-                                                    multiline={true}
-                                                    rows={4}
-                                                    FormHelperTextProps={{ error: true }}
-                                                    onChange={(event) => {
-                                                        handleNoteChange(event.target.value, index);
-                                                    }}
-                                                />
-                                            );
-                                        }
+                                    {internalNotes.map((staffNote, index) => {
+                                        return (
+                                            <TextField
+                                                value={staffNote.note}
+                                                key={staffNote.note_type}
+                                                fullWidth
+                                                multiline={true}
+                                                rows={4}
+                                                FormHelperTextProps={{ error: true }}
+                                                onChange={(event) => {
+                                                    handleNoteChange(event.target.value, index);
+                                                }}
+                                            />
+                                        );
                                     })}
                                     <br />
                                     <MetParagraph>
@@ -416,22 +415,20 @@ const CommentReview = () => {
                         <When condition={review !== CommentStatus.Rejected}>
                             <Grid item xs={12}>
                                 <MetLabel>Internal Note</MetLabel>
-                                {updatedStaffNote.map((staffNote, index) => {
-                                    if (staffNote.note_type == StaffNoteType[StaffNoteType.Internal]) {
-                                        return (
-                                            <TextField
-                                                value={staffNote.note}
-                                                key={staffNote.note_type}
-                                                fullWidth
-                                                multiline={true}
-                                                rows={4}
-                                                FormHelperTextProps={{ error: true }}
-                                                onChange={(event) => {
-                                                    handleNoteChange(event.target.value, index);
-                                                }}
-                                            />
-                                        );
-                                    }
+                                {internalNotes.map((staffNote, index) => {
+                                    return (
+                                        <TextField
+                                            value={staffNote.note}
+                                            key={staffNote.note_type}
+                                            fullWidth
+                                            multiline={true}
+                                            rows={4}
+                                            FormHelperTextProps={{ error: true }}
+                                            onChange={(event) => {
+                                                handleNoteChange(event.target.value, index);
+                                            }}
+                                        />
+                                    );
                                 })}
                             </Grid>
                         </When>
