@@ -8,21 +8,26 @@ import {
     FormControlLabel,
     FormHelperText,
     Stack,
-    useMediaQuery,
-    Theme,
 } from '@mui/material';
 import { MetLabel, modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody } from 'components/common';
 import Modal from '@mui/material/Modal';
 import { ModalProps } from 'components/engagement/view/types';
 
-const EmailModal = ({ open, email, updateEmail, updateModal, header, subText, blockText, handleConfirm }: ModalProps) => {
+const EmailModal = ({
+    open,
+    email,
+    updateEmail,
+    updateModal,
+    header,
+    subText,
+    blockText,
+    handleConfirm,
+}: ModalProps) => {
     const [checked, setChecked] = useState(false);
     const [emailFormError, setEmailFormError] = useState({
         terms: false,
         email: false,
     });
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
-
     const validateForm = () => {
         const errors = {
             terms: !checked,
@@ -136,26 +141,15 @@ const EmailModal = ({ open, email, updateEmail, updateModal, header, subText, bl
                         sx={{ mt: '1em' }}
                     >
                         <Stack
-                            direction={{ xs: 'column', sm: 'row' }}
+                            direction={{ md: 'column-reverse', lg: 'row' }}
                             spacing={1}
                             width="100%"
                             justifyContent="flex-end"
                         >
-                            {isSmallScreen ? (
-                                <>
-                                    <PrimaryButton type="submit" variant={'contained'}>
-                                        Submit
-                                    </PrimaryButton>
-                                    <SecondaryButton onClick={() => updateModal(false)}>Cancel</SecondaryButton>
-                                </>
-                            ) : (
-                                <>
-                                    <SecondaryButton onClick={() => updateModal(false)}>Cancel</SecondaryButton>
-                                    <PrimaryButton type="submit" variant={'contained'}>
-                                        Submit
-                                    </PrimaryButton>
-                                </>
-                            )}
+                            <SecondaryButton onClick={() => updateModal(false)}>Cancel</SecondaryButton>
+                            <PrimaryButton type="submit" variant={'contained'}>
+                                Submit
+                            </PrimaryButton>
                         </Stack>
                     </Grid>
                 </Grid>
