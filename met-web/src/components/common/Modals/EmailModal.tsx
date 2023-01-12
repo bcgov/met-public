@@ -20,7 +20,7 @@ const EmailModal = ({
     updateModal,
     header,
     subText,
-    blockText,
+    termsOfService,
     handleConfirm,
 }: ModalProps) => {
     const [checked, setChecked] = useState(false);
@@ -79,7 +79,7 @@ const EmailModal = ({
                                 fontSize: '0.8rem',
                             }}
                         >
-                            {blockText.map((text: string) => (
+                            {termsOfService.map((text: string) => (
                                 <Typography sx={{ mb: 1 }}>{text}</Typography>
                             ))}
                         </Typography>
