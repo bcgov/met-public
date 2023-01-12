@@ -69,8 +69,8 @@ class UserService:
     def _render_email_template(user: UserSchema):
         template = Template.get_template('email_access_request.html')
         subject = current_app.config.get('ACCESS_REQUEST_EMAIL_SUBJECT')
-        grant_access_url = current_app.config.get('KEYCLOAK_BASE_URL') + \
-            current_app.config.get('KEYCLOAK_GRANT_ROLE_PATH').format(user_id=user.get('external_id'))
+        grant_access_url = current_app.config.get('SITE_URL') + \
+            current_app.config.get('USER_MANAGEMENT_PATH')
         args = {
             'first_name': user.get('first_name'),
             'last_name': user.get('last_name'),

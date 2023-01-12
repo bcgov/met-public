@@ -186,7 +186,8 @@ objects:
     NOTIFICATIONS_EMAIL_ENDPOINT: ${NOTIFICATIONS_EMAIL_ENDPOINT}    
     SITE_URL: ${SITE_URL}
     VERIFICATION_EMAIL_TEMPLATE_ID: ${VERIFICATION_EMAIL_TEMPLATE_ID}
-    REJECTED_EMAIL_TEMPLATE_ID: ${REJECTED_EMAIL_TEMPLATE_ID}
+    REJECTED_EMAIL_TEMPLATE_ID: ${REJECTED_EMAIL_TEMPLATE_ID}    
+    ACCESS_REQUEST_EMAIL_TEMPLATE_ID: ${ACCESS_REQUEST_EMAIL_TEMPLATE_ID}
     KEYCLOAK_REALMNAME: ${KEYCLOAK_REALMNAME}
     KEYCLOAK_BASE_URL: ${KEYCLOAK_BASE_URL}
 - kind: Secret
@@ -243,6 +244,10 @@ parameters:
     description: "The rejected comment email template id"
     required: true
     value: '8410c055-587b-4788-bd2f-b563562bcb2d'
+  - name: ACCESS_REQUEST_EMAIL_TEMPLATE_ID
+    description: "The access request email template id"
+    required: true
+    value: '41afa792-4c75-425a-9ad9-c558561d6669'
   - name: S3_BUCKET
     description: "The s3 object store bucket"
     required: true
