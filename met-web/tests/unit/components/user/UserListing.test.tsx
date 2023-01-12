@@ -21,6 +21,7 @@ const mockUser1: User = {
     created_date: Date(),
     status: 'Active',
     access_type: 'Staff',
+    roles: [],
 };
 
 jest.mock('@mui/material', () => ({
