@@ -26,6 +26,7 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'))
     created_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow, nullable=False)
+    hello = db.Column(db.DateTime, onupdate=datetime.utcnow, nullable=False)
     created_by = db.Column(db.String(50), nullable=False)
     updated_by = db.Column(db.String(50), nullable=False)
     items = db.relationship('WidgetItem', backref='widget', cascade='all, delete', order_by='WidgetItem.sort_index')
@@ -70,7 +71,7 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
         )
 
     @classmethod
-    def creat_all_widgets(cls, widgets: list) -> list[Widget]:
+    def create_all_widgets(cls, widgets: list) -> list[Widget]:
         """Save widgets."""
         new_widgets = [cls.__create_new_widget_entity(widget) for widget in widgets]
         db.session.add_all(new_widgets)
