@@ -16,6 +16,9 @@
 
 Test-Suite to ensure that the /user endpoint is working as expected.
 """
+from unittest.mock import MagicMock
+from http import HTTPStatus
+
 from met_api.utils.enums import ContentType, UserType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestUserInfo
 from tests.utilities.factory_utils import factory_auth_header, factory_user_model
@@ -27,7 +30,7 @@ def test_create_public_user(client, jwt, session, ):  # pylint:disable=unused-ar
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.put('/api/user/',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     # TODO check this
     # assert rv.json.get('username') is not None
     assert rv.json.get('email_id') == claims.get('email')
@@ -40,7 +43,7 @@ def test_create_staff_user(client, jwt, session, ):  # pylint:disable=unused-arg
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.put('/api/user/',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     assert rv.json.get('email_id') == claims.get('email')
     assert rv.json.get('access_type') == UserType.STAFF.value
 
@@ -56,7 +59,7 @@ def test_get_staff_users(client, jwt, session, ):  # pylint:disable=unused-argum
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get('/api/user/',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     assert rv.json.get('total') == 2
     assert len(rv.json.get('items')) == 2
 
@@ -76,7 +79,7 @@ def test_get_staff_users_exclude_public_user(client, jwt, session, ):  # pylint:
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get('/api/user/',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     assert rv.json.get('total') == 2
     assert len(rv.json.get('items')) == 2
     # public user is not fetched
@@ -85,6 +88,25 @@ def test_get_staff_users_exclude_public_user(client, jwt, session, ):  # pylint:
 
     staff_user = _find_user(staff_email, rv)
     assert staff_user is not None
+
+
+def test_add_user_to_admin_group(mocker, client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that you can add a user to admin group."""
+    user = factory_user_model()
+
+    mock_add_user_to_group_keycloak_response = MagicMock()
+    mock_add_user_to_group_keycloak_response.status_code = HTTPStatus.NO_CONTENT
+    mock_add_user_to_group_keycloak = mocker.patch(
+        'met_api.services.keycloak.KeycloakService.add_user_to_group',
+        return_value=mock_add_user_to_group_keycloak_response
+    )
+
+    claims = TestJwtClaims.staff_admin_role
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.post(f'/api/user/{user.external_id}/groups?group=Adminstrator',
+                    headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.OK
+    mock_add_user_to_group_keycloak.assert_called()
 
 
 def _find_user(public_email, rv):
