@@ -1,7 +1,6 @@
 import { _kc } from 'constants/tenantConstants';
-import { userToken, userDetails, userAuthorization, userAuthentication } from './userSlice';
+import { userToken, userDetails, userAuthorization, userAuthentication, userRoles } from './userSlice';
 import { Action, AnyAction, Dispatch } from 'redux';
-import jwt from 'jsonwebtoken';
 import { UserDetail } from './types';
 import { AppConfig } from 'config';
 import Endpoints from 'apiManager/endpoints';
@@ -33,6 +32,7 @@ const initKeycloak = async (dispatch: Dispatch<AnyAction>) => {
         if (updateUserResponse.data) {
             userDetail.user = updateUserResponse.data;
             dispatch(userDetails(userDetail));
+            dispatch(userRoles(userDetail.user?.roles || []));
             dispatch(userAuthorization(true));
         } else {
             console.error('Missing user object');
@@ -62,31 +62,6 @@ const refreshToken = (dispatch: Dispatch<Action>) => {
             }
         }
     }, 60000);
-};
-
-// eslint-disable-next-line
-const authenticateAnonymouslyOnFormio = () => {
-    const user = AppConfig.formio.anonymousUser;
-    const roles = [AppConfig.formio.anonymousId];
-    authenticateFormio(user, roles);
-};
-
-const authenticateFormio = async (user: string, roles: string[]) => {
-    const FORMIO_TOKEN = jwt.sign(
-        {
-            external: true,
-            form: {
-                _id: AppConfig.formio.userResourceFormId, // form.io form Id of user resource
-            },
-            user: {
-                _id: user, // keep it like that
-                roles: roles,
-            },
-        },
-        AppConfig.formio.jwtSecret,
-    ); // TODO Move JWT secret key to COME From ENV
-
-    localStorage.setItem('formioToken', FORMIO_TOKEN);
 };
 
 /**

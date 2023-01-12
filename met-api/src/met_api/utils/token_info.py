@@ -1,5 +1,7 @@
 """Helper for token decoding."""
-from flask import g
+from flask import current_app, g
+
+from met_api.utils.roles import Role
 
 
 class TokenInfo:
@@ -24,6 +26,14 @@ class TokenInfo:
             'last_name': token_info.get('family_name', None),
             'email_id': token_info.get('email', None),
             'username': token_info.get('preferred_username', None),
-            'identity_provider': token_info.get('identity_provider', '')
+            'identity_provider': token_info.get('identity_provider', ''),
+            'roles': TokenInfo.get_user_roles(),
         }
         return user_data
+
+    @staticmethod
+    def get_user_roles():
+        """Get the user roles from token."""
+        valid_roles = set(item.value for item in Role)
+        token_roles = current_app.config['JWT_ROLE_CALLBACK'](g.token_info)
+        return valid_roles.intersection(token_roles)
