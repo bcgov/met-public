@@ -70,7 +70,7 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
         )
 
     @classmethod
-    def creat_all_widgets(cls, widgets: list) -> list[Widget]:
+    def create_all_widgets(cls, widgets: list) -> list[Widget]:
         """Save widgets."""
         new_widgets = [cls.__create_new_widget_entity(widget) for widget in widgets]
         db.session.add_all(new_widgets)

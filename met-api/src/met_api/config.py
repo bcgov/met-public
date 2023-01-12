@@ -84,7 +84,7 @@ class _Config():  # pylint: disable=too-few-public-methods
 
     # Service account details
     KEYCLOAK_BASE_URL = os.getenv('KEYCLOAK_BASE_URL')
-    KEYCLOAK_REALMNAME = os.getenv('KEYCLOAK_REALMNAME')
+    KEYCLOAK_REALMNAME = os.getenv('KEYCLOAK_REALMNAME', 'met')
     KEYCLOAK_SERVICE_ACCOUNT_ID = os.getenv('MET_ADMIN_CLIENT_ID')
     KEYCLOAK_SERVICE_ACCOUNT_SECRET = os.getenv('MET_ADMIN_CLIENT_SECRET')
     # TODO separate out clients for APIs and user management.
@@ -96,17 +96,22 @@ class _Config():  # pylint: disable=too-few-public-methods
     SUBMISSION_PATH = os.getenv('SUBMISSION_PATH', '/engagements/{engagement_id}/edit/{token}')
     SURVEY_PATH = os.getenv('SURVEY_PATH', '/surveys/submit/{survey_id}/{token}')
     ENGAGEMENT_DASHBOARD_PATH = os.getenv('ENGAGEMENT_DASHBOARD_PATH', '/engagements/{engagement_id}/dashboard')
+    USER_MANAGEMENT_PATH = os.getenv('USER_MANAGEMENT_PATH', '/usermanagement')
     SITE_URL = os.getenv('SITE_URL')
 
-    # Email Service
-    VERIFICATION_EMAIL_SUBJECT = os.getenv('VERIFICATION_EMAIL_SUBJECT', '{engagement_name} - Survey link')
-    # The GC notify email template id for email verification
+    # The GC notify email variables
+    # Email address verification
     VERIFICATION_EMAIL_TEMPLATE_ID = os.getenv('VERIFICATION_EMAIL_TEMPLATE_ID')
-    # The GC notify email template id for rejecting comments
+    VERIFICATION_EMAIL_SUBJECT = os.getenv('VERIFICATION_EMAIL_SUBJECT', '{engagement_name} - Survey link')
+    # Rejected comments
     REJECTED_EMAIL_TEMPLATE_ID = os.getenv('REJECTED_EMAIL_TEMPLATE_ID')
     REJECTED_EMAIL_SUBJECT = os.getenv('REJECTED_EMAIL_SUBJECT', '{engagement_name} - About your Comments')
-    NOTIFICATIONS_EMAIL_ENDPOINT = os.getenv('NOTIFICATIONS_EMAIL_ENDPOINT')
+    # New User Registration
+    ACCESS_REQUEST_EMAIL_TEMPLATE_ID = os.getenv('ACCESS_REQUEST_EMAIL_TEMPLATE_ID')
+    ACCESS_REQUEST_EMAIL_SUBJECT = os.getenv('ACCESS_REQUEST_EMAIL_SUBJECT', 'MET - New User Access Request')
+    ACCESS_REQUEST_EMAIL_ADDRESS = os.getenv('ACCESS_REQUEST_EMAIL_ADDRESS')
 
+    NOTIFICATIONS_EMAIL_ENDPOINT = os.getenv('NOTIFICATIONS_EMAIL_ENDPOINT')
     # CDOGS
     CDOGS_ACCESS_TOKEN = os.getenv('CDOGS_ACCESS_TOKEN')
     CDOGS_BASE_URL = os.getenv('CDOGS_BASE_URL')

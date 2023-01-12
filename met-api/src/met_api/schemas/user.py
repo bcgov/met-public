@@ -25,3 +25,4 @@ class UserSchema(Schema):
     created_date = fields.Str(data_key='created_date')
     updated_date = fields.Str(data_key='updated_date')
     access_type = fields.Str(data_key='access_type')
+    roles = fields.List(fields.Str(data_key='roles'))
