@@ -3,5 +3,4 @@ export interface NotificationModalProps {
     subText: string[];
     handleConfirm?: () => void;
     handleClose?: () => void;
-    tos?: string;
 }

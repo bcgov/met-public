@@ -16,7 +16,7 @@ export interface EmailModalProps {
     header?: string;
     subText?: string;
     email?: string;
-    tos?: string | React.ReactFragment;
+    blockText?: string | React.ReactFragment;
     handleConfirm?: () => void;
     handleClose: () => void;
     updateEmail?: (email: string) => void;
@@ -28,7 +28,7 @@ export interface ModalProps {
     header: string;
     subText: Array<string>;
     email: string;
-    tos: Array<string>;
+    blockText: Array<string>;
     handleConfirm: () => void;
     updateEmail: (email: string) => void;
     updateModal: (open: boolean) => void;

@@ -15,7 +15,7 @@ import { MetLabel, modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBo
 import Modal from '@mui/material/Modal';
 import { ModalProps } from 'components/engagement/view/types';
 
-const EmailModal = ({ open, email, updateEmail, updateModal, header, subText, tos, handleConfirm }: ModalProps) => {
+const EmailModal = ({ open, email, updateEmail, updateModal, header, subText, blockText, handleConfirm }: ModalProps) => {
     const [checked, setChecked] = useState(false);
     const [emailFormError, setEmailFormError] = useState({
         terms: false,
@@ -74,7 +74,7 @@ const EmailModal = ({ open, email, updateEmail, updateModal, header, subText, to
                                 fontSize: '0.8rem',
                             }}
                         >
-                            {tos.map((text: string) => (
+                            {blockText.map((text: string) => (
                                 <Typography sx={{ mb: 1 }}>{text}</Typography>
                             ))}
                         </Typography>
