@@ -47,6 +47,7 @@ class User(Resource):
         try:
             user_data = TokenInfo.get_user_data()
             user = UserService().create_or_update_user(user_data)
+            user.roles = user_data.get('roles')
             return UserSchema().dump(user), HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
