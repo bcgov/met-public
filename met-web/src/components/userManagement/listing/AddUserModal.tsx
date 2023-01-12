@@ -129,7 +129,6 @@ export const AddUserModel = () => {
                                         </FormLabel>
                                         <ControlledRadioGroup name="group">
                                             <FormControlLabel
-                                                data-testid={`radio-${USER_GROUP.ADMIN.label}`}
                                                 value={USER_GROUP.ADMIN.value}
                                                 control={<Radio />}
                                                 label={USER_GROUP.ADMIN.label}
