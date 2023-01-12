@@ -5,9 +5,8 @@ import { setupEnv } from '../setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as userService from 'services/userService/api';
-import { User, USER_GROUP } from 'models/user';
+import { User } from 'models/user';
 import UserManagementListing from 'components/userManagement/listing';
-import assert from 'assert';
 
 const mockUser1: User = {
     id: 1,
@@ -48,9 +47,6 @@ describe('User Management tests', () => {
             total: 1,
         }),
     );
-    const mockPostAddUserToGroup = jest
-        .spyOn(userService, 'addUserToGroup')
-        .mockReturnValue(Promise.resolve(mockUser1));
 
     beforeEach(() => {
         setupEnv();
