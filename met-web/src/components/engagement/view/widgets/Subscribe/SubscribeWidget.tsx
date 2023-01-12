@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { MetBody, MetHeader2, MetPaper, PrimaryButton } from 'components/common';
-import { ActionContext } from '../../../view/ActionContext';
+import { ActionContext } from '../../ActionContext';
 import { Grid } from '@mui/material';
 import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
