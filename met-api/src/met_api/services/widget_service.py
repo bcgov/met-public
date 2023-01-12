@@ -83,7 +83,7 @@ class WidgetService:
             item['created_by'] = user_id
             item['updated_by'] = user_id
 
-        created_widgets_records = WidgetItem.creat_all_widget_items(widget_items)
+        created_widgets_records = WidgetItem.create_all_widget_items(widget_items)
         return WidgetItemSchema(many=True).dump(created_widgets_records)
 
     def create_added_widget_items(self, widget_items: list, widget_items_db: list, user_id):
