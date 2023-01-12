@@ -152,10 +152,13 @@ const CommentReview = () => {
         return <CommentReviewSkeleton />;
     }
 
-    const handleNoteChange = (note: string, index: number) => {
+    const handleNoteChange = (note: string, note_type: string, note_id: number) => {
         const newStaffNoteArray = [...updatedStaffNote];
-        newStaffNoteArray[index].note = note;
-        newStaffNoteArray[index].survey_id = submission.survey_id;
+        newStaffNoteArray.map((staffNote) => {
+            if (staffNote.id === note_id && staffNote.note_type === note_type) {
+                staffNote.note = note;
+            }
+        });
         setUpdatedStaffNote(newStaffNoteArray);
     };
 
@@ -335,7 +338,7 @@ const CommentReview = () => {
                                         respondent to help them understand what needs to be edited for their comment(s)
                                         to be approved.)
                                     </MetParagraph>
-                                    {reviewNotes.map((staffNote, index) => {
+                                    {reviewNotes.map((staffNote) => {
                                         return (
                                             <TextField
                                                 value={staffNote.note}
@@ -345,14 +348,18 @@ const CommentReview = () => {
                                                 rows={4}
                                                 FormHelperTextProps={{ error: true }}
                                                 onChange={(event) => {
-                                                    handleNoteChange(event.target.value, index);
+                                                    handleNoteChange(
+                                                        event.target.value,
+                                                        staffNote.note_type,
+                                                        staffNote.id,
+                                                    );
                                                 }}
                                             />
                                         );
                                     })}
                                     <br />
                                     <MetLabel>Internal Note</MetLabel>
-                                    {internalNotes.map((staffNote, index) => {
+                                    {internalNotes.map((staffNote) => {
                                         return (
                                             <TextField
                                                 value={staffNote.note}
@@ -362,7 +369,11 @@ const CommentReview = () => {
                                                 rows={4}
                                                 FormHelperTextProps={{ error: true }}
                                                 onChange={(event) => {
-                                                    handleNoteChange(event.target.value, index);
+                                                    handleNoteChange(
+                                                        event.target.value,
+                                                        staffNote.note_type,
+                                                        staffNote.id,
+                                                    );
                                                 }}
                                             />
                                         );
@@ -415,7 +426,7 @@ const CommentReview = () => {
                         <When condition={review !== CommentStatus.Rejected}>
                             <Grid item xs={12}>
                                 <MetLabel>Internal Note</MetLabel>
-                                {internalNotes.map((staffNote, index) => {
+                                {internalNotes.map((staffNote) => {
                                     return (
                                         <TextField
                                             value={staffNote.note}
@@ -425,7 +436,7 @@ const CommentReview = () => {
                                             rows={4}
                                             FormHelperTextProps={{ error: true }}
                                             onChange={(event) => {
-                                                handleNoteChange(event.target.value, index);
+                                                handleNoteChange(event.target.value, staffNote.note_type, staffNote.id);
                                             }}
                                         />
                                     );
