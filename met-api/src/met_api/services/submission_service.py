@@ -99,41 +99,36 @@ class SubmissionService:
             raise ValueError('Engagement not open to submissions')
 
     @classmethod
-    def review_comment(cls, submission_id, values: dict, external_user_id) -> SubmissionSchema:
+    def review_comment(cls, submission_id, staff_review_details: dict, external_user_id) -> SubmissionSchema:
         """Review comment."""
         user = UserService.get_user_by_external_id(external_user_id)
 
-        cls.validate_review(values, user)
+        cls.validate_review(staff_review_details, user)
         reviewed_by = ' '.join([user.get('first_name', ''), user.get('last_name', '')])
 
-        values['reviewed_by'] = reviewed_by
-        values['user_id'] = user.get('id')
+        staff_review_details['reviewed_by'] = reviewed_by
+        staff_review_details['user_id'] = user.get('id')
 
-        staff_notes = values.get('staff_note', [])
         with session_scope() as session:
-            if values.get('status_id', None) == Status.Rejected.value:
-                rejection_reason_changed = cls.check_rejection_reason_changed(submission_id, values)
-
-            submission = Submission.update_comment_status(submission_id, values, session)
-
-            if staff_notes:
+            submission = Submission.update_comment_status(submission_id, staff_review_details, session)
+            if staff_notes := staff_review_details.get('staff_note', []):
                 cls.add_or_update_staff_note(submission.survey_id, submission_id, staff_notes)
 
-            rejection_review_note = StaffNote.get_staff_note_by_type(submission_id, StaffNoteType.Review.name)
-
-            if submission.comment_status_id == Status.Rejected.value and\
-               submission.has_threat is not True and\
-               submission.notify_email is True and\
-               rejection_reason_changed is True:
-                email_verification = EmailVerificationService().create({
-                    'user_id': submission.user_id,
-                    'survey_id': submission.survey_id,
-                    'submission_id': submission.id,
-                    'review_note': rejection_review_note[0].note,
-                }, session)
-                cls._send_rejected_email(submission, email_verification.get('verification_token'))
-
+            if SubmissionService._should_send_email(submission_id, staff_review_details):
+                rejection_review_note = StaffNote.get_staff_note_by_type(submission_id, StaffNoteType.Review.name)
+                SubmissionService._trigger_email(rejection_review_note, session, submission)
+        session.commit()
         return SubmissionSchema().dump(submission)
+
+    @staticmethod
+    def _trigger_email(rejection_review_note, session, submission):
+        email_verification = EmailVerificationService().create({
+            'user_id': submission.user_id,
+            'survey_id': submission.survey_id,
+            'submission_id': submission.id,
+            'review_note': rejection_review_note[0].note,
+        }, session)
+        SubmissionService._send_rejected_email(submission, email_verification.get('verification_token'))
 
     @classmethod
     def validate_review(cls, values: dict, user):
@@ -161,7 +156,7 @@ class SubmissionService:
     def add_or_update_staff_note(cls, survey_id, submission_id, staff_notes):
         """Process staff note for a comment."""
         for staff_note in staff_notes:
-            note = StaffNote.find_by_id(staff_note['id'])
+            note = StaffNote.get_staff_note_by_type(submission_id, staff_note.get('note_type'))
             if note:
                 note.note = staff_note['note']
                 StaffNote.flush(note)
@@ -178,10 +173,31 @@ class SubmissionService:
         doc.submission_id = submission_id
         return doc
 
-    @classmethod
-    def check_rejection_reason_changed(cls, submission_id, values: dict):
+    @staticmethod
+    def _should_send_email(submission_id: int, staff_comment_details: dict) -> bool:
+        """Check if an email should be sent for a rejected submission."""
+        # Dont send the mail
+        #   if the comment has threat
+        #   if notify_email is false
+        # Send the mail
+        #   if the status of the comment is rejected
+        #   if review note has not changed
+
+        if staff_comment_details.get('has_threat') is True:
+            return False
+        if staff_comment_details.get('notify_email') is False:
+            return False
+        if staff_comment_details.get('status_id') == Status.Rejected.value:
+            return True
+        review_note_changed = SubmissionService.is_review_note_changed(submission_id, staff_comment_details)
+        if review_note_changed:
+            return True
+        return False
+
+    @staticmethod
+    def check_rejection_reason_changed(submission_id, values: dict):
         """Check if rejection reason has changed."""
-        review_note_changed = cls.is_review_note_changed(values)
+        review_note_changed = SubmissionService.is_review_note_changed(submission_id, values)
         if review_note_changed is True:
             return True
 
@@ -194,17 +210,15 @@ class SubmissionService:
 
         return True
 
-    @classmethod
-    def is_review_note_changed(cls, values: dict):
-        """Check if review note has changed."""
+    @staticmethod
+    def is_review_note_changed(submission_id: int, values: dict) -> bool:
+        """Check if review note has changed for a submission."""
         staff_notes = values.get('staff_note', [])
-        if len(staff_notes) != 0:
-            for staff_note in staff_notes:
-                if staff_note['note_type'] == StaffNoteType.Review.name:
-                    note = StaffNote.find_by_id(staff_note['id'])
-                    if note is None or note.note != staff_note['note']:
-                        return True
-
+        for staff_note in staff_notes:
+            if staff_note['note_type'] == StaffNoteType.Review.name:
+                note = StaffNote.get_staff_note_by_type(submission_id, StaffNoteType.Review.name)
+                if not note or note[0].note != staff_note.get('note'):
+                    return True
         return False
 
     @classmethod
