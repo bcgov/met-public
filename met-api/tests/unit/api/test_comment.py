@@ -17,13 +17,19 @@
 Test-Suite to ensure that the /Comment endpoint is working as expected.
 """
 import json
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
+from faker import Faker
+
+from met_api.constants.staff_note_type import StaffNoteType
+from met_api.utils import notification
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_comment_model, factory_submission_model, factory_survey_and_eng_model,
     factory_user_model)
+
+fake = Faker()
 
 
 def test_get_comments(client, jwt, session):  # pylint:disable=unused-argument
@@ -55,6 +61,63 @@ def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
     rv = client.put(f'/api/submissions/{submission.id}',
                     data=json.dumps(to_dict), headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
+
+
+def test_review_comment_internal_note(client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that a comment can be reviewed."""
+    claims = TestJwtClaims.public_user_role
+
+    factory_user_model(TestJwtClaims.public_user_role.get('sub'))
+    user_details = factory_user_model()
+    survey, eng = factory_survey_and_eng_model()
+    submission = factory_submission_model(survey.id, eng.id, user_details.id)
+    factory_comment_model(survey.id, submission.id)
+    note = fake.paragraph()
+    staff_note = {'note': note,
+                  'note_type': StaffNoteType.Internal.name}
+    to_dict = {
+        'status_id': 2,
+        'staff_note': [staff_note]
+    }
+
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.put(f'/api/submissions/{submission.id}',
+                    data=json.dumps(to_dict), headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+    staff_notes = rv.json.get('staff_note', None)
+    assert len(staff_notes) == 1
+    assert staff_notes[0].get('note_type') == StaffNoteType.Internal.name
+    assert staff_notes[0].get('note') == note
+
+
+def test_review_comment_review_note(client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that a comment can be reviewed."""
+    claims = TestJwtClaims.public_user_role
+
+    factory_user_model(TestJwtClaims.public_user_role.get('sub'))
+    user_details = factory_user_model()
+    survey, eng = factory_survey_and_eng_model()
+    submission = factory_submission_model(survey.id, eng.id, user_details.id)
+    factory_comment_model(survey.id, submission.id)
+    note = fake.paragraph()
+    staff_note = {'note': note,
+                  'note_type': StaffNoteType.Review.name}
+    to_dict = {
+        'status_id': 3,
+        'has_personal_info': True,
+        'staff_note': [staff_note]
+    }
+
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    with patch.object(notification, 'send_email', return_value=False) as mock_mail:
+        rv = client.put(f'/api/submissions/{submission.id}',
+                        data=json.dumps(to_dict), headers=headers, content_type=ContentType.JSON.value)
+        assert rv.status_code == 200
+        staff_notes = rv.json.get('staff_note', None)
+        assert len(staff_notes) == 1
+        assert staff_notes[0].get('note_type') == StaffNoteType.Review.name
+        assert staff_notes[0].get('note') == note
+        mock_mail.assert_called()
 
 
 def test_get_comments_spreadsheet(mocker, client, jwt, session):  # pylint:disable=unused-argument
