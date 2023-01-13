@@ -108,15 +108,18 @@ class SubmissionService:
 
         values['reviewed_by'] = reviewed_by
         values['user_id'] = user.get('id')
+
+        staff_notes = values.get('staff_note', [])
         with session_scope() as session:
             if values.get('status_id', None) == Status.Rejected.value:
                 rejection_reason_changed = cls.check_rejection_reason_changed(submission_id, values)
 
             submission = Submission.update_comment_status(submission_id, values, session)
 
-            cls.add_or_update_staff_note(submission.survey_id, submission_id, values)
+            if staff_notes:
+                cls.add_or_update_staff_note(submission.survey_id, submission_id, staff_notes)
 
-            rejection_review_note = StaffNote.get_staff_note_type(submission_id, StaffNoteType.Review.name)
+            rejection_review_note = StaffNote.get_staff_note_by_type(submission_id, StaffNoteType.Review.name)
 
             if submission.comment_status_id == Status.Rejected.value and\
                submission.has_threat is not True and\
@@ -155,17 +158,16 @@ class SubmissionService:
             raise ValueError('A rejection reason is required.')
 
     @classmethod
-    def add_or_update_staff_note(cls, survey_id, submission_id, values: dict):
+    def add_or_update_staff_note(cls, survey_id, submission_id, staff_notes):
         """Process staff note for a comment."""
-        staff_notes = values.get('staff_note', [])
-        if len(staff_notes) != 0:
-            for staff_note in staff_notes:
-                note_exists = StaffNote.get_staff_note(staff_note['id'])
-                if len(note_exists) == 0:
-                    doc = SubmissionService._create_staff_notes(survey_id, submission_id, staff_note)
-                    doc.save()
-                else:
-                    StaffNote.update_staff_note(staff_note)
+        for staff_note in staff_notes:
+            note = StaffNote.find_by_id(staff_note['id'])
+            if note:
+                note.note = staff_note['note']
+                StaffNote.flush(note)
+            else:
+                doc = SubmissionService._create_staff_notes(survey_id, submission_id, staff_note)
+                StaffNote.flush(doc)
 
     @staticmethod
     def _create_staff_notes(survey_id, submission_id, staff_note):
@@ -189,6 +191,7 @@ class SubmissionService:
            submission.has_threat == values['has_threat'] and\
            submission.rejected_reason_other == values['rejected_reason_other']:
             return False
+
         return True
 
     @classmethod
@@ -198,12 +201,10 @@ class SubmissionService:
         if len(staff_notes) != 0:
             for staff_note in staff_notes:
                 if staff_note['note_type'] == StaffNoteType.Review.name:
-                    note_exists = StaffNote.get_staff_note(staff_note['id'])
-                    if len(note_exists) == 0:
+                    note = StaffNote.find_by_id(staff_note['id'])
+                    if note is None or note.note != staff_note['note']:
                         return True
-                    if note_exists[0].note == staff_note['note']:
-                        return False
-                    return True
+
         return False
 
     @classmethod
