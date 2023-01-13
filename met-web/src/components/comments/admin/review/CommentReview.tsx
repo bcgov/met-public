@@ -26,9 +26,11 @@ import {
     MetHeader4,
 } from 'components/common';
 import { CommentStatus } from 'constants/commentStatus';
+import { StaffNoteType } from 'constants/staffNoteType';
 import { formatDate } from 'components/common/dateHelper';
 import { CommentReviewSkeleton } from './CommentReviewSkeleton';
 import { createDefaultSubmission, SurveySubmission } from 'models/surveySubmission';
+import { createDefaultReviewNote, createDefaultInternalNote, StaffNote } from 'models/staffNote';
 import { If, Then, Else, When } from 'react-if';
 
 const CommentReview = () => {
@@ -42,6 +44,9 @@ const CommentReview = () => {
     const [hasThreat, setHasThreat] = useState(false);
     const [otherReason, setOtherReason] = useState('');
     const [hasError, setHasError] = useState(false);
+    const [notifyEmail, setNotifyEmail] = useState(true);
+    const [staffNote, setStaffNote] = useState<StaffNote[]>([]);
+    const [updatedStaffNote, setUpdatedStaffNote] = useState<StaffNote[]>([]);
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -60,6 +65,8 @@ const CommentReview = () => {
             setHasPersonalInfo(fetchedSubmission.has_personal_info ?? false);
             setHasProfanity(fetchedSubmission.has_profanity ?? false);
             setHasThreat(fetchedSubmission.has_threat ?? false);
+            setNotifyEmail(fetchedSubmission.notify_email ?? true);
+            setStaffNote(fetchedSubmission.staff_note);
             setReview(
                 fetchedSubmission.comment_status_id == CommentStatus.Pending
                     ? CommentStatus.Approved
@@ -72,9 +79,19 @@ const CommentReview = () => {
         }
     };
 
+    const extract_staff_note = async () => {
+        setUpdatedStaffNote(
+            staffNote.length !== 0 ? staffNote : [createDefaultReviewNote(), createDefaultInternalNote()],
+        );
+    };
+
     useEffect(() => {
         fetchSubmission();
     }, [submissionId]);
+
+    useEffect(() => {
+        extract_staff_note();
+    }, [staffNote]);
 
     const handleReviewChange = (verdict: number) => {
         setReview(verdict);
@@ -84,6 +101,7 @@ const CommentReview = () => {
             setHasPersonalInfo(false);
             setHasProfanity(false);
             setHasThreat(false);
+            setNotifyEmail(true);
         }
     };
 
@@ -113,6 +131,8 @@ const CommentReview = () => {
                 has_profanity: hasProfanity,
                 has_threat: hasThreat,
                 rejected_reason_other: otherReason,
+                notify_email: notifyEmail,
+                staff_note: updatedStaffNote,
             });
             setIsSaving(false);
             dispatch(openNotification({ severity: 'success', text: 'Comments successfully reviewed.' }));
@@ -131,6 +151,19 @@ const CommentReview = () => {
     if (isLoading) {
         return <CommentReviewSkeleton />;
     }
+
+    const handleNoteChange = (note: string, note_type: string, note_id: number) => {
+        const newStaffNoteArray = [...updatedStaffNote];
+        newStaffNoteArray.map((staffNote) => {
+            if (staffNote.id === note_id && staffNote.note_type === note_type) {
+                staffNote.note = note;
+            }
+        });
+        setUpdatedStaffNote(newStaffNoteArray);
+    };
+
+    const reviewNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Review);
+    const internalNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Internal);
 
     const defaultVerdict = comment_status_id !== CommentStatus.Pending ? comment_status_id : CommentStatus.Approved;
     return (
@@ -240,6 +273,11 @@ const CommentReview = () => {
                                         control={<Radio />}
                                         label={<MetParagraph>Reject</MetParagraph>}
                                     />
+                                    <FormControlLabel
+                                        value={CommentStatus.NeedsFurtherReview}
+                                        control={<Radio />}
+                                        label={<MetParagraph>Needs further review</MetParagraph>}
+                                    />
                                 </RadioGroup>
                             </FormControl>
                         </Grid>
@@ -296,11 +334,74 @@ const CommentReview = () => {
                                     />
                                     <br />
                                     <MetParagraph>
+                                        <b>Review Note</b> (this note will be inserted in the email sent to the
+                                        respondent to help them understand what needs to be edited for their comment(s)
+                                        to be approved.)
+                                    </MetParagraph>
+                                    {reviewNotes.map((staffNote) => {
+                                        return (
+                                            <TextField
+                                                value={staffNote.note}
+                                                key={staffNote.note_type}
+                                                fullWidth
+                                                multiline={true}
+                                                rows={4}
+                                                FormHelperTextProps={{ error: true }}
+                                                onChange={(event) => {
+                                                    handleNoteChange(
+                                                        event.target.value,
+                                                        staffNote.note_type,
+                                                        staffNote.id,
+                                                    );
+                                                }}
+                                            />
+                                        );
+                                    })}
+                                    <br />
+                                    <MetLabel>Internal Note</MetLabel>
+                                    {internalNotes.map((staffNote) => {
+                                        return (
+                                            <TextField
+                                                value={staffNote.note}
+                                                key={staffNote.note_type}
+                                                fullWidth
+                                                multiline={true}
+                                                rows={4}
+                                                FormHelperTextProps={{ error: true }}
+                                                onChange={(event) => {
+                                                    handleNoteChange(
+                                                        event.target.value,
+                                                        staffNote.note_type,
+                                                        staffNote.id,
+                                                    );
+                                                }}
+                                            />
+                                        );
+                                    })}
+                                    <br />
+                                    <MetParagraph>
                                         Clicking the "Save" button will trigger an automatic email to be sent to the
                                         person who made this comment. They will have the option to edit and re-submit
                                         their comment. The edited comment will have to be approved before it is
                                         published.
                                     </MetParagraph>
+                                    <br />
+                                    <FormControlLabel
+                                        label={
+                                            <MetParagraph>
+                                                Don't send this email to the person who commented.
+                                            </MetParagraph>
+                                        }
+                                        control={
+                                            <Checkbox
+                                                checked={notifyEmail === true ? false : true}
+                                                onChange={(event, checked) =>
+                                                    setNotifyEmail(checked === true ? false : true)
+                                                }
+                                            />
+                                        }
+                                    />
+                                    <br />
                                     <MetParagraph color="error">
                                         If there is a threat/menace in the comments, select the checkbox below. No email
                                         will be sent. Contact TBD.
@@ -320,6 +421,26 @@ const CommentReview = () => {
                                             : ''}
                                     </FormHelperText>
                                 </FormControl>
+                            </Grid>
+                        </When>
+                        <When condition={review !== CommentStatus.Rejected}>
+                            <Grid item xs={12}>
+                                <MetLabel>Internal Note</MetLabel>
+                                {internalNotes.map((staffNote) => {
+                                    return (
+                                        <TextField
+                                            value={staffNote.note}
+                                            key={staffNote.note_type}
+                                            fullWidth
+                                            multiline={true}
+                                            rows={4}
+                                            FormHelperTextProps={{ error: true }}
+                                            onChange={(event) => {
+                                                handleNoteChange(event.target.value, staffNote.note_type, staffNote.id);
+                                            }}
+                                        />
+                                    );
+                                })}
                             </Grid>
                         </When>
                         <Grid item xs={12}>
