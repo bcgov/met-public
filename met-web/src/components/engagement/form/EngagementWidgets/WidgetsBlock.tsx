@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Divider, Grid, Skeleton } from '@mui/material';
+import { Box, Divider, Grid, Skeleton } from '@mui/material';
 import { MetHeader2, MetPaper, SecondaryButton } from 'components/common';
 import { WidgetCardSwitch } from './WidgetCardSwitch';
 import { If, Then, Else, When } from 'react-if';
@@ -10,7 +10,14 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { Widget, WidgetType } from 'models/widget';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import update from 'immutability-helper';
-import { DragItem } from 'components/common/Dragndrop';
+import {
+    DragDropContext,
+    Droppable,
+    Draggable,
+    OnDragEndResponder,
+    ResponderProvided,
+    DropResult,
+} from '@hello-pangea/dnd';
 
 const WidgetsBlock = () => {
     const { widgets, deleteWidget, updateWidgetsSorting, handleWidgetDrawerOpen, isWidgetsLoading } =
@@ -29,6 +36,15 @@ const WidgetsBlock = () => {
         setSortableWidgets(widgetsSortedList);
     }, [widgets]);
 
+    // a little function to help us with reordering the result
+    const reorder = (list: any, startIndex: any, endIndex: any) => {
+        const result = Array.from(list);
+        const [removed] = result.splice(startIndex, 1);
+        result.splice(endIndex, 0, removed);
+
+        return result;
+    };
+
     const handleAddWidgetClick = () => {
         if (!savedEngagement.id) {
             dispatch(
@@ -39,18 +55,26 @@ const WidgetsBlock = () => {
         handleWidgetDrawerOpen(true);
     };
 
-    const moveWidget = (dragIndex: number, hoverIndex: number) => {
-        setSortableWidgets((prevWidgets: Widget[]) => {
-            const resortedWidgets = update(prevWidgets, {
-                $splice: [
-                    [dragIndex, 1],
-                    [hoverIndex, 0, prevWidgets[dragIndex]],
-                ],
-            });
-            const widgets = fixedWidgets.concat(resortedWidgets);
-            updateWidgetsSorting(widgets);
-            return resortedWidgets;
-        });
+    const moveWidget = (result: DropResult) => {
+        if (!result.destination) {
+            return;
+        }
+
+        const items = reorder(sortableWidgets, result.source.index, result.destination.index);
+
+        updateWidgetsSorting(items as Widget[]);
+
+        // setSortableWidgets((prevWidgets: Widget[]) => {
+        //     const resortedWidgets = update(prevWidgets, {
+        //         $splice: [
+        //             [result.destination?.index || 0, 1],
+        //             [result.source.index, 0, prevWidgets[result.source.index]],
+        //         ],
+        //     });
+        //     const widgets = fixedWidgets.concat(resortedWidgets);
+        //     updateWidgetsSorting(widgets);
+        //     return resortedWidgets;
+        // });
     };
 
     const removeWidget = (widgetId: number) => {
@@ -112,19 +136,43 @@ const WidgetsBlock = () => {
                                         <Divider />
                                     </Grid>
                                 </When>
-                                {sortableWidgets.map((widget: Widget, index) => {
-                                    return (
-                                        <Grid item xs={12} key={`Grid-${widget.widget_type_id}-${index}`}>
-                                            <DragItem name={'Widgets'} moveItem={moveWidget} index={index}>
-                                                <WidgetCardSwitch
-                                                    key={`${widget.widget_type_id}-${index}`}
-                                                    widget={widget}
-                                                    removeWidget={removeWidget}
-                                                />
-                                            </DragItem>
-                                        </Grid>
-                                    );
-                                })}
+                                <DragDropContext onDragEnd={moveWidget}>
+                                    <Droppable droppableId="droppable">
+                                        {(provided: any, snapshot: any) => (
+                                            <Box {...provided.droppableProps} ref={provided.innerRef}>
+                                                {sortableWidgets.map((widget: Widget, index) => {
+                                                    return (
+                                                        <Draggable
+                                                            key={widget.id}
+                                                            draggableId={String(widget.id)}
+                                                            index={index}
+                                                        >
+                                                            {(provided: any, snapshot: any) => (
+                                                                <Box
+                                                                    ref={provided.innerRef}
+                                                                    {...provided.draggableProps}
+                                                                    {...provided.dragHandleProps}
+                                                                >
+                                                                    <Grid
+                                                                        item
+                                                                        xs={12}
+                                                                        key={`Grid-${widget.widget_type_id}-${index}`}
+                                                                    >
+                                                                        <WidgetCardSwitch
+                                                                            key={`${widget.widget_type_id}-${index}`}
+                                                                            widget={widget}
+                                                                            removeWidget={removeWidget}
+                                                                        />
+                                                                    </Grid>
+                                                                </Box>
+                                                            )}
+                                                        </Draggable>
+                                                    );
+                                                })}
+                                            </Box>
+                                        )}
+                                    </Droppable>
+                                </DragDropContext>
                             </Else>
                         </If>
                     </Grid>
