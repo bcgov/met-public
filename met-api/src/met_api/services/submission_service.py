@@ -110,11 +110,12 @@ class SubmissionService:
         staff_review_details['user_id'] = user.get('id')
 
         with session_scope() as session:
+            should_send_email = SubmissionService._should_send_email(submission_id, staff_review_details)
             submission = Submission.update_comment_status(submission_id, staff_review_details, session)
             if staff_notes := staff_review_details.get('staff_note', []):
                 cls.add_or_update_staff_note(submission.survey_id, submission_id, staff_notes)
 
-            if SubmissionService._should_send_email(submission_id, staff_review_details):
+            if should_send_email:
                 rejection_review_note = StaffNote.get_staff_note_by_type(submission_id, StaffNoteType.Review.name)
                 SubmissionService._trigger_email(rejection_review_note, session, submission)
         session.commit()
@@ -158,11 +159,11 @@ class SubmissionService:
         for staff_note in staff_notes:
             note = StaffNote.get_staff_note_by_type(submission_id, staff_note.get('note_type'))
             if note:
-                note.note = staff_note['note']
-                StaffNote.flush(note)
+                note[0].note = staff_note['note']
+                note[0].flush()
             else:
                 doc = SubmissionService._create_staff_notes(survey_id, submission_id, staff_note)
-                StaffNote.flush(doc)
+                doc.flush()
 
     @staticmethod
     def _create_staff_notes(survey_id, submission_id, staff_note):
@@ -181,31 +182,30 @@ class SubmissionService:
         #   if notify_email is false
         # Send the mail
         #   if the status of the comment is rejected
-        #   if review note has not changed
+        #      if review note has changed
+        #      if review reason has changed
 
         if staff_comment_details.get('has_threat') is True:
             return False
         if staff_comment_details.get('notify_email') is False:
             return False
         if staff_comment_details.get('status_id') == Status.Rejected.value:
-            return True
-        review_note_changed = SubmissionService.is_review_note_changed(submission_id, staff_comment_details)
-        if review_note_changed:
-            return True
+            has_review_note_changed = SubmissionService.is_review_note_changed(submission_id, staff_comment_details)
+            if has_review_note_changed:
+                return True
+            has_review_reason_changed = SubmissionService.is_rejection_reason_changed(submission_id, staff_comment_details)
+            if has_review_reason_changed:
+                return True
         return False
 
     @staticmethod
-    def check_rejection_reason_changed(submission_id, values: dict):
+    def is_rejection_reason_changed(submission_id, values: dict):
         """Check if rejection reason has changed."""
-        review_note_changed = SubmissionService.is_review_note_changed(submission_id, values)
-        if review_note_changed is True:
-            return True
-
         submission = Submission.get(submission_id)
-        if submission.has_personal_info == values['has_personal_info'] and\
-           submission.has_profanity == values['has_profanity'] and\
-           submission.has_threat == values['has_threat'] and\
-           submission.rejected_reason_other == values['rejected_reason_other']:
+        if submission.has_personal_info == values.get('has_personal_info') and\
+           submission.has_profanity == values.get('has_profanity') and\
+           submission.has_threat == values.get('has_threat') and\
+           submission.rejected_reason_other == values.get('rejected_reason_other'):
             return False
 
         return True
