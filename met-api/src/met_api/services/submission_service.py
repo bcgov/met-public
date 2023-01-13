@@ -193,8 +193,8 @@ class SubmissionService:
             has_review_note_changed = SubmissionService.is_review_note_changed(submission_id, staff_comment_details)
             if has_review_note_changed:
                 return True
-            has_review_reason_changed = SubmissionService.is_rejection_reason_changed(submission_id, staff_comment_details)
-            if has_review_reason_changed:
+            has_reason_changed = SubmissionService.is_rejection_reason_changed(submission_id, staff_comment_details)
+            if has_reason_changed:
                 return True
         return False
 
