@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import { Box, Divider, Grid, Skeleton } from '@mui/material';
 import { MetHeader2, MetPaper, SecondaryButton } from 'components/common';
 import { WidgetCardSwitch } from './WidgetCardSwitch';
@@ -18,6 +18,7 @@ import {
     ResponderProvided,
     DropResult,
 } from '@hello-pangea/dnd';
+import { debounce } from 'lodash';
 
 const WidgetsBlock = () => {
     const { widgets, deleteWidget, updateWidgetsSorting, handleWidgetDrawerOpen, isWidgetsLoading } =
@@ -55,6 +56,12 @@ const WidgetsBlock = () => {
         handleWidgetDrawerOpen(true);
     };
 
+    const debounceUpdateWidgetsSorting = useRef(
+        debounce((wigetsToSort: Widget[]) => {
+            updateWidgetsSorting(wigetsToSort);
+        }, 1000),
+    ).current;
+
     const moveWidget = (result: DropResult) => {
         if (!result.destination) {
             return;
@@ -62,19 +69,11 @@ const WidgetsBlock = () => {
 
         const items = reorder(sortableWidgets, result.source.index, result.destination.index);
 
-        updateWidgetsSorting(items as Widget[]);
+        setSortableWidgets(items as Widget[]);
 
-        // setSortableWidgets((prevWidgets: Widget[]) => {
-        //     const resortedWidgets = update(prevWidgets, {
-        //         $splice: [
-        //             [result.destination?.index || 0, 1],
-        //             [result.source.index, 0, prevWidgets[result.source.index]],
-        //         ],
-        //     });
-        //     const widgets = fixedWidgets.concat(resortedWidgets);
-        //     updateWidgetsSorting(widgets);
-        //     return resortedWidgets;
-        // });
+        const widgets = fixedWidgets.concat(items as Widget[]);
+
+        debounceUpdateWidgetsSorting(widgets);
     };
 
     const removeWidget = (widgetId: number) => {
@@ -136,43 +135,57 @@ const WidgetsBlock = () => {
                                         <Divider />
                                     </Grid>
                                 </When>
-                                <DragDropContext onDragEnd={moveWidget}>
-                                    <Droppable droppableId="droppable">
-                                        {(provided: any, snapshot: any) => (
-                                            <Box {...provided.droppableProps} ref={provided.innerRef}>
-                                                {sortableWidgets.map((widget: Widget, index) => {
-                                                    return (
-                                                        <Draggable
-                                                            key={widget.id}
-                                                            draggableId={String(widget.id)}
-                                                            index={index}
-                                                        >
-                                                            {(provided: any, snapshot: any) => (
-                                                                <Box
-                                                                    ref={provided.innerRef}
-                                                                    {...provided.draggableProps}
-                                                                    {...provided.dragHandleProps}
+                                <Grid item xs={12}>
+                                    <DragDropContext onDragEnd={moveWidget}>
+                                        <Droppable droppableId="droppable">
+                                            {(provided: any, snapshot: any) => (
+                                                <Box {...provided.droppableProps} ref={provided.innerRef}>
+                                                    <Grid
+                                                        container
+                                                        direction="row"
+                                                        alignItems={'flex-start'}
+                                                        justifyContent="flex-start"
+                                                    >
+                                                        {sortableWidgets.map((widget: Widget, index) => {
+                                                            return (
+                                                                <Grid
+                                                                    item
+                                                                    xs={12}
+                                                                    key={`Grid-${widget.widget_type_id}-${index}`}
                                                                 >
-                                                                    <Grid
-                                                                        item
-                                                                        xs={12}
-                                                                        key={`Grid-${widget.widget_type_id}-${index}`}
+                                                                    <Draggable
+                                                                        key={widget.id}
+                                                                        draggableId={String(widget.id)}
+                                                                        index={index}
                                                                     >
-                                                                        <WidgetCardSwitch
-                                                                            key={`${widget.widget_type_id}-${index}`}
-                                                                            widget={widget}
-                                                                            removeWidget={removeWidget}
-                                                                        />
-                                                                    </Grid>
-                                                                </Box>
-                                                            )}
-                                                        </Draggable>
-                                                    );
-                                                })}
-                                            </Box>
-                                        )}
-                                    </Droppable>
-                                </DragDropContext>
+                                                                        {(provided: any, snapshot: any) => (
+                                                                            <Box
+                                                                                ref={provided.innerRef}
+                                                                                {...provided.draggableProps}
+                                                                                {...provided.dragHandleProps}
+                                                                                sx={{
+                                                                                    ...provided.draggableProps.style,
+                                                                                    marginBottom: '1em',
+                                                                                }}
+                                                                            >
+                                                                                <WidgetCardSwitch
+                                                                                    key={`${widget.widget_type_id}-${index}`}
+                                                                                    widget={widget}
+                                                                                    removeWidget={removeWidget}
+                                                                                />
+                                                                            </Box>
+                                                                        )}
+                                                                    </Draggable>
+                                                                </Grid>
+                                                            );
+                                                        })}
+                                                    </Grid>
+                                                    {provided.placeholder}
+                                                </Box>
+                                            )}
+                                        </Droppable>
+                                    </DragDropContext>
+                                </Grid>
                             </Else>
                         </If>
                     </Grid>
