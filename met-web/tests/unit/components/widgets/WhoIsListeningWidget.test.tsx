@@ -83,9 +83,15 @@ jest.mock('react-dnd', () => ({
     useDrop: jest.fn(),
 }));
 
-jest.mock('components/common/Dragndrop', () => ({
-    ...jest.requireActual('components/common/Dragndrop'),
-    DragItem: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
+jest.mock('components/common/DragnDrop', () => ({
+    ...jest.requireActual('components/common/DragnDrop'),
+    MetDroppable: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
+    MetDraggable: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
+}));
+
+jest.mock('@hello-pangea/dnd', () => ({
+    ...jest.requireActual('@hello-pangea/dnd'),
+    DragDropContext: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
 }));
 
 const mockWidgetsRtkUnwrap = jest.fn(() => Promise.resolve([whoIsListeningWidget]));

@@ -65,7 +65,6 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
     const updateWidgetsSorting = async (resortedWidgets: Widget[]) => {
         try {
             await sortWidgets(savedEngagement.id, resortedWidgets);
-            loadWidgets();
         } catch (err) {
             dispatch(openNotification({ severity: 'error', text: 'Error sorting widgets' }));
         }

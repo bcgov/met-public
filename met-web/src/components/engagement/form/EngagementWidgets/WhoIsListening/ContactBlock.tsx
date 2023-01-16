@@ -1,12 +1,10 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useContext } from 'react';
 import { Grid } from '@mui/material';
 import ContactInfoPaper from './ContactInfoPaper';
-import update from 'immutability-helper';
 import { Contact } from 'models/contact';
-import { DragItem } from 'components/common/Dragndrop';
 import { WhoIsListeningContext } from './WhoIsListeningContext';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
-import { MetDraggable, MetDroppable } from 'components/common/beautifulDnd';
+import { MetDraggable, MetDroppable } from 'components/common/DragnDrop';
 import { reorder } from 'utils';
 
 const ContactBlock = () => {

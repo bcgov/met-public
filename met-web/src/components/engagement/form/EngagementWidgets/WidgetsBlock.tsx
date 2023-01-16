@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
-import { Box, Divider, Grid, Skeleton } from '@mui/material';
+import { Divider, Grid, Skeleton } from '@mui/material';
 import { MetHeader2, MetPaper, SecondaryButton } from 'components/common';
 import { WidgetCardSwitch } from './WidgetCardSwitch';
 import { If, Then, Else, When } from 'react-if';
@@ -9,9 +9,9 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { Widget, WidgetType } from 'models/widget';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
-import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
+import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { debounce } from 'lodash';
-import { MetDraggable, MetDroppable } from 'components/common/beautifulDnd';
+import { MetDraggable, MetDroppable } from 'components/common/DragnDrop';
 import { reorder } from 'utils';
 
 const WidgetsBlock = () => {
