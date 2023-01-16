@@ -69,9 +69,11 @@ class Auth:  # pylint: disable=too-few-public-methods
             JWT_ROLE_CALLBACK (fn): The callback added to the Flask configuration
         """
         token = jwt.get_token_auth_header()
+        current_app.logger.info(f'Token is {token}')
         unverified_claims = jose_jwt.get_unverified_claims(token)
         roles_in_token = current_app.config['JWT_ROLE_CALLBACK'](
             unverified_claims)
+        current_app.logger.info(f'unverified_claims is {unverified_claims}')
         if any(elem in roles_in_token for elem in roles):
             return True
         return False
