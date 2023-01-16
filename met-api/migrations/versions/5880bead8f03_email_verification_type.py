@@ -1,7 +1,7 @@
 """Email verification type
 
 Revision ID: 5880bead8f03
-Revises: 242c9f0364df
+Revises: d86a682d7096
 Create Date: 2023-01-16 14:34:48.541883
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '5880bead8f03'
-down_revision = '242c9f0364df'
+down_revision = 'd86a682d7096'
 branch_labels = None
 depends_on = None
 
@@ -27,3 +27,4 @@ def upgrade():
 
 def downgrade():
     op.drop_column('email_verification', 'type')
+    op.execute('DROP TYPE emailverificationtype;')    
