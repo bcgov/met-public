@@ -1,12 +1,12 @@
+import React from 'react';
 import { Draggable, Droppable } from '@hello-pangea/dnd';
 import { Box } from '@mui/material';
-import React from 'react';
 
 interface MetDroppableProps {
     children: React.ReactNode;
     droppableId: string;
 }
-export const MetDroppable = ({ droppableId, children }: MetDroppableProps) => {
+const MetDroppable = ({ droppableId, children }: MetDroppableProps) => {
     return (
         <Droppable droppableId={droppableId}>
             {(provided: any) => (
@@ -25,7 +25,7 @@ interface MetDraggableProps {
     draggableId: string;
     marginBottom?: string | number;
 }
-export const MetDraggable = ({ children, draggableId, index, marginBottom }: MetDraggableProps) => {
+const MetDraggable = ({ children, draggableId, index, marginBottom }: MetDraggableProps) => {
     return (
         <Draggable key={draggableId} draggableId={draggableId} index={index}>
             {(provided: any) => (
@@ -44,3 +44,5 @@ export const MetDraggable = ({ children, draggableId, index, marginBottom }: Met
         </Draggable>
     );
 };
+
+export { MetDraggable, MetDroppable };
