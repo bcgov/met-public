@@ -47,7 +47,7 @@ def test_add_engagements_invalid(client, jwt, session, role):  # pylint:disable=
                      headers=headers, content_type=ContentType.JSON.value)
     print(rv.json())
     assert rv.status_code == 401
-    assert rv.json() == ''
+    assert rv.json() == 'a'
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
