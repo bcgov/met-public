@@ -22,8 +22,8 @@ const survey: Survey = {
 
 const surveys = [survey];
 
-jest.mock('components/common/Dragndrop', () => ({
-    ...jest.requireActual('components/common/Dragndrop'),
+jest.mock('components/common/Dragdrop', () => ({
+    ...jest.requireActual('components/common/Dragdrop'),
     MetDroppable: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
     MetDraggable: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
 }));
