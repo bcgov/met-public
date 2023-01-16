@@ -12,7 +12,6 @@ import * as notificationSlice from 'services/notificationService/notificationSli
 import { createDefaultEngagement, Engagement } from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { Widget, WidgetType } from 'models/widget';
-import { Box } from '@mui/material';
 import { DocumentItem } from 'models/document';
 
 const engagement: Engagement = {
