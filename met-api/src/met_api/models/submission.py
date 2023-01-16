@@ -39,7 +39,9 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
     has_profanity = db.Column(db.Boolean, nullable=True)
     rejected_reason_other = db.Column(db.String(50), nullable=True)
     has_threat = db.Column(db.Boolean, nullable=True)
+    notify_email = db.Column(db.Boolean(), default=True)
     comments = db.relationship('Comment', backref='submission', cascade='all, delete')
+    staff_note = db.relationship('StaffNote', backref='submission', cascade='all, delete')
 
     @classmethod
     def get(cls, submission_id) -> Submission:
@@ -101,6 +103,7 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
         has_profanity = comment.get('has_profanity', None)
         has_threat = comment.get('has_threat', None)
         rejected_reason_other = comment.get('rejected_reason_other', None)
+        notify_email = comment.get('notify_email', None)
 
         query = Submission.query.filter_by(id=submission_id)
 
@@ -113,6 +116,7 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
             has_profanity=has_profanity,
             has_threat=has_threat,
             rejected_reason_other=rejected_reason_other,
+            notify_email=notify_email,
             reviewed_by=comment.get('reviewed_by'),
             review_date=datetime.utcnow(),
             updated_by=comment.get('user_id'),

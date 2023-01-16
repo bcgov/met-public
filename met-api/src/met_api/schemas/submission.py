@@ -5,6 +5,7 @@ Manages the submission
 
 from marshmallow import EXCLUDE, Schema, fields
 from met_api.schemas.comment import CommentSchema, PublicCommentSchema
+from met_api.schemas.staff_note import StaffNoteSchema
 
 from .survey import SurveySchema
 
@@ -35,7 +36,9 @@ class SubmissionSchema(Schema):
     has_threat = fields.Bool(data_key='has_threat')
     rejected_reason_other = fields.Str(data_key='rejected_reason_other')
     survey_name = fields.Pluck(SurveySchema, 'name')
+    notify_email = fields.Bool(data_key='notify_email')
     comments = fields.List(fields.Nested(CommentSchema))
+    staff_note = fields.List(fields.Nested(StaffNoteSchema))
 
 
 class PublicSubmissionSchema(Schema):

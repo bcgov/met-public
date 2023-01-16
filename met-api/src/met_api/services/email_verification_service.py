@@ -38,7 +38,7 @@ class EmailVerificationService:
         return email_verification
 
     @classmethod
-    def create(cls, email_verification: EmailVerificationSchema, session=None) -> None:
+    def create(cls, email_verification: EmailVerificationSchema, session=None) -> EmailVerificationSchema:
         """Create an email verification."""
         cls.validate_fields(email_verification)
         email_address = email_verification.get('email_address')
