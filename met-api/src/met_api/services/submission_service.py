@@ -1,5 +1,6 @@
 """Service for submission management."""
 from http import HTTPStatus
+from datetime import datetime
 
 from flask import current_app
 
@@ -117,19 +118,18 @@ class SubmissionService:
 
             if should_send_email:
                 rejection_review_note = StaffNote.get_staff_note_by_type(submission_id, StaffNoteType.Review.name)
-                SubmissionService._trigger_email(rejection_review_note, session, submission)
+                SubmissionService._trigger_email(rejection_review_note[0].note, session, submission)
         session.commit()
         return SubmissionSchema().dump(submission)
 
     @staticmethod
-    def _trigger_email(rejection_review_note, session, submission):
+    def _trigger_email(review_note, session, submission):
         email_verification = EmailVerificationService().create({
             'user_id': submission.user_id,
             'survey_id': submission.survey_id,
             'submission_id': submission.id,
-            'review_note': rejection_review_note[0].note,
         }, session)
-        SubmissionService._send_rejected_email(submission, email_verification.get('verification_token'))
+        SubmissionService._send_rejected_email(submission, review_note, email_verification.get('verification_token'))
 
     @classmethod
     def validate_review(cls, values: dict, user):
@@ -235,13 +235,13 @@ class SubmissionService:
         }
 
     @staticmethod
-    def _send_rejected_email(submission: Submission, token) -> None:
+    def _send_rejected_email(submission: Submission, review_note, token) -> None:
         """Send an verification email.Throws error if fails."""
         user_id = submission.user_id
         user: UserModel = UserModel.get_user(user_id)
 
         template_id = current_app.config.get('REJECTED_EMAIL_TEMPLATE_ID', None)
-        subject, body, args = SubmissionService._render_email_template(submission, token)
+        subject, body, args = SubmissionService._render_email_template(submission, review_note, token)
         try:
             notification.send_email(subject=subject,
                                     email=user.email_id,
@@ -255,10 +255,12 @@ class SubmissionService:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
 
     @staticmethod
-    def _render_email_template(submission: Submission, token):
+    def _render_email_template(submission: Submission, review_note, token):
         template = Template.get_template('email_rejected_comment.html')
         engagement: EngagementModel = EngagementModel.get_engagement(submission.engagement_id)
+        survey: SurveyModel = SurveyModel.get_survey(submission.survey_id)
         engagement_name = engagement.name
+        survey_name = survey.name
 
         site_url = current_app.config.get('SITE_URL')
         submission_path = current_app.config.get('SUBMISSION_PATH'). \
@@ -267,17 +269,23 @@ class SubmissionService:
             format(engagement_name=engagement_name)
         args = {
             'engagement_name': engagement_name,
+            'survey_name': survey_name,
             'has_personal_info': 'yes' if submission.has_personal_info else '',
             'has_profanity': 'yes' if submission.has_profanity else '',
             'has_other_reason': 'yes' if submission.rejected_reason_other else '',
             'other_reason': submission.rejected_reason_other,
             'submission_url': f'{site_url}{submission_path}',
+            'review_note': review_note,
+            'end_date': datetime.strftime(engagement.end_date, EmailVerificationService.full_date_format),
         }
         body = template.render(
             engagement_name=args.get('engagement_name'),
+            survey_name=args.get('survey_name'),
             has_personal_info=args.get('has_personal_info'),
             has_profanity=args.get('has_profanity'),
             has_other_reason=args.get('has_other_reason'),
             other_reason=args.get('other_reason'),
+            review_note=args.get('review_note'),
+            end_date=args.get('end_date'),
         )
         return subject, body, args
