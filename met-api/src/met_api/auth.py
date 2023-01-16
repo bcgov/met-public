@@ -70,6 +70,7 @@ class Auth:  # pylint: disable=too-few-public-methods
         """
         token = jwt.get_token_auth_header()
         current_app.logger.info(f'Token is {token}')
+        assert token == 'bb'
         unverified_claims = jose_jwt.get_unverified_claims(token)
         roles_in_token = current_app.config['JWT_ROLE_CALLBACK'](
             unverified_claims)
