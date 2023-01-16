@@ -158,7 +158,6 @@ class TestJwtClaims(dict, Enum):
     no_role = {
         'iss': CONFIG.JWT_OIDC_TEST_ISSUER,
         'sub': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302065',
-        'idp_userid': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302064',
         'firstname': fake.first_name(),
         'lastname': fake.last_name(),
         'preferred_username': fake.user_name(),
@@ -174,12 +173,12 @@ class TestJwtClaims(dict, Enum):
         'idp_userid': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302064',
         'given_name': fake.first_name(),
         'family_name': fake.last_name(),
-        'preferred_username': fake.user_name(),
-        'email': fake.email(),
+        'preferred_username': f'{fake.user_name()}@idir',
         'identity_provider': LoginSource.IDIR.value,
+        'email': fake.email(),
         'realm_access': {
             'roles': [
-                'public_user'
+                'view_engagement',
             ]
         }
     }
@@ -200,8 +199,8 @@ class TestJwtClaims(dict, Enum):
                 'create_engagement',
                 'edit_engagement',
                 'create_survey',
-                'view_users',
-                'create_admin_user'
+                'view_users'
+                ''
             ]
         }
     }
