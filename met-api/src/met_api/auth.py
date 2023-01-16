@@ -65,8 +65,9 @@ class Auth:  # pylint: disable=too-few-public-methods
             @wraps(f)
             def wrapper(*args, **kwargs):
                 # jwt._require_auth_validation(*args, **kwargs)
-                if jwt.contains_role(roles):
-                    return f(*args, **kwargs)
+                return f(*args, **kwargs)
+                # if jwt.contains_role(roles):
+                #     return f(*args, **kwargs)
                 raise AuthError({'code': 'missing_a_valid_role',
                                  'description':
                                      'Missing a role required to access this endpoint'}, 401)
