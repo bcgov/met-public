@@ -76,7 +76,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                     open: true,
                     data: {
                         header: 'Subscribed Successfully',
-                        subText: ['Your email has been verified.'],
+                        subText: ['Your email has been verified. You will now receive news and updates from us.'],
                     },
                     type: 'update',
                 }),
