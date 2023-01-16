@@ -17,7 +17,7 @@ const ContactBlock = () => {
 
         const items = reorder(addedContacts, result.source.index, result.destination.index);
 
-        setAddedContacts(items as Contact[]);
+        setAddedContacts(items);
     };
 
     const removeContact = (contactId: number) => {

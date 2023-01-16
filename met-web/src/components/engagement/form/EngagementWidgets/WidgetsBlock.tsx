@@ -54,9 +54,9 @@ const WidgetsBlock = () => {
 
         const items = reorder(sortableWidgets, result.source.index, result.destination.index);
 
-        setSortableWidgets(items as Widget[]);
+        setSortableWidgets(items);
 
-        const widgets = fixedWidgets.concat(items as Widget[]);
+        const widgets = fixedWidgets.concat(items);
 
         debounceUpdateWidgetsSorting(widgets);
     };

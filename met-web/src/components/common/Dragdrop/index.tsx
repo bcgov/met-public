@@ -1,4 +1,4 @@
-import { Draggable, Droppable } from '@hello-pangea/dnd';
+import { Draggable, Droppable, DraggableProvided, DroppableProvided } from '@hello-pangea/dnd';
 import { Box } from '@mui/material';
 import React from 'react';
 
@@ -9,7 +9,7 @@ interface MetDroppableProps {
 export const MetDroppable = ({ droppableId, children }: MetDroppableProps) => {
     return (
         <Droppable droppableId={droppableId}>
-            {(provided: any) => (
+            {(provided: DroppableProvided) => (
                 <Box {...provided.droppableProps} ref={provided.innerRef}>
                     {children}
                     {provided.placeholder}
@@ -28,7 +28,7 @@ interface MetDraggableProps {
 export const MetDraggable = ({ children, draggableId, index, marginBottom }: MetDraggableProps) => {
     return (
         <Draggable key={draggableId} draggableId={draggableId} index={index}>
-            {(provided: any) => (
+            {(provided: DraggableProvided) => (
                 <Box
                     ref={provided.innerRef}
                     {...provided.draggableProps}

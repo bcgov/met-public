@@ -37,7 +37,7 @@ export const downloadFile = (response: AxiosResponse<Blob, unknown>, filename: s
     link.click();
 };
 
-export const reorder = (list: any, startIndex: any, endIndex: any) => {
+export const reorder = <T>(list: T[], startIndex: number, endIndex: number) => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
