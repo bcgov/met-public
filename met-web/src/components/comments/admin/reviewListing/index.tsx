@@ -149,7 +149,12 @@ const SubmissionListing = () => {
             disablePadding: true,
             label: 'Status',
             allowSort: true,
-            getValue: (row) => CommentStatus[row.comment_status_id],
+            getValue: (row) =>
+                CommentStatus[
+                    row.comment_status_id === CommentStatus.NeedsFurtherReview
+                        ? CommentStatus.Pending
+                        : row.comment_status_id
+                ],
         },
     ];
 

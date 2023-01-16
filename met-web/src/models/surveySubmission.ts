@@ -1,4 +1,5 @@
 import { Comment } from './comment';
+import { StaffNote } from './staffNote';
 
 export interface SurveySubmission {
     id: number;
@@ -12,7 +13,9 @@ export interface SurveySubmission {
     has_profanity?: boolean;
     has_threat?: boolean;
     rejected_reason_other?: string;
+    notify_email?: boolean;
     comments?: Comment[];
+    staff_note: StaffNote[];
 }
 
 export interface PublicSubmission {
@@ -29,5 +32,6 @@ export const createDefaultSubmission = (): SurveySubmission => {
         review_date: '',
         reviewed_by: '',
         comment_status_id: 1,
+        staff_note: [],
     };
 };

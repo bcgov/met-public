@@ -14,6 +14,7 @@ from met_api.models.comment_status import CommentStatus
 from met_api.models.db import session_scope
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.submission import Submission
+from met_api.models.staff_note import StaffNote
 from met_api.models.user import User as UserModel
 from met_api.schemas.submission import PublicSubmissionSchema, SubmissionSchema
 from met_api.services.comment_service import CommentService
@@ -22,6 +23,7 @@ from met_api.services.survey_service import SurveyService
 from met_api.services.user_service import UserService
 from met_api.utils import notification
 from met_api.utils.template import Template
+from met_api.constants.staff_note_type import StaffNoteType
 
 
 class SubmissionService:
@@ -98,27 +100,38 @@ class SubmissionService:
             raise ValueError('Engagement not open to submissions')
 
     @classmethod
-    def review_comment(cls, submission_id, values: dict, external_user_id) -> SubmissionSchema:
+    def review_comment(cls, submission_id, staff_review_details: dict, external_user_id) -> SubmissionSchema:
         """Review comment."""
         user = UserService.get_user_by_external_id(external_user_id)
 
-        cls.validate_review(values, user)
+        cls.validate_review(staff_review_details, user)
         reviewed_by = ' '.join([user.get('first_name', ''), user.get('last_name', '')])
 
-        values['reviewed_by'] = reviewed_by
-        values['user_id'] = user.get('id')
-        with session_scope() as session:
-            submission = Submission.update_comment_status(submission_id, values, session)
-            if submission.comment_status_id == Status.Rejected.value and submission.has_threat is not True:
-                email_verification = EmailVerificationService().create({
-                    'user_id': submission.user_id,
-                    'survey_id': submission.survey_id,
-                    'submission_id': submission.id,
-                    'type': EmailVerificationType.RejectedComment,
-                }, session)
-                cls._send_rejected_email(submission, email_verification.get('verification_token'))
+        staff_review_details['reviewed_by'] = reviewed_by
+        staff_review_details['user_id'] = user.get('id')
 
+        with session_scope() as session:
+            should_send_email = SubmissionService._should_send_email(submission_id, staff_review_details)
+            submission = Submission.update_comment_status(submission_id, staff_review_details, session)
+            if staff_notes := staff_review_details.get('staff_note', []):
+                cls.add_or_update_staff_note(submission.survey_id, submission_id, staff_notes)
+
+            if should_send_email:
+                rejection_review_note = StaffNote.get_staff_note_by_type(submission_id, StaffNoteType.Review.name)
+                SubmissionService._trigger_email(rejection_review_note, session, submission)
+        session.commit()
         return SubmissionSchema().dump(submission)
+
+    @staticmethod
+    def _trigger_email(rejection_review_note, session, submission):
+        email_verification = EmailVerificationService().create({
+            'user_id': submission.user_id,
+            'survey_id': submission.survey_id,
+            'submission_id': submission.id,
+            'review_note': rejection_review_note[0].note,
+            'type': EmailVerificationType.RejectedComment,
+        }, session)
+        SubmissionService._send_rejected_email(submission, email_verification.get('verification_token'))
 
     @classmethod
     def validate_review(cls, values: dict, user):
@@ -141,6 +154,74 @@ class SubmissionService:
            not any(set((has_personal_info, has_profanity, has_threat))) and\
            not rejected_reason_other:
             raise ValueError('A rejection reason is required.')
+
+    @classmethod
+    def add_or_update_staff_note(cls, survey_id, submission_id, staff_notes):
+        """Process staff note for a comment."""
+        for staff_note in staff_notes:
+            note = StaffNote.get_staff_note_by_type(submission_id, staff_note.get('note_type'))
+            if note:
+                note[0].note = staff_note['note']
+                note[0].flush()
+            else:
+                doc = SubmissionService._create_staff_notes(survey_id, submission_id, staff_note)
+                doc.flush()
+
+    @staticmethod
+    def _create_staff_notes(survey_id, submission_id, staff_note):
+        doc: StaffNote = StaffNote()
+        doc.note = staff_note['note']
+        doc.note_type = staff_note['note_type']
+        doc.survey_id = survey_id
+        doc.submission_id = submission_id
+        return doc
+
+    @staticmethod
+    def _should_send_email(submission_id: int, staff_comment_details: dict) -> bool:
+        """Check if an email should be sent for a rejected submission."""
+        # Dont send the mail
+        #   if the comment has threat
+        #   if notify_email is false
+        # Send the mail
+        #   if the status of the comment is rejected
+        #      if review note has changed
+        #      if review reason has changed
+
+        if staff_comment_details.get('has_threat') is True:
+            return False
+        if staff_comment_details.get('notify_email') is False:
+            return False
+        if staff_comment_details.get('status_id') == Status.Rejected.value:
+            has_review_note_changed = SubmissionService.is_review_note_changed(submission_id, staff_comment_details)
+            if has_review_note_changed:
+                return True
+            has_reason_changed = SubmissionService.is_rejection_reason_changed(submission_id, staff_comment_details)
+            if has_reason_changed:
+                return True
+        return False
+
+    @staticmethod
+    def is_rejection_reason_changed(submission_id, values: dict):
+        """Check if rejection reason has changed."""
+        submission = Submission.get(submission_id)
+        if submission.has_personal_info == values.get('has_personal_info') and\
+           submission.has_profanity == values.get('has_profanity') and\
+           submission.has_threat == values.get('has_threat') and\
+           submission.rejected_reason_other == values.get('rejected_reason_other'):
+            return False
+
+        return True
+
+    @staticmethod
+    def is_review_note_changed(submission_id: int, values: dict) -> bool:
+        """Check if review note has changed for a submission."""
+        staff_notes = values.get('staff_note', [])
+        for staff_note in staff_notes:
+            if staff_note['note_type'] == StaffNoteType.Review.name:
+                note = StaffNote.get_staff_note_by_type(submission_id, StaffNoteType.Review.name)
+                if not note or note[0].note != staff_note.get('note'):
+                    return True
+        return False
 
     @classmethod
     def get_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text=''):
