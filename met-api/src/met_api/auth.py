@@ -16,6 +16,7 @@ from functools import wraps
 from flask import g, request
 from flask_jwt_oidc import JwtManager
 from flask_jwt_oidc.exceptions import AuthError
+from met_api.utils.roles import Role
 
 jwt = (
     JwtManager()
@@ -54,6 +55,23 @@ class Auth:  # pylint: disable=too-few-public-methods
                 g.authorization_header = None
                 g.token_info = None
             return f(*args, **kwargs)
+
+        return decorated
+    
+    
+
+    @classmethod
+    def has_role(cls, f):
+        """Validate an optional Bearer Token."""
+
+        @wraps(f)
+        def decorated(*args, **kwargs):
+            try:
+                jwt.has_one_of_roles([Role.CREATE_ENGAGEMENT.value])
+                
+            except Exception as err:
+                assert str(err) == 'aa'
+                return f(*args, **kwargs)
 
         return decorated
 
