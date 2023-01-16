@@ -7,6 +7,8 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { Widget } from 'models/widget';
 import { useLazyGetWidgetsQuery } from 'apiManager/apiSlices/widgets';
 import { SubmissionStatus } from 'constants/engagementStatus';
+import { verifyEmailVerification } from 'services/emailVerificationService';
+import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
 interface EngagementSchedule {
     id: number;
@@ -26,6 +28,7 @@ export interface EngagementViewContext {
 
 export type EngagementParams = {
     engagementId: string;
+    token?: string;
 };
 
 export const ActionContext = createContext<EngagementViewContext>({
@@ -43,7 +46,7 @@ export const ActionContext = createContext<EngagementViewContext>({
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
-    const { engagementId } = useParams<EngagementParams>();
+    const { engagementId, token } = useParams<EngagementParams>();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
@@ -55,8 +58,34 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const [getWidgetsTrigger] = useLazyGetWidgetsQuery();
 
     useEffect(() => {
+        verifySubscribeToken();
+    }, [token]);
+
+    useEffect(() => {
         setMockStatus(savedEngagement.submission_status);
     }, [savedEngagement]);
+
+    const verifySubscribeToken = async () => {
+        try {
+            if (!token) {
+                return;
+            }
+            await verifyEmailVerification(token);
+            dispatch(
+                openNotificationModal({
+                    open: true,
+                    data: {
+                        header: 'Subscribed Successfully',
+                        subText: ['Your email has been verified.'],
+                    },
+                    type: 'update',
+                }),
+            );
+        } catch (error) {
+            dispatch(openNotification({ severity: 'error', text: 'Error Subscribing to Engagement' }));
+            return Promise.reject(error);
+        }
+    };
 
     const scheduleEngagement = async (engagement: EngagementSchedule): Promise<Engagement> => {
         try {

@@ -4,9 +4,9 @@ Manages the Email verification
 """
 from __future__ import annotations
 from datetime import datetime
-
 from sqlalchemy import ForeignKey
 
+from met_api.constants.email_verification import EmailVerificationType
 from met_api.schemas.email_verification import EmailVerificationSchema
 
 from .db import db
@@ -21,6 +21,7 @@ class EmailVerification(db.Model):  # pylint: disable=too-few-public-methods
     verification_token = db.Column(db.String(50), nullable=False)
     user_id = db.Column(db.Integer, ForeignKey('met_users.id'), nullable=True)
     is_active = db.Column(db.Boolean, nullable=False)
+    type = db.Column(db.Enum(EmailVerificationType), nullable=False)
     survey_id = db.Column(db.Integer, ForeignKey('survey.id'), nullable=True)
     submission_id = db.Column(db.Integer, ForeignKey('submission.id'), nullable=True)
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
@@ -43,6 +44,7 @@ class EmailVerification(db.Model):  # pylint: disable=too-few-public-methods
             verification_token=email_verification.get('verification_token', None),
             user_id=email_verification.get('user_id', None),
             is_active=True,
+            type=email_verification.get('type'),
             survey_id=email_verification.get('survey_id', None),
             submission_id=email_verification.get('submission_id', None),
             created_date=datetime.utcnow(),

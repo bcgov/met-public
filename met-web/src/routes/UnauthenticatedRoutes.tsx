@@ -12,6 +12,7 @@ const UnauthenticatedRoutes = () => {
     return (
         <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/engagements/:engagementId/subscribe/:token" element={<EngagementView />} />
             <Route path="/engagements/:engagementId/view" element={<EngagementView />} />
             <Route path="/engagements/:engagementId/dashboard" element={<EngagementDashboard />} />
             <Route path="/engagements/:engagementId/comments" element={<EngagementComments />} />

@@ -6,18 +6,22 @@ import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import EmailModal from 'components/common/Modals/EmailModal';
 import { createEmailVerification } from 'services/emailVerificationService';
+import { EmailVerificationType } from 'models/emailVerification';
 
 function SubscribeWidget() {
     const dispatch = useAppDispatch();
     const { savedEngagement } = useContext(ActionContext);
     const [email, setEmail] = useState('');
     const [open, setOpen] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
 
     const sendEmail = async () => {
         try {
+            setIsSaving(true);
             await createEmailVerification({
                 email_address: email,
                 survey_id: savedEngagement.surveys[0].id,
+                type: EmailVerificationType.Subscribe,
             });
             window.snowplow('trackSelfDescribingEvent', {
                 schema: 'iglu:ca.bc.gov.met/verify-email/jsonschema/1-0-0',
@@ -53,6 +57,8 @@ function SubscribeWidget() {
                     type: 'update',
                 }),
             );
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -64,6 +70,7 @@ function SubscribeWidget() {
                 email={email}
                 updateEmail={setEmail}
                 handleConfirm={sendEmail}
+                isSaving={isSaving}
                 termsOfService={[
                     'Personal information(your email address is collected under seciton 26(c) and 26(e) of the Freedom of the Information and Protection of Privacy Act, to keep you updated on current engagements and to notify you of future opportunities to participate.',
                     '',

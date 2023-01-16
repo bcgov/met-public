@@ -23,17 +23,6 @@ export interface EmailModalProps {
     updateModal?: (open: boolean) => void;
 }
 
-export interface ModalProps {
-    open: boolean;
-    header: string;
-    subText: Array<string>;
-    email: string;
-    termsOfService: Array<string>;
-    handleConfirm: () => void;
-    updateEmail: (email: string) => void;
-    updateModal: (open: boolean) => void;
-}
-
 export interface EmailPanelProps {
     email: string;
     checkEmail: () => void;

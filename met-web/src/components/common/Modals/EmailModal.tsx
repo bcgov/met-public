@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { MetLabel, modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody } from 'components/common';
 import Modal from '@mui/material/Modal';
-import { ModalProps } from 'components/engagement/view/types';
+import { ModalProps } from './types';
 
 const EmailModal = ({
     open,
@@ -22,6 +22,7 @@ const EmailModal = ({
     subText,
     termsOfService,
     handleConfirm,
+    isSaving,
 }: ModalProps) => {
     const [checked, setChecked] = useState(false);
     const [emailFormError, setEmailFormError] = useState({
@@ -147,7 +148,7 @@ const EmailModal = ({
                             justifyContent="flex-end"
                         >
                             <SecondaryButton onClick={() => updateModal(false)}>Cancel</SecondaryButton>
-                            <PrimaryButton type="submit" variant={'contained'}>
+                            <PrimaryButton loading={isSaving} type="submit" variant={'contained'}>
                                 Submit
                             </PrimaryButton>
                         </Stack>

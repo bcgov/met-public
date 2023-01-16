@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from http import HTTPStatus
 
 from flask import current_app
+from met_api.constants.email_verification import EmailVerificationType
 
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models import Engagement as EngagementModel
@@ -48,7 +49,11 @@ class EmailVerificationService:
         email_verification['created_by'] = email_verification.get('user_id')
         email_verification['verification_token'] = uuid.uuid4()
         EmailVerification.create(email_verification, session)
-        cls._send_verification_email(email_verification)
+
+        # TODO: remove this once email logic is brought over from submission service to here
+        if email_verification.get('type', None) != EmailVerificationType.RejectedComment:
+            cls._send_verification_email(email_verification)
+
         return email_verification
 
     @classmethod
@@ -58,10 +63,14 @@ class EmailVerificationService:
         email_verification = EmailVerificationSchema().dump(db_email_verification)
         cls.validate_email_verification(email_verification)
 
-        if email_verification.get('survey_id', None) != survey_id:
+        verification_type = email_verification.get('type', None)
+
+        if verification_type == EmailVerificationType.Survey and\
+            email_verification.get('survey_id', None) != survey_id:
             raise ValueError('Email verification invalid for survey')
 
-        if email_verification.get('submission_id', None) != submission_id:
+        if verification_type == EmailVerificationType.RejectedComment and\
+            email_verification.get('submission_id', None) != submission_id:
             raise ValueError('Email verification invalid for submission')
 
         email_verification['updated_by'] = email_verification['user_id']
@@ -81,9 +90,8 @@ class EmailVerificationService:
         if not survey.engagement_id:
             raise ValueError('Engagement not found')
 
-        template_id = current_app.config.get('VERIFICATION_EMAIL_TEMPLATE_ID', None)
-        subject, body, args = EmailVerificationService._render_email_template(
-            survey, email_verification.get('verification_token'))
+        subject, body, args, template_id = EmailVerificationService._render_email_template(
+            survey, email_verification.get('verification_token'), email_verification.get('type'))
         try:
             # user hasn't been created yet.so create token using SA.
             notification.send_email(subject=subject, email=email_to, html_body=body, args=args, template_id=template_id)
@@ -94,32 +102,64 @@ class EmailVerificationService:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
 
     @staticmethod
-    def _render_email_template(survey: SurveyModel, token):
-        template = Template.get_template('email_verification.html')
-        survey_id = survey.id
-        survey_path = current_app.config.get('SURVEY_PATH'). \
-            format(survey_id=survey_id, token=token)
-        dashboard_path = current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
-            format(engagement_id=survey.engagement_id)
+    def _render_email_template(survey: SurveyModel, token, email_type: EmailVerificationType):
+        if email_type == EmailVerificationType.Subscribe:
+            return EmailVerificationService._render_subscribe_email_template(survey, token)
+        elif email_type == EmailVerificationType.RejectedComment:
+            # TODO: move reject comment email verification logic here
+            return
+        else:
+            return EmailVerificationService._render_survey_email_template(survey, token)
+    
+    @staticmethod
+    def _render_subscribe_email_template(survey: SurveyModel, token):
         # url is origin url excluding context path
         site_url = current_app.config.get('SITE_URL')
         engagement: EngagementModel = EngagementModel.find_by_id(survey.engagement_id)
         engagement_name = engagement.name
-        subject = current_app.config.get('VERIFICATION_EMAIL_SUBJECT'). \
-            format(engagement_name=engagement_name)
+        template_id = current_app.config.get('SUBSCRIBE_EMAIL_TEMPLATE_ID', None)
+        template = Template.get_template('subscribe_email.html')
+        subject_template = current_app.config.get('SUBSCRIBE_EMAIL_SUBJECT')
+        confirm_path = current_app.config.get('SUBSCRIBE_PATH'). \
+            format(engagement_id=engagement.id, token=token)
+        args = {
+            'engagement_name': engagement_name,
+            'confirm_url': f'{site_url}{confirm_path}',
+        }
+        subject = subject_template.format(engagement_name=engagement_name)
+        body = template.render(
+            engagement_name=args.get('engagement_name'),
+            confirm_url=args.get('confirm_url'),
+        )
+        return subject, body, args, template_id
+
+    @staticmethod
+    def _render_survey_email_template(survey: SurveyModel, token):
+        # url is origin url excluding context path
+        site_url = current_app.config.get('SITE_URL')
+        engagement: EngagementModel = EngagementModel.find_by_id(survey.engagement_id)
+        engagement_name = engagement.name
+        template_id = current_app.config.get('VERIFICATION_EMAIL_TEMPLATE_ID', None)
+        template = Template.get_template('email_verification.html')
+        subject_template = current_app.config.get('VERIFICATION_EMAIL_SUBJECT')
+        survey_path = current_app.config.get('SURVEY_PATH'). \
+            format(survey_id=survey.id, token=token)
+        dashboard_path = current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
+            format(engagement_id=survey.engagement_id)
         args = {
             'engagement_name': engagement_name,
             'survey_url': f'{site_url}{survey_path}',
             'engagement_url': f'{site_url}{dashboard_path}',
             'end_date': datetime.strftime(engagement.end_date, EmailVerificationService.full_date_format),
         }
+        subject = subject_template.format(engagement_name=engagement_name)
         body = template.render(
             engagement_name=args.get('engagement_name'),
             survey_url=args.get('survey_url'),
             engagement_url=args.get('engagement_url'),
             end_date=args.get('end_date'),
         )
-        return subject, body, args
+        return subject, body, args, template_id
 
     @staticmethod
     def validate_email_verification(email_verification: EmailVerificationSchema):
@@ -131,7 +171,10 @@ class EmailVerificationService:
         if not is_active:
             raise ValueError('Email verification already verified')
 
-        if email_verification.get('submission_id') is None:
+        if email_verification.get('type') == EmailVerificationType.Subscribe:
+            return
+
+        if email_verification.get('type') == EmailVerificationType.Survey:
             # New email verification expires in 24 hours
             verification_created_datetime = datetime.strptime(
                 email_verification.get('created_date'), EmailVerificationService.datetime_format)

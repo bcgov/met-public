@@ -95,6 +95,7 @@ class _Config():  # pylint: disable=too-few-public-methods
     # front end urls
     SUBMISSION_PATH = os.getenv('SUBMISSION_PATH', '/engagements/{engagement_id}/edit/{token}')
     SURVEY_PATH = os.getenv('SURVEY_PATH', '/surveys/submit/{survey_id}/{token}')
+    SUBSCRIBE_PATH = os.getenv('SUBSCRIBE_PATH', '/engagements/{engagement_id}/subscribe/{token}')
     ENGAGEMENT_DASHBOARD_PATH = os.getenv('ENGAGEMENT_DASHBOARD_PATH', '/engagements/{engagement_id}/dashboard')
     USER_MANAGEMENT_PATH = os.getenv('USER_MANAGEMENT_PATH', '/usermanagement')
     SITE_URL = os.getenv('SITE_URL')
@@ -103,6 +104,9 @@ class _Config():  # pylint: disable=too-few-public-methods
     # Email address verification
     VERIFICATION_EMAIL_TEMPLATE_ID = os.getenv('VERIFICATION_EMAIL_TEMPLATE_ID')
     VERIFICATION_EMAIL_SUBJECT = os.getenv('VERIFICATION_EMAIL_SUBJECT', '{engagement_name} - Survey link')
+    # Email address verification
+    SUBSCRIBE_EMAIL_TEMPLATE_ID = os.getenv('SUBSCRIBE_EMAIL_TEMPLATE_ID')
+    SUBSCRIBE_EMAIL_SUBJECT = os.getenv('SUBSCRIBE_EMAIL_SUBJECT', 'Confirm your Subscription to {engagement_name}')
     # Rejected comments
     REJECTED_EMAIL_TEMPLATE_ID = os.getenv('REJECTED_EMAIL_TEMPLATE_ID')
     REJECTED_EMAIL_SUBJECT = os.getenv('REJECTED_EMAIL_SUBJECT', '{engagement_name} - About your Comments')

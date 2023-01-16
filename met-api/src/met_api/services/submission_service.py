@@ -4,6 +4,7 @@ from http import HTTPStatus
 from flask import current_app
 
 from met_api.constants.comment_status import Status
+from met_api.constants.email_verification import EmailVerificationType
 from met_api.constants.engagement_status import SubmissionStatus
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models import Engagement as EngagementModel
@@ -113,6 +114,7 @@ class SubmissionService:
                     'user_id': submission.user_id,
                     'survey_id': submission.survey_id,
                     'submission_id': submission.id,
+                    'type': EmailVerificationType.RejectedComment,
                 }, session)
                 cls._send_rejected_email(submission, email_verification.get('verification_token'))
 
