@@ -92,9 +92,9 @@ class Engagements(Resource):
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
-    @cross_origin(origins=allowedorigins())
+    # @cross_origin(origins=allowedorigins())
     @_jwt.has_one_of_roles([Role.CREATE_ENGAGEMENT.value])
-    @auth.require
+    # @auth.require
     def post():
         """Create a new engagement."""
         try:
@@ -103,7 +103,7 @@ class Engagements(Resource):
             engagement_model = EngagementService().create_engagement(requestjson)
             return engagement_schema.dump(engagement_model), HTTPStatus.OK
         except Exception as err:
-            assert str(err) == 'ff'
+            raise ValueError('passing here')
             return str(err), HTTPStatus.SERVICE_UNAVAILABLE            
 
     @staticmethod
