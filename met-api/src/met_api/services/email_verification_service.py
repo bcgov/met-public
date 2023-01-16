@@ -66,11 +66,11 @@ class EmailVerificationService:
         verification_type = email_verification.get('type', None)
 
         if verification_type == EmailVerificationType.Survey and\
-            email_verification.get('survey_id', None) != survey_id:
+           email_verification.get('survey_id', None) != survey_id:
             raise ValueError('Email verification invalid for survey')
 
         if verification_type == EmailVerificationType.RejectedComment and\
-            email_verification.get('submission_id', None) != submission_id:
+           email_verification.get('submission_id', None) != submission_id:
             raise ValueError('Email verification invalid for submission')
 
         email_verification['updated_by'] = email_verification['user_id']
@@ -105,12 +105,11 @@ class EmailVerificationService:
     def _render_email_template(survey: SurveyModel, token, email_type: EmailVerificationType):
         if email_type == EmailVerificationType.Subscribe:
             return EmailVerificationService._render_subscribe_email_template(survey, token)
-        elif email_type == EmailVerificationType.RejectedComment:
+        # if email_type == EmailVerificationType.RejectedComment:
             # TODO: move reject comment email verification logic here
-            return
-        else:
-            return EmailVerificationService._render_survey_email_template(survey, token)
-    
+        #    return
+        return EmailVerificationService._render_survey_email_template(survey, token)
+
     @staticmethod
     def _render_subscribe_email_template(survey: SurveyModel, token):
         # url is origin url excluding context path
