@@ -102,12 +102,9 @@ class Engagements(Resource):
             engagement_schema = EngagementSchema()
             engagement_model = EngagementService().create_engagement(requestjson)
             return engagement_schema.dump(engagement_model), HTTPStatus.OK
-        except KeyError as err:
-            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-        except ValueError as err:
-            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-        except ValidationError as err:
-            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR
+        except Exception as err:
+            assert str(err) == 'ff'
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR            
 
     @staticmethod
     # @TRACER.trace()
