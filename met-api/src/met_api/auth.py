@@ -68,7 +68,6 @@ class Auth:  # pylint: disable=too-few-public-methods
             roles [str,]: Comma separated list of valid roles
             JWT_ROLE_CALLBACK (fn): The callback added to the Flask configuration
         """
-        raise ValueError('errorr')
         token = jwt.get_token_auth_header()
         unverified_claims = jose_jwt.get_unverified_claims(token)
         roles_in_token = current_app.config['JWT_ROLE_CALLBACK'](
@@ -84,6 +83,7 @@ class Auth:  # pylint: disable=too-few-public-methods
             @wraps(f)
             def wrapper(*args, **kwargs):
                 # jwt._require_auth_validation(*args, **kwargs)
+                raise Exception('blaaa')
                 if cls.contains_role(roles):
                     return f(*args, **kwargs)
                 raise AuthError({'code': 'missing_a_valid_role',
