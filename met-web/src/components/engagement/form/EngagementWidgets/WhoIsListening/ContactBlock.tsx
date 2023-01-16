@@ -4,7 +4,7 @@ import ContactInfoPaper from './ContactInfoPaper';
 import { Contact } from 'models/contact';
 import { WhoIsListeningContext } from './WhoIsListeningContext';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
-import { MetDraggable, MetDroppable } from 'components/common/DragnDrop';
+import { MetDraggable, MetDroppable } from 'components/common/Dragndrop';
 import { reorder } from 'utils';
 
 const ContactBlock = () => {

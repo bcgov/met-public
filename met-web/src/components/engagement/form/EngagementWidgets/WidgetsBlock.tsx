@@ -11,7 +11,7 @@ import { Widget, WidgetType } from 'models/widget';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { debounce } from 'lodash';
-import { MetDraggable, MetDroppable } from 'components/common/DragnDrop';
+import { MetDraggable, MetDroppable } from 'components/common/Dragndrop';
 import { reorder } from 'utils';
 
 const WidgetsBlock = () => {
