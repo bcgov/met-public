@@ -56,23 +56,21 @@ class Auth:  # pylint: disable=too-few-public-methods
                 g.token_info = None
             return f(*args, **kwargs)
 
-        return decorated
-    
-    
+        return decorated  
 
     @classmethod
-    def has_role(cls, f):
+    def has_role(cls, roles):
         """Validate an optional Bearer Token."""
-
-        @wraps(f)
-        def decorated(*args, **kwargs):
-            try:
-                jwt.has_one_of_roles([Role.CREATE_ENGAGEMENT.value])
-                
-            except Exception as err:
-                assert str(err) == 'aa'
-                return f(*args, **kwargs)
-
+        def decorated(f):
+            @wraps(f)
+            def wrapper(*args, **kwargs):
+                jwt._require_auth_validation(*args, **kwargs)
+                if jwt.contains_role(roles):
+                    return f(*args, **kwargs)
+                raise AuthError({'code': 'missing_a_valid_role',
+                                 'description':
+                                     'Missing a role required to access this endpoint'}, 401)
+            return wrapper
         return decorated
 
 

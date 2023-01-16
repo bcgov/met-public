@@ -59,7 +59,7 @@ def test_get_engagements(client, jwt, session, engagement_info):  # pylint:disab
     assert rv.status_code == 200
     created_eng = rv.json
 
-    rv = client.get(f'/api/engagements/{created_eng.get("id")}', data=json.dumps(engagement_info),
+    rv = client.get(f'/api/engagements/{created_eng["id"]}', data=json.dumps(engagement_info),
                     headers=headers, content_type=ContentType.JSON.value)
 
     assert created_eng.get('name') == rv.json.get('name')
