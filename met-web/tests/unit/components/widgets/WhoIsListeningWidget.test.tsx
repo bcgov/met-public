@@ -77,12 +77,6 @@ jest.mock('apiManager/apiSlices/contacts', () => ({
     useLazyGetContactQuery: () => [...mockLazyGetContactQuery()],
 }));
 
-jest.mock('react-dnd', () => ({
-    ...jest.requireActual('react-dnd'),
-    useDrag: jest.fn(),
-    useDrop: jest.fn(),
-}));
-
 jest.mock('components/common/DragnDrop', () => ({
     ...jest.requireActual('components/common/DragnDrop'),
     MetDroppable: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,

@@ -55,23 +55,6 @@ const documentWidget: Widget = {
     items: [],
 };
 
-jest.mock('react-dnd', () => ({
-    ...jest.requireActual('react-dnd'),
-    useDrag: jest.fn(),
-    useDrop: jest.fn(),
-}));
-
-jest.mock('components/common/DragnDrop', () => ({
-    ...jest.requireActual('components/common/DragnDrop'),
-    MetDroppable: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
-    MetDraggable: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
-}));
-
-jest.mock('@hello-pangea/dnd', () => ({
-    ...jest.requireActual('@hello-pangea/dnd'),
-    DragDropContext: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
-}));
-
 jest.mock('@reduxjs/toolkit/query/react', () => ({
     ...jest.requireActual('@reduxjs/toolkit/query/react'),
     fetchBaseQuery: jest.fn(),
