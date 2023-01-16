@@ -19,13 +19,13 @@ const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
     // <React.StrictMode>
     <Provider store={store}>
-        {/* <DndProvider backend={HTML5Backend}> */}
-        <ThemeProvider theme={BaseTheme}>
-            <StyledEngineProvider injectFirst>
-                <App />
-            </StyledEngineProvider>
-        </ThemeProvider>
-        {/* </DndProvider> */}
+        <DndProvider backend={HTML5Backend}>
+            <ThemeProvider theme={BaseTheme}>
+                <StyledEngineProvider injectFirst>
+                    <App />
+                </StyledEngineProvider>
+            </ThemeProvider>
+        </DndProvider>
     </Provider>,
     // </React.StrictMode>
 );

@@ -5,19 +5,22 @@ import update from 'immutability-helper';
 import { Contact } from 'models/contact';
 import { DragItem } from 'components/common/Dragndrop';
 import { WhoIsListeningContext } from './WhoIsListeningContext';
+import { DragDropContext, DropResult } from '@hello-pangea/dnd';
+import { MetDraggable, MetDroppable } from 'components/common/beautifulDnd';
+import { reorder } from 'utils';
 
 const ContactBlock = () => {
     const { addedContacts, setAddedContacts } = useContext(WhoIsListeningContext);
-    const moveContact = useCallback((dragIndex: number, hoverIndex: number) => {
-        setAddedContacts((prevContacts: Contact[]) =>
-            update(prevContacts, {
-                $splice: [
-                    [dragIndex, 1],
-                    [hoverIndex, 0, prevContacts[dragIndex]],
-                ],
-            }),
-        );
-    }, []);
+
+    const moveContact = (result: DropResult) => {
+        if (!result.destination) {
+            return;
+        }
+
+        const items = reorder(addedContacts, result.source.index, result.destination.index);
+
+        setAddedContacts(items as Contact[]);
+    };
 
     const removeContact = (contactId: number) => {
         const newContacts = addedContacts.filter((addedContact) => addedContact.id !== contactId);
@@ -25,17 +28,21 @@ const ContactBlock = () => {
     };
 
     return (
-        <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
-            {addedContacts.map((addedContact, index) => {
-                return (
-                    <Grid key={`added-contact-${addedContact.id}`} item xs={12}>
-                        <DragItem name="Contact" moveItem={moveContact} index={index}>
-                            <ContactInfoPaper contact={addedContact} removeContact={removeContact} />
-                        </DragItem>
-                    </Grid>
-                );
-            })}
-        </Grid>
+        <DragDropContext onDragEnd={moveContact}>
+            <MetDroppable droppableId="droppable">
+                <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
+                    {addedContacts.map((addedContact: Contact, index) => {
+                        return (
+                            <Grid item xs={12} key={`Grid-${addedContact.id}`}>
+                                <MetDraggable draggableId={String(addedContact.id)} index={index}>
+                                    <ContactInfoPaper contact={addedContact} removeContact={removeContact} />
+                                </MetDraggable>
+                            </Grid>
+                        );
+                    })}
+                </Grid>
+            </MetDroppable>
+        </DragDropContext>
     );
 };
 
