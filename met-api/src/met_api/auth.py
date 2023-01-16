@@ -17,6 +17,8 @@ from flask import g, request
 from flask_jwt_oidc import JwtManager
 from flask_jwt_oidc.exceptions import AuthError
 from met_api.utils.roles import Role
+from jose import jwt as jose_jwt
+from flask import current_app
 
 jwt = (
     JwtManager()
@@ -59,15 +61,30 @@ class Auth:  # pylint: disable=too-few-public-methods
         return decorated  
 
     @classmethod
+    def contains_role(self, roles):
+        """Check that the listed roles are in the token using the registered callback.
+
+        Args:
+            roles [str,]: Comma separated list of valid roles
+            JWT_ROLE_CALLBACK (fn): The callback added to the Flask configuration
+        """
+        token = jwt.get_token_auth_header()
+        unverified_claims = jose_jwt.get_unverified_claims(token)
+        roles_in_token = current_app.config['JWT_ROLE_CALLBACK'](
+            unverified_claims)
+        if any(elem in roles_in_token for elem in roles):
+            return True
+        return False
+
+    @classmethod
     def has_role(cls, roles):
         """Validate an optional Bearer Token."""
         def decorated(f):
             @wraps(f)
             def wrapper(*args, **kwargs):
                 # jwt._require_auth_validation(*args, **kwargs)
-                return f(*args, **kwargs)
-                # if jwt.contains_role(roles):
-                #     return f(*args, **kwargs)
+                if cls.contains_role(roles):
+                    return f(*args, **kwargs)
                 raise AuthError({'code': 'missing_a_valid_role',
                                  'description':
                                      'Missing a role required to access this endpoint'}, 401)
