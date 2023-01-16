@@ -93,7 +93,7 @@ class Engagements(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.CREATE_ENGAGEMENT.value])
+    # @_jwt.has_one_of_roles([Role.CREATE_ENGAGEMENT.value])
     @auth.require
     def post():
         """Create a new engagement."""
