@@ -1,11 +1,11 @@
 import React from 'react';
-import { MetLabel, MetPaper, MetWidgetPaper } from 'components/common';
-import { Grid, CircularProgress, Stack, IconButton, Tooltip, Typography, Box } from '@mui/material';
+import { MetLabel, MetWidgetPaper } from 'components/common';
+import { Grid, CircularProgress, Stack, IconButton, Tooltip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { When, If, Then, Else } from 'react-if';
+import { If, Then, Else } from 'react-if';
 
 interface MetWidgetProps {
     testId?: string;
