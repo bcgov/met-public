@@ -1,6 +1,6 @@
 import React from 'react';
-import { MetLabel, MetWidgetPaper } from 'components/common';
-import { Grid, CircularProgress, Stack, IconButton, Tooltip } from '@mui/material';
+import { MetLabel, MetPaper, MetWidgetPaper } from 'components/common';
+import { Grid, CircularProgress, Stack, IconButton, Tooltip, Typography, Box } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
@@ -50,16 +50,26 @@ const MetWidget = ({
                 </Grid>
                 <Grid item xs={2} container direction="row" alignItems="flex-start" justifyContent="center">
                     <Stack direction="row" spacing={1}>
-                        <When condition={!!onEdit}>
-                            <IconButton
-                                sx={{ margin: 0, padding: 0 }}
-                                color="inherit"
-                                onClick={onEdit}
-                                data-testid="widget/edit"
-                            >
-                                <EditIcon />
-                            </IconButton>
-                        </When>
+                        <If condition={!!onEdit}>
+                            <Then>
+                                <IconButton
+                                    sx={{ margin: 0, padding: 0 }}
+                                    color="inherit"
+                                    onClick={onEdit}
+                                    data-testid="widget/edit"
+                                >
+                                    <EditIcon />
+                                </IconButton>
+                            </Then>
+                            <Else>
+                                <IconButton
+                                    sx={{ p: 1.5 }}
+                                    color="inherit"
+                                    onClick={onEdit}
+                                    data-testid="widget/edit"
+                                ></IconButton>
+                            </Else>
+                        </If>
                         <IconButton
                             sx={{ margin: 0, padding: 0 }}
                             color="inherit"
