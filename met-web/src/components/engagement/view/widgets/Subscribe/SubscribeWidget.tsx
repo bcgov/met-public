@@ -34,8 +34,14 @@ function SubscribeWidget() {
                     data: {
                         header: 'Thank you',
                         subText: [
-                            `We sent a link to confirm your subscription at the following email address ${email}                    `,
-                            'Please click the link provided to confirm your interest in receiving news and updates from the EAO.',
+                            {
+                                text: 'We sent a link to confirm your subscription at the following email address ${email}',
+                                bold: false,
+                            },
+                            {
+                                text: 'Please click the link provided to confirm your interest in receiving news and updates from the EAO.',
+                                bold: true,
+                            },
                         ],
                     },
                     type: 'update',
@@ -49,9 +55,18 @@ function SubscribeWidget() {
                     data: {
                         header: 'We are sorry',
                         subText: [
-                            `There was a problem with the email address you provided: ${email}                    `,
-                            'Please verify your email and try again.',
-                            'If this problem persists, contact sample@gmail.com',
+                            {
+                                text: `There was a problem with the email address you provided: ${email}`,
+                                bold: false,
+                            },
+                            {
+                                text: 'Please verify your email and try again.',
+                                bold: false,
+                            },
+                            {
+                                text: 'If this problem persists, contact sample@gmail.com',
+                                bold: false,
+                            },
                         ],
                     },
                     type: 'update',
@@ -78,7 +93,12 @@ function SubscribeWidget() {
                     '',
                 ]}
                 header={'Sign Up for Updates'}
-                subText={['Sign up to receive news and updates on public engagements at the EAO']}
+                subText={[
+                    {
+                        text: 'Sign up to receive news and updates on public engagements at the EAO',
+                        bold: false,
+                    },
+                ]}
             />
             <Grid spacing={2} container xs={12} sx={{ pl: '1em' }}>
                 <Grid item xs={12}>

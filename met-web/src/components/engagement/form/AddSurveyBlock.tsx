@@ -75,8 +75,14 @@ export const AddSurveyBlock = ({
                 data: {
                     header: 'Remove Survey',
                     subText: [
-                        'You will be removing this survey from the engagement. This survey will not be deleted and will be available to add to any engagement.',
-                        'Do you want to remove this survey?',
+                        {
+                            text: 'You will be removing this survey from the engagement. This survey will not be deleted and will be available to add to any engagement.',
+                            bold: false,
+                        },
+                        {
+                            text: 'Do you want to remove this survey?',
+                            bold: false,
+                        },
                     ],
                     handleConfirm: () => {
                         handleRemoveSurvey(surveyId, surveyName);

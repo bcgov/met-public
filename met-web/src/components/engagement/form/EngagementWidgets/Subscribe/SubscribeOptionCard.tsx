@@ -84,7 +84,7 @@ const SubscribeOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetHeader4 sx={{ pl: '10px' }}>Sign up for Updates</MetHeader4>
+                                <MetHeader4 sx={{ pl: '10px' }}>Sign Up for Updates</MetHeader4>
                             </Grid>
                             <Grid item xs={12}>
                                 <MetBody sx={{ pl: '10px' }}>

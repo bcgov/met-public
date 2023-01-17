@@ -63,9 +63,9 @@ const EmailModal = ({
                         </MetHeader1>
                     </Grid>
 
-                    {subText.map((text: string) => (
+                    {subText.map((subtext) => (
                         <Grid item xs={12}>
-                            <MetBody>{text}</MetBody>
+                            <MetBody bold={subtext.bold}>{subtext.text}</MetBody>
                         </Grid>
                     ))}
 
