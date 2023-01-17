@@ -29,7 +29,7 @@ const MetWidget = ({
     ...rest
 }: MetWidgetProps) => {
     return (
-        <MetWidgetPaper elevation={3} {...rest}>
+        <MetWidgetPaper elevation={1} {...rest}>
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
                 <Grid item xs={2} sx={{ alignItems: 'center', justifyContent: 'center' }}>
                     <If condition={sortable}>

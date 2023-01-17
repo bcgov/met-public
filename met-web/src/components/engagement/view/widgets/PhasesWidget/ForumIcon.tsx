@@ -4,13 +4,13 @@ import { SvgIcon } from '@mui/material';
 export const ForumIcon = ({ ...props }: { [prop: string]: unknown }) => {
     return (
         <SvgIcon width="72.696" height="69.501" viewBox="0 0 72.696 69.501" {...props}>
-            <g fill="#458686" stroke="#fff" stroke-width="2">
+            <g fill="#458686" stroke="#fff" strokeWidth="2">
                 <rect width="65" height="35" rx="10" stroke="none" />
                 <rect x="1" y="1" width="63" height="33" rx="9" fill="none" />
             </g>
             <g transform="translate(72.696 69.501) rotate(180)">
                 <g transform="translate(0 0)">
-                    <g fill="#9be2df" stroke="#fff" stroke-width="1">
+                    <g fill="#9be2df" stroke="#fff" strokeWidth="1">
                         <rect width="65" height="35" rx="10" stroke="none" />
                         <rect x="0.5" y="0.5" width="64" height="34" rx="9.5" fill="none" />
                     </g>
