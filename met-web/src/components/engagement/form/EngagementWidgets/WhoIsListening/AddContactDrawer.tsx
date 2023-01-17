@@ -19,7 +19,6 @@ import { Contact } from 'models/contact';
 
 const schema = yup
     .object({
-        avatar_filename: yup.string(),
         name: yup.string().max(50, 'Name should not exceed 50 characters').required(),
         title: yup.string().max(50, 'Title should not exceed 50 characters'),
         phone_number: yup.string().max(50, 'Phone Number should not exceed 50 characters'),
@@ -51,13 +50,13 @@ const AddContactDrawer = () => {
     });
 
     useEffect(() => {
-        methods.setValue('avatar_filename', contactToEdit?.avatar_filename || '');
         methods.setValue('name', contactToEdit?.name || '');
         methods.setValue('phone_number', contactToEdit?.phone_number || '');
         methods.setValue('title', contactToEdit?.title || '');
         methods.setValue('email', contactToEdit?.email || '');
         methods.setValue('address', contactToEdit?.address || '');
         methods.setValue('bio', contactToEdit?.bio || '');
+        setAvatarFileName(contactToEdit?.avatar_filename || '');
     }, [contactToEdit]);
 
     const { handleSubmit } = methods;
@@ -80,7 +79,7 @@ const AddContactDrawer = () => {
             const uploadedAvatarImageFileName = await handleUploadAvatarImage();
             const contactUpdatesToPatch = updatedDiff(contactToEdit, {
                 ...data,
-                avatar_filename: data.avatar_filename ? data.avatar_filename : uploadedAvatarImageFileName,
+                avatar_filename: uploadedAvatarImageFileName,
             }) as PatchContactRequest;
 
             await patchContact({
