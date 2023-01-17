@@ -90,7 +90,7 @@ const ImageUpload = ({
                         }}
                     >
                         <input {...getInputProps()} multiple={false} accept={'image/*'} />
-                        <Typography m={4}>{helpText}</Typography>
+                        <Typography m={2}>{helpText}</Typography>
                     </Grid>
                 </section>
             )}
