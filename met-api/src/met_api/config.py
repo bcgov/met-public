@@ -118,7 +118,7 @@ class _Config():  # pylint: disable=too-few-public-methods
     CDOGS_SERVICE_CLIENT = os.getenv('CDOGS_SERVICE_CLIENT')
     CDOGS_SERVICE_CLIENT_SECRET = os.getenv('CDOGS_SERVICE_CLIENT_SECRET')
     CDOGS_TOKEN_URL = os.getenv('CDOGS_TOKEN_URL')
-
+    PROPAGATE_EXCEPTIONS = True
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
     """Dev Config."""
@@ -135,6 +135,7 @@ class TestConfig(_Config):  # pylint: disable=too-few-public-methods
     TESTING = True
     DEBUG = True
     TESTING = True
+    PROPAGATE_EXCEPTIONS = True
     # POSTGRESQL
     DB_USER = os.getenv('DATABASE_TEST_USERNAME', 'postgres')
     DB_PASSWORD = os.getenv('DATABASE_TEST_PASSWORD', 'postgres')
