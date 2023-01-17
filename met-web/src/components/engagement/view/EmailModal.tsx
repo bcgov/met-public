@@ -12,6 +12,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { useAppDispatch } from 'hooks';
 import { ActionContext } from './ActionContext';
 import ThankYouPanel from './ThankYouPanel';
+import { EmailVerificationType } from 'models/emailVerification';
 
 const EmailModal = ({ defaultPanel, open, handleClose }: EmailModalProps) => {
     const dispatch = useAppDispatch();
@@ -39,6 +40,7 @@ const EmailModal = ({ defaultPanel, open, handleClose }: EmailModalProps) => {
             await createEmailVerification({
                 email_address: email,
                 survey_id: savedEngagement.surveys[0].id,
+                type: EmailVerificationType.Survey,
             });
             window.snowplow('trackSelfDescribingEvent', {
                 schema: 'iglu:ca.bc.gov.met/verify-email/jsonschema/1-0-0',
