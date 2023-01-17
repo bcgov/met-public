@@ -47,6 +47,11 @@ export const BaseTheme = createTheme({
                 disableRipple: true,
             },
         },
+        MuiTextField: {
+            defaultProps: {
+                size: 'small',
+            },
+        },
         MuiLink: {
             defaultProps: {
                 color: Palette.action.active,

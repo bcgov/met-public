@@ -67,7 +67,7 @@ export const WidgetButton = ({ children, ...rest }: { children: React.ReactNode;
 );
 
 export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
-    <StyledSecondaryButton {...rest} variant="outlined">
+    <StyledSecondaryButton {...rest} sx={{ minHeight: '40px', maxHeight: '40px' }} variant="outlined">
         {children}
     </StyledSecondaryButton>
 );
@@ -76,6 +76,7 @@ export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode
     <StyledPrimaryButton
         {...rest}
         variant="contained"
+        sx={{ minHeight: '40px', maxHeight: '40px' }}
         loadingIndicator={<CircularProgress color="primary" size={'1.8em'} />}
     >
         {children}
