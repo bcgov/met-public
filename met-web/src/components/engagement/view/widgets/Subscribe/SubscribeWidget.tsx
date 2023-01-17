@@ -87,7 +87,7 @@ function SubscribeWidget() {
                 handleConfirm={sendEmail}
                 isSaving={isSaving}
                 termsOfService={[
-                    'Personal information(your email address is collected under seciton 26(c) and 26(e) of the Freedom of the Information and Protection of Privacy Act, to keep you updated on current engagements and to notify you of future opportunities to participate.',
+                    'Personal information (your email address is collected under Section 26(c) and 26(e) of the Freedom of the Information and Protection of Privacy Act, to keep you updated on current engagements and to notify you of future opportunities to participate.',
                     '',
                     'If you have any questions about the collection, use and disclosure of your personal information, please contact <TBC>.',
                     '',
@@ -95,7 +95,7 @@ function SubscribeWidget() {
                 header={'Sign Up for Updates'}
                 subText={[
                     {
-                        text: 'Sign up to receive news and updates on public engagements at the EAO',
+                        text: 'Sign up to receive news and updates on public engagements at the EAO.',
                         bold: false,
                     },
                 ]}
