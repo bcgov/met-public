@@ -31,6 +31,8 @@ export const StyledPrimaryButton = styled(LoadingButton)(() => ({
         backgroundColor: Palette.primary.main,
         color: '#fff',
         textDecoration: 'underline',
+        minHeight: '40px',
+        maxHeight: '40px',
     },
 }));
 
@@ -44,6 +46,8 @@ export const StyledSecondaryButton = styled(MuiButton)(() => ({
         backgroundColor: Palette.primary.main,
         color: '#FFFFFF',
         border: `2px solid ${Palette.primary.main}`,
+        minHeight: '40px',
+        maxHeight: '40px',
     },
 }));
 
@@ -57,6 +61,8 @@ export const StyledWidgetButton = styled(MuiButton)(() => ({
         backgroundColor: '#f2f2f2',
         color: '#494949',
         border: `2px solid ${'#f2f2f2'}`,
+        minHeight: '40px',
+        maxHeight: '40px',
     },
 }));
 
@@ -67,7 +73,7 @@ export const WidgetButton = ({ children, ...rest }: { children: React.ReactNode;
 );
 
 export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
-    <StyledSecondaryButton {...rest} sx={{ minHeight: '40px', maxHeight: '40px' }} variant="outlined">
+    <StyledSecondaryButton {...rest} variant="outlined">
         {children}
     </StyledSecondaryButton>
 );
@@ -76,7 +82,6 @@ export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode
     <StyledPrimaryButton
         {...rest}
         variant="contained"
-        sx={{ minHeight: '40px', maxHeight: '40px' }}
         loadingIndicator={<CircularProgress color="primary" size={'1.8em'} />}
     >
         {children}
