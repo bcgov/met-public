@@ -4,11 +4,13 @@ import Dropzone from 'react-dropzone';
 import { SecondaryButton } from 'components/common';
 
 interface ImageUploadProps {
+    margin: number;
     handleAddFile: (_files: File[]) => void;
     savedImageUrl?: string;
     helpText?: string;
 }
 const ImageUpload = ({
+    margin,
     handleAddFile,
     savedImageUrl = '',
     helpText = 'Drag and drop some files here, or click to select files',
@@ -90,7 +92,7 @@ const ImageUpload = ({
                         }}
                     >
                         <input {...getInputProps()} multiple={false} accept={'image/*'} />
-                        <Typography m={2}>{helpText}</Typography>
+                        <Typography m={margin}>{helpText}</Typography>
                     </Grid>
                 </section>
             )}

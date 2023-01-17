@@ -160,6 +160,7 @@ const AddContactDrawer = () => {
                         <Grid item xs={12} lg={4}>
                             <MetLabel sx={{ marginBottom: '2px' }}>Profile Picture</MetLabel>
                             <ImageUpload
+                                margin={2}
                                 data-testid="contact/image-upload"
                                 handleAddFile={handleAddAvatarImage}
                                 savedImageUrl={contactToEdit?.avatar_url || ''}
