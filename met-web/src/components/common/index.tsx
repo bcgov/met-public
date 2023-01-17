@@ -26,6 +26,8 @@ export const RoundedButton = styled(MuiButton)(() => ({
 export const StyledPrimaryButton = styled(LoadingButton)(() => ({
     backgroundColor: Palette.primary.main,
     color: '#fff',
+    minHeight: '40px',
+    maxHeight: '40px',
     '&:hover': {
         opacity: '0.8',
         backgroundColor: Palette.primary.main,
@@ -38,6 +40,8 @@ export const StyledSecondaryButton = styled(MuiButton)(() => ({
     backgroundColor: 'transparent',
     color: Palette.primary.main,
     border: `2px solid ${Palette.primary.main}`,
+    minHeight: '40px',
+    maxHeight: '40px',
     '&:hover': {
         opacity: '0.8',
         textDecoration: 'underline',
@@ -51,6 +55,8 @@ export const StyledWidgetButton = styled(MuiButton)(() => ({
     backgroundColor: 'transparent',
     color: '#494949',
     border: `2px solid ${'#707070'}`,
+    minHeight: '40px',
+    maxHeight: '40px',
     '&:hover': {
         opacity: '0.8',
         textDecoration: 'underline',
@@ -60,23 +66,22 @@ export const StyledWidgetButton = styled(MuiButton)(() => ({
     },
 }));
 
-export const WidgetButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
-    <StyledWidgetButton {...rest} sx={{ minHeight: '40px', maxHeight: '40px' }} variant="outlined">
+export const WidgetButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
+    <StyledWidgetButton {...rest} variant="outlined">
         {children}
     </StyledWidgetButton>
 );
 
-export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
-    <StyledSecondaryButton {...rest} sx={{ minHeight: '40px', maxHeight: '40px' }} variant="outlined">
+export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
+    <StyledSecondaryButton {...rest} variant="outlined">
         {children}
     </StyledSecondaryButton>
 );
 
-export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
+export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
     <StyledPrimaryButton
         {...rest}
         variant="contained"
-        sx={{ minHeight: '40px', maxHeight: '40px' }}
         loadingIndicator={<CircularProgress color="primary" size={'1.8em'} />}
     >
         {children}
@@ -88,7 +93,7 @@ export const StyledPaper = styled(MuiPaper)(() => ({
     borderRadius: '4px',
 }));
 
-export const MetPaper = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => {
+export const MetPaper = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => {
     return (
         <StyledPaper elevation={0} {...rest}>
             {children}
