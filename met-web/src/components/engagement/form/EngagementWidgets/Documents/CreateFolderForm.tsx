@@ -26,7 +26,7 @@ const CreateFolderForm = () => {
         setFormError({
             name: !folderName || folderName.length > 50,
         });
-        return Object.values(formError).some((errorExists) => errorExists);
+        return Object.values(formError).every((errorExists) => errorExists);
     };
 
     const getErrorMessage = () => {
@@ -40,17 +40,15 @@ const CreateFolderForm = () => {
 
     const handleCreateFolder = async () => {
         try {
-            if (validate()) {
+            if (!widget && !validate()) {
                 return;
             }
             setCreatingFolder(true);
-            if (widget) {
-                await postDocument(widget.id, {
-                    title: folderName,
-                    widget_id: widget.id,
-                    type: DOCUMENT_TYPE.FOLDER,
-                });
-            }
+            await postDocument(widget.id, {
+                title: folderName,
+                widget_id: widget.id,
+                type: DOCUMENT_TYPE.FOLDER,
+            });
             await loadDocuments();
             setCreatingFolder(false);
             setCreateFolderMode(false);
