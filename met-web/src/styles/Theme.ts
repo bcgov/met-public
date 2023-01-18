@@ -43,8 +43,16 @@ export const BaseTheme = createTheme({
     },
     components: {
         MuiButton: {
+            styleOverrides: {
+                root: { height: '40px' },
+            },
             defaultProps: {
                 disableRipple: true,
+            },
+        },
+        MuiTextField: {
+            defaultProps: {
+                size: 'small',
             },
         },
         MuiLink: {
