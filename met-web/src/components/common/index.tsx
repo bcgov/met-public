@@ -26,8 +26,6 @@ export const RoundedButton = styled(MuiButton)(() => ({
 export const StyledPrimaryButton = styled(LoadingButton)(() => ({
     backgroundColor: Palette.primary.main,
     color: '#fff',
-    minHeight: '40px',
-    maxHeight: '40px',
     '&:hover': {
         opacity: '0.8',
         backgroundColor: Palette.primary.main,
@@ -40,8 +38,6 @@ export const StyledSecondaryButton = styled(MuiButton)(() => ({
     backgroundColor: 'transparent',
     color: Palette.primary.main,
     border: `2px solid ${Palette.primary.main}`,
-    minHeight: '40px',
-    maxHeight: '40px',
     '&:hover': {
         opacity: '0.8',
         textDecoration: 'underline',
@@ -55,8 +51,6 @@ export const StyledWidgetButton = styled(MuiButton)(() => ({
     backgroundColor: 'transparent',
     color: '#494949',
     border: `2px solid ${'#707070'}`,
-    minHeight: '40px',
-    maxHeight: '40px',
     '&:hover': {
         opacity: '0.8',
         textDecoration: 'underline',

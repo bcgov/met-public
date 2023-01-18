@@ -85,7 +85,7 @@ const CreateFolderForm = () => {
                         container
                         item
                         justifyContent={'flex-start'}
-                        alignItems={formError.name || folderName.length > 50 ? 'center' : 'flex-end'}
+                        alignItems={formError.name || folderName.length > 50 ? 'center' : 'flex-start'}
                         spacing={2}
                         xs={12}
                         sx={{ p: 0 }}
