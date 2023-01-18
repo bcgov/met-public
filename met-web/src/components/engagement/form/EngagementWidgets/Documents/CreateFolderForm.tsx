@@ -40,17 +40,16 @@ const CreateFolderForm = () => {
 
     const handleCreateFolder = async () => {
         try {
-            if (!widget && !validate()) {
+            if (!validate()) {
                 return;
             }
             setCreatingFolder(true);
-            /* tslint:disable */
-            await postDocument(widget.id, {
-                title: folderName,
-                widget_id: widget.id,
-                type: DOCUMENT_TYPE.FOLDER,
-            });
-            /* tslint:enable */
+            if (widget)
+                await postDocument(widget.id, {
+                    title: folderName,
+                    widget_id: widget.id,
+                    type: DOCUMENT_TYPE.FOLDER,
+                });
             await loadDocuments();
             setCreatingFolder(false);
             setCreateFolderMode(false);
