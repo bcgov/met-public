@@ -69,7 +69,9 @@ export const EngagementDashboard = () => {
                 data: {
                     header: 'View Comments',
                     subText: [
-                        'The comments will only be available to view after the engagement period is over and the engagement is closed.',
+                        {
+                            text: 'The comments will only be available to view after the engagement period is over and the engagement is closed.',
+                        },
                     ],
                 },
                 type: 'update',

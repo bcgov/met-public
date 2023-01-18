@@ -34,8 +34,13 @@ function SubscribeWidget() {
                     data: {
                         header: 'Thank you',
                         subText: [
-                            `We sent a link to confirm your subscription at the following email address ${email}                    `,
-                            'Please click the link provided to confirm your interest in receiving news and updates from the EAO.',
+                            {
+                                text: 'We sent a link to confirm your subscription at the following email address ${email}',
+                            },
+                            {
+                                text: 'Please click the link provided to confirm your interest in receiving news and updates from the EAO.',
+                                bold: true,
+                            },
                         ],
                     },
                     type: 'update',
@@ -49,9 +54,15 @@ function SubscribeWidget() {
                     data: {
                         header: 'We are sorry',
                         subText: [
-                            `There was a problem with the email address you provided: ${email}                    `,
-                            'Please verify your email and try again.',
-                            'If this problem persists, contact sample@gmail.com',
+                            {
+                                text: `There was a problem with the email address you provided: ${email}`,
+                            },
+                            {
+                                text: 'Please verify your email and try again.',
+                            },
+                            {
+                                text: 'If this problem persists, contact sample@gmail.com',
+                            },
                         ],
                     },
                     type: 'update',
@@ -72,13 +83,17 @@ function SubscribeWidget() {
                 handleConfirm={sendEmail}
                 isSaving={isSaving}
                 termsOfService={[
-                    'Personal information(your email address is collected under seciton 26(c) and 26(e) of the Freedom of the Information and Protection of Privacy Act, to keep you updated on current engagements and to notify you of future opportunities to participate.',
+                    'Personal information (your email address is collected under Section 26(c) and 26(e) of the Freedom of the Information and Protection of Privacy Act, to keep you updated on current engagements and to notify you of future opportunities to participate.',
                     '',
                     'If you have any questions about the collection, use and disclosure of your personal information, please contact <TBC>.',
                     '',
                 ]}
                 header={'Sign Up for Updates'}
-                subText={['Sign up to receive news and updates on public engagements at the EAO']}
+                subText={[
+                    {
+                        text: 'Sign up to receive news and updates on public engagements at the EAO.',
+                    },
+                ]}
             />
             <Grid spacing={2} container xs={12} sx={{ pl: '1em' }}>
                 <Grid item xs={12}>

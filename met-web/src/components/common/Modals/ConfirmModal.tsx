@@ -23,9 +23,11 @@ const ConfirmModal = ({ header, subText, handleConfirm, handleClose }: Notificat
                 </Grid>
             </Grid>
             <Grid container direction="row" item xs={12}>
-                {subText.map((text: string, index) => (
+                {subText.map((subtext, index) => (
                     <Grid key={index} item xs={12}>
-                        <MetBody sx={{ mb: 1 }}> {text} </MetBody>
+                        <MetBody bold={subtext.bold} sx={{ mb: 1 }}>
+                            {subtext.text}
+                        </MetBody>
                     </Grid>
                 ))}
                 <Grid

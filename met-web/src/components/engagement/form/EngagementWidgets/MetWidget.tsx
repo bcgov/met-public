@@ -5,7 +5,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { When, If, Then, Else } from 'react-if';
+import { If, Then, Else } from 'react-if';
 
 interface MetWidgetProps {
     testId?: string;
@@ -50,16 +50,26 @@ const MetWidget = ({
                 </Grid>
                 <Grid item xs={2} container direction="row" alignItems="flex-start" justifyContent="center">
                     <Stack direction="row" spacing={1}>
-                        <When condition={!!onEdit}>
-                            <IconButton
-                                sx={{ margin: 0, padding: 0 }}
-                                color="inherit"
-                                onClick={onEdit}
-                                data-testid="widget/edit"
-                            >
-                                <EditIcon />
-                            </IconButton>
-                        </When>
+                        <If condition={!!onEdit}>
+                            <Then>
+                                <IconButton
+                                    sx={{ margin: 0, padding: 0 }}
+                                    color="inherit"
+                                    onClick={onEdit}
+                                    data-testid="widget/edit"
+                                >
+                                    <EditIcon />
+                                </IconButton>
+                            </Then>
+                            <Else>
+                                <IconButton
+                                    sx={{ p: 1.5 }}
+                                    color="inherit"
+                                    onClick={onEdit}
+                                    data-testid="widget/edit"
+                                ></IconButton>
+                            </Else>
+                        </If>
                         <IconButton
                             sx={{ margin: 0, padding: 0 }}
                             color="inherit"
