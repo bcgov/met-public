@@ -44,11 +44,13 @@ const CreateFolderForm = () => {
                 return;
             }
             setCreatingFolder(true);
+            /* tslint:disable */
             await postDocument(widget.id, {
                 title: folderName,
                 widget_id: widget.id,
                 type: DOCUMENT_TYPE.FOLDER,
             });
+            /* tslint:enable */
             await loadDocuments();
             setCreatingFolder(false);
             setCreateFolderMode(false);
