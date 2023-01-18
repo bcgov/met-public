@@ -1,6 +1,6 @@
 export interface ModalSubtext {
     text: string;
-    bold: boolean;
+    bold?: boolean;
 }
 
 export interface NotificationModalProps {

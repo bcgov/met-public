@@ -60,9 +60,8 @@ const DocumentFile = ({ documentItem }: { documentItem: DocumentItem }) => {
                                             subText: [
                                                 {
                                                     text: 'You will be removing this file from the engagement.',
-                                                    bold: false,
                                                 },
-                                                { text: 'Do you want to remove this file?', bold: false },
+                                                { text: 'Do you want to remove this file?' },
                                             ],
                                             handleConfirm: () => {
                                                 handleDeleteDocument();

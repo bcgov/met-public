@@ -60,8 +60,8 @@ const WidgetsBlock = () => {
                 data: {
                     header: 'Remove Widget',
                     subText: [
-                        { text: 'You will be removing this widget from the engagement.', bold: false },
-                        { text: 'Do you want to remove this widget?', bold: false },
+                        { text: 'You will be removing this widget from the engagement.' },
+                        { text: 'Do you want to remove this widget?' },
                     ],
                     handleConfirm: () => {
                         deleteWidget(widgetId);

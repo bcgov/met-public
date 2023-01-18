@@ -106,11 +106,9 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
                                             subText: [
                                                 {
                                                     text: 'You will be removing this folder from the engagement.',
-                                                    bold: false,
                                                 },
                                                 {
                                                     text: 'Do you want to remove this folder?',
-                                                    bold: false,
                                                 },
                                             ],
                                             handleConfirm: () => {

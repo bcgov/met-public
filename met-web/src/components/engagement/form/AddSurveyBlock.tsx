@@ -77,11 +77,9 @@ export const AddSurveyBlock = ({
                     subText: [
                         {
                             text: 'You will be removing this survey from the engagement. This survey will not be deleted and will be available to add to any engagement.',
-                            bold: false,
                         },
                         {
                             text: 'Do you want to remove this survey?',
-                            bold: false,
                         },
                     ],
                     handleConfirm: () => {

@@ -36,7 +36,6 @@ function SubscribeWidget() {
                         subText: [
                             {
                                 text: 'We sent a link to confirm your subscription at the following email address ${email}',
-                                bold: false,
                             },
                             {
                                 text: 'Please click the link provided to confirm your interest in receiving news and updates from the EAO.',
@@ -57,15 +56,12 @@ function SubscribeWidget() {
                         subText: [
                             {
                                 text: `There was a problem with the email address you provided: ${email}`,
-                                bold: false,
                             },
                             {
                                 text: 'Please verify your email and try again.',
-                                bold: false,
                             },
                             {
                                 text: 'If this problem persists, contact sample@gmail.com',
-                                bold: false,
                             },
                         ],
                     },
@@ -96,7 +92,6 @@ function SubscribeWidget() {
                 subText={[
                     {
                         text: 'Sign up to receive news and updates on public engagements at the EAO.',
-                        bold: false,
                     },
                 ]}
             />

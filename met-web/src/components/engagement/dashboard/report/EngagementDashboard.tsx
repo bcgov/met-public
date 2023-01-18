@@ -71,7 +71,6 @@ export const EngagementDashboard = () => {
                     subText: [
                         {
                             text: 'The comments will only be available to view after the engagement period is over and the engagement is closed.',
-                            bold: false,
                         },
                     ],
                 },

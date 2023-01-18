@@ -79,7 +79,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                         subText: [
                             {
                                 text: 'Your email has been verified. You will now receive news and updates from us.',
-                                bold: false,
                             },
                         ],
                     },
