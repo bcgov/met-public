@@ -1,9 +1,9 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import TabContext from '@mui/lab/TabContext';
-import EngagementForm from './EngagementForm';
-import EngagementSettings from './EngagementSettings';
-import { MetTab, MetTabList, MetTabPanel } from './StyledTabComponents';
+import EngagementForm from '../EngagementForm';
+import EngagementSettings from '../EngagementSettings';
+import { MetTab, MetTabList, MetTabPanel } from '../StyledTabComponents';
 
 const EngagementFormTabs = () => {
     const [value, setValue] = React.useState('details');

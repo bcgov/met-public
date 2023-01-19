@@ -3,10 +3,11 @@ import Box from '@mui/material/Box';
 import TabContext from '@mui/lab/TabContext';
 import RichTextEditor from './RichTextEditor';
 import { MetTab, MetTabList, MetTabPanel } from './StyledTabComponents';
-import { upcomingText, openText, closedText } from 'constants/submissionStatusText';
+import { initialUpcomingText, initialOpenText, initialClosedText } from 'constants/submissionStatusText';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { EngagementStatusBlock } from '../../../models/engagementStatusBlock';
 import { ActionContext } from './ActionContext';
+import { EngagementTabsContext } from './EngagementFormTabs/EngagementTabsContext';
 
 const AddSurveyBlockTabs = ({
     handleChange = (statusBlock: EngagementStatusBlock[]) => {
@@ -18,23 +19,20 @@ const AddSurveyBlockTabs = ({
 
     // get saved engagement details
     const { savedEngagement } = useContext(ActionContext);
+    const { upcomingText, setUpcomingText, openText, setOpenText, closedText, setClosedText } =
+        useContext(EngagementTabsContext);
     const { status_block } = savedEngagement;
-    const [savedUpcomingText, setSavedUpcomingText] = React.useState('');
-    const [savedOpenText, setSavedOpenText] = React.useState('');
-    const [changedUpcomingText, setChangedUpcomingText] = React.useState('');
-    const [changedOpenText, setChangedOpenText] = React.useState('');
-    const [changedClosedText, setChangedClosedText] = React.useState('');
-    const [savedClosedText, setSavedClosedText] = React.useState('');
+
     const getsavedRichText = () => {
         status_block.forEach((item) => {
             if (item.survey_status === SubmissionStatus[SubmissionStatus.Upcoming]) {
-                setSavedUpcomingText(item.block_text);
+                setUpcomingText(item.block_text);
             }
             if (item.survey_status === SubmissionStatus[SubmissionStatus.Open]) {
-                setSavedOpenText(item.block_text);
+                setOpenText(item.block_text);
             }
             if (item.survey_status === SubmissionStatus[SubmissionStatus.Closed]) {
-                setSavedClosedText(item.block_text);
+                setClosedText(item.block_text);
             }
         });
 
@@ -48,15 +46,15 @@ const AddSurveyBlockTabs = ({
     const surveyBlockContent = [
         {
             survey_status: SubmissionStatus[SubmissionStatus.Upcoming],
-            block_text: changedUpcomingText ? changedUpcomingText : '',
+            block_text: upcomingText || '',
         },
         {
             survey_status: SubmissionStatus[SubmissionStatus.Open],
-            block_text: changedOpenText ? changedOpenText : '',
+            block_text: openText || '',
         },
         {
             survey_status: SubmissionStatus[SubmissionStatus.Closed],
-            block_text: changedClosedText ? changedClosedText : '',
+            block_text: closedText || '',
         },
     ];
 
@@ -69,22 +67,15 @@ const AddSurveyBlockTabs = ({
             return item;
         });
         if (value === SubmissionStatus[SubmissionStatus.Upcoming]) {
-            setChangedUpcomingText(newState);
+            setUpcomingText(newState);
         }
         if (value === SubmissionStatus[SubmissionStatus.Open]) {
-            setChangedOpenText(newState);
+            setOpenText(newState);
         }
         if (value === SubmissionStatus[SubmissionStatus.Closed]) {
-            setChangedClosedText(newState);
+            setClosedText(newState);
         }
         handleChange(surveyBlockContent);
-    };
-
-    // retain the state on tab changes
-    const handleKeepStateOnTabChanges = () => {
-        setSavedUpcomingText(changedUpcomingText ? changedUpcomingText : savedUpcomingText);
-        setSavedOpenText(changedOpenText ? changedOpenText : savedOpenText);
-        setSavedClosedText(changedClosedText ? changedClosedText : savedClosedText);
     };
 
     return (
@@ -94,7 +85,7 @@ const AddSurveyBlockTabs = ({
                     <MetTabList
                         onChange={(_event: React.SyntheticEvent, newValue: string) => {
                             setValue(newValue);
-                            handleKeepStateOnTabChanges();
+                            // handleKeepStateOnTabChanges();
                         }}
                         TabIndicatorProps={{
                             style: { transition: 'none', display: 'none' },
@@ -108,22 +99,22 @@ const AddSurveyBlockTabs = ({
                 <MetTabPanel value={SubmissionStatus[SubmissionStatus.Upcoming]}>
                     <RichTextEditor
                         handleEditorStateChange={handleStatusBlockContentChange}
-                        initialHTMLText={upcomingText}
-                        initialRawEditorState={savedUpcomingText}
+                        initialHTMLText={initialUpcomingText}
+                        initialRawEditorState={upcomingText}
                     />
                 </MetTabPanel>
                 <MetTabPanel value={SubmissionStatus[SubmissionStatus.Open]}>
                     <RichTextEditor
                         handleEditorStateChange={handleStatusBlockContentChange}
-                        initialHTMLText={openText}
-                        initialRawEditorState={savedOpenText}
+                        initialHTMLText={initialOpenText}
+                        initialRawEditorState={openText}
                     />
                 </MetTabPanel>
                 <MetTabPanel value={SubmissionStatus[SubmissionStatus.Closed]}>
                     <RichTextEditor
                         handleEditorStateChange={handleStatusBlockContentChange}
-                        initialHTMLText={closedText}
-                        initialRawEditorState={savedClosedText}
+                        initialHTMLText={initialClosedText}
+                        initialRawEditorState={closedText}
                     />
                 </MetTabPanel>
             </TabContext>

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { Typography, Grid, TextField, Stack } from '@mui/material';
 import { MetPaper, MetLabel, PrimaryButton, SecondaryButton, MetHeader4 } from '../../common';
 import RichTextEditor from './RichTextEditor';
@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import { AddSurveyBlock } from './AddSurveyBlock';
 import { If, Then, Else } from 'react-if';
 import DayCalculatorModal from 'components/common/Modals/DayCalculator';
+import { EngagementTabsContext } from './EngagementFormTabs/EngagementTabsContext';
+
 const EngagementForm = () => {
     const {
         handleCreateEngagementRequest,
@@ -19,37 +21,22 @@ const EngagementForm = () => {
         handleStatusBlockChange,
     } = useContext(ActionContext);
 
+    const {
+        engagementFormData,
+        setEngagementFormData,
+        richDescription,
+        setRichDescription,
+        richContent,
+        setRichContent,
+        engagementFormError,
+        setEngagementFormError,
+    } = useContext(EngagementTabsContext);
+
     const navigate = useNavigate();
 
     const isNewEngagement = engagementId === 'create';
 
-    const [engagementFormData, setEngagementFormData] = useState({
-        name: '',
-        start_date: '',
-        end_date: '',
-        description: '',
-        content: '',
-    });
-    const [richDescription, setRichDescription] = useState('');
-    const [richContent, setRichContent] = useState('');
-
-    useEffect(() => {
-        setEngagementFormData({
-            name: savedEngagement?.name || '',
-            start_date: savedEngagement.start_date,
-            end_date: savedEngagement.end_date,
-            description: savedEngagement?.description || '',
-            content: savedEngagement?.content || '',
-        });
-        setRichDescription(savedEngagement?.rich_description || '');
-        setRichContent(savedEngagement?.rich_content || '');
-    }, [savedEngagement]);
     const { name, start_date, end_date } = engagementFormData;
-    const [engagementFormError, setEngagementFormError] = useState({
-        name: false,
-        start_date: false,
-        end_date: false,
-    });
 
     const getErrorMessage = () => {
         if (name.length > 50) {
@@ -267,7 +254,7 @@ const EngagementForm = () => {
                     <RichTextEditor
                         setRawText={handleDescriptionChange}
                         handleEditorStateChange={handleRichDescriptionChange}
-                        initialRawEditorState={savedEngagement.rich_description || ''}
+                        initialRawEditorState={richDescription || savedEngagement.rich_description || ''}
                     />
                 </Grid>
 
@@ -289,7 +276,7 @@ const EngagementForm = () => {
                                 <RichTextEditor
                                     setRawText={handleContentChange}
                                     handleEditorStateChange={handleRichContentChange}
-                                    initialRawEditorState={savedEngagement.rich_content || ''}
+                                    initialRawEditorState={richContent || savedEngagement.rich_content || ''}
                                 />
                             </Grid>
                         </Grid>
