@@ -39,10 +39,10 @@ const CreateFolderForm = () => {
     };
 
     const handleCreateFolder = async () => {
+        if (!widget || !validateForm()) {
+            return;
+        }
         try {
-            if (!widget || !validateForm()) {
-                return;
-            }
             setCreatingFolder(true);
             await postDocument(widget.id, {
                 title: folderName,
