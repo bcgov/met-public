@@ -14,8 +14,6 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Palette } from 'styles/Theme';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { MET_Header_Font_Family, MET_Header_Font_Weight } from './constants';
-import { TreeItemProps } from '@mui/lab/TreeItem';
-import { SvgIconProps } from '@mui/material/SvgIcon';
 import { DocumentItem } from 'models/document';
 import { When } from 'react-if';
 
@@ -60,19 +58,19 @@ export const StyledWidgetButton = styled(MuiButton)(() => ({
     },
 }));
 
-export const WidgetButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
+export const WidgetButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
     <StyledWidgetButton {...rest} variant="outlined">
         {children}
     </StyledWidgetButton>
 );
 
-export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
+export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
     <StyledSecondaryButton {...rest} variant="outlined">
         {children}
     </StyledSecondaryButton>
 );
 
-export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
+export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
     <StyledPrimaryButton
         {...rest}
         variant="contained"
@@ -82,12 +80,12 @@ export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode
     </StyledPrimaryButton>
 );
 
-export const StyledPaper = styled(MuiPaper)(() => ({
+const StyledPaper = styled(MuiPaper)(() => ({
     border: `1px solid #606060`,
     borderRadius: '4px',
 }));
 
-export const MetPaper = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => {
+export const MetPaper = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => {
     return (
         <StyledPaper elevation={0} {...rest}>
             {children}
@@ -328,22 +326,4 @@ export const ModalSubtitle = ({
             {children}
         </Typography>
     );
-};
-
-export type DocumentTreeItemProps = TreeItemProps & {
-    labelIcon: React.ElementType<SvgIconProps>;
-    labelUrl: string | undefined;
-    nodeId: string;
-};
-
-export type DocumentTreeProps = TreeItemProps & {
-    documentItem: DocumentItem;
-};
-
-export type StyledTreeItemProps = TreeItemProps & {
-    bgColor?: string;
-    color?: string;
-    labelIcon: React.ElementType<SvgIconProps>;
-    labelInfo?: string;
-    labelText: string;
 };
