@@ -40,16 +40,15 @@ const CreateFolderForm = () => {
 
     const handleCreateFolder = async () => {
         try {
-            if (!isValid()) {
+            if (!widget || !isValid()) {
                 return;
             }
             setCreatingFolder(true);
-            if (widget)
-                await postDocument(widget.id, {
-                    title: folderName,
-                    widget_id: widget.id,
-                    type: DOCUMENT_TYPE.FOLDER,
-                });
+            await postDocument(widget.id, {
+                title: folderName,
+                widget_id: widget.id,
+                type: DOCUMENT_TYPE.FOLDER,
+            });
             await loadDocuments();
             setCreatingFolder(false);
             setCreateFolderMode(false);
