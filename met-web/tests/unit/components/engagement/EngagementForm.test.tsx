@@ -82,7 +82,7 @@ describe('Engagement form page tests', () => {
             expect(getByText('Engagement Name')).toBeInTheDocument();
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
-        expect(screen.getByText('Save')).toBeInTheDocument();
+        expect(screen.getByText('Create Engagement Draft')).toBeInTheDocument();
         expect(getEngagementMock).not.toHaveBeenCalled();
 
         const nameInput = container.querySelector('input[name="name"]');
@@ -108,7 +108,7 @@ describe('Engagement form page tests', () => {
         useParamsMock.mockReturnValue({ engagementId: 'create' });
         const { container, getByText } = render(<EngagementForm />);
 
-        const createButton = getByText('Save');
+        const createButton = getByText('Create Engagement Draft');
         fireEvent.click(createButton);
 
         expect(container.querySelectorAll('.Mui-error').length).toBeGreaterThan(0);
@@ -125,7 +125,7 @@ describe('Engagement form page tests', () => {
         });
 
         expect(getEngagementMock).toHaveBeenCalledOnce();
-        expect(screen.getByText('Save')).toBeInTheDocument();
+        expect(screen.getByText('Update Engagement')).toBeInTheDocument();
         expect(screen.getByDisplayValue('2022-09-01')).toBeInTheDocument();
         expect(screen.getByDisplayValue('2022-09-30')).toBeInTheDocument();
         expect(screen.getByText('Survey 1')).toBeInTheDocument();
@@ -139,7 +139,7 @@ describe('Engagement form page tests', () => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
-        const updateButton = screen.getByText('Save');
+        const updateButton = screen.getByText('Update Engagement');
 
         fireEvent.click(updateButton);
 
