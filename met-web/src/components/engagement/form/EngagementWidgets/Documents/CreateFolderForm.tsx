@@ -22,7 +22,7 @@ const CreateFolderForm = () => {
     const [formError, setFormError] = useState(initialFormError);
     const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Document);
 
-    const valid = () => {
+    const isValid = () => {
         setFormError({
             name: !folderName || folderName.length > 50,
         });
@@ -40,7 +40,7 @@ const CreateFolderForm = () => {
 
     const handleCreateFolder = async () => {
         try {
-            if (!valid()) {
+            if (!isValid()) {
                 return;
             }
             setCreatingFolder(true);
@@ -60,7 +60,7 @@ const CreateFolderForm = () => {
     };
 
     const handleFolderNameChange = (name: string) => {
-        valid();
+        isValid();
         setFolderName(name);
     };
 
