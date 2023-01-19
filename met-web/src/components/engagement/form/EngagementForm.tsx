@@ -310,7 +310,7 @@ const EngagementForm = () => {
                                 onClick={() => handleCreateEngagement()}
                                 loading={isSaving}
                             >
-                                Create Engagement Draft
+                                Save
                             </PrimaryButton>
                         </Then>
                         <Else>
@@ -321,7 +321,7 @@ const EngagementForm = () => {
                                 disabled={isSaving}
                                 loading={isSaving}
                             >
-                                Update Engagement
+                                Save
                             </PrimaryButton>
                         </Else>
                     </If>
@@ -330,7 +330,7 @@ const EngagementForm = () => {
                         onClick={() => handlePreviewEngagement()}
                         disabled={isSaving}
                     >
-                        {'Save & Preview Engagement'}
+                        {'Preview'}
                     </SecondaryButton>
                 </Grid>
             </Grid>
