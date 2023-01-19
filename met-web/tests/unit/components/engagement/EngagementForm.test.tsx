@@ -82,7 +82,7 @@ describe('Engagement form page tests', () => {
             expect(getByText('Engagement Name')).toBeInTheDocument();
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
-        expect(screen.getByText('Create Engagement Draft')).toBeInTheDocument();
+        expect(screen.getByText('Save')).toBeInTheDocument();
         expect(getEngagementMock).not.toHaveBeenCalled();
 
         const nameInput = container.querySelector('input[name="name"]');
@@ -108,7 +108,7 @@ describe('Engagement form page tests', () => {
         useParamsMock.mockReturnValue({ engagementId: 'create' });
         const { container, getByText } = render(<EngagementForm />);
 
-        const createButton = getByText('Create Engagement Draft');
+        const createButton = getByText('Save');
         fireEvent.click(createButton);
 
         expect(container.querySelectorAll('.Mui-error').length).toBeGreaterThan(0);
@@ -125,13 +125,13 @@ describe('Engagement form page tests', () => {
         });
 
         expect(getEngagementMock).toHaveBeenCalledOnce();
-        expect(screen.getByText('Update Engagement')).toBeInTheDocument();
+        expect(screen.getByText('Save')).toBeInTheDocument();
         expect(screen.getByDisplayValue('2022-09-01')).toBeInTheDocument();
         expect(screen.getByDisplayValue('2022-09-30')).toBeInTheDocument();
         expect(screen.getByText('Survey 1')).toBeInTheDocument();
     });
 
-    test('Update engagement button should trigger Put call', async () => {
+    test('Save engagement button should trigger Put call', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         const { container } = render(<EngagementForm />);
 
@@ -139,7 +139,7 @@ describe('Engagement form page tests', () => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
-        const updateButton = screen.getByText('Update Engagement');
+        const updateButton = screen.getByText('Save');
 
         fireEvent.click(updateButton);
 
