@@ -101,12 +101,12 @@ const CreateFolderForm = () => {
                                 helperText={getErrorMessage()}
                             />
                         </Grid>
-                        <Grid item lg={2.5} md={5}>
+                        <Grid item lg={4} md={5}>
                             <Stack
                                 direction={{ md: 'column', lg: 'row' }}
-                                spacing={1.5}
+                                spacing={1}
                                 width="100%"
-                                justifyContent="flex-end"
+                                justifyContent="flex-start"
                             >
                                 <PrimaryButton sx={{ mb: 1 }} loading={creatingFolder} onClick={handleCreateFolder}>
                                     Save
