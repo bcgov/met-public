@@ -308,10 +308,9 @@ const EngagementForm = () => {
                                 sx={{ marginRight: 1 }}
                                 onClick={() => handleCreateEngagement()}
                                 loading={isSaving}
+                                data-testid="engagement-form/create-engagement-button"
                             >
-                                <React.Fragment data-testid="engagement-form/create-engagement-button">
-                                    Save
-                                </React.Fragment>
+                                Save
                             </PrimaryButton>
                         </Then>
                         <Else>
@@ -322,9 +321,7 @@ const EngagementForm = () => {
                                 disabled={isSaving}
                                 loading={isSaving}
                             >
-                                <React.Fragment data-testid="engagement-form/update-engagement-button">
-                                    Save
-                                </React.Fragment>
+                                Save
                             </PrimaryButton>
                         </Else>
                     </If>
