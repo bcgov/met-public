@@ -1,5 +1,7 @@
+import { SubmissionStatusTypes } from 'constants/engagementStatus';
+
 export interface EngagementStatusBlock {
-    survey_status: string;
+    survey_status: SubmissionStatusTypes;
     block_text: string;
 }
 

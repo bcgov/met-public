@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Typography, Grid, TextField, Stack } from '@mui/material';
 import { MetPaper, MetLabel, PrimaryButton, SecondaryButton, MetHeader4 } from '../../../common';
 import RichTextEditor from '../RichTextEditor';
@@ -32,11 +32,19 @@ const EngagementForm = () => {
         setEngagementFormError,
     } = useContext(EngagementTabsContext);
 
+    const [initialRichDescription, setInitialRichDescription] = useState('');
+    const [initialRichContent, setInitialRichContent] = useState('');
+
     const navigate = useNavigate();
 
     const isNewEngagement = engagementId === 'create';
 
     const { name, start_date, end_date } = engagementFormData;
+
+    useEffect(() => {
+        setInitialRichDescription(richDescription || savedEngagement.rich_description);
+        setInitialRichContent(richContent || savedEngagement.rich_content);
+    }, []);
 
     const getErrorMessage = () => {
         if (name.length > 50) {
@@ -254,7 +262,7 @@ const EngagementForm = () => {
                     <RichTextEditor
                         setRawText={handleDescriptionChange}
                         handleEditorStateChange={handleRichDescriptionChange}
-                        initialRawEditorState={richDescription || savedEngagement.rich_description || ''}
+                        initialRawEditorState={initialRichDescription || ''}
                     />
                 </Grid>
 
@@ -276,7 +284,7 @@ const EngagementForm = () => {
                                 <RichTextEditor
                                     setRawText={handleContentChange}
                                     handleEditorStateChange={handleRichContentChange}
-                                    initialRawEditorState={richContent || savedEngagement.rich_content || ''}
+                                    initialRawEditorState={initialRichContent || ''}
                                 />
                             </Grid>
                         </Grid>

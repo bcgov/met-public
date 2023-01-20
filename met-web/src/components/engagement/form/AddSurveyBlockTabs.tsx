@@ -1,10 +1,10 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import TabContext from '@mui/lab/TabContext';
 import RichTextEditor from './RichTextEditor';
 import { MetTab, MetTabList, MetTabPanel } from './StyledTabComponents';
-import { initialUpcomingText, initialOpenText, initialClosedText } from 'constants/submissionStatusText';
-import { SubmissionStatus } from 'constants/engagementStatus';
+import { defaultUpcomingText, defaultOpenText, defaultClosedText } from 'constants/submissionStatusText';
+import { SubmissionStatusTypes, SUBMISSION_STATUS } from 'constants/engagementStatus';
 import { EngagementStatusBlock } from '../../../models/engagementStatusBlock';
 import { ActionContext } from './ActionContext';
 import { EngagementTabsContext } from './EngagementFormTabs/EngagementTabsContext';
@@ -15,7 +15,7 @@ const AddSurveyBlockTabs = ({
     },
 }) => {
     // set initial value to upcoming
-    const [value, setValue] = React.useState(SubmissionStatus[SubmissionStatus.Upcoming]);
+    const [value, setValue] = useState<SubmissionStatusTypes>(SUBMISSION_STATUS.UPCOMING);
 
     // get saved engagement details
     const { savedEngagement } = useContext(ActionContext);
@@ -23,20 +23,37 @@ const AddSurveyBlockTabs = ({
         useContext(EngagementTabsContext);
     const { status_block } = savedEngagement;
 
+    const blocks = status_block.map((block) => {
+        return {
+            [block.survey_status]: block.block_text,
+        };
+    });
+
+    const [initialUpcomingText, setInitialUpcomingText] = useState('');
+    const [initialOpenText, setInitialOpenText] = useState('');
+    const [initialClosedText, setInitialClosedText] = useState('');
+
+    useEffect(() => {
+        console.log('use Effect called');
+        console.log('upcomingText', upcomingText);
+        setInitialUpcomingText(upcomingText);
+        setInitialOpenText(openText);
+        setInitialClosedText(closedText);
+    }, []);
+
     const getsavedRichText = () => {
+        console.log('getsavedRichText called');
         status_block.forEach((item) => {
-            if (item.survey_status === SubmissionStatus[SubmissionStatus.Upcoming]) {
+            if (item.survey_status === SUBMISSION_STATUS.UPCOMING) {
                 setUpcomingText(item.block_text);
             }
-            if (item.survey_status === SubmissionStatus[SubmissionStatus.Open]) {
+            if (item.survey_status === SUBMISSION_STATUS.OPEN) {
                 setOpenText(item.block_text);
             }
-            if (item.survey_status === SubmissionStatus[SubmissionStatus.Closed]) {
+            if (item.survey_status === SUBMISSION_STATUS.CLOSED) {
                 setClosedText(item.block_text);
             }
         });
-
-        return;
     };
     useEffect(() => {
         getsavedRichText();
@@ -45,34 +62,35 @@ const AddSurveyBlockTabs = ({
     // array to pass updated content to engagement context
     const surveyBlockContent = [
         {
-            survey_status: SubmissionStatus[SubmissionStatus.Upcoming],
+            survey_status: SUBMISSION_STATUS.UPCOMING,
             block_text: upcomingText || '',
         },
         {
-            survey_status: SubmissionStatus[SubmissionStatus.Open],
+            survey_status: SUBMISSION_STATUS.OPEN,
             block_text: openText || '',
         },
         {
-            survey_status: SubmissionStatus[SubmissionStatus.Closed],
+            survey_status: SUBMISSION_STATUS.CLOSED,
             block_text: closedText || '',
         },
     ];
 
     // capture changes in richdescription
     const handleStatusBlockContentChange = (newState: string) => {
+        console.log('handleStatusBlockContentChange');
         surveyBlockContent.forEach((item) => {
             if (item.survey_status === value && newState) {
                 item.block_text = newState;
             }
             return item;
         });
-        if (value === SubmissionStatus[SubmissionStatus.Upcoming]) {
+        if (value === SUBMISSION_STATUS.UPCOMING) {
             setUpcomingText(newState);
         }
-        if (value === SubmissionStatus[SubmissionStatus.Open]) {
+        if (value === SUBMISSION_STATUS.OPEN) {
             setOpenText(newState);
         }
-        if (value === SubmissionStatus[SubmissionStatus.Closed]) {
+        if (value === SUBMISSION_STATUS.CLOSED) {
             setClosedText(newState);
         }
         handleChange(surveyBlockContent);
@@ -83,38 +101,37 @@ const AddSurveyBlockTabs = ({
             <TabContext value={value}>
                 <Box sx={{ marginBottom: '0.25em' }}>
                     <MetTabList
-                        onChange={(_event: React.SyntheticEvent, newValue: string) => {
+                        onChange={(_event: React.SyntheticEvent, newValue: SubmissionStatusTypes) => {
                             setValue(newValue);
-                            // handleKeepStateOnTabChanges();
                         }}
                         TabIndicatorProps={{
                             style: { transition: 'none', display: 'none' },
                         }}
                     >
-                        <MetTab label="Upcoming" value={SubmissionStatus[SubmissionStatus.Upcoming]} />
-                        <MetTab label="Open" value={SubmissionStatus[SubmissionStatus.Open]} />
-                        <MetTab label="Closed" value={SubmissionStatus[SubmissionStatus.Closed]} />
+                        <MetTab label="Upcoming" value={SUBMISSION_STATUS.UPCOMING} />
+                        <MetTab label="Open" value={SUBMISSION_STATUS.OPEN} />
+                        <MetTab label="Closed" value={SUBMISSION_STATUS.CLOSED} />
                     </MetTabList>
                 </Box>
-                <MetTabPanel value={SubmissionStatus[SubmissionStatus.Upcoming]}>
+                <MetTabPanel value={SUBMISSION_STATUS.UPCOMING}>
                     <RichTextEditor
                         handleEditorStateChange={handleStatusBlockContentChange}
-                        initialHTMLText={initialUpcomingText}
-                        initialRawEditorState={upcomingText}
+                        initialHTMLText={defaultUpcomingText}
+                        initialRawEditorState={initialUpcomingText}
                     />
                 </MetTabPanel>
-                <MetTabPanel value={SubmissionStatus[SubmissionStatus.Open]}>
+                <MetTabPanel value={SUBMISSION_STATUS.OPEN}>
                     <RichTextEditor
                         handleEditorStateChange={handleStatusBlockContentChange}
-                        initialHTMLText={initialOpenText}
-                        initialRawEditorState={openText}
+                        initialHTMLText={defaultOpenText}
+                        initialRawEditorState={initialOpenText}
                     />
                 </MetTabPanel>
-                <MetTabPanel value={SubmissionStatus[SubmissionStatus.Closed]}>
+                <MetTabPanel value={SUBMISSION_STATUS.CLOSED}>
                     <RichTextEditor
                         handleEditorStateChange={handleStatusBlockContentChange}
-                        initialHTMLText={initialClosedText}
-                        initialRawEditorState={closedText}
+                        initialHTMLText={defaultClosedText}
+                        initialRawEditorState={initialClosedText}
                     />
                 </MetTabPanel>
             </TabContext>

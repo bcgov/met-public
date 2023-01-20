@@ -156,6 +156,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 return el.block_text !== '';
             });
             setstatusBlockContent(filterContentList);
+            console.log('handleStatusBlockChange is called');
         },
         [statusBlockContent],
     );
