@@ -1,14 +1,14 @@
 import React, { useContext, useState } from 'react';
 import { Typography, Grid, TextField, Stack } from '@mui/material';
-import { MetPaper, MetLabel, PrimaryButton, SecondaryButton, MetHeader4 } from '../../common';
-import RichTextEditor from './RichTextEditor';
-import { ActionContext } from './ActionContext';
+import { MetPaper, MetLabel, PrimaryButton, SecondaryButton, MetHeader4 } from '../../../common';
+import RichTextEditor from '../RichTextEditor';
+import { ActionContext } from '../ActionContext';
 import ImageUpload from 'components/imageUpload';
 import { useNavigate } from 'react-router-dom';
-import { AddSurveyBlock } from './AddSurveyBlock';
+import { AddSurveyBlock } from '../AddSurveyBlock';
 import { If, Then, Else } from 'react-if';
 import DayCalculatorModal from 'components/common/Modals/DayCalculator';
-import { EngagementTabsContext } from './EngagementFormTabs/EngagementTabsContext';
+import { EngagementTabsContext } from './EngagementTabsContext';
 
 const EngagementForm = () => {
     const {

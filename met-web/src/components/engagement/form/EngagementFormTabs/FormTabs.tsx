@@ -1,31 +1,39 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import TabContext from '@mui/lab/TabContext';
-import EngagementForm from '../EngagementForm';
-import EngagementSettings from '../EngagementSettings';
+import EngagementForm from './EngagementForm';
+import EngagementSettings from './EngagementSettings';
 import { MetTab, MetTabList, MetTabPanel } from '../StyledTabComponents';
+import { EngagementFormTabValues, ENGAGEMENT_FORM_TABS } from './constants';
+import EngagementUserManagement from './EngagementUserManagement';
 
-const EngagementFormTabs = () => {
-    const [value, setValue] = React.useState('details');
+const FormTabs = () => {
+    const [value, setValue] = React.useState<EngagementFormTabValues>(ENGAGEMENT_FORM_TABS.DETAILS);
 
     return (
         <Box sx={{ width: '100%', typography: 'body1' }}>
             <TabContext value={value}>
                 <Box sx={{ marginBottom: '0.25em' }}>
                     <MetTabList
-                        onChange={(_event: React.SyntheticEvent, newValue: string) => setValue(newValue)}
+                        onChange={(_event: React.SyntheticEvent, newValue: EngagementFormTabValues) =>
+                            setValue(newValue)
+                        }
                         TabIndicatorProps={{
                             style: { transition: 'none', display: 'none' },
                         }}
                     >
-                        <MetTab label="Engagement Details" value="details" />
-                        <MetTab label="Settings" value="settings" />
+                        <MetTab label="Engagement Details" value={ENGAGEMENT_FORM_TABS.DETAILS} />
+                        <MetTab label="User Management" value={ENGAGEMENT_FORM_TABS.USER_MANAGEMENT} />
+                        <MetTab label="Settings" value={ENGAGEMENT_FORM_TABS.SETTINGS} />
                     </MetTabList>
                 </Box>
-                <MetTabPanel value="details">
+                <MetTabPanel value={ENGAGEMENT_FORM_TABS.DETAILS}>
                     <EngagementForm />
                 </MetTabPanel>
-                <MetTabPanel value="settings">
+                <MetTabPanel value={ENGAGEMENT_FORM_TABS.USER_MANAGEMENT}>
+                    <EngagementUserManagement />
+                </MetTabPanel>
+                <MetTabPanel value={ENGAGEMENT_FORM_TABS.SETTINGS}>
                     <EngagementSettings />
                 </MetTabPanel>
             </TabContext>
@@ -33,4 +41,4 @@ const EngagementFormTabs = () => {
     );
 };
 
-export default EngagementFormTabs;
+export default FormTabs;

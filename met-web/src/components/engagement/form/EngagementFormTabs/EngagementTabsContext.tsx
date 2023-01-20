@@ -1,3 +1,5 @@
+import { createDefaultPageInfo, PageInfo, PaginationOptions } from 'components/common/Table/types';
+import { User } from 'models/user';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { ActionContext } from '../ActionContext';
 
@@ -43,6 +45,13 @@ export interface EngagementTabsContextState {
     setOpenText: React.Dispatch<React.SetStateAction<string>>;
     closedText: string;
     setClosedText: React.Dispatch<React.SetStateAction<string>>;
+
+    pageInfo: PageInfo;
+    setPageInfo: React.Dispatch<React.SetStateAction<PageInfo>>;
+    users: User[];
+    setUsers: React.Dispatch<React.SetStateAction<User[]>>;
+    paginationOptions: PaginationOptions<User>;
+    setPaginationOptions: React.Dispatch<React.SetStateAction<PaginationOptions<User>>>;
 }
 
 export const EngagementTabsContext = createContext<EngagementTabsContextState>({
@@ -74,6 +83,22 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
     setClosedText: () => {
         throw new Error('setClosedText is unimplemented');
     },
+
+    pageInfo: createDefaultPageInfo(),
+    setPageInfo: () => {
+        throw new Error('setPageInfo is unimplemented');
+    },
+    users: [],
+    setUsers: () => {
+        throw new Error('setUsers is unimplemented');
+    },
+    paginationOptions: {
+        page: 0,
+        size: 0,
+    },
+    setPaginationOptions: () => {
+        throw new Error('Not implemented');
+    },
 });
 
 export const EngagementTabsContextProvider = ({ children }: { children: JSX.Element }) => {
@@ -88,6 +113,17 @@ export const EngagementTabsContextProvider = ({ children }: { children: JSX.Elem
     const [openText, setOpenText] = useState('');
     const [closedText, setClosedText] = useState('');
 
+    // User listing
+    const [users, setUsers] = useState<User[]>([]);
+    const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
+    const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<User>>({
+        page: 1,
+        size: 10,
+        sort_key: 'first_name',
+        nested_sort_key: 'first_name',
+        sort_order: 'asc',
+    });
+
     useEffect(() => {
         setEngagementFormData({
             name: savedEngagement?.name || '',
@@ -99,6 +135,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: JSX.Elem
         setRichDescription(savedEngagement?.rich_description || '');
         setRichContent(savedEngagement?.rich_content || '');
     }, [savedEngagement]);
+
     return (
         <EngagementTabsContext.Provider
             value={{
@@ -116,6 +153,12 @@ export const EngagementTabsContextProvider = ({ children }: { children: JSX.Elem
                 setOpenText,
                 closedText,
                 setClosedText,
+                users,
+                setUsers,
+                pageInfo,
+                setPageInfo,
+                paginationOptions,
+                setPaginationOptions,
             }}
         >
             {children}
