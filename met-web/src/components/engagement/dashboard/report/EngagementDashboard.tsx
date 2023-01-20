@@ -9,8 +9,7 @@ import { SubmissionStatus } from 'constants/engagementStatus';
 import { getEngagement } from 'services/engagementService';
 import { getErrorMessage } from 'utils';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { useAppDispatch } from 'hooks';
-import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+import { useAppSelector, useAppDispatch } from 'hooks';
 
 export type EngagementParams = {
     engagementId: string;
@@ -21,6 +20,7 @@ export const EngagementDashboard = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const urlpath = AppConfig.redashDashboardUrl;
+    const roles = useAppSelector((state) => state.user.roles);
 
     const [engagement, setEngagement] = useState<Engagement>(createDefaultEngagement());
     const [isEngagementLoading, setEngagementLoading] = useState(true);
@@ -33,6 +33,18 @@ export const EngagementDashboard = () => {
             throw new Error('Engagement has not yet been opened');
         }
     };
+
+    const validateEngagement = (engagementToValidate: Engagement) => {
+        const isClosed = engagementToValidate?.submission_status === SubmissionStatus.Closed;
+        const canAccessDashboard = !roles.includes('access_dashboard');
+
+        /* check to ensure that users without the role access_dashboard can access the dashboard only after 
+        the engagement is closed*/
+        if (!isClosed && canAccessDashboard) {
+            throw new Error('Engagement is not yet closed');
+        }
+    };
+
     useEffect(() => {
         const fetchEngagement = async () => {
             if (isNaN(Number(engagementId))) {
@@ -42,6 +54,7 @@ export const EngagementDashboard = () => {
             try {
                 const result = await getEngagement(Number(engagementId));
                 failIfInvalidEngagement(result);
+                validateEngagement(result);
                 setEngagement({ ...result });
                 setEngagementLoading(false);
             } catch (error) {
@@ -58,25 +71,8 @@ export const EngagementDashboard = () => {
     }, [engagementId]);
 
     const handleReadComments = () => {
-        if (engagement.submission_status === SubmissionStatus.Closed) {
-            navigate(`/engagements/${engagement.id}/comments`);
-            return;
-        }
-
-        dispatch(
-            openNotificationModal({
-                open: true,
-                data: {
-                    header: 'View Comments',
-                    subText: [
-                        {
-                            text: 'The comments will only be available to view after the engagement period is over and the engagement is closed.',
-                        },
-                    ],
-                },
-                type: 'update',
-            }),
-        );
+        navigate(`/engagements/${engagement.id}/comments`);
+        return;
     };
 
     if (isEngagementLoading) {
