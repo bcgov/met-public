@@ -13,15 +13,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Palette } from 'styles/Theme';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { MET_Header_Font_Family, MET_Header_Font_Weight } from './constants';
-import { DocumentItem } from 'models/document';
+import { MET_Header_Font_Family, MET_Header_Font_Weight } from '../../styles/constants';
 import { When } from 'react-if';
 
-export const RoundedButton = styled(MuiButton)(() => ({
-    borderRadius: '23px',
-}));
-
-export const StyledPrimaryButton = styled(LoadingButton)(() => ({
+const StyledPrimaryButton = styled(LoadingButton)(() => ({
     backgroundColor: Palette.primary.main,
     color: '#fff',
     '&:hover': {
@@ -32,7 +27,7 @@ export const StyledPrimaryButton = styled(LoadingButton)(() => ({
     },
 }));
 
-export const StyledSecondaryButton = styled(MuiButton)(() => ({
+const StyledSecondaryButton = styled(MuiButton)(() => ({
     backgroundColor: 'transparent',
     color: Palette.primary.main,
     border: `2px solid ${Palette.primary.main}`,
@@ -45,7 +40,7 @@ export const StyledSecondaryButton = styled(MuiButton)(() => ({
     },
 }));
 
-export const StyledWidgetButton = styled(MuiButton)(() => ({
+const StyledWidgetButton = styled(MuiButton)(() => ({
     backgroundColor: 'transparent',
     color: '#494949',
     border: `2px solid ${'#707070'}`,
@@ -58,19 +53,19 @@ export const StyledWidgetButton = styled(MuiButton)(() => ({
     },
 }));
 
-export const WidgetButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
+export const WidgetButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
     <StyledWidgetButton {...rest} variant="outlined">
         {children}
     </StyledWidgetButton>
 );
 
-export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
+export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
     <StyledSecondaryButton {...rest} variant="outlined">
         {children}
     </StyledSecondaryButton>
 );
 
-export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
+export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
     <StyledPrimaryButton
         {...rest}
         variant="contained"
@@ -85,7 +80,7 @@ const StyledPaper = styled(MuiPaper)(() => ({
     borderRadius: '4px',
 }));
 
-export const MetPaper = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => {
+export const MetPaper = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => {
     return (
         <StyledPaper elevation={0} {...rest}>
             {children}
@@ -169,11 +164,6 @@ export const MetLabel = styled(Typography)(() => ({
 
 export const MetParagraph = styled(Typography)(() => ({
     fontSize: '16px',
-    fontFamily: MET_Header_Font_Family,
-}));
-
-export const StyledSmallText = styled(Typography)(() => ({
-    fontSize: '13px',
     fontFamily: MET_Header_Font_Family,
 }));
 
