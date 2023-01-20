@@ -15,7 +15,7 @@ export const CommentsBlock = () => {
     const roles = useAppSelector((state) => state.user.roles);
 
     const handleViewDashboard = () => {
-        if (roles.length !== 0) {
+        if (roles.includes('access_dashboard')) {
             navigate(`/engagements/${engagement?.id}/dashboard`);
             return;
         }
