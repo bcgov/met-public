@@ -12,14 +12,16 @@ export const CommentsBlock = () => {
     const { engagement, isEngagementLoading } = useContext(CommentViewContext);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const roles = useAppSelector((state) => state.user.roles);
+    const canAccessDashboard = useAppSelector((state) => state.user.roles.includes('access_dashboard'));
 
     const handleViewDashboard = () => {
-        if (roles.includes('access_dashboard')) {
+        /* check to ensure that users with role access_dashboard can access the dashboard while engagement not closed*/
+        if (canAccessDashboard) {
             navigate(`/engagements/${engagement?.id}/dashboard`);
             return;
         }
 
+        /* check to ensure that all other users can access the dashboard only after the engagement is closed*/
         if (engagement?.submission_status === SubmissionStatus.Closed) {
             navigate(`/engagements/${engagement.id}/dashboard`);
             return;

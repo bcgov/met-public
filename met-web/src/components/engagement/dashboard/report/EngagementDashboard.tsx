@@ -36,9 +36,11 @@ export const EngagementDashboard = () => {
 
     const validateEngagement = (engagementToValidate: Engagement) => {
         const isClosed = engagementToValidate?.submission_status === SubmissionStatus.Closed;
-        const isPublicUser = !roles.includes('access_dashboard');
+        const canAccessDashboard = !roles.includes('access_dashboard');
 
-        if (!isClosed && isPublicUser) {
+        /* check to ensure that users without the role access_dashboard can access the dashboard only after 
+        the engagement is closed*/
+        if (!isClosed && canAccessDashboard) {
             throw new Error('Engagement is not yet closed');
         }
     };
