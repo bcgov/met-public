@@ -10,7 +10,6 @@ from sqlalchemy.sql import text
 from sqlalchemy.sql.schema import ForeignKey
 
 from met_api.constants.comment_status import Status
-from met_api.constants.engagement_status import Status as EngStatus
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement import Engagement
 from met_api.models.submission import Submission
@@ -91,7 +90,6 @@ class Comment(db.Model):
             .filter(
                 and_(
                     Comment.survey_id == survey_id,
-                    Engagement.status_id == EngStatus.Closed.value,
                     CommentStatus.id == Status.Approved.value
                 ))\
 

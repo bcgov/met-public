@@ -4,7 +4,6 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getEngagement } from 'services/engagementService';
 import { Engagement } from 'models/engagement';
-import { SubmissionStatus } from 'constants/engagementStatus';
 import { getErrorMessage } from 'utils';
 import { getCommentsPage } from 'services/commentService';
 import { Comment } from 'models/comment';
@@ -56,13 +55,6 @@ export const CommentViewProvider = ({ children }: { children: JSX.Element | JSX.
 
     const { page, size } = paginationOptions;
 
-    const validateEngagement = (engagementToValidate: Engagement) => {
-        const isClosed = engagementToValidate?.submission_status === SubmissionStatus.Closed;
-
-        if (!isClosed) {
-            throw new Error('Engagement is not yet closed');
-        }
-    };
     useEffect(() => {
         const fetchEngagement = async () => {
             if (isNaN(Number(engagementId))) {
@@ -71,7 +63,6 @@ export const CommentViewProvider = ({ children }: { children: JSX.Element | JSX.
             }
             try {
                 const result = await getEngagement(Number(engagementId));
-                validateEngagement(result);
                 setEngagement({ ...result });
                 setEngagementLoading(false);
             } catch (error) {

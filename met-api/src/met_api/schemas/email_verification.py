@@ -4,6 +4,8 @@ Manages the Email verification
 """
 
 from marshmallow import EXCLUDE, Schema, fields
+from marshmallow_enum import EnumField
+from met_api.constants.email_verification import EmailVerificationType
 
 
 class EmailVerificationSchema(Schema):
@@ -20,6 +22,7 @@ class EmailVerificationSchema(Schema):
     user_id = fields.Int(data_key='user_id')
     is_active = fields.Bool(data_key='is_active')
     survey_id = fields.Int(data_key='survey_id')
+    type = EnumField(EmailVerificationType, by_value=True)
     submission_id = fields.Int(data_key='submission_id')
     created_by = fields.Str(data_key='created_by')
     created_date = fields.Str(data_key='created_date')

@@ -11,7 +11,7 @@ import { postWidget } from 'services/widgetService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
 const SubscribeOptionCard = () => {
-    const { widgets, loadWidgets } = useContext(WidgetDrawerContext);
+    const { widgets, loadWidgets, handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
     const [creatingWidget, setCreatingWidget] = useState(false);
@@ -35,11 +35,13 @@ const SubscribeOptionCard = () => {
                     text: 'Widget successfully created.',
                 }),
             );
+            handleWidgetDrawerOpen(false);
         } catch (error) {
             setCreatingWidget(false);
             dispatch(
                 openNotification({ severity: 'error', text: 'Error occurred while creating subscription widget' }),
             );
+            handleWidgetDrawerOpen(false);
         }
     };
 
@@ -82,7 +84,7 @@ const SubscribeOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetHeader4 sx={{ pl: '10px' }}>Sign up for Updates</MetHeader4>
+                                <MetHeader4 sx={{ pl: '10px' }}>Sign Up for Updates</MetHeader4>
                             </Grid>
                             <Grid item xs={12}>
                                 <MetBody sx={{ pl: '10px' }}>

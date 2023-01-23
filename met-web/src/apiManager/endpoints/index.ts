@@ -43,6 +43,7 @@ const Endpoints = {
     },
     EmailVerification: {
         GET: `${AppConfig.apiUrl}/email_verification/verification_token`,
+        UPDATE: `${AppConfig.apiUrl}/email_verification/verification_token`,
         CREATE: `${AppConfig.apiUrl}/email_verification/`,
     },
     Widgets: {

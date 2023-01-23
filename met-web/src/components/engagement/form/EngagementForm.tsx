@@ -173,6 +173,7 @@ const EngagementForm = () => {
                 <DayCalculatorModal open={isOpen} updateModal={setIsOpen} />
                 <Grid item xs={12}>
                     <ImageUpload
+                        margin={4}
                         data-testid="engagement-form/image-upload"
                         handleAddFile={handleAddBannerImage}
                         savedImageUrl={savedEngagement.banner_url}

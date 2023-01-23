@@ -29,7 +29,7 @@ API = Namespace('email_verification', description='Endpoints for Email Verificat
 """
 
 
-@cors_preflight('GET, OPTIONS')
+@cors_preflight('GET, PUT, OPTIONS')
 @API.route('/<token>')
 class EmailVerification(Resource):
     """Resource for managing a single email verification."""
@@ -47,6 +47,21 @@ class EmailVerification(Resource):
             return 'Email verification not found', HTTPStatus.INTERNAL_SERVER_ERROR
         except KeyError:
             return 'Email verification not found', HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    def put(token):
+        """Fetch a email verification matching the provided token."""
+        try:
+            email_verification = EmailVerificationService().verify(token, None, None, None)
+            if email_verification:
+                return email_verification, HTTPStatus.OK
+            return 'Email verification not found', HTTPStatus.NOT_FOUND
+        except KeyError:
+            return 'Email verification not found', HTTPStatus.NOT_FOUND
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 

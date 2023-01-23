@@ -310,11 +310,21 @@ export const MetHeader4 = ({ bold, color, children, sx, ...rest }: HeaderProps) 
     );
 };
 
-export const MetBody = styled(Typography)(() => ({
-    fontSize: '16px',
-    fontWeight: MET_Header_Font_Weight,
-    fontFamily: MET_Header_Font_Family,
-}));
+export const MetBody = ({ bold, children, sx, ...rest }: HeaderProps) => {
+    return (
+        <Typography
+            sx={{
+                ...sx,
+                fontSize: '16px',
+                fontFamily: MET_Header_Font_Family,
+                fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
+            }}
+            {...rest}
+        >
+            {children}
+        </Typography>
+    );
+};
 
 export const ModalSubtitle = ({
     children,

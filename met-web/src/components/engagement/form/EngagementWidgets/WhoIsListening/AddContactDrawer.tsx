@@ -56,6 +56,7 @@ const AddContactDrawer = () => {
         methods.setValue('email', contactToEdit?.email || '');
         methods.setValue('address', contactToEdit?.address || '');
         methods.setValue('bio', contactToEdit?.bio || '');
+        setAvatarFileName(contactToEdit?.avatar_filename || '');
     }, [contactToEdit]);
 
     const { handleSubmit } = methods;

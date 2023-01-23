@@ -12,7 +12,6 @@ import * as notificationSlice from 'services/notificationService/notificationSli
 import { createDefaultEngagement, Engagement } from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { Widget, WidgetType } from 'models/widget';
-import { Box } from '@mui/material';
 import { DocumentItem } from 'models/document';
 
 const engagement: Engagement = {
@@ -54,17 +53,6 @@ const documentWidget: Widget = {
     engagement_id: 1,
     items: [],
 };
-
-jest.mock('react-dnd', () => ({
-    ...jest.requireActual('react-dnd'),
-    useDrag: jest.fn(),
-    useDrop: jest.fn(),
-}));
-
-jest.mock('components/common/Dragndrop', () => ({
-    ...jest.requireActual('components/common/Dragndrop'),
-    DragItem: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
-}));
 
 jest.mock('@reduxjs/toolkit/query/react', () => ({
     ...jest.requireActual('@reduxjs/toolkit/query/react'),
