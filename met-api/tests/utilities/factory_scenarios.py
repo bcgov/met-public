@@ -197,8 +197,8 @@ class TestJwtClaims(dict, Enum):
                 'create_engagement',
                 'edit_engagement',
                 'create_survey',
-                'view_users'
-                ''
+                'view_users',
+                'create_admin_user'
             ]
         }
     }
