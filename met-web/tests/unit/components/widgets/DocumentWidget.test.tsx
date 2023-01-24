@@ -133,7 +133,7 @@ describe('Document widget in engagement page tests', () => {
         expect(screen.getByText('Add Document')).toBeVisible();
     });
 
-    test('Creat folder appears', async () => {
+    test('Create folder appears', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
         postWidgetMock.mockReturnValue(Promise.resolve(documentWidget));
@@ -152,7 +152,7 @@ describe('Document widget in engagement page tests', () => {
         });
     });
 
-    test('Creat file appears', async () => {
+    test('Create file appears', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
         postWidgetMock.mockReturnValue(Promise.resolve(documentWidget));
