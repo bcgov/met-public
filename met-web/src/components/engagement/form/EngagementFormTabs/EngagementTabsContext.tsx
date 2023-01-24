@@ -1,6 +1,7 @@
+import React, { createContext, useContext, useState } from 'react';
 import { createDefaultPageInfo, PageInfo, PaginationOptions } from 'components/common/Table/types';
+import { SubmissionStatusTypes, SUBMISSION_STATUS } from 'constants/engagementStatus';
 import { User } from 'models/user';
-import React, { createContext, useContext, useEffect, useState } from 'react';
 import { ActionContext } from '../ActionContext';
 
 interface EngagementFormData {
@@ -30,6 +31,7 @@ const initialFormError = {
     start_date: false,
     end_date: false,
 };
+
 export interface EngagementTabsContextState {
     engagementFormData: EngagementFormData;
     setEngagementFormData: React.Dispatch<React.SetStateAction<EngagementFormData>>;
@@ -39,19 +41,14 @@ export interface EngagementTabsContextState {
     setRichContent: React.Dispatch<React.SetStateAction<string>>;
     engagementFormError: EngagementFormError;
     setEngagementFormError: React.Dispatch<React.SetStateAction<EngagementFormError>>;
-    upcomingText: string;
-    setUpcomingText: React.Dispatch<React.SetStateAction<string>>;
-    openText: string;
-    setOpenText: React.Dispatch<React.SetStateAction<string>>;
-    closedText: string;
-    setClosedText: React.Dispatch<React.SetStateAction<string>>;
-
     pageInfo: PageInfo;
     setPageInfo: React.Dispatch<React.SetStateAction<PageInfo>>;
     users: User[];
     setUsers: React.Dispatch<React.SetStateAction<User[]>>;
     paginationOptions: PaginationOptions<User>;
     setPaginationOptions: React.Dispatch<React.SetStateAction<PaginationOptions<User>>>;
+    surveyBlockText: { [key in SubmissionStatusTypes]: string };
+    setSurveyBlockText: React.Dispatch<React.SetStateAction<{ [key in SubmissionStatusTypes]: string }>>;
 }
 
 export const EngagementTabsContext = createContext<EngagementTabsContextState>({
@@ -71,17 +68,13 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
     setEngagementFormError: () => {
         throw new Error('setEngagementFormError is unimplemented');
     },
-    upcomingText: '',
-    setUpcomingText: () => {
-        throw new Error('setUpcomingText is unimplemented');
+    surveyBlockText: {
+        Upcoming: '',
+        Open: '',
+        Closed: '',
     },
-    openText: '',
-    setOpenText: () => {
-        throw new Error('setOpenText is unimplemented');
-    },
-    closedText: '',
-    setClosedText: () => {
-        throw new Error('setClosedText is unimplemented');
+    setSurveyBlockText: () => {
+        throw new Error('setSurveyBlockText not implemented');
     },
 
     pageInfo: createDefaultPageInfo(),
@@ -103,15 +96,29 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
 
 export const EngagementTabsContextProvider = ({ children }: { children: JSX.Element }) => {
     const { savedEngagement } = useContext(ActionContext);
-    const [engagementFormData, setEngagementFormData] = useState<EngagementFormData>(initialEngagementFormData);
-    const [richDescription, setRichDescription] = useState('');
-    const [richContent, setRichContent] = useState('');
+    const [engagementFormData, setEngagementFormData] = useState<EngagementFormData>({
+        name: savedEngagement?.name || '',
+        start_date: savedEngagement.start_date,
+        end_date: savedEngagement.end_date,
+        description: savedEngagement?.description || '',
+        content: savedEngagement?.content || '',
+    });
+    const [richDescription, setRichDescription] = useState(savedEngagement?.rich_description || '');
+    const [richContent, setRichContent] = useState(savedEngagement?.rich_content || '');
     const [engagementFormError, setEngagementFormError] = useState<EngagementFormError>(initialFormError);
 
     // Add survey block
-    const [upcomingText, setUpcomingText] = useState('');
-    const [openText, setOpenText] = useState('');
-    const [closedText, setClosedText] = useState('');
+    const [surveyBlockText, setSurveyBlockText] = useState<{ [key in SubmissionStatusTypes]: string }>({
+        Upcoming:
+            savedEngagement.status_block.find((block) => block.survey_status === SUBMISSION_STATUS.UPCOMING)
+                ?.block_text || '',
+        Open:
+            savedEngagement.status_block.find((block) => block.survey_status === SUBMISSION_STATUS.OPEN)?.block_text ||
+            '',
+        Closed:
+            savedEngagement.status_block.find((block) => block.survey_status === SUBMISSION_STATUS.CLOSED)
+                ?.block_text || '',
+    });
 
     // User listing
     const [users, setUsers] = useState<User[]>([]);
@@ -124,18 +131,6 @@ export const EngagementTabsContextProvider = ({ children }: { children: JSX.Elem
         sort_order: 'asc',
     });
 
-    useEffect(() => {
-        setEngagementFormData({
-            name: savedEngagement?.name || '',
-            start_date: savedEngagement.start_date,
-            end_date: savedEngagement.end_date,
-            description: savedEngagement?.description || '',
-            content: savedEngagement?.content || '',
-        });
-        setRichDescription(savedEngagement?.rich_description || '');
-        setRichContent(savedEngagement?.rich_content || '');
-    }, [savedEngagement]);
-
     return (
         <EngagementTabsContext.Provider
             value={{
@@ -147,12 +142,8 @@ export const EngagementTabsContextProvider = ({ children }: { children: JSX.Elem
                 setRichContent,
                 engagementFormError,
                 setEngagementFormError,
-                upcomingText,
-                setUpcomingText,
-                openText,
-                setOpenText,
-                closedText,
-                setClosedText,
+                setSurveyBlockText,
+                surveyBlockText,
                 users,
                 setUsers,
                 pageInfo,

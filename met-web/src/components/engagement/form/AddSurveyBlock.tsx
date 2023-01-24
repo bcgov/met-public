@@ -11,11 +11,7 @@ import { openNotificationModal } from 'services/notificationModalService/notific
 import AddSurveyBlockTabs from './AddSurveyBlockTabs';
 import { EngagementStatusBlock } from '../../../models/engagementStatusBlock';
 
-export const AddSurveyBlock = ({
-    handleStatusBlockChange = (statusBlock: EngagementStatusBlock[]) => {
-        /* empty default method  */
-    },
-}) => {
+export const AddSurveyBlock = () => {
     const { savedEngagement, fetchEngagement } = useContext(ActionContext);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -106,7 +102,7 @@ export const AddSurveyBlock = ({
                     sx={{ padding: '1em' }}
                 >
                     <Grid item xs={12}>
-                        <AddSurveyBlockTabs handleChange={handleStatusBlockChange} />
+                        <AddSurveyBlockTabs />
                     </Grid>
                     <Grid item xs={12} container direction="row" justifyContent="flex-end">
                         <SecondaryButton onClick={handleAddSurvey} disabled={savedEngagement.surveys.length > 0}>

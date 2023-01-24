@@ -9,6 +9,7 @@ import { AddSurveyBlock } from '../AddSurveyBlock';
 import { If, Then, Else } from 'react-if';
 import DayCalculatorModal from 'components/common/Modals/DayCalculator';
 import { EngagementTabsContext } from './EngagementTabsContext';
+import { SUBMISSION_STATUS } from 'constants/engagementStatus';
 
 const EngagementForm = () => {
     const {
@@ -18,7 +19,6 @@ const EngagementForm = () => {
         savedEngagement,
         engagementId,
         handleAddBannerImage,
-        handleStatusBlockChange,
     } = useContext(ActionContext);
 
     const {
@@ -30,6 +30,7 @@ const EngagementForm = () => {
         setRichContent,
         engagementFormError,
         setEngagementFormError,
+        surveyBlockText,
     } = useContext(EngagementTabsContext);
 
     const [initialRichDescription, setInitialRichDescription] = useState('');
@@ -40,6 +41,21 @@ const EngagementForm = () => {
     const isNewEngagement = engagementId === 'create';
 
     const { name, start_date, end_date } = engagementFormData;
+
+    const surveyBlockList = [
+        {
+            survey_status: SUBMISSION_STATUS.UPCOMING,
+            block_text: surveyBlockText.Upcoming,
+        },
+        {
+            survey_status: SUBMISSION_STATUS.OPEN,
+            block_text: surveyBlockText.Open,
+        },
+        {
+            survey_status: SUBMISSION_STATUS.CLOSED,
+            block_text: surveyBlockText.Closed,
+        },
+    ];
 
     useEffect(() => {
         setInitialRichDescription(richDescription || savedEngagement.rich_description);
@@ -110,6 +126,7 @@ const EngagementForm = () => {
             ...engagementFormData,
             rich_description: richDescription,
             rich_content: richContent,
+            status_block: surveyBlockList,
         });
 
         navigate(`/engagements/${engagement.id}/form`);
@@ -128,6 +145,7 @@ const EngagementForm = () => {
             ...engagementFormData,
             rich_description: richDescription,
             rich_content: richContent,
+            status_block: surveyBlockList,
         });
 
         navigate(`/engagements/${engagement.id}/form`);
@@ -292,7 +310,7 @@ const EngagementForm = () => {
                 </Grid>
 
                 <Grid item xs={12}>
-                    <AddSurveyBlock handleStatusBlockChange={handleStatusBlockChange} />
+                    <AddSurveyBlock />
                 </Grid>
 
                 <Grid item xs={12}>

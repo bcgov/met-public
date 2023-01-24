@@ -7,7 +7,7 @@ export interface EngagementStatusBlock {
 
 export const createDefaultStatusBlock = (): EngagementStatusBlock => {
     return {
-        survey_status: '',
+        survey_status: 'Upcoming',
         block_text: '',
     };
 };
