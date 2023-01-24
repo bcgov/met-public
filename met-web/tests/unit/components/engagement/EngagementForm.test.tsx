@@ -82,7 +82,7 @@ describe('Engagement form page tests', () => {
             expect(getByText('Engagement Name')).toBeInTheDocument();
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
-        expect(screen.getByTestId('engagement-form/create-engagement-button')).toBeInTheDocument();
+        expect(screen.getByTestId('create-engagement-button')).toBeInTheDocument();
         expect(getEngagementMock).not.toHaveBeenCalled();
 
         const nameInput = container.querySelector('input[name="name"]');
@@ -108,7 +108,7 @@ describe('Engagement form page tests', () => {
         useParamsMock.mockReturnValue({ engagementId: 'create' });
         const { container, getByTestId } = render(<EngagementForm />);
 
-        const createButton = getByTestId('engagement-form/create-engagement-button');
+        const createButton = getByTestId('create-engagement-button');
         fireEvent.click(createButton);
 
         expect(container.querySelectorAll('.Mui-error').length).toBeGreaterThan(0);
@@ -125,7 +125,7 @@ describe('Engagement form page tests', () => {
         });
 
         expect(getEngagementMock).toHaveBeenCalledOnce();
-        expect(screen.getByTestId('engagement-form/update-engagement-button')).toBeInTheDocument();
+        expect(screen.getByTestId('update-engagement-button')).toBeInTheDocument();
         expect(screen.getByDisplayValue('2022-09-01')).toBeInTheDocument();
         expect(screen.getByDisplayValue('2022-09-30')).toBeInTheDocument();
         expect(screen.getByText('Survey 1')).toBeInTheDocument();
@@ -139,7 +139,7 @@ describe('Engagement form page tests', () => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
-        const updateButton = screen.getByTestId('engagement-form/update-engagement-button');
+        const updateButton = screen.getByTestId('update-engagement-button');
 
         fireEvent.click(updateButton);
 

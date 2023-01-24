@@ -306,16 +306,16 @@ const EngagementForm = () => {
                         <Then>
                             <PrimaryButton
                                 sx={{ marginRight: 1 }}
+                                data-testid="create-engagement-button"
                                 onClick={() => handleCreateEngagement()}
                                 loading={isSaving}
-                                data-testid="engagement-form/create-engagement-button"
                             >
                                 Save
                             </PrimaryButton>
                         </Then>
                         <Else>
                             <PrimaryButton
-                                data-testid="engagement-form/update-engagement-button"
+                                data-testid="update-engagement-button"
                                 sx={{ marginRight: 1 }}
                                 onClick={() => handleUpdateEngagement()}
                                 disabled={isSaving}
@@ -326,7 +326,7 @@ const EngagementForm = () => {
                         </Else>
                     </If>
                     <SecondaryButton
-                        data-testid="engagement-form/preview-engagement-button"
+                        data-testid="preview-engagement-button"
                         onClick={() => handlePreviewEngagement()}
                         disabled={isSaving}
                     >
