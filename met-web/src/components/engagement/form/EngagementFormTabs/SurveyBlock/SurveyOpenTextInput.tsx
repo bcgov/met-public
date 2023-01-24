@@ -7,7 +7,7 @@ export const SurveyOpenTextInput = () => {
     const { surveyBlockText, setSurveyBlockText } = useContext(EngagementTabsContext);
     const initialOpenTextState = useState(surveyBlockText.Open);
 
-    const handleStatusBlockContentChange = (newState: string) => {
+    const handleSurveyBlockTextChange = (newState: string) => {
         setSurveyBlockText((prevSurveyBlockText) => ({
             ...prevSurveyBlockText,
             Open: newState,
@@ -16,7 +16,7 @@ export const SurveyOpenTextInput = () => {
 
     return (
         <RichTextEditor
-            handleEditorStateChange={handleStatusBlockContentChange}
+            handleEditorStateChange={handleSurveyBlockTextChange}
             initialHTMLText={defaultOpenText}
             initialRawEditorState={initialOpenTextState[0]}
         />

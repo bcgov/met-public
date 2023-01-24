@@ -23,9 +23,10 @@ export const getUserList = async (params: GetUserParams = {}): Promise<Page<User
 interface AddUserToGroupProps {
     user_id?: string;
     group?: string;
+    engagement_id?: number;
 }
-export const addUserToGroup = async ({ user_id, group }: AddUserToGroupProps): Promise<User> => {
+export const addUserToGroup = async ({ user_id, group, engagement_id }: AddUserToGroupProps): Promise<User> => {
     const url = replaceUrl(Endpoints.User.ADD_TO_GROUP, 'user_id', String(user_id));
-    const responseData = await http.PostRequest<User>(url, {}, { group });
+    const responseData = await http.PostRequest<User>(url, {}, { group, engagement_id });
     return responseData.data;
 };

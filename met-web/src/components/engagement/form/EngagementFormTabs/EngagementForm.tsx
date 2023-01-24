@@ -5,7 +5,7 @@ import RichTextEditor from '../RichTextEditor';
 import { ActionContext } from '../ActionContext';
 import ImageUpload from 'components/imageUpload';
 import { useNavigate } from 'react-router-dom';
-import { AddSurveyBlock } from './AddSurveyBlock/AddSurveyBlock';
+import { AddSurveyBlock } from './SurveyBlock/SurveyBlock';
 import { If, Then, Else } from 'react-if';
 import DayCalculatorModal from 'components/common/Modals/DayCalculator';
 import { EngagementTabsContext } from './EngagementTabsContext';

@@ -3,9 +3,11 @@ import { Grid } from '@mui/material';
 import { MetLabel, MetPaper, PrimaryButton, MetParagraph } from 'components/common';
 import { ActionContext } from '../ActionContext';
 import TeamMemberListing from './TeamMemberListing';
+import { EngagementTabsContext } from './EngagementTabsContext';
 
 const EngagementUserManagement = () => {
     const { savedEngagement } = useContext(ActionContext);
+    const { setAddTeamMemberOpen } = useContext(EngagementTabsContext);
 
     return (
         <MetPaper elevation={1}>
@@ -37,7 +39,14 @@ const EngagementUserManagement = () => {
                     </Grid>
 
                     <Grid item container xs={12} direction="row" justifyContent="flex-end" spacing={1}>
-                        <PrimaryButton>+ Add Team Member</PrimaryButton>
+                        <PrimaryButton
+                            onClick={() => {
+                                setAddTeamMemberOpen(true);
+                                console.log('opened');
+                            }}
+                        >
+                            + Add Team Member
+                        </PrimaryButton>
                     </Grid>
 
                     <Grid item xs={12}>

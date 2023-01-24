@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { createDefaultPageInfo, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { SubmissionStatusTypes, SUBMISSION_STATUS } from 'constants/engagementStatus';
 import { User } from 'models/user';
@@ -49,6 +49,8 @@ export interface EngagementTabsContextState {
     setPaginationOptions: React.Dispatch<React.SetStateAction<PaginationOptions<User>>>;
     surveyBlockText: { [key in SubmissionStatusTypes]: string };
     setSurveyBlockText: React.Dispatch<React.SetStateAction<{ [key in SubmissionStatusTypes]: string }>>;
+    addTeamMemberOpen: boolean;
+    setAddTeamMemberOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const EngagementTabsContext = createContext<EngagementTabsContextState>({
@@ -92,9 +94,13 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
     setPaginationOptions: () => {
         throw new Error('Not implemented');
     },
+    addTeamMemberOpen: false,
+    setAddTeamMemberOpen: () => {
+        throw new Error('Set team member open not implemented');
+    },
 });
 
-export const EngagementTabsContextProvider = ({ children }: { children: JSX.Element }) => {
+export const EngagementTabsContextProvider = ({ children }: { children: React.ReactNode }) => {
     const { savedEngagement } = useContext(ActionContext);
     const [engagementFormData, setEngagementFormData] = useState<EngagementFormData>({
         name: savedEngagement?.name || '',
@@ -107,7 +113,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: JSX.Elem
     const [richContent, setRichContent] = useState(savedEngagement?.rich_content || '');
     const [engagementFormError, setEngagementFormError] = useState<EngagementFormError>(initialFormError);
 
-    // Add survey block
+    // Survey block
     const [surveyBlockText, setSurveyBlockText] = useState<{ [key in SubmissionStatusTypes]: string }>({
         Upcoming:
             savedEngagement.status_block.find((block) => block.survey_status === SUBMISSION_STATUS.UPCOMING)
@@ -130,6 +136,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: JSX.Elem
         nested_sort_key: 'first_name',
         sort_order: 'asc',
     });
+    const [addTeamMemberOpen, setAddTeamMemberOpen] = useState(false);
 
     return (
         <EngagementTabsContext.Provider
@@ -150,6 +157,8 @@ export const EngagementTabsContextProvider = ({ children }: { children: JSX.Elem
                 setPageInfo,
                 paginationOptions,
                 setPaginationOptions,
+                addTeamMemberOpen,
+                setAddTeamMemberOpen,
             }}
         >
             {children}
