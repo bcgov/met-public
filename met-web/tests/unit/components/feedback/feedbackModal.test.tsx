@@ -5,7 +5,7 @@ import * as notificationSlice from 'services/notificationService/notificationSli
 import * as feedbackService from 'services/feedbackService';
 import '@testing-library/jest-dom';
 import { setupEnv } from '../setEnvVars';
-import { FeedbackModal } from 'components/common/Modals/Feedback';
+import { FeedbackModal } from 'components/feedback/FeedbackModal';
 import { CommentTypeEnum, SourceTypeEnum } from 'models/feedback';
 
 describe('Feedback modal tests', () => {

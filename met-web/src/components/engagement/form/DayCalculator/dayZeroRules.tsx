@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { MetHeader4, MetBody } from 'components/common';
 
 const DayZeroRules = () => (
