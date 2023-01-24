@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { createDefaultPageInfo, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { SubmissionStatusTypes, SUBMISSION_STATUS } from 'constants/engagementStatus';
 import { User } from 'models/user';

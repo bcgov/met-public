@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import { Autocomplete, Grid, Paper, Stack, TextField } from '@mui/material';
-import { MetHeader3, MetLabel, MetParagraph, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetHeader3, MetLabel, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
 import { User, USER_GROUP } from 'models/user';
 import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -10,7 +10,6 @@ import { addUserToGroup } from 'services/userService/api';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
 import { EngagementTabsContext } from './EngagementTabsContext';
-import { Unless, When } from 'react-if';
 import { ActionContext } from '../ActionContext';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
@@ -27,7 +26,6 @@ export const AddTeamMemberModal = () => {
     const { addTeamMemberOpen, setAddTeamMemberOpen, users } = useContext(EngagementTabsContext);
     const { savedEngagement } = useContext(ActionContext);
     const [isAdding, setIsAdding] = useState(false);
-    const [isAddSuccess, setIsAddSuccess] = useState(false);
 
     const methods = useForm<AddUserForm>({
         resolver: yupResolver(schema),
@@ -44,7 +42,6 @@ export const AddTeamMemberModal = () => {
 
     const handleClose = () => {
         setAddTeamMemberOpen(false);
-        setIsAddSuccess(false);
         reset({});
     };
 
@@ -58,7 +55,6 @@ export const AddTeamMemberModal = () => {
             });
             dispatch(openNotification({ severity: 'success', text: 'User has been successfully added' }));
             setIsAdding(false);
-            setIsAddSuccess(true);
             handleClose();
             dispatch(
                 openNotificationModal({
@@ -77,7 +73,6 @@ export const AddTeamMemberModal = () => {
         } catch (error) {
             console.log(error);
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add user' }));
-            setIsAddSuccess(false);
         }
     };
 

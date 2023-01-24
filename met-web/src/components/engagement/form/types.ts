@@ -1,4 +1,3 @@
-import { SubmissionStatusTypes } from 'constants/engagementStatus';
 import { Engagement } from '../../../models/engagement';
 import { EngagementStatusBlock } from '../../../models/engagementStatusBlock';
 

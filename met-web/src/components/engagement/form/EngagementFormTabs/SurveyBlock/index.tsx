@@ -10,7 +10,7 @@ import { unlinkSurvey } from 'services/surveyService';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import SurveyTextTabs from './SurveyTextTabs';
 
-export const AddSurveyBlock = () => {
+export const SurveyBlock = () => {
     const { savedEngagement, fetchEngagement } = useContext(ActionContext);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();

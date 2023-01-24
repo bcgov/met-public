@@ -5,7 +5,7 @@ import RichTextEditor from '../RichTextEditor';
 import { ActionContext } from '../ActionContext';
 import ImageUpload from 'components/imageUpload';
 import { useNavigate } from 'react-router-dom';
-import { AddSurveyBlock } from './SurveyBlock/SurveyBlock';
+import { SurveyBlock } from './SurveyBlock';
 import { If, Then, Else } from 'react-if';
 import DayCalculatorModal from 'components/common/Modals/DayCalculator';
 import { EngagementTabsContext } from './EngagementTabsContext';
@@ -311,7 +311,7 @@ const EngagementForm = () => {
                 </Grid>
 
                 <Grid item xs={12}>
-                    <AddSurveyBlock />
+                    <SurveyBlock />
                 </Grid>
 
                 <Grid item xs={12}>
