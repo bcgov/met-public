@@ -148,7 +148,7 @@ describe('Document widget in engagement page tests', () => {
 
         await waitFor(() => {
             expect(screen.getByText('Folder name')).toBeVisible();
-            expect(screen.getByText('Save')).toBeVisible();
+            expect(screen.getByTestId('create-folder-form/save-button')).toBeVisible();
         });
     });
 
