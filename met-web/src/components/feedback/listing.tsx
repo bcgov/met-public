@@ -9,7 +9,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import MetTable from 'components/common/Table';
 import { getFeedbacksPage } from 'services/feedbackService';
 import { formatDate } from 'components/common/dateHelper';
-import { customRatings } from 'components/common/Modals/Feedback/constants';
+import { customRatings } from 'components/feedback/FeedbackModal/constants';
 
 const FeedbackListing = () => {
     const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);

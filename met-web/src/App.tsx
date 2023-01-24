@@ -12,7 +12,7 @@ import AuthenticatedRoutes from './routes/AuthenticatedRoutes';
 import { Notification } from 'components/common/notification';
 import PageViewTracker from 'routes/PageViewTracker';
 import { NotificationModal } from 'components/common/modal';
-import { FeedbackModal } from 'components/common/Modals/Feedback';
+import { FeedbackModal } from 'components/feedback/FeedbackModal';
 import { AppConfig } from 'config';
 import NoAccess from 'routes/NoAccess';
 
