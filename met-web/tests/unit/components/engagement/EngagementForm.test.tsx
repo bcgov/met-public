@@ -82,7 +82,7 @@ describe('Engagement form page tests', () => {
             expect(getByText('Engagement Name')).toBeInTheDocument();
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
-        expect(screen.getByTestId('create-engagement-button')).toBeInTheDocument();
+        expect(screen.getByTestId('create-engagement-button')).toBeVisible();
         expect(getEngagementMock).not.toHaveBeenCalled();
 
         const nameInput = container.querySelector('input[name="name"]');
@@ -125,7 +125,7 @@ describe('Engagement form page tests', () => {
         });
 
         expect(getEngagementMock).toHaveBeenCalledOnce();
-        expect(screen.getByTestId('update-engagement-button')).toBeInTheDocument();
+        expect(screen.getByTestId('update-engagement-button')).toBeVisible();
         expect(screen.getByDisplayValue('2022-09-01')).toBeInTheDocument();
         expect(screen.getByDisplayValue('2022-09-30')).toBeInTheDocument();
         expect(screen.getByText('Survey 1')).toBeInTheDocument();
