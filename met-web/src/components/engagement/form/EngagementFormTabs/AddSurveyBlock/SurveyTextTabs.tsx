@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import TabContext from '@mui/lab/TabContext';
-import { MetTab, MetTabList, MetTabPanel } from './StyledTabComponents';
+import { MetTab, MetTabList, MetTabPanel } from '../../StyledTabComponents';
 import { SubmissionStatusTypes, SUBMISSION_STATUS } from 'constants/engagementStatus';
 import { SurveyUpcomingTextInput } from './SurveyUpcomingTextInput';
 import { SurveyOpenTextInput } from './SurveyOpenTextInput';
 import { SurveyClosedTextInput } from './SurveyClosedTextInput';
 
-const AddSurveyBlockTabs = () => {
+const SurveyTextTabs = () => {
     // set initial value to upcoming
-    const [value, setValue] = useState<SubmissionStatusTypes>(SUBMISSION_STATUS.UPCOMING);
+    const [SurveyTabValue, setSurveyTabValue] = useState<SubmissionStatusTypes>(SUBMISSION_STATUS.UPCOMING);
 
     return (
         <Box sx={{ width: '100%', typography: 'body1' }}>
-            <TabContext value={value}>
+            <TabContext value={SurveyTabValue}>
                 <Box sx={{ marginBottom: '0.25em' }}>
                     <MetTabList
-                        onChange={(_event: React.SyntheticEvent, newValue: SubmissionStatusTypes) => {
-                            setValue(newValue);
+                        onChange={(_event: React.SyntheticEvent, newTabValue: SubmissionStatusTypes) => {
+                            setSurveyTabValue(newTabValue);
                         }}
                         TabIndicatorProps={{
                             style: { transition: 'none', display: 'none' },
@@ -41,4 +41,4 @@ const AddSurveyBlockTabs = () => {
         </Box>
     );
 };
-export default AddSurveyBlockTabs;
+export default SurveyTextTabs;
