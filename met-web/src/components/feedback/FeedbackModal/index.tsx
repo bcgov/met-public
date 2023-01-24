@@ -15,7 +15,7 @@ import ModeCommentIcon from '@mui/icons-material/ModeComment';
 import CloseIcon from '@mui/icons-material/Close';
 import { ReactComponent as CheckIcon } from 'assets/images/check.svg';
 import { useState } from 'react';
-import { MetBody, MetHeader3, MetLabel, modalStyle, PrimaryButton } from '../..';
+import { MetBody, MetHeader3, MetLabel, modalStyle, PrimaryButton } from '../../common';
 import { CommentTypeEnum, createDefaultFeedback } from 'models/feedback';
 import { Else, If, Then, When } from 'react-if';
 import { CommentTypeButton, StyledRating } from './styledComponents';

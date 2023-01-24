@@ -7,9 +7,9 @@ import ImageUpload from 'components/imageUpload';
 import { useNavigate } from 'react-router-dom';
 import { SurveyBlock } from './SurveyBlock';
 import { If, Then, Else } from 'react-if';
-import DayCalculatorModal from 'components/common/Modals/DayCalculator';
 import { EngagementTabsContext } from './EngagementTabsContext';
 import { SUBMISSION_STATUS } from 'constants/engagementStatus';
+import DayCalculatorModal from '../DayCalculator';
 
 const EngagementForm = () => {
     const {

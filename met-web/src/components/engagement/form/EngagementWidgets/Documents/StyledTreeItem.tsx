@@ -1,11 +1,25 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import TreeItem, { treeItemClasses } from '@mui/lab/TreeItem';
-import { DocumentTreeItemProps, MetHeader4, StyledTreeItemProps } from 'components/common';
+import TreeItem, { treeItemClasses, TreeItemProps } from '@mui/lab/TreeItem';
+import { MetHeader4 } from 'components/common';
 import { If, Then, Else } from 'react-if';
-import { Link } from '@mui/material';
+import { Link, Box } from '@mui/material';
 import OpenInNew from '@mui/icons-material/OpenInNew';
+import { SvgIconProps } from '@mui/material';
+
+type DocumentTreeItemProps = TreeItemProps & {
+    labelIcon: React.ElementType<SvgIconProps>;
+    labelUrl: string | undefined;
+    nodeId: string;
+};
+
+type StyledTreeItemProps = TreeItemProps & {
+    bgColor?: string;
+    color?: string;
+    labelIcon: React.ElementType<SvgIconProps>;
+    labelInfo?: string;
+    labelText: string;
+};
 
 const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
     color: theme.palette.text.secondary,
