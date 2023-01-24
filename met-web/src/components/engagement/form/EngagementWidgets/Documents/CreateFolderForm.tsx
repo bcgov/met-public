@@ -108,7 +108,12 @@ const CreateFolderForm = () => {
                                 width="100%"
                                 justifyContent="flex-start"
                             >
-                                <PrimaryButton sx={{ mb: 1 }} loading={creatingFolder} onClick={handleCreateFolder}>
+                                <PrimaryButton
+                                    data-testid="create-folder-form/save-button"
+                                    sx={{ mb: 1 }}
+                                    loading={creatingFolder}
+                                    onClick={handleCreateFolder}
+                                >
                                     Save
                                 </PrimaryButton>
                                 <SecondaryButton sx={{ mb: 1 }} onClick={() => setCreateFolderMode(false)}>
