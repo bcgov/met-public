@@ -186,6 +186,7 @@ objects:
     NOTIFICATIONS_EMAIL_ENDPOINT: ${NOTIFICATIONS_EMAIL_ENDPOINT}    
     SITE_URL: ${SITE_URL}
     VERIFICATION_EMAIL_TEMPLATE_ID: ${VERIFICATION_EMAIL_TEMPLATE_ID}
+    SUBSCRIBE_EMAIL_TEMPLATE_ID: ${SUBSCRIBE_EMAIL_TEMPLATE_ID}
     REJECTED_EMAIL_TEMPLATE_ID: ${REJECTED_EMAIL_TEMPLATE_ID}    
     ACCESS_REQUEST_EMAIL_TEMPLATE_ID: ${ACCESS_REQUEST_EMAIL_TEMPLATE_ID}
     KEYCLOAK_REALMNAME: ${KEYCLOAK_REALMNAME}
@@ -240,6 +241,10 @@ parameters:
     description: "The email verification template id"
     required: true
     value: 'c4cc1633-321a-4400-8a22-272acecd836a'
+  - name: SUBSCRIBE_EMAIL_TEMPLATE_ID
+    description: "The subscribe email verification template id"
+    required: true
+    value: '9cd4942b-8ac9-49ae-a869-c800c57a7472'
   - name: REJECTED_EMAIL_TEMPLATE_ID
     description: "The rejected comment email template id"
     required: true
