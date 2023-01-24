@@ -186,6 +186,7 @@ const EngagementForm = () => {
                 <DayCalculatorModal open={isOpen} updateModal={setIsOpen} />
                 <Grid item xs={12}>
                     <ImageUpload
+                        margin={4}
                         data-testid="engagement-form/image-upload"
                         handleAddFile={handleAddBannerImage}
                         savedImageUrl={savedEngagement.banner_url}
@@ -318,31 +319,31 @@ const EngagementForm = () => {
                         <Then>
                             <PrimaryButton
                                 sx={{ marginRight: 1 }}
-                                data-testid="engagement-form/create-engagement-button"
+                                data-testid="create-engagement-button"
                                 onClick={() => handleCreateEngagement()}
                                 loading={isSaving}
                             >
-                                Create Engagement Draft
+                                Save
                             </PrimaryButton>
                         </Then>
                         <Else>
                             <PrimaryButton
-                                data-testid="engagement-form/update-engagement-button"
+                                data-testid="update-engagement-button"
                                 sx={{ marginRight: 1 }}
                                 onClick={() => handleUpdateEngagement()}
                                 disabled={isSaving}
                                 loading={isSaving}
                             >
-                                Update Engagement
+                                Save
                             </PrimaryButton>
                         </Else>
                     </If>
                     <SecondaryButton
-                        data-testid="engagement-form/preview-engagement-button"
+                        data-testid="preview-engagement-button"
                         onClick={() => handlePreviewEngagement()}
                         disabled={isSaving}
                     >
-                        {'Save & Preview Engagement'}
+                        {'Preview'}
                     </SecondaryButton>
                 </Grid>
             </Grid>

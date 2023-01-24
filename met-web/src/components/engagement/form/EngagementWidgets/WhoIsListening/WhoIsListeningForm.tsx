@@ -115,16 +115,12 @@ const WhoIsListeningForm = () => {
                         />
                     </Grid>
                     <Grid item>
-                        <PrimaryButton onClick={() => addContact()} sx={{ height: '100%' }} fullWidth>
+                        <PrimaryButton onClick={() => addContact()} fullWidth>
                             Add This Contact
                         </PrimaryButton>
                     </Grid>
                     <Grid item>
-                        <SecondaryButton
-                            sx={{ height: '100%' }}
-                            fullWidth
-                            onClick={() => handleAddContactDrawerOpen(true)}
-                        >
+                        <SecondaryButton fullWidth onClick={() => handleAddContactDrawerOpen(true)}>
                             Create New Contact
                         </SecondaryButton>
                     </Grid>

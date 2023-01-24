@@ -23,11 +23,11 @@ const CreateFolderForm = () => {
     const [formError, setFormError] = useState(initialFormError);
     const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Document);
 
-    const validate = () => {
+    const validateForm = () => {
         setFormError({
             name: !folderName || folderName.length > 50,
         });
-        return Object.values(formError).some((errorExists) => errorExists);
+        return !Object.values(formError).every((errorExists) => errorExists);
     };
 
     const getErrorMessage = () => {
@@ -40,10 +40,9 @@ const CreateFolderForm = () => {
     };
 
     const handleCreateFolder = async () => {
-        if (!widget || validate()) {
+        if (!widget || !validateForm()) {
             return;
         }
-
         try {
             setCreatingFolder(true);
             await postDocument(widget.id, {
@@ -61,7 +60,7 @@ const CreateFolderForm = () => {
     };
 
     const handleFolderNameChange = (name: string) => {
-        validate();
+        validateForm();
         setFolderName(name);
     };
 
@@ -102,14 +101,19 @@ const CreateFolderForm = () => {
                                 helperText={getErrorMessage()}
                             />
                         </Grid>
-                        <Grid item lg={2.5} md={5}>
+                        <Grid item lg={4} md={5}>
                             <Stack
                                 direction={{ md: 'column', lg: 'row' }}
-                                spacing={1.5}
+                                spacing={1}
                                 width="100%"
-                                justifyContent="flex-end"
+                                justifyContent="flex-start"
                             >
-                                <PrimaryButton sx={{ mb: 1 }} loading={creatingFolder} onClick={handleCreateFolder}>
+                                <PrimaryButton
+                                    data-testid="create-folder-form/save-button"
+                                    sx={{ mb: 1 }}
+                                    loading={creatingFolder}
+                                    onClick={handleCreateFolder}
+                                >
                                     Save
                                 </PrimaryButton>
                                 <SecondaryButton sx={{ mb: 1 }} onClick={() => setCreateFolderMode(false)}>
