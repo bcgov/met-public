@@ -70,6 +70,7 @@ const Endpoints = {
     },
     EngagementTeamMembers: {
         GET_LIST: `${AppConfig.apiUrl}/engagements/engagement_id/members`,
+        CREATE: `${AppConfig.apiUrl}/engagements/engagement_id/members`,
     },
 };
 

@@ -6,12 +6,13 @@ import { User, USER_GROUP } from 'models/user';
 import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { addUserToGroup, getUserList } from 'services/userService/api';
+import { getUserList } from 'services/userService/api';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
 import { EngagementTabsContext } from './EngagementTabsContext';
 import { ActionContext } from '../ActionContext';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+import { addTeamMemberToEngagement } from 'services/engagementService/TeamMemberService';
 
 const schema = yup
     .object({
@@ -19,7 +20,7 @@ const schema = yup
     })
     .required();
 
-type AddUserForm = yup.TypeOf<typeof schema>;
+type AddTeamMemberForm = yup.TypeOf<typeof schema>;
 
 export const AddTeamMemberModal = () => {
     const dispatch = useAppDispatch();
@@ -28,14 +29,14 @@ export const AddTeamMemberModal = () => {
     const [isAdding, setIsAdding] = useState(false);
     const [usersLoading, setUsersLoading] = useState(false);
 
-    const teamMembersIds = useMemo(() => teamMembers.map((teamMember) => teamMember.id), [teamMembers]);
+    const teamMembersIds = useMemo(() => teamMembers.map((teamMember) => teamMember.user_id), [teamMembers]);
 
     const availableUsers = useMemo(
-        () => users.filter((user) => user.roles.includes('Viewer') && !user.roles.includes('Adminstrator')),
+        () => users.filter((user) => user.groups.includes(USER_GROUP.VIEWER.label)),
         [users],
     );
 
-    const methods = useForm<AddUserForm>({
+    const methods = useForm<AddTeamMemberForm>({
         resolver: yupResolver(schema),
     });
 
@@ -76,12 +77,11 @@ export const AddTeamMemberModal = () => {
         }
     };
 
-    const onSubmit: SubmitHandler<AddUserForm> = async (data: AddUserForm) => {
+    const onSubmit: SubmitHandler<AddTeamMemberForm> = async (data: AddTeamMemberForm) => {
         try {
             setIsAdding(true);
-            await addUserToGroup({
+            await addTeamMemberToEngagement({
                 user_id: data.user?.external_id,
-                group: USER_GROUP.VIEWER.value,
                 engagement_id: savedEngagement.id,
             });
             dispatch(openNotification({ severity: 'success', text: 'User has been successfully added' }));

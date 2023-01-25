@@ -131,12 +131,12 @@ export const AddUserModel = () => {
                                             <FormControlLabel
                                                 value={USER_GROUP.ADMIN.value}
                                                 control={<Radio />}
-                                                label={USER_GROUP.ADMIN.label}
+                                                label={'Administrator'}
                                             />
                                             <FormControlLabel
                                                 value={USER_GROUP.VIEWER.value}
                                                 control={<Radio />}
-                                                label={USER_GROUP.VIEWER.label}
+                                                label={'Team Member'}
                                                 disabled
                                             />
                                         </ControlledRadioGroup>

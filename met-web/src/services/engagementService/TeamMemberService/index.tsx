@@ -12,13 +12,15 @@ export const getTeamMembers = async ({ engagement_id }: GetTeamMembersParams): P
     return responseData.data ?? [];
 };
 
-// interface AddUserToGroupProps {
-//     user_id?: string;
-//     group?: string;
-//     engagement_id?: number;
-// }
-// export const addUserToGroup = async ({ user_id, group, engagement_id }: AddUserToGroupProps): Promise<User> => {
-//     const url = replaceUrl(Endpoints.User.ADD_TO_GROUP, 'user_id', String(user_id));
-//     const responseData = await http.PostRequest<User>(url, {}, { group, engagement_id });
-//     return responseData.data;
-// };
+interface TeamMemberAddProps {
+    user_id?: string;
+    engagement_id?: number;
+}
+export const addTeamMemberToEngagement = async ({
+    user_id,
+    engagement_id,
+}: TeamMemberAddProps): Promise<EngagementTeamMember> => {
+    const url = replaceUrl(Endpoints.EngagementTeamMembers.CREATE, 'engagement_id', String(engagement_id));
+    const responseData = await http.PostRequest<EngagementTeamMember>(url, { user_id });
+    return responseData.data;
+};

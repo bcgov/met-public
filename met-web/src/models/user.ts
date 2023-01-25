@@ -3,11 +3,11 @@ export type UserGroup = 'EAO_IT_ADMIN' | 'EAO_IT_VIEWER';
 export const USER_GROUP: { [x: string]: { value: UserGroup; label: string } } = {
     ADMIN: {
         value: 'EAO_IT_ADMIN',
-        label: 'Adminstrator',
+        label: 'Administrator',
     },
     VIEWER: {
         value: 'EAO_IT_VIEWER',
-        label: 'Team Member',
+        label: 'Viewer',
     },
 };
 
