@@ -13,17 +13,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Palette } from 'styles/Theme';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { MET_Header_Font_Family, MET_Header_Font_Weight } from './constants';
-import { TreeItemProps } from '@mui/lab/TreeItem';
-import { SvgIconProps } from '@mui/material/SvgIcon';
-import { DocumentItem } from 'models/document';
+import { MET_Header_Font_Family, MET_Header_Font_Weight } from '../../styles/constants';
 import { When } from 'react-if';
 
-export const RoundedButton = styled(MuiButton)(() => ({
-    borderRadius: '23px',
-}));
-
-export const StyledPrimaryButton = styled(LoadingButton)(() => ({
+const StyledPrimaryButton = styled(LoadingButton)(() => ({
     backgroundColor: Palette.primary.main,
     color: '#fff',
     '&:hover': {
@@ -34,7 +27,7 @@ export const StyledPrimaryButton = styled(LoadingButton)(() => ({
     },
 }));
 
-export const StyledSecondaryButton = styled(MuiButton)(() => ({
+const StyledSecondaryButton = styled(MuiButton)(() => ({
     backgroundColor: 'transparent',
     color: Palette.primary.main,
     border: `2px solid ${Palette.primary.main}`,
@@ -47,7 +40,7 @@ export const StyledSecondaryButton = styled(MuiButton)(() => ({
     },
 }));
 
-export const StyledWidgetButton = styled(MuiButton)(() => ({
+const StyledWidgetButton = styled(MuiButton)(() => ({
     backgroundColor: 'transparent',
     color: '#494949',
     border: `2px solid ${'#707070'}`,
@@ -82,7 +75,7 @@ export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode
     </StyledPrimaryButton>
 );
 
-export const StyledPaper = styled(MuiPaper)(() => ({
+const StyledPaper = styled(MuiPaper)(() => ({
     border: `1px solid #606060`,
     borderRadius: '4px',
 }));
@@ -171,11 +164,6 @@ export const MetLabel = styled(Typography)(() => ({
 
 export const MetParagraph = styled(Typography)(() => ({
     fontSize: '16px',
-    fontFamily: MET_Header_Font_Family,
-}));
-
-export const StyledSmallText = styled(Typography)(() => ({
-    fontSize: '13px',
     fontFamily: MET_Header_Font_Family,
 }));
 
@@ -338,22 +326,4 @@ export const ModalSubtitle = ({
             {children}
         </Typography>
     );
-};
-
-export type DocumentTreeItemProps = TreeItemProps & {
-    labelIcon: React.ElementType<SvgIconProps>;
-    labelUrl: string | undefined;
-    nodeId: string;
-};
-
-export type DocumentTreeProps = TreeItemProps & {
-    documentItem: DocumentItem;
-};
-
-export type StyledTreeItemProps = TreeItemProps & {
-    bgColor?: string;
-    color?: string;
-    labelIcon: React.ElementType<SvgIconProps>;
-    labelInfo?: string;
-    labelText: string;
 };

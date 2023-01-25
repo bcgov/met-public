@@ -9,7 +9,7 @@ import { useAppSelector } from 'hooks';
 import ImageIcon from '@mui/icons-material/Image';
 import UnpublishedIcon from '@mui/icons-material/Unpublished';
 import IconButton from '@mui/material/IconButton';
-import ScheduleModal from 'components/common/Modals/Schedule';
+import ScheduleModal from 'components/engagement/view/ScheduleModal';
 import ArticleIcon from '@mui/icons-material/Article';
 import { formatDate } from 'components/common/dateHelper';
 import { When } from 'react-if';

@@ -2,12 +2,16 @@ import * as React from 'react';
 import TreeView from '@mui/lab/TreeView';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import { DocumentTreeProps } from 'components/common';
 import { If, Then, Else } from 'react-if';
 import { DocumentItem, DOCUMENT_TYPE } from 'models/document';
 import { StyledTreeItem } from './StyledTreeItem';
+import { TreeItemProps } from '@mui/lab/TreeItem';
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+
+type DocumentTreeProps = TreeItemProps & {
+    documentItem: DocumentItem;
+};
 
 export default function DocumentTree({ documentItem }: DocumentTreeProps) {
     return (
