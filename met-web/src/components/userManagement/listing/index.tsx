@@ -3,7 +3,7 @@ import { AddUserModel } from './AddUserModal';
 import { UserManagementContextProvider } from './UserManagementContext';
 import UserManagementListing from './UserManagementListing';
 
-export const WhoIsListening = () => {
+export const UserManagement = () => {
     return (
         <UserManagementContextProvider>
             <UserManagementListing />
@@ -12,4 +12,4 @@ export const WhoIsListening = () => {
     );
 };
 
-export default WhoIsListening;
+export default UserManagement;

@@ -15,7 +15,8 @@ import EngagementDashboard from '../components/engagement/dashboard/report';
 import EngagementComments from '../components/engagement/dashboard/comment';
 import UnderConstruction from './UnderConstruction';
 import FeedbackListing from 'components/feedback/listing';
-import UserManagementListing from '../components/userManagement/listing';
+import UserManagementListing from 'components/userManagement/listing';
+import Dashboard from 'components/dashboard';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -36,6 +37,7 @@ const AuthenticatedRoutes = () => {
             <Route path="/calendar" element={<UnderConstruction />} />
             <Route path="/reporting" element={<UnderConstruction />} />
             <Route path="/usermanagement" element={<UserManagementListing />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
     );
