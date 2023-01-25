@@ -8,7 +8,6 @@ import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
 import * as userService from 'services/userService/api';
-import { createDefaultSurvey, Survey } from 'models/survey';
 import { Box } from '@mui/material';
 import { engagement } from '../factory';
 import { User, initialDefaultUser } from 'models/user';
