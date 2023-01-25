@@ -46,8 +46,8 @@ export interface EngagementTabsContextState {
     setPageInfo: React.Dispatch<React.SetStateAction<PageInfo>>;
     users: User[];
     setUsers: React.Dispatch<React.SetStateAction<User[]>>;
-    paginationOptions: PaginationOptions<User>;
-    setPaginationOptions: React.Dispatch<React.SetStateAction<PaginationOptions<User>>>;
+    paginationOptions: PaginationOptions<EngagementTeamMember>;
+    setPaginationOptions: React.Dispatch<React.SetStateAction<PaginationOptions<EngagementTeamMember>>>;
     surveyBlockText: { [key in SubmissionStatusTypes]: string };
     setSurveyBlockText: React.Dispatch<React.SetStateAction<{ [key in SubmissionStatusTypes]: string }>>;
     addTeamMemberOpen: boolean;
@@ -137,11 +137,10 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
     const [users, setUsers] = useState<User[]>([]);
     const [teamMembers, setTeamMembers] = useState<EngagementTeamMember[]>([]);
     const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
-    const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<User>>({
+    const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<EngagementTeamMember>>({
         page: 1,
         size: 10,
-        sort_key: 'first_name',
-        nested_sort_key: 'first_name',
+        sort_key: 'id',
         sort_order: 'asc',
     });
     const [addTeamMemberOpen, setAddTeamMemberOpen] = useState(false);

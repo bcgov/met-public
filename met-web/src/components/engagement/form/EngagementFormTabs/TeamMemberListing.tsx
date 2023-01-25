@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { Link as MuiLink } from '@mui/material';
 import MetTable from 'components/common/Table';
 import { EngagementTabsContext } from './EngagementTabsContext';
-import { getUserList } from 'services/userService/api';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getTeamMembers } from 'services/engagementService/TeamMemberService';
@@ -13,32 +12,23 @@ import { ActionContext } from '../ActionContext';
 import { EngagementTeamMember } from 'models/engagementTeamMember';
 
 const TeamMemberListing = () => {
-    const {
-        pageInfo,
-        setPageInfo,
-        paginationOptions,
-        setPaginationOptions,
-        users,
-        setUsers,
-        teamMembers,
-        setTeamMembers,
-    } = useContext(EngagementTabsContext);
+    const { pageInfo, paginationOptions, setPaginationOptions, teamMembers, setTeamMembers } =
+        useContext(EngagementTabsContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
     const [teamMembersLoading, setTeamMembersLoading] = useState(false);
 
     useEffect(() => {
-        if (users.length === 0) {
-            loadUsers();
+        if (teamMembers.length === 0) {
+            loadTeamMembers();
         }
     }, []);
 
-    const loadUsers = async () => {
+    const loadTeamMembers = async () => {
         try {
             setTeamMembersLoading(true);
             const response = await getTeamMembers({ engagement_id: savedEngagement.id });
             setTeamMembers(response);
-
             setTeamMembersLoading(false);
         } catch (error) {
             dispatch(
@@ -69,9 +59,9 @@ const TeamMemberListing = () => {
     return (
         <MetTable
             headCells={headCells}
-            rows={users}
+            rows={teamMembers}
             noRowBorder={true}
-            handleChangePagination={(paginationOptions: PaginationOptions<User>) =>
+            handleChangePagination={(paginationOptions: PaginationOptions<EngagementTeamMember>) =>
                 setPaginationOptions(paginationOptions)
             }
             paginationOptions={paginationOptions}

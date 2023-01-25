@@ -6,9 +6,9 @@ import { EngagementTeamMember } from 'models/engagementTeamMember';
 interface GetTeamMembersParams {
     engagement_id: number;
 }
-export const getTeamMembers = async ({ engagement_id }: GetTeamMembersParams): Promise<EngagementTeamMember> => {
+export const getTeamMembers = async ({ engagement_id }: GetTeamMembersParams): Promise<EngagementTeamMember[]> => {
     const url = replaceUrl(Endpoints.EngagementTeamMembers.GET_LIST, 'engagement_id', String(engagement_id));
-    const responseData = await http.GetRequest<EngagementTeamMember>(url);
+    const responseData = await http.GetRequest<EngagementTeamMember[]>(url);
     return responseData.data ?? [];
 };
 
