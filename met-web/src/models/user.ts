@@ -26,3 +26,19 @@ export interface User {
     access_type: string;
     roles: string[];
 }
+
+export const initialDefaultUser: User = {
+    id: 0,
+    contact_number: '',
+    description: '',
+    email_id: '',
+    external_id: '',
+    groups: '',
+    first_name: '',
+    last_name: '',
+    updated_date: Date(),
+    created_date: Date(),
+    status: '',
+    access_type: '',
+    roles: [],
+};

@@ -105,6 +105,7 @@ export const AddTeamMemberModal = () => {
                                         render={({ field: { ref, onChange, ...field } }) => (
                                             <Autocomplete
                                                 options={users || []}
+                                                data-testid="select-team-member"
                                                 onChange={(_, data) => {
                                                     onChange(data);
                                                 }}

@@ -39,14 +39,7 @@ const EngagementUserManagement = () => {
                     </Grid>
 
                     <Grid item container xs={12} direction="row" justifyContent="flex-end" spacing={1}>
-                        <PrimaryButton
-                            onClick={() => {
-                                setAddTeamMemberOpen(true);
-                                console.log('opened');
-                            }}
-                        >
-                            + Add Team Member
-                        </PrimaryButton>
+                        <PrimaryButton onClick={() => setAddTeamMemberOpen(true)}>+ Add Team Member</PrimaryButton>
                     </Grid>
 
                     <Grid item xs={12}>
