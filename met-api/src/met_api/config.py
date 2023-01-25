@@ -124,7 +124,6 @@ class _Config():  # pylint: disable=too-few-public-methods
     CDOGS_SERVICE_CLIENT = os.getenv('CDOGS_SERVICE_CLIENT')
     CDOGS_SERVICE_CLIENT_SECRET = os.getenv('CDOGS_SERVICE_CLIENT_SECRET')
     CDOGS_TOKEN_URL = os.getenv('CDOGS_TOKEN_URL')
-    PROPAGATE_EXCEPTIONS = True
 
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
