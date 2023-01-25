@@ -1,3 +1,5 @@
+import { initialDefaultUser, User } from './user';
+
 export type EngagementMembershipType = 1;
 
 export const ENGAGEMENT_MEMBERSHIP_TYPE: { [x: string]: EngagementMembershipType } = {
@@ -9,6 +11,7 @@ export interface EngagementTeamMember {
     created_date: string;
     engagement_id: number;
     user_id: number;
+    user: User;
     type: EngagementMembershipType;
 }
 
@@ -19,4 +22,5 @@ export const initialDefaultTeamMember: EngagementTeamMember = {
     engagement_id: 0,
     user_id: 0,
     type: ENGAGEMENT_MEMBERSHIP_TYPE.TEAM_MEMBER,
+    user: initialDefaultUser,
 };

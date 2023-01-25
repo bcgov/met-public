@@ -42,12 +42,8 @@ export interface EngagementTabsContextState {
     setRichContent: React.Dispatch<React.SetStateAction<string>>;
     engagementFormError: EngagementFormError;
     setEngagementFormError: React.Dispatch<React.SetStateAction<EngagementFormError>>;
-    pageInfo: PageInfo;
-    setPageInfo: React.Dispatch<React.SetStateAction<PageInfo>>;
     users: User[];
     setUsers: React.Dispatch<React.SetStateAction<User[]>>;
-    paginationOptions: PaginationOptions<EngagementTeamMember>;
-    setPaginationOptions: React.Dispatch<React.SetStateAction<PaginationOptions<EngagementTeamMember>>>;
     surveyBlockText: { [key in SubmissionStatusTypes]: string };
     setSurveyBlockText: React.Dispatch<React.SetStateAction<{ [key in SubmissionStatusTypes]: string }>>;
     addTeamMemberOpen: boolean;
@@ -81,21 +77,9 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
     setSurveyBlockText: () => {
         throw new Error('setSurveyBlockText not implemented');
     },
-
-    pageInfo: createDefaultPageInfo(),
-    setPageInfo: () => {
-        throw new Error('setPageInfo is unimplemented');
-    },
     users: [],
     setUsers: () => {
         throw new Error('setUsers is unimplemented');
-    },
-    paginationOptions: {
-        page: 0,
-        size: 0,
-    },
-    setPaginationOptions: () => {
-        throw new Error('Not implemented');
     },
     addTeamMemberOpen: false,
     setAddTeamMemberOpen: () => {
@@ -136,13 +120,6 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
     // User listing
     const [users, setUsers] = useState<User[]>([]);
     const [teamMembers, setTeamMembers] = useState<EngagementTeamMember[]>([]);
-    const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
-    const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<EngagementTeamMember>>({
-        page: 1,
-        size: 10,
-        sort_key: 'id',
-        sort_order: 'asc',
-    });
     const [addTeamMemberOpen, setAddTeamMemberOpen] = useState(false);
 
     return (
@@ -160,10 +137,6 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
                 surveyBlockText,
                 users,
                 setUsers,
-                pageInfo,
-                setPageInfo,
-                paginationOptions,
-                setPaginationOptions,
                 addTeamMemberOpen,
                 setAddTeamMemberOpen,
                 teamMembers,

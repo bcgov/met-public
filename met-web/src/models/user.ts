@@ -25,6 +25,7 @@ export interface User {
     status: string;
     access_type: string;
     roles: string[];
+    username: string;
 }
 
 export const initialDefaultUser: User = {
@@ -41,4 +42,5 @@ export const initialDefaultUser: User = {
     status: '',
     access_type: '',
     roles: [],
+    username: '',
 };

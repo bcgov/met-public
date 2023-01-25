@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { User } from 'models/user';
-import { HeadCell, PaginationOptions } from 'components/common/Table/types';
+import { HeadCell } from 'components/common/Table/types';
 import { Link } from 'react-router-dom';
 import { Link as MuiLink } from '@mui/material';
 import MetTable from 'components/common/Table';
@@ -12,8 +11,7 @@ import { ActionContext } from '../ActionContext';
 import { EngagementTeamMember } from 'models/engagementTeamMember';
 
 const TeamMemberListing = () => {
-    const { pageInfo, paginationOptions, setPaginationOptions, teamMembers, setTeamMembers } =
-        useContext(EngagementTabsContext);
+    const { teamMembers, setTeamMembers } = useContext(EngagementTabsContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
     const [teamMembersLoading, setTeamMembersLoading] = useState(false);
@@ -43,32 +41,20 @@ const TeamMemberListing = () => {
 
     const headCells: HeadCell<EngagementTeamMember>[] = [
         {
-            key: 'id',
+            key: 'user',
             numeric: false,
             disablePadding: true,
             label: 'Team Members',
-            allowSort: true,
+            allowSort: false,
             getValue: (row: EngagementTeamMember) => (
                 <MuiLink component={Link} to={``}>
-                    {/* {row.last_name + ', ' + row.first_name} */}
+                    {row.user?.last_name + ', ' + row.user?.first_name}
                 </MuiLink>
             ),
         },
     ];
 
-    return (
-        <MetTable
-            headCells={headCells}
-            rows={teamMembers}
-            noRowBorder={true}
-            handleChangePagination={(paginationOptions: PaginationOptions<EngagementTeamMember>) =>
-                setPaginationOptions(paginationOptions)
-            }
-            paginationOptions={paginationOptions}
-            loading={teamMembersLoading}
-            pageInfo={pageInfo}
-        />
-    );
+    return <MetTable headCells={headCells} rows={teamMembers} loading={teamMembersLoading} noPagination />;
 };
 
 export default TeamMemberListing;

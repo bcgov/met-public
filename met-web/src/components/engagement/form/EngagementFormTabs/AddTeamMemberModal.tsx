@@ -29,7 +29,7 @@ export const AddTeamMemberModal = () => {
     const [isAdding, setIsAdding] = useState(false);
     const [usersLoading, setUsersLoading] = useState(false);
 
-    const teamMembersIds = useMemo(() => teamMembers.map((teamMember) => teamMember.user_id), [teamMembers]);
+    const teamMembersIds = useMemo(() => teamMembers.map((teamMember) => teamMember.id), [teamMembers]);
 
     const availableUsers = useMemo(
         () => users.filter((user) => user.groups.includes(USER_GROUP.VIEWER.label)),
@@ -94,7 +94,7 @@ export const AddTeamMemberModal = () => {
                         header: 'Add a Team member to this engagement',
                         subText: [
                             {
-                                text: `You have successfully added <user name> as an Team Member on <engagement name>.`,
+                                text: `You have successfully added ${data.user?.username} as a Team Member on ${savedEngagement.name}.`,
                             },
                         ],
                     },

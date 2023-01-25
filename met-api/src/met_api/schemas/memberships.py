@@ -1,5 +1,6 @@
 """Widget schema class."""
 from marshmallow import EXCLUDE, Schema, fields
+from .user import UserSchema
 from marshmallow_enum import EnumField
 
 from met_api.constants.membership_type import MembershipType
@@ -19,4 +20,5 @@ class MembershipSchema(Schema):
     engagement_id = fields.Int(data_key='engagement_id')
     status = fields.Str(data_key='status')
     user_id = fields.Int(data_key='user_id')
+    user = fields.Nested(UserSchema)
     type = EnumField(MembershipType, by_value=True)
