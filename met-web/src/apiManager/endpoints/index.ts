@@ -68,6 +68,9 @@ const Endpoints = {
         DELETE: `${AppConfig.apiUrl}/widgets/widget_id/documents/document_id`,
         UPDATE: `${AppConfig.apiUrl}/widgets/widget_id/documents/document_id`,
     },
+    EngagementTeamMembers: {
+        GET_LIST: `${AppConfig.apiUrl}/engagements/engagement_id/members`,
+    },
 };
 
 export default Endpoints;

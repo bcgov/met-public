@@ -8,35 +8,38 @@ import { EngagementTabsContext } from './EngagementTabsContext';
 import { getUserList } from 'services/userService/api';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { getTeamMembers } from 'services/engagementService/TeamMemberService';
+import { ActionContext } from '../ActionContext';
+import { EngagementTeamMember } from 'models/engagementTeamMember';
 
 const TeamMemberListing = () => {
-    const { pageInfo, setPageInfo, paginationOptions, setPaginationOptions, users, setUsers } =
-        useContext(EngagementTabsContext);
+    const {
+        pageInfo,
+        setPageInfo,
+        paginationOptions,
+        setPaginationOptions,
+        users,
+        setUsers,
+        teamMembers,
+        setTeamMembers,
+    } = useContext(EngagementTabsContext);
+    const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
-    const [usersLoading, setUsersLoading] = useState(false);
+    const [teamMembersLoading, setTeamMembersLoading] = useState(false);
 
     useEffect(() => {
         if (users.length === 0) {
             loadUsers();
         }
-    }, [users]);
-
-    const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
+    }, []);
 
     const loadUsers = async () => {
         try {
-            setUsersLoading(true);
-            const response = await getUserList({
-                page,
-                size,
-                sort_key: nested_sort_key || sort_key,
-                sort_order,
-            });
-            setUsers(response.items);
-            setPageInfo({
-                total: response.total,
-            });
-            setUsersLoading(false);
+            setTeamMembersLoading(true);
+            const response = await getTeamMembers({ engagement_id: savedEngagement.id });
+            setTeamMembers(response);
+
+            setTeamMembersLoading(false);
         } catch (error) {
             dispatch(
                 openNotification({
@@ -44,20 +47,20 @@ const TeamMemberListing = () => {
                     text: 'Error occurred while trying to fetch users, please refresh the page or try again at a later time',
                 }),
             );
-            setUsersLoading(false);
+            setTeamMembersLoading(false);
         }
     };
 
-    const headCells: HeadCell<User>[] = [
+    const headCells: HeadCell<EngagementTeamMember>[] = [
         {
-            key: 'first_name',
+            key: 'id',
             numeric: false,
             disablePadding: true,
             label: 'Team Members',
             allowSort: true,
-            getValue: (row: User) => (
+            getValue: (row: EngagementTeamMember) => (
                 <MuiLink component={Link} to={``}>
-                    {row.last_name + ', ' + row.first_name}
+                    {/* {row.last_name + ', ' + row.first_name} */}
                 </MuiLink>
             ),
         },
@@ -72,7 +75,7 @@ const TeamMemberListing = () => {
                 setPaginationOptions(paginationOptions)
             }
             paginationOptions={paginationOptions}
-            loading={usersLoading}
+            loading={teamMembersLoading}
             pageInfo={pageInfo}
         />
     );

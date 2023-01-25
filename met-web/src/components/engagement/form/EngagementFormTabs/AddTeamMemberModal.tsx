@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import { Autocomplete, Grid, Paper, Stack, TextField } from '@mui/material';
 import { MetHeader3, MetLabel, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
@@ -6,7 +6,7 @@ import { User, USER_GROUP } from 'models/user';
 import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { addUserToGroup } from 'services/userService/api';
+import { addUserToGroup, getUserList } from 'services/userService/api';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
 import { EngagementTabsContext } from './EngagementTabsContext';
@@ -23,9 +23,17 @@ type AddUserForm = yup.TypeOf<typeof schema>;
 
 export const AddTeamMemberModal = () => {
     const dispatch = useAppDispatch();
-    const { addTeamMemberOpen, setAddTeamMemberOpen, users } = useContext(EngagementTabsContext);
+    const { addTeamMemberOpen, setAddTeamMemberOpen, users, setUsers, teamMembers } = useContext(EngagementTabsContext);
     const { savedEngagement } = useContext(ActionContext);
     const [isAdding, setIsAdding] = useState(false);
+    const [usersLoading, setUsersLoading] = useState(false);
+
+    const teamMembersIds = useMemo(() => teamMembers.map((teamMember) => teamMember.id), [teamMembers]);
+
+    const availableUsers = useMemo(
+        () => users.filter((user) => user.roles.includes('Viewer') && !user.roles.includes('Adminstrator')),
+        [users],
+    );
 
     const methods = useForm<AddUserForm>({
         resolver: yupResolver(schema),
@@ -43,6 +51,29 @@ export const AddTeamMemberModal = () => {
     const handleClose = () => {
         setAddTeamMemberOpen(false);
         reset({});
+    };
+
+    useEffect(() => {
+        if (users.length === 0) {
+            loadUsers();
+        }
+    }, []);
+
+    const loadUsers = async () => {
+        try {
+            setUsersLoading(true);
+            const response = await getUserList();
+            setUsers(response.items);
+            setUsersLoading(false);
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while trying to fetch users, please refresh the page or try again at a later time',
+                }),
+            );
+            setUsersLoading(false);
+        }
     };
 
     const onSubmit: SubmitHandler<AddUserForm> = async (data: AddUserForm) => {
@@ -104,7 +135,7 @@ export const AddTeamMemberModal = () => {
                                         name="user"
                                         render={({ field: { ref, onChange, ...field } }) => (
                                             <Autocomplete
-                                                options={users || []}
+                                                options={availableUsers || []}
                                                 data-testid="select-team-member"
                                                 onChange={(_, data) => {
                                                     onChange(data);
@@ -121,6 +152,9 @@ export const AddTeamMemberModal = () => {
                                                     />
                                                 )}
                                                 getOptionLabel={(user: User) => `${user.first_name} ${user.last_name}`}
+                                                getOptionDisabled={(user: User) => teamMembersIds.includes(user.id)}
+                                                loading={usersLoading}
+                                                disabled={usersLoading}
                                             />
                                         )}
                                     />

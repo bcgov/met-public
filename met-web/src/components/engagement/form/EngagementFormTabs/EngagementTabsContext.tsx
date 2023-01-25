@@ -3,6 +3,7 @@ import { createDefaultPageInfo, PageInfo, PaginationOptions } from 'components/c
 import { SubmissionStatusTypes, SUBMISSION_STATUS } from 'constants/engagementStatus';
 import { User } from 'models/user';
 import { ActionContext } from '../ActionContext';
+import { EngagementTeamMember } from 'models/engagementTeamMember';
 
 interface EngagementFormData {
     name: string;
@@ -51,6 +52,8 @@ export interface EngagementTabsContextState {
     setSurveyBlockText: React.Dispatch<React.SetStateAction<{ [key in SubmissionStatusTypes]: string }>>;
     addTeamMemberOpen: boolean;
     setAddTeamMemberOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    teamMembers: EngagementTeamMember[];
+    setTeamMembers: React.Dispatch<React.SetStateAction<EngagementTeamMember[]>>;
 }
 
 export const EngagementTabsContext = createContext<EngagementTabsContextState>({
@@ -98,6 +101,10 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
     setAddTeamMemberOpen: () => {
         throw new Error('Set team member open not implemented');
     },
+    teamMembers: [],
+    setTeamMembers: () => {
+        throw new Error('Set team members not implemented');
+    },
 });
 
 export const EngagementTabsContextProvider = ({ children }: { children: React.ReactNode }) => {
@@ -128,6 +135,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
 
     // User listing
     const [users, setUsers] = useState<User[]>([]);
+    const [teamMembers, setTeamMembers] = useState<EngagementTeamMember[]>([]);
     const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
     const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<User>>({
         page: 1,
@@ -159,6 +167,8 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
                 setPaginationOptions,
                 addTeamMemberOpen,
                 setAddTeamMemberOpen,
+                teamMembers,
+                setTeamMembers,
             }}
         >
             {children}
