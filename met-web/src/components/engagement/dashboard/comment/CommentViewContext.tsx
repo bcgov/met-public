@@ -56,7 +56,7 @@ export const CommentViewProvider = ({ children }: { children: JSX.Element | JSX.
 
     const { page, size } = paginationOptions;
 
-    const validateEngagement = (commentsToValidate: Comment[]) => {
+    const validateComments = (commentsToValidate: Comment[]) => {
         const hasApprovedComments = commentsToValidate.length > 0;
 
         if (!hasApprovedComments) {
@@ -113,7 +113,7 @@ export const CommentViewProvider = ({ children }: { children: JSX.Element | JSX.
                 page,
                 size,
             });
-            validateEngagement(response.items);
+            validateComments(response.items);
             setComments(response.items);
             setPageInfo({
                 total: response.total,
