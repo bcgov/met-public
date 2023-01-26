@@ -1,12 +1,11 @@
 import React, { useContext } from 'react';
 import Grid from '@mui/material/Grid';
 import { MetHeader2, MetHeader4, MetPageGridContainer } from 'components/common';
-import { Accordion, AccordionDetails, AccordionSummary, styled, Theme, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, styled } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EngagementAccordion from './EngagementAccordion';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { DashboardContext } from './DashboardContext';
-import { getByPlaceholderText } from '@testing-library/react';
 import { Palette } from 'styles/Theme';
 
 const EngagementList = () => {
