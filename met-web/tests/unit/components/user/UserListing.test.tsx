@@ -15,7 +15,6 @@ const mockUser1: User = {
     description: 'mock description',
     email_id: '1',
     external_id: '3859G58GJH3921',
-    groups: 'groups',
     first_name: 'Mock first name',
     last_name: 'Mock last name',
     updated_date: Date(),

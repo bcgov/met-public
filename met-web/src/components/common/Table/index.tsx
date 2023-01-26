@@ -84,15 +84,15 @@ function MetTable<T>({
     handleChangePagination = (_pagination: PaginationOptions<T>) => {},
     loading = false,
     paginationOptions = {
-        page: 0,
-        size: 0,
+        page: 1,
+        size: rows.length,
     },
     pageInfo = {
-        total: 0,
+        total: rows.length,
     },
 }: MetTableProps<T>) {
-    const { page = 1, size = rows.length, sort_key, sort_order, nested_sort_key } = paginationOptions;
-    const { total = rows.length } = pageInfo;
+    const { page = 1, size, sort_key, sort_order, nested_sort_key } = paginationOptions;
+    const { total } = pageInfo;
 
     const order = sort_order;
     const orderBy = sort_key;

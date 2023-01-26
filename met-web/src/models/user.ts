@@ -18,7 +18,7 @@ export interface User {
     email_id: string;
     external_id: string;
     first_name: string;
-    groups: string;
+    groups: string[];
     id: number;
     last_name: string;
     updated_date: string;
@@ -34,7 +34,7 @@ export const initialDefaultUser: User = {
     description: '',
     email_id: '',
     external_id: '',
-    groups: '',
+    groups: [''],
     first_name: '',
     last_name: '',
     updated_date: Date(),

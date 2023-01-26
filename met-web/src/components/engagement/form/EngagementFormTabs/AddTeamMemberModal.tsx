@@ -29,10 +29,14 @@ export const AddTeamMemberModal = () => {
     const [isAdding, setIsAdding] = useState(false);
     const [usersLoading, setUsersLoading] = useState(false);
 
-    const teamMembersIds = useMemo(() => teamMembers.map((teamMember) => teamMember.id), [teamMembers]);
+    const teamMembersIds = useMemo(() => teamMembers.map((teamMember) => teamMember.user_id), [teamMembers]);
 
     const availableUsers = useMemo(
-        () => users.filter((user) => user.groups.includes(USER_GROUP.VIEWER.label)),
+        () =>
+            users.filter(
+                (user) =>
+                    user.groups.includes(USER_GROUP.VIEWER.label) && !user.groups.includes(USER_GROUP.ADMIN.label),
+            ),
         [users],
     );
 

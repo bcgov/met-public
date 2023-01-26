@@ -6,16 +6,40 @@ import { setupEnv } from '../setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
+import * as teamMemberService from 'services/engagementService/TeamMemberService';
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
 import * as userService from 'services/userService/api';
 import { Box } from '@mui/material';
 import { engagement } from '../factory';
-import { User, initialDefaultUser } from 'models/user';
+import { User, initialDefaultUser, USER_GROUP } from 'models/user';
+import { EngagementTeamMember, initialDefaultTeamMember } from 'models/engagementTeamMember';
 
 const mockUser1: User = {
     ...initialDefaultUser,
-    first_name: 'Mock first name',
-    last_name: 'Mock last name',
+    id: 2,
+    first_name: 'John',
+    last_name: 'Snow',
+    groups: [USER_GROUP.VIEWER.label],
+};
+
+const mockTeamMember1: EngagementTeamMember = {
+    ...initialDefaultTeamMember,
+    user_id: 1,
+    user: {
+        ...initialDefaultUser,
+        id: 1,
+        first_name: 'Jane',
+        last_name: 'Doe',
+        groups: [USER_GROUP.VIEWER.label],
+    },
+};
+
+const mockTeamMember2: EngagementTeamMember = {
+    ...initialDefaultTeamMember,
+    user_id: 2,
+    user: {
+        ...mockUser1,
+    },
 };
 
 jest.mock('components/common/Dragdrop', () => ({
@@ -65,7 +89,10 @@ describe('Engagement form page tests', () => {
             total: 1,
         }),
     );
-    const addUserToGroupMock = jest.spyOn(userService, 'addUserToGroup').mockReturnValue(Promise.resolve(mockUser1));
+    jest.spyOn(teamMemberService, 'getTeamMembers').mockReturnValue(Promise.resolve([mockTeamMember1]));
+    const addTeamMemberToEngagementMock = jest
+        .spyOn(teamMemberService, 'addTeamMemberToEngagement')
+        .mockReturnValue(Promise.resolve(mockTeamMember2));
 
     const openNotificationModalMock = jest
         .spyOn(notificationModalSlice, 'openNotificationModal')
@@ -91,7 +118,7 @@ describe('Engagement form page tests', () => {
         fireEvent.click(userManagementTabButton);
 
         await waitFor(() => {
-            expect(screen.getByText(mockUser1.first_name, { exact: false })).toBeInTheDocument();
+            expect(screen.getByText(mockTeamMember1.user.first_name, { exact: false })).toBeInTheDocument();
         });
 
         const addTeamMemberButton = screen.getByText('+ Add Team Member');
@@ -118,7 +145,7 @@ describe('Engagement form page tests', () => {
         fireEvent.click(submitButton);
 
         await waitFor(() => {
-            expect(addUserToGroupMock).toBeCalled();
+            expect(addTeamMemberToEngagementMock).toBeCalled();
             expect(openNotificationModalMock).toBeCalled();
         });
     });

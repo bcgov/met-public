@@ -22,5 +22,5 @@ export const initialDefaultTeamMember: EngagementTeamMember = {
     engagement_id: 0,
     user_id: 0,
     type: ENGAGEMENT_MEMBERSHIP_TYPE.TEAM_MEMBER,
-    user: initialDefaultUser,
+    user: { ...initialDefaultUser },
 };
