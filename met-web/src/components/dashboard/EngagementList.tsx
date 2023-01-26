@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid';
 import { MetHeader2, MetHeader4, MetPageGridContainer } from 'components/common';
 import { Accordion, AccordionDetails, AccordionSummary, styled } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import EngagementAccordion from './EngagementAccordion';
+import EngagementAccordion from './EngagementsAccordion';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { DashboardContext } from './DashboardContext';
 import { Palette } from 'styles/Theme';
