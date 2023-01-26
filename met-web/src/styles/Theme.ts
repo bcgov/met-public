@@ -17,6 +17,20 @@ export const Palette = {
     action: {
         active: '#1A5A96',
     },
+    dashboard: {
+        upcoming: {
+            bg: '#FCB92F26',
+            border: '#FCB92F',
+        },
+        open: {
+            bg: '#C8DF8C4D',
+            border: '#839537',
+        },
+        closed: {
+            bg: '#F15A2C1A',
+            border: '#F15A2C',
+        },
+    },
 };
 
 export const BaseTheme = createTheme({
