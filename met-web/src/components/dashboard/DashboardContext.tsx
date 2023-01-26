@@ -34,10 +34,10 @@ export const DashboardContextProvider = ({ children }: { children: JSX.Element |
 
     const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Engagement>>({
         page: 1,
-        size: 10,
-        sort_key: 'name',
-        nested_sort_key: 'name',
-        sort_order: 'asc',
+        size: 100,
+        sort_key: 'id',
+        nested_sort_key: 'engagement.id',
+        sort_order: 'desc',
     });
 
     useEffect(() => {

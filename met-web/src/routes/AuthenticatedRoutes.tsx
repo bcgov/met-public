@@ -21,7 +21,8 @@ import Dashboard from 'components/dashboard';
 const AuthenticatedRoutes = () => {
     return (
         <Routes>
-            <Route path="/" element={<EngagementListing />} />
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/engagements" element={<EngagementListing />} />
             <Route path="/surveys" element={<SurveyListing />} />
             <Route path="/surveys/create" element={<CreateSurvey />} />
             <Route path="/surveys/:surveyId/build" element={<SurveyFormBuilder />} />
@@ -37,7 +38,6 @@ const AuthenticatedRoutes = () => {
             <Route path="/calendar" element={<UnderConstruction />} />
             <Route path="/reporting" element={<UnderConstruction />} />
             <Route path="/usermanagement" element={<UserManagementListing />} />
-            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
     );
