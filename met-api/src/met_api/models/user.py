@@ -7,9 +7,11 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import Column, ForeignKey, String, asc, desc, func, or_
-from sqlalchemy.sql import text
+from sqlalchemy import Column, ForeignKey, String, asc, desc, func
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.sql import text
+from sqlalchemy.sql.operators import ilike_op
+
 from .db import db, ma
 from .pagination_options import PaginationOptions
 
@@ -33,7 +35,7 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
     # a type for the user to identify what kind of user it is..STAFF/PUBLIC_USER etc
     access_type = Column('access_type', String(200), nullable=True)
     status_id = db.Column(db.Integer, ForeignKey('user_status.id'))
-    
+
     @hybrid_property
     def full_name(self):
         return self.first_name + " " + self.last_name
@@ -54,7 +56,7 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
             query = query.order_by(sort)
 
         if search_text:
-            query = query.filter(User.full_name.ilike('%' + search_text + '%'))
+            query = query.filter(ilike_op(User.full_name, '%' + search_text + '%'))
 
         no_pagination_options = not pagination_options.page or not pagination_options.size
         if no_pagination_options:
