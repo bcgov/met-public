@@ -38,7 +38,8 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
 
     @hybrid_property
     def full_name(self):
-        return self.first_name + " " + self.last_name
+        """Combine first name and last name."""
+        return f'{self.first_name} {self.last_name}'
 
     @classmethod
     def get_user(cls, _id):
@@ -46,8 +47,8 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
         return cls.query.filter_by(id=_id).first()
 
     @classmethod
-    def find_users_by_access_type(cls, user_access_type, pagination_options: PaginationOptions,  search_text=''):
-        """Get a user with the provided id."""
+    def find_users_by_access_type(cls, user_access_type, pagination_options: PaginationOptions, search_text=''):
+        """Fetch list of users by access type."""
         query = cls.query.filter_by(access_type=user_access_type)
         if pagination_options.sort_key:
             sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == 'asc' \
