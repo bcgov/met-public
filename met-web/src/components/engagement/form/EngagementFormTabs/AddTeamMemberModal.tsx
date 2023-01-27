@@ -2,7 +2,7 @@ import React, { useContext, useMemo, useRef, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import { Autocomplete, CircularProgress, Grid, Paper, Stack, TextField } from '@mui/material';
 import { MetHeader3, MetLabel, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
-import { User, USER_GROUP } from 'models/user';
+import { User } from 'models/user';
 import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';

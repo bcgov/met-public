@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { MetBody, MetLabel } from 'components/common';
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
-import { formatDate } from 'components/common/dateHelper';
 import { AppConfig } from 'config';
 import { Engagement } from 'models/engagement';
 import { When } from 'react-if';
