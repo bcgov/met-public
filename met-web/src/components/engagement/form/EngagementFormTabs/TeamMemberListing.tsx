@@ -6,7 +6,7 @@ import MetTable from 'components/common/Table';
 import { EngagementTabsContext } from './EngagementTabsContext';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { getTeamMembers } from 'services/engagementService/TeamMemberService';
+import { getTeamMembers } from 'services/membershipService';
 import { ActionContext } from '../ActionContext';
 import { EngagementTeamMember } from 'models/engagementTeamMember';
 

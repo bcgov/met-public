@@ -12,7 +12,7 @@ import { useAppDispatch } from 'hooks';
 import { EngagementTabsContext } from './EngagementTabsContext';
 import { ActionContext } from '../ActionContext';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
-import { addTeamMemberToEngagement } from 'services/engagementService/TeamMemberService';
+import { addTeamMemberToEngagement } from 'services/membershipService';
 
 const schema = yup
     .object({

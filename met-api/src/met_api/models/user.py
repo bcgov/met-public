@@ -7,9 +7,9 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import Column, ForeignKey, String, asc, desc, func
+from sqlalchemy import Column, ForeignKey, String, asc, desc, func, or_
 from sqlalchemy.sql import text
-
+from sqlalchemy.ext.hybrid import hybrid_property
 from .db import db, ma
 from .pagination_options import PaginationOptions
 
@@ -33,6 +33,10 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
     # a type for the user to identify what kind of user it is..STAFF/PUBLIC_USER etc
     access_type = Column('access_type', String(200), nullable=True)
     status_id = db.Column(db.Integer, ForeignKey('user_status.id'))
+    
+    @hybrid_property
+    def full_name(self):
+        return self.first_name + " " + self.last_name
 
     @classmethod
     def get_user(cls, _id):
@@ -40,7 +44,7 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
         return cls.query.filter_by(id=_id).first()
 
     @classmethod
-    def find_users_by_access_type(cls, user_access_type, pagination_options: PaginationOptions):
+    def find_users_by_access_type(cls, user_access_type, pagination_options: PaginationOptions,  search_text=''):
         """Get a user with the provided id."""
         query = cls.query.filter_by(access_type=user_access_type)
         if pagination_options.sort_key:
@@ -48,6 +52,9 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
                 else desc(text(pagination_options.sort_key))
 
             query = query.order_by(sort)
+
+        if search_text:
+            query = query.filter(User.full_name.ilike('%' + search_text + '%'))
 
         no_pagination_options = not pagination_options.page or not pagination_options.size
         if no_pagination_options:

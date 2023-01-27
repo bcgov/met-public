@@ -6,7 +6,7 @@ import { setupEnv } from '../setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
-import * as teamMemberService from 'services/engagementService/TeamMemberService';
+import * as teamMemberService from 'services/membershipService';
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
 import * as userService from 'services/userService/api';
 import { Box } from '@mui/material';

@@ -1,7 +1,8 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import {
     Autocomplete,
+    CircularProgress,
     FormControl,
     FormControlLabel,
     FormHelperText,
@@ -20,15 +21,23 @@ import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-for
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import ControlledRadioGroup from 'components/common/ControlledInputComponents/ControlledRadioGroup';
-import { addUserToGroup } from 'services/userService/api';
+import { addUserToGroup, getUserList } from 'services/userService/api';
+import { getEngagements } from 'services/engagementService';
+import { addTeamMemberToEngagement } from 'services/membershipService';
 import { When } from 'react-if';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
+import { debounce } from 'lodash';
+import { Engagement } from 'models/engagement';
 
 const schema = yup
     .object({
         user: yup.object().required('A user must be selected'),
         group: yup.string().required('A role must be specified'),
+        engagement: yup.object().when('group', {
+            is: USER_GROUP.VIEWER.value,
+            then: yup.object().required('An engagement must be selected'),
+        }),
     })
     .required();
 
@@ -36,8 +45,13 @@ type AddUserForm = yup.TypeOf<typeof schema>;
 
 export const AddUserModel = () => {
     const dispatch = useAppDispatch();
-    const { addUserModalOpen, setAddUserModelOpen, users } = useContext(UserManagementContext);
-    const [isAdding, setIsAdding] = useState(false);
+    const { addUserModalOpen, setAddUserModelOpen } = useContext(UserManagementContext);
+    const [isAssigningRole, setIsAssigningRole] = useState(false);
+    const [users, setUsers] = useState<User[]>([]);
+    const [usersLoading, setUsersLoading] = useState(false);
+
+    const [engagements, setEngagements] = useState<Engagement[]>([]);
+    const [engagementsLoading, setEngagementsLoading] = useState(false);
 
     const methods = useForm<AddUserForm>({
         resolver: yupResolver(schema),
@@ -48,25 +62,97 @@ export const AddUserModel = () => {
         control,
         reset,
         formState: { errors },
+        watch,
     } = methods;
 
-    const { user: userErrors, group: groupErrors } = errors;
+    const userTypeSelected = watch('group');
+
+    const { user: userErrors, group: groupErrors, engagement: engagementErrors } = errors;
 
     const handleClose = () => {
         setAddUserModelOpen(false);
         reset({});
     };
 
+    const loadUsers = async (searchText: string) => {
+        if (searchText.length < 3) {
+            return;
+        }
+        try {
+            setUsersLoading(true);
+            const response = await getUserList({
+                search_text: searchText,
+            });
+            setUsers(response.items);
+            setUsersLoading(false);
+        } catch (error) {
+            console.log(error);
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while trying to fetch users, please refresh the page or try again at a later time',
+                }),
+            );
+            setUsersLoading(false);
+        }
+    };
+
+    const loadEngagements = async (searchText: string) => {
+        if (searchText.length < 3) {
+            return;
+        }
+        try {
+            setEngagementsLoading(true);
+            const response = await getEngagements({
+                search_text: searchText,
+            });
+            setEngagements(response.items);
+            setEngagementsLoading(false);
+        } catch (error) {
+            console.log(error);
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while trying to fetch users, please refresh the page or try again at a later time',
+                }),
+            );
+            setEngagementsLoading(false);
+        }
+    };
+
+    const debounceLoadUsers = useRef(
+        debounce((searchText: string) => {
+            loadUsers(searchText);
+        }, 1000),
+    ).current;
+
+    const debounceLoadEngagements = useRef(
+        debounce((searchText: string) => {
+            loadEngagements(searchText);
+        }, 1000),
+    ).current;
+
+    const assignRoleToUser = async (data: AddUserForm) => {
+        if (userTypeSelected === USER_GROUP.ADMIN.value) {
+            return addUserToGroup({ user_id: data.user?.external_id, group: data.group });
+        } else
+            return addTeamMemberToEngagement({
+                user_id: data.user?.external_id,
+                engagement_id: data.engagement?.id,
+            });
+    };
+
     const onSubmit: SubmitHandler<AddUserForm> = async (data: AddUserForm) => {
         try {
-            setIsAdding(true);
-            await addUserToGroup({ user_id: data.user?.external_id, group: data.group });
+            setIsAssigningRole(true);
+            await assignRoleToUser(data);
             dispatch(openNotification({ severity: 'success', text: 'User has been successfully added' }));
-            setIsAdding(false);
+            setIsAssigningRole(false);
             handleClose();
         } catch (error) {
             console.log(error);
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add user' }));
+            setIsAssigningRole(false);
         }
     };
 
@@ -103,15 +189,33 @@ export const AddUserModel = () => {
                                                 onChange={(_, data) => {
                                                     onChange(data);
                                                 }}
+                                                onInputChange={(_event, newInputValue) => {
+                                                    debounceLoadUsers(newInputValue);
+                                                }}
                                                 renderInput={(params) => (
                                                     <TextField
                                                         {...params}
                                                         {...field}
                                                         inputRef={ref}
                                                         fullWidth
-                                                        placeholder="(Select one)"
+                                                        placeholder="Type at least 3 letters of the user's name"
                                                         error={Boolean(userErrors)}
                                                         helperText={String(userErrors?.message || '')}
+                                                        InputProps={{
+                                                            ...params.InputProps,
+                                                            endAdornment: (
+                                                                <>
+                                                                    {usersLoading ? (
+                                                                        <CircularProgress
+                                                                            color="inherit"
+                                                                            size={20}
+                                                                            sx={{ marginRight: '2em' }}
+                                                                        />
+                                                                    ) : null}
+                                                                    {params.InputProps.endAdornment}
+                                                                </>
+                                                            ),
+                                                        }}
                                                     />
                                                 )}
                                                 getOptionLabel={(user: User) => `${user.first_name} ${user.last_name}`}
@@ -137,7 +241,6 @@ export const AddUserModel = () => {
                                                 value={USER_GROUP.VIEWER.value}
                                                 control={<Radio />}
                                                 label={'Team Member'}
-                                                disabled
                                             />
                                         </ControlledRadioGroup>
                                         <When condition={Boolean(groupErrors)}>
@@ -145,6 +248,55 @@ export const AddUserModel = () => {
                                         </When>
                                     </FormControl>
                                 </Grid>
+                                <When condition={userTypeSelected === USER_GROUP.VIEWER.value}>
+                                    <Grid item xs={12}>
+                                        <MetLabel sx={{ marginBottom: '2px', display: 'flex' }}>
+                                            Which Engagement would you like to add this Team Member to?
+                                        </MetLabel>
+                                        <Controller
+                                            control={control}
+                                            name="engagement"
+                                            render={({ field: { ref, onChange, ...field } }) => (
+                                                <Autocomplete
+                                                    options={engagements || []}
+                                                    onChange={(_, data) => {
+                                                        onChange(data);
+                                                    }}
+                                                    onInputChange={(_event, newInputValue) => {
+                                                        debounceLoadEngagements(newInputValue);
+                                                    }}
+                                                    renderInput={(params) => (
+                                                        <TextField
+                                                            {...params}
+                                                            {...field}
+                                                            inputRef={ref}
+                                                            fullWidth
+                                                            placeholder="Type at least 3 letters of the engagement's name"
+                                                            error={Boolean(engagementErrors)}
+                                                            helperText={String(engagementErrors?.message || '')}
+                                                            InputProps={{
+                                                                ...params.InputProps,
+                                                                endAdornment: (
+                                                                    <>
+                                                                        {engagementsLoading ? (
+                                                                            <CircularProgress
+                                                                                color="inherit"
+                                                                                size={20}
+                                                                                sx={{ marginRight: '2em' }}
+                                                                            />
+                                                                        ) : null}
+                                                                        {params.InputProps.endAdornment}
+                                                                    </>
+                                                                ),
+                                                            }}
+                                                        />
+                                                    )}
+                                                    getOptionLabel={(engagement: Engagement) => engagement.name}
+                                                />
+                                            )}
+                                        />
+                                    </Grid>
+                                </When>
                             </Grid>
 
                             <Grid
@@ -163,7 +315,7 @@ export const AddUserModel = () => {
                                     justifyContent="flex-end"
                                 >
                                     <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
-                                    <PrimaryButton loading={isAdding} type="submit">
+                                    <PrimaryButton loading={isAssigningRole} type="submit">
                                         Submit
                                     </PrimaryButton>
                                 </Stack>
