@@ -68,7 +68,7 @@ class User(Resource):
         )
 
         users = UserService.find_users(
-            pagination_options=pagination_options, 
+            pagination_options=pagination_options,
             search_text=args.get('search_text', '', str)
         )
         return jsonify(users), HTTPStatus.OK
