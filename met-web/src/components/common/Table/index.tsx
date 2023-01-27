@@ -183,7 +183,9 @@ function MetTable<T>({
                             })}
                             {rows.length == 0 && (
                                 <TableRow>
-                                    <TableCell align={'center'}>{emptyText}</TableCell>
+                                    <TableCell colSpan={headCells.length} align={'center'}>
+                                        {emptyText}
+                                    </TableCell>
                                 </TableRow>
                             )}
                             {emptyRows > 0 && (
