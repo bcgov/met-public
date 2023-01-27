@@ -5,16 +5,16 @@ import { setupEnv } from '../setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as userService from 'services/userService/api';
-import { User } from 'models/user';
+import { User, initialDefaultUser } from 'models/user';
 import UserManagementListing from 'components/userManagement/listing';
 
 const mockUser1: User = {
+    ...initialDefaultUser,
     id: 1,
     contact_number: '555 012 4564',
     description: 'mock description',
     email_id: '1',
     external_id: '3859G58GJH3921',
-    groups: 'groups',
     first_name: 'Mock first name',
     last_name: 'Mock last name',
     updated_date: Date(),

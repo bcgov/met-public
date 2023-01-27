@@ -34,3 +34,5 @@ class Role(Enum):
     EDIT_ENGAGEMENT = 'edit_engagement'
     REVIEW_COMMENTS = 'review_comments'
     ACCESS_DASHBOARD = 'access_dashboard'
+    VIEW_MEMBERS = 'view_members'
+    EDIT_MEMBERS = 'edit_members'

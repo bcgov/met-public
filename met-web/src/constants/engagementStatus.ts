@@ -10,3 +10,11 @@ export enum SubmissionStatus {
     Open = 2,
     Closed = 3,
 }
+
+export type SubmissionStatusTypes = 'Upcoming' | 'Open' | 'Closed';
+
+export const SUBMISSION_STATUS: { [status: string]: SubmissionStatusTypes } = {
+    UPCOMING: 'Upcoming',
+    OPEN: 'Open',
+    CLOSED: 'Closed',
+};

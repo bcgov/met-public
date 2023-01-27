@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { MetPageGridContainer, MidScreenLoader } from 'components/common';
-import EngagementFormTabs from './EngagementFormTabs';
+import EngagementFormTabs from './EngagementFormTabs/';
 import { ActionContext } from './ActionContext';
 import { Grid } from '@mui/material';
 import WidgetsBlock from './EngagementWidgets';

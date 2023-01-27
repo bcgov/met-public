@@ -12,7 +12,7 @@ import Paper from '@mui/material/Paper';
 import { visuallyHidden } from '@mui/utils';
 import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { LinearProgress } from '@mui/material';
-import { When } from 'react-if';
+import { Unless, When } from 'react-if';
 
 type Order = 'asc' | 'desc';
 
@@ -68,22 +68,30 @@ interface MetTableProps<T> {
     rows: T[];
     hideHeader?: boolean;
     noRowBorder?: boolean;
-    handleChangePagination: (pagination: PaginationOptions<T>) => void;
+    handleChangePagination?: (pagination: PaginationOptions<T>) => void;
     loading?: boolean;
-    paginationOptions: PaginationOptions<T>;
-    pageInfo: PageInfo;
+    paginationOptions?: PaginationOptions<T>;
+    pageInfo?: PageInfo;
+    noPagination?: boolean;
 }
 function MetTable<T>({
     hideHeader = false,
     headCells = [],
     rows = [],
     noRowBorder = false,
-    handleChangePagination,
+    noPagination = false,
+    // eslint-disable-next-line
+    handleChangePagination = (_pagination: PaginationOptions<T>) => {},
     loading = false,
-    paginationOptions,
-    pageInfo,
+    paginationOptions = {
+        page: 1,
+        size: rows.length,
+    },
+    pageInfo = {
+        total: rows.length,
+    },
 }: MetTableProps<T>) {
-    const { page, size, sort_key, sort_order, nested_sort_key } = paginationOptions;
+    const { page = 1, size, sort_key, sort_order, nested_sort_key } = paginationOptions;
     const { total } = pageInfo;
 
     const order = sort_order;
@@ -190,16 +198,18 @@ function MetTable<T>({
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <TablePagination
-                    data-testid="Table-Pagination"
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component="div"
-                    count={total}
-                    rowsPerPage={size}
-                    page={page - 1}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                />
+                <Unless condition={noPagination}>
+                    <TablePagination
+                        data-testid="Table-Pagination"
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={total}
+                        rowsPerPage={size}
+                        page={page - 1}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                </Unless>
             </Paper>
         </Box>
     );

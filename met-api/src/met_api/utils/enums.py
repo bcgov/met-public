@@ -30,6 +30,13 @@ class WidgetDocumentType(Enum):
     FOLDER = 'folder'
 
 
+class MembershipStatus(Enum):
+    """User Membership status."""
+
+    ACTIVE = 1
+    INACTIVE = 2
+
+
 class GeneratedDocumentTypes(IntEnum):
     """Document Types."""
 
@@ -47,3 +54,11 @@ class LoginSource(Enum):
     """Login Source."""
 
     IDIR = 'idir'
+
+
+class KeycloakGroups(Enum):
+    """Login Source."""
+
+    EAO_IT_ADMIN = 'Administrator'
+    EAO_IT_VIEWER = 'Viewer'
+    EAO_TEAM_MEMBER = 'Member'

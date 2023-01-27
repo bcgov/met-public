@@ -9,7 +9,6 @@ export interface EngagementContext {
     engagementId: string | undefined;
     loadingSavedEngagement: boolean;
     handleAddBannerImage: (_files: File[]) => void;
-    handleStatusBlockChange: (_statusBlock: EngagementStatusBlock[]) => void;
     fetchEngagement: () => void;
 }
 
@@ -28,6 +27,7 @@ export interface EngagementForm {
     end_date: string;
     content: string;
     rich_content: string;
+    status_block: EngagementStatusBlock[];
 }
 
 export interface EngagementFormUpdate {
@@ -38,6 +38,7 @@ export interface EngagementFormUpdate {
     end_date?: string;
     content?: string;
     rich_content?: string;
+    status_block?: EngagementStatusBlock[];
 }
 
 export type EngagementParams = {
