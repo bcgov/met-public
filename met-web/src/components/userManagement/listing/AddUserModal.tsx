@@ -113,7 +113,7 @@ export const AddUserModel = () => {
             dispatch(
                 openNotification({
                     severity: 'error',
-                    text: 'Error occurred while trying to fetch users, please refresh the page or try again at a later time',
+                    text: 'Error occurred while trying to fetch engagements, please refresh the page or try again at a later time',
                 }),
             );
             setEngagementsLoading(false);
@@ -207,7 +207,7 @@ export const AddUserModel = () => {
                                                                 <>
                                                                     {usersLoading ? (
                                                                         <CircularProgress
-                                                                            color="inherit"
+                                                                            color="primary"
                                                                             size={20}
                                                                             sx={{ marginRight: '2em' }}
                                                                         />
@@ -219,6 +219,7 @@ export const AddUserModel = () => {
                                                     />
                                                 )}
                                                 getOptionLabel={(user: User) => `${user.first_name} ${user.last_name}`}
+                                                loading={usersLoading}
                                             />
                                         )}
                                     />
@@ -280,7 +281,7 @@ export const AddUserModel = () => {
                                                                     <>
                                                                         {engagementsLoading ? (
                                                                             <CircularProgress
-                                                                                color="inherit"
+                                                                                color="primary"
                                                                                 size={20}
                                                                                 sx={{ marginRight: '2em' }}
                                                                             />
@@ -292,6 +293,7 @@ export const AddUserModel = () => {
                                                         />
                                                     )}
                                                     getOptionLabel={(engagement: Engagement) => engagement.name}
+                                                    loading={engagementsLoading}
                                                 />
                                             )}
                                         />

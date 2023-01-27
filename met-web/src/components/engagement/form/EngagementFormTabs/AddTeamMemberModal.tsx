@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useRef, useState } from 'react';
 import Modal from '@mui/material/Modal';
-import { Autocomplete, Grid, Paper, Stack, TextField } from '@mui/material';
+import { Autocomplete, CircularProgress, Grid, Paper, Stack, TextField } from '@mui/material';
 import { MetHeader3, MetLabel, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
 import { User, USER_GROUP } from 'models/user';
 import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
@@ -13,6 +13,7 @@ import { EngagementTabsContext } from './EngagementTabsContext';
 import { ActionContext } from '../ActionContext';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { addTeamMemberToEngagement } from 'services/membershipService';
+import { debounce } from 'lodash';
 
 const schema = yup
     .object({
@@ -24,21 +25,13 @@ type AddTeamMemberForm = yup.TypeOf<typeof schema>;
 
 export const AddTeamMemberModal = () => {
     const dispatch = useAppDispatch();
-    const { addTeamMemberOpen, setAddTeamMemberOpen, users, setUsers, teamMembers } = useContext(EngagementTabsContext);
+    const { addTeamMemberOpen, setAddTeamMemberOpen, teamMembers } = useContext(EngagementTabsContext);
     const { savedEngagement } = useContext(ActionContext);
     const [isAdding, setIsAdding] = useState(false);
     const [usersLoading, setUsersLoading] = useState(false);
+    const [users, setUsers] = useState<User[]>([]);
 
     const teamMembersIds = useMemo(() => teamMembers.map((teamMember) => teamMember.user_id), [teamMembers]);
-
-    const availableUsers = useMemo(
-        () =>
-            users.filter(
-                (user) =>
-                    user.groups.includes(USER_GROUP.VIEWER.label) && !user.groups.includes(USER_GROUP.ADMIN.label),
-            ),
-        [users],
-    );
 
     const methods = useForm<AddTeamMemberForm>({
         resolver: yupResolver(schema),
@@ -58,19 +51,19 @@ export const AddTeamMemberModal = () => {
         reset({});
     };
 
-    useEffect(() => {
-        if (users.length === 0) {
-            loadUsers();
+    const loadUsers = async (searchText: string) => {
+        if (searchText.length < 3) {
+            return;
         }
-    }, []);
-
-    const loadUsers = async () => {
         try {
             setUsersLoading(true);
-            const response = await getUserList();
+            const response = await getUserList({
+                search_text: searchText,
+            });
             setUsers(response.items);
             setUsersLoading(false);
         } catch (error) {
+            console.log(error);
             dispatch(
                 openNotification({
                     severity: 'error',
@@ -80,6 +73,12 @@ export const AddTeamMemberModal = () => {
             setUsersLoading(false);
         }
     };
+
+    const debounceLoadUsers = useRef(
+        debounce((searchText: string) => {
+            loadUsers(searchText);
+        }, 1000),
+    ).current;
 
     const onSubmit: SubmitHandler<AddTeamMemberForm> = async (data: AddTeamMemberForm) => {
         try {
@@ -139,10 +138,13 @@ export const AddTeamMemberModal = () => {
                                         name="user"
                                         render={({ field: { ref, onChange, ...field } }) => (
                                             <Autocomplete
-                                                options={availableUsers || []}
+                                                options={users || []}
                                                 data-testid="select-team-member"
                                                 onChange={(_, data) => {
                                                     onChange(data);
+                                                }}
+                                                onInputChange={(_event, newInputValue) => {
+                                                    debounceLoadUsers(newInputValue);
                                                 }}
                                                 renderInput={(params) => (
                                                     <TextField
@@ -150,15 +152,29 @@ export const AddTeamMemberModal = () => {
                                                         {...field}
                                                         inputRef={ref}
                                                         fullWidth
-                                                        placeholder="(Select one)"
+                                                        placeholder="Type at least 3 letters of the user's name"
                                                         error={Boolean(userErrors)}
                                                         helperText={String(userErrors?.message || '')}
+                                                        InputProps={{
+                                                            ...params.InputProps,
+                                                            endAdornment: (
+                                                                <>
+                                                                    {usersLoading ? (
+                                                                        <CircularProgress
+                                                                            color="primary"
+                                                                            size={20}
+                                                                            sx={{ marginRight: '2em' }}
+                                                                        />
+                                                                    ) : null}
+                                                                    {params.InputProps.endAdornment}
+                                                                </>
+                                                            ),
+                                                        }}
                                                     />
                                                 )}
                                                 getOptionLabel={(user: User) => `${user.first_name} ${user.last_name}`}
                                                 getOptionDisabled={(user: User) => teamMembersIds.includes(user.id)}
                                                 loading={usersLoading}
-                                                disabled={usersLoading}
                                             />
                                         )}
                                     />
