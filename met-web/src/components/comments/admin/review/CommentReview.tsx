@@ -24,6 +24,7 @@ import {
     SecondaryButton,
     MetHeader3,
     MetHeader4,
+    MetBody,
 } from 'components/common';
 import { CommentStatus } from 'constants/commentStatus';
 import { StaffNoteType } from 'constants/staffNoteType';
@@ -33,9 +34,8 @@ import { createDefaultSubmission, SurveySubmission } from 'models/surveySubmissi
 import { createDefaultReviewNote, createDefaultInternalNote, StaffNote } from 'models/staffNote';
 import { If, Then, Else, When } from 'react-if';
 import EmailPreviewModal from './emailPreview/EmailPreviewModal';
-import { MetBody } from 'components/common';
 import { RejectEmailTemplate } from './emailPreview/EmailTemplates';
-import EmailPreview from './emailPreview/PreviewEmail';
+import EmailPreview from './emailPreview/EmailPreview';
 
 const CommentReview = () => {
     const [submission, setSubmission] = useState<SurveySubmission>(createDefaultSubmission());
