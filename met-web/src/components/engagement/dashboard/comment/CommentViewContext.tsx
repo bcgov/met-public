@@ -8,7 +8,6 @@ import { getErrorMessage } from 'utils';
 import { getCommentsPage } from 'services/commentService';
 import { Comment } from 'models/comment';
 import { createDefaultPageInfo, PageInfo, PaginationOptions } from 'components/common/Table/types';
-import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
 export interface EngagementCommentContextProps {
     engagement: Engagement | null;
@@ -56,27 +55,6 @@ export const CommentViewProvider = ({ children }: { children: JSX.Element | JSX.
 
     const { page, size } = paginationOptions;
 
-    const validateComments = (commentsToValidate: Comment[]) => {
-        const hasApprovedComments = commentsToValidate.length > 0;
-
-        if (!hasApprovedComments) {
-            dispatch(
-                openNotificationModal({
-                    open: true,
-                    data: {
-                        header: 'View Comments',
-                        subText: [
-                            {
-                                text: 'Engagement does not have any published comments',
-                            },
-                        ],
-                    },
-                    type: 'update',
-                }),
-            );
-        }
-    };
-
     useEffect(() => {
         const fetchEngagement = async () => {
             if (isNaN(Number(engagementId))) {
@@ -113,7 +91,6 @@ export const CommentViewProvider = ({ children }: { children: JSX.Element | JSX.
                 page,
                 size,
             });
-            validateComments(response.items);
             setComments(response.items);
             setPageInfo({
                 total: response.total,

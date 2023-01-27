@@ -73,6 +73,7 @@ interface MetTableProps<T> {
     paginationOptions?: PaginationOptions<T>;
     pageInfo?: PageInfo;
     noPagination?: boolean;
+    emptyText?: string;
 }
 function MetTable<T>({
     hideHeader = false,
@@ -90,6 +91,7 @@ function MetTable<T>({
     pageInfo = {
         total: rows.length,
     },
+    emptyText = 'No data to display',
 }: MetTableProps<T>) {
     const { page = 1, size, sort_key, sort_order, nested_sort_key } = paginationOptions;
     const { total } = pageInfo;
@@ -179,6 +181,11 @@ function MetTable<T>({
                                     </TableRow>
                                 );
                             })}
+                            {rows.length == 0 && (
+                                <TableRow>
+                                    <TableCell align={'center'}>{emptyText}</TableCell>
+                                </TableRow>
+                            )}
                             {emptyRows > 0 && (
                                 <TableRow
                                     style={{

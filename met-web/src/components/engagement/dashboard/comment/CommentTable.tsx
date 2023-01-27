@@ -45,6 +45,7 @@ const CommentTable = () => {
                 paginationOptions={paginationOptions}
                 pageInfo={pageInfo}
                 loading={tableLoading}
+                emptyText={'Engagement does not have any published comments'}
             />
         </>
     );
