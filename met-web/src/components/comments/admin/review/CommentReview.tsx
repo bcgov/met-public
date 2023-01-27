@@ -33,6 +33,9 @@ import { createDefaultSubmission, SurveySubmission } from 'models/surveySubmissi
 import { createDefaultReviewNote, createDefaultInternalNote, StaffNote } from 'models/staffNote';
 import { If, Then, Else, When } from 'react-if';
 import EmailPreviewModal from './emailPreview/EmailPreviewModal';
+import { MetBody } from 'components/common';
+import { RejectEmailTemplate } from './emailPreview/EmailTemplates';
+import EmailPreview from './emailPreview/PreviewEmail';
 
 const CommentReview = () => {
     const [submission, setSubmission] = useState<SurveySubmission>(createDefaultSubmission());
@@ -53,18 +56,27 @@ const CommentReview = () => {
     const navigate = useNavigate();
     const { submissionId } = useParams();
 
-    const getEmailText = () => {
-        let textArray = [];
-        if (hasPersonalInfo)
-            textArray.push({
-                text: 'One or many of your comments contain personal information such as name, address, or other information that could identify you.',
-            });
-        if (hasProfanity) textArray.push({ text: 'One or many of your comments contain swear words or profanities.' });
-        if (hasThreat) textArray.push({ text: '' });
-        if (hasOtherReason) {
-            textArray.push({ text: `One or many of your comments can't be published because ${otherReason}.` });
-        }
-        return textArray;
+    const getEmailPreview = () => {
+        return (
+            <EmailPreview>
+                <When condition={review == CommentStatus.Rejected}>
+                    <RejectEmailTemplate
+                        hasPersonalInfo={hasPersonalInfo}
+                        hasProfanity={hasProfanity}
+                        hasThreat={hasThreat}
+                        hasOtherReason={hasOtherReason}
+                        otherReason={otherReason}
+                    />
+                </When>
+                <When condition={review == CommentStatus.Approved}></When>
+                <Grid item xs={12}>
+                    <MetBody sx={{ mb: 1 }}>Thank you,</MetBody>
+                </Grid>
+                <Grid item xs={12}>
+                    <MetBody sx={{ mb: 1 }}>The EAO Team</MetBody>
+                </Grid>
+            </EmailPreview>
+        );
     };
 
     const fetchSubmission = async () => {
@@ -191,18 +203,7 @@ const CommentReview = () => {
                 open={open}
                 handleClose={() => setOpen(false)}
                 header={'Your comment on (Engagement name) needs to be edited'}
-                emailText={[
-                    { text: 'Thank you for taking the time to fill in our survey about (project name).' },
-                    {
-                        text: `We reviewed your comments and can't publish them on our public site for the following reason(s):`,
-                    },
-                    ...getEmailText(),
-                    {
-                        text: 'You can access your comment(s) to edit the text and resubmit here: "link will be added when email is sent',
-                    },
-                    { text: 'Thank you,' },
-                    { text: 'The EAO Team' },
-                ]}
+                renderEmail={getEmailPreview()}
             />
             <Grid
                 container

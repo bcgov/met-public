@@ -1,15 +1,9 @@
 import { Box, Grid, Stack } from '@mui/material';
 import * as React from 'react';
-import { MetBody, MetHeader4 } from 'components/common';
-import { ModalSubtext } from 'components/common/Modals/types';
+import { MetHeader4, MetBody } from 'components/common';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoLight.svg';
 
-interface PreviewEmailProps {
-    header: string;
-    emailText: ModalSubtext[];
-}
-
-export default function PreviewEmail({ header, emailText }: PreviewEmailProps) {
+export default function EmailPreview({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) {
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Box style={container}>
@@ -24,14 +18,18 @@ export default function PreviewEmail({ header, emailText }: PreviewEmailProps) {
                         alt="British Columbia Logo"
                     />
                 </Stack>
-                <MetHeader4 sx={{ mb: 2 }}>{header}</MetHeader4>
-                {emailText.map((emailText: ModalSubtext) => (
-                    <Grid item xs={12}>
-                        <MetBody bold={emailText.bold} sx={{ mb: 1 }}>
-                            {emailText.text}
-                        </MetBody>
-                    </Grid>
-                ))}
+                <Grid item xs={12}>
+                    <MetHeader4 sx={{ mb: 1 }}>
+                        Thank you for taking the time to fill in our survey about (project name).
+                    </MetHeader4>
+                </Grid>
+                {children}
+                <Grid item xs={12}>
+                    <MetBody sx={{ mb: 1 }}>Thank you,</MetBody>
+                </Grid>
+                <Grid item xs={12}>
+                    <MetBody sx={{ mb: 1 }}>The EAO Team</MetBody>
+                </Grid>
             </Box>
         </Box>
     );
