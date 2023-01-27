@@ -32,6 +32,7 @@ import { CommentReviewSkeleton } from './CommentReviewSkeleton';
 import { createDefaultSubmission, SurveySubmission } from 'models/surveySubmission';
 import { createDefaultReviewNote, createDefaultInternalNote, StaffNote } from 'models/staffNote';
 import { If, Then, Else, When } from 'react-if';
+import EmailPreviewModal from './emailPreview/EmailPreviewModal';
 
 const CommentReview = () => {
     const [submission, setSubmission] = useState<SurveySubmission>(createDefaultSubmission());
@@ -47,10 +48,24 @@ const CommentReview = () => {
     const [notifyEmail, setNotifyEmail] = useState(true);
     const [staffNote, setStaffNote] = useState<StaffNote[]>([]);
     const [updatedStaffNote, setUpdatedStaffNote] = useState<StaffNote[]>([]);
-
+    const [open, setOpen] = useState(false);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { submissionId } = useParams();
+
+    const getEmailText = () => {
+        let textArray = [];
+        if (hasPersonalInfo)
+            text.add(
+                'One or many of your comments contain personal information such as name, address, or other information that could identify you.',
+            );
+        if (hasProfanity) text.add('One or many of your comments contain swear words or profanities.');
+        if (hasThreat) text.add('');
+        if (hasOtherReason) {
+            text.add(`One or many of your comments can't be published because ${otherReason}.`);
+        }
+        return textArray;
+    };
 
     const fetchSubmission = async () => {
         try {
@@ -143,6 +158,10 @@ const CommentReview = () => {
         }
     };
 
+    const previewEmail = () => {
+        setOpen(true);
+    };
+
     // The comment display information below is fetched from the first comment from the list
     // since comment status/review are being stored individually
     // These values should be exacly the same throughout the array.
@@ -168,6 +187,25 @@ const CommentReview = () => {
     const defaultVerdict = comment_status_id !== CommentStatus.Pending ? comment_status_id : CommentStatus.Approved;
     return (
         <MetPageGridContainer>
+            <EmailPreviewModal
+                open={open}
+                handleClose={() => setOpen(false)}
+                header={'Your comment on (Engagement name) needs to be edited'}
+                emailText={[
+                    { text: 'Thank you for taking the time to fill in our survey about (project name).' },
+                    {
+                        text: `We reviewed your comments and can't publish them on our public site for the following reason(s):`,
+                    },
+                    getEmailText().forEach((text) => {
+                        return { text: text };
+                    }),
+                    {
+                        text: 'You can access your comment(s) to edit the text and resubmit here: "link will be added when email is sent',
+                    },
+                    { text: 'Thank you,' },
+                    { text: 'The EAO Team' },
+                ]}
+            />
             <Grid
                 container
                 direction="row"
@@ -447,6 +485,9 @@ const CommentReview = () => {
                             <Stack direction="row" spacing={2}>
                                 <PrimaryButton loading={isSaving} onClick={handleSave}>
                                     {'Save & Continue'}
+                                </PrimaryButton>
+                                <PrimaryButton loading={isSaving} onClick={previewEmail}>
+                                    {'Preview Email'}
                                 </PrimaryButton>
                                 <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
                             </Stack>

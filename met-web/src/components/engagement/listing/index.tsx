@@ -14,12 +14,15 @@ import Stack from '@mui/material/Stack';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import MetTable from 'components/common/Table';
 import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
+import EmailPreviewModal from 'components/comments/admin/review/emailPreview/EmailPreviewModal';
+import PreviewEmail from 'components/comments/admin/review/emailPreview/PreviewEmail';
 
 const EngagementListing = () => {
     const [searchFilter, setSearchFilter] = useState({
         key: 'name',
         value: '',
     });
+    const [open, setOpen] = useState(false);
     const [searchText, setSearchText] = useState('');
     const [engagements, setEngagements] = useState<Engagement[]>([]);
     const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Engagement>>({
@@ -197,6 +200,23 @@ const EngagementListing = () => {
             rowSpacing={1}
         >
             <Grid item xs={12} lg={10}>
+                <EmailPreviewModal
+                    open={open}
+                    handleClose={() => setOpen(false)}
+                    header={'Your comment on (Engagement name) needs to be edited'}
+                    emailText={[
+                        { text: 'Thank you for taking the time to fill in our survey about (project name).' },
+                        {
+                            text: `We reviewed your comments and can't publish them on our public site for the following reason(s):`,
+                        },
+                        { text: `One or many of your comments can't be published because of (other).` },
+                        {
+                            text: 'You can access your comment(s) to edit the text and resubmit here: "link will be added when email is sent',
+                        },
+                        { text: 'Thank you,' },
+                        { text: 'The EAO Team' },
+                    ]}
+                />
                 <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="100%" justifyContent="space-between">
                     <Stack direction="row" spacing={1} alignItems="center">
                         <TextField
@@ -224,6 +244,7 @@ const EngagementListing = () => {
                     >
                         + Create Engagement
                     </PrimaryButton>
+                    <PrimaryButton onClick={() => setOpen(true)}>Preview Email</PrimaryButton>
                 </Stack>
             </Grid>
             <Grid item xs={12} lg={10}>
