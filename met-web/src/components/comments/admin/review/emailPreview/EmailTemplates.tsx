@@ -49,11 +49,5 @@ export const RejectEmailTemplate = ({
                 >{`One or many of your comments can't be published because ${otherReason}.`}</MetBody>
             </Grid>
         </When>
-        <Grid item xs={12}>
-            <MetBody sx={{ mb: 1 }}>Thank you,</MetBody>
-        </Grid>
-        <Grid item xs={12}>
-            <MetBody sx={{ mb: 1 }}>The EAO Team</MetBody>
-        </Grid>
     </>
 );

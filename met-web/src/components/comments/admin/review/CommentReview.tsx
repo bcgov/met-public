@@ -72,12 +72,6 @@ const CommentReview = () => {
                 <When condition={updatedStaffNote[0].note}>
                     <MetBody sx={{ mb: 1 }}>{updatedStaffNote[0].note}</MetBody>
                 </When>
-                <Grid item xs={12}>
-                    <MetBody sx={{ mb: 1 }}>Thank you,</MetBody>
-                </Grid>
-                <Grid item xs={12}>
-                    <MetBody sx={{ mb: 1 }}>The EAO Team</MetBody>
-                </Grid>
             </EmailPreview>
         );
     };
