@@ -91,7 +91,7 @@ function MetTable<T>({
     pageInfo = {
         total: rows.length,
     },
-    emptyText = 'No data to display',
+    emptyText = 'No records were found',
 }: MetTableProps<T>) {
     const { page = 1, size, sort_key, sort_order, nested_sort_key } = paginationOptions;
     const { total } = pageInfo;
