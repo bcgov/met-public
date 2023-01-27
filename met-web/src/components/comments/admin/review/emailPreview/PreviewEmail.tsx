@@ -6,7 +6,7 @@ import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoLight
 
 interface PreviewEmailProps {
     header: string;
-    emailText: Array<ModalSubtext>;
+    emailText: ModalSubtext[];
 }
 
 export default function PreviewEmail({ header, emailText }: PreviewEmailProps) {

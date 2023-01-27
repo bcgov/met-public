@@ -1,11 +1,19 @@
 import React from 'react';
-import { Grid, Modal, Box } from '@mui/material';
+import { Grid, Modal } from '@mui/material';
 import { PrimaryButton, modalStyle } from 'components/common';
 import PreviewEmail from './PreviewEmail';
+import { ModalSubtext } from 'components/common/Modals/types';
 
-const EmailPreviewModal = ({ header, emailText, handleClose }: any) => {
+type EmailModal = {
+    open: boolean;
+    header: string;
+    emailText: ModalSubtext[];
+    handleClose: () => void;
+};
+
+const EmailPreviewModal = ({ open, header, emailText, handleClose }: EmailModal) => {
     return (
-        <Modal open={true} onClose={() => handleClose()}>
+        <Modal open={open} onClose={() => handleClose()}>
             <Grid
                 container
                 direction="column"

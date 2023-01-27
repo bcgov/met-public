@@ -56,13 +56,13 @@ const CommentReview = () => {
     const getEmailText = () => {
         let textArray = [];
         if (hasPersonalInfo)
-            text.add(
-                'One or many of your comments contain personal information such as name, address, or other information that could identify you.',
-            );
-        if (hasProfanity) text.add('One or many of your comments contain swear words or profanities.');
-        if (hasThreat) text.add('');
+            textArray.push({
+                text: 'One or many of your comments contain personal information such as name, address, or other information that could identify you.',
+            });
+        if (hasProfanity) textArray.push({ text: 'One or many of your comments contain swear words or profanities.' });
+        if (hasThreat) textArray.push({ text: '' });
         if (hasOtherReason) {
-            text.add(`One or many of your comments can't be published because ${otherReason}.`);
+            textArray.push({ text: `One or many of your comments can't be published because ${otherReason}.` });
         }
         return textArray;
     };
@@ -196,9 +196,7 @@ const CommentReview = () => {
                     {
                         text: `We reviewed your comments and can't publish them on our public site for the following reason(s):`,
                     },
-                    getEmailText().forEach((text) => {
-                        return { text: text };
-                    }),
+                    ...getEmailText(),
                     {
                         text: 'You can access your comment(s) to edit the text and resubmit here: "link will be added when email is sent',
                     },
