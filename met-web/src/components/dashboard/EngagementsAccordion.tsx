@@ -59,9 +59,9 @@ const EngagementsAccordion = ({
                             </Grid>
                             <Grid item xs={5} textAlign="right">
                                 <MetBody>
-                                    {formatDate(engagement.start_date)}
+                                    {engagement.start_date}
                                     {' - '}
-                                    {formatDate(engagement.end_date)}
+                                    {engagement.end_date}
                                 </MetBody>
                             </Grid>
                         </AccordionSummary>
