@@ -105,6 +105,7 @@ export const AddTeamMemberModal = () => {
                 }),
             );
         } catch (error) {
+            setIsAdding(false);
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add user' }));
         }
     };
