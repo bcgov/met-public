@@ -50,7 +50,7 @@ const CommentReview = () => {
     const [notifyEmail, setNotifyEmail] = useState(true);
     const [staffNote, setStaffNote] = useState<StaffNote[]>([]);
     const [updatedStaffNote, setUpdatedStaffNote] = useState<StaffNote[]>([]);
-    const [open, setOpen] = useState(false);
+    const [openEmailPreview, setEmailPreview] = useState(false);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { submissionId } = useParams();
@@ -166,7 +166,7 @@ const CommentReview = () => {
     };
 
     const previewEmail = () => {
-        setOpen(true);
+        setEmailPreview(true);
     };
 
     // The comment display information below is fetched from the first comment from the list
@@ -192,8 +192,8 @@ const CommentReview = () => {
     return (
         <MetPageGridContainer>
             <EmailPreviewModal
-                open={open}
-                handleClose={() => setOpen(false)}
+                open={openEmailPreview}
+                handleClose={() => setEmailPreview(false)}
                 header={'Your comment on (Engagement name) needs to be edited'}
                 renderEmail={getEmailPreview()}
             />
