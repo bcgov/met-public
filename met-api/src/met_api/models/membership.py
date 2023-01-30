@@ -12,7 +12,6 @@ from met_api.constants.membership_type import MembershipType
 from met_api.utils.enums import MembershipStatus
 
 from .base_model import BaseModel
-from .user import User
 from .db import db
 
 
