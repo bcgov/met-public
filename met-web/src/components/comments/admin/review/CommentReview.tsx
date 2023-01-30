@@ -55,6 +55,8 @@ const CommentReview = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { submissionId } = useParams();
+    const reviewNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Review);
+    const internalNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Internal);
 
     const getEmailPreview = () => {
         return (
@@ -66,10 +68,8 @@ const CommentReview = () => {
                         hasThreat={hasThreat}
                         hasOtherReason={hasOtherReason}
                         otherReason={otherReason}
+                        reviewNotes={reviewNotes}
                     />
-                </When>
-                <When condition={updatedStaffNote[0].note}>
-                    <MetBody sx={{ mb: 1 }}>{updatedStaffNote[0].note}</MetBody>
                 </When>
             </EmailPreview>
         );
@@ -188,9 +188,6 @@ const CommentReview = () => {
         });
         setUpdatedStaffNote(newStaffNoteArray);
     };
-
-    const reviewNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Review);
-    const internalNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Internal);
 
     const defaultVerdict = comment_status_id !== CommentStatus.Pending ? comment_status_id : CommentStatus.Approved;
     return (
@@ -481,9 +478,7 @@ const CommentReview = () => {
                                 <PrimaryButton loading={isSaving} onClick={handleSave}>
                                     {'Save & Continue'}
                                 </PrimaryButton>
-                                <PrimaryButton loading={isSaving} onClick={previewEmail}>
-                                    {'Preview Email'}
-                                </PrimaryButton>
+                                <SecondaryButton onClick={previewEmail}>{'Preview Email'}</SecondaryButton>
                                 <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
                             </Stack>
                         </Grid>

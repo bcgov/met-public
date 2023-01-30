@@ -2,13 +2,15 @@ import React from 'react';
 import { MetBody } from 'components/common';
 import { Grid } from '@mui/material';
 import { When } from 'react-if';
+import { StaffNote } from 'models/staffNote';
 
 type RejectionEmailProps = {
-    hasPersonalInfo: boolean;
-    hasProfanity: boolean;
-    hasThreat: boolean;
-    hasOtherReason: boolean;
-    otherReason: string;
+    hasPersonalInfo?: boolean;
+    hasProfanity?: boolean;
+    hasThreat?: boolean;
+    hasOtherReason?: boolean;
+    otherReason?: string;
+    reviewNotes?: StaffNote;
 };
 
 export const RejectEmailTemplate = ({
@@ -17,6 +19,7 @@ export const RejectEmailTemplate = ({
     hasThreat,
     hasOtherReason,
     otherReason,
+    reviewNotes,
 }: RejectionEmailProps) => (
     <>
         <Grid item xs={12}>
@@ -47,6 +50,11 @@ export const RejectEmailTemplate = ({
                 <MetBody
                     sx={{ mb: 1 }}
                 >{`One or many of your comments can't be published because ${otherReason}.`}</MetBody>
+            </Grid>
+        </When>
+        <When condition={!!reviewNotes}>
+            <Grid item xs={12}>
+                <MetBody sx={{ mb: 1 }}>{reviewNotes?.note}</MetBody>
             </Grid>
         </When>
     </>
