@@ -1,43 +1,19 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { HeadCell } from 'components/common/Table/types';
 import { Link } from 'react-router-dom';
 import { Link as MuiLink } from '@mui/material';
 import MetTable from 'components/common/Table';
 import { EngagementTabsContext } from './EngagementTabsContext';
-import { useAppDispatch } from 'hooks';
-import { openNotification } from 'services/notificationService/notificationSlice';
-import { getTeamMembers } from 'services/membershipService';
-import { ActionContext } from '../ActionContext';
 import { EngagementTeamMember } from 'models/engagementTeamMember';
 
 const TeamMemberListing = () => {
-    const { teamMembers, setTeamMembers } = useContext(EngagementTabsContext);
-    const { savedEngagement } = useContext(ActionContext);
-    const dispatch = useAppDispatch();
-    const [teamMembersLoading, setTeamMembersLoading] = useState(false);
+    const { teamMembers, loadTeamMembers, teamMembersLoading } = useContext(EngagementTabsContext);
 
     useEffect(() => {
         if (teamMembers.length === 0) {
             loadTeamMembers();
         }
     }, []);
-
-    const loadTeamMembers = async () => {
-        try {
-            setTeamMembersLoading(true);
-            const response = await getTeamMembers({ engagement_id: savedEngagement.id });
-            setTeamMembers(response);
-            setTeamMembersLoading(false);
-        } catch (error) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred while trying to fetch users, please refresh the page or try again at a later time',
-                }),
-            );
-            setTeamMembersLoading(false);
-        }
-    };
 
     const headCells: HeadCell<EngagementTeamMember>[] = [
         {

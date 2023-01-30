@@ -25,7 +25,7 @@ type AddTeamMemberForm = yup.TypeOf<typeof schema>;
 
 export const AddTeamMemberModal = () => {
     const dispatch = useAppDispatch();
-    const { addTeamMemberOpen, setAddTeamMemberOpen, teamMembers } = useContext(EngagementTabsContext);
+    const { addTeamMemberOpen, setAddTeamMemberOpen, teamMembers, loadTeamMembers } = useContext(EngagementTabsContext);
     const { savedEngagement } = useContext(ActionContext);
     const [isAdding, setIsAdding] = useState(false);
     const [usersLoading, setUsersLoading] = useState(false);
@@ -88,6 +88,7 @@ export const AddTeamMemberModal = () => {
             });
             dispatch(openNotification({ severity: 'success', text: 'User has been successfully added' }));
             setIsAdding(false);
+            loadTeamMembers();
             handleClose();
             dispatch(
                 openNotificationModal({
@@ -104,7 +105,7 @@ export const AddTeamMemberModal = () => {
                 }),
             );
         } catch (error) {
-            console.log(error);
+            setIsAdding(false);
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add user' }));
         }
     };
