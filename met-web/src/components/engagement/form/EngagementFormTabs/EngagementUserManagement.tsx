@@ -4,6 +4,7 @@ import { MetLabel, MetPaper, PrimaryButton, MetParagraph } from 'components/comm
 import { ActionContext } from '../ActionContext';
 import TeamMemberListing from './TeamMemberListing';
 import { EngagementTabsContext } from './EngagementTabsContext';
+import { formatDate } from 'components/common/dateHelper';
 
 const EngagementUserManagement = () => {
     const { savedEngagement } = useContext(ActionContext);
@@ -34,7 +35,7 @@ const EngagementUserManagement = () => {
                             <MetLabel>Date Created:</MetLabel>
                         </Grid>
                         <Grid item>
-                            <MetParagraph sx={{ ml: 2 }}>{savedEngagement.created_date}</MetParagraph>
+                            <MetParagraph sx={{ ml: 2 }}>{formatDate(savedEngagement.created_date)}</MetParagraph>
                         </Grid>
                     </Grid>
 
