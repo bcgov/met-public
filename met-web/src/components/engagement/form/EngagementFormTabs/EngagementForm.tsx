@@ -1,13 +1,16 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Typography, Grid, TextField, Stack } from '@mui/material';
-import { MetPaper, MetLabel, PrimaryButton, SecondaryButton, MetHeader4 } from '../../common';
-import RichTextEditor from './RichTextEditor';
-import { ActionContext } from './ActionContext';
+import { MetPaper, MetLabel, PrimaryButton, SecondaryButton, MetHeader4 } from '../../../common';
+import RichTextEditor from '../RichTextEditor';
+import { ActionContext } from '../ActionContext';
 import ImageUpload from 'components/imageUpload';
 import { useNavigate } from 'react-router-dom';
-import { AddSurveyBlock } from './AddSurveyBlock';
+import { SurveyBlock } from './SurveyBlock';
 import { If, Then, Else } from 'react-if';
-import DayCalculatorModal from 'components/engagement/form/DayCalculator';
+import { EngagementTabsContext } from './EngagementTabsContext';
+import { SUBMISSION_STATUS } from 'constants/engagementStatus';
+import DayCalculatorModal from '../DayCalculator';
+
 const EngagementForm = () => {
     const {
         handleCreateEngagementRequest,
@@ -16,40 +19,48 @@ const EngagementForm = () => {
         savedEngagement,
         engagementId,
         handleAddBannerImage,
-        handleStatusBlockChange,
     } = useContext(ActionContext);
+
+    const {
+        engagementFormData,
+        setEngagementFormData,
+        richDescription,
+        setRichDescription,
+        richContent,
+        setRichContent,
+        engagementFormError,
+        setEngagementFormError,
+        surveyBlockText,
+    } = useContext(EngagementTabsContext);
+
+    const [initialRichDescription, setInitialRichDescription] = useState('');
+    const [initialRichContent, setInitialRichContent] = useState('');
 
     const navigate = useNavigate();
 
     const isNewEngagement = engagementId === 'create';
 
-    const [engagementFormData, setEngagementFormData] = useState({
-        name: '',
-        start_date: '',
-        end_date: '',
-        description: '',
-        content: '',
-    });
-    const [richDescription, setRichDescription] = useState('');
-    const [richContent, setRichContent] = useState('');
+    const { name, start_date, end_date } = engagementFormData;
+
+    const surveyBlockList = [
+        {
+            survey_status: SUBMISSION_STATUS.UPCOMING,
+            block_text: surveyBlockText.Upcoming,
+        },
+        {
+            survey_status: SUBMISSION_STATUS.OPEN,
+            block_text: surveyBlockText.Open,
+        },
+        {
+            survey_status: SUBMISSION_STATUS.CLOSED,
+            block_text: surveyBlockText.Closed,
+        },
+    ];
 
     useEffect(() => {
-        setEngagementFormData({
-            name: savedEngagement?.name || '',
-            start_date: savedEngagement.start_date,
-            end_date: savedEngagement.end_date,
-            description: savedEngagement?.description || '',
-            content: savedEngagement?.content || '',
-        });
-        setRichDescription(savedEngagement?.rich_description || '');
-        setRichContent(savedEngagement?.rich_content || '');
-    }, [savedEngagement]);
-    const { name, start_date, end_date } = engagementFormData;
-    const [engagementFormError, setEngagementFormError] = useState({
-        name: false,
-        start_date: false,
-        end_date: false,
-    });
+        setInitialRichDescription(richDescription || savedEngagement.rich_description);
+        setInitialRichContent(richContent || savedEngagement.rich_content);
+    }, []);
 
     const getErrorMessage = () => {
         if (name.length > 50) {
@@ -115,6 +126,7 @@ const EngagementForm = () => {
             ...engagementFormData,
             rich_description: richDescription,
             rich_content: richContent,
+            status_block: surveyBlockList,
         });
 
         navigate(`/engagements/${engagement.id}/form`);
@@ -133,6 +145,7 @@ const EngagementForm = () => {
             ...engagementFormData,
             rich_description: richDescription,
             rich_content: richContent,
+            status_block: surveyBlockList,
         });
 
         navigate(`/engagements/${engagement.id}/form`);
@@ -268,7 +281,7 @@ const EngagementForm = () => {
                     <RichTextEditor
                         setRawText={handleDescriptionChange}
                         handleEditorStateChange={handleRichDescriptionChange}
-                        initialRawEditorState={savedEngagement.rich_description || ''}
+                        initialRawEditorState={initialRichDescription || ''}
                     />
                 </Grid>
 
@@ -290,7 +303,7 @@ const EngagementForm = () => {
                                 <RichTextEditor
                                     setRawText={handleContentChange}
                                     handleEditorStateChange={handleRichContentChange}
-                                    initialRawEditorState={savedEngagement.rich_content || ''}
+                                    initialRawEditorState={initialRichContent || ''}
                                 />
                             </Grid>
                         </Grid>
@@ -298,7 +311,7 @@ const EngagementForm = () => {
                 </Grid>
 
                 <Grid item xs={12}>
-                    <AddSurveyBlock handleStatusBlockChange={handleStatusBlockChange} />
+                    <SurveyBlock />
                 </Grid>
 
                 <Grid item xs={12}>

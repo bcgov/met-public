@@ -15,12 +15,14 @@ import EngagementDashboard from '../components/engagement/dashboard/report';
 import EngagementComments from '../components/engagement/dashboard/comment';
 import UnderConstruction from './UnderConstruction';
 import FeedbackListing from 'components/feedback/listing';
-import UserManagementListing from '../components/userManagement/listing';
+import UserManagementListing from 'components/userManagement/listing';
+import Dashboard from 'components/dashboard';
 
 const AuthenticatedRoutes = () => {
     return (
         <Routes>
-            <Route path="/" element={<EngagementListing />} />
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/engagements" element={<EngagementListing />} />
             <Route path="/surveys" element={<SurveyListing />} />
             <Route path="/surveys/create" element={<CreateSurvey />} />
             <Route path="/surveys/:surveyId/build" element={<SurveyFormBuilder />} />

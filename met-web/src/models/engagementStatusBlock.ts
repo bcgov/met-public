@@ -1,11 +1,13 @@
+import { SubmissionStatusTypes } from 'constants/engagementStatus';
+
 export interface EngagementStatusBlock {
-    survey_status: string;
+    survey_status: SubmissionStatusTypes;
     block_text: string;
 }
 
 export const createDefaultStatusBlock = (): EngagementStatusBlock => {
     return {
-        survey_status: '',
+        survey_status: 'Upcoming',
         block_text: '',
     };
 };

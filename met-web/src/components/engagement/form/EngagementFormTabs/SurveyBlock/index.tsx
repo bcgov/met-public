@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { ActionContext } from './ActionContext';
+import { ActionContext } from '../../ActionContext';
 import { Grid } from '@mui/material';
 import { MetHeader4, MetPaper, MetSurvey, SecondaryButton } from 'components/common';
 import { useNavigate } from 'react-router-dom';
@@ -8,14 +8,9 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { EngagementStatus } from 'constants/engagementStatus';
 import { unlinkSurvey } from 'services/surveyService';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
-import AddSurveyBlockTabs from './AddSurveyBlockTabs';
-import { EngagementStatusBlock } from '../../../models/engagementStatusBlock';
+import SurveyTextTabs from './SurveyTextTabs';
 
-export const AddSurveyBlock = ({
-    handleStatusBlockChange = (statusBlock: EngagementStatusBlock[]) => {
-        /* empty default method  */
-    },
-}) => {
+export const SurveyBlock = () => {
     const { savedEngagement, fetchEngagement } = useContext(ActionContext);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -106,7 +101,7 @@ export const AddSurveyBlock = ({
                     sx={{ padding: '1em' }}
                 >
                     <Grid item xs={12}>
-                        <AddSurveyBlockTabs handleChange={handleStatusBlockChange} />
+                        <SurveyTextTabs />
                     </Grid>
                     <Grid item xs={12} container direction="row" justifyContent="flex-end">
                         <SecondaryButton onClick={handleAddSurvey} disabled={savedEngagement.surveys.length > 0}>

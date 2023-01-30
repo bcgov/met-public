@@ -1,4 +1,4 @@
-# Copyright © 2019 Province of British Columbia
+# Copyright © 2021 Province of British Columbia
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
@@ -11,13 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Constants definitions."""
+"""Constants of staff note."""
+from enum import IntEnum
 
-# Group names
 
-# Group Name Mapping. Keeping a constant to keep a lucid structure
-GROUP_NAME_MAPPING = {
-    'EAO_IT_ADMIN': 'Administrator',
-    'EAO_IT_VIEWER': 'Viewer',
-    'EAO_TEAM_MEMBER': 'Member',
-}
+class MembershipType(IntEnum):
+    """Enum of Membership Type."""
+
+    TEAM_MEMBER = 1
