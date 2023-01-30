@@ -53,6 +53,7 @@ const EngagementList = () => {
                             engagements={upcomingEngagements}
                             bgColor={Palette.dashboard.upcoming.bg}
                             borderColor={Palette.dashboard.upcoming.border}
+                            disabled={true}
                         />
                     </AccordionDetails>
                 </StyledAccordion>
