@@ -86,7 +86,6 @@ export const AddUserModel = () => {
             setUsers(response.items);
             setUsersLoading(false);
         } catch (error) {
-            console.log(error);
             dispatch(
                 openNotification({
                     severity: 'error',
