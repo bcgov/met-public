@@ -10,10 +10,12 @@ const EngagementsAccordion = ({
     engagements,
     bgColor,
     borderColor,
+    disabled,
 }: {
     engagements: Engagement[];
     bgColor: string;
     borderColor: string;
+    disabled?: boolean;
 }) => {
     const urlpath = AppConfig.redashDashboardUrl;
     const [openedEngagements, setOpenedEngagements] = useState<number[]>([]);
@@ -36,6 +38,7 @@ const EngagementsAccordion = ({
             {engagements.map((engagement) => {
                 return (
                     <Accordion
+                        disabled={disabled}
                         onChange={() => {
                             handleChange(engagement.id);
                         }}
@@ -45,10 +48,16 @@ const EngagementsAccordion = ({
                             borderStyle: 'solid',
                             borderColor: borderColor,
                             boxShadow: 'none',
+                            '&.Mui-disabled': {
+                                background: 'initial',
+                            },
                         }}
                     >
                         <AccordionSummary
                             sx={{
+                                '&.Mui-disabled': {
+                                    opacity: 1,
+                                },
                                 backgroundColor: bgColor,
                                 borderBottom: `solid 1px ${borderColor}`,
                             }}

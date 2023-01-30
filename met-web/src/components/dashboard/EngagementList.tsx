@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import Grid from '@mui/material/Grid';
 import { MetHeader2, MetHeader4, MetPageGridContainer } from 'components/common';
-import { Accordion, AccordionDetails, AccordionSummary, styled } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Skeleton, styled } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EngagementAccordion from './EngagementsAccordion';
 import { SubmissionStatus } from 'constants/engagementStatus';
@@ -9,7 +9,7 @@ import { DashboardContext } from './DashboardContext';
 import { Palette } from 'styles/Theme';
 
 const EngagementList = () => {
-    const { engagements } = useContext(DashboardContext);
+    const { engagements, isLoading } = useContext(DashboardContext);
     const openEngagements = engagements.filter((engagement) => engagement.submission_status == SubmissionStatus.Open);
     const upcomingEngagements = engagements.filter(
         (engagement) => engagement.submission_status == SubmissionStatus.Upcoming,
@@ -30,6 +30,10 @@ const EngagementList = () => {
         borderColor: Palette.primary.light,
         boxShadow: 'none',
     });
+
+    if (isLoading) {
+        return <Skeleton variant="rectangular" width="100%" height="35em" />;
+    }
 
     return (
         <MetPageGridContainer
@@ -53,6 +57,7 @@ const EngagementList = () => {
                             engagements={upcomingEngagements}
                             bgColor={Palette.dashboard.upcoming.bg}
                             borderColor={Palette.dashboard.upcoming.border}
+                            disabled={true}
                         />
                     </AccordionDetails>
                 </StyledAccordion>
