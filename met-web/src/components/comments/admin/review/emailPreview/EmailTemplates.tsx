@@ -54,7 +54,7 @@ export const RejectEmailTemplate = ({
         </When>
         <When condition={!!reviewNotes}>
             <Grid item xs={12}>
-                <MetBody sx={{ mb: 1 }}>{reviewNotes[0]?.note}</MetBody>
+                <MetBody sx={{ mb: 1 }}>{reviewNotes ? reviewNotes[0]?.note : ''}</MetBody>
             </Grid>
         </When>
     </>
