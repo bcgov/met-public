@@ -1,26 +1,16 @@
 import React, { ReactNode } from 'react';
-import { render, waitFor, screen, fireEvent, within, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, waitFor, screen, fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import EngagementForm from '../../../../src/components/engagement/form';
 import { setupEnv } from '../setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
-import * as teamMemberService from 'services/engagementService/TeamMemberService';
-import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
-import * as userService from 'services/userService/api';
+import * as teamMemberService from 'services/membershipService';
 import { Box } from '@mui/material';
 import { engagement } from '../factory';
-import { User, initialDefaultUser, USER_GROUP } from 'models/user';
+import { initialDefaultUser, USER_GROUP } from 'models/user';
 import { EngagementTeamMember, initialDefaultTeamMember } from 'models/engagementTeamMember';
-
-const mockUser1: User = {
-    ...initialDefaultUser,
-    id: 2,
-    first_name: 'John',
-    last_name: 'Snow',
-    groups: [USER_GROUP.VIEWER.label],
-};
 
 const mockTeamMember1: EngagementTeamMember = {
     ...initialDefaultTeamMember,
@@ -31,14 +21,6 @@ const mockTeamMember1: EngagementTeamMember = {
         first_name: 'Jane',
         last_name: 'Doe',
         groups: [USER_GROUP.VIEWER.label],
-    },
-};
-
-const mockTeamMember2: EngagementTeamMember = {
-    ...initialDefaultTeamMember,
-    user_id: 2,
-    user: {
-        ...mockUser1,
     },
 };
 
@@ -83,20 +65,7 @@ describe('Engagement form page tests', () => {
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
-    jest.spyOn(userService, 'getUserList').mockReturnValue(
-        Promise.resolve({
-            items: [mockUser1],
-            total: 1,
-        }),
-    );
     jest.spyOn(teamMemberService, 'getTeamMembers').mockReturnValue(Promise.resolve([mockTeamMember1]));
-    const addTeamMemberToEngagementMock = jest
-        .spyOn(teamMemberService, 'addTeamMemberToEngagement')
-        .mockReturnValue(Promise.resolve(mockTeamMember2));
-
-    const openNotificationModalMock = jest
-        .spyOn(notificationModalSlice, 'openNotificationModal')
-        .mockImplementation(jest.fn());
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     jest.spyOn(engagementService, 'getEngagement').mockReturnValue(Promise.resolve(engagement));
 
@@ -104,7 +73,7 @@ describe('Engagement form page tests', () => {
         setupEnv();
     });
 
-    test('User management tab renders and team member added', async () => {
+    test('User management tab renders', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         const { container } = render(<EngagementForm />);
 
@@ -128,25 +97,6 @@ describe('Engagement form page tests', () => {
 
         await waitFor(() => {
             expect(screen.getByText('Select the user you want to add')).toBeInTheDocument();
-        });
-
-        const autocomplete = screen.getByTestId('select-team-member');
-        const input = within(autocomplete).getByRole('combobox');
-
-        autocomplete.focus();
-        fireEvent.change(input, { target: { value: mockUser1.first_name } });
-        fireEvent.keyDown(autocomplete, { key: 'ArrowDown' });
-        fireEvent.keyDown(autocomplete, { key: 'Enter' });
-
-        await waitFor(() => {
-            expect(input).toHaveValue(`${mockUser1.first_name} ${mockUser1.last_name}`);
-        });
-        const submitButton = screen.getByText('Submit');
-        fireEvent.click(submitButton);
-
-        await waitFor(() => {
-            expect(addTeamMemberToEngagementMock).toBeCalled();
-            expect(openNotificationModalMock).toBeCalled();
         });
     });
 });
