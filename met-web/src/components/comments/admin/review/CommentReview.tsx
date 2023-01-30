@@ -24,7 +24,6 @@ import {
     SecondaryButton,
     MetHeader3,
     MetHeader4,
-    MetBody,
 } from 'components/common';
 import { CommentStatus } from 'constants/commentStatus';
 import { StaffNoteType } from 'constants/staffNoteType';

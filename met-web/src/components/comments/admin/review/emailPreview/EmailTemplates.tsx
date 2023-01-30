@@ -10,7 +10,7 @@ type RejectionEmailProps = {
     hasThreat?: boolean;
     hasOtherReason?: boolean;
     otherReason?: string;
-    reviewNotes?: StaffNote;
+    reviewNotes?: StaffNote[];
 };
 
 export const RejectEmailTemplate = ({
@@ -54,7 +54,7 @@ export const RejectEmailTemplate = ({
         </When>
         <When condition={!!reviewNotes}>
             <Grid item xs={12}>
-                <MetBody sx={{ mb: 1 }}>{reviewNotes?.note}</MetBody>
+                <MetBody sx={{ mb: 1 }}>{reviewNotes[0]?.note}</MetBody>
             </Grid>
         </When>
     </>

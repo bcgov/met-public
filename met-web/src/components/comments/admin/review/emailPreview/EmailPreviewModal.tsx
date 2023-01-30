@@ -24,7 +24,7 @@ const EmailPreviewModal = ({ open, header, renderEmail, handleClose }: EmailModa
                     {renderEmail}
                 </Grid>
                 <Grid item xs={3}>
-                    <PrimaryButton onClick={handleClose}>Close Preview</PrimaryButton>
+                    <PrimaryButton onClick={() => handleClose()}>Close Preview</PrimaryButton>
                 </Grid>
             </Grid>
         </Modal>
