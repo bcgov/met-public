@@ -23,6 +23,15 @@ class Status(IntEnum):
     Closed = 3
     Scheduled = 4
 
+class EngagementDisplayStatus(IntEnum):
+    """Enum of engagement display status."""
+
+    Draft = 1
+    Published = 2
+    Closed = 3
+    Scheduled = 4
+    Upcoming = 5
+    Open = 6
 
 class SubmissionStatus(IntEnum):
     """Enum of engagement submission status."""

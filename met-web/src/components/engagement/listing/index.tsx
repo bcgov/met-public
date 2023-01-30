@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { When } from 'react-if';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Link } from 'react-router-dom';
-import { MetPageGridContainer, PrimaryButton } from 'components/common';
+import { MetPageGridContainer, PrimaryButton, SecondaryButton } from 'components/common';
 import { Engagement } from 'models/engagement';
 import { useAppDispatch } from 'hooks';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
@@ -14,6 +17,8 @@ import Stack from '@mui/material/Stack';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import MetTable from 'components/common/Table';
 import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
+import AdvancedSearch from './AdvancedSearch/SearchComponent';
+import { SearchOptions } from './AdvancedSearch/SearchTypes';
 
 const EngagementListing = () => {
     const [searchFilter, setSearchFilter] = useState({
@@ -33,13 +38,41 @@ const EngagementListing = () => {
     const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
     const [tableLoading, setTableLoading] = useState(true);
 
+    const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
+
+    const [searchOptions, setSearchOptions] = useState<SearchOptions>({
+        status_list: [],
+        created_from_date: '',
+        created_to_date: '',
+        published_from_date: '',
+        published_to_date: '',
+        comments_need_review: false,
+    });
+
+    const filterParams = (
+        selectedStatus: number[],
+        createdFromDate: string,
+        createdToDate: string,
+        publishedFromDate: string,
+        publishedToDate: string,
+    ): void => {
+        setSearchOptions({
+            ...searchOptions,
+            status_list: selectedStatus,
+            created_from_date: createdFromDate,
+            created_to_date: createdToDate,
+            published_from_date: publishedFromDate,
+            published_to_date: publishedToDate,
+        });
+    };
+
     const dispatch = useAppDispatch();
 
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
     useEffect(() => {
         loadEngagements();
-    }, [paginationOptions, searchFilter]);
+    }, [paginationOptions, searchFilter, searchOptions]);
 
     const loadEngagements = async () => {
         try {
@@ -50,6 +83,11 @@ const EngagementListing = () => {
                 sort_key: nested_sort_key || sort_key,
                 sort_order,
                 search_text: searchFilter.value,
+                engagement_status: searchOptions.status_list,
+                created_from_date: searchOptions.created_from_date,
+                created_to_date: searchOptions.created_to_date,
+                published_from_date: searchOptions.published_from_date,
+                published_to_date: searchOptions.published_to_date,
             });
             setEngagements(response.items);
             setPageInfo({
@@ -204,7 +242,6 @@ const EngagementListing = () => {
                             data-testid="engagement/listing/searchField"
                             variant="outlined"
                             label="Search by name"
-                            fullWidth
                             name="searchText"
                             value={searchText}
                             onChange={(e) => setSearchText(e.target.value)}
@@ -216,6 +253,9 @@ const EngagementListing = () => {
                         >
                             <SearchIcon />
                         </PrimaryButton>
+                        <SecondaryButton onClick={() => setAdvancedSearchOpen(!advancedSearchOpen)}>
+                            {advancedSearchOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />} Advanced Search
+                        </SecondaryButton>
                     </Stack>
                     <PrimaryButton
                         component={Link}
@@ -226,6 +266,9 @@ const EngagementListing = () => {
                     </PrimaryButton>
                 </Stack>
             </Grid>
+            <When condition={advancedSearchOpen}>
+                <AdvancedSearch getFilterParams={filterParams} />
+            </When>
             <Grid item xs={12} lg={10}>
                 <MetTable
                     headCells={headCells}

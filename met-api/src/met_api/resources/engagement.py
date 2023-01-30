@@ -84,7 +84,14 @@ class Engagements(Resource):
                 .get_engagements_paginated(
                     user_id,
                     pagination_options,
-                    args.get('search_text', '', str)
+                    args.get('search_text', '', str),
+                    advanced_search_params = {
+                        'engagementstatus': args.getlist('engagement_status[]'),
+                        'createdfromdate': args.get('created_from_date', None, type=str),
+                        'createdtodate': args.get('created_to_date', None, type=str),
+                        'publishedfromdate': args.get('published_from_date', None, type=str),
+                        'publishedtodate': args.get('published_to_date', None, type=str),
+                    }
             )
 
             return engagement_records, HTTPStatus.OK
