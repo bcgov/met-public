@@ -27,7 +27,7 @@ class Membership(BaseModel):
     user_id = db.Column(db.Integer, ForeignKey('met_users.id'), nullable=True)
     type = db.Column(db.Enum(MembershipType), nullable=False)
     membership_status = db.relationship('MembershipStatusCode', foreign_keys=[status], lazy='select')
-    user = db.relationship('User', foreign_keys=[user_id], lazy='select')
+    user = db.relationship('User', foreign_keys=[user_id], lazy='joined')
     engagement = db.relationship('Engagement', foreign_keys=[engagement_id], lazy='select')
 
     @classmethod
