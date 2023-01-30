@@ -184,7 +184,8 @@ function MetTable<T>({
                             {rows.length == 0 && (
                                 <TableRow>
                                     <TableCell colSpan={headCells.length} align={'center'}>
-                                        {emptyText}
+                                        <When condition={loading}>Loading Records</When>
+                                        <When condition={!loading}>{emptyText}</When>
                                     </TableCell>
                                 </TableRow>
                             )}
