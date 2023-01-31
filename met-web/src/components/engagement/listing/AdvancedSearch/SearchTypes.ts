@@ -4,5 +4,4 @@ export interface SearchOptions {
     created_to_date: string;
     published_from_date: string;
     published_to_date: string;
-    comments_need_review: boolean;
 }

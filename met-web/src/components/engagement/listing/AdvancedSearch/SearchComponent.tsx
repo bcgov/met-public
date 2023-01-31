@@ -23,7 +23,6 @@ interface filterParams {
         created_to_date: string,
         published_from_date: string,
         published_to_date: string,
-        comments_need_review: boolean,
     ) => void;
 }
 
@@ -70,8 +69,6 @@ const AdvancedSearch: React.FC<filterParams> = ({ getFilterParams }) => {
         });
     };
 
-    const [commentsNeedReviewFilter, setCommentsNeedReviewFilter] = useState(false);
-
     const handleSearch = () => {
         /*
         Database has the values in utc but the value we select from the calender is having only date without a time.
@@ -88,14 +85,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ getFilterParams }) => {
             ? formatToUTC(dayjs(publishedToDate).endOf('day').format('YYYY-MM-DD HH:mm:ss'))
             : publishedToDate;
 
-        getFilterParams(
-            selectedStatusList,
-            fCreatedFromDate,
-            fCreatedToDate,
-            fPublishedFromDate,
-            fPublishedToDate,
-            commentsNeedReviewFilter,
-        );
+        getFilterParams(selectedStatusList, fCreatedFromDate, fCreatedToDate, fPublishedFromDate, fPublishedToDate);
     };
 
     const handleResetSearchFilters = () => {
@@ -109,9 +99,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ getFilterParams }) => {
             publishedToDate: '',
         });
 
-        setCommentsNeedReviewFilter(false);
-
-        getFilterParams([], '', '', '', '', false);
+        getFilterParams([], '', '', '', '');
     };
 
     return (
@@ -412,13 +400,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ getFilterParams }) => {
                     <Grid item xs={12} mt={2}>
                         <FormControlLabel
                             label={<MetParagraph>Has comments that need review</MetParagraph>}
-                            control={
-                                <Checkbox
-                                    checked={commentsNeedReviewFilter}
-                                    disabled={true}
-                                    onChange={(event, checked) => setCommentsNeedReviewFilter(checked)}
-                                />
-                            }
+                            control={<Checkbox disabled={true} />}
                         />
                     </Grid>
                 </Grid>

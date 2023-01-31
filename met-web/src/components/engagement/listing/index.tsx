@@ -46,7 +46,6 @@ const EngagementListing = () => {
         created_to_date: '',
         published_from_date: '',
         published_to_date: '',
-        comments_need_review: false,
     });
 
     const filterParams = (

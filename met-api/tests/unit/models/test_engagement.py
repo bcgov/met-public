@@ -70,16 +70,19 @@ def test_get_engagements_paginated_status_search(session):
     factory_engagement_model(status=SubmissionStatus.Closed.value)
     factory_engagement_model(status=SubmissionStatus.Closed.value)
     result, count = EngagementModel.get_engagements_paginated(pagination_options, search_text=None,
+                                                              advanced_search_params=None,
                                                               statuses=[SubmissionStatus.Closed.value])
     assert count == 2
 
     result, count = EngagementModel.get_engagements_paginated(pagination_options, search_text=None,
+                                                              advanced_search_params=None,
                                                               statuses=[SubmissionStatus.Open.value])
     # 11 Open ones are created
     assert count == 11
     assert len(result) == 11
 
     result, count = EngagementModel.get_engagements_paginated(pagination_options, search_text=None,
+                                                              advanced_search_params=None,
                                                               statuses=[SubmissionStatus.Open.value,
                                                                         SubmissionStatus.Closed.value])
 
@@ -97,8 +100,9 @@ def test_get_engagements_paginated_status_search(session):
 
     )
 
-    result, count = EngagementModel.get_engagements_paginated(pagination_options, None, [SubmissionStatus.Open.value,
-                                                                                         SubmissionStatus.Closed.value])
+    result, count = EngagementModel.get_engagements_paginated(pagination_options, None, None,
+                                                              [SubmissionStatus.Open.value,
+                                                               SubmissionStatus.Closed.value])
     assert count == 13
     # only two items are returned
     assert len(result) == 2

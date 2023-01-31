@@ -129,6 +129,11 @@ describe('Engagement form page tests', () => {
                 sort_key: 'engagement.created_date',
                 sort_order: 'desc',
                 search_text: 'Engagement One',
+                engagement_status: [],
+                created_from_date: '',
+                created_to_date: '',
+                published_from_date: '',
+                published_to_date: '',
             });
         });
     });

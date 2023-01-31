@@ -49,7 +49,8 @@ class EngagementService:
         return engagements
 
     @staticmethod
-    def get_engagements_paginated(user_id, pagination_options: PaginationOptions, search_text='', advanced_search_params={}):
+    def get_engagements_paginated(user_id, pagination_options: PaginationOptions, search_text='',
+                                  advanced_search_params=None):
         """Get engagements paginated."""
         items, total = EngagementModel.get_engagements_paginated(
             pagination_options,

@@ -85,7 +85,7 @@ class Engagements(Resource):
                     user_id,
                     pagination_options,
                     args.get('search_text', '', str),
-                    advanced_search_params = {
+                    advanced_search_params={
                         'engagementstatus': args.getlist('engagement_status[]'),
                         'createdfromdate': args.get('created_from_date', None, type=str),
                         'createdtodate': args.get('created_to_date', None, type=str),
