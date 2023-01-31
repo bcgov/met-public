@@ -32,6 +32,9 @@ import { CommentReviewSkeleton } from './CommentReviewSkeleton';
 import { createDefaultSubmission, SurveySubmission } from 'models/surveySubmission';
 import { createDefaultReviewNote, createDefaultInternalNote, StaffNote } from 'models/staffNote';
 import { If, Then, Else, When } from 'react-if';
+import EmailPreviewModal from './emailPreview/EmailPreviewModal';
+import { RejectEmailTemplate } from './emailPreview/EmailTemplates';
+import EmailPreview from './emailPreview/EmailPreview';
 
 const CommentReview = () => {
     const [submission, setSubmission] = useState<SurveySubmission>(createDefaultSubmission());
@@ -47,10 +50,29 @@ const CommentReview = () => {
     const [notifyEmail, setNotifyEmail] = useState(true);
     const [staffNote, setStaffNote] = useState<StaffNote[]>([]);
     const [updatedStaffNote, setUpdatedStaffNote] = useState<StaffNote[]>([]);
-
+    const [openEmailPreview, setEmailPreview] = useState(false);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { submissionId } = useParams();
+    const reviewNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Review);
+    const internalNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Internal);
+
+    const getEmailPreview = () => {
+        return (
+            <EmailPreview>
+                <When condition={review == CommentStatus.Rejected}>
+                    <RejectEmailTemplate
+                        hasPersonalInfo={hasPersonalInfo}
+                        hasProfanity={hasProfanity}
+                        hasThreat={hasThreat}
+                        hasOtherReason={hasOtherReason}
+                        otherReason={otherReason}
+                        reviewNotes={reviewNotes}
+                    />
+                </When>
+            </EmailPreview>
+        );
+    };
 
     const fetchSubmission = async () => {
         try {
@@ -143,6 +165,10 @@ const CommentReview = () => {
         }
     };
 
+    const previewEmail = () => {
+        setEmailPreview(true);
+    };
+
     // The comment display information below is fetched from the first comment from the list
     // since comment status/review are being stored individually
     // These values should be exacly the same throughout the array.
@@ -162,12 +188,15 @@ const CommentReview = () => {
         setUpdatedStaffNote(newStaffNoteArray);
     };
 
-    const reviewNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Review);
-    const internalNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Internal);
-
     const defaultVerdict = comment_status_id !== CommentStatus.Pending ? comment_status_id : CommentStatus.Approved;
     return (
         <MetPageGridContainer>
+            <EmailPreviewModal
+                open={openEmailPreview}
+                handleClose={() => setEmailPreview(false)}
+                header={'Your comment on (Engagement name) needs to be edited'}
+                renderEmail={getEmailPreview()}
+            />
             <Grid
                 container
                 direction="row"
@@ -448,6 +477,7 @@ const CommentReview = () => {
                                 <PrimaryButton loading={isSaving} onClick={handleSave}>
                                     {'Save & Continue'}
                                 </PrimaryButton>
+                                <SecondaryButton onClick={previewEmail}>{'Preview Email'}</SecondaryButton>
                                 <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
                             </Stack>
                         </Grid>
