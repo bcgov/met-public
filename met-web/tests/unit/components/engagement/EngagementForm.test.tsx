@@ -11,7 +11,7 @@ import * as notificationModalSlice from 'services/notificationModalService/notif
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { WidgetType } from 'models/widget';
 import { Box } from '@mui/material';
-import { engagement } from '../factory';
+import { draftEngagement } from '../factory';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
@@ -63,13 +63,13 @@ describe('Engagement form page tests', () => {
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
-        .mockReturnValue(Promise.resolve(engagement));
+        .mockReturnValue(Promise.resolve(draftEngagement));
     const patchEngagementMock = jest
         .spyOn(engagementService, 'patchEngagement')
-        .mockReturnValue(Promise.resolve(engagement));
+        .mockReturnValue(Promise.resolve(draftEngagement));
     const postEngagementMock = jest
         .spyOn(engagementService, 'postEngagement')
-        .mockReturnValue(Promise.resolve(engagement));
+        .mockReturnValue(Promise.resolve(draftEngagement));
 
     beforeEach(() => {
         setupEnv();
@@ -182,7 +182,7 @@ describe('Engagement form page tests', () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
-                ...engagement,
+                ...draftEngagement,
                 surveys: surveys,
             }),
         );
@@ -200,7 +200,7 @@ describe('Engagement form page tests', () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
-                ...engagement,
+                ...draftEngagement,
                 surveys: surveys,
             }),
         );
@@ -223,14 +223,14 @@ describe('Engagement form page tests', () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
-                ...engagement,
+                ...draftEngagement,
                 surveys: surveys,
             }),
         );
 
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
-                ...engagement,
+                ...draftEngagement,
                 surveys: [],
             }),
         );
@@ -257,7 +257,7 @@ describe('Engagement form page tests', () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
-                ...engagement,
+                ...draftEngagement,
                 surveys: surveys,
             }),
         );
@@ -276,7 +276,7 @@ describe('Engagement form page tests', () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
-                ...engagement,
+                ...draftEngagement,
                 surveys: surveys,
             }),
         );

@@ -9,7 +9,7 @@ import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import { Widget, WidgetItem, WidgetType } from 'models/widget';
 import { createDefaultSurvey, Survey } from 'models/survey';
-import { engagement } from '../factory';
+import { draftEngagement } from '../factory';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
@@ -106,7 +106,7 @@ describe('Engagement View page tests', () => {
     jest.spyOn(reactRouter, 'useParams').mockReturnValue({ engagementId: '1' });
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
-        .mockReturnValue(Promise.resolve(engagement));
+        .mockReturnValue(Promise.resolve(draftEngagement));
 
     beforeEach(() => {
         setupEnv();
@@ -115,7 +115,7 @@ describe('Engagement View page tests', () => {
     test('Look at Engagement view', async () => {
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
-                ...engagement,
+                ...draftEngagement,
                 surveys: surveys,
             }),
         );
@@ -130,7 +130,7 @@ describe('Engagement View page tests', () => {
     test('Widget block appears', async () => {
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
-                ...engagement,
+                ...draftEngagement,
                 surveys: surveys,
             }),
         );
@@ -146,7 +146,7 @@ describe('Engagement View page tests', () => {
     test('Who is listening widget appears', async () => {
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
-                ...engagement,
+                ...draftEngagement,
                 surveys: surveys,
             }),
         );
@@ -170,7 +170,7 @@ describe('Engagement View page tests', () => {
     test('Phases widget appears', async () => {
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
-                ...engagement,
+                ...draftEngagement,
                 surveys: surveys,
             }),
         );

@@ -11,7 +11,7 @@ import { createDefaultSurvey, Survey } from 'models/survey';
 import { Widget, WidgetItem, WidgetType } from 'models/widget';
 import { Contact } from 'models/contact';
 import { Box } from '@mui/material';
-import { engagement } from '../factory';
+import { draftEngagement } from '../factory';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
@@ -109,7 +109,7 @@ describe('Who is Listening widget  tests', () => {
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
-        .mockReturnValue(Promise.resolve(engagement));
+        .mockReturnValue(Promise.resolve(draftEngagement));
     const postWidgetMock = jest
         .spyOn(widgetService, 'postWidget')
         .mockReturnValue(Promise.resolve(whoIsListeningWidget));
@@ -142,7 +142,7 @@ describe('Who is Listening widget  tests', () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
-                ...engagement,
+                ...draftEngagement,
                 surveys: surveys,
             }),
         );
@@ -153,9 +153,9 @@ describe('Who is Listening widget  tests', () => {
 
         await addWhosIsListeningWidget(container);
 
-        expect(postWidgetMock).toHaveBeenNthCalledWith(1, engagement.id, {
+        expect(postWidgetMock).toHaveBeenNthCalledWith(1, draftEngagement.id, {
             widget_type_id: WidgetType.WhoIsListening,
-            engagement_id: engagement.id,
+            engagement_id: draftEngagement.id,
         });
         expect(mockWidgetsRtkUnwrap).toHaveBeenCalledTimes(2);
         expect(screen.getByText('Add This Contact')).toBeVisible();
@@ -166,7 +166,7 @@ describe('Who is Listening widget  tests', () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
-                ...engagement,
+                ...draftEngagement,
                 surveys: surveys,
             }),
         );
