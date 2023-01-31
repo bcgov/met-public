@@ -88,9 +88,9 @@ class UserService:
         return subject, body, args
 
     @staticmethod
-    def find_users(user_type=UserType.STAFF.value, pagination_options: PaginationOptions = None):
+    def find_users(user_type=UserType.STAFF.value, pagination_options: PaginationOptions = None, search_text=''):
         """Return a list of users."""
-        users, total = UserModel.find_users_by_access_type(user_type, pagination_options)
+        users, total = UserModel.find_users_by_access_type(user_type, pagination_options, search_text)
         user: UserModel
         user_schema = UserSchema()
         user_collection = []

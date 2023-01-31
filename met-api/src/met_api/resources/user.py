@@ -67,7 +67,10 @@ class User(Resource):
             sort_order=args.get('sort_order', 'asc', str),
         )
 
-        users = UserService.find_users(pagination_options=pagination_options)
+        users = UserService.find_users(
+            pagination_options=pagination_options,
+            search_text=args.get('search_text', '', str)
+        )
         return jsonify(users), HTTPStatus.OK
 
 

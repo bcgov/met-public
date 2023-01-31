@@ -3,6 +3,9 @@ import { SubmissionStatusTypes, SUBMISSION_STATUS } from 'constants/engagementSt
 import { User } from 'models/user';
 import { ActionContext } from '../ActionContext';
 import { EngagementTeamMember } from 'models/engagementTeamMember';
+import { getTeamMembers } from 'services/membershipService';
+import { openNotification } from 'services/notificationService/notificationSlice';
+import { useAppDispatch } from 'hooks';
 
 interface EngagementFormData {
     name: string;
@@ -49,6 +52,8 @@ export interface EngagementTabsContextState {
     setAddTeamMemberOpen: React.Dispatch<React.SetStateAction<boolean>>;
     teamMembers: EngagementTeamMember[];
     setTeamMembers: React.Dispatch<React.SetStateAction<EngagementTeamMember[]>>;
+    teamMembersLoading: boolean;
+    loadTeamMembers: () => void;
 }
 
 export const EngagementTabsContext = createContext<EngagementTabsContextState>({
@@ -88,10 +93,15 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
     setTeamMembers: () => {
         throw new Error('Set team members not implemented');
     },
+    teamMembersLoading: false,
+    loadTeamMembers: () => {
+        throw new Error('Load team members not implemented');
+    },
 });
 
 export const EngagementTabsContextProvider = ({ children }: { children: React.ReactNode }) => {
     const { savedEngagement } = useContext(ActionContext);
+    const dispatch = useAppDispatch();
     const [engagementFormData, setEngagementFormData] = useState<EngagementFormData>({
         name: savedEngagement?.name || '',
         start_date: savedEngagement.start_date,
@@ -120,6 +130,24 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
     const [users, setUsers] = useState<User[]>([]);
     const [teamMembers, setTeamMembers] = useState<EngagementTeamMember[]>([]);
     const [addTeamMemberOpen, setAddTeamMemberOpen] = useState(false);
+    const [teamMembersLoading, setTeamMembersLoading] = useState(false);
+
+    const loadTeamMembers = async () => {
+        try {
+            setTeamMembersLoading(true);
+            const response = await getTeamMembers({ engagement_id: savedEngagement.id });
+            setTeamMembers(response);
+            setTeamMembersLoading(false);
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while trying to fetch users, please refresh the page or try again at a later time',
+                }),
+            );
+            setTeamMembersLoading(false);
+        }
+    };
 
     return (
         <EngagementTabsContext.Provider
@@ -140,6 +168,8 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
                 setAddTeamMemberOpen,
                 teamMembers,
                 setTeamMembers,
+                teamMembersLoading,
+                loadTeamMembers,
             }}
         >
             {children}

@@ -8,7 +8,9 @@ from datetime import datetime
 from typing import Optional
 
 from sqlalchemy import Column, ForeignKey, String, asc, desc, func
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.sql import text
+from sqlalchemy.sql.operators import ilike_op
 
 from .db import db, ma
 from .pagination_options import PaginationOptions
@@ -34,20 +36,28 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
     access_type = Column('access_type', String(200), nullable=True)
     status_id = db.Column(db.Integer, ForeignKey('user_status.id'))
 
+    @hybrid_property
+    def full_name(self):
+        """Combine first name and last name."""
+        return f'{self.first_name} {self.last_name}'
+
     @classmethod
     def get_user(cls, _id):
         """Get a user with the provided id."""
         return cls.query.filter_by(id=_id).first()
 
     @classmethod
-    def find_users_by_access_type(cls, user_access_type, pagination_options: PaginationOptions):
-        """Get a user with the provided id."""
+    def find_users_by_access_type(cls, user_access_type, pagination_options: PaginationOptions, search_text=''):
+        """Fetch list of users by access type."""
         query = cls.query.filter_by(access_type=user_access_type)
         if pagination_options.sort_key:
             sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == 'asc' \
                 else desc(text(pagination_options.sort_key))
 
             query = query.order_by(sort)
+
+        if search_text:
+            query = query.filter(ilike_op(User.full_name, '%' + search_text + '%'))
 
         no_pagination_options = not pagination_options.page or not pagination_options.size
         if no_pagination_options:
