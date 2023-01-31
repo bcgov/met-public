@@ -16,7 +16,6 @@ type RejectionEmailProps = {
 export const RejectEmailTemplate = ({
     hasPersonalInfo,
     hasProfanity,
-    hasThreat,
     hasOtherReason,
     otherReason,
     reviewNotes,
@@ -38,11 +37,6 @@ export const RejectEmailTemplate = ({
         <When condition={hasProfanity}>
             <Grid item xs={12}>
                 <MetBody sx={{ mb: 1 }}>One or many of your comments contain swear words or profanities.</MetBody>
-            </Grid>
-        </When>
-        <When condition={hasThreat}>
-            <Grid item xs={12}>
-                <MetBody sx={{ mb: 1 }}>One or many of your comments have threats.</MetBody>
             </Grid>
         </When>
         <When condition={otherReason}>
