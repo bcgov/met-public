@@ -390,11 +390,12 @@ const CommentReview = () => {
                                             />
                                         );
                                     })}
-                                    <Grid item xs={12} alignItems="flex-end" justifyContent="flex-end">
-                                        <When condition={review == CommentStatus.Rejected && notifyEmail && !hasThreat}>
+
+                                    <When condition={review == CommentStatus.Rejected && notifyEmail && !hasThreat}>
+                                        <Grid item xs={12} alignItems="flex-end" justifyContent="flex-end">
                                             <SecondaryButton onClick={previewEmail}>{'Preview Email'}</SecondaryButton>
-                                        </When>
-                                    </Grid>
+                                        </Grid>
+                                    </When>
                                     <br />
                                     <MetLabel>Internal Note</MetLabel>
                                     {internalNotes.map((staffNote) => {
