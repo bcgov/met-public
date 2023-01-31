@@ -12,6 +12,7 @@ from met_api.constants.membership_type import MembershipType
 from met_api.utils.enums import MembershipStatus
 
 from .base_model import BaseModel
+from .user import User
 from .db import db
 from .user import User
 
@@ -35,6 +36,7 @@ class Membership(BaseModel):
     def find_by_engagement(cls, engagement_id) -> List[Membership]:
         """Get a survey."""
         memberships = db.session.query(Membership) \
+            .join(User, User.id == Membership.user_id) \
             .filter(Membership.engagement_id == engagement_id) \
             .all()
         return memberships
