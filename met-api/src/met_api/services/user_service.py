@@ -88,13 +88,7 @@ class UserService:
         return subject, body, args
 
     @staticmethod
-    def find_users(user_type=UserType.STAFF.value, pagination_options: PaginationOptions = None, search_text=''):
-        """Return a list of users."""
-        users, total = UserModel.find_users_by_access_type(user_type, pagination_options, search_text)
-        user: UserModel
-        user_schema = UserSchema()
-        user_collection = []
-        user_ids = [user.external_id for user in users]
+    def attach_roles(users, user_schema, user_collection, user_ids):
         group_user_details: List = KEYCLOAK_SERVICE.get_users_groups(user_ids)
         for user in users:
             user_detail = user_schema.dump(user)
@@ -107,6 +101,15 @@ class UserService:
                 user_detail['groups'] = [GROUP_NAME_MAPPING.get(group, '') for group in groups]
             user_collection.append(user_detail)
 
+    @classmethod
+    def find_users(cls, user_type=UserType.STAFF.value, pagination_options: PaginationOptions = None, search_text='', with_roles = True):
+        """Return a list of users."""
+        users, total = UserModel.find_users_by_access_type(user_type, pagination_options, search_text)
+        user_schema = UserSchema()
+        user_collection = []
+        user_ids = [user.external_id for user in users]
+        if with_roles:
+            cls.attach_roles(users, user_schema, user_collection, user_ids)
         return {
             'items': user_collection,
             'total': total

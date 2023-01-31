@@ -8,7 +8,7 @@ from datetime import datetime
 from typing import Optional
 
 from sqlalchemy import Column, ForeignKey, String, asc, desc, func
-from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.orm import column_property
 from sqlalchemy.sql import text
 from sqlalchemy.sql.operators import ilike_op
 
@@ -25,6 +25,7 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
     first_name = Column(db.String(50))
     middle_name = Column(db.String(50), nullable=True)
     last_name = Column(db.String(50))
+    full_name = column_property(first_name + " " + last_name)
     # To store the IDP user name..ie IDIR username
     username = Column('username', String(100), index=True)
     email_id = Column(db.String(50))
@@ -35,11 +36,6 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
     # a type for the user to identify what kind of user it is..STAFF/PUBLIC_USER etc
     access_type = Column('access_type', String(200), nullable=True)
     status_id = db.Column(db.Integer, ForeignKey('user_status.id'))
-
-    @hybrid_property
-    def full_name(self):
-        """Combine first name and last name."""
-        return f'{self.first_name} {self.last_name}'
 
     @classmethod
     def get_user(cls, _id):
