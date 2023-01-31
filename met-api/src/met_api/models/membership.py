@@ -27,6 +27,7 @@ class Membership(BaseModel):
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), nullable=False)
     user_id = db.Column(db.Integer, ForeignKey('met_users.id'), nullable=True)
     type = db.Column(db.Enum(MembershipType), nullable=False)
+    user = db.relationship('User', foreign_keys=[user_id], lazy='joined')
     membership_status = db.relationship('MembershipStatusCode', foreign_keys=[status], lazy='select')
     engagement = db.relationship('Engagement', foreign_keys=[engagement_id], lazy='select')
 
@@ -34,7 +35,6 @@ class Membership(BaseModel):
     def find_by_engagement(cls, engagement_id) -> List[Membership]:
         """Get a survey."""
         memberships = db.session.query(Membership) \
-            .join(User, User.id == Membership.user_id) \
             .filter(Membership.engagement_id == engagement_id) \
             .all()
         return memberships
