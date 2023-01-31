@@ -54,6 +54,7 @@ const EngagementsAccordion = ({
                         }}
                     >
                         <AccordionSummary
+                            data-testid={`engagement-accordion-${engagement.id}`}
                             sx={{
                                 '&.Mui-disabled': {
                                     opacity: 1,
@@ -76,6 +77,7 @@ const EngagementsAccordion = ({
                         <AccordionDetails>
                             <When condition={openedEngagements.some((id) => id == engagement.id)}>
                                 <iframe
+                                    data-testid={`dashboard-frame-${engagement.id}`}
                                     style={{
                                         width: '100%',
                                         height: '1310px',
