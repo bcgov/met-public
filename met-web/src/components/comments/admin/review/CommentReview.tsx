@@ -36,6 +36,7 @@ import EmailPreviewModal from './emailPreview/EmailPreviewModal';
 import { RejectEmailTemplate } from './emailPreview/EmailTemplates';
 import EmailPreview from './emailPreview/EmailPreview';
 import { getEngagement } from 'services/engagementService';
+import { Engagement } from 'models/engagement';
 
 const CommentReview = () => {
     const [submission, setSubmission] = useState<SurveySubmission>(createDefaultSubmission());
@@ -52,7 +53,7 @@ const CommentReview = () => {
     const [staffNote, setStaffNote] = useState<StaffNote[]>([]);
     const [updatedStaffNote, setUpdatedStaffNote] = useState<StaffNote[]>([]);
     const [openEmailPreview, setEmailPreview] = useState(false);
-    const [engagement, setEngagement] = useState(false);
+    const [engagement, setEngagement] = useState<Engagement>(null);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { submissionId } = useParams();
@@ -390,6 +391,11 @@ const CommentReview = () => {
                                             />
                                         );
                                     })}
+                                    <Grid item xs={12} alignItems="flex-end" justifyContent="flex-end">
+                                        <When condition={review == CommentStatus.Rejected && notifyEmail && !hasThreat}>
+                                            <SecondaryButton onClick={previewEmail}>{'Preview Email'}</SecondaryButton>
+                                        </When>
+                                    </Grid>
                                     <br />
                                     <MetLabel>Internal Note</MetLabel>
                                     {internalNotes.map((staffNote) => {
@@ -481,9 +487,7 @@ const CommentReview = () => {
                                 <PrimaryButton loading={isSaving} onClick={handleSave}>
                                     {'Save & Continue'}
                                 </PrimaryButton>
-                                <When condition={review == CommentStatus.Rejected && notifyEmail && !hasThreat}>
-                                    <SecondaryButton onClick={previewEmail}>{'Preview Email'}</SecondaryButton>
-                                </When>
+
                                 <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
                             </Stack>
                         </Grid>
