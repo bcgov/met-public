@@ -392,7 +392,14 @@ const CommentReview = () => {
                                     })}
 
                                     <When condition={review == CommentStatus.Rejected && notifyEmail && !hasThreat}>
-                                        <Grid item xs={12} alignItems="flex-end" justifyContent="flex-end">
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            sx={{ m: 1 }}
+                                            container
+                                            alignItems="flex-end"
+                                            justifyContent="flex-end"
+                                        >
                                             <SecondaryButton onClick={previewEmail}>{'Preview Email'}</SecondaryButton>
                                         </Grid>
                                     </When>
