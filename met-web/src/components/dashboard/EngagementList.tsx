@@ -25,9 +25,7 @@ const EngagementList = () => {
     );
 
     const StyledAccordion = styled(Accordion)({
-        borderStyle: 'solid',
-        borderSize: 1,
-        borderColor: Palette.primary.light,
+        border: 'solid 1px #606060',
         boxShadow: 'none',
     });
 
