@@ -101,13 +101,13 @@ describe('Dashboard page tests', () => {
                 total: 1,
             }),
         );
-        const { container } = render(<Dashboard />);
+        render(<Dashboard />);
 
         await waitFor(() => {
             expect(screen.getByText('Engagement Two')).toBeInTheDocument();
         });
 
-        const accordion = screen.getByTestId(`engagement-accordion-${mockEngagementTwo.id}`)
+        const accordion = screen.getByTestId(`engagement-accordion-${mockEngagementTwo.id}`);
         expect(accordion).toBeVisible();
 
         fireEvent.click(accordion);
