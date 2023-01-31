@@ -3,7 +3,6 @@ import { MetBody } from 'components/common';
 import { Grid, Link } from '@mui/material';
 import { When } from 'react-if';
 import { StaffNote } from 'models/staffNote';
-import Link from '@mui/material';
 
 type RejectionEmailProps = {
     hasPersonalInfo?: boolean;
