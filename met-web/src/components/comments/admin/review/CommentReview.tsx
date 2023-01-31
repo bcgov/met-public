@@ -35,6 +35,8 @@ import { If, Then, Else, When } from 'react-if';
 import EmailPreviewModal from './emailPreview/EmailPreviewModal';
 import { RejectEmailTemplate } from './emailPreview/EmailTemplates';
 import EmailPreview from './emailPreview/EmailPreview';
+import { Survey, createDefaultSurvey } from 'models/survey';
+import { getSurvey } from 'services/surveyService';
 
 const CommentReview = () => {
     const [submission, setSubmission] = useState<SurveySubmission>(createDefaultSubmission());
@@ -51,15 +53,16 @@ const CommentReview = () => {
     const [staffNote, setStaffNote] = useState<StaffNote[]>([]);
     const [updatedStaffNote, setUpdatedStaffNote] = useState<StaffNote[]>([]);
     const [openEmailPreview, setEmailPreview] = useState(false);
+    const [survey, setSurvey] = useState<Survey>(createDefaultSurvey());
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { submissionId } = useParams();
+    const { submissionId, surveyId } = useParams();
     const reviewNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Review);
     const internalNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Internal);
 
     const getEmailPreview = () => {
         return (
-            <EmailPreview>
+            <EmailPreview engagement_name={survey.engagement?.name || ''}>
                 <When condition={review == CommentStatus.Rejected}>
                     <RejectEmailTemplate
                         hasPersonalInfo={hasPersonalInfo}
@@ -79,9 +82,10 @@ const CommentReview = () => {
             if (isNaN(Number(submissionId))) {
                 throw new Error();
             }
-
             const fetchedSubmission = await getSubmission(Number(submissionId));
+            const fetchedSurvey = await getSurvey(Number(surveyId));
             setSubmission(fetchedSubmission);
+            setSurvey(fetchedSurvey);
             setHasOtherReason(!!fetchedSubmission.rejected_reason_other);
             setOtherReason(fetchedSubmission.rejected_reason_other ?? '');
             setHasPersonalInfo(fetchedSubmission.has_personal_info ?? false);
@@ -386,6 +390,12 @@ const CommentReview = () => {
                                             />
                                         );
                                     })}
+
+                                    <When condition={review == CommentStatus.Rejected && notifyEmail && !hasThreat}>
+                                        <Grid item xs={12} alignItems="flex-end" justifyContent="flex-end">
+                                            <SecondaryButton onClick={previewEmail}>{'Preview Email'}</SecondaryButton>
+                                        </Grid>
+                                    </When>
                                     <br />
                                     <MetLabel>Internal Note</MetLabel>
                                     {internalNotes.map((staffNote) => {
@@ -477,7 +487,7 @@ const CommentReview = () => {
                                 <PrimaryButton loading={isSaving} onClick={handleSave}>
                                     {'Save & Continue'}
                                 </PrimaryButton>
-                                <SecondaryButton onClick={previewEmail}>{'Preview Email'}</SecondaryButton>
+
                                 <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
                             </Stack>
                         </Grid>
