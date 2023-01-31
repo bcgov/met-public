@@ -31,15 +31,13 @@ export default function EmailPreview({
                 </Stack>
                 <Grid item xs={12}>
                     <MetHeader4 bold sx={{ mb: 1 }}>
-                        Thank you for taking the time to fill in our survey about {survey.engagement?.name} -{' '}
-                        {survey.name}.
+                        Thank you for taking the time to fill in our survey about {survey.name}.
                     </MetHeader4>
                 </Grid>
                 {children}
                 <Grid item xs={12}>
                     <MetHeader4 bold sx={{ mb: 1 }}>
-                        The engagement period is open until
-                        {scheduledDate}.
+                        The engagement period is open until {scheduledDate}.
                     </MetHeader4>
                 </Grid>
                 <Grid item xs={12}>
