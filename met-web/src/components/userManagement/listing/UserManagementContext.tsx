@@ -65,6 +65,7 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
                 size,
                 sort_key: nested_sort_key || sort_key,
                 sort_order,
+                include_groups: true,
             });
             setUsers(response.items);
             setPageInfo({
@@ -72,7 +73,6 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
             });
             setUsersLoading(false);
         } catch (error) {
-            console.log(error);
             dispatch(
                 openNotification({
                     severity: 'error',

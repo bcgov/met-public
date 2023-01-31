@@ -29,15 +29,19 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { useAppDispatch } from 'hooks';
 import { debounce } from 'lodash';
 import { Engagement } from 'models/engagement';
+import axios, { AxiosError } from 'axios';
 
 const schema = yup
     .object({
-        user: yup.object().required('A user must be selected'),
+        user: yup.object().nullable().required('A user must be selected'),
         group: yup.string().required('A role must be specified'),
-        engagement: yup.object().when('group', {
-            is: USER_GROUP.VIEWER.value,
-            then: yup.object().required('An engagement must be selected'),
-        }),
+        engagement: yup
+            .object()
+            .nullable()
+            .when('group', {
+                is: USER_GROUP.VIEWER.value,
+                then: yup.object().required('An engagement must be selected'),
+            }),
     })
     .required();
 
@@ -63,6 +67,7 @@ export const AddUserModel = () => {
         reset,
         formState: { errors },
         watch,
+        setError,
     } = methods;
 
     const userTypeSelected = watch('group');
@@ -82,6 +87,7 @@ export const AddUserModel = () => {
             setUsersLoading(true);
             const response = await getUserList({
                 search_text: searchText,
+                include_groups: false,
             });
             setUsers(response.items);
             setUsersLoading(false);
@@ -108,7 +114,6 @@ export const AddUserModel = () => {
             setEngagements(response.items);
             setEngagementsLoading(false);
         } catch (error) {
-            console.log(error);
             dispatch(
                 openNotification({
                     severity: 'error',
@@ -141,6 +146,16 @@ export const AddUserModel = () => {
             });
     };
 
+    const setErrors = (error: AxiosError) => {
+        if (!error.response || !Object.keys(schema.fields).includes(error.response.data.error_data)) {
+            return;
+        }
+        setError(error.response.data.error_data, {
+            type: 'validate',
+            message: error.response.data.message || '',
+        });
+    };
+
     const onSubmit: SubmitHandler<AddUserForm> = async (data: AddUserForm) => {
         try {
             setIsAssigningRole(true);
@@ -149,9 +164,11 @@ export const AddUserModel = () => {
             setIsAssigningRole(false);
             handleClose();
         } catch (error) {
-            console.log(error);
-            dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add user' }));
             setIsAssigningRole(false);
+            if (axios.isAxiosError(error)) {
+                setErrors(error);
+            }
+            dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add user' }));
         }
     };
 

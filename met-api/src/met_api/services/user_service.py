@@ -1,6 +1,7 @@
 """Service for user management."""
 from http import HTTPStatus
 from typing import List
+
 from flask import current_app
 
 from met_api.exceptions.business_exception import BusinessException
@@ -8,9 +9,9 @@ from met_api.models.pagination_options import PaginationOptions
 from met_api.models.user import User as UserModel
 from met_api.schemas.user import UserSchema
 from met_api.services.keycloak import KeycloakService
-from met_api.utils.constants import GROUP_NAME_MAPPING
 from met_api.utils import notification
-from met_api.utils.enums import LoginSource, UserType
+from met_api.utils.constants import GROUP_NAME_MAPPING
+from met_api.utils.enums import KeycloakGroupName, LoginSource, UserType
 from met_api.utils.template import Template
 
 
@@ -88,28 +89,24 @@ class UserService:
         return subject, body, args
 
     @staticmethod
-    def attach_roles(users, user_schema, user_collection, user_ids):
-        group_user_details: List = KEYCLOAK_SERVICE.get_users_groups(user_ids)
-        for user in users:
-            user_detail = user_schema.dump(user)
+    def attach_groups(user_collection):
+        group_user_details: List = KEYCLOAK_SERVICE.get_users_groups([user.get('external_id') for user in user_collection])
+        for user in user_collection:
             # Transform group name from EAO_ADMINISTRATOR to Administrator
             # TODO etc;Arrive at a better implementation than keeping a static list
             # TODO Probably add a custom attribute in the keycloak as title against a group?
-            groups = group_user_details.get(user.external_id)
-            user_detail['groups'] = ''
+            groups = group_user_details.get(user.get('external_id'))
+            user['groups'] = ''
             if groups:
-                user_detail['groups'] = [GROUP_NAME_MAPPING.get(group, '') for group in groups]
-            user_collection.append(user_detail)
+                user['groups'] = [GROUP_NAME_MAPPING.get(group, '') for group in groups]
 
     @classmethod
-    def find_users(cls, user_type=UserType.STAFF.value, pagination_options: PaginationOptions = None, search_text='', with_roles = True):
+    def find_users(cls, user_type=UserType.STAFF.value, pagination_options: PaginationOptions = None, search_text='', include_groups = False):
         """Return a list of users."""
         users, total = UserModel.find_users_by_access_type(user_type, pagination_options, search_text)
-        user_schema = UserSchema()
-        user_collection = []
-        user_ids = [user.external_id for user in users]
-        if with_roles:
-            cls.attach_roles(users, user_schema, user_collection, user_ids)
+        user_collection = UserSchema(many=True).dump(users)
+        if include_groups:
+            cls.attach_groups(user_collection)
         return {
             'items': user_collection,
             'total': total
@@ -150,15 +147,26 @@ class UserService:
         if any(empty_fields):
             raise ValueError('Some required fields are empty')
 
-    @staticmethod
-    def add_user_to_group(external_id: str, group_name: str):
+    @classmethod
+    def add_user_to_group(cls, external_id: str, group_name: str):
         """Create or update a user."""
         db_user = UserModel.get_user_by_external_id(external_id)
-        if db_user is None:
-            raise KeyError('User not found')
+
+        cls.validate_user(db_user)
 
         KEYCLOAK_SERVICE.add_user_to_group(user_id=external_id, group_name=group_name)
 
-        user_schema = UserSchema().dump(db_user)
+        return UserSchema().dump(db_user)
 
-        return user_schema
+    @staticmethod
+    def validate_user(db_user: UserModel):
+        if db_user is None:
+            raise KeyError('User not found')
+
+        groups = KEYCLOAK_SERVICE.get_user_groups(user_id=db_user.external_id)
+        group_names = [group.get('name') for group in groups]
+        if KeycloakGroupName.EAO_IT_ADMIN.value in group_names:
+            raise BusinessException(
+                error='This user is already an Administrator.',
+                status_code=HTTPStatus.CONFLICT.value,
+                error_data='user')

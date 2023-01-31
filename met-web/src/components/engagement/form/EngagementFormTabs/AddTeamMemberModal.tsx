@@ -14,10 +14,11 @@ import { ActionContext } from '../ActionContext';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { addTeamMemberToEngagement } from 'services/membershipService';
 import { debounce } from 'lodash';
+import axios, { AxiosError } from 'axios';
 
 const schema = yup
     .object({
-        user: yup.object().required('A user must be selected'),
+        user: yup.object().nullable().required('A user must be selected'),
     })
     .required();
 
@@ -42,6 +43,7 @@ export const AddTeamMemberModal = () => {
         control,
         reset,
         formState: { errors },
+        setError,
     } = methods;
 
     const { user: userErrors } = errors;
@@ -59,6 +61,7 @@ export const AddTeamMemberModal = () => {
             setUsersLoading(true);
             const response = await getUserList({
                 search_text: searchText,
+                include_groups: false,
             });
             setUsers(response.items);
             setUsersLoading(false);
@@ -78,6 +81,16 @@ export const AddTeamMemberModal = () => {
             loadUsers(searchText);
         }, 1000),
     ).current;
+
+    const setErrors = (error: AxiosError) => {
+        if (!error.response || !Object.keys(schema.fields).includes(error.response.data.error_data)) {
+            return;
+        }
+        setError(error.response.data.error_data, {
+            type: 'validate',
+            message: error.response.data.message || '',
+        });
+    };
 
     const onSubmit: SubmitHandler<AddTeamMemberForm> = async (data: AddTeamMemberForm) => {
         try {
@@ -106,6 +119,9 @@ export const AddTeamMemberModal = () => {
             );
         } catch (error) {
             setIsAdding(false);
+            if (axios.isAxiosError(error)) {
+                setErrors(error);
+            }
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add user' }));
         }
     };
