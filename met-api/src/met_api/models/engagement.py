@@ -72,7 +72,7 @@ class Engagement(BaseModel):
 
             query = cls._filter_by_engagement_status(query, search_options)
 
-        sort = cls.get_sort_order(pagination_options)
+        sort = cls._get_sort_order(pagination_options)
 
         query = query.order_by(sort)
 
