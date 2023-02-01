@@ -20,6 +20,11 @@ interface GetEngagementsParams {
     sort_key?: string;
     sort_order?: 'asc' | 'desc';
     search_text?: string;
+    engagement_status?: number[];
+    created_from_date?: string;
+    created_to_date?: string;
+    published_from_date?: string;
+    published_to_date?: string;
 }
 export const getEngagements = async (params: GetEngagementsParams = {}): Promise<Page<Engagement>> => {
     const responseData = await http.GetRequest<Page<Engagement>>(Endpoints.Engagement.GET_LIST, params);
