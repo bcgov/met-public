@@ -46,9 +46,17 @@ def test_get_engagements_paginated_name_search(session):
         sort_key='name',
         sort_order=''
     )
+    search_options = {
+        'search_text': eng.name,
+        'engagement_status': None,
+        'created_from_date': None,
+        'created_to_date': None,
+        'published_from_date': None,
+        'published_to_date': None,
+    }
 
     # verify name search
-    result, count = EngagementModel.get_engagements_paginated(pagination_options, eng.name)
+    result, count = EngagementModel.get_engagements_paginated(pagination_options, search_options)
     assert eng.name == result[0].name
     assert count == 1, 'Name search brings up only search result'
 
@@ -65,24 +73,29 @@ def test_get_engagements_paginated_status_search(session):
         sort_key='name',
         sort_order=''
     )
+    search_options = {
+        'search_text': '',
+        'engagement_status': None,
+        'created_from_date': None,
+        'created_to_date': None,
+        'published_from_date': None,
+        'published_to_date': None,
+    }
 
     # status search
     factory_engagement_model(status=SubmissionStatus.Closed.value)
     factory_engagement_model(status=SubmissionStatus.Closed.value)
-    result, count = EngagementModel.get_engagements_paginated(pagination_options, search_text=None,
-                                                              advanced_search_params=None,
+    result, count = EngagementModel.get_engagements_paginated(pagination_options, search_options,
                                                               statuses=[SubmissionStatus.Closed.value])
     assert count == 2
 
-    result, count = EngagementModel.get_engagements_paginated(pagination_options, search_text=None,
-                                                              advanced_search_params=None,
+    result, count = EngagementModel.get_engagements_paginated(pagination_options, search_options,
                                                               statuses=[SubmissionStatus.Open.value])
     # 11 Open ones are created
     assert count == 11
     assert len(result) == 11
 
-    result, count = EngagementModel.get_engagements_paginated(pagination_options, search_text=None,
-                                                              advanced_search_params=None,
+    result, count = EngagementModel.get_engagements_paginated(pagination_options, search_options,
                                                               statuses=[SubmissionStatus.Open.value,
                                                                         SubmissionStatus.Closed.value])
 
@@ -100,9 +113,19 @@ def test_get_engagements_paginated_status_search(session):
 
     )
 
-    result, count = EngagementModel.get_engagements_paginated(pagination_options, None, None,
+    result, count = EngagementModel.get_engagements_paginated(pagination_options, search_options,
                                                               [SubmissionStatus.Open.value,
                                                                SubmissionStatus.Closed.value])
     assert count == 13
     # only two items are returned
     assert len(result) == 2
+
+    # advanced search based on status
+    result, count = EngagementModel.get_engagements_paginated(pagination_options, search_options={
+                                                              'search_text': '',
+                                                              'engagement_status': [SubmissionStatus.Closed.value],
+                                                              'created_from_date': '',
+                                                              'created_to_date': '',
+                                                              'published_from_date': '',
+                                                              'published_to_date': ''})
+    assert count == 2

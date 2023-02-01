@@ -164,7 +164,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ getFilterParams }) => {
                                 }
                                 label={
                                     <MetParagraph>
-                                        Published/{EngagementDisplayStatus[EngagementDisplayStatus.Upcoming]}
+                                        Published - {EngagementDisplayStatus[EngagementDisplayStatus.Upcoming]}
                                     </MetParagraph>
                                 }
                             />
