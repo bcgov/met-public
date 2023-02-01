@@ -19,7 +19,7 @@ Test-Suite to ensure that the /user endpoint is working as expected.
 from unittest.mock import MagicMock
 from http import HTTPStatus
 
-from met_api.utils.enums import ContentType, UserType
+from met_api.utils.enums import ContentType, UserType, KeycloakGroupName
 from tests.utilities.factory_scenarios import TestJwtClaims, TestUserInfo
 from tests.utilities.factory_utils import factory_auth_header, factory_user_model
 
@@ -99,6 +99,10 @@ def test_add_user_to_admin_group(mocker, client, jwt, session):  # pylint:disabl
     mock_add_user_to_group_keycloak = mocker.patch(
         'met_api.services.keycloak.KeycloakService.add_user_to_group',
         return_value=mock_add_user_to_group_keycloak_response
+    )
+    mock_add_user_to_group_keycloak = mocker.patch(
+        'met_api.services.keycloak.KeycloakService.get_user_groups',
+        return_value=[{'name': KeycloakGroupName.EAO_IT_VIEWER.value}]
     )
 
     claims = TestJwtClaims.staff_admin_role
