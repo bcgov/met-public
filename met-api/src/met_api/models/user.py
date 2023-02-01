@@ -25,7 +25,7 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
     first_name = Column(db.String(50))
     middle_name = Column(db.String(50), nullable=True)
     last_name = Column(db.String(50))
-    full_name = column_property(first_name + " " + last_name)
+    full_name = column_property(first_name + ' ' + last_name)
     # To store the IDP user name..ie IDIR username
     username = Column('username', String(100), index=True)
     email_id = Column(db.String(50))

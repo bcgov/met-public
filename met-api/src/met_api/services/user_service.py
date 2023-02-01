@@ -91,7 +91,9 @@ class UserService:
     @staticmethod
     def attach_groups(user_collection):
         """Attach keycloak groups to user object."""
-        group_user_details: List = KEYCLOAK_SERVICE.get_users_groups([user.get('external_id') for user in user_collection])
+        group_user_details: List = KEYCLOAK_SERVICE.get_users_groups(
+            [user.get('external_id') for user in user_collection])
+
         for user in user_collection:
             # Transform group name from EAO_ADMINISTRATOR to Administrator
             # TODO etc;Arrive at a better implementation than keeping a static list
@@ -102,7 +104,12 @@ class UserService:
                 user['groups'] = [GROUP_NAME_MAPPING.get(group, '') for group in groups]
 
     @classmethod
-    def find_users(cls, user_type=UserType.STAFF.value, pagination_options: PaginationOptions = None, search_text='', include_groups = False):
+    def find_users(
+        cls, 
+        user_type=UserType.STAFF.value, 
+        pagination_options: PaginationOptions=None, 
+        search_text='', 
+        include_groups=False):
         """Return a list of users."""
         users, total = UserModel.find_users_by_access_type(user_type, pagination_options, search_text)
         user_collection = UserSchema(many=True).dump(users)
@@ -161,6 +168,7 @@ class UserService:
 
     @staticmethod
     def validate_user(db_user: UserModel):
+        """Validate user."""
         if db_user is None:
             raise KeyError('User not found')
 
