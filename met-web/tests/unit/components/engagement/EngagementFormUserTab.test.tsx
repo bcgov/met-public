@@ -8,7 +8,7 @@ import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as teamMemberService from 'services/membershipService';
 import { Box } from '@mui/material';
-import { engagement } from '../factory';
+import { draftEngagement } from '../factory';
 import { initialDefaultUser, USER_GROUP } from 'models/user';
 import { EngagementTeamMember, initialDefaultTeamMember } from 'models/engagementTeamMember';
 
@@ -67,7 +67,7 @@ describe('Engagement form page tests', () => {
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
     jest.spyOn(teamMemberService, 'getTeamMembers').mockReturnValue(Promise.resolve([mockTeamMember1]));
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
-    jest.spyOn(engagementService, 'getEngagement').mockReturnValue(Promise.resolve(engagement));
+    jest.spyOn(engagementService, 'getEngagement').mockReturnValue(Promise.resolve(draftEngagement));
 
     beforeEach(() => {
         setupEnv();
@@ -78,7 +78,7 @@ describe('Engagement form page tests', () => {
         const { container } = render(<EngagementForm />);
 
         await waitFor(() => {
-            expect(screen.getByDisplayValue(engagement.name)).toBeInTheDocument();
+            expect(screen.getByDisplayValue(draftEngagement.name)).toBeInTheDocument();
         });
         await waitForElementToBeRemoved(container.querySelector('span.MuiSkeleton-root'));
 
