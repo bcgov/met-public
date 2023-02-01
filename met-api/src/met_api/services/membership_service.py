@@ -5,9 +5,10 @@ from met_api.constants.membership_type import MembershipType
 from met_api.models import User as UserModel
 from met_api.models.membership import Membership as MembershipModel
 from met_api.services.user_service import KEYCLOAK_SERVICE
-from met_api.utils.enums import KeycloakGroups, MembershipStatus
-from .authorization import check_auth
+from met_api.utils.enums import KeycloakGroupName, KeycloakGroups, MembershipStatus
+
 from ..exceptions.business_exception import BusinessException
+from .authorization import check_auth
 
 
 class MembershipService:
@@ -25,7 +26,7 @@ class MembershipService:
 
         # this makes sure duplicate membership doesnt happen.
         # Can remove when user can have multiple roles with in same engagement.
-        MembershipService._validate_duplicate_membership(engagement_id, user)
+        MembershipService._validate_team_member(engagement_id, user)
 
         check_auth(one_of_roles=(MembershipType.TEAM_MEMBER,), engagement_id=engagement_id)
         membership = MembershipService._create_membership_model(engagement_id, user)
@@ -35,11 +36,23 @@ class MembershipService:
         return membership
 
     @staticmethod
-    def _validate_duplicate_membership(engagement_id, user):
+    def _validate_team_member(engagement_id, user):
         existing_membership = MembershipModel.find_by_engagement_and_user_id(engagement_id, user.id)
         if existing_membership:
             raise BusinessException(
-                error='Membership Already Exists.',
+                error='This Team Member is already assigned to this engagement.',
+                status_code=HTTPStatus.CONFLICT.value)
+
+        groups = KEYCLOAK_SERVICE.get_user_groups(user_id=user.external_id)
+        group_names = [group.get('name') for group in groups]
+        if KeycloakGroupName.EAO_IT_ADMIN.value in group_names:
+            raise BusinessException(
+                error='This user is already an Administrator.',
+                status_code=HTTPStatus.CONFLICT.value)
+
+        if KeycloakGroupName.EAO_IT_VIEWER.value not in group_names:
+            raise BusinessException(
+                error='User must be a viewer first.',
                 status_code=HTTPStatus.CONFLICT.value)
 
     @staticmethod

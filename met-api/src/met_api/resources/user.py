@@ -21,6 +21,7 @@ from flask_restx import Namespace, Resource
 
 from met_api.auth import auth
 from met_api.auth import jwt as _jwt
+from met_api.exceptions.business_exception import BusinessException
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.user import UserSchema
 from met_api.services.user_service import UserService
@@ -66,10 +67,10 @@ class User(Resource):
             sort_key=args.get('sort_key', '', str),
             sort_order=args.get('sort_order', 'asc', str),
         )
-
         users = UserService.find_users(
             pagination_options=pagination_options,
-            search_text=args.get('search_text', '', str)
+            search_text=args.get('search_text', '', str),
+            include_groups=args.get('include_groups', default=False, type=lambda v: v.lower() == 'true'),
         )
         return jsonify(users), HTTPStatus.OK
 
@@ -93,3 +94,5 @@ class UserGroup(Resource):
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except BusinessException as err:
+            return {'message': err.error}, err.status_code

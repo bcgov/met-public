@@ -12,8 +12,9 @@ import {
     Radio,
     Stack,
     TextField,
+    useTheme,
 } from '@mui/material';
-import { MetHeader3, MetLabel, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetHeader3, MetLabel, MetSmallText, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
 import { User, USER_GROUP } from 'models/user';
 import { UserManagementContext } from './UserManagementContext';
 import { Palette } from 'styles/Theme';
@@ -29,15 +30,19 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { useAppDispatch } from 'hooks';
 import { debounce } from 'lodash';
 import { Engagement } from 'models/engagement';
+import axios, { AxiosError } from 'axios';
 
 const schema = yup
     .object({
-        user: yup.object().required('A user must be selected'),
+        user: yup.object().nullable().required('A user must be selected'),
         group: yup.string().required('A role must be specified'),
-        engagement: yup.object().when('group', {
-            is: USER_GROUP.VIEWER.value,
-            then: yup.object().required('An engagement must be selected'),
-        }),
+        engagement: yup
+            .object()
+            .nullable()
+            .when('group', {
+                is: USER_GROUP.VIEWER.value,
+                then: yup.object().required('An engagement must be selected'),
+            }),
     })
     .required();
 
@@ -52,6 +57,9 @@ export const AddUserModel = () => {
 
     const [engagements, setEngagements] = useState<Engagement[]>([]);
     const [engagementsLoading, setEngagementsLoading] = useState(false);
+    const [backendError, setBackendError] = useState('');
+
+    const theme = useTheme();
 
     const methods = useForm<AddUserForm>({
         resolver: yupResolver(schema),
@@ -72,6 +80,7 @@ export const AddUserModel = () => {
     const handleClose = () => {
         setAddUserModelOpen(false);
         reset({});
+        setBackendError('');
     };
 
     const loadUsers = async (searchText: string) => {
@@ -82,6 +91,7 @@ export const AddUserModel = () => {
             setUsersLoading(true);
             const response = await getUserList({
                 search_text: searchText,
+                include_groups: false,
             });
             setUsers(response.items);
             setUsersLoading(false);
@@ -108,7 +118,6 @@ export const AddUserModel = () => {
             setEngagements(response.items);
             setEngagementsLoading(false);
         } catch (error) {
-            console.log(error);
             dispatch(
                 openNotification({
                     severity: 'error',
@@ -141,6 +150,13 @@ export const AddUserModel = () => {
             });
     };
 
+    const setErrors = (error: AxiosError) => {
+        if (error.response?.status !== 409) {
+            return;
+        }
+        setBackendError(error.response?.data.message || '');
+    };
+
     const onSubmit: SubmitHandler<AddUserForm> = async (data: AddUserForm) => {
         try {
             setIsAssigningRole(true);
@@ -149,9 +165,11 @@ export const AddUserModel = () => {
             setIsAssigningRole(false);
             handleClose();
         } catch (error) {
-            console.log(error);
-            dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add user' }));
             setIsAssigningRole(false);
+            if (axios.isAxiosError(error)) {
+                setErrors(error);
+            }
+            dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add user' }));
         }
     };
 
@@ -299,6 +317,11 @@ export const AddUserModel = () => {
                                     </Grid>
                                 </When>
                             </Grid>
+                            <When condition={backendError}>
+                                <Grid item xs={12}>
+                                    <MetSmallText sx={{ color: theme.palette.error.main }}>{backendError}</MetSmallText>
+                                </Grid>
+                            </When>
 
                             <Grid
                                 item

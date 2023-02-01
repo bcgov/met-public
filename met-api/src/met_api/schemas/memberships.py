@@ -1,9 +1,10 @@
 """Widget schema class."""
 from marshmallow import EXCLUDE, Schema, fields
-from .user import UserSchema
 from marshmallow_enum import EnumField
 
 from met_api.constants.membership_type import MembershipType
+
+from .user import UserSchema
 
 
 class MembershipSchema(Schema):

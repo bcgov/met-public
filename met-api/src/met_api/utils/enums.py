@@ -62,3 +62,11 @@ class KeycloakGroups(Enum):
     EAO_IT_ADMIN = 'Administrator'
     EAO_IT_VIEWER = 'Viewer'
     EAO_TEAM_MEMBER = 'Member'
+
+
+class KeycloakGroupName(Enum):
+    """Keycloak group names."""
+
+    EAO_IT_ADMIN = 'EAO_IT_ADMIN'
+    EAO_IT_VIEWER = 'EAO_IT_VIEWER'
+    EAO_TEAM_MEMBER = 'EAO_TEAM_MEMBER'
