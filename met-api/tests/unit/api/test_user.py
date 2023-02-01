@@ -16,10 +16,10 @@
 
 Test-Suite to ensure that the /user endpoint is working as expected.
 """
-from unittest.mock import MagicMock
 from http import HTTPStatus
+from unittest.mock import MagicMock
 
-from met_api.utils.enums import ContentType, UserType, KeycloakGroupName
+from met_api.utils.enums import ContentType, KeycloakGroupName, UserType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestUserInfo
 from tests.utilities.factory_utils import factory_auth_header, factory_user_model
 
