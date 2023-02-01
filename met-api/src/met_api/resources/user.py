@@ -69,7 +69,7 @@ class User(Resource):
         )
         users = UserService.find_users(
             pagination_options=pagination_options,
-            search_text=args.get('search_text', '', str),            
+            search_text=args.get('search_text', '', str),
             include_groups=args.get('include_groups', default=False, type=lambda v: v.lower() == 'true'),
         )
         return jsonify(users), HTTPStatus.OK
