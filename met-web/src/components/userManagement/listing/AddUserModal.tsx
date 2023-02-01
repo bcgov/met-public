@@ -41,7 +41,7 @@ const schema = yup
             .nullable()
             .when('group', {
                 is: USER_GROUP.VIEWER.value,
-                then: yup.object().required('An engagement must be selected'),
+                then: yup.object().nullable().required('An engagement must be selected'),
             }),
     })
     .required();
@@ -50,7 +50,7 @@ type AddUserForm = yup.TypeOf<typeof schema>;
 
 export const AddUserModel = () => {
     const dispatch = useAppDispatch();
-    const { addUserModalOpen, setAddUserModelOpen } = useContext(UserManagementContext);
+    const { addUserModalOpen, setAddUserModelOpen, loadUserListing } = useContext(UserManagementContext);
     const [isAssigningRole, setIsAssigningRole] = useState(false);
     const [users, setUsers] = useState<User[]>([]);
     const [usersLoading, setUsersLoading] = useState(false);
@@ -83,7 +83,7 @@ export const AddUserModel = () => {
         setBackendError('');
     };
 
-    const loadUsers = async (searchText: string) => {
+    const loadUserOptions = async (searchText: string) => {
         if (searchText.length < 3) {
             return;
         }
@@ -130,7 +130,7 @@ export const AddUserModel = () => {
 
     const debounceLoadUsers = useRef(
         debounce((searchText: string) => {
-            loadUsers(searchText);
+            loadUserOptions(searchText);
         }, 1000),
     ).current;
 
@@ -142,12 +142,25 @@ export const AddUserModel = () => {
 
     const assignRoleToUser = async (data: AddUserForm) => {
         if (userTypeSelected === USER_GROUP.ADMIN.value) {
-            return addUserToGroup({ user_id: data.user?.external_id, group: data.group });
-        } else
-            return addTeamMemberToEngagement({
+            await addUserToGroup({ user_id: data.user?.external_id, group: data.group });
+            dispatch(
+                openNotification({
+                    severity: 'success',
+                    text: `You have successfully added ${data.user?.username} as an admin`,
+                }),
+            );
+        } else {
+            await addTeamMemberToEngagement({
                 user_id: data.user?.external_id,
                 engagement_id: data.engagement?.id,
             });
+            dispatch(
+                openNotification({
+                    severity: 'success',
+                    text: `You have successfully added ${data.user?.username} as a Team Member on ${data.engagement?.name}.`,
+                }),
+            );
+        }
     };
 
     const setErrors = (error: AxiosError) => {
@@ -163,6 +176,7 @@ export const AddUserModel = () => {
             await assignRoleToUser(data);
             dispatch(openNotification({ severity: 'success', text: 'User has been successfully added' }));
             setIsAssigningRole(false);
+            loadUserListing();
             handleClose();
         } catch (error) {
             setIsAssigningRole(false);

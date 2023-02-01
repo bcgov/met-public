@@ -13,6 +13,7 @@ export interface UserManagementContextProps {
     setPaginationOptions: React.Dispatch<React.SetStateAction<PaginationOptions<User>>>;
     addUserModalOpen: boolean;
     setAddUserModelOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    loadUserListing: () => void;
 }
 
 export type EngagementParams = {
@@ -34,6 +35,9 @@ export const UserManagementContext = createContext<UserManagementContextProps>({
     setAddUserModelOpen: () => {
         throw new Error('Not implemented');
     },
+    loadUserListing: () => {
+        throw new Error('Load user listing is not implemented');
+    },
 });
 
 export const UserManagementContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -52,12 +56,12 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
     });
 
     useEffect(() => {
-        loadUsers();
+        loadUserListing();
     }, [paginationOptions]);
 
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
-    const loadUsers = async () => {
+    const loadUserListing = async () => {
         try {
             setUsersLoading(true);
             const response = await getUserList({
@@ -93,6 +97,7 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
                 setPaginationOptions,
                 addUserModalOpen,
                 setAddUserModelOpen,
+                loadUserListing,
             }}
         >
             {children}

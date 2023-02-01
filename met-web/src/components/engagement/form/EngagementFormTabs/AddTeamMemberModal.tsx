@@ -99,7 +99,12 @@ export const AddTeamMemberModal = () => {
                 user_id: data.user?.external_id,
                 engagement_id: savedEngagement.id,
             });
-            dispatch(openNotification({ severity: 'success', text: 'User has been successfully added' }));
+            dispatch(
+                openNotification({
+                    severity: 'success',
+                    text: `You have successfully added ${data.user?.username} as a Team Member on ${savedEngagement.name}.`,
+                }),
+            );
             setIsAdding(false);
             loadTeamMembers();
             handleClose();
