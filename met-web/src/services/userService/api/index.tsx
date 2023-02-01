@@ -10,6 +10,7 @@ interface GetUserParams {
     sort_key?: string;
     sort_order?: 'asc' | 'desc';
     search_text?: string;
+    // If yes, user groups will be fetched as well from keycloak
     include_groups?: boolean;
 }
 export const getUserList = async (params: GetUserParams = {}): Promise<Page<User>> => {
