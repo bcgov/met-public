@@ -107,9 +107,10 @@ class UserService:
     def find_users(
         cls,
         user_type=UserType.STAFF.value,
-        pagination_options: PaginationOptions=None,
+        pagination_options: PaginationOptions = None,
         search_text='',
-        include_groups=False):
+        include_groups=False
+    ):
         """Return a list of users."""
         users, total = UserModel.find_users_by_access_type(user_type, pagination_options, search_text)
         user_collection = UserSchema(many=True).dump(users)
