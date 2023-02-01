@@ -62,7 +62,7 @@ const CommentReview = () => {
 
     const getEmailPreview = () => {
         return (
-            <EmailPreview engagement_name={survey.engagement?.name || ''}>
+            <EmailPreview survey={survey}>
                 <When condition={review == CommentStatus.Rejected}>
                     <RejectEmailTemplate
                         hasPersonalInfo={hasPersonalInfo}

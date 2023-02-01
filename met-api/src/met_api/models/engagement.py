@@ -6,11 +6,11 @@ Manages the engagement
 from __future__ import annotations
 from datetime import datetime
 from typing import List, Optional
-from sqlalchemy import asc, desc
+from sqlalchemy import and_, asc, desc, or_
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.sql import text
 from sqlalchemy.sql.schema import ForeignKey
-from met_api.constants.engagement_status import Status
+from met_api.constants.engagement_status import EngagementDisplayStatus, Status
 from met_api.constants.user import SYSTEM_USER
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.engagement import EngagementSchema
@@ -53,15 +53,39 @@ class Engagement(BaseModel):
         return engagements_schema.dump(data)
 
     @classmethod
-    def get_engagements_paginated(cls, pagination_options: PaginationOptions, search_text='', statuses=None):
+    def get_engagements_paginated(cls, pagination_options: PaginationOptions, search_options=None, statuses=None):
         """Get engagements paginated."""
         query = db.session.query(Engagement).join(EngagementStatus)
 
         if statuses:
             query = query.filter(Engagement.status_id.in_(statuses))
 
-        if search_text:
-            query = query.filter(Engagement.name.ilike('%' + search_text + '%'))
+        if search_options:
+            if search_options['search_text']:
+                query = query.filter(Engagement.name.ilike('%' + search_options['search_text'] + '%'))
+
+            if search_options['created_from_date']:
+                query = query.filter(Engagement.created_date >= search_options['created_from_date'])
+
+            if search_options['created_to_date']:
+                query = query.filter(Engagement.created_date <= search_options['created_to_date'])
+
+            if search_options['published_from_date']:
+                query = query.filter(Engagement.published_date >= search_options['published_from_date'])
+
+            if search_options['published_to_date']:
+                query = query.filter(Engagement.published_date <= search_options['published_to_date'])
+
+            if (engagement_status := search_options['engagement_status']):
+                status_filter_conditions = []
+                status_filter_conditions.append(Engagement.status_id.in_(engagement_status))
+                if str(EngagementDisplayStatus.Upcoming.value) in engagement_status:
+                    status_filter_conditions.append(and_(Engagement.status_id == Status.Published.value,
+                                                    Engagement.start_date > datetime.now()))
+                if str(EngagementDisplayStatus.Open.value) in engagement_status:
+                    status_filter_conditions.append(and_(Engagement.status_id == Status.Published.value,
+                                                    Engagement.start_date <= datetime.now()))
+                query = query.filter(or_(*status_filter_conditions))
 
         sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == 'asc'\
             else desc(text(pagination_options.sort_key))
