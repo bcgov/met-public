@@ -41,22 +41,19 @@ class MembershipService:
         if existing_membership:
             raise BusinessException(
                 error='This Team Member is already assigned to this engagement.',
-                status_code=HTTPStatus.CONFLICT.value,
-                error_data='engagement')
+                status_code=HTTPStatus.CONFLICT.value)
 
         groups = KEYCLOAK_SERVICE.get_user_groups(user_id=user.external_id)
         group_names = [group.get('name') for group in groups]
         if KeycloakGroupName.EAO_IT_ADMIN.value in group_names:
             raise BusinessException(
                 error='This user is already an Administrator.',
-                status_code=HTTPStatus.CONFLICT.value,
-                error_data='user')
+                status_code=HTTPStatus.CONFLICT.value)
 
         if KeycloakGroupName.EAO_IT_VIEWER.value not in group_names:
             raise BusinessException(
                 error='User must be a viewer first.',
-                status_code=HTTPStatus.CONFLICT.value,
-                error_data='user')
+                status_code=HTTPStatus.CONFLICT.value)
 
     @staticmethod
     def _create_membership_model(engagement_id, user):

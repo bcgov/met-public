@@ -95,4 +95,4 @@ class UserGroup(Resource):
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except BusinessException as err:
-            return {'message': err.error, 'error_data': err.error_data}, err.status_code
+            return {'message': err.error }, err.status_code

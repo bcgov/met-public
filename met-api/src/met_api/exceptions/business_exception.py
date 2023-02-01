@@ -29,4 +29,3 @@ class BusinessException(Exception):  # noqa: N818
         super().__init__(*args, **kwargs)
         self.error = error
         self.status_code = status_code
-        self.error_data = error_data

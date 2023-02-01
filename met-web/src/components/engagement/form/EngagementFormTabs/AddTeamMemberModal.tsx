@@ -1,7 +1,7 @@
-import React, { useContext, useMemo, useRef, useState } from 'react';
+import React, { useContext, useState, useMemo, useRef } from 'react';
 import Modal from '@mui/material/Modal';
-import { Autocomplete, CircularProgress, Grid, Paper, Stack, TextField } from '@mui/material';
-import { MetHeader3, MetLabel, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
+import { Autocomplete, CircularProgress, Grid, Paper, Stack, TextField, useTheme } from '@mui/material';
+import { MetHeader3, MetLabel, MetSmallText, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
 import { User } from 'models/user';
 import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -15,6 +15,7 @@ import { openNotificationModal } from 'services/notificationModalService/notific
 import { addTeamMemberToEngagement } from 'services/membershipService';
 import { debounce } from 'lodash';
 import axios, { AxiosError } from 'axios';
+import { When } from 'react-if';
 
 const schema = yup
     .object({
@@ -31,6 +32,9 @@ export const AddTeamMemberModal = () => {
     const [isAdding, setIsAdding] = useState(false);
     const [usersLoading, setUsersLoading] = useState(false);
     const [users, setUsers] = useState<User[]>([]);
+    const [backendError, setBackendError] = useState('');
+
+    const theme = useTheme();
 
     const teamMembersIds = useMemo(() => teamMembers.map((teamMember) => teamMember.user_id), [teamMembers]);
 
@@ -43,7 +47,6 @@ export const AddTeamMemberModal = () => {
         control,
         reset,
         formState: { errors },
-        setError,
     } = methods;
 
     const { user: userErrors } = errors;
@@ -83,13 +86,10 @@ export const AddTeamMemberModal = () => {
     ).current;
 
     const setErrors = (error: AxiosError) => {
-        if (!error.response || !Object.keys(schema.fields).includes(error.response.data.error_data)) {
+        if (error.response?.status !== 409) {
             return;
         }
-        setError(error.response.data.error_data, {
-            type: 'validate',
-            message: error.response.data.message || '',
-        });
+        setBackendError(error.response?.data.message || '');
     };
 
     const onSubmit: SubmitHandler<AddTeamMemberForm> = async (data: AddTeamMemberForm) => {
@@ -119,7 +119,9 @@ export const AddTeamMemberModal = () => {
             );
         } catch (error) {
             setIsAdding(false);
+            console.log('AA');
             if (axios.isAxiosError(error)) {
+                console.log('A');
                 setErrors(error);
             }
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add user' }));
@@ -196,6 +198,11 @@ export const AddTeamMemberModal = () => {
                                     />
                                 </Grid>
                             </Grid>
+                            <When condition={backendError}>
+                                <Grid item xs={12}>
+                                    <MetSmallText sx={{ color: theme.palette.error.main }}>{backendError}</MetSmallText>
+                                </Grid>
+                            </When>
 
                             <Grid
                                 item

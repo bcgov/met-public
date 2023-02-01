@@ -12,8 +12,9 @@ import {
     Radio,
     Stack,
     TextField,
+    useTheme,
 } from '@mui/material';
-import { MetHeader3, MetLabel, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetHeader3, MetLabel, MetSmallText, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
 import { User, USER_GROUP } from 'models/user';
 import { UserManagementContext } from './UserManagementContext';
 import { Palette } from 'styles/Theme';
@@ -56,6 +57,9 @@ export const AddUserModel = () => {
 
     const [engagements, setEngagements] = useState<Engagement[]>([]);
     const [engagementsLoading, setEngagementsLoading] = useState(false);
+    const [backendError, setBackendError] = useState('');
+
+    const theme = useTheme();
 
     const methods = useForm<AddUserForm>({
         resolver: yupResolver(schema),
@@ -67,7 +71,6 @@ export const AddUserModel = () => {
         reset,
         formState: { errors },
         watch,
-        setError,
     } = methods;
 
     const userTypeSelected = watch('group');
@@ -77,6 +80,7 @@ export const AddUserModel = () => {
     const handleClose = () => {
         setAddUserModelOpen(false);
         reset({});
+        setBackendError('');
     };
 
     const loadUsers = async (searchText: string) => {
@@ -147,13 +151,10 @@ export const AddUserModel = () => {
     };
 
     const setErrors = (error: AxiosError) => {
-        if (!error.response || !Object.keys(schema.fields).includes(error.response.data.error_data)) {
+        if (error.response?.status !== 409) {
             return;
         }
-        setError(error.response.data.error_data, {
-            type: 'validate',
-            message: error.response.data.message || '',
-        });
+        setBackendError(error.response?.data.message || '');
     };
 
     const onSubmit: SubmitHandler<AddUserForm> = async (data: AddUserForm) => {
@@ -316,6 +317,11 @@ export const AddUserModel = () => {
                                     </Grid>
                                 </When>
                             </Grid>
+                            <When condition={backendError}>
+                                <Grid item xs={12}>
+                                    <MetSmallText sx={{ color: theme.palette.error.main }}>{backendError}</MetSmallText>
+                                </Grid>
+                            </When>
 
                             <Grid
                                 item

@@ -168,5 +168,4 @@ class UserService:
         if KeycloakGroupName.EAO_IT_ADMIN.value in group_names:
             raise BusinessException(
                 error='This user is already an Administrator.',
-                status_code=HTTPStatus.CONFLICT.value,
-                error_data='user')
+                status_code=HTTPStatus.CONFLICT.value)

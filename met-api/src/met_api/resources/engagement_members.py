@@ -59,4 +59,4 @@ class EngagementMembership(Resource):
             member = MembershipService.create_membership(engagement_id, request.get_json())
             return MembershipSchema().dump(member), HTTPStatus.OK
         except BusinessException as err:
-            return {'message': err.error, 'error_data': err.error_data}, err.status_code
+            return {'message': err.error}, err.status_code
