@@ -73,7 +73,7 @@ const WhoIsListeningOptionCard = () => {
                         spacing={1}
                     >
                         <Grid item>
-                            <PeopleAltOutlinedIcon sx={{ pl: '25px', fontSize: '5em' }} />
+                            <PeopleAltOutlinedIcon htmlColor={'#707070'} sx={{ pl: '25px', fontSize: '5em' }} />
                         </Grid>
                         <Grid
                             container
@@ -85,10 +85,10 @@ const WhoIsListeningOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetHeader4 sx={{ pl: '10px' }}>Who is Listening</MetHeader4>
+                                <MetHeader4>Who is Listening</MetHeader4>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody sx={{ pl: '10px' }}>Add one or a few contacts to this engagement</MetBody>
+                                <MetBody>Add one or a few contacts to this engagement</MetBody>
                             </Grid>
                         </Grid>
                     </Grid>

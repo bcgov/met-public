@@ -71,7 +71,7 @@ const PhasesOptionCard = () => {
                         spacing={1}
                     >
                         <Grid item>
-                            <ChatBubbleOutlineOutlinedIcon sx={{ pl: '25px', fontSize: '5em' }} />
+                            <ChatBubbleOutlineOutlinedIcon htmlColor={'#707070'} sx={{ pl: '25px', fontSize: '5em' }} />
                         </Grid>
                         <Grid
                             container
@@ -83,10 +83,10 @@ const PhasesOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetHeader4 sx={{ pl: '10px' }}>EA Process</MetHeader4>
+                                <MetHeader4>EA Process</MetHeader4>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody sx={{ pl: '10px' }}>Add the EA process info to this engagement</MetBody>
+                                <MetBody>Add the EA process info to this engagement</MetBody>
                             </Grid>
                         </Grid>
                     </Grid>

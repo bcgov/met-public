@@ -72,7 +72,7 @@ const SubscribeOptionCard = () => {
                         spacing={1}
                     >
                         <Grid item>
-                            <EmailOutlinedIcon sx={{ pl: '25px', fontSize: '5em' }} />
+                            <EmailOutlinedIcon htmlColor={'#707070'} sx={{ pl: '25px', fontSize: '5em' }} />
                         </Grid>
                         <Grid
                             container
@@ -84,12 +84,10 @@ const SubscribeOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetHeader4 sx={{ pl: '10px' }}>Sign Up for Updates</MetHeader4>
+                                <MetHeader4>Sign Up for Updates</MetHeader4>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody sx={{ pl: '10px' }}>
-                                    Offer members of the public to sign up for updates
-                                </MetBody>
+                                <MetBody>Offer members of the public to sign up for updates</MetBody>
                             </Grid>
                         </Grid>
                     </Grid>
