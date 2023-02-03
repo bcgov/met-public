@@ -109,17 +109,9 @@ export const AddTeamMemberModal = () => {
             loadTeamMembers();
             handleClose();
             dispatch(
-                openNotificationModal({
-                    open: true,
-                    data: {
-                        header: 'Add a Team member to this engagement',
-                        subText: [
-                            {
-                                text: `You have successfully added ${data.user?.username} as a Team Member on ${savedEngagement.name}.`,
-                            },
-                        ],
-                    },
-                    type: 'update',
+                openNotification({
+                    severity: 'success',
+                    text: `You have successfully added ${data.user?.username} as a Team Member on ${savedEngagement.name}.`,
                 }),
             );
         } catch (error) {
@@ -149,11 +141,11 @@ export const AddTeamMemberModal = () => {
                                 rowSpacing={4}
                             >
                                 <Grid item xs={12}>
-                                    <MetHeader3 bold>Add a Team member to this engagement</MetHeader3>
+                                    <MetHeader3 bold>Add a Team Member to this Engagement</MetHeader3>
                                 </Grid>
                                 <Grid item xs={12}>
                                     <MetLabel sx={{ marginBottom: '2px', display: 'flex' }}>
-                                        Select the user you want to add
+                                        Select the Team Member you want to add
                                     </MetLabel>
 
                                     <Controller
