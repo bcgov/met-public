@@ -6,6 +6,7 @@ import { ActionContext } from '../../ActionContext';
 import { EngagementPhase } from './EngagementPhase';
 import { ENGAGEMENT_PHASES } from 'models/engagementPhases';
 import { ForumIcon } from './ForumIcon';
+import { InfoArrow } from './InfoArrow';
 
 interface PhaseContextProps {
     anchorEl: HTMLButtonElement | null;
@@ -61,29 +62,7 @@ export const PhasesWidget = () => {
                     <Grid item xs={12} container alignItems="center">
                         <Grid item md={1} xs={0}></Grid>
                         <Grid item alignItems="center">
-                            <Stack direction="row" alignItems={'stretch'}>
-                                <Box
-                                    sx={{
-                                        background: '#54858D',
-                                        padding: '0.25em 1em',
-                                    }}
-                                >
-                                    <MetSmallText color="white">
-                                        Engagement and consensus-seeking with participating Indigenous nations occur at
-                                        each stage of the process, supported by dispute resolution at certain stages if
-                                        required.
-                                    </MetSmallText>
-                                </Box>
-                                <Box
-                                    sx={{
-                                        clipPath: 'polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 0 50%, 0% 0%)',
-                                        background: '#54858D',
-                                        width: '3em',
-                                        padding: '0.25em 1em',
-                                        minHeight: '1.6em',
-                                    }}
-                                ></Box>
-                            </Stack>
+                            <InfoArrow />
                         </Grid>
                     </Grid>
                 </Grid>
