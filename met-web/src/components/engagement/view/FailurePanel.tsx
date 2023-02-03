@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Stack } from '@mui/material';
 import { FailurePanelProps } from './types';
-import { modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody, ModalSubtitle } from 'components/common';
+import { modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody } from 'components/common';
 
 const FailurePanel = ({ email, handleClose, tryAgain }: FailurePanelProps) => {
     return (
