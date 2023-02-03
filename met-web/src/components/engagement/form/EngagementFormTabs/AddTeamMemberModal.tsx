@@ -11,7 +11,6 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { useAppDispatch } from 'hooks';
 import { EngagementTabsContext } from './EngagementTabsContext';
 import { ActionContext } from '../ActionContext';
-import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { addTeamMemberToEngagement } from 'services/membershipService';
 import { debounce } from 'lodash';
 import axios, { AxiosError } from 'axios';
