@@ -73,7 +73,7 @@ const WhoIsListeningOptionCard = () => {
                         spacing={1}
                     >
                         <Grid item>
-                            <PeopleAltOutlinedIcon htmlColor={'#707070'} sx={{ pl: '25px', fontSize: '5em' }} />
+                            <PeopleAltOutlinedIcon color={'info'} sx={{ pl: '25px', fontSize: '5em' }} />
                         </Grid>
                         <Grid
                             container

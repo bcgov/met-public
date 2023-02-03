@@ -71,7 +71,7 @@ const PhasesOptionCard = () => {
                         spacing={1}
                     >
                         <Grid item>
-                            <ChatBubbleOutlineOutlinedIcon htmlColor={'#707070'} sx={{ pl: '25px', fontSize: '5em' }} />
+                            <ChatBubbleOutlineOutlinedIcon color={'info'} sx={{ pl: '25px', fontSize: '5em' }} />
                         </Grid>
                         <Grid
                             container

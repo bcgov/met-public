@@ -71,7 +71,7 @@ const DocumentOptionCard = () => {
                         spacing={1}
                     >
                         <Grid item>
-                            <DescriptionOutlinedIcon htmlColor={'#707070'} sx={{ pl: '25px', fontSize: '5em' }} />
+                            <DescriptionOutlinedIcon color={'info'} sx={{ pl: '25px', fontSize: '5em' }} />
                         </Grid>
                         <Grid
                             container

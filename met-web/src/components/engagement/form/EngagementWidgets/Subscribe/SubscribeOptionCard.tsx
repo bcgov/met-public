@@ -72,7 +72,7 @@ const SubscribeOptionCard = () => {
                         spacing={1}
                     >
                         <Grid item>
-                            <EmailOutlinedIcon htmlColor={'#707070'} sx={{ pl: '25px', fontSize: '5em' }} />
+                            <EmailOutlinedIcon color={'info'} sx={{ pl: '25px', fontSize: '5em' }} />
                         </Grid>
                         <Grid
                             container
