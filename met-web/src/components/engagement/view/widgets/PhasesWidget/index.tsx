@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { Grid, Skeleton, Stack, Box } from '@mui/material';
-import { MetBody, MetHeader3, MetHeader4, MetLabel, MetPaper, MetParagraph, MetSmallText } from 'components/common';
+import { Grid, Skeleton, Stack } from '@mui/material';
+import { MetBody, MetHeader3, MetLabel, MetPaper } from 'components/common';
 import { WidgetType } from 'models/widget';
 import { ActionContext } from '../../ActionContext';
 import { EngagementPhase } from './EngagementPhase';
