@@ -95,7 +95,7 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
                             direction="row"
                             rowSpacing={1}
                             xs={12}
-                            md={8}
+                            md={9}
                         >
                             <Grid item container justifyContent={{ xs: 'center', md: 'flex-start' }} xs={12}>
                                 <MetHeader3 bold>{contact.name}</MetHeader3>
@@ -111,8 +111,9 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
                                     justifyContent={{ xs: 'center', md: 'flex-start' }}
                                     item
                                     xs={12}
-                                    sm={8}
-                                    sx={{ whiteSpace: 'pre-line' }}
+                                    sx={{
+                                        whiteSpace: 'pre-line',
+                                    }}
                                 >
                                     <MetSmallText
                                         sx={{
