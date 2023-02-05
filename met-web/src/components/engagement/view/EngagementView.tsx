@@ -62,7 +62,7 @@ export const EngagementView = () => {
                     direction="row"
                     justifyContent={'flex-start'}
                     alignItems="flex-start"
-                    m={{ md: '1em', xs: '1em' }}
+                    m={{ md: '2em', xs: '1em' }}
                     rowSpacing={2}
                     columnSpacing={1}
                 >
@@ -89,7 +89,7 @@ export const EngagementView = () => {
                                 rowSpacing={2}
                                 columnSpacing={1}
                             >
-                                <Grid data-testid={'engagement-content'} item xs={12}>
+                                <Grid data-testid={'engagement-content'} item xs={12} mt={2}>
                                     <EngagementContent />
                                 </Grid>
                                 <Grid item xs={12}>

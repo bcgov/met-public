@@ -74,7 +74,7 @@ function SubscribeWidget() {
     };
 
     return (
-        <MetPaper elevation={1} sx={{ p: 1, minHeight: '12em' }}>
+        <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
             <EmailModal
                 open={open}
                 updateModal={setOpen}
