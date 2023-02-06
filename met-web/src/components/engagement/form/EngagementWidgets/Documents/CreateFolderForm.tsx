@@ -24,10 +24,9 @@ const CreateFolderForm = () => {
     const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Document);
 
     const validateForm = () => {
-        setFormError({
-            name: !folderName || folderName.length > 50,
-        });
-        return !Object.values(formError).every((errorExists) => errorExists);
+        const errors = { name: !folderName || folderName.length > 50 };
+        setFormError(errors);
+        return !Object.values(errors).every((errorExists) => errorExists);
     };
 
     const getErrorMessage = () => {
