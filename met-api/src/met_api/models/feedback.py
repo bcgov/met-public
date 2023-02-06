@@ -9,15 +9,15 @@ from sqlalchemy.sql import text
 
 from met_api.constants.feedback import CommentType, FeedbackSourceType, RatingType
 from met_api.models.pagination_options import PaginationOptions
+from .base_model import BaseModel
 from .db import db
 
 
-class Feedback(db.Model):
+class Feedback(BaseModel):
     """Definition of the Feedback entity."""
 
     __tablename__ = 'feedback'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    created_date = db.Column(db.DateTime)
     rating = db.Column(db.Enum(RatingType), nullable=False)
     comment_type = db.Column(db.Enum(CommentType), nullable=True)
     comment = db.Column(db.Text, nullable=True)

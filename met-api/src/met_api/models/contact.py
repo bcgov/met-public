@@ -5,11 +5,12 @@ Manages the contact
 from __future__ import annotations
 from datetime import datetime
 from typing import Optional
+from .base_model import BaseModel
 from .db import db
 from .default_method_result import DefaultMethodResult
 
 
-class Contact(db.Model):  # pylint: disable=too-few-public-methods
+class Contact(BaseModel):  # pylint: disable=too-few-public-methods
     """Definition of the Contact entity."""
 
     __tablename__ = 'contact'
@@ -21,10 +22,6 @@ class Contact(db.Model):  # pylint: disable=too-few-public-methods
     phone_number = db.Column(db.String(50), nullable=True)
     address = db.Column(db.String(150))
     bio = db.Column(db.String(500), comment='A biography or short biographical profile of someone.')
-    created_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow, nullable=False)
-    created_by = db.Column(db.String(50), nullable=False)
-    updated_by = db.Column(db.String(50), nullable=False)
     avatar_filename = db.Column(db.String(), unique=False, nullable=True)
 
     @classmethod

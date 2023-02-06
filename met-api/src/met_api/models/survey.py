@@ -13,11 +13,12 @@ from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement_status import EngagementStatus
 from met_api.models.engagement import Engagement
 from met_api.schemas.survey import SurveySchema
+from .base_model import BaseModel
 from .db import db
 from .default_method_result import DefaultMethodResult
 
 
-class Survey(db.Model):  # pylint: disable=too-few-public-methods
+class Survey(BaseModel):  # pylint: disable=too-few-public-methods
     """Definition of the Survey entity."""
 
     __tablename__ = 'survey'
@@ -25,10 +26,6 @@ class Survey(db.Model):  # pylint: disable=too-few-public-methods
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), index=True)
     form_json = db.Column(postgresql.JSONB(astext_type=db.Text()), nullable=False, server_default='{}')
-    created_date = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
-    created_by = db.Column(db.String(50))
-    updated_by = db.Column(db.String(50))
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'))
     comments = db.relationship('Comment', backref='survey', cascade='all, delete')
     submissions = db.relationship('Submission', backref='survey', cascade='all, delete')
