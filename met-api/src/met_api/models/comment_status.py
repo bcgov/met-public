@@ -2,8 +2,6 @@
 
 Manages the comment status
 """
-from datetime import datetime
-
 from .base_model import BaseModel
 from .db import db, ma
 
