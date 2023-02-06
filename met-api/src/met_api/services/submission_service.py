@@ -240,7 +240,7 @@ class SubmissionService:
     def _send_rejected_email(submission: Submission, review_note, token) -> None:
         """Send an verification email.Throws error if fails."""
         user_id = submission.user_id
-        user: UserModel = UserModel.get_user(user_id)
+        user: UserModel = UserModel.find_by_id(user_id)
 
         template_id = current_app.config.get('REJECTED_EMAIL_TEMPLATE_ID', None)
         subject, body, args = SubmissionService._render_email_template(submission, review_note, token)
