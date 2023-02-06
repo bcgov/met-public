@@ -48,7 +48,7 @@ export const PhasesWidget = () => {
                         <MetHeader3 bold>The EA Process</MetHeader3>
                     </Grid>
 
-                    <When condition={Boolean(currentPhaseId)}>
+                    <When condition={Boolean(currentPhaseId) && currentPhaseId !== EngagementPhases.Standalone}>
                         <Grid xs={12}>
                             <MetLabel>
                                 Current Phase: {phases.find((phase) => phase.phaseId === currentPhaseId)?.title || ''}
