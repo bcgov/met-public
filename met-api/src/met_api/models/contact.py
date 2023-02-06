@@ -25,14 +25,6 @@ class Contact(BaseModel):  # pylint: disable=too-few-public-methods
     avatar_filename = db.Column(db.String(), unique=False, nullable=True)
 
     @classmethod
-    def get_contact_by_id(cls, contact_id) -> Contact:
-        """Get a contact."""
-        contact = db.session.query(Contact) \
-            .filter(Contact.id == contact_id) \
-            .first()
-        return contact
-
-    @classmethod
     def get_contacts(cls) -> list[Contact]:
         """Get contacts."""
         return db.session.query(Contact).order_by(Contact.name).all()

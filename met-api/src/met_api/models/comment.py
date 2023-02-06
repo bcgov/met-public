@@ -35,14 +35,6 @@ class Comment(BaseModel):
     component_id = db.Column(db.String(10))
 
     @classmethod
-    def get_comment(cls, comment_id):
-        """Get a comment."""
-        return db.session.query(Comment)\
-            .join(Survey)\
-            .filter(Comment.id == comment_id)\
-            .first()
-
-    @classmethod
     def get_by_submission(cls, submission_id):
         """Get comments by submission id."""
         return db.session.query(Comment)\

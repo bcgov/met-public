@@ -24,11 +24,6 @@ class Feedback(BaseModel):
     source = db.Column(db.Enum(FeedbackSourceType), nullable=True)
 
     @classmethod
-    def get(cls, feedback_id):
-        """Get a feedback."""
-        return db.session.query(Feedback).filter(Feedback.id == feedback_id).first()
-
-    @classmethod
     def get_all_paginated(cls, pagination_options: PaginationOptions, search_text=''):
         """Get feedback paginated."""
         query = db.session.query(Feedback)

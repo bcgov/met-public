@@ -11,7 +11,7 @@ class ContactService:
     @staticmethod
     def get_contact_by_id(contact_id):
         """Get contact by id."""
-        contact_record = Contact.get_contact_by_id(contact_id)
+        contact_record = Contact.find_by_id(contact_id)
         contact = ContactSchema().dump(contact_record)
         contact['avatar_url'] = ObjectStorageService.get_url(contact.get('avatar_filename', None))
         return contact

@@ -92,7 +92,7 @@ class SubmissionService:
         # TODO: Validate against survey form_json
         """Validate all fields."""
         survey_id = submission.get('survey_id', None)
-        survey: SurveyModel = SurveyModel.get_survey(survey_id)
+        survey: SurveyModel = SurveyModel.find_by_id(survey_id)
         engagement: EngagementModel = EngagementModel.find_by_id(survey.engagement_id)
         if not engagement:
             raise ValueError('Survey not linked to an Engagement')
@@ -259,8 +259,8 @@ class SubmissionService:
     @staticmethod
     def _render_email_template(submission: Submission, review_note, token):
         template = Template.get_template('email_rejected_comment.html')
-        engagement: EngagementModel = EngagementModel.get_engagement(submission.engagement_id)
-        survey: SurveyModel = SurveyModel.get_survey(submission.survey_id)
+        engagement: EngagementModel = EngagementModel.find_by_id(submission.engagement_id)
+        survey: SurveyModel = SurveyModel.find_by_id(submission.survey_id)
         engagement_name = engagement.name
         survey_name = survey.name
 

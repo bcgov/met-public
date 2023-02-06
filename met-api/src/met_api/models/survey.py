@@ -31,14 +31,6 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
     submissions = db.relationship('Submission', backref='survey', cascade='all, delete')
 
     @classmethod
-    def get_survey(cls, survey_id) -> Survey:
-        """Get a survey."""
-        survey = db.session.query(Survey) \
-            .filter(Survey.id == survey_id) \
-            .first()
-        return survey
-
-    @classmethod
     def get_open(cls, survey_id) -> Survey:
         """Get an open survey."""
         now = datetime.now()
