@@ -17,6 +17,9 @@ export const Palette = {
     action: {
         active: '#1A5A96',
     },
+    info: {
+        main: '#707070',
+    },
     dashboard: {
         upcoming: {
             bg: '#FCB92F26',
@@ -52,7 +55,7 @@ export const BaseTheme = createTheme({
             active: Palette.action.active,
         },
         info: {
-            main: '#707070',
+            main: Palette.info.main,
         },
     },
     components: {

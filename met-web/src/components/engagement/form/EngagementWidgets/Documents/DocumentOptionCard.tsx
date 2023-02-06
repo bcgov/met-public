@@ -71,7 +71,7 @@ const DocumentOptionCard = () => {
                         spacing={1}
                     >
                         <Grid item>
-                            <DescriptionOutlinedIcon sx={{ pl: '25px', fontSize: '5em' }} />
+                            <DescriptionOutlinedIcon color="info" sx={{ pl: '25px', fontSize: '5em' }} />
                         </Grid>
                         <Grid
                             container
@@ -83,10 +83,10 @@ const DocumentOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetHeader4 sx={{ pl: '10px' }}>Documents</MetHeader4>
+                                <MetHeader4>Documents</MetHeader4>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody sx={{ pl: '10px' }}>Add a document</MetBody>
+                                <MetBody>Add a document</MetBody>
                             </Grid>
                         </Grid>
                     </Grid>
