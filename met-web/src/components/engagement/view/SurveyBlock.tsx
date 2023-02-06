@@ -33,7 +33,7 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
             <Grid container direction="row" alignItems="flex-end" justifyContent="flex-end" spacing={2}>
                 <Grid item xs={12}>
                     <>
-                        <If condition={status_text !== undefined}>
+                        <If condition={status_text !== ''}>
                             <Then>
                                 <Editor
                                     editorState={getEditorState(status_text ? status_text : '')}

@@ -17,7 +17,7 @@ import dayjs from 'dayjs';
 import { formatToUTC } from 'components/common/dateHelper';
 
 interface filterParams {
-    setFilterParams: (
+    getFilterParams: (
         status_list: number[],
         created_from_date: string,
         created_to_date: string,
@@ -26,7 +26,7 @@ interface filterParams {
     ) => void;
 }
 
-const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
+const AdvancedSearch: React.FC<filterParams> = ({ getFilterParams }) => {
     const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
     const intitialStatusList = {
@@ -85,7 +85,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
             ? formatToUTC(dayjs(publishedToDate).endOf('day').format('YYYY-MM-DD HH:mm:ss'))
             : publishedToDate;
 
-        setFilterParams(selectedStatusList, fCreatedFromDate, fCreatedToDate, fPublishedFromDate, fPublishedToDate);
+        getFilterParams(selectedStatusList, fCreatedFromDate, fCreatedToDate, fPublishedFromDate, fPublishedToDate);
     };
 
     const handleResetSearchFilters = () => {
@@ -99,12 +99,12 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
             publishedToDate: '',
         });
 
-        setFilterParams([], '', '', '', '');
+        getFilterParams([], '', '', '', '');
     };
 
     return (
         <>
-            <Grid container direction="row" item mt={3} ml={2}>
+            <Grid container direction="row" item xs={12} lg={10} mt={3} ml={2}>
                 <Grid item md={3} xs={12}>
                     <Grid item xs={12}>
                         <FormLabel id="controlled-radio-buttons-group">
@@ -405,7 +405,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid container direction="row" item justifyContent="flex-end">
+            <Grid container direction="row" item xs={12} lg={10} justifyContent="flex-end">
                 <SecondaryButton data-testid="reset-filter-button" onClick={() => handleResetSearchFilters()}>
                     Reset All Filters
                 </SecondaryButton>

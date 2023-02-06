@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { When } from 'react-if';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import Collapse from '@mui/material/Collapse';
 import { Link } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton, SecondaryButton } from 'components/common';
 import { Engagement } from 'models/engagement';
@@ -252,11 +252,7 @@ const EngagementListing = () => {
                         >
                             <SearchIcon />
                         </PrimaryButton>
-                        <SecondaryButton
-                            data-testid="engagement/listing/advancedSearch"
-                            name="advancedSearch"
-                            onClick={() => setAdvancedSearchOpen(!advancedSearchOpen)}
-                        >
+                        <SecondaryButton onClick={() => setAdvancedSearchOpen(!advancedSearchOpen)}>
                             {advancedSearchOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />} Advanced Search
                         </SecondaryButton>
                     </Stack>
@@ -269,11 +265,9 @@ const EngagementListing = () => {
                     </PrimaryButton>
                 </Stack>
             </Grid>
-            <Grid item xs={12} lg={10} style={{ width: '100%' }}>
-                <Collapse in={advancedSearchOpen} timeout="auto" unmountOnExit style={{ width: '100%' }}>
-                    <AdvancedSearch setFilterParams={filterParams} />
-                </Collapse>
-            </Grid>
+            <When condition={advancedSearchOpen}>
+                <AdvancedSearch getFilterParams={filterParams} />
+            </When>
             <Grid item xs={12} lg={10}>
                 <MetTable
                     headCells={headCells}
