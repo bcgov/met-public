@@ -30,7 +30,7 @@ def test_feedback(session):
     """Assert that a feedback can be created and fetched."""
     feedback = factory_feedback_model()
     assert feedback.id is not None
-    feedback_existing = FeedbackModel.get(feedback.id)
+    feedback_existing = FeedbackModel.find_by_id(feedback.id)
     assert feedback.comment == feedback_existing.comment
     assert feedback.source == FeedbackSourceType.Public
 

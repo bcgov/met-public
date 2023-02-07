@@ -9,7 +9,7 @@ import * as engagementService from 'services/engagementService';
 import * as widgetService from 'services/widgetService';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { Widget, WidgetItem, WidgetType } from 'models/widget';
-import { engagement } from '../factory';
+import { draftEngagement } from '../factory';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
@@ -60,7 +60,7 @@ describe('Phases widget tests', () => {
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
-        .mockReturnValue(Promise.resolve(engagement));
+        .mockReturnValue(Promise.resolve(draftEngagement));
 
     beforeEach(() => {
         setupEnv();
@@ -70,7 +70,7 @@ describe('Phases widget tests', () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
-                ...engagement,
+                ...draftEngagement,
                 surveys: surveys,
             }),
         );
@@ -101,9 +101,9 @@ describe('Phases widget tests', () => {
             expect(screen.getByTestId('engagementPhaseSelect')).toBeVisible();
         });
 
-        expect(postWidgetMock).toHaveBeenNthCalledWith(1, engagement.id, {
+        expect(postWidgetMock).toHaveBeenNthCalledWith(1, draftEngagement.id, {
             widget_type_id: WidgetType.Phases,
-            engagement_id: engagement.id,
+            engagement_id: draftEngagement.id,
         });
         expect(mockWidgetsRtkUnwrap).toHaveBeenCalledTimes(2);
 

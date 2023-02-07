@@ -23,6 +23,10 @@ export interface ProcessStageProps {
     accordionBackground?: string;
 }
 
+export const INFO_ARROW = {
+    backgroundColor: '#54858D',
+};
+
 export const PAST_PHASE = {
     backgroundColor: '#7B8283',
     borderColor: '#565656',

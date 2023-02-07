@@ -2,12 +2,11 @@
 
 Manages the comment status
 """
-from datetime import datetime
-
+from .base_model import BaseModel
 from .db import db, ma
 
 
-class CommentStatus(db.Model):  # pylint: disable=too-few-public-methods
+class CommentStatus(BaseModel):  # pylint: disable=too-few-public-methods
     """Definition of the Comment Status entity."""
 
     __tablename__ = 'comment_status'
@@ -15,8 +14,6 @@ class CommentStatus(db.Model):  # pylint: disable=too-few-public-methods
     id = db.Column(db.Integer, primary_key=True)
     status_name = db.Column(db.String(50), unique=True, nullable=False)
     description = db.Column(db.String(50))
-    created_date = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
     submission = db.relationship('Submission', backref='comment_status', cascade='all, delete')
 
     @classmethod

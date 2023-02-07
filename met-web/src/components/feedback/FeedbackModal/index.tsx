@@ -157,13 +157,7 @@ export const FeedbackModal = () => {
                             <Grid item xs={12}>
                                 <MetLabel>What else would you like to share with us?</MetLabel>
                             </Grid>
-                            <Grid
-                                item
-                                xs={12}
-                                alignItems="flex-start"
-                                justifyContent="space-around"
-                                sx={{ paddingTop: 1 }}
-                            >
+                            <Grid item xs={12} alignItems="flex-start" justifyContent="space-around">
                                 <CommentTypeButton
                                     data-testid="comment-type-issue-button"
                                     onClick={() => handleCommentTypeChanged(CommentTypeEnum.Issue)}

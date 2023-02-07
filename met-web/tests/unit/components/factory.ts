@@ -12,7 +12,7 @@ const survey: Survey = {
 
 const surveys = [survey];
 
-const engagement: Engagement = {
+const draftEngagement: Engagement = {
     ...createDefaultEngagement(),
     id: 1,
     name: 'Test Engagement',
@@ -32,4 +32,22 @@ const engagement: Engagement = {
     },
 };
 
-export { engagement };
+const openEngagement = {
+    ...draftEngagement,
+    id: 2,
+    name: 'Open Engagement',
+    engagement_status: {
+        id: EngagementStatus.Published,
+        status_name: 'Open',
+    },
+    start_date: '2022-09-01',
+    end_date: '2025-09-30',
+    created_date: '2022-09-15 10:00:00',
+    published_date: '2022-09-19 10:00:00',
+    surveys: surveys,
+    submissions_meta_data: {
+        total: 1,
+    },
+};
+
+export { draftEngagement, openEngagement };

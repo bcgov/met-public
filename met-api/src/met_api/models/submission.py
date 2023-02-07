@@ -14,11 +14,12 @@ from met_api.models.survey import Survey
 from met_api.models.user import User
 from met_api.schemas.submission import SubmissionSchema
 
+from .base_model import BaseModel
 from .db import db
 from .default_method_result import DefaultMethodResult
 
 
-class Submission(db.Model):  # pylint: disable=too-few-public-methods
+class Submission(BaseModel):  # pylint: disable=too-few-public-methods
     """Definition of the Submission entity."""
 
     __tablename__ = 'submission'
@@ -28,10 +29,6 @@ class Submission(db.Model):  # pylint: disable=too-few-public-methods
     survey_id = db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), nullable=False)
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), nullable=False)
     user_id = db.Column(db.Integer, ForeignKey('met_users.id'), nullable=True)
-    created_date = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
-    created_by = db.Column(db.String(50), nullable=True)
-    updated_by = db.Column(db.String(50), nullable=True)
     reviewed_by = db.Column(db.String(50))
     review_date = db.Column(db.DateTime)
     comment_status_id = db.Column(db.Integer, ForeignKey('comment_status.id', ondelete='SET NULL'))

@@ -12,11 +12,12 @@ from sqlalchemy.orm import column_property
 from sqlalchemy.sql import text
 from sqlalchemy.sql.operators import ilike_op
 
+from .base_model import BaseModel
 from .db import db, ma
 from .pagination_options import PaginationOptions
 
 
-class User(db.Model):  # pylint: disable=too-few-public-methods
+class User(BaseModel):  # pylint: disable=too-few-public-methods
     """Definition of the User entity."""
 
     __tablename__ = 'met_users'
@@ -31,16 +32,9 @@ class User(db.Model):  # pylint: disable=too-few-public-methods
     email_id = Column(db.String(50))
     contact_number = Column(db.String(50), nullable=True)
     external_id = Column(db.String(50), nullable=False, unique=True)
-    created_date = Column(db.DateTime, default=datetime.utcnow)
-    updated_date = Column(db.DateTime, onupdate=datetime.utcnow)
     # a type for the user to identify what kind of user it is..STAFF/PUBLIC_USER etc
     access_type = Column('access_type', String(200), nullable=True)
     status_id = db.Column(db.Integer, ForeignKey('user_status.id'))
-
-    @classmethod
-    def get_user(cls, _id):
-        """Get a user with the provided id."""
-        return cls.query.filter_by(id=_id).first()
 
     @classmethod
     def find_users_by_access_type(cls, user_access_type, pagination_options: PaginationOptions, search_text=''):
