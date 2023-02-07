@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 import { Link } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton, SecondaryButton } from 'components/common';
@@ -257,7 +256,23 @@ const EngagementListing = () => {
                             name="advancedSearch"
                             onClick={() => setAdvancedSearchOpen(!advancedSearchOpen)}
                         >
-                            {advancedSearchOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />} Advanced Search
+                            {
+                                <ExpandMoreIcon
+                                    sx={[
+                                        {
+                                            transform: 'rotate(0deg)',
+                                            transition: (theme) =>
+                                                theme.transitions.create('all', {
+                                                    duration: theme.transitions.duration.shortest,
+                                                }),
+                                        },
+                                        advancedSearchOpen && {
+                                            transform: 'rotate(180deg)',
+                                        },
+                                    ]}
+                                />
+                            }
+                            {}Advanced Search
                         </SecondaryButton>
                     </Stack>
                     <PrimaryButton
@@ -270,7 +285,7 @@ const EngagementListing = () => {
                 </Stack>
             </Grid>
             <Grid item xs={12} lg={10} style={{ width: '100%' }}>
-                <Collapse in={advancedSearchOpen} timeout="auto" unmountOnExit style={{ width: '100%' }}>
+                <Collapse in={advancedSearchOpen} timeout="auto" style={{ width: '100%' }}>
                     <AdvancedSearch setFilterParams={filterParams} />
                 </Collapse>
             </Grid>
