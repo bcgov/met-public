@@ -65,6 +65,23 @@ def test_get_engagements(client, jwt, session, engagement_info):  # pylint:disab
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
+def test_get_engagements_paginated_advanced_search(client, jwt,
+                                                   session, engagement_info):  # pylint:disable=unused-argument
+    """Assert that an engagement can be fetched."""
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
+                     headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+
+    rv = client.get(f'/api/engagements/?page={1}&size={10}&sort_key={"engagement.created_date"}\
+                    &sort_order={"desc"}&engagement_status={[6]}',
+                    data=json.dumps(engagement_info),
+                    headers=headers, content_type=ContentType.JSON.value)
+
+    assert rv.json.get('total') == 1
+
+
+@pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
 def test_patch_engagement(client, jwt, session, engagement_info):  # pylint:disable=unused-argument
     """Assert that an engagement can be updated."""
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)

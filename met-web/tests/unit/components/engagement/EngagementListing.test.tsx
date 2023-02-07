@@ -151,8 +151,8 @@ describe('Engagement form page tests', () => {
             expect(screen.getByText('Engagement One')).toBeInTheDocument();
         });
 
-        const checkbox = getByTestId(EngagementDisplayStatus.Draft.toString()).querySelector('input[type="checkbox"]')
-        expect(checkbox).toHaveProperty('checked', false)
+        const checkbox = getByTestId(EngagementDisplayStatus.Draft.toString()).querySelector('input[type="checkbox"]');
+        expect(checkbox).toHaveProperty('checked', false);
 
         fireEvent.click(getByTestId(EngagementDisplayStatus.Draft.toString()));
         expect(checkbox).toHaveProperty('checked', true);
