@@ -5,15 +5,10 @@ import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import { PrimaryButton, SecondaryButton } from '../../../common';
 import dayjs from 'dayjs';
 import { formatToUTC } from 'components/common/dateHelper';
+import { SearchOptions } from './SearchTypes';
 
 interface filterParams {
-    setFilterParams: (
-        status_list: number[],
-        created_from_date: string,
-        created_to_date: string,
-        published_from_date: string,
-        published_to_date: string,
-    ) => void;
+    setFilterParams: (newsearchOptions: SearchOptions) => void;
 }
 
 const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
@@ -27,6 +22,14 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
     const [statusFilter, setStatusFilter] = useState(() => {
         return intitialStatusList;
     });
+    const initialFilterParams = {
+        status_list: [],
+        created_from_date: '',
+        created_to_date: '',
+        published_from_date: '',
+        published_to_date: '',
+    };
+
     const [selectedStatusList, setSelectedStatusList] = useState<number[]>([]);
 
     const handleStatusFilterChange = (event: React.SyntheticEvent) => {
@@ -73,7 +76,13 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
             ? formatToUTC(dayjs(publishedToDate).endOf('day').format('YYYY-MM-DD HH:mm:ss'))
             : publishedToDate;
 
-        setFilterParams(selectedStatusList, fCreatedFromDate, fCreatedToDate, fPublishedFromDate, fPublishedToDate);
+        setFilterParams({
+            status_list: selectedStatusList,
+            created_from_date: fCreatedFromDate,
+            created_to_date: fCreatedToDate,
+            published_from_date: fPublishedFromDate,
+            published_to_date: fPublishedToDate,
+        });
     };
 
     const handleResetSearchFilters = () => {
@@ -87,7 +96,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
             publishedToDate: '',
         });
 
-        setFilterParams([], '', '', '', '');
+        setFilterParams(initialFilterParams);
     };
 
     return (
@@ -106,6 +115,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                     <Checkbox
                                         size="small"
                                         id={EngagementDisplayStatus.Draft.toString()}
+                                        data-testid={EngagementDisplayStatus.Draft.toString()}
                                         name={EngagementDisplayStatus[EngagementDisplayStatus.Draft]}
                                         onChange={handleStatusFilterChange}
                                         value={EngagementDisplayStatus[EngagementDisplayStatus.Draft]}
@@ -123,6 +133,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                     <Checkbox
                                         size="small"
                                         id={EngagementDisplayStatus.Scheduled.toString()}
+                                        data-testid={EngagementDisplayStatus.Scheduled.toString()}
                                         name={EngagementDisplayStatus[EngagementDisplayStatus.Scheduled]}
                                         onChange={handleStatusFilterChange}
                                         value={EngagementDisplayStatus[EngagementDisplayStatus.Scheduled]}
@@ -142,6 +153,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                     <Checkbox
                                         size="small"
                                         id={EngagementDisplayStatus.Upcoming.toString()}
+                                        data-testid={EngagementDisplayStatus.Upcoming.toString()}
                                         name={EngagementDisplayStatus[EngagementDisplayStatus.Upcoming]}
                                         onChange={handleStatusFilterChange}
                                         value={EngagementDisplayStatus[EngagementDisplayStatus.Upcoming]}
@@ -161,6 +173,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                     <Checkbox
                                         size="small"
                                         id={EngagementDisplayStatus.Open.toString()}
+                                        data-testid={EngagementDisplayStatus.Open.toString()}
                                         name={EngagementDisplayStatus[EngagementDisplayStatus.Open]}
                                         onChange={handleStatusFilterChange}
                                         value={EngagementDisplayStatus[EngagementDisplayStatus.Open]}
@@ -176,6 +189,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                     <Checkbox
                                         size="small"
                                         id={EngagementDisplayStatus.Closed.toString()}
+                                        data-testid={EngagementDisplayStatus.Closed.toString()}
                                         name={EngagementDisplayStatus[EngagementDisplayStatus.Closed]}
                                         onChange={handleStatusFilterChange}
                                         value={EngagementDisplayStatus[EngagementDisplayStatus.Closed]}

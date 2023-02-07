@@ -51,23 +51,6 @@ const EngagementListing = () => {
         published_to_date: '',
     });
 
-    const filterParams = (
-        selectedStatus: number[],
-        createdFromDate: string,
-        createdToDate: string,
-        publishedFromDate: string,
-        publishedToDate: string,
-    ): void => {
-        setSearchOptions({
-            ...searchOptions,
-            status_list: selectedStatus,
-            created_from_date: createdFromDate,
-            created_to_date: createdToDate,
-            published_from_date: publishedFromDate,
-            published_to_date: publishedToDate,
-        });
-    };
-
     const dispatch = useAppDispatch();
 
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
@@ -318,9 +301,9 @@ const EngagementListing = () => {
             <Grid item xs={12} lg={10} style={{ width: '100%' }}>
                 <Collapse in={advancedSearchOpen} timeout="auto" style={{ width: '100%' }}>
                     {isMediumScreen ? (
-                        <AdvancedSearchMobile setFilterParams={filterParams} />
+                        <AdvancedSearchMobile setFilterParams={setSearchOptions} />
                     ) : (
-                        <AdvancedSearch setFilterParams={filterParams} />
+                        <AdvancedSearch setFilterParams={setSearchOptions} />
                     )}
                 </Collapse>
             </Grid>
