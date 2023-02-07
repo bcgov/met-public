@@ -22,7 +22,7 @@ class CommentService:
     @staticmethod
     def get_comment(comment_id) -> CommentSchema:
         """Get Comment by the id."""
-        comment = Comment.get_comment(comment_id)
+        comment = Comment.find_by_id(comment_id)
         comment_schema = CommentSchema()
         return comment_schema.dump(comment)
 

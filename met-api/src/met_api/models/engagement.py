@@ -43,12 +43,6 @@ class Engagement(BaseModel):
     status_block = db.relationship('EngagementStatusBlock', backref='engagement')
 
     @classmethod
-    def get_engagement(cls, engagement_id):
-        """Get engagement by id."""
-        engagement = db.session.query(Engagement).filter_by(id=engagement_id).first()
-        return engagement
-
-    @classmethod
     def get_all_engagements(cls):
         """Get all engagements."""
         engagements_schema = EngagementSchema(many=True)

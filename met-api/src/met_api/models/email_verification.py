@@ -9,10 +9,11 @@ from sqlalchemy import ForeignKey
 from met_api.constants.email_verification import EmailVerificationType
 from met_api.schemas.email_verification import EmailVerificationSchema
 
+from .base_model import BaseModel
 from .db import db
 
 
-class EmailVerification(db.Model):  # pylint: disable=too-few-public-methods
+class EmailVerification(BaseModel):  # pylint: disable=too-few-public-methods
     """Definition of the Email verification entity."""
 
     __tablename__ = 'email_verification'
@@ -24,10 +25,6 @@ class EmailVerification(db.Model):  # pylint: disable=too-few-public-methods
     type = db.Column(db.Enum(EmailVerificationType), nullable=False)
     survey_id = db.Column(db.Integer, ForeignKey('survey.id'), nullable=True)
     submission_id = db.Column(db.Integer, ForeignKey('submission.id'), nullable=True)
-    created_date = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
-    created_by = db.Column(db.String(50), nullable=True)
-    updated_by = db.Column(db.String(50), nullable=True)
 
     @classmethod
     def get(cls, verification_token) -> EmailVerification:

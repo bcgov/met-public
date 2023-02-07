@@ -10,10 +10,11 @@ from sqlalchemy.sql.schema import ForeignKey
 
 from .widget_item import WidgetItem
 
+from .base_model import BaseModel
 from .db import db
 
 
-class Widget(db.Model):  # pylint: disable=too-few-public-methods
+class Widget(BaseModel):  # pylint: disable=too-few-public-methods
     """Definition of the Widget entity."""
 
     __tablename__ = 'widget'
@@ -24,10 +25,6 @@ class Widget(db.Model):  # pylint: disable=too-few-public-methods
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     widget_type_id = db.Column(db.Integer, ForeignKey('widget_type.id', ondelete='CASCADE'))
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'))
-    created_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow, nullable=False)
-    created_by = db.Column(db.String(50), nullable=False)
-    updated_by = db.Column(db.String(50), nullable=False)
     items = db.relationship('WidgetItem', backref='widget', cascade='all, delete', order_by='WidgetItem.sort_index')
     sort_index = db.Column(db.Integer, nullable=False, default=1)
 
