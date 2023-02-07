@@ -69,10 +69,8 @@ export const PhasesWidget = () => {
                             ))}
                         </Stack>
                     </Grid>
-                    <Grid item xs={12} container alignItems="center">
-                        <Grid item xs={12} lg={10}>
-                            <InfoArrow />
-                        </Grid>
+                    <Grid item xs={12} lg={10}>
+                        <InfoArrow />
                     </Grid>
                 </Grid>
             </MetPaper>
