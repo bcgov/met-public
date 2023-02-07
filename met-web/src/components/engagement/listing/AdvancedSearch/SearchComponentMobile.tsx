@@ -1,15 +1,5 @@
 import React, { useState } from 'react';
-import {
-    Grid,
-    Stack,
-    TextField,
-    FormLabel,
-    FormGroup,
-    FormControlLabel,
-    Checkbox,
-    useMediaQuery,
-    Theme,
-} from '@mui/material';
+import { Grid, Stack, TextField, FormLabel, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 import { MetParagraph, MetLabel } from 'components/common';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import { PrimaryButton, SecondaryButton } from '../../../common';
@@ -27,8 +17,6 @@ interface filterParams {
 }
 
 const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
-    const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
-
     const intitialStatusList = {
         [EngagementDisplayStatus[EngagementDisplayStatus.Draft]]: false,
         [EngagementDisplayStatus[EngagementDisplayStatus.Scheduled]]: false,
