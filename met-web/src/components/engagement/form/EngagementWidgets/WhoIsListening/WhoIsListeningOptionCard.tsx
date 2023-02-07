@@ -10,6 +10,7 @@ import { WidgetType } from 'models/widget';
 import { postWidget } from 'services/widgetService';
 import { Else, If, Then } from 'react-if';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
+import { optionCardStyle } from '../Phases/PhasesOptionCard';
 
 const WhoIsListeningOptionCard = () => {
     const { savedEngagement } = useContext(ActionContext);
@@ -50,11 +51,7 @@ const WhoIsListeningOptionCard = () => {
         <MetPaper
             data-testid={`widget-drawer-option/${WidgetType.WhoIsListening}`}
             elevation={1}
-            sx={{
-                padding: '10px 2px 10px 2px',
-                cursor: 'pointer',
-                '&:hover': { backgroundColor: 'rgb(242, 242, 242)' },
-            }}
+            sx={optionCardStyle}
             onClick={() => createWidget()}
         >
             <If condition={creatingWidget}>
@@ -66,14 +63,14 @@ const WhoIsListeningOptionCard = () => {
                 <Else>
                     <Grid
                         container
-                        alignItems="flex-start"
-                        justifyContent="flex-start"
+                        alignItems="center"
+                        justifyContent="center"
                         direction="row"
                         columnSpacing={2}
                         spacing={1}
                     >
-                        <Grid item>
-                            <PeopleAltOutlinedIcon color={'info'} sx={{ pl: '25px', fontSize: '5em' }} />
+                        <Grid item xs={2}>
+                            <PeopleAltOutlinedIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
                         </Grid>
                         <Grid
                             container
@@ -82,7 +79,7 @@ const WhoIsListeningOptionCard = () => {
                             justifyContent="flex-start"
                             direction="row"
                             rowSpacing={1}
-                            xs={8}
+                            xs={10}
                         >
                             <Grid item xs={12}>
                                 <MetHeader4>Who is Listening</MetHeader4>

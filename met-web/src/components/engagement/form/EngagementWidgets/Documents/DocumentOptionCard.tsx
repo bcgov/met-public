@@ -10,7 +10,7 @@ import { ActionContext } from '../../ActionContext';
 import { useAppDispatch } from 'hooks';
 import { postWidget } from 'services/widgetService';
 import { openNotification } from 'services/notificationService/notificationSlice';
-
+import { optionCardStyle } from '../Phases/PhasesOptionCard';
 const DocumentOptionCard = () => {
     const { widgets, loadWidgets, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
@@ -48,11 +48,7 @@ const DocumentOptionCard = () => {
         <MetPaper
             data-testid={`widget-drawer-option/${WidgetType.Document}`}
             elevation={1}
-            sx={{
-                padding: '10px 2px 10px 2px',
-                cursor: 'pointer',
-                '&:hover': { backgroundColor: 'rgb(242, 242, 242)' },
-            }}
+            sx={optionCardStyle}
             onClick={() => createWidget()}
         >
             <If condition={creatingWidget}>
@@ -64,14 +60,14 @@ const DocumentOptionCard = () => {
                 <Else>
                     <Grid
                         container
-                        alignItems="flex-start"
-                        justifyContent="flex-start"
+                        alignItems="center"
+                        justifyContent="center"
                         direction="row"
                         columnSpacing={2}
                         spacing={1}
                     >
-                        <Grid item>
-                            <DescriptionOutlinedIcon color="info" sx={{ pl: '25px', fontSize: '5em' }} />
+                        <Grid xs={2} item>
+                            <DescriptionOutlinedIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
                         </Grid>
                         <Grid
                             container
@@ -80,7 +76,7 @@ const DocumentOptionCard = () => {
                             justifyContent="flex-start"
                             direction="row"
                             rowSpacing={1}
-                            xs={8}
+                            xs={10}
                         >
                             <Grid item xs={12}>
                                 <MetHeader4>Documents</MetHeader4>
