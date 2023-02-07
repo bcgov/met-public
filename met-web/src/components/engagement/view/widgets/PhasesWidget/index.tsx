@@ -59,7 +59,7 @@ export const PhasesWidget = () => {
                         <MetBody>
                             Click on the sections below to expand them and learn more about each EA process phase. You
                             can also learn more about each engagement period by clicking the engagement icon.
-                            {<ForumIcon />}
+                            {<ForumIcon fontSize="1.2em" sx={{ marginLeft: '0.5em' }} />}
                         </MetBody>
                     </Grid>
                     <Grid item xs={12} sx={{ maxWidth: '99%' }}>
@@ -70,8 +70,7 @@ export const PhasesWidget = () => {
                         </Stack>
                     </Grid>
                     <Grid item xs={12} container alignItems="center">
-                        <Grid item md={1} xs={0}></Grid>
-                        <Grid item alignItems="center">
+                        <Grid item xs={12} lg={10}>
                             <InfoArrow />
                         </Grid>
                     </Grid>
