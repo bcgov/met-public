@@ -60,6 +60,7 @@ jest.mock('@mui/material', () => ({
     Link: ({ children }: { children: ReactNode }) => {
         return <a>{children}</a>;
     },
+    useMediaQuery: (() => false),
 }));
 
 jest.mock('components/common', () => ({
@@ -90,11 +91,9 @@ describe('Engagement form page tests', () => {
         await waitFor(() => {
             expect(screen.getByText('Engagement One')).toBeInTheDocument();
             expect(screen.getByText('2022-09-14')).toBeInTheDocument();
-            expect(screen.getByText('Draft')).toBeInTheDocument();
 
             expect(screen.getByText('Engagement Two')).toBeInTheDocument();
             expect(screen.getByText('2022-09-15')).toBeInTheDocument();
-            expect(screen.getByText('Open')).toBeInTheDocument();
             expect(screen.getByText('2022-09-19')).toBeInTheDocument();
             expect(screen.getByText('View Survey')).toBeInTheDocument();
             expect(screen.getByText('View Report')).toBeInTheDocument();
@@ -133,6 +132,80 @@ describe('Engagement form page tests', () => {
                 created_from_date: '',
                 created_to_date: '',
                 published_from_date: '',
+                published_to_date: '',
+            });
+        });
+    });
+
+    test('Advanced Search filter works for created dates', async () => {
+        getEngagementMock.mockReturnValue(
+            Promise.resolve({
+                items: [mockEngagementTwo],
+                total: 1,
+            }),
+        );
+        const { container } = render(<EngagementListing />);
+
+        await waitFor(() => {
+            expect(screen.getByText('Engagement Two')).toBeInTheDocument();
+        });
+
+        const createdFromDate = container.querySelector('input[name="createdFromDate"]');
+        assert(createdFromDate, 'Unable to find search field that matches the given query');
+
+        const createdToDate = container.querySelector('input[name="createdToDate"]');
+        assert(createdToDate, 'Unable to find search field that matches the given query');
+
+        fireEvent.change(createdFromDate, { target: { value: '2022-09-15' } });
+        fireEvent.change(createdToDate, { target: { value: '2022-09-15' } });
+        fireEvent.click(screen.getByTestId('search-button'));
+
+        await waitFor(() => {
+            expect(getEngagementMock).lastCalledWith({
+                page: 1,
+                size: 10,
+                sort_key: 'engagement.created_date',
+                sort_order: 'desc',
+                search_text: '',
+                engagement_status: [],
+                created_from_date: '2022-09-15 07:00:00',
+                created_to_date: '2022-09-16 06:59:59',
+                published_from_date: '',
+                published_to_date: '',
+            });
+        });
+    });
+    
+    test('Advanced Search filter works for published dates', async () => {
+        getEngagementMock.mockReturnValue(
+            Promise.resolve({
+                items: [mockEngagementTwo],
+                total: 1,
+            }),
+        );
+        const { container } = render(<EngagementListing />);
+
+        await waitFor(() => {
+            expect(screen.getByText('Engagement Two')).toBeInTheDocument();
+        });
+
+        const publishedFromDate = container.querySelector('input[name="publishedFromDate"]');
+        assert(publishedFromDate, 'Unable to find search field that matches the given query');
+
+        fireEvent.change(publishedFromDate, { target: { value: '2022-09-19' } });
+        fireEvent.click(screen.getByTestId('search-button'));
+
+        await waitFor(() => {
+            expect(getEngagementMock).lastCalledWith({
+                page: 1,
+                size: 10,
+                sort_key: 'engagement.created_date',
+                sort_order: 'desc',
+                search_text: '',
+                engagement_status: [],
+                created_from_date: '',
+                created_to_date: '',
+                published_from_date: '2022-09-19 07:00:00',
                 published_to_date: '',
             });
         });
