@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import {
     Autocomplete,
@@ -74,6 +74,13 @@ export const AddUserModel = () => {
     } = methods;
 
     const userTypeSelected = watch('group');
+
+    const formValues = watch();
+    useEffect(() => {
+        if (backendError) {
+            setBackendError('');
+        }
+    }, [JSON.stringify(formValues)]);
 
     const { user: userErrors, group: groupErrors, engagement: engagementErrors } = errors;
 
@@ -174,7 +181,6 @@ export const AddUserModel = () => {
         try {
             setIsAssigningRole(true);
             await assignRoleToUser(data);
-            dispatch(openNotification({ severity: 'success', text: 'User has been successfully added' }));
             setIsAssigningRole(false);
             loadUserListing();
             handleClose();
