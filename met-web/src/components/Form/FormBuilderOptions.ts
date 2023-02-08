@@ -8,7 +8,7 @@ export const formioOptions = {
         basic: false,
         layout: false,
         custom: {
-            title: 'Basic',
+            title: '',
             weight: 20,
             components: {
                 simpletextfield: true,
