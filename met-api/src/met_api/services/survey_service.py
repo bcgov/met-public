@@ -17,7 +17,7 @@ class SurveyService:
     @classmethod
     def get(cls, survey_id):
         """Get survey by the id."""
-        survey_model: SurveyModel = SurveyModel.get_survey(survey_id)
+        survey_model: SurveyModel = SurveyModel.find_by_id(survey_id)
         survey = SurveySchema().dump(survey_model)
         return survey
 
@@ -25,7 +25,7 @@ class SurveyService:
     def get_open(cls, survey_id):
         """Get survey by the id."""
         survey_model = SurveyModel.get_open(survey_id)
-        engagement_model: EngagementModel = EngagementModel.get_engagement(survey_model.engagement_id)
+        engagement_model: EngagementModel = EngagementModel.find_by_id(survey_model.engagement_id)
         survey = SurveySchema().dump(survey_model)
         eng = EngagementSchema().dump(engagement_model)
         eng['banner_url'] = ObjectStorageService.get_url(engagement_model.banner_filename)

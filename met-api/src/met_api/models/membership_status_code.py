@@ -4,10 +4,11 @@ It defines the available types of membership Status have with engagements.
 """
 from __future__ import annotations
 
+from .base_model import BaseModel
 from .db import db
 
 
-class MembershipStatusCode(db.Model):  # pylint: disable=too-few-public-methods
+class MembershipStatusCode(BaseModel):  # pylint: disable=too-few-public-methods
     """Definition of the MembershipStatusCode entity."""
 
     __tablename__ = 'membership_status_codes'

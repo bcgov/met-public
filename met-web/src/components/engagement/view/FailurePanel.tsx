@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Stack } from '@mui/material';
 import { FailurePanelProps } from './types';
-import { modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody, ModalSubtitle } from 'components/common';
+import { modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody } from 'components/common';
 
 const FailurePanel = ({ email, handleClose, tryAgain }: FailurePanelProps) => {
     return (
@@ -24,12 +24,10 @@ const FailurePanel = ({ email, handleClose, tryAgain }: FailurePanelProps) => {
                 <MetBody>{email}</MetBody>
             </Grid>
             <Grid item xs={12}>
-                <ModalSubtitle sx={{ fontWeight: 'bold' }}>Please verify your email and try again.</ModalSubtitle>
+                <MetBody>Please verify your email and try again.</MetBody>
             </Grid>
             <Grid item xs={12}>
-                <ModalSubtitle sx={{ fontWeight: 'bold' }}>
-                    If this problem persists, contact sample@gmail.com
-                </ModalSubtitle>
+                <MetBody>If this problem persists, contact sample@gmail.com</MetBody>
             </Grid>
             <Grid item container xs={12} direction="row" justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">

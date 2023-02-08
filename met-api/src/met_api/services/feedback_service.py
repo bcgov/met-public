@@ -12,7 +12,7 @@ class FeedbackService:
     @staticmethod
     def get_feedback(feedback_id):
         """Get feedback by the id."""
-        feedback = Feedback.get(feedback_id)
+        feedback = Feedback.find_by_id(feedback_id)
         feedback_schema = FeedbackSchema()
         return feedback_schema.dump(feedback)
 

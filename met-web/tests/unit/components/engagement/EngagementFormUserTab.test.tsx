@@ -96,7 +96,7 @@ describe('Engagement form page tests', () => {
         fireEvent.click(addTeamMemberButton);
 
         await waitFor(() => {
-            expect(screen.getByText('Select the user you want to add')).toBeInTheDocument();
+            expect(screen.getByText('Select the Team Member you want to add')).toBeInTheDocument();
         });
     });
 });
