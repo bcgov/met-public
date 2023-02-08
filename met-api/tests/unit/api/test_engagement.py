@@ -22,7 +22,7 @@ import json
 import pytest
 from faker import Faker
 
-from met_api.constants.engagement_status import SubmissionStatus
+from met_api.constants.engagement_status import EngagementDisplayStatus, SubmissionStatus
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestEngagementInfo, TestJwtClaims
 from tests.utilities.factory_utils import factory_auth_header, factory_engagement_model
@@ -65,16 +65,22 @@ def test_get_engagements(client, jwt, session, engagement_info):  # pylint:disab
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
-def test_get_engagements_paginated_advanced_search(client, jwt,
-                                                   session, engagement_info):  # pylint:disable=unused-argument
-    """Assert that an engagement can be fetched."""
+def test_search_engagements_by_status(client, jwt,
+                                      session, engagement_info):  # pylint:disable=unused-argument
+    """Assert that an engagement can be fetched by filtering using the engagement status."""
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
 
-    rv = client.get(f'/api/engagements/?page={1}&size={10}&sort_key={"engagement.created_date"}\
-                    &sort_order={"desc"}&engagement_status={[6]}',
+    page = 1
+    page_size = 10
+    sort_key = 'engagement.created_date'
+    sort_order = 'desc'
+    engagement_status = EngagementDisplayStatus.Open.value
+
+    rv = client.get(f'/api/engagements/?page={page}&size={page_size}&sort_key={sort_key}\
+                    &sort_order={sort_order}&engagement_status={[engagement_status]}',
                     data=json.dumps(engagement_info),
                     headers=headers, content_type=ContentType.JSON.value)
 

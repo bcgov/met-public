@@ -260,7 +260,7 @@ const EngagementListing = () => {
                                         ]}
                                     />
                                 }
-                                {}Advanced Search
+                                Advanced Search
                             </SecondaryButton>
                         </When>
                     </Stack>
@@ -286,7 +286,7 @@ const EngagementListing = () => {
                                     ]}
                                 />
                             }
-                            {}Advanced Search
+                            Advanced Search
                         </SecondaryButton>
                     </When>
                     <PrimaryButton

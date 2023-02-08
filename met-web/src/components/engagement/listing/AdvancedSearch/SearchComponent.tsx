@@ -37,11 +37,11 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
             ...statusFilter,
             [(event.target as HTMLInputElement).value]: (event.target as HTMLInputElement).checked,
         });
-        const id = (event.target as HTMLInputElement).id;
+        const selectedStatusid = (event.target as HTMLInputElement).id;
         setSelectedStatusList((currentParticipants: number[]) =>
-            currentParticipants.includes(parseInt(id))
-                ? currentParticipants.filter((f) => f !== parseInt(id))
-                : [...currentParticipants, parseInt(id)],
+            currentParticipants.includes(parseInt(selectedStatusid))
+                ? currentParticipants.filter((f) => f !== parseInt(selectedStatusid))
+                : [...currentParticipants, parseInt(selectedStatusid)],
         );
     };
 
