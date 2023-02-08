@@ -1,4 +1,4 @@
-FROM python:3.7.13-slim
+FROM python:3.8.5-buster
 
 ARG DAGSTER_VERSION=0.17.6
 
