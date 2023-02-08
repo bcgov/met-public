@@ -9,6 +9,7 @@ import * as notificationSlice from 'services/notificationService/notificationSli
 import { createDefaultSurvey } from 'models/survey';
 import { createDefaultEngagement } from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
+import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import assert from 'assert';
 
 const mockSurvey = {
@@ -60,6 +61,7 @@ jest.mock('@mui/material', () => ({
     Link: ({ children }: { children: ReactNode }) => {
         return <a>{children}</a>;
     },
+    useMediaQuery: () => false,
 }));
 
 jest.mock('components/common', () => ({
@@ -90,11 +92,9 @@ describe('Engagement form page tests', () => {
         await waitFor(() => {
             expect(screen.getByText('Engagement One')).toBeInTheDocument();
             expect(screen.getByText('2022-09-14')).toBeInTheDocument();
-            expect(screen.getByText('Draft')).toBeInTheDocument();
 
             expect(screen.getByText('Engagement Two')).toBeInTheDocument();
             expect(screen.getByText('2022-09-15')).toBeInTheDocument();
-            expect(screen.getByText('Open')).toBeInTheDocument();
             expect(screen.getByText('2022-09-19')).toBeInTheDocument();
             expect(screen.getByText('View Survey')).toBeInTheDocument();
             expect(screen.getByText('View Report')).toBeInTheDocument();
@@ -130,6 +130,43 @@ describe('Engagement form page tests', () => {
                 sort_order: 'desc',
                 search_text: 'Engagement One',
                 engagement_status: [],
+                created_from_date: '',
+                created_to_date: '',
+                published_from_date: '',
+                published_to_date: '',
+            });
+        });
+    });
+
+    test('Advanced Search filter works and fetchs engagements with the selected status as a param', async () => {
+        getEngagementMock.mockReturnValue(
+            Promise.resolve({
+                items: [mockEngagementOne],
+                total: 1,
+            }),
+        );
+        const { getByTestId } = render(<EngagementListing />);
+
+        await waitFor(() => {
+            expect(screen.getByText('Engagement One')).toBeInTheDocument();
+        });
+
+        const checkbox = getByTestId(EngagementDisplayStatus.Draft.toString()).querySelector('input[type="checkbox"]');
+        expect(checkbox).toHaveProperty('checked', false);
+
+        fireEvent.click(getByTestId(EngagementDisplayStatus.Draft.toString()));
+        expect(checkbox).toHaveProperty('checked', true);
+
+        fireEvent.click(screen.getByTestId('search-button'));
+
+        await waitFor(() => {
+            expect(getEngagementMock).lastCalledWith({
+                page: 1,
+                size: 10,
+                sort_key: 'engagement.created_date',
+                sort_order: 'desc',
+                search_text: '',
+                engagement_status: [1],
                 created_from_date: '',
                 created_to_date: '',
                 published_from_date: '',

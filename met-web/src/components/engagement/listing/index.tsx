@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { When } from 'react-if';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Collapse from '@mui/material/Collapse';
 import { Link } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton, SecondaryButton } from 'components/common';
 import { Engagement } from 'models/engagement';
 import { useAppDispatch } from 'hooks';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
-import { Link as MuiLink } from '@mui/material';
+import { Link as MuiLink, useMediaQuery, Theme } from '@mui/material';
 import { getEngagements } from 'services/engagementService';
 import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
@@ -18,9 +18,12 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import MetTable from 'components/common/Table';
 import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
 import AdvancedSearch from './AdvancedSearch/SearchComponent';
+import AdvancedSearchMobile from './AdvancedSearch/SearchComponentMobile';
 import { SearchOptions } from './AdvancedSearch/SearchTypes';
 
 const EngagementListing = () => {
+    const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+
     const [searchFilter, setSearchFilter] = useState({
         key: 'name',
         value: '',
@@ -47,23 +50,6 @@ const EngagementListing = () => {
         published_from_date: '',
         published_to_date: '',
     });
-
-    const filterParams = (
-        selectedStatus: number[],
-        createdFromDate: string,
-        createdToDate: string,
-        publishedFromDate: string,
-        publishedToDate: string,
-    ): void => {
-        setSearchOptions({
-            ...searchOptions,
-            status_list: selectedStatus,
-            created_from_date: createdFromDate,
-            created_to_date: createdToDate,
-            published_from_date: publishedFromDate,
-            published_to_date: publishedToDate,
-        });
-    };
 
     const dispatch = useAppDispatch();
 
@@ -252,10 +238,57 @@ const EngagementListing = () => {
                         >
                             <SearchIcon />
                         </PrimaryButton>
-                        <SecondaryButton onClick={() => setAdvancedSearchOpen(!advancedSearchOpen)}>
-                            {advancedSearchOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />} Advanced Search
-                        </SecondaryButton>
+                        <When condition={!isMediumScreen}>
+                            <SecondaryButton
+                                data-testid="engagement/listing/advancedSearch"
+                                name="advancedSearch"
+                                onClick={() => setAdvancedSearchOpen(!advancedSearchOpen)}
+                            >
+                                {
+                                    <ExpandMoreIcon
+                                        sx={[
+                                            {
+                                                transform: 'rotate(0deg)',
+                                                transition: (theme) =>
+                                                    theme.transitions.create('all', {
+                                                        duration: theme.transitions.duration.shortest,
+                                                    }),
+                                            },
+                                            advancedSearchOpen && {
+                                                transform: 'rotate(180deg)',
+                                            },
+                                        ]}
+                                    />
+                                }
+                                Advanced Search
+                            </SecondaryButton>
+                        </When>
                     </Stack>
+                    <When condition={isMediumScreen}>
+                        <SecondaryButton
+                            data-testid="engagement/listing/advancedSearch"
+                            name="advancedSearch"
+                            onClick={() => setAdvancedSearchOpen(!advancedSearchOpen)}
+                        >
+                            {
+                                <ExpandMoreIcon
+                                    sx={[
+                                        {
+                                            transform: 'rotate(0deg)',
+                                            transition: (theme) =>
+                                                theme.transitions.create('all', {
+                                                    duration: theme.transitions.duration.shortest,
+                                                }),
+                                        },
+                                        advancedSearchOpen && {
+                                            transform: 'rotate(180deg)',
+                                        },
+                                    ]}
+                                />
+                            }
+                            Advanced Search
+                        </SecondaryButton>
+                    </When>
                     <PrimaryButton
                         component={Link}
                         to="/engagements/create/form"
@@ -265,9 +298,15 @@ const EngagementListing = () => {
                     </PrimaryButton>
                 </Stack>
             </Grid>
-            <When condition={advancedSearchOpen}>
-                <AdvancedSearch getFilterParams={filterParams} />
-            </When>
+            <Grid item xs={12} lg={10} style={{ width: '100%' }}>
+                <Collapse in={advancedSearchOpen} timeout="auto" style={{ width: '100%' }}>
+                    {isMediumScreen ? (
+                        <AdvancedSearchMobile setFilterParams={setSearchOptions} />
+                    ) : (
+                        <AdvancedSearch setFilterParams={setSearchOptions} />
+                    )}
+                </Collapse>
+            </Grid>
             <Grid item xs={12} lg={10}>
                 <MetTable
                     headCells={headCells}
