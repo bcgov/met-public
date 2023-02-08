@@ -36,6 +36,12 @@ export const Palette = {
     },
 };
 
+const MetBorderStyle = {
+    border: '1px solid #cdcdcd',
+    borderRadius: '5px',
+    boxShadow: 'rgb(0 0 0 / 6%) 0px 2px 2px -1px, rgb(0 0 0 / 6%) 0px 1px 1px 0px, rgb(0 0 0 / 6%) 0px 1px 3px 0px',
+};
+
 export const BaseTheme = createTheme({
     palette: {
         primary: {
@@ -59,15 +65,30 @@ export const BaseTheme = createTheme({
         },
     },
     components: {
+        MuiTab: {
+            styleOverrides: {
+                root: {
+                    ...MetBorderStyle,
+                },
+            },
+        },
         MuiButton: {
             styleOverrides: {
-                root: { height: '40px' },
+                root: {
+                    height: '40px',
+                },
             },
             defaultProps: {
                 disableRipple: true,
             },
         },
         MuiTextField: {
+            styleOverrides: {
+                root: {
+                    height: '40px',
+                    ...MetBorderStyle,
+                },
+            },
             defaultProps: {
                 size: 'small',
             },
