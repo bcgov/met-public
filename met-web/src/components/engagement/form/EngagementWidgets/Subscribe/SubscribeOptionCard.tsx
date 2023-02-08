@@ -60,24 +60,24 @@ const SubscribeOptionCard = () => {
                 </Then>
                 <Else>
                     <Grid
+                        xs={12}
                         container
                         alignItems="center"
-                        justifyContent="center"
+                        justifyContent="flex-start"
                         direction="row"
-                        columnSpacing={2}
-                        spacing={1}
+                        columnSpacing={1}
                     >
-                        <Grid xs={2} item>
+                        <Grid item sx={{ mr: 0.5 }}>
                             <EmailOutlinedIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
                         </Grid>
                         <Grid
                             container
                             item
-                            alignItems="flex-start"
-                            justifyContent="flex-start"
+                            alignItems="center"
+                            justifyContent="center"
                             direction="row"
                             rowSpacing={1}
-                            xs={10}
+                            xs={8}
                         >
                             <Grid item xs={12}>
                                 <MetHeader4>Sign Up for Updates</MetHeader4>

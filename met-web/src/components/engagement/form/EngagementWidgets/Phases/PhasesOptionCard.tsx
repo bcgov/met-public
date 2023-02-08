@@ -15,7 +15,7 @@ export const optionCardStyle = {
     padding: '10px 2px 10px 2px',
     cursor: 'pointer',
     '&:hover': { backgroundColor: 'rgb(242, 242, 242)' },
-    height: '110px',
+    minHeight: '110px',
 };
 
 const PhasesOptionCard = () => {
@@ -67,13 +67,13 @@ const PhasesOptionCard = () => {
                 <Else>
                     <Grid
                         container
-                        alignItems="center"
-                        justifyContent="center"
+                        alignItems="flex-start"
+                        justifyContent="flex-start"
                         direction="row"
                         columnSpacing={2}
                         spacing={1}
                     >
-                        <Grid xs={2} item>
+                        <Grid item sx={{ mr: 0.5 }}>
                             <ChatBubbleOutlineOutlinedIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
                         </Grid>
                         <Grid
@@ -83,7 +83,7 @@ const PhasesOptionCard = () => {
                             justifyContent="flex-start"
                             direction="row"
                             rowSpacing={1}
-                            xs={10}
+                            xs={8}
                         >
                             <Grid item xs={12}>
                                 <MetHeader4>EA Process</MetHeader4>

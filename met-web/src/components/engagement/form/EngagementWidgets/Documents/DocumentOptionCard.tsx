@@ -61,22 +61,22 @@ const DocumentOptionCard = () => {
                     <Grid
                         container
                         alignItems="center"
-                        justifyContent="center"
+                        justifyContent="flex-start"
                         direction="row"
-                        columnSpacing={2}
+                        columnSpacing={1}
                         spacing={1}
                     >
-                        <Grid xs={2} item>
+                        <Grid item>
                             <DescriptionOutlinedIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
                         </Grid>
                         <Grid
                             container
                             item
-                            alignItems="flex-start"
-                            justifyContent="flex-start"
+                            alignItems="center"
+                            justifyContent="center"
                             direction="row"
                             rowSpacing={1}
-                            xs={10}
+                            xs={8}
                         >
                             <Grid item xs={12}>
                                 <MetHeader4>Documents</MetHeader4>

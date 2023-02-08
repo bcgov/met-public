@@ -61,25 +61,18 @@ const WhoIsListeningOptionCard = () => {
                     </Grid>
                 </Then>
                 <Else>
-                    <Grid
-                        container
-                        alignItems="center"
-                        justifyContent="center"
-                        direction="row"
-                        columnSpacing={2}
-                        spacing={1}
-                    >
-                        <Grid item xs={2}>
+                    <Grid container alignItems="center" justifyContent="flex-start" direction="row" columnSpacing={1}>
+                        <Grid item sx={{ mr: 0.5 }}>
                             <PeopleAltOutlinedIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
                         </Grid>
                         <Grid
                             container
                             item
-                            alignItems="flex-start"
-                            justifyContent="flex-start"
+                            alignItems="center"
+                            justifyContent="center"
                             direction="row"
                             rowSpacing={1}
-                            xs={10}
+                            xs={8}
                         >
                             <Grid item xs={12}>
                                 <MetHeader4>Who is Listening</MetHeader4>
