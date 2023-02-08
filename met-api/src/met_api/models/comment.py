@@ -17,11 +17,12 @@ from met_api.models.user import User
 from met_api.models.survey import Survey
 from met_api.schemas.comment import CommentSchema
 
+from .base_model import BaseModel
 from .comment_status import CommentStatus
 from .db import db
 
 
-class Comment(db.Model):
+class Comment(BaseModel):
     """Definition of the Comment entity."""
 
     __tablename__ = 'comment'
@@ -32,18 +33,6 @@ class Comment(db.Model):
     user_id = db.Column(db.Integer, ForeignKey('met_users.id', ondelete='SET NULL'), nullable=True)
     submission_id = db.Column(db.Integer, ForeignKey('submission.id', ondelete='SET NULL'), nullable=True)
     component_id = db.Column(db.String(10))
-    created_date = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
-    created_by = db.Column(db.String(50), nullable=True)
-    updated_by = db.Column(db.String(50), nullable=True)
-
-    @classmethod
-    def get_comment(cls, comment_id):
-        """Get a comment."""
-        return db.session.query(Comment)\
-            .join(Survey)\
-            .filter(Comment.id == comment_id)\
-            .first()
 
     @classmethod
     def get_by_submission(cls, submission_id):

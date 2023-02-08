@@ -31,7 +31,7 @@ def test_user_creation(session):
     session.add(user)
     session.commit()
     assert user.id is not None
-    user_in_db = UserModel.get_user(user.id)
+    user_in_db = UserModel.find_by_id(user.id)
     assert user_in_db.first_name == name
 
 

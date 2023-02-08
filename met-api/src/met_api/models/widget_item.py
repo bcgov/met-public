@@ -8,10 +8,11 @@ from datetime import datetime
 from sqlalchemy.sql.schema import ForeignKey
 
 
+from .base_model import BaseModel
 from .db import db
 
 
-class WidgetItem(db.Model):  # pylint: disable=too-few-public-methods
+class WidgetItem(BaseModel):  # pylint: disable=too-few-public-methods
     """Definition of the WidgetItem entity."""
 
     __tablename__ = 'widget_item'
@@ -26,10 +27,6 @@ class WidgetItem(db.Model):  # pylint: disable=too-few-public-methods
         comment='A dynamic foreign key that could be to any table where the widget data is hosted.'
     )
     widget_id = db.Column(db.Integer, ForeignKey('widget.id', ondelete='CASCADE'))
-    created_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow, nullable=False)
-    created_by = db.Column(db.String(50), nullable=False)
-    updated_by = db.Column(db.String(50), nullable=False)
     sort_index = db.Column(db.Integer, nullable=False, default=1)
 
     @classmethod

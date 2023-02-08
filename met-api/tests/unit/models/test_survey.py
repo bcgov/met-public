@@ -30,7 +30,7 @@ def test_survey(session):
     """Assert that an survey can be created and fetched."""
     survey = factory_survey_model()
     assert survey.id is not None
-    survey_new = SurveyModel.get_survey(survey.id)
+    survey_new = SurveyModel.find_by_id(survey.id)
     assert survey.name == survey_new.name
 
 

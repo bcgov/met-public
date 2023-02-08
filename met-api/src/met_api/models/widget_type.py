@@ -2,10 +2,11 @@
 
 Manages the widget type status
 """
+from .base_model import BaseModel
 from .db import db
 
 
-class WidgetType(db.Model):  # pylint: disable=too-few-public-methods
+class WidgetType(BaseModel):  # pylint: disable=too-few-public-methods
     """Definition of the Widget Type entity."""
 
     __tablename__ = 'widget_type'
