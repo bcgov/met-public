@@ -35,9 +35,9 @@ class CommentSchema(Schema):
         return obj.submission.reviewed_by
 
     def get_comment_label(self, obj):
-        """Get the associated label of the comment for a single page survey"""
+        """Get the associated label of the comment for a single page survey."""
         form_type = obj.survey.form_json.get('display')
-        if form_type == 'form':        
+        if form_type == 'form':
             components = list(obj.survey.form_json.get('components', []))
             if len(components) == 0:
                 return None
@@ -51,7 +51,7 @@ class CommentSchema(Schema):
                 return None
             return component_label[0]
 
-        """Get the associated label of the comment for a multi page survey"""
+        """Get the associated label of the comment for a multi page survey."""
         if form_type == 'wizard':
             pages = list(obj.survey.form_json.get('components', []))
             for page in pages:
@@ -65,7 +65,7 @@ class CommentSchema(Schema):
                         'key',
                         None) == obj.component_id]
                 if len(component_label) != 0:
-                    return component_label[0]            
+                    return component_label[0]
 
 
 class PublicCommentSchema(Schema):
