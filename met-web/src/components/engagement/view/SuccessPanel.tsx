@@ -29,7 +29,7 @@ const SuccessPanel = ({ email, handleClose }: SuccessPanelProps) => {
             <Grid container direction="row" item xs={12}>
                 <Grid item xs={12}>
                     <MetBody sx={{ mb: 1, fontWeight: 'bold' }}>
-                        Please Click the link provided to access the survey.
+                        Please click the link provided to access the survey.
                     </MetBody>
                 </Grid>
                 <Grid item xs={12}>

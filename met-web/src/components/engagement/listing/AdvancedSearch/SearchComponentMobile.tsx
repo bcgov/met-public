@@ -228,30 +228,6 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                             />
                         </Stack>
                     </Grid>
-                    <Grid item xs={12} mt={3}>
-                        <FormLabel id="controlled-radio-buttons-group">
-                            <MetLabel>Date Published - From</MetLabel>
-                        </FormLabel>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                            <TextField
-                                id="publishedFrom-date"
-                                data-testid="publishedFrom-date"
-                                type="date"
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                                sx={{ width: '80%' }}
-                                name="publishedFromDate"
-                                value={publishedFromDate}
-                                onChange={handleDateFilterChange}
-                                InputProps={{ inputProps: { max: publishedToDate || null } }}
-                            />
-                        </Stack>
-                    </Grid>
-                </Grid>
-                <Grid item md={3} xs={12}>
                     <Grid item xs={12}>
                         <FormLabel id="controlled-radio-buttons-group">
                             <MetLabel>Date Created - To</MetLabel>
@@ -272,6 +248,30 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                 value={createdToDate}
                                 onChange={handleDateFilterChange}
                                 InputProps={{ inputProps: { min: createdFromDate || null } }}
+                            />
+                        </Stack>
+                    </Grid>
+                </Grid>
+                <Grid item md={3} xs={12}>
+                    <Grid item xs={12} mt={3}>
+                        <FormLabel id="controlled-radio-buttons-group">
+                            <MetLabel>Date Published - From</MetLabel>
+                        </FormLabel>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Stack direction="row" alignItems="center" spacing={2}>
+                            <TextField
+                                id="publishedFrom-date"
+                                data-testid="publishedFrom-date"
+                                type="date"
+                                InputLabelProps={{
+                                    shrink: false,
+                                }}
+                                sx={{ width: '80%' }}
+                                name="publishedFromDate"
+                                value={publishedFromDate}
+                                onChange={handleDateFilterChange}
+                                InputProps={{ inputProps: { max: publishedToDate || null } }}
                             />
                         </Stack>
                     </Grid>

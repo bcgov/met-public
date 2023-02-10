@@ -201,16 +201,16 @@ class Engagement(BaseModel):
     def _filter_by_published_date(cls, query, search_options):
         if published_from_date := search_options.get('published_from_date'):
             query = query.filter(Engagement.published_date >= published_from_date)
-        if search_options['published_to_date']:
-            query = query.filter(Engagement.published_date <= published_from_date)
+        if published_to_date := search_options.get('published_to_date'):
+            query = query.filter(Engagement.published_date <= published_to_date)
         return query
 
     @staticmethod
     def _filter_by_created_date(query, search_options):
         if created_from_date := search_options.get('created_from_date'):
             query = query.filter(Engagement.created_date >= created_from_date)
-        if search_options['created_to_date']:
-            query = query.filter(Engagement.created_date <= created_from_date)
+        if created_to_date := search_options.get('created_to_date'):
+            query = query.filter(Engagement.created_date <= created_to_date)
         return query
 
     @staticmethod

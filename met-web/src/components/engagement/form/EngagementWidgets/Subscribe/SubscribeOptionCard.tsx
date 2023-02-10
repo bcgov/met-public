@@ -9,7 +9,7 @@ import { ActionContext } from '../../ActionContext';
 import { useAppDispatch } from 'hooks';
 import { postWidget } from 'services/widgetService';
 import { openNotification } from 'services/notificationService/notificationSlice';
-
+import { optionCardStyle } from '../Phases/PhasesOptionCard';
 const SubscribeOptionCard = () => {
     const { widgets, loadWidgets, handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
@@ -49,11 +49,7 @@ const SubscribeOptionCard = () => {
         <MetPaper
             data-testid={`widget-drawer-option/${WidgetType.Subscribe}`}
             elevation={1}
-            sx={{
-                padding: '10px 2px 10px 2px',
-                cursor: 'pointer',
-                '&:hover': { backgroundColor: 'rgb(242, 242, 242)' },
-            }}
+            sx={optionCardStyle}
             onClick={() => createWidget()}
         >
             <If condition={creatingWidget}>
@@ -64,32 +60,30 @@ const SubscribeOptionCard = () => {
                 </Then>
                 <Else>
                     <Grid
+                        xs={12}
                         container
-                        alignItems="flex-start"
+                        alignItems="center"
                         justifyContent="flex-start"
                         direction="row"
-                        columnSpacing={2}
-                        spacing={1}
+                        columnSpacing={1}
                     >
-                        <Grid item>
-                            <EmailOutlinedIcon sx={{ pl: '25px', fontSize: '5em' }} />
+                        <Grid item sx={{ mr: 0.5 }}>
+                            <EmailOutlinedIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
                         </Grid>
                         <Grid
                             container
                             item
-                            alignItems="flex-start"
-                            justifyContent="flex-start"
+                            alignItems="center"
+                            justifyContent="center"
                             direction="row"
                             rowSpacing={1}
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetHeader4 sx={{ pl: '10px' }}>Sign Up for Updates</MetHeader4>
+                                <MetHeader4>Sign Up for Updates</MetHeader4>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody sx={{ pl: '10px' }}>
-                                    Offer members of the public to sign up for updates
-                                </MetBody>
+                                <MetBody>Offer members of the public to sign up for updates</MetBody>
                             </Grid>
                         </Grid>
                     </Grid>

@@ -17,6 +17,9 @@ export const Palette = {
     action: {
         active: '#1A5A96',
     },
+    info: {
+        main: '#707070',
+    },
     dashboard: {
         upcoming: {
             bg: '#FCB92F26',
@@ -31,6 +34,12 @@ export const Palette = {
             border: '#F15A2C',
         },
     },
+};
+
+const MetBorderStyle = {
+    border: '1px solid #cdcdcd',
+    borderRadius: '5px',
+    boxShadow: 'rgb(0 0 0 / 6%) 0px 2px 2px -1px, rgb(0 0 0 / 6%) 0px 1px 1px 0px, rgb(0 0 0 / 6%) 0px 1px 3px 0px',
 };
 
 export const BaseTheme = createTheme({
@@ -52,19 +61,33 @@ export const BaseTheme = createTheme({
             active: Palette.action.active,
         },
         info: {
-            main: '#707070',
+            main: Palette.info.main,
         },
     },
     components: {
+        MuiTab: {
+            styleOverrides: {
+                root: {
+                    ...MetBorderStyle,
+                },
+            },
+        },
         MuiButton: {
             styleOverrides: {
-                root: { height: '40px' },
+                root: {
+                    height: '40px',
+                },
             },
             defaultProps: {
                 disableRipple: true,
             },
         },
         MuiTextField: {
+            styleOverrides: {
+                root: {
+                    ...MetBorderStyle,
+                },
+            },
             defaultProps: {
                 size: 'small',
             },

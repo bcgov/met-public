@@ -11,6 +11,13 @@ import { postWidget } from 'services/widgetService';
 import { Else, If, Then } from 'react-if';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 
+export const optionCardStyle = {
+    padding: '10px 2px 10px 2px',
+    cursor: 'pointer',
+    '&:hover': { backgroundColor: 'rgb(242, 242, 242)' },
+    minHeight: '110px',
+};
+
 const PhasesOptionCard = () => {
     const { savedEngagement } = useContext(ActionContext);
     const { widgets, loadWidgets, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
@@ -48,11 +55,7 @@ const PhasesOptionCard = () => {
         <MetPaper
             data-testid={`widget-drawer-option/${WidgetType.Phases}`}
             elevation={1}
-            sx={{
-                padding: '10px 2px 10px 2px',
-                cursor: 'pointer',
-                '&:hover': { backgroundColor: 'rgb(242, 242, 242)' },
-            }}
+            sx={optionCardStyle}
             onClick={() => createWidget()}
         >
             <If condition={creatingWidget}>
@@ -70,8 +73,8 @@ const PhasesOptionCard = () => {
                         columnSpacing={2}
                         spacing={1}
                     >
-                        <Grid item>
-                            <ChatBubbleOutlineOutlinedIcon sx={{ pl: '25px', fontSize: '5em' }} />
+                        <Grid item sx={{ mr: 0.5 }}>
+                            <ChatBubbleOutlineOutlinedIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
                         </Grid>
                         <Grid
                             container
@@ -83,10 +86,10 @@ const PhasesOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetHeader4 sx={{ pl: '10px' }}>EA Process</MetHeader4>
+                                <MetHeader4>EA Process</MetHeader4>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody sx={{ pl: '10px' }}>Add the EA process info to this engagement</MetBody>
+                                <MetBody>Add the EA process info to this engagement</MetBody>
                             </Grid>
                         </Grid>
                     </Grid>
