@@ -85,7 +85,6 @@ export const BaseTheme = createTheme({
         MuiTextField: {
             styleOverrides: {
                 root: {
-                    height: '40px',
                     ...MetBorderStyle,
                 },
             },
