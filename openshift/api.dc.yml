@@ -129,6 +129,24 @@ objects:
       app: ${APP}
     sessionAffinity: None
     type: ClusterIP
+- apiVersion: autoscaling/v2beta2
+  kind: HorizontalPodAutoscaler
+  metadata:
+    name: metapihpa
+  spec:
+    scaleTargetRef:
+      kind: DeploymentConfig
+      name: ${APP}
+      apiVersion: apps.openshift.io/v1
+    minReplicas: 2
+    maxReplicas: 3
+    metrics:
+      - type: Resource
+        resource:
+          name: cpu
+          target:
+            type: Utilization
+            averageUtilization: 80
 - apiVersion: route.openshift.io/v1
   kind: Route
   metadata:
