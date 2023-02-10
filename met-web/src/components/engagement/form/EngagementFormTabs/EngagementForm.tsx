@@ -184,14 +184,6 @@ const EngagementForm = () => {
                 sx={{ padding: '2em' }}
             >
                 <DayCalculatorModal open={isOpen} updateModal={setIsOpen} />
-                <Grid item xs={12}>
-                    <ImageUpload
-                        margin={4}
-                        data-testid="engagement-form/image-upload"
-                        handleAddFile={handleAddBannerImage}
-                        savedImageUrl={savedEngagement.banner_url}
-                    />
-                </Grid>
                 <Grid item xs={12} lg={8} md={6}>
                     <MetLabel sx={{ marginBottom: '2px' }}>Engagement Name </MetLabel>
                     <TextField
@@ -275,6 +267,14 @@ const EngagementForm = () => {
                             </SecondaryButton>
                         </Stack>
                     </Grid>
+                </Grid>
+                <Grid item xs={12}>
+                    <ImageUpload
+                        margin={4}
+                        data-testid="engagement-form/image-upload"
+                        handleAddFile={handleAddBannerImage}
+                        savedImageUrl={savedEngagement.banner_url}
+                    />
                 </Grid>
                 <Grid item xs={12}>
                     <MetLabel sx={{ marginBottom: '2px' }}>Engagement Description</MetLabel>
