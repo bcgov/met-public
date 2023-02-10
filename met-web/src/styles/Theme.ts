@@ -65,13 +65,6 @@ export const BaseTheme = createTheme({
         },
     },
     components: {
-        MuiTab: {
-            styleOverrides: {
-                root: {
-                    ...MetBorderStyle,
-                },
-            },
-        },
         MuiButton: {
             styleOverrides: {
                 root: {
