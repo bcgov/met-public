@@ -25,6 +25,7 @@ class Widget(BaseModel):  # pylint: disable=too-few-public-methods
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     widget_type_id = db.Column(db.Integer, ForeignKey('widget_type.id', ondelete='CASCADE'))
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'))
+    title = db.Column(db.String(100), comment='Custom title for the widget.')
     items = db.relationship('WidgetItem', backref='widget', cascade='all, delete', order_by='WidgetItem.sort_index')
     sort_index = db.Column(db.Integer, nullable=False, default=1)
 
