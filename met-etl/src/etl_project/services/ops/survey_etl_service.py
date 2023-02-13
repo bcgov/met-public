@@ -91,36 +91,19 @@ def load_survey(context, new_survey, updated_survey, survey_new_runcycleid):
                 context.log.info('Survey Found without form_json: %s.Skipping it', survey.id)
                 continue
 
-            form_components = survey.form_json.get('components', None)
-            if (form_components) is None:
-                context.log.info('Survey Found without any component in form_json: %s.Skipping it', survey.id)
-                continue
+            form_type = survey.form_json.get('display', None)
 
-            _inactivate_old_questions(session, survey.id)
+            # check and load data for single page survey.
+            if form_type == 'form':
+                form_components = survey.form_json.get('components', None)
+                extract_survey_components(context, session, survey, survey_new_runcycleid, form_components)
 
-            position = 0
-
-            for component in form_components:
-                position = position + 1
-                component_type = component.get('inputType', None)
-                context.log.info('Survey: %s.%sProcessing component with id %s and type: %s and label %s ',
-                                 survey.id,
-                                 survey.name,
-                                 component.get('id', None),
-                                 component_type,
-                                 component.get('label', None))
-
-                if not component_type:
-                    continue
-
-                model_type = _identify_form_type(context, component_type)
-
-                if model_type:
-                    etl_survey = session.query(EtlSurveyModel.id).filter(EtlSurveyModel.source_survey_id == survey.id,
-                                                                         EtlSurveyModel.is_active == True)
-                    for survey_id in etl_survey:
-                        _do_etl_survey_inputs(model_type, session, survey_id, component, survey_new_runcycleid,
-                                              position)
+            # check and load data for multi page survey.
+            if form_type == 'wizard':
+                pages = survey.form_json.get('components', None)
+                for page in pages:
+                    form_components = page.get('components', None)
+                    extract_survey_components(context, session, survey, survey_new_runcycleid, form_components)
 
     yield Output(survey_new_runcycleid, "survey_new_runcycleid")
 
@@ -128,6 +111,37 @@ def load_survey(context, new_survey, updated_survey, survey_new_runcycleid):
 
     session.close()
 
+# extract components within a survey
+def extract_survey_components(context, session, survey, survey_new_runcycleid, form_components):
+    if (form_components) is None:
+        context.log.info('Survey Found without any component in form_json: %s.Skipping it', survey.id)
+        return
+
+    _inactivate_old_questions(session, survey.id)
+
+    position = 0
+
+    for component in form_components:
+        position = position + 1
+        component_type = component.get('inputType', None)
+        context.log.info('Survey: %s.%sProcessing component with id %s and type: %s and label %s ',
+                        survey.id,
+                        survey.name,
+                        component.get('id', None),
+                        component_type,
+                        component.get('label', None))
+
+        if not component_type:
+            continue
+
+        model_type = _identify_form_type(context, component_type)
+
+        if model_type:
+            etl_survey = session.query(EtlSurveyModel.id).filter(EtlSurveyModel.source_survey_id == survey.id,
+                                                                EtlSurveyModel.is_active == True)
+            for survey_id in etl_survey:
+                _do_etl_survey_inputs(model_type, session, survey_id, component, survey_new_runcycleid,
+                                    position)
 
 # inactivate if record is existing in analytics database
 def _inactivate_old_questions(session, source_survey_id):

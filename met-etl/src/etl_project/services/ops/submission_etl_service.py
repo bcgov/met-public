@@ -119,14 +119,38 @@ def load_submission(context, new_submission, updated_submission, submission_new_
                     met_survey.id)
                 continue
 
-            form_questions = met_survey.form_json.get('components', None)
+            form_type = met_survey.form_json.get('display', None)
 
+            # check and load data for single page survey.
+            if form_type == 'form':
+                form_questions = met_survey.form_json.get('components', None)
+                _extract_submission(form_questions, met_survey, metsession, submission, metetlsession, context,
+                                    submission_new_runcycleid, etl_survey)
+
+            # check and load data for multi page survey.
+            if form_type == 'wizard':
+                pages = met_survey.form_json.get('components', None)
+                for page in pages:
+                    form_questions = page.get('components', None)
+                    _extract_submission(form_questions, met_survey, metsession, submission, metetlsession, context,
+                                        submission_new_runcycleid, etl_survey)
+
+    metsession.close()
+
+    metetlsession.close()
+
+    yield Output(submission_new_runcycleid, "submission_new_runcycleid")
+
+
+# load data to table response_type_textarea
+def _extract_submission(form_questions, met_survey, metsession, submission, metetlsession, context,
+                        submission_new_runcycleid, etl_survey):
             if (form_questions) is None:
                 # throw error or notify by logging
                 context.log.info(
                     'Survey Found without any component in form_json: %s.Skipping it',
                     met_survey.id)
-                continue
+                return
 
             user = metsession.query(UserModel).filter(UserModel.id == submission.user_id).first()
 
@@ -161,12 +185,6 @@ def load_submission(context, new_submission, updated_submission, submission_new_
                     submission.id, met_survey.id)
 
                 metetlsession.commit()
-
-    metsession.close()
-
-    metetlsession.close()
-
-    yield Output(submission_new_runcycleid, "submission_new_runcycleid")
 
 
 # load data to table response_type_textarea

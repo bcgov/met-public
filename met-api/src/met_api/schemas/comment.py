@@ -35,19 +35,43 @@ class CommentSchema(Schema):
         return obj.submission.reviewed_by
 
     def get_comment_label(self, obj):
-        """Get the associated label of the comment."""
-        components = list(obj.survey.form_json.get('components', []))
-        if len(components) == 0:
-            return None
+        """Check the value for display type to categorize the form as a single/multi page."""
+        """Forms' are stored with a display type as 'form' for single page and 'wizard' for multi page"""
+        form_type = obj.survey.form_json.get('display')
+        is_single_page_survey = form_type == 'form'
+        is_multi_page_survey = form_type == 'wizard'
+
+        """Get the associated label of the comment for a single page survey."""
+        form_type = obj.survey.form_json.get('display')
+        if is_single_page_survey:
+            components = list(obj.survey.form_json.get('components', []))
+            if len(components) == 0:
+                return None
+            component_label = CommentSchema.loop_through_comment_label(self, obj, components)
+            if len(component_label) == 0:
+                return None
+            return component_label[0]
+
+        """Get the associated label of the comment for a multi page survey."""
+        if is_multi_page_survey:
+            pages = list(obj.survey.form_json.get('components', []))
+            for page in pages:
+                components = list(page['components'])
+                if len(components) == 0:
+                    return None
+                component_label = CommentSchema.loop_through_comment_label(self, obj, components)
+                if len(component_label) != 0:
+                    return component_label[0]
+
+    def loop_through_comment_label(self, obj, components):
+        """Loop through the component list to extract the label."""
         component_label = [
             component.get(
                 'label',
                 None) for component in components if component.get(
                 'key',
                 None) == obj.component_id]
-        if len(component_label) == 0:
-            return None
-        return component_label[0]
+        return component_label
 
 
 class PublicCommentSchema(Schema):
