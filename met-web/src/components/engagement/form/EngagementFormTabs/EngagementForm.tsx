@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Typography, Grid, TextField, Stack } from '@mui/material';
+import { Typography, Grid, TextField, Stack, FormLabel } from '@mui/material';
 import { MetPaper, MetLabel, PrimaryButton, SecondaryButton } from '../../../common';
 import RichTextEditor from '../RichTextEditor';
 import { ActionContext } from '../ActionContext';
@@ -10,7 +10,6 @@ import { If, Then, Else } from 'react-if';
 import { EngagementTabsContext } from './EngagementTabsContext';
 import { SUBMISSION_STATUS } from 'constants/engagementStatus';
 import DayCalculatorModal from '../DayCalculator';
-import { FormLabel } from '@mui/material';
 
 const EngagementForm = () => {
     const {
