@@ -1,16 +1,18 @@
 import React, { useContext, useState, useEffect } from 'react';
 import Modal from '@mui/material/Modal';
-import { FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, RadioGroup } from '@mui/material';
+import { Container, FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, RadioGroup } from '@mui/material';
 import { modalStyle, PrimaryButton } from 'components/common';
 import * as yup from 'yup';
 import { useAppDispatch } from 'hooks';
 import { When } from 'react-if';
 import Cropper, { Area } from 'react-easy-crop';
 import { ImageUploadContext } from './imageUploadContext';
+import { Box } from '@mui/system';
 
-export const AddTeamMemberModal = () => {
+export const CropModal = () => {
     const dispatch = useAppDispatch();
-    const { existingImageUrl, setImgAfterCrop } = useContext(ImageUploadContext);
+    const { existingImageUrl, objectUrl, setImgAfterCrop, cropModalOpen, setCropModalOpen } =
+        useContext(ImageUploadContext);
 
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
@@ -58,27 +60,34 @@ export const AddTeamMemberModal = () => {
     };
 
     return (
-        <Modal open={false} onClose={() => {}} keepMounted={false}>
-            <Paper sx={{ ...modalStyle }}>
-                <Grid
-                    container
-                    direction="row"
-                    alignItems="flex-start"
-                    justifyContent={'flex-end'}
-                    spacing={1}
-                    padding={1}
+        <Modal
+            open={cropModalOpen}
+            onClose={() => {
+                setCropModalOpen(false);
+            }}
+            keepMounted={false}
+        >
+            <Paper sx={{ ...modalStyle, padding: '15em' }}>
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                    }}
                 >
-                    <Grid
-                        item
-                        xs={12}
-                        style={{
-                            border: '1px dashed #606060',
-                            height: '10em',
-                            padding: '0',
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: '10em',
                         }}
                     >
                         <Cropper
-                            image={existingImageUrl}
+                            image={objectUrl || existingImageUrl}
                             aspect={aspectRatio}
                             crop={crop}
                             zoom={zoom}
@@ -93,11 +102,27 @@ export const AddTeamMemberModal = () => {
                                 },
                             }}
                         />
-                    </Grid>
-                    <Grid item xs={12}>
+                    </Box>
+                    <Box
+                        sx={{
+                            position: 'relative',
+                            bottom: 0,
+                            // left: '50%',
+                            // width: '50%',
+                            // transform: 'translateX(-50%)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            marginTop: '10em',
+                        }}
+                    >
                         <FormControl>
                             <FormLabel>Gender</FormLabel>
-                            <RadioGroup name="radio-buttons-group" value={aspectRatio} onChange={handleAspectRatioChange} row>
+                            <RadioGroup
+                                name="radio-buttons-group"
+                                value={aspectRatio}
+                                onChange={handleAspectRatioChange}
+                                row
+                            >
                                 <FormControlLabel value={1} control={<Radio />} label="1:1" />
                                 <FormControlLabel value={5 / 4} control={<Radio />} label="5:4" />
                                 <FormControlLabel value={4 / 3} control={<Radio />} label="4:3" />
@@ -107,17 +132,17 @@ export const AddTeamMemberModal = () => {
                                 <FormControlLabel value={3 / 1} control={<Radio />} label="3:1" />
                             </RadioGroup>
                         </FormControl>
-                    </Grid>
-                    <Grid item xs={12} container justifyContent="flex-end" direction="row">
-                        <PrimaryButton
-                            onClick={() => {
-                                onCropDone(croppedArea);
-                            }}
-                        >
-                            Crop
-                        </PrimaryButton>
-                    </Grid>
-                </Grid>
+                    </Box>
+                </Box>
+                {/* <Grid item xs={12} container justifyContent="flex-end" direction="row">
+                    <PrimaryButton
+                        onClick={() => {
+                            onCropDone(croppedArea);
+                        }}
+                    >
+                        Crop
+                    </PrimaryButton>
+                </Grid> */}
             </Paper>
         </Modal>
     );

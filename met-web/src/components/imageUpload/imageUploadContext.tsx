@@ -6,7 +6,6 @@ import { getTeamMembers } from 'services/membershipService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
 
-
 export interface ImageUploadContextState {
     cropModalOpen: boolean;
     setCropModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -48,7 +47,11 @@ interface ImageUploadContextProviderProps {
     children: React.ReactNode;
     savedImageUrl: string;
 }
-export const ImageUploadContextProvider = ({ children, handleAddFile, savedImageUrl }: ImageUploadContextProviderProps) => {
+export const ImageUploadContextProvider = ({
+    children,
+    handleAddFile,
+    savedImageUrl,
+}: ImageUploadContextProviderProps) => {
     // const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
     const [cropModalOpen, setCropModalOpen] = useState(false);

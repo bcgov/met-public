@@ -1,4 +1,5 @@
 import React from 'react';
+import { CropModal } from './cropModal';
 import { ImageUploadContextProvider } from './imageUploadContext';
 import Uploader from './Uploader';
 
@@ -17,6 +18,7 @@ export const ImageUpload = ({
     return (
         <ImageUploadContextProvider handleAddFile={handleAddFile} savedImageUrl={savedImageUrl}>
             <Uploader margin={margin} helpText={helpText} />
+            <CropModal />
         </ImageUploadContextProvider>
     );
 };

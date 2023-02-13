@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Grid, Typography } from '@mui/material';
+import { Grid, Stack, Typography } from '@mui/material';
 import Dropzone from 'react-dropzone';
 import { PrimaryButton, SecondaryButton } from 'components/common';
 import Cropper, { Area } from 'react-easy-crop';
@@ -13,7 +13,8 @@ const Uploader = ({
     margin = 2,
     helpText = 'Drag and drop some files here, or click to select files',
 }: UploaderProps) => {
-    const { handleAddFile, savedImageUrl } = useContext(ImageUploadContext)
+    const { handleAddFile, objectUrl, setObjectUrl, existingImageUrl, setExistingImageURL, setCropModalOpen } =
+        useContext(ImageUploadContext);
 
     useEffect(() => {
         return () => {
@@ -52,17 +53,31 @@ const Uploader = ({
                     />
                 </Grid>
                 <Grid item xs={12} container justifyContent="flex-end" direction="row">
-                    <SecondaryButton
-                        onClick={() => {
-                            setObjectUrl('');
-                            setExistingImageURL('');
-                            handleAddFile([]);
-                            URL.revokeObjectURL(objectUrl);
-                        }}
-                        size="small"
+                    <Stack
+                        direction={{ md: 'column-reverse', lg: 'row' }}
+                        spacing={1}
+                        width="100%"
+                        justifyContent="flex-end"
                     >
-                        Remove
-                    </SecondaryButton>
+                        <SecondaryButton
+                            onClick={() => {
+                                setObjectUrl('');
+                                setExistingImageURL('');
+                                handleAddFile([]);
+                                URL.revokeObjectURL(objectUrl);
+                            }}
+                            size="small"
+                        >
+                            Remove
+                        </SecondaryButton>
+                        <PrimaryButton
+                            onClick={() => {
+                                setCropModalOpen(true);
+                            }}
+                        >
+                            Crop
+                        </PrimaryButton>
+                    </Stack>
                 </Grid>
             </Grid>
         );
