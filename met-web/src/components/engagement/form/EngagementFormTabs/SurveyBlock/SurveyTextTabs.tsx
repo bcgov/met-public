@@ -14,7 +14,7 @@ const SurveyTextTabs = () => {
     return (
         <Box sx={{ width: '100%', typography: 'body1' }}>
             <TabContext value={SurveyTabValue}>
-                <Box sx={{ marginBottom: '0.25em' }}>
+                <Box>
                     <MetTabList
                         onChange={(_event: React.SyntheticEvent, newTabValue: SubmissionStatusTypes) => {
                             setSurveyTabValue(newTabValue);

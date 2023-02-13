@@ -16,6 +16,8 @@ export const optionCardStyle = {
     cursor: 'pointer',
     '&:hover': { backgroundColor: 'rgb(242, 242, 242)' },
     minHeight: '110px',
+    border: '1px solid #cdcdcd',
+    boxShadow: 'rgb(0 0 0 / 6 %) 0px 2px 2px - 1px, rgb(0 0 0 / 6 %) 0px 1px 1px 0px, rgb(0 0 0 / 6 %) 0px 1px 3px 0px',
 };
 
 const PhasesOptionCard = () => {

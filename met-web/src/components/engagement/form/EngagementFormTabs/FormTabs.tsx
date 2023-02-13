@@ -13,7 +13,7 @@ const FormTabs = () => {
     return (
         <Box sx={{ width: '100%', typography: 'body1' }}>
             <TabContext value={value}>
-                <Box sx={{ marginBottom: '0.25em' }}>
+                <Box>
                     <MetTabList
                         onChange={(_event: React.SyntheticEvent, newValue: EngagementFormTabValues) =>
                             setValue(newValue)
