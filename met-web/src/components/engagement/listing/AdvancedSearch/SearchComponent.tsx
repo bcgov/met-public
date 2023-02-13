@@ -118,7 +118,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                         onChange={handleStatusFilterChange}
                                         value={EngagementDisplayStatus[EngagementDisplayStatus.Draft]}
                                         checked={statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Draft]]}
-                                        style={{
+                                        sx={{
                                             height: 25,
                                         }}
                                     />
@@ -141,7 +141,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                         checked={
                                             statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Scheduled]]
                                         }
-                                        style={{
+                                        sx={{
                                             height: 25,
                                         }}
                                     />
@@ -164,7 +164,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                         checked={
                                             statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Upcoming]]
                                         }
-                                        style={{
+                                        sx={{
                                             height: 25,
                                         }}
                                     />
@@ -185,7 +185,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                         onChange={handleStatusFilterChange}
                                         value={EngagementDisplayStatus[EngagementDisplayStatus.Open]}
                                         checked={statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Open]]}
-                                        style={{
+                                        sx={{
                                             height: 25,
                                         }}
                                     />
@@ -204,7 +204,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                         onChange={handleStatusFilterChange}
                                         value={EngagementDisplayStatus[EngagementDisplayStatus.Closed]}
                                         checked={statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Closed]]}
-                                        style={{
+                                        sx={{
                                             height: 25,
                                         }}
                                     />
