@@ -82,7 +82,7 @@ function MetTable<T>({
     noRowBorder = false,
     noPagination = false,
     // eslint-disable-next-line
-    handleChangePagination = (_pagination: PaginationOptions<T>) => {},
+    handleChangePagination = (_pagination: PaginationOptions<T>) => { },
     loading = false,
     paginationOptions = {
         page: 1,
@@ -169,11 +169,9 @@ function MetTable<T>({
                                                 align={cell.align}
                                                 key={`row-${rowIndex}-${cellIndex}`}
                                                 style={cell.customStyle || {}}
-                                                sx={[
-                                                    noRowBorder && {
-                                                        border: 'none',
-                                                    },
-                                                ]}
+                                                sx={{
+                                                    border: noRowBorder ? 'none' : '',
+                                                }}
                                             >
                                                 {cell.getValue ? cell.getValue(row) : String(row[cell.key])}
                                             </TableCell>
@@ -197,11 +195,9 @@ function MetTable<T>({
                                 >
                                     <TableCell
                                         colSpan={headCells.length}
-                                        sx={[
-                                            noRowBorder && {
-                                                border: 'none',
-                                            },
-                                        ]}
+                                        sx={{
+                                            border: noRowBorder ? 'none' : '',
+                                        }}
                                     />
                                 </TableRow>
                             )}

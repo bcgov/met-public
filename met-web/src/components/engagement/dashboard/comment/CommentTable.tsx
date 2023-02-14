@@ -39,7 +39,7 @@ const CommentTable = () => {
             <MetTable
                 headCells={headCells}
                 rows={comments}
-                noRowBorder={true}
+                noRowBorder={false}
                 hideHeader={true}
                 handleChangePagination={handleChangePagination}
                 paginationOptions={paginationOptions}

@@ -311,7 +311,7 @@ const EngagementListing = () => {
                 <MetTable
                     headCells={headCells}
                     rows={engagements}
-                    noRowBorder={true}
+                    noRowBorder={false}
                     handleChangePagination={(paginationOptions: PaginationOptions<Engagement>) =>
                         setPaginationOptions(paginationOptions)
                     }

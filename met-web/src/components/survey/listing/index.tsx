@@ -235,7 +235,7 @@ const SurveyListing = () => {
                 <MetTable
                     headCells={headCells}
                     rows={surveys}
-                    noRowBorder={true}
+                    noRowBorder={false}
                     handleChangePagination={(paginationOptions: PaginationOptions<Survey>) =>
                         setPaginationOptions(paginationOptions)
                     }

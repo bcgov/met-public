@@ -121,7 +121,7 @@ const FeedbackListing = () => {
                 <MetTable
                     headCells={headCells}
                     rows={feedbacks}
-                    noRowBorder={true}
+                    noRowBorder={false}
                     handleChangePagination={(paginationOptions: PaginationOptions<Feedback>) =>
                         setPaginationOptions(paginationOptions)
                     }

@@ -90,7 +90,7 @@ const UserManagementListing = () => {
                 <MetTable
                     headCells={headCells}
                     rows={users}
-                    noRowBorder={true}
+                    noRowBorder={false}
                     handleChangePagination={(paginationOptions: PaginationOptions<User>) =>
                         setPaginationOptions(paginationOptions)
                     }

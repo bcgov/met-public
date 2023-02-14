@@ -30,7 +30,15 @@ const TeamMemberListing = () => {
         },
     ];
 
-    return <MetTable headCells={headCells} rows={teamMembers} loading={teamMembersLoading} noPagination={true} />;
+    return (
+        <MetTable
+            noRowBorder={false}
+            headCells={headCells}
+            rows={teamMembers}
+            loading={teamMembersLoading}
+            noPagination={true}
+        />
+    );
 };
 
 export default TeamMemberListing;

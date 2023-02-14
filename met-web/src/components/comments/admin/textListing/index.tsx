@@ -161,7 +161,7 @@ const CommentTextListing = () => {
                     hideHeader={true}
                     headCells={headCells}
                     rows={comments}
-                    noRowBorder={true}
+                    noRowBorder={false}
                     handleChangePagination={(pagination: PaginationOptions<Comment>) => setPagination(pagination)}
                     paginationOptions={paginationOptions}
                     pageInfo={pageInfo}
