@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, Stack, TextField, FormLabel, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
+import { Grid, Stack, TextField, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 import { MetParagraph, MetLabel } from 'components/common';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import { PrimaryButton, SecondaryButton } from '../../../common';
@@ -104,9 +104,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
             <Grid container direction="row" item mt={3} ml={2}>
                 <Grid item md={3} xs={12}>
                     <Grid item xs={12}>
-                        <FormLabel id="controlled-radio-buttons-group">
-                            <MetLabel>Status</MetLabel>
-                        </FormLabel>
+                        <MetLabel>Status</MetLabel>
                     </Grid>
                     <Grid item xs={12}>
                         <FormGroup>
@@ -120,6 +118,9 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                         onChange={handleStatusFilterChange}
                                         value={EngagementDisplayStatus[EngagementDisplayStatus.Draft]}
                                         checked={statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Draft]]}
+                                        sx={{
+                                            height: 25,
+                                        }}
                                     />
                                 }
                                 label={
@@ -140,6 +141,9 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                         checked={
                                             statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Scheduled]]
                                         }
+                                        sx={{
+                                            height: 25,
+                                        }}
                                     />
                                 }
                                 label={
@@ -160,6 +164,9 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                         checked={
                                             statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Upcoming]]
                                         }
+                                        sx={{
+                                            height: 25,
+                                        }}
                                     />
                                 }
                                 label={
@@ -178,6 +185,9 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                         onChange={handleStatusFilterChange}
                                         value={EngagementDisplayStatus[EngagementDisplayStatus.Open]}
                                         checked={statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Open]]}
+                                        sx={{
+                                            height: 25,
+                                        }}
                                     />
                                 }
                                 label={
@@ -194,6 +204,9 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                         onChange={handleStatusFilterChange}
                                         value={EngagementDisplayStatus[EngagementDisplayStatus.Closed]}
                                         checked={statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Closed]]}
+                                        sx={{
+                                            height: 25,
+                                        }}
                                     />
                                 }
                                 label={
@@ -207,9 +220,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                 </Grid>
                 <Grid item md={3} xs={12}>
                     <Grid item xs={12}>
-                        <FormLabel id="controlled-radio-buttons-group">
-                            <MetLabel>Date Created - From</MetLabel>
-                        </FormLabel>
+                        <MetLabel>Date Created - From</MetLabel>
                     </Grid>
                     <Grid item xs={12}>
                         <Stack direction="row" alignItems="center" spacing={2}>
@@ -229,9 +240,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                         </Stack>
                     </Grid>
                     <Grid item xs={12}>
-                        <FormLabel id="controlled-radio-buttons-group">
-                            <MetLabel>Date Created - To</MetLabel>
-                        </FormLabel>
+                        <MetLabel>Date Created - To</MetLabel>
                     </Grid>
                     <Grid item xs={12}>
                         <Stack direction="row" alignItems="center" spacing={2}>
@@ -254,9 +263,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                 </Grid>
                 <Grid item md={3} xs={12}>
                     <Grid item xs={12} mt={3}>
-                        <FormLabel id="controlled-radio-buttons-group">
-                            <MetLabel>Date Published - From</MetLabel>
-                        </FormLabel>
+                        <MetLabel>Date Published - From</MetLabel>
                     </Grid>
                     <Grid item xs={12}>
                         <Stack direction="row" alignItems="center" spacing={2}>
@@ -276,9 +283,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                         </Stack>
                     </Grid>
                     <Grid item xs={12} mt={3}>
-                        <FormLabel id="controlled-radio-buttons-group">
-                            <MetLabel>Date Published - To</MetLabel>
-                        </FormLabel>
+                        <MetLabel>Date Published - To</MetLabel>
                     </Grid>
                     <Grid item xs={12}>
                         <Stack direction="row" alignItems="center" spacing={2}>
