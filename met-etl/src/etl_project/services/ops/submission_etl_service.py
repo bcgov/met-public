@@ -165,6 +165,12 @@ def _extract_submission(form_questions, met_survey, metsession, submission, mete
                 if not (answer_key):
                     continue
 
+                # TODO comments related to category type question has a different format in the source system
+                # TODO the key needs to be finalized in the source system before doing a fix on the ETL.
+                # for now excluding the comment for a category type question as we are not using this data for analytics.
+                if component['key'] == 'categorycommentcontainer':
+                    continue
+
                 component_type = component['inputType'].lower()
                 context.log.info('Type for submission id : %s. is %s ', submission.id, component_type)
 
