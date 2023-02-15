@@ -151,9 +151,9 @@ const SubmissionListing = () => {
             allowSort: true,
             getValue: (row) =>
                 CommentStatus[
-                    row.comment_status_id === CommentStatus.NeedsFurtherReview
-                        ? CommentStatus.Pending
-                        : row.comment_status_id
+                row.comment_status_id === CommentStatus.NeedsFurtherReview
+                    ? CommentStatus.Pending
+                    : row.comment_status_id
                 ],
         },
     ];
@@ -195,7 +195,6 @@ const SubmissionListing = () => {
                 <MetTable
                     headCells={headCells}
                     rows={submissions}
-                    noRowBorder={false}
                     handleChangePagination={(pagination: PaginationOptions<SurveySubmission>) =>
                         setPagination(pagination)
                     }
