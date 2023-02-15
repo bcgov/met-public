@@ -170,7 +170,6 @@ const CommentTextListing = () => {
                     hideHeader={true}
                     headCells={headCells}
                     rows={submissions}
-                    noRowBorder={false}
                     handleChangePagination={(pagination: PaginationOptions<SurveySubmission>) =>
                         setPagination(pagination)
                     }

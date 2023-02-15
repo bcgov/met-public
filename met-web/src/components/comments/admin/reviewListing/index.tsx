@@ -195,7 +195,6 @@ const SubmissionListing = () => {
                 <MetTable
                     headCells={headCells}
                     rows={submissions}
-                    noRowBorder={true}
                     handleChangePagination={(pagination: PaginationOptions<SurveySubmission>) =>
                         setPagination(pagination)
                     }
