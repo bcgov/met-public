@@ -72,6 +72,10 @@ const Endpoints = {
         GET_LIST: `${AppConfig.apiUrl}/engagements/engagement_id/members`,
         CREATE: `${AppConfig.apiUrl}/engagements/engagement_id/members`,
     },
+    Events: {
+        CREATE: `${AppConfig.apiUrl}/widgets/widget_id/events`,
+        GET_LIST: `${AppConfig.apiUrl}/widgets/widget_id/events`,
+    },
 };
 
 export default Endpoints;

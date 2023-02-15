@@ -9,7 +9,7 @@ import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRig
 import DocumentSwitch from './DocumentSwitch';
 import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
-import { deleteDocument, patchDocument, PatchDocumentRequest } from 'services/widgetService/DocumentService.tsx';
+import { deleteDocument, patchDocument, PatchDocumentRequest } from 'services/widgetService/DocumentService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType, Widget } from 'models/widget';
 import Edit from '@mui/icons-material/Edit';

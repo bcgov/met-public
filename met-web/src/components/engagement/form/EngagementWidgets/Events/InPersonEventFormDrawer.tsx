@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
@@ -11,13 +11,17 @@ import { useAppDispatch } from 'hooks';
 import { EventsContext } from './EventsContext';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { postEvent } from 'services/widgetService/EventService';
+import { EVENT_TYPE } from 'models/event';
+import { formatToUTC } from 'components/common/dateHelper';
+import dayjs from 'dayjs';
 
 const schema = yup
     .object({
         description: yup.string(),
         location_name: yup.string().required('Location name cannot be empty'),
         location_address: yup.string().required('Address cannot be empty'),
-        date: yup.string().required('Date cannot be empty'),
+        date: yup.string().defined().required('Date cannot be empty'),
         time_from: yup.string().required('Time from cannot be empty'),
         time_to: yup.string().required('Time to cannot be empty'),
     })
@@ -27,18 +31,50 @@ type InPersonEventForm = yup.TypeOf<typeof schema>;
 
 const InPersonEventFormDrawer = () => {
     const dispatch = useAppDispatch();
-    const { inPersonFormTabOpen, setInPersonFormTabOpen } = useContext(EventsContext);
+    const { inPersonFormTabOpen, setInPersonFormTabOpen, widget, loadEvents } = useContext(EventsContext);
+    const [isCreating, setIsCreating] = useState(false);
 
     const methods = useForm<InPersonEventForm>({
         resolver: yupResolver(schema),
     });
 
-    const { handleSubmit } = methods;
+    const { handleSubmit, reset } = methods;
 
     const onSubmit: SubmitHandler<InPersonEventForm> = async (data: InPersonEventForm) => {
+        if (!widget) {
+            return;
+        }
+        const validatedData = await schema.validate(data);
         try {
+            setIsCreating(true);
+            const { location_address, location_name, date, time_from, time_to } = validatedData;
+            const time_from_split = time_from.split(':');
+            const time_to_split = time_to.split(':');
+            const dateFrom = dayjs(date)
+                .set('hour', Number(time_from_split[0]))
+                .set('minute', Number(time_from_split[1]));
+            const dateTo = dayjs(date).set('hour', Number(time_to_split[0])).set('minute', Number(time_to_split[1]));
+
+            await postEvent(widget.id, {
+                widget_id: widget.id,
+                type: EVENT_TYPE.OPENHOUSE,
+                items: [
+                    {
+                        venue: location_name,
+                        location: location_address,
+                        start_date: formatToUTC(dateFrom),
+                        end_date: formatToUTC(dateTo),
+                    },
+                ],
+            });
+            dispatch(openNotification({ severity: 'success', text: 'The event was successfully added' }));
+            setIsCreating(false);
+            reset({});
+            setInPersonFormTabOpen(false);
+            loadEvents();
         } catch (error) {
-            dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add evenr' }));
+            dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add event' }));
+            setIsCreating(false);
         }
     };
 
@@ -124,7 +160,7 @@ const InPersonEventFormDrawer = () => {
                                 <MetLabel sx={{ marginBottom: '2px' }}>Time - From</MetLabel>
                                 <ControlledTextField
                                     name="time_from"
-                                    type="date"
+                                    type="time"
                                     variant="outlined"
                                     label=" "
                                     InputLabelProps={{
@@ -138,7 +174,7 @@ const InPersonEventFormDrawer = () => {
                                 <MetLabel sx={{ marginBottom: '2px' }}>Time - To</MetLabel>
                                 <ControlledTextField
                                     name="time_to"
-                                    type="date"
+                                    type="time"
                                     variant="outlined"
                                     label=" "
                                     InputLabelProps={{
@@ -158,7 +194,7 @@ const InPersonEventFormDrawer = () => {
                                 marginTop="8em"
                             >
                                 <Grid item>
-                                    <PrimaryButton type="submit">{`Save & Close`}</PrimaryButton>
+                                    <PrimaryButton type="submit" loading={isCreating}>{`Save & Close`}</PrimaryButton>
                                 </Grid>
                                 <Grid item>
                                     <SecondaryButton onClick={() => setInPersonFormTabOpen(false)}>
