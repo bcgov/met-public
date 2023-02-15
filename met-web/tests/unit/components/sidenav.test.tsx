@@ -16,7 +16,7 @@ test('Load SideNav', async () => {
     setupEnv();
     render(
         <ProviderShell>
-            <SideNav isMediumScreen={false} open={true} drawerWidth={drawerWidth} />
+            <SideNav setOpen={() => void 0} isMediumScreen={false} open={true} drawerWidth={drawerWidth} />
         </ProviderShell>,
     );
 

@@ -50,7 +50,7 @@ const DrawerBox = () => {
     );
 };
 
-const SideNav = ({ open, isMediumScreen, drawerWidth = 280 }: SideNavProps) => {
+const SideNav = ({ open, setOpen, isMediumScreen, drawerWidth = 280 }: SideNavProps) => {
     return (
         <>
             {isMediumScreen ? (
@@ -75,6 +75,7 @@ const SideNav = ({ open, isMediumScreen, drawerWidth = 280 }: SideNavProps) => {
                         width: '15%',
                         background: Palette.primary.main,
                     }}
+                    onClose={() => setOpen(false)}
                     anchor={'left'}
                     open={open}
                     hideBackdrop={!open}
