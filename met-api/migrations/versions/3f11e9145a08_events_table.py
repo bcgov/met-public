@@ -7,7 +7,6 @@ Create Date: 2023-02-12 16:48:14.120190
 """
 from alembic import op
 import sqlalchemy as sa
-from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = '3f11e9145a08'
@@ -35,9 +34,9 @@ def upgrade():
     sa.Column('created_date', sa.DateTime(), nullable=False),
     sa.Column('updated_date', sa.DateTime(), nullable=True),
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('title', sa.String(length=50), nullable=True),
-    sa.Column('venue', sa.String(length=500), nullable=True),
-    sa.Column('location', sa.String(length=50), nullable=True, comment='Actual location of the event'),
+    sa.Column('description', sa.String(length=500), nullable=True),
+    sa.Column('location_name', sa.String(length=50), nullable=True),
+    sa.Column('location_address', sa.String(length=100), nullable=True, comment='The address of the location'),
     sa.Column('start_date', sa.DateTime(), nullable=True),
     sa.Column('end_date', sa.DateTime(), nullable=True),
     sa.Column('url', sa.String(length=500), nullable=True),

@@ -48,7 +48,7 @@ const EventInfoPaper = ({ event, ...rest }: EventInfoPaperProps) => {
                     </Grid>
                     <Grid item xs={9}>
                         <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
-                            {eventItem.venue}
+                            {eventItem.location_name}
                         </MetParagraph>
                     </Grid>
                     <Grid item xs={3}>
@@ -57,7 +57,7 @@ const EventInfoPaper = ({ event, ...rest }: EventInfoPaperProps) => {
 
                     <Grid item xs={9}>
                         <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
-                            {eventItem.location}
+                            {eventItem.location_address}
                         </MetParagraph>
                     </Grid>
 

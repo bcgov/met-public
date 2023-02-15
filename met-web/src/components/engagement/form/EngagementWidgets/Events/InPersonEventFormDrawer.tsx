@@ -18,9 +18,15 @@ import dayjs from 'dayjs';
 
 const schema = yup
     .object({
-        description: yup.string(),
-        location_name: yup.string().required('Location name cannot be empty'),
-        location_address: yup.string().required('Address cannot be empty'),
+        description: yup.string().max(500, 'Description cannot exceed 500 characters'),
+        location_name: yup
+            .string()
+            .max(50, 'Location name cannot exceed 50 characters')
+            .required('Location name cannot be empty'),
+        location_address: yup
+            .string()
+            .max(100, 'Location address cannot exceed 100 characters')
+            .required('Address cannot be empty'),
         date: yup.string().defined().required('Date cannot be empty'),
         time_from: yup.string().required('Time from cannot be empty'),
         time_to: yup.string().required('Time to cannot be empty'),
@@ -47,7 +53,7 @@ const InPersonEventFormDrawer = () => {
         const validatedData = await schema.validate(data);
         try {
             setIsCreating(true);
-            const { location_address, location_name, date, time_from, time_to } = validatedData;
+            const { description, location_address, location_name, date, time_from, time_to } = validatedData;
             const time_from_split = time_from.split(':');
             const time_to_split = time_to.split(':');
             const dateFrom = dayjs(date)
@@ -60,8 +66,9 @@ const InPersonEventFormDrawer = () => {
                 type: EVENT_TYPE.OPENHOUSE,
                 items: [
                     {
-                        venue: location_name,
-                        location: location_address,
+                        description: description,
+                        location_name: location_name,
+                        location_address: location_address,
                         start_date: formatToUTC(dateFrom),
                         end_date: formatToUTC(dateTo),
                     },

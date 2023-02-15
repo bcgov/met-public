@@ -14,15 +14,15 @@ export const getEvents = async (widget_id: number): Promise<Event[]> => {
 };
 
 interface PostEventProps {
-    widget_id?: number;
+    widget_id: number;
     title?: string;
-    type?: EventType;
+    type: EventType;
     items: {
-        title?: string;
-        venue?: string;
-        location?: string;
-        start_date?: string;
-        end_date?: string;
+        description?: string;
+        location_name?: string;
+        location_address?: string;
+        start_date: string;
+        end_date: string;
         url?: string;
         url_label?: string;
     }[];

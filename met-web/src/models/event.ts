@@ -8,9 +8,9 @@ export const EVENT_TYPE: { [x: string]: EventType } = {
 
 export interface EventItem {
     id: number;
-    title: string;
-    venue: string;
-    location: string;
+    description: string;
+    location_name: string;
+    location_address: string;
     start_date: string;
     end_date: string;
     url: string;
@@ -21,7 +21,6 @@ export interface EventItem {
     updated_by: string;
     created_date: string;
     updated_date: string;
-    description?: string;
 }
 
 export interface Event {
