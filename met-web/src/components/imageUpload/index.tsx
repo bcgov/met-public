@@ -62,7 +62,7 @@ const ImageUpload = ({
                         }}
                         size="small"
                     >
-                        Remove
+                        Remove Image
                     </SecondaryButton>
                 </Grid>
             </Grid>
