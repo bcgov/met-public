@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { MetPaper, MetBody, MetHeader4 } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType } from 'models/widget';
