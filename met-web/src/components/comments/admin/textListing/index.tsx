@@ -1,30 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
 import { Link, useParams } from 'react-router-dom';
-import { MetPageGridContainer, PrimaryButton, MetParagraph, MetLabel } from 'components/common';
+import { MetPageGridContainer, PrimaryButton, MetTextField } from 'components/common';
+import { Comment } from 'models/comment';
 import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
-import { Link as MuiLink, Typography, Grid, Stack, TextField } from '@mui/material';
+import { Link as MuiLink, Typography, Grid, Stack } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { CommentStatusChip } from '../../status';
 import { CommentStatus } from 'constants/commentStatus';
+import { getCommentsPage } from 'services/commentService';
 import { When } from 'react-if';
-import { getSubmissionPage } from 'services/submissionService';
-import { SurveySubmission } from 'models/surveySubmission';
-import { formatDate } from 'components/common/dateHelper';
 
 const CommentTextListing = () => {
+    const [comments, setComments] = useState<Comment[]>([]);
     const [searchFilter, setSearchFilter] = useState({
         key: 'text',
         value: '',
     });
     const [searchText, setSearchText] = useState('');
-    const [paginationOptions, setPagination] = useState<PaginationOptions<SurveySubmission>>({
+    const [paginationOptions, setPagination] = useState<PaginationOptions<Comment>>({
         page: 1,
         size: 10,
         sort_key: 'id',
-        nested_sort_key: 'submission.id',
+        nested_sort_key: 'comment.id',
         sort_order: 'desc',
     });
     const [pageInfo, setPageInfo] = useState<PageInfo>({
@@ -37,11 +37,14 @@ const CommentTextListing = () => {
 
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
-    const [submissions, setSubmissions] = useState<SurveySubmission[]>([]);
-    const loadSubmissions = async () => {
+    const loadComments = async () => {
         try {
+            if (isNaN(Number(surveyId))) {
+                dispatch(openNotification({ severity: 'error', text: 'Invalid surveyId' }));
+            }
+
             setTableLoading(true);
-            const response = await getSubmissionPage({
+            const response = await getCommentsPage({
                 survey_id: Number(surveyId),
                 page,
                 size,
@@ -49,20 +52,20 @@ const CommentTextListing = () => {
                 sort_order,
                 search_text: searchFilter.value,
             });
-            setSubmissions(response.items);
+            setComments(response.items);
             setPageInfo({
                 total: response.total,
             });
             setTableLoading(false);
         } catch (error) {
             console.log(error);
-            dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching submissions' }));
+            dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching comments' }));
             setTableLoading(false);
         }
     };
 
     useEffect(() => {
-        loadSubmissions();
+        loadComments();
     }, [paginationOptions, surveyId, searchFilter]);
 
     const handleSearchBarClick = (filter: string) => {
@@ -72,64 +75,52 @@ const CommentTextListing = () => {
         });
     };
 
-    const headCells: HeadCell<SurveySubmission>[] = [
+    const headCells: HeadCell<Comment>[] = [
         {
             key: 'id',
             numeric: true,
             disablePadding: false,
             label: 'ID',
             allowSort: true,
-            getValue: (row: SurveySubmission) => (
-                <MuiLink component={Link} to={`/surveys/${Number(row.survey_id)}/submissions/${row.id}/review`}>
+            getValue: (row: Comment) => (
+                <MuiLink
+                    component={Link}
+                    to={`/surveys/${Number(row.survey_id)}/submissions/${row.submission_id}/review`}
+                >
                     {row.id}
                 </MuiLink>
             ),
         },
         {
-            key: 'comments',
-            numeric: true,
+            key: 'text',
+            numeric: false,
             disablePadding: false,
             label: 'Content',
             allowSort: true,
-            getValue: (row: SurveySubmission) => (
-                <Grid container rowSpacing={2}>
-                    {row.comments?.map((comment, index) => {
-                        return (
-                            <Grid key={index} item xs={12}>
-                                <Grid xs={12} item paddingTop={2}>
-                                    <MetLabel>{comment.label ?? 'Label not available.'}</MetLabel>
-                                </Grid>
-                                <Grid xs={12} item>
-                                    <MetParagraph>{comment.text}</MetParagraph>
-                                </Grid>
-                            </Grid>
-                        );
-                    })}
-                </Grid>
-            ),
+            getValue: (row: Comment) => row.text,
         },
         {
-            key: 'comment_status_id',
+            key: 'status_id',
             numeric: false,
             disablePadding: false,
             label: 'Comment Date',
             allowSort: false,
             customStyle: { width: '20%' },
-            getValue: (row: SurveySubmission) => (
+            getValue: (row: Comment) => (
                 <Grid container direction="column" alignItems="flex-end" justifyContent="flex-start" width="20em">
                     <Grid item sx={{ pb: '0.5em' }}>
                         <Typography variant="subtitle2" sx={{ pb: '0.5em' }}>
                             <b>Comment Date: </b>
-                            {formatDate(row.created_date)}
+                            {row.submission_date}
                         </Typography>
-                        <When condition={row.comment_status_id !== CommentStatus.Pending}>
+                        <When condition={row.status_id !== CommentStatus.Pending}>
                             <Typography variant="subtitle2">
                                 <b>Reviewed By: </b> {row.reviewed_by}
                             </Typography>
                         </When>
                     </Grid>
                     <Grid item>
-                        <CommentStatusChip commentStatus={row.comment_status_id} />
+                        <CommentStatusChip commentStatus={row.status_id} />
                     </Grid>
                 </Grid>
             ),
@@ -148,7 +139,7 @@ const CommentTextListing = () => {
             <Grid item xs={12} container>
                 <Grid item xs={12} lg={4}>
                     <Stack direction="row" spacing={1}>
-                        <TextField
+                        <MetTextField
                             id="comments"
                             variant="outlined"
                             label="Search Comments"
@@ -169,16 +160,13 @@ const CommentTextListing = () => {
                 <MetTable
                     hideHeader={true}
                     headCells={headCells}
-                    rows={submissions}
-                    noRowBorder={false}
-                    handleChangePagination={(pagination: PaginationOptions<SurveySubmission>) =>
-                        setPagination(pagination)
-                    }
+                    rows={comments}
+                    handleChangePagination={(pagination: PaginationOptions<Comment>) => setPagination(pagination)}
                     paginationOptions={paginationOptions}
                     pageInfo={pageInfo}
                     loading={tableLoading}
                 />
-                <PrimaryButton component={Link} to={`/surveys/${submissions[0]?.survey_id || 0}/comments`}>
+                <PrimaryButton component={Link} to={`/surveys/${comments[0]?.survey_id || 0}/comments`}>
                     Return to Comments List
                 </PrimaryButton>
             </Grid>
