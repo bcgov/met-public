@@ -76,8 +76,9 @@ export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode
 );
 
 const StyledPaper = styled(MuiPaper)(() => ({
-    border: `1px solid #606060`,
-    borderRadius: '4px',
+    border: '1px solid #cdcdcd',
+    borderRadius: '5px',
+    boxShadow: 'rgb(0 0 0 / 6%) 0px 2px 2px -1px, rgb(0 0 0 / 6%) 0px 1px 1px 0px, rgb(0 0 0 / 6%) 0px 1px 3px 0px',
 }));
 
 export const MetPaper = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => {
