@@ -180,16 +180,16 @@ const EngagementForm = () => {
                 direction="row"
                 justifyContent="flex-start"
                 alignItems="flex-start"
-                rowSpacing={2}
+                rowSpacing={4}
                 sx={{ padding: '2em' }}
             >
                 <DayCalculatorModal open={isOpen} updateModal={setIsOpen} />
                 <Grid item xs={12} lg={12} md={12}>
-                    <MetLabel sx={{ marginBottom: '2px' }}>Engagement Name </MetLabel>
+                    <MetLabel>Engagement Name </MetLabel>
                     <FormLabel
-                        id="header"
+                        id="name"
                         sx={{
-                            mb: 1,
+                            fontSize: '13px',
                         }}
                     >
                         This will be the main header of the engagement page.
@@ -222,9 +222,9 @@ const EngagementForm = () => {
                 >
                     <Grid item xs={12}>
                         <MetLabel>Engagement Date </MetLabel>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <FormLabel id="header">This is the date the main header will be open to the public.</FormLabel>
+                        <FormLabel id="header" sx={{ fontSize: '13px' }}>
+                            This is the date the main header will be open to the public.
+                        </FormLabel>
                     </Grid>
                     <Grid item md={4} xs={12}>
                         <Stack direction="row" alignItems="center" spacing={2}>
@@ -279,8 +279,6 @@ const EngagementForm = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <MetLabel>Upload Header Image</MetLabel>
-                </Grid>
-                <Grid item xs={12}>
                     <ImageUpload
                         margin={4}
                         data-testid="engagement-form/image-upload"
@@ -289,9 +287,9 @@ const EngagementForm = () => {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <MetLabel sx={{ marginBottom: '2px' }}>Engagement Description</MetLabel>
+                    <MetLabel>Engagement Description</MetLabel>
 
-                    <FormLabel id="description" sx={{ pb: 1 }}>
+                    <FormLabel id="description" sx={{ pb: 1, fontSize: '13px' }}>
                         This is a short description that will show in the header section of the engagement page. The
                         recommended length is 250-500 characters.
                     </FormLabel>
@@ -303,9 +301,9 @@ const EngagementForm = () => {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <MetLabel sx={{ marginBottom: '2px' }}>Engagement - Page Content</MetLabel>
+                    <MetLabel>Engagement - Page Content</MetLabel>
 
-                    <FormLabel id="page-content" sx={{ pb: 1 }}>
+                    <FormLabel id="page-content" sx={{ pb: 1, fontSize: '13px' }}>
                         This is the main content of the engagement page.
                     </FormLabel>
 
