@@ -222,9 +222,7 @@ const EngagementForm = () => {
                 >
                     <Grid item xs={12}>
                         <MetLabel>Engagement Date </MetLabel>
-                    </Grid>
-                    <Grid item xs={12} sx={{ fontSize: '13px' }}>
-                        <FormLabel id="date">
+                        <FormLabel id="date" sx={{ fontSize: '13px' }}>
                             This is the date the public engagement will be open to the public.
                         </FormLabel>
                     </Grid>
