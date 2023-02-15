@@ -192,7 +192,7 @@ const EngagementForm = () => {
                             fontSize: '13px',
                         }}
                     >
-                        This will be the main header of the engagement page.
+                        This will be the main header on your engagement page.
                     </FormLabel>
                     <TextField
                         id="engagement-name"
