@@ -1,19 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import UserService from 'services/userService';
-import { useMediaQuery, Theme } from '@mui/material';
+import { useMediaQuery, Theme, IconButton } from '@mui/material';
 import SideNav from '../SideNav/SideNav';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Palette } from 'styles/Theme';
 import EnvironmentBanner from './EnvironmentBanner';
 import { MetHeader1, MetHeader2 } from 'components/common';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
+import { When } from 'react-if';
+import MenuIcon from '@mui/icons-material/Menu';
 
 const InternalHeader = ({ drawerWidth = 280 }) => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
+    const [open, setOpen] = useState(false);
     return (
         <>
             <AppBar
@@ -27,6 +30,18 @@ const InternalHeader = ({ drawerWidth = 280 }) => {
             >
                 <CssBaseline />
                 <Toolbar>
+                    <When condition={!isMediumScreen}>
+                        <IconButton
+                            component={MenuIcon}
+                            color="info"
+                            sx={{
+                                height: '2em',
+                                width: '2em',
+                                marginRight: { xs: '1em' },
+                            }}
+                            onClick={() => setOpen(!open)}
+                        />
+                    </When>
                     <Box
                         component={BCLogo}
                         sx={{
@@ -48,9 +63,10 @@ const InternalHeader = ({ drawerWidth = 280 }) => {
                 <EnvironmentBanner />
             </AppBar>
             <SideNav
+                setOpen={setOpen}
                 data-testid="sidenav-header"
                 isMediumScreen={isMediumScreen}
-                open={false}
+                open={open}
                 drawerWidth={drawerWidth}
             />
         </>
