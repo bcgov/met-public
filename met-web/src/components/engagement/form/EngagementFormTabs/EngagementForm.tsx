@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Typography, Grid, TextField, Stack, FormLabel } from '@mui/material';
-import { MetPaper, MetLabel, PrimaryButton, SecondaryButton } from '../../../common';
+import { Typography, Grid, TextField, Stack } from '@mui/material';
+import { MetPaper, MetLabel, PrimaryButton, SecondaryButton, MetLabelDescription } from '../../../common';
 import RichTextEditor from '../RichTextEditor';
 import { ActionContext } from '../ActionContext';
 import ImageUpload from 'components/imageUpload';
@@ -186,14 +186,7 @@ const EngagementForm = () => {
                 <DayCalculatorModal open={isOpen} updateModal={setIsOpen} />
                 <Grid item xs={12} lg={12} md={12}>
                     <MetLabel>Engagement Name </MetLabel>
-                    <FormLabel
-                        id="name"
-                        sx={{
-                            fontSize: '13px',
-                        }}
-                    >
-                        This will be the main header on your engagement page.
-                    </FormLabel>
+                    <MetLabelDescription>This will be the main header on your engagement page.</MetLabelDescription>
                     <TextField
                         id="engagement-name"
                         data-testid="engagement-form/name"
@@ -222,9 +215,9 @@ const EngagementForm = () => {
                 >
                     <Grid item xs={12}>
                         <MetLabel>Engagement Date </MetLabel>
-                        <FormLabel id="date" sx={{ fontSize: '13px' }}>
+                        <MetLabelDescription>
                             This is the date the public engagement will be open to the public.
-                        </FormLabel>
+                        </MetLabelDescription>
                     </Grid>
                     <Grid item md={4} xs={12}>
                         <Stack direction="row" alignItems="center" spacing={2}>
@@ -289,10 +282,10 @@ const EngagementForm = () => {
                 <Grid item xs={12}>
                     <MetLabel>Engagement Description</MetLabel>
 
-                    <FormLabel id="description" sx={{ pb: 1, fontSize: '13px' }}>
+                    <MetLabelDescription>
                         This is a short description that will show in the header section of the engagement page. The
                         recommended length is 250-500 characters.
-                    </FormLabel>
+                    </MetLabelDescription>
 
                     <RichTextEditor
                         setRawText={handleDescriptionChange}
@@ -303,9 +296,7 @@ const EngagementForm = () => {
                 <Grid item xs={12}>
                     <MetLabel>Engagement - Page Content</MetLabel>
 
-                    <FormLabel id="page-content" sx={{ pb: 1, fontSize: '13px' }}>
-                        This is the main content of the engagement page.
-                    </FormLabel>
+                    <MetLabelDescription>This is the main content of the engagement page.</MetLabelDescription>
 
                     <RichTextEditor
                         setRawText={handleContentChange}

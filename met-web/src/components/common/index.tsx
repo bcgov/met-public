@@ -173,6 +173,12 @@ export const MetIconText = styled(Typography)(() => ({
     lineHeight: '1.2',
 }));
 
+export const MetLabelDescription = styled(Typography)(() => ({
+    fontSize: '13px',
+    fontFamily: MET_Header_Font_Family,
+    color: '#707070',
+}));
+
 export const MetSmallText = ({ bold, children, sx, ...rest }: HeaderProps) => {
     return (
         <Typography
