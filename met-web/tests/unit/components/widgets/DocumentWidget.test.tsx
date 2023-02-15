@@ -7,7 +7,7 @@ import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as widgetService from 'services/widgetService';
-import * as documentService from 'services/widgetService/DocumentService.tsx';
+import * as documentService from 'services/widgetService/DocumentService';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
 import { createDefaultEngagement, Engagement } from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';

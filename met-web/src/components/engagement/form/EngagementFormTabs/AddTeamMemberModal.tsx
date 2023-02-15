@@ -98,12 +98,6 @@ export const AddTeamMemberModal = () => {
                 user_id: data.user?.external_id,
                 engagement_id: savedEngagement.id,
             });
-            dispatch(
-                openNotification({
-                    severity: 'success',
-                    text: `You have successfully added ${data.user?.username} as a Team Member on ${savedEngagement.name}.`,
-                }),
-            );
             setIsAdding(false);
             loadTeamMembers();
             handleClose();
@@ -115,9 +109,7 @@ export const AddTeamMemberModal = () => {
             );
         } catch (error) {
             setIsAdding(false);
-            console.log('AA');
             if (axios.isAxiosError(error)) {
-                console.log('A');
                 setErrors(error);
             }
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add user' }));

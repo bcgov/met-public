@@ -59,9 +59,9 @@ class WidgetEventsService:
     @staticmethod
     def _create_event_item(event, widget_events_id):
         event_item = EventItemsModel()
-        event_item.title = event.get('title')
-        event_item.venue = event.get('venue')
-        event_item.location = event.get('location')
+        event_item.description = event.get('description')
+        event_item.location_name = event.get('location_name')
+        event_item.location_address = event.get('location_address')
         event_item.start_date = event.get('start_date')
         event_item.end_date = event.get('end_date')
         event_item.url = event.get('url')
