@@ -151,9 +151,9 @@ const SubmissionListing = () => {
             allowSort: true,
             getValue: (row) =>
                 CommentStatus[
-                row.comment_status_id === CommentStatus.NeedsFurtherReview
-                    ? CommentStatus.Pending
-                    : row.comment_status_id
+                    row.comment_status_id === CommentStatus.NeedsFurtherReview
+                        ? CommentStatus.Pending
+                        : row.comment_status_id
                 ],
         },
     ];
