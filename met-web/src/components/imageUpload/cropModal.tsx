@@ -8,51 +8,30 @@ import { When } from 'react-if';
 import Cropper, { Area } from 'react-easy-crop';
 import { ImageUploadContext } from './imageUploadContext';
 import { Box } from '@mui/system';
+import getCroppedImg from './cropImage';
 
 export const CropModal = () => {
     const dispatch = useAppDispatch();
     const { existingImageUrl, objectUrl, setImgAfterCrop, cropModalOpen, setCropModalOpen } =
         useContext(ImageUploadContext);
 
+    const currentImageUrl = objectUrl || existingImageUrl;
+
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
     const [croppedArea, setCroppedArea] = useState<Area | null>(null);
     const [aspectRatio, setAspectRatio] = useState(4 / 3);
 
-    const onCropDone = (imgCroppedArea: Area | null) => {
-        console.log(imgCroppedArea);
+    const handleCropDone = async (imgCroppedArea: Area | null) => {
         if (!imgCroppedArea) {
             return;
         }
-        const canvasEle = document.createElement('canvas');
-        canvasEle.width = imgCroppedArea.width;
-        canvasEle.height = imgCroppedArea.height;
-
-        const context = canvasEle.getContext('2d');
-        if (!context) {
+        const croppedImage = await getCroppedImg(currentImageUrl, imgCroppedArea);
+        if (!croppedImage) {
             return;
         }
-
-        const imageObj1 = new Image();
-        imageObj1.crossOrigin = '';
-        imageObj1.src = existingImageUrl;
-        imageObj1.onload = function () {
-            context.drawImage(
-                imageObj1,
-                imgCroppedArea.x,
-                imgCroppedArea.y,
-                imgCroppedArea.width,
-                imgCroppedArea.height,
-                0,
-                0,
-                imgCroppedArea.width,
-                imgCroppedArea.height,
-            );
-
-            const dataURL = canvasEle.toDataURL('image/jpeg');
-
-            setImgAfterCrop(dataURL);
-        };
+        setImgAfterCrop(croppedImage);
+        setCropModalOpen(false);
     };
 
     const handleAspectRatioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +46,7 @@ export const CropModal = () => {
             }}
             keepMounted={false}
         >
-            <Paper sx={{ ...modalStyle, padding: '15em' }}>
+            <Paper sx={{ ...modalStyle, padding: '19em' }}>
                 <Box
                     sx={{
                         position: 'absolute',
@@ -103,46 +82,43 @@ export const CropModal = () => {
                             }}
                         />
                     </Box>
-                    <Box
+                    <Container
                         sx={{
-                            position: 'relative',
-                            bottom: 0,
-                            // left: '50%',
-                            // width: '50%',
-                            // transform: 'translateX(-50%)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            marginTop: '10em',
+                            marginTop: '29em',
                         }}
                     >
-                        <FormControl>
-                            <FormLabel>Gender</FormLabel>
-                            <RadioGroup
-                                name="radio-buttons-group"
-                                value={aspectRatio}
-                                onChange={handleAspectRatioChange}
-                                row
-                            >
-                                <FormControlLabel value={1} control={<Radio />} label="1:1" />
-                                <FormControlLabel value={5 / 4} control={<Radio />} label="5:4" />
-                                <FormControlLabel value={4 / 3} control={<Radio />} label="4:3" />
-                                <FormControlLabel value={3 / 2} control={<Radio />} label="3:2" />
-                                <FormControlLabel value={5 / 3} control={<Radio />} label="5:3" />
-                                <FormControlLabel value={16 / 9} control={<Radio />} label="16:9" />
-                                <FormControlLabel value={3 / 1} control={<Radio />} label="3:1" />
-                            </RadioGroup>
-                        </FormControl>
-                    </Box>
+                        <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
+                            <Grid item xs={12}>
+                                <FormControl>
+                                    <FormLabel>Gender</FormLabel>
+                                    <RadioGroup
+                                        name="radio-buttons-group"
+                                        value={aspectRatio}
+                                        onChange={handleAspectRatioChange}
+                                        row
+                                    >
+                                        <FormControlLabel value={1} control={<Radio />} label="1:1" />
+                                        <FormControlLabel value={5 / 4} control={<Radio />} label="5:4" />
+                                        <FormControlLabel value={4 / 3} control={<Radio />} label="4:3" />
+                                        <FormControlLabel value={3 / 2} control={<Radio />} label="3:2" />
+                                        <FormControlLabel value={5 / 3} control={<Radio />} label="5:3" />
+                                        <FormControlLabel value={16 / 9} control={<Radio />} label="16:9" />
+                                        <FormControlLabel value={3 / 1} control={<Radio />} label="3:1" />
+                                    </RadioGroup>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12} container justifyContent="flex-end">
+                                <PrimaryButton
+                                    onClick={() => {
+                                        handleCropDone(croppedArea);
+                                    }}
+                                >
+                                    Save
+                                </PrimaryButton>
+                            </Grid>
+                        </Grid>
+                    </Container>
                 </Box>
-                {/* <Grid item xs={12} container justifyContent="flex-end" direction="row">
-                    <PrimaryButton
-                        onClick={() => {
-                            onCropDone(croppedArea);
-                        }}
-                    >
-                        Crop
-                    </PrimaryButton>
-                </Grid> */}
             </Paper>
         </Modal>
     );

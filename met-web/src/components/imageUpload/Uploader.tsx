@@ -13,8 +13,15 @@ const Uploader = ({
     margin = 2,
     helpText = 'Drag and drop some files here, or click to select files',
 }: UploaderProps) => {
-    const { handleAddFile, objectUrl, setObjectUrl, existingImageUrl, setExistingImageURL, setCropModalOpen } =
-        useContext(ImageUploadContext);
+    const {
+        handleAddFile,
+        objectUrl,
+        setObjectUrl,
+        existingImageUrl,
+        setExistingImageURL,
+        setCropModalOpen,
+        imgAfterCrop,
+    } = useContext(ImageUploadContext);
 
     useEffect(() => {
         return () => {
@@ -24,7 +31,10 @@ const Uploader = ({
         };
     }, []);
 
-    const existingImage = objectUrl || existingImageUrl;
+    useEffect(() => {
+        console.log('imgAfterCrop', imgAfterCrop);
+    }, [imgAfterCrop]);
+    const existingImage = imgAfterCrop || objectUrl || existingImageUrl;
 
     if (existingImage) {
         return (
