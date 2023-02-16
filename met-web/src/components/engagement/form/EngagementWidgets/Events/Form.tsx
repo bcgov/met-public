@@ -7,7 +7,7 @@ import EventsInfoBlock from './EventsInfoBlock';
 
 const Form = () => {
     const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
-    const { setInPersonFormTabOpen } = useContext(EventsContext);
+    const { setInPersonFormTabOpen, setVirtualSessionFormTabOpen } = useContext(EventsContext);
 
     return (
         <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
@@ -26,7 +26,13 @@ const Form = () => {
                     </WidgetButton>
                 </Grid>
                 <Grid item>
-                    <WidgetButton>Add Virtual Session</WidgetButton>
+                    <WidgetButton
+                        onClick={() => {
+                            setVirtualSessionFormTabOpen(true);
+                        }}
+                    >
+                        Add Virtual Session
+                    </WidgetButton>
                 </Grid>
             </Grid>
             <Grid item xs={12}>
