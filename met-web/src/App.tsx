@@ -64,7 +64,7 @@ const App = () => {
             <Router>
                 <InternalHeader />
                 <Container>
-                    <Toolbar />
+                    <Toolbar sx={{ pb: 10 }} />
                     <AuthenticatedRoutes />
                     <FeedbackModal />
                 </Container>
