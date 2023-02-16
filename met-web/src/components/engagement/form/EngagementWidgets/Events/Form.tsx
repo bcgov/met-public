@@ -26,7 +26,7 @@ const Form = () => {
                     </WidgetButton>
                 </Grid>
                 <Grid item>
-                    <WidgetButton>Add Virtual Event</WidgetButton>
+                    <WidgetButton>Add Virtual Session</WidgetButton>
                 </Grid>
             </Grid>
             <Grid item xs={12}>

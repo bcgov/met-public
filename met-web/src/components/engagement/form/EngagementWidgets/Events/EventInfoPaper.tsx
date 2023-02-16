@@ -75,10 +75,10 @@ const EventInfoPaper = ({ event, ...rest }: EventInfoPaperProps) => {
                     </Grid>
                     <Grid item xs={9}>
                         <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
-                            {`${formatDate(eventItem.start_date, 'h:mma')} to ${formatDate(
+                            {`${formatDate(eventItem.start_date, 'h:mm a')} to ${formatDate(
                                 eventItem.end_date,
-                                'h:mma',
-                            )} PDT`}
+                                'h:mm a',
+                            )} PST`}
                         </MetParagraph>
                     </Grid>
                 </Grid>
