@@ -3,6 +3,8 @@ import { Grid, Skeleton } from '@mui/material';
 import { EventsContext } from './EventsContext';
 import { Event } from 'models/event';
 import EventInfoPaper from './EventInfoPaper';
+import VirtualEventInfoPaper from './VirtualEventInfoPaper';
+import { When } from 'react-if';
 
 const EventsInfoBlock = () => {
     const { events, isLoadingEvents } = useContext(EventsContext);
@@ -22,7 +24,15 @@ const EventsInfoBlock = () => {
             {events.map((event: Event, index) => {
                 return (
                     <Grid item xs={12} key={`Grid-${event.id}`}>
-                        <EventInfoPaper event={event} />
+                        <When condition={event.type === 'MEETUP'}>
+                            <EventInfoPaper event={event} />
+                        </When>
+                        <When condition={event.type === 'OPENHOUSE'}>
+                            <EventInfoPaper event={event} />
+                        </When>
+                        <When condition={event.type === 'VIRTUAL'}>
+                            <VirtualEventInfoPaper event={event} />
+                        </When>
                     </Grid>
                 );
             })}
