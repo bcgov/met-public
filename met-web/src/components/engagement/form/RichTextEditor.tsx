@@ -60,7 +60,7 @@ const RichTextEditor = ({
 
     return (
         <FormControl fullWidth>
-           <MetPaper style={{ borderColor: `${error ? '#d32f2f' : '#606060'}` }}>
+            <MetPaper style={{ borderColor: `${error ? '#d32f2f' : '#606060'}` }}>
                 <form>
                     <Editor
                         spellCheck
