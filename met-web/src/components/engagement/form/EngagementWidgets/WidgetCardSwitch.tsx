@@ -64,6 +64,19 @@ export const WidgetCardSwitch = ({ widget, removeWidget }: WidgetCardSwitchProps
                         }}
                     />
                 </Case>
+                <Case condition={widget.widget_type_id === WidgetType.Events}>
+                    <MetWidget
+                        testId={`event-${widget.widget_type_id}`}
+                        title="Events"
+                        onDelete={() => {
+                            removeWidget(widget.id);
+                        }}
+                        onEdit={() => {
+                            handleWidgetDrawerTabValueChange(WidgetTabValues.EVENTS_FORM);
+                            handleWidgetDrawerOpen(true);
+                        }}
+                    />
+                </Case>
             </Switch>
         </>
     );

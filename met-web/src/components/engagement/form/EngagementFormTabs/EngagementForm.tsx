@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Typography, Grid, TextField, Stack } from '@mui/material';
-import { MetPaper, MetLabel, PrimaryButton, SecondaryButton, MetHeader4 } from '../../../common';
+import { MetPaper, MetLabel, PrimaryButton, SecondaryButton, MetDescription } from '../../../common';
 import RichTextEditor from '../RichTextEditor';
 import { ActionContext } from '../ActionContext';
 import ImageUpload from 'components/imageUpload';
@@ -180,20 +180,13 @@ const EngagementForm = () => {
                 direction="row"
                 justifyContent="flex-start"
                 alignItems="flex-start"
-                rowSpacing={2}
+                rowSpacing={4}
                 sx={{ padding: '2em' }}
             >
                 <DayCalculatorModal open={isOpen} updateModal={setIsOpen} />
-                <Grid item xs={12}>
-                    <ImageUpload
-                        margin={4}
-                        data-testid="engagement-form/image-upload"
-                        handleAddFile={handleAddBannerImage}
-                        savedImageUrl={savedEngagement.banner_url}
-                    />
-                </Grid>
-                <Grid item xs={12} lg={8} md={6}>
-                    <MetLabel sx={{ marginBottom: '2px' }}>Engagement Name </MetLabel>
+                <Grid item xs={12} lg={12} md={12}>
+                    <MetLabel>Engagement Name </MetLabel>
+                    <MetDescription>This will be the main header on your engagement page.</MetDescription>
                     <TextField
                         id="engagement-name"
                         data-testid="engagement-form/name"
@@ -222,14 +215,15 @@ const EngagementForm = () => {
                 >
                     <Grid item xs={12}>
                         <MetLabel>Engagement Date </MetLabel>
+                        <MetDescription>
+                            This is the date the public engagement will be open to the public.
+                        </MetDescription>
                     </Grid>
-
                     <Grid item md={4} xs={12}>
                         <Stack direction="row" alignItems="center" spacing={2}>
                             <Typography minWidth={{ xs: '2.5em', md: 'auto' }} align="center">
                                 From
                             </Typography>
-
                             <TextField
                                 id="from-date"
                                 type="date"
@@ -277,37 +271,38 @@ const EngagementForm = () => {
                     </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                    <MetLabel sx={{ marginBottom: '2px' }}>Engagement Description</MetLabel>
+                    <MetLabel>Upload Header Image</MetLabel>
+                    <ImageUpload
+                        margin={4}
+                        data-testid="engagement-form/image-upload"
+                        handleAddFile={handleAddBannerImage}
+                        savedImageUrl={savedEngagement.banner_url}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <MetLabel>Engagement Description</MetLabel>
+
+                    <MetDescription>
+                        This is a short description that will show in the header section of the engagement page. The
+                        recommended length is 250-500 characters.
+                    </MetDescription>
+
                     <RichTextEditor
                         setRawText={handleDescriptionChange}
                         handleEditorStateChange={handleRichDescriptionChange}
                         initialRawEditorState={initialRichDescription || ''}
                     />
                 </Grid>
-
                 <Grid item xs={12}>
-                    <MetHeader4 bold={true} sx={{ marginBottom: '2px' }}>
-                        Content Block
-                    </MetHeader4>
-                    <MetPaper>
-                        <Grid
-                            container
-                            direction="row"
-                            justifyContent="flex-start"
-                            alignItems="flex-start"
-                            spacing={2}
-                            sx={{ padding: '1em' }}
-                        >
-                            <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Engagement Content</MetLabel>
-                                <RichTextEditor
-                                    setRawText={handleContentChange}
-                                    handleEditorStateChange={handleRichContentChange}
-                                    initialRawEditorState={initialRichContent || ''}
-                                />
-                            </Grid>
-                        </Grid>
-                    </MetPaper>
+                    <MetLabel>Engagement - Page Content</MetLabel>
+
+                    <MetDescription>This is the main content of the engagement page.</MetDescription>
+
+                    <RichTextEditor
+                        setRawText={handleContentChange}
+                        handleEditorStateChange={handleRichContentChange}
+                        initialRawEditorState={initialRichContent || ''}
+                    />
                 </Grid>
 
                 <Grid item xs={12}>

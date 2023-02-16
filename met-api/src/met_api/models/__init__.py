@@ -36,3 +36,5 @@ from .widget import Widget
 from .widget_documents import WidgetDocuments
 from .widget_item import WidgetItem
 from .widget_type import WidgetType
+from .event_item import EventItem
+from .widget_events import WidgetEvents

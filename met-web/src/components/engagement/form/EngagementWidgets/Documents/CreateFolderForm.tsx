@@ -5,7 +5,7 @@ import { When } from 'react-if';
 import { DocumentsContext } from './DocumentsContext';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { postDocument } from 'services/widgetService/DocumentService.tsx';
+import { postDocument } from 'services/widgetService/DocumentService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType } from 'models/widget';
 import { DOCUMENT_TYPE } from 'models/document';

@@ -76,8 +76,9 @@ export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode
 );
 
 const StyledPaper = styled(MuiPaper)(() => ({
-    border: `1px solid #606060`,
-    borderRadius: '4px',
+    border: '1px solid #cdcdcd',
+    borderRadius: '5px',
+    boxShadow: 'rgb(0 0 0 / 6%) 0px 2px 2px -1px, rgb(0 0 0 / 6%) 0px 1px 1px 0px, rgb(0 0 0 / 6%) 0px 1px 3px 0px',
 }));
 
 export const MetPaper = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => {
@@ -171,6 +172,12 @@ export const MetIconText = styled(Typography)(() => ({
     fontSize: '11px',
     fontFamily: MET_Header_Font_Family,
     lineHeight: '1.2',
+}));
+
+export const MetDescription = styled(Typography)(() => ({
+    fontSize: '13px',
+    fontFamily: MET_Header_Font_Family,
+    color: '#707070',
 }));
 
 export const MetSmallText = ({ bold, children, sx, ...rest }: HeaderProps) => {

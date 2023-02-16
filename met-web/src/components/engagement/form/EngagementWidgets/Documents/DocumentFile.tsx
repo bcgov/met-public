@@ -6,7 +6,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import LinkIcon from '@mui/icons-material/Link';
 import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
-import { deleteDocument } from 'services/widgetService/DocumentService.tsx';
+import { deleteDocument } from 'services/widgetService/DocumentService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType, Widget } from 'models/widget';
 import Edit from '@mui/icons-material/Edit';
