@@ -80,7 +80,6 @@ const SideNav = ({ open, setOpen, isMediumScreen, drawerWidth = 280 }: SideNavPr
                     open={open}
                     hideBackdrop={!open}
                 >
-                    <Toolbar />
                     <DrawerBox />
                 </Drawer>
             )}
