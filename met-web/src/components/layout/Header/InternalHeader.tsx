@@ -23,7 +23,7 @@ const InternalHeader = ({ drawerWidth = 280 }) => {
                 position="fixed"
                 color="default"
                 sx={{
-                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                    zIndex: (theme: Theme) => (isMediumScreen ? theme.zIndex.drawer + 1 : theme.zIndex.drawer),
                     color: Palette.text.primary,
                 }}
                 data-testid="appbar-header"
