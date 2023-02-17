@@ -193,7 +193,7 @@ const InPersonEventFormDrawer = () => {
                                 direction="row"
                                 spacing={1}
                                 justifyContent={'flex-start'}
-                                marginTop="8em"
+                                marginTop="2em"
                             >
                                 <Grid item>
                                     <PrimaryButton type="submit" loading={isCreating}>{`Save & Close`}</PrimaryButton>

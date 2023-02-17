@@ -15,7 +15,7 @@ const Form = () => {
                 <MetHeader3 bold>Events</MetHeader3>
                 <Divider sx={{ marginTop: '1em' }} />
             </Grid>
-            <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'} marginTop="2em">
+            <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'}>
                 <Grid item>
                     <WidgetButton
                         onClick={() => {
@@ -38,7 +38,7 @@ const Form = () => {
             <Grid item xs={12}>
                 <EventsInfoBlock />
             </Grid>
-            <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'} marginTop="8em">
+            <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'} marginTop="2em">
                 <Grid item>
                     <PrimaryButton
                         onClick={() => {
