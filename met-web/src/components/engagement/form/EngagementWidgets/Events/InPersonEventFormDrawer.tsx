@@ -56,10 +56,7 @@ const InPersonEventFormDrawer = () => {
             const { description, location_address, location_name, date, time_from, time_to } = validatedData;
             const time_from_split = time_from.split(':');
             const time_to_split = time_to.split(':');
-            const dateFrom = dayjs(date)
-                .set('hour', Number(time_from_split[0]))
-                .set('minute', Number(time_from_split[1]));
-            const dateTo = dayjs(date).set('hour', Number(time_to_split[0])).set('minute', Number(time_to_split[1]));
+            const { dateFrom, dateTo } = getDates(date, time_from_split, time_to_split);
 
             await postEvent(widget.id, {
                 widget_id: widget.id,

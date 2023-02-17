@@ -13,7 +13,7 @@ import ControlledTextField from 'components/common/ControlledInputComponents/Con
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { postEvent } from 'services/widgetService/EventService';
 import { EVENT_TYPE } from 'models/event';
-import { formatToUTC } from 'components/common/dateHelper';
+import { formatToUTC, getDates } from 'components/common/dateHelper';
 import dayjs from 'dayjs';
 
 const schema = yup
@@ -45,7 +45,6 @@ const VirtualSessionFormDrawer = () => {
     const { handleSubmit, reset } = methods;
 
     const onSubmit: SubmitHandler<VirtualSessionForm> = async (data: VirtualSessionForm) => {
-        console.log('ON SUBMIT!!!!');
         if (!widget) {
             return;
         }
@@ -55,11 +54,7 @@ const VirtualSessionFormDrawer = () => {
             const { description, session_link, session_link_text, date, time_from, time_to } = validatedData;
             const time_from_split = time_from.split(':');
             const time_to_split = time_to.split(':');
-            const dateFrom = dayjs(date)
-                .set('hour', Number(time_from_split[0]))
-                .set('minute', Number(time_from_split[1]));
-            const dateTo = dayjs(date).set('hour', Number(time_to_split[0])).set('minute', Number(time_to_split[1]));
-            console.log('POST EVENT!!');
+            const { dateFrom, dateTo } = getDates(date, time_from_split, time_to_split);
             await postEvent(widget.id, {
                 widget_id: widget.id,
                 type: EVENT_TYPE.VIRTUAL,
