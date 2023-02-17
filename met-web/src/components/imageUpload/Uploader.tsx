@@ -64,7 +64,7 @@ const Uploader = ({
                 </Grid>
                 <Grid item xs={12} container justifyContent="flex-end" direction="row">
                     <Stack
-                        direction={{ md: 'column-reverse', lg: 'row' }}
+                        direction={{ sm: 'column-reverse', lg: 'row' }}
                         spacing={1}
                         width="100%"
                         justifyContent="flex-end"
