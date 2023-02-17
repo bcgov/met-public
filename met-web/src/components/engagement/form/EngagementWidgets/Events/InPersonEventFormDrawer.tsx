@@ -58,7 +58,7 @@ const InPersonEventFormDrawer = () => {
 
             await postEvent(widget.id, {
                 widget_id: widget.id,
-                type: EVENT_TYPE.OPENHOUSE,
+                type: EVENT_TYPE.OPENHOUSE.label,
                 items: [
                     {
                         description: description,
