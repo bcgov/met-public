@@ -1,9 +1,9 @@
-export type EventType = 'OPENHOUSE' | 'MEETUP' | 'VIRTUAL';
+export type EventType = 0 | 1 | 2;
 
 export const EVENT_TYPE: { [x: string]: EventType } = {
-    OPENHOUSE: 'OPENHOUSE',
-    MEETUP: 'MEETUP',
-    VIRTUAL: 'VIRTUAL',
+    OPENHOUSE: 0,
+    MEETUP: 1,
+    VIRTUAL: 2,
 };
 
 export interface EventItem {

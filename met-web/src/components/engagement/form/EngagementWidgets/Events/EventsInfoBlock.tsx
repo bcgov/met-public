@@ -5,6 +5,7 @@ import { Event } from 'models/event';
 import EventInfoPaper from './EventInfoPaper';
 import VirtualEventInfoPaper from './VirtualEventInfoPaper';
 import { When } from 'react-if';
+import { EVENT_TYPE } from 'models/event';
 
 const EventsInfoBlock = () => {
     const { events, isLoadingEvents } = useContext(EventsContext);
@@ -24,13 +25,13 @@ const EventsInfoBlock = () => {
             {events.map((event: Event, index) => {
                 return (
                     <Grid item xs={12} key={`Grid-${event.id}`}>
-                        <When condition={event.type === 'MEETUP'}>
+                        <When condition={event.type === EVENT_TYPE.MEETING}>
                             <EventInfoPaper event={event} />
                         </When>
-                        <When condition={event.type === 'OPENHOUSE'}>
+                        <When condition={event.type === EVENT_TYPE.OPENHOUSE}>
                             <EventInfoPaper event={event} />
                         </When>
-                        <When condition={event.type === 'VIRTUAL'}>
+                        <When condition={event.type === EVENT_TYPE.VIRTUAL}>
                             <VirtualEventInfoPaper event={event} />
                         </When>
                     </Grid>
