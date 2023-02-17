@@ -1,11 +1,10 @@
 import React, { useContext } from 'react';
 import { Grid, Skeleton } from '@mui/material';
 import { EventsContext } from './EventsContext';
-import { Event } from 'models/event';
+import { Event, EVENT_TYPE } from 'models/event';
 import EventInfoPaper from './EventInfoPaper';
 import VirtualEventInfoPaper from './VirtualEventInfoPaper';
 import { When } from 'react-if';
-import { EVENT_TYPE } from 'models/event';
 
 const EventsInfoBlock = () => {
     const { events, isLoadingEvents } = useContext(EventsContext);
