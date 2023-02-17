@@ -1,10 +1,7 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import { Container, FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, RadioGroup } from '@mui/material';
 import { modalStyle, PrimaryButton } from 'components/common';
-import * as yup from 'yup';
-import { useAppDispatch } from 'hooks';
-import { When } from 'react-if';
 import Cropper, { Area } from 'react-easy-crop';
 import { ImageUploadContext } from './imageUploadContext';
 import { Box } from '@mui/system';
@@ -12,7 +9,6 @@ import getCroppedImg from './cropImage';
 import { blobToFile } from 'utils';
 
 export const CropModal = () => {
-    const dispatch = useAppDispatch();
     const {
         existingImageUrl,
         addedImageFileUrl,

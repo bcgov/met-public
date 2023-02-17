@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Grid, Stack, Typography } from '@mui/material';
 import Dropzone from 'react-dropzone';
 import { PrimaryButton, SecondaryButton } from 'components/common';
-import Cropper, { Area } from 'react-easy-crop';
 import { ImageUploadContext } from './imageUploadContext';
-import { When } from 'react-if';
 
 interface UploaderProps {
     margin?: number;
@@ -84,18 +82,6 @@ const Uploader = ({
                         >
                             Remove
                         </SecondaryButton>
-                        <When condition={Boolean(imgAfterCrop)}>
-                            <SecondaryButton
-                                onClick={() => {
-                                    setImgAfterCrop('');
-                                    handleAddFile([]);
-                                    URL.revokeObjectURL(addedImageFileUrl);
-                                }}
-                                size="small"
-                            >
-                                Undo Crop
-                            </SecondaryButton>
-                        </When>
                         <PrimaryButton
                             onClick={() => {
                                 setCropModalOpen(true);
