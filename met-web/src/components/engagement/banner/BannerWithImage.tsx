@@ -35,7 +35,7 @@ const BannerWithImage = ({ savedEngagement, children }: BannerProps) => {
                 <img
                     src={banner_url}
                     style={{
-                        objectFit: 'cover',
+                        objectFit: 'fill',
                         height: '38em',
                         width: '100%',
                     }}

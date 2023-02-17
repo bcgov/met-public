@@ -11,6 +11,7 @@ import { postWidget } from 'services/widgetService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { optionCardStyle } from '../Phases/PhasesOptionCard';
 import { WidgetTabValues } from '../type';
+
 const EventsOptionCard = () => {
     const { widgets, loadWidgets, handleWidgetDrawerOpen, handleWidgetDrawerTabValueChange } =
         useContext(WidgetDrawerContext);

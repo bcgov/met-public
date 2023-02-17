@@ -1,7 +1,7 @@
 import http from 'apiManager/httpRequestHandler';
 import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
-import { Event, EventType } from 'models/event';
+import { Event, EventTypeLabel } from 'models/event';
 
 export const getEvents = async (widget_id: number): Promise<Event[]> => {
     try {
@@ -16,7 +16,7 @@ export const getEvents = async (widget_id: number): Promise<Event[]> => {
 interface PostEventProps {
     widget_id: number;
     title?: string;
-    type: EventType;
+    type: EventTypeLabel;
     items: {
         description?: string;
         location_name?: string;
