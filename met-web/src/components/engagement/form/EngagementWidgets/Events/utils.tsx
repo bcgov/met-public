@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 
-export const getDates = (date: string, time_from: string, time_to: string) => {
+export const dateFormatter = (date: string, time_from: string, time_to: string) => {
+    //Extracts the date from a form
     const time_from_split = time_from.split(':');
     const time_to_split = time_to.split(':');
     const dateFrom = dayjs(date).set('hour', Number(time_from_split[0])).set('minute', Number(time_from_split[1]));
