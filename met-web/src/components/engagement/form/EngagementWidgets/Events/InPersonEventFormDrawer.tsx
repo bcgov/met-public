@@ -13,8 +13,7 @@ import ControlledTextField from 'components/common/ControlledInputComponents/Con
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { postEvent } from 'services/widgetService/EventService';
 import { EVENT_TYPE } from 'models/event';
-import { formatToUTC } from 'components/common/dateHelper';
-import dayjs from 'dayjs';
+import { formatToUTC, getDates } from 'components/common/dateHelper';
 
 const schema = yup
     .object({
