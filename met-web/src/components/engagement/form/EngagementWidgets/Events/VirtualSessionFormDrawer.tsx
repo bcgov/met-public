@@ -14,7 +14,6 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { postEvent } from 'services/widgetService/EventService';
 import { EVENT_TYPE } from 'models/event';
 import { formatToUTC, getDates } from 'components/common/dateHelper';
-import dayjs from 'dayjs';
 
 const schema = yup
     .object({
