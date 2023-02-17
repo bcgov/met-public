@@ -46,7 +46,7 @@ export const reorder = <T>(list: T[], startIndex: number, endIndex: number) => {
 };
 
 export const blobToFile = (theBlob: Blob, fileName: string): File => {
-    const file: any = theBlob;
+    const file: Blob & { lastModifiedDate?: Date; name?: string } = theBlob;
     //A Blob() is almost a File() - it's just missing the two properties below which we will add
     file.lastModifiedDate = new Date();
     file.name = fileName;

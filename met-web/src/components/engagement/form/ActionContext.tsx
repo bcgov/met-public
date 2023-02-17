@@ -44,7 +44,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const handleAddBannerImage = (files: File[]) => {
         if (files.length > 0) {
             setBannerImage(files[0]);
-            console.log(files);
             return;
         }
 
