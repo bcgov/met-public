@@ -54,7 +54,7 @@ const VirtualSessionFormDrawer = () => {
             const { dateFrom, dateTo } = dateFormatter(date, time_from, time_to);
             await postEvent(widget.id, {
                 widget_id: widget.id,
-                type: EVENT_TYPE.VIRTUAL,
+                type: EVENT_TYPE.VIRTUAL.label,
                 items: [
                     {
                         description: description,

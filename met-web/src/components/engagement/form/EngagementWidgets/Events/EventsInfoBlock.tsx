@@ -24,13 +24,13 @@ const EventsInfoBlock = () => {
             {events.map((event: Event, index) => {
                 return (
                     <Grid item xs={12} key={`Grid-${event.id}`}>
-                        <When condition={event.type === EVENT_TYPE.MEETING}>
+                        <When condition={event.type === EVENT_TYPE.MEETUP.value}>
                             <EventInfoPaper event={event} />
                         </When>
-                        <When condition={event.type === EVENT_TYPE.OPENHOUSE}>
+                        <When condition={event.type === EVENT_TYPE.OPENHOUSE.value}>
                             <EventInfoPaper event={event} />
                         </When>
-                        <When condition={event.type === EVENT_TYPE.VIRTUAL}>
+                        <When condition={event.type === EVENT_TYPE.VIRTUAL.value}>
                             <VirtualEventInfoPaper event={event} />
                         </When>
                     </Grid>
