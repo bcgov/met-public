@@ -18,7 +18,7 @@ import { MET_Header_Font_Family, MET_Header_Font_Weight } from '../../styles/con
 import { When } from 'react-if';
 
 export const MobileToolbar = styled(Toolbar)(() => ({
-    paddingBottom: 10,
+    marginBottom: '40px',
 }));
 
 const StyledPrimaryButton = styled(LoadingButton)(() => ({
