@@ -13,7 +13,8 @@ import ControlledTextField from 'components/common/ControlledInputComponents/Con
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { postEvent } from 'services/widgetService/EventService';
 import { EVENT_TYPE } from 'models/event';
-import { formatToUTC, getDates } from 'components/common/dateHelper';
+import { formatToUTC } from 'components/common/dateHelper';
+import { getDates } from './utils';
 
 const schema = yup
     .object({
@@ -53,9 +54,7 @@ const InPersonEventFormDrawer = () => {
         try {
             setIsCreating(true);
             const { description, location_address, location_name, date, time_from, time_to } = validatedData;
-            const time_from_split = time_from.split(':');
-            const time_to_split = time_to.split(':');
-            const { dateFrom, dateTo } = getDates(date, time_from_split, time_to_split);
+            const { dateFrom, dateTo } = getDates(date, time_from, time_to);
 
             await postEvent(widget.id, {
                 widget_id: widget.id,
