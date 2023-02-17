@@ -44,6 +44,7 @@
         "react-dom": "^18.0.0",
         "react-draft-wysiwyg": "^1.14.7",
         "react-dropzone": "^14.2.1",
+        "react-easy-crop": "^4.6.3",
         "react-hook-form": "^7.37.0",
         "react-if": "^4.1.4",
         "react-redux": "^7.2.8",
