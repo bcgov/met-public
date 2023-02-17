@@ -14,7 +14,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { postEvent } from 'services/widgetService/EventService';
 import { EVENT_TYPE } from 'models/event';
 import { formatToUTC } from 'components/common/dateHelper';
-import { dateFormatter } from './utils';
+import { formEventDates } from './utils';
 
 const schema = yup
     .object({
@@ -54,7 +54,7 @@ const InPersonEventFormDrawer = () => {
         try {
             setIsCreating(true);
             const { description, location_address, location_name, date, time_from, time_to } = validatedData;
-            const { dateFrom, dateTo } = dateFormatter(date, time_from, time_to);
+            const { dateFrom, dateTo } = formEventDates(date, time_from, time_to);
 
             await postEvent(widget.id, {
                 widget_id: widget.id,

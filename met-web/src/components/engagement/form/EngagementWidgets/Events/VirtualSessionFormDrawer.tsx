@@ -14,7 +14,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { postEvent } from 'services/widgetService/EventService';
 import { EVENT_TYPE } from 'models/event';
 import { formatToUTC } from 'components/common/dateHelper';
-import { dateFormatter } from './utils';
+import { formEventDates } from './utils';
 const schema = yup
     .object({
         description: yup.string().max(500, 'Description cannot exceed 500 characters'),
@@ -51,7 +51,7 @@ const VirtualSessionFormDrawer = () => {
         try {
             setIsCreating(true);
             const { description, session_link, session_link_text, date, time_from, time_to } = validatedData;
-            const { dateFrom, dateTo } = dateFormatter(date, time_from, time_to);
+            const { dateFrom, dateTo } = formEventDates(date, time_from, time_to);
             await postEvent(widget.id, {
                 widget_id: widget.id,
                 type: EVENT_TYPE.VIRTUAL.label,
