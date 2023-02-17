@@ -161,7 +161,8 @@ const AddContactDrawer = () => {
                             <ImageUpload
                                 data-testid="contact/image-upload"
                                 handleAddFile={handleAddAvatarImage}
-                                savedImageUrl={contactToEdit?.avatar_url || ''}
+                                savedImageUrl={contactToEdit?.avatar_url}
+                                savedImageName={contactToEdit?.avatar_filename}
                                 helpText="Drag and drop an image here or click to select one"
                             />
                         </Grid>

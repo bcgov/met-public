@@ -277,6 +277,7 @@ const EngagementForm = () => {
                         data-testid="engagement-form/image-upload"
                         handleAddFile={handleAddBannerImage}
                         savedImageUrl={savedEngagement.banner_url}
+                        savedImageName={savedEngagement.banner_filename}
                     />
                 </Grid>
                 <Grid item xs={12}>

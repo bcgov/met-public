@@ -11,8 +11,11 @@ export interface ImageUploadContextState {
     setCropModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
     handleAddFile: (_files: File[]) => void;
     savedImageUrl: string;
-    objectUrl: string;
-    setObjectUrl: React.Dispatch<React.SetStateAction<string>>;
+    savedImageName: string;
+    addedImageFileUrl: string;
+    setAddedImageFileUrl: React.Dispatch<React.SetStateAction<string>>;
+    addedImageFileName: string;
+    setAddedImageFileName: React.Dispatch<React.SetStateAction<string>>;
     existingImageUrl: string;
     setExistingImageURL: React.Dispatch<React.SetStateAction<string>>;
     imgAfterCrop: string;
@@ -28,9 +31,14 @@ export const ImageUploadContext = createContext<ImageUploadContextState>({
         throw new Error('handleAddFile not implemented');
     },
     savedImageUrl: '',
-    objectUrl: '',
-    setObjectUrl: () => {
-        throw new Error('setObjectUrl not implemented');
+    savedImageName: '',
+    addedImageFileUrl: '',
+    setAddedImageFileUrl: () => {
+        throw new Error('setAddedImageFileUrl not implemented');
+    },
+    addedImageFileName: '',
+    setAddedImageFileName: () => {
+        throw new Error('setAddedImageFileName not implemented');
     },
     existingImageUrl: '',
     setExistingImageURL: () => {
@@ -46,16 +54,18 @@ interface ImageUploadContextProviderProps {
     handleAddFile: (_files: File[]) => void;
     children: React.ReactNode;
     savedImageUrl: string;
+    savedImageName: string;
 }
 export const ImageUploadContextProvider = ({
     children,
     handleAddFile,
     savedImageUrl,
+    savedImageName,
 }: ImageUploadContextProviderProps) => {
-    // const { savedEngagement } = useContext(ActionContext);
-    const dispatch = useAppDispatch();
     const [cropModalOpen, setCropModalOpen] = useState(false);
-    const [objectUrl, setObjectUrl] = useState('');
+    const [addedImageFileUrl, setAddedImageFileUrl] = useState('');
+    const [addedImageFileName, setAddedImageFileName] = useState('');
+
     const [existingImageUrl, setExistingImageURL] = useState(savedImageUrl);
     const [imgAfterCrop, setImgAfterCrop] = useState('');
 
@@ -66,8 +76,11 @@ export const ImageUploadContextProvider = ({
                 setCropModalOpen,
                 handleAddFile,
                 savedImageUrl,
-                objectUrl,
-                setObjectUrl,
+                savedImageName,
+                addedImageFileUrl,
+                setAddedImageFileUrl,
+                addedImageFileName,
+                setAddedImageFileName,
                 existingImageUrl,
                 setExistingImageURL,
                 imgAfterCrop,

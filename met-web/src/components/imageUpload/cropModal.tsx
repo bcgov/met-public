@@ -9,13 +9,22 @@ import Cropper, { Area } from 'react-easy-crop';
 import { ImageUploadContext } from './imageUploadContext';
 import { Box } from '@mui/system';
 import getCroppedImg from './cropImage';
+import { blobToFile } from 'utils';
 
 export const CropModal = () => {
     const dispatch = useAppDispatch();
-    const { existingImageUrl, objectUrl, setImgAfterCrop, cropModalOpen, setCropModalOpen } =
-        useContext(ImageUploadContext);
+    const {
+        existingImageUrl,
+        addedImageFileUrl,
+        setImgAfterCrop,
+        cropModalOpen,
+        setCropModalOpen,
+        handleAddFile,
+        savedImageName,
+        addedImageFileName,
+    } = useContext(ImageUploadContext);
 
-    const currentImageUrl = objectUrl || existingImageUrl;
+    const currentImageUrl = addedImageFileUrl || existingImageUrl;
 
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
@@ -30,7 +39,9 @@ export const CropModal = () => {
         if (!croppedImage) {
             return;
         }
-        setImgAfterCrop(croppedImage);
+        setImgAfterCrop(URL.createObjectURL(croppedImage));
+        const imageFile = blobToFile(croppedImage, addedImageFileName || savedImageName);
+        handleAddFile([imageFile]);
         setCropModalOpen(false);
     };
 
@@ -66,7 +77,7 @@ export const CropModal = () => {
                         }}
                     >
                         <Cropper
-                            image={objectUrl || existingImageUrl}
+                            image={addedImageFileUrl || existingImageUrl}
                             aspect={aspectRatio}
                             crop={crop}
                             zoom={zoom}

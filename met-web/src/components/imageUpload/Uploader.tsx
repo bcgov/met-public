@@ -4,6 +4,7 @@ import Dropzone from 'react-dropzone';
 import { PrimaryButton, SecondaryButton } from 'components/common';
 import Cropper, { Area } from 'react-easy-crop';
 import { ImageUploadContext } from './imageUploadContext';
+import { When } from 'react-if';
 
 interface UploaderProps {
     margin?: number;
@@ -15,26 +16,25 @@ const Uploader = ({
 }: UploaderProps) => {
     const {
         handleAddFile,
-        objectUrl,
-        setObjectUrl,
+        addedImageFileUrl,
+        setAddedImageFileUrl,
+        setAddedImageFileName,
         existingImageUrl,
         setExistingImageURL,
         setCropModalOpen,
         imgAfterCrop,
+        setImgAfterCrop,
     } = useContext(ImageUploadContext);
 
     useEffect(() => {
         return () => {
-            if (objectUrl) {
-                URL.revokeObjectURL(objectUrl);
+            if (addedImageFileUrl) {
+                URL.revokeObjectURL(addedImageFileUrl);
             }
         };
     }, []);
 
-    useEffect(() => {
-        console.log('imgAfterCrop', imgAfterCrop);
-    }, [imgAfterCrop]);
-    const existingImage = imgAfterCrop || objectUrl || existingImageUrl;
+    const existingImage = imgAfterCrop || addedImageFileUrl || existingImageUrl;
 
     if (existingImage) {
         return (
@@ -51,14 +51,16 @@ const Uploader = ({
                     <img
                         src={existingImage}
                         style={{
-                            objectFit: 'cover',
+                            objectFit: 'fill',
                             width: '100%',
                             height: '100%',
                         }}
                         onError={() => {
-                            URL.revokeObjectURL(objectUrl);
+                            URL.revokeObjectURL(addedImageFileUrl);
                             setExistingImageURL('');
-                            setObjectUrl('');
+                            setAddedImageFileUrl('');
+                            setAddedImageFileName('');
+                            setImgAfterCrop('');
                         }}
                     />
                 </Grid>
@@ -71,15 +73,29 @@ const Uploader = ({
                     >
                         <SecondaryButton
                             onClick={() => {
-                                setObjectUrl('');
+                                setAddedImageFileUrl('');
+                                setAddedImageFileName('');
                                 setExistingImageURL('');
+                                setImgAfterCrop('');
                                 handleAddFile([]);
-                                URL.revokeObjectURL(objectUrl);
+                                URL.revokeObjectURL(addedImageFileUrl);
                             }}
                             size="small"
                         >
                             Remove
                         </SecondaryButton>
+                        <When condition={Boolean(imgAfterCrop)}>
+                            <SecondaryButton
+                                onClick={() => {
+                                    setImgAfterCrop('');
+                                    handleAddFile([]);
+                                    URL.revokeObjectURL(addedImageFileUrl);
+                                }}
+                                size="small"
+                            >
+                                Undo Crop
+                            </SecondaryButton>
+                        </When>
                         <PrimaryButton
                             onClick={() => {
                                 setCropModalOpen(true);
@@ -97,7 +113,8 @@ const Uploader = ({
             onDrop={(acceptedFiles) => {
                 const createdObjectURL = URL.createObjectURL(acceptedFiles[0]);
                 handleAddFile(acceptedFiles);
-                setObjectUrl(createdObjectURL);
+                setAddedImageFileUrl(createdObjectURL);
+                setAddedImageFileName(acceptedFiles[0].name);
             }}
         >
             {({ getRootProps, getInputProps }) => (
