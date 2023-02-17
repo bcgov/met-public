@@ -23,3 +23,11 @@ export const formatToUTC = (date: Dayjs | string, formatString = 'YYYY-MM-DD HH:
         return '';
     }
 };
+
+export const getDates = (date: Dayjs, timeFrom: Array<string>, timeTo: Array<string>) => {
+
+    const dateFrom = dayjs(date).set('hour', Number(timeFrom[0])).set('minute', Number(timeFrom[1]));
+    const dateTo = dayjs(date).set('hour', Number(timeTo[0])).set('minute', Number(timeTo[1]));
+
+    return { dateFrom: dateFrom, dateTo: dateTo };
+};
