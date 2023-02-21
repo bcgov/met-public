@@ -1,12 +1,11 @@
-import React from 'react';
-import { cloneElement } from 'react';
+import React, { cloneElement } from 'react';
 import { useAppSelector } from 'hooks';
 
-interface hasPermissionProps {
+interface HasPermissionProps {
     permissions: string[];
     scopes: string[];
 }
-const hasPermission = ({ permissions, scopes }: hasPermissionProps) => {
+const hasPermission = ({ permissions, scopes }: HasPermissionProps) => {
     const scopesMap: { [scope: string]: boolean } = {};
 
     scopes.forEach((scope) => {
