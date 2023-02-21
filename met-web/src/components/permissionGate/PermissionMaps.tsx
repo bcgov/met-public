@@ -1,0 +1,17 @@
+export const SCOPES: { [scope: string]: string } = {
+    createTenant: 'create_tenant',
+    viewTenant: 'view_tenant',
+    viewUsers: 'view_users',
+    createAdminUser: 'create_admin_user',
+    createTeam: 'create_team',
+    createEngagement: 'create_engagement',
+    createSurvey: 'create_survey',
+    publishEngagement: 'publish_engagement',
+    viewEngagement: 'view_engagement',
+    editEngagement: 'edit_engagement',
+    reviewComments: 'review_comments',
+    accessDashboard: 'access_dashboard',
+    viewMembers: 'view_members',
+    editMembers: 'edit_members',
+    appAdmin: 'app-admin',
+};

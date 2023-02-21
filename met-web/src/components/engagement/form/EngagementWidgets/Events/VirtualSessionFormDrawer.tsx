@@ -15,6 +15,7 @@ import { postEvent } from 'services/widgetService/EventService';
 import { EVENT_TYPE } from 'models/event';
 import { formatToUTC } from 'components/common/dateHelper';
 import { formEventDates } from './utils';
+
 const schema = yup
     .object({
         description: yup.string().max(500, 'Description cannot exceed 500 characters'),
