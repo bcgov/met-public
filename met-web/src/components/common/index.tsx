@@ -17,8 +17,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { MET_Header_Font_Family, MET_Header_Font_Weight } from '../../styles/constants';
 import { When } from 'react-if';
 
-export const MetToolbar = styled(Toolbar)(() => ({
-    marginBottom: 5,
+export const MobileToolbar = styled(Toolbar)(() => ({
+    marginBottom: '40px',
 }));
 
 const StyledPrimaryButton = styled(LoadingButton)(() => ({

@@ -3,8 +3,8 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import UserService from './services/userService';
 import { useAppSelector, useAppDispatch } from './hooks';
-import { MidScreenLoader, MetToolbar } from './components/common';
-import { Box, Container, useMediaQuery, Theme } from '@mui/material';
+import { MidScreenLoader, MobileToolbar } from './components/common';
+import { Box, Container, useMediaQuery, Theme, Toolbar } from '@mui/material';
 import InternalHeader from './components/layout/Header/InternalHeader';
 import PublicHeader from './components/layout/Header/PublicHeader';
 import UnauthenticatedRoutes from './routes/UnauthenticatedRoutes';
@@ -64,7 +64,7 @@ const App = () => {
             <Router>
                 <InternalHeader />
                 <Container>
-                    <MetToolbar />
+                    <MobileToolbar />
                     <AuthenticatedRoutes />
                     <FeedbackModal />
                 </Container>
@@ -79,7 +79,7 @@ const App = () => {
                 <Notification />
                 <NotificationModal />
                 <Box component="main" sx={{ flexGrow: 1, width: `calc(100% - ${drawerWidth}px)`, marginTop: '17px' }}>
-                    <MetToolbar />
+                    <Toolbar />
                     <AuthenticatedRoutes />
                     <FeedbackModal />
                 </Box>
