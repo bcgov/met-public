@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MetPaper, MetHeader2, MetHeader3, MetBody, MetSmallText } from 'components/common';
+import { MetPaper, MetHeader2, MetBody } from 'components/common';
 import { Grid, Link, Skeleton, useTheme, Divider } from '@mui/material';
 import { Widget } from 'models/widget';
 import { Event, EVENT_TYPE } from 'models/event';
@@ -14,7 +14,6 @@ interface EventsWidgetProps {
 }
 const EventsWidget = ({ widget }: EventsWidgetProps) => {
     const dispatch = useAppDispatch();
-    const theme = useTheme();
     const [isLoading, setIsLoading] = useState(true);
     const [events, setEvents] = useState<Event[]>([]);
 
@@ -77,6 +76,8 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
                 <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
             </Grid>
             {events.map((event: Event) => {
+                const eventItem = event.event_items[0];
+
                 return (
                     <Grid
                         key={event.id}
@@ -145,20 +146,20 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
                                 }
                             >
                                 <Grid container justifyContent={{ xs: 'center', md: 'flex-start' }} item xs={12}>
-                                    <MetBody>Location: {event.event_items[0].location_name}</MetBody>
+                                    <MetBody>Location: {eventItem.location_name}</MetBody>
                                 </Grid>
                                 <Grid container justifyContent={{ xs: 'center', md: 'flex-start' }} item xs={12}>
-                                    <MetBody>Address: {event.event_items[0].location_address}</MetBody>
+                                    <MetBody>Address: {eventItem.location_address}</MetBody>
                                 </Grid>
                             </When>
                             <Grid item container justifyContent={{ xs: 'center', md: 'flex-start' }} xs={12}>
-                                <MetBody>Date: {formatDate(event.event_items[0].start_date, 'MMMM DD, YYYY')}</MetBody>
+                                <MetBody>Date: {formatDate(eventItem.start_date, 'MMMM DD, YYYY')}</MetBody>
                             </Grid>
                             <Grid container justifyContent={{ xs: 'center', md: 'flex-start' }} item xs={12}>
                                 <MetBody>
                                     Time:{' '}
-                                    {`${formatDate(event.event_items[0].start_date, 'h:mm a')} to ${formatDate(
-                                        event.event_items[0].end_date,
+                                    {`${formatDate(eventItem.start_date, 'h:mm a')} to ${formatDate(
+                                        eventItem.end_date,
                                         'h:mm a',
                                     )} PST`}
                                 </MetBody>
@@ -171,7 +172,7 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
                                     xs={12}
                                     sx={{ whiteSpace: 'pre-line' }}
                                 >
-                                    <Link href={`${event.event_items[0].url}`}>{event.event_items[0].url_label}</Link>
+                                    <Link href={`${eventItem.url}`}>{eventItem.url_label}</Link>
                                 </Grid>
                             </When>
                         </Grid>
