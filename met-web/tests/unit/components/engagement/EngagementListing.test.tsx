@@ -71,6 +71,13 @@ jest.mock('components/common', () => ({
     },
 }));
 
+jest.mock('components/permissionsGate', () => ({
+    ...jest.requireActual('components/permissionsGate'),
+    PermissionsGate: ({ children }: { children: ReactNode }) => {
+        return <>{children}</>;
+    },
+}));
+
 describe('Engagement form page tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());

@@ -20,8 +20,8 @@ import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
 import AdvancedSearch from './AdvancedSearch/SearchComponent';
 import AdvancedSearchMobile from './AdvancedSearch/SearchComponentMobile';
 import { SearchOptions } from './AdvancedSearch/SearchTypes';
-import PermissionsGate from 'components/permissionGate';
-import { SCOPES } from 'components/permissionGate/PermissionMaps';
+import { PermissionsGate } from 'components/permissionsGate';
+import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 
 const EngagementListing = () => {
     const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));

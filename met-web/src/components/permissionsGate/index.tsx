@@ -15,13 +15,14 @@ const hasPermission = ({ permissions, scopes }: HasPermissionProps) => {
     return permissions.some((permission) => scopesMap[permission]);
 };
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 interface PermissionsGateProps {
     children: React.ReactElement<any, any>;
     RenderError?: () => React.ReactElement<any, any>;
     errorProps?: any;
     scopes: string[];
 }
-export default function PermissionsGate({
+export function PermissionsGate({
     children,
     RenderError,
     errorProps,
@@ -39,3 +40,4 @@ export default function PermissionsGate({
 
     return <>{children}</>;
 }
+/* eslint-enable */
