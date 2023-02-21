@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
@@ -15,55 +15,51 @@ import { postEvent } from 'services/widgetService/EventService';
 import { EVENT_TYPE } from 'models/event';
 import { formatToUTC } from 'components/common/dateHelper';
 import { formEventDates } from './utils';
-
 const schema = yup
     .object({
         description: yup.string().max(500, 'Description cannot exceed 500 characters'),
-        location_name: yup
-            .string()
-            .max(50, 'Location name cannot exceed 50 characters')
-            .required('Location name cannot be empty'),
-        location_address: yup
-            .string()
-            .max(100, 'Location address cannot exceed 100 characters')
-            .required('Address cannot be empty'),
+        session_link: yup.string().required('Session link cannot be empty'),
+        session_link_text: yup.string().default('Click here to register').required('Session Link Text cannot be empty'),
         date: yup.string().defined().required('Date cannot be empty'),
         time_from: yup.string().required('Time from cannot be empty'),
         time_to: yup.string().required('Time to cannot be empty'),
     })
     .required();
 
-type InPersonEventForm = yup.TypeOf<typeof schema>;
+type VirtualSessionForm = yup.TypeOf<typeof schema>;
 
-const InPersonEventFormDrawer = () => {
+const VirtualSessionFormDrawer = () => {
     const dispatch = useAppDispatch();
-    const { inPersonFormTabOpen, setInPersonFormTabOpen, widget, loadEvents } = useContext(EventsContext);
+    const { virtualSessionFormTabOpen, setVirtualSessionFormTabOpen, widget, loadEvents } = useContext(EventsContext);
     const [isCreating, setIsCreating] = useState(false);
 
-    const methods = useForm<InPersonEventForm>({
+    const methods = useForm<VirtualSessionForm>({
         resolver: yupResolver(schema),
     });
 
+    useEffect(() => {
+        methods.setValue('session_link_text', 'Click here to register');
+    }, []);
+
     const { handleSubmit, reset } = methods;
 
-    const onSubmit: SubmitHandler<InPersonEventForm> = async (data: InPersonEventForm) => {
+    const onSubmit: SubmitHandler<VirtualSessionForm> = async (data: VirtualSessionForm) => {
         if (!widget) {
             return;
         }
         const validatedData = await schema.validate(data);
         try {
             setIsCreating(true);
-            const { description, location_address, location_name, date, time_from, time_to } = validatedData;
+            const { description, session_link, session_link_text, date, time_from, time_to } = validatedData;
             const { dateFrom, dateTo } = formEventDates(date, time_from, time_to);
-
             await postEvent(widget.id, {
                 widget_id: widget.id,
-                type: EVENT_TYPE.OPENHOUSE.label,
+                type: EVENT_TYPE.VIRTUAL.label,
                 items: [
                     {
                         description: description,
-                        location_name: location_name,
-                        location_address: location_address,
+                        url: session_link,
+                        url_label: session_link_text,
                         start_date: formatToUTC(dateFrom),
                         end_date: formatToUTC(dateTo),
                     },
@@ -72,7 +68,7 @@ const InPersonEventFormDrawer = () => {
             dispatch(openNotification({ severity: 'success', text: 'The event was successfully added' }));
             setIsCreating(false);
             reset({});
-            setInPersonFormTabOpen(false);
+            setVirtualSessionFormTabOpen(false);
             loadEvents();
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add event' }));
@@ -83,9 +79,9 @@ const InPersonEventFormDrawer = () => {
     return (
         <Drawer
             anchor="right"
-            open={inPersonFormTabOpen}
+            open={virtualSessionFormTabOpen}
             onClose={() => {
-                setInPersonFormTabOpen(false);
+                setVirtualSessionFormTabOpen(false);
             }}
         >
             <Box sx={{ width: '40vw', paddingTop: '7em' }} role="presentation">
@@ -100,7 +96,7 @@ const InPersonEventFormDrawer = () => {
                             padding="2em"
                         >
                             <Grid item xs={12}>
-                                <MetHeader3 bold>Add In-Person Event</MetHeader3>
+                                <MetHeader3 bold>Virtual Information Session</MetHeader3>
                                 <Divider sx={{ marginTop: '1em' }} />
                             </Grid>
                             <Grid item xs={12}>
@@ -116,32 +112,6 @@ const InPersonEventFormDrawer = () => {
                                     size="small"
                                     multiline
                                     minRows={4}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Location Name</MetLabel>
-                                <ControlledTextField
-                                    name="location_name"
-                                    variant="outlined"
-                                    label=" "
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
-                                    size="small"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Location Address</MetLabel>
-                                <ControlledTextField
-                                    name="location_address"
-                                    variant="outlined"
-                                    label=" "
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
-                                    size="small"
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -186,6 +156,33 @@ const InPersonEventFormDrawer = () => {
                                     size="small"
                                 />
                             </Grid>
+                            <Grid item xs={12}>
+                                <MetLabel sx={{ marginBottom: '2px' }}>Virtual Session Link</MetLabel>
+                                <ControlledTextField
+                                    name="session_link"
+                                    variant="outlined"
+                                    label=" "
+                                    InputLabelProps={{
+                                        shrink: false,
+                                    }}
+                                    fullWidth
+                                    size="small"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <MetLabel sx={{ marginBottom: '2px' }}>Virtual Session Link - Text Displayed</MetLabel>
+                                <ControlledTextField
+                                    name="session_link_text"
+                                    variant="outlined"
+                                    label=" "
+                                    InputLabelProps={{
+                                        shrink: false,
+                                    }}
+                                    fullWidth
+                                    size="small"
+                                />
+                            </Grid>
+
                             <Grid
                                 item
                                 xs={12}
@@ -199,7 +196,7 @@ const InPersonEventFormDrawer = () => {
                                     <PrimaryButton type="submit" loading={isCreating}>{`Save & Close`}</PrimaryButton>
                                 </Grid>
                                 <Grid item>
-                                    <SecondaryButton onClick={() => setInPersonFormTabOpen(false)}>
+                                    <SecondaryButton onClick={() => setVirtualSessionFormTabOpen(false)}>
                                         Cancel
                                     </SecondaryButton>
                                 </Grid>
@@ -212,4 +209,4 @@ const InPersonEventFormDrawer = () => {
     );
 };
 
-export default InPersonEventFormDrawer;
+export default VirtualSessionFormDrawer;

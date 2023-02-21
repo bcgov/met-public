@@ -5,14 +5,10 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
 import { When } from 'react-if';
-import { Event } from 'models/event';
 import { formatDate } from 'components/common/dateHelper';
+import { EventInfoPaperProps } from './EventInfoPaper';
 
-export interface EventInfoPaperProps {
-    event: Event;
-}
-
-const EventInfoPaper = ({ event, ...rest }: EventInfoPaperProps) => {
+const VirtualEventInfoPaper = ({ event, ...rest }: EventInfoPaperProps) => {
     const eventItem = event.event_items[0];
     return (
         <MetWidgetPaper elevation={1} {...rest}>
@@ -42,25 +38,6 @@ const EventInfoPaper = ({ event, ...rest }: EventInfoPaperProps) => {
                             </MetParagraph>
                         </Grid>
                     </When>
-
-                    <Grid item xs={3}>
-                        <MetParagraph>Location:</MetParagraph>
-                    </Grid>
-                    <Grid item xs={9}>
-                        <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
-                            {eventItem.location_name}
-                        </MetParagraph>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <MetParagraph>Address:</MetParagraph>
-                    </Grid>
-
-                    <Grid item xs={9}>
-                        <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
-                            {eventItem.location_address}
-                        </MetParagraph>
-                    </Grid>
-
                     <Grid item xs={3}>
                         <MetParagraph>Date:</MetParagraph>
                     </Grid>
@@ -81,6 +58,15 @@ const EventInfoPaper = ({ event, ...rest }: EventInfoPaperProps) => {
                             )} PST`}
                         </MetParagraph>
                     </Grid>
+                    <Grid item xs={3}>
+                        <MetParagraph>Link: </MetParagraph>
+                    </Grid>
+
+                    <Grid item xs={9}>
+                        <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                            {eventItem.url} - {eventItem.url_label}
+                        </MetParagraph>
+                    </Grid>
                 </Grid>
                 <Grid container item xs={1.5}>
                     <Grid item xs={6}>
@@ -99,4 +85,4 @@ const EventInfoPaper = ({ event, ...rest }: EventInfoPaperProps) => {
     );
 };
 
-export default EventInfoPaper;
+export default VirtualEventInfoPaper;

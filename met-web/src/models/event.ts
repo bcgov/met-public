@@ -1,9 +1,20 @@
-export type EventType = 'OPENHOUSE' | 'MEETUP' | 'VIRTUAL';
+export type EventType = 0 | 1 | 2;
 
-export const EVENT_TYPE: { [x: string]: EventType } = {
-    OPENHOUSE: 'OPENHOUSE',
-    MEETUP: 'MEETUP',
-    VIRTUAL: 'VIRTUAL',
+export type EventTypeLabel = 'OPENHOUSE' | 'MEETUP' | 'VIRTUAL';
+
+export const EVENT_TYPE: { [x: string]: { value: EventType; label: EventTypeLabel } } = {
+    OPENHOUSE: {
+        value: 0,
+        label: 'OPENHOUSE',
+    },
+    MEETUP: {
+        value: 1,
+        label: 'MEETUP',
+    },
+    VIRTUAL: {
+        value: 2,
+        label: 'VIRTUAL',
+    },
 };
 
 export interface EventItem {
@@ -26,7 +37,7 @@ export interface EventItem {
 export interface Event {
     id: number;
     title: string;
-    type: EventType;
+    type: EventType | EventTypeLabel;
     sort_index: number;
     widget_id: number;
     created_by: string;

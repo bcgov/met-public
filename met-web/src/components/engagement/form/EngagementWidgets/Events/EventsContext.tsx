@@ -9,6 +9,8 @@ import { openNotification } from 'services/notificationService/notificationSlice
 export interface EventsContextProps {
     inPersonFormTabOpen: boolean;
     setInPersonFormTabOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    virtualSessionFormTabOpen: boolean;
+    setVirtualSessionFormTabOpen: React.Dispatch<React.SetStateAction<boolean>>;
     widget: Widget | null;
     loadEvents: () => void;
     isLoadingEvents: boolean;
@@ -21,8 +23,12 @@ export type EngagementParams = {
 
 export const EventsContext = createContext<EventsContextProps>({
     inPersonFormTabOpen: false,
+    virtualSessionFormTabOpen: false,
     setInPersonFormTabOpen: () => {
         throw new Error('setInPersonFormTabOpen not implemented');
+    },
+    setVirtualSessionFormTabOpen: () => {
+        throw new Error('setVirtualSessionFormTab not implemented');
     },
     widget: null,
     loadEvents: () => {
@@ -38,6 +44,7 @@ export const EventsProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Events) || null;
 
     const [inPersonFormTabOpen, setInPersonFormTabOpen] = useState(false);
+    const [virtualSessionFormTabOpen, setVirtualSessionFormTabOpen] = useState(false);
     const [isLoadingEvents, setIsLoadingEvents] = useState(true);
     const [events, setEvents] = useState<Event[]>([]);
 
@@ -65,6 +72,8 @@ export const EventsProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     return (
         <EventsContext.Provider
             value={{
+                virtualSessionFormTabOpen,
+                setVirtualSessionFormTabOpen,
                 inPersonFormTabOpen,
                 setInPersonFormTabOpen,
                 widget,
