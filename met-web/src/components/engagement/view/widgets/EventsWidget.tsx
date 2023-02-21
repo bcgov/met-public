@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MetPaper, MetHeader2, MetBody } from 'components/common';
-import { Grid, Link, Skeleton, useTheme, Divider } from '@mui/material';
+import { Grid, Link, Skeleton, Divider } from '@mui/material';
 import { Widget } from 'models/widget';
 import { Event, EVENT_TYPE } from 'models/event';
 import { useAppDispatch } from 'hooks';
