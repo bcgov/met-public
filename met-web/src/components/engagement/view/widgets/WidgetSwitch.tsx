@@ -4,7 +4,7 @@ import { Switch, Case } from 'react-if';
 import WhoIsListeningWidget from './WhoIsListeningWidget';
 import DocumentWidget from './DocumentWidget';
 import SubscribeWidget from './Subscribe/SubscribeWidget';
-
+import EventsWidget from './EventsWidget';
 interface WidgetSwitchProps {
     widget: Widget;
 }
@@ -18,6 +18,9 @@ export const WidgetSwitch = ({ widget }: WidgetSwitchProps) => {
                 </Case>
                 <Case condition={widget.widget_type_id === WidgetType.Document}>
                     <DocumentWidget widget={widget} />
+                </Case>
+                <Case condition={widget.widget_type_id === WidgetType.Events}>
+                    <EventsWidget widget={widget} />
                 </Case>
                 <Case condition={widget.widget_type_id === WidgetType.Subscribe}>
                     <SubscribeWidget />
