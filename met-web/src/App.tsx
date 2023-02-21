@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import UserService from './services/userService';
 import { useAppSelector, useAppDispatch } from './hooks';
-import { MidScreenLoader, MobileToolbar } from './components/common';
+import { MidScreenLoader, MetToolbar } from './components/common';
 import { Box, Container, useMediaQuery, Theme } from '@mui/material';
 import InternalHeader from './components/layout/Header/InternalHeader';
 import PublicHeader from './components/layout/Header/PublicHeader';
@@ -64,7 +64,7 @@ const App = () => {
             <Router>
                 <InternalHeader />
                 <Container>
-                    <MobileToolbar />
+                    <MetToolbar />
                     <AuthenticatedRoutes />
                     <FeedbackModal />
                 </Container>
@@ -79,6 +79,7 @@ const App = () => {
                 <Notification />
                 <NotificationModal />
                 <Box component="main" sx={{ flexGrow: 1, width: `calc(100% - ${drawerWidth}px)`, marginTop: '17px' }}>
+                    <MetToolbar />
                     <AuthenticatedRoutes />
                     <FeedbackModal />
                 </Box>
