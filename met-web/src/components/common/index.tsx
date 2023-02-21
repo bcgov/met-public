@@ -7,6 +7,7 @@ import {
     Typography,
     Stack,
     IconButton,
+    Toolbar,
 } from '@mui/material';
 import { SxProps, styled } from '@mui/system';
 import EditIcon from '@mui/icons-material/Edit';
@@ -15,6 +16,10 @@ import { Palette } from 'styles/Theme';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { MET_Header_Font_Family, MET_Header_Font_Weight } from '../../styles/constants';
 import { When } from 'react-if';
+
+export const MobileToolbar = styled(Toolbar)(() => ({
+    marginBottom: '40px',
+}));
 
 const StyledPrimaryButton = styled(LoadingButton)(() => ({
     backgroundColor: Palette.primary.main,
