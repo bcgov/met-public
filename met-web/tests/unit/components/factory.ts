@@ -2,6 +2,8 @@ import '@testing-library/jest-dom';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { createDefaultEngagement, Engagement } from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
+import { WidgetType, Widget, WidgetItem } from 'models/widget';
+import { Event, EventItem } from 'models/event';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
@@ -50,4 +52,46 @@ const openEngagement = {
     },
 };
 
-export { draftEngagement, openEngagement };
+const mockEventItem: EventItem = {
+    id: 1,
+    description: 'description',
+    location_name: 'location name',
+    location_address: 'location address',
+    start_date: 'start date',
+    end_date: 'end date',
+    url: 'link',
+    url_label: 'link label',
+    sort_index: 1,
+    widget_events_id: 0,
+    created_by: 'test',
+    updated_by: 'test',
+    created_date: 'test date',
+    updated_date: 'test date',
+};
+
+const mockEvent: Event = {
+    id: 1,
+    title: 'Jace',
+    type: 'OPENHOUSE',
+    sort_index: 1,
+    widget_id: 1,
+    created_by: 'test',
+    updated_by: 'test',
+    event_items: [mockEventItem],
+};
+
+const eventWidgetItem: WidgetItem = {
+    id: 1,
+    widget_id: 1,
+    widget_data_id: 1,
+    sort_index: 1,
+};
+
+const eventWidget: Widget = {
+    id: 1,
+    widget_type_id: WidgetType.Events,
+    engagement_id: 1,
+    items: [eventWidgetItem],
+};
+
+export { draftEngagement, openEngagement, surveys, mockEvent, mockEventItem, eventWidgetItem, eventWidget };
