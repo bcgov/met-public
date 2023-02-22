@@ -9,7 +9,7 @@ import * as engagementService from 'services/engagementService';
 import * as widgetService from 'services/widgetService';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { Widget, WidgetItem, WidgetType } from 'models/widget';
-import { Event } from 'models/event';
+import { Event, EventItem } from 'models/event';
 import { Box } from '@mui/material';
 import { draftEngagement } from '../factory';
 
@@ -22,30 +22,46 @@ const survey: Survey = {
 
 const surveys = [survey];
 
-const mockEvent: Event = {
+const mockEventItem: EventItem = {
     id: 1,
-    name: 'Jace',
-    title: 'prince',
-    phone_number: '123-123-1234',
-    email: 'jace@gmail.com',
-    address: 'Dragonstone, Westeros',
-    bio: 'Jacaerys Targaryen is the son and heir of Rhaenyra Targaryen',
-    avatar_filename: '',
-    avatar_url: '',
+    description: 'description',
+    location_name: 'location name',
+    location_address: 'location address',
+    start_date: 'start date',
+    end_date: 'end date',
+    url: 'link',
+    url_label: 'link label',
+    sort_index: 1,
+    widget_events_id: 0,
+    created_by: 'test',
+    updated_by: 'test',
+    created_date: 'test date',
+    updated_date: 'test date',
 };
 
-const contactWidgetItem: WidgetItem = {
+const mockEvent: Event = {
+    id: 1,
+    title: 'Jace',
+    type: 'OPENHOUSE',
+    sort_index: 1,
+    widget_id: 1,
+    created_by: 'test',
+    updated_by: 'test',
+    event_items: [mockEventItem],
+};
+
+const eventWidgetItem: WidgetItem = {
     id: 1,
     widget_id: 1,
     widget_data_id: 1,
     sort_index: 1,
 };
 
-const whoIsListeningWidget: Widget = {
+const eventWidget: Widget = {
     id: 1,
-    widget_type_id: WidgetType.WhoIsListening,
+    widget_type_id: WidgetType.Events,
     engagement_id: 1,
-    items: [contactWidgetItem],
+    items: [eventWidgetItem],
 };
 
 jest.mock('@reduxjs/toolkit/query/react', () => ({
@@ -88,7 +104,7 @@ jest.mock('@hello-pangea/dnd', () => ({
     DragDropContext: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
 }));
 
-const mockWidgetsRtkUnwrap = jest.fn(() => Promise.resolve([whoIsListeningWidget]));
+const mockWidgetsRtkUnwrap = jest.fn(() => Promise.resolve([eventWidget]));
 const mockWidgetsRtkTrigger = () => {
     return {
         unwrap: mockWidgetsRtkUnwrap,
@@ -102,7 +118,7 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
     useLazyGetWidgetsQuery: () => [...mockLazyGetWidgetsQuery()],
 }));
 
-describe('Who is Listening widget  tests', () => {
+describe('Event Widget tests', () => {
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
@@ -110,15 +126,13 @@ describe('Who is Listening widget  tests', () => {
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
         .mockReturnValue(Promise.resolve(draftEngagement));
-    const postWidgetMock = jest
-        .spyOn(widgetService, 'postWidget')
-        .mockReturnValue(Promise.resolve(whoIsListeningWidget));
+    const postWidgetMock = jest.spyOn(widgetService, 'postWidget').mockReturnValue(Promise.resolve(eventWidget));
 
     beforeEach(() => {
         setupEnv();
     });
 
-    async function addWhosIsListeningWidget(container: HTMLElement) {
+    async function addEventWidget(container: HTMLElement) {
         await waitFor(() => {
             expect(screen.getByText('Add Widget')).toBeInTheDocument();
         });
@@ -130,15 +144,16 @@ describe('Who is Listening widget  tests', () => {
             expect(screen.getByText('Select Widget')).toBeVisible();
         });
 
-        const whoIsListeningOption = screen.getByTestId(`widget-drawer-option/${WidgetType.WhoIsListening}`);
-        fireEvent.click(whoIsListeningOption);
+        const eventOption = screen.getByTestId(`widget-drawer-option/${WidgetType.Events}`);
+        fireEvent.click(eventOption);
 
         await waitFor(() => {
-            expect(screen.getByText('Add This Contact')).toBeVisible();
+            expect(screen.getByText('Add In-Person Event')).toBeVisible();
+            expect(screen.getByText('Virtual Information Session')).toBeVisible();
         });
     }
 
-    test('Who is listening widget is created when option is clicked', async () => {
+    test('Event widget is created when option is clicked', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
@@ -147,22 +162,22 @@ describe('Who is Listening widget  tests', () => {
             }),
         );
         mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
-        postWidgetMock.mockReturnValue(Promise.resolve(whoIsListeningWidget));
-        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
+        postWidgetMock.mockReturnValue(Promise.resolve(eventWidget));
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([eventWidget]));
         const { container } = render(<EngagementForm />);
 
-        await addWhosIsListeningWidget(container);
+        await addEventWidget(container);
 
         expect(postWidgetMock).toHaveBeenNthCalledWith(1, draftEngagement.id, {
-            widget_type_id: WidgetType.WhoIsListening,
+            widget_type_id: WidgetType.Events,
             engagement_id: draftEngagement.id,
         });
         expect(mockWidgetsRtkUnwrap).toHaveBeenCalledTimes(2);
-        expect(screen.getByText('Add This Contact')).toBeVisible();
-        expect(screen.getByText('Select Existing Contact')).toBeVisible();
+        expect(screen.getByText('Add In-Person Event')).toBeVisible();
+        expect(screen.getByText('Virtual Information Session')).toBeVisible();
     });
 
-    test('Add contact drawer appears', async () => {
+    test('Add In-Person Event Drawer appears', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
@@ -172,22 +187,49 @@ describe('Who is Listening widget  tests', () => {
         );
 
         mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
-        postWidgetMock.mockReturnValue(Promise.resolve(whoIsListeningWidget));
-        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
+        postWidgetMock.mockReturnValue(Promise.resolve(eventWidget));
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([eventWidget]));
         const { container } = render(<EngagementForm />);
 
-        await addWhosIsListeningWidget(container);
+        await addEventWidget(container);
 
         await waitFor(() => {
-            expect(screen.getByText('Create New Contact')).toBeVisible();
-            expect(screen.getByText(mockEvent.email)).toBeVisible();
+            expect(screen.getByText('Add In-Person Event')).toBeVisible();
         });
 
-        const createContactButton = screen.getByText('Create New Contact');
-        fireEvent.click(createContactButton);
+        const InPersonEventButton = screen.getByText('Add In-Person Event');
+        fireEvent.click(InPersonEventButton);
 
         await waitFor(() => {
-            expect(screen.getByText('Add Contact')).toBeVisible();
+            expect(screen.getByText('Description')).toBeVisible();
+        });
+    });
+
+    test('Add Virtual Session Drawer appears', async () => {
+        useParamsMock.mockReturnValue({ engagementId: '1' });
+        getEngagementMock.mockReturnValueOnce(
+            Promise.resolve({
+                ...draftEngagement,
+                surveys: surveys,
+            }),
+        );
+
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
+        postWidgetMock.mockReturnValue(Promise.resolve(eventWidget));
+        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([eventWidget]));
+        const { container } = render(<EngagementForm />);
+
+        await addEventWidget(container);
+
+        await waitFor(() => {
+            expect(screen.getByText('Virtual Information Session')).toBeVisible();
+        });
+
+        const VirtualSessionButton = screen.getByText('Virtual Information Session');
+        fireEvent.click(VirtualSessionButton);
+
+        await waitFor(() => {
+            expect(screen.getByText('Description')).toBeVisible();
         });
     });
 });
