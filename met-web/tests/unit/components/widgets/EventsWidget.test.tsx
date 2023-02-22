@@ -7,62 +7,9 @@ import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as widgetService from 'services/widgetService';
-import { createDefaultSurvey, Survey } from 'models/survey';
-import { Widget, WidgetItem, WidgetType } from 'models/widget';
-import { Event, EventItem } from 'models/event';
 import { Box } from '@mui/material';
-import { draftEngagement } from '../factory';
-
-const survey: Survey = {
-    ...createDefaultSurvey(),
-    id: 1,
-    name: 'Survey 1',
-    engagement_id: 1,
-};
-
-const surveys = [survey];
-
-const mockEventItem: EventItem = {
-    id: 1,
-    description: 'description',
-    location_name: 'location name',
-    location_address: 'location address',
-    start_date: 'start date',
-    end_date: 'end date',
-    url: 'link',
-    url_label: 'link label',
-    sort_index: 1,
-    widget_events_id: 0,
-    created_by: 'test',
-    updated_by: 'test',
-    created_date: 'test date',
-    updated_date: 'test date',
-};
-
-const mockEvent: Event = {
-    id: 1,
-    title: 'Jace',
-    type: 'OPENHOUSE',
-    sort_index: 1,
-    widget_id: 1,
-    created_by: 'test',
-    updated_by: 'test',
-    event_items: [mockEventItem],
-};
-
-const eventWidgetItem: WidgetItem = {
-    id: 1,
-    widget_id: 1,
-    widget_data_id: 1,
-    sort_index: 1,
-};
-
-const eventWidget: Widget = {
-    id: 1,
-    widget_type_id: WidgetType.Events,
-    engagement_id: 1,
-    items: [eventWidgetItem],
-};
+import { WidgetType } from 'models/widget';
+import { draftEngagement, surveys, mockEvent, eventWidget } from '../factory';
 
 jest.mock('@reduxjs/toolkit/query/react', () => ({
     ...jest.requireActual('@reduxjs/toolkit/query/react'),
