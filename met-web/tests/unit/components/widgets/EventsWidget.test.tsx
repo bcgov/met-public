@@ -85,14 +85,6 @@ const mockEventRtkTrigger = () => {
 };
 export const mockEventRtkQuery = () => [mockEventRtkTrigger];
 
-const mockLazyGetEventsQuery = jest.fn(mockEventsRtkQuery);
-const mockLazyGetEventQuery = jest.fn(mockEventRtkQuery);
-jest.mock('apiManager/apiSlices/contacts', () => ({
-    ...jest.requireActual('apiManager/apiSlices/contacts'),
-    useLazyGetContactsQuery: () => [...mockLazyGetEventsQuery()],
-    useLazyGetContactQuery: () => [...mockLazyGetEventQuery()],
-}));
-
 jest.mock('components/common/Dragdrop', () => ({
     ...jest.requireActual('components/common/Dragdrop'),
     MetDroppable: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
@@ -149,7 +141,7 @@ describe('Event Widget tests', () => {
 
         await waitFor(() => {
             expect(screen.getByText('Add In-Person Event')).toBeVisible();
-            expect(screen.getByText('Virtual Information Session')).toBeVisible();
+            expect(screen.getByText('Add Virtual Session')).toBeVisible();
         });
     }
 
@@ -174,7 +166,7 @@ describe('Event Widget tests', () => {
         });
         expect(mockWidgetsRtkUnwrap).toHaveBeenCalledTimes(2);
         expect(screen.getByText('Add In-Person Event')).toBeVisible();
-        expect(screen.getByText('Virtual Information Session')).toBeVisible();
+        expect(screen.getByText('Add Virtual Session')).toBeVisible();
     });
 
     test('Add In-Person Event Drawer appears', async () => {
@@ -222,14 +214,14 @@ describe('Event Widget tests', () => {
         await addEventWidget(container);
 
         await waitFor(() => {
-            expect(screen.getByText('Virtual Information Session')).toBeVisible();
+            expect(screen.getByText('Add Virtual Session')).toBeVisible();
         });
 
-        const VirtualSessionButton = screen.getByText('Virtual Information Session');
+        const VirtualSessionButton = screen.getByText('Add Virtual Session');
         fireEvent.click(VirtualSessionButton);
 
         await waitFor(() => {
-            expect(screen.getByText('Description')).toBeVisible();
+            expect(screen.getByText('Virtual Information Session')).toBeVisible();
         });
     });
 });

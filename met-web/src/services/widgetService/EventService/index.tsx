@@ -27,6 +27,7 @@ interface PostEventProps {
         url_label?: string;
     }[];
 }
+
 export const postEvent = async (widget_id: number, data: PostEventProps): Promise<Event> => {
     try {
         const url = replaceUrl(Endpoints.Events.CREATE, 'widget_id', String(widget_id));
