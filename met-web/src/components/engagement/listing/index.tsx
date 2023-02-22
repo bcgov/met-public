@@ -20,6 +20,8 @@ import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
 import AdvancedSearch from './AdvancedSearch/SearchComponent';
 import AdvancedSearchMobile from './AdvancedSearch/SearchComponentMobile';
 import { SearchOptions } from './AdvancedSearch/SearchTypes';
+import { PermissionsGate } from 'components/permissionsGate';
+import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 
 const EngagementListing = () => {
     const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
@@ -289,13 +291,15 @@ const EngagementListing = () => {
                             Advanced Search
                         </SecondaryButton>
                     </When>
-                    <PrimaryButton
-                        component={Link}
-                        to="/engagements/create/form"
-                        data-testid="create-engagement-button-landingPage"
-                    >
-                        + Create Engagement
-                    </PrimaryButton>
+                    <PermissionsGate scopes={[SCOPES.createEngagement]} errorProps={{ disabled: true }}>
+                        <PrimaryButton
+                            component={Link}
+                            to="/engagements/create/form"
+                            data-testid="create-engagement-button-landingPage"
+                        >
+                            + Create Engagement
+                        </PrimaryButton>
+                    </PermissionsGate>
                 </Stack>
             </Grid>
             <Grid item xs={12} lg={10} style={{ width: '100%' }}>
