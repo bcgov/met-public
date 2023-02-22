@@ -99,7 +99,7 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
                             xs={12}
                             md={9}
                         >
-                            <When condition={event.type === EVENT_TYPE.MEETUP.value}>
+                            <When condition={Boolean(eventItem.description)}>
                                 <Grid
                                     container
                                     justifyContent={{ xs: 'center', md: 'flex-start' }}
@@ -107,37 +107,7 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
                                     item
                                     xs={12}
                                 >
-                                    <MetBody>
-                                        OPEN HOUSE - Come to this Open House to hear about this project from the
-                                        proponent. Information session will be folloewd by a question period.
-                                    </MetBody>
-                                </Grid>
-                            </When>
-                            <When condition={event.type === EVENT_TYPE.OPENHOUSE.value}>
-                                <Grid
-                                    container
-                                    justifyContent={{ xs: 'center', md: 'flex-start' }}
-                                    paddingBottom={1}
-                                    item
-                                    xs={12}
-                                >
-                                    <MetBody>
-                                        MEETUP - Come to this Meetup to hear about this project from the proponent.
-                                        Information session will be folloewd by a question period.
-                                    </MetBody>
-                                </Grid>
-                            </When>
-                            <When condition={event.type === EVENT_TYPE.VIRTUAL.value}>
-                                <Grid
-                                    container
-                                    justifyContent={{ xs: 'center', md: 'flex-start' }}
-                                    paddingBottom={1}
-                                    item
-                                    xs={12}
-                                >
-                                    <MetBody>
-                                        Virtual Session - Attend this session to learn more and ask questions.
-                                    </MetBody>
+                                    <MetBody>{eventItem.description}</MetBody>
                                 </Grid>
                             </When>
                             <When
