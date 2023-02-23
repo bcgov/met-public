@@ -5,7 +5,7 @@ import { Widget } from 'models/widget';
 import { Event, EVENT_TYPE } from 'models/event';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { When } from 'react-if';
+import { Switch, Case } from 'react-if';
 import { getEvents } from 'services/widgetService/EventService';
 import VirtualSession from './VirtualSession';
 import InPersonEvent from './InPersonEvent';
@@ -100,16 +100,19 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
                             xs={12}
                             md={9}
                         >
-                            <When condition={event.type === EVENT_TYPE.VIRTUAL.value}>
-                                <VirtualSession eventItem={eventItem} />
-                            </When>
-                            <When
-                                condition={
-                                    event.type === EVENT_TYPE.OPENHOUSE.value || event.type === EVENT_TYPE.MEETUP.value
-                                }
-                            >
-                                <InPersonEvent eventItem={eventItem} />
-                            </When>
+                            <Switch>
+                                <Case condition={event.type === EVENT_TYPE.VIRTUAL.value}>
+                                    <VirtualSession eventItem={eventItem} />
+                                </Case>
+                                <Case
+                                    condition={
+                                        event.type === EVENT_TYPE.OPENHOUSE.value ||
+                                        event.type === EVENT_TYPE.MEETUP.value
+                                    }
+                                >
+                                    <InPersonEvent eventItem={eventItem} />
+                                </Case>
+                            </Switch>
                         </Grid>
                     </Grid>
                 );
