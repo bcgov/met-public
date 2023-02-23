@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { MetPaper, MetHeader2, MetBody } from 'components/common';
-import { Grid, Link, Skeleton, Divider } from '@mui/material';
+import { MetPaper, MetHeader2 } from 'components/common';
+import { Grid, Skeleton, Divider } from '@mui/material';
 import { Widget } from 'models/widget';
 import { Event, EVENT_TYPE } from 'models/event';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { When } from 'react-if';
 import { getEvents } from 'services/widgetService/EventService';
-import { formatDate } from 'components/common/dateHelper';
+import VirtualSession from './VirtualSession';
+import InPersonEvent from './InPersonEvent';
 
 interface EventsWidgetProps {
     widget: Widget;
@@ -99,51 +100,15 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
                             xs={12}
                             md={9}
                         >
-                            <When condition={Boolean(eventItem.description)}>
-                                <Grid
-                                    container
-                                    justifyContent={{ xs: 'center', md: 'flex-start' }}
-                                    paddingBottom={1}
-                                    item
-                                    xs={12}
-                                >
-                                    <MetBody>{eventItem.description}</MetBody>
-                                </Grid>
+                            <When condition={event.type === EVENT_TYPE.VIRTUAL.value}>
+                                <VirtualSession eventItem={eventItem} />
                             </When>
                             <When
                                 condition={
-                                    event.type === EVENT_TYPE.MEETUP.value || event.type === EVENT_TYPE.OPENHOUSE.value
+                                    event.type === EVENT_TYPE.OPENHOUSE.value || event.type === EVENT_TYPE.MEETUP.value
                                 }
                             >
-                                <Grid container justifyContent={{ xs: 'center', md: 'flex-start' }} item xs={12}>
-                                    <MetBody>Location: {eventItem.location_name}</MetBody>
-                                </Grid>
-                                <Grid container justifyContent={{ xs: 'center', md: 'flex-start' }} item xs={12}>
-                                    <MetBody>Address: {eventItem.location_address}</MetBody>
-                                </Grid>
-                            </When>
-                            <Grid item container justifyContent={{ xs: 'center', md: 'flex-start' }} xs={12}>
-                                <MetBody>Date: {formatDate(eventItem.start_date, 'MMMM DD, YYYY')}</MetBody>
-                            </Grid>
-                            <Grid container justifyContent={{ xs: 'center', md: 'flex-start' }} item xs={12}>
-                                <MetBody>
-                                    Time:{' '}
-                                    {`${formatDate(eventItem.start_date, 'h:mm a')} to ${formatDate(
-                                        eventItem.end_date,
-                                        'h:mm a',
-                                    )} PST`}
-                                </MetBody>
-                            </Grid>
-                            <When condition={event.type === EVENT_TYPE.VIRTUAL.value}>
-                                <Grid
-                                    container
-                                    justifyContent={{ xs: 'center', md: 'flex-start' }}
-                                    item
-                                    xs={12}
-                                    sx={{ whiteSpace: 'pre-line' }}
-                                >
-                                    <Link href={`${eventItem.url}`}>{eventItem.url_label}</Link>
-                                </Grid>
+                                <InPersonEvent eventItem={eventItem} />
                             </When>
                         </Grid>
                     </Grid>

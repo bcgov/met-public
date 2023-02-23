@@ -4,7 +4,7 @@ import { Switch, Case } from 'react-if';
 import WhoIsListeningWidget from './WhoIsListeningWidget';
 import DocumentWidget from './DocumentWidget';
 import SubscribeWidget from './Subscribe/SubscribeWidget';
-import EventsWidget from './EventsWidget';
+import EventsWidget from './Events/EventsWidget';
 
 interface WidgetSwitchProps {
     widget: Widget;
