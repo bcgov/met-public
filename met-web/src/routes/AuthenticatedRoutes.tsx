@@ -17,6 +17,9 @@ import UnderConstruction from './UnderConstruction';
 import FeedbackListing from 'components/feedback/listing';
 import UserManagementListing from 'components/userManagement/listing';
 import Dashboard from 'components/dashboard';
+import Unauthorized from './Unauthorized';
+import AuthGate from './AuthGate';
+import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -30,7 +33,9 @@ const AuthenticatedRoutes = () => {
             <Route path="/surveys/:surveyId/comments" element={<CommentReviewListing />} />
             <Route path="/surveys/:surveyId/comments/all" element={<CommentTextListing />} />
             <Route path="/surveys/:surveyId/submissions/:submissionId/review" element={<CommentReview />} />
-            <Route path="/engagements/:engagementId/form" element={<EngagementForm />} />
+            <Route element={<AuthGate allowedRoles={[SCOPES.createEngagement, SCOPES.editEngagement]} />}>
+                <Route path="/engagements/:engagementId/form" element={<EngagementForm />} />
+            </Route>
             <Route path="/engagements/:engagementId/view" element={<EngagementView />} />
             <Route path="/engagements/:engagementId/comments" element={<EngagementComments />} />
             <Route path="/engagements/:engagementId/dashboard" element={<EngagementDashboard />} />
@@ -38,6 +43,7 @@ const AuthenticatedRoutes = () => {
             <Route path="/calendar" element={<UnderConstruction />} />
             <Route path="/reporting" element={<UnderConstruction />} />
             <Route path="/usermanagement" element={<UserManagementListing />} />
+            <Route path="/unauthorized" element={<Unauthorized />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
     );
