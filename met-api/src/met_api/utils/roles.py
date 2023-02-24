@@ -20,6 +20,7 @@ class Role(Enum):
 
     PUBLIC_USER = 'public_user'
     ANONYMOUS_USER = 'anonymous_user'
+    ENGAGEMENT_TEAM_MEMBER = 'enagement_team_member'
 
     # STAFF Based roles
     CREATE_TENANT = 'create_tenant'
