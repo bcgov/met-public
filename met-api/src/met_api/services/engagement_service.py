@@ -14,8 +14,10 @@ from met_api.models.pagination_options import PaginationOptions
 from met_api.models.submission import Submission
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services.object_storage_service import ObjectStorageService
+from met_api.services.membership_service import MembershipService
 from met_api.utils.notification import send_email
 from met_api.utils.template import Template
+from met_api.utils.roles import Role
 
 
 class EngagementService:
@@ -48,13 +50,14 @@ class EngagementService:
 
         return engagements
 
-    @staticmethod
-    def get_engagements_paginated(user_id, pagination_options: PaginationOptions, search_options=None):
+    @classmethod
+    def get_engagements_paginated(cls, user_id, user_roles, pagination_options: PaginationOptions, search_options=None):
         """Get engagements paginated."""
         items, total = EngagementModel.get_engagements_paginated(
             pagination_options,
             search_options,
-            statuses=None if user_id else [Status.Published.value],
+            statuses=cls._get_statuses_filter(user_id),
+            assigned_engagements=cls._get_assigned_engagements(user_id, user_roles)
         )
         engagements_schema = EngagementSchema(many=True)
         engagements = engagements_schema.dump(items)
@@ -63,6 +66,19 @@ class EngagementService:
             'items': engagements,
             'total': total
         }
+
+    @staticmethod
+    def _get_statuses_filter(user_id):
+        if user_id:
+            return None
+        return [Status.Published.value]
+
+    @staticmethod
+    def _get_assigned_engagements(user_id, user_roles):
+        if Role.APP_ADMIN.value in user_roles or Role.ENGAGEMENT_TEAM_MEMBER.value not in user_roles:
+            return None
+
+        return MembershipService.get_assigned_engagements(user_id) 
 
     @staticmethod
     def close_engagements_due():

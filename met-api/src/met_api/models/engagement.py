@@ -50,7 +50,7 @@ class Engagement(BaseModel):
         return engagements_schema.dump(data)
 
     @classmethod
-    def get_engagements_paginated(cls, pagination_options: PaginationOptions, search_options=None, statuses=None):
+    def get_engagements_paginated(cls, pagination_options: PaginationOptions, search_options=None, statuses=None, assigned_engagements : list[int] | None=None):
         """Get engagements paginated."""
         query = db.session.query(Engagement).join(EngagementStatus)
 
@@ -65,6 +65,9 @@ class Engagement(BaseModel):
             query = cls._filter_by_published_date(query, search_options)
 
             query = cls._filter_by_engagement_status(query, search_options)
+
+        if assigned_engagements is not None:
+            query = cls._filter_by_assigned_engagements(query, assigned_engagements)
 
         sort = cls._get_sort_order(pagination_options)
 
@@ -222,3 +225,11 @@ class Engagement(BaseModel):
     @staticmethod
     def _filter_by_statuses(query, statuses):
         return query.filter(Engagement.status_id.in_(statuses))
+
+    @staticmethod
+    def _filter_by_assigned_engagements(query, assigned_engagements: list[int]):
+        query = query.filter(or_(
+            Engagement.status_id != Status.Draft.value,
+            Engagement.id.in_(assigned_engagements)
+        ))
+        return query
