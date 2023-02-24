@@ -50,7 +50,12 @@ class Engagement(BaseModel):
         return engagements_schema.dump(data)
 
     @classmethod
-    def get_engagements_paginated(cls, pagination_options: PaginationOptions, search_options=None, statuses=None, assigned_engagements : list[int] | None=None):
+    def get_engagements_paginated(
+        cls, pagination_options: PaginationOptions,
+        search_options=None,
+        statuses=None,
+        assigned_engagements:list[int] | None = None
+    ):
         """Get engagements paginated."""
         query = db.session.query(Engagement).join(EngagementStatus)
 
