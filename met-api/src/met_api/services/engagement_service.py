@@ -78,7 +78,7 @@ class EngagementService:
         if Role.APP_ADMIN.value in user_roles or Role.ENGAGEMENT_TEAM_MEMBER.value not in user_roles:
             return None
 
-        return MembershipService.get_assigned_engagements(user_id) 
+        return MembershipService.get_assigned_engagements(user_id)
 
     @staticmethod
     def close_engagements_due():
