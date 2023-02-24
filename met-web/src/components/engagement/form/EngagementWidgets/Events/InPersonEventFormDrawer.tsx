@@ -37,7 +37,8 @@ type InPersonEventForm = yup.TypeOf<typeof schema>;
 
 const InPersonEventFormDrawer = () => {
     const dispatch = useAppDispatch();
-    const { inPersonFormTabOpen, setInPersonFormTabOpen, widget, loadEvents, eventToEdit } = useContext(EventsContext);
+    const { inPersonFormTabOpen, setInPersonFormTabOpen, widget, loadEvents, eventToEdit, handleEventDrawerOpen } =
+        useContext(EventsContext);
     const [isCreating, setIsCreating] = useState(false);
 
     const methods = useForm<InPersonEventForm>({
@@ -94,7 +95,7 @@ const InPersonEventFormDrawer = () => {
             anchor="right"
             open={inPersonFormTabOpen}
             onClose={() => {
-                setInPersonFormTabOpen(false);
+                handleEventDrawerOpen(eventToEdit, false);
             }}
         >
             <Box sx={{ width: '40vw', paddingTop: '7em' }} role="presentation">
@@ -208,7 +209,7 @@ const InPersonEventFormDrawer = () => {
                                     <PrimaryButton type="submit" loading={isCreating}>{`Save & Close`}</PrimaryButton>
                                 </Grid>
                                 <Grid item>
-                                    <SecondaryButton onClick={() => setInPersonFormTabOpen(false)}>
+                                    <SecondaryButton onClick={() => handleEventDrawerOpen(eventToEdit, false)}>
                                         Cancel
                                     </SecondaryButton>
                                 </Grid>

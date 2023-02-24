@@ -34,7 +34,47 @@ export const postEvent = async (widget_id: number, data: PostEventProps): Promis
         if (response.data) {
             return response.data;
         }
-        return Promise.reject('Failed to create document');
+        return Promise.reject('Failed to create event');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
+interface PatchEventProps {
+    widget_id: number;
+    title?: string;
+    type?: EventTypeLabel;
+    items?: {
+        description?: string;
+        location_name?: string;
+        location_address?: string;
+        start_date?: string;
+        end_date?: string;
+        url?: string;
+        url_label?: string;
+    }[];
+}
+export const patchEvent = async (widget_id: number, data: PatchEventProps): Promise<Event> => {
+    try {
+        const url = replaceUrl(Endpoints.Events.PATCH, 'widget_id', String(widget_id));
+        const response = await http.PatchRequest<Event>(url, data);
+        if (response.data) {
+            return response.data;
+        }
+        return Promise.reject('Failed to patch event');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
+export const deleteEvent = async (widget_id: number, event_name: string): Promise<Event> => {
+    try {
+        const url = replaceUrl(Endpoints.Events.DELETE, 'widget_id', String(widget_id));
+        const response = await http.DeleteRequest<Event>(url);
+        if (response.data) {
+            return response.data;
+        }
+        return Promise.reject('Failed to delete event');
     } catch (err) {
         return Promise.reject(err);
     }

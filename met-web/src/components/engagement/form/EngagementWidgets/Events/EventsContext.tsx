@@ -84,8 +84,8 @@ export const EventsProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     };
 
     const handleEventDrawerOpen = (event: Event, open: boolean) => {
-        console.log(event);
-        if (event.type === EVENT_TYPE.OPENHOUSE.value || event.type === EVENT_TYPE.MEETING.value) {
+
+        if (event.type === EVENT_TYPE.OPENHOUSE.value || event.type === EVENT_TYPE.MEETUP.value) {
             setInPersonFormTabOpen(open);
         } else if (event.type === EVENT_TYPE.VIRTUAL.value) {
             setVirtualSessionFormTabOpen(open);

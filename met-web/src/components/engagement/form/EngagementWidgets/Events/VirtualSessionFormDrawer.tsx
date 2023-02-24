@@ -31,7 +31,14 @@ type VirtualSessionForm = yup.TypeOf<typeof schema>;
 
 const VirtualSessionFormDrawer = () => {
     const dispatch = useAppDispatch();
-    const { virtualSessionFormTabOpen, setVirtualSessionFormTabOpen, widget, loadEvents } = useContext(EventsContext);
+    const {
+        virtualSessionFormTabOpen,
+        setVirtualSessionFormTabOpen,
+        widget,
+        loadEvents,
+        eventToEdit,
+        handleEventDrawerOpen,
+    } = useContext(EventsContext);
     const [isCreating, setIsCreating] = useState(false);
 
     const methods = useForm<VirtualSessionForm>({
@@ -41,6 +48,13 @@ const VirtualSessionFormDrawer = () => {
     useEffect(() => {
         methods.setValue('session_link_text', 'Click here to register');
     }, []);
+
+    useEffect(() => {
+        methods.setValue('description', eventToEdit?.description || '');
+        methods.setValue('date', eventToEdit?.start_date || '');
+        methods.setValue('session_link', eventToEdit?.url || '');
+        methods.setValue('session_link_text', eventToEdit?.url_label || '');
+    }, [eventToEdit]);
 
     const { handleSubmit, reset } = methods;
 
@@ -197,7 +211,11 @@ const VirtualSessionFormDrawer = () => {
                                     <PrimaryButton type="submit" loading={isCreating}>{`Save & Close`}</PrimaryButton>
                                 </Grid>
                                 <Grid item>
-                                    <SecondaryButton onClick={() => setVirtualSessionFormTabOpen(false)}>
+                                    <SecondaryButton
+                                        onClick={() => {
+                                            handleEventDrawerOpen(eventToEdit, false);
+                                        }}
+                                    >
                                         Cancel
                                     </SecondaryButton>
                                 </Grid>
