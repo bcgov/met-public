@@ -7,7 +7,7 @@ import VirtualEventInfoPaper from './VirtualEventInfoPaper';
 import { When } from 'react-if';
 
 const EventsInfoBlock = () => {
-    const { events, isLoadingEvents } = useContext(EventsContext);
+    const { events, setEvents, isLoadingEvents } = useContext(EventsContext);
 
     if (isLoadingEvents) {
         return (
@@ -19,19 +19,24 @@ const EventsInfoBlock = () => {
         );
     }
 
+    const removeEvent = (eventId: number) => {
+        const newEvents = events.filter((event) => event.id !== eventId);
+        setEvents([...newEvents]);
+    };
+
     return (
         <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" spacing={2}>
             {events.map((event: Event, index) => {
                 return (
                     <Grid item xs={12} key={`Grid-${event.id}`}>
                         <When condition={event.type === EVENT_TYPE.MEETUP.value}>
-                            <EventInfoPaper event={event} />
+                            <EventInfoPaper removeEvent={removeEvent} event={event} />
                         </When>
                         <When condition={event.type === EVENT_TYPE.OPENHOUSE.value}>
-                            <EventInfoPaper event={event} />
+                            <EventInfoPaper removeEvent={removeEvent} event={event} />
                         </When>
                         <When condition={event.type === EVENT_TYPE.VIRTUAL.value}>
-                            <VirtualEventInfoPaper event={event} />
+                            <VirtualEventInfoPaper removeEvent={removeEvent} event={event} />
                         </When>
                     </Grid>
                 );

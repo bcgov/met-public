@@ -3,7 +3,7 @@ import { useAppDispatch } from 'hooks';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { Widget, WidgetType } from 'models/widget';
 import { getEvents } from 'services/widgetService/EventService';
-import { Event } from 'models/event';
+import { EVENT_TYPE, Event, EventItem } from 'models/event';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
 export interface EventsContextProps {
@@ -15,6 +15,10 @@ export interface EventsContextProps {
     loadEvents: () => void;
     isLoadingEvents: boolean;
     events: Event[];
+    eventToEdit: EventItem | null;
+    setEvents: React.Dispatch<React.SetStateAction<Event[]>>;
+    handleChangeEventToEdit: (_event: EventItem | null) => void;
+    handleEventDrawerOpen: (_event: Event, _open: boolean) => void;
 }
 
 export type EngagementParams = {
@@ -36,13 +40,23 @@ export const EventsContext = createContext<EventsContextProps>({
     },
     isLoadingEvents: false,
     events: [],
+    eventToEdit: null,
+    setEvents: () => {
+        throw new Error('setEvents not implemented');
+    },
+    handleChangeEventToEdit: () => {
+        /* empty default method  */
+    },
+    handleEventDrawerOpen: (_event: Event, _open: boolean) => {
+        /* empty default method  */
+    },
 });
 
 export const EventsProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     const dispatch = useAppDispatch();
     const { widgets } = useContext(WidgetDrawerContext);
     const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Events) || null;
-
+    const [eventToEdit, setEventToEdit] = useState<EventItem | null>(null);
     const [inPersonFormTabOpen, setInPersonFormTabOpen] = useState(false);
     const [virtualSessionFormTabOpen, setVirtualSessionFormTabOpen] = useState(false);
     const [isLoadingEvents, setIsLoadingEvents] = useState(true);
@@ -65,6 +79,22 @@ export const EventsProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         }
     };
 
+    const handleChangeEventToEdit = (event: EventItem | null) => {
+        setEventToEdit(event);
+    };
+
+    const handleEventDrawerOpen = (event: Event, open: boolean) => {
+        console.log(event);
+        if (event.type === EVENT_TYPE.OPENHOUSE.value || event.type === EVENT_TYPE.MEETING.value) {
+            setInPersonFormTabOpen(open);
+        } else if (event.type === EVENT_TYPE.VIRTUAL.value) {
+            setVirtualSessionFormTabOpen(open);
+        }
+        if (!open && eventToEdit) {
+            setEventToEdit(null);
+        }
+    };
+
     useEffect(() => {
         loadEvents();
     }, []);
@@ -76,10 +106,14 @@ export const EventsProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 setVirtualSessionFormTabOpen,
                 inPersonFormTabOpen,
                 setInPersonFormTabOpen,
+                eventToEdit,
+                handleChangeEventToEdit,
+                handleEventDrawerOpen,
                 widget,
                 loadEvents,
                 isLoadingEvents,
                 events,
+                setEvents,
             }}
         >
             {children}

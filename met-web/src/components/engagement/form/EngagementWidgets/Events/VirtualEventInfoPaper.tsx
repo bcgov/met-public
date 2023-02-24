@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { MetParagraph, MetWidgetPaper } from 'components/common';
 import { Grid, IconButton } from '@mui/material';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
@@ -7,9 +7,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import { When } from 'react-if';
 import { formatDate } from 'components/common/dateHelper';
 import { EventInfoPaperProps } from './EventInfoPaper';
+import { EventsContext } from './EventsContext';
 
-const VirtualEventInfoPaper = ({ event, ...rest }: EventInfoPaperProps) => {
+const VirtualEventInfoPaper = ({ event, removeEvent, ...rest }: EventInfoPaperProps) => {
     const eventItem = event.event_items[0];
+    const { handleChangeEventToEdit, handleEventDrawerOpen } = useContext(EventsContext);
+
     return (
         <MetWidgetPaper elevation={1} {...rest}>
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
@@ -70,12 +73,25 @@ const VirtualEventInfoPaper = ({ event, ...rest }: EventInfoPaperProps) => {
                 </Grid>
                 <Grid container item xs={1.5}>
                     <Grid item xs={6}>
-                        <IconButton sx={{ padding: 1, margin: 0 }} color="inherit" aria-label="edit-icon">
+                        <IconButton
+                            onClick={() => {
+                                handleChangeEventToEdit(event.event_items[0]);
+                                handleEventDrawerOpen(event, true);
+                            }}
+                            sx={{ padding: 1, margin: 0 }}
+                            color="inherit"
+                            aria-label="edit-icon"
+                        >
                             <EditIcon />
                         </IconButton>
                     </Grid>
                     <Grid item xs={6}>
-                        <IconButton sx={{ padding: 1, margin: 0 }} color="inherit" aria-label="delete-icon">
+                        <IconButton
+                            onClick={() => removeEvent(event.id)}
+                            sx={{ padding: 1, margin: 0 }}
+                            color="inherit"
+                            aria-label="delete-icon"
+                        >
                             <HighlightOffIcon />
                         </IconButton>
                     </Grid>

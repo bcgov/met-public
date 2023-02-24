@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
@@ -37,12 +37,21 @@ type InPersonEventForm = yup.TypeOf<typeof schema>;
 
 const InPersonEventFormDrawer = () => {
     const dispatch = useAppDispatch();
-    const { inPersonFormTabOpen, setInPersonFormTabOpen, widget, loadEvents } = useContext(EventsContext);
+    const { inPersonFormTabOpen, setInPersonFormTabOpen, widget, loadEvents, eventToEdit } = useContext(EventsContext);
     const [isCreating, setIsCreating] = useState(false);
 
     const methods = useForm<InPersonEventForm>({
         resolver: yupResolver(schema),
     });
+
+    useEffect(() => {
+        methods.setValue('description', eventToEdit?.description || '');
+        methods.setValue('location_name', eventToEdit?.location_name || '');
+        methods.setValue('location_address', eventToEdit?.location_address || '');
+        methods.setValue('date', eventToEdit?.start_date || '');
+        methods.setValue('time_from', eventToEdit?.start_date || '');
+        methods.setValue('time_to', eventToEdit?.end_date || '');
+    }, [eventToEdit]);
 
     const { handleSubmit, reset } = methods;
 
@@ -100,7 +109,7 @@ const InPersonEventFormDrawer = () => {
                             padding="2em"
                         >
                             <Grid item xs={12}>
-                                <MetHeader3 bold>Add In-Person Event</MetHeader3>
+                                <MetHeader3 bold>{eventToEdit ? 'Edit' : 'Add'} In-Person Event</MetHeader3>
                                 <Divider sx={{ marginTop: '1em' }} />
                             </Grid>
                             <Grid item xs={12}>
