@@ -47,7 +47,7 @@ const App = () => {
         );
     }
 
-    if (roles.length == 0) {
+    if (roles.length === 0) {
         return (
             <Router>
                 <PublicHeader />
