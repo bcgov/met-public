@@ -54,7 +54,7 @@ class Engagement(BaseModel):
         cls, pagination_options: PaginationOptions,
         search_options=None,
         statuses=None,
-        assigned_engagements:list[int] | None = None
+        assigned_engagements: list[int] | None = None
     ):
         """Get engagements paginated."""
         query = db.session.query(Engagement).join(EngagementStatus)
