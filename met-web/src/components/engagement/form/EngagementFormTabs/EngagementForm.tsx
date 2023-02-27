@@ -278,6 +278,8 @@ const EngagementForm = () => {
                         handleAddFile={handleAddBannerImage}
                         savedImageUrl={savedEngagement.banner_url}
                         savedImageName={savedEngagement.banner_filename}
+                        height="360px"
+                        cropAspectRatio={1920 / 700}
                     />
                 </Grid>
                 <Grid item xs={12}>

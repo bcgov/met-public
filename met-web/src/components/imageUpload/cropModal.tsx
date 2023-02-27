@@ -18,6 +18,7 @@ export const CropModal = () => {
         handleAddFile,
         savedImageName,
         addedImageFileName,
+        cropAspectRatio,
     } = useContext(ImageUploadContext);
 
     const currentImageUrl = addedImageFileUrl || existingImageUrl;
@@ -69,7 +70,7 @@ export const CropModal = () => {
                     >
                         <Cropper
                             image={addedImageFileUrl || existingImageUrl}
-                            aspect={1920 / 720}
+                            aspect={cropAspectRatio}
                             crop={crop}
                             zoom={zoom}
                             onCropChange={setCrop}

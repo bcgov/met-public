@@ -14,6 +14,7 @@ export interface ImageUploadContextState {
     setExistingImageURL: React.Dispatch<React.SetStateAction<string>>;
     imgAfterCrop: string;
     setImgAfterCrop: React.Dispatch<React.SetStateAction<string>>;
+    cropAspectRatio: number;
 }
 
 export const ImageUploadContext = createContext<ImageUploadContextState>({
@@ -42,6 +43,7 @@ export const ImageUploadContext = createContext<ImageUploadContextState>({
     setImgAfterCrop: () => {
         throw new Error('setExistingImageURL not implemented');
     },
+    cropAspectRatio: 1,
 });
 
 interface ImageUploadContextProviderProps {
@@ -49,12 +51,14 @@ interface ImageUploadContextProviderProps {
     children: React.ReactNode;
     savedImageUrl: string;
     savedImageName: string;
+    cropAspectRatio: number;
 }
 export const ImageUploadContextProvider = ({
     children,
     handleAddFile,
     savedImageUrl,
     savedImageName,
+    cropAspectRatio,
 }: ImageUploadContextProviderProps) => {
     const [cropModalOpen, setCropModalOpen] = useState(false);
     const [addedImageFileUrl, setAddedImageFileUrl] = useState('');
@@ -79,6 +83,7 @@ export const ImageUploadContextProvider = ({
                 setExistingImageURL,
                 imgAfterCrop,
                 setImgAfterCrop,
+                cropAspectRatio,
             }}
         >
             {children}
