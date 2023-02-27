@@ -235,7 +235,7 @@ export const modalStyle = {
     px: 4,
     pb: 3,
     m: 1,
-    overflowY: 'scroll',
+    overflowY: 'none',
     color: Palette.text.primary,
 };
 
