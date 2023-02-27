@@ -2,7 +2,7 @@ gunicorn
 Flask
 Flask-Migrate<3
 Flask-Mail
-Flask-Script
+Flask-Script==2.0.5
 Flask-Moment
 Flask-SQLAlchemy
 flask-restx
