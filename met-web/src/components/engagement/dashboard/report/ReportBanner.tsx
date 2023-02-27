@@ -2,6 +2,7 @@ import React from 'react';
 import { Skeleton } from '@mui/material';
 import { Banner } from 'components/engagement/banner/Banner';
 import { Engagement } from 'models/engagement';
+import EngagementInfoSection from 'components/engagement/banner/EngagementInfoSection';
 
 interface ReportBannerProps {
     engagement: Engagement;
@@ -12,5 +13,9 @@ export const ReportBanner = ({ engagement, isLoading }: ReportBannerProps) => {
         return <Skeleton variant="rectangular" width="100%" height="35em" />;
     }
 
-    return <Banner savedEngagement={engagement} />;
+    return (
+        <Banner imageUrl={engagement.banner_url}>
+            <EngagementInfoSection savedEngagement={engagement} />
+        </Banner>
+    );
 };

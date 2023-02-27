@@ -4,6 +4,7 @@ import { Banner } from 'components/engagement/banner/Banner';
 import { ActionContext } from './ActionContext';
 import ReplayIcon from '@mui/icons-material/Replay';
 import { MetHeader4 } from 'components/common';
+import EngagementInfoSection from 'components/engagement/banner/EngagementInfoSection';
 
 export const SurveyBanner = () => {
     const { isEngagementLoading, savedEngagement, loadEngagement } = useContext(ActionContext);
@@ -37,5 +38,9 @@ export const SurveyBanner = () => {
         );
     }
 
-    return <Banner savedEngagement={savedEngagement} />;
+    return (
+        <Banner imageUrl={savedEngagement.banner_url}>
+            <EngagementInfoSection savedEngagement={savedEngagement} />
+        </Banner>
+    );
 };

@@ -9,20 +9,12 @@ import { getEditorState } from 'utils';
 import dayjs from 'dayjs';
 import { ActionContext } from '../view/ActionContext';
 
-const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
-    const { rich_description, name, start_date, end_date } = savedEngagement;
-    const { mockStatus } = useContext(ActionContext);
-    const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
-    const dateFormat = 'MMM DD, YYYY';
-
-    const EngagementDate = `Engagement dates: ${dayjs(start_date).format(dateFormat)} to ${dayjs(end_date).format(
-        dateFormat,
-    )}`;
-
+const BannerWithoutImage = ({ children }: BannerProps) => {
     return (
         <Box
             sx={{
-                backgroundColor: isDraft ? '#707070' : '#F2F2F2',
+                // backgroundColor: isDraft ? '#707070' : '#F2F2F2',
+                backgroundColor: '#F2F2F2',
                 width: '100%',
                 position: 'relative',
             }}
@@ -33,54 +25,7 @@ const BannerWithoutImage = ({ savedEngagement }: BannerProps) => {
                     width: '100%',
                 }}
             >
-                <Grid
-                    container
-                    direction="row"
-                    justifyContent="flex-start"
-                    alignItems="flex-start"
-                    height="100%"
-                    sx={{
-                        position: 'absolute',
-                        top: '0px',
-                        left: '0px',
-                    }}
-                >
-                    <Grid
-                        item
-                        lg={6}
-                        sm={12}
-                        container
-                        direction="row"
-                        justifyContent="flex-start"
-                        alignItems="flex-start"
-                        sx={{
-                            backgroundColor: 'rgba(242, 242, 242, 0.95)',
-                            padding: '1em',
-                            margin: '1em',
-                            maxWidth: '90%',
-                        }}
-                        m={{ lg: '3em 5em 0 3em', md: '3em', sm: '1em' }}
-                        rowSpacing={2}
-                    >
-                        <Grid item xs={12} sx={{ maxHeight: '20em', overflowY: 'auto', overflowX: 'auto' }}>
-                            <MetHeader1>{name}</MetHeader1>
-                            <Editor editorState={getEditorState(rich_description)} readOnly={true} toolbarHidden />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography sx={{ fontWeight: 'bold' }} variant="subtitle1" color="black">
-                                {EngagementDate}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Stack direction="row" spacing={1}>
-                                <Typography sx={{ fontWeight: 800 }} variant="subtitle1">
-                                    Status:
-                                </Typography>
-                                <EngagementStatusChip submissionStatus={mockStatus} />
-                            </Stack>
-                        </Grid>
-                    </Grid>
-                </Grid>
+                {children}
             </Box>
         </Box>
     );

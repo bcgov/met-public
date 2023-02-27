@@ -2,8 +2,8 @@ import { Engagement } from 'models/engagement';
 import React from 'react';
 
 export interface BannerProps {
-    savedEngagement: Engagement;
-    children?: JSX.Element;
+    imageUrl?: string;
+    children?: JSX.Element | JSX.Element[];
 }
 
 export interface EngagementBannerProps {

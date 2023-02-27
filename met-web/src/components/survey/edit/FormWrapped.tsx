@@ -8,6 +8,7 @@ import { MetPaper } from 'components/common';
 import { InvalidTokenModal } from './InvalidTokenModal';
 import { useNavigate } from 'react-router';
 import { When } from 'react-if';
+import EngagementInfoSection from 'components/engagement/banner/EngagementInfoSection';
 
 const FormWrapped = () => {
     const { isTokenValid, isLoading, savedEngagement, submission } = useContext(ActionContext);
@@ -20,7 +21,9 @@ const FormWrapped = () => {
     return (
         <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
             <Grid item xs={12}>
-                <Banner savedEngagement={savedEngagement} />;
+                <Banner imageUrl={savedEngagement.banner_url}>
+                    <EngagementInfoSection savedEngagement={savedEngagement} />
+                </Banner>
             </Grid>
             <Grid
                 container
