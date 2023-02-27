@@ -27,7 +27,15 @@ class WidgetEvents(BaseModel):  # pylint: disable=too-few-public-methods
     @classmethod
     def get_all_by_widget_id(cls, widget_id) -> List[WidgetEvents]:
         """Get widget events by widget id."""
-        docs = db.session.query(WidgetEvents) \
+        widget_events = db.session.query(WidgetEvents) \
             .filter(WidgetEvents.widget_id == widget_id) \
+            .order_by(WidgetEvents.sort_index.asc()) \
             .all()
-        return docs
+        return widget_events
+
+    @classmethod
+    def update_widget_events_bulk(cls, update_mappings: list) -> list[WidgetEvents]:
+        """Save widget events sorting."""
+        db.session.bulk_update_mappings(WidgetEvents, update_mappings)
+        db.session.commit()
+        return update_mappings
