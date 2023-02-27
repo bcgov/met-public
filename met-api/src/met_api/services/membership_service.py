@@ -79,5 +79,4 @@ class MembershipService:
         # get user to be added from request json
 
         memberships = MembershipModel.find_by_user_id(user_id)
-        print([membership.engagement_id for membership in memberships])
         return [membership.engagement_id for membership in memberships]

@@ -51,7 +51,8 @@ class Engagement(BaseModel):
 
     @classmethod
     def get_engagements_paginated(
-        cls, pagination_options: PaginationOptions,
+        cls,
+        pagination_options: PaginationOptions,
         search_options=None,
         statuses=None,
         assigned_engagements: list[int] | None = None
