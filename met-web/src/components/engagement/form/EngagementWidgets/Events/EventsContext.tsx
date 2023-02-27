@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useAppDispatch } from 'hooks';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { Widget, WidgetType } from 'models/widget';
-import { getEvents } from 'services/widgetService/EventService';
+import { getEvents,sortWidgetEvents} from 'services/widgetService/EventService';
 import { EVENT_TYPE, Event, EventItem, EventType, EventTypeLabel } from 'models/event';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
@@ -14,11 +14,13 @@ export interface EventsContextProps {
     widget: Widget | null;
     loadEvents: () => void;
     isLoadingEvents: boolean;
+    setEvents: React.Dispatch<React.SetStateAction<Event[]>>;
     events: Event[];
     eventToEdit: EventItem | null;
     setEvents: React.Dispatch<React.SetStateAction<Event[]>>;
     handleChangeEventToEdit: (_event: EventItem | null) => void;
     handleEventDrawerOpen: (_event: EventType | EventTypeLabel, _open: boolean) => void;
+    updateWidgetEventsSorting: (widget_events: Event[]) => void;
 }
 
 export type EngagementParams = {
@@ -39,6 +41,7 @@ export const EventsContext = createContext<EventsContextProps>({
         throw new Error('loadEvents not implemented');
     },
     isLoadingEvents: false,
+    setEvents: (updatedEvent: React.SetStateAction<Event[]>) => [],
     events: [],
     eventToEdit: null,
     setEvents: () => {
@@ -48,6 +51,7 @@ export const EventsContext = createContext<EventsContextProps>({
         /* empty default method  */
     },
     handleEventDrawerOpen: (_event: EventType | EventTypeLabel, _open: boolean) => {
+    updateWidgetEventsSorting: (widget_events: Event[]) => {
         /* empty default method  */
     },
 });
@@ -69,7 +73,6 @@ export const EventsProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         try {
             setIsLoadingEvents(true);
             const loadedEvents = await getEvents(widget.id);
-            console.log(loadedEvents);
             setEvents(loadedEvents);
             setIsLoadingEvents(false);
         } catch (error) {
@@ -98,6 +101,17 @@ export const EventsProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         loadEvents();
     }, []);
 
+    const updateWidgetEventsSorting = async (resortedWidgetEvents: Event[]) => {
+        if (!widget) {
+            return;
+        }
+        try {
+            await sortWidgetEvents(widget.id, resortedWidgetEvents);
+        } catch (err) {
+            dispatch(openNotification({ severity: 'error', text: 'Error sorting widget events' }));
+        }
+    };
+
     return (
         <EventsContext.Provider
             value={{
@@ -111,8 +125,10 @@ export const EventsProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 widget,
                 loadEvents,
                 isLoadingEvents,
+                setEvents,
                 events,
                 setEvents,
+                updateWidgetEventsSorting,
             }}
         >
             {children}

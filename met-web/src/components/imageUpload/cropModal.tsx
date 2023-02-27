@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import Modal from '@mui/material/Modal';
-import { Container, FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, RadioGroup } from '@mui/material';
+import { Container, Grid, Paper } from '@mui/material';
 import { modalStyle, PrimaryButton } from 'components/common';
 import Cropper, { Area } from 'react-easy-crop';
 import { ImageUploadContext } from './imageUploadContext';
@@ -18,6 +18,7 @@ export const CropModal = () => {
         handleAddFile,
         savedImageName,
         addedImageFileName,
+        cropAspectRatio,
     } = useContext(ImageUploadContext);
 
     const currentImageUrl = addedImageFileUrl || existingImageUrl;
@@ -25,7 +26,6 @@ export const CropModal = () => {
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
     const [croppedArea, setCroppedArea] = useState<Area | null>(null);
-    const [aspectRatio, setAspectRatio] = useState(4 / 3);
 
     const handleCropDone = async (imgCroppedArea: Area | null) => {
         if (!imgCroppedArea) {
@@ -39,10 +39,6 @@ export const CropModal = () => {
         const imageFile = blobToFile(croppedImage, addedImageFileName || savedImageName);
         handleAddFile([imageFile]);
         setCropModalOpen(false);
-    };
-
-    const handleAspectRatioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setAspectRatio(Number((event.target as HTMLInputElement).value));
     };
 
     return (
@@ -69,12 +65,12 @@ export const CropModal = () => {
                             top: 0,
                             left: 0,
                             right: 0,
-                            bottom: '10em',
+                            bottom: '5em',
                         }}
                     >
                         <Cropper
                             image={addedImageFileUrl || existingImageUrl}
-                            aspect={aspectRatio}
+                            aspect={cropAspectRatio}
                             crop={crop}
                             zoom={zoom}
                             onCropChange={setCrop}
@@ -91,29 +87,10 @@ export const CropModal = () => {
                     </Box>
                     <Container
                         sx={{
-                            marginTop: '29em',
+                            marginTop: '34em',
                         }}
                     >
                         <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
-                            <Grid item xs={12}>
-                                <FormControl>
-                                    <FormLabel>Gender</FormLabel>
-                                    <RadioGroup
-                                        name="radio-buttons-group"
-                                        value={aspectRatio}
-                                        onChange={handleAspectRatioChange}
-                                        row
-                                    >
-                                        <FormControlLabel value={1} control={<Radio />} label="1:1" />
-                                        <FormControlLabel value={5 / 4} control={<Radio />} label="5:4" />
-                                        <FormControlLabel value={4 / 3} control={<Radio />} label="4:3" />
-                                        <FormControlLabel value={3 / 2} control={<Radio />} label="3:2" />
-                                        <FormControlLabel value={5 / 3} control={<Radio />} label="5:3" />
-                                        <FormControlLabel value={16 / 9} control={<Radio />} label="16:9" />
-                                        <FormControlLabel value={3 / 1} control={<Radio />} label="3:1" />
-                                    </RadioGroup>
-                                </FormControl>
-                            </Grid>
                             <Grid item xs={12} container justifyContent="flex-end">
                                 <PrimaryButton
                                     onClick={() => {

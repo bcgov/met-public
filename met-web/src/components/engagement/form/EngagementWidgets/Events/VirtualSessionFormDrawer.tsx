@@ -12,7 +12,7 @@ import { EventsContext } from './EventsContext';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { postEvent } from 'services/widgetService/EventService';
-import { EVENT_TYPE } from 'models/event';
+import { Event, EVENT_TYPE } from 'models/event';
 import { formatToUTC, formatDate } from 'components/common/dateHelper';
 import { formEventDates } from './utils';
 import dayjs from 'dayjs';
@@ -39,6 +39,7 @@ const VirtualSessionFormDrawer = () => {
         setVirtualSessionFormTabOpen,
         widget,
         loadEvents,
+        setEvents,
         eventToEdit,
         handleEventDrawerOpen,
     } = useContext(EventsContext);
@@ -78,7 +79,7 @@ const VirtualSessionFormDrawer = () => {
             setIsCreating(true);
             const { description, session_link, session_link_text, date, time_from, time_to } = validatedData;
             const { dateFrom, dateTo } = formEventDates(date, time_from, time_to);
-            await postEvent(widget.id, {
+            const createdWidgetEvent = await postEvent(widget.id, {
                 widget_id: widget.id,
                 type: EVENT_TYPE.VIRTUAL.label,
                 items: [
@@ -91,6 +92,7 @@ const VirtualSessionFormDrawer = () => {
                     },
                 ],
             });
+            setEvents((prevWidgetEvents: Event[]) => [...prevWidgetEvents, createdWidgetEvent]);
             dispatch(openNotification({ severity: 'success', text: 'The event was successfully added' }));
             setIsCreating(false);
             reset({});

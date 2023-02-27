@@ -23,6 +23,7 @@ from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas.widget_events import WidgetEventsSchema
 from met_api.services.widget_events_service import WidgetEventsService
 from met_api.utils.util import allowedorigins, cors_preflight
+from met_api.utils.token_info import TokenInfo
 
 API = Namespace('widgets_events', description='Endpoints for Widget Events')
 """Widget Events
@@ -69,5 +70,23 @@ class WidgetEventItems(Resource):
         try:
             event = WidgetEventsService().create_event_items(widget_id, event_id, request_json)
             return WidgetEventsSchema().dump(event), HTTPStatus.OK
+        except BusinessException as err:
+            return str(err), err.status_code
+
+
+@cors_preflight('PATCH')
+@API.route('/sort_index')
+class WidgetEventsSort(Resource):
+    """Resource for managing events sort order within event widget."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    def patch(widget_id):
+        """Sort events for an event widget."""
+        try:
+            request_json = request.get_json()
+            sort_widget_events = WidgetEventsService().save_widget_events_bulk(widget_id, request_json,
+                                                                               user_id=TokenInfo.get_id())
+            return WidgetEventsSchema().dump(sort_widget_events), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code

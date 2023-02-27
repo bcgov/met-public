@@ -72,3 +72,11 @@ class MembershipService:
         memberships = MembershipModel.find_by_engagement(engagement_id)
         check_auth(one_of_roles=(MembershipType.TEAM_MEMBER,), engagement_id=engagement_id)
         return memberships
+
+    @staticmethod
+    def get_assigned_engagements(user_id):
+        """Create membership."""
+        # get user to be added from request json
+
+        memberships = MembershipModel.find_by_user_id(user_id)
+        return [membership.engagement_id for membership in memberships]
