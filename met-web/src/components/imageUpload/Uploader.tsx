@@ -42,14 +42,14 @@ const Uploader = ({
                     xs={12}
                     style={{
                         border: '1px dashed #606060',
-                        height: '10em',
+                        height: '360px',
                         padding: '0',
                     }}
                 >
                     <img
                         src={existingImage}
                         style={{
-                            objectFit: 'fill',
+                            objectFit: 'cover',
                             width: '100%',
                             height: '100%',
                         }}
@@ -114,7 +114,7 @@ const Uploader = ({
                         style={{
                             border: '1px dashed #606060',
                             background: '#F2F2F2 0% 0% no-repeat padding-box',
-                            height: '10em',
+                            height: '360px',
                             cursor: 'pointer',
                         }}
                     >
