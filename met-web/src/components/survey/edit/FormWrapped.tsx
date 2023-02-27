@@ -1,14 +1,14 @@
 import React, { useContext } from 'react';
 import { Grid, Link as MuiLink, Skeleton } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { Banner } from 'components/engagement/banner/Banner';
+import { Banner } from 'components/banner/Banner';
 import { EditForm } from './EditForm';
 import { ActionContext } from './ActionContext';
 import { MetPaper } from 'components/common';
 import { InvalidTokenModal } from './InvalidTokenModal';
 import { useNavigate } from 'react-router';
 import { When } from 'react-if';
-import EngagementInfoSection from 'components/engagement/banner/EngagementInfoSection';
+import EngagementInfoSection from 'components/engagement/view/EngagementInfoSection';
 
 const FormWrapped = () => {
     const { isTokenValid, isLoading, savedEngagement, submission } = useContext(ActionContext);

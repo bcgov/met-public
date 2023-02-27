@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 import { ActionContext } from './ActionContext';
 import { Grid, Skeleton } from '@mui/material';
-import { Banner } from '../banner/Banner';
+import { Banner } from '../../banner/Banner';
 import { PrimaryButton } from 'components/common';
 import { EngagementBannerProps } from './types';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { useAppSelector } from 'hooks';
 import { When } from 'react-if';
-import EngagementInfoSection from '../banner/EngagementInfoSection';
+import EngagementInfoSection from './EngagementInfoSection';
 
 export const EngagementBanner = ({ startSurvey }: EngagementBannerProps) => {
     const { isEngagementLoading, savedEngagement } = useContext(ActionContext);

@@ -1,13 +1,6 @@
-import React, { useContext } from 'react';
-import { Grid, Box, Typography, Stack } from '@mui/material';
-import { MetHeader1 } from 'components/common';
-import { BannerProps } from '../view/types';
-import { EngagementStatusChip } from '../status';
-import { EngagementStatus } from 'constants/engagementStatus';
-import { Editor } from 'react-draft-wysiwyg';
-import { getEditorState } from 'utils';
-import dayjs from 'dayjs';
-import { ActionContext } from '../view/ActionContext';
+import React from 'react';
+import { Box } from '@mui/material';
+import { BannerProps } from '../engagement/view/types';
 
 const BannerWithoutImage = ({ children }: BannerProps) => {
     return (

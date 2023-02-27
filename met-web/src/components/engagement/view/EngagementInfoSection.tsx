@@ -5,7 +5,7 @@ import { EngagementStatusChip } from '../status';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorState } from 'utils';
 import dayjs from 'dayjs';
-import { ActionContext } from '../view/ActionContext';
+import { ActionContext } from './ActionContext';
 import { Engagement } from 'models/engagement';
 
 interface EngagementInfoSectionProps {
