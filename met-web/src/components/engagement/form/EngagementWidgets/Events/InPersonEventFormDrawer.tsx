@@ -12,7 +12,7 @@ import { EventsContext } from './EventsContext';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { postEvent } from 'services/widgetService/EventService';
-import { EVENT_TYPE } from 'models/event';
+import { Event, EVENT_TYPE } from 'models/event';
 import { formatToUTC } from 'components/common/dateHelper';
 import { formEventDates } from './utils';
 
@@ -37,7 +37,7 @@ type InPersonEventForm = yup.TypeOf<typeof schema>;
 
 const InPersonEventFormDrawer = () => {
     const dispatch = useAppDispatch();
-    const { inPersonFormTabOpen, setInPersonFormTabOpen, widget, loadEvents } = useContext(EventsContext);
+    const { inPersonFormTabOpen, setInPersonFormTabOpen, widget, loadEvents, setEvents } = useContext(EventsContext);
     const [isCreating, setIsCreating] = useState(false);
 
     const methods = useForm<InPersonEventForm>({
@@ -56,7 +56,7 @@ const InPersonEventFormDrawer = () => {
             const { description, location_address, location_name, date, time_from, time_to } = validatedData;
             const { dateFrom, dateTo } = formEventDates(date, time_from, time_to);
 
-            await postEvent(widget.id, {
+            const createdWidgetEvent = await postEvent(widget.id, {
                 widget_id: widget.id,
                 type: EVENT_TYPE.OPENHOUSE.label,
                 items: [
@@ -69,6 +69,7 @@ const InPersonEventFormDrawer = () => {
                     },
                 ],
             });
+            setEvents((prevWidgetEvents: Event[]) => [...prevWidgetEvents, createdWidgetEvent]);
             dispatch(openNotification({ severity: 'success', text: 'The event was successfully added' }));
             setIsCreating(false);
             reset({});

@@ -45,8 +45,20 @@ class WidgetEventsService:
         event.widget_id = widget_id
         event.title = event_details.get('title')
         event.type = event_details.get('type')
+        sort_index = WidgetEventsService._find_higest_sort_index(widget_id)
+        event.sort_index = sort_index + 1
         event.flush()
         return event
+
+    @staticmethod
+    def _find_higest_sort_index(widget_id):
+        # find the highest sort order of the widget event
+        sort_index = 0
+        widget_events = WidgetEventsModel.get_all_by_widget_id(widget_id)
+        if widget_events:
+            # Find the largest in the existing widget events
+            sort_index = max(widget_event.sort_index for widget_event in widget_events)
+        return sort_index
 
     @staticmethod
     def _create_event_item_models(event_items: List, widget_events_id):
@@ -68,3 +80,23 @@ class WidgetEventsService:
         event_item.url_label = event.get('url_label')
         event_item.widget_events_id = widget_events_id
         return event_item
+
+    @staticmethod
+    def update_widget_events_sorting(widget_id, widget_events: list, user_id):
+        """Update widget events sorting in bulk."""
+        widget_event_ids = [widget_event.get('id') for widget_event in widget_events]
+        widget_events_db = WidgetEventsModel.get_all_by_widget_id(widget_id)
+
+        widget_events_update_mapping = [{
+            'id': widget_event_db.id,
+            'sort_index': widget_event_ids.index(widget_event_db.id) + 1,
+            'updated_by': user_id
+        } for widget_event_db in widget_events_db]
+
+        updated_widget_events = WidgetEventsModel.update_widget_events_bulk(widget_events_update_mapping)
+        return updated_widget_events
+
+    def save_widget_events_bulk(self, widget_id, widget_events: list, user_id):
+        """Save widget events."""
+        self.update_widget_events_sorting(widget_id, widget_events, user_id)
+        return widget_events
