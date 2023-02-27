@@ -50,10 +50,12 @@ const VirtualSessionFormDrawer = () => {
         resolver: yupResolver(schema),
     });
 
-    function pad(num: any) {
-        if (num < 10) num = '0' + num;
-        return num;
-    }
+    const pad = (num: number) => {
+        let timeString = num.toString();
+        if (num < 10) timeString = '0' + num;
+        console.log(timeString);
+        return timeString;
+    };
 
     useEffect(() => {
         methods.setValue('session_link_text', 'Click here to register');

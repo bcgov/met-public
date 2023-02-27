@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useAppDispatch } from 'hooks';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { Widget, WidgetType } from 'models/widget';
-import { getEvents,sortWidgetEvents} from 'services/widgetService/EventService';
+import { getEvents, sortWidgetEvents } from 'services/widgetService/EventService';
 import { EVENT_TYPE, Event, EventItem, EventType, EventTypeLabel } from 'models/event';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
@@ -14,7 +14,6 @@ export interface EventsContextProps {
     widget: Widget | null;
     loadEvents: () => void;
     isLoadingEvents: boolean;
-    setEvents: React.Dispatch<React.SetStateAction<Event[]>>;
     events: Event[];
     eventToEdit: EventItem | null;
     setEvents: React.Dispatch<React.SetStateAction<Event[]>>;
@@ -44,13 +43,12 @@ export const EventsContext = createContext<EventsContextProps>({
     setEvents: (updatedEvent: React.SetStateAction<Event[]>) => [],
     events: [],
     eventToEdit: null,
-    setEvents: () => {
-        throw new Error('setEvents not implemented');
-    },
     handleChangeEventToEdit: () => {
         /* empty default method  */
     },
     handleEventDrawerOpen: (_event: EventType | EventTypeLabel, _open: boolean) => {
+        /* empty default method  */
+    },
     updateWidgetEventsSorting: (widget_events: Event[]) => {
         /* empty default method  */
     },
@@ -127,7 +125,6 @@ export const EventsProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 isLoadingEvents,
                 setEvents,
                 events,
-                setEvents,
                 updateWidgetEventsSorting,
             }}
         >

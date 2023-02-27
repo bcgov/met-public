@@ -40,8 +40,15 @@ type InPersonEventForm = yup.TypeOf<typeof schema>;
 
 const InPersonEventFormDrawer = () => {
     const dispatch = useAppDispatch();
-    const { inPersonFormTabOpen, setInPersonFormTabOpen, widget, loadEvents, setEvents, eventToEdit, handleEventDrawerOpen } =
-        useContext(EventsContext);
+    const {
+        inPersonFormTabOpen,
+        setInPersonFormTabOpen,
+        widget,
+        loadEvents,
+        setEvents,
+        eventToEdit,
+        handleEventDrawerOpen,
+    } = useContext(EventsContext);
     const [isCreating, setIsCreating] = useState(false);
     const startDate = dayjs(eventToEdit ? eventToEdit?.start_date : '').tz('America/Vancouver');
     const endDate = dayjs(eventToEdit ? eventToEdit?.end_date : '').tz('America/Vancouver');
@@ -49,10 +56,12 @@ const InPersonEventFormDrawer = () => {
         resolver: yupResolver(schema),
     });
 
-    function pad(num: any) {
-        if (num < 10) num = '0' + num;
-        return num;
-    }
+    const pad = (num: number) => {
+        let timeString = num.toString();
+        if (num < 10) timeString = '0' + num;
+        console.log(timeString);
+        return timeString;
+    };
 
     useEffect(() => {
         methods.setValue('description', eventToEdit?.description || '');
