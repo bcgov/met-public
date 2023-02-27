@@ -15,6 +15,9 @@ import { postEvent } from 'services/widgetService/EventService';
 import { EVENT_TYPE } from 'models/event';
 import { formatToUTC, formatDate } from 'components/common/dateHelper';
 import { formEventDates } from './utils';
+import dayjs from 'dayjs';
+import tz from 'dayjs/plugin/timezone';
+dayjs.extend(tz);
 
 const schema = yup
     .object({
@@ -40,11 +43,16 @@ const VirtualSessionFormDrawer = () => {
         handleEventDrawerOpen,
     } = useContext(EventsContext);
     const [isCreating, setIsCreating] = useState(false);
-    const startDate = new Date(eventToEdit ? eventToEdit?.start_date : '');
-    const endDate = new Date(eventToEdit ? eventToEdit?.end_date : '');
+    const startDate = dayjs(eventToEdit ? eventToEdit?.start_date : '').tz('America/Vancouver');
+    const endDate = dayjs(eventToEdit ? eventToEdit?.end_date : '').tz('America/Vancouver');
     const methods = useForm<VirtualSessionForm>({
         resolver: yupResolver(schema),
     });
+
+    function pad(num: any) {
+        if (num < 10) num = '0' + num;
+        return num;
+    }
 
     useEffect(() => {
         methods.setValue('session_link_text', 'Click here to register');
@@ -55,10 +63,8 @@ const VirtualSessionFormDrawer = () => {
         methods.setValue('date', eventToEdit ? formatDate(eventToEdit.start_date) : '');
         methods.setValue('session_link', eventToEdit?.url || '');
         methods.setValue('session_link_text', eventToEdit?.url_label || '');
-        methods.setValue('time_from', startDate.getHours() + ':' + startDate.getMinutes() || '');
-        methods.setValue('time_to', endDate.getHours() + ':' + endDate.getMinutes() || '');
-        console.log('START DATE:::' + startDate);
-        console.log('END DATE::::' + endDate);
+        methods.setValue('time_from', pad(startDate.hour()) + ':' + pad(startDate.minute()) || '');
+        methods.setValue('time_to', pad(endDate.hour()) + ':' + pad(endDate.minute()) || '');
     }, [eventToEdit]);
 
     const { handleSubmit, reset } = methods;

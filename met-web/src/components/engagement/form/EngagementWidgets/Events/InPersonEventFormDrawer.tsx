@@ -16,6 +16,8 @@ import { EVENT_TYPE } from 'models/event';
 import { formatToUTC, formatDate } from 'components/common/dateHelper';
 import { formEventDates } from './utils';
 import dayjs from 'dayjs';
+import tz from 'dayjs/plugin/timezone';
+dayjs.extend(tz);
 
 const schema = yup
     .object({
@@ -41,19 +43,24 @@ const InPersonEventFormDrawer = () => {
     const { inPersonFormTabOpen, setInPersonFormTabOpen, widget, loadEvents, eventToEdit, handleEventDrawerOpen } =
         useContext(EventsContext);
     const [isCreating, setIsCreating] = useState(false);
-    const startDate = new Date(eventToEdit ? formatDate(eventToEdit?.start_date, 'HH:mm:ss') : '');
-    const endDate = new Date(eventToEdit ? formatDate(eventToEdit?.start_date, 'HH:mm:ss') : '');
+    const startDate = dayjs(eventToEdit ? eventToEdit?.start_date : '').tz('America/Vancouver');
+    const endDate = dayjs(eventToEdit ? eventToEdit?.end_date : '').tz('America/Vancouver');
     const methods = useForm<InPersonEventForm>({
         resolver: yupResolver(schema),
     });
+
+    function pad(num: any) {
+        if (num < 10) num = '0' + num;
+        return num;
+    }
 
     useEffect(() => {
         methods.setValue('description', eventToEdit?.description || '');
         methods.setValue('location_name', eventToEdit?.location_name || '');
         methods.setValue('location_address', eventToEdit?.location_address || '');
         methods.setValue('date', eventToEdit ? formatDate(eventToEdit.start_date) : '');
-        methods.setValue('time_from', startDate.getHours() + ':' + startDate.getMinutes() || '');
-        methods.setValue('time_to', endDate.getHours() + ':' + endDate.getMinutes() || '');
+        methods.setValue('time_from', pad(startDate.hour()) + ':' + pad(startDate.minute()) || '');
+        methods.setValue('time_to', pad(endDate.hour()) + ':' + pad(endDate.minute()) || '');
     }, [eventToEdit]);
 
     const { handleSubmit, reset } = methods;
@@ -67,9 +74,6 @@ const InPersonEventFormDrawer = () => {
             setIsCreating(true);
             const { description, location_address, location_name, date, time_from, time_to } = validatedData;
             const { dateFrom, dateTo } = formEventDates(date, time_from, time_to);
-            console.log(date);
-            console.log(time_from);
-            console.log(time_to);
             await postEvent(widget.id, {
                 widget_id: widget.id,
                 type: EVENT_TYPE.OPENHOUSE.label,
