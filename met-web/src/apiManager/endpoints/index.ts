@@ -75,6 +75,7 @@ const Endpoints = {
     Events: {
         CREATE: `${AppConfig.apiUrl}/widgets/widget_id/events`,
         GET_LIST: `${AppConfig.apiUrl}/widgets/widget_id/events`,
+        SORT: `${AppConfig.apiUrl}/widgets/widget_id/events/sort_index`,
     },
 };
 

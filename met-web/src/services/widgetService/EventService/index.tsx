@@ -39,3 +39,16 @@ export const postEvent = async (widget_id: number, data: PostEventProps): Promis
         return Promise.reject(err);
     }
 };
+
+export const sortWidgetEvents = async (widget_id: number, data: Event[]): Promise<Event> => {
+    try {
+        const url = replaceUrl(Endpoints.Events.SORT, 'widget_id', String(widget_id));
+        const response = await http.PatchRequest<Event>(url, data);
+        if (response.data) {
+            return response.data;
+        }
+        return Promise.reject('Failed to update sort order');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
