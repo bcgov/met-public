@@ -7,10 +7,12 @@ import { ImageUploadContext } from './imageUploadContext';
 interface UploaderProps {
     margin?: number;
     helpText?: string;
+    height?: string;
 }
 const Uploader = ({
     margin = 2,
     helpText = 'Drag and drop some files here, or click to select files',
+    height = '10em',
 }: UploaderProps) => {
     const {
         handleAddFile,
@@ -42,14 +44,14 @@ const Uploader = ({
                     xs={12}
                     style={{
                         border: '1px dashed #606060',
-                        height: '10em',
+                        height: height,
                         padding: '0',
                     }}
                 >
                     <img
                         src={existingImage}
                         style={{
-                            objectFit: 'fill',
+                            objectFit: 'cover',
                             width: '100%',
                             height: '100%',
                         }}
@@ -114,7 +116,7 @@ const Uploader = ({
                         style={{
                             border: '1px dashed #606060',
                             background: '#F2F2F2 0% 0% no-repeat padding-box',
-                            height: '10em',
+                            height: height,
                             cursor: 'pointer',
                         }}
                     >

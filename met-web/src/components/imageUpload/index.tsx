@@ -9,6 +9,8 @@ interface UploaderProps {
     savedImageUrl?: string;
     savedImageName?: string;
     helpText?: string;
+    height?: string;
+    cropAspectRatio?: number;
 }
 export const ImageUpload = ({
     margin = 2,
@@ -16,14 +18,17 @@ export const ImageUpload = ({
     savedImageUrl = '',
     savedImageName = '',
     helpText = 'Drag and drop some files here, or click to select files',
+    height = '10em',
+    cropAspectRatio = 1,
 }: UploaderProps) => {
     return (
         <ImageUploadContextProvider
             handleAddFile={handleAddFile}
             savedImageUrl={savedImageUrl}
             savedImageName={savedImageName}
+            cropAspectRatio={cropAspectRatio}
         >
-            <Uploader margin={margin} helpText={helpText} />
+            <Uploader margin={margin} helpText={helpText} height={height} />
             <CropModal />
         </ImageUploadContextProvider>
     );
