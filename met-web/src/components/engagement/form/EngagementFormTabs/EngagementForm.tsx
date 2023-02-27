@@ -10,6 +10,7 @@ import { If, Then, Else } from 'react-if';
 import { EngagementTabsContext } from './EngagementTabsContext';
 import { SUBMISSION_STATUS } from 'constants/engagementStatus';
 import DayCalculatorModal from '../DayCalculator';
+import { ENGAGEMENT_CROPPER_ASPECT_RATIO, ENGAGMENET_UPLOADER_HEIGHT } from './constans';
 
 const EngagementForm = () => {
     const {
@@ -278,6 +279,8 @@ const EngagementForm = () => {
                         handleAddFile={handleAddBannerImage}
                         savedImageUrl={savedEngagement.banner_url}
                         savedImageName={savedEngagement.banner_filename}
+                        height={ENGAGMENET_UPLOADER_HEIGHT}
+                        cropAspectRatio={ENGAGEMENT_CROPPER_ASPECT_RATIO}
                     />
                 </Grid>
                 <Grid item xs={12}>
