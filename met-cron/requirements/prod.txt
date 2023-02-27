@@ -16,7 +16,7 @@ requests
 itsdangerous
 bcrypt
 jaeger-client
-Werkzeug==2.2.0
+Werkzeug<3
 sqlalchemy-utils
 Flask-Caching
 sqlalchemy<1.4
