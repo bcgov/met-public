@@ -76,7 +76,7 @@ const VirtualEventInfoPaper = ({ event, removeEvent, ...rest }: EventInfoPaperPr
                         <IconButton
                             onClick={() => {
                                 handleChangeEventToEdit(event.event_items[0]);
-                                handleEventDrawerOpen(event, true);
+                                handleEventDrawerOpen(event.type, true);
                             }}
                             sx={{ padding: 1, margin: 0 }}
                             color="inherit"

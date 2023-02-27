@@ -13,7 +13,7 @@ import ControlledTextField from 'components/common/ControlledInputComponents/Con
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { postEvent } from 'services/widgetService/EventService';
 import { EVENT_TYPE } from 'models/event';
-import { formatToUTC } from 'components/common/dateHelper';
+import { formatToUTC, formatDate } from 'components/common/dateHelper';
 import { formEventDates } from './utils';
 
 const schema = yup
@@ -40,7 +40,8 @@ const VirtualSessionFormDrawer = () => {
         handleEventDrawerOpen,
     } = useContext(EventsContext);
     const [isCreating, setIsCreating] = useState(false);
-
+    const startDate = new Date(eventToEdit ? eventToEdit?.start_date : '');
+    const endDate = new Date(eventToEdit ? eventToEdit?.end_date : '');
     const methods = useForm<VirtualSessionForm>({
         resolver: yupResolver(schema),
     });
@@ -51,9 +52,13 @@ const VirtualSessionFormDrawer = () => {
 
     useEffect(() => {
         methods.setValue('description', eventToEdit?.description || '');
-        methods.setValue('date', eventToEdit?.start_date || '');
+        methods.setValue('date', eventToEdit ? formatDate(eventToEdit.start_date) : '');
         methods.setValue('session_link', eventToEdit?.url || '');
         methods.setValue('session_link_text', eventToEdit?.url_label || '');
+        methods.setValue('time_from', startDate.getHours() + ':' + startDate.getMinutes() || '');
+        methods.setValue('time_to', endDate.getHours() + ':' + endDate.getMinutes() || '');
+        console.log('START DATE:::' + startDate);
+        console.log('END DATE::::' + endDate);
     }, [eventToEdit]);
 
     const { handleSubmit, reset } = methods;
@@ -96,7 +101,7 @@ const VirtualSessionFormDrawer = () => {
             anchor="right"
             open={virtualSessionFormTabOpen}
             onClose={() => {
-                setVirtualSessionFormTabOpen(false);
+                handleEventDrawerOpen(EVENT_TYPE.VIRTUAL.value, false);
             }}
         >
             <Box sx={{ width: '40vw', paddingTop: '7em' }} role="presentation">
@@ -213,7 +218,7 @@ const VirtualSessionFormDrawer = () => {
                                 <Grid item>
                                     <SecondaryButton
                                         onClick={() => {
-                                            handleEventDrawerOpen(eventToEdit, false);
+                                            handleEventDrawerOpen(EVENT_TYPE.VIRTUAL.value, false);
                                         }}
                                     >
                                         Cancel

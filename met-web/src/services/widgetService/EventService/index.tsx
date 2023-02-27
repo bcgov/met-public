@@ -42,6 +42,7 @@ export const postEvent = async (widget_id: number, data: PostEventProps): Promis
 
 interface PatchEventProps {
     widget_id: number;
+    widget_event_id: number;
     title?: string;
     type?: EventTypeLabel;
     items?: {
@@ -56,7 +57,7 @@ interface PatchEventProps {
 }
 export const patchEvent = async (widget_id: number, data: PatchEventProps): Promise<Event> => {
     try {
-        const url = replaceUrl(Endpoints.Events.PATCH, 'widget_id', String(widget_id));
+        const url = replaceUrl(Endpoints.Events.UPDATE, 'widget_id', String(widget_id));
         const response = await http.PatchRequest<Event>(url, data);
         if (response.data) {
             return response.data;
@@ -67,7 +68,7 @@ export const patchEvent = async (widget_id: number, data: PatchEventProps): Prom
     }
 };
 
-export const deleteEvent = async (widget_id: number, event_name: string): Promise<Event> => {
+export const deleteEvent = async (widget_id: number, event_id: string): Promise<Event> => {
     try {
         const url = replaceUrl(Endpoints.Events.DELETE, 'widget_id', String(widget_id));
         const response = await http.DeleteRequest<Event>(url);

@@ -92,7 +92,7 @@ const EventInfoPaper = ({ event, removeEvent, ...rest }: EventInfoPaperProps) =>
                             <EditIcon
                                 onClick={() => {
                                     handleChangeEventToEdit(event.event_items[0]);
-                                    handleEventDrawerOpen(event, true);
+                                    handleEventDrawerOpen(event.type, true);
                                 }}
                             />
                         </IconButton>

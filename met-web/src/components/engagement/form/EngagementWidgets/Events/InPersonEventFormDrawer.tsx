@@ -13,8 +13,9 @@ import ControlledTextField from 'components/common/ControlledInputComponents/Con
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { postEvent } from 'services/widgetService/EventService';
 import { EVENT_TYPE } from 'models/event';
-import { formatToUTC } from 'components/common/dateHelper';
+import { formatToUTC, formatDate } from 'components/common/dateHelper';
 import { formEventDates } from './utils';
+import dayjs from 'dayjs';
 
 const schema = yup
     .object({
@@ -40,7 +41,8 @@ const InPersonEventFormDrawer = () => {
     const { inPersonFormTabOpen, setInPersonFormTabOpen, widget, loadEvents, eventToEdit, handleEventDrawerOpen } =
         useContext(EventsContext);
     const [isCreating, setIsCreating] = useState(false);
-
+    const startDate = new Date(eventToEdit ? formatDate(eventToEdit?.start_date, 'HH:mm:ss') : '');
+    const endDate = new Date(eventToEdit ? formatDate(eventToEdit?.start_date, 'HH:mm:ss') : '');
     const methods = useForm<InPersonEventForm>({
         resolver: yupResolver(schema),
     });
@@ -49,9 +51,9 @@ const InPersonEventFormDrawer = () => {
         methods.setValue('description', eventToEdit?.description || '');
         methods.setValue('location_name', eventToEdit?.location_name || '');
         methods.setValue('location_address', eventToEdit?.location_address || '');
-        methods.setValue('date', eventToEdit?.start_date || '');
-        methods.setValue('time_from', eventToEdit?.start_date || '');
-        methods.setValue('time_to', eventToEdit?.end_date || '');
+        methods.setValue('date', eventToEdit ? formatDate(eventToEdit.start_date) : '');
+        methods.setValue('time_from', startDate.getHours() + ':' + startDate.getMinutes() || '');
+        methods.setValue('time_to', endDate.getHours() + ':' + endDate.getMinutes() || '');
     }, [eventToEdit]);
 
     const { handleSubmit, reset } = methods;
@@ -65,7 +67,9 @@ const InPersonEventFormDrawer = () => {
             setIsCreating(true);
             const { description, location_address, location_name, date, time_from, time_to } = validatedData;
             const { dateFrom, dateTo } = formEventDates(date, time_from, time_to);
-
+            console.log(date);
+            console.log(time_from);
+            console.log(time_to);
             await postEvent(widget.id, {
                 widget_id: widget.id,
                 type: EVENT_TYPE.OPENHOUSE.label,
@@ -95,7 +99,7 @@ const InPersonEventFormDrawer = () => {
             anchor="right"
             open={inPersonFormTabOpen}
             onClose={() => {
-                handleEventDrawerOpen(eventToEdit, false);
+                handleEventDrawerOpen(EVENT_TYPE.MEETUP.value, false);
             }}
         >
             <Box sx={{ width: '40vw', paddingTop: '7em' }} role="presentation">
@@ -209,7 +213,9 @@ const InPersonEventFormDrawer = () => {
                                     <PrimaryButton type="submit" loading={isCreating}>{`Save & Close`}</PrimaryButton>
                                 </Grid>
                                 <Grid item>
-                                    <SecondaryButton onClick={() => handleEventDrawerOpen(eventToEdit, false)}>
+                                    <SecondaryButton
+                                        onClick={() => handleEventDrawerOpen(EVENT_TYPE.MEETUP.value, false)}
+                                    >
                                         Cancel
                                     </SecondaryButton>
                                 </Grid>

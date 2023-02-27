@@ -3,7 +3,7 @@ import { useAppDispatch } from 'hooks';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { Widget, WidgetType } from 'models/widget';
 import { getEvents } from 'services/widgetService/EventService';
-import { EVENT_TYPE, Event, EventItem } from 'models/event';
+import { EVENT_TYPE, Event, EventItem, EventType, EventTypeLabel } from 'models/event';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
 export interface EventsContextProps {
@@ -18,7 +18,7 @@ export interface EventsContextProps {
     eventToEdit: EventItem | null;
     setEvents: React.Dispatch<React.SetStateAction<Event[]>>;
     handleChangeEventToEdit: (_event: EventItem | null) => void;
-    handleEventDrawerOpen: (_event: Event, _open: boolean) => void;
+    handleEventDrawerOpen: (_event: EventType | EventTypeLabel, _open: boolean) => void;
 }
 
 export type EngagementParams = {
@@ -47,7 +47,7 @@ export const EventsContext = createContext<EventsContextProps>({
     handleChangeEventToEdit: () => {
         /* empty default method  */
     },
-    handleEventDrawerOpen: (_event: Event, _open: boolean) => {
+    handleEventDrawerOpen: (_event: EventType | EventTypeLabel, _open: boolean) => {
         /* empty default method  */
     },
 });
@@ -83,11 +83,10 @@ export const EventsProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         setEventToEdit(event);
     };
 
-    const handleEventDrawerOpen = (event: Event, open: boolean) => {
-
-        if (event.type === EVENT_TYPE.OPENHOUSE.value || event.type === EVENT_TYPE.MEETUP.value) {
+    const handleEventDrawerOpen = (type: EventType | EventTypeLabel, open: boolean) => {
+        if (type === EVENT_TYPE.OPENHOUSE.value || type === EVENT_TYPE.MEETUP.value) {
             setInPersonFormTabOpen(open);
-        } else if (event.type === EVENT_TYPE.VIRTUAL.value) {
+        } else if (type === EVENT_TYPE.VIRTUAL.value) {
             setVirtualSessionFormTabOpen(open);
         }
         if (!open && eventToEdit) {
