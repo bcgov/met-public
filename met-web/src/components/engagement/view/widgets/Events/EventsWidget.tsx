@@ -64,14 +64,14 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
     }
 
     return (
-        <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
+        <MetPaper elevation={1} sx={{ paddingTop: '0.5em', padding: '1em', minHeight: '12em' }}>
             <Grid
                 item
                 container
                 justifyContent={{ xs: 'center', md: 'flex-start' }}
                 flexDirection={'column'}
                 xs={12}
-                paddingBottom={1}
+                paddingBottom={0}
             >
                 <MetHeader2 bold={true}>Events</MetHeader2>
                 <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
@@ -84,11 +84,11 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
                         key={event.id}
                         container
                         item
-                        columnSpacing={3}
+                        columnSpacing={2}
                         rowSpacing={1}
                         xs={12}
                         paddingTop={2}
-                        paddingBottom={4}
+                        paddingBottom={2}
                     >
                         <Grid
                             item
