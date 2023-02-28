@@ -4,7 +4,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { Engagement } from 'models/engagement';
-import { Skeleton, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import { MetBody, MetHeader4, MetLabel, MetParagraph, PrimaryButton, SecondaryButton } from 'components/common';
 import { getEngagement } from 'services/engagementService';
 import { Else, If, Then, When } from 'react-if';

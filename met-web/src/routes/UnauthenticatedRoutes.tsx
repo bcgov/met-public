@@ -6,7 +6,6 @@ import EngagementView from '../components/engagement/view';
 import NotFound from './NotFound';
 import EngagementDashboard from '../components/engagement/dashboard/report';
 import EngagementComments from '../components/engagement/dashboard/comment';
-import HomePage from 'components/homePage/homePage';
 import Landing from 'components/landing';
 
 const UnauthenticatedRoutes = () => {
