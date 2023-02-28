@@ -95,7 +95,12 @@ class Engagements(Resource):
                     user_id,
                     user_roles,
                     pagination_options,
-                    search_options
+                    search_options,
+                    include_banner_url=args.get(
+                        'include_banner_url',
+                        default=False,
+                        type=lambda v: v.lower() == 'true'
+                    )
             )
 
             return engagement_records, HTTPStatus.OK

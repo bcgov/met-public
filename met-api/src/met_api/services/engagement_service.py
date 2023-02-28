@@ -51,7 +51,14 @@ class EngagementService:
         return engagements
 
     @classmethod
-    def get_engagements_paginated(cls, user_id, user_roles, pagination_options: PaginationOptions, search_options=None):
+    def get_engagements_paginated(
+        cls,
+        user_id,
+        user_roles,
+        pagination_options: PaginationOptions,
+        search_options=None,
+        include_banner_url=False
+    ):
         """Get engagements paginated."""
         items, total = EngagementModel.get_engagements_paginated(
             pagination_options,
@@ -62,10 +69,18 @@ class EngagementService:
         engagements_schema = EngagementSchema(many=True)
         engagements = engagements_schema.dump(items)
 
+        if include_banner_url:
+            engagements = cls._attach_banner_url(engagements)
         return {
             'items': engagements,
             'total': total
         }
+
+    @staticmethod
+    def _attach_banner_url(engagements: list):
+        for engagement in engagements:
+            engagement['banner_url'] = ObjectStorageService.get_url(engagement['banner_filename'])
+        return engagements
 
     @staticmethod
     def _get_statuses_filter(user_id):

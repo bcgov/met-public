@@ -17,6 +17,7 @@ const TileBlock = () => {
                 size: 50,
                 sort_key: 'engagement.created_date',
                 sort_order: 'desc',
+                include_banner_url: true,
             });
             setEngagements(loadedEngagements.items);
             setLoadingEngagements(false);
