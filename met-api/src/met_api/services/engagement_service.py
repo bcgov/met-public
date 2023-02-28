@@ -70,9 +70,6 @@ class EngagementService:
     @staticmethod
     def _get_statuses_filter(user_roles):
         """Return the statuses of the engagement which user has access to."""
-        # if No user or no admin , can only see published/closed
-        # if Admin , can see every engagement
-
         public_statuses = [Status.Published.value, Status.Closed.value]
         if Role.VIEW_PRIVATE_ENGAGEMENTS.value in user_roles:
             return None
