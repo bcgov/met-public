@@ -4,7 +4,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { Engagement } from 'models/engagement';
-import { Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { MetBody, MetHeader4, MetLabel, MetParagraph, PrimaryButton, SecondaryButton } from 'components/common';
 import { getEngagement } from 'services/engagementService';
 import { Else, If, Then, When } from 'react-if';
@@ -64,19 +64,21 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                 <CardMedia sx={{ height: 140 }} image={banner_url} title={name} />
             </When>
             <CardContent>
-                <MetHeader4>{name}</MetHeader4>
-                <MetParagraph
-                    sx={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        display: '-webkit-box',
-                        WebkitLineClamp: '6',
-                        WebkitBoxOrient: 'vertical',
-                    }}
-                    mt="0.5em"
-                >
-                    {description}
-                </MetParagraph>
+                <Box sx={{ height: 200 }}>
+                    <MetHeader4>{name}</MetHeader4>
+                    <MetParagraph
+                        sx={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            display: '-webkit-box',
+                            WebkitLineClamp: '6',
+                            WebkitBoxOrient: 'vertical',
+                        }}
+                        mt="0.5em"
+                    >
+                        {description}
+                    </MetParagraph>
+                </Box>
                 <MetBody bold mt="1em">
                     {EngagementDate}
                 </MetBody>

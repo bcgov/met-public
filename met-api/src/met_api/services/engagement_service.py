@@ -86,7 +86,7 @@ class EngagementService:
     def _get_statuses_filter(user_id):
         if user_id:
             return None
-        return [Status.Published.value]
+        return [Status.Published.value, Status.Closed.value]
 
     @staticmethod
     def _get_assigned_engagements(user_id, user_roles):
