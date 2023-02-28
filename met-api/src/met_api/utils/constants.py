@@ -17,7 +17,7 @@
 
 # Group Name Mapping. Keeping a constant to keep a lucid structure
 GROUP_NAME_MAPPING = {
-    'EAO_IT_ADMIN': 'Administrator',
+    'EAO_IT_ADMIN': 'Superuser',
     'EAO_IT_VIEWER': 'Viewer',
     'EAO_TEAM_MEMBER': 'Member',
 }
