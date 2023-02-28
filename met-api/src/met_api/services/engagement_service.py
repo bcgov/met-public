@@ -74,13 +74,13 @@ class EngagementService:
         # if Admin , can see every engagement
 
         public_statuses = [Status.Published.value, Status.Closed.value]
-        if Role.APP_ADMIN.value in user_roles:
+        if Role.VIEW_PRIVATE_ENGAGEMENTS.value in user_roles:
             return None
         return public_statuses
 
     @staticmethod
     def _get_assigned_engagements(user_id, user_roles):
-        if Role.APP_ADMIN.value in user_roles or Role.ENGAGEMENT_TEAM_MEMBER.value not in user_roles:
+        if Role.VIEW_PRIVATE_ENGAGEMENTS.value in user_roles:
             return None
 
         return MembershipService.get_assigned_engagements(user_id)
