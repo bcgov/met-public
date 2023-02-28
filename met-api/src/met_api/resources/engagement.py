@@ -72,7 +72,7 @@ class Engagements(Resource):
         try:
             args = request.args
             user_id = TokenInfo.get_id()
-            user_roles = TokenInfo.get_user_roles() if user_id else []
+            user_roles = TokenInfo.get_user_roles()
 
             pagination_options = PaginationOptions(
                 page=args.get('page', None, int),
