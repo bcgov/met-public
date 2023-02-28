@@ -27,7 +27,6 @@ from met_api.constants.feedback import CommentType, FeedbackSourceType, RatingTy
 from met_api.constants.widget import WidgetType
 from met_api.utils.enums import LoginSource, UserType
 
-
 fake = Faker()
 
 CONFIG = get_named_config('testing')
@@ -221,6 +220,13 @@ class TestWidgetInfo(dict, Enum):
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
     }
+    widget_events = {
+        'widget_type_id': WidgetType.EVENTS.value,
+        'created_by': '123',
+        'updated_by': '123',
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+    }
 
 
 class TestWidgetItemInfo(dict, Enum):
@@ -285,8 +291,29 @@ class TestCommentInfo(dict, Enum):
     }
 
 
+class TestEventnfo(dict, Enum):
+    """Test scenarios of event."""
+
+    event_meetup = {
+        'title': fake.name(),
+        'type': 'MEETUP',
+        'items': [
+            {
+                'description': fake.name(),
+                'venue': 'Online',
+                'location_address': 'location_address',
+                'location_name': 'Anywhere',
+                'start_date': datetime.now().strftime('%Y-%m-%d'),
+                'end_date': (datetime.now() + timedelta(weeks=+1)).strftime('%Y-%m-%d'),
+                'url': fake.url(),
+                'url_label': fake.name(),
+            }
+        ]
+    }
+
+
 class TestWidgetDocumentInfo(dict, Enum):
-    """Test scenarios of contact."""
+    """Test scenarios of document."""
 
     document1 = {
         'id': '4',
