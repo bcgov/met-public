@@ -101,14 +101,11 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
                             md={9}
                         >
                             <Switch>
-                                <Case condition={event.type === EVENT_TYPE.VIRTUAL.value}>
+                                <Case condition={event.type === EVENT_TYPE.VIRTUAL}>
                                     <VirtualSession eventItem={eventItem} />
                                 </Case>
                                 <Case
-                                    condition={
-                                        event.type === EVENT_TYPE.OPENHOUSE.value ||
-                                        event.type === EVENT_TYPE.MEETUP.value
-                                    }
+                                    condition={event.type === EVENT_TYPE.OPENHOUSE || event.type === EVENT_TYPE.MEETUP}
                                 >
                                     <InPersonEvent eventItem={eventItem} />
                                 </Case>

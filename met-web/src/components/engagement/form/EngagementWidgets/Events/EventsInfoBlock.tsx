@@ -49,13 +49,13 @@ const EventsInfoBlock = () => {
                         return (
                             <Grid item xs={12} key={`Grid-${event.id}`}>
                                 <MetDraggable draggableId={String(event.id)} index={index}>
-                                    <When condition={event.type === EVENT_TYPE.MEETUP.value}>
+                                    <When condition={event.type === EVENT_TYPE.MEETUP}>
                                         <EventInfoPaper event={event} />
                                     </When>
-                                    <When condition={event.type === EVENT_TYPE.OPENHOUSE.value}>
+                                    <When condition={event.type === EVENT_TYPE.OPENHOUSE}>
                                         <EventInfoPaper event={event} />
                                     </When>
-                                    <When condition={event.type === EVENT_TYPE.VIRTUAL.value}>
+                                    <When condition={event.type === EVENT_TYPE.VIRTUAL}>
                                         <VirtualEventInfoPaper event={event} />
                                     </When>
                                 </MetDraggable>
