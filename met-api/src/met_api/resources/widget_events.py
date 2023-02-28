@@ -58,7 +58,7 @@ class WidgetEvents(Resource):
 
 
 @cors_preflight('GET,POST,OPTIONS')
-@API.route('/<int:event_id>/items', methods=['GET', 'POST', 'OPTIONS'])
+@API.route('/<int:event_id>/items', methods=['GET','DELETE','OPTIONS'])
 class WidgetEventItems(Resource):
     """Resource for managing a Widget Events."""
 
@@ -69,6 +69,31 @@ class WidgetEventItems(Resource):
         request_json = request.get_json()
         try:
             event = WidgetEventsService().create_event_items(widget_id, event_id, request_json)
+            return WidgetEventsSchema().dump(event), HTTPStatus.OK
+        except BusinessException as err:
+            return str(err), err.status_code
+        
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def patch(widget_id, event_id):
+        """delete event item."""
+        request_json = request.get_json()
+        try:
+            event = WidgetEventsService().update_event_items(widget_id, event_id, request_json)
+            return WidgetEventsSchema().dump(event), HTTPStatus.OK
+        except BusinessException as err:
+            return str(err), err.status_code
+        
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    @auth.require
+    def delete(widget_id, event_id):
+        """delete event item."""
+        try:
+            event = WidgetEventsService().delete_event_items(widget_id, event_id)
             return WidgetEventsSchema().dump(event), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
@@ -90,3 +115,4 @@ class WidgetEventsSort(Resource):
             return WidgetEventsSchema().dump(sort_widget_events), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
+        

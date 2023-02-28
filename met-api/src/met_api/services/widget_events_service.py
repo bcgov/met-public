@@ -80,6 +80,16 @@ class WidgetEventsService:
         event_item.url_label = event.get('url_label')
         event_item.widget_events_id = widget_events_id
         return event_item
+    
+    @staticmethod
+    def _update_event_item(event_item_data):
+        event_item = EventItemsModel.update_event_item(event_item_data)
+        return event_item
+    
+    @staticmethod
+    def _delete_event_item(widget_events_id):
+        event_item = EventItemsModel.delete_event_item(widget_events_id)
+        return event_item
 
     @staticmethod
     def update_widget_events_sorting(widget_id, widget_events: list, user_id):
