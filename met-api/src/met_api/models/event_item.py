@@ -36,15 +36,21 @@ class EventItem(BaseModel):  # pylint: disable=too-few-public-methods, too-many-
     @classmethod
     def update_event_item(cls, event_data: dict) -> Optional[EventItem or DefaultMethodResult]:
         """Update Event Item."""
-        event_id = event_data.get('widget_events_id', None)
-        query = EventItem.query.filter_by(id=event_id)
-        event: EventItem = query.first()
-        if not event:
-            return DefaultMethodResult(False, 'Event Not Found', event_id)
-        event_data['updated_date'] = datetime.utcnow()
-        query.update(event_data)
-        db.session.commit()
-        return event
+        query = EventItem.query.filter_by(id=event_data.get('id'))
+        update_fields = dict(
+            description=event_data.get('description', None),
+            location_name=event_data.get('location_name', None),
+            location_address=event_data.get('location_address', None),
+            start_date=event_data.get('start_date', None),
+            end_date=event_data.get('end_date', None),
+            url=event_data.get('url', None),
+            url_label=event_data.get('url_label', None),
+            sort_index=event_data.get('sort_index', None),
+            widget_events_id=event_data.get('widget_events_id', None),
+            updated_date=datetime.utcnow(),
+        )
+        query.update(update_fields)
+        return query.first()
     
     @classmethod
     def delete_event_item(cls, event_id: dict) -> Optional[EventItem or DefaultMethodResult]:
