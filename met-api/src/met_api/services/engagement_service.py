@@ -56,7 +56,7 @@ class EngagementService:
         items, total = EngagementModel.get_engagements_paginated(
             pagination_options,
             search_options,
-            statuses=cls._get_statuses_filter(user_id),
+            statuses=cls._get_statuses_filter(user_roles),
             assigned_engagements=cls._get_assigned_engagements(user_id, user_roles)
         )
         engagements_schema = EngagementSchema(many=True)
@@ -68,10 +68,15 @@ class EngagementService:
         }
 
     @staticmethod
-    def _get_statuses_filter(user_id):
-        if user_id:
+    def _get_statuses_filter(user_roles):
+        """Return the statuses of the engagement which user has access to."""
+        # if No user or no admin , can only see published/closed
+        # if Admin , can see every engagement
+
+        public_statuses = [Status.Published.value, Status.Closed.value]
+        if Role.APP_ADMIN.value in user_roles:
             return None
-        return [Status.Published.value]
+        return public_statuses
 
     @staticmethod
     def _get_assigned_engagements(user_id, user_roles):
