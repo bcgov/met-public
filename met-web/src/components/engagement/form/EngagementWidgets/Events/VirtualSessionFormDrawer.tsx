@@ -11,12 +11,14 @@ import { useAppDispatch } from 'hooks';
 import { EventsContext } from './EventsContext';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { postEvent } from 'services/widgetService/EventService';
+import { postEvent, patchEvent, deleteEvent, PatchEventProps } from 'services/widgetService/EventService';
 import { Event, EVENT_TYPE } from 'models/event';
 import { formatToUTC, formatDate } from 'components/common/dateHelper';
 import { formEventDates } from './utils';
 import dayjs from 'dayjs';
 import tz from 'dayjs/plugin/timezone';
+import { updatedDiff } from 'deep-object-diff';
+
 dayjs.extend(tz);
 
 const schema = yup
@@ -71,15 +73,28 @@ const VirtualSessionFormDrawer = () => {
 
     const { handleSubmit, reset } = methods;
 
-    const onSubmit: SubmitHandler<VirtualSessionForm> = async (data: VirtualSessionForm) => {
-        if (!widget) {
-            return;
+    const updateEvent = async (data: VirtualSessionForm) => {
+        if (eventToEdit && widget) {
+            console.log(eventToEdit);
+            const eventUpdatesToPatch = updatedDiff(eventToEdit, {
+                id: eventToEdit.id,
+                ...data,
+            }) as PatchEventProps;
+
+            await patchEvent(widget.id, {
+                ...eventUpdatesToPatch,
+            });
+
+            handleEventDrawerOpen(EVENT_TYPE.VIRTUAL.value, false);
+            dispatch(openNotification({ severity: 'success', text: 'Event was successfully updated' }));
         }
+    };
+
+    const createEvent = async (data: VirtualSessionForm) => {
         const validatedData = await schema.validate(data);
-        try {
-            setIsCreating(true);
-            const { description, session_link, session_link_text, date, time_from, time_to } = validatedData;
-            const { dateFrom, dateTo } = formEventDates(date, time_from, time_to);
+        const { description, session_link, session_link_text, date, time_from, time_to } = validatedData;
+        const { dateFrom, dateTo } = formEventDates(date, time_from, time_to);
+        if (widget) {
             const createdWidgetEvent = await postEvent(widget.id, {
                 widget_id: widget.id,
                 type: EVENT_TYPE.VIRTUAL.label,
@@ -93,12 +108,31 @@ const VirtualSessionFormDrawer = () => {
                     },
                 ],
             });
+
             setEvents((prevWidgetEvents: Event[]) => [...prevWidgetEvents, createdWidgetEvent]);
+        }
+        dispatch(openNotification({ severity: 'success', text: 'A new event was successfully added' }));
+    };
+
+    const saveEvent = async (data: VirtualSessionForm) => {
+        if (eventToEdit) {
+            return updateEvent(data);
+        }
+        return createEvent(data);
+    };
+
+    const onSubmit: SubmitHandler<VirtualSessionForm> = async (data: VirtualSessionForm) => {
+        if (!widget) {
+            return;
+        }
+        try {
+            setIsCreating(true);
+            await saveEvent(data);
+            await loadEvents();
             dispatch(openNotification({ severity: 'success', text: 'The event was successfully added' }));
             setIsCreating(false);
             reset({});
             setVirtualSessionFormTabOpen(false);
-            loadEvents();
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add event' }));
             setIsCreating(false);

@@ -37,7 +37,7 @@ class EventItem(BaseModel):  # pylint: disable=too-few-public-methods, too-many-
     def update_event_item(cls, event_data: dict) -> Optional[EventItem or DefaultMethodResult]:
         """Update Event Item."""
         query = EventItem.query.filter_by(id=event_data.get('id'))
-        update_fields = dict(
+        update_fields = dict(   
             description=event_data.get('description', None),
             location_name=event_data.get('location_name', None),
             location_address=event_data.get('location_address', None),
@@ -49,6 +49,8 @@ class EventItem(BaseModel):  # pylint: disable=too-few-public-methods, too-many-
             widget_events_id=event_data.get('widget_events_id', None),
             updated_date=datetime.utcnow(),
         )
+        if not query:
+            return DefaultMethodResult(False, 'Event Not Found', event_data.get('widgets_event_id'))
         query.update(update_fields)
         return query.first()
     

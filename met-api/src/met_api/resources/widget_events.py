@@ -73,15 +73,20 @@ class WidgetEventItems(Resource):
         except BusinessException as err:
             return str(err), err.status_code
         
+
+@cors_preflight('PATCH,DELETE')
+@API.route('/<int:event_id>/items', methods=['PATCH', 'DELETE'])
+class WidgetEventItems(Resource):
+    """Resource for managing a Widget Events."""
+
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
-    @auth.require
     def patch(widget_id, event_id):
-        """delete event item."""
+        """update event item."""
         request_json = request.get_json()
         try:
-            event = WidgetEventsService().update_event_items(widget_id, event_id, request_json)
+            event = WidgetEventsService().update_event_items(request_json)
             return WidgetEventsSchema().dump(event), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
@@ -89,15 +94,13 @@ class WidgetEventItems(Resource):
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
-    @auth.require
     def delete(widget_id, event_id):
         """delete event item."""
         try:
-            event = WidgetEventsService().delete_event_items(widget_id, event_id)
+            event = WidgetEventsService().delete_event_items(event_id)
             return WidgetEventsSchema().dump(event), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
-
 
 @cors_preflight('PATCH')
 @API.route('/sort_index')

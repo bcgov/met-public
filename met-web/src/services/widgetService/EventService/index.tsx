@@ -40,27 +40,24 @@ export const postEvent = async (widget_id: number, data: PostEventProps): Promis
     }
 };
 
-interface PatchEventProps {
-    widget_id: number;
-    widget_event_id: number;
-    title?: string;
-    type?: EventTypeLabel;
-    items?: {
-        description?: string;
-        location_name?: string;
-        location_address?: string;
-        start_date?: string;
-        end_date?: string;
-        url?: string;
-        url_label?: string;
-    }[];
+export interface PatchEventProps {
+    id: number;
+    description?: string;
+    location_name?: string;
+    location_address?: string;
+    start_date?: string;
+    end_date?: string;
+    url?: string;
+    url_label?: string;
 }
+[];
+
 export const patchEvent = async (widget_id: number, data: PatchEventProps): Promise<Event> => {
     try {
         const url = replaceAllInURL({
             URL: Endpoints.Events.UPDATE,
             params: {
-                event_id: String(data.widget_event_id),
+                event_id: String(data.id),
                 widget_id: String(widget_id),
             },
         });
