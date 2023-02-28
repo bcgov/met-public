@@ -28,11 +28,13 @@ const TileBlock = () => {
     }, []);
 
     if (loadingEngagements) {
-        <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
-            <RepeatedGrid times={4} item xs={4}>
-                <TileSkeleton />
-            </RepeatedGrid>
-        </Grid>;
+        return (
+            <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
+                <RepeatedGrid times={4} item xs={3}>
+                    <TileSkeleton />
+                </RepeatedGrid>
+            </Grid>
+        );
     }
     return (
         <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
