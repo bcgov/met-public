@@ -12,16 +12,12 @@ const VirtualSession = ({ eventItem }: EventProps) => {
                 <MetBody>{eventItem.description}</MetBody>
             </Grid>
             <Grid item container justifyContent={justifyContent} xs={12}>
-                <MetBody sx={{ display: 'flex' }}>
-                    <MetBody bold>Date: </MetBody>
-                    <MetBody>&nbsp;</MetBody>
-                    {formatDate(eventItem.start_date, 'MMMM DD, YYYY')}
-                </MetBody>
+                <MetBody bold>Date:&nbsp;</MetBody>
+                <MetBody>{formatDate(eventItem.start_date, 'MMMM DD, YYYY')}</MetBody>
             </Grid>
             <Grid container justifyContent={justifyContent} item xs={12}>
-                <MetBody sx={{ display: 'flex' }}>
-                    <MetBody bold>Time: </MetBody>
-                    <MetBody>&nbsp;</MetBody>
+                <MetBody bold>Time:&nbsp;</MetBody>
+                <MetBody>
                     {`${formatDate(eventItem.start_date, 'h:mm a')} to ${formatDate(eventItem.end_date, 'h:mm a')} PST`}
                 </MetBody>
             </Grid>

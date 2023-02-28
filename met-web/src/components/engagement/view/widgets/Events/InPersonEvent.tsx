@@ -17,24 +17,22 @@ const InPersonEvent = ({ eventItem }: EventProps) => {
                 <MetBody>{eventItem.description}</MetBody>
             </Grid>
             <Grid container justifyContent={justifyContent} item xs={12}>
-                <Box sx={{ display: 'flex', alignItems: 'baseline' }}>
-                    <MetBody bold>Location: </MetBody> <MetBody>&nbsp;</MetBody> {' ' + eventItem.location_name}
-                </Box>
+                <MetBody bold>Location:&nbsp;</MetBody>
+                <MetBody>{eventItem.location_name}</MetBody>
             </Grid>
             <Grid container justifyContent={justifyContent} item xs={12}>
-                <MetBody bold>Address: </MetBody>
-                <MetBody>&nbsp;</MetBody> <MetBody>{' ' + eventItem.location_address} </MetBody>
+                <MetBody bold>Address:&nbsp;</MetBody>
+                <MetBody>{eventItem.location_address}</MetBody>
             </Grid>
             <Grid item container justifyContent={justifyContent} xs={12}>
                 <MetBody sx={{ display: 'flex', alignItems: 'baseline' }}>
-                    <MetBody bold>Date: </MetBody>
-                    <MetBody>&nbsp;</MetBody> {formatDate(eventItem.start_date, 'MMMM DD, YYYY')}
+                    <MetBody bold>Date:&nbsp;</MetBody>
+                    <MetBody>{formatDate(eventItem.start_date, 'MMMM DD, YYYY')}</MetBody>
                 </MetBody>
             </Grid>
             <Grid container justifyContent={justifyContent} item xs={12}>
                 <Box sx={{ display: 'flex', alignItems: 'baseline' }}>
-                    <MetBody bold>Time: </MetBody>
-                    <MetBody>&nbsp;</MetBody>
+                    <MetBody bold>Time:&nbsp;</MetBody>
                     <MetBody>
                         {`${formatDate(eventItem.start_date, 'h:mm a')} to ${formatDate(
                             eventItem.end_date,
