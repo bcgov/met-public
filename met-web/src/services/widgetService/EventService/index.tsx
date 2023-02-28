@@ -1,6 +1,6 @@
 import http from 'apiManager/httpRequestHandler';
 import Endpoints from 'apiManager/endpoints';
-import { replaceUrl } from 'helper';
+import { replaceUrl, replaceAllInURL } from 'helper';
 import { Event, EventTypeLabel } from 'models/event';
 
 export const getEvents = async (widget_id: number): Promise<Event[]> => {
@@ -57,7 +57,13 @@ interface PatchEventProps {
 }
 export const patchEvent = async (widget_id: number, data: PatchEventProps): Promise<Event> => {
     try {
-        const url = replaceUrl(Endpoints.Events.UPDATE, 'widget_id', String(widget_id));
+        const url = replaceAllInURL({
+            URL: Endpoints.Events.UPDATE,
+            params: {
+                event_id: String(data.widget_event_id),
+                widget_id: String(widget_id),
+            },
+        });
         const response = await http.PatchRequest<Event>(url, data);
         if (response.data) {
             return response.data;
@@ -70,7 +76,13 @@ export const patchEvent = async (widget_id: number, data: PatchEventProps): Prom
 
 export const deleteEvent = async (widget_id: number, event_id: string): Promise<Event> => {
     try {
-        const url = replaceUrl(Endpoints.Events.DELETE, 'widget_id', String(widget_id));
+        const url = replaceAllInURL({
+            URL: Endpoints.Events.DELETE,
+            params: {
+                event_id: String(event_id),
+                widget_id: String(widget_id),
+            },
+        });
         const response = await http.DeleteRequest<Event>(url);
         if (response.data) {
             return response.data;

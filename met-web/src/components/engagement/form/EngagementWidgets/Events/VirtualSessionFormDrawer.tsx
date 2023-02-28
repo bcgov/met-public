@@ -53,7 +53,6 @@ const VirtualSessionFormDrawer = () => {
     const pad = (num: number) => {
         let timeString = num.toString();
         if (num < 10) timeString = '0' + num;
-        console.log(timeString);
         return timeString;
     };
 
