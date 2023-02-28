@@ -13,8 +13,8 @@ const InPersonEvent = ({ eventItem }: EventProps) => {
 
     return (
         <>
-            <Grid container justifyContent={justifyContent} paddingBottom={1} item xs={12}>
-                <MetBody>{eventItem.description}</MetBody>
+            <Grid container justifyContent={justifyContent} paddingBottom={0.5} item xs={12}>
+                <MetBody bold={true}>{eventItem.description}</MetBody>
             </Grid>
             <Grid container justifyContent={justifyContent} item xs={12}>
                 <MetBody>Location: {eventItem.location_name}</MetBody>

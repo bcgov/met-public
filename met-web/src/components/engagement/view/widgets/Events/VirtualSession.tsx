@@ -8,8 +8,8 @@ const VirtualSession = ({ eventItem }: EventProps) => {
     const justifyContent = { xs: 'center', md: 'flex-start' };
     return (
         <>
-            <Grid container justifyContent={justifyContent} paddingBottom={1} item xs={12}>
-                <MetBody>{eventItem.description}</MetBody>
+            <Grid container justifyContent={justifyContent} paddingBottom={0.5} item xs={12}>
+                <MetBody bold={true}>{eventItem.description}</MetBody>
             </Grid>
             <Grid item container justifyContent={justifyContent} xs={12}>
                 <MetBody>Date: {formatDate(eventItem.start_date, 'MMMM DD, YYYY')}</MetBody>
