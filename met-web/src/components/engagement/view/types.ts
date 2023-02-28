@@ -1,4 +1,3 @@
-import { Engagement } from 'models/engagement';
 import React from 'react';
 
 export interface BannerProps {
