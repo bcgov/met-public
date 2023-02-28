@@ -3,14 +3,15 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import { Engagement } from 'models/engagement';
-import { Skeleton } from '@mui/material';
-import { useAppDispatch } from 'hooks';
-import { MetHeader4, MetLabel, MetParagraph, PrimaryButton } from 'components/common';
+import { Skeleton, Stack } from '@mui/material';
+import { MetBody, MetHeader4, MetLabel, MetParagraph, PrimaryButton, SecondaryButton } from 'components/common';
 import { getEngagement } from 'services/engagementService';
-import { When } from 'react-if';
+import { Else, If, Then, When } from 'react-if';
+import dayjs from 'dayjs';
+import { EngagementStatusChip } from 'components/engagement/status';
+import { SubmissionStatus } from 'constants/engagementStatus';
+import { TileSkeleton } from './TileSkeleton';
 
 interface EngagementTileProps {
     passedEngagement?: Engagement;
@@ -19,7 +20,9 @@ interface EngagementTileProps {
 const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps) => {
     const [loadedEngagement, setLoadedEngagement] = useState<Engagement | null>(passedEngagement || null);
     const [isLoadingEngagement, setIsLoadingEngagement] = useState(true);
-    const dispatch = useAppDispatch();
+    const dateFormat = 'MMM DD, YYYY';
+
+    const engagementUrl = loadedEngagement ? `${window.location.origin}/engagements/${loadedEngagement.id}/view` : null;
 
     const loadEngagement = async () => {
         if (passedEngagement) {
@@ -46,32 +49,73 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
     }, [passedEngagement, engagementId]);
 
     if (isLoadingEngagement) {
-        return <Skeleton variant="rectangular" height="10em" />;
+        return <TileSkeleton />;
     }
 
     if (!loadedEngagement) {
         return <MetLabel>error Loading</MetLabel>;
     }
 
+    const { name, end_date, start_date, description, status_id, banner_url } = loadedEngagement;
+    const EngagementDate = `${dayjs(start_date).format(dateFormat)} to ${dayjs(end_date).format(dateFormat)}`;
     return (
         <Card sx={{ maxWidth: 345 }}>
-            <When condition={Boolean(loadedEngagement.banner_url)}>
-                <CardMedia
-                    sx={{ height: 140 }}
-                    image={loadedEngagement.banner_url}
-                    title={loadedEngagement.banner_filename}
-                />
+            <When condition={Boolean(banner_url)}>
+                <CardMedia sx={{ height: 140 }} image={banner_url} title={name} />
             </When>
             <CardContent>
-                <MetHeader4>{loadedEngagement.name}</MetHeader4>
-                <MetParagraph overflow="hidden" textOverflow={'ellipsis'} maxHeight={200}>
-                    {loadedEngagement.description}
+                <MetHeader4>{name}</MetHeader4>
+                <MetParagraph
+                    sx={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: '6',
+                        WebkitBoxOrient: 'vertical',
+                    }}
+                    mt="0.5em"
+                >
+                    {description}
                 </MetParagraph>
+                <MetBody bold mt="1em">
+                    {EngagementDate}
+                </MetBody>
+                <Stack direction="row" alignItems={'center'} spacing={1} mt="0.5em">
+                    <MetBody bold>Status:</MetBody>
+                    <EngagementStatusChip submissionStatus={status_id} />
+                </Stack>
             </CardContent>
             <CardActions>
-                <PrimaryButton fullWidth size="small">
-                    Share your thoughts
-                </PrimaryButton>
+                <If condition={status_id === SubmissionStatus.Open}>
+                    <Then>
+                        <PrimaryButton
+                            fullWidth
+                            onClick={() => {
+                                if (!engagementUrl) {
+                                    return;
+                                }
+                                window.open(engagementUrl, '_blank');
+                            }}
+                            disabled={!engagementUrl}
+                        >
+                            Share your thoughts
+                        </PrimaryButton>
+                    </Then>
+                    <Else>
+                        <SecondaryButton
+                            fullWidth
+                            onClick={() => {
+                                if (!engagementUrl) {
+                                    return;
+                                }
+                                window.open(engagementUrl, '_blank');
+                            }}
+                            disabled={!engagementUrl}
+                        >
+                            View Engagement
+                        </SecondaryButton>
+                    </Else>
+                </If>
             </CardActions>
         </Card>
     );

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Grid } from '@mui/material';
 import { Banner } from 'components/banner/Banner';
-import { MetHeader1 } from 'components/common';
-import EngagementTile from './EngagementTile';
+import { MetHeader1, MetParagraph } from 'components/common';
+import TileBlock from './TileBlock';
 
 export const Landing = () => {
     return (
@@ -38,8 +38,11 @@ export const Landing = () => {
                             m={{ lg: '3em 5em 0 3em', md: '3em', sm: '1em' }}
                             rowSpacing={2}
                         >
-                            <Grid item xs={12} sx={{ maxHeight: '20em', overflowY: 'auto', overflowX: 'auto', mb: 2 }}>
-                                <MetHeader1>FC Bayern Munchen</MetHeader1>
+                            <Grid item xs={12}>
+                                <MetHeader1>Environmental Assessment Office</MetHeader1>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <MetParagraph>Something about the EAO and public engagements….</MetParagraph>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -56,8 +59,8 @@ export const Landing = () => {
                 rowSpacing={2}
                 columnSpacing={1}
             >
-                <Grid item xs={4}>
-                    <EngagementTile engagementId={3} />
+                <Grid item xs={12}>
+                    <TileBlock />
                 </Grid>
             </Grid>
         </Grid>
