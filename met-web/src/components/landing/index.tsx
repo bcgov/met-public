@@ -4,7 +4,7 @@ import { Banner } from 'components/banner/Banner';
 import { MetHeader1, MetParagraph } from 'components/common';
 import TileBlock from './TileBlock';
 
-export const Landing = () => {
+const Landing = () => {
     return (
         <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
             <Grid item xs={12}>
