@@ -83,6 +83,7 @@ class EngagementService:
             engagement['banner_url'] = ObjectStorageService.get_url(engagement['banner_filename'])
         return engagements
 
+    @staticmethod
     def _get_statuses_filter(user_roles):
         """Return the statuses of the engagement which user has access to."""
         public_statuses = [Status.Published.value, Status.Closed.value]
