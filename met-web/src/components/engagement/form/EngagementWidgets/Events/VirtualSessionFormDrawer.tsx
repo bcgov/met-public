@@ -11,13 +11,12 @@ import { useAppDispatch } from 'hooks';
 import { EventsContext } from './EventsContext';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { postEvent, patchEvent, PatchEventProps } from 'services/widgetService/EventService';
+import { postEvent, patchEvent } from 'services/widgetService/EventService';
 import { Event, EVENT_TYPE } from 'models/event';
 import { formatToUTC, formatDate } from 'components/common/dateHelper';
 import { formEventDates } from './utils';
 import dayjs from 'dayjs';
 import tz from 'dayjs/plugin/timezone';
-import { updatedDiff } from 'deep-object-diff';
 
 dayjs.extend(tz);
 
@@ -77,14 +76,14 @@ const VirtualSessionFormDrawer = () => {
     const updateEvent = async (data: VirtualSessionForm) => {
         if (eventItemToEdit && eventToEdit && widget) {
             const validatedData = await schema.validate(data);
-            const { date, time_from, time_to, session_link, session_link_text } = validatedData;
+            const { description, date, time_from, time_to, session_link, session_link_text } = validatedData;
             const { dateFrom, dateTo } = formEventDates(date, time_from, time_to);
             await patchEvent(widget.id, eventToEdit.id, eventItemToEdit.id, {
+                description: description,
                 start_date: formatToUTC(dateFrom),
                 end_date: formatToUTC(dateTo),
                 url: session_link,
                 url_label: session_link_text,
-                ...eventUpdatesToPatch,
             });
 
             handleEventDrawerOpen(EVENT_TYPE.VIRTUAL, false);
