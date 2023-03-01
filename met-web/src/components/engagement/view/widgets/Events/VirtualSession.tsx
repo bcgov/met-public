@@ -33,7 +33,9 @@ const VirtualSession = ({ eventItem }: EventProps) => {
                 </Grid>
             </Grid>
             <Grid container justifyContent={justifyContent} item xs={12} sx={{ whiteSpace: 'pre-line' }}>
-                <Link href={`${eventItem.url}`}>{eventItem.url_label}</Link>
+                <Link target="_blank" href={`${eventItem.url}`}>
+                    {eventItem.url_label}
+                </Link>
             </Grid>
         </>
     );
