@@ -20,8 +20,6 @@ class Role(Enum):
 
     PUBLIC_USER = 'public_user'
     ANONYMOUS_USER = 'anonymous_user'
-    ENGAGEMENT_TEAM_MEMBER = 'enagement_team_member'
-    APP_ADMIN = 'app_admin'
 
     # STAFF Based roles
     CREATE_TENANT = 'create_tenant'
@@ -33,6 +31,7 @@ class Role(Enum):
     CREATE_SURVEY = 'create_survey'
     PUBLISH_ENGAGEMENT = 'publish_engagement'
     VIEW_ENGAGEMENT = 'view_engagement'
+    VIEW_PRIVATE_ENGAGEMENTS = 'view_private_engagements'
     EDIT_ENGAGEMENT = 'edit_engagement'
     REVIEW_COMMENTS = 'review_comments'
     ACCESS_DASHBOARD = 'access_dashboard'

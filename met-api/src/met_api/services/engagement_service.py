@@ -64,7 +64,7 @@ class EngagementService:
         items, total = EngagementModel.get_engagements_paginated(
             pagination_options,
             search_options,
-            statuses=cls._get_statuses_filter(user_id),
+            statuses=cls._get_statuses_filter(user_roles),
             assigned_engagements=cls._get_assigned_engagements(user_id, user_roles)
         )
         engagements_schema = EngagementSchema(many=True)
@@ -83,15 +83,16 @@ class EngagementService:
             engagement['banner_url'] = ObjectStorageService.get_url(engagement['banner_filename'])
         return engagements
 
-    @staticmethod
-    def _get_statuses_filter(user_id):
-        if user_id:
+    def _get_statuses_filter(user_roles):
+        """Return the statuses of the engagement which user has access to."""
+        public_statuses = [Status.Published.value, Status.Closed.value]
+        if Role.VIEW_PRIVATE_ENGAGEMENTS.value in user_roles:
             return None
-        return [Status.Published.value, Status.Closed.value]
+        return public_statuses
 
     @staticmethod
     def _get_assigned_engagements(user_id, user_roles):
-        if Role.APP_ADMIN.value in user_roles or Role.ENGAGEMENT_TEAM_MEMBER.value not in user_roles:
+        if Role.VIEW_PRIVATE_ENGAGEMENTS.value in user_roles:
             return None
 
         return MembershipService.get_assigned_engagements(user_id)
