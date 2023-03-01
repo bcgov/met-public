@@ -21,9 +21,10 @@ from flask_restx import Namespace, Resource
 
 from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas.widget_events import WidgetEventsSchema
+from met_api.schemas.event_item import EventItemSchema
 from met_api.services.widget_events_service import WidgetEventsService
-from met_api.utils.util import allowedorigins, cors_preflight
 from met_api.utils.token_info import TokenInfo
+from met_api.utils.util import allowedorigins, cors_preflight
 
 API = Namespace('widgets_events', description='Endpoints for Widget Events')
 """Widget Events
@@ -58,7 +59,7 @@ class WidgetEvents(Resource):
 
 
 @cors_preflight('GET,POST,OPTIONS')
-@API.route('/<int:event_id>/items', methods=['GET','DELETE','OPTIONS'])
+@API.route('/<int:event_id>/items', methods=['GET', 'DELETE', 'OPTIONS'])
 class WidgetEventItems(Resource):
     """Resource for managing a Widget Events."""
 
@@ -72,35 +73,41 @@ class WidgetEventItems(Resource):
             return WidgetEventsSchema().dump(event), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
-        
 
-@cors_preflight('PATCH,DELETE')
-@API.route('/<int:event_id>/items', methods=['PATCH', 'DELETE'])
-class WidgetEventItems(Resource):
+
+@cors_preflight('DELETE')
+@API.route('/<int:event_id>', methods=['DELETE'])
+class WidgetEvent(Resource):
     """Resource for managing a Widget Events."""
 
     @staticmethod
-    # @TRACER.trace()
-    @cross_origin(origins=allowedorigins())
-    def patch(widget_id, event_id):
-        """update event item."""
-        request_json = request.get_json()
-        try:
-            event = WidgetEventsService().update_event_items(request_json)
-            return WidgetEventsSchema().dump(event), HTTPStatus.OK
-        except BusinessException as err:
-            return str(err), err.status_code
-        
-    @staticmethod
-    # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
     def delete(widget_id, event_id):
-        """delete event item."""
+        """Delete  an event ."""
         try:
-            event = WidgetEventsService().delete_event_items(event_id)
-            return WidgetEventsSchema().dump(event), HTTPStatus.OK
+            WidgetEventsService().delete_event(event_id, widget_id)
+            response, status = {}, HTTPStatus.OK
+        except BusinessException as err:
+            response, status = str(err), err.status_code
+        return response, status
+
+
+@cors_preflight('PATCH')
+@API.route('/<int:event_id>/item/<int:item_id>', methods=['PATCH'])
+class EventItems(Resource):
+    """Resource for managing a Widget Events Item."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    def patch(widget_id, event_id, item_id):
+        """Update event item."""
+        request_json = request.get_json()
+        try:
+            event = WidgetEventsService().update_event_item(widget_id, event_id, item_id, request_json)
+            return EventItemSchema().dump(event), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
+
 
 @cors_preflight('PATCH')
 @API.route('/sort_index')
@@ -118,4 +125,3 @@ class WidgetEventsSort(Resource):
             return WidgetEventsSchema().dump(sort_widget_events), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
-        
