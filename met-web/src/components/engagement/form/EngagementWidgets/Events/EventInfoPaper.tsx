@@ -107,7 +107,7 @@ const EventInfoPaper = ({ event, removeEvent, ...rest }: EventInfoPaperProps) =>
                         <IconButton sx={{ padding: 1, margin: 0 }} color="inherit" aria-label="edit-icon">
                             <EditIcon
                                 onClick={() => {
-                                    handleChangeEventToEdit(event.event_items[0]);
+                                    handleChangeEventToEdit(event);
                                     handleEventDrawerOpen(event.type, true);
                                 }}
                             />

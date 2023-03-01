@@ -46,8 +46,9 @@ const VirtualSessionFormDrawer = () => {
         handleEventDrawerOpen,
     } = useContext(EventsContext);
     const [isCreating, setIsCreating] = useState(false);
-    const startDate = dayjs(eventToEdit ? eventToEdit?.start_date : '').tz('America/Vancouver');
-    const endDate = dayjs(eventToEdit ? eventToEdit?.end_date : '').tz('America/Vancouver');
+    const eventItemToEdit = eventToEdit ? eventToEdit.event_items[0] : null;
+    const startDate = dayjs(eventItemToEdit ? eventItemToEdit?.start_date : '').tz('America/Vancouver');
+    const endDate = dayjs(eventItemToEdit ? eventItemToEdit?.end_date : '').tz('America/Vancouver');
     const methods = useForm<VirtualSessionForm>({
         resolver: yupResolver(schema),
     });
@@ -63,10 +64,10 @@ const VirtualSessionFormDrawer = () => {
     }, []);
 
     useEffect(() => {
-        methods.setValue('description', eventToEdit?.description || '');
-        methods.setValue('date', eventToEdit ? formatDate(eventToEdit.start_date) : '');
-        methods.setValue('session_link', eventToEdit?.url || '');
-        methods.setValue('session_link_text', eventToEdit?.url_label || '');
+        methods.setValue('description', eventItemToEdit?.description || '');
+        methods.setValue('date', eventItemToEdit ? formatDate(eventItemToEdit.start_date) : '');
+        methods.setValue('session_link', eventItemToEdit?.url || '');
+        methods.setValue('session_link_text', eventItemToEdit?.url_label || '');
         methods.setValue('time_from', pad(startDate.hour()) + ':' + pad(startDate.minute()) || '');
         methods.setValue('time_to', pad(endDate.hour()) + ':' + pad(endDate.minute()) || '');
     }, [eventToEdit]);
@@ -74,13 +75,17 @@ const VirtualSessionFormDrawer = () => {
     const { handleSubmit, reset } = methods;
 
     const updateEvent = async (data: VirtualSessionForm) => {
-        if (eventToEdit && widget) {
-            const eventUpdatesToPatch = updatedDiff(eventToEdit, {
-                id: eventToEdit.id,
+        if (eventItemToEdit && eventToEdit && widget) {
+            const validatedData = await schema.validate(data);
+            const { date, time_from, time_to } = validatedData;
+            const { dateFrom, dateTo } = formEventDates(date, time_from, time_to);
+            const eventUpdatesToPatch = updatedDiff(eventItemToEdit, {
                 ...data,
             }) as PatchEventProps;
-
-            await patchEvent(widget.id, {
+            await patchEvent(widget.id, eventToEdit.id, {
+                id: eventItemToEdit.id,
+                start_date: formatToUTC(dateFrom),
+                end_date: formatToUTC(dateTo),
                 ...eventUpdatesToPatch,
             });
 
@@ -114,7 +119,7 @@ const VirtualSessionFormDrawer = () => {
     };
 
     const saveEvent = async (data: VirtualSessionForm) => {
-        if (eventToEdit) {
+        if (eventItemToEdit) {
             return updateEvent(data);
         }
         return createEvent(data);

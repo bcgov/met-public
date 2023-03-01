@@ -51,13 +51,14 @@ export interface PatchEventProps {
     url_label?: string;
 }
 
-export const patchEvent = async (widget_id: number, data: PatchEventProps): Promise<Event> => {
+export const patchEvent = async (widget_id: number, event_id: number, data: PatchEventProps): Promise<Event> => {
     try {
         const url = replaceAllInURL({
             URL: Endpoints.Events.UPDATE,
             params: {
-                event_id: String(data.id),
                 widget_id: String(widget_id),
+                event_id: String(event_id),
+                item_id: String(data.id),
             },
         });
         const response = await http.PatchRequest<Event>(url, data);

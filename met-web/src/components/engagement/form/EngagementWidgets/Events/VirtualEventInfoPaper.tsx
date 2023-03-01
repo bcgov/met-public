@@ -91,7 +91,7 @@ const VirtualEventInfoPaper = ({ event, removeEvent, ...rest }: EventInfoPaperPr
                     <Grid item xs={6}>
                         <IconButton
                             onClick={() => {
-                                handleChangeEventToEdit(event.event_items[0]);
+                                handleChangeEventToEdit(event);
                                 handleEventDrawerOpen(event.type, true);
                             }}
                             sx={{ padding: 1, margin: 0 }}

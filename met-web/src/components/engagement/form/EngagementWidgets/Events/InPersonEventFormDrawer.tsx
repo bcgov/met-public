@@ -52,8 +52,9 @@ const InPersonEventFormDrawer = () => {
         handleEventDrawerOpen,
     } = useContext(EventsContext);
     const [isCreating, setIsCreating] = useState(false);
-    const startDate = dayjs(eventToEdit ? eventToEdit?.start_date : '').tz('America/Vancouver');
-    const endDate = dayjs(eventToEdit ? eventToEdit?.end_date : '').tz('America/Vancouver');
+    const eventItemToEdit = eventToEdit ? eventToEdit.event_items[0] : null;
+    const startDate = dayjs(eventItemToEdit ? eventItemToEdit?.start_date : '').tz('America/Vancouver');
+    const endDate = dayjs(eventItemToEdit ? eventItemToEdit?.end_date : '').tz('America/Vancouver');
     const methods = useForm<InPersonEventForm>({
         resolver: yupResolver(schema),
     });
@@ -65,10 +66,10 @@ const InPersonEventFormDrawer = () => {
     };
 
     useEffect(() => {
-        methods.setValue('description', eventToEdit?.description || '');
-        methods.setValue('location_name', eventToEdit?.location_name || '');
-        methods.setValue('location_address', eventToEdit?.location_address || '');
-        methods.setValue('date', eventToEdit ? formatDate(eventToEdit.start_date) : '');
+        methods.setValue('description', eventItemToEdit?.description || '');
+        methods.setValue('location_name', eventItemToEdit?.location_name || '');
+        methods.setValue('location_address', eventItemToEdit?.location_address || '');
+        methods.setValue('date', eventItemToEdit ? formatDate(eventItemToEdit.start_date) : '');
         methods.setValue('time_from', pad(startDate.hour()) + ':' + pad(startDate.minute()) || '');
         methods.setValue('time_to', pad(endDate.hour()) + ':' + pad(endDate.minute()) || '');
     }, [eventToEdit]);
@@ -76,13 +77,18 @@ const InPersonEventFormDrawer = () => {
     const { handleSubmit, reset } = methods;
 
     const updateEvent = async (data: InPersonEventForm) => {
-        if (eventToEdit && widget) {
-            const eventUpdatesToPatch = updatedDiff(eventToEdit, {
-                id: eventToEdit.id,
+        if (eventToEdit && eventItemToEdit && widget) {
+            const validatedData = await schema.validate(data);
+            const { date, time_from, time_to } = validatedData;
+            const { dateFrom, dateTo } = formEventDates(date, time_from, time_to);
+            const eventUpdatesToPatch = updatedDiff(eventItemToEdit, {
                 ...data,
             }) as PatchEventProps;
 
-            await patchEvent(widget.id, {
+            await patchEvent(widget.id, eventToEdit.id, {
+                id: eventItemToEdit.id,
+                start_date: formatToUTC(dateFrom),
+                end_date: formatToUTC(dateTo),
                 ...eventUpdatesToPatch,
             });
 
@@ -116,7 +122,7 @@ const InPersonEventFormDrawer = () => {
     };
 
     const saveEvent = async (data: InPersonEventForm) => {
-        if (eventToEdit) {
+        if (eventItemToEdit) {
             return updateEvent(data);
         }
         return createEvent(data);
@@ -161,7 +167,7 @@ const InPersonEventFormDrawer = () => {
                             padding="2em"
                         >
                             <Grid item xs={12}>
-                                <MetHeader3 bold>{eventToEdit ? 'Edit' : 'Add'} In-Person Event</MetHeader3>
+                                <MetHeader3 bold>{eventItemToEdit ? 'Edit' : 'Add'} In-Person Event</MetHeader3>
                                 <Divider sx={{ marginTop: '1em' }} />
                             </Grid>
                             <Grid item xs={12}>
