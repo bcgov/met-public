@@ -38,10 +38,17 @@ const TileBlock = () => {
         );
     }
     return (
-        <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
+        <Grid
+            container
+            direction="row"
+            alignItems={'flex-start'}
+            justifyContent="flex-start"
+            columnSpacing={2}
+            rowSpacing={4}
+        >
             {engagements.map((engagement) => {
                 return (
-                    <Grid key={`Grid-${engagement.id}`} item xs={3}>
+                    <Grid key={`Grid-${engagement.id}`} item xs={12} sm={6} md={4} lg={3}>
                         <EngagementTile passedEngagement={engagement} engagementId={engagement.id} />
                     </Grid>
                 );
