@@ -96,7 +96,7 @@ const VirtualSessionFormDrawer = () => {
         if (widget) {
             const createdWidgetEvent = await postEvent(widget.id, {
                 widget_id: widget.id,
-                type: EVENT_TYPE.VIRTUAL.label,
+                type: EVENT_TYPE.VIRTUAL,
                 items: [
                     {
                         description: description,

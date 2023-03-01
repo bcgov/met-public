@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
 import { Box, Grid, IconButton, Skeleton, Stack } from '@mui/material';
-import { Banner } from 'components/engagement/banner/Banner';
+import { Banner } from 'components/banner/Banner';
 import { ActionContext } from './ActionContext';
 import ReplayIcon from '@mui/icons-material/Replay';
 import { MetHeader4 } from 'components/common';
+import EngagementInfoSection from 'components/engagement/view/EngagementInfoSection';
 
 export const SurveyBanner = () => {
     const { isEngagementLoading, savedEngagement, loadEngagement } = useContext(ActionContext);
@@ -37,5 +38,9 @@ export const SurveyBanner = () => {
         );
     }
 
-    return <Banner savedEngagement={savedEngagement} />;
+    return (
+        <Banner imageUrl={savedEngagement.banner_url}>
+            <EngagementInfoSection savedEngagement={savedEngagement} />
+        </Banner>
+    );
 };

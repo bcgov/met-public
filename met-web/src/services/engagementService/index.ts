@@ -25,6 +25,7 @@ interface GetEngagementsParams {
     created_to_date?: string;
     published_from_date?: string;
     published_to_date?: string;
+    include_banner_url?: boolean;
 }
 export const getEngagements = async (params: GetEngagementsParams = {}): Promise<Page<Engagement>> => {
     const responseData = await http.GetRequest<Page<Engagement>>(Endpoints.Engagement.GET_LIST, params);

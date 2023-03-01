@@ -18,6 +18,7 @@ from met_api.services.membership_service import MembershipService
 from met_api.utils.notification import send_email
 from met_api.utils.template import Template
 from met_api.utils.roles import Role
+from met_api.utils.token_info import TokenInfo
 
 
 class EngagementService:
@@ -51,31 +52,48 @@ class EngagementService:
         return engagements
 
     @classmethod
-    def get_engagements_paginated(cls, user_id, user_roles, pagination_options: PaginationOptions, search_options=None):
+    def get_engagements_paginated(
+        cls,
+        user_id,
+        pagination_options: PaginationOptions,
+        search_options=None,
+        include_banner_url=False
+    ):
         """Get engagements paginated."""
+        user_roles = TokenInfo.get_user_roles()
         items, total = EngagementModel.get_engagements_paginated(
             pagination_options,
             search_options,
-            statuses=cls._get_statuses_filter(user_id),
+            statuses=cls._get_statuses_filter(user_roles),
             assigned_engagements=cls._get_assigned_engagements(user_id, user_roles)
         )
         engagements_schema = EngagementSchema(many=True)
         engagements = engagements_schema.dump(items)
 
+        if include_banner_url:
+            engagements = cls._attach_banner_url(engagements)
         return {
             'items': engagements,
             'total': total
         }
 
     @staticmethod
-    def _get_statuses_filter(user_id):
-        if user_id:
+    def _attach_banner_url(engagements: list):
+        for engagement in engagements:
+            engagement['banner_url'] = ObjectStorageService.get_url(engagement['banner_filename'])
+        return engagements
+
+    @staticmethod
+    def _get_statuses_filter(user_roles):
+        """Return the statuses of the engagement which user has access to."""
+        public_statuses = [Status.Published.value, Status.Closed.value]
+        if Role.VIEW_PRIVATE_ENGAGEMENTS.value in user_roles:
             return None
-        return [Status.Published.value]
+        return public_statuses
 
     @staticmethod
     def _get_assigned_engagements(user_id, user_roles):
-        if Role.APP_ADMIN.value in user_roles or Role.ENGAGEMENT_TEAM_MEMBER.value not in user_roles:
+        if Role.VIEW_PRIVATE_ENGAGEMENTS.value in user_roles:
             return None
 
         return MembershipService.get_assigned_engagements(user_id)
