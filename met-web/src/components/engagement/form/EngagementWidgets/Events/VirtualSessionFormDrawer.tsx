@@ -67,7 +67,7 @@ const VirtualSessionFormDrawer = () => {
         methods.setValue('description', eventItemToEdit?.description || '');
         methods.setValue('date', eventItemToEdit ? formatDate(eventItemToEdit.start_date) : '');
         methods.setValue('session_link', eventItemToEdit?.url || '');
-        methods.setValue('session_link_text', eventItemToEdit?.url_label || '');
+        methods.setValue('session_link_text', eventItemToEdit?.url_label || 'Click here to register');
         methods.setValue('time_from', pad(startDate.hour()) + ':' + pad(startDate.minute()) || '');
         methods.setValue('time_to', pad(endDate.hour()) + ':' + pad(endDate.minute()) || '');
     }, [eventToEdit]);
@@ -77,14 +77,13 @@ const VirtualSessionFormDrawer = () => {
     const updateEvent = async (data: VirtualSessionForm) => {
         if (eventItemToEdit && eventToEdit && widget) {
             const validatedData = await schema.validate(data);
-            const { date, time_from, time_to } = validatedData;
+            const { date, time_from, time_to, session_link, session_link_text } = validatedData;
             const { dateFrom, dateTo } = formEventDates(date, time_from, time_to);
-            const eventUpdatesToPatch = updatedDiff(eventItemToEdit, {
-                ...data,
-            }) as PatchEventProps;
             await patchEvent(widget.id, eventToEdit.id, eventItemToEdit.id, {
                 start_date: formatToUTC(dateFrom),
                 end_date: formatToUTC(dateTo),
+                url: session_link,
+                url_label: session_link_text,
                 ...eventUpdatesToPatch,
             });
 
