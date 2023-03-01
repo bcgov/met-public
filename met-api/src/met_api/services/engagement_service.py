@@ -18,6 +18,7 @@ from met_api.services.membership_service import MembershipService
 from met_api.utils.notification import send_email
 from met_api.utils.template import Template
 from met_api.utils.roles import Role
+from met_api.utils.token_info import TokenInfo
 
 
 class EngagementService:
@@ -54,12 +55,12 @@ class EngagementService:
     def get_engagements_paginated(
         cls,
         user_id,
-        user_roles,
         pagination_options: PaginationOptions,
         search_options=None,
         include_banner_url=False
     ):
         """Get engagements paginated."""
+        user_roles = TokenInfo.get_user_roles()
         items, total = EngagementModel.get_engagements_paginated(
             pagination_options,
             search_options,
