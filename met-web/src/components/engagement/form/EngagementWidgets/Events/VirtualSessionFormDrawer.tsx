@@ -82,8 +82,7 @@ const VirtualSessionFormDrawer = () => {
             const eventUpdatesToPatch = updatedDiff(eventItemToEdit, {
                 ...data,
             }) as PatchEventProps;
-            await patchEvent(widget.id, eventToEdit.id, {
-                id: eventItemToEdit.id,
+            await patchEvent(widget.id, eventToEdit.id, eventItemToEdit.id, {
                 start_date: formatToUTC(dateFrom),
                 end_date: formatToUTC(dateTo),
                 ...eventUpdatesToPatch,
@@ -133,7 +132,6 @@ const VirtualSessionFormDrawer = () => {
             setIsCreating(true);
             await saveEvent(data);
             await loadEvents();
-            dispatch(openNotification({ severity: 'success', text: 'The event was successfully added' }));
             setIsCreating(false);
             reset({});
             setVirtualSessionFormTabOpen(false);
