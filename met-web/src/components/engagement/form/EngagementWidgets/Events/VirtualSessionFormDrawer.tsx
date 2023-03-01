@@ -11,7 +11,7 @@ import { useAppDispatch } from 'hooks';
 import { EventsContext } from './EventsContext';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { postEvent, patchEvent, deleteEvent, PatchEventProps } from 'services/widgetService/EventService';
+import { postEvent, patchEvent, PatchEventProps } from 'services/widgetService/EventService';
 import { Event, EVENT_TYPE } from 'models/event';
 import { formatToUTC, formatDate } from 'components/common/dateHelper';
 import { formEventDates } from './utils';
@@ -75,7 +75,6 @@ const VirtualSessionFormDrawer = () => {
 
     const updateEvent = async (data: VirtualSessionForm) => {
         if (eventToEdit && widget) {
-            console.log(eventToEdit);
             const eventUpdatesToPatch = updatedDiff(eventToEdit, {
                 id: eventToEdit.id,
                 ...data,

@@ -50,7 +50,6 @@ export interface PatchEventProps {
     url?: string;
     url_label?: string;
 }
-[];
 
 export const patchEvent = async (widget_id: number, data: PatchEventProps): Promise<Event> => {
     try {
@@ -71,13 +70,13 @@ export const patchEvent = async (widget_id: number, data: PatchEventProps): Prom
     }
 };
 
-export const deleteEvent = async (widget_id: number, event_id: string): Promise<Event> => {
+export const deleteEvent = async (widget_id: number, event_id: number): Promise<Event> => {
     try {
         const url = replaceAllInURL({
             URL: Endpoints.Events.DELETE,
             params: {
-                event_id: String(event_id),
                 widget_id: String(widget_id),
+                event_id: String(event_id),
             },
         });
         const response = await http.DeleteRequest<Event>(url);

@@ -8,10 +8,26 @@ import { When } from 'react-if';
 import { formatDate } from 'components/common/dateHelper';
 import { EventInfoPaperProps } from './EventInfoPaper';
 import { EventsContext } from './EventsContext';
+import { deleteEvent } from 'services/widgetService/EventService';
+import { useAppDispatch } from 'hooks';
+import { openNotification } from 'services/notificationService/notificationSlice';
 
 const VirtualEventInfoPaper = ({ event, removeEvent, ...rest }: EventInfoPaperProps) => {
     const eventItem = event.event_items[0];
-    const { handleChangeEventToEdit, handleEventDrawerOpen } = useContext(EventsContext);
+    const dispatch = useAppDispatch();
+    const { handleChangeEventToEdit, handleEventDrawerOpen, widget } = useContext(EventsContext);
+
+    const handleRemoveEvent = async (event_id: number) => {
+        try {
+            if (widget) {
+                await deleteEvent(widget.id, event_id);
+                removeEvent(event_id);
+                dispatch(openNotification({ severity: 'success', text: 'The event was removed successfully' }));
+            }
+        } catch (error) {
+            dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to remove event' }));
+        }
+    };
 
     return (
         <MetWidgetPaper elevation={1} {...rest}>
@@ -87,7 +103,7 @@ const VirtualEventInfoPaper = ({ event, removeEvent, ...rest }: EventInfoPaperPr
                     </Grid>
                     <Grid item xs={6}>
                         <IconButton
-                            onClick={() => removeEvent(event.id)}
+                            onClick={() => handleRemoveEvent(event.id)}
                             sx={{ padding: 1, margin: 0 }}
                             color="inherit"
                             aria-label="delete-icon"

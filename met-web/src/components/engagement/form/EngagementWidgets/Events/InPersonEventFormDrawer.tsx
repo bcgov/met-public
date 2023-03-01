@@ -11,12 +11,14 @@ import { useAppDispatch } from 'hooks';
 import { EventsContext } from './EventsContext';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { postEvent } from 'services/widgetService/EventService';
+import { postEvent, patchEvent, PatchEventProps } from 'services/widgetService/EventService';
 import { Event, EVENT_TYPE } from 'models/event';
 import { formatToUTC, formatDate } from 'components/common/dateHelper';
 import { formEventDates } from './utils';
 import dayjs from 'dayjs';
 import tz from 'dayjs/plugin/timezone';
+import { updatedDiff } from 'deep-object-diff';
+
 dayjs.extend(tz);
 
 const schema = yup
@@ -73,15 +75,27 @@ const InPersonEventFormDrawer = () => {
 
     const { handleSubmit, reset } = methods;
 
-    const onSubmit: SubmitHandler<InPersonEventForm> = async (data: InPersonEventForm) => {
-        if (!widget) {
-            return;
+    const updateEvent = async (data: InPersonEventForm) => {
+        if (eventToEdit && widget) {
+            const eventUpdatesToPatch = updatedDiff(eventToEdit, {
+                id: eventToEdit.id,
+                ...data,
+            }) as PatchEventProps;
+
+            await patchEvent(widget.id, {
+                ...eventUpdatesToPatch,
+            });
+
+            handleEventDrawerOpen(EVENT_TYPE.MEETUP.value, false);
+            dispatch(openNotification({ severity: 'success', text: 'Event was successfully updated' }));
         }
+    };
+
+    const createEvent = async (data: InPersonEventForm) => {
         const validatedData = await schema.validate(data);
-        try {
-            setIsCreating(true);
-            const { description, location_address, location_name, date, time_from, time_to } = validatedData;
-            const { dateFrom, dateTo } = formEventDates(date, time_from, time_to);
+        const { description, location_address, location_name, date, time_from, time_to } = validatedData;
+        const { dateFrom, dateTo } = formEventDates(date, time_from, time_to);
+        if (widget) {
             const createdWidgetEvent = await postEvent(widget.id, {
                 widget_id: widget.id,
                 type: EVENT_TYPE.OPENHOUSE.label,
@@ -95,7 +109,27 @@ const InPersonEventFormDrawer = () => {
                     },
                 ],
             });
+
             setEvents((prevWidgetEvents: Event[]) => [...prevWidgetEvents, createdWidgetEvent]);
+        }
+        dispatch(openNotification({ severity: 'success', text: 'A new event was successfully added' }));
+    };
+
+    const saveEvent = async (data: InPersonEventForm) => {
+        if (eventToEdit) {
+            return updateEvent(data);
+        }
+        return createEvent(data);
+    };
+
+    const onSubmit: SubmitHandler<InPersonEventForm> = async (data: InPersonEventForm) => {
+        if (!widget) {
+            return;
+        }
+        try {
+            setIsCreating(true);
+            await saveEvent(data);
+            await loadEvents();
             dispatch(openNotification({ severity: 'success', text: 'The event was successfully added' }));
             setIsCreating(false);
             reset({});

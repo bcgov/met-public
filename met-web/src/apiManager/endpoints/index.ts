@@ -75,8 +75,8 @@ const Endpoints = {
     Events: {
         CREATE: `${AppConfig.apiUrl}/widgets/widget_id/events`,
         GET_LIST: `${AppConfig.apiUrl}/widgets/widget_id/events`,
-        UPDATE: `${AppConfig.apiUrl}/widgets/widget_id/events/event_id`,
-        DELETE: `${AppConfig.apiUrl}/widgets/widget_id/events/event_id`,
+        UPDATE: `${AppConfig.apiUrl}/widgets/widget_id/events/event_id/items`,
+        DELETE: `${AppConfig.apiUrl}/widgets/widget_id/events/event_id/items`,
         SORT: `${AppConfig.apiUrl}/widgets/widget_id/events/sort_index`,
     },
 };
