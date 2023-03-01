@@ -312,6 +312,40 @@ class TestEventnfo(dict, Enum):
         ]
     }
 
+    event_openhouse = {
+        'title': fake.name(),
+        'type': 'OPENHOUSE',
+        'items': [
+            {
+                'description': fake.name(),
+                'venue': 'Online',
+                'location_address': 'location_address',
+                'location_name': 'Anywhere',
+                'start_date': datetime.now().strftime('%Y-%m-%d'),
+                'end_date': (datetime.now() + timedelta(weeks=+1)).strftime('%Y-%m-%d'),
+                'url': fake.url(),
+                'url_label': fake.name(),
+            }
+        ]
+    }
+
+    event_virtual = {
+        'title': fake.name(),
+        'type': 'VIRTUAL',
+        'items': [
+            {
+                'description': fake.name(),
+                'venue': 'Online',
+                'location_address': '',
+                'location_name': '',
+                'start_date': datetime.now().strftime('%Y-%m-%d'),
+                'end_date': (datetime.now() + timedelta(weeks=+1)).strftime('%Y-%m-%d'),
+                'url': fake.url(),
+                'url_label': fake.name(),
+            }
+        ]
+    }
+
 
 class TestWidgetDocumentInfo(dict, Enum):
     """Test scenarios of document."""
