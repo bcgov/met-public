@@ -55,9 +55,7 @@ const Landing = () => {
                 direction="row"
                 justifyContent={'flex-start'}
                 alignItems="flex-start"
-                m={{ md: '1em', xs: '1em' }}
-                rowSpacing={2}
-                columnSpacing={1}
+                m={{ md: '2em', xs: '2em', lg: '2em 5em' }}
             >
                 <Grid item xs={12}>
                     <TileBlock />
