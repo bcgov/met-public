@@ -3,7 +3,7 @@ import { useAppDispatch } from 'hooks';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { Widget, WidgetType } from 'models/widget';
 import { getEvents, sortWidgetEvents } from 'services/widgetService/EventService';
-import { EVENT_TYPE, Event, EventItem, EventType, EventTypeLabel } from 'models/event';
+import { EVENT_TYPE, Event, EventItem, EventTypeLabel } from 'models/event';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
 export interface EventsContextProps {
@@ -18,7 +18,7 @@ export interface EventsContextProps {
     eventToEdit: EventItem | null;
     setEvents: React.Dispatch<React.SetStateAction<Event[]>>;
     handleChangeEventToEdit: (_event: EventItem | null) => void;
-    handleEventDrawerOpen: (_event: EventType | EventTypeLabel, _open: boolean) => void;
+    handleEventDrawerOpen: (_event: EventTypeLabel, _open: boolean) => void;
     updateWidgetEventsSorting: (widget_events: Event[]) => void;
 }
 
@@ -46,7 +46,7 @@ export const EventsContext = createContext<EventsContextProps>({
     handleChangeEventToEdit: () => {
         /* empty default method  */
     },
-    handleEventDrawerOpen: (_event: EventType | EventTypeLabel, _open: boolean) => {
+    handleEventDrawerOpen: (_event: EventTypeLabel, _open: boolean) => {
         /* empty default method  */
     },
     updateWidgetEventsSorting: (widget_events: Event[]) => {
@@ -84,10 +84,10 @@ export const EventsProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         setEventToEdit(event);
     };
 
-    const handleEventDrawerOpen = (type: EventType | EventTypeLabel, open: boolean) => {
-        if (type === EVENT_TYPE.OPENHOUSE.value || type === EVENT_TYPE.MEETUP.value) {
+    const handleEventDrawerOpen = (type: EventTypeLabel, open: boolean) => {
+        if (type === EVENT_TYPE.OPENHOUSE || type === EVENT_TYPE.MEETUP) {
             setInPersonFormTabOpen(open);
-        } else if (type === EVENT_TYPE.VIRTUAL.value) {
+        } else if (type === EVENT_TYPE.VIRTUAL) {
             setVirtualSessionFormTabOpen(open);
         }
         if (!open && eventToEdit) {

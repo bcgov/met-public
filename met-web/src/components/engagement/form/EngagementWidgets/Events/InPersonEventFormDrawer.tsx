@@ -86,7 +86,7 @@ const InPersonEventFormDrawer = () => {
                 ...eventUpdatesToPatch,
             });
 
-            handleEventDrawerOpen(EVENT_TYPE.MEETUP.value, false);
+            handleEventDrawerOpen(EVENT_TYPE.MEETUP, false);
             dispatch(openNotification({ severity: 'success', text: 'Event was successfully updated' }));
         }
     };
@@ -146,7 +146,7 @@ const InPersonEventFormDrawer = () => {
             anchor="right"
             open={inPersonFormTabOpen}
             onClose={() => {
-                handleEventDrawerOpen(EVENT_TYPE.MEETUP.value, false);
+                handleEventDrawerOpen(EVENT_TYPE.MEETUP, false);
             }}
         >
             <Box sx={{ width: '40vw', paddingTop: '7em' }} role="presentation">
@@ -260,9 +260,7 @@ const InPersonEventFormDrawer = () => {
                                     <PrimaryButton type="submit" loading={isCreating}>{`Save & Close`}</PrimaryButton>
                                 </Grid>
                                 <Grid item>
-                                    <SecondaryButton
-                                        onClick={() => handleEventDrawerOpen(EVENT_TYPE.MEETUP.value, false)}
-                                    >
+                                    <SecondaryButton onClick={() => handleEventDrawerOpen(EVENT_TYPE.MEETUP, false)}>
                                         Cancel
                                     </SecondaryButton>
                                 </Grid>

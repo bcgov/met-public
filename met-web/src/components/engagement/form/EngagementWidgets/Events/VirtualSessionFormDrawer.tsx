@@ -84,7 +84,7 @@ const VirtualSessionFormDrawer = () => {
                 ...eventUpdatesToPatch,
             });
 
-            handleEventDrawerOpen(EVENT_TYPE.VIRTUAL.value, false);
+            handleEventDrawerOpen(EVENT_TYPE.VIRTUAL, false);
             dispatch(openNotification({ severity: 'success', text: 'Event was successfully updated' }));
         }
     };
@@ -143,7 +143,7 @@ const VirtualSessionFormDrawer = () => {
             anchor="right"
             open={virtualSessionFormTabOpen}
             onClose={() => {
-                handleEventDrawerOpen(EVENT_TYPE.VIRTUAL.value, false);
+                handleEventDrawerOpen(EVENT_TYPE.VIRTUAL, false);
             }}
         >
             <Box sx={{ width: '40vw', paddingTop: '7em' }} role="presentation">
@@ -260,7 +260,7 @@ const VirtualSessionFormDrawer = () => {
                                 <Grid item>
                                     <SecondaryButton
                                         onClick={() => {
-                                            handleEventDrawerOpen(EVENT_TYPE.VIRTUAL.value, false);
+                                            handleEventDrawerOpen(EVENT_TYPE.VIRTUAL, false);
                                         }}
                                     >
                                         Cancel
