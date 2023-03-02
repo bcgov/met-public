@@ -69,7 +69,6 @@ class EngagementMembershipUser(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.VIEW_ASSIGNED_ENGAGEMENTS_SELF.value])
     def get(engagement_id, user_id):  # pylint: disable=unused-argument
         """Get membership by id."""
         try:

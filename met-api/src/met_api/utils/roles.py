@@ -36,5 +36,4 @@ class Role(Enum):
     REVIEW_COMMENTS = 'review_comments'
     ACCESS_DASHBOARD = 'access_dashboard'
     VIEW_MEMBERS = 'view_members'
-    VIEW_ASSIGNED_ENGAGEMENTS_SELF = 'view_assigned_engagements_self'
     EDIT_MEMBERS = 'edit_members'
