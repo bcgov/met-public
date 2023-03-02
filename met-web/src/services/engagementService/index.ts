@@ -27,6 +27,7 @@ interface GetEngagementsParams {
     published_to_date?: string;
 }
 export const getEngagements = async (params: GetEngagementsParams = {}): Promise<Page<Engagement>> => {
+    console.log('Endpoint ', Endpoints.Engagement.GET_LIST);
     const responseData = await http.GetRequest<Page<Engagement>>(Endpoints.Engagement.GET_LIST, params);
     return (
         responseData.data ?? {

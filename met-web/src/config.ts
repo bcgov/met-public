@@ -22,27 +22,29 @@ declare global {
     }
 }
 
-const API_URL = window._env_.REACT_APP_API_URL || process.env.REACT_APP_API_URL;
-const REDASH_DASHBOARD_URL = window._env_.REACT_APP_REDASH_PUBLIC_URL || process.env.REACT_APP_REDASH_PUBLIC_URL;
-const REDASH_CMNTS_DASHBOARD_URL =
-    window._env_.REACT_APP_REDASH_COMMENTS_PUBLIC_URL || process.env.REACT_APP_REDASH_COMMENTS_PUBLIC_URL;
+const getEnv = () => {
+    return window._env_ || process.env || {};
+};
+
+// adding localStorage to access the MET API from external sources(eg: web-components)
+const API_URL = localStorage.getItem('met-api-url') || getEnv()['REACT_APP_API_URL'];
+const REDASH_DASHBOARD_URL = getEnv()['REACT_APP_REDASH_PUBLIC_URL'];
+const REDASH_CMNTS_DASHBOARD_URL = getEnv()['REACT_APP_REDASH_COMMENTS_PUBLIC_URL'];
 
 // Formio Environment Variables
-const FORMIO_PROJECT_URL = window._env_.REACT_APP_API_PROJECT_URL || process.env.REACT_APP_API_PROJECT_URL;
-const FORMIO_API_URL = window._env_.REACT_APP_API_PROJECT_URL || process.env.REACT_APP_API_SERVER_URL;
-const FORMIO_FORM_ID = window._env_.REACT_APP_FORM_ID || process.env.REACT_APP_FORM_ID;
-const FORMIO_JWT_SECRET = window._env_.REACT_APP_FORMIO_JWT_SECRET || process.env.REACT_APP_FORMIO_JWT_SECRET;
-const FORMIO_USER_RESOURCE_FORM_ID =
-    window._env_.REACT_APP_USER_RESOURCE_FORM_ID || process.env.REACT_APP_USER_RESOURCE_FORM_ID;
-const FORMIO_ANONYMOUS_USER =
-    window._env_.REACT_APP_FORMIO_ANONYMOUS_USER || process.env.REACT_APP_FORMIO_ANONYMOUS_USER;
-const FORMIO_ANONYMOUS_ID = window._env_.REACT_APP_ANONYMOUS_ID || process.env.REACT_APP_ANONYMOUS_ID;
+const FORMIO_PROJECT_URL = getEnv()['REACT_APP_API_PROJECT_URL'];
+const FORMIO_API_URL = getEnv()['REACT_APP_API_PROJECT_URL'];
+const FORMIO_FORM_ID = getEnv()['REACT_APP_FORM_ID'];
+const FORMIO_JWT_SECRET = getEnv()['REACT_APP_FORMIO_JWT_SECRET'];
+const FORMIO_USER_RESOURCE_FORM_ID = getEnv()['REACT_APP_USER_RESOURCE_FORM_ID'];
+const FORMIO_ANONYMOUS_USER = getEnv()['REACT_APP_FORMIO_ANONYMOUS_USER'];
+const FORMIO_ANONYMOUS_ID = getEnv()['REACT_APP_ANONYMOUS_ID'];
 
 // Keycloak Environment Variables
-const KC_URL = window._env_.REACT_APP_KEYCLOAK_URL || process.env.REACT_APP_KEYCLOAK_URL;
-const KC_CLIENT = window._env_.REACT_APP_KEYCLOAK_CLIENT || process.env.REACT_APP_KEYCLOAK_CLIENT;
-const KC_REALM = window._env_.REACT_APP_KEYCLOAK_REALM || process.env.REACT_APP_KEYCLOAK_REALM;
-const KC_ADMIN_ROLE = window._env_.REACT_APP_KEYCLOAK_ADMIN_ROLE || process.env.REACT_APP_KEYCLOAK_ADMIN_ROLE;
+const KC_URL = getEnv()['REACT_APP_KEYCLOAK_URL'];
+const KC_CLIENT = getEnv()['REACT_APP_KEYCLOAK_CLIENT'];
+const KC_REALM = getEnv()['REACT_APP_KEYCLOAK_REALM'];
+const KC_ADMIN_ROLE = getEnv()['REACT_APP_KEYCLOAK_ADMIN_ROLE'];
 
 export const AppConfig = {
     apiUrl: API_URL,
