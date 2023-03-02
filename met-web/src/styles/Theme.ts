@@ -11,6 +11,9 @@ export const Palette = {
         dark: '#FFAB00',
         light: '#FFE082',
     },
+    hover: {
+        light: '#4C81AF',
+    },
     text: {
         primary: '#494949',
     },
