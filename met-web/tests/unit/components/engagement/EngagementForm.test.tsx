@@ -12,6 +12,7 @@ import { createDefaultSurvey, Survey } from 'models/survey';
 import { WidgetType } from 'models/widget';
 import { Box } from '@mui/material';
 import { draftEngagement } from '../factory';
+import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
@@ -21,6 +22,16 @@ const survey: Survey = {
 };
 
 const surveys = [survey];
+
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useSelector: jest.fn(() => {
+        return {
+            roles: [SCOPES.viewPrivateEngagement, SCOPES.editEngagement, SCOPES.createEngagement],
+            assignedEngagements: [draftEngagement.id],
+        };
+    }),
+}));
 
 jest.mock('components/common/Dragdrop', () => ({
     ...jest.requireActual('components/common/Dragdrop'),
@@ -53,7 +64,6 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
 }));
 
 describe('Engagement form page tests', () => {
-    jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
     const openNotificationMock = jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());

@@ -35,8 +35,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
-    const roles = useAppSelector((state) => state.user.roles);
-    const assignedEngagements = useAppSelector((state) => state.user.assignedEngagements);
+    const { roles, assignedEngagements } = useAppSelector((state) => state.user);
 
     const [isSaving, setSaving] = useState(false);
     const [loadingSavedEngagement, setLoadingSavedEngagement] = useState(true);

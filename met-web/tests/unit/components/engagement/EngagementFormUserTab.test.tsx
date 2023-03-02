@@ -11,6 +11,7 @@ import { Box } from '@mui/material';
 import { draftEngagement } from '../factory';
 import { initialDefaultUser, USER_GROUP } from 'models/user';
 import { EngagementTeamMember, initialDefaultTeamMember } from 'models/engagementTeamMember';
+import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 
 const mockTeamMember1: EngagementTeamMember = {
     ...initialDefaultTeamMember,
@@ -23,6 +24,16 @@ const mockTeamMember1: EngagementTeamMember = {
         groups: [USER_GROUP.VIEWER.label],
     },
 };
+
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useSelector: jest.fn(() => {
+        return {
+            roles: [SCOPES.viewPrivateEngagement, SCOPES.editEngagement, SCOPES.createEngagement],
+            assignedEngagements: [draftEngagement.id],
+        };
+    }),
+}));
 
 jest.mock('components/common/Dragdrop', () => ({
     ...jest.requireActual('components/common/Dragdrop'),
@@ -62,7 +73,6 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
 }));
 
 describe('Engagement form page tests', () => {
-    jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
     jest.spyOn(teamMemberService, 'getTeamMembers').mockReturnValue(Promise.resolve([mockTeamMember1]));
