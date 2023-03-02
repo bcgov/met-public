@@ -1,4 +1,3 @@
-import { Engagement } from 'models/engagement';
 import { User } from 'models/user';
 
 export interface UserDetail {
