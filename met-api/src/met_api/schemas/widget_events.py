@@ -14,11 +14,13 @@
 """Manager for widget link schema and export."""
 
 from marshmallow import fields
+from marshmallow_enum import EnumField
 
 from met_api.models import WidgetEvents as WidgetEventsModel
 
 from .base_schema import BaseSchema
 from .event_item import EventItemSchema
+from ..constants.event_types import EventTypes
 
 
 class WidgetEventsSchema(BaseSchema):  # pylint: disable=too-many-ancestors, too-few-public-methods
@@ -30,3 +32,4 @@ class WidgetEventsSchema(BaseSchema):  # pylint: disable=too-many-ancestors, too
         model = WidgetEventsModel
 
     event_items = fields.List(fields.Nested(EventItemSchema))
+    type = EnumField(EventTypes)

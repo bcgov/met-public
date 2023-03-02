@@ -41,6 +41,11 @@ const EventsInfoBlock = () => {
         );
     }
 
+    const removeEvent = (eventId: number) => {
+        const newEvents = events.filter((event) => event.id !== eventId);
+        setEvents([...newEvents]);
+    };
+
     return (
         <DragDropContext onDragEnd={moveEvent}>
             <MetDroppable droppableId="droppable">
@@ -49,14 +54,14 @@ const EventsInfoBlock = () => {
                         return (
                             <Grid item xs={12} key={`Grid-${event.id}`}>
                                 <MetDraggable draggableId={String(event.id)} index={index}>
-                                    <When condition={event.type === EVENT_TYPE.MEETUP.value}>
-                                        <EventInfoPaper event={event} />
+                                    <When condition={event.type === EVENT_TYPE.MEETUP}>
+                                        <EventInfoPaper removeEvent={removeEvent} event={event} />
                                     </When>
-                                    <When condition={event.type === EVENT_TYPE.OPENHOUSE.value}>
-                                        <EventInfoPaper event={event} />
+                                    <When condition={event.type === EVENT_TYPE.OPENHOUSE}>
+                                        <EventInfoPaper removeEvent={removeEvent} event={event} />
                                     </When>
-                                    <When condition={event.type === EVENT_TYPE.VIRTUAL.value}>
-                                        <VirtualEventInfoPaper event={event} />
+                                    <When condition={event.type === EVENT_TYPE.VIRTUAL}>
+                                        <VirtualEventInfoPaper removeEvent={removeEvent} event={event} />
                                     </When>
                                 </MetDraggable>
                             </Grid>

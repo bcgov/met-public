@@ -87,6 +87,15 @@ def test_search_engagements_by_status(client, jwt,
     assert rv.json.get('total') == 1
 
 
+def test_search_engagements_not_logged_in(client, session):  # pylint:disable=unused-argument
+    """Assert that an engagement can be fetched without JWT Token."""
+    factory_engagement_model()
+
+    rv = client.get('/api/engagements/', content_type=ContentType.JSON.value)
+    assert rv.json.get('total') == 1
+    assert rv.status_code == 200
+
+
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
 def test_patch_engagement(client, jwt, session, engagement_info):  # pylint:disable=unused-argument
     """Assert that an engagement can be updated."""

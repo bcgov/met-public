@@ -82,6 +82,44 @@ class WidgetEventsService:
         return event_item
 
     @staticmethod
+    def update_event_item(widget_id, event_id, item_id, request_json):
+        """Update event Items."""
+        event: WidgetEventsModel = WidgetEventsModel.find_by_id(event_id)
+        if event.widget_id != widget_id:
+            raise BusinessException(
+                error='Invalid widgets and event',
+                status_code=HTTPStatus.BAD_REQUEST)
+        event_item: EventItemsModel = EventItemsModel.find_by_id(item_id)
+        if event_item.widget_events_id != event_id:
+            raise BusinessException(
+                error='Invalid widgets and event',
+                status_code=HTTPStatus.BAD_REQUEST)
+
+        WidgetEventsService._update_from_dict(event_item, request_json)
+        event_item.commit()
+
+        return EventItemsModel.find_by_id(item_id)
+
+    @staticmethod
+    def delete_event(event_id, widget_id) -> None:
+        """Delete an event."""
+        event: WidgetEventsModel = WidgetEventsModel.find_by_id(event_id)
+        if event.widget_id != widget_id:
+            raise BusinessException(
+                error='Invalid widgets and event',
+                status_code=HTTPStatus.BAD_REQUEST)
+
+        event.delete()
+
+    @staticmethod
+    # TODO Move this to common.
+    def _update_from_dict(event_item: EventItemsModel, input_dict):
+        """Update the model using dict."""
+        for key, value in input_dict.items():
+            if hasattr(event_item, key):
+                setattr(event_item, key, value)
+
+    @staticmethod
     def update_widget_events_sorting(widget_id, widget_events: list, user_id):
         """Update widget events sorting in bulk."""
         widget_event_ids = [widget_event.get('id') for widget_event in widget_events]

@@ -10,6 +10,7 @@ import {
     Stack,
     useMediaQuery,
     Theme,
+    Toolbar,
 } from '@mui/material';
 import { EmailPanelProps } from './types';
 import { MetLabel, modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody } from 'components/common';
@@ -50,7 +51,7 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
             <Grid
                 container
                 direction="row"
-                sx={{ ...modalStyle }}
+                sx={{ ...modalStyle, overflowY: isSmallScreen ? 'scroll' : 'none' }}
                 alignItems="flex-start"
                 justifyContent="flex-start"
                 rowSpacing={2}
@@ -159,6 +160,7 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
                                 <SecondaryButton onClick={handleClose} disabled={isSaving}>
                                     Cancel
                                 </SecondaryButton>
+                                <Toolbar />
                             </>
                         ) : (
                             <>

@@ -1,2 +1,2 @@
-import SampleWC from './sample-wc';
-export default SampleWC;
+import EngagementTilesWC from './engagment-tiles-wc';
+export default EngagementTilesWC;

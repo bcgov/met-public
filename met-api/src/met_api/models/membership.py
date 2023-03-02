@@ -40,6 +40,18 @@ class Membership(BaseModel):
         return memberships
 
     @classmethod
+    def find_by_user_id(cls, user_external_id) -> List[Membership]:
+        """Get memberships by user id."""
+        memberships = db.session.query(Membership) \
+            .join(User, User.id == Membership.user_id) \
+            .filter(and_(User.external_id == user_external_id,
+                         Membership.type == MembershipType.TEAM_MEMBER
+                         )
+                    ) \
+            .all()
+        return memberships
+
+    @classmethod
     def find_by_engagement_and_user_id(cls, eng_id, userid, status=MembershipStatus.ACTIVE.value) \
             -> List[Membership]:
         """Get a survey."""
