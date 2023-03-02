@@ -15,6 +15,7 @@ const initialState: UserState = {
     },
     currentPage: '',
     isAuthorized: false,
+    assignedEngagements: [],
 };
 
 export const userSlice = createSlice({
@@ -43,10 +44,14 @@ export const userSlice = createSlice({
                 loading: false,
             };
         },
+        assignedEngagements: (state, action: PayloadAction<number[]>) => {
+            state.assignedEngagements = action.payload;
+        },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { userToken, userRoles, userDetails, userAuthorization, userAuthentication } = userSlice.actions;
+export const { userToken, userRoles, userDetails, userAuthorization, userAuthentication, assignedEngagements } =
+    userSlice.actions;
 
 export default userSlice.reducer;

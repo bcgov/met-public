@@ -70,6 +70,7 @@ const Endpoints = {
     },
     EngagementTeamMembers: {
         GET_LIST: `${AppConfig.apiUrl}/engagements/engagement_id/members`,
+        GET_LIST_BY_USER: `${AppConfig.apiUrl}/engagements/all/members/user_id`,
         CREATE: `${AppConfig.apiUrl}/engagements/engagement_id/members`,
     },
     Events: {

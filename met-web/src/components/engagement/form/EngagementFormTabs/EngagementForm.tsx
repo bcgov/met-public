@@ -11,6 +11,8 @@ import { EngagementTabsContext } from './EngagementTabsContext';
 import { SUBMISSION_STATUS } from 'constants/engagementStatus';
 import DayCalculatorModal from '../DayCalculator';
 import { ENGAGEMENT_CROPPER_ASPECT_RATIO, ENGAGMENET_UPLOADER_HEIGHT } from './constans';
+import { useAppSelector } from 'hooks';
+import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 
 const EngagementForm = () => {
     const {
@@ -36,6 +38,8 @@ const EngagementForm = () => {
 
     const [initialRichDescription, setInitialRichDescription] = useState('');
     const [initialRichContent, setInitialRichContent] = useState('');
+
+    const [isOpen, setIsOpen] = useState(false);
 
     const navigate = useNavigate();
 
@@ -171,8 +175,6 @@ const EngagementForm = () => {
         navigate(`/engagements/${engagement.id}/view`);
         window.scrollTo(0, 0);
     };
-
-    const [isOpen, setIsOpen] = useState(false);
 
     return (
         <MetPaper elevation={1}>

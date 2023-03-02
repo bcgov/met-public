@@ -1,3 +1,4 @@
+import { Engagement } from 'models/engagement';
 import { User } from 'models/user';
 
 export interface UserDetail {
@@ -19,4 +20,5 @@ export interface UserState {
     authentication: UserAuthentication;
     currentPage: string;
     isAuthorized: boolean;
+    assignedEngagements: number[];
 }

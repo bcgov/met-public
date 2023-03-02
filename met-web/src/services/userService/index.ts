@@ -1,11 +1,20 @@
 import { _kc } from 'constants/tenantConstants';
-import { userToken, userDetails, userAuthorization, userAuthentication, userRoles } from './userSlice';
+import {
+    userToken,
+    userDetails,
+    userAuthorization,
+    userAuthentication,
+    userRoles,
+    assignedEngagements,
+} from './userSlice';
 import { Action, AnyAction, Dispatch } from 'redux';
 import { UserDetail } from './types';
 import { AppConfig } from 'config';
 import Endpoints from 'apiManager/endpoints';
 import http from 'apiManager/httpRequestHandler';
 import { User } from 'models/user';
+import { getMembershipsByUser } from 'services/membershipService';
+import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 
 const KeycloakData = _kc;
 
@@ -31,8 +40,10 @@ const initKeycloak = async (dispatch: Dispatch<AnyAction>) => {
         const updateUserResponse = await updateUser();
         if (updateUserResponse.data) {
             userDetail.user = updateUserResponse.data;
+            const engagementsIds = await getAssignedEngagements(userDetail.sub || '', userDetail.user?.roles || []);
             dispatch(userDetails(userDetail));
             dispatch(userRoles(userDetail.user?.roles || []));
+            dispatch(assignedEngagements(engagementsIds));
             dispatch(userAuthorization(true));
         } else {
             console.error('Missing user object');
@@ -89,6 +100,21 @@ const hasAdminRole = () => KeycloakData.hasResourceRole(AppConfig.keycloak.admin
 const updateUser = async () => {
     try {
         return await http.PutRequest<User>(Endpoints.User.CREATE_UPDATE);
+    } catch (e: unknown) {
+        console.error(e);
+        return Promise.reject(e);
+    }
+};
+
+const getAssignedEngagements = async (externalId: string, roles: string[]) => {
+    if (roles.includes(SCOPES.viewPrivateEngagements) || !externalId) {
+        return [];
+    }
+    try {
+        const memberships = await getMembershipsByUser({
+            user_id: externalId,
+        });
+        return memberships.map((membership) => membership.engagement_id);
     } catch (e: unknown) {
         console.error(e);
         return Promise.reject(e);

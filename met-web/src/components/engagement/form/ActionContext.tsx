@@ -5,10 +5,11 @@ import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementPara
 import { createDefaultEngagement, Engagement } from '../../../models/engagement';
 import { saveDocument } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { useAppDispatch } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { getErrorMessage } from 'utils';
 import { updatedDiff } from 'deep-object-diff';
 import { PatchEngagementRequest } from 'services/engagementService/types';
+import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 
 export const ActionContext = createContext<EngagementContext>({
     handleCreateEngagementRequest: (_engagement: EngagementForm): Promise<Engagement> => {
@@ -33,6 +34,10 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const { engagementId } = useParams<EngagementParams>();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+
+    const roles = useAppSelector((state) => state.user.roles);
+    const assignedEngagements = useAppSelector((state) => state.user.assignedEngagements);
+
     const [isSaving, setSaving] = useState(false);
     const [loadingSavedEngagement, setLoadingSavedEngagement] = useState(true);
 
@@ -53,7 +58,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     const fetchEngagement = async () => {
         if (engagementId !== 'create' && isNaN(Number(engagementId))) {
-            navigate('/engagements/create/form');
+            navigate('/');
         }
 
         if (engagementId === 'create') {
@@ -77,7 +82,18 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         if (bannerImage) setBannerImage(null);
     };
 
+    const verifyUserAuthorization = () => {
+        if (roles.includes(SCOPES.viewPrivateEngagements)) {
+            return;
+        }
+
+        if (!assignedEngagements.includes(Number(engagementId))) {
+            navigate('/unauthorized');
+        }
+    };
+
     useEffect(() => {
+        verifyUserAuthorization();
         fetchEngagement();
     }, [engagementId]);
 
