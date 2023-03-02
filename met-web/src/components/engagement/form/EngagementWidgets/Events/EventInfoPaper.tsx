@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { MetParagraph, MetWidgetPaper } from 'components/common';
 import { Grid, IconButton } from '@mui/material';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
@@ -7,13 +7,33 @@ import EditIcon from '@mui/icons-material/Edit';
 import { When } from 'react-if';
 import { Event } from 'models/event';
 import { formatDate } from 'components/common/dateHelper';
+import { EventsContext } from './EventsContext';
+import { deleteEvent } from 'services/widgetService/EventService';
+import { useAppDispatch } from 'hooks';
+import { openNotification } from 'services/notificationService/notificationSlice';
 
 export interface EventInfoPaperProps {
     event: Event;
+    removeEvent: (_eventId: number) => void;
 }
 
-const EventInfoPaper = ({ event, ...rest }: EventInfoPaperProps) => {
+const EventInfoPaper = ({ event, removeEvent, ...rest }: EventInfoPaperProps) => {
     const eventItem = event.event_items[0];
+    const dispatch = useAppDispatch();
+    const { handleChangeEventToEdit, handleEventDrawerOpen, widget } = useContext(EventsContext);
+
+    const handleRemoveEvent = async (event_id: number) => {
+        try {
+            if (widget) {
+                await deleteEvent(widget.id, event_id);
+                removeEvent(event_id);
+                dispatch(openNotification({ severity: 'success', text: 'The event was removed successfully' }));
+            }
+        } catch (error) {
+            dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to remove event' }));
+        }
+    };
+
     return (
         <MetWidgetPaper elevation={1} {...rest}>
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
@@ -85,11 +105,21 @@ const EventInfoPaper = ({ event, ...rest }: EventInfoPaperProps) => {
                 <Grid container item xs={1.5}>
                     <Grid item xs={6}>
                         <IconButton sx={{ padding: 1, margin: 0 }} color="inherit" aria-label="edit-icon">
-                            <EditIcon />
+                            <EditIcon
+                                onClick={() => {
+                                    handleChangeEventToEdit(event);
+                                    handleEventDrawerOpen(event.type, true);
+                                }}
+                            />
                         </IconButton>
                     </Grid>
                     <Grid item xs={6}>
-                        <IconButton sx={{ padding: 1, margin: 0 }} color="inherit" aria-label="delete-icon">
+                        <IconButton
+                            onClick={() => handleRemoveEvent(event.id)}
+                            sx={{ padding: 1, margin: 0 }}
+                            color="inherit"
+                            aria-label="delete-icon"
+                        >
                             <HighlightOffIcon />
                         </IconButton>
                     </Grid>

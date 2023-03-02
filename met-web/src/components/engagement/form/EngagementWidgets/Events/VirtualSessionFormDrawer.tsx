@@ -11,10 +11,14 @@ import { useAppDispatch } from 'hooks';
 import { EventsContext } from './EventsContext';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { postEvent } from 'services/widgetService/EventService';
+import { postEvent, patchEvent } from 'services/widgetService/EventService';
 import { Event, EVENT_TYPE } from 'models/event';
-import { formatToUTC } from 'components/common/dateHelper';
+import { formatToUTC, formatDate } from 'components/common/dateHelper';
 import { formEventDates } from './utils';
+import dayjs from 'dayjs';
+import tz from 'dayjs/plugin/timezone';
+
+dayjs.extend(tz);
 
 const schema = yup
     .object({
@@ -31,32 +35,70 @@ type VirtualSessionForm = yup.TypeOf<typeof schema>;
 
 const VirtualSessionFormDrawer = () => {
     const dispatch = useAppDispatch();
-    const { virtualSessionFormTabOpen, setVirtualSessionFormTabOpen, widget, loadEvents, setEvents } =
-        useContext(EventsContext);
+    const {
+        virtualSessionFormTabOpen,
+        setVirtualSessionFormTabOpen,
+        widget,
+        loadEvents,
+        setEvents,
+        eventToEdit,
+        handleEventDrawerOpen,
+    } = useContext(EventsContext);
     const [isCreating, setIsCreating] = useState(false);
-
+    const eventItemToEdit = eventToEdit ? eventToEdit.event_items[0] : null;
+    const startDate = dayjs(eventItemToEdit ? eventItemToEdit?.start_date : '').tz('America/Vancouver');
+    const endDate = dayjs(eventItemToEdit ? eventItemToEdit?.end_date : '').tz('America/Vancouver');
     const methods = useForm<VirtualSessionForm>({
         resolver: yupResolver(schema),
     });
+
+    const pad = (num: number) => {
+        let timeString = num.toString();
+        if (num < 10) timeString = '0' + num;
+        return timeString;
+    };
 
     useEffect(() => {
         methods.setValue('session_link_text', 'Click here to register');
     }, []);
 
+    useEffect(() => {
+        methods.setValue('description', eventItemToEdit?.description || '');
+        methods.setValue('date', eventItemToEdit ? formatDate(eventItemToEdit.start_date) : '');
+        methods.setValue('session_link', eventItemToEdit?.url || '');
+        methods.setValue('session_link_text', eventItemToEdit?.url_label || 'Click here to register');
+        methods.setValue('time_from', pad(startDate.hour()) + ':' + pad(startDate.minute()) || '');
+        methods.setValue('time_to', pad(endDate.hour()) + ':' + pad(endDate.minute()) || '');
+    }, [eventToEdit]);
+
     const { handleSubmit, reset } = methods;
 
-    const onSubmit: SubmitHandler<VirtualSessionForm> = async (data: VirtualSessionForm) => {
-        if (!widget) {
-            return;
-        }
-        const validatedData = await schema.validate(data);
-        try {
-            setIsCreating(true);
-            const { description, session_link, session_link_text, date, time_from, time_to } = validatedData;
+    const updateEvent = async (data: VirtualSessionForm) => {
+        if (eventItemToEdit && eventToEdit && widget) {
+            const validatedData = await schema.validate(data);
+            const { description, date, time_from, time_to, session_link, session_link_text } = validatedData;
             const { dateFrom, dateTo } = formEventDates(date, time_from, time_to);
+            await patchEvent(widget.id, eventToEdit.id, eventItemToEdit.id, {
+                description: description,
+                start_date: formatToUTC(dateFrom),
+                end_date: formatToUTC(dateTo),
+                url: session_link,
+                url_label: session_link_text,
+            });
+
+            handleEventDrawerOpen(EVENT_TYPE.VIRTUAL, false);
+            dispatch(openNotification({ severity: 'success', text: 'Event was successfully updated' }));
+        }
+    };
+
+    const createEvent = async (data: VirtualSessionForm) => {
+        const validatedData = await schema.validate(data);
+        const { description, session_link, session_link_text, date, time_from, time_to } = validatedData;
+        const { dateFrom, dateTo } = formEventDates(date, time_from, time_to);
+        if (widget) {
             const createdWidgetEvent = await postEvent(widget.id, {
                 widget_id: widget.id,
-                type: EVENT_TYPE.VIRTUAL.label,
+                type: EVENT_TYPE.VIRTUAL,
                 items: [
                     {
                         description: description,
@@ -67,12 +109,30 @@ const VirtualSessionFormDrawer = () => {
                     },
                 ],
             });
+
             setEvents((prevWidgetEvents: Event[]) => [...prevWidgetEvents, createdWidgetEvent]);
-            dispatch(openNotification({ severity: 'success', text: 'The event was successfully added' }));
+        }
+        dispatch(openNotification({ severity: 'success', text: 'A new event was successfully added' }));
+    };
+
+    const saveEvent = async (data: VirtualSessionForm) => {
+        if (eventItemToEdit) {
+            return updateEvent(data);
+        }
+        return createEvent(data);
+    };
+
+    const onSubmit: SubmitHandler<VirtualSessionForm> = async (data: VirtualSessionForm) => {
+        if (!widget) {
+            return;
+        }
+        try {
+            setIsCreating(true);
+            await saveEvent(data);
+            await loadEvents();
             setIsCreating(false);
             reset({});
             setVirtualSessionFormTabOpen(false);
-            loadEvents();
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add event' }));
             setIsCreating(false);
@@ -84,7 +144,7 @@ const VirtualSessionFormDrawer = () => {
             anchor="right"
             open={virtualSessionFormTabOpen}
             onClose={() => {
-                setVirtualSessionFormTabOpen(false);
+                handleEventDrawerOpen(EVENT_TYPE.VIRTUAL, false);
             }}
         >
             <Box sx={{ width: '40vw', paddingTop: '7em' }} role="presentation">
@@ -199,7 +259,11 @@ const VirtualSessionFormDrawer = () => {
                                     <PrimaryButton type="submit" loading={isCreating}>{`Save & Close`}</PrimaryButton>
                                 </Grid>
                                 <Grid item>
-                                    <SecondaryButton onClick={() => setVirtualSessionFormTabOpen(false)}>
+                                    <SecondaryButton
+                                        onClick={() => {
+                                            handleEventDrawerOpen(EVENT_TYPE.VIRTUAL, false);
+                                        }}
+                                    >
                                         Cancel
                                     </SecondaryButton>
                                 </Grid>

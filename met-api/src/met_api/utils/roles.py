@@ -32,6 +32,7 @@ class Role(Enum):
     CREATE_SURVEY = 'create_survey'
     PUBLISH_ENGAGEMENT = 'publish_engagement'
     VIEW_ENGAGEMENT = 'view_engagement'
+    VIEW_PRIVATE_ENGAGEMENTS = 'view_private_engagements'
     EDIT_ENGAGEMENT = 'edit_engagement'
     REVIEW_COMMENTS = 'review_comments'
     ACCESS_DASHBOARD = 'access_dashboard'

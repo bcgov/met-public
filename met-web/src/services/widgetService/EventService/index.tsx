@@ -1,6 +1,6 @@
 import http from 'apiManager/httpRequestHandler';
 import Endpoints from 'apiManager/endpoints';
-import { replaceUrl } from 'helper';
+import { replaceUrl, replaceAllInURL } from 'helper';
 import { Event, EventTypeLabel } from 'models/event';
 
 export const getEvents = async (widget_id: number): Promise<Event[]> => {
@@ -34,7 +34,61 @@ export const postEvent = async (widget_id: number, data: PostEventProps): Promis
         if (response.data) {
             return response.data;
         }
-        return Promise.reject('Failed to create document');
+        return Promise.reject('Failed to create event');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
+export interface PatchEventProps {
+    description?: string;
+    location_name?: string;
+    location_address?: string;
+    start_date?: string;
+    end_date?: string;
+    url?: string;
+    url_label?: string;
+}
+
+export const patchEvent = async (
+    widget_id: number,
+    event_id: number,
+    item_id: number,
+    data: PatchEventProps,
+): Promise<Event> => {
+    try {
+        const url = replaceAllInURL({
+            URL: Endpoints.Events.UPDATE,
+            params: {
+                widget_id: String(widget_id),
+                event_id: String(event_id),
+                item_id: String(item_id),
+            },
+        });
+        const response = await http.PatchRequest<Event>(url, data);
+        if (response.data) {
+            return response.data;
+        }
+        return Promise.reject('Failed to patch event');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
+export const deleteEvent = async (widget_id: number, event_id: number): Promise<Event> => {
+    try {
+        const url = replaceAllInURL({
+            URL: Endpoints.Events.DELETE,
+            params: {
+                widget_id: String(widget_id),
+                event_id: String(event_id),
+            },
+        });
+        const response = await http.DeleteRequest<Event>(url);
+        if (response.data) {
+            return response.data;
+        }
+        return Promise.reject('Failed to delete event');
     } catch (err) {
         return Promise.reject(err);
     }

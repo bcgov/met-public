@@ -1,12 +1,13 @@
 import React, { useContext } from 'react';
 import { ActionContext } from './ActionContext';
 import { Grid, Skeleton } from '@mui/material';
-import { Banner } from '../banner/Banner';
+import { Banner } from '../../banner/Banner';
 import { PrimaryButton } from 'components/common';
 import { EngagementBannerProps } from './types';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { useAppSelector } from 'hooks';
 import { When } from 'react-if';
+import EngagementInfoSection from './EngagementInfoSection';
 
 export const EngagementBanner = ({ startSurvey }: EngagementBannerProps) => {
     const { isEngagementLoading, savedEngagement } = useContext(ActionContext);
@@ -20,14 +21,16 @@ export const EngagementBanner = ({ startSurvey }: EngagementBannerProps) => {
     }
 
     return (
-        <Banner savedEngagement={savedEngagement}>
-            <When condition={!!surveyId && (isOpen || isPreview)}>
-                <Grid item container direction={{ xs: 'column', sm: 'row' }} xs={12} justifyContent="flex-end">
-                    <PrimaryButton data-testid="EngagementBanner/share-your-thoughts-button" onClick={startSurvey}>
-                        Share your thoughts
-                    </PrimaryButton>
-                </Grid>
-            </When>
+        <Banner imageUrl={savedEngagement.banner_url}>
+            <EngagementInfoSection savedEngagement={savedEngagement}>
+                <When condition={!!surveyId && (isOpen || isPreview)}>
+                    <Grid item container direction={{ xs: 'column', sm: 'row' }} xs={12} justifyContent="flex-end">
+                        <PrimaryButton data-testid="EngagementBanner/share-your-thoughts-button" onClick={startSurvey}>
+                            Share your thoughts
+                        </PrimaryButton>
+                    </Grid>
+                </When>
+            </EngagementInfoSection>
         </Banner>
     );
 };

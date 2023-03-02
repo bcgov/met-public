@@ -5,12 +5,10 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import createCache from '@emotion/cache';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
-import Test from 'Test';
-import EngagementList from 'components/engagement/listing/index';
+import TileBlock from 'components/landing/TileBlock';
 import { store } from '../store';
 
-export default class SampleWC extends HTMLElement {
+export default class EngagementTilesWC extends HTMLElement {
     connectedCallback() {
         const shadowContainer = this.attachShadow({ mode: 'open' });
         const emotionRoot = document.createElement('style');
@@ -31,7 +29,7 @@ export default class SampleWC extends HTMLElement {
                     <CacheProvider value={cache}>
                         <ThemeProvider theme={shadowTheme}>
                             <Router>
-                                <EngagementList />
+                                <TileBlock />
                             </Router>
                         </ThemeProvider>
                     </CacheProvider>
@@ -40,4 +38,4 @@ export default class SampleWC extends HTMLElement {
         );
     }
 }
-customElements.define('engagements-wc', SampleWC);
+customElements.define('engagement-tiles-wc', EngagementTilesWC);
