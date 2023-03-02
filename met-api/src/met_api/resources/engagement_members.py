@@ -63,14 +63,14 @@ class EngagementMembership(Resource):
 
 @cors_preflight('GET,OPTIONS')
 @API.route('/<user_id>')
-class EngagementMembership(Resource):
-    """Resource for managing engagement's membership."""
+class EngagementMembershipUser(Resource):
+    """Resource for fetching memberships for user."""
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.has_one_of_roles([Role.VIEW_ASSIGNED_ENGAGEMENTS_SELF.value])
-    def get(engagement_id, user_id):
-        """Create a new membership."""
+    def get(engagement_id, user_id): # pylint: disable=unused-argument
+        """Get membership by id."""
         try:
             members = MembershipService.get_assigned_engagements(user_id)
             return jsonify(MembershipSchema().dump(members, many=True)), HTTPStatus.OK
