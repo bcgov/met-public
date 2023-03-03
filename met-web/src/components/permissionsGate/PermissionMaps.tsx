@@ -14,4 +14,5 @@ export const SCOPES: { [scope: string]: string } = {
     viewMembers: 'view_members',
     editMembers: 'edit_members',
     appAdmin: 'app-admin',
+    viewPrivateEngagements: 'view_private_engagements',
 };

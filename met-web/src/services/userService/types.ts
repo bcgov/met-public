@@ -19,4 +19,5 @@ export interface UserState {
     authentication: UserAuthentication;
     currentPage: string;
     isAuthorized: boolean;
+    assignedEngagements: number[];
 }

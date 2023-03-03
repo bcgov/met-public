@@ -13,6 +13,7 @@ import { createDefaultEngagement, Engagement } from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { Widget, WidgetType } from 'models/widget';
 import { DocumentItem } from 'models/document';
+import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 
 const engagement: Engagement = {
     ...createDefaultEngagement(),
@@ -54,6 +55,16 @@ const documentWidget: Widget = {
     items: [],
 };
 
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useSelector: jest.fn(() => {
+        return {
+            roles: [SCOPES.viewPrivateEngagement, SCOPES.editEngagement, SCOPES.createEngagement],
+            assignedEngagements: [engagement.id],
+        };
+    }),
+}));
+
 jest.mock('@reduxjs/toolkit/query/react', () => ({
     ...jest.requireActual('@reduxjs/toolkit/query/react'),
     fetchBaseQuery: jest.fn(),
@@ -74,7 +85,6 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
 }));
 
 describe('Document widget in engagement page tests', () => {
-    jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());

@@ -66,7 +66,7 @@ class MembershipService:
 
     @staticmethod
     def get_memberships(engagement_id):
-        """Create membership."""
+        """Get memberships by engagement id."""
         # get user to be added from request json
 
         memberships = MembershipModel.find_by_engagement(engagement_id)
@@ -75,8 +75,5 @@ class MembershipService:
 
     @staticmethod
     def get_assigned_engagements(user_id):
-        """Create membership."""
-        # get user to be added from request json
-
-        memberships = MembershipModel.find_by_user_id(user_id)
-        return [membership.engagement_id for membership in memberships]
+        """Get memberships by user id."""
+        return MembershipModel.find_by_user_id(user_id)

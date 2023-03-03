@@ -61,11 +61,13 @@ class EngagementService:
     ):
         """Get engagements paginated."""
         user_roles = TokenInfo.get_user_roles()
+        statuses = cls._get_statuses_filter(user_roles)
+        assigned_engagements, statuses = cls._get_assigned_engagements(user_id, user_roles, statuses)
         items, total = EngagementModel.get_engagements_paginated(
             pagination_options,
             search_options,
-            statuses=cls._get_statuses_filter(user_roles),
-            assigned_engagements=cls._get_assigned_engagements(user_id, user_roles)
+            statuses=statuses,
+            assigned_engagements=assigned_engagements
         )
         engagements_schema = EngagementSchema(many=True)
         engagements = engagements_schema.dump(items)
@@ -92,11 +94,13 @@ class EngagementService:
         return public_statuses
 
     @staticmethod
-    def _get_assigned_engagements(user_id, user_roles):
+    def _get_assigned_engagements(user_id, user_roles, statuses: list):
         if Role.VIEW_PRIVATE_ENGAGEMENTS.value in user_roles:
-            return None
-
-        return MembershipService.get_assigned_engagements(user_id)
+            return None, None
+        memberships = MembershipService.get_assigned_engagements(user_id)
+        if len(memberships) > 0 and statuses:
+            statuses.append(Status.Draft.value)
+        return [membership.engagement_id for membership in memberships], statuses
 
     @staticmethod
     def close_engagements_due():

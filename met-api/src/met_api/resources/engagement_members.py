@@ -60,3 +60,19 @@ class EngagementMembership(Resource):
             return MembershipSchema().dump(member), HTTPStatus.OK
         except BusinessException as err:
             return {'message': err.error}, err.status_code
+
+
+@cors_preflight('GET,OPTIONS')
+@API.route('/<user_id>')
+class EngagementMembershipUser(Resource):
+    """Resource for fetching memberships for user."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    def get(engagement_id, user_id):  # pylint: disable=unused-argument
+        """Get membership by id."""
+        try:
+            members = MembershipService.get_assigned_engagements(user_id)
+            return jsonify(MembershipSchema().dump(members, many=True)), HTTPStatus.OK
+        except BusinessException as err:
+            return {'message': err.error}, err.status_code

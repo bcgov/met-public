@@ -10,6 +10,17 @@ import * as widgetService from 'services/widgetService';
 import { Box } from '@mui/material';
 import { WidgetType } from 'models/widget';
 import { draftEngagement, surveys, mockEvent, eventWidget } from '../factory';
+import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useSelector: jest.fn(() => {
+        return {
+            roles: [SCOPES.viewPrivateEngagement, SCOPES.editEngagement, SCOPES.createEngagement],
+            assignedEngagements: [draftEngagement.id],
+        };
+    }),
+}));
 
 jest.mock('@reduxjs/toolkit/query/react', () => ({
     ...jest.requireActual('@reduxjs/toolkit/query/react'),
@@ -58,7 +69,6 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
 }));
 
 describe('Event Widget tests', () => {
-    jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');

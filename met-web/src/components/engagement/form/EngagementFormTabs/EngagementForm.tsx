@@ -37,6 +37,8 @@ const EngagementForm = () => {
     const [initialRichDescription, setInitialRichDescription] = useState('');
     const [initialRichContent, setInitialRichContent] = useState('');
 
+    const [isOpen, setIsOpen] = useState(false);
+
     const navigate = useNavigate();
 
     const isNewEngagement = engagementId === 'create';
@@ -171,8 +173,6 @@ const EngagementForm = () => {
         navigate(`/engagements/${engagement.id}/view`);
         window.scrollTo(0, 0);
     };
-
-    const [isOpen, setIsOpen] = useState(false);
 
     return (
         <MetPaper elevation={1}>
