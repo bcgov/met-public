@@ -62,6 +62,7 @@ export const BaseTheme = createTheme({
         MuiButton: {
             styleOverrides: {
                 root: {
+                    lineHeight: '1.1rem',
                     height: '40px',
                 },
             },
