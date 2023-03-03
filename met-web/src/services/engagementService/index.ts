@@ -28,7 +28,6 @@ interface GetEngagementsParams {
     include_banner_url?: boolean;
 }
 export const getEngagements = async (params: GetEngagementsParams = {}): Promise<Page<Engagement>> => {
-    console.log('Endpoint ', Endpoints.Engagement.GET_LIST);
     const responseData = await http.GetRequest<Page<Engagement>>(Endpoints.Engagement.GET_LIST, params);
     return (
         responseData.data ?? {

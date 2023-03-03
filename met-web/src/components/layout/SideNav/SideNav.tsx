@@ -33,6 +33,11 @@ const DrawerBox = () => {
                         <ListItemButton
                             data-testid={`SideNav/${route.name}-button`}
                             onClick={() => navigate(route.path)}
+                            sx={{
+                                '&:hover': {
+                                    backgroundColor: Palette.hover.light,
+                                },
+                            }}
                         >
                             <When condition={currentBaseRoute === route.base}>
                                 <MetHeader4 color={Palette.secondary.main} bold>
