@@ -3,7 +3,6 @@ from http import HTTPStatus
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.map import Map as WidgetMapModel
 
-
 class WidgetMapService:
     """Widget Map management service."""
 
@@ -16,7 +15,7 @@ class WidgetMapService:
     @staticmethod
     def create_map(map_details: dict):
         """Create map for the widget."""
-        map = WidgetMapService.create_map(map_details)
+        map = WidgetMapModel.create_map(map_details)
         return map
      
     @staticmethod
