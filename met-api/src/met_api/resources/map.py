@@ -42,7 +42,7 @@ class Map(Resource):
         """Get map widget."""
         request_json = request.get_json()
         try:
-            widget_map = WidgetMapService().get_map(widget_id, request_json)
+            widget_map = WidgetMapService().get_map(widget_id)
             return WidgetMapSchema().dump(widget_map), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
