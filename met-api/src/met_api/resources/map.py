@@ -40,7 +40,6 @@ class Map(Resource):
     @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
     def get(widget_id):
         """Get map widget."""
-        request_json = request.get_json()
         try:
             widget_map = WidgetMapService().get_map(widget_id)
             return WidgetMapSchema().dump(widget_map), HTTPStatus.OK
