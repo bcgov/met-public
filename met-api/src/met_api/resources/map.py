@@ -20,7 +20,6 @@ from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from met_api.exceptions.business_exception import BusinessException
 from met_api.auth import jwt as _jwt
-from met_api.schemas.map import WidgetMapSchema
 from met_api.services.widget_map_service import WidgetMapService
 from met_api.schemas.map import WidgetMapSchema
 from met_api.utils.roles import Role
@@ -59,7 +58,7 @@ class Map(Resource):
             return WidgetMapSchema().dump(widget_map), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
-  
+
 
 @cors_preflight('PATCH')
 @API.route('widget/<widget_id>/map/<map_id>')
@@ -77,4 +76,3 @@ class MapUpdate(Resource):
             return WidgetMapSchema().dump(widget_map), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
-

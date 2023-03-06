@@ -17,7 +17,7 @@ class WidgetMapService:
         """Create map for the widget."""
         widget_map = WidgetMapModel.create_map(map_details)
         return widget_map
- 
+
     @staticmethod
     def update_map(widget_id, request_json):
         """Update map widget."""
@@ -26,4 +26,4 @@ class WidgetMapService:
             raise BusinessException(
                 error='Invalid widgets and map',
                 status_code=HTTPStatus.BAD_REQUEST)
-        return WidgetMapModel.update_map(widget_id)
+        return WidgetMapModel.update_map(widget_id, request_json)
