@@ -9,18 +9,18 @@ class WidgetMapService:
     
     @staticmethod
     def _create_map_model(widget_id, map_data: dict):
-        map = WidgetMapModel()
-        map.widget_id = widget_id
-        map.title = map_data.get('title')
-        map.latitude = map_data.get('latitude')
-        map.title = map_data.get('longitude')
-        map.engagement_id = map_data.get('engagement_id')
-        map.created_date=datetime.utcnow(),
-        map.updated_date=datetime.utcnow(),
-        map.created_by=map_data.get('created_by', None),
-        map.updated_by=map_data.get('updated_by', None),
-        map.flush()
-        return map
+        map_model = WidgetMapModel()
+        map_model.widget_id = widget_id
+        map_model.title = map_data.get('title')
+        map_model.latitude = map_data.get('latitude')
+        map_model.title = map_data.get('longitude')
+        map_model.engagement_id = map_data.get('engagement_id')
+        map_model.created_date=datetime.utcnow(),
+        map_model.updated_date=datetime.utcnow(),
+        map_model.created_by=map_data.get('created_by', None),
+        map_model.updated_by=map_data.get('updated_by', None),
+        map_model.flush()
+        return map_model
 
     @staticmethod
     def _create_map_model(widget_id, map_data: dict):
