@@ -29,17 +29,17 @@ class WidgetMap(BaseModel):  # pylint: disable=too-few-public-methods
         return db.session.query(WidgetMap).filter_by(WidgetMap.widget_id == widget_id)
 
     @classmethod
-    def create_map(cls, map) -> WidgetMap:
+    def create_map(cls, map_data) -> WidgetMap:
         """Create map."""
         new_map = WidgetMap(
-            title=map.get('title', None),
-            latitude=map.get('latitude', None),
-            longitude=map.get('longitude', None),
-            shapefile=map.get('shapefile', None),
+            title=map_data.get('title', None),
+            latitude=map_data.get('latitude', None),
+            longitude=map_data.get('longitude', None),
+            shapefile=map_data.get('shapefile', None),
             created_date=datetime.utcnow(),
             updated_date=datetime.utcnow(),
-            created_by=map.get('created_by', None),
-            updated_by=map.get('updated_by', None),
+            created_by=map_data.get('created_by', None),
+            updated_by=map_data.get('updated_by', None),
         )
         db.session.add(new_map)
         db.session.commit()
@@ -47,13 +47,12 @@ class WidgetMap(BaseModel):  # pylint: disable=too-few-public-methods
         return new_map
 
     @classmethod
-    def update_map(cls, widget_id, map_data: dict) -> Optional[WidgetMap or DefaultMethodResult]:
+    def update_map(cls, widget_id, map_data: dict) -> WidgetMap:
         """Update map."""
         query = WidgetMap.query.filter_by(WidgetMap.widget_id == widget_id)
         widget_map: WidgetMap = query.first()
         if not widget_map:
-            return DefaultMethodResult(False, 'WidgetMap Not Found', widget_id)
-        map_data['updated_date'] = datetime.utcnow()
+            return map_data
         query.update(map_data)
         db.session.commit()
         return widget_map

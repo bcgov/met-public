@@ -1,7 +1,7 @@
 """Service for Widget Map management."""
 from http import HTTPStatus
 from met_api.exceptions.business_exception import BusinessException
-from met_api.models.map import Map as WidgetMapModel
+from met_api.models.map import WidgetMap as WidgetMapModel
 
 class WidgetMapService:
     """Widget Map management service."""
@@ -17,7 +17,7 @@ class WidgetMapService:
         """Create map for the widget."""
         widget_map = WidgetMapModel.create_map(map_details)
         return widget_map
-     
+ 
     @staticmethod
     def update_map(widget_id, request_json):
         """Update map widget."""

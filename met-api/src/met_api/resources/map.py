@@ -15,15 +15,14 @@
 
 from http import HTTPStatus
 
-from flask import jsonify, request
+from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from met_api.exceptions.business_exception import BusinessException
 from met_api.auth import jwt as _jwt
-from met_api.schemas.map import Map
+from met_api.schemas.map import WidgetMapSchema
 from met_api.services.widget_map_service import WidgetMapService
 from met_api.schemas.map import WidgetMapSchema
-from met_api.services.object_storage_service import ObjectStorageService
 from met_api.utils.roles import Role
 from met_api.utils.util import allowedorigins, cors_preflight
 
@@ -36,7 +35,7 @@ API = Namespace('map', description='Endpoints for Map Widget Management')
 @API.route('/map')
 class Map(Resource):
     """Resource for managing map widgets."""
-    
+
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
@@ -52,7 +51,7 @@ class Map(Resource):
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
-    def post(widget_id):
+    def post():
         """Create map widget."""
         request_json = request.get_json()
         try:
@@ -60,13 +59,13 @@ class Map(Resource):
             return WidgetMapSchema().dump(widget_map), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
-        
+  
 
 @cors_preflight('PATCH')
 @API.route('widget/<widget_id>/map/<map_id>')
-class Map(Resource):
+class MapUpdate(Resource):
     """Resource for updating map widgets."""
-    
+
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
@@ -78,5 +77,4 @@ class Map(Resource):
             return WidgetMapSchema().dump(widget_map), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
-        
-    
+
