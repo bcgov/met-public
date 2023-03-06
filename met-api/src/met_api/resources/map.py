@@ -44,8 +44,8 @@ class Map(Resource):
         """Get map widget."""
         request_json = request.get_json()
         try:
-            map = WidgetMapService().get_map(widget_id, request_json)
-            return WidgetMapSchema().dump(map), HTTPStatus.OK
+            widget_map = WidgetMapService().get_map(widget_id, request_json)
+            return WidgetMapSchema().dump(widget_map), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
 
@@ -56,8 +56,8 @@ class Map(Resource):
         """Create map widget."""
         request_json = request.get_json()
         try:
-            map = WidgetMapService().create_map(request_json)
-            return WidgetMapSchema().dump(map), HTTPStatus.OK
+            widget_map = WidgetMapService().create_map(request_json)
+            return WidgetMapSchema().dump(widget_map), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
         
@@ -74,8 +74,8 @@ class Map(Resource):
         """Update map widget."""
         request_json = request.get_json()
         try:
-            map = WidgetMapService().update_map(widget_id, request_json)
-            return WidgetMapSchema().dump(map), HTTPStatus.OK
+            widget_map = WidgetMapService().update_map(widget_id, request_json)
+            return WidgetMapSchema().dump(widget_map), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
         

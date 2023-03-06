@@ -9,20 +9,20 @@ class WidgetMapService:
     @staticmethod
     def get_map(widget_id):
         """Get map by widget id."""
-        map = WidgetMapModel.get_map(widget_id)
-        return map
+        widget_map = WidgetMapModel.get_map(widget_id)
+        return widget_map
 
     @staticmethod
     def create_map(map_details: dict):
         """Create map for the widget."""
-        map = WidgetMapModel.create_map(map_details)
-        return map
+        widget_map = WidgetMapModel.create_map(map_details)
+        return widget_map
      
     @staticmethod
     def update_map(widget_id, request_json):
         """Update map widget."""
-        map: WidgetMapModel = WidgetMapModel.update_map(widget_id, request_json)
-        if map.widget_id != widget_id:
+        widget_map: WidgetMapModel = WidgetMapModel.update_map(widget_id, request_json)
+        if widget_map.widget_id != widget_id:
             raise BusinessException(
                 error='Invalid widgets and map',
                 status_code=HTTPStatus.BAD_REQUEST)
