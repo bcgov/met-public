@@ -8,7 +8,6 @@ from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.sql.schema import ForeignKey
 from .base_model import BaseModel
 from .db import db
-from .default_method_result import DefaultMethodResult
 
 
 class WidgetMap(BaseModel):  # pylint: disable=too-few-public-methods
@@ -19,8 +18,8 @@ class WidgetMap(BaseModel):  # pylint: disable=too-few-public-methods
     widget_id = db.Column(db.Integer, ForeignKey('widget.id', ondelete='CASCADE'), nullable=True)
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), nullable=True)
     title = db.Column(db.String(50))
-    latitutde = db.Column(db.Float)
-    longitude = db.Column(db.Float)
+    latitutde = db.Column(db.Float, nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
     shapefile = db.Column(JSON, unique=False, nullable=True)
 
     @classmethod

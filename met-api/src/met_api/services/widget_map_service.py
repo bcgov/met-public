@@ -29,7 +29,7 @@ class WidgetMapService:
         widget_map = WidgetMapService._create_map_model(widget_id, map_details)
         widget_map.commit()
         return widget_map
- 
+
     @staticmethod
     def update_map(widget_id, request_json):
         """Update map widget."""
