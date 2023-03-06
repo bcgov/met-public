@@ -48,7 +48,7 @@ class Map(BaseModel):  # pylint: disable=too-few-public-methods
     @classmethod
     def update_map(cls, widget_id, map_data: dict) -> Optional[Map or DefaultMethodResult]:
         """Update map."""
-        widget_id = map_data.get('id', None)
+        widget_id = widget_id
         query = Map.query.filter_by(Map.widget_id == widget_id)
         map: Map = query.first()
         if not map:

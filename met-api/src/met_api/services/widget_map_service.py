@@ -3,7 +3,6 @@ from http import HTTPStatus
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.widget_map import WidgetMap as WidgetMapModel
 
-
 class WidgetMapService:
     """Widget Map management service."""
 
