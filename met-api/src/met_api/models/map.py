@@ -51,10 +51,10 @@ class WidgetMap(BaseModel):  # pylint: disable=too-few-public-methods
         """Update map."""
         widget_id = widget_id
         query = WidgetMap.query.filter_by(WidgetMap.widget_id == widget_id)
-        map: WidgetMap = query.first()
-        if not map:
+        widget_map: WidgetMap = query.first()
+        if not widget_map:
             return DefaultMethodResult(False, 'WidgetMap Not Found', widget_id)
         map_data['updated_date'] = datetime.utcnow()
         query.update(map_data)
         db.session.commit()
-        return map
+        return widget_map
