@@ -1,24 +1,27 @@
-"""Widget Map schema class."""
+# Copyright © 2019 Province of British Columbia
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+"""Manager for widget map schema."""
 
-from marshmallow import EXCLUDE, Schema, fields
+from met_api.models.map import WidgetMap as WidgetMapModel
+
+from .base_schema import BaseSchema
 
 
-class WidgetMapSchema(Schema):
-    """Widget Map schema."""
+class WidgetMapSchema(BaseSchema):  # pylint: disable=too-many-ancestors, too-few-public-methods
+    """This is the schema for the map model."""
 
-    class Meta:  # pylint: disable=too-few-public-methods
-        """Exclude unknown fields in the deserialized output."""
+    class Meta(BaseSchema.Meta):  # pylint: disable=too-few-public-methods
+        """Maps all of the Widget Map fields to a default schema."""
 
-        unknown = EXCLUDE
-
-    id = fields.Int(data_key='id')
-    widget_id = fields.Int(data_key='widget_id', required=True)
-    sort_index = fields.Int(data_key='sort_index')
-    title = fields.Int(data_key='title')
-    latitude = fields.Float(data_key="latitude")
-    longitude = fields.Float(data_key="longitude")
-    shapefile = fields.Dict(data_key="shapefile")
-    created_by = fields.Str(data_key='created_by')
-    created_date = fields.Str(data_key='created_date')
-    updated_by = fields.Str(data_key='updated_by')
-    updated_date = fields.Str(data_key='updated_date')
+        model = WidgetMapModel
