@@ -5,4 +5,5 @@ export const WidgetTabValues = {
     DOCUMENT_FORM: 'DOCUMENT_FORM',
     PHASES_FORM: 'PHASES_FORM',
     EVENTS_FORM: 'EVENTS_FORM',
+    MAP_FORM: 'MAP_FORM',
 };
