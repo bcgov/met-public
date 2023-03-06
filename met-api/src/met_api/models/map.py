@@ -1,4 +1,4 @@
-"""Map model class.
+"""WidgetMap model class.
 
 Manages the map widget
 """
@@ -11,7 +11,7 @@ from .db import db
 from .default_method_result import DefaultMethodResult
 
 
-class Map(BaseModel):  # pylint: disable=too-few-public-methods
+class WidgetMap(BaseModel):  # pylint: disable=too-few-public-methods
     """Definition of the Map entity."""
 
     __tablename__ = 'map'
@@ -23,14 +23,14 @@ class Map(BaseModel):  # pylint: disable=too-few-public-methods
     shapefile = db.Column(JSON, unique=False, nullable=True)
 
     @classmethod
-    def get_map(cls, widget_id) -> list[Map]:
+    def get_map(cls, widget_id) -> list[WidgetMap]:
         """Get map"""
-        return db.session.query(Map).filter_by(Map.widget_id == widget_id)
+        return db.session.query(WidgetMap).filter_by(WidgetMap.widget_id == widget_id)
 
     @classmethod
-    def create_map(cls, map) -> Map:
+    def create_map(cls, map) -> WidgetMap:
         """Create map."""
-        new_map = Map(
+        new_map = WidgetMap(
             title=map.get('title', None),
             latitude=map.get('latitude', None),
             longitude=map.get('longitude', None),
@@ -46,13 +46,13 @@ class Map(BaseModel):  # pylint: disable=too-few-public-methods
         return new_map
 
     @classmethod
-    def update_map(cls, widget_id, map_data: dict) -> Optional[Map or DefaultMethodResult]:
+    def update_map(cls, widget_id, map_data: dict) -> Optional[WidgetMap or DefaultMethodResult]:
         """Update map."""
         widget_id = widget_id
-        query = Map.query.filter_by(Map.widget_id == widget_id)
-        map: Map = query.first()
+        query = WidgetMap.query.filter_by(WidgetMap.widget_id == widget_id)
+        map: WidgetMap = query.first()
         if not map:
-            return DefaultMethodResult(False, 'Map Not Found', widget_id)
+            return DefaultMethodResult(False, 'WidgetMap Not Found', widget_id)
         map_data['updated_date'] = datetime.utcnow()
         query.update(map_data)
         db.session.commit()
