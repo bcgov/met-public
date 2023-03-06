@@ -4,7 +4,6 @@ Manages the map widget
 """
 from __future__ import annotations
 
-from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.sql.schema import ForeignKey
 
 from .base_model import BaseModel

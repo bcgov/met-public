@@ -49,11 +49,11 @@ class Map(Resource):
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
-    def post():
+    def post(widget_id):
         """Create map widget."""
         request_json = request.get_json()
         try:
-            widget_map = WidgetMapService().create_map(request_json)
+            widget_map = WidgetMapService().create_map(widget_id, request_json)
             return WidgetMapSchema().dump(widget_map), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
