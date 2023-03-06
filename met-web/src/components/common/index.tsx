@@ -61,19 +61,19 @@ const StyledWidgetButton = styled(MuiButton)(() => ({
     },
 }));
 
-export const WidgetButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
+export const WidgetButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
     <StyledWidgetButton {...rest} variant="outlined">
         {children}
     </StyledWidgetButton>
 );
 
-export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
+export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
     <StyledSecondaryButton {...rest} variant="outlined">
         {children}
     </StyledSecondaryButton>
 );
 
-export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => (
+export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
     <StyledPrimaryButton
         {...rest}
         variant="contained"
@@ -89,7 +89,7 @@ const StyledPaper = styled(MuiPaper)(() => ({
     boxShadow: 'rgb(0 0 0 / 6%) 0px 2px 2px -1px, rgb(0 0 0 / 6%) 0px 1px 1px 0px, rgb(0 0 0 / 6%) 0px 1px 3px 0px',
 }));
 
-export const MetPaper = ({ children, ...rest }: { children: React.ReactNode;[prop: string]: unknown }) => {
+export const MetPaper = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => {
     return (
         <StyledPaper elevation={0} {...rest}>
             {children}
