@@ -30,8 +30,8 @@ API = Namespace('map', description='Endpoints for Map Widget Management')
 """Custom exception messages"""
 
 
-@cors_preflight('GET, POST, OPTIONS')
-@API.route('/map')
+@cors_preflight('GET, POST, PATCH, OPTIONS')
+@API.route('widget/<widget_id>/map/<map_id>')
 class Map(Resource):
     """Resource for managing map widgets."""
 
@@ -57,17 +57,11 @@ class Map(Resource):
             return WidgetMapSchema().dump(widget_map), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
-
-
-@cors_preflight('PATCH')
-@API.route('widget/<widget_id>/map/<map_id>')
-class MapUpdate(Resource):
-    """Resource for updating map widgets."""
-
+        
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
-    def get(widget_id):
+    def patch(widget_id):
         """Update map widget."""
         request_json = request.get_json()
         try:
