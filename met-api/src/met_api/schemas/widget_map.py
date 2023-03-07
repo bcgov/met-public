@@ -13,7 +13,7 @@
 # limitations under the License.
 """Manager for widget map schema."""
 
-from met_api.models.map import WidgetMap as WidgetMapModel
+from met_api.models.widget_map import WidgetMap as WidgetMapModel
 
 from .base_schema import BaseSchema
 

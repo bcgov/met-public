@@ -14,7 +14,7 @@ class WidgetMap(BaseModel):  # pylint: disable=too-few-public-methods
     """Definition of the Map entity."""
 
     __tablename__ = 'map'
-    
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     widget_id = db.Column(db.Integer, ForeignKey('widget.id', ondelete='CASCADE'), nullable=True)
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), nullable=True)
