@@ -80,6 +80,10 @@ const Endpoints = {
         DELETE: `${AppConfig.apiUrl}/widgets/widget_id/events/event_id`,
         SORT: `${AppConfig.apiUrl}/widgets/widget_id/events/sort_index`,
     },
+    Maps: {
+        GET_LIST: `${AppConfig.apiUrl}/widgets/widget_id/maps`,
+        CREATE: `${AppConfig.apiUrl}/widgets/widget_id/maps`,
+    },
 };
 
 export default Endpoints;
