@@ -57,7 +57,7 @@ class Map(Resource):
             return WidgetMapSchema().dump(widget_map), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
-        
+
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
