@@ -6,6 +6,7 @@ from typing import List
 from flask import current_app
 
 from met_api.constants.engagement_status import Status
+from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models import User as UserModel
 from met_api.models.engagement import Engagement as EngagementModel
@@ -13,6 +14,7 @@ from met_api.models.engagement_status_block import EngagementStatusBlock as Enga
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.submission import Submission
 from met_api.schemas.engagement import EngagementSchema
+from met_api.services import authorization
 from met_api.services.object_storage_service import ObjectStorageService
 from met_api.services.membership_service import MembershipService
 from met_api.utils.notification import send_email
@@ -168,6 +170,8 @@ class EngagementService:
         """Update engagement."""
         self.validate_fields(request_json)
         engagement_id = request_json.get('id', None)
+        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER,
+                                               Role.EDIT_ENGAGEMENT.value), engagement_id=engagement_id)
         engagement = EngagementModel.update_engagement(request_json)
         if (status_block := request_json.get('status_block')) is not None:
             EngagementService._save_or_update_eng_block(engagement_id, status_block)
@@ -199,6 +203,8 @@ class EngagementService:
         """Update engagement partially."""
         survey_block = data.pop('status_block', None)
         engagement_id = data.get('id', None)
+        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER,
+                                               Role.EDIT_ENGAGEMENT.value), engagement_id=engagement_id)
         if data:
             updated_engagement = EngagementModel.edit_engagement(data)
             if not updated_engagement:

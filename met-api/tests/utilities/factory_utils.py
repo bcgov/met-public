@@ -221,3 +221,13 @@ def factory_document_model(document_info: dict = TestWidgetDocumentInfo.document
     )
     document.save()
     return document
+
+
+def patch_token_info(claims, monkeypatch):
+    """Patch token info to mimic g."""
+
+    def token_info():
+        """Return token info."""
+        return claims
+
+    monkeypatch.setattr('met_api.utils.user_context._get_token_info', token_info)
