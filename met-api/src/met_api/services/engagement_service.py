@@ -170,7 +170,7 @@ class EngagementService:
         """Update engagement."""
         self.validate_fields(request_json)
         engagement_id = request_json.get('id', None)
-        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER,
+        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name,
                                                Role.EDIT_ENGAGEMENT.value), engagement_id=engagement_id)
         engagement = EngagementModel.update_engagement(request_json)
         if (status_block := request_json.get('status_block')) is not None:
@@ -203,7 +203,7 @@ class EngagementService:
         """Update engagement partially."""
         survey_block = data.pop('status_block', None)
         engagement_id = data.get('id', None)
-        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER,
+        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name,
                                                Role.EDIT_ENGAGEMENT.value), engagement_id=engagement_id)
         if data:
             updated_engagement = EngagementModel.edit_engagement(data)

@@ -20,7 +20,7 @@ def check_auth(**kwargs):
     has_valid_roles = bool(set(token_roles) & set(permitted_roles))
     if has_valid_roles:
         return
-    if MembershipType.TEAM_MEMBER in permitted_roles:
+    if MembershipType.TEAM_MEMBER.name in permitted_roles:
         # check if he is a member of particular engagement.
         is_a_member = _has_team_membership(kwargs, user_from_context)
         if is_a_member:
