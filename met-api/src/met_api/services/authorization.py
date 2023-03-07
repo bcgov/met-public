@@ -36,7 +36,6 @@ def _has_team_membership(kwargs, user_from_context) -> bool:
     if not eng_id or not user:
         return False
     memberships = MembershipModel.find_by_engagement_and_user_id(eng_id, user.id)
-    print('----memberships----', memberships)
     # TODO when multiple memberships are supported , iterate list and check role.
     if memberships and memberships[0].type == MembershipType.TEAM_MEMBER:
         return True
