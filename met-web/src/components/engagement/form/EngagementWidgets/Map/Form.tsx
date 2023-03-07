@@ -11,6 +11,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { MapContext } from './MapContext';
 import { postMap } from 'services/widgetService/MapService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
+import Map from 'components/map';
 
 const schema = yup
     .object({
@@ -34,7 +35,7 @@ type DetailsForm = yup.TypeOf<typeof schema>;
 
 const Form = () => {
     const dispatch = useAppDispatch();
-    const { widget } = useContext(MapContext);
+    const { widget, setPreviewMapOpen } = useContext(MapContext);
     const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const [isCreating, setIsCreating] = useState(false);
 
@@ -78,6 +79,7 @@ const Form = () => {
 
     const handlePreviewMap = async () => {
         await trigger(['latitude', 'longitude']);
+        setPreviewMapOpen(true);
     };
 
     return (
@@ -135,6 +137,9 @@ const Form = () => {
                                     multiline
                                     minRows={4}
                                 />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Map />
                             </Grid>
                             <Grid
                                 item
