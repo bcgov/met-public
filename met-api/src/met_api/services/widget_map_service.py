@@ -4,6 +4,7 @@ from datetime import datetime
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.widget_map import WidgetMap as WidgetMapModel
 
+
 class WidgetMapService:
     """Widget Map management service."""
 
@@ -15,10 +16,10 @@ class WidgetMapService:
         map_model.latitude = map_data.get('latitude')
         map_model.title = map_data.get('longitude')
         map_model.engagement_id = map_data.get('engagement_id')
-        map_model.created_date=datetime.utcnow()
-        map_model.updated_date=datetime.utcnow()
-        map_model.created_by=map_data.get('created_by', None)
-        map_model.updated_by=map_data.get('updated_by', None)
+        map_model.created_date = datetime.utcnow()
+        map_model.updated_date = datetime.utcnow()
+        map_model.created_by = map_data.get('created_by', None)
+        map_model.updated_by = map_data.get('updated_by', None)
         map_model.flush()
         return map_model
 
