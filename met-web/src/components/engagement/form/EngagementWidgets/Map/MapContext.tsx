@@ -1,8 +1,6 @@
 import { Widget, WidgetType } from 'models/widget';
 import { WidgetMap } from 'models/widgetMap';
 import React, { createContext, useContext, useState } from 'react';
-import { openNotification } from 'services/notificationService/notificationSlice';
-import { postMap } from 'services/widgetService/MapService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 
 export interface MapContextProps {

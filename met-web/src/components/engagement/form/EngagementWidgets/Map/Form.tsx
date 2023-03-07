@@ -1,6 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
+import React, { useContext, useState } from 'react';
 import Divider from '@mui/material/Divider';
 import { Grid } from '@mui/material';
 import { MetHeader3, MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
