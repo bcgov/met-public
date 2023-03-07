@@ -5,8 +5,6 @@ import { WidgetDrawerContext } from '../WidgetDrawerContext';
 
 export interface MapContextProps {
     widget: Widget | null;
-    mapDetailsDrawerOpen: boolean;
-    setMapDetailsDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
     widgetMap: WidgetMap | null;
     setWidgetMap: React.Dispatch<React.SetStateAction<WidgetMap | null>>;
 }
@@ -17,10 +15,6 @@ export type EngagementParams = {
 
 export const MapContext = createContext<MapContextProps>({
     widget: null,
-    mapDetailsDrawerOpen: false,
-    setMapDetailsDrawerOpen: () => {
-        throw new Error('setMapDetailsDrawerOpen unimplemented');
-    },
     widgetMap: null,
     setWidgetMap: () => {
         throw new Error('setWidgetMap unimplemented');
@@ -30,12 +24,7 @@ export const MapContext = createContext<MapContextProps>({
 export const MapProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     const { widgets } = useContext(WidgetDrawerContext);
     const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Map) || null;
-    const [mapDetailsDrawerOpen, setMapDetailsDrawerOpen] = useState(false);
     const [widgetMap, setWidgetMap] = useState<WidgetMap | null>(null);
 
-    return (
-        <MapContext.Provider value={{ widget, mapDetailsDrawerOpen, setMapDetailsDrawerOpen, widgetMap, setWidgetMap }}>
-            {children}
-        </MapContext.Provider>
-    );
+    return <MapContext.Provider value={{ widget, widgetMap, setWidgetMap }}>{children}</MapContext.Provider>;
 };
