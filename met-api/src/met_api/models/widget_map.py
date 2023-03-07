@@ -10,11 +10,10 @@ from .base_model import BaseModel
 from .db import db
 
 
-class WidgetMap(BaseModel):  # pylint: disable=too-few-public-methods
+class WidgetMap(BaseModel):  # pylint: disable=too-few-public-methods, too-many-instance-attributes
     """Definition of the Map entity."""
 
-    __tablename__ = 'map'
-
+    __tablename__ = 'widget_map'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     widget_id = db.Column(db.Integer, ForeignKey('widget.id', ondelete='CASCADE'), nullable=True)
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), nullable=True)
