@@ -24,6 +24,7 @@ export const MobileToolbar = styled(Toolbar)(() => ({
 const StyledPrimaryButton = styled(LoadingButton)(() => ({
     backgroundColor: Palette.primary.main,
     color: '#fff',
+    lineHeight: '1.1rem',
     '&:hover': {
         opacity: '0.8',
         backgroundColor: Palette.primary.main,
@@ -35,6 +36,7 @@ const StyledPrimaryButton = styled(LoadingButton)(() => ({
 const StyledSecondaryButton = styled(MuiButton)(() => ({
     backgroundColor: 'transparent',
     color: Palette.primary.main,
+    lineHeight: '1.1rem',
     border: `2px solid ${Palette.primary.main}`,
     '&:hover': {
         opacity: '0.8',
@@ -48,6 +50,7 @@ const StyledSecondaryButton = styled(MuiButton)(() => ({
 const StyledWidgetButton = styled(MuiButton)(() => ({
     backgroundColor: 'transparent',
     color: '#494949',
+    lineHeight: '1.1rem',
     border: `2px solid ${'#707070'}`,
     '&:hover': {
         opacity: '0.8',
