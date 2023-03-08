@@ -34,9 +34,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['engagement_id'], ['engagement.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
-    op.bulk_insert(widget_map, [
-        {'id': 1, 'description': 'description', 'longitude': 0, "latitude": 0, "created_date": datetime.utcnow(),'widget_id': 0, 'engagement_id': 0}
-    ])
 
 
 

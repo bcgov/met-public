@@ -26,7 +26,7 @@ export const postMap = async (widget_id: number, data: PostMapRequest): Promise<
         if (response.data) {
             return response.data;
         }
-        return Promise.reject('Failed to create document');
+        return Promise.reject('Failed to create map');
     } catch (err) {
         return Promise.reject(err);
     }

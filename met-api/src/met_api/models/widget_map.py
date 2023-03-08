@@ -18,7 +18,7 @@ class WidgetMap(BaseModel):  # pylint: disable=too-few-public-methods, too-many-
     widget_id = db.Column(db.Integer, ForeignKey('widget.id', ondelete='CASCADE'), nullable=True)
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), nullable=True)
     description = db.Column(db.String(500))
-    latitutde = db.Column(db.Float, nullable=False)
+    latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
 
     @classmethod

@@ -26,12 +26,12 @@ from met_api.utils.roles import Role
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
-API = Namespace('map', description='Endpoints for Map Widget Management')
-"""Custom exception messages"""
+API = Namespace('widget_maps', description='Endpoints for Map Widget Management')
+"""Widget Maps"""
 
 
 @cors_preflight('GET, POST, PATCH, OPTIONS')
-@API.route('widget/<widget_id>/map/<map_id>')
+@API.route('')
 class Map(Resource):
     """Resource for managing map widgets."""
 
