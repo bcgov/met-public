@@ -84,6 +84,10 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
     useLazyGetWidgetsQuery: () => [...mockLazyGetWidgetsQuery()],
 }));
 
+jest.mock('components/map', () => () => {
+    return <div></div>;
+});
+
 describe('Document widget in engagement page tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());

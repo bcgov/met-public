@@ -1,5 +1,5 @@
-import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
+import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import EngagementForm from '../../../../src/components/engagement/form';
 import { setupEnv } from '../setEnvVars';
@@ -63,6 +63,10 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
     useLazyGetWidgetsQuery: () => [...mockLazyGetWidgetsQuery()],
 }));
+
+jest.mock('components/map', () => () => {
+    return <div></div>;
+});
 
 describe('Phases widget tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());

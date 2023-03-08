@@ -12,6 +12,10 @@ import { WidgetType } from 'models/widget';
 import { draftEngagement, surveys, mockEvent, eventWidget } from '../factory';
 import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 
+jest.mock('components/map', () => () => {
+    return <div></div>;
+});
+
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
     useSelector: jest.fn(() => {

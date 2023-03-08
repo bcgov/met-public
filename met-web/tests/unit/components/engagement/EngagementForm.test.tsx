@@ -49,6 +49,10 @@ jest.mock('@reduxjs/toolkit/query/react', () => ({
     fetchBaseQuery: jest.fn(),
 }));
 
+jest.mock('components/map', () => () => {
+    return <Box></Box>;
+});
+
 const mockWidgetsRtkUnwrap = jest.fn(() => Promise.resolve([]));
 const mockWidgetsRtkTrigger = () => {
     return {

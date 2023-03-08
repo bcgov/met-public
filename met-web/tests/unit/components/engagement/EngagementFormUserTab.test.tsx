@@ -58,6 +58,10 @@ jest.mock('@mui/material', () => ({
     },
 }));
 
+jest.mock('components/map', () => () => {
+    return <div></div>;
+});
+
 const mockWidgetsRtkUnwrap = jest.fn(() => Promise.resolve([]));
 const mockWidgetsRtkTrigger = () => {
     return {
