@@ -33,9 +33,10 @@ from met_api.models.widget import Widget as WidgetModal
 from met_api.models.widget_documents import WidgetDocuments as WidgetDocumentModel
 from met_api.models.widget_item import WidgetItem as WidgetItemModal
 from met_api.utils.enums import MembershipStatus
+from met_api.models.widget_map import WidgetMap as WidgetMapModel
 from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementInfo, TestFeedbackInfo, TestSubmissionInfo, TestSurveyInfo, TestUserInfo,
-    TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo)
+    TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo, TestWidgetMapInfo)
 
 CONFIG = get_named_config('testing')
 fake = Faker()
@@ -245,3 +246,17 @@ def patch_token_info(claims, monkeypatch):
         return claims
 
     monkeypatch.setattr('met_api.utils.user_context._get_token_info', token_info)
+
+
+def factory_map_model(widget_id, id, map_info: dict = TestWidgetMapInfo.map_info):
+    """Produce a widget map model."""
+    widget_map = WidgetMapModel(
+        id=map_info.get('id'),
+        widget_id=map_info.get('widget_id'),
+        longitude=map_info.get('longitude'),
+        latitude=map_info.get('latitude'),
+        description=map_info.get('description'),
+    )
+    db.session.add(widget_map)
+    db.session.commit()
+    return widget_map

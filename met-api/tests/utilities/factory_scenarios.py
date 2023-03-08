@@ -394,3 +394,16 @@ class TestWidgetDocumentInfo(dict, Enum):
         'url': fake.image_url(),
         'sort_index': 1,
     }
+    
+    
+class TestWidgetMapInfo(dict, Enum):
+    """Test scenarios of widget map."""
+
+    map_info = {
+        'description': fake.paragraph(nb_sentences=3),
+        'id': 1,
+        'widget_id': 1,
+        'longitude': 1,
+        'latitude': 1,
+    }
+
