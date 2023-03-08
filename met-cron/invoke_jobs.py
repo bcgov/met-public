@@ -78,7 +78,7 @@ def run(job_name):
         application.logger.info(f'<<<< Completed MET Engagement Publish >>>>')
     elif job_name == 'PURGE':
         MetPurge.do_purge()
-        application.logger.info(f'<<<< Completed MET Purge >>>>')
+        application.logger.info('<<<< Completed MET Purge >>>>')
     else:
         application.logger.debug('No valid args passed.Exiting job without running any ***************')
 
