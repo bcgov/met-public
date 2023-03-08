@@ -9,10 +9,14 @@ import EventInfoPaper from './EventInfoPaper';
 import VirtualEventInfoPaper from './VirtualEventInfoPaper';
 import { When } from 'react-if';
 import { debounce } from 'lodash';
+import { deleteEvent } from 'services/widgetService/EventService';
+import { useAppDispatch } from 'hooks';
+import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+import { openNotification } from 'services/notificationService/notificationSlice';
 
 const EventsInfoBlock = () => {
-    const { events, setEvents, isLoadingEvents, updateWidgetEventsSorting } = useContext(EventsContext);
-
+    const { events, setEvents, isLoadingEvents, updateWidgetEventsSorting, widget } = useContext(EventsContext);
+    const dispatch = useAppDispatch();
     const debounceUpdateWidgetEventsSorting = useRef(
         debounce((widgetEventsToSort: Event[]) => {
             updateWidgetEventsSorting(widgetEventsToSort);
@@ -41,9 +45,40 @@ const EventsInfoBlock = () => {
         );
     }
 
-    const removeEvent = (eventId: number) => {
-        const newEvents = events.filter((event) => event.id !== eventId);
-        setEvents([...newEvents]);
+    const handleRemoveEvent = (eventId: number) => {
+        dispatch(
+            openNotificationModal({
+                open: true,
+                data: {
+                    header: 'Remove Event',
+                    subText: [
+                        {
+                            text: 'You will be removing this event from the engagement.',
+                        },
+                        {
+                            text: 'Do you want to remove this event?',
+                        },
+                    ],
+                    handleConfirm: () => {
+                        removeEvent(eventId);
+                    },
+                },
+                type: 'confirm',
+            }),
+        );
+    };
+
+    const removeEvent = async (eventId: number) => {
+        try {
+            if (widget) {
+                await deleteEvent(widget.id, eventId);
+                const newEvents = events.filter((event) => event.id !== eventId);
+                setEvents([...newEvents]);
+                dispatch(openNotification({ severity: 'success', text: 'The event was removed successfully' }));
+            }
+        } catch (error) {
+            dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to remove event' }));
+        }
     };
 
     return (
@@ -55,13 +90,13 @@ const EventsInfoBlock = () => {
                             <Grid item xs={12} key={`Grid-${event.id}`}>
                                 <MetDraggable draggableId={String(event.id)} index={index}>
                                     <When condition={event.type === EVENT_TYPE.MEETUP}>
-                                        <EventInfoPaper removeEvent={removeEvent} event={event} />
+                                        <EventInfoPaper removeEvent={handleRemoveEvent} event={event} />
                                     </When>
                                     <When condition={event.type === EVENT_TYPE.OPENHOUSE}>
-                                        <EventInfoPaper removeEvent={removeEvent} event={event} />
+                                        <EventInfoPaper removeEvent={handleRemoveEvent} event={event} />
                                     </When>
                                     <When condition={event.type === EVENT_TYPE.VIRTUAL}>
-                                        <VirtualEventInfoPaper removeEvent={removeEvent} event={event} />
+                                        <VirtualEventInfoPaper removeEvent={handleRemoveEvent} event={event} />
                                     </When>
                                 </MetDraggable>
                             </Grid>
