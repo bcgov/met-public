@@ -49,6 +49,10 @@ const whoIsListeningWidget: Widget = {
     items: [contactWidgetItem],
 };
 
+jest.mock('components/map', () => () => {
+    return <div></div>;
+});
+
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
     useSelector: jest.fn(() => {
