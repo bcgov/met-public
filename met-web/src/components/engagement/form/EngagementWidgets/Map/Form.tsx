@@ -11,7 +11,6 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { MapContext } from './MapContext';
 import { postMap } from 'services/widgetService/MapService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
-import Map from 'components/map';
 
 const schema = yup
     .object({
@@ -35,7 +34,7 @@ type DetailsForm = yup.TypeOf<typeof schema>;
 
 const Form = () => {
     const dispatch = useAppDispatch();
-    const { widget, setPreviewMapOpen } = useContext(MapContext);
+    const { widget, setPreviewMapOpen, setPreviewMap } = useContext(MapContext);
     const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const [isCreating, setIsCreating] = useState(false);
 
@@ -43,7 +42,9 @@ const Form = () => {
         resolver: yupResolver(schema),
     });
 
-    const { handleSubmit, reset, trigger } = methods;
+    const { handleSubmit, reset, trigger, watch } = methods;
+
+    const [longitude, latitude] = watch(['longitude', 'latitude']);
 
     const createMap = async (data: DetailsForm) => {
         if (!widget) {
@@ -78,8 +79,16 @@ const Form = () => {
     };
 
     const handlePreviewMap = async () => {
-        await trigger(['latitude', 'longitude']);
+        const valid = await trigger(['latitude', 'longitude']);
+        const validatedData = await schema.validate({ latitude, longitude });
+        if (!valid) {
+            return;
+        }
         setPreviewMapOpen(true);
+        setPreviewMap({
+            longitude: validatedData.longitude,
+            latitude: validatedData.latitude,
+        });
     };
 
     return (
@@ -137,9 +146,6 @@ const Form = () => {
                                     multiline
                                     minRows={4}
                                 />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Map />
                             </Grid>
                             <Grid
                                 item

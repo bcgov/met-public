@@ -1,12 +1,16 @@
 import React, { useContext } from 'react';
 import Modal from '@mui/material/Modal';
-import { Paper } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import { modalStyle } from 'components/common';
 import { MapContext } from './MapContext';
 import Map from 'components/map';
 
 export const PreviewModal = () => {
-    const { previewMapOpen, setPreviewMapOpen } = useContext(MapContext);
+    const { previewMapOpen, setPreviewMapOpen, previewMap } = useContext(MapContext);
+
+    if (!previewMap) {
+        return null;
+    }
 
     return (
         <Modal
@@ -16,8 +20,15 @@ export const PreviewModal = () => {
             }}
             keepMounted={false}
         >
-            <Paper sx={{ ...modalStyle, padding: 0 }}>
-                <Map />
+            <Paper sx={{ ...modalStyle, padding: '1px' }}>
+                <Box
+                    sx={{
+                        width: '500px',
+                        height: '500px',
+                    }}
+                >
+                    <Map longitude={previewMap.longitude} latitude={previewMap.latitude} />
+                </Box>
             </Paper>
         </Modal>
     );
