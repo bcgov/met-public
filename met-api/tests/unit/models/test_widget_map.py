@@ -26,25 +26,25 @@ fake = Faker()
 
 def test_map_creation(session):
     """Assert that a map can be created and fetched."""
-    map = WidgetMapModel(id=1, widget_id=1, engagement_id=1, longitude=1, latitude=1)
+    widget_map = WidgetMapModel(id=1, widget_id=1, engagement_id=1, longitude=1, latitude=1)
     description = fake.paragraph(nb_sentences=3)
-    session.add(map)
+    session.add(widget_map)
     session.commit()
-    assert map.id is not None
-    widget_map_in_db = WidgetMapModel.find_by_id(map.id)
+    assert widget_map.id is not None
+    widget_map_in_db = WidgetMapModel.find_by_id(widget_map.id)
     assert widget_map_in_db.description == description
 
 
 def test_get_map_by_external_id(session):
     """Assert that an map can be created and fetched."""
     description = fake.paragraph(nb_sentences=3)
-    map = WidgetMapModel(id=1, widget_id=1, engagement_id=1, longitude=1, latitude=1)
-    session.add(map)
+    widget_map = WidgetMapModel(id=1, widget_id=1, engagement_id=1, longitude=1, latitude=1)
+    session.add(widget_map)
     session.commit()
-    assert map.id is not None
-    map_in_db = WidgetMapModel.get_map(map.widget_id)
+    assert widget_map.id is not None
+    map_in_db = WidgetMapModel.get_map(widget_map.widget_id)
     assert map_in_db.description== description
-    assert map_in_db.id == map.id
+    assert map_in_db.id == widget_map.id
 
 
 def test_update_map_from_dict(session):

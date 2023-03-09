@@ -29,8 +29,8 @@ fake = Faker()
 def test_get_map(client, jwt, session, ):  # pylint:disable=unused-argument
     """Assert that an user can be fetched."""
     map_details = factory_map_model()
-    map: dict = WidgetMapService.get_map(map_details.widget_id)
-    assert map.get('widget_id') == map_details.widget_id
+    widget_map: dict = WidgetMapService.get_map(map_details.widget_id)
+    assert widget_map.get('widget_id') == map_details.widget_id
 
 def test_create_map(client, jwt, session, ):  # pylint:disable=unused-argument
     """Assert that an user can be Created."""
@@ -47,9 +47,9 @@ def test_update_map(client, jwt, session, ):  # pylint:disable=unused-argument
     old_description = map_details.description
     map_id = map_details.id
     # verify existing details
-    map: dict = WidgetMapService.get_map(map_details.id)
+    widget_map: dict = WidgetMapService.get_map(map_details.id)
     assert map_details.get('description') == old_description
-    assert map.get('id') == map_id
+    assert widget_map.get('id') == map_id
 
     new_map_data = {
         'description': 'updated description',

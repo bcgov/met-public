@@ -247,8 +247,7 @@ def patch_token_info(claims, monkeypatch):
 
     monkeypatch.setattr('met_api.utils.user_context._get_token_info', token_info)
 
-
-def factory_map_model(widget_id, id, map_info: dict = TestWidgetMapInfo.map_info):
+def factory_map_model(map_info: dict = TestWidgetMapInfo.map_info):
     """Produce a widget map model."""
     widget_map = WidgetMapModel(
         id=map_info.get('id'),
