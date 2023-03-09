@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import { Container, Grid, Paper } from '@mui/material';
-import { modalStyle, PrimaryButton } from 'components/common';
+import { MetDescription, MetParagraph, modalStyle, PrimaryButton } from 'components/common';
 import Cropper, { Area } from 'react-easy-crop';
 import { ImageUploadContext } from './imageUploadContext';
 import { Box } from '@mui/system';
@@ -65,7 +65,7 @@ export const CropModal = () => {
                             top: 0,
                             left: 0,
                             right: 0,
-                            bottom: '5em',
+                            bottom: '9em',
                         }}
                     >
                         <Cropper
@@ -87,10 +87,17 @@ export const CropModal = () => {
                     </Box>
                     <Container
                         sx={{
-                            marginTop: '34em',
+                            marginTop: '30em',
                         }}
                     >
                         <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
+                            <Grid item xs={12}>
+                                <MetDescription>
+                                    The image will be cropped at the correct ratio to display as a banner on MET. You
+                                    can zoom in or out and move the image around. Please note that part of the image
+                                    could be hidden depending on the display size.
+                                </MetDescription>
+                            </Grid>
                             <Grid item xs={12} container justifyContent="flex-end">
                                 <PrimaryButton
                                     onClick={() => {
