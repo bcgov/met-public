@@ -13,7 +13,7 @@
 # limitations under the License.
 """Tests for the Org model.
 
-Test suite to ensure that the User model routines are working as expected.
+Test suite to ensure that the widget map model routines are working as expected.
 """
 
 from faker import Faker
