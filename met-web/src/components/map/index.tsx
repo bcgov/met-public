@@ -16,7 +16,7 @@ const Map = ({ latitude, longitude }: MapProps) => {
                 zoom: 12,
             }}
             mapLib={maplibregl}
-            mapStyle="https://api.maptiler.com/maps/basic-v2/style.json?key=IE2yWwcY3JTfcbqVxNOV"
+            mapStyle="https://api.maptiler.com/maps/basic-v2/style.json?key=1uSv0gptchHMlsIWxjFc"
             style={{
                 width: '100%',
                 height: '100%',
