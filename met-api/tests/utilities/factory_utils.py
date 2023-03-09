@@ -34,6 +34,7 @@ from met_api.models.widget_documents import WidgetDocuments as WidgetDocumentMod
 from met_api.models.widget_item import WidgetItem as WidgetItemModal
 from met_api.utils.enums import MembershipStatus
 from met_api.models.widget_map import WidgetMap as WidgetMapModel
+from met_api.utils.enums import MembershipStatus
 from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementInfo, TestFeedbackInfo, TestSubmissionInfo, TestSurveyInfo, TestUserInfo,
     TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo, TestWidgetMapInfo)
@@ -259,3 +260,13 @@ def factory_map_model(map_info: dict = TestWidgetMapInfo.map_info):
     db.session.add(widget_map)
     db.session.commit()
     return widget_map
+
+
+def patch_token_info(claims, monkeypatch):
+    """Patch token info to mimic g."""
+
+    def token_info():
+        """Return token info."""
+        return claims
+
+    monkeypatch.setattr('met_api.utils.user_context._get_token_info', token_info)
