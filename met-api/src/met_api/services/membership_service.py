@@ -8,7 +8,6 @@ from met_api.services.user_service import KEYCLOAK_SERVICE
 from met_api.utils.enums import KeycloakGroupName, KeycloakGroups, MembershipStatus
 
 from ..exceptions.business_exception import BusinessException
-from .authorization import check_auth
 
 
 class MembershipService:
@@ -28,7 +27,6 @@ class MembershipService:
         # Can remove when user can have multiple roles with in same engagement.
         MembershipService._validate_team_member(engagement_id, user)
 
-        check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name,), engagement_id=engagement_id)
         membership = MembershipService._create_membership_model(engagement_id, user)
 
         KEYCLOAK_SERVICE.add_user_to_group(user_id=user_id, group_name=KeycloakGroups.EAO_TEAM_MEMBER.name)
@@ -70,7 +68,6 @@ class MembershipService:
         # get user to be added from request json
 
         memberships = MembershipModel.find_by_engagement(engagement_id)
-        check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name,), engagement_id=engagement_id)
         return memberships
 
     @staticmethod
