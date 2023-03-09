@@ -4,8 +4,8 @@ export const createImage = (url: string) =>
         const image = new Image();
         image.addEventListener('load', () => resolve(image));
         image.addEventListener('error', (error) => reject(error));
-        image.setAttribute('crossOrigin', '');
-        image.src = url + '?not-from-cache';
+        image.setAttribute('crossOrigin', 'anonymous');
+        image.src = url + '?cache=false';
     });
 
 export function getRadianAngle(degreeValue: number) {
