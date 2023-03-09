@@ -8,9 +8,6 @@ import { When } from 'react-if';
 import { Event } from 'models/event';
 import { formatDate } from 'components/common/dateHelper';
 import { EventsContext } from './EventsContext';
-import { deleteEvent } from 'services/widgetService/EventService';
-import { useAppDispatch } from 'hooks';
-import { openNotification } from 'services/notificationService/notificationSlice';
 
 export interface EventInfoPaperProps {
     event: Event;
@@ -19,20 +16,7 @@ export interface EventInfoPaperProps {
 
 const EventInfoPaper = ({ event, removeEvent, ...rest }: EventInfoPaperProps) => {
     const eventItem = event.event_items[0];
-    const dispatch = useAppDispatch();
-    const { handleChangeEventToEdit, handleEventDrawerOpen, widget } = useContext(EventsContext);
-
-    const handleRemoveEvent = async (event_id: number) => {
-        try {
-            if (widget) {
-                await deleteEvent(widget.id, event_id);
-                removeEvent(event_id);
-                dispatch(openNotification({ severity: 'success', text: 'The event was removed successfully' }));
-            }
-        } catch (error) {
-            dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to remove event' }));
-        }
-    };
+    const { handleChangeEventToEdit, handleEventDrawerOpen } = useContext(EventsContext);
 
     return (
         <MetWidgetPaper elevation={1} {...rest}>
@@ -115,7 +99,7 @@ const EventInfoPaper = ({ event, removeEvent, ...rest }: EventInfoPaperProps) =>
                     </Grid>
                     <Grid item xs={6}>
                         <IconButton
-                            onClick={() => handleRemoveEvent(event.id)}
+                            onClick={() => removeEvent(event.id)}
                             sx={{ padding: 1, margin: 0 }}
                             color="inherit"
                             aria-label="delete-icon"
