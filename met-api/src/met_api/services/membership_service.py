@@ -8,7 +8,6 @@ from met_api.services.user_service import KEYCLOAK_SERVICE
 from met_api.utils.enums import KeycloakGroupName, KeycloakGroups, MembershipStatus
 
 from ..exceptions.business_exception import BusinessException
-from .authorization import check_auth
 
 
 class MembershipService:
