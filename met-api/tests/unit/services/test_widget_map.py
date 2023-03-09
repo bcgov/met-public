@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Tests to verify the User Service class.
+"""Tests to verify the Widget Map class.
 
-Test-Suite to ensure that the UserService is working as expected.
+Test-Suite to ensure that the WidgetMapService is working as expected.
 """
 import pytest
 from faker import Faker
