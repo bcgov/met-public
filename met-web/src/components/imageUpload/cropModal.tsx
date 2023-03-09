@@ -21,7 +21,7 @@ export const CropModal = () => {
         cropAspectRatio,
     } = useContext(ImageUploadContext);
 
-    const currentImageUrl = addedImageFileUrl || existingImageUrl;
+    const currentImageUrl = addedImageFileUrl || `${existingImageUrl}?dummy-variable`;
 
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
