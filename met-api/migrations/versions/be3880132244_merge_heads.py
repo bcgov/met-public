@@ -14,3 +14,11 @@ revision = 'be3880132244'
 down_revision = ('8595172f9d96', 'a1237c8a3df9')
 branch_labels = None
 depends_on = None
+
+
+def upgrade():
+    pass
+
+
+def downgrade():
+    pass
