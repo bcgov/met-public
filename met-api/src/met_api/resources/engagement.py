@@ -66,6 +66,7 @@ class Engagements(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
+    @auth.optional
     def get():
         """Fetch engagements."""
         try:
