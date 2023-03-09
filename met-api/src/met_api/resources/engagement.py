@@ -20,6 +20,7 @@ from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
 
+from met_api.auth import auth
 from met_api.auth import jwt as _jwt
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.engagement import EngagementSchema
@@ -41,6 +42,7 @@ class Engagement(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
+    @auth.optional
     def get(engagement_id):
         """Fetch a single engagement matching the provided id."""
         try:
