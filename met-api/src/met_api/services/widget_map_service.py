@@ -16,10 +16,6 @@ class WidgetMapService:
         map_model.latitude = map_data.get('latitude')
         map_model.longitude = map_data.get('longitude')
         map_model.engagement_id = map_data.get('engagement_id')
-        map_model.created_date = datetime.utcnow()
-        map_model.updated_date = datetime.utcnow()
-        map_model.created_by = map_data.get('created_by', None)
-        map_model.updated_by = map_data.get('updated_by', None)
         map_model.flush()
         return map_model
 
