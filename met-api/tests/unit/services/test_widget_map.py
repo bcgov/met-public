@@ -19,7 +19,7 @@ Test-Suite to ensure that the WidgetMapService is working as expected.
 import pytest
 from faker import Faker
 
-from met_api.schemas.widget_map import MapSchema
+from met_api.schemas.widget_map import WidgetMapSchema
 from met_api.services.widget_map_service import WidgetMapService
 from tests.utilities.factory_scenarios import TestWidgetMapInfo
 from tests.utilities.factory_utils import factory_map_model
@@ -35,7 +35,7 @@ def test_get_map(client, jwt, session, ):  # pylint:disable=unused-argument
 def test_create_map(client, jwt, session, ):  # pylint:disable=unused-argument
     """Assert that an user can be Created."""
     map_data: dict = TestWidgetMapInfo.map_info
-    map_schema = MapSchema().load(map_data)
+    map_schema = WidgetMapSchema().load(map_data)
     new_map = WidgetMapService().create(map_schema)
     assert new_map.map_id == map_data['id']
     assert new_map.description == map_data['description']
@@ -56,7 +56,7 @@ def test_update_map(client, jwt, session, ):  # pylint:disable=unused-argument
         'longitude': 2,
         'latitude': 2,
     }
-    map_schema = MapSchema().load(new_map_data)
+    map_schema = WidgetMapSchema().load(new_map_data)
     new_map = WidgetMapService().create(map_schema)
 
     # verify same user , but different email id
