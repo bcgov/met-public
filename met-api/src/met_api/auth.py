@@ -13,6 +13,7 @@
 # limitations under the License.
 """Bring in the common JWT Manager."""
 from functools import wraps
+
 from flask import g, request
 from flask_jwt_oidc import JwtManager
 from flask_jwt_oidc.exceptions import AuthError

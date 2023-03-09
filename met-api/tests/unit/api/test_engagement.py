@@ -16,7 +16,7 @@
 
 Test-Suite to ensure that the /Engagement endpoint is working as expected.
 """
-
+import copy
 import json
 
 import pytest
@@ -24,8 +24,10 @@ from faker import Faker
 
 from met_api.constants.engagement_status import EngagementDisplayStatus, SubmissionStatus
 from met_api.utils.enums import ContentType
-from tests.utilities.factory_scenarios import TestEngagementInfo, TestJwtClaims
-from tests.utilities.factory_utils import factory_auth_header, factory_engagement_model
+from tests.utilities.factory_scenarios import TestEngagementInfo, TestJwtClaims, TestUserInfo
+from tests.utilities.factory_utils import (
+    factory_auth_header, factory_engagement_model, factory_membership_model, factory_user_model)
+
 
 fake = Faker()
 
@@ -127,6 +129,45 @@ def test_patch_engagement(client, jwt, session, engagement_info):  # pylint:disa
     assert rv.json.get('description') == engagement_edits.get('description')
     assert rv.json.get('content') == engagement_edits.get('content')
     assert engagement_edits.get('created_date') in rv.json.get('created_date')
+
+
+def test_patch_engagement_by_member(client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that an engagement can be updated."""
+    engagement = factory_engagement_model()
+    engagement_id = str(engagement.id)
+
+    engagement_edits = {
+        'id': engagement_id,
+        'name': fake.name(),
+        'start_date': fake.date(),
+        'end_date': fake.date(),
+        'description': fake.text(),
+        'content': fake.text(),
+        'created_date': fake.date(),
+    }
+
+    staff_1 = dict(TestUserInfo.user_staff_1)
+    user = factory_user_model(user_info=staff_1)
+    claims = copy.deepcopy(TestJwtClaims.public_user_role.value)
+    claims['sub'] = str(user.external_id)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+
+    rv = client.patch('/api/engagements/', data=json.dumps(engagement_edits),
+                      headers=headers, content_type=ContentType.JSON.value)
+
+    assert rv.status_code == 403, 'Not a team member.So throws exception.'
+
+    factory_membership_model(user_id=user.id, engagement_id=engagement_id)
+
+    rv = client.patch('/api/engagements/', data=json.dumps(engagement_edits),
+                      headers=headers, content_type=ContentType.JSON.value)
+
+    assert rv.status_code == 200, 'Added as team member.So throws exception.'
+
+    rv = client.get(f'/api/engagements/{engagement_id}',
+                    headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+    assert rv.json.get('name') == engagement_edits.get('name')
 
 
 def test_patch_new_survey_block_engagement(client, jwt, session):  # pylint:disable=unused-argument

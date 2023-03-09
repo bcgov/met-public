@@ -19,7 +19,7 @@ from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
-from met_api.auth import auth
+from met_api.auth import jwt as _jwt
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas import utils as schema_utils
 from met_api.services.feedback_service import FeedbackService
@@ -39,7 +39,7 @@ class Feedback(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    @_jwt.requires_auth
     def get():
         """Fetch feedbacks page."""
         try:
@@ -59,7 +59,7 @@ class Feedback(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.optional
+    @_jwt.requires_auth
     def post():
         """Create a new feedback."""
         try:

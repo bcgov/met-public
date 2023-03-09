@@ -18,8 +18,8 @@ from http import HTTPStatus
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
+from met_api.auth import jwt as _jwt
 
-from met_api.auth import auth
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas import utils as schema_utils
 from met_api.schemas.submission import SubmissionSchema
@@ -39,9 +39,8 @@ class Submission(Resource):
     """Resource for managing a submission."""
 
     @staticmethod
-    # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    @_jwt.requires_auth
     def get(submission_id):
         """Fetch a single submission."""
         try:
@@ -54,7 +53,7 @@ class Submission(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    @_jwt.requires_auth
     def put(submission_id):
         """Update comment status by submission id."""
         try:
@@ -124,7 +123,7 @@ class SurveySubmissions(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    @_jwt.requires_auth
     def get(survey_id):
         """Get submissions page."""
         try:

@@ -19,7 +19,7 @@ from flask import Response, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
-from met_api.auth import auth
+from met_api.auth import jwt as _jwt
 from met_api.models.pagination_options import PaginationOptions
 from met_api.services.comment_service import CommentService
 from met_api.utils.token_info import TokenInfo
@@ -38,7 +38,7 @@ class Comment(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    @_jwt.requires_auth
     def get(comment_id):
         """Fetch a single comment matching the provided id."""
         try:
@@ -61,7 +61,7 @@ class SurveyComments(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.optional
+    @_jwt.requires_auth
     def get(survey_id):
         """Get comments page."""
         try:
@@ -93,7 +93,7 @@ class GeneratedCommentsSheet(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    @_jwt.requires_auth
     def get(survey_id):
         """Export comments."""
         try:

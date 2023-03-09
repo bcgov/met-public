@@ -25,12 +25,14 @@ from met_api.models.comment import Comment as CommentModel
 from met_api.models.email_verification import EmailVerification as EmailVerificationModel
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.feedback import Feedback as FeedbackModel
+from met_api.models.membership import Membership as MembershipModel
 from met_api.models.submission import Submission as SubmissionModel
 from met_api.models.survey import Survey as SurveyModel
 from met_api.models.user import User as UserModel
 from met_api.models.widget import Widget as WidgetModal
 from met_api.models.widget_documents import WidgetDocuments as WidgetDocumentModel
 from met_api.models.widget_item import WidgetItem as WidgetItemModal
+from met_api.utils.enums import MembershipStatus
 from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementInfo, TestFeedbackInfo, TestSubmissionInfo, TestSurveyInfo, TestUserInfo,
     TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo)
@@ -127,6 +129,18 @@ def factory_user_model(external_id=None, user_info: dict = TestUserInfo.user_pub
     return user
 
 
+def factory_membership_model(user_id, engagement_id, member_type='TEAM_MEMBER'):
+    """Produce a Membership model."""
+    membership = MembershipModel(user_id=user_id,
+                                 engagement_id=engagement_id,
+                                 type=member_type,
+                                 status=MembershipStatus.ACTIVE.value)
+
+    membership.created_by_id = user_id
+    membership.save()
+    return membership
+
+
 def factory_feedback_model(feedback_info: dict = TestFeedbackInfo.feedback1, status=None):
     """Produce a feedback model."""
     feedback = FeedbackModel(
@@ -221,3 +235,13 @@ def factory_document_model(document_info: dict = TestWidgetDocumentInfo.document
     )
     document.save()
     return document
+
+
+def patch_token_info(claims, monkeypatch):
+    """Patch token info to mimic g."""
+
+    def token_info():
+        """Return token info."""
+        return claims
+
+    monkeypatch.setattr('met_api.utils.user_context._get_token_info', token_info)
