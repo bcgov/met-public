@@ -16,7 +16,7 @@ const Map = ({ latitude, longitude }: MapProps) => {
                 zoom: 12,
             }}
             mapLib={maplibregl}
-            mapStyle="https://api.maptiler.com/maps/basic-v2/style.json?key=1uSv0gptchHMlsIWxjFc"
+            mapStyle="https://governmentofbc.maps.arcgis.com/sharing/rest/content/items/bbe05270d3a642f5b62203d6c454f457/resources/styles/root.json"
             style={{
                 width: '100%',
                 height: '100%',
