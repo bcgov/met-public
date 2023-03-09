@@ -19,7 +19,7 @@ from flask import jsonify, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
-from met_api.auth import auth
+from met_api.auth import jwt as _jwt
 from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas.widget_documents import WidgetDocumentsSchema
 from met_api.services.widget_documents_service import WidgetDocumentService
@@ -48,7 +48,7 @@ class WidgetDocuments(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    @_jwt.requires_auth
     def post(widget_id):
         """Add new documents to the widgets."""
         request_json = request.get_json()
@@ -66,7 +66,7 @@ class WidgetDocumentsChanges(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    @_jwt.requires_auth
     def patch(widget_id, document_id):
         """Update saved documents."""
         request_json = request.get_json()
@@ -78,7 +78,7 @@ class WidgetDocumentsChanges(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    @_jwt.requires_auth
     def delete(widget_id, document_id):
         """Remove folder from a document widget."""
         try:

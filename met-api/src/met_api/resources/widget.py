@@ -20,7 +20,7 @@ from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
 
-from met_api.auth import auth
+from met_api.auth import jwt as _jwt
 from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas import utils as schema_utils
 from met_api.schemas.widget import WidgetSchema
@@ -52,7 +52,7 @@ class Widget(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    @_jwt.requires_auth
     def post(engagement_id):
         """Add new widget for an engagement."""
         try:
@@ -78,7 +78,7 @@ class EngagementWidgetSort(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    @_jwt.requires_auth
     def patch(engagement_id):
         """Sort widget for an engagement."""
         try:
@@ -96,7 +96,7 @@ class EngagementWidget(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    @_jwt.requires_auth
     def delete(engagement_id, widget_id):
         """Remove widget for an engagement."""
         try:
@@ -116,7 +116,7 @@ class WidgetItems(Resource):
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    @_jwt.requires_auth
     def post(widget_id):
         """Add new widget items to a widget."""
         try:
