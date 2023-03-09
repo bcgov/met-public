@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import { Container, Grid, Paper } from '@mui/material';
-import { MetDescription, MetParagraph, modalStyle, PrimaryButton } from 'components/common';
+import { MetDescription, modalStyle, PrimaryButton } from 'components/common';
 import Cropper, { Area } from 'react-easy-crop';
 import { ImageUploadContext } from './imageUploadContext';
 import { Box } from '@mui/system';
