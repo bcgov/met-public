@@ -32,7 +32,7 @@ def test_create_widget_map(client, jwt, session):  # pylint:disable=unused-argum
     """Assert that widget events can be POSTed."""
     widget_map = factory_map_model()
     TestWidgetMapInfo.map_info['id'] = widget_map.id
-    widget = factory_map_model(TestWidgetInfo.widget1)
+    widget = factory_widget_model(TestWidgetInfo.widget1)
     map_info = TestWidgetMapInfo.map_info
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
 

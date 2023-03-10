@@ -17,16 +17,16 @@ Test suite to ensure that the widget map model routines are working as expected.
 """
 
 from faker import Faker
-
+from tests.utilities.factory_scenarios import TestWidgetInfo
 from met_api.models.widget_map import WidgetMap as WidgetMapModel
-
-
+from tests.utilities.factory_utils import factory_widget_model
 fake = Faker()
 
 
 def test_map_creation(session):
     """Assert that a map can be created and fetched."""
-    widget_map = WidgetMapModel(id=1, widget_id=1, engagement_id=1, longitude=1, latitude=1)
+    widget = factory_widget_model(TestWidgetInfo.widget1)
+    widget_map = WidgetMapModel(id=1, widget_id=widget.id, engagement_id=widget.engagement_id, longitude=1, latitude=1, description=description)
     description = fake.paragraph(nb_sentences=3)
     session.add(widget_map)
     session.commit()
@@ -38,7 +38,8 @@ def test_map_creation(session):
 def test_get_map_by_external_id(session):
     """Assert that an map can be created and fetched."""
     description = fake.paragraph(nb_sentences=3)
-    widget_map = WidgetMapModel(id=1, widget_id=1, engagement_id=1, longitude=1, latitude=1)
+    widget = factory_widget_model(TestWidgetInfo.widget1)
+    widget_map = WidgetMapModel(id=1, widget_id=widget.id, engagement_id=widget.engagement_id, longitude=1, latitude=1, description=description)
     session.add(widget_map)
     session.commit()
     assert widget_map.id is not None
@@ -56,14 +57,15 @@ def test_update_map_from_dict(session):
 
 def test_update_map_from_dict_valid(session):
     """Assert that an map can be created and fetched."""
+    widget = factory_widget_model(TestWidgetInfo.widget1)
     description = fake.paragraph(nb_sentences=3)
     external_id = str(fake.random_number(digits=5))
     map_dict = {
         'description': description,
         'latitude': 1,
         'longitude': 1,
-        'widget_id': 1,
-        'engagement_id': external_id,
+        'widget_id': widget.id,
+        'engagement_id': widget.engagement_id,
     }
     new_map = WidgetMapModel.create_map(map_dict)
     assert new_map.description == description
