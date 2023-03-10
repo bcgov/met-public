@@ -34,6 +34,7 @@ def test_create_widget_map(client, jwt, session):  # pylint:disable=unused-argum
     TestWidgetMapInfo.map_info['id'] = widget_map.id
     widget = factory_widget_model(TestWidgetInfo.widget1)
     map_info = TestWidgetMapInfo.map_info
+    map_info['widget_id'] = widget.id
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
 
     data = {

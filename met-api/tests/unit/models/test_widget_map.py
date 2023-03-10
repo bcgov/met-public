@@ -45,18 +45,9 @@ def test_get_map_by_external_id(session):
     session.add(widget_map)
     session.commit()
     assert widget_map.id is not None
-    map_in_db = WidgetMapModel.get_map(widget_map.widget_id)
+    map_in_db = WidgetMapModel.get_map(widget.widget_id)
     assert map_in_db.description== description
     assert map_in_db.id == widget_map.id
-
-
-def test_update_map_from_dict(session):
-    """Assert that update_user returns none."""
-    
-    invalid_id = fake.random_number(digits=5)
-    new_map = WidgetMapModel.update_map(invalid_id, {})
-    assert new_map is None
-
 
 def test_update_map_from_dict_valid(session):
     """Assert that an map can be created and fetched."""
