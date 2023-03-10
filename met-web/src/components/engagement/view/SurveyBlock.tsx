@@ -24,6 +24,7 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
     const isPreview = isLoggedIn;
     const status_block = savedEngagement.status_block;
     const status_text = status_block.find((status) => status.survey_status === statusMap[mockStatus])?.block_text;
+    const isMockStatusClosed = SubmissionStatus.Closed === mockStatus;
     if (isEngagementLoading) {
         return <Skeleton variant="rectangular" height={'15em'} />;
     }
@@ -54,7 +55,7 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
                 <Grid item container direction={{ xs: 'column', sm: 'row' }} xs={12} justifyContent="flex-end">
                     <PrimaryButton
                         data-testid="SurveyBlock/take-me-to-survey-button"
-                        disabled={!surveyId || (!isOpen && !isPreview)}
+                        disabled={!surveyId || (!isOpen && !isPreview) || (isPreview && isMockStatusClosed)}
                         onClick={startSurvey}
                     >
                         Take me to the survey
