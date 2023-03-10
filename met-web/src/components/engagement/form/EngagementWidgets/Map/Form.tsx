@@ -55,6 +55,7 @@ const Form = () => {
         const { latitude, longitude, description } = validatedData;
         await postMap(widget.id, {
             widget_id: widget.id,
+            engagement_id: widget.engagement_id,
             description,
             longitude,
             latitude,
@@ -73,7 +74,7 @@ const Form = () => {
             reset({});
             handleWidgetDrawerOpen(false);
         } catch (error) {
-            dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add event' }));
+            dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add map' }));
             setIsCreating(false);
         }
     };
