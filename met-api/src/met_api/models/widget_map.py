@@ -24,12 +24,15 @@ class WidgetMap(BaseModel):  # pylint: disable=too-few-public-methods, too-many-
     @classmethod
     def get_map(cls, widget_id) -> list[WidgetMap]:
         """Get map."""
-        return db.session.query(WidgetMap).filter_by(WidgetMap.widget_id == widget_id)
+        widget_map = db.session.query(WidgetMap) \
+            .filter(WidgetMap.widget_id == widget_id) \
+            .all()
+        return widget_map
 
     @classmethod
     def update_map(cls, widget_id, map_data: dict) -> WidgetMap:
         """Update map."""
-        query = WidgetMap.query.filter_by(WidgetMap.widget_id == widget_id)
+        query = WidgetMap.query.filter_by(widget_id = widget_id)
         widget_map: WidgetMap = query.first()
         if not widget_map:
             return map_data
