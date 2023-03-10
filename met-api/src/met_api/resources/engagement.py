@@ -108,7 +108,6 @@ class Engagements(Resource):
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.has_one_of_roles([Role.CREATE_ENGAGEMENT.value])
-    @auth.require
     def post():
         """Create a new engagement."""
         try:
@@ -127,7 +126,6 @@ class Engagements(Resource):
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
     @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
-    @auth.require
     def put():
         """Update saved engagement."""
         try:
@@ -145,10 +143,8 @@ class Engagements(Resource):
             return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
-    # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
-    @auth.require
+    @_jwt.requires_auth
     def patch():
         """Update saved engagement partially."""
         try:

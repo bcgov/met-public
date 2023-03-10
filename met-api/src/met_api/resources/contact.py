@@ -20,7 +20,7 @@ from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
 
-from met_api.auth import auth
+from met_api.auth import jwt as _jwt
 from met_api.schemas import utils as schema_utils
 from met_api.schemas.contact import ContactSchema
 from met_api.services.contact_service import ContactService
@@ -57,7 +57,7 @@ class Contacts(Resource):
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    @_jwt.requires_auth
     def post():
         """Create a new contact."""
         try:
@@ -90,7 +90,7 @@ class Contacts(Resource):
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    @_jwt.requires_auth
     def patch():
         """Update saved contact partially."""
         try:

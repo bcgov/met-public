@@ -40,7 +40,6 @@ class Survey(Resource):
     """Resource for managing a single survey."""
 
     @staticmethod
-    # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
     @auth.optional
     def get(survey_id):
@@ -68,8 +67,7 @@ class Surveys(Resource):
     """Resource for managing surveys."""
 
     @staticmethod
-    # @TRACER.trace()
-    @auth.require
+    @_jwt.requires_auth
     @cross_origin(origins=allowedorigins())
     def get():
         """Fetch surveys."""
@@ -96,7 +94,6 @@ class Surveys(Resource):
     @staticmethod
     @_jwt.has_one_of_roles([Role.CREATE_SURVEY.value])
     @cross_origin(origins=allowedorigins())
-    @auth.require
     def post():
         """Create a new survey."""
         try:
@@ -114,9 +111,8 @@ class Surveys(Resource):
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
-    # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    @_jwt.requires_auth
     def put():
         """Update a existing survey."""
         try:
@@ -138,9 +134,8 @@ class SurveyLink(Resource):
     """Resource for linking a single survey to an engagement."""
 
     @staticmethod
-    # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    @_jwt.requires_auth
     def put(survey_id, engagement_id):
         """Update survey to be linked with engagement."""
         try:
@@ -163,9 +158,8 @@ class SurveyUnlink(Resource):
     """Resource for linking a single survey to an engagement."""
 
     @staticmethod
-    # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    @_jwt.requires_auth
     def delete(survey_id, engagement_id):
         """Update survey to be unlinked to an engagement."""
         try:

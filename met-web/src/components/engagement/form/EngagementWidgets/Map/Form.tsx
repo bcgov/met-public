@@ -34,7 +34,7 @@ type DetailsForm = yup.TypeOf<typeof schema>;
 
 const Form = () => {
     const dispatch = useAppDispatch();
-    const { widget } = useContext(MapContext);
+    const { widget, setPreviewMapOpen, setPreviewMap } = useContext(MapContext);
     const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const [isCreating, setIsCreating] = useState(false);
 
@@ -42,7 +42,9 @@ const Form = () => {
         resolver: yupResolver(schema),
     });
 
-    const { handleSubmit, reset, trigger } = methods;
+    const { handleSubmit, reset, trigger, watch } = methods;
+
+    const [longitude, latitude] = watch(['longitude', 'latitude']);
 
     const createMap = async (data: DetailsForm) => {
         if (!widget) {
@@ -77,7 +79,16 @@ const Form = () => {
     };
 
     const handlePreviewMap = async () => {
-        await trigger(['latitude', 'longitude']);
+        const valid = await trigger(['latitude', 'longitude']);
+        const validatedData = await schema.validate({ latitude, longitude });
+        if (!valid) {
+            return;
+        }
+        setPreviewMapOpen(true);
+        setPreviewMap({
+            longitude: validatedData.longitude,
+            latitude: validatedData.latitude,
+        });
     };
 
     return (

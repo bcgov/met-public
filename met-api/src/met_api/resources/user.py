@@ -19,7 +19,6 @@ from flask import jsonify, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
-from met_api.auth import auth
 from met_api.auth import jwt as _jwt
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.pagination_options import PaginationOptions
@@ -42,7 +41,7 @@ class User(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    @_jwt.requires_auth
     def put():
         """Update or create a user."""
         try:
@@ -83,7 +82,6 @@ class UserGroup(Resource):
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.has_one_of_roles([Role.CREATE_ADMIN_USER.value])
-    @auth.require
     def post(user_id):
         """Add user to group."""
         try:
