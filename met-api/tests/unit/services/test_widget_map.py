@@ -16,7 +16,6 @@
 
 Test-Suite to ensure that the WidgetMapService is working as expected.
 """
-import pytest
 from faker import Faker
 
 from met_api.schemas.widget_map import WidgetMapSchema
@@ -28,12 +27,14 @@ fake = Faker()
 
 def test_get_map(client, jwt, session, ):  # pylint:disable=unused-argument
     """Assert that an user can be fetched."""
+    
     map_details = factory_map_model()
     widget_map: dict = WidgetMapService.get_map(map_details.widget_id)
     assert widget_map.get('widget_id') == map_details.widget_id
 
 def test_create_map(client, jwt, session, ):  # pylint:disable=unused-argument
     """Assert that an user can be Created."""
+    
     map_data: dict = TestWidgetMapInfo.map_info
     map_schema = WidgetMapSchema().load(map_data)
     new_map = WidgetMapService().create(map_schema)
@@ -43,6 +44,7 @@ def test_create_map(client, jwt, session, ):  # pylint:disable=unused-argument
 
 def test_update_map(client, jwt, session, ):  # pylint:disable=unused-argument
     """Assert that an user can be Created."""
+    
     map_details = factory_map_model()
     old_description = map_details.description
     map_id = map_details.id

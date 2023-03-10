@@ -82,8 +82,8 @@ def test_widget_map_update(client, jwt, session):  # pylint:disable=unused-argum
     }
 
     rv = client.patch(
-        **patch_data,
         f'/api/widgets/{widget.id}/maps',
+        data=json.dumps(patch_data),
         headers=headers,
         content_type=ContentType.JSON.value
     )

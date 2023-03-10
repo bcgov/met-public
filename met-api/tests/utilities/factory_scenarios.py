@@ -394,8 +394,8 @@ class TestWidgetDocumentInfo(dict, Enum):
         'url': fake.image_url(),
         'sort_index': 1,
     }
-    
-    
+
+
 class TestWidgetMapInfo(dict, Enum):
     """Test scenarios of widget map."""
 
@@ -406,4 +406,3 @@ class TestWidgetMapInfo(dict, Enum):
         'longitude': 1,
         'latitude': 1,
     }
-
