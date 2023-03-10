@@ -37,7 +37,6 @@ class Map(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
     def get(widget_id):
         """Get map widget."""
         try:
@@ -48,7 +47,6 @@ class Map(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
     def post(widget_id):
         """Create map widget."""
         request_json = request.get_json()
@@ -60,7 +58,6 @@ class Map(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
     def patch(widget_id):
         """Update map widget."""
         request_json = request.get_json()

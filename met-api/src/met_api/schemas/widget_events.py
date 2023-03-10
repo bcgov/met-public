@@ -24,7 +24,7 @@ from ..constants.event_types import EventTypes
 
 
 class WidgetEventsSchema(BaseSchema):  # pylint: disable=too-many-ancestors, too-few-public-methods
-    """This is the schema for the Contact link model."""
+    """This is the schema for the Event model."""
 
     class Meta(BaseSchema.Meta):  # pylint: disable=too-few-public-methods
         """Maps all of the Widget Events fields to a default schema."""
