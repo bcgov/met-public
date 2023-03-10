@@ -25,9 +25,10 @@ fake = Faker()
 
 def test_map_creation(session):
     """Assert that a map can be created and fetched."""
+    
+    description = fake.paragraph(nb_sentences=3)
     widget = factory_widget_model(TestWidgetInfo.widget1)
     widget_map = WidgetMapModel(id=1, widget_id=widget.id, engagement_id=widget.engagement_id, longitude=1, latitude=1, description=description)
-    description = fake.paragraph(nb_sentences=3)
     session.add(widget_map)
     session.commit()
     assert widget_map.id is not None
@@ -37,6 +38,7 @@ def test_map_creation(session):
 
 def test_get_map_by_external_id(session):
     """Assert that an map can be created and fetched."""
+    
     description = fake.paragraph(nb_sentences=3)
     widget = factory_widget_model(TestWidgetInfo.widget1)
     widget_map = WidgetMapModel(id=1, widget_id=widget.id, engagement_id=widget.engagement_id, longitude=1, latitude=1, description=description)
@@ -50,6 +52,7 @@ def test_get_map_by_external_id(session):
 
 def test_update_map_from_dict(session):
     """Assert that update_user returns none."""
+    
     invalid_id = fake.random_number(digits=5)
     new_map = WidgetMapModel.update_map(invalid_id, {})
     assert new_map is None
@@ -57,9 +60,9 @@ def test_update_map_from_dict(session):
 
 def test_update_map_from_dict_valid(session):
     """Assert that an map can be created and fetched."""
+    
     widget = factory_widget_model(TestWidgetInfo.widget1)
     description = fake.paragraph(nb_sentences=3)
-    external_id = str(fake.random_number(digits=5))
     map_dict = {
         'description': description,
         'latitude': 1,
