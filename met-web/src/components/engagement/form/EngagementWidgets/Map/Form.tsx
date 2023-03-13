@@ -1,7 +1,7 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Divider from '@mui/material/Divider';
 import { Grid } from '@mui/material';
-import { MetHeader3, MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetHeader3, MetLabel, PrimaryButton, SecondaryButton, MidScreenLoader } from 'components/common';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -11,7 +11,6 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { MapContext } from './MapContext';
 import { postMap } from 'services/widgetService/MapService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
-
 const schema = yup
     .object({
         description: yup.string().max(500, 'Description cannot exceed 500 characters'),
@@ -34,13 +33,19 @@ type DetailsForm = yup.TypeOf<typeof schema>;
 
 const Form = () => {
     const dispatch = useAppDispatch();
-    const { widget, setPreviewMapOpen, setPreviewMap } = useContext(MapContext);
+    const { widget, mapData, isLoadingMap, setPreviewMapOpen, setPreviewMap } = useContext(MapContext);
     const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const [isCreating, setIsCreating] = useState(false);
 
     const methods = useForm<DetailsForm>({
         resolver: yupResolver(schema),
     });
+
+    useEffect(() => {
+        methods.setValue('description', mapData?.description || '');
+        methods.setValue('latitude', mapData ? mapData?.longitude : 0);
+        methods.setValue('longitude', mapData ? mapData?.latitude : 0);
+    }, [mapData]);
 
     const { handleSubmit, reset, trigger, watch } = methods;
 
@@ -55,6 +60,7 @@ const Form = () => {
         const { latitude, longitude, description } = validatedData;
         await postMap(widget.id, {
             widget_id: widget.id,
+            engagement_id: widget.engagement_id,
             description,
             longitude,
             latitude,
@@ -90,6 +96,16 @@ const Form = () => {
             latitude: validatedData.latitude,
         });
     };
+
+    if (isLoadingMap) {
+        return (
+            <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" spacing={2}>
+                <Grid item xs={12}>
+                    <MidScreenLoader />
+                </Grid>
+            </Grid>
+        );
+    }
 
     return (
         <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
