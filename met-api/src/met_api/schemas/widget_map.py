@@ -15,13 +15,14 @@
 
 from met_api.models.widget_map import WidgetMap as WidgetMapModel
 
-from .base_schema import BaseSchema
+from marshmallow import Schema
 
 
-class WidgetMapSchema(BaseSchema):  # pylint: disable=too-many-ancestors, too-few-public-methods
+class WidgetMapSchema(Schema):  # pylint: disable=too-many-ancestors, too-few-public-methods
     """This is the schema for the map model."""
 
-    class Meta(BaseSchema.Meta):  # pylint: disable=too-few-public-methods
+    class Meta:  # pylint: disable=too-few-public-methods
         """Maps all of the Widget Map fields to a default schema."""
 
         model = WidgetMapModel
+        fields = ('id', 'widget_id', 'engagement_id', 'description', 'latitude', 'longitude')

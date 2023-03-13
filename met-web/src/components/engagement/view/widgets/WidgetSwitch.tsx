@@ -5,7 +5,7 @@ import WhoIsListeningWidget from './WhoIsListeningWidget';
 import DocumentWidget from './DocumentWidget';
 import SubscribeWidget from './Subscribe/SubscribeWidget';
 import EventsWidget from './Events/EventsWidget';
-
+import MapWidget from './Map/MapWidget';
 interface WidgetSwitchProps {
     widget: Widget;
 }
@@ -22,6 +22,9 @@ export const WidgetSwitch = ({ widget }: WidgetSwitchProps) => {
                 </Case>
                 <Case condition={widget.widget_type_id === WidgetType.Events}>
                     <EventsWidget widget={widget} />
+                </Case>
+                <Case condition={widget.widget_type_id === WidgetType.Map}>
+                    <MapWidget widget={widget} />
                 </Case>
                 <Case condition={widget.widget_type_id === WidgetType.Subscribe}>
                     <SubscribeWidget />

@@ -15,6 +15,7 @@ export const fetchMaps = async (widget_id: number): Promise<WidgetMap[]> => {
 
 interface PostMapRequest {
     widget_id: number;
+    engagement_id: number;
     longitude: number;
     latitude: number;
     description?: string;
