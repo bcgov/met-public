@@ -15,7 +15,7 @@
 
 from http import HTTPStatus
 
-from flask import request, jsonify
+from flask import jsonify, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
@@ -38,7 +38,6 @@ class Map(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
     def get(widget_id):
         """Get map widget."""
         try:
