@@ -18,10 +18,11 @@ from http import HTTPStatus
 from flask import request, jsonify
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
-from met_api.exceptions.business_exception import BusinessException
+
 from met_api.auth import jwt as _jwt
-from met_api.services.widget_map_service import WidgetMapService
+from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas.widget_map import WidgetMapSchema
+from met_api.services.widget_map_service import WidgetMapService
 from met_api.utils.roles import Role
 from met_api.utils.util import allowedorigins, cors_preflight
 
