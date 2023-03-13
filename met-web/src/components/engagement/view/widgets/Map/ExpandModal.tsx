@@ -7,7 +7,7 @@ import { WidgetMap } from 'models/widgetMap';
 interface ExpandModalProps {
     open: boolean;
     setOpen: (open: boolean) => void;
-    map: WidgetMap;
+    map: WidgetMap | null;
 }
 
 export const ExpandModal = ({ open, setOpen, map }: ExpandModalProps) => {
