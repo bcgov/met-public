@@ -8,16 +8,17 @@ import { WidgetType } from 'models/widget';
 import { Else, If, Then } from 'react-if';
 import { ActionContext } from '../../ActionContext';
 import { useAppDispatch } from 'hooks';
-import { postWidget } from 'services/widgetService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { optionCardStyle } from '../Phases/PhasesOptionCard';
+import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
 const DocumentOptionCard = () => {
     const { widgets, loadWidgets, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
     const [creatingWidget, setCreatingWidget] = useState(false);
+    const [createWidget] = useCreateWidgetMutation();
 
-    const createWidget = async () => {
+    const handleCreateWidget = async () => {
         const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Document);
         if (alreadyExists) {
             handleWidgetDrawerTabValueChange(WidgetTabValues.DOCUMENT_FORM);
@@ -26,7 +27,7 @@ const DocumentOptionCard = () => {
 
         try {
             setCreatingWidget(!creatingWidget);
-            await postWidget(savedEngagement.id, {
+            await createWidget({
                 widget_type_id: WidgetType.Document,
                 engagement_id: savedEngagement.id,
             });
@@ -49,7 +50,7 @@ const DocumentOptionCard = () => {
             data-testid={`widget-drawer-option/${WidgetType.Document}`}
             elevation={1}
             sx={optionCardStyle}
-            onClick={() => createWidget()}
+            onClick={() => handleCreateWidget()}
         >
             <If condition={creatingWidget}>
                 <Then>

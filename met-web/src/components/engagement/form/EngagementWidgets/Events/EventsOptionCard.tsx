@@ -7,19 +7,21 @@ import { WidgetType } from 'models/widget';
 import { Else, If, Then } from 'react-if';
 import { ActionContext } from '../../ActionContext';
 import { useAppDispatch } from 'hooks';
-import { postWidget } from 'services/widgetService';
+// import { postWidget } from 'services/widgetService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { optionCardStyle } from '../Phases/PhasesOptionCard';
 import { WidgetTabValues } from '../type';
+import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
 
 const EventsOptionCard = () => {
     const { widgets, loadWidgets, handleWidgetDrawerOpen, handleWidgetDrawerTabValueChange } =
         useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
+    const [createWidget, { isLoading: isCreatingWidget }] = useCreateWidgetMutation();
     const [creatingWidget, setCreatingWidget] = useState(false);
 
-    const createWidget = async () => {
+    const handleCreateWidget = async () => {
         const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Events);
         if (alreadyExists) {
             handleWidgetDrawerTabValueChange(WidgetTabValues.EVENTS_FORM);
@@ -27,8 +29,7 @@ const EventsOptionCard = () => {
         }
 
         try {
-            setCreatingWidget(!creatingWidget);
-            await postWidget(savedEngagement.id, {
+            await createWidget({
                 widget_type_id: WidgetType.Events,
                 engagement_id: savedEngagement.id,
             });
@@ -52,9 +53,9 @@ const EventsOptionCard = () => {
             data-testid={`widget-drawer-option/${WidgetType.Events}`}
             elevation={1}
             sx={optionCardStyle}
-            onClick={() => createWidget()}
+            onClick={() => handleCreateWidget()}
         >
-            <If condition={creatingWidget}>
+            <If condition={isCreatingWidget}>
                 <Then>
                     <Grid container alignItems="center" justifyContent="center" direction="row" height="5.5em">
                         <CircularProgress color="inherit" />
