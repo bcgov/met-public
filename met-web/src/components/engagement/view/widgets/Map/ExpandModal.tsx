@@ -1,10 +1,9 @@
 import React from 'react';
 import Modal from '@mui/material/Modal';
-import { Box, Paper, Grid, Theme, useMediaQuery } from '@mui/material';
+import { Box, Paper, Grid } from '@mui/material';
 import Map from 'components/map';
 import { WidgetMap } from 'models/widgetMap';
 import { PrimaryButton } from 'components/common';
-import { When } from 'react-if';
 
 interface ExpandModalProps {
     open: boolean;
