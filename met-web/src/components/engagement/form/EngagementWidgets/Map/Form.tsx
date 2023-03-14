@@ -42,9 +42,11 @@ const Form = () => {
     });
 
     useEffect(() => {
-        methods.setValue('description', mapData?.description || '');
-        methods.setValue('latitude', mapData ? mapData?.longitude : 0);
-        methods.setValue('longitude', mapData ? mapData?.latitude : 0);
+        if (mapData) {
+            methods.setValue('description', mapData?.description || '');
+            methods.setValue('latitude', mapData ? mapData?.latitude : undefined);
+            methods.setValue('longitude', mapData ? mapData?.longitude : undefined);
+        }
     }, [mapData]);
 
     const { handleSubmit, reset, trigger, watch } = methods;

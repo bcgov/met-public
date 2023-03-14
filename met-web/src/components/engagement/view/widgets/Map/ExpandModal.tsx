@@ -1,8 +1,9 @@
 import React from 'react';
 import Modal from '@mui/material/Modal';
-import { Box, Paper, Button } from '@mui/material';
+import { Box, Paper, Grid } from '@mui/material';
 import Map from 'components/map';
 import { WidgetMap } from 'models/widgetMap';
+import { PrimaryButton } from 'components/common';
 
 interface ExpandModalProps {
     open: boolean;
@@ -28,27 +29,39 @@ export const ExpandModal = ({ open, setOpen, map }: ExpandModalProps) => {
             }}
             keepMounted={false}
         >
-            <Paper
-                sx={{
-                    width: '80vw',
-                    height: '80vh',
-                }}
-            >
-                <Box
+            <Paper>
+                <Grid
+                    container
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="flex-start"
                     sx={{
                         width: '80vw',
-                        height: '70vh',
+                        height: '75vh',
                     }}
                 >
-                    <Map longitude={map?.longitude || 0} latitude={map?.latitude || 0} />
-                </Box>
-                <Button
-                    onClick={() => {
-                        setOpen(false);
-                    }}
-                >
-                    Close
-                </Button>
+                    <Grid item>
+                        <Box
+                            sx={{
+                                width: '80vw',
+                                height: '65vh',
+                            }}
+                        >
+                            <Map longitude={map?.longitude || 0} latitude={map?.latitude || 0} />
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12} container justifyContent="flex-end" padding={2}>
+                        <Grid item>
+                            <PrimaryButton
+                                onClick={() => {
+                                    setOpen(false);
+                                }}
+                            >
+                                Close
+                            </PrimaryButton>
+                        </Grid>
+                    </Grid>
+                </Grid>
             </Paper>
         </Modal>
     );
