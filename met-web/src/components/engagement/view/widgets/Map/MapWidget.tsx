@@ -64,7 +64,6 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
 
     return (
         <>
-            <ExpandModal map={map} open={open} setOpen={setOpen} />
             <MetPaper elevation={1} sx={{ paddingTop: '0.5em', padding: '1em', minHeight: '12em' }}>
                 <Grid container justifyContent={{ xs: 'center' }} alignItems="center" rowSpacing={2}>
                     <Grid
@@ -101,6 +100,7 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
                                 </Link>
                             </Grid>
                         </Grid>
+                        <ExpandModal map={map} open={open} setOpen={setOpen} />
                     </When>
                 </Grid>
             </MetPaper>
