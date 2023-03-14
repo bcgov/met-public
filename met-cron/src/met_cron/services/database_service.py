@@ -23,4 +23,4 @@ class DatabaseService:  # pylint: disable=too-few-public-methods
         """Perform the purge of dagster event logs"""
         with db.engine.connect() as con:
             con.execute('delete from dagster.event_logs where timestamp < current_timestamp + interval \'-15\' day;')
-            con.execute('VACUUM dagster.event_logs;')
+            con.execution_options(isolation_level="AUTOCOMMIT").execute('VACUUM dagster.event_logs;')
