@@ -62,6 +62,10 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
         );
     }
 
+    if (!map) {
+        return null;
+    }
+
     return (
         <>
             <MetPaper elevation={1} sx={{ paddingTop: '0.5em', padding: '1em', minHeight: '12em' }}>
@@ -84,7 +88,7 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
                                 height: '500px',
                             }}
                         >
-                            <Map longitude={map?.longitude || 0} latitude={map?.latitude || 0} />
+                            <Map longitude={map.longitude} latitude={map.latitude} markerLabel={map.marker_label} />
                         </Box>
                     </Grid>
                     <When condition={isLargeScreen}>

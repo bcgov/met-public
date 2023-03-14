@@ -2,12 +2,17 @@ import React from 'react';
 import ReactMapGL, { Marker, NavigationControl } from 'react-map-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import maplibregl from 'maplibre-gl';
+import MarkerIcon from '@mui/icons-material/LocationOnRounded';
+import { MetSmallText } from 'components/common';
+import { Stack } from '@mui/material';
+import { When } from 'react-if';
 
 interface MapProps {
     latitude: number;
     longitude: number;
+    markerLabel?: string;
 }
-const Map = ({ latitude, longitude }: MapProps) => {
+const Map = ({ latitude, longitude, markerLabel }: MapProps) => {
     return (
         <ReactMapGL
             initialViewState={{
@@ -23,7 +28,16 @@ const Map = ({ latitude, longitude }: MapProps) => {
             }}
         >
             <NavigationControl />
-            <Marker latitude={latitude} longitude={longitude} color="red"></Marker>
+            <Marker latitude={latitude} longitude={longitude} anchor="bottom">
+                <Stack direction="column" alignItems="center" justifyContent="center">
+                    <MarkerIcon fontSize="large" htmlColor="red" />
+                    <When condition={Boolean(markerLabel)}>
+                        <MetSmallText bold bgcolor={'white'} borderRadius="10px" padding="0 2px 0 2px">
+                            {markerLabel}
+                        </MetSmallText>
+                    </When>
+                </Stack>
+            </Marker>
         </ReactMapGL>
     );
 };

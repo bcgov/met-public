@@ -4,5 +4,5 @@ export interface WidgetMap {
     engagement_id: number;
     longitude: number;
     latitude: number;
-    description: string;
+    marker_label?: string;
 }
