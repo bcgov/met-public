@@ -98,6 +98,10 @@ jest.mock('apiManager/apiSlices/contacts', () => ({
     useLazyGetContactQuery: () => [...mockLazyGetContactQuery()],
 }));
 
+jest.mock('components/map', () => () => {
+    return <div></div>;
+});
+
 describe('Engagement View page tests', () => {
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
