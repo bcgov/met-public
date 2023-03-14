@@ -11,7 +11,7 @@ class WidgetMapService:
     def _create_map_model(widget_id, map_data: dict):
         map_model = WidgetMapModel()
         map_model.widget_id = widget_id
-        map_model.description = map_data.get('description')
+        map_model.marker_label = map_data.get('marker_label')
         map_model.latitude = map_data.get('latitude')
         map_model.longitude = map_data.get('longitude')
         map_model.engagement_id = map_data.get('engagement_id')

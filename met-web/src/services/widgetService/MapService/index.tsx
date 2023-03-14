@@ -18,7 +18,7 @@ interface PostMapRequest {
     engagement_id: number;
     longitude: number;
     latitude: number;
-    description?: string;
+    marker_label?: string;
 }
 export const postMap = async (widget_id: number, data: PostMapRequest): Promise<WidgetMap> => {
     try {

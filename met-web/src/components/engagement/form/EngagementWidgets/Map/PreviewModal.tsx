@@ -27,7 +27,11 @@ export const PreviewModal = () => {
                         height: '500px',
                     }}
                 >
-                    <Map longitude={previewMap.longitude} latitude={previewMap.latitude} />
+                    <Map
+                        longitude={previewMap.longitude}
+                        latitude={previewMap.latitude}
+                        markerLabel={previewMap.markerLabel}
+                    />
                 </Box>
             </Paper>
         </Modal>

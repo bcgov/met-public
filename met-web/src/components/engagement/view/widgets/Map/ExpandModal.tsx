@@ -47,7 +47,7 @@ export const ExpandModal = ({ open, setOpen, map }: ExpandModalProps) => {
                                 height: '65vh',
                             }}
                         >
-                            <Map longitude={map?.longitude || 0} latitude={map?.latitude || 0} />
+                            <Map longitude={map.longitude} latitude={map.latitude} markerLabel={map.marker_label} />
                         </Box>
                     </Grid>
                     <Grid item xs={12} container justifyContent="flex-end" padding={2}>
