@@ -13,9 +13,6 @@ const RichTextEditor = ({
     handleEditorStateChange = (_stringifiedEditorState: string) => {
         /* empty default method  */
     },
-    validateTextEditor = () => {
-        /* empty default method  */
-    },
     initialRawEditorState = '',
     initialHTMLText = '',
     error = false,
