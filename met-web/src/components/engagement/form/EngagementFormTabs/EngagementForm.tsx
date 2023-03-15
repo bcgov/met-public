@@ -43,7 +43,7 @@ const EngagementForm = () => {
 
     const isNewEngagement = engagementId === 'create';
 
-    const { name, start_date, end_date } = engagementFormData;
+    const { name, start_date, end_date, description } = engagementFormData;
 
     const surveyBlockList = [
         {
@@ -90,6 +90,11 @@ const EngagementForm = () => {
             ...engagementFormData,
             description: rawText,
         });
+
+        setEngagementFormError({
+            ...engagementFormError,
+            description: false,
+        });
     };
 
     const handleContentChange = (rawText: string) => {
@@ -112,6 +117,7 @@ const EngagementForm = () => {
             name: !(name && name.length < 50),
             start_date: !start_date,
             end_date: !end_date,
+            description: description.length > 550,
         };
         setEngagementFormError(errors);
 
@@ -295,6 +301,8 @@ const EngagementForm = () => {
                         setRawText={handleDescriptionChange}
                         handleEditorStateChange={handleRichDescriptionChange}
                         initialRawEditorState={initialRichDescription || ''}
+                        error={engagementFormError.description}
+                        helperText={'Description must be less then 550 characters'}
                     />
                 </Grid>
                 <Grid item xs={12}>
