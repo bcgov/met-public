@@ -11,9 +11,10 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { MapContext } from './MapContext';
 import { postMap } from 'services/widgetService/MapService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
+
 const schema = yup
     .object({
-        description: yup.string().max(500, 'Description cannot exceed 500 characters'),
+        markerLabel: yup.string().max(30, 'Markel label cannot exceed 30 characters'),
         latitude: yup
             .number()
             .typeError('Invalid value for Latitude')
@@ -42,9 +43,11 @@ const Form = () => {
     });
 
     useEffect(() => {
-        methods.setValue('description', mapData?.description || '');
-        methods.setValue('latitude', mapData ? mapData?.longitude : 0);
-        methods.setValue('longitude', mapData ? mapData?.latitude : 0);
+        if (mapData) {
+            methods.setValue('markerLabel', mapData?.marker_label || '');
+            methods.setValue('latitude', mapData ? mapData?.latitude : undefined);
+            methods.setValue('longitude', mapData ? mapData?.longitude : undefined);
+        }
     }, [mapData]);
 
     const { handleSubmit, reset, trigger, watch } = methods;
@@ -57,11 +60,11 @@ const Form = () => {
         }
 
         const validatedData = await schema.validate(data);
-        const { latitude, longitude, description } = validatedData;
+        const { latitude, longitude, markerLabel } = validatedData;
         await postMap(widget.id, {
             widget_id: widget.id,
             engagement_id: widget.engagement_id,
-            description,
+            marker_label: markerLabel,
             longitude,
             latitude,
         });
@@ -94,6 +97,7 @@ const Form = () => {
         setPreviewMap({
             longitude: validatedData.longitude,
             latitude: validatedData.latitude,
+            markerLabel: validatedData.markerLabel,
         });
     };
 
@@ -149,9 +153,9 @@ const Form = () => {
                                 </Grid>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Description</MetLabel>
+                                <MetLabel sx={{ marginBottom: '2px' }}>Marker Label</MetLabel>
                                 <ControlledTextField
-                                    name="description"
+                                    name="markerLabel"
                                     variant="outlined"
                                     label=" "
                                     InputLabelProps={{
@@ -159,8 +163,6 @@ const Form = () => {
                                     }}
                                     fullWidth
                                     size="small"
-                                    multiline
-                                    minRows={4}
                                 />
                             </Grid>
                             <Grid
