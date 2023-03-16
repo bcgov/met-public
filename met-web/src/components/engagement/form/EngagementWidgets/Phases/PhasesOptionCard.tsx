@@ -7,7 +7,7 @@ import { ActionContext } from '../../ActionContext';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
 import { WidgetType } from 'models/widget';
-import { postWidget } from 'services/widgetService';
+import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
 import { Else, If, Then } from 'react-if';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 
@@ -22,9 +22,9 @@ const PhasesOptionCard = () => {
     const { savedEngagement } = useContext(ActionContext);
     const { widgets, loadWidgets, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
     const dispatch = useAppDispatch();
-    const [creatingWidget, setCreatingWidget] = useState(false);
+    const [createWidget, { isLoading: isCreatingWidget }] = useCreateWidgetMutation();
 
-    const createWidget = async () => {
+    const handleCreateWidget = async () => {
         const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Phases);
         if (alreadyExists) {
             handleWidgetDrawerTabValueChange(WidgetTabValues.PHASES_FORM);
@@ -32,8 +32,7 @@ const PhasesOptionCard = () => {
         }
 
         try {
-            setCreatingWidget(!creatingWidget);
-            await postWidget(savedEngagement.id, {
+            await createWidget({
                 widget_type_id: WidgetType.Phases,
                 engagement_id: savedEngagement.id,
             });
@@ -46,7 +45,6 @@ const PhasesOptionCard = () => {
             );
             handleWidgetDrawerTabValueChange(WidgetTabValues.PHASES_FORM);
         } catch (error) {
-            setCreatingWidget(false);
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while adding phases widget' }));
         }
     };
@@ -56,9 +54,9 @@ const PhasesOptionCard = () => {
             data-testid={`widget-drawer-option/${WidgetType.Phases}`}
             elevation={1}
             sx={optionCardStyle}
-            onClick={() => createWidget()}
+            onClick={() => handleCreateWidget()}
         >
-            <If condition={creatingWidget}>
+            <If condition={isCreatingWidget}>
                 <Then>
                     <Grid container alignItems="center" justifyContent="center" direction="row" height="5.5em">
                         <CircularProgress color="inherit" />

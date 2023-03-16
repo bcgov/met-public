@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { MetPaper, MetBody, MetHeader4 } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
@@ -7,18 +7,18 @@ import { ActionContext } from '../../ActionContext';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
 import { WidgetType } from 'models/widget';
-import { postWidget } from 'services/widgetService';
 import { Else, If, Then } from 'react-if';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import { optionCardStyle } from '../Phases/PhasesOptionCard';
+import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
 
 const WhoIsListeningOptionCard = () => {
     const { savedEngagement } = useContext(ActionContext);
     const { widgets, loadWidgets, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
     const dispatch = useAppDispatch();
-    const [creatingWidget, setCreatingWidget] = useState(false);
+    const [createWidget, { isLoading: isCreatingWidget }] = useCreateWidgetMutation();
 
-    const createWidget = async () => {
+    const handleCreateWidget = async () => {
         const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.WhoIsListening);
         if (alreadyExists) {
             handleWidgetDrawerTabValueChange(WidgetTabValues.WHO_IS_LISTENING_FORM);
@@ -26,8 +26,7 @@ const WhoIsListeningOptionCard = () => {
         }
 
         try {
-            setCreatingWidget(!creatingWidget);
-            await postWidget(savedEngagement.id, {
+            await createWidget({
                 widget_type_id: WidgetType.WhoIsListening,
                 engagement_id: savedEngagement.id,
             });
@@ -40,7 +39,6 @@ const WhoIsListeningOptionCard = () => {
             );
             handleWidgetDrawerTabValueChange(WidgetTabValues.WHO_IS_LISTENING_FORM);
         } catch (error) {
-            setCreatingWidget(false);
             dispatch(
                 openNotification({ severity: 'error', text: 'Error occurred while creating who is listening widget' }),
             );
@@ -52,9 +50,9 @@ const WhoIsListeningOptionCard = () => {
             data-testid={`widget-drawer-option/${WidgetType.WhoIsListening}`}
             elevation={1}
             sx={optionCardStyle}
-            onClick={() => createWidget()}
+            onClick={() => handleCreateWidget()}
         >
-            <If condition={creatingWidget}>
+            <If condition={isCreatingWidget}>
                 <Then>
                     <Grid container alignItems="center" justifyContent="center" direction="row" height="5.5em">
                         <CircularProgress color="inherit" />

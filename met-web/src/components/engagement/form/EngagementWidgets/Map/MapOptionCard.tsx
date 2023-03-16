@@ -6,20 +6,20 @@ import { WidgetType } from 'models/widget';
 import { Else, If, Then } from 'react-if';
 import { ActionContext } from '../../ActionContext';
 import { useAppDispatch } from 'hooks';
-import { postWidget } from 'services/widgetService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { optionCardStyle } from '../Phases/PhasesOptionCard';
 import { WidgetTabValues } from '../type';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
 
 const MapOptionCard = () => {
     const { widgets, loadWidgets, handleWidgetDrawerOpen, handleWidgetDrawerTabValueChange } =
         useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
-    const [creatingWidget, setCreatingWidget] = useState(false);
+    const [createWidget, { isLoading: isCreatingWidget }] = useCreateWidgetMutation();
 
-    const createWidget = async () => {
+    const handleCreateWidget = async () => {
         const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Map);
         if (alreadyExists) {
             handleWidgetDrawerTabValueChange(WidgetTabValues.MAP_FORM);
@@ -27,8 +27,7 @@ const MapOptionCard = () => {
         }
 
         try {
-            setCreatingWidget(!creatingWidget);
-            await postWidget(savedEngagement.id, {
+            await createWidget({
                 widget_type_id: WidgetType.Map,
                 engagement_id: savedEngagement.id,
             });
@@ -41,7 +40,6 @@ const MapOptionCard = () => {
             );
             handleWidgetDrawerTabValueChange(WidgetTabValues.MAP_FORM);
         } catch (error) {
-            setCreatingWidget(false);
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while creating map widget' }));
             handleWidgetDrawerOpen(false);
         }
@@ -52,9 +50,9 @@ const MapOptionCard = () => {
             data-testid={`widget-drawer-option/${WidgetType.Map}`}
             elevation={1}
             sx={optionCardStyle}
-            onClick={() => createWidget()}
+            onClick={() => handleCreateWidget()}
         >
-            <If condition={creatingWidget}>
+            <If condition={isCreatingWidget}>
                 <Then>
                     <Grid container alignItems="center" justifyContent="center" direction="row" height="5.5em">
                         <CircularProgress color="inherit" />

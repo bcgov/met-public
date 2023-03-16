@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { MetPaper, MetBody, MetHeader4 } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
 import EventNoteIcon from '@mui/icons-material/EventNote';
@@ -7,7 +7,6 @@ import { WidgetType } from 'models/widget';
 import { Else, If, Then } from 'react-if';
 import { ActionContext } from '../../ActionContext';
 import { useAppDispatch } from 'hooks';
-// import { postWidget } from 'services/widgetService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { optionCardStyle } from '../Phases/PhasesOptionCard';
 import { WidgetTabValues } from '../type';
@@ -19,7 +18,6 @@ const EventsOptionCard = () => {
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
     const [createWidget, { isLoading: isCreatingWidget }] = useCreateWidgetMutation();
-    const [creatingWidget, setCreatingWidget] = useState(false);
 
     const handleCreateWidget = async () => {
         const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Events);
@@ -42,7 +40,6 @@ const EventsOptionCard = () => {
             );
             handleWidgetDrawerTabValueChange(WidgetTabValues.EVENTS_FORM);
         } catch (error) {
-            setCreatingWidget(false);
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while creating events widget' }));
             handleWidgetDrawerOpen(false);
         }

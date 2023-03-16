@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { MetPaper, MetBody, MetHeader4 } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
@@ -10,20 +10,21 @@ import { useAppDispatch } from 'hooks';
 import { postWidget } from 'services/widgetService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { optionCardStyle } from '../Phases/PhasesOptionCard';
+import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
+
 const SubscribeOptionCard = () => {
     const { widgets, loadWidgets, handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
-    const [creatingWidget, setCreatingWidget] = useState(false);
+    const [createWidget, { isLoading: isCreatingWidget }] = useCreateWidgetMutation();
 
-    const createWidget = async () => {
+    const handleCreateWidget = async () => {
         const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Subscribe);
         if (alreadyExists) {
             return;
         }
 
         try {
-            setCreatingWidget(!creatingWidget);
             await postWidget(savedEngagement.id, {
                 widget_type_id: WidgetType.Subscribe,
                 engagement_id: savedEngagement.id,
@@ -37,7 +38,6 @@ const SubscribeOptionCard = () => {
             );
             handleWidgetDrawerOpen(false);
         } catch (error) {
-            setCreatingWidget(false);
             dispatch(
                 openNotification({ severity: 'error', text: 'Error occurred while creating subscription widget' }),
             );
@@ -50,9 +50,9 @@ const SubscribeOptionCard = () => {
             data-testid={`widget-drawer-option/${WidgetType.Subscribe}`}
             elevation={1}
             sx={optionCardStyle}
-            onClick={() => createWidget()}
+            onClick={() => handleCreateWidget()}
         >
-            <If condition={creatingWidget}>
+            <If condition={isCreatingWidget}>
                 <Then>
                     <Grid container alignItems="center" justifyContent="center" direction="row" height="5.5em">
                         <CircularProgress color="inherit" />
