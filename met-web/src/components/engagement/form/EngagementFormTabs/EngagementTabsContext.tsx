@@ -13,6 +13,12 @@ interface EngagementFormData {
     end_date: string;
     description: string;
     content: string;
+
+    projectNumber: string;
+    projectName: string;
+    projectType: string;
+    clientName: string;
+    applicationNumber: string;
 }
 
 const initialEngagementFormData = {
@@ -21,6 +27,12 @@ const initialEngagementFormData = {
     end_date: '',
     description: '',
     content: '',
+
+    projectNumber: '',
+    projectName: '',
+    projectType: '',
+    clientName: '',
+    applicationNumber: '',
 };
 
 interface EngagementFormError {
@@ -110,6 +122,12 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         end_date: savedEngagement.end_date,
         description: savedEngagement?.description || '',
         content: savedEngagement?.content || '',
+
+        projectNumber: '',
+        projectName: '',
+        projectType: '',
+        clientName: '',
+        applicationNumber: '',
     });
     const [richDescription, setRichDescription] = useState(savedEngagement?.rich_description || '');
     const [richContent, setRichContent] = useState(savedEngagement?.rich_content || '');
