@@ -27,12 +27,14 @@ interface EngagementFormError {
     name: boolean;
     start_date: boolean;
     end_date: boolean;
+    description: boolean;
 }
 
 const initialFormError = {
     name: false,
     start_date: false,
     end_date: false,
+    description: false,
 };
 
 export interface EngagementTabsContextState {
