@@ -55,13 +55,13 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
         """Save submission."""
         has_comments = cls.__check_if_submission_has_comments(submission)
         if has_comments:
-            const_comment_status=Status.Pending.value
-            const_reviewed_by=None
-            const_review_date=None
+            const_comment_status = Status.Pending.value
+            const_reviewed_by = None
+            const_review_date = None
         else:
-            const_comment_status=Status.Approved.value
-            const_reviewed_by='System'
-            const_review_date=datetime.utcnow()
+            const_comment_status = Status.Approved.value
+            const_reviewed_by = 'System'
+            const_review_date = datetime.utcnow()
 
         new_submission = Submission(
             submission_json=submission.get('submission_json', None),
@@ -83,30 +83,30 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
             session.add(new_submission)
             session.flush()
         return new_submission
-    
+
     @staticmethod
     def __check_if_submission_has_comments(submission: SubmissionSchema):
         """Check if comment exists."""
         if 'simpletextarea' not in submission.get('submission_json', None) and \
-            'simpletextfield' not in submission.get('submission_json', None):
+           'simpletextfield' not in submission.get('submission_json', None):
             return False
-        
+
         if 'simpletextarea' in submission.get('submission_json', None) and \
-            'simpletextfield' in submission.get('submission_json', None):
+           'simpletextfield' in submission.get('submission_json', None):
             if len(submission.get('submission_json', None)['simpletextarea']) == 0 and \
                len(submission.get('submission_json', None)['simpletextfield']) == 0:
                 return False
 
         if 'simpletextarea' in submission.get('submission_json', None) and \
-            'simpletextfield' not in submission.get('submission_json', None):
+           'simpletextfield' not in submission.get('submission_json', None):
             if len(submission.get('submission_json', None)['simpletextarea']) == 0:
                 return False
 
         if 'simpletextarea' not in submission.get('submission_json', None) and \
-            'simpletextfield' in submission.get('submission_json', None):
+           'simpletextfield' in submission.get('submission_json', None):
             if len(submission.get('submission_json', None)['simpletextfield']) == 0:
                 return False
-            
+
         return True
 
     @classmethod
@@ -169,8 +169,8 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
     def get_by_survey_id_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text=''):
         """Get submissions by survey id paginated."""
         query = db.session.query(Submission)\
-            .filter(Submission.survey_id == survey_id, 
-                    or_(Submission.reviewed_by!='System', Submission.reviewed_by == None))\
+            .filter(Submission.survey_id == survey_id,
+                    or_(Submission.reviewed_by != 'System', Submission.reviewed_by is None))\
 
         if search_text:
             # Remove all non-digit characters from search text
