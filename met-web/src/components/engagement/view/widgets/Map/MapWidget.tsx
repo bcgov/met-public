@@ -88,7 +88,12 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
                                 height: '500px',
                             }}
                         >
-                            <Map longitude={map.longitude} latitude={map.latitude} markerLabel={map.marker_label} />
+                            <Map
+                                geojson={map.geojson}
+                                longitude={map.longitude}
+                                latitude={map.latitude}
+                                markerLabel={map.marker_label}
+                            />
                         </Box>
                     </Grid>
                     <When condition={isLargeScreen}>

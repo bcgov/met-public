@@ -11,6 +11,8 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { MapContext } from './MapContext';
 import { postMap } from 'services/widgetService/MapService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
+import ShapeFileUpload from './ShapefileUpload';
+import { GeoJSON } from 'geojson';
 
 const schema = yup
     .object({
@@ -37,6 +39,8 @@ const Form = () => {
     const { widget, mapData, isLoadingMap, setPreviewMapOpen, setPreviewMap } = useContext(MapContext);
     const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const [isCreating, setIsCreating] = useState(false);
+    const [fileUpload, setFileUpload] = useState<File | undefined>(undefined);
+    const [uploadName, setUploadName] = useState('');
 
     const methods = useForm<DetailsForm>({
         resolver: yupResolver(schema),
@@ -101,6 +105,16 @@ const Form = () => {
         });
     };
 
+    const handleAddFile = (files: File[]) => {
+        if (files.length > 0) {
+            setFileUpload(files[0]);
+            return;
+        }
+
+        setFileUpload(null);
+        setUploadName('');
+    };
+
     if (isLoadingMap) {
         return (
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" spacing={2}>
@@ -163,6 +177,15 @@ const Form = () => {
                                     }}
                                     fullWidth
                                     size="small"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <ShapeFileUpload
+                                    data-testid="shapefile-upload"
+                                    handleAddFile={handleAddFile}
+                                    savedFileName={uploadName}
+                                    savedFile={fileUpload}
+                                    helpText="Drag and drop a shapefile here or click to select one"
                                 />
                             </Grid>
                             <Grid
