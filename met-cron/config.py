@@ -126,7 +126,7 @@ class _Config():  # pylint: disable=too-few-public-methods
 
     # front end endpoints
     SITE_URL = os.getenv('SITE_URL')
-    ENGAGEMENT_DASHBOARD_PATH = os.getenv('ENGAGEMENT_DASHBOARD_PATH', '/engagement/{engagement_id}/dashboard')
+    ENGAGEMENT_DASHBOARD_PATH = os.getenv('ENGAGEMENT_DASHBOARD_PATH', '/engagements/{engagement_id}/dashboard')
 
     # Email Service
     ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID = os.getenv('ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID')
