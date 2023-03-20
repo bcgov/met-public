@@ -5,7 +5,7 @@ Manages the Submission
 from __future__ import annotations
 from datetime import datetime
 from typing import List
-from sqlalchemy import TEXT, ForeignKey, asc, cast, desc, text
+from sqlalchemy import TEXT, ForeignKey, asc, cast, desc, or_, text
 from sqlalchemy.dialects import postgresql
 
 from met_api.constants.comment_status import Status
@@ -53,6 +53,16 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
     @classmethod
     def create(cls, submission: SubmissionSchema, session=None) -> Submission:
         """Save submission."""
+        has_comments = cls.__check_if_submission_has_comments(submission)
+        if has_comments:
+            const_comment_status=Status.Pending.value
+            const_reviewed_by=None
+            const_review_date=None
+        else:
+            const_comment_status=Status.Approved.value
+            const_reviewed_by='System'
+            const_review_date=datetime.utcnow()
+
         new_submission = Submission(
             submission_json=submission.get('submission_json', None),
             engagement_id=submission.get('engagement_id', None),
@@ -62,7 +72,9 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
             updated_date=None,
             created_by=submission.get('created_by', None),
             updated_by=submission.get('updated_by', None),
-            comment_status_id=Status.Pending.value,
+            comment_status_id=const_comment_status,
+            reviewed_by=const_reviewed_by,
+            review_date=const_review_date,
         )
         if session is None:
             db.session.add(new_submission)
@@ -71,6 +83,31 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
             session.add(new_submission)
             session.flush()
         return new_submission
+    
+    @staticmethod
+    def __check_if_submission_has_comments(submission: SubmissionSchema):
+        """Check if comment exists."""
+        if 'simpletextarea' not in submission.get('submission_json', None) and \
+            'simpletextfield' not in submission.get('submission_json', None):
+            return False
+        
+        if 'simpletextarea' in submission.get('submission_json', None) and \
+            'simpletextfield' in submission.get('submission_json', None):
+            if len(submission.get('submission_json', None)['simpletextarea']) == 0 and \
+               len(submission.get('submission_json', None)['simpletextfield']) == 0:
+                return False
+
+        if 'simpletextarea' in submission.get('submission_json', None) and \
+            'simpletextfield' not in submission.get('submission_json', None):
+            if len(submission.get('submission_json', None)['simpletextarea']) == 0:
+                return False
+
+        if 'simpletextarea' not in submission.get('submission_json', None) and \
+            'simpletextfield' in submission.get('submission_json', None):
+            if len(submission.get('submission_json', None)['simpletextfield']) == 0:
+                return False
+            
+        return True
 
     @classmethod
     def update(cls, submission: SubmissionSchema, session=None) -> Submission:
@@ -132,7 +169,8 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
     def get_by_survey_id_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text=''):
         """Get submissions by survey id paginated."""
         query = db.session.query(Submission)\
-            .filter(Submission.survey_id == survey_id)\
+            .filter(Submission.survey_id == survey_id, 
+                    or_(Submission.reviewed_by!='System', Submission.reviewed_by == None))\
 
         if search_text:
             # Remove all non-digit characters from search text
