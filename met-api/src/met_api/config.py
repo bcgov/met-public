@@ -125,6 +125,8 @@ class _Config():  # pylint: disable=too-few-public-methods
     CDOGS_SERVICE_CLIENT_SECRET = os.getenv('CDOGS_SERVICE_CLIENT_SECRET')
     CDOGS_TOKEN_URL = os.getenv('CDOGS_TOKEN_URL')
 
+    # just a temporary writable location to unzip the files.
+    # This gets cleared after every shapefile conversion.
     SHAPEFILE_UPLOAD_FOLDER = os.getenv('SHAPEFILE_UPLOAD_FOLDER', '/tmp/uploads')
 
 
