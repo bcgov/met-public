@@ -52,7 +52,7 @@ const Form = () => {
 
     const { handleSubmit, reset, trigger, watch } = methods;
 
-    const [longitude, latitude] = watch(['longitude', 'latitude']);
+    const [longitude, latitude, markerLabel] = watch(['longitude', 'latitude', 'markerLabel']);
 
     const createMap = async (data: DetailsForm) => {
         if (!widget) {
@@ -88,8 +88,8 @@ const Form = () => {
     };
 
     const handlePreviewMap = async () => {
-        const valid = await trigger(['latitude', 'longitude']);
-        const validatedData = await schema.validate({ latitude, longitude });
+        const valid = await trigger(['latitude', 'longitude', 'markerLabel']);
+        const validatedData = await schema.validate({ latitude, longitude, markerLabel });
         if (!valid) {
             return;
         }

@@ -16,7 +16,7 @@ const RichTextEditor = ({
     initialRawEditorState = '',
     initialHTMLText = '',
     error = false,
-    helperText = 'Field cannot be empty',
+    helperText = '',
 }) => {
     const getStateFromInitialValue = () => {
         if (initialRawEditorState) {
@@ -47,7 +47,6 @@ const RichTextEditor = ({
 
     const handleChange = (newEditorState: EditorState) => {
         const plainText = newEditorState.getCurrentContent().getPlainText();
-
         setEditorState(newEditorState);
         const stringifiedEditorState = JSON.stringify(convertToRaw(newEditorState.getCurrentContent()));
         handleEditorStateChange(stringifiedEditorState);
