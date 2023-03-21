@@ -103,18 +103,12 @@ jest.mock('@hello-pangea/dnd', () => ({
     DragDropContext: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
 }));
 
-const mockWidgetsRtkUnwrap = jest.fn(() => Promise.resolve([whoIsListeningWidget]));
-const mockWidgetsRtkTrigger = () => {
-    return {
-        unwrap: mockWidgetsRtkUnwrap,
-    };
-};
-export const mockWidgetsRtkQuery = () => [mockWidgetsRtkTrigger];
-
-const mockLazyGetWidgetsQuery = jest.fn(mockWidgetsRtkQuery);
+const mockCreateWidget = jest.fn(() => Promise.resolve(whoIsListeningWidget));
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
-    useLazyGetWidgetsQuery: () => [...mockLazyGetWidgetsQuery()],
+    useCreateWidgetMutation: () => [mockCreateWidget],
+    useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
+    useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
 
 describe('Who is Listening widget  tests', () => {
@@ -124,9 +118,9 @@ describe('Who is Listening widget  tests', () => {
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
         .mockReturnValue(Promise.resolve(draftEngagement));
-    const postWidgetMock = jest
-        .spyOn(widgetService, 'postWidget')
-        .mockReturnValue(Promise.resolve(whoIsListeningWidget));
+    const getWidgetsMock = jest
+        .spyOn(widgetService, 'getWidgets')
+        .mockReturnValue(Promise.resolve([whoIsListeningWidget]));
 
     beforeEach(() => {
         setupEnv();
@@ -160,18 +154,18 @@ describe('Who is Listening widget  tests', () => {
                 surveys: surveys,
             }),
         );
-        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
-        postWidgetMock.mockReturnValue(Promise.resolve(whoIsListeningWidget));
-        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
+        mockCreateWidget.mockReturnValue(Promise.resolve(whoIsListeningWidget));
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
         const { container } = render(<EngagementForm />);
 
         await addWhosIsListeningWidget(container);
 
-        expect(postWidgetMock).toHaveBeenNthCalledWith(1, draftEngagement.id, {
+        expect(mockCreateWidget).toHaveBeenNthCalledWith(1, {
             widget_type_id: WidgetType.WhoIsListening,
             engagement_id: draftEngagement.id,
         });
-        expect(mockWidgetsRtkUnwrap).toHaveBeenCalledTimes(2);
+        expect(getWidgetsMock).toHaveBeenCalledTimes(2);
         expect(screen.getByText('Add This Contact')).toBeVisible();
         expect(screen.getByText('Select Existing Contact')).toBeVisible();
     });
@@ -185,9 +179,9 @@ describe('Who is Listening widget  tests', () => {
             }),
         );
 
-        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
-        postWidgetMock.mockReturnValue(Promise.resolve(whoIsListeningWidget));
-        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
+        mockCreateWidget.mockReturnValue(Promise.resolve(whoIsListeningWidget));
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
         const { container } = render(<EngagementForm />);
 
         await addWhosIsListeningWidget(container);
