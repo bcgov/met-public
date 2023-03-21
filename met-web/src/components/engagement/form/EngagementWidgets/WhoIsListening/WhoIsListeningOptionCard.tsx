@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { MetPaper, MetBody, MetHeader4 } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
@@ -16,7 +16,8 @@ const WhoIsListeningOptionCard = () => {
     const { savedEngagement } = useContext(ActionContext);
     const { widgets, loadWidgets, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
     const dispatch = useAppDispatch();
-    const [createWidget, { isLoading: isCreatingWidget }] = useCreateWidgetMutation();
+    const [createWidget] = useCreateWidgetMutation();
+    const [isCreatingWidget, setIsCreatingWidget] = useState(false);
 
     const handleCreateWidget = async () => {
         const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.WhoIsListening);
@@ -26,6 +27,7 @@ const WhoIsListeningOptionCard = () => {
         }
 
         try {
+            setIsCreatingWidget(true);
             await createWidget({
                 widget_type_id: WidgetType.WhoIsListening,
                 engagement_id: savedEngagement.id,
@@ -37,8 +39,10 @@ const WhoIsListeningOptionCard = () => {
                     text: 'Widget successfully created. Proceed to Add Contacts.',
                 }),
             );
+            setIsCreatingWidget(false);
             handleWidgetDrawerTabValueChange(WidgetTabValues.WHO_IS_LISTENING_FORM);
         } catch (error) {
+            setIsCreatingWidget(false);
             dispatch(
                 openNotification({ severity: 'error', text: 'Error occurred while creating who is listening widget' }),
             );

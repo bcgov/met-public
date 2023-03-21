@@ -50,23 +50,17 @@ jest.mock('@reduxjs/toolkit/query/react', () => ({
     fetchBaseQuery: jest.fn(),
 }));
 
-const mockWidgetsRtkUnwrap = jest.fn(() => Promise.resolve([phasesWidget]));
-const mockWidgetsRtkTrigger = () => {
-    return {
-        unwrap: mockWidgetsRtkUnwrap,
-    };
-};
-export const mockWidgetsRtkQuery = () => [mockWidgetsRtkTrigger];
-
-const mockLazyGetWidgetsQuery = jest.fn(mockWidgetsRtkQuery);
-jest.mock('apiManager/apiSlices/widgets', () => ({
-    ...jest.requireActual('apiManager/apiSlices/widgets'),
-    useLazyGetWidgetsQuery: () => [...mockLazyGetWidgetsQuery()],
-}));
-
 jest.mock('components/map', () => () => {
     return <div></div>;
 });
+
+const mockCreateWidget = jest.fn(() => Promise.resolve(phasesWidget));
+jest.mock('apiManager/apiSlices/widgets', () => ({
+    ...jest.requireActual('apiManager/apiSlices/widgets'),
+    useCreateWidgetMutation: () => [mockCreateWidget],
+    useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
+    useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
+}));
 
 describe('Phases widget tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
@@ -75,6 +69,7 @@ describe('Phases widget tests', () => {
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
         .mockReturnValue(Promise.resolve(draftEngagement));
+    const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([phasesWidget]));
 
     beforeEach(() => {
         setupEnv();
@@ -88,10 +83,9 @@ describe('Phases widget tests', () => {
                 surveys: surveys,
             }),
         );
-        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
-        const postWidgetMock = jest.spyOn(widgetService, 'postWidget');
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
         const postWidgetItemMock = jest.spyOn(widgetService, 'postWidgetItem');
-        postWidgetMock.mockReturnValue(Promise.resolve(phasesWidget));
+        mockCreateWidget.mockReturnValue(Promise.resolve(phasesWidget));
         postWidgetItemMock.mockReturnValue(Promise.resolve(phaseWidgetItem));
         render(<EngagementForm />);
 
@@ -106,7 +100,7 @@ describe('Phases widget tests', () => {
             expect(screen.getByText('Select Widget')).toBeVisible();
         });
 
-        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([phasesWidget]));
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([phasesWidget]));
 
         const phasesOption = screen.getByTestId(`widget-drawer-option/${WidgetType.Phases}`);
         fireEvent.click(phasesOption);
@@ -115,11 +109,11 @@ describe('Phases widget tests', () => {
             expect(screen.getByTestId('engagementPhaseSelect')).toBeVisible();
         });
 
-        expect(postWidgetMock).toHaveBeenNthCalledWith(1, draftEngagement.id, {
+        expect(mockCreateWidget).toHaveBeenNthCalledWith(1, {
             widget_type_id: WidgetType.Phases,
             engagement_id: draftEngagement.id,
         });
-        expect(mockWidgetsRtkUnwrap).toHaveBeenCalledTimes(2);
+        expect(getWidgetsMock).toHaveBeenCalledTimes(2);
 
         const saveWidgetButton = screen.getByTestId('savePhasesWidgetButton');
         expect(saveWidgetButton).toBeDisabled();

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { MetPaper, MetBody, MetHeader4 } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
 import EventNoteIcon from '@mui/icons-material/EventNote';
@@ -17,7 +17,8 @@ const EventsOptionCard = () => {
         useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
-    const [createWidget, { isLoading: isCreatingWidget }] = useCreateWidgetMutation();
+    const [createWidget] = useCreateWidgetMutation();
+    const [isCreatingWidget, setIsCreatingWidget] = useState(false);
 
     const handleCreateWidget = async () => {
         const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Events);
@@ -27,6 +28,7 @@ const EventsOptionCard = () => {
         }
 
         try {
+            setIsCreatingWidget(true);
             await createWidget({
                 widget_type_id: WidgetType.Events,
                 engagement_id: savedEngagement.id,
@@ -38,9 +40,11 @@ const EventsOptionCard = () => {
                     text: 'Events widget successfully created.',
                 }),
             );
+            setIsCreatingWidget(false);
             handleWidgetDrawerTabValueChange(WidgetTabValues.EVENTS_FORM);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while creating events widget' }));
+            setIsCreatingWidget(false);
             handleWidgetDrawerOpen(false);
         }
     };
@@ -59,14 +63,7 @@ const EventsOptionCard = () => {
                     </Grid>
                 </Then>
                 <Else>
-                    <Grid
-                        xs={12}
-                        container
-                        alignItems="center"
-                        justifyContent="flex-start"
-                        direction="row"
-                        columnSpacing={1}
-                    >
+                    <Grid container alignItems="center" justifyContent="flex-start" direction="row" columnSpacing={1}>
                         <Grid item sx={{ mr: 0.5 }}>
                             <EventNoteIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
                         </Grid>

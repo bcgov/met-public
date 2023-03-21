@@ -17,7 +17,8 @@ const MapOptionCard = () => {
         useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
-    const [createWidget, { isLoading: isCreatingWidget }] = useCreateWidgetMutation();
+    const [createWidget] = useCreateWidgetMutation();
+    const [isCreatingWidget, setIsCreatingWidget] = useState(false);
 
     const handleCreateWidget = async () => {
         const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Map);
@@ -27,6 +28,7 @@ const MapOptionCard = () => {
         }
 
         try {
+            setIsCreatingWidget(true);
             await createWidget({
                 widget_type_id: WidgetType.Map,
                 engagement_id: savedEngagement.id,
@@ -38,8 +40,10 @@ const MapOptionCard = () => {
                     text: 'Map widget successfully created.',
                 }),
             );
+            setIsCreatingWidget(false);
             handleWidgetDrawerTabValueChange(WidgetTabValues.MAP_FORM);
         } catch (error) {
+            setIsCreatingWidget(false);
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while creating map widget' }));
             handleWidgetDrawerOpen(false);
         }
@@ -59,14 +63,7 @@ const MapOptionCard = () => {
                     </Grid>
                 </Then>
                 <Else>
-                    <Grid
-                        xs={12}
-                        container
-                        alignItems="center"
-                        justifyContent="flex-start"
-                        direction="row"
-                        columnSpacing={1}
-                    >
+                    <Grid container alignItems="center" justifyContent="flex-start" direction="row" columnSpacing={1}>
                         <Grid item sx={{ mr: 0.5 }}>
                             <LocationOnIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
                         </Grid>

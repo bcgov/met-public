@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { MetPaper, MetBody, MetHeader4 } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
@@ -11,11 +11,13 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { optionCardStyle } from '../Phases/PhasesOptionCard';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
+
 const DocumentOptionCard = () => {
     const { widgets, loadWidgets, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
-    const [createWidget, { isLoading: isCreatingWidget }] = useCreateWidgetMutation();
+    const [createWidget] = useCreateWidgetMutation();
+    const [isCreatingWidget, setIsCreatingWidget] = useState(false);
 
     const handleCreateWidget = async () => {
         const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Document);
@@ -25,6 +27,7 @@ const DocumentOptionCard = () => {
         }
 
         try {
+            setIsCreatingWidget(true);
             await createWidget({
                 widget_type_id: WidgetType.Document,
                 engagement_id: savedEngagement.id,
@@ -36,8 +39,10 @@ const DocumentOptionCard = () => {
                     text: 'Widget successfully created. Proceed to add documents',
                 }),
             );
+            setIsCreatingWidget(false);
             handleWidgetDrawerTabValueChange(WidgetTabValues.DOCUMENT_FORM);
         } catch (error) {
+            setIsCreatingWidget(false);
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while creating document widget' }));
         }
     };

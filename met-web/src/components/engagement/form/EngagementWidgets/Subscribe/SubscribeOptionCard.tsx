@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { MetPaper, MetBody, MetHeader4 } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
@@ -7,7 +7,6 @@ import { WidgetType } from 'models/widget';
 import { Else, If, Then } from 'react-if';
 import { ActionContext } from '../../ActionContext';
 import { useAppDispatch } from 'hooks';
-import { postWidget } from 'services/widgetService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { optionCardStyle } from '../Phases/PhasesOptionCard';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
@@ -16,7 +15,8 @@ const SubscribeOptionCard = () => {
     const { widgets, loadWidgets, handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
-    const [createWidget, { isLoading: isCreatingWidget }] = useCreateWidgetMutation();
+    const [createWidget] = useCreateWidgetMutation();
+    const [isCreatingWidget, setIsCreatingWidget] = useState(false);
 
     const handleCreateWidget = async () => {
         const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Subscribe);
@@ -25,7 +25,8 @@ const SubscribeOptionCard = () => {
         }
 
         try {
-            await postWidget(savedEngagement.id, {
+            setIsCreatingWidget(true);
+            await createWidget({
                 widget_type_id: WidgetType.Subscribe,
                 engagement_id: savedEngagement.id,
             });
@@ -36,8 +37,10 @@ const SubscribeOptionCard = () => {
                     text: 'Widget successfully created.',
                 }),
             );
+            setIsCreatingWidget(false);
             handleWidgetDrawerOpen(false);
         } catch (error) {
+            setIsCreatingWidget(false);
             dispatch(
                 openNotification({ severity: 'error', text: 'Error occurred while creating subscription widget' }),
             );
@@ -59,14 +62,7 @@ const SubscribeOptionCard = () => {
                     </Grid>
                 </Then>
                 <Else>
-                    <Grid
-                        xs={12}
-                        container
-                        alignItems="center"
-                        justifyContent="flex-start"
-                        direction="row"
-                        columnSpacing={1}
-                    >
+                    <Grid container alignItems="center" justifyContent="flex-start" direction="row" columnSpacing={1}>
                         <Grid item sx={{ mr: 0.5 }}>
                             <EmailOutlinedIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
                         </Grid>

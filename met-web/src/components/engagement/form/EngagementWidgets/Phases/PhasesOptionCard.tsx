@@ -22,7 +22,8 @@ const PhasesOptionCard = () => {
     const { savedEngagement } = useContext(ActionContext);
     const { widgets, loadWidgets, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
     const dispatch = useAppDispatch();
-    const [createWidget, { isLoading: isCreatingWidget }] = useCreateWidgetMutation();
+    const [createWidget] = useCreateWidgetMutation();
+    const [isCreatingWidget, setIsCreatingWidget] = useState(false);
 
     const handleCreateWidget = async () => {
         const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Phases);
@@ -32,6 +33,7 @@ const PhasesOptionCard = () => {
         }
 
         try {
+            setIsCreatingWidget(true);
             await createWidget({
                 widget_type_id: WidgetType.Phases,
                 engagement_id: savedEngagement.id,
@@ -43,8 +45,10 @@ const PhasesOptionCard = () => {
                     text: 'Widget successfully added.',
                 }),
             );
+            setIsCreatingWidget(false);
             handleWidgetDrawerTabValueChange(WidgetTabValues.PHASES_FORM);
         } catch (error) {
+            setIsCreatingWidget(false);
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while adding phases widget' }));
         }
     };

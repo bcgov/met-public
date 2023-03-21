@@ -8,6 +8,7 @@ import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
+import * as widgetService from 'services/widgetService';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { WidgetType } from 'models/widget';
 import { Box } from '@mui/material';
@@ -53,18 +54,11 @@ jest.mock('components/map', () => () => {
     return <Box></Box>;
 });
 
-const mockWidgetsRtkUnwrap = jest.fn(() => Promise.resolve([]));
-const mockWidgetsRtkTrigger = () => {
-    return {
-        unwrap: mockWidgetsRtkUnwrap,
-    };
-};
-export const mockWidgetsRtkQuery = () => [mockWidgetsRtkTrigger];
-
-const mockLazyGetWidgetsQuery = jest.fn(mockWidgetsRtkQuery);
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
-    useLazyGetWidgetsQuery: () => [...mockLazyGetWidgetsQuery()],
+    useCreateWidgetMutation: () => [jest.fn(() => Promise.resolve())],
+    useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
+    useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
 
 describe('Engagement form page tests', () => {
@@ -84,6 +78,7 @@ describe('Engagement form page tests', () => {
     const postEngagementMock = jest
         .spyOn(engagementService, 'postEngagement')
         .mockReturnValue(Promise.resolve(draftEngagement));
+    const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([]));
 
     beforeEach(() => {
         setupEnv();
@@ -283,7 +278,7 @@ describe('Engagement form page tests', () => {
         });
 
         expect(screen.getByText('Add Widget')).toBeVisible();
-        expect(mockWidgetsRtkUnwrap).toHaveBeenCalled();
+        expect(getWidgetsMock).toHaveBeenCalled();
     });
 
     test('Widget drawer appears', async () => {
@@ -294,7 +289,7 @@ describe('Engagement form page tests', () => {
                 surveys: surveys,
             }),
         );
-        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
         const { container } = render(<EngagementForm />);
 
         await waitFor(() => {
