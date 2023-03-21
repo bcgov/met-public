@@ -41,6 +41,7 @@ const Form = () => {
     const [isCreating, setIsCreating] = useState(false);
     const [fileUpload, setFileUpload] = useState<File | undefined>(undefined);
     const [uploadName, setUploadName] = useState('');
+    const [geoJson, setGeoJson] = useState<GeoJSON | undefined>(undefined);
 
     const methods = useForm<DetailsForm>({
         resolver: yupResolver(schema),
@@ -51,6 +52,7 @@ const Form = () => {
             methods.setValue('markerLabel', mapData?.marker_label || '');
             methods.setValue('latitude', mapData ? mapData?.latitude : undefined);
             methods.setValue('longitude', mapData ? mapData?.longitude : undefined);
+            setGeoJson(mapData ? mapData.geojson : undefined);
         }
     }, [mapData]);
 
@@ -71,6 +73,7 @@ const Form = () => {
             marker_label: markerLabel,
             longitude,
             latitude,
+            geojson: fileUpload,
         });
         dispatch(openNotification({ severity: 'success', text: 'A new map was successfully added' }));
     };
@@ -102,16 +105,16 @@ const Form = () => {
             longitude: validatedData.longitude,
             latitude: validatedData.latitude,
             markerLabel: validatedData.markerLabel,
+            geojson: geoJson,
         });
     };
 
-    const handleAddFile = (files: File[]) => {
+    const handleAddFile = async (files: File[]) => {
         if (files.length > 0) {
             setFileUpload(files[0]);
             return;
         }
-
-        setFileUpload(null);
+        setFileUpload(undefined);
         setUploadName('');
     };
 

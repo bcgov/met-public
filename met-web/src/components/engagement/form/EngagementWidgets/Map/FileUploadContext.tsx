@@ -7,7 +7,7 @@ export interface FileUploadContextState {
     addedFileUrl: string;
     setAddedFileUrl: React.Dispatch<React.SetStateAction<string>>;
     addedFileName: string;
-    setaddedFileName: React.Dispatch<React.SetStateAction<string>>;
+    setAddedFileName: React.Dispatch<React.SetStateAction<string>>;
     existingFileUrl: string;
     setExistingFileUrl: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -23,8 +23,8 @@ export const FileUploadContext = createContext<FileUploadContextState>({
         throw new Error('setAddedFileUrl not implemented');
     },
     addedFileName: '',
-    setaddedFileName: () => {
-        throw new Error('setaddedFileName not implemented');
+    setAddedFileName: () => {
+        throw new Error('setAddedFileName not implemented');
     },
     existingFileUrl: '',
     setExistingFileUrl: () => {
@@ -45,7 +45,7 @@ export const FileUploadContextProvider = ({
     savedFileName,
 }: FileUploadContextProviderProps) => {
     const [addedFileUrl, setAddedFileUrl] = useState('');
-    const [addedFileName, setaddedFileName] = useState('');
+    const [addedFileName, setAddedFileName] = useState('');
 
     const [existingFileUrl, setExistingFileUrl] = useState(savedFileUrl);
 
@@ -58,7 +58,7 @@ export const FileUploadContextProvider = ({
                 addedFileUrl,
                 setAddedFileUrl,
                 addedFileName,
-                setaddedFileName,
+                setAddedFileName,
                 existingFileUrl,
                 setExistingFileUrl,
             }}

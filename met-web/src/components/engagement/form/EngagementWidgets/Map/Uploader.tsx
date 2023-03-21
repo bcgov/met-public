@@ -17,7 +17,6 @@ const Uploader = ({
 }: UploaderProps) => {
     const {
         handleAddFile,
-        savedFileUrl,
         savedFileName,
         addedFileUrl,
         setAddedFileUrl,
@@ -46,7 +45,7 @@ const Uploader = ({
                             <Grid item xs>
                                 <Stack spacing={2} direction="row" alignItems="center">
                                     <LinkIcon color="info" />
-                                    <Typography>{addedFileName}</Typography>
+                                    <Typography>{addedFileName ? addedFileName : savedFileName}</Typography>
                                 </Stack>
                             </Grid>
                         </Grid>
@@ -78,6 +77,7 @@ const Uploader = ({
     }
     return (
         <Dropzone
+            accept={{ 'application/zipped-shapefile': ['.shp'] }}
             onDrop={(acceptedFiles) => {
                 const createdObjectURL = URL.createObjectURL(acceptedFiles[0]);
                 handleAddFile(acceptedFiles);
