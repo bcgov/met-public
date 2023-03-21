@@ -2,6 +2,7 @@
 from http import HTTPStatus
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.widget_map import WidgetMap as WidgetMapModel
+from met_api.services.shapefile_service import ShapefileService
 
 
 class WidgetMapService:
@@ -29,6 +30,22 @@ class WidgetMapService:
         """Create map for the widget."""
         widget_map = WidgetMapService._create_map_model(widget_id, map_details)
         widget_map.commit()
+        return widget_map
+
+    @staticmethod
+    def create_shapefile(widget_id, file_zip=None):
+        """Create map for the widget."""
+        if file_zip:
+            geojson = ShapefileService.convert_to_geojson(file_zip)
+        widget_map: WidgetMapModel = WidgetMapModel.get_map(widget_id)
+        if widget_map:
+            widget_map.geojson = geojson
+            widget_map.commit()
+        else:
+            widget_map = WidgetMapModel()
+            widget_map.widget_id = widget_id
+            widget_map.geojson = geojson
+            widget_map.commit()
         return widget_map
 
     @staticmethod

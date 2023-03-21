@@ -48,12 +48,16 @@ class Map(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
     def post(widget_id):
         """Create map widget."""
-        request_json = request.get_json()
+
         try:
-            widget_map = WidgetMapService().create_map(widget_id, request_json)
+            is_shape_file_present = 'file' not in request.files
+            if is_shape_file_present:
+                file = request.files['file']
+                if file.filename == '':
+                    return jsonify({'error': 'No file selected.'}), 400
+            widget_map = WidgetMapService().create_map(widget_id, file)
             return WidgetMapSchema().dump(widget_map), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
@@ -66,6 +70,30 @@ class Map(Resource):
         request_json = request.get_json()
         try:
             widget_map = WidgetMapService().update_map(widget_id, request_json)
+            return WidgetMapSchema().dump(widget_map), HTTPStatus.OK
+        except BusinessException as err:
+            return str(err), err.status_code
+
+
+
+@cors_preflight('GET, POST, PATCH, OPTIONS')
+@API.route('/shapefiles')
+class ShapeFile(Resource):
+    """Resource for managing map widgets."""
+
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    def post(widget_id):
+        """Create map widget."""
+
+        try:
+            is_shape_file_present = request.files.get('file')
+            if is_shape_file_present:
+                file = request.files.get('file')
+                if file.filename == '':
+                    return jsonify({'error': 'No file selected.'}), 400
+            widget_map = WidgetMapService().create_shapefile(widget_id, file)
             return WidgetMapSchema().dump(widget_map), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code

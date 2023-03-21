@@ -20,6 +20,7 @@ class WidgetMap(BaseModel):  # pylint: disable=too-few-public-methods, too-many-
     marker_label = db.Column(db.String(30))
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
+    geojson = db.Column(db.Text())
 
     @classmethod
     def get_map(cls, widget_id) -> list[WidgetMap]:
