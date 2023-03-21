@@ -183,6 +183,7 @@ const Form = () => {
                                 />
                             </Grid>
                             <Grid item xs={12}>
+                                <MetLabel sx={{ marginBottom: '2px' }}>Shape File Upload</MetLabel>
                                 <ShapeFileUpload
                                     data-testid="shapefile-upload"
                                     handleAddFile={handleAddFile}
