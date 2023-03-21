@@ -17,6 +17,7 @@ Test suite to ensure that the Submission service routines are working as expecte
 """
 from unittest.mock import patch
 
+from met_api.constants.comment_status import Status
 from met_api.schemas.submission import SubmissionSchema
 from met_api.services.comment_service import CommentService
 from met_api.services.email_verification_service import EmailVerificationService
@@ -79,3 +80,21 @@ def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
     }
     submission_record = SubmissionService().review_comment(submission.id, reasons, admin_user.external_id)
     assert submission_record.get('comment_status_id') == 2
+
+
+def test_auto_approval_of_submissions_without_comment(session):  # pylint:disable=unused-argument
+    """Assert that a submission can be Created."""
+    survey, eng = factory_survey_and_eng_model()
+    email_verification = factory_email_verification(survey.id)
+    user_details = factory_user_model()
+
+    submission_request: SubmissionSchema = {
+        'submission_json': {'simplepostalcode': 'abc', 'simpletextarea': ''},
+        'survey_id': survey.id,
+        'user_id': user_details.id,
+        'verification_token': email_verification.verification_token,
+    }
+    submission = SubmissionService().create(email_verification.verification_token, submission_request)
+
+    assert submission is not None
+    assert submission.comment_status_id == Status.Approved.value
