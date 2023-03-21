@@ -125,7 +125,8 @@ class _Config():  # pylint: disable=too-few-public-methods
     CDOGS_SERVICE_CLIENT_SECRET = os.getenv('CDOGS_SERVICE_CLIENT_SECRET')
     CDOGS_TOKEN_URL = os.getenv('CDOGS_TOKEN_URL')
 
-    SHAPEFILE_UPLOAD_FOLDER = os.getenv('SHAPEFILE_UPLOAD_FOLDER','/tmp/uploads')
+    SHAPEFILE_UPLOAD_FOLDER = os.getenv('SHAPEFILE_UPLOAD_FOLDER', '/tmp/uploads')
+
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
     """Dev Config."""
