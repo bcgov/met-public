@@ -50,8 +50,8 @@ export const widgetsApi = createApi({
             invalidatesTags: (_result, _error, arg) => [{ type: 'Widgets', id: arg.widgetId }],
         }),
     }),
-    // refetchOnReconnect: true,
-    // refetchOnMountOrArgChange: 20000,
+    refetchOnReconnect: true,
+    refetchOnMountOrArgChange: 60000,
 });
 
 // Export hooks for usage in functional components, which are
