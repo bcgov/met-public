@@ -77,7 +77,7 @@ const Uploader = ({
     }
     return (
         <Dropzone
-            accept={{ 'application/zipped-shapefile': ['.shp'] }}
+            accept={{ 'application/shapefile': ['.shp'] }}
             onDrop={(acceptedFiles) => {
                 const createdObjectURL = URL.createObjectURL(acceptedFiles[0]);
                 handleAddFile(acceptedFiles);
