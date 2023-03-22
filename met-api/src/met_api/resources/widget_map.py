@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """API endpoints for managing a FOI Requests resource."""
-
+import json
 from http import HTTPStatus
 
 from flask import jsonify, request
@@ -51,9 +51,11 @@ class Map(Resource):
     @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
     def post(widget_id):
         """Create map widget."""
-        request_json = request.get_json()
         try:
-            widget_map = WidgetMapService().create_map(widget_id, request_json)
+            file = request.files.get('file')
+            request_json = request.form or request.form.get('data')
+            widget_map = WidgetMapService().create_map(widget_id, request_json, file)
+            widget_map.geojson = json.loads(widget_map.geojson)
             return WidgetMapSchema().dump(widget_map), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
