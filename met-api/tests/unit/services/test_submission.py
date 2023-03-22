@@ -83,7 +83,7 @@ def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
 
 
 def test_auto_approval_of_submissions_without_comment(session):  # pylint:disable=unused-argument
-    """Assert that a submission can be Created."""
+    """Assert that a submission without comment is auto approved."""
     survey, eng = factory_survey_and_eng_model()
     email_verification = factory_email_verification(survey.id)
     user_details = factory_user_model()
