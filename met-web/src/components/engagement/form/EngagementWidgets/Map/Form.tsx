@@ -11,8 +11,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { MapContext } from './MapContext';
 import { postMap } from 'services/widgetService/MapService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
-import ShapeFileUpload from './ShapefileUpload';
-import { GeoJSON } from 'geojson';
+import FileUpload from 'components/common/FileUpload/FileUpload';
 
 const schema = yup
     .object({
@@ -29,6 +28,8 @@ const schema = yup
             .required('Longitude is required')
             .min(-180, 'Longitude must be greater than or equal to -180')
             .max(180, 'Longitude must be less than or equal to 180'),
+        shapefile: yup.mixed(),
+        geojson: yup.mixed(),
     })
     .required();
 
@@ -39,9 +40,7 @@ const Form = () => {
     const { widget, mapData, isLoadingMap, setPreviewMapOpen, setPreviewMap } = useContext(MapContext);
     const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const [isCreating, setIsCreating] = useState(false);
-    const [fileUpload, setFileUpload] = useState<File | undefined>(undefined);
     const [uploadName, setUploadName] = useState('');
-    const [geoJson, setGeoJson] = useState<GeoJSON | undefined>(undefined);
 
     const methods = useForm<DetailsForm>({
         resolver: yupResolver(schema),
@@ -52,13 +51,13 @@ const Form = () => {
             methods.setValue('markerLabel', mapData?.marker_label || '');
             methods.setValue('latitude', mapData ? mapData?.latitude : undefined);
             methods.setValue('longitude', mapData ? mapData?.longitude : undefined);
-            setGeoJson(mapData ? mapData.geojson : undefined);
+            methods.setValue('geojson', mapData ? mapData.geojson : undefined);
         }
     }, [mapData]);
 
     const { handleSubmit, reset, trigger, watch } = methods;
 
-    const [longitude, latitude, markerLabel] = watch(['longitude', 'latitude', 'markerLabel']);
+    const [longitude, latitude, markerLabel, geojson] = watch(['longitude', 'latitude', 'markerLabel', 'geojson']);
 
     const createMap = async (data: DetailsForm) => {
         if (!widget) {
@@ -66,14 +65,14 @@ const Form = () => {
         }
 
         const validatedData = await schema.validate(data);
-        const { latitude, longitude, markerLabel } = validatedData;
+        const { latitude, longitude, markerLabel, shapefile } = validatedData;
         await postMap(widget.id, {
             widget_id: widget.id,
             engagement_id: widget.engagement_id,
             marker_label: markerLabel,
             longitude,
             latitude,
-            geojson: fileUpload,
+            file: shapefile,
         });
         dispatch(openNotification({ severity: 'success', text: 'A new map was successfully added' }));
     };
@@ -96,7 +95,7 @@ const Form = () => {
 
     const handlePreviewMap = async () => {
         const valid = await trigger(['latitude', 'longitude', 'markerLabel']);
-        const validatedData = await schema.validate({ latitude, longitude, markerLabel });
+        const validatedData = await schema.validate({ latitude, longitude, markerLabel, geojson });
         if (!valid) {
             return;
         }
@@ -105,16 +104,16 @@ const Form = () => {
             longitude: validatedData.longitude,
             latitude: validatedData.latitude,
             markerLabel: validatedData.markerLabel,
-            geojson: geoJson,
+            geojson: validatedData.geojson,
         });
     };
 
     const handleAddFile = async (files: File[]) => {
         if (files.length > 0) {
-            setFileUpload(files[0]);
+            methods.setValue('shapefile', files[0]);
             return;
         }
-        setFileUpload(undefined);
+        methods.setValue('shapefile', undefined);
         setUploadName('');
     };
 
@@ -184,11 +183,11 @@ const Form = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <MetLabel sx={{ marginBottom: '2px' }}>Shape File Upload </MetLabel>
-                                <ShapeFileUpload
+                                <FileUpload
                                     data-testid="shapefile-upload"
                                     handleAddFile={handleAddFile}
                                     savedFileName={uploadName}
-                                    savedFile={fileUpload}
+                                    savedFile={methods.getValues('shapefile')}
                                     helpText="Drag and drop a shapefile here or click to select one"
                                 />
                             </Grid>
