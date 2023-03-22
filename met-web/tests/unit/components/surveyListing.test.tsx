@@ -50,6 +50,10 @@ const mockEngagementTwo = {
     published_date: '2022-09-19 10:00:00',
     submissions_meta_data: {
         total: 1,
+        pending: 0,
+        needs_further_review: 0,
+        rejected: 0,
+        approved: 1,
     },
 };
 

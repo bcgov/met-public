@@ -49,6 +49,10 @@ const openEngagement = {
     surveys: surveys,
     submissions_meta_data: {
         total: 1,
+        pending: 0,
+        needs_further_review: 0,
+        rejected: 0,
+        approved: 1,
     },
 };
 
