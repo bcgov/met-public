@@ -19,6 +19,7 @@ interface PostMapRequest {
     longitude: number;
     latitude: number;
     marker_label?: string;
+    geojson?: File;
 }
 export const postMap = async (widget_id: number, data: PostMapRequest): Promise<WidgetMap> => {
     try {
