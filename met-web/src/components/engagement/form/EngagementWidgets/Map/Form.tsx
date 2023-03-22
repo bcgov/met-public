@@ -11,8 +11,8 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { MapContext } from './MapContext';
 import { postMap } from 'services/widgetService/MapService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
-import ShapeFileUpload from './ShapefileUpload';
 import { GeoJSON } from 'geojson';
+import FileUpload from 'components/common/FileUpload/FileUpload';
 
 const schema = yup
     .object({
@@ -29,6 +29,10 @@ const schema = yup
             .required('Longitude is required')
             .min(-180, 'Longitude must be greater than or equal to -180')
             .max(180, 'Longitude must be less than or equal to 180'),
+        shapefile: yup.mixed().test('fileSize', 'file is too large', (value) => {
+            if (!value.length) return true; // attachment is optional
+            return value[0].size <= 2000000;
+        }),
     })
     .required();
 
@@ -66,14 +70,14 @@ const Form = () => {
         }
 
         const validatedData = await schema.validate(data);
-        const { latitude, longitude, markerLabel } = validatedData;
+        const { latitude, longitude, markerLabel, shapefile } = validatedData;
         await postMap(widget.id, {
             widget_id: widget.id,
             engagement_id: widget.engagement_id,
             marker_label: markerLabel,
             longitude,
             latitude,
-            geojson: fileUpload,
+            geojson: shapefile,
         });
         dispatch(openNotification({ severity: 'success', text: 'A new map was successfully added' }));
     };
@@ -184,7 +188,7 @@ const Form = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <MetLabel sx={{ marginBottom: '2px' }}>Shape File Upload </MetLabel>
-                                <ShapeFileUpload
+                                <FileUpload
                                     data-testid="shapefile-upload"
                                     handleAddFile={handleAddFile}
                                     savedFileName={uploadName}
