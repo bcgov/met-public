@@ -98,3 +98,21 @@ def test_auto_approval_of_submissions_without_comment(session):  # pylint:disabl
 
     assert submission is not None
     assert submission.comment_status_id == Status.Approved.value
+
+
+def test_submissions_with_comment_are_not_auto_approved(session):  # pylint:disable=unused-argument
+    """Assert that a submission with comment is not auto approved."""
+    survey, eng = factory_survey_and_eng_model()
+    email_verification = factory_email_verification(survey.id)
+    user_details = factory_user_model()
+
+    submission_request: SubmissionSchema = {
+        'submission_json': {'simplepostalcode': 'abc', 'simpletextarea': 'Test Comment'},
+        'survey_id': survey.id,
+        'user_id': user_details.id,
+        'verification_token': email_verification.verification_token,
+    }
+    submission = SubmissionService().create(email_verification.verification_token, submission_request)
+
+    assert submission is not None
+    assert submission.comment_status_id == Status.Pending.value
