@@ -43,7 +43,6 @@ const Form = () => {
     const { widget, mapData, isLoadingMap, setPreviewMapOpen, setPreviewMap } = useContext(MapContext);
     const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const [isCreating, setIsCreating] = useState(false);
-    const [fileUpload, setFileUpload] = useState<File | undefined>(undefined);
     const [uploadName, setUploadName] = useState('');
     const [geoJson, setGeoJson] = useState<GeoJSON | undefined>(undefined);
 
@@ -115,10 +114,10 @@ const Form = () => {
 
     const handleAddFile = async (files: File[]) => {
         if (files.length > 0) {
-            setFileUpload(files[0]);
+            methods.setValue('shapefile', files[0]);
             return;
         }
-        setFileUpload(undefined);
+        methods.setValue('shapefile', undefined);
         setUploadName('');
     };
 
@@ -192,7 +191,7 @@ const Form = () => {
                                     data-testid="shapefile-upload"
                                     handleAddFile={handleAddFile}
                                     savedFileName={uploadName}
-                                    savedFile={fileUpload}
+                                    savedFile={methods.getValues('shapefile')}
                                     helpText="Drag and drop a shapefile here or click to select one"
                                 />
                             </Grid>
