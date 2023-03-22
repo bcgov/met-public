@@ -72,7 +72,7 @@ const Form = () => {
             marker_label: markerLabel,
             longitude,
             latitude,
-            geojson: shapefile,
+            file: shapefile,
         });
         dispatch(openNotification({ severity: 'success', text: 'A new map was successfully added' }));
     };
