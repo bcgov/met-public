@@ -60,7 +60,7 @@ class EngagementSchema(Schema):
                             if submission.comment_status_id == CommentStatus.Approved.value]),
             'rejected': len([submission for submission in obj.surveys[0].submissions
                             if submission.comment_status_id == CommentStatus.Rejected.value]),
-            'needs_further_review': len([submission for submission in obj.surveys[0].submissions 
+            'needs_further_review': len([submission for submission in obj.surveys[0].submissions
                                          if submission.comment_status_id == CommentStatus.Needs_further_review.value])
         }
 
