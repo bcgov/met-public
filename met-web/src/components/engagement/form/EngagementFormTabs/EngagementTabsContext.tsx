@@ -6,6 +6,7 @@ import { EngagementTeamMember } from 'models/engagementTeamMember';
 import { getTeamMembers } from 'services/membershipService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
+import { ProjectMetadata } from 'models/engagement';
 
 interface EngagementFormData {
     name: string;
@@ -14,11 +15,8 @@ interface EngagementFormData {
     description: string;
     content: string;
 
-    projectNumber: string;
-    projectName: string;
-    projectType: string;
-    clientName: string;
-    applicationNumber: string;
+    parent_id: string;
+    project_metadata: ProjectMetadata;
 }
 
 const initialEngagementFormData = {
@@ -28,11 +26,13 @@ const initialEngagementFormData = {
     description: '',
     content: '',
 
-    projectNumber: '',
-    projectName: '',
-    projectType: '',
-    clientName: '',
-    applicationNumber: '',
+    parent_id: '',
+    project_metadata: {
+        project_name: '',
+        type: '',
+        client_name: '',
+        application_number: '',
+    },
 };
 
 interface EngagementFormError {
@@ -123,11 +123,13 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         description: savedEngagement?.description || '',
         content: savedEngagement?.content || '',
 
-        projectNumber: '',
-        projectName: '',
-        projectType: '',
-        clientName: '',
-        applicationNumber: '',
+        parent_id: savedEngagement.parent_id,
+        project_metadata: {
+            project_name: savedEngagement?.project_metadata?.project_name || '',
+            client_name: savedEngagement?.project_metadata?.client_name || '',
+            type: savedEngagement?.project_metadata?.type || '',
+            application_number: savedEngagement?.project_metadata?.application_number || '',
+        },
     });
     const [richDescription, setRichDescription] = useState(savedEngagement?.rich_description || '');
     const [richContent, setRichContent] = useState(savedEngagement?.rich_content || '');

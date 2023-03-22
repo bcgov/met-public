@@ -44,6 +44,8 @@ class EngagementSchema(Schema):
     submission_status = fields.Method('get_submission_status')
     submissions_meta_data = fields.Method('get_submissions_meta_data')
     status_block = fields.List(fields.Nested(EngagementStatusBlockSchema))
+    parent_id = fields.Str(data_key='parent_id')
+    project_metadata = fields.Dict(data_key='project_metadata')
 
     def get_submissions_meta_data(self, obj):
         """Get the meta data of the submissions made in the survey."""

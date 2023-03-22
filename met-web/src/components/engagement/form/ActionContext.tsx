@@ -2,12 +2,12 @@ import React, { createContext, useState, useEffect } from 'react';
 import { postEngagement, getEngagement, patchEngagement } from '../../../services/engagementService';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams } from './types';
-import { createDefaultEngagement, Engagement } from '../../../models/engagement';
+import { createDefaultEngagement, Engagement, ProjectMetadata } from '../../../models/engagement';
 import { saveDocument } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { getErrorMessage } from 'utils';
-import { updatedDiff } from 'deep-object-diff';
+import { updatedDiff, diff } from 'deep-object-diff';
 import { PatchEngagementRequest } from 'services/engagementService/types';
 import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 
@@ -140,10 +140,11 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 ...engagement,
                 banner_filename: uploadedBannerImageFileName,
             }) as PatchEngagementRequest;
-
+            const metadataDiff = diff(state.project_metadata, engagement.project_metadata) as ProjectMetadata;
             const updatedEngagement = await patchEngagement({
                 ...engagementEditsToPatch,
                 id: Number(engagementId),
+                project_metadata: metadataDiff,
             });
             setEngagement(updatedEngagement);
             dispatch(openNotification({ severity: 'success', text: 'Engagement Updated Successfully' }));

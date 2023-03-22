@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
-import { Grid, InputAdornment, TextField, Tooltip } from '@mui/material';
-import { MetLabel, MetPaper, PrimaryButton, MetBody, MetHeader4 } from '../../../common';
+import { Grid, InputAdornment, MenuItem, TextField, Select, Tooltip, SelectChangeEvent } from '@mui/material';
+import { MetLabel, MetPaper, PrimaryButton, MetHeader4, MetDescription } from '../../../common';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { ActionContext } from '../ActionContext';
@@ -11,7 +11,7 @@ import { EngagementTabsContext } from './EngagementTabsContext';
 const EngagementSettings = () => {
     const { savedEngagement } = useContext(ActionContext);
     const { engagementFormData, setEngagementFormData } = useContext(EngagementTabsContext);
-    const { projectName, projectNumber, projectType, clientName, applicationNumber } = engagementFormData;
+    const { parent_id, project_metadata } = engagementFormData;
 
     const dispatch = useAppDispatch();
 
@@ -30,6 +30,16 @@ const EngagementSettings = () => {
         setEngagementFormData({
             ...engagementFormData,
             [e.target.name]: e.target.value,
+        });
+    };
+
+    const handleChangeMetadata = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement> | SelectChangeEvent) => {
+        setEngagementFormData({
+            ...engagementFormData,
+            project_metadata: {
+                ...project_metadata,
+                [e.target.name]: e.target.value,
+            },
         });
     };
 
@@ -58,73 +68,90 @@ const EngagementSettings = () => {
                 sx={{ padding: '2em' }}
             >
                 <Grid item xs={12} mb={1}>
-                    <MetHeader4>Engagement Details</MetHeader4>
+                    <MetHeader4 bold>Engagement Information</MetHeader4>
                 </Grid>
                 <Grid item xs={12} lg={6} p={1}>
-                    <MetLabel>Project/Mine Name</MetLabel>
+                    <MetLabel>Project Name</MetLabel>
                     <TextField
                         id="project-name"
-                        name="projectName"
-                        value={projectName}
+                        name="project_name"
+                        label=" "
+                        InputLabelProps={{
+                            shrink: false,
+                        }}
+                        value={project_metadata.project_name}
                         variant="outlined"
                         fullWidth
-                        onChange={handleChange}
+                        onChange={handleChangeMetadata}
                     />
                 </Grid>
                 <Grid item xs={12} lg={6} p={1}>
                     <MetLabel>Client/Proponent</MetLabel>
                     <TextField
                         id="client-name"
-                        name="clientName"
-                        value={clientName}
+                        name="client_name"
+                        value={project_metadata.client_name}
+                        variant="outlined"
+                        fullWidth
+                        onChange={handleChangeMetadata}
+                    />
+                </Grid>
+                <Grid item xs={12} lg={6} p={1}>
+                    <MetLabel>Project #</MetLabel>
+                    <TextField
+                        id="parent-id"
+                        name="parent_id"
+                        value={parent_id}
                         variant="outlined"
                         fullWidth
                         onChange={handleChange}
                     />
                 </Grid>
                 <Grid item xs={12} lg={6} p={1}>
-                    <MetLabel>Project/Mine #</MetLabel>
-                    <TextField
-                        id="project-number"
-                        name="projectNumber"
-                        value={projectNumber}
-                        variant="outlined"
-                        fullWidth
-                        onChange={handleChange}
-                    />
-                </Grid>
-                <Grid item xs={12} lg={6} p={1}>
-                    <MetLabel>Project/Mine Type</MetLabel>
-                    <TextField
+                    <MetLabel>Project Type</MetLabel>
+                    <Select
                         id="project-type"
-                        name="projectType"
-                        value={projectType}
+                        name="type"
                         variant="outlined"
+                        label=" "
+                        defaultValue=""
+                        value={project_metadata.type}
                         fullWidth
-                        onChange={handleChange}
-                    />
+                        size="small"
+                        onChange={handleChangeMetadata}
+                    >
+                        <MenuItem value={''} sx={{ fontStyle: 'italic', height: '2em' }}>
+                            none
+                        </MenuItem>
+                        <MenuItem value={'Energy-Electricity'}>Energy-Electricity</MenuItem>
+                        <MenuItem value={'Energy - Petroleum & Natural Gas'}>Energy - Petroleum & Natural Gas</MenuItem>
+                        <MenuItem value={'Food Processing'}>Food Processing</MenuItem>
+                        <MenuItem value={'Industrial'}>Industrial</MenuItem>
+                        <MenuItem value={'Mines'}>Mines</MenuItem>
+                        <MenuItem value={'Other'}>Other</MenuItem>
+                        <MenuItem value={'Tourist Destination Resorts'}>Tourist Destination Resorts</MenuItem>
+                        <MenuItem value={'Transportation'}>Transportation</MenuItem>
+                        <MenuItem value={'Waste disposal'}>Waste disposal</MenuItem>
+                        <MenuItem value={'Water Management'}>Water Management</MenuItem>
+                    </Select>
                 </Grid>
                 <Grid item xs={6} lg={6} p={1}>
                     <MetLabel>Application #</MetLabel>
                     <TextField
                         id="application-number"
-                        name="applicationNumber"
-                        value={applicationNumber}
+                        name="application_number"
+                        value={project_metadata.application_number}
                         variant="outlined"
                         fullWidth
-                        onChange={handleChange}
+                        onChange={handleChangeMetadata}
                     />
                 </Grid>
                 <Grid item xs={12} mt={5}>
                     <MetLabel>Engagement Link</MetLabel>
-                </Grid>
-                <Grid item xs={12}>
-                    <MetBody>
+                    <MetDescription>
                         This is the link to the public engagement and will only be accessible once the engagement is
                         published.
-                    </MetBody>
-                </Grid>
-                <Grid item xs={12} lg={9}>
+                    </MetDescription>
                     <ClickAwayListener onClickAway={handleTooltipClose}>
                         <Tooltip
                             title="Link copied!"
