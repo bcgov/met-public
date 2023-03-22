@@ -10,7 +10,7 @@ import { Engagement } from 'models/engagement';
 import { useAppDispatch } from 'hooks';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
-import { Link as MuiLink, useMediaQuery, Theme } from '@mui/material';
+import { Link as MuiLink, useMediaQuery, Theme, Box } from '@mui/material';
 import { getEngagements } from 'services/engagementService';
 import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
@@ -22,6 +22,16 @@ import AdvancedSearchMobile from './AdvancedSearch/SearchComponentMobile';
 import { SearchOptions } from './AdvancedSearch/SearchTypes';
 import { PermissionsGate } from 'components/permissionsGate';
 import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
+import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
+import FiberNewOutlinedIcon from '@mui/icons-material/FiberNewOutlined';
+import CheckBoxRoundedIcon from '@mui/icons-material/CheckBoxRounded';
+import CheckIcon from '@mui/icons-material/Check';
+import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import { ApprovedIcon, NewIcon, PendingIcon, RejectedIcon } from './Icons';
+import CloseRounded from '@mui/icons-material/CloseRounded';
+import FiberNewOutlined from '@mui/icons-material/FiberNewOutlined';
 
 const EngagementListing = () => {
     const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
@@ -182,14 +192,98 @@ const EngagementListing = () => {
             key: 'surveys',
             numeric: true,
             disablePadding: false,
-            label: 'Submissions',
+            label: 'Comments',
+            customStyle: { padding: 5 },
+            hideSorticon: true,
+            allowSort: false,
+            getValue: () => '',
+        },
+        {
+            key: 'surveys',
+            numeric: true,
+            disablePadding: false,
+            label: '',
+            customStyle: { padding: 5 },
+            hideSorticon: true,
+            align: 'center',
+            icon: (
+                <ApprovedIcon>
+                    <CheckIcon fontSize="small" />
+                </ApprovedIcon>
+            ),
             allowSort: false,
             getValue: (row: Engagement) => {
-                if (!row.submissions_meta_data.total) {
+                if (!row.submissions_meta_data) {
                     return 0;
                 }
-                const { total } = row.submissions_meta_data;
-                return `${total}`;
+                const { approved } = row.submissions_meta_data;
+                return approved == null ? <></> : <ApprovedIcon>{approved || 0}</ApprovedIcon>;
+            },
+        },
+        {
+            key: 'surveys',
+            numeric: true,
+            disablePadding: false,
+            label: '',
+            customStyle: { padding: 5 },
+            hideSorticon: true,
+            align: 'center',
+            icon: (
+                <PendingIcon>
+                    <PriorityHighRoundedIcon fontSize="small" />
+                </PendingIcon>
+            ),
+            allowSort: false,
+            getValue: (row: Engagement) => {
+                if (!row.submissions_meta_data) {
+                    return 0;
+                }
+                const { needs_further_review } = row.submissions_meta_data;
+                return needs_further_review == null ? <></> : <PendingIcon>{needs_further_review || 0}</PendingIcon>;
+            },
+        },
+        {
+            key: 'surveys',
+            numeric: true,
+            disablePadding: false,
+            label: '',
+            customStyle: { padding: 5 },
+            hideSorticon: true,
+            align: 'center',
+            icon: (
+                <RejectedIcon>
+                    <CloseRounded fontSize="small" />
+                </RejectedIcon>
+            ),
+            allowSort: false,
+            getValue: (row: Engagement) => {
+                if (!row.submissions_meta_data) {
+                    return 0;
+                }
+                const { rejected } = row.submissions_meta_data;
+                return rejected == null ? <></> : <RejectedIcon>{rejected || 0}</RejectedIcon>;
+            },
+        },
+        {
+            key: 'surveys',
+            numeric: true,
+            disablePadding: false,
+            label: '',
+            customStyle: { padding: 5 },
+            hideSorticon: true,
+            align: 'center',
+            icon: (
+                <NewIcon>
+                    <FiberNewOutlined fontSize="small" />
+                </NewIcon>
+            ),
+            allowSort: false,
+            getValue: (row: Engagement) => {
+                if (!row.submissions_meta_data) {
+                    return 0;
+                }
+                const { pending } = row.submissions_meta_data;
+                return pending == null ? <></> : <NewIcon>{pending || 0}</NewIcon>;
             },
         },
         {
@@ -221,7 +315,7 @@ const EngagementListing = () => {
             columnSpacing={2}
             rowSpacing={1}
         >
-            <Grid item xs={12} lg={10}>
+            <Grid item xs={12}>
                 <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="100%" justifyContent="space-between">
                     <Stack direction="row" spacing={1} alignItems="center">
                         <TextField
@@ -302,7 +396,7 @@ const EngagementListing = () => {
                     </PermissionsGate>
                 </Stack>
             </Grid>
-            <Grid item xs={12} lg={10} style={{ width: '100%' }}>
+            <Grid item xs={12} style={{ width: '100%' }}>
                 <Collapse in={advancedSearchOpen} timeout="auto" style={{ width: '100%' }}>
                     {isMediumScreen ? (
                         <AdvancedSearchMobile setFilterParams={setSearchOptions} />
@@ -311,7 +405,7 @@ const EngagementListing = () => {
                     )}
                 </Collapse>
             </Grid>
-            <Grid item xs={12} lg={10}>
+            <Grid item xs={12}>
                 <MetTable
                     headCells={headCells}
                     rows={engagements}

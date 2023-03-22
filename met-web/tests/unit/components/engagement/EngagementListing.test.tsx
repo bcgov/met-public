@@ -53,6 +53,10 @@ const mockEngagementTwo = {
     surveys: mockSurveys,
     submissions_meta_data: {
         total: 1,
+        pending: 0,
+        needsFurtherReview: 0,
+        rejected: 0,
+        approved: 1,
     },
 };
 

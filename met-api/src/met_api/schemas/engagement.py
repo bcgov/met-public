@@ -8,6 +8,7 @@ from datetime import datetime
 from marshmallow import EXCLUDE, Schema, ValidationError, fields, validate, validates_schema
 
 from met_api.constants.engagement_status import Status, SubmissionStatus
+from met_api.constants.comment_status import Status as CommentStatus
 from met_api.schemas.engagement_survey import EngagementSurveySchema
 from met_api.utils.datetime import local_datetime
 from met_api.schemas.engagement_status_block import EngagementStatusBlockSchema
@@ -53,6 +54,14 @@ class EngagementSchema(Schema):
             }
         return {
             'total': len(obj.surveys[0].submissions),
+            'pending': len([submission for submission in obj.surveys[0].submissions
+                            if submission.comment_status_id == CommentStatus.Pending.value]),
+            'approved': len([submission for submission in obj.surveys[0].submissions
+                            if submission.comment_status_id == CommentStatus.Approved.value]),
+            'rejected': len([submission for submission in obj.surveys[0].submissions
+                            if submission.comment_status_id == CommentStatus.Rejected.value]),
+            'needs_further_review': len([submission for submission in obj.surveys[0].submissions
+                            if submission.comment_status_id == CommentStatus.Needs_further_review.value])
         }
 
     def get_submission_status(self, obj):

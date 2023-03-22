@@ -21,6 +21,10 @@ export interface SurveyCommentData {
 
 export interface SurveySubmissionData {
     total: number;
+    approved: number;
+    rejected: number;
+    pending: number;
+    needs_further_review: number;
 }
 
 export const createDefaultSurvey = (): Survey => {
