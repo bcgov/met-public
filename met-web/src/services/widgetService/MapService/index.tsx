@@ -2,6 +2,7 @@ import http from 'apiManager/httpRequestHandler';
 import { WidgetMap } from 'models/widgetMap';
 import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
+import { GeoJSON } from 'geojson';
 
 export const fetchMaps = async (widget_id: number): Promise<WidgetMap[]> => {
     try {
@@ -47,17 +48,14 @@ interface PreviewShapefileRequest {
     file?: File | undefined;
 }
 
-export const previewShapeFile = async (data: PreviewShapefileRequest): Promise<string> => {
+export const previewShapeFile = async (data: PreviewShapefileRequest): Promise<GeoJSON> => {
     try {
-        const queryParameters = new URLSearchParams();
-        if (data.file) {
-            queryParameters.append('file', data.file.name);
+        const formdata = new FormData();
+        if (data.file !== undefined) {
+            formdata.append('file', data.file);
         }
-        const response = await http.GetRequest<string>(
-            Endpoints.Maps.SHAPEFILE_PREVIEW + `?${queryParameters.toString()}`,
-        );
+        const response = await http.PostRequest<GeoJSON>(Endpoints.Maps.SHAPEFILE_PREVIEW, formdata);
         if (response.data) {
-            console.log('RESPONSE!!!!!' + JSON.stringify(response));
             return response.data;
         }
         return Promise.reject('Failed to preview shapefile');
