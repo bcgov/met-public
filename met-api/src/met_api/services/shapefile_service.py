@@ -53,11 +53,6 @@ class ShapefileService:   # pylint: disable=too-few-public-methods
         ShapefileService._create_upload_dir(upload_folder)
         file_path = os.path.join(upload_folder, filename)
         file.save(file_path)
-        is_zip_file = zipfile.is_zipfile(filename)
-        if not is_zip_file:
-            raise BusinessException(
-                error='No Valid Zip found.',
-                status_code=HTTPStatus.BAD_REQUEST)
         with zipfile.ZipFile(file_path, 'r') as zip_ref:
             zip_ref.extractall(upload_folder)
             shapefile_name = ShapefileService._get_shapefile_name(zip_ref)
