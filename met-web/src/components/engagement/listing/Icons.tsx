@@ -7,7 +7,7 @@ export const ApprovedIcon = ({ children }: { children: React.ReactNode }) => {
         <Box
             sx={{
                 height: '1.4em',
-                width: '1.4em',
+                minminWidth: '1.4em',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -26,7 +26,7 @@ export const PendingIcon = ({ children }: { children: React.ReactNode }) => {
         <Box
             sx={{
                 height: '1.4em',
-                width: '1.4em',
+                minWidth: '1.4em',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -45,7 +45,7 @@ export const RejectedIcon = ({ children }: { children: React.ReactNode }) => {
         <Box
             sx={{
                 height: '1.4em',
-                width: '1.4em',
+                minWidth: '1.4em',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -64,7 +64,7 @@ export const NewIcon = ({ children }: { children: React.ReactNode }) => {
         <Box
             sx={{
                 height: '1.4em',
-                width: '1.4em',
+                minWidth: '1.4em',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',

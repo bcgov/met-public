@@ -122,7 +122,6 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         end_date: savedEngagement.end_date,
         description: savedEngagement?.description || '',
         content: savedEngagement?.content || '',
-
         projectNumber: '',
         projectName: '',
         projectType: '',

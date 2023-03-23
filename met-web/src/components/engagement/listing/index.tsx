@@ -7,7 +7,7 @@ import Collapse from '@mui/material/Collapse';
 import { Link } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton, SecondaryButton } from 'components/common';
 import { Engagement } from 'models/engagement';
-import { useAppDispatch } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink, useMediaQuery, Theme } from '@mui/material';
@@ -59,6 +59,10 @@ const EngagementListing = () => {
     });
 
     const dispatch = useAppDispatch();
+
+    const { roles, assignedEngagements } = useAppSelector((state) => state.user);
+
+    const canViewPrivateEngagements = roles.includes(SCOPES.viewPrivateEngagements);
 
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
@@ -188,19 +192,29 @@ const EngagementListing = () => {
             numeric: true,
             disablePadding: false,
             label: 'Comments',
-            customStyle: { padding: 5 },
+            customStyle: { paddingRight: '2px' },
+            align: 'left',
             hideSorticon: true,
             allowSort: false,
-            getValue: () => '',
+            getValue: (row: Engagement) => {
+                if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
+                    return <></>;
+                }
+                return (
+                    <MuiLink component={Link} to={`/surveys/${row.surveys[0].id}/comments`}>
+                        View All
+                    </MuiLink>
+                );
+            },
         },
         {
             key: 'surveys',
             numeric: true,
             disablePadding: false,
             label: '',
-            customStyle: { padding: 5 },
+            customStyle: { paddingRight: '2px' },
             hideSorticon: true,
-            align: 'center',
+            align: 'left',
             icon: (
                 <ApprovedIcon>
                     <CheckIcon fontSize="small" />
@@ -220,9 +234,10 @@ const EngagementListing = () => {
             numeric: true,
             disablePadding: false,
             label: '',
-            customStyle: { padding: 5 },
+
+            customStyle: { paddingRight: '2px' },
             hideSorticon: true,
-            align: 'center',
+            align: 'left',
             icon: (
                 <PendingIcon>
                     <PriorityHighRoundedIcon fontSize="small" />
@@ -230,11 +245,11 @@ const EngagementListing = () => {
             ),
             allowSort: false,
             getValue: (row: Engagement) => {
-                if (!row.submissions_meta_data) {
-                    return 0;
+                if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
+                    return <></>;
                 }
                 const { needs_further_review } = row.submissions_meta_data;
-                return needs_further_review == null ? <></> : <PendingIcon>{needs_further_review || 0}</PendingIcon>;
+                return <PendingIcon>{needs_further_review || 0}</PendingIcon>;
             },
         },
         {
@@ -242,9 +257,10 @@ const EngagementListing = () => {
             numeric: true,
             disablePadding: false,
             label: '',
-            customStyle: { padding: 5 },
+
+            customStyle: { paddingRight: '2px' },
             hideSorticon: true,
-            align: 'center',
+            align: 'left',
             icon: (
                 <RejectedIcon>
                     <CloseRounded fontSize="small" />
@@ -252,8 +268,8 @@ const EngagementListing = () => {
             ),
             allowSort: false,
             getValue: (row: Engagement) => {
-                if (!row.submissions_meta_data) {
-                    return 0;
+                if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
+                    return <></>;
                 }
                 const { rejected } = row.submissions_meta_data;
                 return rejected == null ? <></> : <RejectedIcon>{rejected || 0}</RejectedIcon>;
@@ -264,9 +280,10 @@ const EngagementListing = () => {
             numeric: true,
             disablePadding: false,
             label: '',
-            customStyle: { padding: 5 },
+
+            customStyle: { paddingRight: '2px' },
             hideSorticon: true,
-            align: 'center',
+            align: 'left',
             icon: (
                 <NewIcon>
                     <FiberNewOutlined fontSize="small" />
@@ -274,8 +291,8 @@ const EngagementListing = () => {
             ),
             allowSort: false,
             getValue: (row: Engagement) => {
-                if (!row.submissions_meta_data) {
-                    return 0;
+                if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
+                    return <></>;
                 }
                 const { pending } = row.submissions_meta_data;
                 return pending == null ? <></> : <NewIcon>{pending || 0}</NewIcon>;

@@ -50,19 +50,24 @@ class EngagementSchema(Schema):
         """Get the meta data of the submissions made in the survey."""
         if not obj or len(obj.surveys) == 0:
             return {
-                'total': '0'
+                'total': 0,
+                'pending': 0,
+                'approved': 0,
+                'rejected': 0,
+                'needs_further_review': 0
             }
+        submissions = obj.surveys[0].submissions
         return {
-            'total': len(obj.surveys[0].submissions),
-            'pending': len([submission for submission in obj.surveys[0].submissions
-                            if submission.comment_status_id == CommentStatus.Pending.value]),
-            'approved': len([submission for submission in obj.surveys[0].submissions
-                            if submission.comment_status_id == CommentStatus.Approved.value]),
-            'rejected': len([submission for submission in obj.surveys[0].submissions
-                            if submission.comment_status_id == CommentStatus.Rejected.value]),
-            'needs_further_review': len([submission for submission in obj.surveys[0].submissions
-                                         if submission.comment_status_id == CommentStatus.Needs_further_review.value])
+            'total': len(submissions),
+            'pending': self._count_comments_by_status(submissions, CommentStatus.Pending.value),
+            'approved': self._count_comments_by_status(submissions, CommentStatus.Approved.value),
+            'rejected': self._count_comments_by_status(submissions, CommentStatus.Rejected.value),
+            'needs_further_review': self._count_comments_by_status(submissions, CommentStatus.Needs_further_review.value)
         }
+
+    def _count_comments_by_status(self, submissios, status):
+        return len([submission for submission in submissios 
+                    if submission.comment_status_id == status])
 
     def get_submission_status(self, obj):
         """Get the submission status of the engagement."""
