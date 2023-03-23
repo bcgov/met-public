@@ -55,7 +55,8 @@ class Map(Resource):
             file = request.files.get('file')
             request_json = request.form or request.form.get('data')
             widget_map = WidgetMapService().create_map(widget_id, request_json, file)
-            widget_map.geojson = json.loads(widget_map.geojson)
+            if widget_map.geojson:
+                widget_map.geojson = json.loads(widget_map.geojson)
             return WidgetMapSchema().dump(widget_map), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
