@@ -41,6 +41,7 @@ class ShapeFile(Resource):
     def get():
         """Convert and return the geojson of shapefile."""
         try:
+            print(request.files.get('file'))
             file = request.files.get('file')
             if not file:
                 return jsonify({'error': 'No file uploaded.'}), HTTPStatus.BAD_REQUEST
