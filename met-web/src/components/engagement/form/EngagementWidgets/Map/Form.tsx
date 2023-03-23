@@ -9,10 +9,11 @@ import { useAppDispatch } from 'hooks';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { MapContext } from './MapContext';
-import { postMap } from 'services/widgetService/MapService';
+import { postMap, previewShapeFile } from 'services/widgetService/MapService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import FileUpload from 'components/common/FileUpload/FileUpload';
-
+import { geoJSONDecode } from './utils';
+import { GeoJSON } from 'geojson';
 const schema = yup
     .object({
         markerLabel: yup.string().max(30, 'Markel label cannot exceed 30 characters'),
@@ -51,13 +52,19 @@ const Form = () => {
             methods.setValue('markerLabel', mapData?.marker_label || '');
             methods.setValue('latitude', mapData ? mapData?.latitude : undefined);
             methods.setValue('longitude', mapData ? mapData?.longitude : undefined);
-            methods.setValue('geojson', mapData ? mapData.geojson : undefined);
+            methods.setValue('geojson', mapData ? geoJSONDecode(mapData?.geojson) : undefined);
         }
     }, [mapData]);
 
     const { handleSubmit, reset, trigger, watch } = methods;
 
-    const [longitude, latitude, markerLabel, geojson] = watch(['longitude', 'latitude', 'markerLabel', 'geojson']);
+    const [longitude, latitude, markerLabel, geojson, shapefile] = watch([
+        'longitude',
+        'latitude',
+        'markerLabel',
+        'geojson',
+        'shapefile',
+    ]);
 
     const createMap = async (data: DetailsForm) => {
         if (!widget) {
@@ -94,17 +101,23 @@ const Form = () => {
     };
 
     const handlePreviewMap = async () => {
-        const valid = await trigger(['latitude', 'longitude', 'markerLabel']);
-        const validatedData = await schema.validate({ latitude, longitude, markerLabel, geojson });
+        const valid = await trigger(['latitude', 'longitude', 'markerLabel', 'shapefile']);
+        const validatedData = await schema.validate({ latitude, longitude, markerLabel, geojson, shapefile });
+        let previewGeoJson: GeoJSON | undefined;
         if (!valid) {
             return;
         }
         setPreviewMapOpen(true);
+        if (shapefile) {
+            previewGeoJson = await previewShapeFile({
+                file: shapefile,
+            });
+        }
         setPreviewMap({
             longitude: validatedData.longitude,
             latitude: validatedData.latitude,
             markerLabel: validatedData.markerLabel,
-            geojson: validatedData.geojson,
+            geojson: previewGeoJson ? previewGeoJson : validatedData.geojson,
         });
     };
 
