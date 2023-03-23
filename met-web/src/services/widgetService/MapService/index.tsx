@@ -18,24 +18,21 @@ interface PostMapRequest {
     longitude: number;
     latitude: number;
     marker_label?: string;
-    file?: File;
+    file?: File | undefined;
 }
 
 export const postMap = async (widget_id: number, data: PostMapRequest): Promise<WidgetMap> => {
     try {
         const url = replaceUrl(Endpoints.Maps.CREATE, 'widget_id', String(widget_id));
         const formdata = new FormData();
-
-        formdata.append('file', data.file ? data.file.toString() : '');
-        formdata.append('lat', data.latitude.toString());
-        formdata.append('long', data.longitude.toString());
+        if (data.file !== undefined) {
+            formdata.append('file', data.file);
+        }
+        formdata.append('engagement_id', data.engagement_id.toString());
+        formdata.append('latitude', data.latitude.toString());
+        formdata.append('longitude', data.longitude.toString());
         formdata.append('marker_label', data.marker_label ? data.marker_label : '');
-
-        const requestOptions = {
-            body: formdata,
-        };
-
-        const response = await http.PostRequest<WidgetMap>(url, data, requestOptions);
+        const response = await http.PostRequest<WidgetMap>(url, formdata);
         if (response.data) {
             return response.data;
         }
