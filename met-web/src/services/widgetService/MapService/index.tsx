@@ -20,14 +20,14 @@ interface PostMapRequest {
     longitude: number;
     latitude: number;
     marker_label?: string;
-    file?: File | undefined;
+    file?: File;
 }
 
 export const postMap = async (widget_id: number, data: PostMapRequest): Promise<WidgetMap> => {
     try {
         const url = replaceUrl(Endpoints.Maps.CREATE, 'widget_id', String(widget_id));
         const formdata = new FormData();
-        if (data.file !== undefined) {
+        if (data.file) {
             formdata.append('file', data.file);
         }
         formdata.append('engagement_id', data.engagement_id.toString());
@@ -45,13 +45,13 @@ export const postMap = async (widget_id: number, data: PostMapRequest): Promise<
 };
 
 interface PreviewShapefileRequest {
-    file?: File | undefined;
+    file?: File;
 }
 
 export const previewShapeFile = async (data: PreviewShapefileRequest): Promise<GeoJSON> => {
     try {
         const formdata = new FormData();
-        if (data.file !== undefined) {
+        if (data.file) {
             formdata.append('file', data.file);
         }
         const response = await http.PostRequest<GeoJSON>(Endpoints.Maps.SHAPEFILE_PREVIEW, formdata);
