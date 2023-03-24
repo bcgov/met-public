@@ -9,7 +9,7 @@ import { SvgIconProps } from '@mui/material';
 
 type DocumentTreeItemProps = TreeItemProps & {
     labelIcon: React.ElementType<SvgIconProps>;
-    labelUrl: string | undefined;
+    labelUrl?: string;
     nodeId: string;
 };
 

@@ -83,6 +83,7 @@ const Endpoints = {
     Maps: {
         GET_LIST: `${AppConfig.apiUrl}/widgets/widget_id/maps`,
         CREATE: `${AppConfig.apiUrl}/widgets/widget_id/maps`,
+        SHAPEFILE_PREVIEW: `${AppConfig.apiUrl}/shapefile`,
     },
 };
 
