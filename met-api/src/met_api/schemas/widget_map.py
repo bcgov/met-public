@@ -25,4 +25,4 @@ class WidgetMapSchema(Schema):  # pylint: disable=too-many-ancestors, too-few-pu
         """Maps all of the Widget Map fields to a default schema."""
 
         model = WidgetMapModel
-        fields = ('id', 'widget_id', 'engagement_id', 'marker_label', 'latitude', 'longitude', 'geojson','file_name')
+        fields = ('id', 'widget_id', 'engagement_id', 'marker_label', 'latitude', 'longitude', 'geojson', 'file_name')
