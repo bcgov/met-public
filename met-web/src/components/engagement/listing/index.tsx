@@ -200,7 +200,7 @@ const EngagementListing = () => {
                 const isAuthorized = canViewPrivateEngagements || assignedEngagements.includes(Number(row.id));
 
                 if (row.surveys.length === 0 || !isAuthorized) {
-                    return <></>;
+                    return '';
                 }
                 return (
                     <MuiLink component={Link} to={`/surveys/${row.surveys[0].id}/comments`}>
