@@ -16,7 +16,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { ReactComponent as CheckIcon } from 'assets/images/check.svg';
 import { useState } from 'react';
 import { MetBody, MetHeader3, MetLabel, modalStyle, PrimaryButton } from '../../common';
-import { CommentTypeEnum, createDefaultFeedback } from 'models/feedback';
+import { CommentTypeEnum, createDefaultFeedback, RatingTypeEnum } from 'models/feedback';
 import { Else, If, Then, When } from 'react-if';
 import { CommentTypeButton, StyledRating } from './styledComponents';
 import { createFeedback } from 'services/feedbackService';
@@ -232,7 +232,10 @@ export const FeedbackModal = () => {
                                 <PrimaryButton
                                     data-testid="submit-button"
                                     loading={isSaving}
-                                    disabled={Boolean(!rating || (comment_type !== CommentTypeEnum.None && !comment))}
+                                    disabled={Boolean(
+                                        (rating === RatingTypeEnum.None && comment_type === CommentTypeEnum.None) ||
+                                            (comment_type !== CommentTypeEnum.None && !comment),
+                                    )}
                                     onClick={handleSubmit}
                                 >
                                     Submit

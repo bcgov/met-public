@@ -19,12 +19,12 @@
         "rating": {
             "$id": "#/properties/rating",
             "type": "number",
-            "minimum": 1,
+            "minimum": 0,
             "maximum": 5,
             "title": "Rating",
-            "description": "The rating range from 1 to 5",
+            "description": "The rating range from 1 to 5. The value 0 is to accomodate only comment",
             "examples": [
-                1, 2, 3, 4, 5
+                0, 1, 2, 3, 4, 5
             ]
         },
         "comment_type": {
