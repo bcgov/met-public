@@ -62,11 +62,13 @@ class EngagementSchema(Schema):
             'pending': self._count_comments_by_status(submissions, CommentStatus.Pending.value),
             'approved': self._count_comments_by_status(submissions, CommentStatus.Approved.value),
             'rejected': self._count_comments_by_status(submissions, CommentStatus.Rejected.value),
-            'needs_further_review': self._count_comments_by_status(submissions, CommentStatus.Needs_further_review.value)
+            'needs_further_review': self._count_comments_by_status(
+                submissions,
+                CommentStatus.Needs_further_review.value)
         }
 
     def _count_comments_by_status(self, submissios, status):
-        return len([submission for submission in submissios 
+        return len([submission for submission in submissios
                     if submission.comment_status_id == status])
 
     def get_submission_status(self, obj):

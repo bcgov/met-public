@@ -11,12 +11,20 @@ import { createDefaultEngagement } from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import assert from 'assert';
+import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 
 const mockSurvey = {
     ...createDefaultSurvey(),
     id: 1,
     name: 'Survey 1',
     engagement_id: 2,
+};
+
+const mockSurveyTwo = {
+    ...createDefaultSurvey(),
+    id: 2,
+    name: 'Survey 2',
+    engagement_id: 1,
 };
 
 const mockSurveys = [mockSurvey];
@@ -26,6 +34,7 @@ const mockEngagementOne = {
     id: 1,
     name: 'Engagement One',
     created_date: '2022-09-14 10:00:00',
+    surveys: [mockSurveyTwo],
     rich_content:
         '{"blocks":[{"key":"29p4m","text":"Test content","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
     content: 'Test content',
@@ -82,6 +91,16 @@ jest.mock('components/permissionsGate', () => ({
     },
 }));
 
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useSelector: jest.fn(() => {
+        return {
+            roles: [SCOPES.viewPrivateEngagement, SCOPES.editEngagement, SCOPES.createEngagement],
+            assignedEngagements: [mockEngagementOne.id, mockEngagementTwo.id],
+        };
+    }),
+}));
+
 describe('Engagement form page tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
@@ -107,8 +126,9 @@ describe('Engagement form page tests', () => {
             expect(screen.getByText('Engagement Two')).toBeInTheDocument();
             expect(screen.getByText('2022-09-15')).toBeInTheDocument();
             expect(screen.getByText('2022-09-19')).toBeInTheDocument();
-            expect(screen.getByText('View Survey')).toBeInTheDocument();
             expect(screen.getByText('View Report')).toBeInTheDocument();
+
+            expect(screen.getAllByText('View Survey')).toBeArrayOfSize(2);
         });
 
         expect(screen.getByText('Create Engagement', { exact: false })).toBeInTheDocument();

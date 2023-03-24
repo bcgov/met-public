@@ -222,11 +222,8 @@ const EngagementListing = () => {
             ),
             allowSort: false,
             getValue: (row: Engagement) => {
-                if (!row.submissions_meta_data) {
-                    return 0;
-                }
                 const { approved } = row.submissions_meta_data;
-                return approved == null ? <></> : <ApprovedIcon>{approved || 0}</ApprovedIcon>;
+                return <ApprovedIcon>{approved || 0}</ApprovedIcon>;
             },
         },
         {
@@ -272,7 +269,7 @@ const EngagementListing = () => {
                     return <></>;
                 }
                 const { rejected } = row.submissions_meta_data;
-                return rejected == null ? <></> : <RejectedIcon>{rejected || 0}</RejectedIcon>;
+                return <RejectedIcon>{rejected || 0}</RejectedIcon>;
             },
         },
         {
@@ -295,7 +292,7 @@ const EngagementListing = () => {
                     return <></>;
                 }
                 const { pending } = row.submissions_meta_data;
-                return pending == null ? <></> : <NewIcon>{pending || 0}</NewIcon>;
+                return <NewIcon>{pending || 0}</NewIcon>;
             },
         },
         {
