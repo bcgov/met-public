@@ -1,7 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
 import Divider from '@mui/material/Divider';
-import { Grid } from '@mui/material';
+import { Grid, Typography, Stack } from '@mui/material';
 import { MetHeader3, MetLabel, PrimaryButton, SecondaryButton, MidScreenLoader } from 'components/common';
+import { MetWidgetPaper } from 'components/common';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -14,6 +15,9 @@ import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import FileUpload from 'components/common/FileUpload/FileUpload';
 import { geoJSONDecode } from './utils';
 import { GeoJSON } from 'geojson';
+import LinkIcon from '@mui/icons-material/Link';
+import { When } from 'react-if';
+
 const schema = yup
     .object({
         markerLabel: yup.string().max(30, 'Markel label cannot exceed 30 characters'),
@@ -176,11 +180,6 @@ const Form = () => {
                                     size="small"
                                 />
                             </Grid>
-                            <Grid item xs={12} container direction="row" justifyContent={'flex-end'}>
-                                <Grid item>
-                                    <SecondaryButton onClick={handlePreviewMap}>Preview Map</SecondaryButton>
-                                </Grid>
-                            </Grid>
                             <Grid item xs={12}>
                                 <MetLabel sx={{ marginBottom: '2px' }}>Marker Label</MetLabel>
                                 <ControlledTextField
@@ -194,8 +193,28 @@ const Form = () => {
                                     size="small"
                                 />
                             </Grid>
+                            <When condition={Boolean(mapData?.file_name)}>
+                                <Grid item xs={12}>
+                                    <MetLabel sx={{ marginBottom: '2px' }}>File Uploaded </MetLabel>
+                                    <MetWidgetPaper elevation={1} sx={{ width: '100%' }}>
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            alignItems={'center'}
+                                            justifyContent="flex-start"
+                                        >
+                                            <Grid item xs>
+                                                <Stack spacing={2} direction="row" alignItems="center">
+                                                    <LinkIcon color="info" />
+                                                    <Typography>{mapData?.file_name}</Typography>
+                                                </Stack>
+                                            </Grid>
+                                        </Grid>
+                                    </MetWidgetPaper>
+                                </Grid>
+                            </When>
                             <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Shape File Upload </MetLabel>
+                                <MetLabel sx={{ marginBottom: '2px' }}>New File Upload </MetLabel>
                                 <FileUpload
                                     data-testid="shapefile-upload"
                                     handleAddFile={handleAddFile}
@@ -203,6 +222,11 @@ const Form = () => {
                                     savedFile={methods.getValues('shapefile')}
                                     helpText="Drag and drop a shapefile here or click to select one"
                                 />
+                            </Grid>
+                            <Grid item xs={12} container direction="row" justifyContent={'flex-end'}>
+                                <Grid item>
+                                    <SecondaryButton onClick={handlePreviewMap}>Preview Map</SecondaryButton>
+                                </Grid>
                             </Grid>
                             <Grid
                                 item

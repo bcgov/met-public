@@ -21,6 +21,7 @@ class WidgetMap(BaseModel):  # pylint: disable=too-few-public-methods, too-many-
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
     geojson = db.Column(db.Text())
+    file_name = db.Column(db.Text())
 
     @classmethod
     def get_map(cls, widget_id) -> list[WidgetMap]:

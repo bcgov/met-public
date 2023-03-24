@@ -21,7 +21,7 @@ class WidgetMapService:
         geojson = None
         if shape_file:
             geojson = ShapefileService().convert_to_geojson(shape_file)
-        widget_map = WidgetMapService._create_map_model(widget_id, map_details, geojson)
+        widget_map = WidgetMapService._create_map_model(widget_id, map_details, geojson, shape_file.filename)
         widget_map.commit()
         return widget_map
 
@@ -36,13 +36,15 @@ class WidgetMapService:
         return WidgetMapModel.update_map(widget_id, request_json)
 
     @staticmethod
-    def _create_map_model(widget_id, map_data: dict, geojson=None):
+    def _create_map_model(widget_id, map_data: dict, geojson=None, filename=None):
         map_model: WidgetMapModel = WidgetMapModel()
         map_model.widget_id = widget_id
         map_model.marker_label = map_data.get('marker_label')
         map_model.latitude = map_data.get('latitude')
         map_model.longitude = map_data.get('longitude')
         map_model.engagement_id = map_data.get('engagement_id')
+        if filename:
+            map_model.file_name = filename
         if geojson:
             map_model.geojson = geojson
         map_model.flush()
