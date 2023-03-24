@@ -192,12 +192,14 @@ const EngagementListing = () => {
             numeric: true,
             disablePadding: false,
             label: 'Comments',
-            customStyle: { paddingRight: '2px' },
+            customStyle: { padding: 2 },
             align: 'left',
             hideSorticon: true,
             allowSort: false,
             getValue: (row: Engagement) => {
-                if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
+                const isAuthorized = canViewPrivateEngagements || assignedEngagements.includes(Number(row.id));
+
+                if (row.surveys.length === 0 || !isAuthorized) {
                     return <></>;
                 }
                 return (
@@ -212,7 +214,7 @@ const EngagementListing = () => {
             numeric: true,
             disablePadding: false,
             label: '',
-            customStyle: { paddingRight: '2px' },
+            customStyle: { padding: 2 },
             hideSorticon: true,
             align: 'left',
             icon: (
@@ -232,7 +234,7 @@ const EngagementListing = () => {
             disablePadding: false,
             label: '',
 
-            customStyle: { paddingRight: '2px' },
+            customStyle: { padding: 2 },
             hideSorticon: true,
             align: 'left',
             icon: (
@@ -255,7 +257,7 @@ const EngagementListing = () => {
             disablePadding: false,
             label: '',
 
-            customStyle: { paddingRight: '2px' },
+            customStyle: { padding: 2 },
             hideSorticon: true,
             align: 'left',
             icon: (
@@ -278,7 +280,7 @@ const EngagementListing = () => {
             disablePadding: false,
             label: '',
 
-            customStyle: { paddingRight: '2px' },
+            customStyle: { padding: 2 },
             hideSorticon: true,
             align: 'left',
             icon: (

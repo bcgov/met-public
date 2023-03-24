@@ -7,7 +7,7 @@ export const ApprovedIcon = ({ children }: { children: React.ReactNode }) => {
         <Box
             sx={{
                 height: '1.4em',
-                minminWidth: '1.4em',
+                minWidth: '1.4em',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
