@@ -255,4 +255,3 @@ def test_count_submissions(client, jwt, session, engagement_info):  # pylint:dis
     assert submission_meta_data.get('approved', 0) == 1
     assert submission_meta_data.get('pending', 0) == 1
     assert submission_meta_data.get('needs_further_review', 0) == 1
-
