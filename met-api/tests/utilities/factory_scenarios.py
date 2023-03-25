@@ -295,7 +295,7 @@ class TestSubmissionInfo(dict, Enum):
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
-        'comment_status_id': CommentStatus.Pending.value,  # Pending
+        'comment_status_id': CommentStatus.Pending.value,
         'review_by': 'John Doe',
         'review_date': datetime.now().strftime('%Y-%m-%d'),
     }
@@ -306,7 +306,7 @@ class TestSubmissionInfo(dict, Enum):
         'updated_by': str(fake.pyint()),
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
-        'comment_status_id': CommentStatus.Approved.value,  # Pending
+        'comment_status_id': CommentStatus.Approved.value,
         'review_by': fake.first_name(),
         'review_date': datetime.now().strftime('%Y-%m-%d'),
     }
@@ -317,7 +317,7 @@ class TestSubmissionInfo(dict, Enum):
         'updated_by': str(fake.pyint()),
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
-        'comment_status_id': CommentStatus.Rejected.value,  # Pending
+        'comment_status_id': CommentStatus.Rejected.value,
         'review_by': fake.first_name(),
         'review_date': datetime.now().strftime('%Y-%m-%d'),
     }
@@ -328,7 +328,7 @@ class TestSubmissionInfo(dict, Enum):
         'updated_by': str(fake.pyint()),
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
-        'comment_status_id': CommentStatus.Pending.value,  # Pending
+        'comment_status_id': CommentStatus.Pending.value,
         'review_by': fake.first_name(),
         'review_date': datetime.now().strftime('%Y-%m-%d'),
     }
@@ -339,7 +339,7 @@ class TestSubmissionInfo(dict, Enum):
         'updated_by': str(fake.pyint()),
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
-        'comment_status_id': CommentStatus.Needs_further_review.value,  # Pending
+        'comment_status_id': CommentStatus.Needs_further_review.value,
         'review_by': fake.first_name(),
         'review_date': datetime.now().strftime('%Y-%m-%d'),
     }
