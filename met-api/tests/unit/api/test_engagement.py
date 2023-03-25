@@ -24,14 +24,10 @@ from faker import Faker
 
 from met_api.constants.engagement_status import EngagementDisplayStatus, SubmissionStatus
 from met_api.utils.enums import ContentType
-from tests.utilities.factory_scenarios import TestEngagementInfo, TestJwtClaims, TestUserInfo, TestSubmissionInfo
+from tests.utilities.factory_scenarios import TestEngagementInfo, TestJwtClaims, TestSubmissionInfo, TestUserInfo
 from tests.utilities.factory_utils import (
-    factory_auth_header,
-    factory_engagement_model,
-    factory_membership_model,
-    factory_user_model,
-    factory_submission_model,
-    factory_survey_and_eng_model)
+    factory_auth_header, factory_engagement_model, factory_membership_model, factory_submission_model,
+    factory_survey_and_eng_model, factory_user_model)
 
 
 fake = Faker()
