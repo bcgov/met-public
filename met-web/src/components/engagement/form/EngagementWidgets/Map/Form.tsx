@@ -26,35 +26,43 @@ import { When } from 'react-if';
 
 const schema = yup
     .object({
-        markerLabel: yup.string().max(30, 'Marker label cannot exceed 30 characters'),
+        markerLabel: yup.string().max(30, 'Markel label cannot exceed 30 characters'),
         shapefile: yup.mixed(),
         geojson: yup.mixed(),
-        latitude: yup.number().when(['shapefile', 'geojson'], {
-            is: (shapefile: File, geojson: string) => !shapefile && !geojson,
-            then: yup
-                .number()
-                .required('Latitude is required')
-                .min(-90, 'Latitude must be greater than or equal to -90')
-                .max(90, 'Latitude must be less than or equal to 90'),
-            otherwise: yup
-                .number()
-                .nullable()
-                .min(-90, 'Latitude must be greater than or equal to -90')
-                .max(90, 'Latitude must be less than or equal to 90'),
-        }),
-        longitude: yup.number().when(['shapefile', 'geojson'], {
-            is: (shapefile: File, geojson: string) => !shapefile && !geojson,
-            then: yup
-                .number()
-                .required('Longitude is required')
-                .min(-180, 'Longitude must be greater than or equal to -180')
-                .max(180, 'Longitude must be less than or equal to 180'),
-            otherwise: yup
-                .number()
-                .nullable()
-                .min(-180, 'Longitude must be greater than or equal to -180')
-                .max(180, 'Longitude must be less than or equal to 180'),
-        }),
+        latitude: yup
+            .number()
+            .nullable()
+            .transform((value, originalValue) => (!originalValue ? undefined : value))
+            .when(['shapefile', 'geojson'], {
+                is: (shapefile: File, geojson: string) => shapefile || !geojson,
+                then: yup
+                    .number()
+                    .nullable()
+                    .min(-90, 'Latitude must be greater than or equal to -90')
+                    .max(90, 'Latitude must be less than or equal to 90'),
+                otherwise: yup
+                    .number()
+                    .nullable()
+                    .min(-90, 'Latitude must be greater than or equal to -90')
+                    .max(90, 'Latitude must be less than or equal to 90'),
+            }),
+        longitude: yup
+            .number()
+            .nullable()
+            .transform((value, originalValue) => (!originalValue ? undefined : value))
+            .when(['shapefile', 'geojson'], {
+                is: (shapefile: File, geojson: string) => !shapefile && !geojson,
+                then: yup
+                    .number()
+                    .nullable()
+                    .min(-180, 'Longitude must be greater than or equal to -180')
+                    .max(180, 'Longitude must be less than or equal to 180'),
+                otherwise: yup
+                    .number()
+                    .nullable()
+                    .min(-180, 'Longitude must be greater than or equal to -180')
+                    .max(180, 'Longitude must be less than or equal to 180'),
+            }),
     })
     .required();
 
@@ -101,8 +109,8 @@ const Form = () => {
             widget_id: widget.id,
             engagement_id: widget.engagement_id,
             marker_label: markerLabel,
-            longitude,
-            latitude,
+            longitude: longitude ? longitude : undefined,
+            latitude: latitude ? latitude : undefined,
             file: shapefile,
         });
         dispatch(openNotification({ severity: 'success', text: 'A new map was successfully added' }));
