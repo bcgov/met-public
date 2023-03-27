@@ -235,7 +235,7 @@ export const FeedbackModal = () => {
                                 <PrimaryButton
                                     data-testid="submit-button"
                                     loading={isSaving}
-                                    disabled={Boolean(isFeedbackTypeNotSelected || isCommentNotProvided)}
+                                    disabled={isFeedbackTypeNotSelected || isCommentNotProvided}
                                     onClick={handleSubmit}
                                 >
                                     Submit
