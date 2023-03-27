@@ -101,7 +101,7 @@ describe('Engagement form page tests', () => {
         expect(screen.getByTestId('create-engagement-button')).toBeVisible();
         expect(getEngagementMock).not.toHaveBeenCalled();
         expect(getEngagementMetadataMock).not.toHaveBeenCalled();
-        
+
         const nameInput = container.querySelector('input[name="name"]');
         expect(nameInput).not.toBeNull();
         expect(nameInput).toHaveAttribute('value', '');
@@ -206,9 +206,9 @@ describe('Engagement form page tests', () => {
         );
         getEngagementMetadataMock.mockReturnValueOnce(
             Promise.resolve({
-                ...engagementMetadata
-            })
-        )
+                ...engagementMetadata,
+            }),
+        );
         const { container } = render(<EngagementForm />);
 
         await waitFor(() => {
