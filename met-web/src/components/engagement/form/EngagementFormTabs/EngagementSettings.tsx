@@ -11,7 +11,7 @@ import { EngagementTabsContext } from './EngagementTabsContext';
 const EngagementSettings = () => {
     const { savedEngagement } = useContext(ActionContext);
     const { engagementFormData, setEngagementFormData } = useContext(EngagementTabsContext);
-    const { parent_id, project_metadata } = engagementFormData;
+    const { project_id, project_metadata } = engagementFormData;
 
     const dispatch = useAppDispatch();
 
@@ -99,9 +99,9 @@ const EngagementSettings = () => {
                 <Grid item xs={12} lg={6} p={1}>
                     <MetLabel>Project #</MetLabel>
                     <TextField
-                        id="parent-id"
-                        name="parent_id"
-                        value={parent_id}
+                        id="project-id"
+                        name="project_id"
+                        value={project_id}
                         variant="outlined"
                         fullWidth
                         onChange={handleChange}

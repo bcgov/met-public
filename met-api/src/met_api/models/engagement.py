@@ -42,8 +42,6 @@ class Engagement(BaseModel):
     banner_filename = db.Column(db.String(), unique=False, nullable=True)
     surveys = db.relationship('Survey', backref='engagement', cascade='all, delete')
     status_block = db.relationship('EngagementStatusBlock', backref='engagement')
-    parent_id = db.Column(db.String(50), unique=False, nullable=True)
-    project_metadata = db.Column(postgresql.JSONB(astext_type=db.Text()), unique=False, nullable=True)
 
     @classmethod
     def get_all_engagements(cls):
@@ -126,8 +124,6 @@ class Engagement(BaseModel):
             banner_filename=engagement.get('banner_filename', None),
             content=engagement.get('content', None),
             rich_content=engagement.get('rich_content', None),
-            parent_id=engagement.get('parent_id', None),
-            project_metadata=engagement.get('project_metadata', None),
         )
         query.update(update_fields)
         db.session.commit()

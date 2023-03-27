@@ -7,6 +7,11 @@ const Endpoints = {
         UPDATE: `${AppConfig.apiUrl}/engagements/`,
         GET: `${AppConfig.apiUrl}/engagements/engagement_id`,
     },
+    EngagementMetadata: {
+        CREATE: `${AppConfig.apiUrl}/engagementsmetadata/`,
+        UPDATE: `${AppConfig.apiUrl}/engagementsmetadata/`,
+        GET: `${AppConfig.apiUrl}/engagementsmetadata/engagement_id`,
+    },
     User: {
         CREATE_UPDATE: `${AppConfig.apiUrl}/user/`,
         GET_LIST: `${AppConfig.apiUrl}/user/`,

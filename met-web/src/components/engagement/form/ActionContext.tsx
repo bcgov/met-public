@@ -1,8 +1,18 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { postEngagement, getEngagement, patchEngagement } from '../../../services/engagementService';
+import {
+    postEngagementMetadata,
+    getEngagementMetadata,
+    patchEngagementMetadata,
+} from '../../../services/engagementMetadataService';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams } from './types';
-import { createDefaultEngagement, Engagement, ProjectMetadata } from '../../../models/engagement';
+import {
+    createDefaultEngagement,
+    createDefaultEngagementMetadata,
+    Engagement,
+    EngagementMetadata,
+} from '../../../models/engagement';
 import { saveDocument } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch, useAppSelector } from 'hooks';
@@ -18,14 +28,24 @@ export const ActionContext = createContext<EngagementContext>({
     handleUpdateEngagementRequest: (_engagement: EngagementFormUpdate): Promise<Engagement> => {
         return Promise.reject();
     },
+    handleCreateEngagementMetadataRequest: (_engagement: EngagementMetadata): Promise<EngagementMetadata> => {
+        return Promise.reject();
+    },
+    handleUpdateEngagementMetadataRequest: (_engagement: EngagementMetadata): Promise<EngagementMetadata> => {
+        return Promise.reject();
+    },
     isSaving: false,
     savedEngagement: createDefaultEngagement(),
+    engagementMetadata: createDefaultEngagementMetadata(),
     engagementId: 'create',
     loadingSavedEngagement: true,
     handleAddBannerImage: (_files: File[]) => {
         /* empty default method  */
     },
     fetchEngagement: () => {
+        /* empty default method  */
+    },
+    fetchEngagementMetadata: () => {
         /* empty default method  */
     },
 });
@@ -41,6 +61,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [loadingSavedEngagement, setLoadingSavedEngagement] = useState(true);
 
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
+    const [engagementMetadata, setEngagementMetadata] = useState<EngagementMetadata>(createDefaultEngagementMetadata());
 
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
@@ -74,6 +95,19 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
     };
 
+    const fetchEngagementMetadata = async () => {
+        if (engagementId === 'create') {
+            return;
+        }
+
+        try {
+            const engagement = await getEngagementMetadata(Number(engagementId));
+            setEngagementMetadata(engagement);
+        } catch (err) {
+            console.log(err);
+            dispatch(openNotification({ severity: 'error', text: 'Error Fetching Engagement Metadata' }));
+        }
+    };
     const setEngagement = (engagement: Engagement) => {
         setSavedEngagement({ ...engagement });
         setSavedBannerImageFileName(engagement.banner_filename);
@@ -94,7 +128,30 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     useEffect(() => {
         verifyUserAuthorization();
         fetchEngagement();
+        fetchEngagementMetadata();
     }, [engagementId]);
+
+    const handleCreateEngagementMetadataRequest = async (
+        engagement: EngagementMetadata,
+    ): Promise<EngagementMetadata> => {
+        setSaving(true);
+        try {
+            const result = await postEngagementMetadata(engagement);
+            dispatch(openNotification({ severity: 'success', text: 'Engagement Metadata Created Successfully' }));
+            setSaving(false);
+            return Promise.resolve(result);
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: getErrorMessage(error) || 'Error Creating Engagement Metadata',
+                }),
+            );
+            setSaving(false);
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
 
     const handleCreateEngagementRequest = async (engagement: EngagementForm): Promise<Engagement> => {
         setSaving(true);
@@ -140,11 +197,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 ...engagement,
                 banner_filename: uploadedBannerImageFileName,
             }) as PatchEngagementRequest;
-            const metadataDiff = diff(state.project_metadata, engagement.project_metadata) as ProjectMetadata;
             const updatedEngagement = await patchEngagement({
                 ...engagementEditsToPatch,
                 id: Number(engagementId),
-                project_metadata: metadataDiff,
             });
             setEngagement(updatedEngagement);
             dispatch(openNotification({ severity: 'success', text: 'Engagement Updated Successfully' }));
@@ -158,17 +213,49 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
     };
 
+    const handleUpdateEngagementMetadataRequest = async (
+        engagement: EngagementFormUpdate,
+    ): Promise<EngagementMetadata> => {
+        setSaving(true);
+        try {
+            const state = { ...engagementMetadata };
+            const engagementMetadataToUpdate: EngagementMetadata = {
+                engagement_id: Number(engagementId),
+                project_id: engagement.project_id,
+                project_metadata: engagement.project_metadata,
+            };
+            const metadataDiff = diff(state, engagementMetadataToUpdate) as EngagementMetadata;
+            const updatedEngagementMetadata = await patchEngagementMetadata({
+                ...metadataDiff,
+                engagement_id: Number(engagementId),
+            });
+            setEngagementMetadata(updatedEngagementMetadata);
+            dispatch(openNotification({ severity: 'success', text: 'Engagement metadata Updated Successfully' }));
+            setSaving(false);
+            return Promise.resolve(updatedEngagementMetadata);
+        } catch (error) {
+            dispatch(openNotification({ severity: 'error', text: 'Error Updating Engagement metadata' }));
+            setSaving(false);
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+
     return (
         <ActionContext.Provider
             value={{
                 handleCreateEngagementRequest,
                 handleUpdateEngagementRequest,
+                handleCreateEngagementMetadataRequest,
+                handleUpdateEngagementMetadataRequest,
                 isSaving,
                 savedEngagement,
+                engagementMetadata,
                 engagementId,
                 loadingSavedEngagement,
                 handleAddBannerImage,
                 fetchEngagement,
+                fetchEngagementMetadata,
             }}
         >
             {children}

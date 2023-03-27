@@ -25,7 +25,11 @@ export interface Engagement {
     submission_status: SubmissionStatus;
     submissions_meta_data: SurveySubmissionData;
     status_block: EngagementStatusBlock[];
-    parent_id: string;
+}
+
+export interface EngagementMetadata {
+    engagement_id: number;
+    project_id: string;
     project_metadata: ProjectMetadata;
 }
 
@@ -61,11 +65,17 @@ export const createDefaultEngagement = (): Engagement => {
             total: 0,
         },
         status_block: [],
-        parent_id: '',
+    };
+};
+
+export const createDefaultEngagementMetadata = (): EngagementMetadata => {
+    return {
+        engagement_id: 0,
+        project_id: '',
         project_metadata: {
-            project_name: '',
-            type: '',
             client_name: '',
+            type: '',
+            project_name: '',
             application_number: '',
         },
     };

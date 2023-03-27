@@ -15,7 +15,7 @@ interface EngagementFormData {
     description: string;
     content: string;
 
-    parent_id: string;
+    project_id: string;
     project_metadata: ProjectMetadata;
 }
 
@@ -26,7 +26,7 @@ const initialEngagementFormData = {
     description: '',
     content: '',
 
-    parent_id: '',
+    project_id: '',
     project_metadata: {
         project_name: '',
         type: '',
@@ -114,7 +114,7 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
 });
 
 export const EngagementTabsContextProvider = ({ children }: { children: React.ReactNode }) => {
-    const { savedEngagement } = useContext(ActionContext);
+    const { savedEngagement, engagementMetadata } = useContext(ActionContext);
     const dispatch = useAppDispatch();
     const [engagementFormData, setEngagementFormData] = useState<EngagementFormData>({
         name: savedEngagement?.name || '',
@@ -123,12 +123,12 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         description: savedEngagement?.description || '',
         content: savedEngagement?.content || '',
 
-        parent_id: savedEngagement.parent_id,
+        project_id: engagementMetadata.project_id,
         project_metadata: {
-            project_name: savedEngagement?.project_metadata?.project_name || '',
-            client_name: savedEngagement?.project_metadata?.client_name || '',
-            type: savedEngagement?.project_metadata?.type || '',
-            application_number: savedEngagement?.project_metadata?.application_number || '',
+            project_name: engagementMetadata?.project_metadata?.project_name || '',
+            client_name: engagementMetadata?.project_metadata?.client_name || '',
+            type: engagementMetadata?.project_metadata?.type || '',
+            application_number: engagementMetadata?.project_metadata?.application_number || '',
         },
     });
     const [richDescription, setRichDescription] = useState(savedEngagement?.rich_description || '');
