@@ -1,7 +1,7 @@
 """engagement metadata
 
 Revision ID: 45f89f245e3d
-Revises: 5423fd515e04
+Revises: f99eb7f53041
 Create Date: 2023-03-23 12:03:04.558661
 
 """
@@ -11,7 +11,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = '45f89f245e3d'
-down_revision = '5423fd515e04'
+down_revision = 'f99eb7f53041'
 branch_labels = None
 depends_on = None
 
