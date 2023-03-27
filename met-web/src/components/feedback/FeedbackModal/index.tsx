@@ -77,6 +77,9 @@ export const FeedbackModal = () => {
         setIsOpen(false);
     };
 
+    const isFeedbackTypeNotSelected = rating === RatingTypeEnum.None && comment_type === CommentTypeEnum.None;
+    const isCommentNotProvided = comment_type !== CommentTypeEnum.None && !comment;
+
     return (
         <>
             <PrimaryButton
@@ -232,10 +235,7 @@ export const FeedbackModal = () => {
                                 <PrimaryButton
                                     data-testid="submit-button"
                                     loading={isSaving}
-                                    disabled={Boolean(
-                                        (rating === RatingTypeEnum.None && comment_type === CommentTypeEnum.None) ||
-                                            (comment_type !== CommentTypeEnum.None && !comment),
-                                    )}
+                                    disabled={Boolean(isFeedbackTypeNotSelected || isCommentNotProvided)}
                                     onClick={handleSubmit}
                                 >
                                     Submit
