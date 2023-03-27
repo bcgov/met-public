@@ -18,8 +18,8 @@ class WidgetMap(BaseModel):  # pylint: disable=too-few-public-methods, too-many-
     widget_id = db.Column(db.Integer, ForeignKey('widget.id', ondelete='CASCADE'), nullable=True)
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), nullable=True)
     marker_label = db.Column(db.String(30))
-    latitude = db.Column(db.Float, nullable=False)
-    longitude = db.Column(db.Float, nullable=False)
+    latitude = db.Column(db.Float, nullable=True)
+    longitude = db.Column(db.Float, nullable=True)
     geojson = db.Column(db.Text())
     file_name = db.Column(db.Text())
 

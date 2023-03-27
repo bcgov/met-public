@@ -10,8 +10,8 @@ import { When } from 'react-if';
 import { AnyLayer } from 'mapbox-gl';
 
 interface MapProps {
-    latitude: number;
-    longitude: number;
+    latitude?: number;
+    longitude?: number;
     markerLabel?: string;
     geojson?: GeoJSON;
 }

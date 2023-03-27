@@ -29,8 +29,8 @@ export const PreviewModal = () => {
                 >
                     <Map
                         geojson={previewMap.geojson}
-                        longitude={previewMap.longitude}
-                        latitude={previewMap.latitude}
+                        longitude={previewMap.longitude ? previewMap.longitude : undefined}
+                        latitude={previewMap.latitude ? previewMap.latitude : undefined}
                         markerLabel={previewMap.markerLabel}
                     />
                 </Box>

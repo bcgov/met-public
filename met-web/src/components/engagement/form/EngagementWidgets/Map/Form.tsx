@@ -26,21 +26,35 @@ import { When } from 'react-if';
 
 const schema = yup
     .object({
-        markerLabel: yup.string().max(30, 'Markel label cannot exceed 30 characters'),
-        latitude: yup
-            .number()
-            .typeError('Invalid value for Latitude')
-            .required('Latitude is required')
-            .min(-90, 'Latitude must be greater than or equal to -90')
-            .max(90, 'Latitude must be less than or equal to 90'),
-        longitude: yup
-            .number()
-            .typeError('Invalid value for Longitude')
-            .required('Longitude is required')
-            .min(-180, 'Longitude must be greater than or equal to -180')
-            .max(180, 'Longitude must be less than or equal to 180'),
+        markerLabel: yup.string().max(30, 'Marker label cannot exceed 30 characters'),
         shapefile: yup.mixed(),
         geojson: yup.mixed(),
+        latitude: yup.number().when(['shapefile', 'geojson'], {
+            is: (shapefile: File, geojson: string) => !shapefile && !geojson,
+            then: yup
+                .number()
+                .required('Latitude is required')
+                .min(-90, 'Latitude must be greater than or equal to -90')
+                .max(90, 'Latitude must be less than or equal to 90'),
+            otherwise: yup
+                .number()
+                .nullable()
+                .min(-90, 'Latitude must be greater than or equal to -90')
+                .max(90, 'Latitude must be less than or equal to 90'),
+        }),
+        longitude: yup.number().when(['shapefile', 'geojson'], {
+            is: (shapefile: File, geojson: string) => !shapefile && !geojson,
+            then: yup
+                .number()
+                .required('Longitude is required')
+                .min(-180, 'Longitude must be greater than or equal to -180')
+                .max(180, 'Longitude must be less than or equal to 180'),
+            otherwise: yup
+                .number()
+                .nullable()
+                .min(-180, 'Longitude must be greater than or equal to -180')
+                .max(180, 'Longitude must be less than or equal to 180'),
+        }),
     })
     .required();
 
@@ -124,8 +138,8 @@ const Form = () => {
             });
         }
         setPreviewMap({
-            longitude: validatedData.longitude,
-            latitude: validatedData.latitude,
+            longitude: validatedData.longitude ? validatedData.longitude : undefined,
+            latitude: validatedData.latitude ? validatedData.latitude : undefined,
             markerLabel: validatedData.markerLabel,
             geojson: previewGeoJson ? previewGeoJson : validatedData.geojson,
         });

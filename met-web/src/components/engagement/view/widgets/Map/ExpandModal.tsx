@@ -50,8 +50,8 @@ export const ExpandModal = ({ open, setOpen, map }: ExpandModalProps) => {
                         >
                             <Map
                                 geojson={geoJSONDecode(map.geojson)}
-                                longitude={map.longitude}
-                                latitude={map.latitude}
+                                longitude={map.longitude ? map.longitude : undefined}
+                                latitude={map.latitude ? map.latitude : undefined}
                                 markerLabel={map.marker_label}
                             />
                         </Box>
