@@ -6,6 +6,10 @@ export interface Feedback {
     source: SourceTypeEnum;
 }
 
+export enum RatingTypeEnum {
+    None = 0,
+}
+
 export enum CommentTypeEnum {
     None = 0,
     Issue = 1,
