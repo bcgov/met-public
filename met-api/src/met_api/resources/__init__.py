@@ -29,6 +29,7 @@ from .contact import API as CONTACT_API
 from .document import API as DOCUMENT_API
 from .email_verification import API as EMAIL_VERIFICATION_API
 from .engagement import API as ENGAGEMENT_API
+from .engagement_metadata import API as ENGAGEMENT_METADATA_API
 from .engagement_members import API as ENGAGEMENT_MEMBERS_API
 from .feedback import API as FEEDBACK_API
 from .submission import API as SUBMISSION_API
@@ -65,6 +66,7 @@ API.add_namespace(FEEDBACK_API)
 API.add_namespace(WIDGET_API)
 API.add_namespace(CONTACT_API)
 API.add_namespace(VALUE_COMPONENTS_API)
+API.add_namespace(ENGAGEMENT_METADATA_API)
 API.add_namespace(SHAPEFILE_API)
 API.add_namespace(WIDGET_DOCUMENTS_API, path='/widgets/<string:widget_id>/documents')
 API.add_namespace(ENGAGEMENT_MEMBERS_API, path='/engagements/<string:engagement_id>/members')
