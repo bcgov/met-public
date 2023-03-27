@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { createDefaultSurvey, Survey } from 'models/survey';
-import { createDefaultEngagement, Engagement } from 'models/engagement';
+import { createDefaultEngagement, createDefaultEngagementMetadata, Engagement, EngagementMetadata } from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { WidgetType, Widget, WidgetItem } from 'models/widget';
 import { Event, EventItem } from 'models/event';
@@ -98,4 +98,9 @@ const eventWidget: Widget = {
     items: [eventWidgetItem],
 };
 
-export { draftEngagement, openEngagement, surveys, mockEvent, mockEventItem, eventWidgetItem, eventWidget };
+const engagementMetadata: EngagementMetadata = {
+    ...createDefaultEngagementMetadata(),
+    engagement_id: 1,
+};
+
+export { draftEngagement, openEngagement, surveys, mockEvent, mockEventItem, eventWidgetItem, eventWidget, engagementMetadata };
