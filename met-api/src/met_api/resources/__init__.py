@@ -40,7 +40,7 @@ from .widget import API as WIDGET_API
 from .widget_documents import API as WIDGET_DOCUMENTS_API
 from .widget_events import API as WIDGET_EVENTS_API
 from .widget_map import API as WIDGET_MAPS_API
-
+from .shape_file import API as SHAPEFILE_API
 __all__ = ('API_BLUEPRINT',)
 
 URL_PREFIX = '/api/'
@@ -67,6 +67,7 @@ API.add_namespace(WIDGET_API)
 API.add_namespace(CONTACT_API)
 API.add_namespace(VALUE_COMPONENTS_API)
 API.add_namespace(ENGAGEMENT_METADATA_API)
+API.add_namespace(SHAPEFILE_API)
 API.add_namespace(WIDGET_DOCUMENTS_API, path='/widgets/<string:widget_id>/documents')
 API.add_namespace(ENGAGEMENT_MEMBERS_API, path='/engagements/<string:engagement_id>/members')
 API.add_namespace(WIDGET_EVENTS_API, path='/widgets/<int:widget_id>/events')

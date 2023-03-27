@@ -1,6 +1,6 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { Grid, Stack, Typography } from '@mui/material';
-import Dropzone from 'react-dropzone';
+import Dropzone, { Accept } from 'react-dropzone';
 import { MetWidgetPaper, SecondaryButton } from 'components/common';
 import { FileUploadContext } from './FileUploadContext';
 import LinkIcon from '@mui/icons-material/Link';
@@ -9,32 +9,17 @@ interface UploaderProps {
     margin?: number;
     helpText?: string;
     height?: string;
+    acceptedFormat?: Accept;
 }
 const Uploader = ({
     margin = 2,
     helpText = 'Drag and drop some files here, or click to select files',
     height = '10em',
+    acceptedFormat = { 'application/zip': ['.zip'] },
 }: UploaderProps) => {
-    const {
-        handleAddFile,
-        savedFileName,
-        addedFileUrl,
-        setAddedFileUrl,
-        addedFileName,
-        setAddedFileName,
-        existingFileUrl,
-        setExistingFileUrl,
-    } = useContext(FileUploadContext);
+    const { handleAddFile, savedFileName, addedFileName, setAddedFileName } = useContext(FileUploadContext);
 
-    useEffect(() => {
-        return () => {
-            if (addedFileUrl) {
-                URL.revokeObjectURL(addedFileUrl);
-            }
-        };
-    }, []);
-
-    const existingFile = addedFileUrl || existingFileUrl;
+    const existingFile = addedFileName;
 
     if (existingFile) {
         return (
@@ -60,11 +45,8 @@ const Uploader = ({
                     >
                         <SecondaryButton
                             onClick={() => {
-                                setAddedFileUrl('');
                                 setAddedFileName('');
-                                setExistingFileUrl('');
                                 handleAddFile([]);
-                                URL.revokeObjectURL(addedFileUrl);
                             }}
                             size="small"
                         >
@@ -77,11 +59,9 @@ const Uploader = ({
     }
     return (
         <Dropzone
-            accept={{ 'application/shapefile': ['.shp'] }}
+            accept={acceptedFormat}
             onDrop={(acceptedFiles) => {
-                const createdObjectURL = URL.createObjectURL(acceptedFiles[0]);
                 handleAddFile(acceptedFiles);
-                setAddedFileUrl(createdObjectURL);
                 setAddedFileName(acceptedFiles[0].name);
             }}
         >

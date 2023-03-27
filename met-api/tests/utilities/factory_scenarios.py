@@ -23,6 +23,7 @@ from faker import Faker
 
 from met_api.config import get_named_config
 from met_api.constants.engagement_status import SubmissionStatus
+from met_api.constants.comment_status import Status as CommentStatus
 from met_api.constants.feedback import CommentType, FeedbackSourceType, RatingType
 from met_api.constants.widget import WidgetType
 from met_api.utils.enums import LoginSource, UserType
@@ -294,8 +295,52 @@ class TestSubmissionInfo(dict, Enum):
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
-        'comment_status_id': 1,  # Pending
+        'comment_status_id': CommentStatus.Pending.value,
         'review_by': 'John Doe',
+        'review_date': datetime.now().strftime('%Y-%m-%d'),
+    }
+
+    approved_submission = {
+        'submission_json': {'simpletextarea': fake.paragraph(nb_sentences=3)},
+        'created_by': str(fake.pyint()),
+        'updated_by': str(fake.pyint()),
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+        'comment_status_id': CommentStatus.Approved.value,
+        'review_by': fake.first_name(),
+        'review_date': datetime.now().strftime('%Y-%m-%d'),
+    }
+
+    rejected_submission = {
+        'submission_json': {'simpletextarea': fake.paragraph(nb_sentences=3)},
+        'created_by': str(fake.pyint()),
+        'updated_by': str(fake.pyint()),
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+        'comment_status_id': CommentStatus.Rejected.value,
+        'review_by': fake.first_name(),
+        'review_date': datetime.now().strftime('%Y-%m-%d'),
+    }
+
+    pending_submission = {
+        'submission_json': {'simpletextarea': fake.paragraph(nb_sentences=3)},
+        'created_by': str(fake.pyint()),
+        'updated_by': str(fake.pyint()),
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+        'comment_status_id': CommentStatus.Pending.value,
+        'review_by': fake.first_name(),
+        'review_date': datetime.now().strftime('%Y-%m-%d'),
+    }
+
+    needs_further_review_submission = {
+        'submission_json': {'simpletextarea': fake.paragraph(nb_sentences=3)},
+        'created_by': str(fake.pyint()),
+        'updated_by': str(fake.pyint()),
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+        'comment_status_id': CommentStatus.Needs_further_review.value,
+        'review_by': fake.first_name(),
         'review_date': datetime.now().strftime('%Y-%m-%d'),
     }
 

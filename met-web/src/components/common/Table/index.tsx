@@ -38,6 +38,7 @@ function MetTableHead<T>({ order, orderBy, onRequestSort, headCells, loading, ne
                     <TableCell
                         key={`${String(headCell.key)}${index}`}
                         align={headCell.align}
+                        style={headCell.customStyle || {}}
                         sortDirection={orderBy === headCell.key ? order : false}
                         sx={{ borderBottom: '1.5px solid gray', fontWeight: 'bold' }}
                     >
@@ -48,8 +49,10 @@ function MetTableHead<T>({ order, orderBy, onRequestSort, headCells, loading, ne
                                 orderBy === headCell.key && nestedSortKey === headCell.nestedSortKey ? order : 'asc'
                             }
                             onClick={createSortHandler(headCell.key, index)}
+                            hideSortIcon={Boolean(headCell.hideSorticon)}
                         >
                             {headCell.label}
+                            {headCell.icon}
                             {orderBy === headCell.key && nestedSortKey === headCell.nestedSortKey && (
                                 <Box component="span" sx={visuallyHidden}>
                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
@@ -82,7 +85,7 @@ function MetTable<T>({
     noRowBorder = false,
     noPagination = false,
     // eslint-disable-next-line
-    handleChangePagination = (_pagination: PaginationOptions<T>) => { },
+    handleChangePagination = (_pagination: PaginationOptions<T>) => {},
     loading = false,
     paginationOptions = {
         page: 1,

@@ -2,7 +2,9 @@ export interface HeadCell<T> {
     disablePadding: boolean;
     key: keyof T;
     nestedSortKey?: string;
-    label: string;
+    label?: string;
+    icon?: JSX.Element;
+    hideSorticon?: boolean;
     numeric: boolean;
     allowSort: boolean;
     getValue?: (row: T) => string | number | JSX.Element;

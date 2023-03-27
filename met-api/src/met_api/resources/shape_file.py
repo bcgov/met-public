@@ -30,7 +30,7 @@ API = Namespace('shapefile', description='Endpoints for shapefile preview')
 """Shapefile Maps"""
 
 
-@cors_preflight('GET, OPTIONS')
+@cors_preflight('POST, OPTIONS')
 @API.route('')
 class ShapeFile(Resource):
     """Resource for managing map shapefile."""
@@ -38,7 +38,7 @@ class ShapeFile(Resource):
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
-    def get():
+    def post():
         """Convert and return the geojson of shapefile."""
         try:
             file = request.files.get('file')

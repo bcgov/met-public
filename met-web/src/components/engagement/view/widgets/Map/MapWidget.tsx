@@ -10,6 +10,7 @@ import { WidgetMap } from 'models/widgetMap';
 import OpenWithIcon from '@mui/icons-material/OpenWith';
 import { ExpandModal } from './ExpandModal';
 import { When } from 'react-if';
+import { geoJSONDecode } from 'components/engagement/form/EngagementWidgets/Map/utils';
 
 interface MapWidgetProps {
     widget: Widget;
@@ -89,7 +90,7 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
                             }}
                         >
                             <Map
-                                geojson={map.geojson}
+                                geojson={geoJSONDecode(map.geojson)}
                                 longitude={map.longitude}
                                 latitude={map.latitude}
                                 markerLabel={map.marker_label}

@@ -4,6 +4,7 @@ import { Box, Paper, Grid } from '@mui/material';
 import Map from 'components/map';
 import { WidgetMap } from 'models/widgetMap';
 import { PrimaryButton } from 'components/common';
+import { geoJSONDecode } from 'components/engagement/form/EngagementWidgets/Map/utils';
 
 interface ExpandModalProps {
     open: boolean;
@@ -48,7 +49,7 @@ export const ExpandModal = ({ open, setOpen, map }: ExpandModalProps) => {
                             }}
                         >
                             <Map
-                                geojson={map.geojson}
+                                geojson={geoJSONDecode(map.geojson)}
                                 longitude={map.longitude}
                                 latitude={map.latitude}
                                 markerLabel={map.marker_label}
