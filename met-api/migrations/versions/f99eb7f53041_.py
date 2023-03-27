@@ -1,16 +1,17 @@
 """Increase submission.rejected_reason_other length
 
-Revision ID: 7da9c7050bff
-Revises: 5423fd515e04
-Create Date: 2023-03-27 10:40:26.827693
+Revision ID: f99eb7f53041
+Revises: 7bf7394a517c
+Create Date: 2023-03-27 11:15:52.342030
 
 """
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '7da9c7050bff'
-down_revision = '5423fd515e04'
+revision = 'f99eb7f53041'
+down_revision = '7bf7394a517c'
 branch_labels = None
 depends_on = None
 
