@@ -22,7 +22,6 @@ class EngagementMetadataModel(BaseModel):
     project_id = db.Column(db.String(50), unique=False, nullable=True)
     project_metadata = db.Column(postgresql.JSONB(astext_type=db.Text()), unique=False, nullable=True)
 
-
     @classmethod
     def update(cls, engagement_metadata_data: dict) -> Optional[EngagementMetadataModel]:
         """Update engagement."""
@@ -38,4 +37,3 @@ class EngagementMetadataModel(BaseModel):
         query.update(update_fields)
         db.session.commit()
         return engagement_metadata
-

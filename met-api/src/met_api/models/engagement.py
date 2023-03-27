@@ -10,7 +10,6 @@ from typing import List, Optional
 
 from sqlalchemy import and_, asc, desc, or_
 from sqlalchemy.dialects.postgresql import JSON
-from sqlalchemy.dialects import postgresql
 from sqlalchemy.sql import text
 from sqlalchemy.sql.schema import ForeignKey
 
