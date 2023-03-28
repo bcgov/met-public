@@ -63,7 +63,7 @@ export const PreviewBanner = () => {
                         <Grid item container direction="row" rowSpacing={isSmallScreen ? 2 : 1}>
                             <When condition={!imageExists}>
                                 <Grid item container direction="row" xs={12} lg={8}>
-                                    <Grid alignItems="center" item>
+                                    <Grid item>
                                         <IconButton
                                             sx={{ padding: 0, margin: 0 }}
                                             color="inherit"
