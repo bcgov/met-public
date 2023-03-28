@@ -39,7 +39,7 @@ class WidgetMapService:
         return WidgetMapModel.update_map(widget_id, request_json)
 
     @staticmethod
-    def _create_map_model(widget_id, map_data: dict, geojson=None):
+    def _create_map_model(widget_id, map_data: dict):
         map_model: WidgetMapModel = WidgetMapModel()
         map_model.widget_id = widget_id
         map_model.marker_label = map_data.get('marker_label')
