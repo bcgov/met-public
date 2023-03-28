@@ -60,8 +60,8 @@ const Form = () => {
     useEffect(() => {
         if (mapData) {
             methods.setValue('markerLabel', mapData?.marker_label || '');
-            methods.setValue('latitude', mapData?.latitude);
-            methods.setValue('longitude', mapData?.longitude);
+            methods.setValue('latitude', mapData?.latitude || undefined);
+            methods.setValue('longitude', mapData?.longitude || undefined);
             methods.setValue('geojson', mapData ? geoJSONDecode(mapData?.geojson) : undefined);
         }
     }, [mapData]);
