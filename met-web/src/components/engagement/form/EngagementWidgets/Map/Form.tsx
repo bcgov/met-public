@@ -31,38 +31,16 @@ const schema = yup
         geojson: yup.mixed(),
         latitude: yup
             .number()
-            .nullable()
-            .transform((value, originalValue) => (!originalValue ? undefined : value))
-            .when(['shapefile', 'geojson'], {
-                is: (shapefile: File, geojson: string) => shapefile || !geojson,
-                then: yup
-                    .number()
-                    .nullable()
-                    .min(-90, 'Latitude must be greater than or equal to -90')
-                    .max(90, 'Latitude must be less than or equal to 90'),
-                otherwise: yup
-                    .number()
-                    .nullable()
-                    .min(-90, 'Latitude must be greater than or equal to -90')
-                    .max(90, 'Latitude must be less than or equal to 90'),
-            }),
+            .typeError('Invalid value for Latitude')
+            .required('Latitude is required')
+            .min(-90, 'Latitude must be greater than or equal to -90')
+            .max(90, 'Latitude must be less than or equal to 90'),
         longitude: yup
             .number()
-            .nullable()
-            .transform((value, originalValue) => (!originalValue ? undefined : value))
-            .when(['shapefile', 'geojson'], {
-                is: (shapefile: File, geojson: string) => !shapefile && !geojson,
-                then: yup
-                    .number()
-                    .nullable()
-                    .min(-180, 'Longitude must be greater than or equal to -180')
-                    .max(180, 'Longitude must be less than or equal to 180'),
-                otherwise: yup
-                    .number()
-                    .nullable()
-                    .min(-180, 'Longitude must be greater than or equal to -180')
-                    .max(180, 'Longitude must be less than or equal to 180'),
-            }),
+            .typeError('Invalid value for Longitude')
+            .required('Longitude is required')
+            .min(-180, 'Longitude must be greater than or equal to -180')
+            .max(180, 'Longitude must be less than or equal to 180'),
     })
     .required();
 
@@ -82,8 +60,8 @@ const Form = () => {
     useEffect(() => {
         if (mapData) {
             methods.setValue('markerLabel', mapData?.marker_label || '');
-            methods.setValue('latitude', mapData ? mapData?.latitude : undefined);
-            methods.setValue('longitude', mapData ? mapData?.longitude : undefined);
+            methods.setValue('latitude', mapData?.latitude);
+            methods.setValue('longitude', mapData?.longitude);
             methods.setValue('geojson', mapData ? geoJSONDecode(mapData?.geojson) : undefined);
         }
     }, [mapData]);
@@ -109,8 +87,8 @@ const Form = () => {
             widget_id: widget.id,
             engagement_id: widget.engagement_id,
             marker_label: markerLabel,
-            longitude: longitude ? longitude : undefined,
-            latitude: latitude ? latitude : undefined,
+            longitude: longitude,
+            latitude: latitude,
             file: shapefile,
         });
         dispatch(openNotification({ severity: 'success', text: 'A new map was successfully added' }));
@@ -146,8 +124,8 @@ const Form = () => {
             });
         }
         setPreviewMap({
-            longitude: validatedData.longitude ? validatedData.longitude : undefined,
-            latitude: validatedData.latitude ? validatedData.latitude : undefined,
+            longitude: validatedData.longitude,
+            latitude: validatedData.latitude,
             markerLabel: validatedData.markerLabel,
             geojson: previewGeoJson ? previewGeoJson : validatedData.geojson,
         });
