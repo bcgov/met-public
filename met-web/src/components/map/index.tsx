@@ -25,7 +25,7 @@ const layerStyle: AnyLayer = {
     },
 };
 
-const Map = ({ geojson, latitude, longitude, markerLabel }: MapProps) => {
+const MetMap = ({ geojson, latitude, longitude, markerLabel }: MapProps) => {
     return (
         <ReactMapGL
             initialViewState={{
@@ -59,4 +59,4 @@ const Map = ({ geojson, latitude, longitude, markerLabel }: MapProps) => {
         </ReactMapGL>
     );
 };
-export default Map;
+export default MetMap;
