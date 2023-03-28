@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
-import { Grid, Stack, Typography } from '@mui/material';
+import { Grid, Stack, Typography, IconButton } from '@mui/material';
 import Dropzone, { Accept } from 'react-dropzone';
-import { MetWidgetPaper, SecondaryButton } from 'components/common';
+import { MetWidgetPaper } from 'components/common';
 import { FileUploadContext } from './FileUploadContext';
 import LinkIcon from '@mui/icons-material/Link';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 interface UploaderProps {
     margin?: number;
@@ -33,26 +34,19 @@ const Uploader = ({
                                     <Typography>{addedFileName ? addedFileName : savedFileName}</Typography>
                                 </Stack>
                             </Grid>
+                            <IconButton
+                                onClick={() => {
+                                    setAddedFileName('');
+                                    handleAddFile([]);
+                                }}
+                                sx={{ padding: 0, margin: 0 }}
+                                color="inherit"
+                                aria-label="Remove Shapefile"
+                            >
+                                <HighlightOffIcon />
+                            </IconButton>
                         </Grid>
                     </MetWidgetPaper>
-                </Grid>
-                <Grid item xs={12} container justifyContent="flex-end" direction="row">
-                    <Stack
-                        direction={{ sm: 'column-reverse', lg: 'row' }}
-                        spacing={1}
-                        width="100%"
-                        justifyContent="flex-end"
-                    >
-                        <SecondaryButton
-                            onClick={() => {
-                                setAddedFileName('');
-                                handleAddFile([]);
-                            }}
-                            size="small"
-                        >
-                            Remove
-                        </SecondaryButton>
-                    </Stack>
                 </Grid>
             </Grid>
         );

@@ -30,9 +30,13 @@ export const postMap = async (widget_id: number, data: PostMapRequest): Promise<
         if (data.file) {
             formdata.append('file', data.file);
         }
+        if (data.latitude) {
+            formdata.append('latitude', data.latitude.toString());
+        }
+        if (data.longitude) {
+            formdata.append('longitude', data.longitude.toString());
+        }
         formdata.append('engagement_id', data.engagement_id.toString());
-        formdata.append('latitude', data.latitude.toString());
-        formdata.append('longitude', data.longitude.toString());
         formdata.append('marker_label', data.marker_label ? data.marker_label : '');
         const response = await http.PostRequest<WidgetMap>(url, formdata);
         if (response.data) {

@@ -9,6 +9,7 @@ import {
 import { EngagementStatus } from 'constants/engagementStatus';
 import { WidgetType, Widget, WidgetItem } from 'models/widget';
 import { Event, EventItem } from 'models/event';
+import { WidgetMap } from 'models/widgetMap';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
@@ -103,6 +104,31 @@ const eventWidget: Widget = {
     items: [eventWidgetItem],
 };
 
+const mapWidgetItem: WidgetItem = {
+    id: 1,
+    widget_id: 1,
+    widget_data_id: 1,
+    sort_index: 1,
+};
+
+const mapWidget: Widget = {
+    id: 1,
+    widget_type_id: WidgetType.Map,
+    engagement_id: 1,
+    items: [mapWidgetItem],
+};
+
+const mockMap: WidgetMap = {
+    id: 1,
+    widget_id: 1,
+    engagement_id: 1,
+    longitude: 0,
+    latitude: 0,
+    marker_label: 'test',
+    geojson: '',
+    file_name: 'test.zip',
+};
+
 const engagementMetadata: EngagementMetadata = {
     ...createDefaultEngagementMetadata(),
     engagement_id: 1,
@@ -114,6 +140,8 @@ export {
     surveys,
     mockEvent,
     mockEventItem,
+    mapWidget,
+    mockMap,
     eventWidgetItem,
     eventWidget,
     engagementMetadata,
