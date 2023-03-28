@@ -1,6 +1,11 @@
 import '@testing-library/jest-dom';
 import { createDefaultSurvey, Survey } from 'models/survey';
-import { createDefaultEngagement, Engagement } from 'models/engagement';
+import {
+    createDefaultEngagement,
+    createDefaultEngagementMetadata,
+    Engagement,
+    EngagementMetadata,
+} from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { WidgetType, Widget, WidgetItem } from 'models/widget';
 import { Event, EventItem } from 'models/event';
@@ -124,14 +129,20 @@ const mockMap: WidgetMap = {
     file_name: 'test.zip',
 };
 
+const engagementMetadata: EngagementMetadata = {
+    ...createDefaultEngagementMetadata(),
+    engagement_id: 1,
+};
+
 export {
     draftEngagement,
     openEngagement,
     surveys,
     mockEvent,
     mockEventItem,
-    eventWidget,
-    eventWidgetItem,
     mapWidget,
     mockMap,
+    eventWidgetItem,
+    eventWidget,
+    engagementMetadata,
 };

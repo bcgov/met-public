@@ -16,6 +16,8 @@ const EngagementForm = () => {
     const {
         handleCreateEngagementRequest,
         handleUpdateEngagementRequest,
+        handleCreateEngagementMetadataRequest,
+        handleUpdateEngagementMetadataRequest,
         isSaving,
         savedEngagement,
         engagementId,
@@ -138,6 +140,11 @@ const EngagementForm = () => {
             status_block: surveyBlockList,
         });
 
+        await handleCreateEngagementMetadataRequest({
+            ...engagementFormData,
+            engagement_id: Number(engagement.id),
+        });
+
         navigate(`/engagements/${engagement.id}/form`);
 
         return engagement;
@@ -155,6 +162,11 @@ const EngagementForm = () => {
             rich_description: richDescription,
             rich_content: richContent,
             status_block: surveyBlockList,
+        });
+
+        await handleUpdateEngagementMetadataRequest({
+            ...engagementFormData,
+            engagement_id: Number(engagementId),
         });
 
         navigate(`/engagements/${engagement.id}/form`);
