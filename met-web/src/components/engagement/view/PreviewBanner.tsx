@@ -186,14 +186,14 @@ export const PreviewBanner = () => {
                         </SecondaryButton>
 
                         <When condition={isDraft}>
-                            <PermissionsGate scopes={[SCOPES.createEngagement]} errorProps={{ disabled: true }}>
+                            <PermissionsGate scopes={[SCOPES.publishEngagement]} errorProps={{ disabled: true }}>
                                 <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => setIsOpen(true)}>
                                     Schedule Engagement
                                 </PrimaryButton>
                             </PermissionsGate>
                         </When>
                         <When condition={isScheduled}>
-                            <PermissionsGate scopes={[SCOPES.createEngagement]} errorProps={{ disabled: true }}>
+                            <PermissionsGate scopes={[SCOPES.publishEngagement]} errorProps={{ disabled: true }}>
                                 <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => setIsOpen(true)}>
                                     Reschedule Engagement
                                 </PrimaryButton>
