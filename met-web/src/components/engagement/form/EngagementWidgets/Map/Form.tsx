@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import Divider from '@mui/material/Divider';
-import { Grid, Typography, Stack } from '@mui/material';
+import { Grid, Typography, Stack, IconButton } from '@mui/material';
 import {
     MetHeader3,
     MetLabel,
@@ -23,6 +23,7 @@ import { geoJSONDecode } from './utils';
 import { GeoJSON } from 'geojson';
 import LinkIcon from '@mui/icons-material/Link';
 import { When } from 'react-if';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 const schema = yup
     .object({
@@ -41,6 +42,7 @@ const schema = yup
             .required('Longitude is required')
             .min(-180, 'Longitude must be greater than or equal to -180')
             .max(180, 'Longitude must be less than or equal to 180'),
+        filename: yup.string().nullable(),
     })
     .required();
 
@@ -63,17 +65,19 @@ const Form = () => {
             methods.setValue('latitude', mapData?.latitude || undefined);
             methods.setValue('longitude', mapData?.longitude || undefined);
             methods.setValue('geojson', mapData ? geoJSONDecode(mapData?.geojson) : undefined);
+            methods.setValue('filename', mapData ? mapData.file_name : undefined);
         }
     }, [mapData]);
 
     const { handleSubmit, reset, trigger, watch } = methods;
 
-    const [longitude, latitude, markerLabel, geojson, shapefile] = watch([
+    const [longitude, latitude, markerLabel, geojson, shapefile, filename] = watch([
         'longitude',
         'latitude',
         'markerLabel',
         'geojson',
         'shapefile',
+        'filename',
     ]);
 
     const createMap = async (data: DetailsForm) => {
@@ -199,7 +203,7 @@ const Form = () => {
                                     size="small"
                                 />
                             </Grid>
-                            <When condition={Boolean(mapData?.file_name)}>
+                            <When condition={Boolean(filename)}>
                                 <Grid item xs={12}>
                                     <MetLabel sx={{ marginBottom: '2px' }}>File Uploaded </MetLabel>
                                     <MetWidgetPaper elevation={1} sx={{ width: '100%' }}>
@@ -215,6 +219,17 @@ const Form = () => {
                                                     <Typography>{mapData?.file_name}</Typography>
                                                 </Stack>
                                             </Grid>
+                                            <IconButton
+                                                onClick={() => {
+                                                    methods.setValue('filename', undefined);
+                                                    methods.setValue('geojson', undefined);
+                                                }}
+                                                sx={{ padding: 0, margin: 0 }}
+                                                color="inherit"
+                                                aria-label="Remove GeoJSON"
+                                            >
+                                                <HighlightOffIcon />
+                                            </IconButton>
                                         </Grid>
                                     </MetWidgetPaper>
                                 </Grid>
