@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from '@mui/material/Modal';
 import { Box, Paper, Grid } from '@mui/material';
-import Map from 'components/map';
+import MetMap from 'components/map';
 import { WidgetMap } from 'models/widgetMap';
 import { PrimaryButton } from 'components/common';
 import { geoJSONDecode } from 'components/engagement/form/EngagementWidgets/Map/utils';
@@ -48,7 +48,7 @@ export const ExpandModal = ({ open, setOpen, map }: ExpandModalProps) => {
                                 height: '65vh',
                             }}
                         >
-                            <Map
+                            <MetMap
                                 geojson={geoJSONDecode(map.geojson)}
                                 longitude={map.longitude}
                                 latitude={map.latitude}

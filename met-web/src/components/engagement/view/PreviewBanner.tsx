@@ -13,6 +13,8 @@ import ScheduleModal from 'components/engagement/view/ScheduleModal';
 import ArticleIcon from '@mui/icons-material/Article';
 import { formatDate } from 'components/common/dateHelper';
 import { When } from 'react-if';
+import { PermissionsGate } from 'components/permissionsGate';
+import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 
 export const PreviewBanner = () => {
     const isSmallScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
@@ -138,7 +140,7 @@ export const PreviewBanner = () => {
                                     </IconButton>
                                 </Grid>
                                 <Grid item xs={10} sm={10}>
-                                    <MetBody>Please schedule the engagement when ready.</MetBody>
+                                    <MetBody>A Superuser can schedule the engagement when ready.</MetBody>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -184,14 +186,18 @@ export const PreviewBanner = () => {
                         </SecondaryButton>
 
                         <When condition={isDraft}>
-                            <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => setIsOpen(true)}>
-                                Schedule Engagement
-                            </PrimaryButton>
+                            <PermissionsGate scopes={[SCOPES.publishEngagement]} errorProps={{ disabled: true }}>
+                                <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => setIsOpen(true)}>
+                                    Schedule Engagement
+                                </PrimaryButton>
+                            </PermissionsGate>
                         </When>
                         <When condition={isScheduled}>
-                            <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => setIsOpen(true)}>
-                                Reschedule Engagement
-                            </PrimaryButton>
+                            <PermissionsGate scopes={[SCOPES.publishEngagement]} errorProps={{ disabled: true }}>
+                                <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => setIsOpen(true)}>
+                                    Reschedule Engagement
+                                </PrimaryButton>
+                            </PermissionsGate>
                         </When>
                     </Stack>
                 </Grid>
