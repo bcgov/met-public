@@ -5,6 +5,15 @@ export enum EngagementStatus {
     Scheduled = 4,
 }
 
+export type EngagementStatusType = 'Draft' | 'Published' | 'Closed' | 'Scheduled';
+
+export const ENGAGEMENT_STATUS: { [status: string]: EngagementStatusType } = {
+    DRAFT: 'Draft',
+    PUBLISHED: 'Published',
+    CLOSED: 'Closed',
+    SCHEDULED: 'Scheduled',
+};
+
 export enum SubmissionStatus {
     Upcoming = 1,
     Open = 2,

@@ -1,32 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Engagement } from 'models/engagement';
+import React, { useContext } from 'react';
 import { Grid } from '@mui/material';
 import { RepeatedGrid } from 'components/common';
 import { TileSkeleton } from './TileSkeleton';
-import { getEngagements } from 'services/engagementService';
 import EngagementTile from './EngagementTile';
+import { LandingContext } from './LandingContext';
 
 const TileBlock = () => {
-    const [engagements, setEngagements] = useState<Engagement[]>([]);
-    const [loadingEngagements, setLoadingEngagements] = useState(true);
-
-    const loadEngagements = async () => {
-        try {
-            const loadedEngagements = await getEngagements({
-                page: 1,
-                size: 50,
-                sort_key: 'engagement.created_date',
-                sort_order: 'desc',
-                include_banner_url: true,
-            });
-            setEngagements(loadedEngagements.items);
-            setLoadingEngagements(false);
-        } catch (error) {}
-    };
-
-    useEffect(() => {
-        loadEngagements();
-    }, []);
+    const { engagements, loadingEngagements } = useContext(LandingContext);
 
     if (loadingEngagements) {
         return (
