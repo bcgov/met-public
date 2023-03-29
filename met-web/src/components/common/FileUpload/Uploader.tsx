@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Grid, Stack, Typography, IconButton } from '@mui/material';
 import Dropzone, { Accept } from 'react-dropzone';
-import { MetWidgetPaper, WidgetButton } from 'components/common';
+import { MetWidgetPaper } from 'components/common';
 import { FileUploadContext } from './FileUploadContext';
 import LinkIcon from '@mui/icons-material/Link';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
@@ -24,24 +24,8 @@ const Uploader = ({
 
     if (existingFile) {
         return (
-            <>
-                <Dropzone
-                    accept={acceptedFormat}
-                    onDrop={(acceptedFiles) => {
-                        handleAddFile(acceptedFiles);
-                        setAddedFileName(acceptedFiles[0].name);
-                    }}
-                >
-                    {({ getRootProps, getInputProps, open }) => (
-                        <section>
-                            <input {...getInputProps()} />
-                            <WidgetButton onClick={open} sx={{ mb: 1 }}>
-                                Upload Shapefile
-                            </WidgetButton>
-                        </section>
-                    )}
-                </Dropzone>
-                <Grid container direction="row" alignItems="flex-start" justifyContent={'flex-start'} item xs={12}>
+            <Grid container direction="row" alignItems="flex-start" justifyContent={'flex-end'} spacing={1} padding={1}>
+                <Grid item xs={12}>
                     <MetWidgetPaper elevation={1} sx={{ width: '100%' }}>
                         <Grid container direction="row" alignItems={'center'} justifyContent="flex-start">
                             <Grid item xs>
@@ -64,7 +48,7 @@ const Uploader = ({
                         </Grid>
                     </MetWidgetPaper>
                 </Grid>
-            </>
+            </Grid>
         );
     }
     return (
@@ -75,10 +59,24 @@ const Uploader = ({
                 setAddedFileName(acceptedFiles[0].name);
             }}
         >
-            {({ getRootProps, getInputProps, open }) => (
+            {({ getRootProps, getInputProps }) => (
                 <section>
-                    <input {...getInputProps()} />
-                    <WidgetButton onClick={open}>Upload Shapefile </WidgetButton>
+                    <Grid
+                        {...getRootProps()}
+                        container
+                        direction="row"
+                        alignItems="center"
+                        justifyContent="center"
+                        style={{
+                            border: '1px dashed #606060',
+                            background: '#F2F2F2 0% 0% no-repeat padding-box',
+                            height: height,
+                            cursor: 'pointer',
+                        }}
+                    >
+                        <input {...getInputProps()} multiple={false} accept={'image/*'} />
+                        <Typography m={margin}>{helpText}</Typography>
+                    </Grid>
                 </section>
             )}
         </Dropzone>

@@ -165,46 +165,6 @@ const Form = () => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Grid container direction="row" alignItems="baseline" justifyContent="flex-start" spacing={2}>
                             <Grid item xs={12}>
-                                <FileUpload
-                                    data-testid="shapefile-upload"
-                                    handleAddFile={handleAddFile}
-                                    savedFileName={uploadName}
-                                    savedFile={methods.getValues('shapefile')}
-                                    helpText="Drag and drop a shapefile here or click to select one"
-                                />
-                            </Grid>
-                            <When condition={Boolean(filename)}>
-                                <Grid item xs={12}>
-                                    <MetLabel sx={{ marginBottom: '2px' }}>File Uploaded </MetLabel>
-                                    <MetWidgetPaper elevation={1} sx={{ width: '100%' }}>
-                                        <Grid
-                                            container
-                                            direction="row"
-                                            alignItems={'center'}
-                                            justifyContent="flex-start"
-                                        >
-                                            <Grid item xs>
-                                                <Stack spacing={2} direction="row" alignItems="center">
-                                                    <LinkIcon color="info" />
-                                                    <Typography>{mapData?.file_name}</Typography>
-                                                </Stack>
-                                            </Grid>
-                                            <IconButton
-                                                onClick={() => {
-                                                    methods.setValue('filename', undefined);
-                                                    methods.setValue('geojson', undefined);
-                                                }}
-                                                sx={{ padding: 0, margin: 0 }}
-                                                color="inherit"
-                                                aria-label="Remove GeoJSON"
-                                            >
-                                                <HighlightOffIcon />
-                                            </IconButton>
-                                        </Grid>
-                                    </MetWidgetPaper>
-                                </Grid>
-                            </When>
-                            <Grid item xs={12}>
                                 <MetLabel sx={{ marginBottom: '2px' }}>Latitude</MetLabel>
                                 <ControlledTextField
                                     name="latitude"
@@ -241,6 +201,47 @@ const Form = () => {
                                     }}
                                     fullWidth
                                     size="small"
+                                />
+                            </Grid>
+                            <When condition={Boolean(filename)}>
+                                <Grid item xs={12}>
+                                    <MetLabel sx={{ marginBottom: '2px' }}>File Uploaded </MetLabel>
+                                    <MetWidgetPaper elevation={1} sx={{ width: '100%' }}>
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            alignItems={'center'}
+                                            justifyContent="flex-start"
+                                        >
+                                            <Grid item xs>
+                                                <Stack spacing={2} direction="row" alignItems="center">
+                                                    <LinkIcon color="info" />
+                                                    <Typography>{mapData?.file_name}</Typography>
+                                                </Stack>
+                                            </Grid>
+                                            <IconButton
+                                                onClick={() => {
+                                                    methods.setValue('filename', undefined);
+                                                    methods.setValue('geojson', undefined);
+                                                }}
+                                                sx={{ padding: 0, margin: 0 }}
+                                                color="inherit"
+                                                aria-label="Remove GeoJSON"
+                                            >
+                                                <HighlightOffIcon />
+                                            </IconButton>
+                                        </Grid>
+                                    </MetWidgetPaper>
+                                </Grid>
+                            </When>
+                            <Grid item xs={12}>
+                                <MetLabel sx={{ marginBottom: '2px' }}>New File Upload </MetLabel>
+                                <FileUpload
+                                    data-testid="shapefile-upload"
+                                    handleAddFile={handleAddFile}
+                                    savedFileName={uploadName}
+                                    savedFile={methods.getValues('shapefile')}
+                                    helpText="Drag and drop a shapefile here or click to select one"
                                 />
                             </Grid>
                             <Grid item xs={12} container direction="row" justifyContent={'flex-end'}>
