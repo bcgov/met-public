@@ -16,7 +16,7 @@ interface SearchFilters {
     project_type: string;
 }
 const LandingComponent = () => {
-    const { searchFilters, setSearchFilters, setPage } = useContext(LandingContext);
+    const { searchFilters, setSearchFilters, setPage, page } = useContext(LandingContext);
     const [engagementOptionsLoading, setEngagementOptionsLoading] = useState(false);
     const [engagementOptions, setEngagementOptions] = useState<Engagement[]>([]);
 
@@ -42,8 +42,15 @@ const LandingComponent = () => {
         }, 1000),
     ).current;
 
+    const tileBlockRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const yOffset = tileBlockRef?.current?.offsetTop;
+        window.scrollTo({ top: yOffset || 0, behavior: 'smooth' });
+    }, [page]);
+
     return (
-        <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
+        <Grid container direction="row" justifyContent={'center'} alignItems="center">
             <Grid item xs={12}>
                 <Banner imageUrl="https://citz-gdx.objectstore.gov.bc.ca/new-bucket-048a62a2/6e20c9fe-e737-49fe-82eb-590c5ce575bc.jpg">
                     <Grid
@@ -85,24 +92,17 @@ const LandingComponent = () => {
                     </Grid>
                 </Banner>
             </Grid>
-            <Grid
-                container
-                item
-                xs={12}
-                direction="row"
-                justifyContent={'flex-start'}
-                alignItems="flex-start"
-                m={{ md: '2em', xs: '2em', lg: '2em 5em' }}
-                spacing={3}
-            >
+            <Grid container item xs={12} direction="row" justifyContent={'center'} alignItems="center" rowSpacing={3}>
                 <Grid
                     container
                     item
-                    xs={12}
+                    xs={10}
                     justifyContent={'flex-start'}
                     alignItems="flex-start"
                     columnSpacing={2}
                     rowSpacing={4}
+                    marginTop={'2em'}
+                    ref={tileBlockRef}
                 >
                     <Grid item xs={12} sm={6} md={4} lg={3}>
                         <MetLabel sx={{ marginBottom: '2px', display: 'flex' }}>Engagment name</MetLabel>
@@ -208,12 +208,16 @@ const LandingComponent = () => {
                                 {' '}
                             </MenuItem>
                             {ENGAGEMENT_PROJECT_TYPES.map((type) => {
-                                return <MenuItem value={type}>{type}</MenuItem>;
+                                return (
+                                    <MenuItem key={type} value={type}>
+                                        {type}
+                                    </MenuItem>
+                                );
                             })}
                         </TextField>
                     </Grid>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={10} container justifyContent={'center'} alignItems="center">
                     <TileBlock />
                 </Grid>
             </Grid>
