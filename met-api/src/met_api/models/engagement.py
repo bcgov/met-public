@@ -234,9 +234,8 @@ class Engagement(BaseModel):
     @staticmethod
     def _filter_by_project_type(query, project_type = None):
         if project_type:
-            query = query.join(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id, isouter=True)
             query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)\
-                .filter(text("json_extract(coalesce(engagement_metadata.project_metadata, '{}'), '$.project_type') = :val"))\
+                .filter(text("coalesce(engagement_metadata.project_metadata, '{}') ->> 'type' = :val"))\
                 .params(val=project_type)
         return query
 

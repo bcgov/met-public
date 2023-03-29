@@ -3,6 +3,7 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { Engagement } from 'models/engagement';
 import { getEngagements } from 'services/engagementService';
+import { PAGE_SIZE } from './constants';
 
 interface SearchFilters {
     name: string;
@@ -14,6 +15,9 @@ export interface LandingContextProps {
     loadingEngagements: boolean;
     searchFilters: SearchFilters;
     setSearchFilters: React.Dispatch<React.SetStateAction<SearchFilters>>;
+    totalEngagements: number;
+    page: number;
+    setPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const initialSearchFilters = {
@@ -28,32 +32,42 @@ export const LandingContext = createContext<LandingContextProps>({
     setSearchFilters: () => {
         throw new Error('setSearchFilters unimplemented');
     },
+    totalEngagements: 0,
+    page: 1,
+    setPage: () => {
+        throw new Error('setPage unimplemented');
+    },
 });
 
 export const LandingContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     const [engagements, setEngagements] = useState<Engagement[]>([]);
+    const [totalEngagements, setTotalEngagements] = useState(0);
     const [loadingEngagements, setLoadingEngagements] = useState(true);
     const [searchFilters, setSearchFilters] = useState<SearchFilters>(initialSearchFilters);
+    const [page, setPage] = useState(1);
 
     const loadEngagements = async () => {
         try {
+            const { status, name, project_type } = searchFilters;
             const loadedEngagements = await getEngagements({
-                page: 1,
-                size: 50,
+                page: page,
+                size: PAGE_SIZE,
                 sort_key: 'engagement.created_date',
                 sort_order: 'desc',
                 include_banner_url: true,
-                engagement_status: searchFilters.status,
-                search_text: searchFilters.name,
+                engagement_status: status,
+                search_text: name,
+                project_type: project_type,
             });
             setEngagements(loadedEngagements.items);
+            setTotalEngagements(loadedEngagements.total);
             setLoadingEngagements(false);
         } catch (error) {}
     };
 
     useEffect(() => {
         loadEngagements();
-    }, [searchFilters]);
+    }, [searchFilters, page]);
 
     return (
         <LandingContext.Provider
@@ -62,6 +76,9 @@ export const LandingContextProvider = ({ children }: { children: JSX.Element | J
                 loadingEngagements,
                 searchFilters,
                 setSearchFilters,
+                totalEngagements,
+                page,
+                setPage,
             }}
         >
             {children}

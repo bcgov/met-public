@@ -16,7 +16,7 @@ interface SearchFilters {
     project_type: string;
 }
 const LandingComponent = () => {
-    const { searchFilters, setSearchFilters } = useContext(LandingContext);
+    const { searchFilters, setSearchFilters, setPage } = useContext(LandingContext);
     const [engagementOptionsLoading, setEngagementOptionsLoading] = useState(false);
     const [engagementOptions, setEngagementOptions] = useState<Engagement[]>([]);
 
@@ -141,6 +141,7 @@ const LandingComponent = () => {
                                     ...searchFilters,
                                     name: engagement?.name || '',
                                 });
+                                setPage(1);
                             }}
                             getOptionLabel={(engagement: Engagement) => engagement.name}
                             loading={false}
@@ -164,6 +165,7 @@ const LandingComponent = () => {
                                     ...searchFilters,
                                     status: event.target.value ? [Number(event.target.value)] : [],
                                 });
+                                setPage(1);
                             }}
                             select
                             InputLabelProps={{
@@ -194,6 +196,7 @@ const LandingComponent = () => {
                                     ...searchFilters,
                                     project_type: event.target.value || '',
                                 });
+                                setPage(1);
                             }}
                             select
                             InputLabelProps={{
