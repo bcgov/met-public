@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Autocomplete, CircularProgress, Grid, MenuItem, Select, TextField } from '@mui/material';
+import { Autocomplete, CircularProgress, Grid, MenuItem, TextField } from '@mui/material';
 import { Banner } from 'components/banner/Banner';
 import { MetHeader1, MetLabel, MetParagraph } from 'components/common';
 import TileBlock from './TileBlock';
@@ -10,11 +10,6 @@ import { ENGAGEMENT_PROJECT_TYPES } from 'components/engagement/form/EngagementF
 import { EngagementStatus } from 'constants/engagementStatus';
 import { LandingContext } from './LandingContext';
 
-interface SearchFilters {
-    name: string;
-    status: number[];
-    project_type: string;
-}
 const LandingComponent = () => {
     const { searchFilters, setSearchFilters, setPage, page } = useContext(LandingContext);
     const [engagementOptionsLoading, setEngagementOptionsLoading] = useState(false);

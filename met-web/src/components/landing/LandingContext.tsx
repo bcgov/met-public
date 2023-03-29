@@ -1,6 +1,4 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { useAppDispatch } from 'hooks';
-import { openNotification } from 'services/notificationService/notificationSlice';
 import { Engagement } from 'models/engagement';
 import { getEngagements } from 'services/engagementService';
 import { PAGE_SIZE } from './constants';

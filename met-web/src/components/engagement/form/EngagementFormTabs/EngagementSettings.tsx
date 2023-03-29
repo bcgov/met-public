@@ -125,7 +125,11 @@ const EngagementSettings = () => {
                             none
                         </MenuItem>
                         {ENGAGEMENT_PROJECT_TYPES.map((type) => {
-                            return <MenuItem value={type}>{type}</MenuItem>;
+                            return (
+                                <MenuItem key={type} value={type}>
+                                    {type}
+                                </MenuItem>
+                            );
                         })}
                     </Select>
                 </Grid>
