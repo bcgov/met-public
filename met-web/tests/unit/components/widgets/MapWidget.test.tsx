@@ -95,7 +95,7 @@ describe('Map Widget tests', () => {
         fireEvent.click(eventOption);
 
         await waitFor(() => {
-            expect(screen.getByText('New File Upload')).toBeVisible();
+            expect(screen.getByText('Upload Shapefile')).toBeVisible();
             expect(screen.getByText('Preview Map')).toBeVisible();
         });
     }
@@ -120,7 +120,7 @@ describe('Map Widget tests', () => {
             engagement_id: draftEngagement.id,
         });
         expect(getWidgetsMock).toHaveBeenCalledTimes(2);
-        expect(screen.getByText('New File Upload')).toBeVisible();
+        expect(screen.getByText('Upload Shapefile')).toBeVisible();
         expect(screen.getByText('Preview Map')).toBeVisible();
     });
 });
