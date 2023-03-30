@@ -7,6 +7,7 @@ import { ActionContext } from '../ActionContext';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { EngagementTabsContext } from './EngagementTabsContext';
+import { ENGAGEMENT_PROJECT_TYPES } from './constants';
 
 const EngagementSettings = () => {
     const { savedEngagement } = useContext(ActionContext);
@@ -123,16 +124,13 @@ const EngagementSettings = () => {
                         <MenuItem value={''} sx={{ fontStyle: 'italic', height: '2em' }}>
                             none
                         </MenuItem>
-                        <MenuItem value={'Energy-Electricity'}>Energy-Electricity</MenuItem>
-                        <MenuItem value={'Energy - Petroleum & Natural Gas'}>Energy - Petroleum & Natural Gas</MenuItem>
-                        <MenuItem value={'Food Processing'}>Food Processing</MenuItem>
-                        <MenuItem value={'Industrial'}>Industrial</MenuItem>
-                        <MenuItem value={'Mines'}>Mines</MenuItem>
-                        <MenuItem value={'Other'}>Other</MenuItem>
-                        <MenuItem value={'Tourist Destination Resorts'}>Tourist Destination Resorts</MenuItem>
-                        <MenuItem value={'Transportation'}>Transportation</MenuItem>
-                        <MenuItem value={'Waste disposal'}>Waste disposal</MenuItem>
-                        <MenuItem value={'Water Management'}>Water Management</MenuItem>
+                        {ENGAGEMENT_PROJECT_TYPES.map((type) => {
+                            return (
+                                <MenuItem key={type} value={type}>
+                                    {type}
+                                </MenuItem>
+                            );
+                        })}
                     </Select>
                 </Grid>
                 <Grid item xs={6} lg={6} p={1}>

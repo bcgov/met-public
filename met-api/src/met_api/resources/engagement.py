@@ -87,6 +87,7 @@ class Engagements(Resource):
                 'created_to_date': args.get('created_to_date', None, type=str),
                 'published_from_date': args.get('published_from_date', None, type=str),
                 'published_to_date': args.get('published_to_date', None, type=str),
+                'project_type': args.get('project_type', None, type=str),
             }
 
             engagement_records = EngagementService()\

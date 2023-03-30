@@ -1,6 +1,5 @@
 import { Survey, SurveySubmissionData } from './survey';
 import { EngagementStatusBlock } from './engagementStatusBlock';
-import { Status } from './status';
 import { SubmissionStatus } from 'constants/engagementStatus';
 
 export interface Engagement {
@@ -25,6 +24,11 @@ export interface Engagement {
     submission_status: SubmissionStatus;
     submissions_meta_data: SurveySubmissionData;
     status_block: EngagementStatusBlock[];
+}
+
+export interface Status {
+    id: number;
+    status_name: string;
 }
 
 export interface EngagementMetadata {
