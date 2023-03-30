@@ -232,7 +232,7 @@ class Engagement(BaseModel):
         return query
 
     @staticmethod
-    def _filter_by_project_type(query, project_type = None):
+    def _filter_by_project_type(query, project_type=None):
         if project_type:
             query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)\
                 .filter(text("coalesce(engagement_metadata.project_metadata, '{}') ->> 'type' = :val"))\
