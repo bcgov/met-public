@@ -9,6 +9,7 @@ import { getEngagements } from 'services/engagementService';
 import { ENGAGEMENT_PROJECT_TYPES } from 'components/engagement/form/EngagementFormTabs/constants';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { LandingContext } from './LandingContext';
+import { Container } from '@mui/system';
 
 const LandingComponent = () => {
     const { searchFilters, setSearchFilters, setPage, page } = useContext(LandingContext);
@@ -87,135 +88,143 @@ const LandingComponent = () => {
                     </Grid>
                 </Banner>
             </Grid>
-            <Grid container item xs={12} direction="row" justifyContent={'center'} alignItems="center" rowSpacing={3}>
+
+            <Container maxWidth={false} sx={{ maxWidth: '1700px' }}>
                 <Grid
                     container
                     item
-                    xs={10}
-                    justifyContent={'flex-start'}
-                    alignItems="flex-start"
-                    columnSpacing={2}
-                    rowSpacing={4}
-                    marginTop={'2em'}
-                    ref={tileBlockRef}
+                    xs={12}
+                    direction="row"
+                    justifyContent={'center'}
+                    alignItems="center"
+                    rowSpacing={3}
                 >
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <MetLabel sx={{ marginBottom: '2px', display: 'flex' }}>Engagment name</MetLabel>
-                        <Autocomplete
-                            options={engagementOptions || []}
-                            onInputChange={(_event, newInputValue) => {
-                                debounceLoadEngagments(newInputValue);
-                            }}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    fullWidth
-                                    placeholder="Type engagement's name..."
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        endAdornment: (
-                                            <>
-                                                {engagementOptionsLoading ? (
-                                                    <CircularProgress
-                                                        color="primary"
-                                                        size={20}
-                                                        sx={{ marginRight: '2em' }}
-                                                    />
-                                                ) : null}
-                                                {params.InputProps.endAdornment}
-                                            </>
-                                        ),
-                                    }}
-                                />
-                            )}
-                            onChange={(_, engagement) => {
-                                setSearchFilters({
-                                    ...searchFilters,
-                                    name: engagement?.name || '',
-                                });
-                                setPage(1);
-                            }}
-                            getOptionLabel={(engagement: Engagement) => engagement.name}
-                            loading={false}
-                            size="small"
-                            sx={{ maxWidth: 345 }}
-                        />
+                    <Grid
+                        container
+                        item
+                        xs={10}
+                        justifyContent={'flex-start'}
+                        alignItems="flex-start"
+                        columnSpacing={2}
+                        rowSpacing={4}
+                        marginTop={'2em'}
+                        ref={tileBlockRef}
+                    >
+                        <Grid item xs={12} sm={6} md={4} lg={4}>
+                            <MetLabel sx={{ marginBottom: '2px', display: 'flex' }}>Engagment name</MetLabel>
+                            <Autocomplete
+                                options={engagementOptions || []}
+                                onInputChange={(_event, newInputValue) => {
+                                    debounceLoadEngagments(newInputValue);
+                                }}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        fullWidth
+                                        placeholder="Type engagement's name..."
+                                        InputLabelProps={{
+                                            shrink: false,
+                                        }}
+                                        InputProps={{
+                                            ...params.InputProps,
+                                            endAdornment: (
+                                                <>
+                                                    {engagementOptionsLoading ? (
+                                                        <CircularProgress
+                                                            color="primary"
+                                                            size={20}
+                                                            sx={{ marginRight: '2em' }}
+                                                        />
+                                                    ) : null}
+                                                    {params.InputProps.endAdornment}
+                                                </>
+                                            ),
+                                        }}
+                                    />
+                                )}
+                                onChange={(_, engagement) => {
+                                    setSearchFilters({
+                                        ...searchFilters,
+                                        name: engagement?.name || '',
+                                    });
+                                    setPage(1);
+                                }}
+                                getOptionLabel={(engagement: Engagement) => engagement.name}
+                                loading={false}
+                                size="small"
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={4} lg={4}>
+                            <MetLabel>Status</MetLabel>
+                            <TextField
+                                id="status"
+                                name="status"
+                                variant="outlined"
+                                label=" "
+                                defaultValue=""
+                                value={searchFilters.status}
+                                fullWidth
+                                size="small"
+                                onChange={(event) => {
+                                    setSearchFilters({
+                                        ...searchFilters,
+                                        status: event.target.value ? [Number(event.target.value)] : [],
+                                    });
+                                    setPage(1);
+                                }}
+                                select
+                                InputLabelProps={{
+                                    shrink: false,
+                                }}
+                            >
+                                <MenuItem value={0} sx={{ fontStyle: 'italic', height: '2em' }}>
+                                    {''}
+                                </MenuItem>
+                                <MenuItem value={EngagementStatus.Published}>Published</MenuItem>
+                                <MenuItem value={EngagementStatus.Closed}>Closed</MenuItem>
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={4} lg={4}>
+                            <MetLabel>Project Type</MetLabel>
+                            <TextField
+                                id="project-type"
+                                name="projectType"
+                                variant="outlined"
+                                label=" "
+                                defaultValue=""
+                                value={searchFilters.project_type}
+                                fullWidth
+                                size="small"
+                                onChange={(event) => {
+                                    setSearchFilters({
+                                        ...searchFilters,
+                                        project_type: event.target.value || '',
+                                    });
+                                    setPage(1);
+                                }}
+                                select
+                                InputLabelProps={{
+                                    shrink: false,
+                                }}
+                            >
+                                <MenuItem value={''} sx={{ fontStyle: 'italic', height: '2em' }}>
+                                    {' '}
+                                </MenuItem>
+                                {ENGAGEMENT_PROJECT_TYPES.map((type) => {
+                                    return (
+                                        <MenuItem key={type} value={type}>
+                                            {type}
+                                        </MenuItem>
+                                    );
+                                })}
+                            </TextField>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <MetLabel>Status</MetLabel>
-                        <TextField
-                            id="status"
-                            name="status"
-                            variant="outlined"
-                            label=" "
-                            defaultValue=""
-                            value={searchFilters.status}
-                            fullWidth
-                            size="small"
-                            onChange={(event) => {
-                                setSearchFilters({
-                                    ...searchFilters,
-                                    status: event.target.value ? [Number(event.target.value)] : [],
-                                });
-                                setPage(1);
-                            }}
-                            select
-                            InputLabelProps={{
-                                shrink: false,
-                            }}
-                            sx={{ maxWidth: 345 }}
-                        >
-                            <MenuItem value={0} sx={{ fontStyle: 'italic', height: '2em' }}>
-                                {''}
-                            </MenuItem>
-                            <MenuItem value={EngagementStatus.Published}>Published</MenuItem>
-                            <MenuItem value={EngagementStatus.Closed}>Closed</MenuItem>
-                        </TextField>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <MetLabel>Project Type</MetLabel>
-                        <TextField
-                            id="project-type"
-                            name="projectType"
-                            variant="outlined"
-                            label=" "
-                            defaultValue=""
-                            value={searchFilters.project_type}
-                            fullWidth
-                            size="small"
-                            onChange={(event) => {
-                                setSearchFilters({
-                                    ...searchFilters,
-                                    project_type: event.target.value || '',
-                                });
-                                setPage(1);
-                            }}
-                            select
-                            InputLabelProps={{
-                                shrink: false,
-                            }}
-                            sx={{ maxWidth: 345 }}
-                        >
-                            <MenuItem value={''} sx={{ fontStyle: 'italic', height: '2em' }}>
-                                {' '}
-                            </MenuItem>
-                            {ENGAGEMENT_PROJECT_TYPES.map((type) => {
-                                return (
-                                    <MenuItem key={type} value={type}>
-                                        {type}
-                                    </MenuItem>
-                                );
-                            })}
-                        </TextField>
+                    <Grid item xs={10} container justifyContent={'center'} alignItems="center">
+                        <TileBlock />
                     </Grid>
                 </Grid>
-                <Grid item xs={10} container justifyContent={'center'} alignItems="center">
-                    <TileBlock />
-                </Grid>
-            </Grid>
+            </Container>
         </Grid>
     );
 };
