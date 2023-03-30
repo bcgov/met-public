@@ -72,7 +72,7 @@ class Engagement(BaseModel):
             query = cls._filter_by_published_date(query, search_options)
 
             query = cls._filter_by_engagement_status(query, search_options)
-            
+
             query = cls._filter_by_project_type(query, search_options.get('project_type'))
 
         if assigned_engagements is not None:
