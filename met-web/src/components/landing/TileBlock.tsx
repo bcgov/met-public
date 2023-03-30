@@ -37,8 +37,8 @@ const TileBlock = () => {
                         md={4}
                         lg={3}
                         container
-                        justifyContent={'flex-start'}
-                        alignItems="flex-start"
+                        justifyContent={{ xs: 'center', sm: 'flex-start' }}
+                        alignItems={{ xs: 'center', sm: 'flex-start' }}
                     >
                         <Grid item>
                             <EngagementTile passedEngagement={engagement} engagementId={engagement.id} />
