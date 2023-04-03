@@ -15,6 +15,7 @@ import { FormBuilderData } from 'components/Form/types';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { getEngagement } from 'services/engagementService';
 import { Engagement } from 'models/engagement';
+import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
 const SurveyFormBuilder = () => {
     const navigate = useNavigate();
@@ -219,11 +220,38 @@ const SurveyFormBuilder = () => {
                             <Switch
                                 checked={formDefinition.display === 'wizard'}
                                 onChange={(e) => {
-                                    if (e.target.checked) {
-                                        setFormDefinition({ display: 'wizard', components: [] });
-                                        return;
-                                    }
-                                    setFormDefinition({ display: 'form', components: [] });
+                                    dispatch(
+                                        openNotificationModal({
+                                            open: true,
+                                            data: {
+                                                header: 'Change Survey Type',
+                                                subText: [
+                                                    {
+                                                        text: `You will be changing the survey type from ${
+                                                            formDefinition.display === 'wizard' ? 'multi-page' : 'form'
+                                                        } to ${
+                                                            formDefinition.display === 'wizard' ? 'form' : 'multi-page'
+                                                        }.`,
+                                                    },
+                                                    {
+                                                        text: 'You will lose all current progress if you do.',
+                                                        bold: true,
+                                                    },
+                                                    {
+                                                        text: 'Do you want to change this survey type?',
+                                                    },
+                                                ],
+                                                handleConfirm: () => {
+                                                    setFormDefinition({
+                                                        display:
+                                                            formDefinition.display === 'wizard' ? 'form' : 'wizard',
+                                                        components: [],
+                                                    });
+                                                },
+                                            },
+                                            type: 'confirm',
+                                        }),
+                                    );
                                 }}
                             />
                         }
