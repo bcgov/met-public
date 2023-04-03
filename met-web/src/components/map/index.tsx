@@ -25,6 +25,16 @@ const layerStyle: AnyLayer = {
     },
 };
 
+const lineStyle: AnyLayer = {
+    id: 'lines',
+    type: 'line',
+    source: 'lines',
+    paint: {
+        'line-width': 1,
+        'line-color': '#00ffff',
+    },
+};
+
 const MetMap = ({ geojson, latitude, longitude, markerLabel }: MapProps) => {
     return (
         <ReactMapGL
@@ -44,6 +54,7 @@ const MetMap = ({ geojson, latitude, longitude, markerLabel }: MapProps) => {
             <When condition={Boolean(geojson)}>
                 <Source id="geojson-data" type="geojson" data={geojson}>
                     <Layer {...layerStyle} />
+                    <Layer {...lineStyle} />
                 </Source>
             </When>
             <Marker latitude={latitude} longitude={longitude} anchor="bottom">
