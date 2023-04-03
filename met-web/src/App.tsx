@@ -16,6 +16,7 @@ import { FeedbackModal } from 'components/feedback/FeedbackModal';
 import { AppConfig } from 'config';
 import NoAccess from 'routes/NoAccess';
 import NotFound from 'routes/NotFound';
+import { validBasenames, EAO } from './constants';
 
 const App = () => {
     const drawerWidth = 280;
@@ -28,14 +29,13 @@ const App = () => {
     const basename = pathSegments[1];
 
     // TODO: Remove this when we have a better way to fetch the valid basenames
-    const validBasenames = ['eao', 'gdx', 'emli'];
     const isValidBasename = !basename || validBasenames.includes(basename);
 
     useEffect(() => {
         UserService.initKeycloak(dispatch);
     }, [dispatch]);
 
-    sessionStorage.setItem('basename', basename || 'eao');
+    sessionStorage.setItem('tenantId', basename || EAO);
     sessionStorage.setItem('apiurl', String(AppConfig.apiUrl));
 
     if (authenticationLoading) {
