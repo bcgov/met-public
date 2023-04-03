@@ -17,6 +17,9 @@ export interface Survey {
 export interface SurveyCommentData {
     total: number;
     pending: number;
+    approved: number;
+    rejected: number;
+    needs_further_review: number;
 }
 
 export interface SurveySubmissionData {
@@ -37,6 +40,9 @@ export const createDefaultSurvey = (): Survey => {
         comments_meta_data: {
             total: 0,
             pending: 0,
+            approved: 0,
+            rejected: 0,
+            needs_further_review: 0,
         },
         engagement_id: 0,
     };
