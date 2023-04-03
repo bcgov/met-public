@@ -45,6 +45,7 @@ const App = () => {
     if (!isValidBasename) {
         return (
             <Router>
+                <PublicHeader />
                 <Routes>
                     <Route path="*" element={<NotFound />} />
                 </Routes>
