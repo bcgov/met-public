@@ -33,7 +33,6 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     default_id = "1"
-    current_app.config.get('BCOL_API_URL')
     op.bulk_insert(tenant_table, [
         {'id': default_id,
          'short_name': current_app.config.get('DEFAULT_TENANT_SHORT_NAME') ,
