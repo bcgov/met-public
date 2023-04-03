@@ -40,7 +40,7 @@
         "lodash": "^4.17.21",
         "mapbox-gl": "^2.13.0",
         "maplibre-gl": "^1.15.3",
-        "met-formio": "^1.0.10-rc.2",
+        "met-formio": "^1.0.10-rc.4",
         "mui-sx": "^1.0.0",
         "node-sass": "^7.0.3",
         "react": "^18.0.0",
