@@ -228,9 +228,13 @@ const SurveyFormBuilder = () => {
                                                 subText: [
                                                     {
                                                         text: `You will be changing the survey type from ${
-                                                            formDefinition.display === 'wizard' ? 'multi-page' : 'form'
+                                                            formDefinition.display === 'wizard'
+                                                                ? 'multi page'
+                                                                : 'single page'
                                                         } to ${
-                                                            formDefinition.display === 'wizard' ? 'form' : 'multi-page'
+                                                            formDefinition.display === 'wizard'
+                                                                ? 'single page'
+                                                                : 'multi page'
                                                         }.`,
                                                     },
                                                     {
