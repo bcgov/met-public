@@ -42,7 +42,7 @@ class Engagement(BaseModel):
     banner_filename = db.Column(db.String(), unique=False, nullable=True)
     surveys = db.relationship('Survey', backref='engagement', cascade='all, delete')
     status_block = db.relationship('EngagementStatusBlock', backref='engagement')
-    tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=False)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
 
     @classmethod
     def get_all_engagements(cls):
