@@ -29,7 +29,6 @@ const App = () => {
 
     const validBasenames = ['eao', 'gdx', 'emli'];
     const isValidBasename = !basename || validBasenames.includes(basename);
-    console.log(isValidBasename);
 
     useEffect(() => {
         UserService.initKeycloak(dispatch);
