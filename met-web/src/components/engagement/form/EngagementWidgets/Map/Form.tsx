@@ -8,6 +8,7 @@ import {
     SecondaryButton,
     MidScreenLoader,
     MetWidgetPaper,
+    MetDescription,
 } from 'components/common';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -206,6 +207,7 @@ const Form = () => {
                             </When>
                             <Grid item xs={12}>
                                 <MetLabel sx={{ marginBottom: '2px' }}>Latitude</MetLabel>
+                                <MetDescription>Latitude in British Columbia is between 48.30 and 60.00</MetDescription>
                                 <ControlledTextField
                                     name="latitude"
                                     variant="outlined"
@@ -219,6 +221,9 @@ const Form = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <MetLabel sx={{ marginBottom: '2px' }}>Longitude</MetLabel>
+                                <MetDescription>
+                                    Longitude in British Columbia is between  -139.06 and -114.03
+                                </MetDescription>
                                 <ControlledTextField
                                     name="longitude"
                                     variant="outlined"
@@ -232,6 +237,7 @@ const Form = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <MetLabel sx={{ marginBottom: '2px' }}>Marker Label</MetLabel>
+                                <MetDescription>This text will appear next to your marker on the map</MetDescription>
                                 <ControlledTextField
                                     name="markerLabel"
                                     variant="outlined"
