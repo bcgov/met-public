@@ -22,6 +22,7 @@ class Feedback(BaseModel):
     comment_type = db.Column(db.Enum(CommentType), nullable=True)
     comment = db.Column(db.Text, nullable=True)
     source = db.Column(db.Enum(FeedbackSourceType), nullable=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
 
     @classmethod
     def get_all_paginated(cls, pagination_options: PaginationOptions, search_text=''):

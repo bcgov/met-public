@@ -25,6 +25,7 @@ class EmailVerification(BaseModel):  # pylint: disable=too-few-public-methods
     type = db.Column(db.Enum(EmailVerificationType), nullable=False)
     survey_id = db.Column(db.Integer, ForeignKey('survey.id'), nullable=True)
     submission_id = db.Column(db.Integer, ForeignKey('submission.id'), nullable=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
 
     @classmethod
     def get(cls, verification_token) -> EmailVerification:
