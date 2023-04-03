@@ -38,7 +38,7 @@ class SurveySchema(Schema):
                 obj.submissions,
                 Status.Needs_further_review.value)
         }
-        
+
     def _count_comments_by_status(self, submissios, status):
         return len([submission for submission in submissios
                     if submission.comment_status_id == status])
