@@ -27,6 +27,7 @@ const App = () => {
     const pathSegments = window.location.pathname.split('/');
     const basename = pathSegments[1];
 
+    // TODO: Remove this when we have a better way to fetch the valid basenames
     const validBasenames = ['eao', 'gdx', 'emli'];
     const isValidBasename = !basename || validBasenames.includes(basename);
 
