@@ -35,8 +35,10 @@ const App = () => {
         UserService.initKeycloak(dispatch);
     }, [dispatch]);
 
-    sessionStorage.setItem('tenantId', basename || EAO);
-    sessionStorage.setItem('apiurl', String(AppConfig.apiUrl));
+    useEffect(() => {
+        sessionStorage.setItem('tenantId', basename || EAO);
+        sessionStorage.setItem('apiurl', String(AppConfig.apiUrl));
+    }, [basename, AppConfig.apiUrl]);
 
     if (authenticationLoading) {
         return <MidScreenLoader />;
