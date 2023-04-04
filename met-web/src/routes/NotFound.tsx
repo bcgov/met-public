@@ -5,7 +5,7 @@ import { IProps } from './types';
 import ErrorIcon from '@mui/icons-material/ErrorOutlineOutlined';
 
 const NotFound = React.memo(
-    ({ errorMessage = "We couldn't find page page your are looking for.", errorCode = '404' }: IProps) => {
+    ({ errorMessage = "We couldn't find the page you are looking for.", errorCode = '404' }: IProps) => {
         return (
             <Grid
                 container

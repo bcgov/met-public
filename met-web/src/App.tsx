@@ -1,6 +1,6 @@
 import './App.scss';
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import UserService from './services/userService';
 import { useAppSelector, useAppDispatch } from './hooks';
 import { MidScreenLoader, MobileToolbar } from './components/common';
@@ -15,6 +15,8 @@ import { NotificationModal } from 'components/common/modal';
 import { FeedbackModal } from 'components/feedback/FeedbackModal';
 import { AppConfig } from 'config';
 import NoAccess from 'routes/NoAccess';
+import NotFound from 'routes/NotFound';
+import { validBasenames, EAO } from './constants';
 
 const App = () => {
     const drawerWidth = 280;
@@ -23,20 +25,39 @@ const App = () => {
     const roles = useAppSelector((state) => state.user.roles);
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const authenticationLoading = useAppSelector((state) => state.user.authentication.loading);
+    const pathSegments = window.location.pathname.split('/');
+    const basename = pathSegments[1];
+
+    // TODO: Remove this when we have a better way to fetch the valid basenames
+    const isValidBasename = !basename || validBasenames.includes(basename);
 
     useEffect(() => {
         UserService.initKeycloak(dispatch);
     }, [dispatch]);
 
-    sessionStorage.setItem('apiurl', String(AppConfig.apiUrl));
+    useEffect(() => {
+        sessionStorage.setItem('tenantId', basename || EAO);
+        sessionStorage.setItem('apiurl', String(AppConfig.apiUrl));
+    }, [basename, AppConfig.apiUrl]);
 
     if (authenticationLoading) {
         return <MidScreenLoader />;
     }
 
-    if (!isLoggedIn) {
+    if (!isValidBasename) {
         return (
             <Router>
+                <PublicHeader />
+                <Routes>
+                    <Route path="*" element={<NotFound />} />
+                </Routes>
+            </Router>
+        );
+    }
+
+    if (!isLoggedIn) {
+        return (
+            <Router basename={basename}>
                 <PageViewTracker />
                 <Notification />
                 <NotificationModal />
@@ -49,7 +70,7 @@ const App = () => {
 
     if (roles.length === 0) {
         return (
-            <Router>
+            <Router basename={basename}>
                 <PublicHeader />
                 <Container>
                     <NoAccess />
@@ -61,7 +82,7 @@ const App = () => {
 
     if (!isMediumScreen) {
         return (
-            <Router>
+            <Router basename={basename}>
                 <InternalHeader />
                 <Container>
                     <MobileToolbar />
@@ -73,7 +94,7 @@ const App = () => {
     }
 
     return (
-        <Router>
+        <Router basename={basename}>
             <Box sx={{ display: 'flex' }}>
                 <InternalHeader drawerWidth={drawerWidth} />
                 <Notification />
