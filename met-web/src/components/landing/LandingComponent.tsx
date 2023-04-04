@@ -15,6 +15,7 @@ const LandingComponent = () => {
     const { searchFilters, setSearchFilters, setPage, page } = useContext(LandingContext);
     const [engagementOptionsLoading, setEngagementOptionsLoading] = useState(false);
     const [engagementOptions, setEngagementOptions] = useState<Engagement[]>([]);
+    const [didMount, setDidMount] = useState(false);
 
     const loadEngagementOptions = async (searchText: string) => {
         if (!searchText) {
@@ -41,8 +42,14 @@ const LandingComponent = () => {
     const tileBlockRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const yOffset = tileBlockRef?.current?.offsetTop;
-        window.scrollTo({ top: yOffset || 0, behavior: 'smooth' });
+        setDidMount(true);
+        return () => setDidMount(false);
+    }, []);
+    useEffect(() => {
+        if (didMount) {
+            const yOffset = tileBlockRef?.current?.offsetTop;
+            window.scrollTo({ top: yOffset || 0, behavior: 'smooth' });
+        }
     }, [page]);
 
     return (
