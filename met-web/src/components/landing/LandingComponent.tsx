@@ -6,15 +6,17 @@ import TileBlock from './TileBlock';
 import { Engagement } from 'models/engagement';
 import { debounce } from 'lodash';
 import { getEngagements } from 'services/engagementService';
-import { ENGAGEMENT_PROJECT_TYPES } from 'components/engagement/form/EngagementFormTabs/constants';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { LandingContext } from './LandingContext';
 import { Container } from '@mui/system';
+import { AppConfig } from 'config';
 
 const LandingComponent = () => {
     const { searchFilters, setSearchFilters, setPage, page } = useContext(LandingContext);
     const [engagementOptionsLoading, setEngagementOptionsLoading] = useState(false);
     const [engagementOptions, setEngagementOptions] = useState<Engagement[]>([]);
+
+    const { engagementProjectTypes } = AppConfig.constants;
 
     const loadEngagementOptions = async (searchText: string) => {
         if (!searchText) {
@@ -210,7 +212,7 @@ const LandingComponent = () => {
                                 <MenuItem value={''} sx={{ fontStyle: 'italic', height: '2em' }}>
                                     {' '}
                                 </MenuItem>
-                                {ENGAGEMENT_PROJECT_TYPES.map((type) => {
+                                {engagementProjectTypes.map((type: string) => {
                                     return (
                                         <MenuItem key={type} value={type}>
                                             {type}
