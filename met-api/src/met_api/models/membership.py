@@ -30,6 +30,7 @@ class Membership(BaseModel):
     user = db.relationship('User', foreign_keys=[user_id], lazy='joined')
     membership_status = db.relationship('MembershipStatusCode', foreign_keys=[status], lazy='select')
     engagement = db.relationship('Engagement', foreign_keys=[engagement_id], lazy='select')
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
 
     @classmethod
     def find_by_engagement(cls, engagement_id) -> List[Membership]:
