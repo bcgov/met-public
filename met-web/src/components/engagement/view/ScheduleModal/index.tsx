@@ -25,12 +25,7 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
     const dispatch = useAppDispatch();
 
     const isEngagementReady = () => {
-        return (
-            savedEngagement.surveys.length === 1 &&
-            savedEngagement.content &&
-            savedEngagement.description &&
-            savedEngagement.banner_url
-        );
+        return savedEngagement.surveys.length === 1 && savedEngagement.content && savedEngagement.description;
     };
 
     const handleChange = (newDate: Dayjs | null) => {

@@ -580,3 +580,18 @@ div[disabled] {
   @extend .BC-Gov-PrimaryButton;
   @extend .BC-Gov-PrimaryButton:hover;
 }
+
+.progress-bar-container {
+  width: 100%;
+  background-color: #f3f3f3;
+  padding: 5px;
+}
+
+.progress-bar {
+  width: 0%;
+  height: 20px;
+  background-color: #4caf50;
+  text-align: center;
+  line-height: 20px;
+  color: white;
+}
