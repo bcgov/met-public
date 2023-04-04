@@ -218,7 +218,7 @@ const SurveyFormBuilder = () => {
                     <FormControlLabel
                         control={
                             <Switch
-                                checked={formDefinition.display === 'wizard'}
+                                checked={isMultiPage}
                                 onChange={(e) => {
                                     dispatch(
                                         openNotificationModal({
@@ -227,11 +227,10 @@ const SurveyFormBuilder = () => {
                                                 header: 'Change Survey Type',
                                                 subText: [
                                                     {
-                                                        text: `You will be changing the survey type from ${
-                                                            isMultiPage
-                                                                ? 'multi page to single page'
-                                                                : 'single page to multi page'
-                                                        }.`,
+                                                        text: `You will be changing the survey type from ${isMultiPage
+                                                            ? 'multi page to single page'
+                                                            : 'single page to multi page'
+                                                            }.`,
                                                     },
                                                     {
                                                         text: 'You will lose all current progress if you do.',
