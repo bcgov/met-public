@@ -55,7 +55,18 @@ const KC_REALM = getEnv('REACT_APP_KEYCLOAK_REALM');
 const KC_ADMIN_ROLE = getEnv('REACT_APP_KEYCLOAK_ADMIN_ROLE');
 
 // App constants
-const ENGAGEMENT_PROJECT_TYPES: string[] = getEnv('REACT_APP_ENGAGEMENT_PROJECT_TYPES', '').split(',');
+const ENGAGEMENT_PROJECT_TYPES: string[] = getEnv(
+    'REACT_APP_ENGAGEMENT_PROJECT_TYPES',
+    'Energy-Electricity,Energy - Petroleum & Natural Gas,' +
+        'Food Processing,' +
+        'Industrial,' +
+        'Mines,' +
+        'Other,' +
+        'Tourist Destination Resorts,' +
+        'Transportation,' +
+        'Waste Disposal,' +
+        'Water Management',
+).split(',');
 
 export const AppConfig = {
     apiUrl: API_URL,
