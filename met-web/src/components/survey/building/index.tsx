@@ -32,7 +32,7 @@ const SurveyFormBuilder = () => {
     const [savedEngagement, setSavedEngagement] = useState<Engagement | null>(null);
 
     const [formDefinition, setFormDefinition] = useState<FormBuilderData>({ display: 'form', components: [] });
-
+    const isMultiPage = formDefinition.display === 'wizard';
     const hasEngagement = Boolean(savedSurvey?.engagement_id);
     const isEngagementDraft = savedEngagement?.status_id === EngagementStatus.Draft;
     const hasPublishedEngagement = hasEngagement && !isEngagementDraft;
@@ -228,13 +228,9 @@ const SurveyFormBuilder = () => {
                                                 subText: [
                                                     {
                                                         text: `You will be changing the survey type from ${
-                                                            formDefinition.display === 'wizard'
-                                                                ? 'multi page'
-                                                                : 'single page'
-                                                        } to ${
-                                                            formDefinition.display === 'wizard'
-                                                                ? 'single page'
-                                                                : 'multi page'
+                                                            isMultiPage
+                                                                ? 'multi page to single page'
+                                                                : 'single page to multi page'
                                                         }.`,
                                                     },
                                                     {
@@ -247,8 +243,7 @@ const SurveyFormBuilder = () => {
                                                 ],
                                                 handleConfirm: () => {
                                                     setFormDefinition({
-                                                        display:
-                                                            formDefinition.display === 'wizard' ? 'form' : 'wizard',
+                                                        display: isMultiPage ? 'form' : 'wizard',
                                                         components: [],
                                                     });
                                                 },
