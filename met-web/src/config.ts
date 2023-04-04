@@ -20,6 +20,9 @@ declare global {
             REACT_APP_KEYCLOAK_CLIENT: string;
             REACT_APP_KEYCLOAK_REALM: string;
             REACT_APP_KEYCLOAK_ADMIN_ROLE: string;
+
+            // Constants
+            REACT_APP_ENGAGEMENT_PROJECT_TYPES: string;
         };
     }
 }
@@ -51,6 +54,9 @@ const KC_CLIENT = getEnv('REACT_APP_KEYCLOAK_CLIENT');
 const KC_REALM = getEnv('REACT_APP_KEYCLOAK_REALM');
 const KC_ADMIN_ROLE = getEnv('REACT_APP_KEYCLOAK_ADMIN_ROLE');
 
+// App constants
+const ENGAGEMENT_PROJECT_TYPES: string[] = getEnv('REACT_APP_ENGAGEMENT_PROJECT_TYPES', '').split(',');
+
 export const AppConfig = {
     apiUrl: API_URL,
     publicUrl: PUBLIC_URL,
@@ -71,5 +77,8 @@ export const AppConfig = {
         clientId: KC_CLIENT || '',
         realm: KC_REALM || '',
         adminRole: KC_ADMIN_ROLE || 'admin',
+    },
+    constants: {
+        engagementProjectTypes: ENGAGEMENT_PROJECT_TYPES,
     },
 };

@@ -7,12 +7,13 @@ import { ActionContext } from '../ActionContext';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { EngagementTabsContext } from './EngagementTabsContext';
-import { ENGAGEMENT_PROJECT_TYPES } from './constants';
+import { AppConfig } from 'config';
 
 const EngagementSettings = () => {
     const { savedEngagement } = useContext(ActionContext);
     const { engagementFormData, setEngagementFormData } = useContext(EngagementTabsContext);
     const { project_id, project_metadata } = engagementFormData;
+    const { engagementProjectTypes } = AppConfig.constants;
 
     const dispatch = useAppDispatch();
 
@@ -124,7 +125,7 @@ const EngagementSettings = () => {
                         <MenuItem value={''} sx={{ fontStyle: 'italic', height: '2em' }}>
                             none
                         </MenuItem>
-                        {ENGAGEMENT_PROJECT_TYPES.map((type) => {
+                        {engagementProjectTypes.map((type: string) => {
                             return (
                                 <MenuItem key={type} value={type}>
                                     {type}
