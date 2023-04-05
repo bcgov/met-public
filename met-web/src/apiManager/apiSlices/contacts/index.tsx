@@ -1,11 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { AppConfig } from 'config';
 import { Contact } from 'models/contact';
+import { prepareHeaders } from 'apiManager//apiSlices/util';
 
 // Define a service using a base URL and expected endpoints
 export const contactsApi = createApi({
     reducerPath: 'contactsApi',
-    baseQuery: fetchBaseQuery({ baseUrl: AppConfig.apiUrl }),
+    baseQuery: fetchBaseQuery({
+        baseUrl: AppConfig.apiUrl,
+        prepareHeaders,
+    }),
     endpoints: (builder) => ({
         getContacts: builder.query<Contact[], void>({
             query: () => `contacts/`,
