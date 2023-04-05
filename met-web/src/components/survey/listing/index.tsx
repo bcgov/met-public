@@ -11,9 +11,15 @@ import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
 import { getSurveysPage } from 'services/surveyService';
-import { useAppDispatch } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
+import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+import CheckIcon from '@mui/icons-material/Check';
+import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
+import { ApprovedIcon, NewIcon, PendingIcon, RejectedIcon } from 'components/engagement/listing/Icons';
+import CloseRounded from '@mui/icons-material/CloseRounded';
+import FiberNewOutlined from '@mui/icons-material/FiberNewOutlined';
 
 const SurveyListing = () => {
     const [searchFilter, setSearchFilter] = useState({
@@ -32,6 +38,10 @@ const SurveyListing = () => {
     const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
 
     const [tableLoading, setTableLoading] = useState(true);
+
+    const { roles, assignedEngagements } = useAppSelector((state) => state.user);
+
+    const canViewPrivateEngagements = roles.includes(SCOPES.viewPrivateEngagements);
 
     const dispatch = useAppDispatch();
 
@@ -155,20 +165,110 @@ const SurveyListing = () => {
             key: 'comments_meta_data',
             numeric: true,
             disablePadding: false,
-            label: 'Responses',
+            label: 'Comments',
+            customStyle: { padding: 2 },
+            align: 'left',
+            hideSorticon: true,
             allowSort: false,
             getValue: (row: Survey) => {
-                if (!row.comments_meta_data.total) {
-                    return 0;
-                }
+                const isAuthorized = canViewPrivateEngagements || assignedEngagements.includes(Number(row.id));
 
-                const { total, pending } = row.comments_meta_data;
+                if (!isAuthorized) {
+                    return '';
+                }
                 return (
                     <MuiLink component={Link} to={`/surveys/${row.id}/comments`}>
-                        {`${total}`}
-                        {pending ? ` (${pending} New)` : ''}
+                        View All
                     </MuiLink>
                 );
+            },
+        },
+        {
+            key: 'comments_meta_data',
+            numeric: true,
+            disablePadding: false,
+            label: '',
+            customStyle: { padding: 2 },
+            hideSorticon: true,
+            align: 'left',
+            icon: (
+                <ApprovedIcon>
+                    <CheckIcon fontSize="small" />
+                </ApprovedIcon>
+            ),
+            allowSort: false,
+            getValue: (row: Survey) => {
+                const { approved } = row.comments_meta_data;
+                return <ApprovedIcon>{approved || 0}</ApprovedIcon>;
+            },
+        },
+        {
+            key: 'comments_meta_data',
+            numeric: true,
+            disablePadding: false,
+            label: '',
+
+            customStyle: { padding: 2 },
+            hideSorticon: true,
+            align: 'left',
+            icon: (
+                <PendingIcon>
+                    <PriorityHighRoundedIcon fontSize="small" />
+                </PendingIcon>
+            ),
+            allowSort: false,
+            getValue: (row: Survey) => {
+                if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
+                    return <></>;
+                }
+                const { needs_further_review } = row.comments_meta_data;
+                return <PendingIcon>{needs_further_review || 0}</PendingIcon>;
+            },
+        },
+        {
+            key: 'comments_meta_data',
+            numeric: true,
+            disablePadding: false,
+            label: '',
+
+            customStyle: { padding: 2 },
+            hideSorticon: true,
+            align: 'left',
+            icon: (
+                <RejectedIcon>
+                    <CloseRounded fontSize="small" />
+                </RejectedIcon>
+            ),
+            allowSort: false,
+            getValue: (row: Survey) => {
+                if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
+                    return <></>;
+                }
+                const { rejected } = row.comments_meta_data;
+                return <RejectedIcon>{rejected || 0}</RejectedIcon>;
+            },
+        },
+        {
+            key: 'comments_meta_data',
+            numeric: true,
+            disablePadding: false,
+            label: '',
+
+            customStyle: { padding: 2 },
+            hideSorticon: true,
+            align: 'left',
+            icon: (
+                <NewIcon>
+                    <FiberNewOutlined fontSize="small" />
+                </NewIcon>
+            ),
+            allowSort: false,
+            getValue: (row: Survey) => {
+                if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
+                    return <></>;
+                }
+                const { pending } = row.comments_meta_data;
+                return <NewIcon>{pending || 0}</NewIcon>;
             },
         },
         {

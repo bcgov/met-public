@@ -10,6 +10,7 @@ import { createDefaultSurvey } from 'models/survey';
 import { createDefaultEngagement } from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
 import assert from 'assert';
+import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 
 const mockEngagementOne = {
     ...createDefaultEngagement(),
@@ -65,8 +66,11 @@ const mockSurveyTwo = {
     engagement: mockEngagementTwo,
     created_date: '2022-09-15 10:00:00',
     comments_meta_data: {
-        pending: 1,
         total: 12,
+        pending: 1,
+        approved: 4,
+        rejected: 3,
+        needs_further_review: 4,
     },
 };
 
@@ -82,6 +86,16 @@ jest.mock('components/common', () => ({
     PrimaryButton: ({ children, ...rest }: { children: ReactNode; [prop: string]: unknown }) => {
         return <button {...rest}>{children}</button>;
     },
+}));
+
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useSelector: jest.fn(() => {
+        return {
+            roles: [SCOPES.viewPrivateEngagement, SCOPES.editEngagement, SCOPES.createEngagement],
+            assignedEngagements: [mockEngagementOne.id, mockEngagementTwo.id],
+        };
+    }),
 }));
 
 describe('Survey form page tests', () => {
