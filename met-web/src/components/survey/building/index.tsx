@@ -15,6 +15,7 @@ import { FormBuilderData } from 'components/Form/types';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { getEngagement } from 'services/engagementService';
 import { Engagement } from 'models/engagement';
+import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
 const SurveyFormBuilder = () => {
     const navigate = useNavigate();
@@ -31,7 +32,7 @@ const SurveyFormBuilder = () => {
     const [savedEngagement, setSavedEngagement] = useState<Engagement | null>(null);
 
     const [formDefinition, setFormDefinition] = useState<FormBuilderData>({ display: 'form', components: [] });
-
+    const isMultiPage = formDefinition.display === 'wizard';
     const hasEngagement = Boolean(savedSurvey?.engagement_id);
     const isEngagementDraft = savedEngagement?.status_id === EngagementStatus.Draft;
     const hasPublishedEngagement = hasEngagement && !isEngagementDraft;
@@ -217,13 +218,39 @@ const SurveyFormBuilder = () => {
                     <FormControlLabel
                         control={
                             <Switch
-                                checked={formDefinition.display === 'wizard'}
+                                checked={isMultiPage}
                                 onChange={(e) => {
-                                    if (e.target.checked) {
-                                        setFormDefinition({ display: 'wizard', components: [] });
-                                        return;
-                                    }
-                                    setFormDefinition({ display: 'form', components: [] });
+                                    dispatch(
+                                        openNotificationModal({
+                                            open: true,
+                                            data: {
+                                                header: 'Change Survey Type',
+                                                subText: [
+                                                    {
+                                                        text: `You will be changing the survey type from ${
+                                                            isMultiPage
+                                                                ? 'multi page to single page'
+                                                                : 'single page to multi page'
+                                                        }.`,
+                                                    },
+                                                    {
+                                                        text: 'You will lose all current progress if you do.',
+                                                        bold: true,
+                                                    },
+                                                    {
+                                                        text: 'Do you want to change this survey type?',
+                                                    },
+                                                ],
+                                                handleConfirm: () => {
+                                                    setFormDefinition({
+                                                        display: isMultiPage ? 'form' : 'wizard',
+                                                        components: [],
+                                                    });
+                                                },
+                                            },
+                                            type: 'confirm',
+                                        }),
+                                    );
                                 }}
                             />
                         }
