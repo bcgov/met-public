@@ -11,15 +11,11 @@ interface PageData {
 
 const FormSubmit = ({ handleFormChange, savedForm, handleFormSubmit }: FormSubmitterProps) => {
     const [currentPage, setCurrentPage] = useState(0);
+    const isMultiPage = savedForm && savedForm.display === 'wizard';
     return (
         <div className="formio">
-            {savedForm && savedForm.display === 'wizard' ? (
-                <ProgressBar
-                    currentPage={currentPage}
-                    totalPages={
-                        savedForm != undefined ? (savedForm.display === 'wizard' ? savedForm.components.length - 1 : 0) : 0
-                    }
-                />
+            {isMultiPage ? (
+                <ProgressBar currentPage={currentPage} totalPages={savedForm.components.length - 1} />
             ) : (
                 <></>
             )}
