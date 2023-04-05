@@ -38,6 +38,10 @@ const App = () => {
     useEffect(() => {
         sessionStorage.setItem('tenantId', basename || EAO);
         sessionStorage.setItem('apiurl', String(AppConfig.apiUrl));
+
+        if (window.location.pathname === '/') {
+            window.location.replace(`/${EAO}`);
+        }
     }, [basename, AppConfig.apiUrl]);
 
     if (authenticationLoading) {
