@@ -10,7 +10,6 @@ interface PageData {
 }
 
 const FormSubmit = ({ handleFormChange, savedForm, handleFormSubmit }: FormSubmitterProps) => {
-    console.log(savedForm);
     const [currentPage, setCurrentPage] = useState(0);
     return (
         <div className="formio">
