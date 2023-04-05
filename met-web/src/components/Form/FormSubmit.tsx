@@ -10,15 +10,15 @@ interface PageData {
 }
 
 const FormSubmit = ({ handleFormChange, savedForm, handleFormSubmit }: FormSubmitterProps) => {
-    const [currentPage, setCurrentPage] = useState(1);
-
+    console.log(savedForm);
+    const [currentPage, setCurrentPage] = useState(0);
     return (
         <div className="formio">
             {savedForm && savedForm.display === 'wizard' ? (
                 <ProgressBar
                     currentPage={currentPage}
                     totalPages={
-                        savedForm != undefined ? (savedForm.display === 'wizard' ? savedForm.components.length : 1) : 1
+                        savedForm != undefined ? (savedForm.display === 'wizard' ? savedForm.components.length - 1 : 0) : 0
                     }
                 />
             ) : (
@@ -27,8 +27,8 @@ const FormSubmit = ({ handleFormChange, savedForm, handleFormSubmit }: FormSubmi
             <Form
                 form={savedForm || { display: 'form' }}
                 onChange={(form: unknown) => handleFormChange(form as FormSubmissionData)}
-                onNextPage={(pageData: PageData) => setCurrentPage(pageData.page + 1)}
-                onPrevPage={(pageData: PageData) => setCurrentPage(pageData.page + 1)}
+                onNextPage={(pageData: PageData) => setCurrentPage(pageData.page)}
+                onPrevPage={(pageData: PageData) => setCurrentPage(pageData.page)}
                 onSubmit={(form: unknown) => {
                     const formSubmissionData = form as FormSubmissionData;
                     handleFormSubmit(formSubmissionData.data);
