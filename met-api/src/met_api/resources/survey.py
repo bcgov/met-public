@@ -72,6 +72,7 @@ class Surveys(Resource):
     def get():
         """Fetch surveys."""
         try:
+            user_id = TokenInfo.get_id()
             args = request.args
 
             pagination_options = PaginationOptions(
@@ -85,7 +86,9 @@ class Surveys(Resource):
                 .get_surveys_paginated(
                     pagination_options,
                     args.get('search_text', '', str),
-                    args.get('unlinked', False, bool)
+                    args.get('unlinked', False, bool),
+                    user_id,
+                    args.get('exclude_hidden', False, bool),
             )
             return survey_records, HTTPStatus.OK
         except ValueError as err:

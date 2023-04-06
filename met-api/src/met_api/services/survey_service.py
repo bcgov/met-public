@@ -1,12 +1,21 @@
 """Service for survey management."""
+from http import HTTPStatus
 
 from met_api.constants.engagement_status import Status
 from met_api.models import Engagement as EngagementModel
 from met_api.models import Survey as SurveyModel
+from met_api.models import User as UserModel
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.engagement import EngagementSchema
 from met_api.schemas.survey import SurveySchema
+from met_api.services.keycloak import KeycloakService
 from met_api.services.object_storage_service import ObjectStorageService
+from met_api.utils.enums import KeycloakGroupName
+
+from ..exceptions.business_exception import BusinessException
+
+
+KEYCLOAK_SERVICE = KeycloakService()
 
 
 class SurveyService:
@@ -33,12 +42,23 @@ class SurveyService:
         return survey
 
     @staticmethod
-    def get_surveys_paginated(pagination_options: PaginationOptions, search_text='', unlinked=False):
+    def get_surveys_paginated(pagination_options: PaginationOptions, search_text='', unlinked=False, user_id='',
+                              exclude_hidden=False):
         """Get engagements paginated."""
+        # check if user is an admin
+        user: UserModel = UserModel.get_user_by_external_id(user_id)
+        if not user:
+            raise BusinessException(
+                error='Invalid User.',
+                status_code=HTTPStatus.BAD_REQUEST)
+        is_admin = KeycloakGroupName.EAO_IT_ADMIN.value in SurveyService._get_user_group_names(user)
+        
         items, total = SurveyModel.get_surveys_paginated(
             pagination_options,
             search_text,
             unlinked,
+            is_admin,
+            exclude_hidden,
         )
         surveys_schema = SurveySchema(many=True)
 
@@ -46,6 +66,12 @@ class SurveyService:
             'items': surveys_schema.dump(items),
             'total': total
         }
+
+    @staticmethod
+    def _get_user_group_names(user):
+        groups = KEYCLOAK_SERVICE.get_user_groups(user_id=user.external_id)
+        group_names = [group.get('name') for group in groups]
+        return group_names
 
     @classmethod
     def create(cls, data: SurveySchema):

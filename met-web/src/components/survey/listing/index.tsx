@@ -20,6 +20,7 @@ import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
 import { ApprovedIcon, NewIcon, PendingIcon, RejectedIcon } from 'components/engagement/listing/Icons';
 import CloseRounded from '@mui/icons-material/CloseRounded';
 import FiberNewOutlined from '@mui/icons-material/FiberNewOutlined';
+import { PermissionsGate } from 'components/permissionsGate';
 
 const SurveyListing = () => {
     const [searchFilter, setSearchFilter] = useState({
@@ -325,9 +326,11 @@ const SurveyListing = () => {
                             <SearchIcon />
                         </PrimaryButton>
                     </Stack>
-                    <PrimaryButton component={Link} to="/surveys/create">
-                        + Create Survey
-                    </PrimaryButton>
+                    <PermissionsGate scopes={[SCOPES.createSurvey]} errorProps={{ disabled: true }}>
+                        <PrimaryButton component={Link} to="/surveys/create">
+                            + Create Survey
+                        </PrimaryButton>
+                    </PermissionsGate>
                 </Stack>
             </Grid>
 
