@@ -1,6 +1,6 @@
 import './App.scss';
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import UserService from './services/userService';
 import { useAppSelector, useAppDispatch } from './hooks';
 import { MidScreenLoader, MobileToolbar } from './components/common';
@@ -15,7 +15,6 @@ import { NotificationModal } from 'components/common/modal';
 import { FeedbackModal } from 'components/feedback/FeedbackModal';
 import { AppConfig } from 'config';
 import NoAccess from 'routes/NoAccess';
-import NotFound from 'routes/NotFound';
 import { validBasenames, EAO } from './constants';
 
 const App = () => {
