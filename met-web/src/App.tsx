@@ -1,6 +1,6 @@
 import './App.scss';
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import UserService from './services/userService';
 import { useAppSelector, useAppDispatch } from './hooks';
 import { MidScreenLoader, MobileToolbar } from './components/common';
@@ -15,7 +15,6 @@ import { NotificationModal } from 'components/common/modal';
 import { FeedbackModal } from 'components/feedback/FeedbackModal';
 import { AppConfig } from 'config';
 import NoAccess from 'routes/NoAccess';
-import NotFound from 'routes/NotFound';
 import { validBasenames, EAO } from './constants';
 
 const App = () => {
@@ -29,34 +28,26 @@ const App = () => {
     const basename = pathSegments[1];
 
     // TODO: Remove this when we have a better way to fetch the valid basenames
-    const isValidBasename = !basename || validBasenames.includes(basename);
+    const isValidBasename = basename && validBasenames.includes(basename);
 
     useEffect(() => {
         UserService.initKeycloak(dispatch);
     }, [dispatch]);
 
     useEffect(() => {
-        sessionStorage.setItem('tenantId', basename || EAO);
         sessionStorage.setItem('apiurl', String(AppConfig.apiUrl));
 
-        if (window.location.pathname === '/') {
-            window.location.replace(`/${EAO}`);
+        if (isValidBasename) {
+            sessionStorage.setItem('tenantId', basename);
+        } else {
+            sessionStorage.setItem('tenantId', EAO);
+            const path = window.location.pathname.length > 1 ? window.location.pathname : '';
+            window.location.replace(`/${EAO}${path}`);
         }
     }, [basename, AppConfig.apiUrl]);
 
     if (authenticationLoading) {
         return <MidScreenLoader />;
-    }
-
-    if (!isValidBasename) {
-        return (
-            <Router>
-                <PublicHeader />
-                <Routes>
-                    <Route path="*" element={<NotFound />} />
-                </Routes>
-            </Router>
-        );
     }
 
     if (!isLoggedIn) {
