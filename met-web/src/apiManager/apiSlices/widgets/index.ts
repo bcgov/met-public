@@ -1,12 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { AppConfig } from 'config';
 import { Widget } from 'models/widget';
-import UserService from 'services/userService';
+import { prepareHeaders } from 'apiManager//apiSlices/util';
 
 // Define a service using a base URL and expected endpoints
 export const widgetsApi = createApi({
     reducerPath: 'widgetsApi',
-    baseQuery: fetchBaseQuery({ baseUrl: AppConfig.apiUrl }),
+    baseQuery: fetchBaseQuery({
+        baseUrl: AppConfig.apiUrl,
+        prepareHeaders,
+    }),
     tagTypes: ['Widgets'],
     endpoints: (builder) => ({
         getWidgets: builder.query<Widget[], number>({
@@ -19,10 +22,6 @@ export const widgetsApi = createApi({
                 url: `widgets/engagement/${widget.engagement_id}`,
                 method: 'POST',
                 body: widget,
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${UserService.getToken()}`,
-                },
             }),
             invalidatesTags: ['Widgets'],
         }),
@@ -31,10 +30,6 @@ export const widgetsApi = createApi({
                 url: `widgets/engagement/${engagementId}/sort_index`,
                 method: 'PATCH',
                 body: widgets,
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${UserService.getToken()}`,
-                },
             }),
             invalidatesTags: ['Widgets'],
         }),
@@ -42,10 +37,6 @@ export const widgetsApi = createApi({
             query: ({ engagementId, widgetId }) => ({
                 url: `widgets/engagement/${engagementId}/widget/${widgetId}`,
                 method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${UserService.getToken()}`,
-                },
             }),
             invalidatesTags: (_result, _error, arg) => [{ type: 'Widgets', id: arg.widgetId }],
         }),
