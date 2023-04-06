@@ -36,7 +36,7 @@ class SubmissionService:
     def get(cls, submission_id):
         """Get submission by the id."""
         db_data = Submission.get(submission_id)
-        return SubmissionSchema().dump(db_data)
+        return SubmissionSchema(exclude=['submission_json']).dump(db_data)
 
     @classmethod
     def get_by_token(cls, token):
@@ -232,7 +232,7 @@ class SubmissionService:
             search_text,
         )
         return {
-            'items': SubmissionSchema(many=True).dump(items),
+            'items': SubmissionSchema(many=True, exclude=['submission_json']).dump(items),
             'total': total
         }
 
