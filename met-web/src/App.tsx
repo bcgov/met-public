@@ -29,34 +29,26 @@ const App = () => {
     const basename = pathSegments[1];
 
     // TODO: Remove this when we have a better way to fetch the valid basenames
-    const isValidBasename = !basename || validBasenames.includes(basename);
+    const isValidBasename = basename && validBasenames.includes(basename);
 
     useEffect(() => {
         UserService.initKeycloak(dispatch);
     }, [dispatch]);
 
     useEffect(() => {
-        sessionStorage.setItem('tenantId', basename || EAO);
         sessionStorage.setItem('apiurl', String(AppConfig.apiUrl));
 
-        if (window.location.pathname === '/') {
-            window.location.replace(`/${EAO}`);
+        if (isValidBasename) {
+            sessionStorage.setItem('tenantId', basename);
+        } else {
+            sessionStorage.setItem('tenantId', EAO);
+            const path = window.location.pathname.length > 1 ? window.location.pathname : '';
+            window.location.replace(`/${EAO}${path}`);
         }
     }, [basename, AppConfig.apiUrl]);
 
     if (authenticationLoading) {
         return <MidScreenLoader />;
-    }
-
-    if (!isValidBasename) {
-        return (
-            <Router>
-                <PublicHeader />
-                <Routes>
-                    <Route path="*" element={<NotFound />} />
-                </Routes>
-            </Router>
-        );
     }
 
     if (!isLoggedIn) {
