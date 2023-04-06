@@ -56,6 +56,7 @@ def factory_survey_model(survey_info: dict = TestSurveyInfo.survey1):
         updated_by=survey_info.get('updated_by'),
         created_date=survey_info.get('created_date'),
         updated_date=survey_info.get('updated_date'),
+        is_hidden=survey_info.get('is_hidden'),
     )
     db.session.add(survey)
     db.session.commit()
@@ -72,6 +73,7 @@ def factory_survey_and_eng_model(survey_info: dict = TestSurveyInfo.survey1):
         updated_by=survey_info.get('updated_by'),
         created_date=survey_info.get('created_date'),
         updated_date=survey_info.get('updated_date'),
+        is_hidden=survey_info.get('is_hidden'),
         engagement_id=eng.id
     )
     db.session.add(survey)

@@ -278,12 +278,12 @@ const SurveyFormBuilder = () => {
             <Grid item xs={12}>
                 <FormBuilder handleFormChange={handleFormChange} savedForm={formDefinition} />
             </Grid>
-            <PermissionsGate scopes={[SCOPES.createSurvey]} errorProps={{ disabled: true }}>
-                <Grid item xs={12}>
-                    <Stack direction="row" spacing={0}>
-                        <FormGroup>
-                            <FormControlLabel
-                                control={
+            <Grid item xs={12}>
+                <Stack direction="row" spacing={0}>
+                    <FormGroup>
+                        <FormControlLabel
+                            control={
+                                <PermissionsGate scopes={[SCOPES.createSurvey]} errorProps={{ disabled: true }}>
                                     <Switch
                                         checked={isHiddenSurvey}
                                         onChange={(e) => {
@@ -294,18 +294,18 @@ const SurveyFormBuilder = () => {
                                             setIsHiddenSurvey(false);
                                         }}
                                     />
-                                }
-                                label="Hide Survey"
-                            />
-                        </FormGroup>
-                        <Tooltip title="When you toggle ON this option and save your Survey, your Survey will be 'Hidden'. As long as this option is on, the Survey will only be visible to Superusers. When you are ready to make it available, change the toggle to OFF and click the Save button.">
-                            <IconButton>
-                                <HelpIcon sx={{ fontSize: 20, color: `${Palette.primary.main}` }} />
-                            </IconButton>
-                        </Tooltip>
-                    </Stack>
-                </Grid>
-            </PermissionsGate>
+                                </PermissionsGate>
+                            }
+                            label="Hide Survey"
+                        />
+                    </FormGroup>
+                    <Tooltip title="When you toggle ON this option and save your Survey, your Survey will be 'Hidden'. As long as this option is on, the Survey will only be visible to Superusers. When you are ready to make it available, change the toggle to OFF and click the Save button.">
+                        <IconButton>
+                            <HelpIcon sx={{ fontSize: 20, color: `${Palette.primary.main}` }} />
+                        </IconButton>
+                    </Tooltip>
+                </Stack>
+            </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
                     <PrimaryButton

@@ -1,21 +1,14 @@
 """Service for survey management."""
-from http import HTTPStatus
 
 from met_api.constants.engagement_status import Status
 from met_api.models import Engagement as EngagementModel
 from met_api.models import Survey as SurveyModel
-from met_api.models import User as UserModel
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.engagement import EngagementSchema
 from met_api.schemas.survey import SurveySchema
-from met_api.services.keycloak import KeycloakService
 from met_api.services.object_storage_service import ObjectStorageService
-from met_api.utils.enums import KeycloakGroupName
-
-from ..exceptions.business_exception import BusinessException
-
-
-KEYCLOAK_SERVICE = KeycloakService()
+from met_api.utils.roles import Role
+from met_api.utils.token_info import TokenInfo
 
 
 class SurveyService:
@@ -42,22 +35,20 @@ class SurveyService:
         return survey
 
     @staticmethod
-    def get_surveys_paginated(pagination_options: PaginationOptions, search_text='', unlinked=False, user_id='',
+    def get_surveys_paginated(pagination_options: PaginationOptions, search_text='', unlinked=False,
                               exclude_hidden=False):
         """Get engagements paginated."""
-        # check if user is an admin
-        user: UserModel = UserModel.get_user_by_external_id(user_id)
-        if not user:
-            raise BusinessException(
-                error='Invalid User.',
-                status_code=HTTPStatus.BAD_REQUEST)
-        is_admin = KeycloakGroupName.EAO_IT_ADMIN.value in SurveyService._get_user_group_names(user)
+        # check if user has view all surveys access to view hidden surveys as well
+        user_roles = TokenInfo.get_user_roles()
+        has_limited_survey_access = SurveyService._validate_user_access_to_view_survey(user_roles)
+
+        if has_limited_survey_access:
+            exclude_hidden = has_limited_survey_access
 
         items, total = SurveyModel.get_surveys_paginated(
             pagination_options,
             search_text,
             unlinked,
-            is_admin,
             exclude_hidden,
         )
         surveys_schema = SurveySchema(many=True)
@@ -68,10 +59,12 @@ class SurveyService:
         }
 
     @staticmethod
-    def _get_user_group_names(user):
-        groups = KEYCLOAK_SERVICE.get_user_groups(user_id=user.external_id)
-        group_names = [group.get('name') for group in groups]
-        return group_names
+    def _validate_user_access_to_view_survey(user_roles):
+        """Return true if user does not have access to view all hidden surveys."""
+        exclude_hidden = True
+        if Role.VIEW_ALL_SURVEYS.value in user_roles:
+            return None
+        return exclude_hidden
 
     @classmethod
     def create(cls, data: SurveySchema):

@@ -75,7 +75,8 @@ class TestSurveyInfo(dict, Enum):
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
         'created_by': '123',
         'updated_by': '123',
-        'form_json': {'display': 'form', 'components': []}
+        'form_json': {'display': 'form', 'components': []},
+        'is_hidden': False
     }
     survey2 = {
         'name': fake.name(),

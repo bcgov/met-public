@@ -37,3 +37,4 @@ class Role(Enum):
     ACCESS_DASHBOARD = 'access_dashboard'
     VIEW_MEMBERS = 'view_members'
     EDIT_MEMBERS = 'edit_members'
+    VIEW_ALL_SURVEYS = 'view_all_surveys'
