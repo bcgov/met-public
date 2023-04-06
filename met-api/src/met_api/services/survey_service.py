@@ -52,7 +52,7 @@ class SurveyService:
                 error='Invalid User.',
                 status_code=HTTPStatus.BAD_REQUEST)
         is_admin = KeycloakGroupName.EAO_IT_ADMIN.value in SurveyService._get_user_group_names(user)
-        
+
         items, total = SurveyModel.get_surveys_paginated(
             pagination_options,
             search_text,

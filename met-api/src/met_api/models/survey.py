@@ -59,7 +59,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
             if exclude_hidden:
                 query = query.filter(or_(Survey.is_hidden.is_(False), Survey.is_hidden == null_value))
         else:
-            query = query.filter(or_(Survey.is_hidden.is_(False), Survey.is_hidden == null_value))        
+            query = query.filter(or_(Survey.is_hidden.is_(False), Survey.is_hidden == null_value))
 
         if unlinked:
             query = query.filter(Survey.engagement_id.is_(None))
