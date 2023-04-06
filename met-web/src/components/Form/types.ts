@@ -11,7 +11,7 @@ export interface FormBuilderProps {
 
 export interface FormBuilderData {
     display: string;
-    components: unknown;
+    components: Array<unknown>;
 }
 export interface FormSubmissionData {
     data: unknown;
