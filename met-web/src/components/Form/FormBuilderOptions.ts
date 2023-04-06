@@ -21,6 +21,7 @@ export const formioOptions = {
                 categorycheckboxes: true,
                 categorycommentcontainer: true,
                 simplehtmlelement: true,
+                content: true,
             },
             default: true,
         },
