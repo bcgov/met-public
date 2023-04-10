@@ -23,12 +23,17 @@ const layerStyle: AnyLayer = {
         'fill-color': '#00ffff',
         'fill-opacity': 0.5,
     },
+    filter: ['all', ['==', ['geometry-type'], 'Polygon']],
 };
 
 const lineStyle: AnyLayer = {
     id: 'lines',
     type: 'line',
-    source: 'lines',
+    filter: ['all', ['==', ['geometry-type'], 'LineString'], ['!=', ['get', 'type'], 'platform']],
+    layout: {
+        'line-join': 'round',
+        'line-cap': 'round',
+    },
     paint: {
         'line-width': 1,
         'line-color': '#00ffff',
