@@ -40,10 +40,10 @@ class SurveyService:
         """Get engagements paginated."""
         # check if user has view all surveys access to view hidden surveys as well
         user_roles = TokenInfo.get_user_roles()
-        has_limited_survey_access = SurveyService._can_user_access_hidden_surveys(user_roles)
+        has_access_to_hidden_surveys = SurveyService._can_user_access_hidden_surveys(user_roles)
 
-        if has_limited_survey_access:
-            exclude_hidden = has_limited_survey_access
+        if not has_access_to_hidden_surveys:
+            exclude_hidden = True
 
         items, total = SurveyModel.get_surveys_paginated(
             pagination_options,
@@ -61,10 +61,10 @@ class SurveyService:
     @staticmethod
     def _can_user_access_hidden_surveys(user_roles):
         """Return true if user does not have access to view all hidden surveys."""
-        exclude_hidden = True
+        has_access_to_hidden_surveys = False
         if Role.VIEW_ALL_SURVEYS.value in user_roles:
-            return False
-        return exclude_hidden
+            return True
+        return has_access_to_hidden_surveys
 
     @classmethod
     def create(cls, data: SurveySchema):
