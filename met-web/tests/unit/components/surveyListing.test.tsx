@@ -88,6 +88,13 @@ jest.mock('components/common', () => ({
     },
 }));
 
+jest.mock('components/permissionsGate', () => ({
+    ...jest.requireActual('components/permissionsGate'),
+    PermissionsGate: ({ children }: { children: ReactNode }) => {
+        return <>{children}</>;
+    },
+}));
+
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
     useSelector: jest.fn(() => {

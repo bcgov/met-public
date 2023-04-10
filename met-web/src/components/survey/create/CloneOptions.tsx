@@ -72,6 +72,7 @@ const CloneOptions = () => {
                 page: page,
                 size: size,
                 sort_order: sort_order,
+                exclude_hidden: true,
             });
             setAvailableSurveys(fetchedSurveys.items);
             setLoadingSurveys(false);

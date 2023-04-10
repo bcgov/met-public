@@ -85,7 +85,8 @@ class Surveys(Resource):
                 .get_surveys_paginated(
                     pagination_options,
                     args.get('search_text', '', str),
-                    args.get('unlinked', False, bool)
+                    args.get('unlinked', False, bool),
+                    args.get('exclude_hidden', False, bool),
             )
             return survey_records, HTTPStatus.OK
         except ValueError as err:

@@ -31,6 +31,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
     submissions = db.relationship('Submission', backref='survey', cascade='all, delete')
     # Survey templates might not need tenant id
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
+    is_hidden = db.Column(db.Boolean, nullable=False)
 
     @classmethod
     def get_open(cls, survey_id) -> Survey:
@@ -45,9 +46,13 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         return survey
 
     @classmethod
-    def get_surveys_paginated(cls, pagination_options: PaginationOptions, search_text='', unlinked=False):
+    def get_surveys_paginated(cls, pagination_options: PaginationOptions, search_text='', unlinked=False,
+                              exclude_hidden=False):
         """Get surveys paginated."""
         query = db.session.query(Survey).join(Engagement, isouter=True).join(EngagementStatus, isouter=True)
+
+        if exclude_hidden:
+            query = query.filter(Survey.is_hidden.is_(False))
 
         if unlinked:
             query = query.filter(Survey.engagement_id.is_(None))
@@ -80,6 +85,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
             created_by=survey.get('created_by', None),
             updated_by=survey.get('updated_by', None),
             engagement_id=survey.get('engagement_id', None),
+            is_hidden=survey.get('is_hidden', False),
 
         )
         db.session.add(new_survey)
@@ -99,6 +105,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
             updated_date=datetime.utcnow(),
             updated_by=survey.get('updated_by', record.updated_by),
             name=survey.get('name', record.name),
+            is_hidden=survey.get('is_hidden', record.is_hidden),
         )
         query.update(update_fields)
         db.session.commit()
