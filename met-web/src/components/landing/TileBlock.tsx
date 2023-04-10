@@ -1,32 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { Engagement } from 'models/engagement';
-import { Grid } from '@mui/material';
+import React, { useContext } from 'react';
+import { Grid, Pagination } from '@mui/material';
 import { RepeatedGrid } from 'components/common';
 import { TileSkeleton } from './TileSkeleton';
-import { getEngagements } from 'services/engagementService';
 import EngagementTile from './EngagementTile';
+import { LandingContext } from './LandingContext';
+import { PAGE_SIZE } from './constants';
 
 const TileBlock = () => {
-    const [engagements, setEngagements] = useState<Engagement[]>([]);
-    const [loadingEngagements, setLoadingEngagements] = useState(true);
-
-    const loadEngagements = async () => {
-        try {
-            const loadedEngagements = await getEngagements({
-                page: 1,
-                size: 50,
-                sort_key: 'engagement.created_date',
-                sort_order: 'desc',
-                include_banner_url: true,
-            });
-            setEngagements(loadedEngagements.items);
-            setLoadingEngagements(false);
-        } catch (error) {}
-    };
-
-    useEffect(() => {
-        loadEngagements();
-    }, []);
+    const { engagements, loadingEngagements, totalEngagements, page, setPage } = useContext(LandingContext);
 
     if (loadingEngagements) {
         return (
@@ -41,18 +22,51 @@ const TileBlock = () => {
         <Grid
             container
             direction="row"
-            alignItems={'flex-start'}
-            justifyContent="flex-start"
+            justifyContent={'flex-start'}
+            alignItems="flex-start"
             columnSpacing={2}
             rowSpacing={4}
         >
             {engagements.map((engagement) => {
                 return (
-                    <Grid key={`Grid-${engagement.id}`} item xs={12} sm={6} md={4} lg={3}>
-                        <EngagementTile passedEngagement={engagement} engagementId={engagement.id} />
+                    <Grid
+                        key={`Grid-${engagement.id}`}
+                        item
+                        xs={12}
+                        sm={6}
+                        md={4}
+                        lg={3}
+                        container
+                        justifyContent={{ xs: 'center', sm: 'flex-start' }}
+                        alignItems={{ xs: 'center', sm: 'flex-start' }}
+                    >
+                        <Grid item>
+                            <EngagementTile passedEngagement={engagement} engagementId={engagement.id} />
+                        </Grid>
                     </Grid>
                 );
             })}
+            <Grid
+                item
+                xs={12}
+                container
+                direction="row"
+                alignItems={'center'}
+                justifyContent="center"
+                marginBottom="2em"
+            >
+                <Grid item>
+                    <Pagination
+                        defaultPage={1}
+                        page={page}
+                        count={Math.ceil(totalEngagements / PAGE_SIZE)}
+                        color="primary"
+                        showFirstButton
+                        showLastButton
+                        onChange={(_, pageNumber) => setPage(pageNumber)}
+                    />
+                </Grid>
+            </Grid>
         </Grid>
     );
 };

@@ -24,9 +24,10 @@ from faker import Faker
 
 from met_api.constants.engagement_status import EngagementDisplayStatus, SubmissionStatus
 from met_api.utils.enums import ContentType
-from tests.utilities.factory_scenarios import TestEngagementInfo, TestJwtClaims, TestUserInfo
+from tests.utilities.factory_scenarios import TestEngagementInfo, TestJwtClaims, TestSubmissionInfo, TestUserInfo
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_engagement_model, factory_membership_model, factory_user_model)
+    factory_auth_header, factory_engagement_model, factory_membership_model, factory_submission_model,
+    factory_survey_and_eng_model, factory_user_model)
 
 
 fake = Faker()
@@ -224,3 +225,29 @@ def test_update_survey_block_engagement(client, jwt, session):  # pylint:disable
     assert len(actual_status_blocks) == 2
     upcoming_block = next(x for x in actual_status_blocks if x.get('survey_status') == SubmissionStatus.Closed.name)
     assert upcoming_block.get('block_text') == block_text_for_upcoming
+
+
+@pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
+def test_count_submissions(client, jwt, session, engagement_info):  # pylint:disable=unused-argument
+    """Assert that an engagement can be POSTed."""
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    factory_user_model(TestJwtClaims.public_user_role.get('sub'))
+    user_details = factory_user_model()
+    survey, eng = factory_survey_and_eng_model()
+    factory_submission_model(
+        survey.id, eng.id, user_details.id, TestSubmissionInfo.approved_submission)
+    factory_submission_model(
+        survey.id, eng.id, user_details.id, TestSubmissionInfo.rejected_submission)
+    factory_submission_model(
+        survey.id, eng.id, user_details.id, TestSubmissionInfo.needs_further_review_submission)
+    factory_submission_model(
+        survey.id, eng.id, user_details.id, TestSubmissionInfo.pending_submission)
+
+    rv = client.get(f'/api/engagements/{eng.id}', data=json.dumps(engagement_info),
+                    headers=headers, content_type=ContentType.JSON.value)
+
+    submission_meta_data = rv.json.get('submissions_meta_data', {})
+    assert submission_meta_data.get('total', 0) == 4
+    assert submission_meta_data.get('approved', 0) == 1
+    assert submission_meta_data.get('pending', 0) == 1
+    assert submission_meta_data.get('needs_further_review', 0) == 1

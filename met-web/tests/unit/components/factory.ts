@@ -1,9 +1,15 @@
 import '@testing-library/jest-dom';
 import { createDefaultSurvey, Survey } from 'models/survey';
-import { createDefaultEngagement, Engagement } from 'models/engagement';
+import {
+    createDefaultEngagement,
+    createDefaultEngagementMetadata,
+    Engagement,
+    EngagementMetadata,
+} from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { WidgetType, Widget, WidgetItem } from 'models/widget';
 import { Event, EventItem } from 'models/event';
+import { WidgetMap } from 'models/widgetMap';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
@@ -49,6 +55,10 @@ const openEngagement = {
     surveys: surveys,
     submissions_meta_data: {
         total: 1,
+        pending: 0,
+        needs_further_review: 0,
+        rejected: 0,
+        approved: 1,
     },
 };
 
@@ -94,4 +104,45 @@ const eventWidget: Widget = {
     items: [eventWidgetItem],
 };
 
-export { draftEngagement, openEngagement, surveys, mockEvent, mockEventItem, eventWidgetItem, eventWidget };
+const mapWidgetItem: WidgetItem = {
+    id: 1,
+    widget_id: 1,
+    widget_data_id: 1,
+    sort_index: 1,
+};
+
+const mapWidget: Widget = {
+    id: 1,
+    widget_type_id: WidgetType.Map,
+    engagement_id: 1,
+    items: [mapWidgetItem],
+};
+
+const mockMap: WidgetMap = {
+    id: 1,
+    widget_id: 1,
+    engagement_id: 1,
+    longitude: 0,
+    latitude: 0,
+    marker_label: 'test',
+    geojson: '',
+    file_name: 'test.zip',
+};
+
+const engagementMetadata: EngagementMetadata = {
+    ...createDefaultEngagementMetadata(),
+    engagement_id: 1,
+};
+
+export {
+    draftEngagement,
+    openEngagement,
+    surveys,
+    mockEvent,
+    mockEventItem,
+    mapWidget,
+    mockMap,
+    eventWidgetItem,
+    eventWidget,
+    engagementMetadata,
+};

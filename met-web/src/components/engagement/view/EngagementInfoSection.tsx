@@ -7,14 +7,18 @@ import { getEditorState } from 'utils';
 import dayjs from 'dayjs';
 import { ActionContext } from './ActionContext';
 import { Engagement } from 'models/engagement';
+import { useAppSelector } from 'hooks';
 
 interface EngagementInfoSectionProps {
     savedEngagement: Engagement;
     children?: React.ReactNode;
 }
 const EngagementInfoSection = ({ savedEngagement, children }: EngagementInfoSectionProps) => {
-    const { name, end_date, start_date, rich_description } = savedEngagement;
+    const { name, end_date, start_date, rich_description, submission_status } = savedEngagement;
     const { mockStatus } = useContext(ActionContext);
+    const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
+    const isPreview = isLoggedIn;
+    const statusName = isPreview ? mockStatus : submission_status;
     const dateFormat = 'MMM DD, YYYY';
 
     const EngagementDate = `Engagement dates: ${dayjs(start_date).format(dateFormat)} to ${dayjs(end_date).format(
@@ -49,11 +53,12 @@ const EngagementInfoSection = ({ savedEngagement, children }: EngagementInfoSect
                     maxWidth: '90%',
                 }}
                 m={{ lg: '3em 5em 0 3em', md: '3em', sm: '1em' }}
-                rowSpacing={2}
             >
-                <Grid item xs={12} sx={{ maxHeight: '20em', overflowY: 'auto', overflowX: 'auto', mb: 2 }}>
+                <Grid item xs={12} sx={{ maxHeight: '20em', overflowY: 'auto', overflowX: 'auto' }}>
                     <MetHeader1>{name}</MetHeader1>
-                    <Editor editorState={getEditorState(rich_description)} readOnly={true} toolbarHidden />
+                    <Grid item xs={12} sx={{ mb: 1 }}>
+                        <Editor editorState={getEditorState(rich_description)} readOnly={true} toolbarHidden />
+                    </Grid>
                 </Grid>
                 <Grid item xs={12}>
                     <Typography sx={{ fontWeight: 'bold' }} variant="subtitle1" color="black">
@@ -65,7 +70,7 @@ const EngagementInfoSection = ({ savedEngagement, children }: EngagementInfoSect
                         <Typography sx={{ fontWeight: 800 }} variant="subtitle1">
                             Status:
                         </Typography>
-                        <EngagementStatusChip submissionStatus={mockStatus} />
+                        <EngagementStatusChip submissionStatus={statusName} />
                     </Stack>
                 </Grid>
                 {children}

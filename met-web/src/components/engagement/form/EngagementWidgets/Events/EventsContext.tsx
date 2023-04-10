@@ -97,7 +97,7 @@ export const EventsProvider = ({ children }: { children: JSX.Element | JSX.Eleme
 
     useEffect(() => {
         loadEvents();
-    }, []);
+    }, [widget]);
 
     const updateWidgetEventsSorting = async (resortedWidgetEvents: Event[]) => {
         if (!widget) {

@@ -10,12 +10,14 @@ import { If, Then, Else } from 'react-if';
 import { EngagementTabsContext } from './EngagementTabsContext';
 import { SUBMISSION_STATUS } from 'constants/engagementStatus';
 import DayCalculatorModal from '../DayCalculator';
-import { ENGAGEMENT_CROPPER_ASPECT_RATIO, ENGAGMENET_UPLOADER_HEIGHT } from './constans';
+import { ENGAGEMENT_CROPPER_ASPECT_RATIO, ENGAGMENET_UPLOADER_HEIGHT } from './constants';
 
 const EngagementForm = () => {
     const {
         handleCreateEngagementRequest,
         handleUpdateEngagementRequest,
+        handleCreateEngagementMetadataRequest,
+        handleUpdateEngagementMetadataRequest,
         isSaving,
         savedEngagement,
         engagementId,
@@ -43,7 +45,7 @@ const EngagementForm = () => {
 
     const isNewEngagement = engagementId === 'create';
 
-    const { name, start_date, end_date } = engagementFormData;
+    const { name, start_date, end_date, description } = engagementFormData;
 
     const surveyBlockList = [
         {
@@ -90,6 +92,11 @@ const EngagementForm = () => {
             ...engagementFormData,
             description: rawText,
         });
+
+        setEngagementFormError({
+            ...engagementFormError,
+            description: false,
+        });
     };
 
     const handleContentChange = (rawText: string) => {
@@ -112,6 +119,7 @@ const EngagementForm = () => {
             name: !(name && name.length < 50),
             start_date: !start_date,
             end_date: !end_date,
+            description: description.length > 550,
         };
         setEngagementFormError(errors);
 
@@ -132,6 +140,11 @@ const EngagementForm = () => {
             status_block: surveyBlockList,
         });
 
+        await handleCreateEngagementMetadataRequest({
+            ...engagementFormData,
+            engagement_id: Number(engagement.id),
+        });
+
         navigate(`/engagements/${engagement.id}/form`);
 
         return engagement;
@@ -149,6 +162,11 @@ const EngagementForm = () => {
             rich_description: richDescription,
             rich_content: richContent,
             status_block: surveyBlockList,
+        });
+
+        await handleUpdateEngagementMetadataRequest({
+            ...engagementFormData,
+            engagement_id: Number(engagementId),
         });
 
         navigate(`/engagements/${engagement.id}/form`);
@@ -295,6 +313,8 @@ const EngagementForm = () => {
                         setRawText={handleDescriptionChange}
                         handleEditorStateChange={handleRichDescriptionChange}
                         initialRawEditorState={initialRichDescription || ''}
+                        error={engagementFormError.description}
+                        helperText={'Description must be less then 550 characters'}
                     />
                 </Grid>
                 <Grid item xs={12}>

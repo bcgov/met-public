@@ -18,6 +18,7 @@ from enum import IntEnum
 class RatingType(IntEnum):
     """Rating types enum."""
 
+    NONE = 0
     VerySatisfied = 1
     Satisfied = 2
     Neutral = 3

@@ -2,10 +2,10 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import { useAppDispatch } from 'hooks';
 import { Widget } from 'models/widget';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { removeWidget, sortWidgets } from 'services/widgetService';
-import { useLazyGetWidgetsQuery } from 'apiManager/apiSlices/widgets';
+import { getWidgets } from 'services/widgetService';
 import { ActionContext } from '../ActionContext';
 import { WidgetTabValues } from './type';
+import { useDeleteWidgetMutation, useSortWidgetsMutation } from 'apiManager/apiSlices/widgets';
 
 export interface WidgetDrawerContextProps {
     widgets: Widget[];
@@ -46,15 +46,16 @@ export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
 export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
-    const [getWidgetsTrigger] = useLazyGetWidgetsQuery();
     const [widgets, setWidgets] = useState<Widget[]>([]);
     const [isWidgetsLoading, setIsWidgetsLoading] = useState(true);
     const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
     const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState(WidgetTabValues.WIDGET_OPTIONS);
+    const [removeWidget] = useDeleteWidgetMutation();
+    const [sortWidgets] = useSortWidgetsMutation();
 
     const deleteWidget = async (widgetId: number) => {
         try {
-            await removeWidget(savedEngagement.id, widgetId);
+            await removeWidget({ engagementId: savedEngagement.id, widgetId });
             dispatch(openNotification({ severity: 'success', text: 'Removed Widget' }));
             loadWidgets();
         } catch (err) {
@@ -64,7 +65,7 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
 
     const updateWidgetsSorting = async (resortedWidgets: Widget[]) => {
         try {
-            await sortWidgets(savedEngagement.id, resortedWidgets);
+            await sortWidgets({ engagementId: savedEngagement.id, widgets: resortedWidgets });
         } catch (err) {
             dispatch(openNotification({ severity: 'error', text: 'Error sorting widgets' }));
         }
@@ -77,11 +78,10 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
         }
 
         try {
-            const widgetsList = await getWidgetsTrigger(savedEngagement.id, false).unwrap();
+            const widgetsList = await getWidgets(savedEngagement.id);
             setWidgets(widgetsList);
             setIsWidgetsLoading(false);
         } catch (err) {
-            console.log(err);
             setIsWidgetsLoading(false);
             dispatch(openNotification({ severity: 'error', text: 'Error fetching engagement widgets' }));
         }

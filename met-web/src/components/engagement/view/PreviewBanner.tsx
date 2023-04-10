@@ -13,6 +13,8 @@ import ScheduleModal from 'components/engagement/view/ScheduleModal';
 import ArticleIcon from '@mui/icons-material/Article';
 import { formatDate } from 'components/common/dateHelper';
 import { When } from 'react-if';
+import { PermissionsGate } from 'components/permissionsGate';
+import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 
 export const PreviewBanner = () => {
     const isSmallScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
@@ -58,10 +60,10 @@ export const PreviewBanner = () => {
                         </Grid>
                     </When>
                     <When condition={isDraft}>
-                        <Grid item container direction="row" rowSpacing={isSmallScreen ? 2 : 0.5}>
+                        <Grid item container direction="row" rowSpacing={isSmallScreen ? 2 : 1}>
                             <When condition={!imageExists}>
                                 <Grid item container direction="row" xs={12} lg={8}>
-                                    <Grid container direction="row" alignItems="center" item sm={0.5} xs={2}>
+                                    <Grid item>
                                         <IconButton
                                             sx={{ padding: 0, margin: 0 }}
                                             color="inherit"
@@ -71,14 +73,14 @@ export const PreviewBanner = () => {
                                             <ImageIcon />
                                         </IconButton>
                                     </Grid>
-                                    <Grid item container direction="row" alignItems="center" xs={10} sm={10}>
+                                    <Grid item container direction="row" alignItems="center" xs={10} sm={11}>
                                         <MetBody>This engagement is missing a header image.</MetBody>
                                     </Grid>
                                 </Grid>
                             </When>
                             <When condition={savedEngagement.surveys.length === 0}>
-                                <Grid container direction="row" alignItems="center" item xs={12} lg={8}>
-                                    <Grid item sm={0.5} xs={2}>
+                                <Grid container direction="row" alignItems="center" item xs={12} lg={10}>
+                                    <Grid item>
                                         <IconButton
                                             sx={{ padding: 0, margin: 0 }}
                                             color="inherit"
@@ -94,8 +96,8 @@ export const PreviewBanner = () => {
                                 </Grid>
                             </When>
                             <When condition={!savedEngagement.description}>
-                                <Grid container direction="row" alignItems="center" item xs={12} lg={8}>
-                                    <Grid item sm={0.5} xs={2}>
+                                <Grid container direction="row" alignItems="center" item xs={12} lg={10}>
+                                    <Grid item>
                                         <IconButton
                                             sx={{ padding: 0, margin: 0 }}
                                             color="inherit"
@@ -111,8 +113,8 @@ export const PreviewBanner = () => {
                                 </Grid>
                             </When>
                             <When condition={!savedEngagement.content}>
-                                <Grid container direction="row" alignItems="center" item xs={12} lg={8}>
-                                    <Grid item sm={0.5} xs={2}>
+                                <Grid container direction="row" alignItems="center" item xs={12} lg={10}>
+                                    <Grid item>
                                         <IconButton
                                             sx={{ padding: 0, margin: 0 }}
                                             color="inherit"
@@ -127,8 +129,8 @@ export const PreviewBanner = () => {
                                     </Grid>
                                 </Grid>
                             </When>
-                            <Grid container direction="row" alignItems="center" item xs={12} lg={8}>
-                                <Grid item sm={0.5} xs={2}>
+                            <Grid container direction="row" alignItems="center" item xs={12} lg={10}>
+                                <Grid item>
                                     <IconButton
                                         sx={{ padding: 0, margin: 0 }}
                                         color="inherit"
@@ -137,8 +139,8 @@ export const PreviewBanner = () => {
                                         <UnpublishedIcon />
                                     </IconButton>
                                 </Grid>
-                                <Grid item xs={10} sm={10}>
-                                    <MetBody>Please schedule the engagement when ready.</MetBody>
+                                <Grid item sm={11}>
+                                    <MetBody>A Superuser can schedule the engagement when ready.</MetBody>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -184,14 +186,18 @@ export const PreviewBanner = () => {
                         </SecondaryButton>
 
                         <When condition={isDraft}>
-                            <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => setIsOpen(true)}>
-                                Schedule Engagement
-                            </PrimaryButton>
+                            <PermissionsGate scopes={[SCOPES.publishEngagement]} errorProps={{ disabled: true }}>
+                                <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => setIsOpen(true)}>
+                                    Schedule Engagement
+                                </PrimaryButton>
+                            </PermissionsGate>
                         </When>
                         <When condition={isScheduled}>
-                            <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => setIsOpen(true)}>
-                                Reschedule Engagement
-                            </PrimaryButton>
+                            <PermissionsGate scopes={[SCOPES.publishEngagement]} errorProps={{ disabled: true }}>
+                                <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => setIsOpen(true)}>
+                                    Reschedule Engagement
+                                </PrimaryButton>
+                            </PermissionsGate>
                         </When>
                     </Stack>
                 </Grid>

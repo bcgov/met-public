@@ -60,6 +60,8 @@ const CommentReview = () => {
     const reviewNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Review);
     const internalNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Internal);
 
+    const MAX_OTHER_REASON_CHAR = 500;
+
     const getEmailPreview = () => {
         return (
             <EmailPreview survey={survey}>
@@ -68,7 +70,6 @@ const CommentReview = () => {
                         hasPersonalInfo={hasPersonalInfo}
                         hasProfanity={hasProfanity}
                         hasThreat={hasThreat}
-                        hasOtherReason={hasOtherReason}
                         otherReason={otherReason}
                         reviewNotes={reviewNotes}
                     />
@@ -364,6 +365,8 @@ const CommentReview = () => {
                                         sx={{ marginLeft: '2em' }}
                                         FormHelperTextProps={{ error: true }}
                                         onChange={(event) => setOtherReason(event.target.value)}
+                                        inputProps={{ maxLength: MAX_OTHER_REASON_CHAR }}
+                                        multiline
                                     />
                                     <br />
                                     <MetParagraph>

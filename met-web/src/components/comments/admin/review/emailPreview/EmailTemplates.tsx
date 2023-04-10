@@ -8,7 +8,6 @@ type RejectionEmailProps = {
     hasPersonalInfo?: boolean;
     hasProfanity?: boolean;
     hasThreat?: boolean;
-    hasOtherReason?: boolean;
     otherReason?: string;
     reviewNotes?: StaffNote[];
 };
@@ -16,7 +15,6 @@ type RejectionEmailProps = {
 export const RejectEmailTemplate = ({
     hasPersonalInfo,
     hasProfanity,
-    hasOtherReason,
     otherReason,
     reviewNotes,
 }: RejectionEmailProps) => (

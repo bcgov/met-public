@@ -2,6 +2,7 @@ import http from 'apiManager/httpRequestHandler';
 import { WidgetMap } from 'models/widgetMap';
 import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
+import { GeoJSON } from 'geojson';
 
 export const fetchMaps = async (widget_id: number): Promise<WidgetMap[]> => {
     try {
@@ -18,16 +19,50 @@ interface PostMapRequest {
     engagement_id: number;
     longitude: number;
     latitude: number;
-    description?: string;
+    marker_label?: string;
+    file?: File;
 }
+
 export const postMap = async (widget_id: number, data: PostMapRequest): Promise<WidgetMap> => {
     try {
         const url = replaceUrl(Endpoints.Maps.CREATE, 'widget_id', String(widget_id));
-        const response = await http.PostRequest<WidgetMap>(url, data);
+        const formdata = new FormData();
+        if (data.file) {
+            formdata.append('file', data.file);
+        }
+        if (data.latitude) {
+            formdata.append('latitude', data.latitude.toString());
+        }
+        if (data.longitude) {
+            formdata.append('longitude', data.longitude.toString());
+        }
+        formdata.append('engagement_id', data.engagement_id.toString());
+        formdata.append('marker_label', data.marker_label ? data.marker_label : '');
+        const response = await http.PostRequest<WidgetMap>(url, formdata);
         if (response.data) {
             return response.data;
         }
         return Promise.reject('Failed to create map');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
+interface PreviewShapefileRequest {
+    file?: File;
+}
+
+export const previewShapeFile = async (data: PreviewShapefileRequest): Promise<GeoJSON> => {
+    try {
+        const formdata = new FormData();
+        if (data.file) {
+            formdata.append('file', data.file);
+        }
+        const response = await http.PostRequest<GeoJSON>(Endpoints.Maps.SHAPEFILE_PREVIEW, formdata);
+        if (response.data) {
+            return response.data;
+        }
+        return Promise.reject('Failed to preview shapefile');
     } catch (err) {
         return Promise.reject(err);
     }

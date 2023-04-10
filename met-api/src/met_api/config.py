@@ -125,6 +125,15 @@ class _Config():  # pylint: disable=too-few-public-methods
     CDOGS_SERVICE_CLIENT_SECRET = os.getenv('CDOGS_SERVICE_CLIENT_SECRET')
     CDOGS_TOKEN_URL = os.getenv('CDOGS_TOKEN_URL')
 
+    # just a temporary writable location to unzip the files.
+    # This gets cleared after every shapefile conversion.
+    SHAPEFILE_UPLOAD_FOLDER = os.getenv('SHAPEFILE_UPLOAD_FOLDER', '/tmp/uploads')
+
+    # default tenant configs ; Set to EAO for now.Overwrite using openshift variables
+    DEFAULT_TENANT_SHORT_NAME = os.getenv('DEFAULT_TENANT_SHORT_NAME', 'EAO')
+    DEFAULT_TENANT_NAME = os.getenv('DEFAULT_TENANT_NAME', 'Environment Assessment Office')
+    DEFAULT_TENANT_DESCRIPTION = os.getenv('DEFAULT_TENANT_DESCRIPTION', 'Environment Assessment Office')
+
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
     """Dev Config."""

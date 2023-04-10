@@ -29,6 +29,8 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'))
     comments = db.relationship('Comment', backref='survey', cascade='all, delete')
     submissions = db.relationship('Submission', backref='survey', cascade='all, delete')
+    # Survey templates might not need tenant id
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
 
     @classmethod
     def get_open(cls, survey_id) -> Survey:

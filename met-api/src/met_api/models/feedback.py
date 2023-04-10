@@ -18,10 +18,11 @@ class Feedback(BaseModel):
 
     __tablename__ = 'feedback'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    rating = db.Column(db.Enum(RatingType), nullable=False)
+    rating = db.Column(db.Enum(RatingType), nullable=True)
     comment_type = db.Column(db.Enum(CommentType), nullable=True)
     comment = db.Column(db.Text, nullable=True)
     source = db.Column(db.Enum(FeedbackSourceType), nullable=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
 
     @classmethod
     def get_all_paginated(cls, pagination_options: PaginationOptions, search_text=''):

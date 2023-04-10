@@ -58,18 +58,12 @@ jest.mock('@hello-pangea/dnd', () => ({
     DragDropContext: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
 }));
 
-const mockWidgetsRtkUnwrap = jest.fn(() => Promise.resolve([eventWidget]));
-const mockWidgetsRtkTrigger = () => {
-    return {
-        unwrap: mockWidgetsRtkUnwrap,
-    };
-};
-export const mockWidgetsRtkQuery = () => [mockWidgetsRtkTrigger];
-
-const mockLazyGetWidgetsQuery = jest.fn(mockWidgetsRtkQuery);
+const mockCreateWidget = jest.fn(() => Promise.resolve(eventWidget));
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
-    useLazyGetWidgetsQuery: () => [...mockLazyGetWidgetsQuery()],
+    useCreateWidgetMutation: () => [mockCreateWidget],
+    useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
+    useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
 
 describe('Event Widget tests', () => {
@@ -79,7 +73,7 @@ describe('Event Widget tests', () => {
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
         .mockReturnValue(Promise.resolve(draftEngagement));
-    const postWidgetMock = jest.spyOn(widgetService, 'postWidget').mockReturnValue(Promise.resolve(eventWidget));
+    const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([eventWidget]));
 
     beforeEach(() => {
         setupEnv();
@@ -114,18 +108,18 @@ describe('Event Widget tests', () => {
                 surveys: surveys,
             }),
         );
-        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
-        postWidgetMock.mockReturnValue(Promise.resolve(eventWidget));
-        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([eventWidget]));
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
+        mockCreateWidget.mockReturnValue(Promise.resolve(eventWidget));
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([eventWidget]));
         const { container } = render(<EngagementForm />);
 
         await addEventWidget(container);
 
-        expect(postWidgetMock).toHaveBeenNthCalledWith(1, draftEngagement.id, {
+        expect(mockCreateWidget).toHaveBeenNthCalledWith(1, {
             widget_type_id: WidgetType.Events,
             engagement_id: draftEngagement.id,
         });
-        expect(mockWidgetsRtkUnwrap).toHaveBeenCalledTimes(2);
+        expect(getWidgetsMock).toHaveBeenCalledTimes(2);
         expect(screen.getByText('Add In-Person Event')).toBeVisible();
         expect(screen.getByText('Add Virtual Session')).toBeVisible();
     });
@@ -139,9 +133,9 @@ describe('Event Widget tests', () => {
             }),
         );
 
-        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
-        postWidgetMock.mockReturnValue(Promise.resolve(eventWidget));
-        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([eventWidget]));
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
+        mockCreateWidget.mockReturnValue(Promise.resolve(eventWidget));
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([eventWidget]));
         const { container } = render(<EngagementForm />);
 
         await addEventWidget(container);
@@ -167,9 +161,9 @@ describe('Event Widget tests', () => {
             }),
         );
 
-        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
-        postWidgetMock.mockReturnValue(Promise.resolve(eventWidget));
-        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([eventWidget]));
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
+        mockCreateWidget.mockReturnValue(Promise.resolve(eventWidget));
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([eventWidget]));
         const { container } = render(<EngagementForm />);
 
         await addEventWidget(container);

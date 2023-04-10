@@ -6,6 +6,7 @@ import { EngagementTeamMember } from 'models/engagementTeamMember';
 import { getTeamMembers } from 'services/membershipService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
+import { ProjectMetadata } from 'models/engagement';
 
 interface EngagementFormData {
     name: string;
@@ -13,6 +14,9 @@ interface EngagementFormData {
     end_date: string;
     description: string;
     content: string;
+
+    project_id: string;
+    project_metadata: ProjectMetadata;
 }
 
 const initialEngagementFormData = {
@@ -21,18 +25,28 @@ const initialEngagementFormData = {
     end_date: '',
     description: '',
     content: '',
+
+    project_id: '',
+    project_metadata: {
+        project_name: '',
+        type: '',
+        client_name: '',
+        application_number: '',
+    },
 };
 
 interface EngagementFormError {
     name: boolean;
     start_date: boolean;
     end_date: boolean;
+    description: boolean;
 }
 
 const initialFormError = {
     name: false,
     start_date: false,
     end_date: false,
+    description: false,
 };
 
 export interface EngagementTabsContextState {
@@ -100,7 +114,7 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
 });
 
 export const EngagementTabsContextProvider = ({ children }: { children: React.ReactNode }) => {
-    const { savedEngagement } = useContext(ActionContext);
+    const { savedEngagement, engagementMetadata } = useContext(ActionContext);
     const dispatch = useAppDispatch();
     const [engagementFormData, setEngagementFormData] = useState<EngagementFormData>({
         name: savedEngagement?.name || '',
@@ -108,6 +122,14 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         end_date: savedEngagement.end_date,
         description: savedEngagement?.description || '',
         content: savedEngagement?.content || '',
+
+        project_id: engagementMetadata.project_id,
+        project_metadata: {
+            project_name: engagementMetadata?.project_metadata?.project_name || '',
+            client_name: engagementMetadata?.project_metadata?.client_name || '',
+            type: engagementMetadata?.project_metadata?.type || '',
+            application_number: engagementMetadata?.project_metadata?.application_number || '',
+        },
     });
     const [richDescription, setRichDescription] = useState(savedEngagement?.rich_description || '');
     const [richContent, setRichContent] = useState(savedEngagement?.rich_content || '');

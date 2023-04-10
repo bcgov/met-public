@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Grid, TextField, Stack } from '@mui/material';
+import { Grid, TextField, Stack, FormGroup, FormControlLabel, Switch } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { useNavigate } from 'react-router-dom';
 import { postSurvey } from 'services/surveyService';
@@ -15,6 +15,7 @@ export const CreateOptions = () => {
     const initialFormError = {
         name: false,
     };
+    const [multiPageSurvey, setMultiPageSurvey] = useState<boolean>(true);
     const [formError, setFormError] = useState(initialFormError);
     const [isSaving, setIsSaving] = useState(false);
     const getErrorMessage = () => {
@@ -51,7 +52,7 @@ export const CreateOptions = () => {
                 name: surveyForm.name,
                 engagement_id: engagementToLink?.id ? String(engagementToLink.id) : undefined,
                 form_json: {
-                    display: 'form',
+                    display: multiPageSurvey ? 'wizard' : 'form',
                     components: [],
                 },
             });
@@ -93,6 +94,22 @@ export const CreateOptions = () => {
                     error={formError.name || name.length > 50}
                     helperText={getErrorMessage()}
                 />
+            </Grid>
+            <Grid item xs={6}></Grid>
+            <Grid item xs={6}>
+                <FormGroup>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={multiPageSurvey}
+                                onChange={(e) => {
+                                    setMultiPageSurvey(!multiPageSurvey);
+                                }}
+                            />
+                        }
+                        label="Multi-page"
+                    />
+                </FormGroup>
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
