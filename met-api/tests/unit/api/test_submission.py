@@ -43,6 +43,7 @@ def test_valid_submission(client, jwt, session):  # pylint:disable=unused-argume
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
 
+
 @pytest.mark.parametrize('submission_info', [TestSubmissionInfo.submission1])
 def test_get_submission_by_id(client, jwt, session, submission_info):  # pylint:disable=unused-argument
     """Assert that an engagement can be fetched."""
@@ -55,9 +56,9 @@ def test_get_submission_by_id(client, jwt, session, submission_info):  # pylint:
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/submissions/{submission.id}', headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert rv.json.get('submission_json', None) == None
-    
-## test get submission page
+    assert rv.json.get('submission_json', None) is None
+
+
 @pytest.mark.parametrize('submission_info', [TestSubmissionInfo.submission1])
 def test_get_submission_page(client, jwt, session, submission_info):  # pylint:disable=unused-argument
     """Assert that an engagement page can be fetched."""
@@ -70,7 +71,8 @@ def test_get_submission_page(client, jwt, session, submission_info):  # pylint:d
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/submissions/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert rv.json.get('items', [])[0].get('submission_json', None) == None
+    assert rv.json.get('items', [])[0].get('submission_json', None) is None
+
 
 def test_invalid_submission(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that an engagement can be POSTed."""
