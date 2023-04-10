@@ -286,6 +286,7 @@ const SurveyFormBuilder = () => {
                                 <PermissionsGate scopes={[SCOPES.createSurvey]} errorProps={{ disabled: true }}>
                                     <Switch
                                         checked={isHiddenSurvey}
+                                        disabled={savedSurvey?.engagement_id ? true : false}
                                         onChange={(e) => {
                                             if (e.target.checked) {
                                                 setIsHiddenSurvey(true);

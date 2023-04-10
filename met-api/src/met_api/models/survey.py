@@ -85,7 +85,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
             created_by=survey.get('created_by', None),
             updated_by=survey.get('updated_by', None),
             engagement_id=survey.get('engagement_id', None),
-            is_hidden=survey.get('is_hidden', False),
+            is_hidden=survey.get('is_hidden', True),
 
         )
         db.session.add(new_survey)
