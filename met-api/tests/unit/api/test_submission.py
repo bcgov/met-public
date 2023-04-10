@@ -18,9 +18,13 @@ Test-Suite to ensure that the /Submission endpoint is working as expected.
 """
 import json
 
+import pytest
+
 from met_api.utils.enums import ContentType
-from tests.utilities.factory_scenarios import TestJwtClaims
-from tests.utilities.factory_utils import factory_auth_header, factory_email_verification, factory_survey_and_eng_model
+from tests.utilities.factory_scenarios import TestJwtClaims, TestSubmissionInfo
+from tests.utilities.factory_utils import (
+    factory_auth_header, factory_email_verification, factory_submission_model, factory_survey_and_eng_model,
+    factory_user_model)
 
 
 def test_valid_submission(client, jwt, session):  # pylint:disable=unused-argument
@@ -39,6 +43,34 @@ def test_valid_submission(client, jwt, session):  # pylint:disable=unused-argume
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
 
+@pytest.mark.parametrize('submission_info', [TestSubmissionInfo.submission1])
+def test_get_submission_by_id(client, jwt, session, submission_info):  # pylint:disable=unused-argument
+    """Assert that an engagement can be fetched."""
+    claims = TestJwtClaims.public_user_role
+
+    user_details = factory_user_model()
+    survey, eng = factory_survey_and_eng_model()
+    submission = factory_submission_model(
+        survey.id, eng.id, user_details.id, submission_info)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.get(f'/api/submissions/{submission.id}', headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+    assert rv.json.get('submission_json', None) == None
+    
+## test get submission page
+@pytest.mark.parametrize('submission_info', [TestSubmissionInfo.submission1])
+def test_get_submission_page(client, jwt, session, submission_info):  # pylint:disable=unused-argument
+    """Assert that an engagement page can be fetched."""
+    claims = TestJwtClaims.public_user_role
+
+    user_details = factory_user_model()
+    survey, eng = factory_survey_and_eng_model()
+    factory_submission_model(
+        survey.id, eng.id, user_details.id, submission_info)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.get(f'/api/submissions/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+    assert rv.json.get('items', [])[0].get('submission_json', None) == None
 
 def test_invalid_submission(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that an engagement can be POSTed."""
