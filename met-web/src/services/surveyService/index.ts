@@ -7,6 +7,7 @@ import { Page } from 'services/type';
 interface FetchSurveyParams {
     unlinked?: boolean;
     exclude_hidden?: boolean;
+    template?: boolean;
 }
 export const fetchSurveys = async (params: FetchSurveyParams = {}): Promise<Survey[]> => {
     const responseData = await http.GetRequest<Page<Survey>>(Endpoints.Survey.GET_LIST, { ...params });

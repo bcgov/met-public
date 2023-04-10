@@ -47,7 +47,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
 
     @classmethod
     def get_surveys_paginated(cls, pagination_options: PaginationOptions, search_text='', unlinked=False,
-                              exclude_hidden=False):
+                              exclude_hidden=False, template=False):
         """Get surveys paginated."""
         query = db.session.query(Survey).join(Engagement, isouter=True).join(EngagementStatus, isouter=True)
 
@@ -56,6 +56,11 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
 
         if unlinked:
             query = query.filter(Survey.engagement_id.is_(None))
+
+        if template is not None:
+            query = query.filter()
+            # TODO: add is template column
+            # query = query.filter(Survey.is_template.is_(template))
 
         if search_text:
             query = query.filter(Survey.name.ilike('%' + search_text + '%'))

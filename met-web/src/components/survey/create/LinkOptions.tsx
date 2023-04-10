@@ -28,6 +28,7 @@ const LinkOptions = () => {
             const fetchedSurveys = await fetchSurveys({
                 unlinked: true,
                 exclude_hidden: true,
+                template: false,
             });
             setAvailableSurveys(fetchedSurveys);
             setLoadingSurveys(false);
