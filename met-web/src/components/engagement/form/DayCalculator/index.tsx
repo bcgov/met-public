@@ -173,7 +173,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                 direction="row"
                 justifyContent="flex-start"
                 alignItems="space-between"
-                sx={{ ...modalStyle }}
+                sx={{ ...modalStyle, overflowY: 'scroll' }}
                 rowSpacing={2}
             >
                 <Grid container direction="row" item xs={12} wrap="nowrap">
