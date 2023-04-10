@@ -26,3 +26,4 @@ export default function ProgressBar({ currentPage, totalPages }: ProgressBarProp
         </Box>
     );
 }
+

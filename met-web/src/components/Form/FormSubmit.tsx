@@ -2,8 +2,7 @@
 import React, { useState } from 'react';
 import { Form } from '@formio/react';
 import { FormSubmissionData, FormSubmitterProps } from './types';
-import ProgressBar from 'components/survey/submit/FormProgressBar';
-
+import FormStepper from 'components/survey/submit/Stepper';
 interface PageData {
     page: number;
     submission: unknown;
@@ -12,10 +11,16 @@ interface PageData {
 const FormSubmit = ({ handleFormChange, savedForm, handleFormSubmit }: FormSubmitterProps) => {
     const [currentPage, setCurrentPage] = useState(0);
     const isMultiPage = savedForm && savedForm.display === 'wizard';
+    console.log(savedForm);
+
     return (
         <div className="formio">
             {isMultiPage ? (
-                <ProgressBar currentPage={currentPage} totalPages={savedForm.components.length - 1} />
+                <FormStepper
+                    currentPage={currentPage}
+                    totalPages={savedForm?.components.length - 1}
+                    pages={savedForm?.components}
+                />
             ) : (
                 <></>
             )}
