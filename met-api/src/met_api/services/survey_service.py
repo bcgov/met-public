@@ -60,11 +60,10 @@ class SurveyService:
 
     @staticmethod
     def _can_user_access_hidden_surveys(user_roles):
-        """Return true if user does not have access to view all hidden surveys."""
-        has_access_to_hidden_surveys = False
+        """Return false if user does not have access to view all hidden surveys."""
         if Role.VIEW_ALL_SURVEYS.value in user_roles:
             return True
-        return has_access_to_hidden_surveys
+        return False
 
     @classmethod
     def create(cls, data: SurveySchema):
