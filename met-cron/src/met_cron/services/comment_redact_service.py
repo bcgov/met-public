@@ -26,7 +26,7 @@ from met_cron.models.db import db, session_scope
 
 class CommentRedactService:  # pylint: disable=too-few-public-methods
     """Redaction Service on Comments."""
-    LAST_N_DAYS = 50
+    LAST_N_DAYS = 14
 
     @staticmethod
     def do_redact_comments():
