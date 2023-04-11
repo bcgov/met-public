@@ -4,6 +4,7 @@ from met_api.constants.engagement_status import Status
 from met_api.models import Engagement as EngagementModel
 from met_api.models import Survey as SurveyModel
 from met_api.models.pagination_options import PaginationOptions
+from met_api.models.survey_exclusion_option import SurveyExclusionOptions
 from met_api.schemas.engagement import EngagementSchema
 from met_api.schemas.survey import SurveySchema
 from met_api.services.object_storage_service import ObjectStorageService
@@ -35,21 +36,21 @@ class SurveyService:
         return survey
 
     @staticmethod
-    def get_surveys_paginated(pagination_options: PaginationOptions, search_text='', unlinked=False,
-                              exclude_hidden=False):
+    def get_surveys_paginated(pagination_options: PaginationOptions, survey_exclusion_options: SurveyExclusionOptions,
+                              search_text='', unlinked=False):
         """Get engagements paginated."""
         # check if user has view all surveys access to view hidden surveys as well
         user_roles = TokenInfo.get_user_roles()
         has_access_to_hidden_surveys = SurveyService._can_user_access_hidden_surveys(user_roles)
 
         if not has_access_to_hidden_surveys:
-            exclude_hidden = True
+            survey_exclusion_options.exclude_hidden = True
 
         items, total = SurveyModel.get_surveys_paginated(
             pagination_options,
+            survey_exclusion_options,
             search_text,
             unlinked,
-            exclude_hidden,
         )
         surveys_schema = SurveySchema(many=True)
 

@@ -25,6 +25,7 @@ class SurveySchema(Schema):
     updated_date = fields.Str(data_key='updated_date')
     engagement_id = fields.Str(data_key='engagement_id')
     is_hidden = fields.Bool(data_key='is_hidden')
+    is_template = fields.Bool(data_key='is_template')
     engagement = fields.Nested(EngagementSchema)
     comments_meta_data = fields.Method('get_comments_meta_data')
 
