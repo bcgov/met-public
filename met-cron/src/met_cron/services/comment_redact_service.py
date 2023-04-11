@@ -27,7 +27,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 
 class CommentRedactService:  # pylint: disable=too-few-public-methods
     """Redaction Service on Comments."""
-    LAST_N_DAYS = 14
+    LAST_N_DAYS = 50
 
     @staticmethod
     def do_redact_comments():
@@ -40,7 +40,7 @@ class CommentRedactService:  # pylint: disable=too-few-public-methods
         """
         submissions = CommentRedactService._find_submissions_for_last_n_days_closed_engagements(days=CommentRedactService.LAST_N_DAYS)
         if not submissions:
-            current_app.logger.info(f'No Submissions for Engagements closed in the last {CommentRedactService.LAST_N_DAYS} found.')
+            current_app.logger.info(f'No Submissions for Engagements closed in the last {CommentRedactService.LAST_N_DAYS} days found.')
             return
         submissions_ids = [submission.id for submission in submissions]
         with session_scope() as session:
@@ -66,12 +66,12 @@ class CommentRedactService:  # pylint: disable=too-few-public-methods
     @staticmethod
     def _redact_submission_json_comments(submission_ids: List[int], session) -> List[MetSubmissionModel]:
         keys_to_redact = ['simpletextarea', 'simpletextfield']
-        session.query(MetSubmissionModel)\
-            .filter(MetSubmissionModel.id.in_(submission_ids))\
-            .update({MetSubmissionModel.submission_json: JSONB(
-                {k: '[Comment Redacted]' if any(k.startswith(key) for key in keys_to_redact)
-                 else v
-                 for k, v in MetSubmissionModel.submission_json.items()
-                })}, synchronize_session=False)
-        db.session.commit()           
+        for submission in session.query(MetSubmissionModel).filter(MetSubmissionModel.id.in_(submission_ids)):
+            new_submission_json = {}
+            for key, value in submission.submission_json.items():
+                if any(key.startswith(redacted_key) for redacted_key in keys_to_redact):
+                    new_submission_json[key] = '[Comment Redacted]'
+                else:
+                    new_submission_json[key] = value
+            submission.submission_json = new_submission_json
 
