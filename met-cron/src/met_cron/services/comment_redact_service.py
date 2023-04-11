@@ -56,7 +56,7 @@ class CommentRedactService:  # pylint: disable=too-few-public-methods
             .filter(and_(
             MetEngagementModel.end_date >= datetime.now() - timedelta(days=days),
             MetEngagementModel.status_id == MetEngagementStatus.Closed.value,
-            MetSubmissionModel.comment_status_id != CommentStatus.Rejected,
+            MetSubmissionModel.comment_status_id == CommentStatus.Rejected,
             MetSubmissionModel.has_threat.is_(False)
         )).all()
 
