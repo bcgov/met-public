@@ -26,6 +26,7 @@ const layerStyle: AnyLayer = {
     filter: ['all', ['==', ['geometry-type'], 'Polygon']],
 };
 
+//filter enforces that only geojson features that are linestrings use this styling
 const lineStyle: AnyLayer = {
     id: 'lines',
     type: 'line',
