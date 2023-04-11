@@ -7,6 +7,7 @@ import { Page } from 'services/type';
 interface FetchSurveyParams {
     unlinked?: boolean;
     exclude_hidden?: boolean;
+    exclude_template?: boolean;
 }
 export const fetchSurveys = async (params: FetchSurveyParams = {}): Promise<Survey[]> => {
     const responseData = await http.GetRequest<Page<Survey>>(Endpoints.Survey.GET_LIST, { ...params });
@@ -20,6 +21,7 @@ interface GetSurveysParams {
     sort_order?: 'asc' | 'desc';
     search_text?: string;
     exclude_hidden?: boolean;
+    exclude_template?: boolean;
 }
 export const getSurveysPage = async (params: GetSurveysParams = {}): Promise<Page<Survey>> => {
     const response = await http.GetRequest<Page<Survey>>(Endpoints.Survey.GET_LIST, params);
@@ -57,6 +59,7 @@ interface PutSurveyRequest {
     form_json: unknown;
     name: string;
     is_hidden: boolean;
+    is_template: boolean;
 }
 export const putSurvey = async (data: PutSurveyRequest): Promise<Survey> => {
     const response = await http.PutRequest<Survey>(Endpoints.Survey.UPDATE, data);

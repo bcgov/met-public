@@ -12,6 +12,7 @@ from met_api.constants.engagement_status import Status
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement_status import EngagementStatus
 from met_api.models.engagement import Engagement
+from met_api.models.survey_exclusion_option import SurveyExclusionOptions
 from met_api.schemas.survey import SurveySchema
 from .base_model import BaseModel
 from .db import db
@@ -32,6 +33,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
     # Survey templates might not need tenant id
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
     is_hidden = db.Column(db.Boolean, nullable=False)
+    is_template = db.Column(db.Boolean, nullable=False)
 
     @classmethod
     def get_open(cls, survey_id) -> Survey:
@@ -46,13 +48,17 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         return survey
 
     @classmethod
-    def get_surveys_paginated(cls, pagination_options: PaginationOptions, search_text='', unlinked=False,
-                              exclude_hidden=False):
+    def get_surveys_paginated(cls, pagination_options: PaginationOptions,
+                              survey_exclusion_options: SurveyExclusionOptions,
+                              search_text='', unlinked=False):
         """Get surveys paginated."""
         query = db.session.query(Survey).join(Engagement, isouter=True).join(EngagementStatus, isouter=True)
 
-        if exclude_hidden:
+        if survey_exclusion_options.exclude_hidden:
             query = query.filter(Survey.is_hidden.is_(False))
+
+        if survey_exclusion_options.exclude_template:
+            query = query.filter(Survey.is_template.is_(False))
 
         if unlinked:
             query = query.filter(Survey.engagement_id.is_(None))
@@ -86,6 +92,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
             updated_by=survey.get('updated_by', None),
             engagement_id=survey.get('engagement_id', None),
             is_hidden=survey.get('is_hidden', False),
+            is_template=survey.get('is_template', False),
 
         )
         db.session.add(new_survey)
@@ -106,6 +113,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
             updated_by=survey.get('updated_by', record.updated_by),
             name=survey.get('name', record.name),
             is_hidden=survey.get('is_hidden', record.is_hidden),
+            is_template=survey.get('is_template', record.is_template),
         )
         query.update(update_fields)
         db.session.commit()

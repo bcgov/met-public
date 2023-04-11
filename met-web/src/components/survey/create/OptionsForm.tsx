@@ -47,7 +47,9 @@ const OptionsForm = () => {
                         value={value}
                         onChange={handleChange}
                     >
-                        <FormControlLabel value="CREATE" control={<Radio />} label="Create a new Survey" />
+                        <When condition={!engagementToLink}>
+                            <FormControlLabel value="CREATE" control={<Radio />} label="Create a new Survey" />
+                        </When>
                         <FormControlLabel value="CLONE" control={<Radio />} label="Clone an existing Survey" />
                         <When condition={!!engagementToLink}>
                             <FormControlLabel
