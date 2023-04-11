@@ -75,6 +75,8 @@ class Engagement(BaseModel):
             query = cls._filter_by_engagement_status(query, search_options)
 
             query = cls._filter_by_project_type(query, search_options.get('project_type'))
+            
+            query = cls._filter_to_end_date(query, search_options.get('to_end_date'))
 
         if assigned_engagements is not None:
             query = cls._filter_by_assigned_engagements(query, assigned_engagements)
@@ -243,6 +245,12 @@ class Engagement(BaseModel):
     @staticmethod
     def _filter_by_statuses(query, statuses):
         return query.filter(Engagement.status_id.in_(statuses))
+
+    @classmethod
+    def _filter_to_end_date(cls, query, end_date):
+        if end_date:
+            query = query.filter(Engagement.end_date <= end_date)
+        return query
 
     @staticmethod
     def _filter_by_assigned_engagements(query, assigned_engagements: list[int]):

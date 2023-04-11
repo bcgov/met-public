@@ -134,7 +134,6 @@ const SubmissionListing = () => {
             allowSort: true,
             getValue: (row) => row.reviewed_by,
         },
-
         {
             key: 'review_date',
             numeric: true,

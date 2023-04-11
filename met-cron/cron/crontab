@@ -6,4 +6,6 @@
 */5 * * * * default cd /met-cron && ./run_met_publish.sh
 # PURGE Runs At every 15 days.
 0 0 * * 0 default cd /met-cron && ./run_met_purge.sh
+# REDACT COMMENTS Runs At every 14 days.
+0 0 */15 * * default cd /met-cron && ./run_met_comment_redact.sh
 # An empty line is required at the end of this file for a valid cron file
