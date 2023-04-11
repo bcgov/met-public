@@ -21,7 +21,9 @@ from met_api.constants.engagement_status import Status as MetEngagementStatus
 from met_api.models.comment import Comment as MetCommentModel
 from met_api.models.engagement import Engagement as MetEngagementModel
 from met_api.models.submission import Submission as MetSubmissionModel
+from met_api.constants.comment_status import Status as CommentStatus
 from met_cron.models.db import db, session_scope
+from sqlalchemy import and_
 
 
 class CommentRedactService:  # pylint: disable=too-few-public-methods
@@ -51,8 +53,12 @@ class CommentRedactService:  # pylint: disable=too-few-public-methods
     def _find_submissions_for_last_n_days_closed_engagements(days = LAST_N_DAYS) -> List[MetSubmissionModel]:
         return db.session.query(MetSubmissionModel)\
             .join(MetEngagementModel, MetEngagementModel.id == MetSubmissionModel.engagement_id)\
-            .filter(MetEngagementModel.end_date >= datetime.now() - timedelta(days=days))\
-            .filter(MetEngagementModel.status_id == MetEngagementStatus.Closed.value).all()
+            .filter(and_(
+            MetEngagementModel.end_date >= datetime.now() - timedelta(days=days),
+            MetEngagementModel.status_id == MetEngagementStatus.Closed.value,
+            MetSubmissionModel.comment_status_id != CommentStatus.Rejected,
+            MetSubmissionModel.has_threat.is_(False)
+        )).all()
 
 
     @staticmethod
