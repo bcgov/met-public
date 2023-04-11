@@ -22,7 +22,6 @@ from met_api.models.engagement import Engagement as MetEngagementModel
 from met_api.models.comment import Comment as MetCommentModel
 
 from met_cron.models.db import db, session_scope
-from sqlalchemy.dialects.postgresql import JSONB
 
 
 class CommentRedactService:  # pylint: disable=too-few-public-methods
