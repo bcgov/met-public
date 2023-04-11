@@ -11,7 +11,6 @@ interface PageData {
 const FormSubmit = ({ handleFormChange, savedForm, handleFormSubmit }: FormSubmitterProps) => {
     const [currentPage, setCurrentPage] = useState(0);
     const isMultiPage = savedForm && savedForm.display === 'wizard';
-    console.log(savedForm);
 
     return (
         <div className="formio">

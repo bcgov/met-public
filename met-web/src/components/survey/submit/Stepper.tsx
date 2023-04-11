@@ -1,23 +1,18 @@
 import React from 'react';
 import { Stepper, Step, StepLabel, Box } from '@mui/material';
-import InfoIcon from '@mui/icons-material/Info';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { FormInfo } from 'components/Form/types';
 
 export interface ProgressBarProps {
     currentPage: number;
     totalPages: number;
-    pages: Array<unknown>;
+    pages: Array<FormInfo>;
 }
 
 function FormStepper({ currentPage, totalPages, pages }: ProgressBarProps) {
-    const getIcon = (index: number) => {
-        return <InfoIcon />;
-    };
-
     return (
         <Box sx={{ pb: 2 }}>
             <Stepper activeStep={currentPage} alternativeLabel>
-                {pages.map((page: unknown, index: number) => (
+                {pages.map((page: FormInfo, index: number) => (
                     <Step key={index}>
                         <StepLabel>{page.title}</StepLabel>
                     </Step>
