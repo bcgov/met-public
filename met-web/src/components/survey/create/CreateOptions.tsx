@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { postSurvey } from 'services/surveyService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetLabel, PrimaryButton, SecondaryButton, MetDescription } from 'components/common';
 
 export const CreateOptions = () => {
     const navigate = useNavigate();
@@ -110,6 +110,13 @@ export const CreateOptions = () => {
                         label="Multi-page"
                     />
                 </FormGroup>
+            </Grid>
+            <Grid item xs={6}></Grid>
+            <Grid item xs={4}>
+                <MetDescription>
+                    The multi-page option will enable you to add one, or many pages to a survey. It will also create a
+                    progress bar. If you want to create a 1-page survey, turn off the multi-page toggle.
+                </MetDescription>
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
