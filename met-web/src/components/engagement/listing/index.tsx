@@ -52,6 +52,11 @@ const EngagementListing = () => {
 
     const [searchOptions, setSearchOptions] = useState<SearchOptions>({
         status_list: [],
+        project_name: '',
+        project_number: '',
+        application_number: '',
+        proponent: '',
+        project_type: '',
         created_from_date: '',
         created_to_date: '',
         published_from_date: '',
@@ -84,6 +89,11 @@ const EngagementListing = () => {
                 created_to_date: searchOptions.created_to_date,
                 published_from_date: searchOptions.published_from_date,
                 published_to_date: searchOptions.published_to_date,
+                project_type: searchOptions.project_type,
+                project_number: searchOptions.project_number,
+                project_name: searchOptions.project_name,
+                proponent: searchOptions.proponent,
+                application_number: searchOptions.application_number,
             });
             setEngagements(response.items);
             setPageInfo({

@@ -24,6 +24,11 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
     });
     const initialFilterParams = {
         status_list: [],
+        project_name: '',
+        project_number: '',
+        application_number: '',
+        proponent: '',
+        project_type: '',
         created_from_date: '',
         created_to_date: '',
         published_from_date: '',
@@ -45,6 +50,14 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
         );
     };
 
+    const [projectFilter, setProjectFilter] = useState({
+        projectType: '',
+        projectNumber: '',
+        projectName: '',
+        proponent: '',
+        applicationNumber: '',
+    });
+
     const [dateFilter, setDateFilter] = useState({
         createdFromDate: '',
         createdToDate: '',
@@ -53,9 +66,18 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
     });
     const { createdFromDate, createdToDate, publishedFromDate, publishedToDate } = dateFilter;
 
+    const { projectType, projectNumber, projectName, proponent, applicationNumber } = projectFilter;
+
     const handleDateFilterChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setDateFilter({
             ...dateFilter,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const handleProjectDataChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        setProjectFilter({
+            ...projectFilter,
             [e.target.name]: e.target.value,
         });
     };
@@ -75,6 +97,11 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
         const fPublishedToDate = publishedToDate
             ? formatToUTC(dayjs(publishedToDate).endOf('day').format('YYYY-MM-DD HH:mm:ss'))
             : publishedToDate;
+        const fProjectType = projectType ? projectType : '';
+        const fProjectNumber = projectNumber ? projectNumber : '';
+        const fProjectName = projectName ? projectName : '';
+        const fProponent = proponent ? proponent : '';
+        const fAppNumber = applicationNumber ? applicationNumber : '';
 
         setFilterParams({
             status_list: selectedStatusList,
@@ -82,12 +109,25 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
             created_to_date: fCreatedToDate,
             published_from_date: fPublishedFromDate,
             published_to_date: fPublishedToDate,
+            project_type: fProjectType,
+            project_number: fProjectNumber,
+            project_name: fProjectName,
+            proponent: fProponent,
+            application_number: fAppNumber,
         });
     };
 
     const handleResetSearchFilters = () => {
         setStatusFilter(intitialStatusList);
         setSelectedStatusList([]);
+
+        setProjectFilter({
+            projectType: '',
+            projectNumber: '',
+            projectName: '',
+            proponent: '',
+            applicationNumber: '',
+        });
 
         setDateFilter({
             createdFromDate: '',

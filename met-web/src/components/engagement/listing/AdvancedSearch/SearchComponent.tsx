@@ -24,6 +24,11 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
     });
     const initialFilterParams = {
         status_list: [],
+        project_name: '',
+        project_number: '',
+        application_number: '',
+        proponent: '',
+        project_type: '',
         created_from_date: '',
         created_to_date: '',
         published_from_date: '',
@@ -45,6 +50,14 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
         );
     };
 
+    const [projectFilter, setProjectFilter] = useState({
+        projectType: '',
+        projectNumber: '',
+        projectName: '',
+        proponent: '',
+        applicationNumber: '',
+    });
+
     const [dateFilter, setDateFilter] = useState({
         createdFromDate: '',
         createdToDate: '',
@@ -53,9 +66,18 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
     });
     const { createdFromDate, createdToDate, publishedFromDate, publishedToDate } = dateFilter;
 
+    const { projectType, projectNumber, projectName, proponent, applicationNumber } = projectFilter;
+
     const handleDateFilterChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setDateFilter({
             ...dateFilter,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const handleProjectDataChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        setProjectFilter({
+            ...projectFilter,
             [e.target.name]: e.target.value,
         });
     };
@@ -75,6 +97,11 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
         const fPublishedToDate = publishedToDate
             ? formatToUTC(dayjs(publishedToDate).endOf('day').format('YYYY-MM-DD HH:mm:ss'))
             : publishedToDate;
+        const fProjectType = projectType ? projectType : '';
+        const fProjectNumber = projectNumber ? projectNumber : '';
+        const fProjectName = projectName ? projectName : '';
+        const fProponent = proponent ? proponent : '';
+        const fAppNumber = applicationNumber ? applicationNumber : '';
 
         setFilterParams({
             status_list: selectedStatusList,
@@ -82,12 +109,25 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
             created_to_date: fCreatedToDate,
             published_from_date: fPublishedFromDate,
             published_to_date: fPublishedToDate,
+            project_type: fProjectType,
+            project_number: fProjectNumber,
+            project_name: fProjectName,
+            proponent: fProponent,
+            application_number: fAppNumber,
         });
     };
 
     const handleResetSearchFilters = () => {
         setStatusFilter(intitialStatusList);
         setSelectedStatusList([]);
+
+        setProjectFilter({
+            projectType: '',
+            projectNumber: '',
+            projectName: '',
+            proponent: '',
+            applicationNumber: '',
+        });
 
         setDateFilter({
             createdFromDate: '',
@@ -101,8 +141,8 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
 
     return (
         <>
-            <Grid container direction="row" item mt={3} ml={2}>
-                <Grid item md={3} xs={12}>
+            <Grid container direction="row" item mt={3} ml={2} spacing={2}>
+                <Grid item md={1} xs={12} mr={1}>
                     <Grid item xs={12}>
                         <MetLabel>Status</MetLabel>
                     </Grid>
@@ -171,7 +211,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                 }
                                 label={
                                     <MetParagraph>
-                                        Published - {EngagementDisplayStatus[EngagementDisplayStatus.Upcoming]}
+                                        {EngagementDisplayStatus[EngagementDisplayStatus.Upcoming]}
                                     </MetParagraph>
                                 }
                             />
@@ -218,7 +258,118 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                         </FormGroup>
                     </Grid>
                 </Grid>
-                <Grid item md={3} xs={12}>
+                <Grid item md={2} xs={12}>
+                    <Grid item xs={12}>
+                        <MetLabel>Project Name</MetLabel>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Stack direction="row" alignItems="center" spacing={2}>
+                            <TextField
+                                id="project-name"
+                                data-testid="project-name"
+                                type="project_name"
+                                InputLabelProps={{
+                                    shrink: false,
+                                }}
+                                sx={{ width: '80%' }}
+                                name="projectName"
+                                value={projectName}
+                                onChange={handleProjectDataChange}
+                                InputProps={{ inputProps: { max: projectName || null } }}
+                            />
+                        </Stack>
+                    </Grid>
+                    <Grid item xs={12} mt={3}>
+                        <MetLabel>Project #</MetLabel>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Stack direction="row" alignItems="center" spacing={2}>
+                            <TextField
+                                id="project_number"
+                                data-testid="project_number"
+                                type="project_number"
+                                InputLabelProps={{
+                                    shrink: false,
+                                }}
+                                sx={{ width: '80%' }}
+                                name="projectNumber"
+                                value={projectNumber}
+                                onChange={handleProjectDataChange}
+                                InputProps={{ inputProps: { max: projectNumber || null } }}
+                            />
+                        </Stack>
+                    </Grid>
+                    <Grid item xs={12} mt={3}>
+                        <MetLabel>Application #</MetLabel>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Stack direction="row" alignItems="center" spacing={2}>
+                            <TextField
+                                id="application_number"
+                                data-testid="application_number"
+                                type="application_number"
+                                InputLabelProps={{
+                                    shrink: false,
+                                }}
+                                sx={{ width: '80%' }}
+                                name="applicationNumber"
+                                value={applicationNumber}
+                                onChange={handleProjectDataChange}
+                                InputProps={{ inputProps: { max: applicationNumber || null } }}
+                            />
+                        </Stack>
+                    </Grid>
+                </Grid>
+                <Grid item md={2} xs={12}>
+                    <Grid item xs={12}>
+                        <MetLabel>Proponent</MetLabel>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Stack direction="row" alignItems="center" spacing={2}>
+                            <TextField
+                                id="proponent"
+                                data-testid="proponent"
+                                type="propoent"
+                                label=" "
+                                InputLabelProps={{
+                                    shrink: false,
+                                }}
+                                sx={{ width: '80%' }}
+                                name="proponent"
+                                value={proponent}
+                                onChange={handleProjectDataChange}
+                                InputProps={{ inputProps: { min: proponent || null } }}
+                            />
+                        </Stack>
+                    </Grid>
+                    <Grid item xs={12} mt={3}>
+                        <MetLabel>Project Type</MetLabel>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Stack direction="row" alignItems="center" spacing={2}>
+                            <TextField
+                                id="project_type"
+                                data-testid="project_type"
+                                type="project_type"
+                                InputLabelProps={{
+                                    shrink: false,
+                                }}
+                                sx={{ width: '80%' }}
+                                name="projectNumber"
+                                value={projectNumber}
+                                onChange={handleProjectDataChange}
+                                InputProps={{ inputProps: { min: projectNumber || null } }}
+                            />
+                        </Stack>
+                    </Grid>
+                    <Grid item xs={12} mt={2}>
+                        <FormControlLabel
+                            label={<MetParagraph>Has comments that need review</MetParagraph>}
+                            control={<Checkbox disabled={true} />}
+                        />
+                    </Grid>
+                </Grid>
+                <Grid item md={2} xs={12}>
                     <Grid item xs={12}>
                         <MetLabel>Date Created - From</MetLabel>
                     </Grid>
@@ -260,7 +411,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                         </Stack>
                     </Grid>
                 </Grid>
-                <Grid item md={3} xs={12}>
+                <Grid item md={2} xs={12}>
                     <Grid item xs={12}>
                         <MetLabel>Date Created - To</MetLabel>
                     </Grid>
@@ -301,14 +452,6 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                 InputProps={{ inputProps: { min: publishedFromDate || null } }}
                             />
                         </Stack>
-                    </Grid>
-                </Grid>
-                <Grid item md={3} xs={12}>
-                    <Grid item xs={12} mt={2}>
-                        <FormControlLabel
-                            label={<MetParagraph>Has comments that need review</MetParagraph>}
-                            control={<Checkbox disabled={true} />}
-                        />
                     </Grid>
                 </Grid>
             </Grid>
