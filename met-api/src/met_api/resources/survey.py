@@ -81,13 +81,17 @@ class Surveys(Resource):
                 sort_order=args.get('sort_order', 'asc', str),
             )
 
+            search_options = {
+                'search_text': args.get('search_text', '', type=str),
+                'unlinked': args.get('unlinked', False, bool),
+                'exclude_hidden': args.get('exclude_hidden', False, bool),
+                'template': args.get('template', None, bool),
+            }
+
             survey_records = SurveyService()\
                 .get_surveys_paginated(
                     pagination_options,
-                    args.get('search_text', '', str),
-                    args.get('unlinked', False, bool),
-                    args.get('exclude_hidden', False, bool),
-                    args.get('template', None, bool),
+                    search_options,
             )
             return survey_records, HTTPStatus.OK
         except ValueError as err:

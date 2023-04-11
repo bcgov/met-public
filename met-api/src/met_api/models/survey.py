@@ -46,24 +46,18 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         return survey
 
     @classmethod
-    def get_surveys_paginated(cls, pagination_options: PaginationOptions, search_text='', unlinked=False,
-                              exclude_hidden=False, template=False):
+    def get_surveys_paginated(cls, pagination_options: PaginationOptions, search_options=None):
         """Get surveys paginated."""
         query = db.session.query(Survey).join(Engagement, isouter=True).join(EngagementStatus, isouter=True)
 
-        if exclude_hidden:
-            query = query.filter(Survey.is_hidden.is_(False))
+        if search_options:
+            query = cls._filter_by_search_text(query, search_options)
 
-        if unlinked:
-            query = query.filter(Survey.engagement_id.is_(None))
+            query = cls._filter_by_hidden(query, search_options)
 
-        if template is not None:
-            query = query.filter()
-            # TODO: add is template column
-            # query = query.filter(Survey.is_template.is_(template))
+            query = cls._filter_by_template(query, search_options)
 
-        if search_text:
-            query = query.filter(Survey.name.ilike('%' + search_text + '%'))
+            query = cls._filter_by_unlinked(query, search_options)            
 
         sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == 'asc'\
             else desc(text(pagination_options.sort_key))
@@ -137,3 +131,34 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         survey.engagement_id = None
         db.session.commit()
         return DefaultMethodResult(True, 'Survey Unlinked', survey_id)
+
+    @staticmethod
+    def _filter_by_search_text(query, search_options):
+        if search_text := search_options.get('search_text'):
+            query = query.filter(Survey.name.ilike('%' + search_text + '%'))
+        return query
+
+    @staticmethod
+    def _filter_by_template(query, search_options):
+        if template := search_options.get('template'):
+            query = query.filter(False==template)
+            # TODO: add is template column
+            # query = query.filter(Survey.is_template.is_(template))
+
+        return query
+
+    @staticmethod
+    def _filter_by_hidden(query, search_options):
+        if is_hidden := search_options.get('is_hidden'):
+            query = query.filter(Survey.is_hidden.is_(is_hidden))
+
+        return query
+
+    @staticmethod
+    def _filter_by_unlinked(query, search_options):
+        if search_options.get('unlinked'):
+            query = query.filter(Survey.engagement_id.is_(None))
+
+        return query
+            
+

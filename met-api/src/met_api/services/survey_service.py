@@ -35,22 +35,18 @@ class SurveyService:
         return survey
 
     @staticmethod
-    def get_surveys_paginated(pagination_options: PaginationOptions, search_text='', unlinked=False,
-                              exclude_hidden=False, template=None):
+    def get_surveys_paginated(pagination_options: PaginationOptions, search_options=None):
         """Get engagements paginated."""
         # check if user has view all surveys access to view hidden surveys as well
         user_roles = TokenInfo.get_user_roles()
         has_access_to_hidden_surveys = SurveyService._can_user_access_hidden_surveys(user_roles)
 
         if not has_access_to_hidden_surveys:
-            exclude_hidden = True
+            search_options['exclude_hidden'] = True
 
         items, total = SurveyModel.get_surveys_paginated(
             pagination_options,
-            search_text,
-            unlinked,
-            exclude_hidden,
-            template,
+            search_options,
         )
         surveys_schema = SurveySchema(many=True)
 
