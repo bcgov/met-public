@@ -11,16 +11,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Service to do ETL on e."""
-from datetime import timedelta, datetime
+"""Service to do met comment refaction."""
+from datetime import datetime, timedelta
 from typing import List
 
 from flask import current_app
-from met_api.models.submission import Submission as MetSubmissionModel
-from met_api.constants.engagement_status import Status as MetEngagementStatus
-from met_api.models.engagement import Engagement as MetEngagementModel
-from met_api.models.comment import Comment as MetCommentModel
 
+from met_api.constants.engagement_status import Status as MetEngagementStatus
+from met_api.models.comment import Comment as MetCommentModel
+from met_api.models.engagement import Engagement as MetEngagementModel
+from met_api.models.submission import Submission as MetSubmissionModel
 from met_cron.models.db import db, session_scope
 
 
