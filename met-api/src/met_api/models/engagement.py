@@ -78,7 +78,7 @@ class Engagement(BaseModel):
             
             query = cls._filter_by_project_name(query, search_options.get('project_name'))
             
-            query = cls._filter_by_project_number(query, search_options.get('project_id'))
+            query = cls._filter_by_project_id(query, search_options.get('project_id'))
             
             query = cls._filter_by_client_name(query, search_options.get('client_name'))
             
@@ -257,11 +257,11 @@ class Engagement(BaseModel):
         return query
     
     @staticmethod
-    def _filter_by_project_number(query, project_number=None):
-        if project_number:
+    def _filter_by_project_id(query, project_id=None):
+        if project_id:
             query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)\
-                .filter(EngagementMetadataModel.project_id == project_number)\
-                .params(val=project_number)
+                .filter(EngagementMetadataModel.project_id == project_id)\
+                .params(val=project_id)
         return query
     
     @staticmethod
@@ -273,11 +273,11 @@ class Engagement(BaseModel):
         return query
     
     @staticmethod
-    def _filter_by_client_name(query, proponent=None):
-        if proponent:
+    def _filter_by_client_name(query, client_name=None):
+        if client_name:
             query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)\
-                .filter(EngagementMetadataModel.project_metadata['client_name'].astext == proponent)\
-                .params(val=proponent)
+                .filter(EngagementMetadataModel.project_metadata['client_name'].astext == client_name)\
+                .params(val=client_name)
         return query
 
     @staticmethod

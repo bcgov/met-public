@@ -25,7 +25,6 @@ const initialEngagementFormData = {
     end_date: '',
     description: '',
     content: '',
-
     project_id: '',
     project_metadata: {
         project_name: '',
