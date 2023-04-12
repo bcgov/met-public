@@ -237,7 +237,7 @@ class Engagement(BaseModel):
         query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)
 
         if project_type:= search_options.get('project_type'):
-           query = query.filter(EngagementMetadataModel.project_metadata['type'].astext == project_type)\
+            query = query.filter(EngagementMetadataModel.project_metadata['type'].astext == project_type)\
             .params(val=project_type)
 
         if project_name:= search_options.get('project_name'):
@@ -249,7 +249,7 @@ class Engagement(BaseModel):
             .params(val=project_id)
 
         if application_number:= search_options.get('application_number'):
-           query = query.filter(EngagementMetadataModel.project_metadata['application_number'].astext == application_number)\
+            query = query.filter(EngagementMetadataModel.project_metadata['application_number'].astext == application_number)\
             .params(val=application_number)
 
         if  client_name:= search_options.get('client_name'):
