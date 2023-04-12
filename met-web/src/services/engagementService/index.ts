@@ -27,9 +27,9 @@ interface GetEngagementsParams {
     published_to_date?: string;
     include_banner_url?: boolean;
     project_type?: string;
-    project_number?: string;
+    project_id?: string;
     project_name?: string;
-    proponent?: string;
+    client_name?: string;
     application_number?: string;
 }
 export const getEngagements = async (params: GetEngagementsParams = {}): Promise<Page<Engagement>> => {

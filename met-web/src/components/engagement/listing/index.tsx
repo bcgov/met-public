@@ -55,7 +55,7 @@ const EngagementListing = () => {
         project_name: '',
         project_id: '',
         application_number: '',
-        proponent: '',
+        client_name: '',
         project_type: '',
         created_from_date: '',
         created_to_date: '',
@@ -92,7 +92,7 @@ const EngagementListing = () => {
                 project_type: searchOptions.project_type,
                 project_id: searchOptions.project_id,
                 project_name: searchOptions.project_name,
-                proponent: searchOptions.proponent,
+                client_name: searchOptions.client_name,
                 application_number: searchOptions.application_number,
             });
             setEngagements(response.items);

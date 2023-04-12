@@ -27,7 +27,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
         project_name: '',
         project_id: '',
         application_number: '',
-        proponent: '',
+        client_name: '',
         project_type: '',
         created_from_date: '',
         created_to_date: '',
@@ -54,7 +54,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
         projectType: '',
         projectId: '',
         projectName: '',
-        proponent: '',
+        clientName: '',
         applicationNumber: '',
     });
 
@@ -66,7 +66,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
     });
     const { createdFromDate, createdToDate, publishedFromDate, publishedToDate } = dateFilter;
 
-    const { projectType, projectId, projectName, proponent, applicationNumber } = projectFilter;
+    const { projectType, projectId, projectName, clientName, applicationNumber } = projectFilter;
 
     const handleDateFilterChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setDateFilter({
@@ -100,7 +100,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
         const fProjectType = projectType ? projectType : '';
         const fprojectId = projectId ? projectId : '';
         const fProjectName = projectName ? projectName : '';
-        const fProponent = proponent ? proponent : '';
+        const fClientName = clientName ? clientName : '';
         const fAppNumber = applicationNumber ? applicationNumber : '';
 
         setFilterParams({
@@ -112,7 +112,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
             project_type: fProjectType,
             project_id: fprojectId,
             project_name: fProjectName,
-            proponent: fProponent,
+            client_name: fClientName,
             application_number: fAppNumber,
         });
     };
@@ -125,7 +125,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
             projectType: '',
             projectId: '',
             projectName: '',
-            proponent: '',
+            clientName: '',
             applicationNumber: '',
         });
 
@@ -327,18 +327,18 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                     <Grid item xs={12}>
                         <Stack direction="row" alignItems="center" spacing={2}>
                             <TextField
-                                id="proponent"
-                                data-testid="proponent"
-                                type="propoent"
+                                id="client_name"
+                                data-testid="client_name"
+                                type="clientName"
                                 label=" "
                                 InputLabelProps={{
                                     shrink: false,
                                 }}
                                 sx={{ width: '80%' }}
-                                name="proponent"
-                                value={proponent}
+                                name="clientName"
+                                value={clientName}
                                 onChange={handleProjectDataChange}
-                                InputProps={{ inputProps: { min: proponent || null } }}
+                                InputProps={{ inputProps: { min: clientName || null } }}
                             />
                         </Stack>
                     </Grid>
@@ -355,10 +355,10 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                     shrink: false,
                                 }}
                                 sx={{ width: '80%' }}
-                                name="projectId"
-                                value={projectId}
+                                name="projectType"
+                                value={projectType}
                                 onChange={handleProjectDataChange}
-                                InputProps={{ inputProps: { min: projectId || null } }}
+                                InputProps={{ inputProps: { min: projectType || null } }}
                             />
                         </Stack>
                     </Grid>

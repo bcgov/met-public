@@ -78,9 +78,9 @@ class Engagement(BaseModel):
             
             query = cls._filter_by_project_name(query, search_options.get('project_name'))
             
-            query = cls._filter_by_project_number(query, search_options.get('project_number'))
+            query = cls._filter_by_project_number(query, search_options.get('project_id'))
             
-            query = cls._filter_by_proponent(query, search_options.get('proponent'))
+            query = cls._filter_by_client_name(query, search_options.get('client_name'))
             
             query = cls._filter_by_application_number(query, search_options.get('application_number'))
 
@@ -252,7 +252,7 @@ class Engagement(BaseModel):
     def _filter_by_project_name(query, project_name=None):
         if project_name:
             query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)\
-                .filter(EngagementMetadataModel.project_metadata['name'].astext == project_name)\
+                .filter(EngagementMetadataModel.project_metadata['project_name'].astext == project_name)\
                 .params(val=project_name)
         return query
     
@@ -260,7 +260,7 @@ class Engagement(BaseModel):
     def _filter_by_project_number(query, project_number=None):
         if project_number:
             query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)\
-                .filter(EngagementMetadataModel.project_metadata['number'].astext == project_number)\
+                .filter(EngagementMetadataModel.project_id == project_number)\
                 .params(val=project_number)
         return query
     
@@ -273,10 +273,10 @@ class Engagement(BaseModel):
         return query
     
     @staticmethod
-    def _filter_by_proponent(query, proponent=None):
+    def _filter_by_client_name(query, proponent=None):
         if proponent:
             query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)\
-                .filter(EngagementMetadataModel.project_metadata['proponent'].astext == proponent)\
+                .filter(EngagementMetadataModel.project_metadata['client_name'].astext == proponent)\
                 .params(val=proponent)
         return query
 
