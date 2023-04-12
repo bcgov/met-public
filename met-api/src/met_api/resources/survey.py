@@ -21,6 +21,7 @@ from flask_restx import Namespace, Resource
 
 from met_api.auth import auth
 from met_api.auth import jwt as _jwt
+from met_api.exceptions.business_exception import BusinessException
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.survey_exclusion_option import SurveyExclusionOptions
 from met_api.schemas.survey import SurveySchema
@@ -133,6 +134,8 @@ class Surveys(Resource):
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except BusinessException as err:
+            return {'message': err.error}, err.status_code
 
 
 @cors_preflight('PUT,OPTIONS')

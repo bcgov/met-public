@@ -38,3 +38,4 @@ class Role(Enum):
     VIEW_MEMBERS = 'view_members'
     EDIT_MEMBERS = 'edit_members'
     VIEW_ALL_SURVEYS = 'view_all_surveys'
+    EDIT_ALL_SURVEYS = 'edit_all_surveys'
