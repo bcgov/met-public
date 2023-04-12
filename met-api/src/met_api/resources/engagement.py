@@ -88,10 +88,10 @@ class Engagements(Resource):
                 'published_from_date': args.get('published_from_date', None, type=str),
                 'published_to_date': args.get('published_to_date', None, type=str),
                 'project_type': args.get('project_type', None, type=str),
-                'project_number': args.get('project_number', None, type=str),
+                'project_id': args.get('project_id', None, type=str),
                 'project_name': args.get('project_name', None, type=str),
                 'application_number': args.get('application_number', None, type=str),
-                'proponent': args.get('proponent', None, type=str),
+                'client_name': args.get('client_name', None, type=str),
             }
 
             engagement_records = EngagementService()\
