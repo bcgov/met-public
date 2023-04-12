@@ -75,13 +75,13 @@ class Engagement(BaseModel):
             query = cls._filter_by_engagement_status(query, search_options)
 
             query = cls._filter_by_project_type(query, search_options.get('project_type'))
-            
+
             query = cls._filter_by_project_name(query, search_options.get('project_name'))
-            
+
             query = cls._filter_by_project_id(query, search_options.get('project_id'))
-            
+
             query = cls._filter_by_client_name(query, search_options.get('client_name'))
-            
+
             query = cls._filter_by_application_number(query, search_options.get('application_number'))
 
         if assigned_engagements is not None:
@@ -247,7 +247,7 @@ class Engagement(BaseModel):
                 .filter(EngagementMetadataModel.project_metadata['type'].astext == project_type)\
                 .params(val=project_type)
         return query
-    
+
     @staticmethod
     def _filter_by_project_name(query, project_name=None):
         if project_name:
@@ -255,7 +255,7 @@ class Engagement(BaseModel):
                 .filter(EngagementMetadataModel.project_metadata['project_name'].astext == project_name)\
                 .params(val=project_name)
         return query
-    
+
     @staticmethod
     def _filter_by_project_id(query, project_id=None):
         if project_id:
@@ -263,7 +263,7 @@ class Engagement(BaseModel):
                 .filter(EngagementMetadataModel.project_id == project_id)\
                 .params(val=project_id)
         return query
-    
+
     @staticmethod
     def _filter_by_application_number(query, application_number=None):
         if application_number:
@@ -271,7 +271,7 @@ class Engagement(BaseModel):
                 .filter(EngagementMetadataModel.project_metadata['application_number'].astext == application_number)\
                 .params(val=application_number)
         return query
-    
+
     @staticmethod
     def _filter_by_client_name(query, client_name=None):
         if client_name:
