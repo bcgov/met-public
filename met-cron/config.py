@@ -133,6 +133,10 @@ class _Config():  # pylint: disable=too-few-public-methods
     ENGAGEMENT_CLOSEOUT_EMAIL_SUBJECT = \
         os.getenv('ENGAGEMENT_CLOSEOUT_EMAIL_SUBJECT', '{engagement_name} - What we heard')
     NOTIFICATIONS_EMAIL_ENDPOINT = os.getenv('NOTIFICATIONS_EMAIL_ENDPOINT')
+    
+    # config for comment_redact_service
+    N_DAYS = os.getenv('N_DAYS', 14)
+    REDACTION_TEXT = os.getenv('REDACTION_TEXT', '[Comment Redacted]')
 
 
 class MigrationConfig():  # pylint: disable=too-few-public-methods
