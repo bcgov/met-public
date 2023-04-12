@@ -105,7 +105,7 @@ class SurveyService:
         if is_template and Role.EDIT_ALL_SURVEYS.value not in user_roles:
             raise BusinessException(
                 error='Changes could not be saved due to restricted access on a template survey',
-                status_code=HTTPStatus.BAD_REQUEST)
+                status_code=HTTPStatus.FORBIDDEN)
 
     @staticmethod
     def validate_create_fields(data):
