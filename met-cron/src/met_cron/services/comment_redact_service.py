@@ -1,17 +1,3 @@
-# Copyright © 2019 Province of British Columbia
-#
-# Licensed under the Apache License, Version 2.0 (the 'License');
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an 'AS IS' BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-"""Service to do met comment refaction."""
 from datetime import datetime, timedelta
 from typing import List
 
@@ -41,8 +27,9 @@ class CommentRedactService:  # pylint: disable=too-few-public-methods
         """
         submissions = CommentRedactService._find_submissions_for_n_days_closed_engagements(days=current_app.config.get('N_DAYS', 14))
         if not submissions:
-            current_app.logger.info(f'No Submissions for Engagements closed for {current_app.config.get("N_DAYS", 14)} days found.')
-            return
+            current_app.logger.info(f'>>>>>No Submissions for Engagements closed for {current_app.config.get("N_DAYS", 14)} days found.')
+            return        
+        current_app.logger.info('>>>>>Total Submissions to redact found: %s.', len(submissions))
         submissions_ids = [submission.id for submission in submissions]
         with session_scope() as session:
             CommentRedactService._redact_comments_by_submission_ids(submissions_ids, session)
@@ -50,7 +37,8 @@ class CommentRedactService:  # pylint: disable=too-few-public-methods
 
 
     @staticmethod
-    def _find_submissions_for_n_days_closed_engagements(days) -> List[MetSubmissionModel]:
+    def _find_submissions_for_n_days_closed_engagements(days) -> List[MetSubmissionModel]:        
+        current_app.logger.info(f'>>>>>Finding submissions for Engagements closed for {days} days.')
         n_days_ago = datetime.utcnow().date() - timedelta(days=days)
         return db.session.query(MetSubmissionModel)\
             .join(MetEngagementModel, MetEngagementModel.id == MetSubmissionModel.engagement_id)\
@@ -64,6 +52,7 @@ class CommentRedactService:  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def _redact_comments_by_submission_ids(submission_ids: List[int], session):
+        current_app.logger.info(f'>>>>>Redacting comments for submissions: {submission_ids}')
         session.query(MetCommentModel)\
         .filter(MetCommentModel.submission_id.in_(submission_ids))\
         .update(
@@ -77,12 +66,14 @@ class CommentRedactService:  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def _redact_submission_json_comments(submission_ids: List[int], session):
+        current_app.logger.info(f'>>>>>Fetching keys to redact aka component_types from comments for submissions: {submission_ids}')
         comments = session.query(MetCommentModel)\
         .filter(MetCommentModel.submission_id.in_(submission_ids))\
         .all()
         # e.g. ['simpletextarea', 'simpletextarea1', 'simpletextfield']
         keys_to_redact = [comment.component_id for comment in comments]
 
+        current_app.logger.info(f'>>>>>Redacting comments in submission_json for submissions: {submission_ids}')
         for submission in session.query(MetSubmissionModel).filter(MetSubmissionModel.id.in_(submission_ids)):
             new_submission_json = {}
             for key, value in submission.submission_json.items():
