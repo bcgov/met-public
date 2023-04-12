@@ -128,3 +128,28 @@ def test_get_hidden_survey_for_team_member(client, jwt, session, survey_info):  
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json.get('total') == 0
+
+
+@pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey4])
+def test_get_template_survey(client, jwt, session, survey_info):  # pylint:disable=unused-argument
+    """Assert that a hidden survey cannot be fetched by team members."""
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    survey = factory_hidden_survey_model()
+    survey_id = str(survey.id)
+    new_survey_name = 'new_survey_name'
+    rv = client.put('/api/surveys/', data=json.dumps({'id': survey_id, 'name': new_survey_name}),
+                    headers=headers, content_type=ContentType.JSON.value)
+
+    assert rv.status_code == 200
+
+    page = 1
+    page_size = 10
+    sort_key = 'survey.created_date'
+    sort_order = 'desc'
+
+    rv = client.get(f'/api/surveys/?page={page}&size={page_size}&sort_key={sort_key}\
+                    &sort_order={sort_order}&search_text=',
+                    data=json.dumps(survey_info),
+                    headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+    assert rv.json.get('total') == 1
