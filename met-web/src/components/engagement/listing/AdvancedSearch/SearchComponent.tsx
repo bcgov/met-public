@@ -1,17 +1,30 @@
 import React, { useState } from 'react';
-import { Grid, Stack, TextField, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
+import {
+    Grid,
+    Stack,
+    TextField,
+    FormGroup,
+    FormControlLabel,
+    Checkbox,
+    Select,
+    SelectChangeEvent,
+    MenuItem,
+} from '@mui/material';
 import { MetParagraph, MetLabel } from 'components/common';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import { PrimaryButton, SecondaryButton } from '../../../common';
 import dayjs from 'dayjs';
 import { formatToUTC } from 'components/common/dateHelper';
 import { SearchOptions } from './SearchTypes';
+import { AppConfig } from 'config';
 
 interface filterParams {
     setFilterParams: (newsearchOptions: SearchOptions) => void;
 }
 
 const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
+    const { engagementProjectTypes } = AppConfig.constants;
+
     const intitialStatusList = {
         [EngagementDisplayStatus[EngagementDisplayStatus.Draft]]: false,
         [EngagementDisplayStatus[EngagementDisplayStatus.Scheduled]]: false,
@@ -22,6 +35,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
     const [statusFilter, setStatusFilter] = useState(() => {
         return intitialStatusList;
     });
+
     const initialFilterParams = {
         status_list: [],
         project_name: '',
@@ -75,7 +89,9 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
         });
     };
 
-    const handleProjectDataChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    const handleProjectDataChange = (
+        e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement> | SelectChangeEvent,
+    ) => {
         setProjectFilter({
             ...projectFilter,
             [e.target.name]: e.target.value,
@@ -346,21 +362,28 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                         <MetLabel>Project Type</MetLabel>
                     </Grid>
                     <Grid item xs={12}>
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                            <TextField
-                                id="project_type"
-                                data-testid="project_type"
-                                type="project_type"
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                                sx={{ width: '80%' }}
-                                name="projectType"
-                                value={projectType}
-                                onChange={handleProjectDataChange}
-                                InputProps={{ inputProps: { min: projectType || null } }}
-                            />
-                        </Stack>
+                        <Select
+                            id="project-type"
+                            name="projectType"
+                            variant="outlined"
+                            label=" "
+                            defaultValue=""
+                            value={projectType}
+                            sx={{ width: '80%' }}
+                            size="small"
+                            onChange={handleProjectDataChange}
+                        >
+                            <MenuItem value={''} sx={{ fontStyle: 'italic', height: '2em' }}>
+                                none
+                            </MenuItem>
+                            {engagementProjectTypes.map((type: string) => {
+                                return (
+                                    <MenuItem key={type} value={type}>
+                                        {type}
+                                    </MenuItem>
+                                );
+                            })}
+                        </Select>
                     </Grid>
                     <Grid item xs={12} mt={2}>
                         <FormControlLabel
