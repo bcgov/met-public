@@ -75,6 +75,14 @@ class Engagement(BaseModel):
             query = cls._filter_by_engagement_status(query, search_options)
 
             query = cls._filter_by_project_type(query, search_options.get('project_type'))
+            
+            query = cls._filter_by_project_name(query, search_options.get('project_name'))
+            
+            query = cls._filter_by_project_number(query, search_options.get('project_number'))
+            
+            query = cls._filter_by_proponent(query, search_options.get('proponent'))
+            
+            query = cls._filter_by_application_number(query, search_options.get('application_number'))
 
         if assigned_engagements is not None:
             query = cls._filter_by_assigned_engagements(query, assigned_engagements)
@@ -238,6 +246,38 @@ class Engagement(BaseModel):
             query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)\
                 .filter(EngagementMetadataModel.project_metadata['type'].astext == project_type)\
                 .params(val=project_type)
+        return query
+    
+    @staticmethod
+    def _filter_by_project_name(query, project_name=None):
+        if project_name:
+            query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)\
+                .filter(EngagementMetadataModel.project_metadata['name'].astext == project_name)\
+                .params(val=project_name)
+        return query
+    
+    @staticmethod
+    def _filter_by_project_number(query, project_number=None):
+        if project_number:
+            query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)\
+                .filter(EngagementMetadataModel.project_metadata['number'].astext == project_number)\
+                .params(val=project_number)
+        return query
+    
+    @staticmethod
+    def _filter_by_application_number(query, application_number=None):
+        if application_number:
+            query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)\
+                .filter(EngagementMetadataModel.project_metadata['application_number'].astext == application_number)\
+                .params(val=application_number)
+        return query
+    
+    @staticmethod
+    def _filter_by_proponent(query, proponent=None):
+        if proponent:
+            query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)\
+                .filter(EngagementMetadataModel.project_metadata['proponent'].astext == proponent)\
+                .params(val=proponent)
         return query
 
     @staticmethod
