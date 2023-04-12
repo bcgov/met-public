@@ -74,16 +74,8 @@ class Engagement(BaseModel):
 
             query = cls._filter_by_engagement_status(query, search_options)
 
-            query = cls._filter_by_project_type(query, search_options.get('project_type'))
-
-            query = cls._filter_by_project_name(query, search_options.get('project_name'))
-
-            query = cls._filter_by_project_id(query, search_options.get('project_id'))
-
-            query = cls._filter_by_client_name(query, search_options.get('client_name'))
-
-            query = cls._filter_by_application_number(query, search_options.get('application_number'))
-
+            query = cls._filter_by_project_metaData(query, search_options)
+            
         if assigned_engagements is not None:
             query = cls._filter_by_assigned_engagements(query, assigned_engagements)
 
@@ -241,43 +233,29 @@ class Engagement(BaseModel):
         return query
 
     @staticmethod
-    def _filter_by_project_type(query, project_type=None):
-        if project_type:
-            query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)\
-                .filter(EngagementMetadataModel.project_metadata['type'].astext == project_type)\
-                .params(val=project_type)
-        return query
-
-    @staticmethod
-    def _filter_by_project_name(query, project_name=None):
-        if project_name:
-            query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)\
-                .filter(EngagementMetadataModel.project_metadata['project_name'].astext == project_name)\
-                .params(val=project_name)
-        return query
-
-    @staticmethod
-    def _filter_by_project_id(query, project_id=None):
-        if project_id:
-            query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)\
-                .filter(EngagementMetadataModel.project_id == project_id)\
-                .params(val=project_id)
-        return query
-
-    @staticmethod
-    def _filter_by_application_number(query, application_number=None):
-        if application_number:
-            query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)\
-                .filter(EngagementMetadataModel.project_metadata['application_number'].astext == application_number)\
-                .params(val=application_number)
-        return query
-
-    @staticmethod
-    def _filter_by_client_name(query, client_name=None):
-        if client_name:
-            query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)\
-                .filter(EngagementMetadataModel.project_metadata['client_name'].astext == client_name)\
-                .params(val=client_name)
+    def _filter_by_project_metaData(query, search_options):
+        query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)
+        
+        if project_type:= search_options.get('project_type'):
+           query = query.filter(EngagementMetadataModel.project_metadata['type'].astext == project_type)\
+            .params(val=project_type)
+            
+        if project_name:= search_options.get('project_name'):
+            query =query.filter(EngagementMetadataModel.project_metadata['project_name'].astext == project_name)\
+            .params(val=project_name)
+            
+        if project_id:= search_options.get('project_id'):
+            query = query.filter(EngagementMetadataModel.project_id == project_id)\
+            .params(val=project_id)
+            
+        if application_number:= search_options.get('application_number'):
+           query = query.filter(EngagementMetadataModel.project_metadata['application_number'].astext == application_number)\
+            .params(val=application_number)
+            
+        if  client_name:= search_options.get('client_name'):
+            query = query.filter(EngagementMetadataModel.project_metadata['client_name'].astext == client_name)\
+            .params(val=client_name)
+        
         return query
 
     @staticmethod
