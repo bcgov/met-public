@@ -63,7 +63,7 @@ class CommentRedactService:  # pylint: disable=too-few-public-methods
 
 
     @staticmethod
-    def _redact_comments_by_submission_ids(submission_ids: List[int], session) -> List[MetCommentModel]:
+    def _redact_comments_by_submission_ids(submission_ids: List[int], session):
         session.query(MetCommentModel)\
         .filter(MetCommentModel.submission_id.in_(submission_ids))\
         .update(
@@ -76,7 +76,7 @@ class CommentRedactService:  # pylint: disable=too-few-public-methods
 
 
     @staticmethod
-    def _redact_submission_json_comments(submission_ids: List[int], session) -> List[MetSubmissionModel]:
+    def _redact_submission_json_comments(submission_ids: List[int], session):
         comments = session.query(MetCommentModel)\
         .filter(MetCommentModel.submission_id.in_(submission_ids))\
         .all()
