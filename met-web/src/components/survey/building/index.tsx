@@ -30,6 +30,7 @@ import { openNotificationModal } from 'services/notificationModalService/notific
 import { Palette } from 'styles/Theme';
 import { PermissionsGate } from 'components/permissionsGate';
 import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+import axios from 'axios';
 
 const SurveyFormBuilder = () => {
     const navigate = useNavigate();
@@ -167,12 +168,21 @@ const SurveyFormBuilder = () => {
             navigate('/surveys');
         } catch (error) {
             setIsSaving(false);
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred while saving survey',
-                }),
-            );
+            if (axios.isAxiosError(error)) {
+                dispatch(
+                    openNotification({
+                        severity: 'error',
+                        text: error.response?.data.message,
+                    }),
+                );
+            } else {
+                dispatch(
+                    openNotification({
+                        severity: 'error',
+                        text: 'Error occurred while saving survey',
+                    }),
+                );
+            }
         }
     };
 

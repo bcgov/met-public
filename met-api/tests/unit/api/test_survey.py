@@ -23,7 +23,8 @@ import pytest
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestSurveyInfo
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_engagement_model, factory_hidden_survey_model, factory_survey_model)
+    factory_auth_header, factory_engagement_model, factory_hidden_survey_model, factory_survey_model,
+    factory_template_survey_model)
 
 
 @pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey2])
@@ -134,7 +135,7 @@ def test_get_hidden_survey_for_team_member(client, jwt, session, survey_info):  
 def test_get_template_survey(client, jwt, session, survey_info):  # pylint:disable=unused-argument
     """Assert that a hidden survey cannot be fetched by team members."""
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
-    survey = factory_hidden_survey_model()
+    survey = factory_template_survey_model()
     survey_id = str(survey.id)
     new_survey_name = 'new_survey_name'
     rv = client.put('/api/surveys/', data=json.dumps({'id': survey_id, 'name': new_survey_name}),
@@ -153,3 +154,29 @@ def test_get_template_survey(client, jwt, session, survey_info):  # pylint:disab
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json.get('total') == 1
+
+
+@pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey4])
+def test_edit_template_survey_for_admins(client, jwt, session, survey_info):  # pylint:disable=unused-argument
+    """Assert that a hidden survey cannot be fetched by team members."""
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    survey = factory_template_survey_model()
+    survey_id = str(survey.id)
+    new_survey_name = 'new_survey_name'
+    rv = client.put('/api/surveys/', data=json.dumps({'id': survey_id, 'name': new_survey_name}),
+                    headers=headers, content_type=ContentType.JSON.value)
+
+    assert rv.status_code == 200, 'Admins are able to edit template surveys'
+
+
+@pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey4])
+def test_edit_template_survey_for_team_member(client, jwt, session, survey_info):  # pylint:disable=unused-argument
+    """Assert that a hidden survey cannot be fetched by team members."""
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.team_member_role)
+    survey = factory_template_survey_model()
+    survey_id = str(survey.id)
+    new_survey_name = 'new_survey_name'
+    rv = client.put('/api/surveys/', data=json.dumps({'id': survey_id, 'name': new_survey_name}),
+                    headers=headers, content_type=ContentType.JSON.value)
+
+    assert rv.status_code == 403, 'Team members are not able to edit template surveys, so throws exception.'

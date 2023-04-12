@@ -222,7 +222,8 @@ class TestJwtClaims(dict, Enum):
                 'view_users',
                 'view_private_engagements',
                 'create_admin_user',
-                'view_all_surveys'
+                'view_all_surveys',
+                'edit_all_surveys',
             ]
         }
     }
