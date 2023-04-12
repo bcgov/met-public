@@ -20,7 +20,7 @@ class CommentRedactService:  # pylint: disable=too-few-public-methods
     def do_redact_comments():
         """Perform the redaction on rejected comments.
 
-            1. Get submissions for engagements closed in for N_DAYS
+            1. Get submissions for engagements closed for N_DAYS
             2. Redact comments in comments table by submission_ids
             3. Redact comments in submission_json by submission_ids
 
