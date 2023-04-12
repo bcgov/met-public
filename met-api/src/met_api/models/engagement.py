@@ -242,8 +242,8 @@ class Engagement(BaseModel):
 
         if project_name := search_options.get('project_name'):
             query = query.filter(EngagementMetadataModel.project_metadata['project_name']
-                                .astext.ilike(f'%{project_name}%'))\
-                                .params(val=project_name)
+                                 .astext.ilike(f'%{project_name}%'))\
+                                 .params(val=project_name)
 
         if project_id := search_options.get('project_id'):
             query = query.filter(EngagementMetadataModel.project_id == project_id)\
@@ -251,10 +251,10 @@ class Engagement(BaseModel):
 
         if application_number := search_options.get('application_number'):
             query = query.filter(EngagementMetadataModel.project_metadata['application_number']
-                                 .astext.ilike(f'%{application_number}%') )\
+                                 .astext.ilike(f'%{application_number}%'))\
                                  .params(val=application_number)
 
-        if  client_name := search_options.get('client_name'):
+        if client_name := search_options.get('client_name'):
             query = query.filter(EngagementMetadataModel.project_metadata['client_name']
                                  .astext.ilike(f'%{client_name}%'))\
                                  .params(val=client_name)
