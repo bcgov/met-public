@@ -1,11 +1,11 @@
 import React from 'react';
-import PublicDashboard from './publicDashboard';
+import Dashboard from './Dashboard';
 import { DashboardContextProvider } from './DashboardContext';
 
 export const publicDashboard = () => {
     return (
         <DashboardContextProvider>
-            <PublicDashboard />
+            <Dashboard />
         </DashboardContextProvider>
     );
 };

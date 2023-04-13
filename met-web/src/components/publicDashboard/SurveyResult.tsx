@@ -65,7 +65,7 @@ export const SurveyResult = () => {
                 <MetHeader3 color="#003366">Survey Results</MetHeader3>
             </Stack>
             <Grid container direction="row" item xs={12} spacing={1}>
-                <Grid item sm={4} margin={{ bottom: 150 }}>
+                <Grid item xs={12} lg={4} margin={{ bottom: 150 }}>
                     <MetBody mb={2} color="#003366">
                         Click on a question to view results
                     </MetBody>
@@ -100,7 +100,7 @@ export const SurveyResult = () => {
                         </List>
                     </Box>
                 </Grid>
-                <Grid item sm={8} margin={{ bottom: 150 }} alignItems="center">
+                <Grid item xs={12} sm={8} margin={{ bottom: 150 }} alignItems="center">
                     <ResponsiveContainer width={'100%'} height={400} key={selectedData.length}>
                         <BarChart
                             data={selectedData}
