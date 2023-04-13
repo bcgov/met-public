@@ -236,29 +236,21 @@ class Engagement(BaseModel):
     def _filter_by_project_metadata(query, search_options):
         query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)
 
-        if project_type := search_options.get('project_type'):
-            query = query.filter(EngagementMetadataModel.project_metadata['type'].astext.ilike(f'%{project_type}%'))\
-                .params(val=project_type)
+        filters = {
+        'project_type': (EngagementMetadataModel.project_metadata['type'].astext.ilike, 'val'),
+        'project_name': (EngagementMetadataModel.project_metadata['project_name'].astext.ilike, 'val'),
+        'application_number': (EngagementMetadataModel.project_metadata['application_number'].astext.ilike, 'val'),
+        'client_name': (EngagementMetadataModel.project_metadata['client_name'].astext.ilike, 'val'),
+        }
 
-        if project_name := search_options.get('project_name'):
-            query = query.filter(EngagementMetadataModel.project_metadata['project_name']
-                                 .astext.ilike(f'%{project_name}%'))\
-                                 .params(val=project_name)
-
-        if project_id := search_options.get('project_id'):
-            query = query.filter(EngagementMetadataModel.project_id == project_id)\
-                         .params(val=project_id)
-
-        if application_number := search_options.get('application_number'):
-            query = query.filter(EngagementMetadataModel.project_metadata['application_number']
-                                 .astext.ilike(f'%{application_number}%'))\
-                                 .params(val=application_number)
-
-        if client_name := search_options.get('client_name'):
-            query = query.filter(EngagementMetadataModel.project_metadata['client_name']
-                                 .astext.ilike(f'%{client_name}%'))\
-                                 .params(val=client_name)
-
+        for filter_name, (filter_func, param_name) in filters.items():
+            if filter_value := search_options.get(filter_name):
+                if filter_name == 'project_id':
+                    query = query.filter(EngagementMetadataModel.project_id == filter_value)\
+                                         .params(val=filter_value)
+                else:
+                    query = query.filter(filter_func(f'%{filter_value}%')).params(**{param_name: filter_value})
+    
         return query
 
     @staticmethod
