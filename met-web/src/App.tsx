@@ -15,6 +15,7 @@ import { NotificationModal } from 'components/common/modal';
 import { FeedbackModal } from 'components/feedback/FeedbackModal';
 import { AppConfig } from 'config';
 import NoAccess from 'routes/NoAccess';
+import { validBasenames, EAO } from './constants';
 
 const App = () => {
     const drawerWidth = 280;
@@ -23,12 +24,27 @@ const App = () => {
     const roles = useAppSelector((state) => state.user.roles);
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const authenticationLoading = useAppSelector((state) => state.user.authentication.loading);
+    const pathSegments = window.location.pathname.split('/');
+    const basename = pathSegments[1];
+
+    // TODO: Remove this when we have a better way to fetch the valid basenames
+    const isValidBasename = basename && validBasenames.includes(basename);
 
     useEffect(() => {
         UserService.initKeycloak(dispatch);
     }, [dispatch]);
 
-    sessionStorage.setItem('apiurl', String(AppConfig.apiUrl));
+    useEffect(() => {
+        sessionStorage.setItem('apiurl', String(AppConfig.apiUrl));
+
+        if (isValidBasename) {
+            sessionStorage.setItem('tenantId', basename);
+        } else {
+            sessionStorage.setItem('tenantId', EAO);
+            const path = window.location.pathname.length > 1 ? window.location.pathname : '';
+            window.location.replace(`/${EAO}${path}`);
+        }
+    }, [basename, AppConfig.apiUrl]);
 
     if (authenticationLoading) {
         return <MidScreenLoader />;
@@ -36,7 +52,7 @@ const App = () => {
 
     if (!isLoggedIn) {
         return (
-            <Router>
+            <Router basename={basename}>
                 <PageViewTracker />
                 <Notification />
                 <NotificationModal />
@@ -49,7 +65,7 @@ const App = () => {
 
     if (roles.length === 0) {
         return (
-            <Router>
+            <Router basename={basename}>
                 <PublicHeader />
                 <Container>
                     <NoAccess />
@@ -61,7 +77,7 @@ const App = () => {
 
     if (!isMediumScreen) {
         return (
-            <Router>
+            <Router basename={basename}>
                 <InternalHeader />
                 <Container>
                     <MobileToolbar />
@@ -73,7 +89,7 @@ const App = () => {
     }
 
     return (
-        <Router>
+        <Router basename={basename}>
             <Box sx={{ display: 'flex' }}>
                 <InternalHeader drawerWidth={drawerWidth} />
                 <Notification />

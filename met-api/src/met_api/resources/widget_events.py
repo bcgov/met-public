@@ -20,11 +20,12 @@ from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
 from met_api.exceptions.business_exception import BusinessException
-from met_api.schemas.widget_events import WidgetEventsSchema
 from met_api.schemas.event_item import EventItemSchema
+from met_api.schemas.widget_events import WidgetEventsSchema
 from met_api.services.widget_events_service import WidgetEventsService
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
+
 
 API = Namespace('widgets_events', description='Endpoints for Widget Events')
 """Widget Events

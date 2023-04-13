@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react';
-import { Grid, TextField, Stack } from '@mui/material';
+import { Grid, TextField, Stack, FormGroup, FormControlLabel, Switch } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { useNavigate } from 'react-router-dom';
 import { postSurvey } from 'services/surveyService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetLabel, PrimaryButton, SecondaryButton, MetDescription } from 'components/common';
 
 export const CreateOptions = () => {
     const navigate = useNavigate();
@@ -15,6 +15,7 @@ export const CreateOptions = () => {
     const initialFormError = {
         name: false,
     };
+    const [multiPageSurvey, setMultiPageSurvey] = useState<boolean>(true);
     const [formError, setFormError] = useState(initialFormError);
     const [isSaving, setIsSaving] = useState(false);
     const getErrorMessage = () => {
@@ -51,7 +52,7 @@ export const CreateOptions = () => {
                 name: surveyForm.name,
                 engagement_id: engagementToLink?.id ? String(engagementToLink.id) : undefined,
                 form_json: {
-                    display: 'form',
+                    display: multiPageSurvey ? 'wizard' : 'form',
                     components: [],
                 },
             });
@@ -94,6 +95,28 @@ export const CreateOptions = () => {
                     helperText={getErrorMessage()}
                 />
             </Grid>
+            <Grid item xs={6}></Grid>
+            <Grid item xs={6}>
+                <FormGroup>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={multiPageSurvey}
+                                onChange={(e) => {
+                                    setMultiPageSurvey(!multiPageSurvey);
+                                }}
+                            />
+                        }
+                        label="Multi-page"
+                    />
+                </FormGroup>
+                <MetDescription>
+                    The multi-page option will enable you to add one, or many pages to a survey. It will also create a
+                    progress bar. If you want to create a 1-page survey, turn off the multi-page toggle.
+                </MetDescription>
+            </Grid>
+            <Grid item xs={6}></Grid>
+
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
                     <PrimaryButton onClick={handleSaveClick} loading={isSaving}>

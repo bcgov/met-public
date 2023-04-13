@@ -2,7 +2,7 @@ gunicorn
 Flask
 Flask-Migrate<3
 Flask-Mail
-Flask-Script
+Flask-Script==2.0.5
 Flask-Moment
 Flask-SQLAlchemy
 SQLAlchemy-Continuum
@@ -32,3 +32,4 @@ python-dotenv
 aws-requests-auth
 requests
 anytree
+geopandas

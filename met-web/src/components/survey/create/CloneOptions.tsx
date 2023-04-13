@@ -72,6 +72,7 @@ const CloneOptions = () => {
                 page: page,
                 size: size,
                 sort_order: sort_order,
+                exclude_hidden: true,
             });
             setAvailableSurveys(fetchedSurveys.items);
             setLoadingSurveys(false);
@@ -97,12 +98,8 @@ const CloneOptions = () => {
     };
 
     useEffect(() => {
-        if (!availableSurveys) {
-            handleFetchSurveys(PAGE, PAGE_SIZE, SORT_ORDER);
-        } else {
-            setLoadingSurveys(false);
-        }
-    }, [availableSurveys]);
+        handleFetchSurveys(PAGE, PAGE_SIZE, SORT_ORDER);
+    }, []);
 
     useEffect(() => {
         if (!availableEngagements) {

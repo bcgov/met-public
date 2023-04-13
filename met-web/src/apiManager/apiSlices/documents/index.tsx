@@ -1,11 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { AppConfig } from 'config';
 import { DocumentItem } from 'models/document';
+import { prepareHeaders } from 'apiManager//apiSlices/util';
 
 // Define a service using a base URL and expected endpoints
 export const documentsApi = createApi({
     reducerPath: 'documentsApi',
-    baseQuery: fetchBaseQuery({ baseUrl: AppConfig.apiUrl }),
+    baseQuery: fetchBaseQuery({
+        baseUrl: AppConfig.apiUrl,
+        prepareHeaders,
+    }),
     endpoints: (builder) => ({
         getDocuments: builder.query<DocumentItem[], number>({
             query: (widget_id) => `widgets/${widget_id}/documents`,

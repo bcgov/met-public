@@ -1,14 +1,20 @@
 import React, { useState, useContext } from 'react';
-import { Grid, InputAdornment, TextField, Tooltip } from '@mui/material';
-import { MetLabel, MetPaper, PrimaryButton, MetBody } from '../../../common';
+import { Grid, InputAdornment, MenuItem, TextField, Select, Tooltip, SelectChangeEvent } from '@mui/material';
+import { MetLabel, MetPaper, PrimaryButton, MetHeader4, MetDescription } from '../../../common';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { ActionContext } from '../ActionContext';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { EngagementTabsContext } from './EngagementTabsContext';
+import { AppConfig } from 'config';
 
 const EngagementSettings = () => {
     const { savedEngagement } = useContext(ActionContext);
+    const { engagementFormData, setEngagementFormData } = useContext(EngagementTabsContext);
+    const { project_id, project_metadata } = engagementFormData;
+    const { engagementProjectTypes } = AppConfig.constants;
+
     const dispatch = useAppDispatch();
 
     const newEngagement = !savedEngagement.id || isNaN(Number(savedEngagement.id));
@@ -20,6 +26,23 @@ const EngagementSettings = () => {
 
     const handleTooltipClose = () => {
         setCopyTooltip(false);
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        setEngagementFormData({
+            ...engagementFormData,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const handleChangeMetadata = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement> | SelectChangeEvent) => {
+        setEngagementFormData({
+            ...engagementFormData,
+            project_metadata: {
+                ...project_metadata,
+                [e.target.name]: e.target.value,
+            },
+        });
     };
 
     const handleCopyUrl = () => {
@@ -46,16 +69,88 @@ const EngagementSettings = () => {
                 spacing={1}
                 sx={{ padding: '2em' }}
             >
-                <Grid item xs={12}>
-                    <MetLabel>Engagement Link</MetLabel>
+                <Grid item xs={12} mb={1}>
+                    <MetHeader4 bold>Engagement Information</MetHeader4>
                 </Grid>
-                <Grid item xs={12}>
-                    <MetBody>
+                <Grid item xs={12} lg={6} p={1}>
+                    <MetLabel>Project Name</MetLabel>
+                    <TextField
+                        id="project-name"
+                        name="project_name"
+                        label=" "
+                        InputLabelProps={{
+                            shrink: false,
+                        }}
+                        value={project_metadata.project_name}
+                        variant="outlined"
+                        fullWidth
+                        onChange={handleChangeMetadata}
+                    />
+                </Grid>
+                <Grid item xs={12} lg={6} p={1}>
+                    <MetLabel>Client/Proponent</MetLabel>
+                    <TextField
+                        id="client-name"
+                        name="client_name"
+                        value={project_metadata.client_name}
+                        variant="outlined"
+                        fullWidth
+                        onChange={handleChangeMetadata}
+                    />
+                </Grid>
+                <Grid item xs={12} lg={6} p={1}>
+                    <MetLabel>Project #</MetLabel>
+                    <TextField
+                        id="project-id"
+                        name="project_id"
+                        value={project_id}
+                        variant="outlined"
+                        fullWidth
+                        onChange={handleChange}
+                    />
+                </Grid>
+                <Grid item xs={12} lg={6} p={1}>
+                    <MetLabel>Project Type</MetLabel>
+                    <Select
+                        id="project-type"
+                        name="type"
+                        variant="outlined"
+                        label=" "
+                        defaultValue=""
+                        value={project_metadata.type}
+                        fullWidth
+                        size="small"
+                        onChange={handleChangeMetadata}
+                    >
+                        <MenuItem value={''} sx={{ fontStyle: 'italic', height: '2em' }}>
+                            none
+                        </MenuItem>
+                        {engagementProjectTypes.map((type: string) => {
+                            return (
+                                <MenuItem key={type} value={type}>
+                                    {type}
+                                </MenuItem>
+                            );
+                        })}
+                    </Select>
+                </Grid>
+                <Grid item xs={6} lg={6} p={1}>
+                    <MetLabel>Application #</MetLabel>
+                    <TextField
+                        id="application-number"
+                        name="application_number"
+                        value={project_metadata.application_number}
+                        variant="outlined"
+                        fullWidth
+                        onChange={handleChangeMetadata}
+                    />
+                </Grid>
+                <Grid item xs={12} mt={5}>
+                    <MetLabel>Engagement Link</MetLabel>
+                    <MetDescription>
                         This is the link to the public engagement and will only be accessible once the engagement is
                         published.
-                    </MetBody>
-                </Grid>
-                <Grid item xs={12} lg={9}>
+                    </MetDescription>
                     <ClickAwayListener onClickAway={handleTooltipClose}>
                         <Tooltip
                             title="Link copied!"

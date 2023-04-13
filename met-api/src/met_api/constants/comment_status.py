@@ -21,3 +21,4 @@ class Status(IntEnum):
     Pending = 1
     Approved = 2
     Rejected = 3
+    Needs_further_review = 4

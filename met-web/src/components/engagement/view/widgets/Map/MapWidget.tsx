@@ -4,12 +4,13 @@ import { Grid, Skeleton, Divider, Box, IconButton, Link, useMediaQuery, Theme } 
 import { Widget } from 'models/widget';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import Map from 'components/map';
+import MetMap from 'components/map';
 import { fetchMaps } from 'services/widgetService/MapService';
 import { WidgetMap } from 'models/widgetMap';
 import OpenWithIcon from '@mui/icons-material/OpenWith';
 import { ExpandModal } from './ExpandModal';
 import { When } from 'react-if';
+import { geoJSONDecode } from 'components/engagement/form/EngagementWidgets/Map/utils';
 
 interface MapWidgetProps {
     widget: Widget;
@@ -88,7 +89,12 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
                                 height: '500px',
                             }}
                         >
-                            <Map longitude={map.longitude} latitude={map.latitude} markerLabel={map.marker_label} />
+                            <MetMap
+                                geojson={geoJSONDecode(map.geojson)}
+                                longitude={map.longitude}
+                                latitude={map.latitude}
+                                markerLabel={map.marker_label}
+                            />
                         </Box>
                     </Grid>
                     <When condition={isLargeScreen}>

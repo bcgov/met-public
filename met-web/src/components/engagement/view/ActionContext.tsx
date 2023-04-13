@@ -101,7 +101,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
             return Promise.resolve(updateResult);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error Updating Engagement' }));
-            console.log(error);
             return Promise.reject(error);
         }
     };
@@ -120,7 +119,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
             setSavedEngagement({ ...result });
             setEngagementLoading(false);
         } catch (error) {
-            console.log(error);
             dispatch(
                 openNotification({
                     severity: 'error',
@@ -140,7 +138,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
             setIsWidgetsLoading(false);
         } catch (error) {
             setIsWidgetsLoading(false);
-            console.log(error);
             dispatch(
                 openNotification({
                     severity: 'error',

@@ -5,4 +5,6 @@ export interface WidgetMap {
     longitude: number;
     latitude: number;
     marker_label?: string;
+    geojson?: string;
+    file_name?: string;
 }

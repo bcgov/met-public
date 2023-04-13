@@ -7,6 +7,7 @@ import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as teamMemberService from 'services/membershipService';
+import * as widgetService from 'services/widgetService';
 import { Box } from '@mui/material';
 import { draftEngagement } from '../factory';
 import { initialDefaultUser, USER_GROUP } from 'models/user';
@@ -62,18 +63,10 @@ jest.mock('components/map', () => () => {
     return <div></div>;
 });
 
-const mockWidgetsRtkUnwrap = jest.fn(() => Promise.resolve([]));
-const mockWidgetsRtkTrigger = () => {
-    return {
-        unwrap: mockWidgetsRtkUnwrap,
-    };
-};
-export const mockWidgetsRtkQuery = () => [mockWidgetsRtkTrigger];
-
-const mockLazyGetWidgetsQuery = jest.fn(mockWidgetsRtkQuery);
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
-    useLazyGetWidgetsQuery: () => [...mockLazyGetWidgetsQuery()],
+    useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
+    useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
 
 describe('Engagement form page tests', () => {
@@ -82,6 +75,7 @@ describe('Engagement form page tests', () => {
     jest.spyOn(teamMemberService, 'getTeamMembers').mockReturnValue(Promise.resolve([mockTeamMember1]));
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     jest.spyOn(engagementService, 'getEngagement').mockReturnValue(Promise.resolve(draftEngagement));
+    jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([]));
 
     beforeEach(() => {
         setupEnv();

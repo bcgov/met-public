@@ -62,6 +62,7 @@ def run(job_name):
     from tasks.met_closeout import MetEngagementCloseout
     from tasks.met_publish import MetEngagementPublish
     from tasks.met_purge import MetPurge
+    from tasks.met_comment_redact import MetCommentRedact
     application = create_app()
 
     application.app_context().push()
@@ -79,6 +80,9 @@ def run(job_name):
     elif job_name == 'PURGE':
         MetPurge.do_purge()
         application.logger.info('<<<< Completed MET Purge >>>>')
+    elif job_name == 'COMMENT_REDACT':
+        MetCommentRedact.do_redact()
+        application.logger.info('<<<< Completed MET COMMENT_REDACT >>>>')
     else:
         application.logger.debug('No valid args passed.Exiting job without running any ***************')
 

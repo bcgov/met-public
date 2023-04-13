@@ -20,6 +20,8 @@ export const formioOptions = {
                 simplepostalcode: true,
                 categorycheckboxes: true,
                 categorycommentcontainer: true,
+                simplehtmlelement: true,
+                content: true,
             },
             default: true,
         },

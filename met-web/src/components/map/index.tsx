@@ -1,18 +1,47 @@
 import React from 'react';
-import ReactMapGL, { Marker, NavigationControl } from 'react-map-gl';
+import ReactMapGL, { Marker, NavigationControl, Source, Layer } from 'react-map-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import maplibregl from 'maplibre-gl';
+import { GeoJSON } from 'geojson';
 import MarkerIcon from '@mui/icons-material/LocationOnRounded';
 import { MetSmallText } from 'components/common';
 import { Stack } from '@mui/material';
 import { When } from 'react-if';
+import { AnyLayer } from 'mapbox-gl';
 
 interface MapProps {
     latitude: number;
     longitude: number;
     markerLabel?: string;
+    geojson?: GeoJSON;
 }
-const Map = ({ latitude, longitude, markerLabel }: MapProps) => {
+
+const layerStyle: AnyLayer = {
+    id: 'fill-layer',
+    type: 'fill',
+    paint: {
+        'fill-color': '#00ffff',
+        'fill-opacity': 0.5,
+    },
+    filter: ['all', ['==', ['geometry-type'], 'Polygon']],
+};
+
+//filter enforces that only geojson features that are linestrings use this styling
+const lineStyle: AnyLayer = {
+    id: 'lines',
+    type: 'line',
+    filter: ['all', ['==', ['geometry-type'], 'LineString'], ['!=', ['get', 'type'], 'platform']],
+    layout: {
+        'line-join': 'round',
+        'line-cap': 'round',
+    },
+    paint: {
+        'line-width': 1,
+        'line-color': '#00ffff',
+    },
+};
+
+const MetMap = ({ geojson, latitude, longitude, markerLabel }: MapProps) => {
     return (
         <ReactMapGL
             initialViewState={{
@@ -28,6 +57,12 @@ const Map = ({ latitude, longitude, markerLabel }: MapProps) => {
             }}
         >
             <NavigationControl />
+            <When condition={Boolean(geojson)}>
+                <Source id="geojson-data" type="geojson" data={geojson}>
+                    <Layer {...layerStyle} />
+                    <Layer {...lineStyle} />
+                </Source>
+            </When>
             <Marker latitude={latitude} longitude={longitude} anchor="bottom">
                 <Stack direction="column" alignItems="center" justifyContent="center">
                     <MarkerIcon fontSize="large" htmlColor="red" />
@@ -41,4 +76,4 @@ const Map = ({ latitude, longitude, markerLabel }: MapProps) => {
         </ReactMapGL>
     );
 };
-export default Map;
+export default MetMap;

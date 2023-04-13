@@ -19,14 +19,11 @@ const LinkOptions = () => {
     const { availableSurveys, setAvailableSurveys, engagementToLink } = useContext(CreateSurveyContext);
 
     const handleFetchSurveys = async () => {
-        if (!!availableSurveys) {
-            setLoadingSurveys(false);
-            return;
-        }
-
         try {
             const fetchedSurveys = await fetchSurveys({
                 unlinked: true,
+                exclude_hidden: true,
+                exclude_template: true,
             });
             setAvailableSurveys(fetchedSurveys);
             setLoadingSurveys(false);
@@ -37,7 +34,7 @@ const LinkOptions = () => {
 
     useEffect(() => {
         handleFetchSurveys();
-    }, [availableSurveys]);
+    }, []);
 
     const handleSave = async () => {
         if (!selectedSurvey) {

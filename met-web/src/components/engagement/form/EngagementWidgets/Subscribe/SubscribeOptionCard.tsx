@@ -7,24 +7,26 @@ import { WidgetType } from 'models/widget';
 import { Else, If, Then } from 'react-if';
 import { ActionContext } from '../../ActionContext';
 import { useAppDispatch } from 'hooks';
-import { postWidget } from 'services/widgetService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { optionCardStyle } from '../Phases/PhasesOptionCard';
+import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
+
 const SubscribeOptionCard = () => {
     const { widgets, loadWidgets, handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
-    const [creatingWidget, setCreatingWidget] = useState(false);
+    const [createWidget] = useCreateWidgetMutation();
+    const [isCreatingWidget, setIsCreatingWidget] = useState(false);
 
-    const createWidget = async () => {
+    const handleCreateWidget = async () => {
         const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Subscribe);
         if (alreadyExists) {
             return;
         }
 
         try {
-            setCreatingWidget(!creatingWidget);
-            await postWidget(savedEngagement.id, {
+            setIsCreatingWidget(true);
+            await createWidget({
                 widget_type_id: WidgetType.Subscribe,
                 engagement_id: savedEngagement.id,
             });
@@ -35,9 +37,10 @@ const SubscribeOptionCard = () => {
                     text: 'Widget successfully created.',
                 }),
             );
+            setIsCreatingWidget(false);
             handleWidgetDrawerOpen(false);
         } catch (error) {
-            setCreatingWidget(false);
+            setIsCreatingWidget(false);
             dispatch(
                 openNotification({ severity: 'error', text: 'Error occurred while creating subscription widget' }),
             );
@@ -50,23 +53,16 @@ const SubscribeOptionCard = () => {
             data-testid={`widget-drawer-option/${WidgetType.Subscribe}`}
             elevation={1}
             sx={optionCardStyle}
-            onClick={() => createWidget()}
+            onClick={() => handleCreateWidget()}
         >
-            <If condition={creatingWidget}>
+            <If condition={isCreatingWidget}>
                 <Then>
                     <Grid container alignItems="center" justifyContent="center" direction="row" height="5.5em">
                         <CircularProgress color="inherit" />
                     </Grid>
                 </Then>
                 <Else>
-                    <Grid
-                        xs={12}
-                        container
-                        alignItems="center"
-                        justifyContent="flex-start"
-                        direction="row"
-                        columnSpacing={1}
-                    >
+                    <Grid container alignItems="center" justifyContent="flex-start" direction="row" columnSpacing={1}>
                         <Grid item sx={{ mr: 0.5 }}>
                             <EmailOutlinedIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
                         </Grid>

@@ -9,9 +9,13 @@ export interface FormBuilderProps {
     savedForm?: FormBuilderData;
 }
 
+export interface FormInfo {
+    [key: string]: any;
+}
+
 export interface FormBuilderData {
     display: string;
-    components: unknown;
+    components: Array<FormInfo>;
 }
 export interface FormSubmissionData {
     data: unknown;

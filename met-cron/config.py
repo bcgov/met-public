@@ -126,13 +126,17 @@ class _Config():  # pylint: disable=too-few-public-methods
 
     # front end endpoints
     SITE_URL = os.getenv('SITE_URL')
-    ENGAGEMENT_DASHBOARD_PATH = os.getenv('ENGAGEMENT_DASHBOARD_PATH', '/engagement/{engagement_id}/dashboard')
+    ENGAGEMENT_DASHBOARD_PATH = os.getenv('ENGAGEMENT_DASHBOARD_PATH', '/engagements/{engagement_id}/dashboard')
 
     # Email Service
     ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID = os.getenv('ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID')
     ENGAGEMENT_CLOSEOUT_EMAIL_SUBJECT = \
         os.getenv('ENGAGEMENT_CLOSEOUT_EMAIL_SUBJECT', '{engagement_name} - What we heard')
     NOTIFICATIONS_EMAIL_ENDPOINT = os.getenv('NOTIFICATIONS_EMAIL_ENDPOINT')
+    
+    # config for comment_redact_service
+    N_DAYS = os.getenv('N_DAYS', 14)
+    REDACTION_TEXT = os.getenv('REDACTION_TEXT', '[Comment Redacted]')
 
 
 class MigrationConfig():  # pylint: disable=too-few-public-methods

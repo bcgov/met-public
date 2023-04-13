@@ -15,7 +15,7 @@ import { getSubmissionPage } from 'services/submissionService';
 import { SurveySubmission } from 'models/surveySubmission';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { getSurvey } from 'services/surveyService';
-import { CommentStatus } from 'constants/commentStatus';
+import { COMMENTS_STATUS, CommentStatus } from 'constants/commentStatus';
 import { getCommentsSheet } from 'services/commentService';
 import { downloadFile } from 'utils';
 
@@ -134,7 +134,6 @@ const SubmissionListing = () => {
             allowSort: true,
             getValue: (row) => row.reviewed_by,
         },
-
         {
             key: 'review_date',
             numeric: true,
@@ -149,12 +148,7 @@ const SubmissionListing = () => {
             disablePadding: true,
             label: 'Status',
             allowSort: true,
-            getValue: (row) =>
-                CommentStatus[
-                    row.comment_status_id === CommentStatus.NeedsFurtherReview
-                        ? CommentStatus.Pending
-                        : row.comment_status_id
-                ],
+            getValue: (row) => COMMENTS_STATUS[row.comment_status_id as CommentStatus] || '',
         },
     ];
 

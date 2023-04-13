@@ -1,6 +1,3 @@
-*Issue #:*
-https://github.com/bcgov/met-public/issues/<Put the github issue number here>
-
 *Description of changes:*
 
 

@@ -7,6 +7,7 @@ const GetRequest = <T>(url: string, params = {}, headers = {}) => {
         headers: {
             'Content-type': 'application/json',
             Authorization: `Bearer ${UserService.getToken()}`,
+            'tenant-id': `${sessionStorage.getItem('tenantId')}`,
             ...headers,
         },
     });
@@ -18,6 +19,7 @@ const PostRequest = <T>(url: string, data = {}, params = {}) => {
         headers: {
             'Content-type': 'application/json',
             Authorization: `Bearer ${UserService.getToken()}`,
+            'tenant-id': `${sessionStorage.getItem('tenantId')}`,
         },
     });
 };
@@ -28,6 +30,7 @@ const PutRequest = <T>(url: string, data = {}, params = {}) => {
         headers: {
             'Content-type': 'application/json',
             Authorization: `Bearer ${UserService.getToken()}`,
+            'tenant-id': `${sessionStorage.getItem('tenantId')}`,
         },
     });
 };
@@ -37,6 +40,7 @@ const PatchRequest = <T>(url: string, data = {}) => {
         headers: {
             'Content-type': 'application/json',
             Authorization: `Bearer ${UserService.getToken()}`,
+            'tenant-id': `${sessionStorage.getItem('tenantId')}`,
         },
     });
 };
@@ -47,6 +51,7 @@ const DeleteRequest = <T>(url: string, params = {}) => {
         headers: {
             'Content-type': 'application/json',
             Authorization: `Bearer ${UserService.getToken()}`,
+            'tenant-id': `${sessionStorage.getItem('tenantId')}`,
         },
     });
 };
@@ -60,6 +65,7 @@ export const OSSGetRequest = <T>(url: string, requestOptions: OSSRequestOptions)
         headers: {
             'X-Amz-Date': requestOptions.amzDate,
             Authorization: requestOptions.authHeader,
+            'tenant-id': `${sessionStorage.getItem('tenantId')}`,
         },
         responseType: 'blob',
     });
@@ -70,6 +76,7 @@ export const OSSPutRequest = <T>(url: string, data: File, requestOptions: OSSReq
         headers: {
             'X-Amz-Date': requestOptions.amzDate,
             Authorization: requestOptions.authHeader,
+            'tenant-id': `${sessionStorage.getItem('tenantId')}`,
         },
     });
 };

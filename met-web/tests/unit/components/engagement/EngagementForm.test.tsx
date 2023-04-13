@@ -6,12 +6,14 @@ import { setupEnv } from '../setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
+import * as engagementMetadataService from 'services/engagementMetadataService';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
+import * as widgetService from 'services/widgetService';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { WidgetType } from 'models/widget';
 import { Box } from '@mui/material';
-import { draftEngagement } from '../factory';
+import { draftEngagement, engagementMetadata } from '../factory';
 import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 
 const survey: Survey = {
@@ -53,18 +55,11 @@ jest.mock('components/map', () => () => {
     return <Box></Box>;
 });
 
-const mockWidgetsRtkUnwrap = jest.fn(() => Promise.resolve([]));
-const mockWidgetsRtkTrigger = () => {
-    return {
-        unwrap: mockWidgetsRtkUnwrap,
-    };
-};
-export const mockWidgetsRtkQuery = () => [mockWidgetsRtkTrigger];
-
-const mockLazyGetWidgetsQuery = jest.fn(mockWidgetsRtkQuery);
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
-    useLazyGetWidgetsQuery: () => [...mockLazyGetWidgetsQuery()],
+    useCreateWidgetMutation: () => [jest.fn(() => Promise.resolve())],
+    useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
+    useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
 
 describe('Engagement form page tests', () => {
@@ -75,6 +70,12 @@ describe('Engagement form page tests', () => {
         .spyOn(notificationModalSlice, 'openNotificationModal')
         .mockImplementation(jest.fn());
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
+    const getEngagementMetadataMock = jest
+        .spyOn(engagementMetadataService, 'getEngagementMetadata')
+        .mockReturnValue(Promise.resolve(engagementMetadata));
+    const patchEngagementMetadataMock = jest
+        .spyOn(engagementMetadataService, 'patchEngagementMetadata')
+        .mockReturnValue(Promise.resolve(engagementMetadata));
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
         .mockReturnValue(Promise.resolve(draftEngagement));
@@ -84,6 +85,7 @@ describe('Engagement form page tests', () => {
     const postEngagementMock = jest
         .spyOn(engagementService, 'postEngagement')
         .mockReturnValue(Promise.resolve(draftEngagement));
+    const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([]));
 
     beforeEach(() => {
         setupEnv();
@@ -98,6 +100,7 @@ describe('Engagement form page tests', () => {
         });
         expect(screen.getByTestId('create-engagement-button')).toBeVisible();
         expect(getEngagementMock).not.toHaveBeenCalled();
+        expect(getEngagementMetadataMock).not.toHaveBeenCalled();
 
         const nameInput = container.querySelector('input[name="name"]');
         expect(nameInput).not.toBeNull();
@@ -139,6 +142,7 @@ describe('Engagement form page tests', () => {
         });
 
         expect(getEngagementMock).toHaveBeenCalledOnce();
+        expect(getEngagementMetadataMock).toHaveBeenCalledOnce();
         expect(screen.getByTestId('update-engagement-button')).toBeVisible();
         expect(screen.getByDisplayValue('2022-09-01')).toBeInTheDocument();
         expect(screen.getByDisplayValue('2022-09-30')).toBeInTheDocument();
@@ -198,6 +202,11 @@ describe('Engagement form page tests', () => {
             Promise.resolve({
                 ...draftEngagement,
                 surveys: surveys,
+            }),
+        );
+        getEngagementMetadataMock.mockReturnValueOnce(
+            Promise.resolve({
+                ...engagementMetadata,
             }),
         );
         const { container } = render(<EngagementForm />);
@@ -283,7 +292,7 @@ describe('Engagement form page tests', () => {
         });
 
         expect(screen.getByText('Add Widget')).toBeVisible();
-        expect(mockWidgetsRtkUnwrap).toHaveBeenCalled();
+        expect(getWidgetsMock).toHaveBeenCalled();
     });
 
     test('Widget drawer appears', async () => {
@@ -294,7 +303,7 @@ describe('Engagement form page tests', () => {
                 surveys: surveys,
             }),
         );
-        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([]));
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
         const { container } = render(<EngagementForm />);
 
         await waitFor(() => {

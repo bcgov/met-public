@@ -16,6 +16,7 @@ from sqlalchemy.sql.schema import ForeignKey
 from met_api.constants.engagement_status import EngagementDisplayStatus, Status
 from met_api.constants.user import SYSTEM_USER
 from met_api.models.pagination_options import PaginationOptions
+from met_api.models.engagement_metadata import EngagementMetadataModel
 from met_api.schemas.engagement import EngagementSchema
 from met_api.utils.datetime import local_datetime
 from .base_model import BaseModel
@@ -41,6 +42,7 @@ class Engagement(BaseModel):
     banner_filename = db.Column(db.String(), unique=False, nullable=True)
     surveys = db.relationship('Survey', backref='engagement', cascade='all, delete')
     status_block = db.relationship('EngagementStatusBlock', backref='engagement')
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
 
     @classmethod
     def get_all_engagements(cls):
@@ -71,6 +73,8 @@ class Engagement(BaseModel):
             query = cls._filter_by_published_date(query, search_options)
 
             query = cls._filter_by_engagement_status(query, search_options)
+
+            query = cls._filter_by_project_type(query, search_options.get('project_type'))
 
         if assigned_engagements is not None:
             query = cls._filter_by_assigned_engagements(query, assigned_engagements)
@@ -226,6 +230,14 @@ class Engagement(BaseModel):
     def _filter_by_search_text(query, search_options):
         if search_text := search_options.get('search_text'):
             query = query.filter(Engagement.name.ilike('%' + search_text + '%'))
+        return query
+
+    @staticmethod
+    def _filter_by_project_type(query, project_type=None):
+        if project_type:
+            query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)\
+                .filter(EngagementMetadataModel.project_metadata['type'].astext == project_type)\
+                .params(val=project_type)
         return query
 
     @staticmethod

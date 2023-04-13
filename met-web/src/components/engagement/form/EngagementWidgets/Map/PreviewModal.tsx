@@ -3,7 +3,7 @@ import Modal from '@mui/material/Modal';
 import { Box, Paper } from '@mui/material';
 import { modalStyle } from 'components/common';
 import { MapContext } from './MapContext';
-import Map from 'components/map';
+import MetMap from 'components/map';
 
 export const PreviewModal = () => {
     const { previewMapOpen, setPreviewMapOpen, previewMap } = useContext(MapContext);
@@ -27,7 +27,8 @@ export const PreviewModal = () => {
                         height: '500px',
                     }}
                 >
-                    <Map
+                    <MetMap
+                        geojson={previewMap.geojson}
                         longitude={previewMap.longitude}
                         latitude={previewMap.latitude}
                         markerLabel={previewMap.markerLabel}
