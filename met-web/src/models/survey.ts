@@ -7,6 +7,7 @@ export interface Survey {
     responseCount: number;
     created_date: string;
     is_hidden: boolean;
+    is_template: boolean;
     engagement?: Engagement;
     form_json?: FormBuilderData;
     comments?: unknown;
@@ -38,6 +39,7 @@ export const createDefaultSurvey = (): Survey => {
         responseCount: 0,
         created_date: '',
         is_hidden: false,
+        is_template: false,
         engagement: createDefaultEngagement(),
         comments_meta_data: {
             total: 0,

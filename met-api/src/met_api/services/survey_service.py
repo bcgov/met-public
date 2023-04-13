@@ -1,14 +1,18 @@
 """Service for survey management."""
+from http import HTTPStatus
 
 from met_api.constants.engagement_status import Status
 from met_api.models import Engagement as EngagementModel
 from met_api.models import Survey as SurveyModel
 from met_api.models.pagination_options import PaginationOptions
+from met_api.models.survey_exclusion_option import SurveyExclusionOptions
 from met_api.schemas.engagement import EngagementSchema
 from met_api.schemas.survey import SurveySchema
 from met_api.services.object_storage_service import ObjectStorageService
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
+
+from ..exceptions.business_exception import BusinessException
 
 
 class SurveyService:
@@ -35,21 +39,21 @@ class SurveyService:
         return survey
 
     @staticmethod
-    def get_surveys_paginated(pagination_options: PaginationOptions, search_text='', unlinked=False,
-                              exclude_hidden=False):
+    def get_surveys_paginated(pagination_options: PaginationOptions, survey_exclusion_options: SurveyExclusionOptions,
+                              search_text='', unlinked=False):
         """Get engagements paginated."""
         # check if user has view all surveys access to view hidden surveys as well
         user_roles = TokenInfo.get_user_roles()
         has_access_to_hidden_surveys = SurveyService._can_user_access_hidden_surveys(user_roles)
 
         if not has_access_to_hidden_surveys:
-            exclude_hidden = True
+            survey_exclusion_options.exclude_hidden = True
 
         items, total = SurveyModel.get_surveys_paginated(
             pagination_options,
+            survey_exclusion_options,
             search_text,
             unlinked,
-            exclude_hidden,
         )
         surveys_schema = SurveySchema(many=True)
 
@@ -77,6 +81,12 @@ class SurveyService:
         cls.validate_update_fields(data)
         survey = cls.get(data.get('id', None))
         engagement = survey.get('engagement', None)
+
+        # check if user has edit all surveys access to edit template surveys as well
+        user_roles = TokenInfo.get_user_roles()
+        is_template = survey.get('is_template', None)
+        cls.validate_template_surveys_edit_access(is_template, user_roles)
+
         if engagement and engagement.get('status_id', None) != Status.Draft.value:
             raise ValueError('Engagament already published')
         return SurveyModel.update_survey(data)
@@ -88,6 +98,14 @@ class SurveyService:
 
         if any(empty_fields):
             raise ValueError('Some required fields are empty')
+
+    @staticmethod
+    def validate_template_surveys_edit_access(is_template, user_roles):
+        """Validatef user has edit access on a template survey."""
+        if is_template and Role.EDIT_ALL_SURVEYS.value not in user_roles:
+            raise BusinessException(
+                error='Changes could not be saved due to restricted access on a template survey',
+                status_code=HTTPStatus.FORBIDDEN)
 
     @staticmethod
     def validate_create_fields(data):

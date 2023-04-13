@@ -30,6 +30,7 @@ import { openNotificationModal } from 'services/notificationModalService/notific
 import { Palette } from 'styles/Theme';
 import { PermissionsGate } from 'components/permissionsGate';
 import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+import axios from 'axios';
 
 const SurveyFormBuilder = () => {
     const navigate = useNavigate();
@@ -51,6 +52,7 @@ const SurveyFormBuilder = () => {
     const isEngagementDraft = savedEngagement?.status_id === EngagementStatus.Draft;
     const hasPublishedEngagement = hasEngagement && !isEngagementDraft;
     const [isHiddenSurvey, setIsHiddenSurvey] = useState(savedSurvey ? savedSurvey.is_hidden : false);
+    const [isTemplateSurvey, setIsTemplateSurvey] = useState(savedSurvey ? savedSurvey.is_template : false);
 
     useEffect(() => {
         loadSurvey();
@@ -84,6 +86,7 @@ const SurveyFormBuilder = () => {
             setFormDefinition(loadedSurvey?.form_json || { display: 'form', components: [] });
             setName(loadedSurvey.name);
             setIsHiddenSurvey(loadedSurvey.is_hidden);
+            setIsTemplateSurvey(loadedSurvey.is_template);
         } catch (error) {
             dispatch(
                 openNotification({
@@ -147,6 +150,7 @@ const SurveyFormBuilder = () => {
                 form_json: formData,
                 name: name,
                 is_hidden: isHiddenSurvey,
+                is_template: isTemplateSurvey,
             });
             dispatch(
                 openNotification({
@@ -164,12 +168,21 @@ const SurveyFormBuilder = () => {
             navigate('/surveys');
         } catch (error) {
             setIsSaving(false);
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred while saving survey',
-                }),
-            );
+            if (axios.isAxiosError(error)) {
+                dispatch(
+                    openNotification({
+                        severity: 'error',
+                        text: error.response?.data.message,
+                    }),
+                );
+            } else {
+                dispatch(
+                    openNotification({
+                        severity: 'error',
+                        text: 'Error occurred while saving survey',
+                    }),
+                );
+            }
         }
     };
 
@@ -279,14 +292,52 @@ const SurveyFormBuilder = () => {
                 <FormBuilder handleFormChange={handleFormChange} savedForm={formDefinition} />
             </Grid>
             <Grid item xs={12}>
-                <Stack direction="row" spacing={0}>
+                <Stack direction="row">
+                    <FormGroup>
+                        <FormControlLabel
+                            control={
+                                <PermissionsGate scopes={[SCOPES.createSurvey]} errorProps={{ disabled: true }}>
+                                    <Switch
+                                        checked={isTemplateSurvey}
+                                        disabled={Boolean(savedSurvey?.engagement_id)}
+                                        onChange={(e) => {
+                                            if (e.target.checked) {
+                                                setIsTemplateSurvey(true);
+                                                return;
+                                            }
+                                            setIsTemplateSurvey(false);
+                                        }}
+                                    />
+                                </PermissionsGate>
+                            }
+                            label="Save as a Template"
+                        />
+                    </FormGroup>
+                    <Tooltip
+                        title="When you toggle ON this option and save your Survey, your Survey will become a Template. As long as this option is on, the Template can be cloned (and then edited) but can't be attached directly to an Engagement."
+                        placement="top"
+                        componentsProps={{
+                            tooltip: {
+                                sx: {
+                                    bgcolor: '#003366',
+                                    color: 'white',
+                                },
+                            },
+                        }}
+                    >
+                        <IconButton>
+                            <HelpIcon sx={{ fontSize: 20, color: `${Palette.primary.main}` }} />
+                        </IconButton>
+                    </Tooltip>
+                </Stack>
+                <Stack direction="row">
                     <FormGroup>
                         <FormControlLabel
                             control={
                                 <PermissionsGate scopes={[SCOPES.createSurvey]} errorProps={{ disabled: true }}>
                                     <Switch
                                         checked={isHiddenSurvey}
-                                        disabled={savedSurvey?.engagement_id ? true : false}
+                                        disabled={Boolean(savedSurvey?.engagement_id)}
                                         onChange={(e) => {
                                             if (e.target.checked) {
                                                 setIsHiddenSurvey(true);
@@ -300,7 +351,18 @@ const SurveyFormBuilder = () => {
                             label="Hide Survey"
                         />
                     </FormGroup>
-                    <Tooltip title="When you toggle ON this option and save your Survey, your Survey will be 'Hidden'. As long as this option is on, the Survey will only be visible to Superusers. When you are ready to make it available, change the toggle to OFF and click the Save button.">
+                    <Tooltip
+                        title="When you toggle ON this option and save your Survey, your Survey will be 'Hidden'. When the toggle is ON and as long as the survey is not attached to an engagement, the Survey will only be visible to Superusers. When you are ready to make it available and able to be cloned or attached to an engagement, change the toggle to OFF and click the Save button."
+                        placement="top"
+                        componentsProps={{
+                            tooltip: {
+                                sx: {
+                                    bgcolor: '#003366',
+                                    color: 'white',
+                                },
+                            },
+                        }}
+                    >
                         <IconButton>
                             <HelpIcon sx={{ fontSize: 20, color: `${Palette.primary.main}` }} />
                         </IconButton>

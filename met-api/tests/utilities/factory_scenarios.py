@@ -76,7 +76,8 @@ class TestSurveyInfo(dict, Enum):
         'created_by': '123',
         'updated_by': '123',
         'form_json': {'display': 'form', 'components': []},
-        'is_hidden': False
+        'is_hidden': False,
+        'is_template': False
     }
     survey2 = {
         'name': fake.name(),
@@ -89,7 +90,18 @@ class TestSurveyInfo(dict, Enum):
         'created_by': '123',
         'updated_by': '123',
         'form_json': {'display': 'form', 'components': []},
-        'is_hidden': True
+        'is_hidden': True,
+        'is_template': False,
+    }
+    survey4 = {
+        'name': fake.name(),
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+        'created_by': '123',
+        'updated_by': '123',
+        'form_json': {'display': 'form', 'components': []},
+        'is_hidden': False,
+        'is_template': True,
     }
 
 
@@ -210,7 +222,8 @@ class TestJwtClaims(dict, Enum):
                 'view_users',
                 'view_private_engagements',
                 'create_admin_user',
-                'view_all_surveys'
+                'view_all_surveys',
+                'edit_all_surveys',
             ]
         }
     }
