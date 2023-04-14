@@ -6,7 +6,7 @@ Manages the engagement
 from __future__ import annotations
 
 from datetime import datetime
-from typing import List, Optional, Callable, Tuple
+from typing import List, Optional
 
 from sqlalchemy import and_, asc, desc, or_
 from sqlalchemy.dialects.postgresql import JSON
@@ -236,7 +236,7 @@ class Engagement(BaseModel):
     def _filter_by_project_metadata(query, search_options):
         query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)
 
-        filters: Dict[str, Tuple[Callable, Optional[str]]]  = {
+        filters = {
         'project_type': (EngagementMetadataModel.project_metadata['type'].astext.ilike, 'val'),
         'project_name': (EngagementMetadataModel.project_metadata['project_name'].astext.ilike, 'val'),
         'application_number': (EngagementMetadataModel.project_metadata['application_number'].astext.ilike, 'val'),
