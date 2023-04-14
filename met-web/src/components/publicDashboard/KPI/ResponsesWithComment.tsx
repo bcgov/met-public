@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import { MetPaper, MetHeader3 } from 'components/common';
 import { Skeleton } from '@mui/material';
 import { ErrorPlaceholder } from './ErrorPlaceholder';
-import { DASHBOARD } from './constants';
+import { DASHBOARD } from '../constants';
 
 const ResponsesWithComment = () => {
     // Sample data

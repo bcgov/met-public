@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Stack from '@mui/material/Stack';
 import { Skeleton } from '@mui/material';
-import { DASHBOARD } from './constants';
+import { DASHBOARD } from '../constants';
 import { RadialBarChart, PolarAngleAxis, RadialBar } from 'recharts';
 import { MetPaper, MetHeader3 } from 'components/common';
 import { ErrorPlaceholder } from './ErrorPlaceholder';

@@ -1,6 +1,6 @@
 import { MetBody, MetHeader4, MetPaper } from 'components/common';
 import React from 'react';
-import { DASHBOARD } from './constants';
+import { DASHBOARD } from '../constants';
 import { Grid, IconButton } from '@mui/material';
 import LoopIcon from '@mui/icons-material/Loop';
 

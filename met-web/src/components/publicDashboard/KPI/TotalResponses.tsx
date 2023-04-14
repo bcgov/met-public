@@ -5,7 +5,7 @@ import { MetPaper, MetHeader3 } from 'components/common';
 import { Grid, Skeleton } from '@mui/material';
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import { ErrorPlaceholder } from './ErrorPlaceholder';
-import { DASHBOARD } from './constants';
+import { DASHBOARD } from '../constants';
 
 const TotalResponses = () => {
     // Sample data

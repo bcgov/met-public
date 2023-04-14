@@ -3,12 +3,12 @@ import { Grid, Link as MuiLink } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { MetHeader1, MetPaper, PrimaryButton } from 'components/common';
 import { ReportBanner } from './ReportBanner';
-import SurveyResult from './SurveyResult';
 import CompleteResponses from './KPI/CompleteResponses';
 import ResponsesWithComment from './KPI/ResponsesWithComment';
 import TotalResponses from './KPI/TotalResponses';
 import SubmissionTrend from './SubmissionTrend/SubmissionTrend';
 import { DashboardContext } from './DashboardContext';
+import SurveyBar from './SurveyBar.tsx';
 
 export const Dashboard = () => {
     const navigate = useNavigate();
@@ -16,7 +16,6 @@ export const Dashboard = () => {
 
     const handleReadComments = () => {
         navigate(`/engagements/${engagement.id}/comments`);
-        return;
     };
 
     return (
@@ -31,7 +30,7 @@ export const Dashboard = () => {
                 direction="row"
                 justifyContent={'flex-end'}
                 alignItems="flex-end"
-                m={{ lg: '1em 8em 2em 3em', xs: '1em' }}
+                m={{ lg: '1em 8em 2em 3em', sm: '2em', xs: '0.5em' }}
             >
                 <Grid item xs={12} container justifyContent="flex-end">
                     <MuiLink component={Link} to={`/engagements/${engagement.id}/view`}>
@@ -40,16 +39,17 @@ export const Dashboard = () => {
                 </Grid>
 
                 <Grid container item xs={12}>
-                    <MetPaper elevation={1} sx={{ padding: '2em 2em 0 2em' }}>
+                    <MetPaper elevation={1} sx={{ padding: { md: '2em 2em 0 2em', sm: '1em', xs: '0.5em' } }}>
                         <Grid
                             container
                             direction="row"
                             justifyContent="flex-start"
                             alignItems="flex-start"
                             rowSpacing={3}
+                            sx={{ marginBottom: '2em' }}
                         >
                             <Grid item xs={12} sm={6}>
-                                <MetHeader1>What We Heard</MetHeader1>
+                                <MetHeader1 textAlign={{ xs: 'center', sm: 'left' }}>What We Heard</MetHeader1>
                             </Grid>
                             <Grid
                                 item
@@ -81,7 +81,7 @@ export const Dashboard = () => {
                                 <SubmissionTrend />
                             </Grid>
                             <Grid item xs={12}>
-                                <SurveyResult />
+                                <SurveyBar />
                             </Grid>
                         </Grid>
                     </MetPaper>
