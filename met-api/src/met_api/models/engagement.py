@@ -250,7 +250,7 @@ class Engagement(BaseModel):
                                          .params(val=filter_value)
                 else:
                     query = query.filter(filter_func(f'%{filter_value}%')).params(**{param_name: filter_value})
-    
+
         return query
 
     @staticmethod
