@@ -92,7 +92,7 @@ export const SurveyBar = () => {
     }
 
     if (isError) {
-        return <ErrorBox height={HEIGHT} onClick={fetchData} />;
+        return <ErrorBox sx={{ height: HEIGHT }} onClick={fetchData} />;
     }
 
     return (

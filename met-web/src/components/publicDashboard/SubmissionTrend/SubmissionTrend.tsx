@@ -59,7 +59,7 @@ const SubmissionTrend = () => {
     }
 
     if (isError) {
-        return <ErrorBox height={HEIGHT} onClick={fetchData} />;
+        return <ErrorBox sx={{ height: HEIGHT }} onClick={fetchData} />;
     }
     return (
         <MetPaper sx={{ p: 2 }}>

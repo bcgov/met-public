@@ -1,15 +1,16 @@
 import React from 'react';
-import { Grid, IconButton } from '@mui/material';
+import { Grid, IconButton, SxProps, Theme } from '@mui/material';
 import { MetBody, MetHeader4, MetPaper } from 'components/common';
 import LoopIcon from '@mui/icons-material/Loop';
 import { DASHBOARD } from './constants';
 
 interface ErrorBoxProps {
-    height: number | string;
+    height?: number | string;
     onClick: () => void;
+    sx?: SxProps<Theme>;
 }
 export const ErrorBox = ({
-    height,
+    sx,
     onClick = () => {
         /*empty*/
     },
@@ -18,9 +19,10 @@ export const ErrorBox = ({
         <MetPaper
             sx={{
                 width: '100%',
-                height: height,
+                height: '100%',
                 backgroundColor: DASHBOARD.KPI.BACKGROUND_COLOR,
                 p: 2,
+                ...sx,
             }}
         >
             <Grid

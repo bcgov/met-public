@@ -3,9 +3,10 @@ import { RadialBarChart, PolarAngleAxis, RadialBar } from 'recharts';
 import Stack from '@mui/material/Stack';
 import { MetPaper, MetHeader3 } from 'components/common';
 import { Skeleton } from '@mui/material';
-import { ErrorPlaceholder } from './ErrorPlaceholder';
 import { DASHBOARD } from '../constants';
+import { ErrorBox } from '../ErrorBox';
 
+const HEIGHT = '213px';
 const ResponsesWithComment = () => {
     // Sample data
     const sampleData = [{ name: 'L1', value: 60 }];
@@ -13,7 +14,7 @@ const ResponsesWithComment = () => {
 
     const [data, setData] = useState(sampleData);
     const [isLoading, setIsLoading] = useState(true);
-    const [isError, setIsError] = useState(false);
+    const [isError, setIsError] = useState(true);
 
     const fetchData = async () => {
         setIsLoading(true);
@@ -32,11 +33,11 @@ const ResponsesWithComment = () => {
     }, []);
 
     if (isLoading) {
-        return <Skeleton variant="rectangular" width={'100%'} height={'100%'} sx={{ minHeight: '213px' }} />;
+        return <Skeleton variant="rectangular" width={'100%'} height={'100%'} sx={{ minHeight: HEIGHT }} />;
     }
 
     if (isError) {
-        return <ErrorPlaceholder onClick={fetchData} />;
+        return <ErrorBox sx={{ height: '100%', minHeight: HEIGHT }} onClick={fetchData} />;
     }
 
     return (

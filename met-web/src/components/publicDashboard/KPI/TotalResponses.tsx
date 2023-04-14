@@ -4,9 +4,10 @@ import Stack from '@mui/material/Stack';
 import { MetPaper, MetHeader3 } from 'components/common';
 import { Grid, Skeleton } from '@mui/material';
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
-import { ErrorPlaceholder } from './ErrorPlaceholder';
 import { DASHBOARD } from '../constants';
+import { ErrorBox } from '../ErrorBox';
 
+const HEIGHT = '213px';
 const TotalResponses = () => {
     // Sample data
     const sampleData = [{ name: 'L1', value: 100 }];
@@ -37,7 +38,7 @@ const TotalResponses = () => {
     }
 
     if (isError) {
-        return <ErrorPlaceholder onClick={fetchData} />;
+        return <ErrorBox sx={{ height: '100%', minHeight: HEIGHT }} onClick={fetchData} />;
     }
 
     return (

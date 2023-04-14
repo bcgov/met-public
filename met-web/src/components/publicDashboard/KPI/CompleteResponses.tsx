@@ -4,7 +4,7 @@ import { Skeleton } from '@mui/material';
 import { DASHBOARD } from '../constants';
 import { RadialBarChart, PolarAngleAxis, RadialBar } from 'recharts';
 import { MetPaper, MetHeader3 } from 'components/common';
-import { ErrorPlaceholder } from './ErrorPlaceholder';
+import { ErrorBox } from '../ErrorBox';
 
 const CompleteResponses = () => {
     const sampleData = [{ name: 'L1', value: 80 }];
@@ -35,7 +35,7 @@ const CompleteResponses = () => {
     }
 
     if (isError) {
-        return <ErrorPlaceholder onClick={fetchData} />;
+        return <ErrorBox sx={{ height: '100%', minHeight: '213px' }} onClick={fetchData} />;
     }
 
     return (
