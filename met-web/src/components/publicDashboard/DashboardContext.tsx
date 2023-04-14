@@ -1,8 +1,7 @@
-import { Skeleton } from '@mui/material';
+import React, { createContext, useEffect, useState } from 'react';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { Engagement, createDefaultEngagement } from 'models/engagement';
-import React, { createContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getEngagement } from 'services/engagementService';
 import { openNotification } from 'services/notificationService/notificationSlice';

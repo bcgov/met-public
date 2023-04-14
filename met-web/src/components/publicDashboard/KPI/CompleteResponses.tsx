@@ -17,6 +17,7 @@ const CompleteResponses = () => {
     const fetchData = async () => {
         setIsLoading(true);
         try {
+            // TODO: uncomment this when the API is ready
             // const result = await fetch('/api/engagement/1/complete-responses');
             setData(sampleData);
             setIsLoading(false);
