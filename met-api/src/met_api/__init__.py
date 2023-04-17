@@ -85,7 +85,7 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
             tenant: TenantModel = TenantModel.find_by_short_name(tenant_short_name)
             if not tenant:
                 return
-            key = tenant.tenant_short_name.upper()
+            key = tenant.short_name.upper()
             cache.set(f'tenant_{key}', tenant)
         g.tenant_id = tenant.id
         g.tenant_name = key
