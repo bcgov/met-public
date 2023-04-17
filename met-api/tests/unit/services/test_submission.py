@@ -22,7 +22,6 @@ from met_api.schemas.submission import SubmissionSchema
 from met_api.services.comment_service import CommentService
 from met_api.services.email_verification_service import EmailVerificationService
 from met_api.services.submission_service import SubmissionService
-from met_api.models.submission import Submission as SubmissionModel
 
 from tests.utilities.factory_utils import (
     factory_comment_model, factory_email_verification, factory_submission_model, factory_survey_and_eng_model,
@@ -125,8 +124,7 @@ def test_check_if_submission_has_comments(session):
         survey, eng = factory_survey_and_eng_model()
         email_verification = factory_email_verification(survey.id)
         user_details = factory_user_model()
-        submission_model = SubmissionModel()
-        
+
         # Create a sample submission with a comment in a text field that starts with 'simpletextarea'
         submission_request: SubmissionSchema = {
             'submission_json': {'simplepostalcode': 'abc', 'simpletextfield': 'This is some text', 'simpletextfield2': 'This is some text 2', 'simpletextarea2': 'This is a comment 1','simpletextarea1': 'This is a comment 1'},
@@ -134,12 +132,12 @@ def test_check_if_submission_has_comments(session):
             'user_id': user_details.id,
             'verification_token': email_verification.verification_token,
         }
-        
-        has_comments =  submission_model.__check_if_submission_has_comments(submission_request)
-        
+
+        submission = SubmissionService().create(email_verification.verification_token, submission_request)
+
         # Assert that the function returns True since there is a comment in a text field that starts with 'simpletextarea'
-        assert has_comments is True
-        
+        assert submission is not None
+
         # Create another sample submission with no comments in any text field
         submission_request: SubmissionSchema = {
             'submission_json': {'simplepostalcode': 'abc'},
@@ -147,9 +145,8 @@ def test_check_if_submission_has_comments(session):
             'user_id': user_details.id,
             'verification_token': email_verification.verification_token,
         }
-        
-        # Call __check_if_submission_has_comments() again with the new submission
-        has_comments =  submission_model.__check_if_submission_has_comments(submission_request)
-        
+     
+        submission = SubmissionService().create(email_verification.verification_token, submission_request)
+
         # Assert that the function returns False since there are no comments in any text field
-        assert has_comments is False
+        assert submission is None
