@@ -3,9 +3,9 @@ import { Grid, Link as MuiLink } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { MetHeader1, MetPaper, PrimaryButton } from 'components/common';
 import { ReportBanner } from './ReportBanner';
-import CompleteResponses from './KPI/CompleteResponses';
-import ResponsesWithComment from './KPI/ResponsesWithComment';
-import TotalResponses from './KPI/TotalResponses';
+import CompleteResponsesGauge from './KPI/CompleteResponsesGauge';
+import ResponsesWithCommentGauge from './KPI/ResponsesWithCommentGauge';
+import TotalResponsesGauge from './KPI/TotalResponsesGauge';
 import SubmissionTrend from './SubmissionTrend/SubmissionTrend';
 import { DashboardContext } from './DashboardContext';
 import SurveyBar from './SurveyBar.tsx';
@@ -68,13 +68,13 @@ export const Dashboard = () => {
                             </Grid>
                             <Grid container spacing={3} item xs={12}>
                                 <Grid item xs={12} sm={4}>
-                                    <TotalResponses />
+                                    <TotalResponsesGauge />
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
-                                    <CompleteResponses />
+                                    <CompleteResponsesGauge />
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
-                                    <ResponsesWithComment />
+                                    <ResponsesWithCommentGauge />
                                 </Grid>
                             </Grid>
                             <Grid item xs={12}>

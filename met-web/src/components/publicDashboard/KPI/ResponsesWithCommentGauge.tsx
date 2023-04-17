@@ -7,7 +7,7 @@ import { DASHBOARD } from '../constants';
 import { ErrorBox } from '../ErrorBox';
 
 const HEIGHT = '213px';
-const ResponsesWithComment = () => {
+const ResponsesWithCommentGauge = () => {
     // Sample data
     const sampleData = [{ name: 'L1', value: 60 }];
     const circleSize = 150;
@@ -79,4 +79,4 @@ const ResponsesWithComment = () => {
     );
 };
 
-export default ResponsesWithComment;
+export default ResponsesWithCommentGauge;

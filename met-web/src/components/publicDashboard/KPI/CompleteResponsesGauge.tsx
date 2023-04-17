@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { RadialBarChart, PolarAngleAxis, RadialBar } from 'recharts';
 import Stack from '@mui/material/Stack';
-import { MetPaper, MetHeader3 } from 'components/common';
-import { Grid, Skeleton } from '@mui/material';
-import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
+import { Skeleton } from '@mui/material';
 import { DASHBOARD } from '../constants';
+import { RadialBarChart, PolarAngleAxis, RadialBar } from 'recharts';
+import { MetPaper, MetHeader3 } from 'components/common';
 import { ErrorBox } from '../ErrorBox';
 
-const HEIGHT = '213px';
-const TotalResponses = () => {
-    // Sample data
-    const sampleData = [{ name: 'L1', value: 100 }];
-    const circleSize = 150;
-
+const CompleteResponsesGauge = () => {
+    const sampleData = [{ name: 'L1', value: 80 }];
     const [data, setData] = useState(sampleData);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
+
+    const circleSize = 150;
 
     const fetchData = async () => {
         setIsLoading(true);
@@ -39,17 +36,12 @@ const TotalResponses = () => {
     }
 
     if (isError) {
-        return <ErrorBox sx={{ height: '100%', minHeight: HEIGHT }} onClick={fetchData} />;
+        return <ErrorBox sx={{ height: '100%', minHeight: '213px' }} onClick={fetchData} />;
     }
 
     return (
         <MetPaper sx={{ p: 2, backgroundColor: DASHBOARD.KPI.BACKGROUND_COLOR, textAlign: 'center' }}>
-            <Grid direction="column" justifyContent="center" alignItems="center">
-                <Stack direction="row" spacing={1} justifyContent="center">
-                    <SupervisorAccountIcon color="primary" sx={{ width: 30, height: 30 }} />
-                    <MetHeader3 color="primary">Survey Responses</MetHeader3>
-                </Stack>
-            </Grid>
+            <MetHeader3 color="primary">Completed responses</MetHeader3>
             <Stack alignItems="center" gap={1}>
                 <RadialBarChart
                     width={circleSize}
@@ -85,4 +77,4 @@ const TotalResponses = () => {
     );
 };
 
-export default TotalResponses;
+export default CompleteResponsesGauge;
