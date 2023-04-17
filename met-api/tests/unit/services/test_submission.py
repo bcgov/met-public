@@ -118,7 +118,7 @@ def test_submissions_with_comment_are_not_auto_approved(session):  # pylint:disa
     assert submission.comment_status_id == Status.Pending.value
     
     
-def test_check_if_submission_has_comments(self):
+def test_check_if_submission_has_comments(session):
     
         survey, eng = factory_survey_and_eng_model()
         email_verification = factory_email_verification(survey.id)
@@ -136,7 +136,7 @@ def test_check_if_submission_has_comments(self):
         has_comments =  SubmissionService().__check_if_submission_has_comments(submission)
         
         # Assert that the function returns True since there is a comment in a text field that starts with 'simpletextarea'
-        self.assertTrue(has_comments)
+        assert has_comments is True
         
         # Create another sample submission with no comments in any text field
         submission_request: SubmissionSchema = {
@@ -151,4 +151,4 @@ def test_check_if_submission_has_comments(self):
         has_comments =  SubmissionService().__check_if_submission_has_comments(submission)
         
         # Assert that the function returns False since there are no comments in any text field
-        self.assertFalse(has_comments)
+        assert has_comments is False
