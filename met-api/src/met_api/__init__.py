@@ -12,7 +12,8 @@ from flask_cors import CORS
 from met_api.auth import jwt
 from met_api.config import get_named_config
 from met_api.models import db, ma, migrate
-
+from met_api.models.tenant import Tenant as TenantModel
+from met_api.utils.cache import cache
 
 # Security Response headers
 csp = (
@@ -36,7 +37,6 @@ secure_headers = secure.Secure(
 )
 
 
-# All Apps routes are registered here
 def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
     """Create flask app."""
     from met_api.resources import API_BLUEPRINT  # pylint: disable=import-outside-toplevel
@@ -69,6 +69,27 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
     def set_origin():
         g.origin_url = request.environ.get('HTTP_ORIGIN', 'localhost')
 
+    build_cache(app)
+
+    @app.before_request
+    def set_tenant_id():
+        """Set Tenant ID Globally."""
+        tenant_short_name = request.headers.get('tenant-id', None)
+        if not tenant_short_name:
+            return
+
+        key = tenant_short_name.upper()
+        tenant = cache.get(f'tenant_{key}')
+        cache_miss = not tenant
+        if cache_miss:
+            tenant: TenantModel = TenantModel.find_by_short_name(tenant_short_name)
+            if not tenant:
+                return
+            key = tenant.tenant_short_name.upper()
+            cache.set(f'tenant_{key}', tenant)
+        g.tenant_id = tenant.id
+        g.tenant_name = key
+
     @app.after_request
     def set_secure_headers(response):
         """Set CORS headers for security."""
@@ -80,6 +101,18 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
 
     # Return App for run in run.py file
     return app
+
+
+def build_cache(app):
+    """Build cache."""
+    cache.init_app(app)
+    with app.app_context():
+        cache.clear()
+        if not app.config.get('TESTING', False):
+            tenants = TenantModel.query.all()
+            for tenant in tenants:
+                key = tenant.short_name.upper()
+                cache.set(f'tenant_{key}', tenant)
 
 
 def setup_jwt_manager(app_context, jwt_manager):
