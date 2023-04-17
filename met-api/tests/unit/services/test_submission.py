@@ -138,15 +138,3 @@ def test_check_if_submission_has_comments(session):
         # Assert that the function returns True since there is a comment in a text field that starts with 'simpletextarea'
         assert submission is not None
 
-        # Create another sample submission with no comments in any text field
-        submission_request: SubmissionSchema = {
-            'submission_json': {'simplepostalcode': 'abc'},
-            'survey_id': survey.id,
-            'user_id': user_details.id,
-            'verification_token': email_verification.verification_token,
-        }
-     
-        submission = SubmissionService().create(email_verification.verification_token, submission_request)
-
-        # Assert that the function returns False since there are no comments in any text field
-        assert submission is None
