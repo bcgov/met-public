@@ -125,6 +125,7 @@ def test_check_if_submission_has_comments(session):
         survey, eng = factory_survey_and_eng_model()
         email_verification = factory_email_verification(survey.id)
         user_details = factory_user_model()
+        submission_model = SubmissionModel()
         
         # Create a sample submission with a comment in a text field that starts with 'simpletextarea'
         submission_request: SubmissionSchema = {
@@ -134,7 +135,7 @@ def test_check_if_submission_has_comments(session):
             'verification_token': email_verification.verification_token,
         }
         
-        has_comments =  SubmissionModel().__check_if_submission_has_comments(submission_request)
+        has_comments =  submission_model.__check_if_submission_has_comments(submission_request)
         
         # Assert that the function returns True since there is a comment in a text field that starts with 'simpletextarea'
         assert has_comments is True
@@ -148,7 +149,7 @@ def test_check_if_submission_has_comments(session):
         }
         
         # Call __check_if_submission_has_comments() again with the new submission
-        has_comments =  SubmissionModel().__check_if_submission_has_comments(submission_request)
+        has_comments =  submission_model.__check_if_submission_has_comments(submission_request)
         
         # Assert that the function returns False since there are no comments in any text field
         assert has_comments is False
