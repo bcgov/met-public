@@ -80,11 +80,15 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
 
         key = tenant_short_name.upper()
         tenant = cache.get(f'tenant_{key}')
-        if tenant:
-            g.tenant_id = tenant.id
-            g.tenant_name = key
-        else:
-            current_app.logger.error('Tenant Not Found ', key)
+        cache_miss = not tenant
+        if cache_miss:
+            tenant: TenantModel = TenantModel.find_by_short_name(tenant_short_name)
+            if not tenant:
+                return
+            key = tenant.tenant_short_name.upper()
+            cache.set(f'tenant_{key}', tenant)
+        g.tenant_id = tenant.id
+        g.tenant_name = key
 
     @app.after_request
     def set_secure_headers(response):
