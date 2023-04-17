@@ -95,8 +95,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
             is_template=survey.get('is_template', False),
 
         )
-        db.session.add(new_survey)
-        db.session.commit()
+        new_survey.save()
         return DefaultMethodResult(True, 'Survey Added', new_survey.id)
 
     @classmethod

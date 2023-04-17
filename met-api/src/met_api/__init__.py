@@ -6,7 +6,7 @@ This module is for the initiation of the flask app.
 import os
 
 import secure
-from flask import Flask, g, request
+from flask import Flask, current_app, g, request
 from flask_cors import CORS
 
 from met_api.auth import jwt
@@ -80,15 +80,11 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
 
         key = tenant_short_name.upper()
         tenant = cache.get(f'tenant_{key}')
-        cache_miss = not tenant
-        if cache_miss:
-            tenant: TenantModel = TenantModel.find_by_short_name(tenant_short_name)
-            if not tenant:
-                return
-            key = tenant.short_name.upper()
-            cache.set(f'tenant_{key}', tenant)
-        g.tenant_id = tenant.id
-        g.tenant_name = key
+        if tenant:
+            g.tenant_id = tenant.id
+            g.tenant_name = key
+        else:
+            current_app.logger.error('Tenant Not Found ', key)
 
     @app.after_request
     def set_secure_headers(response):
@@ -108,11 +104,12 @@ def build_cache(app):
     cache.init_app(app)
     with app.app_context():
         cache.clear()
-        if not app.config.get('TESTING', False):
-            tenants = TenantModel.query.all()
-            for tenant in tenants:
-                key = tenant.short_name.upper()
-                cache.set(f'tenant_{key}', tenant)
+        try:
+            from met_api.services.tenant_service import TenantService  # pylint: disable=import-outside-toplevel
+            TenantService.build_all_tenant_cache()
+        except Exception as e:  # NOQA # pylint:disable=broad-except
+            current_app.logger.error('Error on caching ')
+            current_app.logger.error(e)
 
 
 def setup_jwt_manager(app_context, jwt_manager):
