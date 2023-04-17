@@ -22,6 +22,8 @@ from met_api.schemas.submission import SubmissionSchema
 from met_api.services.comment_service import CommentService
 from met_api.services.email_verification_service import EmailVerificationService
 from met_api.services.submission_service import SubmissionService
+from met_api.models.submission import Submission as SubmissionModel
+
 from tests.utilities.factory_utils import (
     factory_comment_model, factory_email_verification, factory_submission_model, factory_survey_and_eng_model,
     factory_user_model)
@@ -132,8 +134,7 @@ def test_check_if_submission_has_comments(session):
             'verification_token': email_verification.verification_token,
         }
         
-        submission = SubmissionService().create(email_verification.verification_token, submission_request)
-        has_comments =  SubmissionService().__check_if_submission_has_comments(submission)
+        has_comments =  SubmissionModel().__check_if_submission_has_comments(submission_request)
         
         # Assert that the function returns True since there is a comment in a text field that starts with 'simpletextarea'
         assert has_comments is True
@@ -147,8 +148,7 @@ def test_check_if_submission_has_comments(session):
         }
         
         # Call __check_if_submission_has_comments() again with the new submission
-        submission = SubmissionService().create(email_verification.verification_token, submission_request)
-        has_comments =  SubmissionService().__check_if_submission_has_comments(submission)
+        has_comments =  SubmissionModel().__check_if_submission_has_comments(submission_request)
         
         # Assert that the function returns False since there are no comments in any text field
         assert has_comments is False
