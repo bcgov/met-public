@@ -89,7 +89,7 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
             session.flush()
         return new_submission
 
-    @staticmethod
+    @classmethod
     def __check_if_submission_has_comments(submission: SubmissionSchema):
         """Check if comment exists."""
         submission_json = submission.get('submission_json', {})
