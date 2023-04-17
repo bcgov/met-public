@@ -10,7 +10,7 @@ import * as submissionService from 'services/submissionService';
 import { createDefaultSurvey } from 'models/survey';
 import { createDefaultSubmission } from 'models/surveySubmission';
 import { createDefaultComment } from 'models/comment';
-import SubmissionListing from 'components/comments/admin/reviewListing';
+import SubmissionListing from 'components/comments/admin/reviewListing/Submissions';
 import * as utils from 'utils';
 
 const mockSurveyOne = {

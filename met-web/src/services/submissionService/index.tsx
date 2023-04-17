@@ -4,6 +4,7 @@ import { replaceUrl } from 'helper';
 import { PublicSubmission, SurveySubmission } from 'models/surveySubmission';
 import { Comment } from 'models/comment';
 import { Page } from 'services/type';
+import { CommentStatus } from 'constants/commentStatus';
 
 interface ReviewCommentRequest {
     submission_id: number;
@@ -31,6 +32,12 @@ interface GetSubmissionsParams {
     sort_key?: string;
     sort_order?: 'asc' | 'desc';
     search_text?: string;
+    status?: CommentStatus;
+    comment_date_from?: string;
+    comment_date_to?: string;
+    reviewer?: string;
+    reviewed_by_date_from?: string;
+    reviewed_by_date_to?: string;
 }
 export const getSubmissionPage = async ({
     survey_id,
@@ -39,6 +46,12 @@ export const getSubmissionPage = async ({
     sort_key,
     sort_order,
     search_text,
+    status,
+    comment_date_from,
+    comment_date_to,
+    reviewer,
+    reviewed_by_date_from,
+    reviewed_by_date_to,
 }: GetSubmissionsParams): Promise<Page<SurveySubmission>> => {
     const url = replaceUrl(Endpoints.SurveySubmission.GET_LIST, 'survey_id', String(survey_id));
     const response = await http.GetRequest<Page<SurveySubmission>>(url, {
@@ -47,6 +60,12 @@ export const getSubmissionPage = async ({
         sort_key,
         sort_order,
         search_text,
+        status,
+        comment_date_from,
+        comment_date_to,
+        reviewer,
+        reviewed_by_date_from,
+        reviewed_by_date_to,
     });
     if (response.data) {
         return response.data;
