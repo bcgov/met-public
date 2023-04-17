@@ -89,7 +89,7 @@ def test_auto_approval_of_submissions_without_comment(session):  # pylint:disabl
     user_details = factory_user_model()
 
     submission_request: SubmissionSchema = {
-        'submission_json': {'simplepostalcode': 'abc', 'simpletextarea': ''},
+        'submission_json': {'simplepostalcode': 'abc', 'simpletextarea': '', 'simpletextarea1': ''},
         'survey_id': survey.id,
         'user_id': user_details.id,
         'verification_token': email_verification.verification_token,
@@ -107,7 +107,7 @@ def test_submissions_with_comment_are_not_auto_approved(session):  # pylint:disa
     user_details = factory_user_model()
 
     submission_request: SubmissionSchema = {
-        'submission_json': {'simplepostalcode': 'abc', 'simpletextarea': 'Test Comment'},
+        'submission_json': {'simplepostalcode': 'abc', 'simpletextarea': 'Test Comment','simpletextarea1': 'Test Comment 2'},
         'survey_id': survey.id,
         'user_id': user_details.id,
         'verification_token': email_verification.verification_token,
