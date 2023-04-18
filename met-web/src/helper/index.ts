@@ -20,7 +20,6 @@ const filterQueryParams = (queryParams: { [x: string]: unknown }) => {
             filteredQueryParams[key] = queryParams[key];
         }
     });
-    console.log('filteredQueryParams', filteredQueryParams);
     return filteredQueryParams;
 };
 
