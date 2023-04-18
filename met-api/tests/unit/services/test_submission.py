@@ -120,8 +120,8 @@ def test_submissions_with_comment_are_not_auto_approved(session):  # pylint:disa
     assert submission.comment_status_id == Status.Pending.value
 
 
-def test_check_if_submission_has_comments(session):
-    """Make sure comments in submission are approved."""
+def test_check_if_submission_can_handle_multiple_comments(session):
+    """Assert that submissions can handle multiple comments."""
     survey, eng = factory_survey_and_eng_model()
     email_verification = factory_email_verification(survey.id)
     user_details = factory_user_model()
@@ -138,5 +138,5 @@ def test_check_if_submission_has_comments(session):
 
     submission = SubmissionService().create(email_verification.verification_token, submission_request)
 
-    # Assert that the function returns True since there is a comment in a text field that starts with 'simpletextarea'
-    assert submission is not None
+    # Assert that the function returns True since there is a comment in a text field that starts with 'simpletextfield2'
+    assert 'simpletextfield2' in submission.comments.keys()
