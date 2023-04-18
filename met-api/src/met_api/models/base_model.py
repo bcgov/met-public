@@ -14,11 +14,14 @@
 """Super class to handle all operations related to base model."""
 from datetime import datetime
 
+from flask import g
 from sqlalchemy import Column
 from sqlalchemy.ext.declarative import declared_attr
 
 from .db import db
 from ..utils.token_info import TokenInfo
+
+TENANT_ID = 'tenant_id'
 
 
 class BaseModel(db.Model):
@@ -69,6 +72,11 @@ class BaseModel(db.Model):
 
     def save(self):
         """Save and commit."""
+        # add tenant id to the model if the child model has tenant id column
+        has_tenant_id = hasattr(g, 'tenant_id') and g.tenant_id
+        if has_tenant_id and hasattr(self, TENANT_ID):
+            if not getattr(self, TENANT_ID):
+                setattr(self, TENANT_ID, g.tenant_id)
         db.session.add(self)
         db.session.flush()
         db.session.commit()
