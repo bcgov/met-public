@@ -1,6 +1,6 @@
 import http from 'apiManager/httpRequestHandler';
 import Endpoints from 'apiManager/endpoints';
-import { replaceUrl } from 'helper';
+import { filterQueryParams, replaceUrl } from 'helper';
 import { PublicSubmission, SurveySubmission } from 'models/surveySubmission';
 import { Comment } from 'models/comment';
 import { Page } from 'services/type';
@@ -27,46 +27,27 @@ export const reviewComments = async (requestData: ReviewCommentRequest): Promise
 
 interface GetSubmissionsParams {
     survey_id: number;
-    page?: number;
-    size?: number;
-    sort_key?: string;
-    sort_order?: 'asc' | 'desc';
-    search_text?: string;
-    status?: CommentStatus;
-    comment_date_from?: string;
-    comment_date_to?: string;
-    reviewer?: string;
-    reviewed_date_from?: string;
-    reviewed_date_to?: string;
+    queryParams?: {
+        page?: number;
+        size?: number;
+        sort_key?: string;
+        sort_order?: 'asc' | 'desc';
+        search_text?: string;
+        status?: CommentStatus;
+        comment_date_from?: string;
+        comment_date_to?: string;
+        reviewer?: string;
+        reviewed_date_from?: string;
+        reviewed_date_to?: string;
+    };
 }
 export const getSubmissionPage = async ({
     survey_id,
-    page,
-    size,
-    sort_key,
-    sort_order,
-    search_text,
-    status,
-    comment_date_from,
-    comment_date_to,
-    reviewer,
-    reviewed_date_from,
-    reviewed_date_to,
+    queryParams = {},
 }: GetSubmissionsParams): Promise<Page<SurveySubmission>> => {
     const url = replaceUrl(Endpoints.SurveySubmission.GET_LIST, 'survey_id', String(survey_id));
-    const response = await http.GetRequest<Page<SurveySubmission>>(url, {
-        page,
-        size,
-        sort_key,
-        sort_order,
-        search_text,
-        status,
-        comment_date_from,
-        comment_date_to,
-        reviewer,
-        reviewed_date_from,
-        reviewed_date_to,
-    });
+    const filteredQueryParams = filterQueryParams(queryParams);
+    const response = await http.GetRequest<Page<SurveySubmission>>(url, filteredQueryParams);
     if (response.data) {
         return response.data;
     }

@@ -130,8 +130,7 @@ export const CommentListingContextProvider = ({ children }: CommentListingContex
     const loadSubmissions = async () => {
         try {
             setLoading(true);
-            const response = await getSubmissionPage({
-                survey_id: Number(surveyId),
+            const queryParams = {
                 page,
                 size,
                 sort_key: nested_sort_key || sort_key,
@@ -143,6 +142,10 @@ export const CommentListingContextProvider = ({ children }: CommentListingContex
                 reviewer: advancedSearchFilters.reviewer,
                 reviewed_date_from: advancedSearchFilters.reviewedDateFrom,
                 reviewed_date_to: advancedSearchFilters.reviewedDateTo,
+            };
+            const response = await getSubmissionPage({
+                survey_id: Number(surveyId),
+                queryParams,
             });
             setSubmissions(response.items);
             setPageInfo({
