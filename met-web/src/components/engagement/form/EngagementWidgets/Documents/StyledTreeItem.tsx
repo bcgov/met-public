@@ -22,9 +22,9 @@ type StyledTreeItemProps = TreeItemProps & {
 };
 
 const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.primary,
     [`& .${treeItemClasses.content}`]: {
-        color: theme.palette.text.secondary,
+        color: theme.palette.text.primary,
         borderTopRightRadius: theme.spacing(2),
         borderBottomRightRadius: theme.spacing(2),
         paddingRight: theme.spacing(1),
@@ -57,10 +57,14 @@ export function StyledTreeItem(props: StyledTreeItemProps & DocumentTreeItemProp
     return (
         <StyledTreeItemRoot
             label={
-                <Box sx={{ display: 'flex', alignItems: 'center', p: 0.5, pr: 0 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', p: 0.5, pr: 0, border: '2px solid blue' }}>
                     <If condition={labelUrl}>
                         <Then>
-                            <Box component={LabelIcon} color="inherit" sx={{ p: 0.3, mr: 1 }} />
+                            <Box
+                                component={LabelIcon}
+                                color="inherit"
+                                sx={{ p: 0.3, mr: 1, border: '2px solid red' }}
+                            />
                             <Link
                                 sx={{
                                     alignItems: 'center',
