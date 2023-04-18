@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import TreeItem, { treeItemClasses, TreeItemProps } from '@mui/lab/TreeItem';
-import { MetHeader4 } from 'components/common';
+import { MetBody } from 'components/common';
 import { If, Then, Else } from 'react-if';
 import { Link, Box } from '@mui/material';
 import OpenInNew from '@mui/icons-material/OpenInNew';
@@ -28,7 +28,7 @@ const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
         borderTopRightRadius: theme.spacing(2),
         borderBottomRightRadius: theme.spacing(2),
         paddingRight: theme.spacing(1),
-        fontWeight: theme.typography.fontWeightMedium,
+        fontWeight: theme.typography.fontWeightRegular,
         '&.Mui-expanded': {
             fontWeight: theme.typography.fontWeightRegular,
         },
@@ -57,14 +57,10 @@ export function StyledTreeItem(props: StyledTreeItemProps & DocumentTreeItemProp
     return (
         <StyledTreeItemRoot
             label={
-                <Box sx={{ display: 'flex', alignItems: 'center', p: 0.5, pr: 0, border: '2px solid blue' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', p: 0.5, pr: 0 }}>
                     <If condition={labelUrl}>
                         <Then>
-                            <Box
-                                component={LabelIcon}
-                                color="inherit"
-                                sx={{ p: 0.3, mr: 1, border: '2px solid red' }}
-                            />
+                            <Box component={LabelIcon} color="inherit" sx={{ p: 0.3, ml: 3, mr: 1 }} />
                             <Link
                                 sx={{
                                     alignItems: 'center',
@@ -90,7 +86,7 @@ export function StyledTreeItem(props: StyledTreeItemProps & DocumentTreeItemProp
                         </Then>
                         <Else>
                             <Box component={LabelIcon} color="inherit" sx={{ p: 0.3, mr: 1 }} />
-                            <MetHeader4 bold={true}>{labelText}</MetHeader4>
+                            <MetBody bold>{labelText}</MetBody>
                         </Else>
                     </If>
                 </Box>
