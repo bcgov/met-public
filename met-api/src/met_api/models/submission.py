@@ -158,7 +158,7 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
         return query.first()
 
     @classmethod
-    def get_by_survey_id_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text='', advanced_search_filters={}):
+    def get_by_survey_id_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text='', advanced_search_filters=None):
         """Get submissions by survey id paginated."""
         null_value = None
         query = db.session.query(Submission)\
@@ -168,7 +168,7 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
         if search_text:
             # Remove all non-digit characters from search text
             query = query.filter(cast(Submission.id, TEXT).like('%' + search_text + '%'))
-    
+
         if advanced_search_filters:
             query = cls._filter_by_advanced_filters(query, advanced_search_filters)
 
