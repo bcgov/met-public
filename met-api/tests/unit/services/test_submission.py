@@ -108,7 +108,7 @@ def test_submissions_with_comment_are_not_auto_approved(session):  # pylint:disa
     user_details = factory_user_model()
 
     submission_request: SubmissionSchema = {
-        'submission_json': {'simplepostalcode': 'abc', 'simpletextarea': 'Test Comment'
+        'submission_json': {'simplepostalcode': 'abc', 'simpletextarea': 'Test Comment' 
                             , 'simpletextarea1': 'Test Comment 2'},
         'survey_id': survey.id,
         'user_id': user_details.id,
@@ -128,8 +128,8 @@ def test_check_if_submission_has_comments(session):
 
     # Create a sample submission with a comment in a text field that starts with 'simpletextarea'
     submission_request: SubmissionSchema = {
-        'submission_json': {'simplepostalcode': 'abc', 'simpletextfield': 'This is some text'
-                            , 'simpletextfield2': 'This is some text 2', 'simpletextarea2': 'This is a comment 1'
+        'submission_json': {'simplepostalcode': 'abc', 'simpletextfield': 'This is some text' 
+                            , 'simpletextfield2': 'This is some text 2', 'simpletextarea2': 'This is a comment 1' 
                             , 'simpletextarea1': 'This is a comment 1'},
         'survey_id': survey.id,
         'user_id': user_details.id,
