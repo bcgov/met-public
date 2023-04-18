@@ -112,7 +112,7 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
                                     justifyContent={{ xs: 'center', md: 'flex-start' }}
                                     item
                                     xs={12}
-                                    sx={{ border: '2px solid red', whiteSpace: 'pre-line' }}
+                                    sx={{ whiteSpace: 'pre-line' }}
                                 >
                                     <MetSmallText
                                         sx={{

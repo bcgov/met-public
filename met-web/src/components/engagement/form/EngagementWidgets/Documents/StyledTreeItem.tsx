@@ -28,9 +28,9 @@ const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
         borderTopRightRadius: theme.spacing(2),
         borderBottomRightRadius: theme.spacing(2),
         paddingRight: theme.spacing(1),
-        fontWeight: theme.typography.fontWeightRegular,
+        fontWeight: theme.typography.fontWeightMedium,
         '&.Mui-expanded': {
-            fontWeight: theme.typography.fontWeightRegular,
+            fontWeight: theme.typography.fontWeightMedium,
         },
         '&:hover': {
             backgroundColor: 'transparent',
