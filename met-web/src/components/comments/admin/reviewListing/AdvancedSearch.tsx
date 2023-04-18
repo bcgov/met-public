@@ -69,7 +69,6 @@ export const AdvancedSearch = () => {
                         type="date"
                         variant="outlined"
                         label=" "
-                        defaultValue=""
                         value={commentDateFrom}
                         fullWidth
                         size="small"
@@ -86,7 +85,6 @@ export const AdvancedSearch = () => {
                         type="date"
                         variant="outlined"
                         label=" "
-                        defaultValue=""
                         value={commentDateTo}
                         fullWidth
                         size="small"
@@ -128,7 +126,6 @@ export const AdvancedSearch = () => {
                         type="date"
                         variant="outlined"
                         label=" "
-                        defaultValue=""
                         value={reviewedDateFrom}
                         fullWidth
                         size="small"
@@ -145,7 +142,6 @@ export const AdvancedSearch = () => {
                         type="date"
                         variant="outlined"
                         label=" "
-                        defaultValue=""
                         value={reviewedDateTo}
                         fullWidth
                         size="small"
