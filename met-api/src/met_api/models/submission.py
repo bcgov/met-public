@@ -158,7 +158,13 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
         return query.first()
 
     @classmethod
-    def get_by_survey_id_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text='', advanced_search_filters=None):
+    def get_by_survey_id_paginated(
+        cls,
+        survey_id,
+        pagination_options: PaginationOptions,
+        search_text='',
+        advanced_search_filters=None
+    ):
         """Get submissions by survey id paginated."""
         null_value = None
         query = db.session.query(Submission)\
