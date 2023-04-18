@@ -137,7 +137,7 @@ def test_check_if_submission_can_handle_multiple_comments(session):
     }
 
     submission = SubmissionService().create(email_verification.verification_token, submission_request)
-    submission_json = submission.get('submission_json', {})
+    submission_json = submission.get('submission_json')
     
     # Assert that the function returns True since there is a comment in a text field that starts with 'simpletextfield2'
     assert 'simpletextfield2' in submission_json.keys()
