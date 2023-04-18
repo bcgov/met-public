@@ -169,6 +169,7 @@ export const AdvancedSearch = () => {
                         Reset All Filters
                     </SecondaryButton>
                     <PrimaryButton
+                        data-testid="advanced-search-button"
                         onClick={() => {
                             setAdvancedSearchFilters(searchFilters);
                         }}

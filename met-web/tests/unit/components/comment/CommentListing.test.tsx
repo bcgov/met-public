@@ -99,4 +99,20 @@ describe('Comment listing tests', () => {
             expect(mockDownloadFile).toHaveBeenCalledOnce();
         });
     });
+
+    test('Advanced search appear', async () => {
+        render(<SubmissionListing />);
+
+        await waitFor(() => {
+            expect(screen.getByText(`${mockSurveyOne.name} Comments`)).toBeVisible();
+            expect(screen.getByText(mockSubmission1.reviewed_by)).toBeVisible();
+        });
+
+        const advancedSearch = screen.getByText('Advanced Search');
+        fireEvent.click(advancedSearch);
+
+        await waitFor(() => {
+            expect(screen.getByText('Reset All Filters')).toBeVisible();
+        });
+    });
 });

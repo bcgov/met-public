@@ -121,6 +121,7 @@ const Submissions = () => {
                         <SearchIcon />
                     </PrimaryButton>
                     <SecondaryButton
+                        data-testid="comment-listing/advanced-search-button"
                         onClick={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)}
                         startIcon={
                             <ExpandMoreIcon
