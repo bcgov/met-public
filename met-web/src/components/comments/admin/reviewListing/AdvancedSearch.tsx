@@ -5,16 +5,15 @@ import { COMMENTS_STATUS, CommentStatus } from 'constants/commentStatus';
 import { AdvancedSearchFilters, CommentListingContext, initialSearchFilters } from './CommentListingContext';
 
 export const AdvancedSearch = () => {
-    const [searchFilters, setSearchFilters] = useState<AdvancedSearchFilters>(initialSearchFilters);
-
-    const { setAdvancedSearchFilters } = React.useContext(CommentListingContext);
+    const { advancedSearchFilters, setAdvancedSearchFilters } = React.useContext(CommentListingContext);
+    const [searchFilters, setSearchFilters] = useState<AdvancedSearchFilters>(advancedSearchFilters);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setSearchFilters({ ...searchFilters, [name]: value });
     };
 
-    const { status, commentDateFrom, commentDateTo, reviewer, reviewedByDateFrom, reviewedByDateTo } = searchFilters;
+    const { status, commentDateFrom, commentDateTo, reviewer, reviewedDateFrom, reviewedDateTo } = searchFilters;
 
     return (
         <Grid
@@ -125,12 +124,12 @@ export const AdvancedSearch = () => {
                 <Grid item xs={12} sm={6} md={4} lg={4}>
                     <MetLabel>Filter by Reviewed Date - From</MetLabel>
                     <TextField
-                        name="ReviewedByDateFrom"
+                        name="reviewedDateFrom"
                         type="date"
                         variant="outlined"
                         label=" "
                         defaultValue=""
-                        value={reviewedByDateFrom}
+                        value={reviewedDateFrom}
                         fullWidth
                         size="small"
                         onChange={handleChange}
@@ -142,12 +141,12 @@ export const AdvancedSearch = () => {
                 <Grid item xs={12} sm={6} md={4} lg={4}>
                     <MetLabel>Filter by Reviewed Date - To</MetLabel>
                     <TextField
-                        name="ReviewedByDateTo"
+                        name="reviewedDateTo"
                         type="date"
                         variant="outlined"
                         label=" "
                         defaultValue=""
-                        value={reviewedByDateTo}
+                        value={reviewedDateTo}
                         fullWidth
                         size="small"
                         onChange={handleChange}

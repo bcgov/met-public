@@ -14,16 +14,16 @@ export interface AdvancedSearchFilters {
     commentDateFrom: string;
     commentDateTo: string;
     reviewer: string;
-    reviewedByDateFrom: string;
-    reviewedByDateTo: string;
+    reviewedDateFrom: string;
+    reviewedDateTo: string;
 }
 export const initialSearchFilters: AdvancedSearchFilters = {
     status: null,
     commentDateFrom: '',
     commentDateTo: '',
     reviewer: '',
-    reviewedByDateFrom: '',
-    reviewedByDateTo: '',
+    reviewedDateFrom: '',
+    reviewedDateTo: '',
 };
 
 export interface CommentListingContextState {
@@ -141,8 +141,8 @@ export const CommentListingContextProvider = ({ children }: CommentListingContex
                 comment_date_from: advancedSearchFilters.commentDateFrom,
                 comment_date_to: advancedSearchFilters.commentDateTo,
                 reviewer: advancedSearchFilters.reviewer,
-                reviewed_by_date_from: advancedSearchFilters.reviewedByDateFrom,
-                reviewed_by_date_to: advancedSearchFilters.reviewedByDateTo,
+                reviewed_date_from: advancedSearchFilters.reviewedDateFrom,
+                reviewed_date_to: advancedSearchFilters.reviewedDateTo,
             });
             setSubmissions(response.items);
             setPageInfo({

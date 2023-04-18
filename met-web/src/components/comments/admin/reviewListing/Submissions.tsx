@@ -15,6 +15,7 @@ import { getCommentsSheet } from 'services/commentService';
 import { downloadFile } from 'utils';
 import { AdvancedSearch } from './AdvancedSearch';
 import { CommentListingContext } from './CommentListingContext';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const Submissions = () => {
     const {
@@ -119,7 +120,20 @@ const Submissions = () => {
                     >
                         <SearchIcon />
                     </PrimaryButton>
-                    <SecondaryButton onClick={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)}>
+                    <SecondaryButton
+                        onClick={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)}
+                        startIcon={
+                            <ExpandMoreIcon
+                                sx={{
+                                    transition: (theme) =>
+                                        theme.transitions.create('transform', {
+                                            duration: theme.transitions.duration.shortest,
+                                        }),
+                                    transform: isAdvancedSearchOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                                }}
+                            />
+                        }
+                    >
                         Advanced Search
                     </SecondaryButton>
                 </Stack>
