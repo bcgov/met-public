@@ -26,6 +26,8 @@ from tests.utilities.factory_utils import (
     factory_auth_header, factory_email_verification, factory_submission_model, factory_survey_and_eng_model,
     factory_user_model)
 
+DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
+
 
 def test_valid_submission(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that an engagement can be POSTed."""
@@ -132,7 +134,9 @@ def test_advanced_search_submission(client, jwt, session, submission_info):  # p
 
     assert rv.status_code == 200
     assert len(rv.json.get('items', [])) == 1
-    assert rv.json.get('items')[0].get('comment_status_id') == submission_approved.comment_status_id
-    assert rv.json.get('items')[0].get('reviewed_by') == submission_approved.reviewed_by
-    assert rv.json.get('items')[0].get('created_date') == submission_approved.created_date.strftime('%Y-%m-%d %H:%M:%S')
-    assert rv.json.get('items')[0].get('review_date') == submission_approved.review_date.strftime('%Y-%m-%d %H:%M:%S')
+
+    fetched_submission = rv.json.get('items')[0]
+    assert fetched_submission.get('comment_status_id') == submission_approved.comment_status_id
+    assert fetched_submission.get('reviewed_by') == submission_approved.reviewed_by
+    assert fetched_submission.get('created_date') == submission_approved.created_date.strftime(DATE_FORMAT)
+    assert fetched_submission.get('review_date') == submission_approved.review_date.strftime(DATE_FORMAT)

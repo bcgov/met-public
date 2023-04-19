@@ -228,15 +228,15 @@ class SubmissionService:
         cls,
         survey_id,
         pagination_options: PaginationOptions,
-        search_text='',
-        advanced_search_filters=None
+        search_text: str,
+        advanced_search_filters: dict
     ):
         """Get submissions by survey id paginated."""
         items, total = Submission.get_by_survey_id_paginated(
             survey_id,
             pagination_options,
             search_text,
-            advanced_search_filters
+            advanced_search_filters if any(advanced_search_filters.values()) else None
         )
         return {
             'items': SubmissionSchema(many=True, exclude=['submission_json']).dump(items),

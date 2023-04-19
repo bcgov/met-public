@@ -148,7 +148,7 @@ class SurveySubmissions(Resource):
                     survey_id,
                     pagination_options,
                     args.get('search_text', '', str),
-                    advanced_search_filters if any(advanced_search_filters.values()) else None
+                    advanced_search_filters
             )
             return submission_page, HTTPStatus.OK
         except ValueError as err:

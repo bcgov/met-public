@@ -214,7 +214,7 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
             query = query.filter(Submission.created_date >= comment_date_from)
 
         if reviewer := advanced_search_filters.get('reviewer'):
-            query = query.filter(Submission.reviewed_by.ilike('%' + reviewer + '%'))
+            query = query.filter(Submission.reviewed_by.ilike(f'%{reviewer}%'))
 
         if reviewed_date_from := advanced_search_filters.get('reviewed_date_from'):
             query = query.filter(Submission.review_date >= reviewed_date_from)
