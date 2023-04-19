@@ -6,11 +6,13 @@ from sqlalchemy.ext.declarative import declared_attr
 from .db import db
 
 
-class ResponseMixin(object):
+class ResponseMixin:  # pylint: disable=too-few-public-methods
+    """Super class to handle all operations related to base model."""
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     """
-      Response needs to have additonal fields as   
+      Response needs to have additonal fields as
           request_key = simpletextfield,checkbox,simplecheckboxes
           value = actual user value
           request_id = mapping to questions.Id from the reuqst table.Helps with groupiing
@@ -18,6 +20,7 @@ class ResponseMixin(object):
 
     @declared_attr
     def survey_id(self):
+        """Survey id column."""
         return db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), nullable=False)
 
     user_id = db.Column(db.Integer)

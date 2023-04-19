@@ -35,12 +35,8 @@ def get_named_config(config_name: str = 'development'):
     """
     if config_name in ['production', 'staging', 'default']:
         config = ProdConfig()
-    elif config_name == 'testing':
-        config = TestConfig()
     elif config_name == 'development':
         config = DevConfig()
-    elif config_name == 'docker':
-        config = DockerConfig()
     else:
         raise KeyError("Unknown configuration '{config_name}'")
     return config

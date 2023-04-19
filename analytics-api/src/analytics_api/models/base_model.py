@@ -6,6 +6,8 @@ from .db import db
 
 
 class BaseModel(db.Model):
+    """This class manages all of the base model functions."""
+
     __abstract__ = True
     __bind_key__ = 'met_db_analytics'
 

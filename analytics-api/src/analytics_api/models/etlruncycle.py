@@ -3,7 +3,6 @@
 Manages the etlruncycle
 """
 from datetime import datetime
-from sqlalchemy import update
 
 
 from .db import db

@@ -3,7 +3,6 @@
 Manages the engagement
 """
 from datetime import datetime
-from sqlalchemy import update
 
 
 from .base_model import BaseModel
