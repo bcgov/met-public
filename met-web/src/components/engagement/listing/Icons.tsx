@@ -29,8 +29,8 @@ export const ApprovedIcon = ({ children, onClick }: BadgeProps) => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    minHeight: '1.4em',
-                    minWidth: '1.4em',
+                    minHeight: '1.8em',
+                    minWidth: '2em',
                     width: 'fit-content',
                 }}
             >
@@ -62,8 +62,8 @@ export const NFRIcon = ({ children, onClick }: BadgeProps) => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    minHeight: '1.4em',
-                    minWidth: '1.4em',
+                    minHeight: '1.8em',
+                    minWidth: '2em',
                     width: 'fit-content',
                 }}
             >
@@ -95,8 +95,8 @@ export const RejectedIcon = ({ children, onClick }: BadgeProps) => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    minHeight: '1.4em',
-                    minWidth: '1.4em',
+                    minHeight: '1.8em',
+                    minWidth: '2em',
                     width: 'fit-content',
                     padding: 0,
                 }}
@@ -125,8 +125,8 @@ export const NewIcon = ({ children, onClick }: BadgeProps) => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    minHeight: '1.4em',
-                    minWidth: '1.4em',
+                    minHeight: '1.8em',
+                    minWidth: '2em',
                     width: 'fit-content',
                     border: `2px solid ${Palette.primary.main}`,
                     padding: 0,
