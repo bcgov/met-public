@@ -4,7 +4,7 @@ import { useAppDispatch } from 'hooks';
 import { Survey, createDefaultSurvey } from 'models/survey';
 import { SurveySubmission } from 'models/surveySubmission';
 import React, { createContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getSubmissionPage } from 'services/submissionService';
 import { getSurvey } from 'services/surveyService';
@@ -94,7 +94,11 @@ export const CommentListingContextProvider = ({ children }: CommentListingContex
         key: 'id',
         value: '',
     });
-    const [advancedSearchFilters, setAdvancedSearchFilters] = useState<AdvancedSearchFilters>(initialSearchFilters);
+    const { state } = useLocation();
+    const [advancedSearchFilters, setAdvancedSearchFilters] = useState<AdvancedSearchFilters>({
+        ...initialSearchFilters,
+        status: state?.status || null,
+    });
     const [searchText, setSearchText] = useState('');
     const [survey, setSurvey] = useState<Survey>(createDefaultSurvey());
     const [submissions, setSubmissions] = useState<SurveySubmission[]>([]);

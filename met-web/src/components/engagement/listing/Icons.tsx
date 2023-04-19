@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, IconButton } from '@mui/material';
+import { IconButton } from '@mui/material';
 import { Palette } from 'styles/Theme';
 import Icon from '@mui/material/Icon';
 
@@ -9,10 +9,20 @@ interface BadgeProps {
 }
 export const ApprovedIcon = ({ children, onClick }: BadgeProps) => {
     return (
-        <IconButton size="small" color="inherit" onClick={onClick}>
+        <IconButton
+            size="small"
+            color="inherit"
+            onClick={onClick}
+            sx={{
+                padding: 0,
+            }}
+        >
             <Icon
                 sx={{
                     backgroundColor: '#D3FDC6',
+                    '&:hover': {
+                        backgroundColor: '#77eb52',
+                    },
                     borderRadius: '3px',
                     fontWeight: 'bold',
                     fontSize: '1rem',
@@ -32,10 +42,20 @@ export const ApprovedIcon = ({ children, onClick }: BadgeProps) => {
 
 export const NFRIcon = ({ children, onClick }: BadgeProps) => {
     return (
-        <IconButton size="small" color="inherit" onClick={onClick}>
+        <IconButton
+            size="small"
+            color="inherit"
+            onClick={onClick}
+            sx={{
+                padding: 0,
+            }}
+        >
             <Icon
                 sx={{
                     backgroundColor: '#FCE0B9',
+                    '&:hover': {
+                        backgroundColor: 'rgb(252, 185, 47)',
+                    },
                     borderRadius: '3px',
                     fontWeight: 'bold',
                     fontSize: '1rem',
@@ -60,12 +80,15 @@ export const RejectedIcon = ({ children, onClick }: BadgeProps) => {
             color="inherit"
             onClick={onClick}
             sx={{
-                margin: 0,
+                padding: 0,
             }}
         >
             <Icon
                 sx={{
                     backgroundColor: '#F9D9D9',
+                    '&:hover': {
+                        backgroundColor: 'rgb(241, 90, 44)',
+                    },
                     borderRadius: '3px',
                     fontWeight: 'bold',
                     fontSize: '1rem',
@@ -91,7 +114,7 @@ export const NewIcon = ({ children, onClick }: BadgeProps) => {
             color="inherit"
             onClick={onClick}
             sx={{
-                margin: 0,
+                padding: 0,
             }}
         >
             <Icon
@@ -107,6 +130,11 @@ export const NewIcon = ({ children, onClick }: BadgeProps) => {
                     width: 'fit-content',
                     border: `2px solid ${Palette.primary.main}`,
                     padding: 0,
+                    '&:hover': {
+                        backgroundColor: Palette.primary.main,
+                        color: 'white',
+                        textDecoration: 'underline',
+                    },
                 }}
             >
                 {children}
