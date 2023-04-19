@@ -98,7 +98,6 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
                             direction="row"
                             rowSpacing={1}
                             xs={12}
-                            md={9}
                         >
                             <Switch>
                                 <Case condition={event.type === EVENT_TYPE.VIRTUAL}>

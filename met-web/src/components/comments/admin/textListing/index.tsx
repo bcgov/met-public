@@ -41,13 +41,16 @@ const CommentTextListing = () => {
     const loadSubmissions = async () => {
         try {
             setTableLoading(true);
-            const response = await getSubmissionPage({
-                survey_id: Number(surveyId),
+            const queryParams = {
                 page,
                 size,
                 sort_key: nested_sort_key || sort_key,
                 sort_order,
                 search_text: searchFilter.value,
+            };
+            const response = await getSubmissionPage({
+                survey_id: Number(surveyId),
+                queryParams,
             });
             setSubmissions(response.items);
             setPageInfo({

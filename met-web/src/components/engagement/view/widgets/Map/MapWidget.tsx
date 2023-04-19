@@ -86,7 +86,7 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
                         <Box
                             sx={{
                                 width: '100%',
-                                height: '500px',
+                                height: '370px',
                             }}
                         >
                             <MetMap

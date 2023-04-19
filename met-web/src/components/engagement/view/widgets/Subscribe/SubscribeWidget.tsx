@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { MetBody, MetHeader2, MetPaper, PrimaryButton } from 'components/common';
 import { ActionContext } from '../../ActionContext';
-import { Grid } from '@mui/material';
+import { Grid, Divider } from '@mui/material';
 import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import EmailModal from 'components/common/Modals/EmailModal';
@@ -98,6 +98,7 @@ function SubscribeWidget() {
             <Grid spacing={2} container xs={12} sx={{ pl: '1em' }}>
                 <Grid item xs={12}>
                     <MetHeader2 bold>Sign Up for Updates</MetHeader2>
+                    <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
                 </Grid>
                 <Grid item xs={12}>
                     <MetBody>
