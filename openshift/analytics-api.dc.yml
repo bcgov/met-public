@@ -152,7 +152,7 @@ objects:
     name: ${APP}-web-path
   spec:
     host: met-analytics-api-${ENV}.apps.gold.devops.gov.bc.ca
-    path: /
+    path: /api/
     port:
       targetPort: 8080-tcp
     tls:
