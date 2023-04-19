@@ -1,9 +1,9 @@
+import React, { createContext, useEffect, useState } from 'react';
 import { PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { CommentStatus } from 'constants/commentStatus';
 import { useAppDispatch } from 'hooks';
 import { Survey, createDefaultSurvey } from 'models/survey';
 import { SurveySubmission } from 'models/surveySubmission';
-import React, { createContext, useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getSubmissionPage } from 'services/submissionService';
@@ -132,7 +132,6 @@ export const CommentListingContextProvider = ({ children }: CommentListingContex
 
     const loadSubmissions = async () => {
         try {
-            setLoading(true);
             const queryParams = {
                 page,
                 size,
@@ -154,21 +153,25 @@ export const CommentListingContextProvider = ({ children }: CommentListingContex
             setPageInfo({
                 total: response.total,
             });
-            setLoading(false);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching submissions' }));
             setLoading(false);
         }
     };
 
+    const loadData = async () => {
+        setLoading(true);
+        await loadSurvey();
+        await loadSubmissions();
+        setLoading(false);
+    };
+
     useEffect(() => {
         if (isNaN(Number(surveyId))) {
-            dispatch(openNotification({ severity: 'error', text: 'Invalid surveyId' }));
+            dispatch(openNotification({ severity: 'error', text: 'Invalid survey' }));
             return;
         }
-
-        loadSurvey();
-        loadSubmissions();
+        loadData();
     }, [surveyId, paginationOptions, searchFilter, advancedSearchFilters]);
 
     return (
