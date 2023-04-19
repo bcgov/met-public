@@ -15,7 +15,7 @@ export const EngagementContent = () => {
     }
 
     return (
-        <MetPaper elevation={1} sx={{ padding: '2em', minHeight: '30em' }}>
+        <MetPaper elevation={1} sx={{ padding: '2em', pt: '25px', minHeight: '30em' }}>
             <Editor editorState={getEditorState(rich_content)} readOnly={true} toolbarHidden />
         </MetPaper>
     );

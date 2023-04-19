@@ -87,7 +87,7 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
                             borderColor: '#003366',
                             backgroundColor: '#F2F2F2',
                             mt: '2em',
-                            fontSize: '0.8rem',
+                            fontSize: '1rem',
                         }}
                     >
                         {`
