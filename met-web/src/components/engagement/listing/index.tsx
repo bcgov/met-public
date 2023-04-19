@@ -360,23 +360,18 @@ const EngagementListing = () => {
                                 data-testid="engagement/listing/advancedSearch"
                                 name="advancedSearch"
                                 onClick={() => setAdvancedSearchOpen(!advancedSearchOpen)}
-                            >
-                                {
+                                startIcon={
                                     <ExpandMoreIcon
-                                        sx={[
-                                            {
-                                                transform: 'rotate(0deg)',
-                                                transition: (theme) =>
-                                                    theme.transitions.create('all', {
-                                                        duration: theme.transitions.duration.shortest,
-                                                    }),
-                                            },
-                                            advancedSearchOpen && {
-                                                transform: 'rotate(180deg)',
-                                            },
-                                        ]}
+                                        sx={{
+                                            transition: (theme) =>
+                                                theme.transitions.create('transform', {
+                                                    duration: theme.transitions.duration.shortest,
+                                                }),
+                                            transform: advancedSearchOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                                        }}
                                     />
                                 }
+                            >
                                 Advanced Search
                             </SecondaryButton>
                         </When>

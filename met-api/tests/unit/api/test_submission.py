@@ -26,6 +26,8 @@ from tests.utilities.factory_utils import (
     factory_auth_header, factory_email_verification, factory_submission_model, factory_survey_and_eng_model,
     factory_user_model)
 
+DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
+
 
 def test_valid_submission(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that an engagement can be POSTed."""
@@ -97,3 +99,44 @@ def test_invalid_submission(client, jwt, session):  # pylint:disable=unused-argu
     rv = client.post('/api/submissions/public/123', data=json.dumps(to_dict),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status == '400 BAD REQUEST'
+
+
+@pytest.mark.parametrize('submission_info', [TestSubmissionInfo.approved_submission])
+def test_advanced_search_submission(client, jwt, session, submission_info):  # pylint:disable=unused-argument
+    """Assert that an engagement page can be fetched."""
+    claims = TestJwtClaims.public_user_role
+
+    user_details = factory_user_model()
+    survey, eng = factory_survey_and_eng_model()
+    submission_approved = factory_submission_model(
+        survey.id, eng.id, user_details.id, submission_info)
+    factory_submission_model(
+        survey.id, eng.id, user_details.id, TestSubmissionInfo.rejected_submission)
+    factory_submission_model(
+        survey.id, eng.id, user_details.id, TestSubmissionInfo.pending_submission)
+
+    params = {
+        'status': submission_approved.comment_status_id,
+        'reviewer': submission_approved.reviewed_by,
+        'comment_date_to': submission_approved.created_date,
+        'comment_date_from': submission_approved.created_date,
+        'review_date_to': submission_approved.review_date,
+        'review_date_from': submission_approved.review_date,
+    }
+
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.get(
+        f'/api/submissions/survey/{survey.id}',
+        headers=headers,
+        content_type=ContentType.JSON.value,
+        query_string=params
+    )
+
+    assert rv.status_code == 200
+    assert len(rv.json.get('items', [])) == 1
+
+    fetched_submission = rv.json.get('items')[0]
+    assert fetched_submission.get('comment_status_id') == submission_approved.comment_status_id
+    assert fetched_submission.get('reviewed_by') == submission_approved.reviewed_by
+    assert fetched_submission.get('created_date') == submission_approved.created_date.strftime(DATE_FORMAT)
+    assert fetched_submission.get('review_date') == submission_approved.review_date.strftime(DATE_FORMAT)
