@@ -125,7 +125,7 @@ export const MetSurvey = ({
         <MetWidgetPaper elevation={3} {...rest}>
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
                 <Grid item xs={6}>
-                    <MetHeader3 bold={true}>{title}</MetHeader3>
+                    <MetHeader3 bold>{title}</MetHeader3>
                 </Grid>
                 <Grid item xs={6} container direction="row" justifyContent="flex-end">
                     <Stack direction="row" spacing={1}>

@@ -14,7 +14,7 @@ const FailurePanel = ({ email, handleClose, tryAgain }: FailurePanelProps) => {
             spacing={2}
         >
             <Grid item xs={12}>
-                <MetHeader1 bold={true}>We are sorry</MetHeader1>
+                <MetHeader1 bold>We are sorry</MetHeader1>
             </Grid>
             <Grid item xs={12}>
                 <MetBody>There was a problem with the email address you provided:</MetBody>

@@ -17,7 +17,7 @@ const ConfirmModal = ({ header, subText, handleConfirm, handleClose }: Notificat
         >
             <Grid container direction="row" item xs={12}>
                 <Grid item xs={12}>
-                    <MetHeader1 bold={true} sx={{ mb: 2 }}>
+                    <MetHeader1 bold sx={{ mb: 2 }}>
                         {header}
                     </MetHeader1>
                 </Grid>

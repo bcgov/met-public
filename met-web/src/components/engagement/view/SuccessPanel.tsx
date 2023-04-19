@@ -15,7 +15,7 @@ const SuccessPanel = ({ email, handleClose }: SuccessPanelProps) => {
         >
             <Grid container direction="row" item xs={12}>
                 <Grid item xs={12}>
-                    <MetHeader1 bold={true} sx={{ mb: 2 }}>
+                    <MetHeader1 bold sx={{ mb: 2 }}>
                         Thank you
                     </MetHeader1>
                 </Grid>
