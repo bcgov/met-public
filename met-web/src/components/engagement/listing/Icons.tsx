@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconButton, ButtonBase } from '@mui/material';
+import { ButtonBase } from '@mui/material';
 import { Palette } from 'styles/Theme';
 import Icon from '@mui/material/Icon';
 

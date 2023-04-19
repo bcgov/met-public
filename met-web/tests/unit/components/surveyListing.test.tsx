@@ -107,7 +107,7 @@ jest.mock('react-redux', () => ({
 
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
-    useNavigation: jest.fn(),
+    useNavigate: jest.fn(),
 }));
 
 describe('Survey form page tests', () => {
