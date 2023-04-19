@@ -356,7 +356,7 @@ const SurveyListing = () => {
             columnSpacing={2}
             rowSpacing={1}
         >
-            <Grid item xs={12} lg={10}>
+            <Grid item xs={12}>
                 <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="100%" justifyContent="space-between">
                     <Stack direction="row" spacing={1} alignItems="center">
                         <TextField
@@ -384,7 +384,7 @@ const SurveyListing = () => {
                 </Stack>
             </Grid>
 
-            <Grid item xs={12} lg={10}>
+            <Grid item xs={12}>
                 <MetTable
                     headCells={headCells}
                     rows={surveys}
