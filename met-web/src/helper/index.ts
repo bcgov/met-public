@@ -13,4 +13,14 @@ const replaceAllInURL = ({ URL, params }: { URL: string; params: Params }) => {
     });
 };
 
-export { replaceUrl, replaceAllInURL };
+const filterQueryParams = (queryParams: { [x: string]: unknown }) => {
+    const filteredQueryParams: { [x: string]: unknown } = {};
+    Object.keys(queryParams).forEach((key) => {
+        if (queryParams[key]) {
+            filteredQueryParams[key] = queryParams[key];
+        }
+    });
+    return filteredQueryParams;
+};
+
+export { replaceUrl, replaceAllInURL, filterQueryParams };

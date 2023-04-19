@@ -36,7 +36,7 @@ class SubmissionService:
     def get(cls, submission_id):
         """Get submission by the id."""
         db_data = Submission.get(submission_id)
-        return SubmissionSchema().dump(db_data)
+        return SubmissionSchema(exclude=['submission_json']).dump(db_data)
 
     @classmethod
     def get_by_token(cls, token):
@@ -224,15 +224,22 @@ class SubmissionService:
         return False
 
     @classmethod
-    def get_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text=''):
+    def get_paginated(
+        cls,
+        survey_id,
+        pagination_options: PaginationOptions,
+        search_text: str,
+        advanced_search_filters: dict
+    ):
         """Get submissions by survey id paginated."""
         items, total = Submission.get_by_survey_id_paginated(
             survey_id,
             pagination_options,
             search_text,
+            advanced_search_filters if any(advanced_search_filters.values()) else None
         )
         return {
-            'items': SubmissionSchema(many=True).dump(items),
+            'items': SubmissionSchema(many=True, exclude=['submission_json']).dump(items),
             'total': total
         }
 

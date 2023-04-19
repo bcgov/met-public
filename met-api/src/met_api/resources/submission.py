@@ -132,14 +132,23 @@ class SurveySubmissions(Resource):
             pagination_options = PaginationOptions(
                 page=args.get('page', None, int),
                 size=args.get('size', None, int),
-                sort_key=args.get('sort_key', 'name', str),
+                sort_key=args.get('sort_key', 'submission.id', str),
                 sort_order=args.get('sort_order', 'asc', str),
             )
+            advanced_search_filters = {
+                'status': args.get('status', None, int),
+                'comment_date_to': args.get('comment_date_to', None, str),
+                'comment_date_from': args.get('comment_date_from', None, str),
+                'reviewer': args.get('reviewer', None, str),
+                'reviewed_date_from': args.get('reviewed_date_from', None, str),
+                'reviewed_date_to': args.get('reviewed_date_to', None, str),
+            }
             submission_page = SubmissionService()\
                 .get_paginated(
                     survey_id,
                     pagination_options,
                     args.get('search_text', '', str),
+                    advanced_search_filters
             )
             return submission_page, HTTPStatus.OK
         except ValueError as err:

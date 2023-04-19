@@ -21,14 +21,15 @@ import json
 
 import pytest
 from faker import Faker
+from flask import current_app
 
 from met_api.constants.engagement_status import EngagementDisplayStatus, SubmissionStatus
+from met_api.models.tenant import Tenant as TenantModel
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestEngagementInfo, TestJwtClaims, TestSubmissionInfo, TestUserInfo
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_engagement_model, factory_membership_model, factory_submission_model,
     factory_survey_and_eng_model, factory_user_model)
-
 
 fake = Faker()
 
@@ -40,6 +41,22 @@ def test_add_engagements(client, jwt, session, engagement_info):  # pylint:disab
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
+    assert rv.json.get('tenant_id') is None
+
+
+@pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
+def test_add_engagements_tenant_id(client, jwt, session, engagement_info):  # pylint:disable=unused-argument
+    """Assert that an engagement can be POSTed with tenant id."""
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    tenant_short_name = current_app.config.get('DEFAULT_TENANT_SHORT_NAME')
+    tenant = TenantModel.find_by_short_name(tenant_short_name)
+    assert tenant is not None
+    headers['tenant_id'] = tenant_short_name
+    rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
+                     headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+    engagament_tenant_id = rv.json.get('tenant_id')
+    assert engagament_tenant_id == str(tenant.id)
 
 
 @pytest.mark.parametrize('role', [TestJwtClaims.no_role, TestJwtClaims.public_user_role])

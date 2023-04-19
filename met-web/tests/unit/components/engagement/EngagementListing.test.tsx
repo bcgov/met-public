@@ -161,6 +161,11 @@ describe('Engagement form page tests', () => {
                 sort_order: 'desc',
                 search_text: 'Engagement One',
                 engagement_status: [],
+                application_number: '',
+                client_name: '',
+                project_id: '',
+                project_name: '',
+                project_type: '',
                 created_from_date: '',
                 created_to_date: '',
                 published_from_date: '',
@@ -169,7 +174,7 @@ describe('Engagement form page tests', () => {
         });
     });
 
-    test('Advanced Search filter works and fetchs engagements with the selected status as a param', async () => {
+    test('Advanced Search filter works and fetches engagements with the selected status as a param', async () => {
         getEngagementMock.mockReturnValue(
             Promise.resolve({
                 items: [mockEngagementOne],
@@ -198,6 +203,11 @@ describe('Engagement form page tests', () => {
                 sort_order: 'desc',
                 search_text: '',
                 engagement_status: [1],
+                application_number: '',
+                client_name: '',
+                project_id: '',
+                project_name: '',
+                project_type: '',
                 created_from_date: '',
                 created_to_date: '',
                 published_from_date: '',

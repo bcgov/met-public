@@ -1,0 +1,186 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: analytics-api-deploy-template
+  annotations:
+    description: "Deployment Configuration Template for the MET Analytics API Project"
+    tags: "met, analytics, api, python"
+objects:
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: ${APP}
+      app-group: met-app
+    name: ${APP}
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      app: ${APP}
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        pre:
+          execNewPod:
+            command:
+            - /opt/app-root/pre-hook-update-db.sh
+            containerName: ${APP}
+          failurePolicy: Abort
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: ${APP}
+          environment: ${ENV}
+          role: api
+          app-group: met-app
+      spec:
+        containers:
+        - env:
+          - name: FLASK_ENV
+            value: production
+          - name: DATABASE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: analytics-username
+                name: met-database-users
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: analytics-password
+                name: met-database-users
+          - name: DATABASE_NAME
+            valueFrom:
+              secretKeyRef:
+                key: app-db-name
+                name: ${DB_APP_NAME}
+          - name: DATABASE_HOST
+            value: ${DB_APP_NAME}
+          - name: S3_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                key: secret-access-key
+                name: s3
+          envFrom:
+          - configMapRef:
+              name: ${APP}
+          - configMapRef:
+              name: jwt-oidc
+          imagePullPolicy: Always
+          name: ${APP}
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 150m
+              memory: 512Mi
+            requests:
+              cpu: 75m
+              memory: 100Mi
+          stdin: true
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          tty: true
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ${APP}
+        from:
+          kind: ImageStreamTag
+          name: ${APP}:${IMAGE_TAG}
+          namespace: ${IMAGE_NAMESPACE}
+      type: ImageChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: ${APP}
+      app-group: met-app
+    name: ${APP}
+  spec:
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: ${APP}
+    sessionAffinity: None
+    type: ClusterIP
+- apiVersion: autoscaling/v2beta2
+  kind: HorizontalPodAutoscaler
+  metadata:
+    name: metanalyticsapihpa
+  spec:
+    scaleTargetRef:
+      kind: DeploymentConfig
+      name: ${APP}
+      apiVersion: apps.openshift.io/v1
+    minReplicas: 2
+    maxReplicas: 3
+    metrics:
+      - type: Resource
+        resource:
+          name: cpu
+          target:
+            type: Utilization
+            averageUtilization: 80
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    labels:
+      app: ${APP}
+      app-group: met-app
+    name: ${APP}-web-path
+  spec:
+    host: met-analytics-api-${ENV}.apps.gold.devops.gov.bc.ca
+    path: /api/
+    port:
+      targetPort: 8080-tcp
+    tls:
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
+    to:
+      kind: Service
+      name: ${APP}
+      weight: 100
+    wildcardPolicy: None
+parameters:
+  - name: APP
+    description: "The application name"
+    required: true
+    value: analytics-api
+  - name: IMAGE_NAMESPACE
+    description: "The image stream location namespace"
+    required: true
+    value: e903c2-tools
+  - name: ENV
+    description: "The selected environment (dev, test, prod)"
+    required: true
+    value: dev
+  - name: DB_APP_NAME
+    description: "The postgresql application name"
+    required: true
+    value: met-patroni
+  - name: IMAGE_TAG
+    description: "The image tag to deploy"
+    required: true
+    value: latest

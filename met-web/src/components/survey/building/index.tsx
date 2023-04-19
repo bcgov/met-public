@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Stack, Divider, TextField, IconButton, Switch, FormGroup, FormControlLabel } from '@mui/material';
+import {
+    Grid,
+    Stack,
+    Divider,
+    TextField,
+    IconButton,
+    Switch,
+    FormGroup,
+    FormControlLabel,
+    Tooltip,
+} from '@mui/material';
+import HelpIcon from '@mui/icons-material/Help';
 import { useNavigate, useParams } from 'react-router-dom';
 import FormBuilder from 'components/Form/FormBuilder';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
@@ -16,6 +27,10 @@ import { EngagementStatus } from 'constants/engagementStatus';
 import { getEngagement } from 'services/engagementService';
 import { Engagement } from 'models/engagement';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+import { Palette } from 'styles/Theme';
+import { PermissionsGate } from 'components/permissionsGate';
+import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+import axios from 'axios';
 
 const SurveyFormBuilder = () => {
     const navigate = useNavigate();
@@ -36,6 +51,8 @@ const SurveyFormBuilder = () => {
     const hasEngagement = Boolean(savedSurvey?.engagement_id);
     const isEngagementDraft = savedEngagement?.status_id === EngagementStatus.Draft;
     const hasPublishedEngagement = hasEngagement && !isEngagementDraft;
+    const [isHiddenSurvey, setIsHiddenSurvey] = useState(savedSurvey ? savedSurvey.is_hidden : false);
+    const [isTemplateSurvey, setIsTemplateSurvey] = useState(savedSurvey ? savedSurvey.is_template : false);
 
     useEffect(() => {
         loadSurvey();
@@ -68,6 +85,8 @@ const SurveyFormBuilder = () => {
             setSavedSurvey(loadedSurvey);
             setFormDefinition(loadedSurvey?.form_json || { display: 'form', components: [] });
             setName(loadedSurvey.name);
+            setIsHiddenSurvey(loadedSurvey.is_hidden);
+            setIsTemplateSurvey(loadedSurvey.is_template);
         } catch (error) {
             dispatch(
                 openNotification({
@@ -130,6 +149,8 @@ const SurveyFormBuilder = () => {
                 id: String(surveyId),
                 form_json: formData,
                 name: name,
+                is_hidden: isHiddenSurvey,
+                is_template: isTemplateSurvey,
             });
             dispatch(
                 openNotification({
@@ -147,12 +168,21 @@ const SurveyFormBuilder = () => {
             navigate('/surveys');
         } catch (error) {
             setIsSaving(false);
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred while saving survey',
-                }),
-            );
+            if (axios.isAxiosError(error)) {
+                dispatch(
+                    openNotification({
+                        severity: 'error',
+                        text: error.response?.data.message,
+                    }),
+                );
+            } else {
+                dispatch(
+                    openNotification({
+                        severity: 'error',
+                        text: 'Error occurred while saving survey',
+                    }),
+                );
+            }
         }
     };
 
@@ -260,6 +290,84 @@ const SurveyFormBuilder = () => {
             </Grid>
             <Grid item xs={12}>
                 <FormBuilder handleFormChange={handleFormChange} savedForm={formDefinition} />
+            </Grid>
+            <Grid item xs={12}>
+                <Stack direction="row">
+                    <FormGroup>
+                        <FormControlLabel
+                            control={
+                                <PermissionsGate scopes={[SCOPES.createSurvey]} errorProps={{ disabled: true }}>
+                                    <Switch
+                                        checked={isTemplateSurvey}
+                                        disabled={Boolean(savedSurvey?.engagement_id)}
+                                        onChange={(e) => {
+                                            if (e.target.checked) {
+                                                setIsTemplateSurvey(true);
+                                                return;
+                                            }
+                                            setIsTemplateSurvey(false);
+                                        }}
+                                    />
+                                </PermissionsGate>
+                            }
+                            label="Save as a Template"
+                        />
+                    </FormGroup>
+                    <Tooltip
+                        title="When you toggle ON this option and save your Survey, your Survey will become a Template. As long as this option is on, the Template can be cloned (and then edited) but can't be attached directly to an Engagement."
+                        placement="top"
+                        componentsProps={{
+                            tooltip: {
+                                sx: {
+                                    bgcolor: '#003366',
+                                    color: 'white',
+                                },
+                            },
+                        }}
+                    >
+                        <IconButton>
+                            <HelpIcon sx={{ fontSize: 20, color: `${Palette.primary.main}` }} />
+                        </IconButton>
+                    </Tooltip>
+                </Stack>
+                <Stack direction="row">
+                    <FormGroup>
+                        <FormControlLabel
+                            control={
+                                <PermissionsGate scopes={[SCOPES.createSurvey]} errorProps={{ disabled: true }}>
+                                    <Switch
+                                        checked={isHiddenSurvey}
+                                        disabled={Boolean(savedSurvey?.engagement_id)}
+                                        onChange={(e) => {
+                                            if (e.target.checked) {
+                                                setIsHiddenSurvey(true);
+                                                return;
+                                            }
+                                            setIsHiddenSurvey(false);
+                                        }}
+                                    />
+                                </PermissionsGate>
+                            }
+                            label="Hide Survey"
+                        />
+                    </FormGroup>
+                    <Tooltip
+                        title="When you toggle ON this option and save your Survey, your Survey will be 'Hidden'. When the toggle is ON and as long as the survey is not attached to an engagement, the Survey will only be visible to Superusers. When you are ready to make it available and able to be cloned or attached to an engagement, change the toggle to OFF and click the Save button."
+                        placement="top"
+                        componentsProps={{
+                            tooltip: {
+                                sx: {
+                                    bgcolor: '#003366',
+                                    color: 'white',
+                                },
+                            },
+                        }}
+                    >
+                        <IconButton>
+                            <HelpIcon sx={{ fontSize: 20, color: `${Palette.primary.main}` }} />
+                        </IconButton>
+                    </Tooltip>
+                </Stack>
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>

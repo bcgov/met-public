@@ -22,6 +22,7 @@ from met_api.schemas.submission import SubmissionSchema
 from met_api.services.comment_service import CommentService
 from met_api.services.email_verification_service import EmailVerificationService
 from met_api.services.submission_service import SubmissionService
+
 from tests.utilities.factory_utils import (
     factory_comment_model, factory_email_verification, factory_submission_model, factory_survey_and_eng_model,
     factory_user_model)
@@ -89,7 +90,7 @@ def test_auto_approval_of_submissions_without_comment(session):  # pylint:disabl
     user_details = factory_user_model()
 
     submission_request: SubmissionSchema = {
-        'submission_json': {'simplepostalcode': 'abc', 'simpletextarea': ''},
+        'submission_json': {'simplepostalcode': 'abc', 'simpletextarea': '', 'simpletextarea1': ''},
         'survey_id': survey.id,
         'user_id': user_details.id,
         'verification_token': email_verification.verification_token,
@@ -107,7 +108,8 @@ def test_submissions_with_comment_are_not_auto_approved(session):  # pylint:disa
     user_details = factory_user_model()
 
     submission_request: SubmissionSchema = {
-        'submission_json': {'simplepostalcode': 'abc', 'simpletextarea': 'Test Comment'},
+        'submission_json': {'simplepostalcode': 'abc', 'simpletextarea': 'Test Comment',
+                            'simpletextarea1': 'Test Comment 2'},
         'survey_id': survey.id,
         'user_id': user_details.id,
         'verification_token': email_verification.verification_token,
@@ -116,3 +118,26 @@ def test_submissions_with_comment_are_not_auto_approved(session):  # pylint:disa
 
     assert submission is not None
     assert submission.comment_status_id == Status.Pending.value
+
+
+def test_check_if_submission_can_handle_multiple_comments(session):
+    """Assert that submissions can handle multiple comments."""
+    survey, eng = factory_survey_and_eng_model()
+    email_verification = factory_email_verification(survey.id)
+    user_details = factory_user_model()
+
+    # Create a sample submission with a comment in a text field that starts with 'simpletextarea'
+    submission_request: SubmissionSchema = {
+        'submission_json': {'simplepostalcode': 'abc', 'simpletextfield': 'This is some text',
+                            'simpletextfield2': 'This is some text 2', 'simpletextarea2': 'This is a comment 1',
+                            'simpletextarea1': 'This is a comment 1'},
+        'survey_id': survey.id,
+        'user_id': user_details.id,
+        'verification_token': email_verification.verification_token,
+    }
+
+    submission = SubmissionService().create(email_verification.verification_token, submission_request)
+    submission_json = submission.submission_json
+
+    # Assert that the function returns True since there is a comment in a text field that starts with 'simpletextfield2'
+    assert 'simpletextfield2' in submission_json.keys()

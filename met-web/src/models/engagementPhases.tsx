@@ -65,7 +65,7 @@ export const ENGAGEMENT_PHASES = {
             <Grid item xs={12}>
                 <MetParagraph>
                     Review detailed project description, and input from early engagement and technical advisors, to
-                    determine whether to proceed to environmental assessment.Consensus with Indigenous nations sought.
+                    determine whether to proceed to environmental assessment. Consensus with Indigenous nations sought.
                 </MetParagraph>
             </Grid>
         ),
@@ -79,7 +79,7 @@ export const ENGAGEMENT_PHASES = {
         learnMoreText: (
             <Grid item xs={12}>
                 <MetParagraph>
-                    'Engage with Indigenous nations, stakeholders, technical experts to establish how the environmental
+                    Engage with Indigenous nations, stakeholders, technical experts to establish how the environmental
                     assessment will be conducted, including scope, procedures and methods, and how provincial and
                     Indigenous processes and decision-making will align. Consensus with Indigenous nations sought.
                 </MetParagraph>
@@ -98,8 +98,8 @@ export const ENGAGEMENT_PHASES = {
             <>
                 <Grid item xs={12}>
                     <MetParagraph>
-                        Proponent consults and does technical studies, then develops Initial application. EAO then seeks
-                        feedback on it from Indigenous nations, stakeholders, technical experts and the public.
+                        Proponent consults and does technical studies, then develops the initial application. EAO then
+                        seeks feedback on it from Indigenous nations, stakeholders, technical experts and the public.
                     </MetParagraph>
                 </Grid>
                 <Grid item xs={12}>

@@ -6,6 +6,7 @@ import EngagementView from '../components/engagement/view';
 import NotFound from './NotFound';
 import EngagementDashboard from '../components/engagement/dashboard/report';
 import EngagementComments from '../components/engagement/dashboard/comment';
+import PublicDashboard from 'components/publicDashboard';
 import Landing from 'components/landing';
 
 const UnauthenticatedRoutes = () => {
@@ -18,6 +19,7 @@ const UnauthenticatedRoutes = () => {
             <Route path="/engagements/:engagementId/comments" element={<EngagementComments />} />
             <Route path="/surveys/submit/:surveyId/:token" element={<SurveySubmit />} />
             <Route path="/engagements/:engagementId/edit/:token" element={<EditSurvey />} />
+            <Route path="/engagements/:engagementId/public/dashboard" element={<PublicDashboard />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
     );
