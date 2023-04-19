@@ -95,8 +95,8 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
         submission_json = submission.get('submission_json', {})
         text_fields = ['simpletextarea', 'simpletextfield']
 
-        for field in text_fields:
-            if field in submission_json and len(submission_json[field]) > 0:
+        for field in submission_json:
+            if any(field.startswith(prefix) for prefix in text_fields) and len(submission_json[field]) > 0:
                 return True
 
         return False
