@@ -4,7 +4,7 @@ Commands and notes to deploy MET to a Openshift environment.
 
 ## Build Configuration
 
-Github actions are being used for building images but if necessary to use openshift, 
+Github actions are being used for building images but **IF NECESSARY** to use openshift, 
 follow the steps below:
 
 In the tools namespace use the following to create the build configurations:
