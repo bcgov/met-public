@@ -24,7 +24,7 @@ import { PermissionsGate } from 'components/permissionsGate';
 import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 import CheckIcon from '@mui/icons-material/Check';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
-import { ApprovedIcon, NewIcon, PendingIcon, RejectedIcon } from './Icons';
+import { ApprovedIcon, NewIcon, NFRIcon, RejectedIcon } from './Icons';
 import CloseRounded from '@mui/icons-material/CloseRounded';
 import FiberNewOutlined from '@mui/icons-material/FiberNewOutlined';
 
@@ -248,9 +248,9 @@ const EngagementListing = () => {
             hideSorticon: true,
             align: 'left',
             icon: (
-                <PendingIcon>
+                <NFRIcon>
                     <PriorityHighRoundedIcon fontSize="small" />
-                </PendingIcon>
+                </NFRIcon>
             ),
             allowSort: false,
             getValue: (row: Engagement) => {
@@ -258,7 +258,7 @@ const EngagementListing = () => {
                     return <></>;
                 }
                 const { needs_further_review } = row.submissions_meta_data;
-                return <PendingIcon>{needs_further_review || 0}</PendingIcon>;
+                return <NFRIcon>{needs_further_review || 0}</NFRIcon>;
             },
         },
         {

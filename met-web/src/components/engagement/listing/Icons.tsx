@@ -1,80 +1,116 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import { Palette } from 'styles/Theme';
+import Icon from '@mui/material/Icon';
 
-export const ApprovedIcon = ({ children }: { children: React.ReactNode }) => {
+interface BadgeProps {
+    children: React.ReactNode;
+    onClick?: () => void;
+}
+export const ApprovedIcon = ({ children, onClick }: BadgeProps) => {
     return (
-        <Box
-            sx={{
-                height: '1.4em',
-                minWidth: '1.4em',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: '#D3FDC6',
-                borderRadius: '3px',
-                fontWeight: 'bold',
-            }}
-        >
-            {children}
-        </Box>
+        <IconButton size="small" color="inherit" onClick={onClick}>
+            <Icon
+                sx={{
+                    backgroundColor: '#D3FDC6',
+                    borderRadius: '3px',
+                    fontWeight: 'bold',
+                    fontSize: '1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minHeight: '1.4em',
+                    minWidth: '1.4em',
+                    width: 'fit-content',
+                }}
+            >
+                {children}
+            </Icon>
+        </IconButton>
     );
 };
 
-export const PendingIcon = ({ children }: { children: React.ReactNode }) => {
+export const NFRIcon = ({ children, onClick }: BadgeProps) => {
     return (
-        <Box
-            sx={{
-                height: '1.4em',
-                minWidth: '1.4em',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: '#FCE0B9',
-                borderRadius: '3px',
-                fontWeight: 'bold',
-            }}
-        >
-            {children}
-        </Box>
+        <IconButton size="small" color="inherit" onClick={onClick}>
+            <Icon
+                sx={{
+                    backgroundColor: '#FCE0B9',
+                    borderRadius: '3px',
+                    fontWeight: 'bold',
+                    fontSize: '1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minHeight: '1.4em',
+                    minWidth: '1.4em',
+                    width: 'fit-content',
+                }}
+            >
+                {children}
+            </Icon>
+        </IconButton>
     );
 };
 
-export const RejectedIcon = ({ children }: { children: React.ReactNode }) => {
+export const RejectedIcon = ({ children, onClick }: BadgeProps) => {
     return (
-        <Box
+        <IconButton
+            size="small"
+            color="inherit"
+            onClick={onClick}
             sx={{
-                height: '1.4em',
-                minWidth: '1.4em',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: '#F9D9D9',
-                borderRadius: '3px',
-                fontWeight: 'bold',
+                margin: 0,
             }}
         >
-            {children}
-        </Box>
+            <Icon
+                sx={{
+                    backgroundColor: '#F9D9D9',
+                    borderRadius: '3px',
+                    fontWeight: 'bold',
+                    fontSize: '1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minHeight: '1.4em',
+                    minWidth: '1.4em',
+                    width: 'fit-content',
+                    padding: 0,
+                }}
+            >
+                {children}
+            </Icon>
+        </IconButton>
     );
 };
 
-export const NewIcon = ({ children }: { children: React.ReactNode }) => {
+export const NewIcon = ({ children, onClick }: BadgeProps) => {
     return (
-        <Box
+        <IconButton
+            size="small"
+            color="inherit"
+            onClick={onClick}
             sx={{
-                height: '1.4em',
-                minWidth: '1.4em',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: '3px',
-                fontWeight: 'bold',
-                border: `2px solid ${Palette.primary.main}`,
+                margin: 0,
             }}
-            borderColor="inherit"
         >
-            {children}
-        </Box>
+            <Icon
+                sx={{
+                    borderRadius: '3px',
+                    fontWeight: 'bold',
+                    fontSize: '1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minHeight: '1.4em',
+                    minWidth: '1.4em',
+                    width: 'fit-content',
+                    border: `2px solid ${Palette.primary.main}`,
+                    padding: 0,
+                }}
+            >
+                {children}
+            </Icon>
+        </IconButton>
     );
 };
