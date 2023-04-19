@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconButton } from '@mui/material';
+import { IconButton, ButtonBase } from '@mui/material';
 import { Palette } from 'styles/Theme';
 import Icon from '@mui/material/Icon';
 
@@ -9,14 +9,7 @@ interface BadgeProps {
 }
 export const ApprovedIcon = ({ children, onClick }: BadgeProps) => {
     return (
-        <IconButton
-            size="small"
-            color="inherit"
-            onClick={onClick}
-            sx={{
-                padding: 0,
-            }}
-        >
+        <ButtonBase onClick={onClick}>
             <Icon
                 sx={{
                     backgroundColor: '#D3FDC6',
@@ -36,20 +29,13 @@ export const ApprovedIcon = ({ children, onClick }: BadgeProps) => {
             >
                 {children}
             </Icon>
-        </IconButton>
+        </ButtonBase>
     );
 };
 
 export const NFRIcon = ({ children, onClick }: BadgeProps) => {
     return (
-        <IconButton
-            size="small"
-            color="inherit"
-            onClick={onClick}
-            sx={{
-                padding: 0,
-            }}
-        >
+        <ButtonBase onClick={onClick}>
             <Icon
                 sx={{
                     backgroundColor: '#FCE0B9',
@@ -69,20 +55,13 @@ export const NFRIcon = ({ children, onClick }: BadgeProps) => {
             >
                 {children}
             </Icon>
-        </IconButton>
+        </ButtonBase>
     );
 };
 
 export const RejectedIcon = ({ children, onClick }: BadgeProps) => {
     return (
-        <IconButton
-            size="small"
-            color="inherit"
-            onClick={onClick}
-            sx={{
-                padding: 0,
-            }}
-        >
+        <ButtonBase onClick={onClick}>
             <Icon
                 sx={{
                     backgroundColor: '#F9D9D9',
@@ -103,22 +82,21 @@ export const RejectedIcon = ({ children, onClick }: BadgeProps) => {
             >
                 {children}
             </Icon>
-        </IconButton>
+        </ButtonBase>
     );
 };
 
 export const NewIcon = ({ children, onClick }: BadgeProps) => {
     return (
-        <IconButton
-            size="small"
-            color="inherit"
-            onClick={onClick}
-            sx={{
-                padding: 0,
-            }}
-        >
+        <ButtonBase onClick={onClick}>
             <Icon
                 sx={{
+                    border: `2px solid ${Palette.primary.main}`,
+                    '&:hover': {
+                        backgroundColor: Palette.primary.main,
+                        color: 'white',
+                        textDecoration: 'underline',
+                    },
                     borderRadius: '3px',
                     fontWeight: 'bold',
                     fontSize: '1rem',
@@ -128,17 +106,11 @@ export const NewIcon = ({ children, onClick }: BadgeProps) => {
                     minHeight: '1.8em',
                     minWidth: '2em',
                     width: 'fit-content',
-                    border: `2px solid ${Palette.primary.main}`,
                     padding: 0,
-                    '&:hover': {
-                        backgroundColor: Palette.primary.main,
-                        color: 'white',
-                        textDecoration: 'underline',
-                    },
                 }}
             >
                 {children}
             </Icon>
-        </IconButton>
+        </ButtonBase>
     );
 };

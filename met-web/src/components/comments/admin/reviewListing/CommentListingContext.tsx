@@ -125,7 +125,6 @@ export const CommentListingContextProvider = ({ children }: CommentListingContex
             const survey = await getSurvey(Number(surveyId));
             setSurvey(survey);
         } catch (error) {
-            console.log(error);
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching survey information' }));
             setLoading(false);
         }
@@ -157,7 +156,6 @@ export const CommentListingContextProvider = ({ children }: CommentListingContex
             });
             setLoading(false);
         } catch (error) {
-            console.log(error);
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching submissions' }));
             setLoading(false);
         }

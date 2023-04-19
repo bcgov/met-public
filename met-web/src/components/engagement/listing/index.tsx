@@ -103,7 +103,6 @@ const EngagementListing = () => {
             });
             setTableLoading(false);
         } catch (error) {
-            console.log(error);
             dispatch(
                 openNotification({
                     severity: 'error',

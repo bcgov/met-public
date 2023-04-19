@@ -91,6 +91,11 @@ jest.mock('components/permissionsGate', () => ({
     },
 }));
 
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigation: jest.fn(),
+}));
+
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
     useSelector: jest.fn(() => {

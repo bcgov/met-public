@@ -1,5 +1,5 @@
-import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import React, { ReactNode } from 'react';
+import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SurveyListing from '../../../src/components/survey/listing';
 import { setupEnv } from './setEnvVars';
@@ -103,6 +103,11 @@ jest.mock('react-redux', () => ({
             assignedEngagements: [mockEngagementOne.id, mockEngagementTwo.id],
         };
     }),
+}));
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigation: jest.fn(),
 }));
 
 describe('Survey form page tests', () => {
