@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MetPaper, MetHeader2 } from 'components/common';
-import { Grid, Skeleton } from '@mui/material';
+import { Grid, Skeleton, Divider } from '@mui/material';
 import { Widget } from 'models/widget';
 import { DocumentItem } from 'models/document';
 import { useAppDispatch } from 'hooks';
@@ -51,6 +51,7 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
             <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
                 <Grid item justifyContent="flex-start" alignItems="center" xs={12}>
                     <MetHeader2 bold={true}>Documents</MetHeader2>
+                    <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
                 </Grid>
                 {documents.map((document: DocumentItem) => {
                     return (
