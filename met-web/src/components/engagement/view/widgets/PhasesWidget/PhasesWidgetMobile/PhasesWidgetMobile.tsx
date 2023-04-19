@@ -62,7 +62,7 @@ export const PhasesWidgetMobile = () => {
     }
 
     return (
-        <MetPaper elevation={1} sx={{ padding: '2em' }}>
+        <MetPaper elevation={1} sx={{ padding: '2em', pt: '25px' }}>
             <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" rowSpacing={2}>
                 <Grid item xs={12}>
                     <MetHeader3 bold>The EA Process</MetHeader3>
