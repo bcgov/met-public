@@ -1,4 +1,4 @@
-//ts-nocheck
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useContext, useState, useEffect } from 'react';
 import Divider from '@mui/material/Divider';
 import { Grid, Typography, Stack, IconButton } from '@mui/material';
@@ -145,8 +145,11 @@ const Form = () => {
             previewGeoJson = await previewShapeFile({
                 file: files[0],
             });
+            //ts-ignore
             const centerPoint: Feature = turf.center(previewGeoJson);
+            //ts-ignore
             methods.setValue('longitude', centerPoint.geometry.coordinates[0]);
+            //ts-ignore
             methods.setValue('latitude', centerPoint.geometry.coordinates[1]);
             return;
         }
