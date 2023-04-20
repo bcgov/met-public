@@ -145,11 +145,11 @@ const Form = () => {
             previewGeoJson = await previewShapeFile({
                 file: files[0],
             });
-            //ts-ignore
+            //@ts-ignore
             const centerPoint: Feature = turf.center(previewGeoJson);
-            //ts-ignore
+            //@ts-ignore
             methods.setValue('longitude', centerPoint.geometry.coordinates[0]);
-            //ts-ignore
+            //@ts-ignore
             methods.setValue('latitude', centerPoint.geometry.coordinates[1]);
             return;
         }
