@@ -88,7 +88,7 @@ export const SurveyBlock = () => {
 
     return (
         <>
-            <MetHeader4 bold={true} sx={{ marginBottom: '2px' }}>
+            <MetHeader4 bold sx={{ marginBottom: '2px' }}>
                 Survey Block
             </MetHeader4>
             <MetPaper>

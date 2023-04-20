@@ -19,6 +19,7 @@ type StyledTreeItemProps = TreeItemProps & {
     labelIcon: React.ElementType<SvgIconProps>;
     labelInfo?: string;
     labelText: string;
+    innerDocument?: boolean;
 };
 
 const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
@@ -52,7 +53,7 @@ const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
 }));
 
 export function StyledTreeItem(props: StyledTreeItemProps & DocumentTreeItemProps) {
-    const { labelUrl, labelIcon: LabelIcon, labelText, ...other } = props;
+    const { labelUrl, labelIcon: LabelIcon, labelText, innerDocument, ...other } = props;
 
     return (
         <StyledTreeItemRoot
@@ -60,7 +61,11 @@ export function StyledTreeItem(props: StyledTreeItemProps & DocumentTreeItemProp
                 <Box sx={{ display: 'flex', alignItems: 'center', p: 0.5, pr: 0 }}>
                     <If condition={labelUrl}>
                         <Then>
-                            <Box component={LabelIcon} color="inherit" sx={{ p: 0.3, ml: 3, mr: 1 }} />
+                            <Box
+                                component={LabelIcon}
+                                color="inherit"
+                                sx={{ p: 0.3, ml: innerDocument ? 3 : 0, mr: 1 }}
+                            />
                             <Link
                                 sx={{
                                     alignItems: 'center',

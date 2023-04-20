@@ -73,7 +73,7 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
                 xs={12}
                 paddingBottom={0}
             >
-                <MetHeader2 bold={true}>Events</MetHeader2>
+                <MetHeader2 bold>Events</MetHeader2>
                 <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
             </Grid>
             {events.map((event: Event) => {

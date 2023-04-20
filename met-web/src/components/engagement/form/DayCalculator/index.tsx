@@ -179,7 +179,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                 <Grid container direction="row" item xs={12} wrap="nowrap">
                     <Grid item md={11} xs={12}>
                         <Stack direction="row" alignItems="center" spacing={2}>
-                            <MetHeader1 bold={true} sx={{ mb: 2 }} data-testid="daycalculator-title">
+                            <MetHeader1 bold sx={{ mb: 2 }} data-testid="daycalculator-title">
                                 Day Calculator
                             </MetHeader1>
                         </Stack>
@@ -633,7 +633,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                 </Grid>
                 <Grid item md={12} xs={12}>
                     <Stack direction="row" alignItems="center" spacing={2}>
-                        <MetHeader4 bold={true}>Description</MetHeader4>
+                        <MetHeader4 bold>Description</MetHeader4>
                     </Stack>
                 </Grid>
                 <Grid item md={12} xs={12}>

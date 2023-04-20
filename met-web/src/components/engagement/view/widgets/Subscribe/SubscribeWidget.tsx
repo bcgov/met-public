@@ -83,9 +83,12 @@ function SubscribeWidget() {
                 handleConfirm={sendEmail}
                 isSaving={isSaving}
                 termsOfService={[
-                    'Personal information (your email address is collected under Section 26(c) and 26(e) of the Freedom of the Information and Protection of Privacy Act, to keep you updated on current engagements and to notify you of future opportunities to participate.',
+                    'Personal information (your email address) is collected under Section 26(c) and 26(e) of the Freedom of Information\
+                    and Protection of Privacy Act, for the purpose of providing content updates and future opportunities to participate.\
+                    Your email is never shared with third parties.',
                     '',
-                    'If you have any questions about the collection, use and disclosure of your personal information, please contact <TBC>.',
+                    'If you have any questions about the collection, use and disclosure of your personal information,\
+                    please contact the Director of Digital Services at Sid.Tobias@gov.bc.ca',
                     '',
                 ]}
                 header={'Sign Up for Updates'}
@@ -95,7 +98,7 @@ function SubscribeWidget() {
                     },
                 ]}
             />
-            <Grid spacing={2} container xs={12} sx={{ pl: '1em' }}>
+            <Grid spacing={2} container xs={12}>
                 <Grid item xs={12}>
                     <MetHeader2 bold>Sign Up for Updates</MetHeader2>
                     <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />

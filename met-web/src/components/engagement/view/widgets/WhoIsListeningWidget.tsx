@@ -72,8 +72,8 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
 
     return (
         <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
-            <Grid item container justifyContent={{ xs: 'center', md: 'flex-start' }} xs={12}>
-                <MetHeader2 bold={true}>Who is Listening</MetHeader2>
+            <Grid item justifyContent={{ xs: 'center', md: 'flex-start' }} xs={12}>
+                <MetHeader2 bold>Who is Listening</MetHeader2>
                 <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
             </Grid>
             {contacts.map((contact) => {
