@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useContext, useState, useEffect } from 'react';
 import Divider from '@mui/material/Divider';
 import { Grid, Typography, Stack, IconButton } from '@mui/material';
@@ -22,7 +21,7 @@ import { postMap, previewShapeFile } from 'services/widgetService/MapService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import FileUpload from 'components/common/FileUpload/FileUpload';
 import { geoJSONDecode } from './utils';
-import { GeoJSON, Feature } from 'geojson';
+import { GeoJSON } from 'geojson';
 import LinkIcon from '@mui/icons-material/Link';
 import { When } from 'react-if';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
@@ -142,14 +141,11 @@ const Form = () => {
         let previewGeoJson: turf.AllGeoJSON | GeoJSON | undefined;
         if (files.length > 0) {
             methods.setValue('shapefile', files[0]);
-            previewGeoJson = await previewShapeFile({
+            previewGeoJson = (await previewShapeFile({
                 file: files[0],
-            });
-            //@ts-ignore
-            const centerPoint: Feature = turf.center(previewGeoJson);
-            //@ts-ignore
+            })) as unknown as turf.FeatureCollection<turf.Point>;
+            const centerPoint = turf.center(previewGeoJson as turf.FeatureCollection<turf.Point>);
             methods.setValue('longitude', centerPoint.geometry.coordinates[0]);
-            //@ts-ignore
             methods.setValue('latitude', centerPoint.geometry.coordinates[1]);
             return;
         }
