@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Typography, Grid, TextField, Stack } from '@mui/material';
+import { Typography, Grid, TextField, Stack, Box } from '@mui/material';
 import { MetPaper, MetLabel, PrimaryButton, SecondaryButton, MetDescription } from '../../../common';
 import RichTextEditor from '../RichTextEditor';
 import { ActionContext } from '../ActionContext';
@@ -38,6 +38,7 @@ const EngagementForm = () => {
 
     const [initialRichDescription, setInitialRichDescription] = useState('');
     const [initialRichContent, setInitialRichContent] = useState('');
+    const [descriptionCharCount, setDescriptionCharCount] = useState(0);
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -92,6 +93,8 @@ const EngagementForm = () => {
             ...engagementFormData,
             description: rawText,
         });
+
+        setDescriptionCharCount(rawText.length);
 
         setEngagementFormError({
             ...engagementFormError,
@@ -308,14 +311,16 @@ const EngagementForm = () => {
                         This is a short description that will show in the header section of the engagement page. The
                         recommended length is 250-500 characters.
                     </MetDescription>
-
-                    <RichTextEditor
-                        setRawText={handleDescriptionChange}
-                        handleEditorStateChange={handleRichDescriptionChange}
-                        initialRawEditorState={initialRichDescription || ''}
-                        error={engagementFormError.description}
-                        helperText={'Description must be less then 550 characters'}
-                    />
+                    <Box display="flex" flexDirection="column" justifyContent="space-between">
+                        <RichTextEditor
+                            setRawText={handleDescriptionChange}
+                            handleEditorStateChange={handleRichDescriptionChange}
+                            initialRawEditorState={initialRichDescription || ''}
+                            error={engagementFormError.description}
+                            helperText={'Description must be less then 550 characters'}
+                        />
+                        <Typography alignSelf="flex-end">Character Count: {descriptionCharCount}</Typography>
+                    </Box>
                 </Grid>
                 <Grid item xs={12}>
                     <MetLabel>Engagement - Page Content</MetLabel>
