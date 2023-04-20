@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton, SecondaryButton } from 'components/common';
 import { Engagement } from 'models/engagement';
 import { useAppDispatch, useAppSelector } from 'hooks';
@@ -24,12 +24,14 @@ import { PermissionsGate } from 'components/permissionsGate';
 import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 import CheckIcon from '@mui/icons-material/Check';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
-import { ApprovedIcon, NewIcon, PendingIcon, RejectedIcon } from './Icons';
+import { ApprovedIcon, NewIcon, NFRIcon, RejectedIcon } from './Icons';
 import CloseRounded from '@mui/icons-material/CloseRounded';
 import FiberNewOutlined from '@mui/icons-material/FiberNewOutlined';
+import { CommentStatus } from 'constants/commentStatus';
 
 const EngagementListing = () => {
     const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+    const navigate = useNavigate();
 
     const [searchFilter, setSearchFilter] = useState({
         key: 'name',
@@ -101,7 +103,6 @@ const EngagementListing = () => {
             });
             setTableLoading(false);
         } catch (error) {
-            console.log(error);
             dispatch(
                 openNotification({
                     severity: 'error',
@@ -235,7 +236,20 @@ const EngagementListing = () => {
             allowSort: false,
             getValue: (row: Engagement) => {
                 const { approved } = row.submissions_meta_data;
-                return <ApprovedIcon>{approved || 0}</ApprovedIcon>;
+                return (
+                    <ApprovedIcon
+                        onClick={() => {
+                            if (row.surveys.length === 0) return;
+                            navigate(`/surveys/${row.surveys[0].id}/comments`, {
+                                state: {
+                                    status: CommentStatus.Approved,
+                                },
+                            });
+                        }}
+                    >
+                        {approved || 0}
+                    </ApprovedIcon>
+                );
             },
         },
         {
@@ -248,9 +262,9 @@ const EngagementListing = () => {
             hideSorticon: true,
             align: 'left',
             icon: (
-                <PendingIcon>
+                <NFRIcon>
                     <PriorityHighRoundedIcon fontSize="small" />
-                </PendingIcon>
+                </NFRIcon>
             ),
             allowSort: false,
             getValue: (row: Engagement) => {
@@ -258,7 +272,20 @@ const EngagementListing = () => {
                     return <></>;
                 }
                 const { needs_further_review } = row.submissions_meta_data;
-                return <PendingIcon>{needs_further_review || 0}</PendingIcon>;
+                return (
+                    <NFRIcon
+                        onClick={() => {
+                            if (row.surveys.length === 0) return;
+                            navigate(`/surveys/${row.surveys[0].id}/comments`, {
+                                state: {
+                                    status: CommentStatus.NeedsFurtherReview,
+                                },
+                            });
+                        }}
+                    >
+                        {needs_further_review || 0}
+                    </NFRIcon>
+                );
             },
         },
         {
@@ -281,7 +308,20 @@ const EngagementListing = () => {
                     return <></>;
                 }
                 const { rejected } = row.submissions_meta_data;
-                return <RejectedIcon>{rejected || 0}</RejectedIcon>;
+                return (
+                    <RejectedIcon
+                        onClick={() => {
+                            if (row.surveys.length === 0) return;
+                            navigate(`/surveys/${row.surveys[0].id}/comments`, {
+                                state: {
+                                    status: CommentStatus.Rejected,
+                                },
+                            });
+                        }}
+                    >
+                        {rejected || 0}
+                    </RejectedIcon>
+                );
             },
         },
         {
@@ -304,7 +344,20 @@ const EngagementListing = () => {
                     return <></>;
                 }
                 const { pending } = row.submissions_meta_data;
-                return <NewIcon>{pending || 0}</NewIcon>;
+                return (
+                    <NewIcon
+                        onClick={() => {
+                            if (row.surveys.length === 0) return;
+                            navigate(`/surveys/${row.surveys[0].id}/comments`, {
+                                state: {
+                                    status: CommentStatus.Pending,
+                                },
+                            });
+                        }}
+                    >
+                        {pending || 0}
+                    </NewIcon>
+                );
             },
         },
         {
