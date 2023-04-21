@@ -4,7 +4,7 @@ import { MetHeader4, MetBody } from 'components/common';
 
 const DayZeroRules = () => (
     <div>
-        <MetHeader4 bold={true}>Holidays</MetHeader4>
+        <MetHeader4 bold>Holidays</MetHeader4>
         <div>
             <ul>
                 <li>
@@ -16,7 +16,7 @@ const DayZeroRules = () => (
                 </li>
             </ul>
         </div>
-        <MetHeader4 bold={true}>Weekends or Other Office Closures</MetHeader4>
+        <MetHeader4 bold>Weekends or Other Office Closures</MetHeader4>
         <div>
             <ul>
                 <li>
@@ -28,7 +28,7 @@ const DayZeroRules = () => (
                 </li>
             </ul>
         </div>
-        <MetHeader4 bold={true}>Calculation of Days</MetHeader4>
+        <MetHeader4 bold>Calculation of Days</MetHeader4>
         <div>
             <ul>
                 <li>
@@ -46,7 +46,7 @@ const DayZeroRules = () => (
                 </li>
             </ul>
         </div>
-        <MetHeader4 bold={true}>Time of Day</MetHeader4>
+        <MetHeader4 bold>Time of Day</MetHeader4>
         <div>
             <ul>
                 <li>
@@ -62,7 +62,7 @@ const DayZeroRules = () => (
                 </li>
             </ul>
         </div>
-        <MetHeader4 bold={true}>Suspension</MetHeader4>
+        <MetHeader4 bold>Suspension</MetHeader4>
         <div>
             <ul>
                 <li>
@@ -75,7 +75,7 @@ const DayZeroRules = () => (
                 </li>
             </ul>
         </div>
-        <MetHeader4 bold={true}>Interpretation Act</MetHeader4>
+        <MetHeader4 bold>Interpretation Act</MetHeader4>
         <div>
             <ul>
                 <p>

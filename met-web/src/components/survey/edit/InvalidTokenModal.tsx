@@ -20,7 +20,7 @@ export const InvalidTokenModal = ({ open, handleClose }: InvalidTokenModalProps)
                 spacing={2}
             >
                 <Grid item xs={12}>
-                    <MetHeader1 bold={true} sx={{ mb: 2 }}>
+                    <MetHeader1 bold sx={{ mb: 2 }}>
                         Oops! Something Went Wrong
                     </MetHeader1>
                 </Grid>

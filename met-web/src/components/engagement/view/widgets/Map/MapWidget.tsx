@@ -79,7 +79,7 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
                         xs={12}
                         paddingBottom={0}
                     >
-                        <MetHeader2 bold={true}>Map</MetHeader2>
+                        <MetHeader2 bold>Map</MetHeader2>
                         <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
                     </Grid>
                     <Grid item xs={12}>

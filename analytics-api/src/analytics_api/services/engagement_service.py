@@ -3,7 +3,7 @@ from analytics_api.models.engagement import Engagement as EngagementModel
 from analytics_api.schemas.engagement import EngagementSchema
 
 
-class EngagementService:
+class EngagementService:  # pylint: disable=too-few-public-methods
     """Engagement management service."""
 
     otherdateformat = '%Y-%m-%d'

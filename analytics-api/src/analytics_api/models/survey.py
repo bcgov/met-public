@@ -2,8 +2,6 @@
 
 Manages the survey
 """
-from sqlalchemy import ForeignKey
-
 from .base_model import BaseModel
 from .db import db
 

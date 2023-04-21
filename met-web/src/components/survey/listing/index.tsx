@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton } from 'components/common';
 import { Survey } from 'models/survey';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
@@ -17,12 +17,14 @@ import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
 import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 import CheckIcon from '@mui/icons-material/Check';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
-import { ApprovedIcon, NewIcon, PendingIcon, RejectedIcon } from 'components/engagement/listing/Icons';
+import { ApprovedIcon, NewIcon, NFRIcon, RejectedIcon } from 'components/engagement/listing/Icons';
 import CloseRounded from '@mui/icons-material/CloseRounded';
 import FiberNewOutlined from '@mui/icons-material/FiberNewOutlined';
 import { PermissionsGate } from 'components/permissionsGate';
+import { CommentStatus } from 'constants/commentStatus';
 
 const SurveyListing = () => {
+    const navigate = useNavigate();
     const [searchFilter, setSearchFilter] = useState({
         key: 'name',
         value: '',
@@ -200,7 +202,19 @@ const SurveyListing = () => {
             allowSort: false,
             getValue: (row: Survey) => {
                 const { approved } = row.comments_meta_data;
-                return <ApprovedIcon>{approved || 0}</ApprovedIcon>;
+                return (
+                    <ApprovedIcon
+                        onClick={() => {
+                            navigate(`/surveys/${row.id}/comments`, {
+                                state: {
+                                    status: CommentStatus.Approved,
+                                },
+                            });
+                        }}
+                    >
+                        {approved || 0}
+                    </ApprovedIcon>
+                );
             },
         },
         {
@@ -213,9 +227,9 @@ const SurveyListing = () => {
             hideSorticon: true,
             align: 'left',
             icon: (
-                <PendingIcon>
+                <NFRIcon>
                     <PriorityHighRoundedIcon fontSize="small" />
-                </PendingIcon>
+                </NFRIcon>
             ),
             allowSort: false,
             getValue: (row: Survey) => {
@@ -223,7 +237,19 @@ const SurveyListing = () => {
                     return <></>;
                 }
                 const { needs_further_review } = row.comments_meta_data;
-                return <PendingIcon>{needs_further_review || 0}</PendingIcon>;
+                return (
+                    <NFRIcon
+                        onClick={() => {
+                            navigate(`/surveys/${row.id}/comments`, {
+                                state: {
+                                    status: CommentStatus.NeedsFurtherReview,
+                                },
+                            });
+                        }}
+                    >
+                        {needs_further_review || 0}
+                    </NFRIcon>
+                );
             },
         },
         {
@@ -246,7 +272,19 @@ const SurveyListing = () => {
                     return <></>;
                 }
                 const { rejected } = row.comments_meta_data;
-                return <RejectedIcon>{rejected || 0}</RejectedIcon>;
+                return (
+                    <RejectedIcon
+                        onClick={() => {
+                            navigate(`/surveys/${row.id}/comments`, {
+                                state: {
+                                    status: CommentStatus.Rejected,
+                                },
+                            });
+                        }}
+                    >
+                        {rejected || 0}
+                    </RejectedIcon>
+                );
             },
         },
         {
@@ -269,7 +307,19 @@ const SurveyListing = () => {
                     return <></>;
                 }
                 const { pending } = row.comments_meta_data;
-                return <NewIcon>{pending || 0}</NewIcon>;
+                return (
+                    <NewIcon
+                        onClick={() => {
+                            navigate(`/surveys/${row.id}/comments`, {
+                                state: {
+                                    status: CommentStatus.Pending,
+                                },
+                            });
+                        }}
+                    >
+                        {pending || 0}
+                    </NewIcon>
+                );
             },
         },
         {
@@ -306,7 +356,7 @@ const SurveyListing = () => {
             columnSpacing={2}
             rowSpacing={1}
         >
-            <Grid item xs={12} lg={10}>
+            <Grid item xs={12}>
                 <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="100%" justifyContent="space-between">
                     <Stack direction="row" spacing={1} alignItems="center">
                         <TextField
@@ -334,7 +384,7 @@ const SurveyListing = () => {
                 </Stack>
             </Grid>
 
-            <Grid item xs={12} lg={10}>
+            <Grid item xs={12}>
                 <MetTable
                     headCells={headCells}
                     rows={surveys}
