@@ -70,25 +70,7 @@ const EmailModal = ({
                     ))}
 
                     <Grid item xs={12}>
-                        <Typography
-                            sx={{
-                                p: '1em',
-                                borderLeft: 8,
-                                borderColor: '#003366',
-                                backgroundColor: '#F2F2F2',
-                                mt: '2em',
-                            }}
-                        >
-                            {termsOfService.map((text: string | ReactElement) => (
-                                <>
-                                    {React.isValidElement(text) ? (
-                                        text
-                                    ) : (
-                                        <Typography sx={{ fontSize: '0.8rem', mb: 1 }}>{text}</Typography>
-                                    )}
-                                </>
-                            ))}
-                        </Typography>
+                        {termsOfService}
                     </Grid>
                     <Grid
                         item

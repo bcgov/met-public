@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactNode } from 'react';
 
 export interface ModalSubtext {
     text: string;
@@ -18,7 +18,7 @@ export interface ModalProps {
     header: string;
     subText: Array<ModalSubtext>;
     email: string;
-    termsOfService: Array<string | ReactElement>;
+    termsOfService: ReactNode;
     handleConfirm: () => void;
     updateEmail: (email: string) => void;
     updateModal: (open: boolean) => void;

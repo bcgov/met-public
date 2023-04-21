@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { MetBody, MetHeader2, MetPaper, PrimaryButton } from 'components/common';
 import { ActionContext } from '../../ActionContext';
-import { Grid, Divider, Link, Typography } from '@mui/material';
+import { Grid, Divider, Link, Typography, Box } from '@mui/material';
 import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import EmailModal from 'components/common/Modals/EmailModal';
@@ -82,19 +82,29 @@ function SubscribeWidget() {
                 updateEmail={setEmail}
                 handleConfirm={sendEmail}
                 isSaving={isSaving}
-                termsOfService={[
-                    'Personal information (your email address) is collected under Section 26(c) and 26(e) of the Freedom of Information\
-                    and Protection of Privacy Act, for the purpose of providing content updates and future opportunities to participate.\
-                    Your email is never shared with third parties.',
-                    '',
-                    <Typography sx={{ fontSize: '0.8rem' }}>
-                        {
-                            'If you have any questions about the collection, use and disclosure of your personal information, please contact the Director of Digital Services at '
-                        }
-                        <Link href="mailto:Sid.Tobias@gov.bc.ca">Sid.Tobias@gov.bc.ca</Link>
-                    </Typography>,
-                    '',
-                ]}
+                termsOfService={
+                    <Box
+                        sx={{
+                            p: '1em',
+                            borderLeft: 8,
+                            borderColor: '#003366',
+                            backgroundColor: '#F2F2F2',
+                            mt: '2em',
+                        }}
+                    >
+                        <Typography sx={{ fontSize: '0.8rem', mb: 1 }}>
+                            Personal information (your email address) is collected under Section 26(c) and 26(e) of the
+                            Freedom of Information\ and Protection of Privacy Act, for the purpose of providing content
+                            updates and future opportunities to participate.\ Your email is never shared with third
+                            parties.
+                        </Typography>
+                        <Typography sx={{ fontSize: '0.8rem', mb: 1 }}>
+                            If you have any questions about the collection, use and disclosure of your personal
+                            information, please contact the Director of Digital Services at
+                            <Link href="mailto:Sid.Tobias@gov.bc.ca">Sid.Tobias@gov.bc.ca</Link>
+                        </Typography>
+                    </Box>
+                }
                 header={'Sign Up for Updates'}
                 subText={[
                     {
