@@ -181,24 +181,6 @@ const EngagementListing = () => {
                 return row.engagement_status.status_name;
             },
         },
-        // {
-        //     key: 'surveys',
-        //     numeric: false,
-        //     disablePadding: false,
-        //     label: 'Survey',
-        //     allowSort: false,
-        //     getValue: (row: Engagement) => {
-        //         if (row.surveys.length === 0) {
-        //             return '';
-        //         }
-
-        //         return (
-        //             <MuiLink component={Link} to={`/surveys/${Number(row.surveys[0].id)}/submit`}>
-        //                 View Survey
-        //             </MuiLink>
-        //         );
-        //     },
-        // },
         {
             key: 'surveys',
             numeric: true,
@@ -361,25 +343,6 @@ const EngagementListing = () => {
                 );
             },
         },
-        // {
-        //     key: 'surveys',
-        //     numeric: true,
-        //     disablePadding: false,
-        //     label: 'Reporting',
-        //     allowSort: false,
-        //     getValue: (row: Engagement) => {
-        //         if (row.surveys.length === 0 || row.submissions_meta_data.total === 0) {
-        //             return '';
-        //         }
-
-        //         return (
-        //             <MuiLink component={Link} to={`/engagements/${Number(row.id)}/dashboard`}>
-        //                 View Report
-        //             </MuiLink>
-        //         );
-        //     },
-        // },
-        // NOSONAR
         {
             key: 'id',
             numeric: true,
