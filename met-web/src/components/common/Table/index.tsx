@@ -176,7 +176,7 @@ function MetTable<T>({
                                                     border: noRowBorder ? 'none' : '',
                                                 }}
                                             >
-                                                {cell.getValue ? cell.getValue(row) : String(row[cell.key])}
+                                                {cell.renderCell ? cell.renderCell(row) : String(row[cell.key])}
                                             </TableCell>
                                         ))}
                                     </TableRow>
