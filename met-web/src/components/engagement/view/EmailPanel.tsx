@@ -11,6 +11,7 @@ import {
     useMediaQuery,
     Theme,
     Toolbar,
+    Link,
 } from '@mui/material';
 import { EmailPanelProps } from './types';
 import { MetLabel, modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody } from 'components/common';
@@ -87,7 +88,7 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
                             borderColor: '#003366',
                             backgroundColor: '#F2F2F2',
                             mt: '2em',
-                            fontSize: '1rem',
+                            fontSize: '0.8rem',
                         }}
                     >
                         {`
@@ -99,8 +100,9 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
                         <br />
                         {
                             'If you have any questions about the collection, use and disclosure of your personal information,\
-                            please contact the Director of Digital Services at Sid.Tobias@gov.bc.ca'
+                            please contact the Director of Digital Services at '
                         }
+                        <Link href="mailto:Sid.Tobias@gov.bc.ca">Sid.Tobias@gov.bc.ca</Link>
                     </Typography>
                 </Grid>
                 <Grid
