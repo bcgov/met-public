@@ -1,14 +1,5 @@
-import React, { ReactElement, FormEvent, useState } from 'react';
-import {
-    Grid,
-    Typography,
-    Checkbox,
-    TextField,
-    FormControl,
-    FormControlLabel,
-    FormHelperText,
-    Stack,
-} from '@mui/material';
+import React, { FormEvent, useState } from 'react';
+import { Grid, Checkbox, TextField, FormControl, FormControlLabel, FormHelperText, Stack } from '@mui/material';
 import { MetLabel, modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody } from 'components/common';
 import Modal from '@mui/material/Modal';
 import { ModalProps } from './types';
