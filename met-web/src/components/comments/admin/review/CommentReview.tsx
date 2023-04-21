@@ -208,15 +208,24 @@ const CommentReview = () => {
                 padding="3em"
                 justifyContent="flex-start"
                 alignItems="flex-start"
-                rowSpacing={6}
+                rowSpacing={4}
             >
-                <Grid container direction="row" item rowSpacing={3}>
+                <Grid container direction="row" item rowSpacing={2}>
                     <Grid container direction="row" item xs={6} spacing={1}>
                         <Grid item>
                             <MetLabel>Submission ID:</MetLabel>
                         </Grid>
                         <Grid item>
                             <MetParagraph sx={{ pl: 2 }}>{id}</MetParagraph>
+                        </Grid>
+                    </Grid>
+
+                    <Grid container direction="row" item xs={6} spacing={1}>
+                        <Grid item>
+                            <MetLabel>Comment Date:</MetLabel>
+                        </Grid>
+                        <Grid item>
+                            <MetParagraph sx={{ pl: 2 }}>{formatDate(created_date)}</MetParagraph>
                         </Grid>
                     </Grid>
 
@@ -235,15 +244,6 @@ const CommentReview = () => {
                         </Grid>
                         <Grid item>
                             <MetParagraph sx={{ pl: 2 }}>{reviewed_by}</MetParagraph>
-                        </Grid>
-                    </Grid>
-
-                    <Grid container direction="row" item xs={6} spacing={1}>
-                        <Grid item>
-                            <MetLabel>Comment Date:</MetLabel>
-                        </Grid>
-                        <Grid item>
-                            <MetParagraph sx={{ pl: 2 }}>{formatDate(created_date)}</MetParagraph>
                         </Grid>
                     </Grid>
 
@@ -336,6 +336,19 @@ const CommentReview = () => {
                                             <Checkbox
                                                 checked={hasProfanity}
                                                 onChange={(event, checked) => setHasProfanity(checked)}
+                                            />
+                                        }
+                                    />
+                                    <MetParagraph color="error">
+                                        If there is a threat/menace in the comments, select the checkbox below. No email
+                                        will be sent. Contact TBD.
+                                    </MetParagraph>
+                                    <FormControlLabel
+                                        label={<MetParagraph>Contains threat/menace</MetParagraph>}
+                                        control={
+                                            <Checkbox
+                                                checked={hasThreat}
+                                                onChange={(event, checked) => setHasThreat(checked)}
                                             />
                                         }
                                     />
@@ -451,19 +464,6 @@ const CommentReview = () => {
                                         }
                                     />
                                     <br />
-                                    <MetParagraph color="error">
-                                        If there is a threat/menace in the comments, select the checkbox below. No email
-                                        will be sent. Contact TBD.
-                                    </MetParagraph>
-                                    <FormControlLabel
-                                        label={<MetParagraph>Contains threat/menace</MetParagraph>}
-                                        control={
-                                            <Checkbox
-                                                checked={hasThreat}
-                                                onChange={(event, checked) => setHasThreat(checked)}
-                                            />
-                                        }
-                                    />
                                     <FormHelperText error={true}>
                                         {hasError
                                             ? 'Please enter at least one reason for rejecting the comment(s).'
