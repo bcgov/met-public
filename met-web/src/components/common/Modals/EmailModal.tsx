@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import React, { ReactElement, FormEvent, useState } from 'react';
 import {
     Grid,
     Typography,
@@ -77,11 +77,16 @@ const EmailModal = ({
                                 borderColor: '#003366',
                                 backgroundColor: '#F2F2F2',
                                 mt: '2em',
-                                fontSize: '0.8rem',
                             }}
                         >
-                            {termsOfService.map((text: string) => (
-                                <Typography sx={{ mb: 1 }}>{text}</Typography>
+                            {termsOfService.map((text: string | ReactElement) => (
+                                <>
+                                    {React.isValidElement(text) ? (
+                                        text
+                                    ) : (
+                                        <Typography sx={{ fontSize: '0.8rem', mb: 1 }}>{text}</Typography>
+                                    )}
+                                </>
                             ))}
                         </Typography>
                     </Grid>
