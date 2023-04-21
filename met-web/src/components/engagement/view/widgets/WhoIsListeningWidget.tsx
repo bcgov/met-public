@@ -95,7 +95,6 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
                             alignItems="flex-start"
                             direction="row"
                             rowSpacing={1}
-                            sx={{ border: '2px solid red' }}
                             sm={12}
                             md={9}
                             lg={12}
