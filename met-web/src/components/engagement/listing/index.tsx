@@ -13,6 +13,7 @@ import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink, useMediaQuery, Theme } from '@mui/material';
 import { getEngagements } from 'services/engagementService';
 import SearchIcon from '@mui/icons-material/Search';
+import CommentIcon from '@mui/icons-material/Comment';
 import Stack from '@mui/material/Stack';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import MetTable from 'components/common/Table';
@@ -129,7 +130,7 @@ const EngagementListing = () => {
             label: 'Engagement Name',
             allowSort: true,
             renderCell: (row: Engagement) => (
-                <MuiLink component={Link} to={`/engagements/${Number(row.id)}/form`}>
+                <MuiLink component={Link} to={`/engagements/${Number(row.id)}/view`}>
                     {row.name}
                 </MuiLink>
             ),
@@ -185,22 +186,13 @@ const EngagementListing = () => {
             key: 'surveys',
             numeric: true,
             disablePadding: false,
-            label: 'Comments',
             customStyle: { padding: 2 },
             align: 'left',
             hideSorticon: true,
             allowSort: false,
+            icon: <CommentIcon />,
             renderCell: (row: Engagement) => {
-                const isAuthorized = canViewPrivateEngagements || assignedEngagements.includes(Number(row.id));
-
-                if (row.surveys.length === 0 || !isAuthorized) {
-                    return '';
-                }
-                return (
-                    <MuiLink component={Link} to={`/surveys/${row.surveys[0].id}/comments`}>
-                        View All
-                    </MuiLink>
-                );
+                return <></>;
             },
         },
         {
