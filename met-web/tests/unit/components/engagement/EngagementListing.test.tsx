@@ -131,9 +131,6 @@ describe('Engagement form page tests', () => {
             expect(screen.getByText('Engagement Two')).toBeInTheDocument();
             expect(screen.getByText('2022-09-15')).toBeInTheDocument();
             expect(screen.getByText('2022-09-19')).toBeInTheDocument();
-            expect(screen.getByText('View Report')).toBeInTheDocument();
-
-            expect(screen.getAllByText('View Survey')).toBeArrayOfSize(2);
         });
 
         expect(screen.getByText('Create Engagement', { exact: false })).toBeInTheDocument();

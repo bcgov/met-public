@@ -82,7 +82,7 @@ const CommentTextListing = () => {
             disablePadding: false,
             label: 'ID',
             allowSort: true,
-            getValue: (row: SurveySubmission) => (
+            renderCell: (row: SurveySubmission) => (
                 <MuiLink component={Link} to={`/surveys/${Number(row.survey_id)}/submissions/${row.id}/review`}>
                     {row.id}
                 </MuiLink>
@@ -94,7 +94,7 @@ const CommentTextListing = () => {
             disablePadding: false,
             label: 'Content',
             allowSort: true,
-            getValue: (row: SurveySubmission) => (
+            renderCell: (row: SurveySubmission) => (
                 <Grid container rowSpacing={2}>
                     {row.comments?.map((comment, index) => {
                         return (
@@ -118,7 +118,7 @@ const CommentTextListing = () => {
             label: 'Comment Date',
             allowSort: false,
             customStyle: { width: '20%' },
-            getValue: (row: SurveySubmission) => (
+            renderCell: (row: SurveySubmission) => (
                 <Grid container direction="column" alignItems="flex-end" justifyContent="flex-start" width="20em">
                     <Grid item sx={{ pb: '0.5em' }}>
                         <Typography variant="subtitle2" sx={{ pb: '0.5em' }}>

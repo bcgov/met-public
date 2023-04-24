@@ -23,7 +23,7 @@ const UserManagementListing = () => {
             disablePadding: true,
             label: 'User Name',
             allowSort: true,
-            getValue: (row: User) => (
+            renderCell: (row: User) => (
                 <MuiLink component={Link} to={``}>
                     {row.last_name + ', ' + row.first_name}
                 </MuiLink>
@@ -35,7 +35,7 @@ const UserManagementListing = () => {
             disablePadding: true,
             label: 'Role',
             allowSort: true,
-            getValue: (row: User) => {
+            renderCell: (row: User) => {
                 return row.groups[0];
             },
         },
@@ -45,7 +45,7 @@ const UserManagementListing = () => {
             disablePadding: true,
             label: 'Date Added',
             allowSort: true,
-            getValue: (row: User) => formatDate(row.created_date),
+            renderCell: (row: User) => formatDate(row.created_date),
         },
         {
             key: 'status',
@@ -55,7 +55,7 @@ const UserManagementListing = () => {
             allowSort: true,
             /* TODO Hardcoded value since currently we have all users as active. 
             Need to change once we have different user status */
-            getValue: () => 'Active',
+            renderCell: () => 'Active',
         },
     ];
 

@@ -56,7 +56,7 @@ const Submissions = () => {
             disablePadding: false,
             label: 'ID',
             allowSort: true,
-            getValue: (row) => (
+            renderCell: (row) => (
                 <MuiLink component={Link} to={`/surveys/${Number(row.survey_id)}/submissions/${row.id}/review`}>
                     {row.id}
                 </MuiLink>
@@ -68,7 +68,7 @@ const Submissions = () => {
             disablePadding: false,
             label: 'Comment Date',
             allowSort: true,
-            getValue: (row) => formatDate(row.created_date || ''),
+            renderCell: (row) => formatDate(row.created_date || ''),
         },
         {
             key: 'reviewed_by',
@@ -76,7 +76,7 @@ const Submissions = () => {
             disablePadding: false,
             label: 'Reviewed By',
             allowSort: true,
-            getValue: (row) => row.reviewed_by,
+            renderCell: (row) => row.reviewed_by,
         },
         {
             key: 'review_date',
@@ -84,7 +84,7 @@ const Submissions = () => {
             disablePadding: false,
             label: 'Date Reviewed',
             allowSort: true,
-            getValue: (row) => formatDate(row.review_date || ''),
+            renderCell: (row) => formatDate(row.review_date || ''),
         },
         {
             key: 'comment_status_id',
@@ -92,7 +92,7 @@ const Submissions = () => {
             disablePadding: true,
             label: 'Status',
             allowSort: true,
-            getValue: (row) => COMMENTS_STATUS[row.comment_status_id as CommentStatus] || '',
+            renderCell: (row) => COMMENTS_STATUS[row.comment_status_id as CommentStatus] || '',
         },
     ];
 
