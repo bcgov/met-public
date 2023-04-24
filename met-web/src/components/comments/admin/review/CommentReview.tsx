@@ -291,7 +291,7 @@ const CommentReview = () => {
                         <Grid item xs={12}>
                             <FormControl>
                                 <FormLabel id="controlled-radio-buttons-group">
-                                    <MetHeader3>Comment Approval</MetHeader3>
+                                    <MetHeader3 sx={{ color: '#494949' }}>Comments Approval</MetHeader3>
                                 </FormLabel>
                                 <RadioGroup
                                     defaultValue={defaultVerdict}
@@ -319,7 +319,7 @@ const CommentReview = () => {
                             <Grid item xs={12}>
                                 <FormControl>
                                     <FormLabel id="controlled-checkbox-group">
-                                        <MetHeader4>Reason for rejection</MetHeader4>
+                                        <MetHeader4 sx={{ color: '#494949' }}>Reason for Rejection</MetHeader4>
                                     </FormLabel>
                                     <FormControlLabel
                                         label={<MetParagraph>Contains personal information</MetParagraph>}
