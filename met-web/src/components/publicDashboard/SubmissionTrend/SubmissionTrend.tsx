@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
 import { Stack, useMediaQuery, Theme, Skeleton, Grid, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { MetPaper, MetLabel } from 'components/common';
 import { Unless } from 'react-if';
@@ -101,7 +101,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                         </Stack>
                     </Grid>
                     <ResponsiveContainer width="100%" height={isSmallScreen ? 200 : 250}>
-                        <AreaChart
+                        <BarChart
                             data={data}
                             margin={
                                 !isSmallScreen
@@ -114,13 +114,15 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             <Unless condition={isSmallScreen}>
                                 <Tooltip />
                             </Unless>
-                            <Area
-                                type="monotone"
+                            <Bar
                                 dataKey="responses"
-                                stroke={DASHBOARD.LINE_CHART.STROKE_COLOR}
-                                fill={DASHBOARD.LINE_CHART.FILL_COLOR}
-                            />
-                        </AreaChart>
+                                fill={DASHBOARD.BAR_CHART.FILL_COLOR}
+                                minPointSize={2}
+                                barSize={50}
+                            >
+                                <LabelList dataKey="responses" position="insideTop" style={{ fill: 'white' }} />
+                            </Bar>
+                        </BarChart>
                     </ResponsiveContainer>
                 </Stack>
             </MetPaper>
