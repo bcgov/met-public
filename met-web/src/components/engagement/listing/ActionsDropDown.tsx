@@ -4,6 +4,7 @@ import { MenuItem, Select } from '@mui/material';
 import { Engagement } from 'models/engagement';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from 'hooks';
+import { SubmissionStatus } from 'constants/engagementStatus';
 
 interface ActionDropDownItem {
     value: number;
@@ -14,6 +15,9 @@ interface ActionDropDownItem {
 export const ActionsDropDown = ({ engagement }: { engagement: Engagement }) => {
     const navigate = useNavigate();
     const { roles, assignedEngagements } = useAppSelector((state) => state.user);
+    const submissionHasBeenOpened = [SubmissionStatus.Open, SubmissionStatus.Closed].includes(
+        engagement.submission_status,
+    );
 
     const ITEMS: ActionDropDownItem[] = useMemo(
         () => [
@@ -24,7 +28,9 @@ export const ActionsDropDown = ({ engagement }: { engagement: Engagement }) => {
                     navigate(`/engagements/${engagement.id}/form`);
                 },
                 condition:
-                    roles.includes(USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS) || assignedEngagements.includes(engagement.id),
+                    !submissionHasBeenOpened &&
+                    (roles.includes(USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS) ||
+                        assignedEngagements.includes(engagement.id)),
             },
             {
                 value: 2,
@@ -40,7 +46,9 @@ export const ActionsDropDown = ({ engagement }: { engagement: Engagement }) => {
                 action: () => {
                     navigate(`/engagements/${engagement.id}/dashboard`);
                 },
-                condition: roles.includes(USER_ROLES.ACCESS_DASHBOARD) || assignedEngagements.includes(engagement.id),
+                condition:
+                    submissionHasBeenOpened &&
+                    (roles.includes(USER_ROLES.ACCESS_DASHBOARD) || assignedEngagements.includes(engagement.id)),
             },
             {
                 value: 4,
@@ -48,7 +56,9 @@ export const ActionsDropDown = ({ engagement }: { engagement: Engagement }) => {
                 action: () => {
                     navigate(`/surveys/${engagement.surveys[0].id}/comments`);
                 },
-                condition: roles.includes(USER_ROLES.REVIEW_COMMENTS) || assignedEngagements.includes(engagement.id),
+                condition:
+                    submissionHasBeenOpened &&
+                    (roles.includes(USER_ROLES.REVIEW_COMMENTS) || assignedEngagements.includes(engagement.id)),
             },
         ],
         [engagement.id],
