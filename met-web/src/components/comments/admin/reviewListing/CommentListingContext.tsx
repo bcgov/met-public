@@ -1,10 +1,10 @@
+import React, { createContext, useEffect, useState } from 'react';
 import { PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { CommentStatus } from 'constants/commentStatus';
 import { useAppDispatch } from 'hooks';
 import { Survey, createDefaultSurvey } from 'models/survey';
 import { SurveySubmission } from 'models/surveySubmission';
-import React, { createContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getSubmissionPage } from 'services/submissionService';
 import { getSurvey } from 'services/surveyService';
@@ -94,7 +94,11 @@ export const CommentListingContextProvider = ({ children }: CommentListingContex
         key: 'id',
         value: '',
     });
-    const [advancedSearchFilters, setAdvancedSearchFilters] = useState<AdvancedSearchFilters>(initialSearchFilters);
+    const { state } = useLocation();
+    const [advancedSearchFilters, setAdvancedSearchFilters] = useState<AdvancedSearchFilters>({
+        ...initialSearchFilters,
+        status: state?.status || null,
+    });
     const [searchText, setSearchText] = useState('');
     const [survey, setSurvey] = useState<Survey>(createDefaultSurvey());
     const [submissions, setSubmissions] = useState<SurveySubmission[]>([]);
@@ -121,7 +125,6 @@ export const CommentListingContextProvider = ({ children }: CommentListingContex
             const survey = await getSurvey(Number(surveyId));
             setSurvey(survey);
         } catch (error) {
-            console.log(error);
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching survey information' }));
             setLoading(false);
         }
@@ -129,7 +132,6 @@ export const CommentListingContextProvider = ({ children }: CommentListingContex
 
     const loadSubmissions = async () => {
         try {
-            setLoading(true);
             const queryParams = {
                 page,
                 size,
@@ -151,22 +153,25 @@ export const CommentListingContextProvider = ({ children }: CommentListingContex
             setPageInfo({
                 total: response.total,
             });
-            setLoading(false);
         } catch (error) {
-            console.log(error);
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching submissions' }));
             setLoading(false);
         }
     };
 
+    const loadData = async () => {
+        setLoading(true);
+        await loadSurvey();
+        await loadSubmissions();
+        setLoading(false);
+    };
+
     useEffect(() => {
         if (isNaN(Number(surveyId))) {
-            dispatch(openNotification({ severity: 'error', text: 'Invalid surveyId' }));
+            dispatch(openNotification({ severity: 'error', text: 'Invalid survey' }));
             return;
         }
-
-        loadSurvey();
-        loadSubmissions();
+        loadData();
     }, [surveyId, paginationOptions, searchFilter, advancedSearchFilters]);
 
     return (

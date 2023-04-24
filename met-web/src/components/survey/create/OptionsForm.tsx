@@ -50,7 +50,7 @@ const OptionsForm = () => {
                         <When condition={!engagementToLink}>
                             <FormControlLabel value="CREATE" control={<Radio />} label="Create a new Survey" />
                         </When>
-                        <FormControlLabel value="CLONE" control={<Radio />} label="Clone an existing Survey" />
+                        <FormControlLabel value="CLONE" control={<Radio />} label="Clone an existing Survey/Template" />
                         <When condition={!!engagementToLink}>
                             <FormControlLabel
                                 value="LINK"

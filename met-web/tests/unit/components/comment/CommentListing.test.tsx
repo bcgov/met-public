@@ -3,7 +3,6 @@ import React, { ReactNode } from 'react';
 import '@testing-library/jest-dom';
 import { setupEnv } from '../setEnvVars';
 import * as reactRedux from 'react-redux';
-import * as reactRouter from 'react-router';
 import * as commentService from 'services/commentService';
 import * as surveyService from 'services/surveyService';
 import * as submissionService from 'services/submissionService';
@@ -53,11 +52,20 @@ jest.mock('components/common', () => ({
     },
 }));
 
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useLocation: jest.fn(() => {
+        return { nothing: 'nothing' };
+    }),
+    useParams: jest.fn(() => {
+        return { surveyId: 1 };
+    }),
+    useNavigate: jest.fn(),
+}));
+
 describe('Comment listing tests', () => {
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
-    jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
-    jest.spyOn(reactRouter, 'useParams').mockReturnValue({ surveyId: String(mockSurveyOne.id) });
     jest.spyOn(surveyService, 'getSurvey').mockReturnValue(Promise.resolve(mockSurveyOne));
     jest.spyOn(submissionService, 'getSubmissionPage').mockReturnValue(
         Promise.resolve({
@@ -78,8 +86,8 @@ describe('Comment listing tests', () => {
         render(<SubmissionListing />);
 
         await waitFor(() => {
-            expect(screen.getByText(`${mockSurveyOne.name} Comments`)).toBeVisible();
             expect(screen.getByText(mockSubmission1.reviewed_by)).toBeVisible();
+            expect(screen.getByText(`${mockSurveyOne.name} Comments`)).toBeVisible();
         });
     });
 
