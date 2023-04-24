@@ -63,9 +63,17 @@ const EngagementForm = () => {
         },
     ];
 
+    const getTextFromJSON = (contentJSON: string): string => {
+        if (!contentJSON) return '';
+        const contentState = JSON.parse(contentJSON);
+        return contentState.blocks.map((block: { text: string }) => block.text).join(' ');
+    };
+
     useEffect(() => {
+        const initialDescription = getTextFromJSON(richDescription || savedEngagement.rich_description);
         setInitialRichDescription(richDescription || savedEngagement.rich_description);
         setInitialRichContent(richContent || savedEngagement.rich_content);
+        setDescriptionCharCount(initialDescription.length);
     }, []);
 
     const getErrorMessage = () => {
