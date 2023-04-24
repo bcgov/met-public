@@ -94,13 +94,13 @@ function SubscribeWidget() {
                     >
                         <Typography sx={{ fontSize: '0.8rem', mb: 1 }}>
                             Personal information (your email address) is collected under Section 26(c) and 26(e) of the
-                            Freedom of Information\ and Protection of Privacy Act, for the purpose of providing content
-                            updates and future opportunities to participate.\ Your email is never shared with third
+                            Freedom of Information and Protection of Privacy Act, for the purpose of providing content
+                            updates and future opportunities to participate. Your email is never shared with third
                             parties.
                         </Typography>
                         <Typography sx={{ fontSize: '0.8rem', mb: 1 }}>
                             If you have any questions about the collection, use and disclosure of your personal
-                            information, please contact the Director of Digital Services at
+                            information, please contact the Director of Digital Services at{' '}
                             <Link href="mailto:Sid.Tobias@gov.bc.ca">Sid.Tobias@gov.bc.ca</Link>
                         </Typography>
                     </Box>
