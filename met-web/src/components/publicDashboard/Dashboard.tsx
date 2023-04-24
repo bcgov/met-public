@@ -78,7 +78,7 @@ export const Dashboard = () => {
                                 </Grid>
                             </Grid>
                             <Grid item xs={12}>
-                                <SubmissionTrend />
+                                <SubmissionTrend engagement={engagement} engagementIsLoading={isEngagementLoading} />
                             </Grid>
                             <Grid item xs={12}>
                                 <SurveyBar />

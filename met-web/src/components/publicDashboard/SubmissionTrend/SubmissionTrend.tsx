@@ -1,48 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { Stack, useMediaQuery, Theme, Skeleton } from '@mui/material';
-import { MetPaper, MetHeader3 } from 'components/common';
+import { Stack, useMediaQuery, Theme, Skeleton, Grid, ToggleButtonGroup, ToggleButton } from '@mui/material';
+import { MetPaper, MetLabel } from 'components/common';
 import { Unless } from 'react-if';
 import { DASHBOARD } from '../constants';
 import { ErrorBox } from '../ErrorBox';
-
-const sampleData = [
-    {
-        Month: 'Jan',
-        Responses: 20,
-    },
-    {
-        Month: 'Feb',
-        Responses: 15,
-    },
-    {
-        Month: 'Mar',
-        Responses: 10,
-    },
-    {
-        Month: 'Apr',
-        Responses: 30,
-    },
-    {
-        Month: 'May',
-        Responses: 10,
-    },
-];
+import {
+    getUserResponseDetailByMonth,
+    getUserResponseDetailByWeek,
+} from 'services/analytics/userResponseDetailService';
+import { createDefaultByMonthData } from '../../../models/analytics/userResponseDetail';
+import { Engagement } from 'models/engagement';
+import { Palette } from 'styles/Theme';
 
 const HEIGHT = 320;
 
-const SubmissionTrend = () => {
+interface SubmissionTrendProps {
+    engagement: Engagement;
+    engagementIsLoading: boolean;
+}
+
+const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendProps) => {
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
-    const [data, setData] = useState(sampleData);
+    const [data, setData] = useState(createDefaultByMonthData());
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
+    const [chartBy, setChartBy] = React.useState('monthly');
 
     const fetchData = async () => {
         setIsLoading(true);
         try {
-            // TODO: uncomment this when the API is ready
-            // const result = await fetch('/api/engagement/1/complete-responses');
-            setData(sampleData);
+            if (chartBy == 'monthly') {
+                const response = await getUserResponseDetailByMonth(Number(engagement.id));
+                setData(response);
+            } else if (chartBy == 'weekly') {
+                const response = await getUserResponseDetailByWeek(Number(engagement.id));
+                setData(response);
+            }
             setIsLoading(false);
             setIsError(false);
         } catch (error) {
@@ -53,9 +47,13 @@ const SubmissionTrend = () => {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [engagement.id, chartBy]);
 
-    if (isLoading) {
+    const handleToggleChange = (event: React.MouseEvent<HTMLElement>, chartByValue: string) => {
+        setChartBy(chartByValue);
+    };
+
+    if (isLoading || engagementIsLoading) {
         return <Skeleton variant="rectangular" width={'100%'} height={HEIGHT} />;
     }
 
@@ -63,35 +61,70 @@ const SubmissionTrend = () => {
         return <ErrorBox sx={{ height: HEIGHT }} onClick={fetchData} />;
     }
     return (
-        <MetPaper sx={{ p: 2 }}>
-            <Stack direction="column" alignItems="center" gap={1}>
-                <MetHeader3 mb={5} color="primary">
-                    Submission Trend
-                </MetHeader3>
-                <ResponsiveContainer width="100%" height={isSmallScreen ? 200 : 250}>
-                    <AreaChart
-                        data={data}
-                        margin={
-                            !isSmallScreen
-                                ? { top: 10, right: 30, left: 0, bottom: 0 }
-                                : { top: 5, right: 0, left: -20, bottom: 0 }
-                        }
-                    >
-                        <XAxis dataKey="Month" />
-                        <YAxis />
-                        <Unless condition={isSmallScreen}>
-                            <Tooltip />
-                        </Unless>
-                        <Area
-                            type="monotone"
-                            dataKey="Responses"
-                            stroke={DASHBOARD.LINE_CHART.STROKE_COLOR}
-                            fill={DASHBOARD.LINE_CHART.FILL_COLOR}
-                        />
-                    </AreaChart>
-                </ResponsiveContainer>
-            </Stack>
-        </MetPaper>
+        <>
+            <MetLabel mb={2} color="primary">
+                Live Activity - Engagement
+            </MetLabel>
+            <MetPaper sx={{ p: 2 }}>
+                <Stack direction="column" alignItems="center" gap={1}>
+                    <Grid item container xs={12} direction="row" justifyContent="center" spacing={1}>
+                        <Stack
+                            direction={{ xs: 'column', sm: 'row' }}
+                            spacing={1}
+                            width="100%"
+                            justifyContent="flex-end"
+                        >
+                            <ToggleButtonGroup value={chartBy} exclusive onChange={handleToggleChange}>
+                                <ToggleButton
+                                    value="monthly"
+                                    sx={{
+                                        '&.Mui-selected': {
+                                            backgroundColor: Palette.primary.main,
+                                            color: 'white',
+                                        },
+                                    }}
+                                >
+                                    Monthly
+                                </ToggleButton>
+                                <ToggleButton
+                                    value="weekly"
+                                    sx={{
+                                        '&.Mui-selected': {
+                                            backgroundColor: Palette.primary.main,
+                                            color: 'white',
+                                        },
+                                    }}
+                                >
+                                    Weekly
+                                </ToggleButton>
+                            </ToggleButtonGroup>
+                        </Stack>
+                    </Grid>
+                    <ResponsiveContainer width="100%" height={isSmallScreen ? 200 : 250}>
+                        <AreaChart
+                            data={data}
+                            margin={
+                                !isSmallScreen
+                                    ? { top: 10, right: 30, left: 0, bottom: 0 }
+                                    : { top: 5, right: 0, left: -20, bottom: 0 }
+                            }
+                        >
+                            <XAxis dataKey="showdataby" />
+                            <YAxis />
+                            <Unless condition={isSmallScreen}>
+                                <Tooltip />
+                            </Unless>
+                            <Area
+                                type="monotone"
+                                dataKey="responses"
+                                stroke={DASHBOARD.LINE_CHART.STROKE_COLOR}
+                                fill={DASHBOARD.LINE_CHART.FILL_COLOR}
+                            />
+                        </AreaChart>
+                    </ResponsiveContainer>
+                </Stack>
+            </MetPaper>
+        </>
     );
 };
 

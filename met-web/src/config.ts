@@ -7,6 +7,9 @@ declare global {
             REACT_APP_REDASH_PUBLIC_URL: string;
             REACT_APP_REDASH_COMMENTS_PUBLIC_URL: string;
 
+            // Analytics
+            REACT_APP_ANALYTICS_API_URL: string;
+
             // Formio
             REACT_APP_API_PROJECT_URL: string;
             REACT_APP_FORM_ID: string;
@@ -39,6 +42,9 @@ const PUBLIC_URL = localStorage.getItem('met-public-url') || getEnv('REACT_APP_P
 const REDASH_DASHBOARD_URL = getEnv('REACT_APP_REDASH_PUBLIC_URL');
 const REDASH_CMNTS_DASHBOARD_URL = getEnv('REACT_APP_REDASH_COMMENTS_PUBLIC_URL');
 
+// adding localStorage to access the MET Analytics API from external sources(eg: web-components)
+const REACT_APP_ANALYTICS_API_URL = localStorage.getItem('analytics-api-url') || getEnv('REACT_APP_ANALYTICS_API_URL');
+
 // Formio Environment Variables
 const FORMIO_PROJECT_URL = getEnv('REACT_APP_API_PROJECT_URL');
 const FORMIO_API_URL = getEnv('REACT_APP_API_PROJECT_URL');
@@ -70,6 +76,7 @@ const ENGAGEMENT_PROJECT_TYPES: string[] = getEnv(
 
 export const AppConfig = {
     apiUrl: API_URL,
+    analyticsApiUrl: REACT_APP_ANALYTICS_API_URL,
     publicUrl: PUBLIC_URL,
     redashDashboardUrl: REDASH_DASHBOARD_URL,
     redashCmntsDashboardUrl: REDASH_CMNTS_DASHBOARD_URL,
