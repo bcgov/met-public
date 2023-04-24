@@ -2,8 +2,9 @@
 
 Manages the user responses for a survey
 """
-from sqlalchemy import extract, ForeignKey, func
 from flask import jsonify
+from sqlalchemy import ForeignKey, extract, func
+from sqlalchemy.sql.expression import true
 
 from .base_model import BaseModel
 from .db import db
@@ -26,12 +27,10 @@ class UserResponseDetail(BaseModel):  # pylint: disable=too-few-public-methods
     ):
         """Get user response count for an engagement id."""
         response_count = (db.session.query(func.count(UserResponseDetail.id))
-                                 .filter(UserResponseDetail.engagement_id == engagement_id)
-                                 .filter(UserResponseDetail.is_active == True)
-        )
+                          .filter(UserResponseDetail.engagement_id == engagement_id)
+                          .filter(UserResponseDetail.is_active == true()))
 
         return response_count.all()
-
 
     @classmethod
     def get_response_count_by_created_month(
@@ -43,18 +42,17 @@ class UserResponseDetail(BaseModel):  # pylint: disable=too-few-public-methods
             extract('month', func.timezone('America/Vancouver', UserResponseDetail.created_date)).label('orderby'),
             func.concat(extract('year', func.timezone('America/Vancouver', UserResponseDetail.created_date)),
                         '-',
-                        func.to_char(func.timezone('America/Vancouver', UserResponseDetail.created_date), "FMMon")
+                        func.to_char(func.timezone('America/Vancouver', UserResponseDetail.created_date), 'FMMon')
                         ).label('showdataby'),
             func.count(UserResponseDetail.id).label('responses'))
             .filter(UserResponseDetail.engagement_id == engagement_id)
-            .filter(UserResponseDetail.is_active == True)
+            .filter(UserResponseDetail.is_active == true())
             .order_by('orderby')
             .group_by('showdataby', 'orderby').all()
         )
         cols = ['showdataby', 'responses']
         result = [{col: getattr(d, col) for col in cols} for d in response_count_by_created_month]
         return jsonify(result)
-
 
     @classmethod
     def get_response_count_by_created_week(
@@ -70,7 +68,7 @@ class UserResponseDetail(BaseModel):  # pylint: disable=too-few-public-methods
                         ).label('showdataby'),
             func.count(UserResponseDetail.id).label('responses'))
             .filter(UserResponseDetail.engagement_id == engagement_id)
-            .filter(UserResponseDetail.is_active == True)
+            .filter(UserResponseDetail.is_active == true())
             .order_by('orderby')
             .group_by('showdataby', 'orderby').all()
         )

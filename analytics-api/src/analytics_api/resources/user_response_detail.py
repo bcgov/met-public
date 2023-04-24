@@ -30,7 +30,7 @@ API = Namespace('responses', description='Endpoints for User Response Management
 
 @cors_preflight('GET,OPTIONS')
 @API.route('/month/<engagement_id>')
-class UserResponseDetail(Resource):
+class UserResponseDetailByMonth(Resource):
     """Resource for managing User Responses by month."""
 
     @staticmethod
@@ -53,7 +53,7 @@ class UserResponseDetail(Resource):
 
 @cors_preflight('GET,OPTIONS')
 @API.route('/week/<engagement_id>')
-class UserResponseDetail(Resource):
+class UserResponseDetailByWeek(Resource):
     """Resource for managing User Responses by week."""
 
     @staticmethod
