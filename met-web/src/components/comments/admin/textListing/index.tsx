@@ -3,7 +3,7 @@ import MetTable from 'components/common/Table';
 import { Link, useParams } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton, MetParagraph, MetLabel } from 'components/common';
 import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
-import { Link as MuiLink, Typography, Grid, Stack, TextField } from '@mui/material';
+import { Link as MuiLink, Grid, Stack, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
