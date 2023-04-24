@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton, MetHeader1, SecondaryButton } from 'components/common';
 import { HeadCell, PaginationOptions } from 'components/common/Table/types';
 import { formatDate, formatToUTC } from 'components/common/dateHelper';
@@ -30,9 +30,9 @@ const Submissions = () => {
         pageInfo,
         loading,
     } = useContext(CommentListingContext);
-
+    const { state } = useLocation();
     const [isExporting, setIsExporting] = useState(false);
-    const [isAdvancedSearchOpen, setIsAdvancedSearchOpen] = useState(false);
+    const [isAdvancedSearchOpen, setIsAdvancedSearchOpen] = useState(Boolean(state));
 
     const handleSearchBarClick = (filter: string) => {
         setSearchFilter({
