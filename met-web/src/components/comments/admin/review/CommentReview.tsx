@@ -354,7 +354,7 @@ const CommentReview = () => {
                                     />
                                     <FormControlLabel
                                         label={
-                                            <MetParagraph>
+                                            <MetParagraph sx={{ color: '#070707', fontSize: '13px' }}>
                                                 Other (this will be inserted in the email sent to the respondent in the
                                                 following sentence: One of your comments can't be published because of
                                                 "other")
@@ -382,7 +382,7 @@ const CommentReview = () => {
                                         multiline
                                     />
                                     <br />
-                                    <MetParagraph>
+                                    <MetParagraph sx={{ color: '#070707', fontSize: '13px' }}>
                                         <b>Review Note</b> (this note will be inserted in the email sent to the
                                         respondent to help them understand what needs to be edited for their comment(s)
                                         to be approved.)

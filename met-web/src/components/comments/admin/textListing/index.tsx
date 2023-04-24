@@ -99,7 +99,7 @@ const CommentTextListing = () => {
                     {row.comments?.map((comment, index) => {
                         return (
                             <Grid key={index} item xs={12}>
-                                <Grid xs={12} item paddingTop={2}>
+                                <Grid xs={12} item>
                                     <MetLabel>{comment.label ?? 'Label not available.'}</MetLabel>
                                 </Grid>
                                 <Grid xs={12} item>
@@ -121,14 +121,14 @@ const CommentTextListing = () => {
             getValue: (row: SurveySubmission) => (
                 <Grid container direction="column" alignItems="flex-end" justifyContent="flex-start" width="20em">
                     <Grid item sx={{ pb: '0.5em' }}>
-                        <Typography variant="subtitle2" sx={{ pb: '0.5em' }}>
+                        <MetParagraph sx={{ pb: '0.5em' }}>
                             <b>Comment Date: </b>
                             {formatDate(row.created_date)}
-                        </Typography>
+                        </MetParagraph>
                         <When condition={row.comment_status_id !== CommentStatus.Pending}>
-                            <Typography variant="subtitle2">
+                            <MetParagraph>
                                 <b>Reviewed By: </b> {row.reviewed_by}
-                            </Typography>
+                            </MetParagraph>
                         </When>
                     </Grid>
                     <Grid item>
