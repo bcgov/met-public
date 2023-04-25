@@ -3,7 +3,7 @@ import MetTable from 'components/common/Table';
 import { Link, useParams } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton, MetParagraph, MetLabel } from 'components/common';
 import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
-import { Link as MuiLink, Grid, Stack, TextField } from '@mui/material';
+import { Link as MuiLink, Grid, Stack, TextField, Divider } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -100,10 +100,8 @@ const CommentTextListing = () => {
                         return (
                             <Grid key={index} item xs={12}>
                                 <Grid xs={12} item>
-                                    <MetLabel>{comment.label ?? 'Label not available.'}</MetLabel>
-                                </Grid>
-                                <Grid xs={12} item>
-                                    <MetParagraph>{comment.text}</MetParagraph>
+                                    <MetLabel>{comment.label ?? 'Label not available.'} </MetLabel>
+                                    <MetParagraph>{' ' + comment.text}</MetParagraph>
                                 </Grid>
                             </Grid>
                         );
@@ -176,6 +174,7 @@ const CommentTextListing = () => {
                     handleChangePagination={(pagination: PaginationOptions<SurveySubmission>) =>
                         setPagination(pagination)
                     }
+                    commentTable
                     paginationOptions={paginationOptions}
                     pageInfo={pageInfo}
                     loading={tableLoading}
