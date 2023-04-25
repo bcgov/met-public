@@ -72,8 +72,8 @@ oc new-app --template=postgresql-persistent -p POSTGRESQL_DATABASE=app -p DATABA
 
 ### Setup
 
-1. Users Setup script is located at ./postgresql-user-setup.sql
-1. Initial database setup script is located at ./postgresql-schema-setup.sql
+1. Users Setup script is located at /tools/postgres/init/00_postgresql-user-setup.sql
+1. Initial database setup script is located at /tools/postgres/init/01_postgresql-schema-setup.sql
 1. Openshift secret yaml is located at ./database-users.secret.yml
 
 ## Restore Backup Script

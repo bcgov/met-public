@@ -15,7 +15,7 @@
 
 from http import HTTPStatus
 
-from flask import request
+from flask import g, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
@@ -72,7 +72,7 @@ class Engagements(Resource):
         try:
             args = request.args
             user_id = TokenInfo.get_id()
-
+            print(g.tenant_id)
             pagination_options = PaginationOptions(
                 page=args.get('page', None, int),
                 size=args.get('size', None, int),
