@@ -5,6 +5,7 @@ import { Engagement } from 'models/engagement';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from 'hooks';
 import { SubmissionStatus, EngagementStatus } from 'constants/engagementStatus';
+import { Palette } from 'styles/Theme';
 
 interface ActionDropDownItem {
     value: number;
@@ -107,8 +108,14 @@ export const ActionsDropDown = ({ engagement }: { engagement: Engagement }) => {
     );
 
     return (
-        <Select id={`action-drop-down-${engagement.id}`} value={0} fullWidth size="small">
-            <MenuItem value={0} sx={{ fontStyle: 'italic', height: '2em' }}>
+        <Select
+            id={`action-drop-down-${engagement.id}`}
+            value={0}
+            fullWidth
+            size="small"
+            sx={{ backgroundColor: 'white', color: Palette.info.main }}
+        >
+            <MenuItem value={0} sx={{ fontStyle: 'italic', height: '2em' }} color="info" disabled>
                 {'(Select One)'}
             </MenuItem>
             {ITEMS.filter((item) => item.condition).map((item) => (
