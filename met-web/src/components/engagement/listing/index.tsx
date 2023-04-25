@@ -139,7 +139,7 @@ const EngagementListing = () => {
             key: 'created_date',
             nestedSortKey: 'engagement.created_date',
             numeric: true,
-            disablePadding: false,
+            disablePadding: true,
             label: 'Date Created',
             allowSort: true,
             renderCell: (row: Engagement) => formatDate(row.created_date),
@@ -147,7 +147,7 @@ const EngagementListing = () => {
         {
             key: 'published_date',
             numeric: true,
-            disablePadding: false,
+            disablePadding: true,
             label: 'Date Published',
             allowSort: true,
             renderCell: (row: Engagement) => {

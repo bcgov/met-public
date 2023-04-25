@@ -25,6 +25,7 @@ from flask import Blueprint
 
 from .apihelper import Api
 from .engagement import API as ENGAGEMENT_API
+from .user_response_detail import API as USER_RESPONSE_API
 __all__ = ('API_BLUEPRINT',)
 
 URL_PREFIX = '/api/'
@@ -40,3 +41,4 @@ API = Api(
 # HANDLER = ExceptionHandler(API)
 
 API.add_namespace(ENGAGEMENT_API)
+API.add_namespace(USER_RESPONSE_API)
