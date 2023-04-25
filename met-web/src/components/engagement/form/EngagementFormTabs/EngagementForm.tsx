@@ -106,7 +106,7 @@ const EngagementForm = () => {
 
         setEngagementFormError({
             ...engagementFormError,
-            description: false,
+            description: rawText.length > 550,
         });
     };
 
@@ -314,11 +314,12 @@ const EngagementForm = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <MetLabel>Engagement Description</MetLabel>
-
-                    <MetDescription>
-                        This is a short description that will show in the header section of the engagement page. The
-                        recommended length is 250-500 characters.
-                    </MetDescription>
+                    <Stack direction="row">
+                        <MetDescription>
+                            This is a short description that will show in the header section of the engagement page.
+                        </MetDescription>
+                        <MetDescription sx={{ ml: 0.5, color: 'red' }}> Maximum 550 Characters.</MetDescription>
+                    </Stack>
                     <Box display="flex" flexDirection="column" justifyContent="space-between">
                         <RichTextEditor
                             setRawText={handleDescriptionChange}

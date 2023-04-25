@@ -138,9 +138,14 @@ const Submissions = () => {
                         Advanced Search
                     </SecondaryButton>
                 </Stack>
-                <SecondaryButton onClick={handleExportComments} loading={isExporting}>
-                    Export to CSV
-                </SecondaryButton>
+                <Stack direction="row" spacing={1}>
+                    <PrimaryButton component={Link} to={`/surveys/${survey.id}/comments/all`}>
+                        Read All Comments
+                    </PrimaryButton>
+                    <SecondaryButton onClick={handleExportComments} loading={isExporting}>
+                        Export to CSV
+                    </SecondaryButton>
+                </Stack>
             </Stack>
 
             <Grid item xs={12}>
@@ -163,9 +168,6 @@ const Submissions = () => {
                     pageInfo={pageInfo}
                     loading={loading}
                 />
-                <PrimaryButton component={Link} to={`/surveys/${survey.id}/comments/all`}>
-                    Read All Comments
-                </PrimaryButton>
             </Grid>
         </MetPageGridContainer>
     );
