@@ -39,3 +39,8 @@ class Role(Enum):
     EDIT_MEMBERS = 'edit_members'
     VIEW_ALL_SURVEYS = 'view_all_surveys'
     EDIT_ALL_SURVEYS = 'edit_all_surveys'
+    EDIT_DRAFT_ENGAGEMENT = 'edit_draft_engagement'
+    EDIT_SCHEDULED_ENGAGEMENT = 'edit_scheduled_engagement'
+    EDIT_UPCOMING_ENGAGEMENT = 'edit_upcoming_engagement'
+    EDIT_OPEN_ENGAGEMENT = 'edit_open_engagement'
+    EDIT_CLOSED_ENGAGEMENT = 'edit_closed_engagement'
