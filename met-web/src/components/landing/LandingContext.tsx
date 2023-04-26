@@ -8,6 +8,7 @@ interface SearchFilters {
     status: number[];
     project_type: string;
 }
+
 export interface LandingContextProps {
     engagements: Engagement[];
     loadingEngagements: boolean;
@@ -60,7 +61,7 @@ export const LandingContextProvider = ({ children }: { children: JSX.Element | J
             setEngagements(loadedEngagements.items);
             setTotalEngagements(loadedEngagements.total);
             setLoadingEngagements(false);
-        } catch (error) {}
+        } catch (error) { }
     };
 
     useEffect(() => {

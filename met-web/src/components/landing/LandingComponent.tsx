@@ -35,7 +35,7 @@ const LandingComponent = () => {
         }
     };
 
-    const debounceLoadEngagments = useRef(
+    const debounceLoadEngagements = useRef(
         debounce((searchText: string) => {
             loadEngagementOptions(searchText);
         }, 1000),
@@ -120,11 +120,11 @@ const LandingComponent = () => {
                         ref={tileBlockRef}
                     >
                         <Grid item xs={12} sm={6} md={4} lg={4}>
-                            <MetLabel sx={{ marginBottom: '2px', display: 'flex' }}>Engagment name</MetLabel>
+                            <MetLabel sx={{ marginBottom: '2px', display: 'flex' }}>Engagement name</MetLabel>
                             <Autocomplete
                                 options={engagementOptions || []}
                                 onInputChange={(_event, newInputValue) => {
-                                    debounceLoadEngagments(newInputValue);
+                                    debounceLoadEngagements(newInputValue);
                                 }}
                                 renderInput={(params) => (
                                     <TextField
@@ -178,6 +178,7 @@ const LandingComponent = () => {
                                     setSearchFilters({
                                         ...searchFilters,
                                         status: event.target.value ? [Number(event.target.value)] : [],
+
                                     });
                                     setPage(1);
                                 }}
