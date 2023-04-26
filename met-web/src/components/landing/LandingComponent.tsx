@@ -120,7 +120,7 @@ const LandingComponent = () => {
                         ref={tileBlockRef}
                     >
                         <Grid item xs={12} sm={6} md={4} lg={4}>
-                            <MetLabel sx={{ marginBottom: '2px', display: 'flex' }}>Engagment name</MetLabel>
+                            <MetLabel sx={{ marginBottom: '2px', display: 'flex' }}>Engagement name</MetLabel>
                             <Autocomplete
                                 options={engagementOptions || []}
                                 onInputChange={(_event, newInputValue) => {
@@ -139,11 +139,7 @@ const LandingComponent = () => {
                                             endAdornment: (
                                                 <>
                                                     {engagementOptionsLoading ? (
-                                                        <CircularProgress
-                                                            color="primary"
-                                                            size={20}
-                                                            sx={{ marginRight: '2em' }}
-                                                        />
+                                                        <CircularProgress color="primary" size={20} />
                                                     ) : null}
                                                     {params.InputProps.endAdornment}
                                                 </>
