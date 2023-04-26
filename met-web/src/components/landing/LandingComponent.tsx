@@ -189,7 +189,8 @@ const LandingComponent = () => {
                                 <MenuItem value={0} sx={{ fontStyle: 'italic', height: '2em' }}>
                                     {''}
                                 </MenuItem>
-                                <MenuItem value={EngagementStatus.Published}>Published</MenuItem>
+                                <MenuItem value={EngagementStatus.Published}>Open</MenuItem>
+                                <MenuItem value={EngagementStatus.Scheduled}>Upcoming</MenuItem>
                                 <MenuItem value={EngagementStatus.Closed}>Closed</MenuItem>
                             </TextField>
                         </Grid>
