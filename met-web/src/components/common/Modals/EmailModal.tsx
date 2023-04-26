@@ -1,14 +1,5 @@
 import React, { FormEvent, useState } from 'react';
-import {
-    Grid,
-    Typography,
-    Checkbox,
-    TextField,
-    FormControl,
-    FormControlLabel,
-    FormHelperText,
-    Stack,
-} from '@mui/material';
+import { Grid, Checkbox, TextField, FormControl, FormControlLabel, FormHelperText, Stack } from '@mui/material';
 import { MetLabel, modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody } from 'components/common';
 import Modal from '@mui/material/Modal';
 import { ModalProps } from './types';
@@ -70,20 +61,7 @@ const EmailModal = ({
                     ))}
 
                     <Grid item xs={12}>
-                        <Typography
-                            sx={{
-                                p: '1em',
-                                borderLeft: 8,
-                                borderColor: '#003366',
-                                backgroundColor: '#F2F2F2',
-                                mt: '2em',
-                                fontSize: '0.8rem',
-                            }}
-                        >
-                            {termsOfService.map((text: string) => (
-                                <Typography sx={{ mb: 1 }}>{text}</Typography>
-                            ))}
-                        </Typography>
+                        {termsOfService}
                     </Grid>
                     <Grid
                         item

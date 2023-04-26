@@ -77,6 +77,7 @@ interface MetTableProps<T> {
     pageInfo?: PageInfo;
     noPagination?: boolean;
     emptyText?: string;
+    commentTable?: boolean;
 }
 function MetTable<T>({
     hideHeader = false,
@@ -84,8 +85,9 @@ function MetTable<T>({
     rows = [],
     noRowBorder = false,
     noPagination = false,
+    commentTable = false,
     // eslint-disable-next-line
-    handleChangePagination = (_pagination: PaginationOptions<T>) => {},
+    handleChangePagination = (_pagination: PaginationOptions<T>) => { },
     loading = false,
     paginationOptions = {
         page: 1,
@@ -173,10 +175,11 @@ function MetTable<T>({
                                                 key={`row-${rowIndex}-${cellIndex}`}
                                                 style={cell.customStyle || {}}
                                                 sx={{
+                                                    paddingTop: commentTable ? 0 : '16px',
                                                     border: noRowBorder ? 'none' : '',
                                                 }}
                                             >
-                                                {cell.getValue ? cell.getValue(row) : String(row[cell.key])}
+                                                {cell.renderCell ? cell.renderCell(row) : String(row[cell.key])}
                                             </TableCell>
                                         ))}
                                     </TableRow>

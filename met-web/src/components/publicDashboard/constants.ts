@@ -11,6 +11,6 @@ export const DASHBOARD = {
         FILL_COLOR: '#4E7780',
     },
     BAR_CHART: {
-        FILL_COLOR: '#C8DF8C',
+        FILL_COLOR: '#4C81AF',
     },
 };

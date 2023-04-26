@@ -90,7 +90,7 @@ const SurveyListing = () => {
             disablePadding: true,
             label: 'Survey Name',
             allowSort: true,
-            getValue: (row: Survey) => (
+            renderCell: (row: Survey) => (
                 <MuiLink component={Link} to={`/surveys/${Number(row.id)}/build`}>
                     {row.name}
                 </MuiLink>
@@ -103,7 +103,7 @@ const SurveyListing = () => {
             disablePadding: false,
             label: 'Date Created',
             allowSort: true,
-            getValue: (row: Survey) => formatDate(row.created_date),
+            renderCell: (row: Survey) => formatDate(row.created_date),
         },
         {
             key: 'engagement',
@@ -112,7 +112,7 @@ const SurveyListing = () => {
             disablePadding: false,
             label: 'Date Published',
             allowSort: true,
-            getValue: (row: Survey) => formatDate(row.engagement?.published_date || ''),
+            renderCell: (row: Survey) => formatDate(row.engagement?.published_date || ''),
         },
         {
             key: 'engagement',
@@ -121,7 +121,7 @@ const SurveyListing = () => {
             disablePadding: false,
             label: 'Status',
             allowSort: true,
-            getValue: (row: Survey) => {
+            renderCell: (row: Survey) => {
                 const acceptable_status = [
                     SubmissionStatus[SubmissionStatus.Open],
                     SubmissionStatus[SubmissionStatus.Closed],
@@ -152,7 +152,7 @@ const SurveyListing = () => {
             disablePadding: false,
             label: 'Engagement Name',
             allowSort: true,
-            getValue: (row: Survey) => {
+            renderCell: (row: Survey) => {
                 if (!row.engagement) {
                     return <></>;
                 }
@@ -173,7 +173,7 @@ const SurveyListing = () => {
             align: 'left',
             hideSorticon: true,
             allowSort: false,
-            getValue: (row: Survey) => {
+            renderCell: (row: Survey) => {
                 const isAuthorized = canViewPrivateEngagements || assignedEngagements.includes(Number(row.id));
 
                 if (!isAuthorized) {
@@ -200,7 +200,7 @@ const SurveyListing = () => {
                 </ApprovedIcon>
             ),
             allowSort: false,
-            getValue: (row: Survey) => {
+            renderCell: (row: Survey) => {
                 const { approved } = row.comments_meta_data;
                 return (
                     <ApprovedIcon
@@ -232,7 +232,7 @@ const SurveyListing = () => {
                 </NFRIcon>
             ),
             allowSort: false,
-            getValue: (row: Survey) => {
+            renderCell: (row: Survey) => {
                 if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
                     return <></>;
                 }
@@ -267,7 +267,7 @@ const SurveyListing = () => {
                 </RejectedIcon>
             ),
             allowSort: false,
-            getValue: (row: Survey) => {
+            renderCell: (row: Survey) => {
                 if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
                     return <></>;
                 }
@@ -302,7 +302,7 @@ const SurveyListing = () => {
                 </NewIcon>
             ),
             allowSort: false,
-            getValue: (row: Survey) => {
+            renderCell: (row: Survey) => {
                 if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
                     return <></>;
                 }
@@ -329,7 +329,7 @@ const SurveyListing = () => {
             disablePadding: false,
             label: 'Reporting',
             allowSort: false,
-            getValue: (row: Survey) => {
+            renderCell: (row: Survey) => {
                 if (!row.engagement) {
                     return <></>;
                 }

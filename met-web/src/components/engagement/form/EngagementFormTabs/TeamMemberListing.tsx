@@ -22,7 +22,7 @@ const TeamMemberListing = () => {
             disablePadding: true,
             label: 'Team Members',
             allowSort: false,
-            getValue: (row: EngagementTeamMember) => (
+            renderCell: (row: EngagementTeamMember) => (
                 <MuiLink component={Link} to={``}>
                     {row.user?.last_name + ', ' + row.user?.first_name}
                 </MuiLink>

@@ -16,7 +16,7 @@ const CommentTable = () => {
             disablePadding: false,
             label: 'Content',
             allowSort: true,
-            getValue: (row: Comment) => row.text,
+            renderCell: (row: Comment) => row.text,
         },
         {
             key: 'submission_date',
@@ -26,7 +26,7 @@ const CommentTable = () => {
             allowSort: false,
             customStyle: { width: '20%' },
             align: 'right',
-            getValue: (row: Comment) => <Typography variant="subtitle2">{row.submission_date}</Typography>,
+            renderCell: (row: Comment) => <Typography variant="subtitle2">{row.submission_date}</Typography>,
         },
     ];
 

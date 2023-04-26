@@ -30,7 +30,7 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
     }
 
     return (
-        <MetPaper elevation={1} sx={{ padding: '2em', pt: '25px' }}>
+        <MetPaper elevation={1} sx={{ padding: '2em', pt: '0px' }}>
             <Grid container direction="row" alignItems="flex-end" justifyContent="flex-end" spacing={2}>
                 <Grid item xs={12}>
                     <>
