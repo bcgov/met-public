@@ -16,6 +16,7 @@
 Test Utility for creating model factory.
 """
 from faker import Faker
+from flask import current_app
 
 from met_api import db
 from met_api.config import get_named_config
@@ -194,7 +195,10 @@ def factory_feedback_model(feedback_info: dict = TestFeedbackInfo.feedback1, sta
 
 def factory_auth_header(jwt, claims):
     """Produce JWT tokens for use in tests."""
-    return {'Authorization': 'Bearer ' + jwt.create_jwt(claims=claims, header=JWT_HEADER)}
+    return {
+        'Authorization': 'Bearer ' + jwt.create_jwt(claims=claims, header=JWT_HEADER),
+        'tenant-id': current_app.config.get('DEFAULT_TENANT_SHORT_NAME'),
+    }
 
 
 def factory_widget_model(widget_info: dict = TestWidgetInfo.widget1):

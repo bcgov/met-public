@@ -129,6 +129,7 @@ class TestEngagementInfo(dict, Enum):
         'name': fake.name(),
         'start_date': (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d'),
         'end_date': (datetime.today() + timedelta(days=1)).strftime('%Y-%m-%d'),
+        'tenant_id': '1',
         'banner_url': '',
         'created_by': '123',
         'updated_by': '123',
