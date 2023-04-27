@@ -314,19 +314,17 @@ const EngagementForm = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <MetLabel>Engagement Description</MetLabel>
-                    <Stack direction="row">
-                        <MetDescription>
-                            This is a short description that will show in the header section of the engagement page.
-                        </MetDescription>
-                        <MetDescription sx={{ ml: 0.5, color: 'red' }}> Maximum 550 Characters.</MetDescription>
-                    </Stack>
+                    <MetDescription>
+                        This is a short description that will show in the header section of the engagement page.{' '}
+                        <span style={{ color: 'red', whiteSpace: 'nowrap' }}>Maximum 550 Characters.</span>
+                    </MetDescription>
                     <Box display="flex" flexDirection="column" justifyContent="space-between">
                         <RichTextEditor
                             setRawText={handleDescriptionChange}
                             handleEditorStateChange={handleRichDescriptionChange}
                             initialRawEditorState={initialRichDescription || ''}
                             error={engagementFormError.description}
-                            helperText={'Description must be less then 550 characters'}
+                            helperText={'Maximum 550 Characters.'}
                         />
                         <Typography alignSelf="flex-end">Character Count: {descriptionCharCount}</Typography>
                     </Box>
