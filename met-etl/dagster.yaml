@@ -11,6 +11,7 @@ run_launcher:
   class: DockerRunLauncher
   config:
     env_vars:
+      - DAGSTER_POSTGRES_HOSTNAME
       - DAGSTER_POSTGRES_USER
       - DAGSTER_POSTGRES_PASSWORD
       - DAGSTER_POSTGRES_DB
@@ -35,7 +36,8 @@ run_storage:
   class: PostgresRunStorage
   config:
     postgres_db:
-      hostname: dagster_postgresql
+      hostname:
+        env: DAGSTER_POSTGRES_HOSTNAME
       username:
         env: DAGSTER_POSTGRES_USER
       password:
@@ -49,7 +51,8 @@ schedule_storage:
   class: PostgresScheduleStorage
   config:
     postgres_db:
-      hostname: dagster_postgresql
+      hostname:
+        env: DAGSTER_POSTGRES_HOSTNAME
       username:
         env: DAGSTER_POSTGRES_USER
       password:
@@ -63,7 +66,8 @@ event_log_storage:
   class: PostgresEventLogStorage
   config:
     postgres_db:
-      hostname: dagster_postgresql
+      hostname:
+        env: DAGSTER_POSTGRES_HOSTNAME
       username:
         env: DAGSTER_POSTGRES_USER
       password:

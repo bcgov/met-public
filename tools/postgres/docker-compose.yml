@@ -9,6 +9,8 @@ services:
     env_file:
       - ./postgres.env
     restart: unless-stopped
+    networks:
+      - metnetwork
     volumes:
       - ./backups:/backups
       - ./scripts:/scripts
@@ -17,3 +19,6 @@ services:
 volumes:
   metdb:
     name: metdb.local
+networks:
+  metnetwork:
+    name: metnetwork
