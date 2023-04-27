@@ -77,4 +77,19 @@ docker compose up
 
 ## redash
 
-TODO
+A custom redash project is used for some of the dashboards whithin MET.
+
+To start an instance clone the following repository:
+```
+git clone https://github.com/bcgov/redash
+```
+
+create a .env file with the following:
+```
+REDASH_COOKIE_SECRET=redash
+```
+
+Run the docker compose command:
+```
+docker compose up
+```
