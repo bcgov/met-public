@@ -6,7 +6,7 @@ import TileBlock from './TileBlock';
 import { Engagement } from 'models/engagement';
 import { debounce } from 'lodash';
 import { getEngagements } from 'services/engagementService';
-import { EngagementStatus } from 'constants/engagementStatus';
+import { SubmissionStatus } from 'constants/engagementStatus';
 import { LandingContext } from './LandingContext';
 import { Container } from '@mui/system';
 import { AppConfig } from 'config';
@@ -189,9 +189,9 @@ const LandingComponent = () => {
                                 <MenuItem value={0} sx={{ fontStyle: 'italic', height: '2em' }}>
                                     {''}
                                 </MenuItem>
-                                <MenuItem value={EngagementStatus.Published}>Open</MenuItem>
-                                <MenuItem value={EngagementStatus.Scheduled}>Upcoming</MenuItem>
-                                <MenuItem value={EngagementStatus.Closed}>Closed</MenuItem>
+                                <MenuItem value={SubmissionStatus.Open}>Open</MenuItem>
+                                <MenuItem value={SubmissionStatus.Upcoming}>Upcoming</MenuItem>
+                                <MenuItem value={SubmissionStatus.Closed}>Closed</MenuItem>
                             </TextField>
                         </Grid>
                         <Grid item xs={12} sm={6} md={4} lg={4}>
