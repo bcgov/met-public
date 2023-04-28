@@ -117,7 +117,14 @@ const CommentTextListing = () => {
             allowSort: false,
             customStyle: { width: '20%' },
             renderCell: (row: SurveySubmission) => (
-                <Grid container direction="column" alignItems="flex-end" justifyContent="flex-start" width="20em">
+                <Grid
+                    container
+                    direction="column"
+                    alignItems="flex-end"
+                    justifyContent="flex-start"
+                    width="20em"
+                    height="100%"
+                >
                     <Grid item sx={{ pb: '0.5em' }}>
                         <MetParagraph sx={{ pb: '0.5em' }}>
                             <b>Comment Date: </b>

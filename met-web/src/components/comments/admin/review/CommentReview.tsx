@@ -213,19 +213,10 @@ const CommentReview = () => {
                 <Grid container direction="row" item rowSpacing={2}>
                     <Grid container direction="row" item xs={6} spacing={1}>
                         <Grid item>
-                            <MetLabel>Submission ID:</MetLabel>
+                            <MetLabel>Comment ID:</MetLabel>
                         </Grid>
                         <Grid item>
                             <MetParagraph sx={{ pl: 2 }}>{id}</MetParagraph>
-                        </Grid>
-                    </Grid>
-
-                    <Grid container direction="row" item xs={6} spacing={1}>
-                        <Grid item>
-                            <MetLabel>Comment Date:</MetLabel>
-                        </Grid>
-                        <Grid item>
-                            <MetParagraph sx={{ pl: 2 }}>{formatDate(created_date)}</MetParagraph>
                         </Grid>
                     </Grid>
 
@@ -240,14 +231,23 @@ const CommentReview = () => {
 
                     <Grid container direction="row" item xs={6} spacing={1}>
                         <Grid item>
+                            <MetLabel>Comment Date:</MetLabel>
+                        </Grid>
+                        <Grid item>
+                            <MetParagraph sx={{ pl: 2 }}>{formatDate(created_date)}</MetParagraph>
+                        </Grid>
+                    </Grid>
+
+                    <Grid container direction="row" item xs={6} spacing={1}>
+                        <Grid item>
                             <MetLabel>Reviewed by:</MetLabel>
                         </Grid>
                         <Grid item>
                             <MetParagraph sx={{ pl: 2 }}>{reviewed_by}</MetParagraph>
                         </Grid>
                     </Grid>
-
-                    <Grid container direction="row" item xs={12} spacing={1}>
+                    <Grid container direction="row" item xs={6} spacing={1}></Grid>
+                    <Grid container direction="row" item xs={6} spacing={1}>
                         <Grid item>
                             <MetLabel>Date Reviewed:</MetLabel>
                         </Grid>
@@ -339,10 +339,6 @@ const CommentReview = () => {
                                             />
                                         }
                                     />
-                                    <MetParagraph color="error">
-                                        If there is a threat/menace in the comments, select the checkbox below. No email
-                                        will be sent. Contact TBD.
-                                    </MetParagraph>
                                     <FormControlLabel
                                         label={<MetParagraph>Contains threat/menace</MetParagraph>}
                                         control={
@@ -352,14 +348,12 @@ const CommentReview = () => {
                                             />
                                         }
                                     />
+                                    <MetParagraph color="#d32f2f" fontSize={'13px'} marginLeft={'3em'}>
+                                        If there is a threat/menace in the comments, select this checkbox and contact.
+                                        No email will be sent.
+                                    </MetParagraph>
                                     <FormControlLabel
-                                        label={
-                                            <MetParagraph sx={{ color: '#070707', fontSize: '13px' }}>
-                                                Other (this will be inserted in the email sent to the respondent in the
-                                                following sentence: One of your comments can't be published because of
-                                                "other")
-                                            </MetParagraph>
-                                        }
+                                        label={<MetParagraph sx={{ color: '#494949' }}>Other</MetParagraph>}
                                         control={
                                             <Checkbox
                                                 checked={hasOtherReason}
@@ -372,6 +366,10 @@ const CommentReview = () => {
                                             />
                                         }
                                     />
+                                    <MetParagraph sx={{ marginLeft: '3em', color: '#707070', fontSize: '13px' }}>
+                                        This will be inserted in the email sent to the respondent in the following
+                                        sentence: One of your comments can't be published because of "other"
+                                    </MetParagraph>
                                     <TextField
                                         disabled={!hasOtherReason}
                                         value={otherReason}
@@ -382,10 +380,12 @@ const CommentReview = () => {
                                         multiline
                                     />
                                     <br />
-                                    <MetParagraph sx={{ color: '#070707', fontSize: '13px' }}>
-                                        <b>Review Note</b> (this note will be inserted in the email sent to the
-                                        respondent to help them understand what needs to be edited for their comment(s)
-                                        to be approved.)
+                                    <MetParagraph sx={{ fontWeight: 'bold', color: '#494949' }}>
+                                        Review Notes
+                                    </MetParagraph>
+                                    <MetParagraph sx={{ color: '#707070', fontSize: '13px' }}>
+                                        This note will be inserted in the email sent to the respondent to help them
+                                        understand what needs to be edited for their comment(s) to be approved.
                                     </MetParagraph>
                                     {reviewNotes.map((staffNote) => {
                                         return (
