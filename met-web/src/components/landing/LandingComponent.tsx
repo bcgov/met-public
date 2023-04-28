@@ -178,7 +178,6 @@ const LandingComponent = () => {
                                     setSearchFilters({
                                         ...searchFilters,
                                         status: event.target.value ? [Number(event.target.value)] : [],
-
                                     });
                                     setPage(1);
                                 }}
