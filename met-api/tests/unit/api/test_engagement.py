@@ -51,7 +51,7 @@ def test_add_engagements_tenant_id(client, jwt, session, engagement_info):  # py
     tenant_short_name = current_app.config.get('DEFAULT_TENANT_SHORT_NAME')
     tenant = TenantModel.find_by_short_name(tenant_short_name)
     assert tenant is not None
-    headers['tenant_id'] = tenant_short_name
+    headers['tenant-id'] = tenant_short_name
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
