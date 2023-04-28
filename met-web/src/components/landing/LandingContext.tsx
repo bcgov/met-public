@@ -61,7 +61,7 @@ export const LandingContextProvider = ({ children }: { children: JSX.Element | J
             setEngagements(loadedEngagements.items);
             setTotalEngagements(loadedEngagements.total);
             setLoadingEngagements(false);
-        } catch (error) { }
+        } catch (error) {}
     };
 
     useEffect(() => {
