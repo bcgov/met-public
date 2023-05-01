@@ -4,7 +4,7 @@ dagster-docker
 Flask-Migrate==2.7.0
 Flask-Moment==1.0.5
 Flask-SQLAlchemy==2.5.1
-Flask==1.1.2
+Flask==2.3.2
 SQLAlchemy-Utils==0.38.3
 SQLAlchemy==1.3.24
 Werkzeug==2.0.3
