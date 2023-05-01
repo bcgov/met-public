@@ -36,7 +36,6 @@ class Engagement(BaseModel):  # pylint: disable=too-few-public-methods
         """Deactivate model by source_identifier."""
         return cls.query.filter_by(source_engagement_id=source_identifier).update(
             {Engagement.is_active: False})
-
     @classmethod
     def get_engagement_map_data(
         cls,
