@@ -15,7 +15,7 @@
 
 from http import HTTPStatus
 
-from flask import g, request
+from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
