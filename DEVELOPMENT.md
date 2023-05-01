@@ -17,6 +17,27 @@ A local instance of keycloak might be necessary. The following configuration use
 docker compose -f ./tools/keycloak/docker-compose.yml up -d
 ```
 
+## met-web
+
+Create a .env file based on the sample.env
+
+Installing the packages:
+
+```
+npm install
+```
+
+Starting the app:
+
+```
+npm start
+```
+
+Running the unit test:
+
+```
+npm run test
+```
 
 ## met-api
 ## analytics-api
@@ -24,23 +45,29 @@ docker compose -f ./tools/keycloak/docker-compose.yml up -d
 
 Create a .env file based on the sample.env
 
-To install packages:
+Installing the packages:
 
 ```
 make setup
 ```
 
-To run the project:
+Starting the app:
 
 ```
 make run
+```
+
+Running the unit test:
+
+```
+make test
 ```
 
 ## met-cron
 
 Create a .env file based on the sample.env
 
-To install packages:
+Installing the packages:
 
 ```
 make setup
@@ -59,17 +86,7 @@ make run_publish
 
 Create a .env file based on the sample.env
 
-This is a dagster project, to run it use the following commands:
-
-```
-docker compose up
-```
-
-## dagster
-
-Create a .env file based on the sample.env
-
-This is a dagster project, to run it use the following commands:
+Running the app:
 
 ```
 docker compose up

@@ -72,7 +72,7 @@ class Engagements(Resource):
         try:
             args = request.args
             user_id = TokenInfo.get_id()
-            print(g.tenant_id)
+
             pagination_options = PaginationOptions(
                 page=args.get('page', None, int),
                 size=args.get('size', None, int),
