@@ -1,10 +1,11 @@
 from dagster import Out, Output, op
 from met_api.constants.engagement_status import Status as EngagementStatus
 from met_api.models.engagement import Engagement as MetEngagementModel
-from met_cron.models.engagement import Engagement as EtlEngagementModel
+from met_api.models.widget_map import WidgetMap as MetWidgetMap
+from analytics_api.models.engagement import Engagement as EtlEngagementModel
 from sqlalchemy import func
 from datetime import datetime
-from met_cron.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
+from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 
 
 # get the last run cycle id for user detail etl
@@ -49,7 +50,7 @@ def extract_engagement(context, eng_last_run_cycle_time, eng_new_runcycleid):
     for last_run_cycle_time in eng_last_run_cycle_time:
         context.log.info("started extracting new data from engagement table")
         new_engagements = session.query(MetEngagementModel).filter(
-			MetEngagementModel.created_date > last_run_cycle_time,
+            MetEngagementModel.created_date > last_run_cycle_time,
             MetEngagementModel.status_id != EngagementStatus.Draft.value).all()
         
         context.log.info(last_run_cycle_time)	
@@ -78,6 +79,7 @@ def extract_engagement(context, eng_last_run_cycle_time, eng_new_runcycleid):
 # load the surveys created or updated after last run to the analytics database
 @op(required_resource_keys={"met_db_session", "met_etl_db_session"}, out={"engagement_new_runcycleid": Out()})
 def load_engagement(context, new_engagements, updated_engagements, engagement_new_runcycleid):
+    met_session = context.resources.met_db_session
     session = context.resources.met_etl_db_session
     all_engagements = new_engagements + updated_engagements
     if len(all_engagements) > 0:
@@ -86,6 +88,20 @@ def load_engagement(context, new_engagements, updated_engagements, engagement_ne
         for engagement in all_engagements:
             session.query(EtlEngagementModel).filter(EtlEngagementModel.source_engagement_id == engagement.id).update(
                 {'is_active': False})
+            
+            # extract map data
+            latitude=None
+            longitude=None
+            geojson=None
+            marker_label=None
+            map_widget = met_session.query(MetWidgetMap).filter(
+                MetWidgetMap.engagement_id == engagement.id).order_by(MetWidgetMap.created_date.desc()).first()
+            if map_widget:
+                latitude=map_widget.latitude
+                longitude=map_widget.longitude
+                geojson=map_widget.geojson
+                marker_label=map_widget.marker_label
+
             engagement_model = EtlEngagementModel(name=engagement.name,
                                                   source_engagement_id=engagement.id,
                                                   start_date=engagement.start_date,
@@ -94,7 +110,11 @@ def load_engagement(context, new_engagements, updated_engagements, engagement_ne
                                                   published_date=engagement.published_date,
                                                   runcycle_id=engagement_new_runcycleid,
                                                   created_date=engagement.created_date,
-                                                  updated_date=engagement.updated_date
+                                                  updated_date=engagement.updated_date,
+                                                  latitude=latitude,
+                                                  longitude=longitude,
+                                                  geojson=geojson,
+                                                  marker_label=marker_label,
                                                   )
             session.add(engagement_model)
             session.commit()
@@ -103,6 +123,7 @@ def load_engagement(context, new_engagements, updated_engagements, engagement_ne
 
     context.log.info("completed loading engagement table")
 
+    met_session.close()
     session.close()
 
 
