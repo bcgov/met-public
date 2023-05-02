@@ -15,7 +15,6 @@ class AggregatorService:  # pylint: disable=too-few-public-methods
 
         if count_for == 'email_verification':
             total_count = EmailVerificationModel.get_email_verification_count(engagement_id)
-
         if count_for == 'survey_completed':
             total_count = UserResponseDetailModel.get_response_count(engagement_id)
 
