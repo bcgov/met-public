@@ -175,7 +175,8 @@ function MetTable<T>({
                                                 key={`row-${rowIndex}-${cellIndex}`}
                                                 style={cell.customStyle || {}}
                                                 sx={{
-                                                    paddingTop: 0,
+                                                    paddingTop: commentTable ? 0 : '16px',
+                                                    border: noRowBorder ? 'none' : '',
                                                 }}
                                             >
                                                 {cell.renderCell ? cell.renderCell(row) : String(row[cell.key])}
@@ -198,7 +199,12 @@ function MetTable<T>({
                                         height: 53 * emptyRows,
                                     }}
                                 >
-                                    <TableCell colSpan={headCells.length} />
+                                    <TableCell
+                                        colSpan={headCells.length}
+                                        sx={{
+                                            border: noRowBorder ? 'none' : '',
+                                        }}
+                                    />
                                 </TableRow>
                             )}
                         </TableBody>
