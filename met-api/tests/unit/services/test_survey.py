@@ -25,6 +25,6 @@ def test_create_survey(session):  # pylint:disable=unused-argument
     survey_data = TestSurveyInfo.survey1
     saved_survey = SurveyService().create(survey_data)
     # fetch the survey with id and assert
-    fetched_survey = SurveyService().get(saved_survey.identifier)
-    assert fetched_survey.get('id') == saved_survey.identifier
+    fetched_survey = SurveyService().get(saved_survey.id)
+    assert fetched_survey.get('id') == saved_survey.id
     assert fetched_survey.get('name') == survey_data.get('name')
