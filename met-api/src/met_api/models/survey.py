@@ -81,7 +81,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         return page.items, page.total
 
     @classmethod
-    def create_survey(cls, survey: SurveySchema) -> DefaultMethodResult:
+    def create_survey(cls, survey: SurveySchema) -> Survey:
         """Save Survey."""
         new_survey = Survey(
             name=survey.get('name', None),
@@ -96,7 +96,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
 
         )
         new_survey.save()
-        return DefaultMethodResult(True, 'Survey Added', new_survey.id)
+        return new_survey
 
     @classmethod
     def update_survey(cls, survey: SurveySchema) -> DefaultMethodResult:

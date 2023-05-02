@@ -13,6 +13,7 @@ from met_api.auth import jwt
 from met_api.config import get_named_config
 from met_api.models import db, ma, migrate
 from met_api.models.tenant import Tenant as TenantModel
+from met_api.utils import constants
 from met_api.utils.cache import cache
 
 # Security Response headers
@@ -74,7 +75,7 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
     @app.before_request
     def set_tenant_id():
         """Set Tenant ID Globally."""
-        tenant_short_name = request.headers.get('tenant-id', None)
+        tenant_short_name = request.headers.get(constants.TENANT_ID_HEADER, None)
         if not tenant_short_name:
             return
 

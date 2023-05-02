@@ -105,14 +105,10 @@ class Surveys(Resource):
     def post():
         """Create a new survey."""
         try:
-            user_id = TokenInfo.get_id()
             requestjson = request.get_json()
-            survey_schema = SurveySchema().load(requestjson)
-            survey_schema['created_by'] = user_id
-            survey_schema['updated_by'] = user_id
-            result = SurveyService().create(survey_schema)
-            survey_schema['id'] = result.identifier
-            return survey_schema, HTTPStatus.OK
+            result = SurveyService().create(requestjson)
+            survey_schema = SurveySchema()
+            return survey_schema.dump(result), HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:

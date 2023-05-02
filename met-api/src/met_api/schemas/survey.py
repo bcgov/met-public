@@ -28,6 +28,7 @@ class SurveySchema(Schema):
     is_template = fields.Bool(data_key='is_template')
     engagement = fields.Nested(EngagementSchema)
     comments_meta_data = fields.Method('get_comments_meta_data')
+    tenant_id = fields.Str(data_key='tenant_id')
 
     def get_comments_meta_data(self, obj):
         """Get the meta data of the comments made in the survey."""

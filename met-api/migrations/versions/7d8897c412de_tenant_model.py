@@ -34,7 +34,7 @@ def upgrade():
     )
     default_id = "1"
     op.bulk_insert(tenant_table, [
-        {'id': default_id,
+        {
          'short_name': current_app.config.get('DEFAULT_TENANT_SHORT_NAME') ,
          'name': current_app.config.get('DEFAULT_TENANT_NAME'),
          'description': current_app.config.get('DEFAULT_TENANT_DESCRIPTION'),
