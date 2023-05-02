@@ -43,7 +43,7 @@ class Counter(Resource):
             args = request.args
 
             counts = jsonify(
-                {'key':'total_count',
+                {'key': 'total_count',
                  'value': AggregatorService().get_count(args.get('engagement_id', 0, int),
                                                         args.get('count_for', '', str))})
 

@@ -2,7 +2,6 @@
 
 Manages the Email verification
 """
-from sqlalchemy import func
 from sqlalchemy.sql.expression import true
 
 from .base_model import BaseModel
@@ -27,7 +26,7 @@ class EmailVerification(BaseModel):  # pylint: disable=too-few-public-methods
     ):
         """Get email verification count for an engagement id."""
         email_verification_count = (db.session.query(EmailVerification)
-                          .filter(EmailVerification.engagement_id == engagement_id)
-                          .filter(EmailVerification.is_active == true()))
+                                    .filter(EmailVerification.engagement_id == engagement_id)
+                                    .filter(EmailVerification.is_active == true()))
 
         return email_verification_count.count()
