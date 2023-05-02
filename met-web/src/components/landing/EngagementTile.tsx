@@ -9,7 +9,7 @@ import { MetBody, MetHeader4, MetLabel, MetParagraph, PrimaryButton, SecondaryBu
 import { getEngagement } from 'services/engagementService';
 import { Else, If, Then, When } from 'react-if';
 import dayjs from 'dayjs';
-import { EngagementStatusChip } from 'components/engagement/status';
+import { HomepageEngagementStatusChip } from 'components/engagement/status';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { TileSkeleton } from './TileSkeleton';
 import { AppConfig } from 'config';
@@ -86,7 +86,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                 </MetBody>
                 <Stack direction="row" alignItems={'center'} spacing={1} mt="0.5em">
                     <MetBody bold>Status:</MetBody>
-                    <EngagementStatusChip submissionStatus={status_id} />
+                    <HomepageEngagementStatusChip engagement={loadedEngagement} />
                 </Stack>
             </CardContent>
             <CardActions>
