@@ -22,8 +22,8 @@ from enum import Enum
 from faker import Faker
 
 from met_api.config import get_named_config
-from met_api.constants.engagement_status import SubmissionStatus
 from met_api.constants.comment_status import Status as CommentStatus
+from met_api.constants.engagement_status import SubmissionStatus
 from met_api.constants.feedback import CommentType, FeedbackSourceType, RatingType
 from met_api.constants.widget import WidgetType
 from met_api.utils.enums import LoginSource, UserType
@@ -120,6 +120,21 @@ class KeycloakScenario:
         }
 
         return create_user_request
+
+
+class TestTenantInfo(dict, Enum):
+    """Test scenarios of tenants."""
+
+    tenant1 = {
+        'short_name': 'GDX',
+        'name': fake.name(),
+        'description': fake.text(max_nb_chars=10),
+    }
+    tenant2 = {
+        'short_name': 'EMLI',
+        'name': fake.name(),
+        'description': fake.text(max_nb_chars=10),
+    }
 
 
 class TestEngagementInfo(dict, Enum):

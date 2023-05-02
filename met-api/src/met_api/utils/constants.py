@@ -21,3 +21,5 @@ GROUP_NAME_MAPPING = {
     'EAO_IT_VIEWER': 'Viewer',
     'EAO_TEAM_MEMBER': 'Member',
 }
+
+TENANT_ID_HEADER = 'tenant-id'

@@ -63,7 +63,7 @@ const FeedbackListing = () => {
             disablePadding: true,
             label: 'Feedback',
             allowSort: true,
-            getValue: (row: Feedback) => customRatings[row.rating].icon,
+            renderCell: (row: Feedback) => customRatings[row.rating].icon,
         },
         {
             key: 'created_date',
@@ -71,7 +71,7 @@ const FeedbackListing = () => {
             disablePadding: false,
             label: 'Date Published',
             allowSort: true,
-            getValue: (row: Feedback) => formatDate(row.created_date),
+            renderCell: (row: Feedback) => formatDate(row.created_date),
         },
         {
             key: 'source',
@@ -79,7 +79,7 @@ const FeedbackListing = () => {
             disablePadding: false,
             label: 'Source',
             allowSort: true,
-            getValue: (row: Feedback) => SourceTypeEnum[row.source ?? 0].toString(),
+            renderCell: (row: Feedback) => SourceTypeEnum[row.source ?? 0].toString(),
         },
         {
             key: 'comment_type',
@@ -87,7 +87,7 @@ const FeedbackListing = () => {
             disablePadding: false,
             label: 'Feedback Type',
             allowSort: true,
-            getValue: (row: Feedback) => CommentTypeEnum[row.comment_type].toString(),
+            renderCell: (row: Feedback) => CommentTypeEnum[row.comment_type].toString(),
         },
         {
             key: 'comment',
@@ -95,7 +95,7 @@ const FeedbackListing = () => {
             disablePadding: false,
             label: 'Message',
             allowSort: true,
-            getValue: (row: Feedback) => row.comment,
+            renderCell: (row: Feedback) => row.comment,
         },
     ];
 

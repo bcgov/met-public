@@ -1,21 +1,6 @@
 version: "3.7"
 
 services:
-  # This service runs the postgres DB used by dagster for run storage, schedule storage,
-  # and event log storage.
-  dagster_postgresql:
-    image: postgres:11
-    container_name: dagster_postgresql
-    environment:
-      POSTGRES_USER: "admin"
-      POSTGRES_PASSWORD: "admin"
-      POSTGRES_DB: "dagster"
-    ports:
-      - 54335:5432/tcp
-    restart: unless-stopped        
-    networks:
-      - dagster_network
-
   # This service runs the gRPC server that loads your user code, in both dagit
   # and dagster-daemon. By setting DAGSTER_CURRENT_IMAGE to its own image, we tell the
   # run launcher to use this same image when launching runs in a new container as well.
@@ -29,12 +14,15 @@ services:
     image: dagster_user_code_image
     restart: always
     environment:
-      DAGSTER_POSTGRES_USER: "admin"
-      DAGSTER_POSTGRES_PASSWORD: "admin"
-      DAGSTER_POSTGRES_DB: "dagster"
+      DAGSTER_POSTGRES_USER: "dagster"
+      DAGSTER_POSTGRES_PASSWORD: "dagster"
+      DAGSTER_POSTGRES_DB: "met"
+      DAGSTER_POSTGRES_HOSTNAME: "metdb"
+      DAGSTER_POSTGRES_PORT: "5432"
       DAGSTER_CURRENT_IMAGE: "dagster_user_code_image"
     networks:
       - dagster_network
+      - metnetwork
 
   # This service runs dagit, which loads your user code from the user code container.
   # Since our instance uses the QueuedRunCoordinator, any runs submitted from dagit will be put on
@@ -48,25 +36,27 @@ services:
       - -h
       - "0.0.0.0"
       - -p
-      - "3000"
+      - "3001"
       - -w
       - workspace.yaml
     container_name: dagster_dagit
     expose:
-      - "3000"
+      - "3001"
     ports:
-      - "3000:3000"
+      - "3001:3001"
     environment:
-      DAGSTER_POSTGRES_USER: "admin"
-      DAGSTER_POSTGRES_PASSWORD: "admin"
-      DAGSTER_POSTGRES_DB: "dagster"
+      DAGSTER_POSTGRES_USER: "dagster"
+      DAGSTER_POSTGRES_PASSWORD: "dagster"
+      DAGSTER_POSTGRES_DB: "met"
+      DAGSTER_POSTGRES_HOSTNAME: "metdb"
+      DAGSTER_POSTGRES_PORT: "5432"
     volumes: # Make docker client accessible so we can terminate containers from dagit
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp/io_manager_storage:/tmp/io_manager_storage
     networks:
       - dagster_network
+      - metnetwork
     depends_on:
-      - dagster_postgresql
       - dagster_user_code
 
   # This service runs the dagster-daemon process, which is responsible for taking runs
@@ -81,9 +71,11 @@ services:
     container_name: dagster_daemon
     restart: on-failure
     environment:
-      DAGSTER_POSTGRES_USER: "admin"
-      DAGSTER_POSTGRES_PASSWORD: "admin"
-      DAGSTER_POSTGRES_DB: "dagster"
+      DAGSTER_POSTGRES_USER: "dagster"
+      DAGSTER_POSTGRES_PASSWORD: "dagster"
+      DAGSTER_POSTGRES_DB: "met"
+      DAGSTER_POSTGRES_HOSTNAME: "metdb"
+      DAGSTER_POSTGRES_PORT: "5432"
       MET_DB_USER: $MET_DB_USER
       MET_DB_PASSWORD: $MET_DB_PASSWORD
       MET_DB_DB: $MET_DB_DB
@@ -99,11 +91,14 @@ services:
       - /tmp/io_manager_storage:/tmp/io_manager_storage
     networks:
       - dagster_network
+      - metnetwork
     depends_on:
-      - dagster_postgresql
       - dagster_user_code
 
 networks:
   dagster_network:
     driver: bridge
     name: dagster_network
+  metnetwork:
+    external:
+      name: metnetwork

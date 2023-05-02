@@ -13,6 +13,7 @@ import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink, useMediaQuery, Theme } from '@mui/material';
 import { getEngagements } from 'services/engagementService';
 import SearchIcon from '@mui/icons-material/Search';
+import CommentIcon from '@mui/icons-material/Comment';
 import Stack from '@mui/material/Stack';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import MetTable from 'components/common/Table';
@@ -28,6 +29,7 @@ import { ApprovedIcon, NewIcon, NFRIcon, RejectedIcon } from './Icons';
 import CloseRounded from '@mui/icons-material/CloseRounded';
 import FiberNewOutlined from '@mui/icons-material/FiberNewOutlined';
 import { CommentStatus } from 'constants/commentStatus';
+import { ActionsDropDown } from './ActionsDropDown';
 
 const EngagementListing = () => {
     const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
@@ -127,8 +129,8 @@ const EngagementListing = () => {
             disablePadding: true,
             label: 'Engagement Name',
             allowSort: true,
-            getValue: (row: Engagement) => (
-                <MuiLink component={Link} to={`/engagements/${Number(row.id)}/form`}>
+            renderCell: (row: Engagement) => (
+                <MuiLink component={Link} to={`/engagements/${Number(row.id)}/view`}>
                     {row.name}
                 </MuiLink>
             ),
@@ -137,18 +139,18 @@ const EngagementListing = () => {
             key: 'created_date',
             nestedSortKey: 'engagement.created_date',
             numeric: true,
-            disablePadding: false,
+            disablePadding: true,
             label: 'Date Created',
             allowSort: true,
-            getValue: (row: Engagement) => formatDate(row.created_date),
+            renderCell: (row: Engagement) => formatDate(row.created_date),
         },
         {
             key: 'published_date',
             numeric: true,
-            disablePadding: false,
+            disablePadding: true,
             label: 'Date Published',
             allowSort: true,
-            getValue: (row: Engagement) => {
+            renderCell: (row: Engagement) => {
                 if (row.published_date === 'None' || !row.published_date) {
                     return '';
                 }
@@ -161,7 +163,7 @@ const EngagementListing = () => {
             disablePadding: false,
             label: 'Status',
             allowSort: true,
-            getValue: (row: Engagement) => {
+            renderCell: (row: Engagement) => {
                 const acceptable_status = [
                     SubmissionStatus[SubmissionStatus.Open],
                     SubmissionStatus[SubmissionStatus.Closed],
@@ -182,42 +184,15 @@ const EngagementListing = () => {
         },
         {
             key: 'surveys',
-            numeric: false,
-            disablePadding: false,
-            label: 'Survey',
-            allowSort: false,
-            getValue: (row: Engagement) => {
-                if (row.surveys.length === 0) {
-                    return '';
-                }
-
-                return (
-                    <MuiLink component={Link} to={`/surveys/${Number(row.surveys[0].id)}/submit`}>
-                        View Survey
-                    </MuiLink>
-                );
-            },
-        },
-        {
-            key: 'surveys',
             numeric: true,
             disablePadding: false,
-            label: 'Comments',
             customStyle: { padding: 2 },
             align: 'left',
             hideSorticon: true,
             allowSort: false,
-            getValue: (row: Engagement) => {
-                const isAuthorized = canViewPrivateEngagements || assignedEngagements.includes(Number(row.id));
-
-                if (row.surveys.length === 0 || !isAuthorized) {
-                    return '';
-                }
-                return (
-                    <MuiLink component={Link} to={`/surveys/${row.surveys[0].id}/comments`}>
-                        View All
-                    </MuiLink>
-                );
+            icon: <CommentIcon />,
+            renderCell: (row: Engagement) => {
+                return <></>;
             },
         },
         {
@@ -234,7 +209,7 @@ const EngagementListing = () => {
                 </ApprovedIcon>
             ),
             allowSort: false,
-            getValue: (row: Engagement) => {
+            renderCell: (row: Engagement) => {
                 const { approved } = row.submissions_meta_data;
                 return (
                     <ApprovedIcon
@@ -267,7 +242,7 @@ const EngagementListing = () => {
                 </NFRIcon>
             ),
             allowSort: false,
-            getValue: (row: Engagement) => {
+            renderCell: (row: Engagement) => {
                 if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
                     return <></>;
                 }
@@ -303,7 +278,7 @@ const EngagementListing = () => {
                 </RejectedIcon>
             ),
             allowSort: false,
-            getValue: (row: Engagement) => {
+            renderCell: (row: Engagement) => {
                 if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
                     return <></>;
                 }
@@ -339,7 +314,7 @@ const EngagementListing = () => {
                 </NewIcon>
             ),
             allowSort: false,
-            getValue: (row: Engagement) => {
+            renderCell: (row: Engagement) => {
                 if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
                     return <></>;
                 }
@@ -361,21 +336,16 @@ const EngagementListing = () => {
             },
         },
         {
-            key: 'surveys',
+            key: 'id',
             numeric: true,
             disablePadding: false,
-            label: 'Reporting',
+            label: 'Actions',
             allowSort: false,
-            getValue: (row: Engagement) => {
-                if (row.surveys.length === 0 || row.submissions_meta_data.total === 0) {
-                    return '';
-                }
-
-                return (
-                    <MuiLink component={Link} to={`/engagements/${Number(row.id)}/dashboard`}>
-                        View Report
-                    </MuiLink>
-                );
+            renderCell: (row: Engagement) => {
+                return <ActionsDropDown engagement={row} />;
+            },
+            customStyle: {
+                minWidth: '200px',
             },
         },
     ];

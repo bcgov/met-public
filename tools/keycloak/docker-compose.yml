@@ -1,0 +1,22 @@
+version: "3.5"
+services:
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:14.0.0
+    volumes:
+      - ./init:/opt/jboss/keycloak/init
+      - keycloak:/opt/jboss/keycloak
+    ports:
+      - 8080:8080
+    networks:
+      - metnetwork
+    env_file:
+      - ./keycloak.env
+    restart: unless-stopped
+volumes:
+  keycloak:
+    name: keycloak.local
+networks:
+  metnetwork:
+    external:
+      name: metnetwork

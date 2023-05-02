@@ -26,7 +26,7 @@ class Api(BaseApi):
     @property
     def specs_url(self):
         """Return URL for endpoint."""
-        scheme = 'http' if '5000' in self.base_url else 'https'
+        scheme = 'http' if '5001' in self.base_url else 'https'
         return url_for(self.endpoint('specs'), _external=True, _scheme=scheme)
 
 

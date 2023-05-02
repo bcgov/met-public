@@ -71,8 +71,6 @@ objects:
                 name: s3
           envFrom:
           - configMapRef:
-              name: ${APP}
-          - configMapRef:
               name: jwt-oidc
           imagePullPolicy: Always
           name: ${APP}

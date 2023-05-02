@@ -16,11 +16,13 @@
 Test Utility for creating model factory.
 """
 from faker import Faker
+from flask import current_app
 
 from met_api import db
 from met_api.config import get_named_config
 from met_api.constants.engagement_status import Status
 from met_api.constants.widget import WidgetType
+from met_api.models import Tenant
 from met_api.models.comment import Comment as CommentModel
 from met_api.models.email_verification import EmailVerification as EmailVerificationModel
 from met_api.models.engagement import Engagement as EngagementModel
@@ -32,6 +34,7 @@ from met_api.models.user import User as UserModel
 from met_api.models.widget import Widget as WidgetModal
 from met_api.models.widget_documents import WidgetDocuments as WidgetDocumentModel
 from met_api.models.widget_item import WidgetItem as WidgetItemModal
+from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import MembershipStatus
 from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementInfo, TestFeedbackInfo, TestSubmissionInfo, TestSurveyInfo, TestUserInfo,
@@ -150,6 +153,18 @@ def factory_engagement_model(eng_info: dict = TestEngagementInfo.engagement1, st
     return engagement
 
 
+def factory_tenant_model(tenant_info: dict = None):
+    """Produce a tenant model."""
+    tenant = Tenant(
+        short_name=tenant_info.get('short_name'),
+        name=tenant_info.get('name'),
+        description=tenant_info.get('description'),
+    )
+    db.session.add(tenant)
+    db.session.commit()
+    return tenant
+
+
 def factory_user_model(external_id=None, user_info: dict = TestUserInfo.user_public_1):
     """Produce a user model."""
     # Generate a external id if not passed
@@ -194,7 +209,10 @@ def factory_feedback_model(feedback_info: dict = TestFeedbackInfo.feedback1, sta
 
 def factory_auth_header(jwt, claims):
     """Produce JWT tokens for use in tests."""
-    return {'Authorization': 'Bearer ' + jwt.create_jwt(claims=claims, header=JWT_HEADER)}
+    return {
+        'Authorization': 'Bearer ' + jwt.create_jwt(claims=claims, header=JWT_HEADER),
+        TENANT_ID_HEADER: current_app.config.get('DEFAULT_TENANT_SHORT_NAME'),
+    }
 
 
 def factory_widget_model(widget_info: dict = TestWidgetInfo.widget1):

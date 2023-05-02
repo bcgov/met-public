@@ -3,7 +3,7 @@ import MetTable from 'components/common/Table';
 import { Link, useParams } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton, MetParagraph, MetLabel } from 'components/common';
 import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
-import { Link as MuiLink, Typography, Grid, Stack, TextField } from '@mui/material';
+import { Link as MuiLink, Grid, Stack, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -82,7 +82,7 @@ const CommentTextListing = () => {
             disablePadding: false,
             label: 'ID',
             allowSort: true,
-            getValue: (row: SurveySubmission) => (
+            renderCell: (row: SurveySubmission) => (
                 <MuiLink component={Link} to={`/surveys/${Number(row.survey_id)}/submissions/${row.id}/review`}>
                     {row.id}
                 </MuiLink>
@@ -94,16 +94,14 @@ const CommentTextListing = () => {
             disablePadding: false,
             label: 'Content',
             allowSort: true,
-            getValue: (row: SurveySubmission) => (
+            renderCell: (row: SurveySubmission) => (
                 <Grid container rowSpacing={2}>
                     {row.comments?.map((comment, index) => {
                         return (
                             <Grid key={index} item xs={12}>
-                                <Grid xs={12} item paddingTop={2}>
-                                    <MetLabel>{comment.label ?? 'Label not available.'}</MetLabel>
-                                </Grid>
                                 <Grid xs={12} item>
-                                    <MetParagraph>{comment.text}</MetParagraph>
+                                    <MetLabel>{comment.label ?? 'Label not available.'} </MetLabel>
+                                    <MetParagraph>{' ' + comment.text}</MetParagraph>
                                 </Grid>
                             </Grid>
                         );
@@ -118,17 +116,17 @@ const CommentTextListing = () => {
             label: 'Comment Date',
             allowSort: false,
             customStyle: { width: '20%' },
-            getValue: (row: SurveySubmission) => (
+            renderCell: (row: SurveySubmission) => (
                 <Grid container direction="column" alignItems="flex-end" justifyContent="flex-start" width="20em">
                     <Grid item sx={{ pb: '0.5em' }}>
-                        <Typography variant="subtitle2" sx={{ pb: '0.5em' }}>
+                        <MetParagraph sx={{ pb: '0.5em' }}>
                             <b>Comment Date: </b>
                             {formatDate(row.created_date)}
-                        </Typography>
+                        </MetParagraph>
                         <When condition={row.comment_status_id !== CommentStatus.Pending}>
-                            <Typography variant="subtitle2">
+                            <MetParagraph>
                                 <b>Reviewed By: </b> {row.reviewed_by}
-                            </Typography>
+                            </MetParagraph>
                         </When>
                     </Grid>
                     <Grid item>
@@ -176,6 +174,7 @@ const CommentTextListing = () => {
                     handleChangePagination={(pagination: PaginationOptions<SurveySubmission>) =>
                         setPagination(pagination)
                     }
+                    commentTable
                     paginationOptions={paginationOptions}
                     pageInfo={pageInfo}
                     loading={tableLoading}

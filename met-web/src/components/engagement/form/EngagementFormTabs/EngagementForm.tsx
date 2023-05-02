@@ -63,9 +63,17 @@ const EngagementForm = () => {
         },
     ];
 
+    const getTextFromDraftJsContentState = (contentJSON: string): string => {
+        if (!contentJSON) return '';
+        const contentState = JSON.parse(contentJSON);
+        return contentState.blocks.map((block: { text: string }) => block.text).join(' ');
+    };
+
     useEffect(() => {
+        const initialDescription = getTextFromDraftJsContentState(richDescription || savedEngagement.rich_description);
         setInitialRichDescription(richDescription || savedEngagement.rich_description);
         setInitialRichContent(richContent || savedEngagement.rich_content);
+        setDescriptionCharCount(initialDescription.length);
     }, []);
 
     const getErrorMessage = () => {
@@ -98,7 +106,7 @@ const EngagementForm = () => {
 
         setEngagementFormError({
             ...engagementFormError,
-            description: false,
+            description: rawText.length > 550,
         });
     };
 
@@ -306,10 +314,9 @@ const EngagementForm = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <MetLabel>Engagement Description</MetLabel>
-
                     <MetDescription>
-                        This is a short description that will show in the header section of the engagement page. The
-                        recommended length is 250-500 characters.
+                        This is a short description that will show in the header section of the engagement page.{' '}
+                        <span style={{ color: 'red', whiteSpace: 'nowrap' }}>Maximum 550 Characters.</span>
                     </MetDescription>
                     <Box display="flex" flexDirection="column" justifyContent="space-between">
                         <RichTextEditor
@@ -317,7 +324,7 @@ const EngagementForm = () => {
                             handleEditorStateChange={handleRichDescriptionChange}
                             initialRawEditorState={initialRichDescription || ''}
                             error={engagementFormError.description}
-                            helperText={'Description must be less then 550 characters'}
+                            helperText={'Maximum 550 Characters.'}
                         />
                         <Typography alignSelf="flex-end">Character Count: {descriptionCharCount}</Typography>
                     </Box>

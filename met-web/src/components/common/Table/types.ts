@@ -7,7 +7,7 @@ export interface HeadCell<T> {
     hideSorticon?: boolean;
     numeric: boolean;
     allowSort: boolean;
-    getValue?: (row: T) => string | number | JSX.Element;
+    renderCell?: (row: T) => string | number | JSX.Element;
     customStyle?: React.CSSProperties;
     align?: 'right' | 'left' | 'inherit' | 'center' | 'justify';
 }
