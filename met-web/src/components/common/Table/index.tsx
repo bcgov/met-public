@@ -198,12 +198,7 @@ function MetTable<T>({
                                         height: 53 * emptyRows,
                                     }}
                                 >
-                                    <TableCell
-                                        colSpan={headCells.length}
-                                        sx={{
-                                            border: noRowBorder ? 'none' : '',
-                                        }}
-                                    />
+                                    <TableCell colSpan={headCells.length} />
                                 </TableRow>
                             )}
                         </TableBody>
