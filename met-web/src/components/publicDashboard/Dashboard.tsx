@@ -3,9 +3,9 @@ import { Grid, Link as MuiLink } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { MetHeader1, MetPaper, PrimaryButton } from 'components/common';
 import { ReportBanner } from './ReportBanner';
-import CompleteResponsesGauge from './KPI/CompleteResponsesGauge';
-import ResponsesWithCommentGauge from './KPI/ResponsesWithCommentGauge';
-import TotalResponsesGauge from './KPI/TotalResponsesGauge';
+import SurveysCompleted from './KPI/SurveysCompleted';
+import ProjectLocation from './KPI/ProjectLocation';
+import SurveyEmailsSent from './KPI/SurveyEmailsSent';
 import SubmissionTrend from './SubmissionTrend/SubmissionTrend';
 import { DashboardContext } from './DashboardContext';
 import SurveyBar from './SurveyBar.tsx';
@@ -66,18 +66,27 @@ export const Dashboard = () => {
                                     Read Comments
                                 </PrimaryButton>
                             </Grid>
-                            <Grid container spacing={3} item xs={12}>
+                            <Grid ml={2} container spacing={3} item xs={12}>
                                 <Grid item xs={12} sm={4}>
-                                    <TotalResponsesGauge />
+                                    <SurveyEmailsSent
+                                        engagement={engagement}
+                                        engagementIsLoading={isEngagementLoading}
+                                    />
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
-                                    <CompleteResponsesGauge />
+                                    <SurveysCompleted
+                                        engagement={engagement}
+                                        engagementIsLoading={isEngagementLoading}
+                                    />
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
-                                    <ResponsesWithCommentGauge />
+                                    <ProjectLocation
+                                        engagement={engagement}
+                                        engagementIsLoading={isEngagementLoading}
+                                    />
                                 </Grid>
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid ml={5} item xs={12}>
                                 <SubmissionTrend engagement={engagement} engagementIsLoading={isEngagementLoading} />
                             </Grid>
                             <Grid item xs={12}>

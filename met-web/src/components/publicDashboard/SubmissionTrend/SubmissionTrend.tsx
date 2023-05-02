@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
-import { Stack, useMediaQuery, Theme, Skeleton, Grid, ToggleButtonGroup, ToggleButton } from '@mui/material';
+import { Stack, useMediaQuery, Theme, Grid, ToggleButtonGroup, ToggleButton, CircularProgress } from '@mui/material';
 import { MetPaper, MetLabel } from 'components/common';
 import { Unless } from 'react-if';
 import { DASHBOARD } from '../constants';
@@ -54,7 +54,27 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     };
 
     if (isLoading || engagementIsLoading) {
-        return <Skeleton variant="rectangular" width={'100%'} height={HEIGHT} />;
+        return (
+            <>
+                <MetLabel mb={2} color="primary">
+                    Live Activity - Engagement
+                </MetLabel>
+                <MetPaper sx={{ p: 2 }}>
+                    <Stack direction="column" alignItems="center" gap={1}>
+                        <Grid
+                            container
+                            alignItems="center"
+                            justifyContent="center"
+                            direction="row"
+                            width={'100%'}
+                            height={HEIGHT}
+                        >
+                            <CircularProgress color="inherit" />
+                        </Grid>
+                    </Stack>
+                </MetPaper>
+            </>
+        );
     }
 
     if (isError) {
