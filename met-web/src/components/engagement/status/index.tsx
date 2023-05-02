@@ -45,31 +45,3 @@ export const EngagementStatusChip = ({
             return null;
     }
 };
-
-export const HomepageEngagementStatusChip = ({
-    engagement,
-    preview,
-}: {
-    engagement: Engagement;
-    preview?: boolean;
-}) => {
-    const engagementStartDateUTC = dayjs(formatToUTC(engagement.start_date));
-    const now = dayjs();
-
-    switch (engagement.status_id) {
-        case SubmissionStatus.Upcoming:
-            // Engagement is published but submission start date is not due yet.
-            return <Upcoming preview={preview} />;
-        case SubmissionStatus.Open:
-            // Engagement is published and open for submission.
-            if (engagementStartDateUTC.isAfter(now)) return <Upcoming preview={preview} />;
-            else {
-                return <Open preview={preview} />;
-            }
-        case SubmissionStatus.Closed:
-            // Engagement is published but it's past the submission date.
-            return <Closed preview={preview} />;
-        default:
-            return null;
-    }
-};

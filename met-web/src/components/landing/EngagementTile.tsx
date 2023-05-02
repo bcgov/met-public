@@ -9,7 +9,7 @@ import { MetBody, MetHeader4, MetLabel, MetParagraph, PrimaryButton, SecondaryBu
 import { getEngagement } from 'services/engagementService';
 import { Else, If, Then, When } from 'react-if';
 import dayjs from 'dayjs';
-import { HomepageEngagementStatusChip } from 'components/engagement/status';
+import { EngagementStatusChip } from 'components/engagement/status';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { TileSkeleton } from './TileSkeleton';
 import { AppConfig } from 'config';
@@ -58,7 +58,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
         return <MetLabel>error Loading</MetLabel>;
     }
 
-    const { name, end_date, start_date, description, status_id, banner_url } = loadedEngagement;
+    const { name, end_date, start_date, description, status_id, banner_url, submission_status } = loadedEngagement;
     const EngagementDate = `${dayjs(start_date).format(dateFormat)} to ${dayjs(end_date).format(dateFormat)}`;
     return (
         <Card sx={{ maxWidth: 345 }}>
@@ -86,7 +86,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                 </MetBody>
                 <Stack direction="row" alignItems={'center'} spacing={1} mt="0.5em">
                     <MetBody bold>Status:</MetBody>
-                    <HomepageEngagementStatusChip engagement={loadedEngagement} />
+                    <EngagementStatusChip submissionStatus={submission_status} />
                 </Stack>
             </CardContent>
             <CardActions>
