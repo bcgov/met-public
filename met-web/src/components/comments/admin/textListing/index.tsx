@@ -118,7 +118,15 @@ const CommentTextListing = () => {
             renderCell: (row: SurveySubmission) => (
                 <Grid container>
                     <Grid container item xs={12} sx={{ pb: '0.5em' }}>
-                        <Grid item xs={4} alignItems={'flex-end'} justifyContent={'flex-end'}>
+                        <Grid
+                            item
+                            lg={3}
+                            md={5}
+                            xs={6}
+                            alignItems={'flex-end'}
+                            justifyContent={'flex-end'}
+                            sx={{ mr: 1 }}
+                        >
                             <MetParagraph
                                 sx={{
                                     alignItems: 'flex-end',
@@ -130,22 +138,30 @@ const CommentTextListing = () => {
                                 <b>Comment Date: </b>
                             </MetParagraph>
                         </Grid>
-                        <Grid item xs={8}>
+                        <Grid item lg={8} md={6} xs={6}>
                             <MetParagraph>{formatDate(row.created_date)}</MetParagraph>
                         </Grid>
                         <When condition={row.comment_status_id !== CommentStatus.Pending}>
-                            <Grid item xs={4} alignItems={'flex-end'} justifyContent={'flex-end'}>
+                            <Grid
+                                item
+                                lg={3}
+                                md={5}
+                                xs={6}
+                                alignItems={'flex-end'}
+                                justifyContent={'flex-end'}
+                                sx={{ mr: 1 }}
+                            >
                                 <MetParagraph>
                                     <b>Reviewed By: </b>
                                 </MetParagraph>
                             </Grid>
-                            <Grid item xs={8}>
+                            <Grid item lg={8} md={6} xs={6}>
                                 <MetParagraph>{row.reviewed_by}</MetParagraph>
                             </Grid>
                         </When>
                     </Grid>
-                    <Grid item xs={4}></Grid>
-                    <Grid item xs={8}>
+                    <Grid item lg={3} md={5} xs={6} sx={{ mr: 1 }}></Grid>
+                    <Grid item lg={8} md={6} xs={6}>
                         <CommentStatusChip commentStatus={row.comment_status_id} />
                     </Grid>
                 </Grid>
