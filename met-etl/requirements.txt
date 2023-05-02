@@ -17,4 +17,4 @@ python-dotenv==0.21.0
 pytz==2022.5
 -e git+https://github.com/bcgov/met-public.git#egg=met-api&subdirectory=met-api
 -e git+https://github.com/bcgov/met-public.git#egg=met-cron&subdirectory=met-cron
--e git+https://github.com/VineetBala-AOT/met-public.git#egg=analytics-api&subdirectory=analytics-api
+-e git+https://github.com/bcgov/met-public.git#egg=analytics-api&subdirectory=analytics-api
