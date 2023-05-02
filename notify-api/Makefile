@@ -138,11 +138,8 @@ tag: push ## tag image
 #################################################################################
 # COMMANDS - Local                                                              #
 #################################################################################
-run: db ## Run the project in local
-	. venv/bin/activate && python -m flask run -p 5000
-
-db: ## Update the local database
-	. venv/bin/activate && python manage.py db upgrade
+run: ## Run the project in local
+	. venv/bin/activate && python -m flask run -p 5002
 
 #################################################################################
 # Self Documenting Commands                                                     #

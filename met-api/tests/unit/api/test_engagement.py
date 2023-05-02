@@ -41,7 +41,7 @@ def test_add_engagements(client, jwt, session, engagement_info):  # pylint:disab
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert rv.json.get('tenant_id') is None
+    assert rv.json.get('tenant_id') == '1'
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
@@ -51,7 +51,7 @@ def test_add_engagements_tenant_id(client, jwt, session, engagement_info):  # py
     tenant_short_name = current_app.config.get('DEFAULT_TENANT_SHORT_NAME')
     tenant = TenantModel.find_by_short_name(tenant_short_name)
     assert tenant is not None
-    headers['tenant_id'] = tenant_short_name
+    headers['tenant-id'] = tenant_short_name
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -111,7 +111,8 @@ def test_search_engagements_not_logged_in(client, session):  # pylint:disable=un
     """Assert that an engagement can be fetched without JWT Token."""
     factory_engagement_model()
 
-    rv = client.get('/api/engagements/', content_type=ContentType.JSON.value)
+    tenant_header = {'tenant-id': current_app.config.get('DEFAULT_TENANT_SHORT_NAME')}
+    rv = client.get('/api/engagements/', headers=tenant_header, content_type=ContentType.JSON.value)
     assert rv.json.get('total') == 1
     assert rv.status_code == 200
 
