@@ -1,10 +1,6 @@
 import React from 'react';
 import { Chip } from '@mui/material';
 import { SubmissionStatus } from 'constants/engagementStatus';
-import { Engagement } from 'models/engagement';
-import { formatToUTC } from 'components/common/dateHelper';
-import dayjs from 'dayjs';
-
 const Chip_Font_Weight = { fontWeight: 'bold' };
 
 const Open = ({ preview }: { preview?: boolean }) => {
