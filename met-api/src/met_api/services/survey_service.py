@@ -72,6 +72,7 @@ class SurveyService:
     @classmethod
     def create(cls, survey_data: dict):
         """Create survey."""
+        cls.validate_create_fields(survey_data)
         return SurveyModel.create_survey(survey_data)
 
     @classmethod

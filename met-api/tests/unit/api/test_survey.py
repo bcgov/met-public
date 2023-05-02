@@ -30,7 +30,7 @@ from tests.utilities.factory_utils import (
     factory_template_survey_model, factory_tenant_model)
 
 
-@pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey2])
+@pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey1])
 def test_create_survey(client, jwt, session, survey_info):  # pylint:disable=unused-argument
     """Assert that an survey can be POSTed."""
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
@@ -40,7 +40,7 @@ def test_create_survey(client, jwt, session, survey_info):  # pylint:disable=unu
     assert rv.json.get('form_json') == survey_info.get('form_json')
 
 
-def test_create_survey_with_tenant(client, jwt, session, survey_info):  # pylint:disable=unused-argument
+def test_create_survey_with_tenant(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that an survey can be POSTed."""
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
     tenant_short_name = current_app.config.get('DEFAULT_TENANT_SHORT_NAME')
@@ -50,12 +50,12 @@ def test_create_survey_with_tenant(client, jwt, session, survey_info):  # pylint
     rv = client.post('/api/surveys/', data=json.dumps(TestSurveyInfo.survey2),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert rv.json.get('form_json') == survey_info.get('form_json')
+    assert rv.json.get('form_json') == TestSurveyInfo.survey2.get('form_json')
     survey_tenant_id = rv.json.get('tenant_id')
     assert survey_tenant_id == str(tenant.id)
 
     # Create a tenant
-    tenant_data = TestTenantInfo.tenant1
+    tenant_data = TestTenantInfo.tenant2
     factory_tenant_model(tenant_data)
     tenant2_short_name = tenant_data['short_name']
     tenant_2 = TenantModel.find_by_short_name(tenant2_short_name)
@@ -69,7 +69,7 @@ def test_create_survey_with_tenant(client, jwt, session, survey_info):  # pylint
     rv = client.post('/api/surveys/', data=json.dumps(TestSurveyInfo.survey3),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert rv.json.get('form_json') == survey_info.get('form_json')
+    assert rv.json.get('form_json') == TestSurveyInfo.survey3.get('form_json')
     survey_tenant_id = rv.json.get('tenant_id')
     assert survey_tenant_id == str(tenant_2.id)
 

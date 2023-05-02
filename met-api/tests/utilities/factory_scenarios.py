@@ -126,7 +126,12 @@ class TestTenantInfo(dict, Enum):
     """Test scenarios of tenants."""
 
     tenant1 = {
-        'short_name': fake.lexify(text='???').upper(),
+        'short_name': 'GDX',
+        'name': fake.name(),
+        'description': fake.text(max_nb_chars=10),
+    }
+    tenant2 = {
+        'short_name': 'EMLI',
         'name': fake.name(),
         'description': fake.text(max_nb_chars=10),
     }
