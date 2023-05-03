@@ -8,6 +8,7 @@ interface SearchFilters {
     status: number[];
     project_type: string;
 }
+
 export interface LandingContextProps {
     engagements: Engagement[];
     loadingEngagements: boolean;
