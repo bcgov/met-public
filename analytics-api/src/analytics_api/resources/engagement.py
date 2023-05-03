@@ -49,3 +49,26 @@ class Engagement(Resource):
             return 'Engagement was not found', HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@cors_preflight('GET,OPTIONS')
+@API.route('/map/<engagement_id>')
+class EngagementMap(Resource):
+    """Resource for managing a single engagement."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @auth.optional
+    def get(engagement_id):
+        """Fetch a map data matching the provided id."""
+        try:
+            map_data = EngagementService().get_engagement_map_data(engagement_id)
+
+            if map_data:
+                return map_data, HTTPStatus.OK
+
+            return 'Engagement was not found', HTTPStatus.INTERNAL_SERVER_ERROR
+        except KeyError:
+            return 'Engagement was not found', HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

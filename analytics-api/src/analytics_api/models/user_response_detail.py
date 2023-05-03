@@ -26,11 +26,11 @@ class UserResponseDetail(BaseModel):  # pylint: disable=too-few-public-methods
         engagement_id
     ):
         """Get user response count for an engagement id."""
-        response_count = (db.session.query(func.count(UserResponseDetail.id))
+        response_count = (db.session.query(UserResponseDetail)
                           .filter(UserResponseDetail.engagement_id == engagement_id)
                           .filter(UserResponseDetail.is_active == true()))
 
-        return response_count.all()
+        return response_count.count()
 
     @classmethod
     def get_response_count_by_created_month(

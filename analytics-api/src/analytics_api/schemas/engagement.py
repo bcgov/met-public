@@ -20,3 +20,7 @@ class EngagementSchema(Schema):
     created_date = fields.Str(data_key='created_date')
     updated_date = fields.Str(data_key='updated_date')
     is_active = fields.Bool(data_key='is_active')
+    latitude = fields.Float(data_key='latitude')
+    longitude = fields.Float(data_key='longitude')
+    geojson = fields.Str(data_key='geojson')
+    marker_label = fields.Str(data_key='marker_label')

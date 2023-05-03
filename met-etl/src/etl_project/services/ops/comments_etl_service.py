@@ -4,9 +4,9 @@ from datetime import datetime
 
 from met_api.models.comment import Comment as MetCommentModel
 from met_api.constants.comment_status import Status as CommentStatus
-from met_cron.models.user_feedback import UserFeedback as UserFeedbackModel
-from met_cron.models.survey import Survey as EtlSurveyModel
-from met_cron.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
+from analytics_api.models.user_feedback import UserFeedback as UserFeedbackModel
+from analytics_api.models.survey import Survey as EtlSurveyModel
+from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 
 
 # get the last run cycle id for comments etl

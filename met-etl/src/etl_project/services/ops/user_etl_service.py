@@ -1,11 +1,10 @@
 from dagster import Out, Output, op
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy import func
 from datetime import datetime
 
 from met_api.models.user import User as MetUserModel
-from met_cron.models.user_details import UserDetails as UserDetailsModel
-from met_cron.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
+from analytics_api.models.user_details import UserDetails as UserDetailsModel
+from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 
 
 # get the last run cycle id for user detail etl

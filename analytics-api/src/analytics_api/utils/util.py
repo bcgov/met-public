@@ -22,7 +22,7 @@ import os
 import re
 import urllib
 
-from humps.main import camelize, decamelize
+from enum import Enum
 
 
 def cors_preflight(methods):
@@ -43,16 +43,6 @@ def cors_preflight(methods):
     return wrapper
 
 
-def camelback2snake(camel_dict: dict):
-    """Convert the passed dictionary's keys from camelBack case to snake_case."""
-    return decamelize(camel_dict)
-
-
-def snake2camelback(snake_dict: dict):
-    """Convert the passed dictionary's keys from snake_case to camelBack case."""
-    return camelize(snake_dict)
-
-
 def allowedorigins():
     """Return allowed origin."""
     _allowedcors = os.getenv('CORS_ORIGIN')
@@ -63,25 +53,16 @@ def allowedorigins():
     return allowedcors
 
 
-class Singleton(type):
-    """Singleton meta."""
-
-    _instances = {}
-
-    def __call__(cls, *args, **kwargs):
-        """Call for meta."""
-        if cls not in cls._instances:
-            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
-        return cls._instances[cls]
-
-
-def digitify(payload: str) -> int:
-    """Return the digits from the string."""
-    return int(re.sub(r'\D', '', payload))
-
-
 def escape_wam_friendly_url(param):
     """Return encoded/escaped url."""
     base64_org_name = base64.b64encode(bytes(param, encoding='utf-8')).decode('utf-8')
     encode_org_name = urllib.parse.quote(base64_org_name, safe='')
     return encode_org_name
+
+
+class FormIoComponentType(Enum):
+    """FormIO Component Types."""
+
+    RADIO = 'radio'
+    CHECKBOX = 'checkbox'
+    TEXT = 'text'

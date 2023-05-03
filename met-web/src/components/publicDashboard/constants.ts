@@ -2,8 +2,16 @@ export const DASHBOARD = {
     KPI: {
         BACKGROUND_COLOR: '#ECF2F5',
         RADIALBAR: {
-            BACKGROUND_COLOR: '#D8D9DA',
+            BACKGROUND_COLOR: '#F1F1F1',
             FILL_COLOR: '#FFAB00',
+        },
+        SURVEYCOMPLETEDRADIALBAR: {
+            BACKGROUND_COLOR: '#D8D9DA',
+            FILL_COLOR: '#F15A2C',
+        },
+        SURVEYEMAILSSENTRADIALBAR: {
+            BACKGROUND_COLOR: '#D8D9DA',
+            FILL_COLOR: '#A1DDF3',
         },
     },
     LINE_CHART: {
