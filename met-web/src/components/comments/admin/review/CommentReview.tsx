@@ -349,8 +349,8 @@ const CommentReview = () => {
                                         }
                                     />
                                     <MetParagraph color="#d32f2f" fontSize={'13px'} marginLeft={'3em'}>
-                                        If there is a threat/menace in the comments, select this checkbox and contact.
-                                        No email will be sent.
+                                        If there is a threat/menace in the comments, select this checkbox and contact
+                                        {`<TBD>`}. No email will be sent.
                                     </MetParagraph>
                                     <FormControlLabel
                                         label={<MetParagraph sx={{ color: '#494949' }}>Other</MetParagraph>}
