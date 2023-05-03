@@ -22,7 +22,6 @@ import os
 import re
 import urllib
 
-from humps.main import camelize, decamelize
 from enum import Enum
 
 
