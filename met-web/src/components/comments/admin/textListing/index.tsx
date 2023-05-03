@@ -95,7 +95,7 @@ const CommentTextListing = () => {
             label: 'Content',
             allowSort: true,
             renderCell: (row: SurveySubmission) => (
-                <Grid container rowSpacing={2}>
+                <Grid container rowSpacing={2} sx={{ pt: 1.5 }}>
                     {row.comments?.map((comment, index) => {
                         return (
                             <Grid key={index} item xs={12}>
@@ -111,25 +111,57 @@ const CommentTextListing = () => {
         },
         {
             key: 'comment_status_id',
-            numeric: false,
+            numeric: true,
             disablePadding: false,
             label: 'Comment Date',
-            allowSort: false,
-            customStyle: { width: '20%' },
+            allowSort: true,
             renderCell: (row: SurveySubmission) => (
-                <Grid container direction="column" alignItems="flex-end" justifyContent="flex-start" width="20em">
-                    <Grid item sx={{ pb: '0.5em' }}>
-                        <MetParagraph sx={{ pb: '0.5em' }}>
-                            <b>Comment Date: </b>
-                            {formatDate(row.created_date)}
-                        </MetParagraph>
-                        <When condition={row.comment_status_id !== CommentStatus.Pending}>
-                            <MetParagraph>
-                                <b>Reviewed By: </b> {row.reviewed_by}
+                <Grid container>
+                    <Grid container item xs={12} sx={{ pb: '0.5em' }}>
+                        <Grid
+                            item
+                            lg={3}
+                            md={5}
+                            xs={6}
+                            alignItems={'flex-end'}
+                            justifyContent={'flex-end'}
+                            sx={{ mr: 1 }}
+                        >
+                            <MetParagraph
+                                sx={{
+                                    alignItems: 'flex-end',
+                                    justifyContent: 'flex-end',
+                                    alignSelf: 'flex-end',
+                                    pb: '0.5em',
+                                }}
+                            >
+                                <b>Comment Date: </b>
                             </MetParagraph>
+                        </Grid>
+                        <Grid item lg={8} md={6} xs={6}>
+                            <MetParagraph>{formatDate(row.created_date)}</MetParagraph>
+                        </Grid>
+                        <When condition={row.comment_status_id !== CommentStatus.Pending}>
+                            <Grid
+                                item
+                                lg={3}
+                                md={5}
+                                xs={6}
+                                alignItems={'flex-end'}
+                                justifyContent={'flex-end'}
+                                sx={{ mr: 1 }}
+                            >
+                                <MetParagraph>
+                                    <b>Reviewed By: </b>
+                                </MetParagraph>
+                            </Grid>
+                            <Grid item lg={8} md={6} xs={6}>
+                                <MetParagraph>{row.reviewed_by}</MetParagraph>
+                            </Grid>
                         </When>
                     </Grid>
-                    <Grid item>
+                    <Grid item lg={3} md={5} xs={6} sx={{ mr: 1 }}></Grid>
+                    <Grid item lg={8} md={6} xs={6}>
                         <CommentStatusChip commentStatus={row.comment_status_id} />
                     </Grid>
                 </Grid>
