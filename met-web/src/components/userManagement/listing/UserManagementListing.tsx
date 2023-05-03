@@ -11,11 +11,18 @@ import { Link as MuiLink } from '@mui/material';
 import MetTable from 'components/common/Table';
 import { formatDate } from 'components/common/dateHelper';
 import { UserManagementContext } from './UserManagementContext';
-
+import { useNavigate } from 'react-router-dom';
 const UserManagementListing = () => {
-    const { pageInfo, paginationOptions, setPaginationOptions, users, usersLoading, setAddUserModelOpen } =
-        useContext(UserManagementContext);
-
+    const {
+        pageInfo,
+        paginationOptions,
+        setPaginationOptions,
+        users,
+        usersLoading,
+        setAddUserModelOpen,
+        setCurrentUser,
+    } = useContext(UserManagementContext);
+    const navigate = useNavigate();
     const headCells: HeadCell<User>[] = [
         {
             key: 'first_name',
@@ -24,7 +31,14 @@ const UserManagementListing = () => {
             label: 'User Name',
             allowSort: true,
             renderCell: (row: User) => (
-                <MuiLink component={Link} to={``}>
+                <MuiLink
+                    to={`/usermanagement/${row.id}/details`}
+                    component={Link}
+                    onClick={() => {
+                        setCurrentUser(row);
+                        navigate(`/usermanagement/${row.id}/details`);
+                    }}
+                >
                     {row.last_name + ', ' + row.first_name}
                 </MuiLink>
             ),

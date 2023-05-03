@@ -14,6 +14,8 @@ export interface UserManagementContextProps {
     addUserModalOpen: boolean;
     setAddUserModelOpen: React.Dispatch<React.SetStateAction<boolean>>;
     loadUserListing: () => void;
+    selectedUser: User | null;
+    setCurrentUser: (user: User) => void;
 }
 
 export type EngagementParams = {
@@ -24,6 +26,7 @@ export const UserManagementContext = createContext<UserManagementContextProps>({
     usersLoading: true,
     pageInfo: createDefaultPageInfo(),
     users: [],
+    selectedUser: null,
     paginationOptions: {
         page: 0,
         size: 0,
@@ -38,11 +41,15 @@ export const UserManagementContext = createContext<UserManagementContextProps>({
     loadUserListing: () => {
         throw new Error('Load user listing is not implemented');
     },
+    setCurrentUser: () => {
+        throw new Error('set current user is not implemented');
+    },
 });
 
 export const UserManagementContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     const dispatch = useAppDispatch();
     const [users, setUsers] = useState<User[]>([]);
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
     const [usersLoading, setUsersLoading] = useState(true);
     const [addUserModalOpen, setAddUserModelOpen] = useState(false);
@@ -87,6 +94,10 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
         }
     };
 
+    const setCurrentUser = (user: User) => {
+        setSelectedUser(user);
+    };
+
     return (
         <UserManagementContext.Provider
             value={{
@@ -98,6 +109,8 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
                 addUserModalOpen,
                 setAddUserModelOpen,
                 loadUserListing,
+                selectedUser,
+                setCurrentUser,
             }}
         >
             {children}
