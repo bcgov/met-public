@@ -53,6 +53,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
                               search_text='', unlinked=False):
         """Get surveys paginated."""
         query = db.session.query(Survey).join(Engagement, isouter=True).join(EngagementStatus, isouter=True)
+        query = cls._add_tenant_filter(query)
 
         if survey_exclusion_options.exclude_hidden:
             query = query.filter(Survey.is_hidden.is_(False))

@@ -83,7 +83,7 @@ class TestSurveyInfo(dict, Enum):
         'name': fake.name(),
         'form_json': {'display': 'form', 'components': []}
     }
-    survey3 = {
+    hidden_survey = {
         'name': fake.name(),
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
@@ -92,8 +92,9 @@ class TestSurveyInfo(dict, Enum):
         'form_json': {'display': 'form', 'components': []},
         'is_hidden': True,
         'is_template': False,
+        'tenant_id': 1
     }
-    survey4 = {
+    survey_template = {
         'name': fake.name(),
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
@@ -102,6 +103,7 @@ class TestSurveyInfo(dict, Enum):
         'form_json': {'display': 'form', 'components': []},
         'is_hidden': False,
         'is_template': True,
+        'tenant_id': 1
     }
 
 
