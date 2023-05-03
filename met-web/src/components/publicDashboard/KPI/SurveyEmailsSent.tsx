@@ -98,6 +98,7 @@ const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentP
                             background={{ fill: DASHBOARD.KPI.RADIALBAR.BACKGROUND_COLOR }}
                             dataKey="value"
                             fill={DASHBOARD.KPI.SURVEYEMAILSSENTRADIALBAR.FILL_COLOR}
+                            cornerRadius={30}
                         />
                         <text
                             x={circleSize / 2}

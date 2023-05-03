@@ -31,7 +31,7 @@ API = Namespace('counts', description='Endpoints for Counts')
 
 @cors_preflight('GET,OPTIONS')
 @API.route('/')
-class Counter(Resource):
+class Aggregator(Resource):
     """Resource for managing counts."""
 
     @staticmethod

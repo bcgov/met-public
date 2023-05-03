@@ -53,7 +53,7 @@ class Engagement(Resource):
 
 @cors_preflight('GET,OPTIONS')
 @API.route('/map/<engagement_id>')
-class Engagements(Resource):
+class EngagementMap(Resource):
     """Resource for managing a single engagement."""
 
     @staticmethod

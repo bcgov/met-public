@@ -98,6 +98,7 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
                             background={{ fill: DASHBOARD.KPI.RADIALBAR.BACKGROUND_COLOR }}
                             dataKey="value"
                             fill={DASHBOARD.KPI.SURVEYCOMPLETEDRADIALBAR.FILL_COLOR}
+                            cornerRadius={30}
                         />
                         <text
                             x={circleSize / 2}
