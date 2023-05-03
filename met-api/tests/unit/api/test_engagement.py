@@ -147,8 +147,6 @@ def test_search_engagements_not_logged_in(client, session):  # pylint:disable=un
     rv = client.get('/api/engagements/', content_type=ContentType.JSON.value)
     assert rv.json.get('total') == 2, 'Both of the engagaments should visible for public user wit no tenant information'
     assert rv.status_code == 200
-    print('\n' * 10)
-    print('*' * 10)
 
     tenant_header = {TENANT_ID_HEADER: current_app.config.get('DEFAULT_TENANT_SHORT_NAME')}
     rv = client.get('/api/engagements/', headers=tenant_header, content_type=ContentType.JSON.value)
