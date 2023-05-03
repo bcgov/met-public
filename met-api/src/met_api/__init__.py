@@ -77,8 +77,13 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
         """Set Tenant ID Globally."""
         tenant_short_name = request.headers.get(constants.TENANT_ID_HEADER, None)
         if not tenant_short_name:
-            return
+            # Remove tenant_id and tenant_name attributes from g
+            if hasattr(g, 'tenant_id'):
+                del g.tenant_id
 
+            if hasattr(g, 'tenant_name'):
+                del g.tenant_name
+            return
         key = tenant_short_name.upper()
         tenant = cache.get(f'tenant_{key}')
         cache_miss = not tenant

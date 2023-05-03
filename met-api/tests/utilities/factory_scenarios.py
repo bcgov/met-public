@@ -83,7 +83,7 @@ class TestSurveyInfo(dict, Enum):
         'name': fake.name(),
         'form_json': {'display': 'form', 'components': []}
     }
-    survey3 = {
+    hidden_survey = {
         'name': fake.name(),
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
@@ -92,8 +92,9 @@ class TestSurveyInfo(dict, Enum):
         'form_json': {'display': 'form', 'components': []},
         'is_hidden': True,
         'is_template': False,
+        'tenant_id': 1
     }
-    survey4 = {
+    survey_template = {
         'name': fake.name(),
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
@@ -102,6 +103,7 @@ class TestSurveyInfo(dict, Enum):
         'form_json': {'display': 'form', 'components': []},
         'is_hidden': False,
         'is_template': True,
+        'tenant_id': 1
     }
 
 
@@ -155,6 +157,7 @@ class TestEngagementInfo(dict, Enum):
         'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\"type\":\"unstyled\",\"depth\":0,\
         \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"'
     }
+
     engagement2 = {
         'name': fake.name(),
         'start_date': (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d'),
@@ -175,6 +178,23 @@ class TestEngagementInfo(dict, Enum):
             \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"'
         }
         ]
+    }
+
+    engagement3 = {
+        'name': fake.name(),
+        'start_date': (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d'),
+        'end_date': (datetime.today() + timedelta(days=1)).strftime('%Y-%m-%d'),
+        'banner_url': '',
+        'tenant_id': 1,
+        'created_by': '123',
+        'updated_by': '123',
+        'status': SubmissionStatus.Open.value,
+        'description': 'My Test Engagement Description',
+        'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\"type\":\"unstyled\",\
+            \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
+        'content': 'Content Sample',
+        'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\"type\":\"unstyled\",\"depth\":0,\
+            \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"'
     }
 
 

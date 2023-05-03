@@ -81,7 +81,13 @@ class BaseModel(db.Model):
         db.session.flush()
         db.session.commit()
 
-        return self
+    @classmethod
+    def _add_tenant_filter(cls, query):
+        has_tenant_id = hasattr(cls, TENANT_ID)
+        has_g_tenant_id = hasattr(g, 'tenant_id') and g.tenant_id
+        if has_tenant_id and has_g_tenant_id:
+            return query.filter(getattr(cls, TENANT_ID) == g.tenant_id)
+        return query
 
     def delete(self):
         """Delete and commit."""

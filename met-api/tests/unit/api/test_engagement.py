@@ -33,7 +33,6 @@ from tests.utilities.factory_utils import (
     factory_auth_header, factory_engagement_model, factory_membership_model, factory_submission_model,
     factory_survey_and_eng_model, factory_tenant_model, factory_user_model)
 
-
 fake = Faker()
 
 
@@ -135,9 +134,23 @@ def test_search_engagements_not_logged_in(client, session):  # pylint:disable=un
     """Assert that an engagement can be fetched without JWT Token."""
     factory_engagement_model()
 
-    tenant_header = {'tenant-id': current_app.config.get('DEFAULT_TENANT_SHORT_NAME')}
+    rv = client.get('/api/engagements/', content_type=ContentType.JSON.value)
+    assert rv.json.get('total') == 1, 'its visible for public user wit no tenant information'
+    assert rv.status_code == 200
+
+    tenant_header = {TENANT_ID_HEADER: current_app.config.get('DEFAULT_TENANT_SHORT_NAME')}
     rv = client.get('/api/engagements/', headers=tenant_header, content_type=ContentType.JSON.value)
-    assert rv.json.get('total') == 1
+    assert rv.json.get('total') == 0, 'Tenant based fetching.So dont return the non-tenant info.'
+    assert rv.status_code == 200
+
+    factory_engagement_model(TestEngagementInfo.engagement3)
+    rv = client.get('/api/engagements/', content_type=ContentType.JSON.value)
+    assert rv.json.get('total') == 2, 'Both of the engagaments should visible for public user wit no tenant information'
+    assert rv.status_code == 200
+
+    tenant_header = {TENANT_ID_HEADER: current_app.config.get('DEFAULT_TENANT_SHORT_NAME')}
+    rv = client.get('/api/engagements/', headers=tenant_header, content_type=ContentType.JSON.value)
+    assert rv.json.get('total') == 1, 'Tenant based fetching.So dont return the non-tenant info.'
     assert rv.status_code == 200
 
 

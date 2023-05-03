@@ -45,13 +45,6 @@ class Engagement(BaseModel):
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
 
     @classmethod
-    def get_all_engagements(cls):
-        """Get all engagements."""
-        engagements_schema = EngagementSchema(many=True)
-        data = db.session.query(Engagement).join(EngagementStatus).order_by(Engagement.id.asc()).all()
-        return engagements_schema.dump(data)
-
-    @classmethod
     def get_engagements_paginated(
         cls,
         pagination_options: PaginationOptions,
@@ -61,6 +54,8 @@ class Engagement(BaseModel):
     ):
         """Get engagements paginated."""
         query = db.session.query(Engagement).join(EngagementStatus)
+
+        query = cls._add_tenant_filter(query)
 
         if statuses:
             query = cls._filter_by_statuses(query, statuses)
@@ -90,17 +85,6 @@ class Engagement(BaseModel):
 
         page = query.paginate(page=pagination_options.page, per_page=pagination_options.size)
         return page.items, page.total
-
-    @classmethod
-    def get_engagements_by_status(cls, status_id):
-        """Get all engagements by a list of status."""
-        engagements_schema = EngagementSchema(many=True)
-        data = db.session.query(Engagement) \
-            .join(EngagementStatus) \
-            .filter(Engagement.status_id.in_(status_id)) \
-            .order_by(Engagement.id.asc()) \
-            .all()
-        return engagements_schema.dump(data)
 
     @classmethod
     def update_engagement(cls, engagement: EngagementSchema) -> Engagement:
