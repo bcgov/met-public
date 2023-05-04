@@ -100,7 +100,7 @@ const CommentTextListing = () => {
             label: 'Content',
             allowSort: true,
             renderCell: (row: SurveySubmission) => (
-                <Grid container sx={12} rowSpacing={2} sx={{ pt: 1.5 }}>
+                <Grid container xs={12} rowSpacing={2} sx={{ pt: 1.5 }}>
                     {row.comments?.map((comment, index) => {
                         return (
                             <Grid key={index} item xs={12}>
