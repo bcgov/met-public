@@ -55,7 +55,7 @@ export const UserDetails = () => {
                         <MetLabel>User:</MetLabel>
                     </Grid>
                     <Grid item>
-                        <MetParagraph sx={{ pl: 2 }}>{savedUser?.first_name}</MetParagraph>
+                        <MetParagraph sx={{ pl: 2 }}>{savedUser && savedUser?.first_name}</MetParagraph>
                     </Grid>
                 </Grid>
 
@@ -64,7 +64,7 @@ export const UserDetails = () => {
                         <MetLabel>Role:</MetLabel>
                     </Grid>
                     <Grid item>
-                        <MetParagraph sx={{ pl: 2 }}>{savedUser?.roles[0]}</MetParagraph>
+                        <MetParagraph sx={{ pl: 2 }}>{savedUser && savedUser?.roles[0]}</MetParagraph>
                     </Grid>
                 </Grid>
 
@@ -73,7 +73,7 @@ export const UserDetails = () => {
                         <MetLabel>Status:</MetLabel>
                     </Grid>
                     <Grid item>
-                        <MetParagraph sx={{ pl: 2 }}>{savedUser?.email_id}</MetParagraph>
+                        <MetParagraph sx={{ pl: 2 }}>{savedUser && savedUser?.email_id}</MetParagraph>
                     </Grid>
                 </Grid>
 
@@ -93,7 +93,7 @@ export const UserDetails = () => {
                         <MetLabel>Date Added:</MetLabel>
                     </Grid>
                     <Grid item>
-                        <MetParagraph sx={{ pl: 2 }}>{savedUser?.created_date}</MetParagraph>
+                        <MetParagraph sx={{ pl: 2 }}>{savedUser && savedUser?.created_date}</MetParagraph>
                     </Grid>
                 </Grid>
                 <Grid container direction="row" item xs={6} spacing={1}>

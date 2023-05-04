@@ -38,7 +38,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         }
         try {
             const result = await getUserList();
-            const currentUser = result.items.find((user) => user.id === parseInt(userId ?? '0'));
+            const currentUser = result.items.find((user) => user.id === parseInt(userId));
             setSavedUser(currentUser);
             setUserLoading(false);
         } catch (error) {
