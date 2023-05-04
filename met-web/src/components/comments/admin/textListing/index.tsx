@@ -179,7 +179,7 @@ const CommentTextListing = () => {
             rowSpacing={1}
         >
             <Grid item xs={12} container>
-                <Grid item xs={12} lg={4}>
+                <Grid item xs={12} lg={5}>
                     <Stack direction="row" spacing={1}>
                         <TextField
                             id="comments"
@@ -197,6 +197,11 @@ const CommentTextListing = () => {
                         </PrimaryButton>
                     </Stack>
                 </Grid>
+                <Grid item container lg={5} xs={12} alignItems={'flex-end'} justifyContent={'flex-end'}>
+                    <PrimaryButton component={Link} to={`/surveys/${submissions[0]?.survey_id || 0}/comments`}>
+                        Return to Comments List
+                    </PrimaryButton>
+                </Grid>
             </Grid>
             <Grid item sm={12} lg={10}>
                 <MetTable
@@ -211,9 +216,6 @@ const CommentTextListing = () => {
                     pageInfo={pageInfo}
                     loading={tableLoading}
                 />
-                <PrimaryButton component={Link} to={`/surveys/${submissions[0]?.survey_id || 0}/comments`}>
-                    Return to Comments List
-                </PrimaryButton>
             </Grid>
         </MetPageGridContainer>
     );
