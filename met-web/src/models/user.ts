@@ -28,7 +28,7 @@ export interface User {
     username: string;
 }
 
-export const initialDefaultUser: User = {
+export const createDefaultUser: User = {
     id: 0,
     contact_number: '',
     description: '',

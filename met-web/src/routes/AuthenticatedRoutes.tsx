@@ -16,11 +16,11 @@ import EngagementComments from '../components/engagement/dashboard/comment';
 import UnderConstruction from './UnderConstruction';
 import FeedbackListing from 'components/feedback/listing';
 import UserManagementListing from 'components/userManagement/listing';
-import UserDetails from 'components/userManagement/listing/UserDetails';
 import Dashboard from 'components/dashboard';
 import Unauthorized from './Unauthorized';
 import AuthGate from './AuthGate';
 import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+import UserProfile from 'components/userManagement/userDetails';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -44,7 +44,7 @@ const AuthenticatedRoutes = () => {
             <Route path="/calendar" element={<UnderConstruction />} />
             <Route path="/reporting" element={<UnderConstruction />} />
             <Route path="/usermanagement" element={<UserManagementListing />} />
-            <Route path="/usermanagement/:userId/details" element={<UserDetails />} />
+            <Route path="/usermanagement/:userId/details" element={<UserProfile />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
