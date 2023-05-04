@@ -26,6 +26,7 @@ from flask import Blueprint
 from .apihelper import Api
 from .aggregator import API as AGGREGATOR_API
 from .engagement import API as ENGAGEMENT_API
+from .survey_result import API as SURVEY_RESULT_API
 from .user_response_detail import API as USER_RESPONSE_API
 __all__ = ('API_BLUEPRINT',)
 
@@ -43,4 +44,5 @@ API = Api(
 
 API.add_namespace(AGGREGATOR_API)
 API.add_namespace(ENGAGEMENT_API)
+API.add_namespace(SURVEY_RESULT_API)
 API.add_namespace(USER_RESPONSE_API)

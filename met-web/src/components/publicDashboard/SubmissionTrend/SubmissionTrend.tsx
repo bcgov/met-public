@@ -56,9 +56,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     if (isLoading || engagementIsLoading) {
         return (
             <>
-                <MetLabel mb={2} color="primary">
-                    Live Activity - Engagement
-                </MetLabel>
+                <MetLabel mb={2}>Live Activity - Engagement</MetLabel>
                 <MetPaper sx={{ p: 2 }}>
                     <Stack direction="column" alignItems="center" gap={1}>
                         <Grid
@@ -82,9 +80,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     }
     return (
         <>
-            <MetLabel mb={2} color="primary">
-                Live Activity - Engagement
-            </MetLabel>
+            <MetLabel mb={2}>Live Activity - Engagement</MetLabel>
             <MetPaper sx={{ p: 2 }}>
                 <Stack direction="column" alignItems="center" gap={1}>
                     <Grid item container xs={12} direction="row" justifyContent="center" spacing={1}>

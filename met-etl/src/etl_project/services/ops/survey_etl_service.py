@@ -10,7 +10,7 @@ from analytics_api.models.request_type_textarea import RequestTypeTextarea as Me
 from analytics_api.models.request_type_textfield import RequestTypeTextfield as MetRequestTypeTextModel
 from analytics_api.models.survey import Survey as EtlSurveyModel
 from met_api.models.survey import Survey as MetSurveyModel
-from met_cron.utils import FormIoComponentType
+from analytics_api.utils.util import FormIoComponentType
 
 
 # get the last run cycle id for survey etl

@@ -25,7 +25,7 @@ run_launcher:
       - MET_ANALYTICS_DB_DB
       - MET_ANALYTICS_DB_HOST
       - MET_ANALYTICS_DB_PORT
-    network: dagster_network
+    network: metnetwork
     container_kwargs:
       volumes: # Make docker client accessible to any launched containers as well
         - /var/run/docker.sock:/var/run/docker.sock

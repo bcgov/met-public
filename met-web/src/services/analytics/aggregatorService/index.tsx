@@ -8,7 +8,7 @@ interface GetCountParams {
 }
 
 export const getAggregatorData = async (params: GetCountParams = {}): Promise<AggregatorData> => {
-    const response = await http.GetRequest<AggregatorData>(Endpoints.Aggregator.GET_COUNT, params);
+    const response = await http.GetRequest<AggregatorData>(Endpoints.AnalyticsAggregator.GET_COUNT, params);
     if (response.data) {
         return response.data;
     }

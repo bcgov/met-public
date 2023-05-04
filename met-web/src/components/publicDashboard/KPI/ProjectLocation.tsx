@@ -41,9 +41,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading }: SurveysCompletedPr
     if (isLoading || engagementIsLoading || !data) {
         return (
             <>
-                <MetLabel mb={2} color="primary">
-                    Project Location
-                </MetLabel>
+                <MetLabel mb={2}>Project Location</MetLabel>
                 <MetPaper sx={{ p: 2, textAlign: 'center' }}>
                     <Stack alignItems="center" gap={1}>
                         <Grid
@@ -68,9 +66,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading }: SurveysCompletedPr
 
     return (
         <>
-            <MetLabel mb={2} color="primary">
-                Project Location
-            </MetLabel>
+            <MetLabel mb={2}>Project Location</MetLabel>
             <MetPaper sx={{ textAlign: 'center' }}>
                 <Box
                     sx={{

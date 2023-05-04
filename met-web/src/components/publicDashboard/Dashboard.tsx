@@ -90,7 +90,7 @@ export const Dashboard = () => {
                                 <SubmissionTrend engagement={engagement} engagementIsLoading={isEngagementLoading} />
                             </Grid>
                             <Grid item xs={12}>
-                                <SurveyBar />
+                                <SurveyBar engagement={engagement} engagementIsLoading={isEngagementLoading} />
                             </Grid>
                         </Grid>
                     </MetPaper>
