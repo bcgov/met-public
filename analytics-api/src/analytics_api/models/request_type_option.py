@@ -9,10 +9,6 @@ from analytics_api.models.response_type_option import ResponseTypeOption as Resp
 from .base_model import BaseModel
 from .db import db
 from .request_mixin import RequestMixin
-from analytics_api.models.survey import Survey as SurveyModel
-from analytics_api.models.response_type_option import ResponseTypeOption as ResponseTypeOptionModel
-from sqlalchemy import func
-from sqlalchemy.sql.expression import true
 
 
 class RequestTypeOption(BaseModel, RequestMixin):  # pylint: disable=too-few-public-methods
