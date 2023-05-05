@@ -1,6 +1,6 @@
 """request_type_option model class.
 
-Manages the option type questions on a survey
+Manages the option type questions (radion/checkbox) on a survey
 """
 from sqlalchemy import func
 from sqlalchemy.sql.expression import true
@@ -21,12 +21,13 @@ class RequestTypeOption(BaseModel, RequestMixin):  # pylint: disable=too-few-pub
         cls,
         engagement_id
     ):
-        """Get survey result for an engagement id."""
+        """Get the analytics survey id for an engagement id."""
         analytics_survey_id = (db.session.query(SurveyModel.id)
                                .filter(SurveyModel.engagement_id == engagement_id)
                                .filter(SurveyModel.is_active == true())
                                .subquery())
 
+        # Get all the survey questions specific to a survey id which are in active status.
         survey_question = (db.session.query(RequestTypeOption.postion.label('postion'),
                                             RequestTypeOption.label.label('label'),
                                             RequestTypeOption.request_id)
@@ -35,6 +36,8 @@ class RequestTypeOption(BaseModel, RequestMixin):  # pylint: disable=too-few-pub
                            .order_by(RequestTypeOption.postion)
                            .subquery())
 
+        # Get all the survey responses with the counts for each response specific to a survey id which
+        # are in active status.
         survey_response = (db.session.query(ResponseTypeOptionModel.request_id, ResponseTypeOptionModel.value,
                                             func.count(ResponseTypeOptionModel.request_id).label('response'))
                            .filter(ResponseTypeOptionModel.survey_id.in_(analytics_survey_id))
@@ -42,6 +45,11 @@ class RequestTypeOption(BaseModel, RequestMixin):  # pylint: disable=too-few-pub
                            .group_by(ResponseTypeOptionModel.request_id, ResponseTypeOptionModel.value)
                            .subquery())
 
+        # Combine the data fetched above such that the result has a format as below
+        # - position: is a unique value for each question which helps to get the order of question on the survey
+        # - label: is the the survey question
+        # - value: user selected response for each question
+        # - count: number of time the same value is selected as a response to each question
         survey_result = (db.session.query((survey_question.c.postion).label('postion'),
                                           (survey_question.c.label).label('question'),
                                           func.json_agg(func.json_build_object('value', survey_response.c.value,
