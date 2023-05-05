@@ -1,6 +1,6 @@
 """request_type_option model class.
 
-Manages the option type questions (radion/checkbox) on a survey
+Manages the option type questions (radio/checkbox) on a survey
 """
 from sqlalchemy import func
 from sqlalchemy.sql.expression import true
