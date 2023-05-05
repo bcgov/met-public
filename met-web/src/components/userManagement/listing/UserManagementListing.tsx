@@ -11,18 +11,11 @@ import { Link as MuiLink } from '@mui/material';
 import MetTable from 'components/common/Table';
 import { formatDate } from 'components/common/dateHelper';
 import { UserManagementContext } from './UserManagementContext';
-import { useNavigate } from 'react-router-dom';
+
 const UserManagementListing = () => {
-    const {
-        pageInfo,
-        paginationOptions,
-        setPaginationOptions,
-        users,
-        usersLoading,
-        setAddUserModelOpen,
-        setCurrentUser,
-    } = useContext(UserManagementContext);
-    const navigate = useNavigate();
+    const { pageInfo, paginationOptions, setPaginationOptions, users, usersLoading, setAddUserModalOpen } =
+        useContext(UserManagementContext);
+
     const headCells: HeadCell<User>[] = [
         {
             key: 'first_name',
@@ -31,14 +24,7 @@ const UserManagementListing = () => {
             label: 'User Name',
             allowSort: true,
             renderCell: (row: User) => (
-                <MuiLink
-                    to={`/usermanagement/${row.id}/details`}
-                    component={Link}
-                    onClick={() => {
-                        setCurrentUser(row);
-                        navigate(`/usermanagement/${row.id}/details`);
-                    }}
-                >
+                <MuiLink to={`/usermanagement/${row.id}/details`} component={Link}>
                     {row.last_name + ', ' + row.first_name}
                 </MuiLink>
             ),
@@ -97,7 +83,7 @@ const UserManagementListing = () => {
                             <SearchIcon />
                         </PrimaryButton>
                     </Stack>
-                    <PrimaryButton onClick={() => setAddUserModelOpen(true)}>+ Add User</PrimaryButton>
+                    <PrimaryButton onClick={() => setAddUserModalOpen(true)}>+ Add User</PrimaryButton>
                 </Stack>
             </Grid>
             <Grid item xs={12} lg={10}>

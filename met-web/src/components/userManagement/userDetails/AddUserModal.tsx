@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { MetHeader3, MetLabel, MetSmallText, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
 import { User, USER_GROUP } from 'models/user';
-import { UserManagementContext } from './UserManagementContext';
+import { ActionContext } from './UserActionProvider';
 import { Palette } from 'styles/Theme';
 import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -50,11 +50,10 @@ type AddUserForm = yup.TypeOf<typeof schema>;
 
 export const AddUserModal = () => {
     const dispatch = useAppDispatch();
-    const { addUserModalOpen, setAddUserModalOpen, loadUserListing } = useContext(UserManagementContext);
+    const { savedUser, addUserModalOpen, setAddUserModalOpen, loadUserListing } = useContext(ActionContext);
     const [isAssigningRole, setIsAssigningRole] = useState(false);
     const [users, setUsers] = useState<User[]>([]);
     const [usersLoading, setUsersLoading] = useState(false);
-
     const [engagements, setEngagements] = useState<Engagement[]>([]);
     const [engagementsLoading, setEngagementsLoading] = useState(false);
     const [backendError, setBackendError] = useState('');

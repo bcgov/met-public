@@ -12,10 +12,8 @@ export interface UserManagementContextProps {
     paginationOptions: PaginationOptions<User>;
     setPaginationOptions: React.Dispatch<React.SetStateAction<PaginationOptions<User>>>;
     addUserModalOpen: boolean;
-    setAddUserModelOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setAddUserModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
     loadUserListing: () => void;
-    selectedUser: User | null;
-    setCurrentUser: (user: User) => void;
 }
 
 export type EngagementParams = {
@@ -26,7 +24,6 @@ export const UserManagementContext = createContext<UserManagementContextProps>({
     usersLoading: true,
     pageInfo: createDefaultPageInfo(),
     users: [],
-    selectedUser: null,
     paginationOptions: {
         page: 0,
         size: 0,
@@ -35,24 +32,20 @@ export const UserManagementContext = createContext<UserManagementContextProps>({
         throw new Error('Not implemented');
     },
     addUserModalOpen: false,
-    setAddUserModelOpen: () => {
+    setAddUserModalOpen: () => {
         throw new Error('Not implemented');
     },
     loadUserListing: () => {
         throw new Error('Load user listing is not implemented');
-    },
-    setCurrentUser: () => {
-        throw new Error('set current user is not implemented');
     },
 });
 
 export const UserManagementContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     const dispatch = useAppDispatch();
     const [users, setUsers] = useState<User[]>([]);
-    const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
     const [usersLoading, setUsersLoading] = useState(true);
-    const [addUserModalOpen, setAddUserModelOpen] = useState(false);
+    const [addUserModalOpen, setAddUserModalOpen] = useState(false);
 
     const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<User>>({
         page: 1,
@@ -94,10 +87,6 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
         }
     };
 
-    const setCurrentUser = (user: User) => {
-        setSelectedUser(user);
-    };
-
     return (
         <UserManagementContext.Provider
             value={{
@@ -107,10 +96,8 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
                 paginationOptions,
                 setPaginationOptions,
                 addUserModalOpen,
-                setAddUserModelOpen,
+                setAddUserModalOpen,
                 loadUserListing,
-                selectedUser,
-                setCurrentUser,
             }}
         >
             {children}

@@ -8,7 +8,7 @@ import { HeadCell, PaginationOptions } from 'components/common/Table/types';
 import { ActionContext } from './UserActionProvider';
 
 export const UserDetails = () => {
-    const { savedUser, isUserLoading } = useContext(ActionContext);
+    const { savedUser, setAddUserModalOpen } = useContext(ActionContext);
     const [superUserAssigned, setSuperUser] = useState(false);
     const [deactivatedUser, setDeactivatedUser] = useState(false);
     const handleToggleChange = (event: ChangeEvent<HTMLInputElement>, checked: boolean) => {
@@ -51,66 +51,71 @@ export const UserDetails = () => {
         <MetPageGridContainer>
             <Grid container direction="row" item rowSpacing={1} sx={{ mb: 4 }}>
                 <Grid container direction="row" item xs={6} spacing={1}>
-                    <Grid item>
+                    <Grid item xs={2} sx={{ mr: 1 }}>
                         <MetLabel>User:</MetLabel>
                     </Grid>
-                    <Grid item>
+                    <Grid item xs={2}>
                         <MetParagraph sx={{ pl: 2 }}>{savedUser && savedUser?.first_name}</MetParagraph>
                     </Grid>
                 </Grid>
 
                 <Grid container direction="row" item xs={6} spacing={1}>
-                    <Grid item>
+                    <Grid item xs={2} sx={{ mr: 1 }}>
                         <MetLabel>Role:</MetLabel>
                     </Grid>
-                    <Grid item>
-                        <MetParagraph sx={{ pl: 2 }}>{savedUser && savedUser?.roles[0]}</MetParagraph>
+                    <Grid item xs={2}>
+                        <MetParagraph sx={{ pl: 2 }}>
+                            {savedUser && savedUser.roles
+                                ? savedUser.roles.map((role, index) => (
+                                      <React.Fragment key={index}>
+                                          {role}
+                                          {index < savedUser.roles.length - 1 ? ', ' : ''}
+                                      </React.Fragment>
+                                  ))
+                                : 'none'}
+                        </MetParagraph>
                     </Grid>
                 </Grid>
 
                 <Grid container direction="row" item xs={6} spacing={1}>
-                    <Grid item>
+                    <Grid item xs={2} sx={{ mr: 1 }}>
                         <MetLabel>Status:</MetLabel>
                     </Grid>
-                    <Grid item>
+                    <Grid item xs={2}>
                         <MetParagraph sx={{ pl: 2 }}>{savedUser && savedUser?.email_id}</MetParagraph>
                     </Grid>
                 </Grid>
 
                 <Grid container direction="row" item xs={6} spacing={1}>
-                    <Stack direction="row">
-                        <MetLabel>Assign SuperUser Role:</MetLabel>{' '}
+                    <Grid item xs={4}>
                         <FormControlLabel
-                            sx={{ border: '2px solid red', p: 0 }}
                             control={<Switch checked={superUserAssigned} onChange={handleToggleChange} />}
-                            label=""
+                            label={<MetLabel>Assign Superuser Role</MetLabel>}
                         />
-                    </Stack>
+                    </Grid>
                 </Grid>
 
                 <Grid container direction="row" item xs={6} spacing={1}>
-                    <Grid item>
+                    <Grid item xs={2} sx={{ mr: 1 }}>
                         <MetLabel>Date Added:</MetLabel>
                     </Grid>
-                    <Grid item>
+                    <Grid item xs={2}>
                         <MetParagraph sx={{ pl: 2 }}>{savedUser && savedUser?.created_date}</MetParagraph>
                     </Grid>
                 </Grid>
                 <Grid container direction="row" item xs={6} spacing={1}>
-                    <Stack direction="row">
-                        <MetLabel>Deactivate User:</MetLabel>{' '}
+                    <Grid item xs={4}>
                         <FormControlLabel
-                            sx={{ border: '2px solid red', p: 0 }}
                             control={<Switch checked={superUserAssigned} onChange={handleUserDeactivated} />}
-                            label=""
+                            label={<MetLabel>Deactivate User</MetLabel>}
                         />
-                    </Stack>
+                    </Grid>
                 </Grid>
             </Grid>
             <Grid item xs={6}></Grid>
             <Grid item xs={6}></Grid>
             <Grid item xs={6}>
-                <PrimaryButton>+ Add an Engagement</PrimaryButton>
+                <PrimaryButton onClick={() => setAddUserModalOpen(true)}>+ Add an Engagement</PrimaryButton>
             </Grid>
             <Grid item xs={12} lg={10}>
                 {/* <MetTable
