@@ -15,6 +15,11 @@ import { SurveySubmission } from 'models/surveySubmission';
 import { formatDate } from 'components/common/dateHelper';
 
 const CommentTextListing = () => {
+    const badgeStyle: React.CSSProperties = {
+        padding: 0,
+        margin: 0,
+        width: '25%',
+    };
     const [searchFilter, setSearchFilter] = useState({
         key: 'text',
         value: '',
@@ -95,7 +100,7 @@ const CommentTextListing = () => {
             label: 'Content',
             allowSort: true,
             renderCell: (row: SurveySubmission) => (
-                <Grid container rowSpacing={2} sx={{ pt: 1.5 }}>
+                <Grid container xs={12} rowSpacing={2} sx={{ pt: 1.5 }}>
                     {row.comments?.map((comment, index) => {
                         return (
                             <Grid key={index} item xs={12}>
@@ -115,53 +120,72 @@ const CommentTextListing = () => {
             disablePadding: false,
             label: 'Comment Date',
             allowSort: true,
+            align: 'right',
+            customStyle: badgeStyle,
             renderCell: (row: SurveySubmission) => (
                 <Grid container>
-                    <Grid container item xs={12} sx={{ pb: '0.5em' }}>
+                    <Grid
+                        container
+                        item
+                        sx={{
+                            pb: '0.1em',
+                            alignItems: 'flex-start',
+                            justifyContent: 'flex-start',
+                        }}
+                    >
                         <Grid
-                            item
-                            lg={3}
-                            md={5}
-                            xs={6}
-                            alignItems={'flex-end'}
-                            justifyContent={'flex-end'}
-                            sx={{ mr: 1 }}
+                            xs={12}
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'flex-start',
+                                justifyContent: 'flex-start',
+                            }}
                         >
-                            <MetParagraph
+                            <Stack
                                 sx={{
-                                    alignItems: 'flex-end',
-                                    justifyContent: 'flex-end',
-                                    alignSelf: 'flex-end',
-                                    pb: '0.5em',
+                                    display: 'flex',
+                                    alignItems: 'flex-start',
+                                    justifyContent: 'flex-start',
                                 }}
                             >
-                                <b>Comment Date: </b>
-                            </MetParagraph>
-                        </Grid>
-                        <Grid item lg={8} md={6} xs={6}>
-                            <MetParagraph>{formatDate(row.created_date)}</MetParagraph>
+                                <MetParagraph
+                                    sx={{
+                                        pb: '0.1em',
+                                    }}
+                                >
+                                    <b>Comment Date: </b>
+                                </MetParagraph>
+                                <MetParagraph>{formatDate(row.created_date)}</MetParagraph>
+                            </Stack>
                         </Grid>
                         <When condition={row.comment_status_id !== CommentStatus.Pending}>
                             <Grid
-                                item
-                                lg={3}
-                                md={5}
-                                xs={6}
-                                alignItems={'flex-end'}
-                                justifyContent={'flex-end'}
-                                sx={{ mr: 1 }}
+                                xs={12}
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'flex-start',
+                                    justifyContent: 'flex-start',
+                                }}
                             >
-                                <MetParagraph>
-                                    <b>Reviewed By: </b>
-                                </MetParagraph>
-                            </Grid>
-                            <Grid item lg={8} md={6} xs={6}>
-                                <MetParagraph>{row.reviewed_by}</MetParagraph>
+                                <Stack
+                                    sx={{
+                                        alignItems: 'flex-start',
+                                        justifyContent: 'flex-start',
+                                    }}
+                                >
+                                    <MetParagraph
+                                        sx={{
+                                            pb: '0.1em',
+                                        }}
+                                    >
+                                        <b>Reviewed By: </b>
+                                    </MetParagraph>
+                                    <MetParagraph>{row.reviewed_by}</MetParagraph>
+                                </Stack>
                             </Grid>
                         </When>
                     </Grid>
-                    <Grid item lg={3} md={5} xs={6} sx={{ mr: 1 }}></Grid>
-                    <Grid item lg={8} md={6} xs={6}>
+                    <Grid item container xs={12} alignItems={'flex-start'} justifyContent={'flex-start'}>
                         <CommentStatusChip commentStatus={row.comment_status_id} />
                     </Grid>
                 </Grid>
@@ -175,11 +199,10 @@ const CommentTextListing = () => {
             justifyContent="flex-start"
             alignItems="flex-start"
             container
-            columnSpacing={2}
             rowSpacing={1}
         >
-            <Grid item xs={12} container>
-                <Grid item xs={12} lg={4}>
+            <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="95%" justifyContent="space-between">
+                <Grid item xs={12} lg={6}>
                     <Stack direction="row" spacing={1}>
                         <TextField
                             id="comments"
@@ -197,8 +220,13 @@ const CommentTextListing = () => {
                         </PrimaryButton>
                     </Stack>
                 </Grid>
-            </Grid>
-            <Grid item sm={12} lg={10}>
+                <Grid item container lg={6} xs={12} alignItems={'flex-end'} justifyContent={'flex-end'}>
+                    <PrimaryButton component={Link} to={`/surveys/${submissions[0]?.survey_id || 0}/comments`}>
+                        Return to Comments List
+                    </PrimaryButton>
+                </Grid>
+            </Stack>
+            <Grid item lg={12}>
                 <MetTable
                     hideHeader={true}
                     headCells={headCells}
@@ -211,9 +239,6 @@ const CommentTextListing = () => {
                     pageInfo={pageInfo}
                     loading={tableLoading}
                 />
-                <PrimaryButton component={Link} to={`/surveys/${submissions[0]?.survey_id || 0}/comments`}>
-                    Return to Comments List
-                </PrimaryButton>
             </Grid>
         </MetPageGridContainer>
     );
