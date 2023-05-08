@@ -16,7 +16,6 @@ from met_api.schemas.submission import SubmissionSchema
 
 from .base_model import BaseModel
 from .db import db
-from .default_method_result import DefaultMethodResult
 
 
 class Submission(BaseModel):  # pylint: disable=too-few-public-methods
@@ -134,7 +133,7 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
         query = Submission.query.filter_by(id=submission_id)
 
         if not query.first():
-            return DefaultMethodResult(False, 'Submission Not Found', submission_id)
+            return None
 
         update_fields = dict(
             comment_status_id=status_id,
