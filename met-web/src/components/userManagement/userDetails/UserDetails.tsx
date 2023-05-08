@@ -3,24 +3,16 @@ import { Grid, FormControlLabel, Switch } from '@mui/material';
 import { MetLabel, MetParagraph, MetPageGridContainer, PrimaryButton } from 'components/common';
 import MetTable from 'components/common/Table';
 import { useAppSelector } from 'hooks';
-import { HeadCell, PaginationOptions } from 'components/common/Table/types';
+import { HeadCell } from 'components/common/Table/types';
 import { ActionContext } from './UserActionProvider';
-import { EngagementTeamMember } from 'models/engagementTeamMember';
+import { UserEngagementsTable } from 'models/engagementTeamMember';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
 export const UserDetails = () => {
     const { roles } = useAppSelector((state) => state.user);
-    const {
-        pageInfo,
-        paginationOptions,
-        setPaginationOptions,
-        memberships,
-        savedUser,
-        setAddUserModalOpen,
-        isUserLoading,
-    } = useContext(ActionContext);
+    const { memberships, savedUser, setAddUserModalOpen, isUserLoading } = useContext(ActionContext);
     const [superUserAssigned, setSuperUser] = useState(false);
     const [deactivatedUser, setDeactivatedUser] = useState(false);
     const dispatch = useAppDispatch();
@@ -78,23 +70,25 @@ export const UserDetails = () => {
         }
     };
 
-    const headCells: HeadCell<EngagementTeamMember>[] = [
+    const headCells: HeadCell<UserEngagementsTable>[] = [
         {
-            key: 'engagement_id',
+            key: 'engagement',
+            nestedSortKey: 'engagement.name',
             numeric: false,
             disablePadding: true,
             label: 'Engagement',
             allowSort: true,
-            renderCell: (row: EngagementTeamMember) => row.engagement_id,
+            renderCell: (row: UserEngagementsTable) => row.engagement.name,
         },
         {
-            key: 'user_id',
+            key: 'added_by_user',
+            nestedSortKey: 'user.username',
             numeric: false,
             disablePadding: true,
             label: 'Added By',
             allowSort: true,
-            renderCell: (row: EngagementTeamMember) => {
-                return row.user_id;
+            renderCell: (row: UserEngagementsTable) => {
+                return row.user.username;
             },
         },
         {
@@ -103,7 +97,7 @@ export const UserDetails = () => {
             disablePadding: true,
             label: 'Date Added',
             allowSort: true,
-            renderCell: (row: EngagementTeamMember) => row.created_date,
+            renderCell: (row: UserEngagementsTable) => row.created_date,
         },
     ];
 
@@ -127,11 +121,11 @@ export const UserDetails = () => {
                         <MetParagraph sx={{ pl: 2 }}>
                             {savedUser && savedUser.roles
                                 ? savedUser.roles.map((role, index) => (
-                                    <React.Fragment key={index}>
-                                        {role}
-                                        {index < savedUser.roles.length - 1 ? ', ' : ''}
-                                    </React.Fragment>
-                                ))
+                                      <React.Fragment key={index}>
+                                          {role}
+                                          {index < savedUser.roles.length - 1 ? ', ' : ''}
+                                      </React.Fragment>
+                                  ))
                                 : 'none'}
                         </MetParagraph>
                     </Grid>
@@ -180,16 +174,7 @@ export const UserDetails = () => {
                 </Grid>
             </Grid>
             <Grid item xs={12}>
-                <MetTable
-                    headCells={headCells}
-                    rows={memberships}
-                    handleChangePagination={(paginationOptions: PaginationOptions<EngagementTeamMember>) =>
-                        setPaginationOptions(paginationOptions)
-                    }
-                    paginationOptions={paginationOptions}
-                    loading={isUserLoading}
-                    pageInfo={pageInfo}
-                />
+                <MetTable headCells={headCells} rows={memberships} noPagination={true} loading={isUserLoading} />
             </Grid>
         </MetPageGridContainer>
     );

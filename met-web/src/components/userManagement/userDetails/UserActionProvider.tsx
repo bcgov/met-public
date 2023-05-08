@@ -4,22 +4,17 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { User, createDefaultUser } from 'models/user';
 import { getUserList } from 'services/userService/api';
-import { createDefaultPageInfo, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { getMembershipsByUser } from 'services/membershipService';
-import { EngagementTeamMember } from 'models/engagementTeamMember';
+import { UserEngagementsTable } from 'models/engagementTeamMember';
+import { getEngagement } from 'services/engagementService';
 
 export interface UserViewContext {
     savedUser: User | undefined;
     isUserLoading: boolean;
     addUserModalOpen: boolean;
-    pageInfo: PageInfo;
-    users: User[];
-    memberships: EngagementTeamMember[];
-    setMemberships: React.Dispatch<React.SetStateAction<EngagementTeamMember[]>>;
+    memberships: UserEngagementsTable[];
+    setMemberships: React.Dispatch<React.SetStateAction<UserEngagementsTable[]>>;
     setAddUserModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    setPaginationOptions: React.Dispatch<React.SetStateAction<PaginationOptions<EngagementTeamMember>>>;
-    paginationOptions: PaginationOptions<User>;
-    loadUserListing: () => void;
 }
 
 export type UserParams = {
@@ -30,24 +25,12 @@ export const ActionContext = createContext<UserViewContext>({
     savedUser: createDefaultUser,
     isUserLoading: true,
     addUserModalOpen: false,
-    pageInfo: createDefaultPageInfo(),
-    users: [],
     memberships: [],
     setMemberships: () => {
         throw new Error('set memberships is not implemented');
     },
-    paginationOptions: {
-        page: 0,
-        size: 0,
-    },
-    setPaginationOptions: () => {
-        throw new Error('Not implemented');
-    },
     setAddUserModalOpen: () => {
         throw new Error('Not implemented');
-    },
-    loadUserListing: () => {
-        throw new Error('Load user listing is not implemented');
     },
 });
 
@@ -55,31 +38,23 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const { userId } = useParams<UserParams>();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const [users, setUsers] = useState<User[]>([]);
+    const [userList, setUserList] = useState<User[]>([]);
     const [savedUser, setSavedUser] = useState<User | undefined>(createDefaultUser);
     const [isUserLoading, setUserLoading] = useState(true);
-    const [usersLoading, setUsersLoading] = useState(true);
-    const [memberships, setMemberships] = useState<EngagementTeamMember[]>([]);
+    const [memberships, setMemberships] = useState<UserEngagementsTable[]>([]);
     const [addUserModalOpen, setAddUserModalOpen] = useState(false);
-    const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<EngagementTeamMember>>({
-        page: 1,
-        size: 10,
-        sort_key: 'first_name',
-        nested_sort_key: 'first_name',
-        sort_order: 'asc',
-    });
-    const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
 
     useEffect(() => {
-        loadUserListing();
-    }, [paginationOptions]);
-
-    useEffect(() => {
-        fetchUser();
-        getUserEngagements();
+        const loadData = async () => {
+            try {
+                await fetchUser();
+                await getUserEngagements();
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        loadData();
     }, [userId]);
-
-    const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
     const fetchUser = async () => {
         if (isNaN(Number(userId))) {
@@ -88,7 +63,10 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         }
         try {
             const result = await getUserList();
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            //@ts-ignore
             const currentUser = result.items.find((user) => user.id === parseInt(userId));
+            setUserList(result.items);
             setSavedUser(currentUser);
             setUserLoading(false);
         } catch (error) {
@@ -105,33 +83,20 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         const user_memberships = await getMembershipsByUser({
             user_id: userId,
         });
-        setMemberships(user_memberships);
-    };
+        const membership_table: UserEngagementsTable[] = [];
 
-    const loadUserListing = async () => {
-        try {
-            setUsersLoading(true);
-            const response = await getUserList({
-                page,
-                size,
-                sort_key: nested_sort_key || sort_key,
-                sort_order,
-                include_groups: true,
-            });
-            setUsers(response.items);
-            setPageInfo({
-                total: response.total,
-            });
-            setUsersLoading(false);
-        } catch (error) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred while trying to fetch users, please refresh the page or try again at a later time',
-                }),
-            );
-            setUsersLoading(false);
-        }
+        user_memberships.forEach((membership) => {
+            getEngagement(membership.id)
+                .then((engagement) => {
+                    const added_by_user = userList.find((user) => user.id === membership.user_id);
+                    const created_date = membership.created_date;
+                    const user = savedUser ? savedUser : createDefaultUser;
+
+                    membership_table.push({ engagement, added_by_user, created_date, user });
+                })
+                .catch((error) => console.error(error));
+        });
+        setMemberships(membership_table);
     };
 
     return (
@@ -141,11 +106,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 isUserLoading,
                 addUserModalOpen,
                 setAddUserModalOpen,
-                paginationOptions,
-                setPaginationOptions,
-                pageInfo,
-                users,
-                loadUserListing,
                 memberships,
                 setMemberships,
             }}

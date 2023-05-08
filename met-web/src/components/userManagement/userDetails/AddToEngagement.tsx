@@ -2,14 +2,10 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import { Autocomplete, CircularProgress, Grid, Paper, Stack, TextField, useTheme } from '@mui/material';
 import { MetHeader3, MetLabel, MetSmallText, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
-import { User, USER_GROUP } from 'models/user';
 import { ActionContext } from './UserActionProvider';
-import { Palette } from 'styles/Theme';
 import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import ControlledRadioGroup from 'components/common/ControlledInputComponents/ControlledRadioGroup';
-import { addUserToGroup, getUserList } from 'services/userService/api';
 import { getEngagements } from 'services/engagementService';
 import { addTeamMemberToEngagement } from 'services/membershipService';
 import { When } from 'react-if';
@@ -29,7 +25,7 @@ type AddUserForm = yup.TypeOf<typeof schema>;
 
 export const AddToEngagementModal = () => {
     const dispatch = useAppDispatch();
-    const { savedUser, addUserModalOpen, setAddUserModalOpen, loadUserListing } = useContext(ActionContext);
+    const { savedUser, addUserModalOpen, setAddUserModalOpen } = useContext(ActionContext);
     const [isAssigningRole, setIsAssigningRole] = useState(false);
     const [engagements, setEngagements] = useState<Engagement[]>([]);
     const [engagementsLoading, setEngagementsLoading] = useState(false);
@@ -117,7 +113,6 @@ export const AddToEngagementModal = () => {
             setIsAssigningRole(true);
             await addUserToEngagement(data);
             setIsAssigningRole(false);
-            loadUserListing();
             handleClose();
         } catch (error) {
             setIsAssigningRole(false);

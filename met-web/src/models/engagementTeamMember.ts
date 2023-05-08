@@ -1,3 +1,4 @@
+import { Engagement } from './engagement';
 import { createDefaultUser, User } from './user';
 
 export type EngagementMembershipType = 1;
@@ -24,3 +25,10 @@ export const initialDefaultTeamMember: EngagementTeamMember = {
     type: ENGAGEMENT_MEMBERSHIP_TYPE.TEAM_MEMBER,
     user: { ...createDefaultUser },
 };
+
+export interface UserEngagementsTable {
+    added_by_user: User;
+    engagement: Engagement;
+    user: User;
+    created_date: string;
+}
