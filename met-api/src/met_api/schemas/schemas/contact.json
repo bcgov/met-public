@@ -59,6 +59,13 @@
       "title": "Personal biography",
       "description": "A short text describing the contact.",
       "examples": ["Jace is a prince of house Targaryen."]
+    },
+    "tenant_id": {
+      "$id": "#/properties/tenant_id",
+      "type": "integer",
+      "title": "Tenant ID",
+      "description": "The ID of the tenant that the contact belongs to.",
+      "examples": [12345]
     }
   }
 }
