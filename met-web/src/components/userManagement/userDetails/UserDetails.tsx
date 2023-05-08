@@ -8,6 +8,7 @@ import { ActionContext } from './UserActionProvider';
 import { UserEngagementsTable } from 'models/engagementTeamMember';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { formatDate } from 'components/common/dateHelper';
 
 export const UserDetails = () => {
     const { roles } = useAppSelector((state) => state.user);
@@ -96,7 +97,7 @@ export const UserDetails = () => {
             disablePadding: true,
             label: 'Date Added',
             allowSort: true,
-            renderCell: (row: UserEngagementsTable) => row.created_date,
+            renderCell: (row: UserEngagementsTable) => formatDate(row.created_date),
         },
     ];
 
@@ -153,7 +154,9 @@ export const UserDetails = () => {
                         <MetLabel>Date Added:</MetLabel>
                     </Grid>
                     <Grid item xs={4.5}>
-                        <MetParagraph sx={{ pl: 2 }}>{savedUser?.created_date}</MetParagraph>
+                        <MetParagraph sx={{ pl: 2 }}>
+                            {savedUser ? formatDate(savedUser?.created_date) : ''}
+                        </MetParagraph>
                     </Grid>
                 </Grid>
 
