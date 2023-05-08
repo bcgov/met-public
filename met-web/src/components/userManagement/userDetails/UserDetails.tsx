@@ -6,6 +6,9 @@ import { useAppSelector } from 'hooks';
 import { HeadCell, PaginationOptions } from 'components/common/Table/types';
 import { ActionContext } from './UserActionProvider';
 import { EngagementTeamMember } from 'models/engagementTeamMember';
+import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+import { useAppDispatch } from 'hooks';
+import { openNotification } from 'services/notificationService/notificationSlice';
 
 export const UserDetails = () => {
     const { roles } = useAppSelector((state) => state.user);
@@ -20,14 +23,58 @@ export const UserDetails = () => {
     } = useContext(ActionContext);
     const [superUserAssigned, setSuperUser] = useState(false);
     const [deactivatedUser, setDeactivatedUser] = useState(false);
+    const dispatch = useAppDispatch();
+
     const handleToggleChange = (event: ChangeEvent<HTMLInputElement>, checked: boolean) => {
         if (roles.includes('SuperUser')) {
-            setSuperUser(!superUserAssigned);
+            dispatch(
+                openNotificationModal({
+                    open: true,
+                    data: {
+                        header: `Assign Superuser to ${savedUser?.username}`,
+                        subText: [
+                            {
+                                text: `You are attempting to give ${savedUser?.username} the SuperRole role`,
+                            },
+                            {
+                                text: 'Are you sure?',
+                            },
+                        ],
+                        handleConfirm: () => {
+                            setSuperUser(!superUserAssigned);
+                        },
+                    },
+                    type: 'confirm',
+                }),
+            );
+        } else {
+            dispatch(openNotification({ severity: 'error', text: 'You do not have permissions to give user roles' }));
         }
     };
     const handleUserDeactivated = (event: ChangeEvent<HTMLInputElement>, checked: boolean) => {
         if (roles.includes('SuperUser')) {
-            setDeactivatedUser(!deactivatedUser);
+            dispatch(
+                openNotificationModal({
+                    open: true,
+                    data: {
+                        header: `Remove SuperUser role from ${savedUser?.username}`,
+                        subText: [
+                            {
+                                text: `You are attempting to remove the SuperUser role from ${savedUser?.username}`,
+                            },
+                            {
+                                text: 'Are you sure?',
+                            },
+                        ],
+                        handleConfirm: () => {
+                            setDeactivatedUser(!deactivatedUser);
+                        },
+                    },
+                    type: 'confirm',
+                }),
+            );
+        } else {
+            dispatch(openNotification({ severity: 'error', text: 'You do not have permissions to remove user roles' }));
         }
     };
 
