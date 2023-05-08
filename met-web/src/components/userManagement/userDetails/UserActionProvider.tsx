@@ -88,12 +88,11 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         user_memberships.forEach((membership) => {
             getEngagement(membership.id)
                 .then((engagement) => {
-                    const find_user = userList.find((user) => user.id === membership.user_id);
-                    const added_by_user = find_user ? find_user : createDefaultUser;
+                    const added_by_user = userList.find((user) => user.id === membership.user_id);
                     const created_date = membership.created_date;
-                    const user = savedUser ? savedUser : createDefaultUser;
-
-                    membership_table.push({ engagement, added_by_user, created_date, user });
+                    const user = savedUser;
+                    if (added_by_user && created_date && user)
+                        membership_table.push({ engagement, added_by_user, created_date, user });
                 })
                 .catch((error) => console.error(error));
         });
