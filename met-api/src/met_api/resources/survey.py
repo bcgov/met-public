@@ -146,9 +146,9 @@ class SurveyLink(Resource):
         """Update survey to be linked with engagement."""
         try:
 
-            result = SurveyService().link(survey_id, engagement_id)
+            survey = SurveyService().link(survey_id, engagement_id)
 
-            if result.success:
+            if survey:
                 return 'Survey successfully linked', HTTPStatus.OK
 
             return 'Error occurred while linking survey to engagement', HTTPStatus.INTERNAL_SERVER_ERROR
@@ -170,9 +170,9 @@ class SurveyUnlink(Resource):
         """Update survey to be unlinked to an engagement."""
         try:
 
-            result = SurveyService().unlink(survey_id, engagement_id)
+            survey = SurveyService().unlink(survey_id, engagement_id)
 
-            if result.success:
+            if survey:
                 return 'Survey successfully unlinked', HTTPStatus.OK
 
             return 'Error occurred while unlinking survey from engagement', HTTPStatus.INTERNAL_SERVER_ERROR

@@ -4,19 +4,23 @@ Manages the Survey
 """
 
 from __future__ import annotations
+
 from datetime import datetime
+from typing import Optional
+
 from sqlalchemy import ForeignKey, and_, asc, desc
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.sql import text
+
 from met_api.constants.engagement_status import Status
-from met_api.models.pagination_options import PaginationOptions
-from met_api.models.engagement_status import EngagementStatus
 from met_api.models.engagement import Engagement
+from met_api.models.engagement_status import EngagementStatus
+from met_api.models.pagination_options import PaginationOptions
 from met_api.models.survey_exclusion_option import SurveyExclusionOptions
 from met_api.schemas.survey import SurveySchema
+
 from .base_model import BaseModel
 from .db import db
-from .default_method_result import DefaultMethodResult
 
 
 class Survey(BaseModel):  # pylint: disable=too-few-public-methods
@@ -100,13 +104,13 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         return new_survey
 
     @classmethod
-    def update_survey(cls, survey: SurveySchema) -> DefaultMethodResult:
+    def update_survey(cls, survey: SurveySchema) -> Optional[Survey or None]:
         """Update survey."""
         survey_id = survey.get('id', None)
         query = Survey.query.filter_by(id=survey_id)
         record = query.first()
         if not record:
-            return DefaultMethodResult(False, 'Survey Not Found', survey_id)
+            return None
         update_fields = dict(
             form_json=survey.get('form_json', record.form_json),
             updated_date=datetime.utcnow(),
@@ -117,26 +121,26 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         )
         query.update(update_fields)
         db.session.commit()
-        return DefaultMethodResult(True, 'Survey Updated', survey_id)
+        return record
 
     @classmethod
-    def link_survey(cls, survey_id, engagement_id) -> DefaultMethodResult:
+    def link_survey(cls, survey_id, engagement_id) -> Optional[Survey or None]:
         """Link survey to engagement."""
         query = Survey.query.filter_by(id=survey_id)
         survey = query.first()
         if not survey:
-            return DefaultMethodResult(False, 'Survey Not Found', survey_id)
+            return None
         survey.engagement_id = engagement_id
         db.session.commit()
-        return DefaultMethodResult(True, 'Survey Linked', survey_id)
+        return survey
 
     @classmethod
-    def unlink_survey(cls, survey_id) -> DefaultMethodResult:
+    def unlink_survey(cls, survey_id) -> Optional[Survey or None]:
         """Unlink survey from engagement."""
         query = Survey.query.filter_by(id=survey_id)
         survey = query.first()
         if not survey:
-            return DefaultMethodResult(False, 'Survey to unlink was not found', survey_id)
+            return None
         survey.engagement_id = None
         db.session.commit()
-        return DefaultMethodResult(True, 'Survey Unlinked', survey_id)
+        return survey
