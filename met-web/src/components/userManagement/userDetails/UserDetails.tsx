@@ -2,12 +2,11 @@ import React, { useContext, useState, ChangeEvent } from 'react';
 import { Grid, FormControlLabel, Switch } from '@mui/material';
 import { MetLabel, MetParagraph, MetPageGridContainer, PrimaryButton } from 'components/common';
 import MetTable from 'components/common/Table';
-import { useAppSelector } from 'hooks';
+import { useAppSelector, useAppDispatch } from 'hooks';
 import { HeadCell } from 'components/common/Table/types';
 import { ActionContext } from './UserActionProvider';
 import { UserEngagementsTable } from 'models/engagementTeamMember';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
-import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
 export const UserDetails = () => {
@@ -109,7 +108,7 @@ export const UserDetails = () => {
                         <MetLabel>User:</MetLabel>
                     </Grid>
                     <Grid item xs={2}>
-                        <MetParagraph sx={{ pl: 2 }}>{savedUser && savedUser?.first_name}</MetParagraph>
+                        <MetParagraph sx={{ pl: 2 }}>{savedUser?.first_name}</MetParagraph>
                     </Grid>
                 </Grid>
 
@@ -119,9 +118,9 @@ export const UserDetails = () => {
                     </Grid>
                     <Grid item xs={2}>
                         <MetParagraph sx={{ pl: 2 }}>
-                            {savedUser && savedUser.roles
-                                ? savedUser.roles.map((role, index) => (
-                                      <React.Fragment key={index}>
+                            {avedUser?.roles
+                                ? savedUser?.roles.map((role, index) => (
+                                      <React.Fragment>
                                           {role}
                                           {index < savedUser.roles.length - 1 ? ', ' : ''}
                                       </React.Fragment>
@@ -136,7 +135,7 @@ export const UserDetails = () => {
                         <MetLabel>Status:</MetLabel>
                     </Grid>
                     <Grid item xs={1.5}>
-                        <MetParagraph sx={{ pl: 2 }}>{savedUser && savedUser?.email_id}</MetParagraph>
+                        <MetParagraph sx={{ pl: 2 }}>{savedUser?.email_id}</MetParagraph>
                     </Grid>
                 </Grid>
 
@@ -154,7 +153,7 @@ export const UserDetails = () => {
                         <MetLabel>Date Added:</MetLabel>
                     </Grid>
                     <Grid item xs={4.5}>
-                        <MetParagraph sx={{ pl: 2 }}>{savedUser && savedUser?.created_date}</MetParagraph>
+                        <MetParagraph sx={{ pl: 2 }}>{savedUser?.created_date}</MetParagraph>
                     </Grid>
                 </Grid>
 
