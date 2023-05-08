@@ -21,4 +21,10 @@ export const DASHBOARD = {
     BAR_CHART: {
         FILL_COLOR: '#4C81AF',
     },
+    SURVEY_RESULT: {
+        BACKGROUND_COLOR: '#FFFFFF',
+        HOVER_COLOR: '#ECF5FC',
+        UNSELECTED_TEXT_COLOR: '#003366',
+        SELECTED_TEXT_COLOR: '#4C81AF',
+    },
 };

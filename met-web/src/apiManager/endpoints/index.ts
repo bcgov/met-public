@@ -94,11 +94,14 @@ const Endpoints = {
         GET_COUNT_BY_MONTH: `${AppConfig.analyticsApiUrl}/responses/month/engagement_id`,
         GET_COUNT_BY_WEEK: `${AppConfig.analyticsApiUrl}/responses/week/engagement_id`,
     },
-    Aggregator: {
+    AnalyticsAggregator: {
         GET_COUNT: `${AppConfig.analyticsApiUrl}/counts/`,
     },
     AnalyticsMap: {
         GET: `${AppConfig.analyticsApiUrl}/engagements/map/engagement_id`,
+    },
+    AnalyticsSurveyResult: {
+        GET: `${AppConfig.analyticsApiUrl}/surveyresult/engagement_id`,
     },
 };
 

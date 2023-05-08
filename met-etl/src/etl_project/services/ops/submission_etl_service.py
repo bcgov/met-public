@@ -12,7 +12,7 @@ from analytics_api.models.response_type_textarea import ResponseTypeTextarea as 
 from analytics_api.models.response_type_option import ResponseTypeOption as ResponseTypeOptionModel
 from analytics_api.models.user_response_detail import UserResponseDetail as UserResponseDetailModel
 from analytics_api.models.survey import Survey as EtlSurveyModel
-from met_cron.utils import FormIoComponentType
+from analytics_api.utils.util import FormIoComponentType
 
 
 # Perform the ETL on submissions.

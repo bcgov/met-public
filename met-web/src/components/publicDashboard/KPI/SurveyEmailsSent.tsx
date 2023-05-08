@@ -44,9 +44,7 @@ const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentP
     if (isLoading || engagementIsLoading) {
         return (
             <>
-                <MetLabel mb={2} color="primary">
-                    Survey Emails Sent
-                </MetLabel>
+                <MetLabel mb={2}>Survey Emails Sent</MetLabel>
                 <MetPaper sx={{ p: 2, textAlign: 'center' }}>
                     <Box
                         sx={{
@@ -76,9 +74,7 @@ const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentP
 
     return (
         <>
-            <MetLabel mb={2} color="primary">
-                Survey Emails Sent
-            </MetLabel>
+            <MetLabel mb={2}>Survey Emails Sent</MetLabel>
             <MetPaper sx={{ p: 2, textAlign: 'center' }}>
                 <Stack alignItems="center" gap={1}>
                     <RadialBarChart
@@ -90,7 +86,7 @@ const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentP
                         outerRadius={90}
                         barSize={30}
                         data={[data]}
-                        startAngle={90}
+                        startAngle={225}
                         endAngle={-270}
                     >
                         <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />

@@ -44,9 +44,7 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
     if (isLoading || engagementIsLoading) {
         return (
             <>
-                <MetLabel mb={2} color="primary">
-                    Surveys Completed
-                </MetLabel>
+                <MetLabel mb={2}>Surveys Completed</MetLabel>
                 <MetPaper sx={{ p: 2, textAlign: 'center' }}>
                     <Box
                         sx={{
@@ -76,9 +74,7 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
 
     return (
         <>
-            <MetLabel mb={2} color="primary">
-                Surveys Completed
-            </MetLabel>
+            <MetLabel mb={2}>Surveys Completed</MetLabel>
             <MetPaper sx={{ p: 2, textAlign: 'center' }}>
                 <Stack alignItems="center" gap={1}>
                     <RadialBarChart
@@ -90,7 +86,7 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
                         outerRadius={90}
                         barSize={30}
                         data={[data]}
-                        startAngle={90}
+                        startAngle={225}
                         endAngle={-270}
                     >
                         <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
