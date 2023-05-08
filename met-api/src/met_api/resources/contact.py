@@ -61,17 +61,12 @@ class Contacts(Resource):
     def post():
         """Create a new contact."""
         try:
-            user_id = TokenInfo.get_id()
             request_json = request.get_json()
-
             valid_format, errors = schema_utils.validate(request_json, 'contact')
             if not valid_format:
                 return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
-
-            contact_schema = ContactSchema().load(request_json)
-            result = ContactService().create_contact(contact_schema, user_id)
-            contact_schema['id'] = result.id
-            return contact_schema, HTTPStatus.OK
+            result = ContactService().create_contact(request_json)
+            return ContactSchema().dump(result), HTTPStatus.OK
         except (KeyError, ValueError) as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValidationError as err:

@@ -23,3 +23,4 @@ class ContactSchema(Schema):
     created_date = fields.Str(data_key='created_date')
     updated_by = fields.Str(data_key='updated_by')
     updated_date = fields.Str(data_key='updated_date')
+    tenant_id = fields.Str(data_key='tenant_id')

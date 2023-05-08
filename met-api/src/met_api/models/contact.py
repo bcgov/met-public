@@ -3,8 +3,10 @@
 Manages the contact
 """
 from __future__ import annotations
+
 from datetime import datetime
 from typing import Optional
+
 from .base_model import BaseModel
 from .db import db
 from .default_method_result import DefaultMethodResult
@@ -23,11 +25,14 @@ class Contact(BaseModel):  # pylint: disable=too-few-public-methods
     address = db.Column(db.String(150))
     bio = db.Column(db.String(500), comment='A biography or short biographical profile of someone.')
     avatar_filename = db.Column(db.String(), unique=False, nullable=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
 
     @classmethod
     def get_contacts(cls) -> list[Contact]:
         """Get contacts."""
-        return db.session.query(Contact).order_by(Contact.name).all()
+        query = db.session.query(Contact)
+        query = cls._add_tenant_filter(query)
+        return query.order_by(Contact.name).all()
 
     @classmethod
     def create_contact(cls, contact) -> Contact:
@@ -44,8 +49,7 @@ class Contact(BaseModel):  # pylint: disable=too-few-public-methods
             created_by=contact.get('created_by', None),
             updated_by=contact.get('updated_by', None),
         )
-        db.session.add(new_contact)
-        db.session.commit()
+        new_contact.save()
 
         return new_contact
 

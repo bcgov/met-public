@@ -19,7 +19,7 @@ Test suite to ensure that the Contact service routines are working as expected.
 from faker import Faker
 
 from met_api.services.contact_service import ContactService
-from tests.utilities.factory_scenarios import TestContactInfo, TestUserInfo
+from tests.utilities.factory_scenarios import TestContactInfo
 
 
 fake = Faker()
@@ -29,9 +29,8 @@ date_format = '%Y-%m-%d'
 def test_create_contact(session):  # pylint:disable=unused-argument
     """Assert that a contact can be created."""
     contact_info = TestContactInfo.contact1
-    user_id = TestUserInfo.user['id']
 
-    contact_record = ContactService().create_contact(contact_info, user_id)
+    contact_record = ContactService().create_contact(contact_info)
 
     # Assert that was created
     assert contact_record.name == contact_info.get('name')

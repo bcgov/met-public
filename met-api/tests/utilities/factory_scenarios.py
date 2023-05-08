@@ -342,6 +342,7 @@ class TestContactInfo(dict, Enum):
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
+        'tenant_id': 1
     }
 
 
