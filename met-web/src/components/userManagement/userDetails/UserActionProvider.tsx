@@ -2,10 +2,11 @@ import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { User } from 'models/user';
-import { createDefaultUser } from 'models/user';
+import { User, createDefaultUser } from 'models/user';
 import { getUserList } from 'services/userService/api';
 import { createDefaultPageInfo, PageInfo, PaginationOptions } from 'components/common/Table/types';
+import { getMembershipsByUser } from 'services/membershipService';
+import { EngagementTeamMember } from 'models/engagementTeamMember';
 
 export interface UserViewContext {
     savedUser: User | undefined;
@@ -13,8 +14,10 @@ export interface UserViewContext {
     addUserModalOpen: boolean;
     pageInfo: PageInfo;
     users: User[];
+    memberships: EngagementTeamMember[];
+    setMemberships: React.Dispatch<React.SetStateAction<EngagementTeamMember[]>>;
     setAddUserModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    setPaginationOptions: React.Dispatch<React.SetStateAction<PaginationOptions<User>>>;
+    setPaginationOptions: React.Dispatch<React.SetStateAction<PaginationOptions<EngagementTeamMember>>>;
     paginationOptions: PaginationOptions<User>;
     loadUserListing: () => void;
 }
@@ -29,6 +32,10 @@ export const ActionContext = createContext<UserViewContext>({
     addUserModalOpen: false,
     pageInfo: createDefaultPageInfo(),
     users: [],
+    memberships: [],
+    setMemberships: () => {
+        throw new Error('set memberships is not implemented');
+    },
     paginationOptions: {
         page: 0,
         size: 0,
@@ -52,8 +59,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const [savedUser, setSavedUser] = useState<User | undefined>(createDefaultUser);
     const [isUserLoading, setUserLoading] = useState(true);
     const [usersLoading, setUsersLoading] = useState(true);
+    const [memberships, setMemberships] = useState<EngagementTeamMember[]>([]);
     const [addUserModalOpen, setAddUserModalOpen] = useState(false);
-    const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<User>>({
+    const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<EngagementTeamMember>>({
         page: 1,
         size: 10,
         sort_key: 'first_name',
@@ -68,6 +76,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
 
     useEffect(() => {
         fetchUser();
+        getUserEngagements();
     }, [userId]);
 
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
@@ -79,10 +88,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         }
         try {
             const result = await getUserList();
-            console.log(result.items);
-            console.log('USER ID ' + userId);
             const currentUser = result.items.find((user) => user.id === parseInt(userId));
-            console.log('CURRENT USER:::' + JSON.stringify(currentUser));
             setSavedUser(currentUser);
             setUserLoading(false);
         } catch (error) {
@@ -93,6 +99,13 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 }),
             );
         }
+    };
+
+    const getUserEngagements = async () => {
+        const user_memberships = await getMembershipsByUser({
+            user_id: userId,
+        });
+        setMemberships(user_memberships);
     };
 
     const loadUserListing = async () => {
@@ -133,6 +146,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 pageInfo,
                 users,
                 loadUserListing,
+                memberships,
+                setMemberships,
             }}
         >
             {children}

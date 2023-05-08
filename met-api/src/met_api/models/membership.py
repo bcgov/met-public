@@ -1,4 +1,4 @@
-"""Membershio class.
+"""Membership class.
 
 Manages the membership between a user and engagement/survey
 """

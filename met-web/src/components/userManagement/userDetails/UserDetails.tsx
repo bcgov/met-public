@@ -1,42 +1,53 @@
 import React, { useContext, useState, ChangeEvent } from 'react';
-import { Grid, FormControlLabel, Switch, Stack } from '@mui/material';
-import { useNavigate } from 'react-router';
+import { Grid, FormControlLabel, Switch } from '@mui/material';
 import { MetLabel, MetParagraph, MetPageGridContainer, PrimaryButton } from 'components/common';
 import MetTable from 'components/common/Table';
-import { User } from 'models/user';
+import { useAppSelector } from 'hooks';
 import { HeadCell, PaginationOptions } from 'components/common/Table/types';
 import { ActionContext } from './UserActionProvider';
-import { When } from 'react-if';
+import { EngagementTeamMember } from 'models/engagementTeamMember';
 
 export const UserDetails = () => {
-    const { pageInfo, paginationOptions, setPaginationOptions, users, savedUser, setAddUserModalOpen, isUserLoading } =
-        useContext(ActionContext);
+    const { roles } = useAppSelector((state) => state.user);
+    const {
+        pageInfo,
+        paginationOptions,
+        setPaginationOptions,
+        memberships,
+        savedUser,
+        setAddUserModalOpen,
+        isUserLoading,
+    } = useContext(ActionContext);
     const [superUserAssigned, setSuperUser] = useState(false);
     const [deactivatedUser, setDeactivatedUser] = useState(false);
     const handleToggleChange = (event: ChangeEvent<HTMLInputElement>, checked: boolean) => {
-        setSuperUser(!superUserAssigned);
+        if (roles.includes('SuperUser')) {
+            setSuperUser(!superUserAssigned);
+        }
     };
     const handleUserDeactivated = (event: ChangeEvent<HTMLInputElement>, checked: boolean) => {
-        setDeactivatedUser(!deactivatedUser);
+        if (roles.includes('SuperUser')) {
+            setDeactivatedUser(!deactivatedUser);
+        }
     };
 
-    const headCells: HeadCell<User>[] = [
+    const headCells: HeadCell<EngagementTeamMember>[] = [
         {
-            key: 'last_name',
+            key: 'engagement_id',
             numeric: false,
             disablePadding: true,
             label: 'Engagement',
             allowSort: true,
-            renderCell: (row: User) => row.last_name,
+            renderCell: (row: EngagementTeamMember) => row.engagement_id,
         },
         {
-            key: 'first_name',
+            key: 'user_id',
             numeric: false,
             disablePadding: true,
             label: 'Added By',
             allowSort: true,
-            renderCell: (row: User) => {
-                return row.first_name;
+            renderCell: (row: EngagementTeamMember) => {
+                return row.user_id;
             },
         },
         {
@@ -45,7 +56,7 @@ export const UserDetails = () => {
             disablePadding: true,
             label: 'Date Added',
             allowSort: true,
-            renderCell: (row: User) => row.created_date,
+            renderCell: (row: EngagementTeamMember) => row.created_date,
         },
     ];
 
@@ -69,11 +80,11 @@ export const UserDetails = () => {
                         <MetParagraph sx={{ pl: 2 }}>
                             {savedUser && savedUser.roles
                                 ? savedUser.roles.map((role, index) => (
-                                      <React.Fragment key={index}>
-                                          {role}
-                                          {index < savedUser.roles.length - 1 ? ', ' : ''}
-                                      </React.Fragment>
-                                  ))
+                                    <React.Fragment key={index}>
+                                        {role}
+                                        {index < savedUser.roles.length - 1 ? ', ' : ''}
+                                    </React.Fragment>
+                                ))
                                 : 'none'}
                         </MetParagraph>
                     </Grid>
@@ -105,16 +116,15 @@ export const UserDetails = () => {
                         <MetParagraph sx={{ pl: 2 }}>{savedUser && savedUser?.created_date}</MetParagraph>
                     </Grid>
                 </Grid>
-                <When condition={savedUser && savedUser.groups && savedUser?.groups.includes('SuperUser')}>
-                    <Grid container direction="row" item xs={6} spacing={1}>
-                        <Grid item xs={6}>
-                            <FormControlLabel
-                                control={<Switch checked={deactivatedUser} onChange={handleUserDeactivated} />}
-                                label={<MetLabel>Deactivate User</MetLabel>}
-                            />
-                        </Grid>
+
+                <Grid container direction="row" item xs={6} spacing={1}>
+                    <Grid item xs={6}>
+                        <FormControlLabel
+                            control={<Switch checked={deactivatedUser} onChange={handleUserDeactivated} />}
+                            label={<MetLabel>Deactivate User</MetLabel>}
+                        />
                     </Grid>
-                </When>
+                </Grid>
             </Grid>
             <Grid container item justifyContent={'flex-end'} alignItems={'flex-end'} xs={12}>
                 <Grid item xs={6}></Grid>
@@ -125,8 +135,8 @@ export const UserDetails = () => {
             <Grid item xs={12}>
                 <MetTable
                     headCells={headCells}
-                    rows={users}
-                    handleChangePagination={(paginationOptions: PaginationOptions<User>) =>
+                    rows={memberships}
+                    handleChangePagination={(paginationOptions: PaginationOptions<EngagementTeamMember>) =>
                         setPaginationOptions(paginationOptions)
                     }
                     paginationOptions={paginationOptions}
