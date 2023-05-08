@@ -141,7 +141,7 @@ export const UserDetails = () => {
                 </Grid>
 
                 <Grid container direction="row" item xs={6} spacing={1}>
-                    <Grid item xs={6}>
+                    <Grid item xs={12}>
                         <FormControlLabel
                             control={<Switch checked={superUserAssigned} onChange={handleToggleChange} />}
                             label={<MetLabel>Assign Superuser Role</MetLabel>}
@@ -153,13 +153,13 @@ export const UserDetails = () => {
                     <Grid item xs={1.5} sx={{ mr: 1 }}>
                         <MetLabel>Date Added:</MetLabel>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={4.5}>
                         <MetParagraph sx={{ pl: 2 }}>{savedUser && savedUser?.created_date}</MetParagraph>
                     </Grid>
                 </Grid>
 
                 <Grid container direction="row" item xs={6} spacing={1}>
-                    <Grid item xs={6}>
+                    <Grid item xs={12}>
                         <FormControlLabel
                             control={<Switch checked={deactivatedUser} onChange={handleUserDeactivated} />}
                             label={<MetLabel>Deactivate User</MetLabel>}
