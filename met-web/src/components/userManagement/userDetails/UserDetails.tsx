@@ -118,7 +118,7 @@ export const UserDetails = () => {
                     </Grid>
                     <Grid item xs={2}>
                         <MetParagraph sx={{ pl: 2 }}>
-                            {avedUser?.roles
+                            {savedUser?.roles
                                 ? savedUser?.roles.map((role, index) => (
                                       <React.Fragment>
                                           {role}
