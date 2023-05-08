@@ -9,7 +9,6 @@ from typing import Optional
 
 from .base_model import BaseModel
 from .db import db
-from .default_method_result import DefaultMethodResult
 
 
 class Contact(BaseModel):  # pylint: disable=too-few-public-methods
@@ -54,13 +53,13 @@ class Contact(BaseModel):  # pylint: disable=too-few-public-methods
         return new_contact
 
     @classmethod
-    def update_contact(cls, contact_data: dict) -> Optional[Contact or DefaultMethodResult]:
+    def update_contact(cls, contact_data: dict) -> Optional[Contact or None]:
         """Update engagement."""
         contact_id = contact_data.get('id', None)
         query = Contact.query.filter_by(id=contact_id)
         contact: Contact = query.first()
         if not contact:
-            return DefaultMethodResult(False, 'Contact Not Found', contact_id)
+            return None
         contact_data['updated_date'] = datetime.utcnow()
         query.update(contact_data)
         db.session.commit()
