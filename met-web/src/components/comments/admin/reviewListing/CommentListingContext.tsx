@@ -8,6 +8,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getSubmissionPage } from 'services/submissionService';
 import { getSurvey } from 'services/surveyService';
+import UserService from 'services/userService';
 
 export interface AdvancedSearchFilters {
     status: CommentStatus | null;
@@ -102,6 +103,10 @@ export const CommentListingContextProvider = ({ children }: CommentListingContex
     const { assignedEngagements } = useAppSelector((state) => state.user);
     const [searchText, setSearchText] = useState('');
     const [survey, setSurvey] = useState<Survey>(createDefaultSurvey());
+    const canViewAllComments =
+        UserService.hasAdminRole() ||
+        !assignedEngagements.includes(survey.engagement_id) ||
+        UserService.hasRole('SuperUser');
     const [submissions, setSubmissions] = useState<SurveySubmission[]>([]);
     const [paginationOptions, setPagination] = useState<PaginationOptions<SurveySubmission>>({
         page: 1,
@@ -154,9 +159,7 @@ export const CommentListingContextProvider = ({ children }: CommentListingContex
             const filterCondition = (submission: SurveySubmission) =>
                 submission.comment_status_id === CommentStatus.Approved;
 
-            const filteredSubmissions = !assignedEngagements.includes(Number(survey.engagement_id))
-                ? response.items.filter(filterCondition)
-                : response.items;
+            const filteredSubmissions = canViewAllComments ? response.items.filter(filterCondition) : response.items;
 
             setSubmissions(filteredSubmissions);
             setPageInfo({ total: response.total });

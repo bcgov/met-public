@@ -14,8 +14,11 @@ import { getSubmissionPage } from 'services/submissionService';
 import { SurveySubmission } from 'models/surveySubmission';
 import { formatDate } from 'components/common/dateHelper';
 import { getSurvey } from 'services/surveyService';
+import UserService from 'services/userService';
 
 const CommentTextListing = () => {
+    const { surveyId } = useParams();
+    const dispatch = useAppDispatch();
     const { assignedEngagements } = useAppSelector((state) => state.user);
     const badgeStyle: React.CSSProperties = {
         padding: 0,
@@ -38,10 +41,6 @@ const CommentTextListing = () => {
         total: 0,
     });
     const [tableLoading, setTableLoading] = useState(true);
-
-    const dispatch = useAppDispatch();
-    const { surveyId } = useParams();
-
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
     const [submissions, setSubmissions] = useState<SurveySubmission[]>([]);
@@ -56,19 +55,22 @@ const CommentTextListing = () => {
                 search_text: searchFilter.value,
             };
 
+            const survey = await getSurvey(Number(surveyId));
+
             const response = await getSubmissionPage({
                 survey_id: Number(surveyId),
                 queryParams,
             });
 
-            const survey = await getSurvey(Number(surveyId));
+            const canViewAllComments =
+                UserService.hasAdminRole() ||
+                !assignedEngagements.includes(survey.engagement_id) ||
+                UserService.hasRole('SuperUser');
 
             const filterCondition = (submission: SurveySubmission) =>
                 submission.comment_status_id === CommentStatus.Approved;
 
-            const filteredSubmissions = !assignedEngagements.includes(survey.engagement_id)
-                ? response.items.filter(filterCondition)
-                : response.items;
+            const filteredSubmissions = !canViewAllComments ? response.items.filter(filterCondition) : response.items;
 
             setSubmissions(filteredSubmissions);
             setPageInfo({

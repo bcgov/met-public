@@ -37,6 +37,7 @@ import { RejectEmailTemplate } from './emailPreview/EmailTemplates';
 import EmailPreview from './emailPreview/EmailPreview';
 import { Survey, createDefaultSurvey } from 'models/survey';
 import { getSurvey } from 'services/surveyService';
+import UserService from 'services/userService';
 
 const CommentReview = () => {
     const [submission, setSubmission] = useState<SurveySubmission>(createDefaultSubmission());
@@ -60,7 +61,10 @@ const CommentReview = () => {
     const reviewNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Review);
     const internalNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Internal);
     const { assignedEngagements } = useAppSelector((state) => state.user);
-
+    const canEditComments =
+        UserService.hasAdminRole() ||
+        !assignedEngagements.includes(survey.engagement_id) ||
+        UserService.hasRole('SuperUser');
     const MAX_OTHER_REASON_CHAR = 500;
 
     const getEmailPreview = () => {
@@ -495,11 +499,7 @@ const CommentReview = () => {
                         </When>
                         <Grid item xs={12}>
                             <Stack direction="row" spacing={2}>
-                                <PrimaryButton
-                                    disabled={!assignedEngagements.includes(Number(survey.engagement_id))}
-                                    loading={isSaving}
-                                    onClick={handleSave}
-                                >
+                                <PrimaryButton disabled={!canEditComments} loading={isSaving} onClick={handleSave}>
                                     {'Save & Continue'}
                                 </PrimaryButton>
                                 <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
