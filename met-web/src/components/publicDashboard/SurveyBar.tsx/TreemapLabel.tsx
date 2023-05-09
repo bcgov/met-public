@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { DASHBOARD } from '../constants';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export default class TreemapLabel extends Component<any> {
     static displayName = 'TreemapLabel';
 
