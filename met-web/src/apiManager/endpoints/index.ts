@@ -16,6 +16,7 @@ const Endpoints = {
         CREATE_UPDATE: `${AppConfig.apiUrl}/user/`,
         GET_LIST: `${AppConfig.apiUrl}/user/`,
         ADD_TO_GROUP: `${AppConfig.apiUrl}/user/user_id/groups`,
+        GET_USER_ENGAGEMENTS: `${AppConfig.apiUrl}/user/user_id/engagements`,
     },
     Document: {
         OSS_HEADER: `${AppConfig.apiUrl}/document/`,
