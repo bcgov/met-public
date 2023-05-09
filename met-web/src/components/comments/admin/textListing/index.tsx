@@ -13,6 +13,7 @@ import { When } from 'react-if';
 import { getSubmissionPage } from 'services/submissionService';
 import { SurveySubmission } from 'models/surveySubmission';
 import { formatDate } from 'components/common/dateHelper';
+import { getSurvey } from 'services/surveyService';
 
 const CommentTextListing = () => {
     const { assignedEngagements } = useAppSelector((state) => state.user);
@@ -60,10 +61,12 @@ const CommentTextListing = () => {
                 queryParams,
             });
 
+            const survey = await getSurvey(Number(surveyId));
+
             const filterCondition = (submission: SurveySubmission) =>
                 submission.comment_status_id === CommentStatus.Approved;
 
-            const filteredSubmissions = !assignedEngagements.includes(Number(survey.engagement_id))
+            const filteredSubmissions = !assignedEngagements.includes(survey.engagement_id)
                 ? response.items.filter(filterCondition)
                 : response.items;
 
