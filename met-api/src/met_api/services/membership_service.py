@@ -3,11 +3,10 @@ from http import HTTPStatus
 
 from met_api.constants.membership_type import MembershipType
 from met_api.models import User as UserModel
-from met_api.models.membership import Membership as MembershipModel
 from met_api.models.engagement import Engagement as EngagementModel
+from met_api.models.membership import Membership as MembershipModel
 from met_api.services.user_service import KEYCLOAK_SERVICE
 from met_api.utils.enums import KeycloakGroupName, KeycloakGroups, MembershipStatus
-
 from ..exceptions.business_exception import BusinessException
 
 
