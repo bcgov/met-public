@@ -74,3 +74,8 @@ class MembershipService:
     def get_assigned_engagements(user_id):
         """Get memberships by user id."""
         return MembershipModel.find_by_user_id(user_id)
+
+    @staticmethod
+    def get_engagements_by_user(user_id):
+        """Get engagements by user id."""
+        return EngagementModel.get_assigned_engagements(user_id)
