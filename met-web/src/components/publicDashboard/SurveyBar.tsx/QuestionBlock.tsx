@@ -1,5 +1,5 @@
 import { Box, List, ListItem, ListItemButton } from '@mui/material';
-import { MetLabel } from 'components/common';
+import { MetParagraph } from 'components/common';
 import React from 'react';
 import { SurveyBarData } from '../types';
 import { DASHBOARD } from '../constants';
@@ -33,7 +33,7 @@ export const QuestionBlock = ({ data, selected, handleSelected }: QuestionBlockP
                                 borderBottom: '1px solid #cdcdcd',
                             }}
                         >
-                            <MetLabel
+                            <MetParagraph
                                 color={
                                     selected === result.postion
                                         ? DASHBOARD.SURVEY_RESULT.SELECTED_TEXT_COLOR
@@ -41,7 +41,7 @@ export const QuestionBlock = ({ data, selected, handleSelected }: QuestionBlockP
                                 }
                             >
                                 {result.label}
-                            </MetLabel>
+                            </MetParagraph>
                         </ListItemButton>
                     </ListItem>
                 ))}

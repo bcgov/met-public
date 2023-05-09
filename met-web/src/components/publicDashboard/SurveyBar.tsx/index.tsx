@@ -1,9 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Grid, Skeleton, Divider, CircularProgress } from '@mui/material';
+import {
+    Box,
+    Grid,
+    Skeleton,
+    Divider,
+    CircularProgress,
+    useMediaQuery,
+    Theme,
+    Stack,
+    ToggleButtonGroup,
+    ToggleButton,
+} from '@mui/material';
+import { Palette } from 'styles/Theme';
 import { MetHeader1, MetPaper, MetLabel } from 'components/common';
 import { QuestionBlock } from './QuestionBlock';
 import { SurveyBarData } from '../types';
 import { BarBlock } from './BarBlock';
+import { TreemapBlock } from './TreemapBlock';
 import { getSurveyResultData } from 'services/analytics/surveyResult';
 import { Engagement } from 'models/engagement';
 import { SurveyResultData, createSurveyResultData, defaultData } from '../../../models/analytics/surveyResult';
@@ -16,10 +29,16 @@ interface SurveyQuestionProps {
 }
 
 export const SurveyBar = ({ engagement, engagementIsLoading }: SurveyQuestionProps) => {
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const [data, setData] = useState<SurveyResultData>(createSurveyResultData());
     const [selectedData, setSelectedData] = useState(defaultData[0]);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
+    const [chartType, setChartType] = React.useState('bar');
+
+    const handleToggleChange = (event: React.MouseEvent<HTMLElement>, chartByValue: string) => {
+        setChartType(chartByValue);
+    };
 
     const fetchData = async () => {
         setIsLoading(true);
@@ -50,12 +69,40 @@ export const SurveyBar = ({ engagement, engagementIsLoading }: SurveyQuestionPro
                     Survey Results
                 </MetLabel>
             </Grid>
-            <Grid ml={5} item xs={12}>
+            <Grid ml={isSmallScreen ? 0 : 5} item xs={12}>
                 <MetPaper sx={{ p: 2 }}>
                     <Grid item xs={12}>
-                        <MetLabel mb={2} color="primary">
-                            Click on a question to view results
-                        </MetLabel>
+                        <Stack direction={{ xs: 'column', sm: 'row' }} width="100%" justifyContent="flex-end">
+                            <Grid item container xs={12} direction="row" justifyContent="center">
+                                <MetLabel mb={2} color="primary">
+                                    Click on a question to view results
+                                </MetLabel>
+                                <ToggleButtonGroup value={chartType} exclusive onChange={handleToggleChange}>
+                                    <ToggleButton
+                                        value="bar"
+                                        sx={{
+                                            '&.Mui-selected': {
+                                                backgroundColor: Palette.primary.main,
+                                                color: 'white',
+                                            },
+                                        }}
+                                    >
+                                        Show as Bar Chart
+                                    </ToggleButton>
+                                    <ToggleButton
+                                        value="treemap"
+                                        sx={{
+                                            '&.Mui-selected': {
+                                                backgroundColor: Palette.primary.main,
+                                                color: 'white',
+                                            },
+                                        }}
+                                    >
+                                        Show as TreeMap Chart
+                                    </ToggleButton>
+                                </ToggleButtonGroup>
+                            </Grid>
+                        </Stack>
                         <Divider sx={{ marginTop: '1em' }} />
                         <Grid container direction="row" item xs={12} spacing={1} alignItems={'flex-start'}>
                             <CircularProgress color="inherit" />
@@ -71,10 +118,42 @@ export const SurveyBar = ({ engagement, engagementIsLoading }: SurveyQuestionPro
             <Grid item xs={12} mb={2}>
                 <MetHeader1>Survey Results</MetHeader1>
             </Grid>
-            <Grid ml={5} item xs={12}>
+            <Grid ml={isSmallScreen ? 0 : 5} item xs={12}>
                 <MetPaper sx={{ p: 2 }}>
                     <Grid item xs={12}>
-                        <MetLabel mb={2}>Click on a question to view results</MetLabel>
+                        <Stack direction={{ xs: 'column', sm: 'row' }} width="100%" justifyContent="flex-end">
+                            <Grid item container xs={8} direction="row" justifyContent="flex-start">
+                                <MetLabel mb={2} color="primary">
+                                    Click on a question to view results
+                                </MetLabel>
+                            </Grid>
+                            <Grid item container xs={4} direction="row" justifyContent="flex-end">
+                                <ToggleButtonGroup value={chartType} exclusive onChange={handleToggleChange}>
+                                    <ToggleButton
+                                        value="bar"
+                                        sx={{
+                                            '&.Mui-selected': {
+                                                backgroundColor: Palette.primary.main,
+                                                color: 'white',
+                                            },
+                                        }}
+                                    >
+                                        Show as Bar Chart
+                                    </ToggleButton>
+                                    <ToggleButton
+                                        value="treemap"
+                                        sx={{
+                                            '&.Mui-selected': {
+                                                backgroundColor: Palette.primary.main,
+                                                color: 'white',
+                                            },
+                                        }}
+                                    >
+                                        Show as TreeMap Chart
+                                    </ToggleButton>
+                                </ToggleButtonGroup>
+                            </Grid>
+                        </Stack>
                         <Divider sx={{ marginTop: '1em' }} />
                     </Grid>
                     <Grid container direction="row" item xs={12} spacing={1} alignItems={'flex-start'}>
@@ -97,7 +176,11 @@ export const SurveyBar = ({ engagement, engagementIsLoading }: SurveyQuestionPro
                             </Grid>
                         </Grid>
                         <Grid item xs={12} sm={8} alignItems="center">
-                            <BarBlock data={selectedData} />
+                            {chartType == 'bar' ? (
+                                <BarBlock data={selectedData} />
+                            ) : (
+                                <TreemapBlock data={selectedData} />
+                            )}
                         </Grid>
                     </Grid>
                 </MetPaper>

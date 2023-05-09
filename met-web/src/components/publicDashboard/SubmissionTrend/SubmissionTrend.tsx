@@ -82,65 +82,53 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
         <>
             <MetLabel mb={2}>Live Activity - Engagement</MetLabel>
             <MetPaper sx={{ p: 2 }}>
-                <Stack direction="column" alignItems="center" gap={1}>
-                    <Grid item container xs={12} direction="row" justifyContent="center" spacing={1}>
-                        <Stack
-                            direction={{ xs: 'column', sm: 'row' }}
-                            spacing={1}
-                            width="100%"
-                            justifyContent="flex-end"
-                        >
-                            <ToggleButtonGroup value={chartBy} exclusive onChange={handleToggleChange}>
-                                <ToggleButton
-                                    value="monthly"
-                                    sx={{
-                                        '&.Mui-selected': {
-                                            backgroundColor: Palette.primary.main,
-                                            color: 'white',
-                                        },
-                                    }}
-                                >
-                                    Monthly
-                                </ToggleButton>
-                                <ToggleButton
-                                    value="weekly"
-                                    sx={{
-                                        '&.Mui-selected': {
-                                            backgroundColor: Palette.primary.main,
-                                            color: 'white',
-                                        },
-                                    }}
-                                >
-                                    Weekly
-                                </ToggleButton>
-                            </ToggleButtonGroup>
-                        </Stack>
-                    </Grid>
-                    <ResponsiveContainer width="100%" height={isSmallScreen ? 200 : 250}>
-                        <BarChart
-                            data={data}
-                            margin={
-                                !isSmallScreen
-                                    ? { top: 10, right: 30, left: 0, bottom: 0 }
-                                    : { top: 5, right: 0, left: -20, bottom: 0 }
-                            }
-                        >
-                            <XAxis dataKey="showdataby" />
-                            <YAxis />
-                            <Unless condition={isSmallScreen}>
-                                <Tooltip />
-                            </Unless>
-                            <Bar
-                                dataKey="responses"
-                                fill={DASHBOARD.BAR_CHART.FILL_COLOR}
-                                minPointSize={2}
-                                barSize={50}
+                <Grid item container xs={12} direction="row" justifyContent="center">
+                    <Stack direction={{ xs: 'column', sm: 'row' }} width="100%" justifyContent="flex-end">
+                        <ToggleButtonGroup value={chartBy} exclusive onChange={handleToggleChange}>
+                            <ToggleButton
+                                value="monthly"
+                                sx={{
+                                    '&.Mui-selected': {
+                                        backgroundColor: Palette.primary.main,
+                                        color: 'white',
+                                    },
+                                }}
                             >
-                                <LabelList dataKey="responses" position="insideTop" style={{ fill: 'white' }} />
-                            </Bar>
-                        </BarChart>
-                    </ResponsiveContainer>
-                </Stack>
+                                Monthly
+                            </ToggleButton>
+                            <ToggleButton
+                                value="weekly"
+                                sx={{
+                                    '&.Mui-selected': {
+                                        backgroundColor: Palette.primary.main,
+                                        color: 'white',
+                                    },
+                                }}
+                            >
+                                Weekly
+                            </ToggleButton>
+                        </ToggleButtonGroup>
+                    </Stack>
+                </Grid>
+                <ResponsiveContainer width="100%" height={isSmallScreen ? 200 : 250}>
+                    <BarChart
+                        data={data}
+                        margin={
+                            !isSmallScreen
+                                ? { top: 10, right: 30, left: 0, bottom: 0 }
+                                : { top: 5, right: 0, left: -20, bottom: 0 }
+                        }
+                    >
+                        <XAxis dataKey="showdataby" />
+                        <YAxis />
+                        <Unless condition={isSmallScreen}>
+                            <Tooltip />
+                        </Unless>
+                        <Bar dataKey="responses" fill={DASHBOARD.BAR_CHART.FILL_COLOR} minPointSize={2} barSize={50}>
+                            <LabelList dataKey="responses" position="insideTop" style={{ fill: 'white' }} />
+                        </Bar>
+                    </BarChart>
+                </ResponsiveContainer>
             </MetPaper>
         </>
     );

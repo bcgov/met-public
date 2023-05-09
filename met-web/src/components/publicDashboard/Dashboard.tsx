@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Grid, Link as MuiLink } from '@mui/material';
+import { Grid, Link as MuiLink, useMediaQuery, Theme } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { MetHeader1, MetPaper, PrimaryButton } from 'components/common';
 import { ReportBanner } from './ReportBanner';
@@ -11,6 +11,7 @@ import { DashboardContext } from './DashboardContext';
 import SurveyBar from './SurveyBar.tsx';
 
 export const Dashboard = () => {
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const navigate = useNavigate();
     const { engagement, isEngagementLoading } = useContext(DashboardContext);
 
@@ -66,7 +67,7 @@ export const Dashboard = () => {
                                     Read Comments
                                 </PrimaryButton>
                             </Grid>
-                            <Grid ml={2} container spacing={3} item xs={12}>
+                            <Grid ml={isSmallScreen ? 0 : 2} container spacing={isSmallScreen ? 0 : 3} item xs={12}>
                                 <Grid item xs={12} sm={4}>
                                     <SurveyEmailsSent
                                         engagement={engagement}
@@ -86,7 +87,7 @@ export const Dashboard = () => {
                                     />
                                 </Grid>
                             </Grid>
-                            <Grid ml={5} item xs={12}>
+                            <Grid ml={isSmallScreen ? 0 : 5} item xs={12}>
                                 <SubmissionTrend engagement={engagement} engagementIsLoading={isEngagementLoading} />
                             </Grid>
                             <Grid item xs={12}>
