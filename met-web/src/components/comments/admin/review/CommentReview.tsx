@@ -13,7 +13,7 @@ import {
     FormHelperText,
 } from '@mui/material';
 import { getSubmission, reviewComments } from 'services/submissionService';
-import { useAppDispatch } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { useParams, useNavigate } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import {
@@ -37,6 +37,7 @@ import { RejectEmailTemplate } from './emailPreview/EmailTemplates';
 import EmailPreview from './emailPreview/EmailPreview';
 import { Survey, createDefaultSurvey } from 'models/survey';
 import { getSurvey } from 'services/surveyService';
+import { PermissionsGate } from 'components/permissionsGate';
 
 const CommentReview = () => {
     const [submission, setSubmission] = useState<SurveySubmission>(createDefaultSubmission());
@@ -59,6 +60,7 @@ const CommentReview = () => {
     const { submissionId, surveyId } = useParams();
     const reviewNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Review);
     const internalNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Internal);
+    const { assignedEngagements } = useAppSelector((state) => state.user);
 
     const MAX_OTHER_REASON_CHAR = 500;
 
@@ -494,10 +496,13 @@ const CommentReview = () => {
                         </When>
                         <Grid item xs={12}>
                             <Stack direction="row" spacing={2}>
-                                <PrimaryButton loading={isSaving} onClick={handleSave}>
+                                <PrimaryButton
+                                    disabled={!assignedEngagements.includes(Number(survey.engagement_id))}
+                                    loading={isSaving}
+                                    onClick={handleSave}
+                                >
                                     {'Save & Continue'}
                                 </PrimaryButton>
-
                                 <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
                             </Stack>
                         </Grid>

@@ -57,7 +57,14 @@ const CommentTextListing = () => {
                 survey_id: Number(surveyId),
                 queryParams,
             });
-            setSubmissions(response.items);
+            const filterCondition = (submission: SurveySubmission) =>
+                submission.comment_status_id === CommentStatus.Approved;
+
+            const filteredSubmissions = !assignedEngagements.includes(Number(survey.engagement_id))
+                ? response.items.filter(filterCondition)
+                : response.items;
+
+            setSubmissions(filteredSubmissions);
             setPageInfo({
                 total: response.total,
             });

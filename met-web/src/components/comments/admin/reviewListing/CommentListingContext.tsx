@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { CommentStatus } from 'constants/commentStatus';
-import { useAppDispatch } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { Survey, createDefaultSurvey } from 'models/survey';
 import { SurveySubmission } from 'models/surveySubmission';
 import { useParams, useLocation } from 'react-router-dom';
@@ -99,6 +99,7 @@ export const CommentListingContextProvider = ({ children }: CommentListingContex
         ...initialSearchFilters,
         status: state?.status || null,
     });
+    const { assignedEngagements } = useAppSelector((state) => state.user);
     const [searchText, setSearchText] = useState('');
     const [survey, setSurvey] = useState<Survey>(createDefaultSurvey());
     const [submissions, setSubmissions] = useState<SurveySubmission[]>([]);
@@ -149,10 +150,16 @@ export const CommentListingContextProvider = ({ children }: CommentListingContex
                 survey_id: Number(surveyId),
                 queryParams,
             });
-            setSubmissions(response.items);
-            setPageInfo({
-                total: response.total,
-            });
+
+            const filterCondition = (submission: SurveySubmission) =>
+                submission.comment_status_id === CommentStatus.Approved;
+
+            const filteredSubmissions = !assignedEngagements.includes(Number(survey.engagement_id))
+                ? response.items.filter(filterCondition)
+                : response.items;
+
+            setSubmissions(filteredSubmissions);
+            setPageInfo({ total: response.total });
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching submissions' }));
             setLoading(false);
