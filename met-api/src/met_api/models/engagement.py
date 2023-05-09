@@ -261,5 +261,6 @@ class Engagement(BaseModel):
     @staticmethod
     def get_assigned_engagements(user_id: int) -> List[Engagement]:
         """Get engagements assigned to the given user id."""
-        engagements = db.session.query(Engagement).join(MembershipModel).filter(MembershipModel.user_id == user_id).all()
+        engagements = db.session.query(Engagement).join(MembershipModel).filter(
+            MembershipModel.user_id == user_id).all()
         return engagements
