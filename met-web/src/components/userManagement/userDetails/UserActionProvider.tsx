@@ -3,9 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { User, createDefaultUser } from 'models/user';
-import { getUserList } from 'services/userService/api';
+import { getUserList, fetchUserEngagements } from 'services/userService/api';
 import { UserEngagementsTable } from 'models/engagementTeamMember';
-import { fetchUserEngagements } from 'services/userService/api';
 
 export interface UserViewContext {
     savedUser: User | undefined;
@@ -43,13 +42,10 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const [addUserModalOpen, setAddUserModalOpen] = useState(false);
 
     useEffect(() => {
-        const loadData = async () => {
-            try {
-                await fetchUser();
-                await getUserEngagements();
-            } catch (error) {
-                console.error(error);
-            }
+        const loadData = () => {
+            fetchUser()
+                .then(() => getUserEngagements())
+                .catch((error) => console.error(error));
         };
         loadData();
     }, [userId]);
@@ -57,7 +53,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const fetchUser = async () => {
         if (isNaN(Number(userId))) {
             navigate('/404');
-            return;
+            return Promise.resolve();
         }
         try {
             const result = await getUserList();

@@ -84,7 +84,9 @@ export const AddToEngagementModal = () => {
 
     const debounceLoadEngagements = useRef(
         debounce((searchText: string) => {
-            loadEngagements(searchText);
+            loadEngagements(searchText).catch((error) => {
+                console.error('Error in debounceLoadEngagements:', error);
+            });
         }, 1000),
     ).current;
 

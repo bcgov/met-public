@@ -121,7 +121,7 @@ export const UserDetails = () => {
                         <MetParagraph sx={{ pl: 2 }}>
                             {savedUser?.roles
                                 ? savedUser?.roles.map((role, index) => (
-                                      <React.Fragment>
+                                      <React.Fragment key={role}>
                                           {role}
                                           {index < savedUser.roles.length - 1 ? ', ' : ''}
                                       </React.Fragment>
