@@ -63,7 +63,7 @@ const CommentReview = () => {
     const { assignedEngagements } = useAppSelector((state) => state.user);
     const canEditComments =
         UserService.hasAdminRole() ||
-        !assignedEngagements.includes(survey.engagement_id) ||
+        assignedEngagements.includes(survey.engagement_id) ||
         UserService.hasRole('SuperUser');
     const MAX_OTHER_REASON_CHAR = 500;
 

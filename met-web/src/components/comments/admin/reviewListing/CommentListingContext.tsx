@@ -105,7 +105,7 @@ export const CommentListingContextProvider = ({ children }: CommentListingContex
     const [survey, setSurvey] = useState<Survey>(createDefaultSurvey());
     const canViewAllComments =
         UserService.hasAdminRole() ||
-        !assignedEngagements.includes(survey.engagement_id) ||
+        assignedEngagements.includes(survey.engagement_id) ||
         UserService.hasRole('SuperUser');
     const [submissions, setSubmissions] = useState<SurveySubmission[]>([]);
     const [paginationOptions, setPagination] = useState<PaginationOptions<SurveySubmission>>({
@@ -159,7 +159,7 @@ export const CommentListingContextProvider = ({ children }: CommentListingContex
             const filterCondition = (submission: SurveySubmission) =>
                 submission.comment_status_id === CommentStatus.Approved;
 
-            const filteredSubmissions = canViewAllComments ? response.items.filter(filterCondition) : response.items;
+            const filteredSubmissions = !canViewAllComments ? response.items.filter(filterCondition) : response.items;
 
             setSubmissions(filteredSubmissions);
             setPageInfo({ total: response.total });

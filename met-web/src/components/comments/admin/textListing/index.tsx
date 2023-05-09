@@ -15,6 +15,7 @@ import { SurveySubmission } from 'models/surveySubmission';
 import { formatDate } from 'components/common/dateHelper';
 import { getSurvey } from 'services/surveyService';
 import UserService from 'services/userService';
+import { Survey, createDefaultSurvey } from 'models/survey';
 
 const CommentTextListing = () => {
     const { surveyId } = useParams();
@@ -42,8 +43,19 @@ const CommentTextListing = () => {
     });
     const [tableLoading, setTableLoading] = useState(true);
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
-
+    const [survey, setSurvey] = useState<Survey>(createDefaultSurvey());
     const [submissions, setSubmissions] = useState<SurveySubmission[]>([]);
+
+    const loadSurvey = async () => {
+        try {
+            const survey = await getSurvey(Number(surveyId));
+            setSurvey(survey);
+        } catch (error) {
+            dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching survey information' }));
+            setTableLoading(false);
+        }
+    };
+
     const loadSubmissions = async () => {
         try {
             setTableLoading(true);
@@ -55,8 +67,6 @@ const CommentTextListing = () => {
                 search_text: searchFilter.value,
             };
 
-            const survey = await getSurvey(Number(surveyId));
-
             const response = await getSubmissionPage({
                 survey_id: Number(surveyId),
                 queryParams,
@@ -64,7 +74,7 @@ const CommentTextListing = () => {
 
             const canViewAllComments =
                 UserService.hasAdminRole() ||
-                !assignedEngagements.includes(survey.engagement_id) ||
+                assignedEngagements.includes(survey.engagement_id) ||
                 UserService.hasRole('SuperUser');
 
             const filterCondition = (submission: SurveySubmission) =>
@@ -84,8 +94,15 @@ const CommentTextListing = () => {
         }
     };
 
+    const loadData = async () => {
+        setTableLoading(true);
+        await loadSurvey();
+        await loadSubmissions();
+        setTableLoading(false);
+    };
+
     useEffect(() => {
-        loadSubmissions();
+        loadData();
     }, [paginationOptions, surveyId, searchFilter]);
 
     const handleSearchBarClick = (filter: string) => {
@@ -236,7 +253,7 @@ const CommentTextListing = () => {
                     </Stack>
                 </Grid>
                 <Grid item container lg={6} xs={12} alignItems={'flex-end'} justifyContent={'flex-end'}>
-                    <PrimaryButton component={Link} to={`/surveys/${submissions[0]?.survey_id || 0}/comments`}>
+                    <PrimaryButton component={Link} to={`/surveys/${survey.id}/comments`}>
                         Return to Comments List
                     </PrimaryButton>
                 </Grid>
