@@ -37,7 +37,6 @@ import { RejectEmailTemplate } from './emailPreview/EmailTemplates';
 import EmailPreview from './emailPreview/EmailPreview';
 import { Survey, createDefaultSurvey } from 'models/survey';
 import { getSurvey } from 'services/surveyService';
-import { PermissionsGate } from 'components/permissionsGate';
 
 const CommentReview = () => {
     const [submission, setSubmission] = useState<SurveySubmission>(createDefaultSubmission());

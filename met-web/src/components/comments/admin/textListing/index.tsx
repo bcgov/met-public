@@ -5,7 +5,7 @@ import { MetPageGridContainer, PrimaryButton, MetParagraph, MetLabel } from 'com
 import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { Link as MuiLink, Grid, Stack, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { useAppDispatch } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { CommentStatusChip } from '../../status';
 import { CommentStatus } from 'constants/commentStatus';
@@ -15,6 +15,7 @@ import { SurveySubmission } from 'models/surveySubmission';
 import { formatDate } from 'components/common/dateHelper';
 
 const CommentTextListing = () => {
+    const { assignedEngagements } = useAppSelector((state) => state.user);
     const badgeStyle: React.CSSProperties = {
         padding: 0,
         margin: 0,
@@ -53,10 +54,12 @@ const CommentTextListing = () => {
                 sort_order,
                 search_text: searchFilter.value,
             };
+
             const response = await getSubmissionPage({
                 survey_id: Number(surveyId),
                 queryParams,
             });
+
             const filterCondition = (submission: SurveySubmission) =>
                 submission.comment_status_id === CommentStatus.Approved;
 
