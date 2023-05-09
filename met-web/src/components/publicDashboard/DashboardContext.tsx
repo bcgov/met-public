@@ -46,10 +46,10 @@ export const DashboardContextProvider = ({ children }: DashboardContextProviderP
         const canAccessDashboard = !roles.includes('access_dashboard');
 
         /* check to ensure that users without the role access_dashboard can access the dashboard only after 
-        the engagement is closed
+        the engagement is closed*/
         if (!isClosed && canAccessDashboard) {
             throw new Error('Engagement is not yet closed');
-        }*/
+        }
     };
 
     const fetchEngagement = async () => {
