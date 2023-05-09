@@ -15,8 +15,9 @@ from sqlalchemy.sql.schema import ForeignKey
 
 from met_api.constants.engagement_status import EngagementDisplayStatus, Status
 from met_api.constants.user import SYSTEM_USER
-from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement_metadata import EngagementMetadataModel
+from met_api.models.membership import Membership as MembershipModel
+from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.engagement import EngagementSchema
 from met_api.utils.datetime import local_datetime
 from .base_model import BaseModel
@@ -46,11 +47,11 @@ class Engagement(BaseModel):
 
     @classmethod
     def get_engagements_paginated(
-        cls,
-        pagination_options: PaginationOptions,
-        search_options=None,
-        statuses=None,
-        assigned_engagements: list[int] | None = None
+            cls,
+            pagination_options: PaginationOptions,
+            search_options=None,
+            statuses=None,
+            assigned_engagements: list[int] | None = None
     ):
         """Get engagements paginated."""
         query = db.session.query(Engagement).join(EngagementStatus)
@@ -221,27 +222,27 @@ class Engagement(BaseModel):
         query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)
 
         if project_type := search_options.get('project_type'):
-            query = query.filter(EngagementMetadataModel.project_metadata['type'].astext.ilike(f'%{project_type}%'))\
+            query = query.filter(EngagementMetadataModel.project_metadata['type'].astext.ilike(f'%{project_type}%')) \
                 .params(val=project_type)
 
         if project_name := search_options.get('project_name'):
             query = query.filter(EngagementMetadataModel.project_metadata['project_name']
-                                 .astext.ilike(f'%{project_name}%'))\
-                                 .params(val=project_name)
+                                 .astext.ilike(f'%{project_name}%')) \
+                .params(val=project_name)
 
         if project_id := search_options.get('project_id'):
-            query = query.filter(EngagementMetadataModel.project_id == project_id)\
-                         .params(val=project_id)
+            query = query.filter(EngagementMetadataModel.project_id == project_id) \
+                .params(val=project_id)
 
         if application_number := search_options.get('application_number'):
             query = query.filter(EngagementMetadataModel.project_metadata['application_number']
-                                 .astext.ilike(f'%{application_number}%'))\
-                                 .params(val=application_number)
+                                 .astext.ilike(f'%{application_number}%')) \
+                .params(val=application_number)
 
         if client_name := search_options.get('client_name'):
             query = query.filter(EngagementMetadataModel.project_metadata['client_name']
-                                 .astext.ilike(f'%{client_name}%'))\
-                                 .params(val=client_name)
+                                 .astext.ilike(f'%{client_name}%')) \
+                .params(val=client_name)
 
         return query
 
@@ -256,3 +257,9 @@ class Engagement(BaseModel):
             Engagement.id.in_(assigned_engagements)
         ))
         return query
+
+    @staticmethod
+    def get_assigned_engagements(user_id: int) -> List[Engagement]:
+        """Get engagements assigned to the given user id."""
+        engagements = db.session.query(Engagement).join(MembershipModel).filter(MembershipModel.user_id == user_id).all()
+        return engagements

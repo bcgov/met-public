@@ -26,7 +26,6 @@ from met_api.services.membership_service import MembershipService
 from met_api.utils.roles import Role
 from met_api.utils.util import allowedorigins, cors_preflight
 
-
 API = Namespace('engagements', description='Endpoints for Engagements Management')
 """Custom exception messages
 """
@@ -69,6 +68,7 @@ class EngagementMembershipUser(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
+    @_jwt.has_one_of_roles([Role.VIEW_MEMBERS.value])
     def get(engagement_id, user_id):  # pylint: disable=unused-argument
         """Get membership by id."""
         try:
