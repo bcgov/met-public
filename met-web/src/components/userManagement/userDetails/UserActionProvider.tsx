@@ -1,10 +1,11 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from 'hooks';
+import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { User, createDefaultUser } from 'models/user';
 import { getUserList } from 'services/userService/api';
-import { EngagementTeamMember, UserEngagementsTable } from 'models/engagementTeamMember';
+import { getMembershipsByUser } from 'services/membershipService';
+import { UserEngagementsTable } from 'models/engagementTeamMember';
 import { getEngagement } from 'services/engagementService';
 
 export interface UserViewContext {
@@ -37,7 +38,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const { userId } = useParams<UserParams>();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { assignedEngagements } = useAppSelector((state) => state.user);
     const [userList, setUserList] = useState<User[]>([]);
     const [savedUser, setSavedUser] = useState<User | undefined>(createDefaultUser);
     const [isUserLoading, setUserLoading] = useState(true);
@@ -80,8 +80,12 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     };
 
     const getUserEngagements = async () => {
+        const user_memberships = await getMembershipsByUser({
+            user_id: userId,
+        });
         const membership_table: UserEngagementsTable[] = [];
-        assignedEngagements.forEach((membership: EngagementTeamMember) => {
+
+        user_memberships.forEach((membership) => {
             getEngagement(membership.engagement_id)
                 .then((engagement) => {
                     const added_by_user = userList.find((user) => user.id === membership.user_id);
