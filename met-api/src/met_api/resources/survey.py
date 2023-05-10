@@ -23,7 +23,7 @@ from met_api.auth import auth
 from met_api.auth import jwt as _jwt
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.pagination_options import PaginationOptions
-from met_api.models.survey_exclusion_option import SurveyExclusionOptions
+from met_api.models.survey_search_options import SurveySearchOptions
 from met_api.schemas.survey import SurveySchema
 from met_api.services.survey_service import SurveyService
 from met_api.utils.roles import Role
@@ -75,7 +75,7 @@ class Surveys(Resource):
         """Fetch surveys."""
         try:
             args = request.args
-
+            user_id = TokenInfo.get_id()
             pagination_options = PaginationOptions(
                 page=args.get('page', None, int),
                 size=args.get('size', None, int),
@@ -83,17 +83,18 @@ class Surveys(Resource):
                 sort_order=args.get('sort_order', 'asc', str),
             )
 
-            survey_exclusion_options = SurveyExclusionOptions(
+            search_options = SurveySearchOptions(
                 exclude_hidden=args.get('exclude_hidden', False, bool),
                 exclude_template=args.get('exclude_template', False, bool),
+                search_text=args.get('search_text', '', str),
+                unlinked=args.get('unlinked', False, bool),
             )
 
             survey_records = SurveyService()\
                 .get_surveys_paginated(
+                    user_id,
                     pagination_options,
-                    survey_exclusion_options,
-                    args.get('search_text', '', str),
-                    args.get('unlinked', False, bool),
+                    search_options,
             )
             return survey_records, HTTPStatus.OK
         except ValueError as err:
