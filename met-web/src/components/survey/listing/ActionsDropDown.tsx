@@ -19,8 +19,8 @@ export const ActionsDropDown = ({ survey }: { survey: Survey }) => {
     const engagement = survey.engagement;
     const engagementId = engagement?.id ?? 0;
     const submissionHasBeenOpened =
-        !!engagement && [SubmissionStatus.Open, SubmissionStatus.Closed].includes(engagement!.submission_status);
-    const isEngagementDraft = !!engagement && engagement!.engagement_status.id === EngagementStatus.Draft;
+        !!engagement && [SubmissionStatus.Open, SubmissionStatus.Closed].includes(engagement.submission_status);
+    const isEngagementDraft = !!engagement && engagement.engagement_status.id === EngagementStatus.Draft;
 
     const canEditSurvey = (): boolean => {
         if (submissionHasBeenOpened) {
