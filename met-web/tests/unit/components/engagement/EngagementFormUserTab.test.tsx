@@ -10,7 +10,7 @@ import * as teamMemberService from 'services/membershipService';
 import * as widgetService from 'services/widgetService';
 import { Box } from '@mui/material';
 import { draftEngagement } from '../factory';
-import { initialDefaultUser, USER_GROUP } from 'models/user';
+import { createDefaultUser, USER_GROUP } from 'models/user';
 import { EngagementTeamMember, initialDefaultTeamMember } from 'models/engagementTeamMember';
 import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 
@@ -18,7 +18,7 @@ const mockTeamMember1: EngagementTeamMember = {
     ...initialDefaultTeamMember,
     user_id: 1,
     user: {
-        ...initialDefaultUser,
+        ...createDefaultUser,
         id: 1,
         first_name: 'Jane',
         last_name: 'Doe',

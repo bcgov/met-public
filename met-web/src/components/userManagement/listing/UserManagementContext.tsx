@@ -12,7 +12,7 @@ export interface UserManagementContextProps {
     paginationOptions: PaginationOptions<User>;
     setPaginationOptions: React.Dispatch<React.SetStateAction<PaginationOptions<User>>>;
     addUserModalOpen: boolean;
-    setAddUserModelOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setAddUserModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
     loadUserListing: () => void;
 }
 
@@ -32,7 +32,7 @@ export const UserManagementContext = createContext<UserManagementContextProps>({
         throw new Error('Not implemented');
     },
     addUserModalOpen: false,
-    setAddUserModelOpen: () => {
+    setAddUserModalOpen: () => {
         throw new Error('Not implemented');
     },
     loadUserListing: () => {
@@ -45,7 +45,7 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
     const [users, setUsers] = useState<User[]>([]);
     const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
     const [usersLoading, setUsersLoading] = useState(true);
-    const [addUserModalOpen, setAddUserModelOpen] = useState(false);
+    const [addUserModalOpen, setAddUserModalOpen] = useState(false);
 
     const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<User>>({
         page: 1,
@@ -96,7 +96,7 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
                 paginationOptions,
                 setPaginationOptions,
                 addUserModalOpen,
-                setAddUserModelOpen,
+                setAddUserModalOpen,
                 loadUserListing,
             }}
         >
