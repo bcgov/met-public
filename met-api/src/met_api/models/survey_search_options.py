@@ -9,6 +9,6 @@ class SurveySearchOptions:  # pylint: disable=too-many-instance-attributes
 
     exclude_hidden: bool
     exclude_template: bool
-    assigned_engagements: list[int] = None
+    assigned_engagements: list[int]
     search_text: str = ''
     unlinked: bool = False
