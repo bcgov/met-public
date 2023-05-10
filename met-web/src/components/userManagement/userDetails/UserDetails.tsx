@@ -106,11 +106,11 @@ export const UserDetails = () => {
                         <MetParagraph sx={{ pl: 2 }}>
                             {savedUser?.roles
                                 ? savedUser?.roles.map((role, index) => (
-                                    <React.Fragment key={role}>
-                                        {role}
-                                        {index < savedUser.roles.length - 1 ? ', ' : ''}
-                                    </React.Fragment>
-                                ))
+                                      <React.Fragment key={role}>
+                                          {role}
+                                          {index < savedUser.roles.length - 1 ? ', ' : ''}
+                                      </React.Fragment>
+                                  ))
                                 : 'none'}
                         </MetParagraph>
                     </Grid>
@@ -135,7 +135,7 @@ export const UserDetails = () => {
                 </Grid>
 
                 <Grid container direction="row" item xs={6} spacing={1}>
-                    <Grid item xs={2.5} sx={{ pt: 0, mt: 0, mr: 1, }}>
+                    <Grid item xs={2.5} sx={{ mr: 1 }}>
                         <MetLabel>Date Added:</MetLabel>
                     </Grid>
                     <Grid item xs={4.5}>
