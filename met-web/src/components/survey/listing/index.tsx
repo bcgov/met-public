@@ -22,6 +22,8 @@ import CloseRounded from '@mui/icons-material/CloseRounded';
 import FiberNewOutlined from '@mui/icons-material/FiberNewOutlined';
 import { PermissionsGate } from 'components/permissionsGate';
 import { CommentStatus } from 'constants/commentStatus';
+import { ActionsDropDown } from './ActionsDropDown';
+import { When } from 'react-if';
 
 const SurveyListing = () => {
     const navigate = useNavigate();
@@ -91,9 +93,14 @@ const SurveyListing = () => {
             label: 'Survey Name',
             allowSort: true,
             renderCell: (row: Survey) => (
-                <MuiLink component={Link} to={`/surveys/${Number(row.id)}/build`}>
-                    {row.name}
-                </MuiLink>
+                <>
+                    <When condition={!!row.engagement}>
+                        <MuiLink component={Link} to={`/surveys/${Number(row.id)}/submit`}>
+                            {row.name}
+                        </MuiLink>
+                    </When>
+                    <When condition={!row.engagement}>{row.name}</When>
+                </>
             ),
         },
         {
@@ -160,28 +167,6 @@ const SurveyListing = () => {
                 return (
                     <MuiLink component={Link} to={`/engagements/${row.engagement.id}/view`}>
                         {row.engagement.name}
-                    </MuiLink>
-                );
-            },
-        },
-        {
-            key: 'comments_meta_data',
-            numeric: true,
-            disablePadding: false,
-            label: 'Comments',
-            customStyle: { padding: 2 },
-            align: 'left',
-            hideSorticon: true,
-            allowSort: false,
-            renderCell: (row: Survey) => {
-                const isAuthorized = canViewPrivateEngagements || assignedEngagements.includes(Number(row.id));
-
-                if (!isAuthorized) {
-                    return '';
-                }
-                return (
-                    <MuiLink component={Link} to={`/surveys/${row.id}/comments`}>
-                        View All
                     </MuiLink>
                 );
             },
@@ -324,25 +309,15 @@ const SurveyListing = () => {
         },
         {
             key: 'id',
-            nestedSortKey: 'survey.id',
             numeric: true,
             disablePadding: false,
-            label: 'Reporting',
+            label: 'Actions',
             allowSort: false,
             renderCell: (row: Survey) => {
-                if (!row.engagement) {
-                    return <></>;
-                }
-
-                if (row.engagement.engagement_status.id === EngagementStatus.Draft || !row.comments_meta_data.total) {
-                    return <></>;
-                }
-
-                return (
-                    <MuiLink component={Link} to={`/engagements/${Number(row.engagement.id)}/dashboard`}>
-                        View Report
-                    </MuiLink>
-                );
+                return <ActionsDropDown survey={row} />;
+            },
+            customStyle: {
+                minWidth: '200px',
             },
         },
     ];
