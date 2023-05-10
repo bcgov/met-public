@@ -103,16 +103,7 @@ export const UserDetails = () => {
                         <MetLabel>Role:</MetLabel>
                     </Grid>
                     <Grid item xs={2}>
-                        <MetParagraph sx={{ pl: 2 }}>
-                            {savedUser?.roles
-                                ? savedUser?.roles.map((role, index) => (
-                                      <React.Fragment key={role}>
-                                          {role}
-                                          {index < savedUser.roles.length - 1 ? ', ' : ''}
-                                      </React.Fragment>
-                                  ))
-                                : 'none'}
-                        </MetParagraph>
+                        <MetParagraph sx={{ pl: 2 }}>{savedUser?.groups ? savedUser?.groups[0] : 'none'}</MetParagraph>
                     </Grid>
                 </Grid>
 

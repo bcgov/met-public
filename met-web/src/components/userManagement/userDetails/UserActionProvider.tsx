@@ -56,7 +56,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
             return Promise.resolve();
         }
         try {
-            const result = await getUserList();
+            const result = await getUserList({ include_groups: true });
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             //@ts-ignore
             const currentUser = result.items.find((user) => user.id === parseInt(userId));
