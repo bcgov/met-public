@@ -4,14 +4,14 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { User, createDefaultUser } from 'models/user';
 import { getUserList, fetchUserEngagements } from 'services/userService/api';
-import { UserEngagementsTable } from 'models/engagementTeamMember';
+import { Engagement } from 'models/engagement';
 
 export interface UserViewContext {
     savedUser: User | undefined;
     isUserLoading: boolean;
     addUserModalOpen: boolean;
-    memberships: UserEngagementsTable[];
-    setMemberships: React.Dispatch<React.SetStateAction<UserEngagementsTable[]>>;
+    memberships: Engagement[];
+    setMemberships: React.Dispatch<React.SetStateAction<Engagement[]>>;
     setAddUserModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -38,7 +38,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const dispatch = useAppDispatch();
     const [savedUser, setSavedUser] = useState<User | undefined>(createDefaultUser);
     const [isUserLoading, setUserLoading] = useState(true);
-    const [memberships, setMemberships] = useState<UserEngagementsTable[]>([]);
+    const [memberships, setMemberships] = useState<Engagement[]>([]);
     const [addUserModalOpen, setAddUserModalOpen] = useState(false);
 
     useEffect(() => {

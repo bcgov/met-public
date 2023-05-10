@@ -3,7 +3,7 @@ import Endpoints from 'apiManager/endpoints';
 import { Page } from 'services/type';
 import { User } from 'models/user';
 import { replaceUrl } from 'helper';
-import { UserEngagementsTable } from 'models/engagementTeamMember';
+import { Engagement } from 'models/engagement';
 
 interface GetUserParams {
     page?: number;
@@ -39,11 +39,11 @@ interface GetUserEngagementsParams {
     user_id?: string;
 }
 
-export const fetchUserEngagements = async ({ user_id }: GetUserEngagementsParams): Promise<UserEngagementsTable[]> => {
+export const fetchUserEngagements = async ({ user_id }: GetUserEngagementsParams): Promise<Engagement[]> => {
     if (!user_id) {
         return [];
     }
     const url = replaceUrl(Endpoints.User.GET_USER_ENGAGEMENTS, 'user_id', String(user_id));
-    const responseData = await http.GetRequest<UserEngagementsTable[]>(url);
+    const responseData = await http.GetRequest<Engagement[]>(url);
     return responseData.data ?? [];
 };
