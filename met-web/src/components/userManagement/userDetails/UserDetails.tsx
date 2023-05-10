@@ -133,7 +133,7 @@ export const UserDetails = () => {
 
                 <Grid container direction="row" item xs={6} spacing={1}>
                     <Grid item xs={1.5} sx={{ mr: 1 }}>
-                        <MetLabel>Status:</MetLabel>
+                        <MetLabel>Email:</MetLabel>
                     </Grid>
                     <Grid item xs={1.5}>
                         <MetParagraph sx={{ pl: 2 }}>{savedUser?.email_id}</MetParagraph>

@@ -98,7 +98,9 @@ export const AddToEngagementModal = () => {
         dispatch(
             openNotification({
                 severity: 'success',
-                text: `You have successfully added ${savedUser?.username} as a Team Member on ${data.engagement?.name}.`,
+                text: `You have successfully added ${
+                    savedUser?.first_name + ' ' + savedUser?.last_name
+                } as a Team Member on ${data.engagement?.name}.`,
             }),
         );
     };
@@ -132,7 +134,9 @@ export const AddToEngagementModal = () => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
                             <Grid item xs={12}>
-                                <MetHeader3 bold>Add {savedUser?.username} to Engagement</MetHeader3>
+                                <MetHeader3 bold>
+                                    Add {savedUser?.first_name + ' ' + savedUser?.last_name} to Engagement
+                                </MetHeader3>
                             </Grid>
 
                             <Grid
@@ -146,7 +150,8 @@ export const AddToEngagementModal = () => {
                             >
                                 <Grid item xs={12}>
                                     <MetLabel sx={{ marginBottom: '2px', display: 'flex' }}>
-                                        Which Engagement would you like to add {savedUser?.username} to?
+                                        Which Engagement would you like to add{' '}
+                                        {savedUser?.first_name + ' ' + savedUser?.last_name} to?
                                     </MetLabel>
                                     <Controller
                                         control={control}
