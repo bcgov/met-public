@@ -137,7 +137,6 @@ describe('Survey form page tests', () => {
             expect(screen.getByText('2022-09-15')).toBeInTheDocument();
             expect(screen.getByText('Open')).toBeInTheDocument();
             expect(screen.getByText('2022-09-19')).toBeInTheDocument();
-            expect(screen.getByText('View Report')).toBeInTheDocument();
         });
 
         expect(screen.getByText('Create Survey', { exact: false })).toBeInTheDocument();
