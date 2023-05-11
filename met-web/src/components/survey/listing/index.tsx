@@ -23,7 +23,6 @@ import FiberNewOutlined from '@mui/icons-material/FiberNewOutlined';
 import { PermissionsGate } from 'components/permissionsGate';
 import { CommentStatus } from 'constants/commentStatus';
 import { ActionsDropDown } from './ActionsDropDown';
-import { When } from 'react-if';
 
 const SurveyListing = () => {
     const navigate = useNavigate();
@@ -93,14 +92,9 @@ const SurveyListing = () => {
             label: 'Survey Name',
             allowSort: true,
             renderCell: (row: Survey) => (
-                <>
-                    <When condition={!!row.engagement}>
-                        <MuiLink component={Link} to={`/surveys/${Number(row.id)}/submit`}>
-                            {row.name}
-                        </MuiLink>
-                    </When>
-                    <When condition={!row.engagement}>{row.name}</When>
-                </>
+                <MuiLink component={Link} to={`/surveys/${Number(row.id)}/submit`}>
+                    {row.name}
+                </MuiLink>
             ),
         },
         {

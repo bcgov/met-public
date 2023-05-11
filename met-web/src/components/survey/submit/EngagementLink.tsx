@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Link as MuiLink, Skeleton } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { ActionContext } from './ActionContext';
+import { When } from 'react-if';
 
 export const EngagementLink = () => {
     const { savedEngagement, isEngagementLoading } = useContext(ActionContext);
@@ -13,9 +14,19 @@ export const EngagementLink = () => {
     if (!savedEngagement) {
         return null;
     }
+
     return (
-        <MuiLink component={Link} to={`/engagements/${savedEngagement.id}/view`}>
-            {`<< Return to ${savedEngagement.name} Engagement`}
-        </MuiLink>
+        <>
+            <When condition={!!savedEngagement.id}>
+                <MuiLink component={Link} to={`/engagements/${savedEngagement.id}/view`}>
+                    {`<< Return to ${savedEngagement.name} Engagement`}
+                </MuiLink>
+            </When>
+            <When condition={!savedEngagement.id}>
+                <MuiLink component={Link} to={'/surveys'}>
+                    {`<< Return to survey list`}
+                </MuiLink>
+            </When>
+        </>
     );
 };
