@@ -103,7 +103,7 @@ export const UserDetails = () => {
                         <MetLabel>Role:</MetLabel>
                     </Grid>
                     <Grid item xs={2}>
-                        <MetParagraph sx={{ pl: 2 }}>{savedUser?.groups ? savedUser?.groups[0] : 'none'}</MetParagraph>
+                        <MetParagraph sx={{ pl: 2 }}>{savedUser?.main_role}</MetParagraph>
                     </Grid>
                 </Grid>
 
