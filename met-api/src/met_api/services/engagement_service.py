@@ -42,17 +42,6 @@ class EngagementService:
             engagement['banner_url'] = ObjectStorageService.get_url(engagement_model.banner_filename)
         return engagement
 
-    @staticmethod
-    def get_all_engagements(user_id):
-        """Get all engagements."""
-        if user_id:
-            # authenticated users have access to any engagement status
-            engagements = EngagementModel.get_all_engagements()
-        else:
-            engagements = EngagementModel.get_engagements_by_status([Status.Published.value, Status.Closed.value])
-
-        return engagements
-
     @classmethod
     def get_engagements_paginated(
         cls,

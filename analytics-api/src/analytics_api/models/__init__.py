@@ -15,6 +15,7 @@
 """This exports all of the models and schemas used by the application."""
 
 from .db import db, ma, migrate
+from .email_verification import EmailVerification
 from .engagement import Engagement
 from .request_type_radio import RequestTypeRadio
 from .request_type_selectbox import RequestTypeSelectbox

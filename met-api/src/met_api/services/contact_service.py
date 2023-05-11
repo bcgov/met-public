@@ -28,10 +28,8 @@ class ContactService:
         return contacts
 
     @staticmethod
-    def create_contact(contact_data, user_id):
+    def create_contact(contact_data):
         """Create contact."""
-        contact_data['created_by'] = user_id
-        contact_data['updated_by'] = user_id
         return Contact.create_contact(contact_data)
 
     @staticmethod

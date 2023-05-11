@@ -2,12 +2,15 @@
 from http import HTTPStatus
 
 from met_api.constants.engagement_status import Status
+from met_api.constants.membership_type import MembershipType
 from met_api.models import Engagement as EngagementModel
 from met_api.models import Survey as SurveyModel
 from met_api.models.pagination_options import PaginationOptions
-from met_api.models.survey_exclusion_option import SurveyExclusionOptions
+from met_api.models.survey_search_options import SurveySearchOptions
 from met_api.schemas.engagement import EngagementSchema
 from met_api.schemas.survey import SurveySchema
+from met_api.services import authorization
+from met_api.services.membership_service import MembershipService
 from met_api.services.object_storage_service import ObjectStorageService
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
@@ -39,21 +42,19 @@ class SurveyService:
         return survey
 
     @staticmethod
-    def get_surveys_paginated(pagination_options: PaginationOptions, survey_exclusion_options: SurveyExclusionOptions,
-                              search_text='', unlinked=False):
+    def get_surveys_paginated(user_id, pagination_options: PaginationOptions, search_options: SurveySearchOptions):
         """Get engagements paginated."""
         # check if user has view all surveys access to view hidden surveys as well
         user_roles = TokenInfo.get_user_roles()
-        has_access_to_hidden_surveys = SurveyService._can_user_access_hidden_surveys(user_roles)
+        can_view_all_surveys = SurveyService._can_view_all_surveys(user_roles)
 
-        if not has_access_to_hidden_surveys:
-            survey_exclusion_options.exclude_hidden = True
+        if not can_view_all_surveys:
+            search_options.exclude_hidden = True
 
+        search_options.assigned_engagements = SurveyService._get_assigned_engagements(user_id, user_roles)
         items, total = SurveyModel.get_surveys_paginated(
             pagination_options,
-            survey_exclusion_options,
-            search_text,
-            unlinked,
+            search_options,
         )
         surveys_schema = SurveySchema(many=True)
 
@@ -63,7 +64,14 @@ class SurveyService:
         }
 
     @staticmethod
-    def _can_user_access_hidden_surveys(user_roles):
+    def _get_assigned_engagements(user_id, user_roles):
+        if Role.VIEW_PRIVATE_ENGAGEMENTS.value in user_roles:
+            return None
+        memberships = MembershipService.get_assigned_engagements(user_id)
+        return [membership.engagement_id for membership in memberships]
+
+    @staticmethod
+    def _can_view_all_surveys(user_roles):
         """Return false if user does not have access to view all hidden surveys."""
         if Role.VIEW_ALL_SURVEYS.value in user_roles:
             return True
@@ -81,6 +89,10 @@ class SurveyService:
         cls.validate_update_fields(data)
         survey = cls.get(data.get('id', None))
         engagement = survey.get('engagement', None)
+        engagement_id = survey.get('engagement_id', None)
+
+        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name,
+                                               Role.EDIT_ALL_SURVEYS.value), engagement_id=engagement_id)
 
         # check if user has edit all surveys access to edit template surveys as well
         user_roles = TokenInfo.get_user_roles()
@@ -88,7 +100,7 @@ class SurveyService:
         cls.validate_template_surveys_edit_access(is_template, user_roles)
 
         if engagement and engagement.get('status_id', None) != Status.Draft.value:
-            raise ValueError('Engagament already published')
+            raise ValueError('Engagement already published')
         return SurveyModel.update_survey(data)
 
     @staticmethod

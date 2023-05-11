@@ -1,7 +1,6 @@
 import React from 'react';
 import { Chip } from '@mui/material';
 import { SubmissionStatus } from 'constants/engagementStatus';
-
 const Chip_Font_Weight = { fontWeight: 'bold' };
 
 const Open = ({ preview }: { preview?: boolean }) => {

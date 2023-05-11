@@ -1,81 +1,51 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Skeleton } from '@mui/material';
-import { MetPaper, MetHeader3, MetBody } from 'components/common';
+import {
+    Box,
+    Grid,
+    Skeleton,
+    Divider,
+    CircularProgress,
+    useMediaQuery,
+    Theme,
+    Stack,
+    ToggleButtonGroup,
+    ToggleButton,
+} from '@mui/material';
+import { Palette } from 'styles/Theme';
+import { MetHeader1, MetPaper, MetLabel } from 'components/common';
 import { QuestionBlock } from './QuestionBlock';
 import { SurveyBarData } from '../types';
 import { BarBlock } from './BarBlock';
-import { ErrorBox } from '../ErrorBox';
-
-const data1 = [
-    {
-        name: 'Yes',
-        Count: 70, // uv is the part of the graph we want to show
-    },
-    {
-        name: 'No',
-        Count: 20,
-    },
-    {
-        name: 'Total',
-        Count: 90,
-    },
-];
-const data2 = [
-    {
-        name: 'Air Quality',
-        Count: 10, // uv is the part of the graph we want to show
-    },
-    {
-        name: 'Water Quality',
-        Count: 5,
-    },
-    {
-        name: 'Land & Resource Use',
-        Count: 1,
-    },
-    {
-        name: 'Wildlife',
-        Count: 20,
-    },
-    {
-        name: 'Employment & Economy',
-        Count: 16,
-    },
-    {
-        name: 'Human Health & Wellbeing',
-        Count: 27,
-    },
-    { name: 'Other', Count: 0, pv: 78 },
-];
-
-const sampleData = [
-    {
-        key: 1,
-        label: 'In your current role at the EAO, do you work on public engagements?',
-        values: data1,
-    },
-    {
-        key: 2,
-        label: 'If you were to buy a piece of furniture from Ikea, how would you go about putting it together?',
-        values: data2,
-    },
-];
+import { TreemapBlock } from './TreemapBlock';
+import { getSurveyResultData } from 'services/analytics/surveyResult';
+import { Engagement } from 'models/engagement';
+import { SurveyResultData, createSurveyResultData, defaultData } from '../../../models/analytics/surveyResult';
 
 const HEIGHT = 400;
 
-export const SurveyBar = () => {
-    const [data, setData] = useState(sampleData);
-    const [selectedData, setSelectedData] = useState(sampleData[0]);
+interface SurveyQuestionProps {
+    engagement: Engagement;
+    engagementIsLoading: boolean;
+}
+
+export const SurveyBar = ({ engagement, engagementIsLoading }: SurveyQuestionProps) => {
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+    const [data, setData] = useState<SurveyResultData>(createSurveyResultData());
+    const [selectedData, setSelectedData] = useState(defaultData[0]);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
+    const [chartType, setChartType] = React.useState('bar');
+
+    const handleToggleChange = (event: React.MouseEvent<HTMLElement>, chartByValue: string) => {
+        setChartType(chartByValue);
+    };
 
     const fetchData = async () => {
         setIsLoading(true);
         try {
-            // TODO: uncomment this when the API is ready
-            // const result = await fetch('/api/engagement/1/complete-responses');
-            setData(sampleData);
-            setSelectedData(sampleData[0]);
+            const response = await getSurveyResultData(Number(engagement.id));
+            setData(response);
+            setSelectedData(response?.data[0]);
             setIsLoading(false);
             setIsError(false);
         } catch (error) {
@@ -86,43 +56,136 @@ export const SurveyBar = () => {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [engagement.id]);
 
-    if (isLoading) {
+    if (isLoading || engagementIsLoading) {
         return <Skeleton variant="rectangular" width={'100%'} height={HEIGHT} />;
     }
 
     if (isError) {
-        return <ErrorBox sx={{ height: HEIGHT }} onClick={fetchData} />;
+        <>
+            <Grid item xs={12}>
+                <MetLabel mb={2} color="primary">
+                    Survey Results
+                </MetLabel>
+            </Grid>
+            <Grid ml={isSmallScreen ? 0 : 5} item xs={12}>
+                <MetPaper sx={{ p: 2 }}>
+                    <Grid item xs={12}>
+                        <Stack direction={{ xs: 'column', sm: 'row' }} width="100%" justifyContent="flex-end">
+                            <Grid item container xs={12} direction="row" justifyContent="center">
+                                <MetLabel mb={2} color="primary">
+                                    Click on a question to view results
+                                </MetLabel>
+                                <ToggleButtonGroup value={chartType} exclusive onChange={handleToggleChange}>
+                                    <ToggleButton
+                                        value="bar"
+                                        sx={{
+                                            '&.Mui-selected': {
+                                                backgroundColor: Palette.primary.main,
+                                                color: 'white',
+                                            },
+                                        }}
+                                    >
+                                        Show as Bar Chart
+                                    </ToggleButton>
+                                    <ToggleButton
+                                        value="treemap"
+                                        sx={{
+                                            '&.Mui-selected': {
+                                                backgroundColor: Palette.primary.main,
+                                                color: 'white',
+                                            },
+                                        }}
+                                    >
+                                        Show as TreeMap Chart
+                                    </ToggleButton>
+                                </ToggleButtonGroup>
+                            </Grid>
+                        </Stack>
+                        <Divider sx={{ marginTop: '1em' }} />
+                        <Grid container direction="row" item xs={12} spacing={1} alignItems={'flex-start'}>
+                            <CircularProgress color="inherit" />
+                        </Grid>
+                    </Grid>
+                </MetPaper>
+            </Grid>
+        </>;
     }
 
     return (
-        <MetPaper sx={{ p: 2 }}>
-            <Grid container direction="row" item xs={12} spacing={1} alignItems={'flex-start'}>
-                <Grid item xs={12}>
-                    <MetHeader3 color="primary" textAlign={'center'}>
-                        Survey Results
-                    </MetHeader3>
-                </Grid>
-                <Grid container item xs={12} sm={4}>
-                    <Grid item>
-                        <MetBody color="primary">Click on a question to view results</MetBody>
-                    </Grid>
-                    <Grid item>
-                        <QuestionBlock
-                            data={data}
-                            selected={selectedData.key}
-                            handleSelected={(data: SurveyBarData) => {
-                                setSelectedData(data);
-                            }}
-                        />
-                    </Grid>
-                </Grid>
-                <Grid item xs={12} sm={8} alignItems="center">
-                    <BarBlock data={selectedData} />
-                </Grid>
+        <>
+            <Grid item xs={12} mb={2}>
+                <MetHeader1>Survey Results</MetHeader1>
             </Grid>
-        </MetPaper>
+            <Grid ml={isSmallScreen ? 0 : 5} item xs={12}>
+                <MetPaper sx={{ p: 2 }}>
+                    <Grid item xs={12}>
+                        <Stack direction={{ xs: 'column', sm: 'row' }} width="100%" justifyContent="flex-end">
+                            <Grid item container xs={8} direction="row" justifyContent="flex-start">
+                                <MetLabel mb={2} color="primary">
+                                    Click on a question to view results
+                                </MetLabel>
+                            </Grid>
+                            <Grid item container xs={4} direction="row" justifyContent="flex-end">
+                                <ToggleButtonGroup value={chartType} exclusive onChange={handleToggleChange}>
+                                    <ToggleButton
+                                        value="bar"
+                                        sx={{
+                                            '&.Mui-selected': {
+                                                backgroundColor: Palette.primary.main,
+                                                color: 'white',
+                                            },
+                                        }}
+                                    >
+                                        Show as Bar Chart
+                                    </ToggleButton>
+                                    <ToggleButton
+                                        value="treemap"
+                                        sx={{
+                                            '&.Mui-selected': {
+                                                backgroundColor: Palette.primary.main,
+                                                color: 'white',
+                                            },
+                                        }}
+                                    >
+                                        Show as TreeMap Chart
+                                    </ToggleButton>
+                                </ToggleButtonGroup>
+                            </Grid>
+                        </Stack>
+                        <Divider sx={{ marginTop: '1em' }} />
+                    </Grid>
+                    <Grid container direction="row" item xs={12} spacing={1} alignItems={'flex-start'}>
+                        <Grid container item xs={12} sm={4}>
+                            <Grid item>
+                                <Box
+                                    sx={{
+                                        width: '100%',
+                                        height: '50px',
+                                    }}
+                                >
+                                    <QuestionBlock
+                                        data={data.data}
+                                        selected={selectedData.postion}
+                                        handleSelected={(data: SurveyBarData) => {
+                                            setSelectedData(data);
+                                        }}
+                                    />
+                                </Box>
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={12} sm={8} alignItems="center">
+                            {chartType == 'bar' ? (
+                                <BarBlock data={selectedData} />
+                            ) : (
+                                <TreemapBlock data={selectedData} />
+                            )}
+                        </Grid>
+                    </Grid>
+                </MetPaper>
+            </Grid>
+        </>
     );
 };
 

@@ -13,7 +13,7 @@ import { formatDate } from 'components/common/dateHelper';
 import { UserManagementContext } from './UserManagementContext';
 
 const UserManagementListing = () => {
-    const { pageInfo, paginationOptions, setPaginationOptions, users, usersLoading, setAddUserModelOpen } =
+    const { pageInfo, paginationOptions, setPaginationOptions, users, usersLoading, setAddUserModalOpen } =
         useContext(UserManagementContext);
 
     const headCells: HeadCell<User>[] = [
@@ -24,7 +24,7 @@ const UserManagementListing = () => {
             label: 'User Name',
             allowSort: true,
             renderCell: (row: User) => (
-                <MuiLink component={Link} to={``}>
+                <MuiLink to={`/usermanagement/${row.id}/details`} component={Link}>
                     {row.last_name + ', ' + row.first_name}
                 </MuiLink>
             ),
@@ -83,7 +83,7 @@ const UserManagementListing = () => {
                             <SearchIcon />
                         </PrimaryButton>
                     </Stack>
-                    <PrimaryButton onClick={() => setAddUserModelOpen(true)}>+ Add User</PrimaryButton>
+                    <PrimaryButton onClick={() => setAddUserModalOpen(true)}>+ Add User</PrimaryButton>
                 </Stack>
             </Grid>
             <Grid item xs={12} lg={10}>

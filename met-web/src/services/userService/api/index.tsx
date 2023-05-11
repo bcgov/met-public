@@ -3,6 +3,7 @@ import Endpoints from 'apiManager/endpoints';
 import { Page } from 'services/type';
 import { User } from 'models/user';
 import { replaceUrl } from 'helper';
+import { Engagement } from 'models/engagement';
 
 interface GetUserParams {
     page?: number;
@@ -32,4 +33,17 @@ export const addUserToGroup = async ({ user_id, group, engagement_id }: AddUserT
     const url = replaceUrl(Endpoints.User.ADD_TO_GROUP, 'user_id', String(user_id));
     const responseData = await http.PostRequest<User>(url, {}, { group, engagement_id });
     return responseData.data;
+};
+
+interface GetUserEngagementsParams {
+    user_id?: string;
+}
+
+export const fetchUserEngagements = async ({ user_id }: GetUserEngagementsParams): Promise<Engagement[]> => {
+    if (!user_id) {
+        return [];
+    }
+    const url = replaceUrl(Endpoints.User.GET_USER_ENGAGEMENTS, 'user_id', String(user_id));
+    const responseData = await http.GetRequest<Engagement[]>(url);
+    return responseData.data ?? [];
 };

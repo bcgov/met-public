@@ -22,12 +22,13 @@ from flask_restx import Namespace, Resource
 from met_api.auth import jwt as _jwt
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.pagination_options import PaginationOptions
+from met_api.schemas.engagement import EngagementSchema
 from met_api.schemas.user import UserSchema
+from met_api.services.membership_service import MembershipService
 from met_api.services.user_service import UserService
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
-
 
 API = Namespace('user', description='Endpoints for User Management')
 """Custom exception messages
@@ -92,5 +93,23 @@ class UserGroup(Resource):
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except BusinessException as err:
+            return {'message': err.error}, err.status_code
+
+
+@cors_preflight('GET,OPTIONS')
+@API.route('/<user_id>/engagements')
+class EngagementMemberships(Resource):
+    """Resource for fetching engagements for user."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.has_one_of_roles([Role.VIEW_USERS.value])
+    def get(user_id):
+        """Get engagement details by user id."""
+        try:
+            members = MembershipService.get_engagements_by_user(user_id)
+            engagement_schema = EngagementSchema(exclude=['surveys', 'rich_content', 'rich_description'], many=True)
+            return jsonify(engagement_schema.dump(members, many=True)), HTTPStatus.OK
         except BusinessException as err:
             return {'message': err.error}, err.status_code

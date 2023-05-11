@@ -4,19 +4,23 @@ Manages the Survey
 """
 
 from __future__ import annotations
+
 from datetime import datetime
-from sqlalchemy import ForeignKey, and_, asc, desc
+from typing import Optional
+
+from sqlalchemy import ForeignKey, and_, asc, desc, or_
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.sql import text
+
 from met_api.constants.engagement_status import Status
-from met_api.models.pagination_options import PaginationOptions
-from met_api.models.engagement_status import EngagementStatus
 from met_api.models.engagement import Engagement
-from met_api.models.survey_exclusion_option import SurveyExclusionOptions
+from met_api.models.engagement_status import EngagementStatus
+from met_api.models.pagination_options import PaginationOptions
+from met_api.models.survey_search_options import SurveySearchOptions
 from met_api.schemas.survey import SurveySchema
+
 from .base_model import BaseModel
 from .db import db
-from .default_method_result import DefaultMethodResult
 
 
 class Survey(BaseModel):  # pylint: disable=too-few-public-methods
@@ -49,22 +53,25 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
 
     @classmethod
     def get_surveys_paginated(cls, pagination_options: PaginationOptions,
-                              survey_exclusion_options: SurveyExclusionOptions,
-                              search_text='', unlinked=False):
+                              survey_search_options: SurveySearchOptions):
         """Get surveys paginated."""
         query = db.session.query(Survey).join(Engagement, isouter=True).join(EngagementStatus, isouter=True)
+        query = cls._add_tenant_filter(query)
 
-        if survey_exclusion_options.exclude_hidden:
+        if survey_search_options.exclude_hidden:
             query = query.filter(Survey.is_hidden.is_(False))
 
-        if survey_exclusion_options.exclude_template:
+        if survey_search_options.exclude_template:
             query = query.filter(Survey.is_template.is_(False))
 
-        if unlinked:
+        if survey_search_options.unlinked:
             query = query.filter(Survey.engagement_id.is_(None))
 
-        if search_text:
-            query = query.filter(Survey.name.ilike('%' + search_text + '%'))
+        if survey_search_options.assigned_engagements is not None:
+            query = cls._filter_by_assigned_engagements(query, survey_search_options.assigned_engagements)
+
+        if survey_search_options.search_text:
+            query = query.filter(Survey.name.ilike('%' + survey_search_options.search_text + '%'))
 
         sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == 'asc'\
             else desc(text(pagination_options.sort_key))
@@ -99,13 +106,13 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         return new_survey
 
     @classmethod
-    def update_survey(cls, survey: SurveySchema) -> DefaultMethodResult:
+    def update_survey(cls, survey: SurveySchema) -> Optional[Survey or None]:
         """Update survey."""
         survey_id = survey.get('id', None)
         query = Survey.query.filter_by(id=survey_id)
         record = query.first()
         if not record:
-            return DefaultMethodResult(False, 'Survey Not Found', survey_id)
+            return None
         update_fields = dict(
             form_json=survey.get('form_json', record.form_json),
             updated_date=datetime.utcnow(),
@@ -116,26 +123,34 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         )
         query.update(update_fields)
         db.session.commit()
-        return DefaultMethodResult(True, 'Survey Updated', survey_id)
+        return record
 
     @classmethod
-    def link_survey(cls, survey_id, engagement_id) -> DefaultMethodResult:
+    def link_survey(cls, survey_id, engagement_id) -> Optional[Survey or None]:
         """Link survey to engagement."""
         query = Survey.query.filter_by(id=survey_id)
         survey = query.first()
         if not survey:
-            return DefaultMethodResult(False, 'Survey Not Found', survey_id)
+            return None
         survey.engagement_id = engagement_id
         db.session.commit()
-        return DefaultMethodResult(True, 'Survey Linked', survey_id)
+        return survey
 
     @classmethod
-    def unlink_survey(cls, survey_id) -> DefaultMethodResult:
+    def unlink_survey(cls, survey_id) -> Optional[Survey or None]:
         """Unlink survey from engagement."""
         query = Survey.query.filter_by(id=survey_id)
         survey = query.first()
         if not survey:
-            return DefaultMethodResult(False, 'Survey to unlink was not found', survey_id)
+            return None
         survey.engagement_id = None
         db.session.commit()
-        return DefaultMethodResult(True, 'Survey Unlinked', survey_id)
+        return survey
+
+    @staticmethod
+    def _filter_by_assigned_engagements(query, assigned_engagements: list[int]):
+        query = query.filter(or_(
+            Engagement.status_id != Status.Draft.value,
+            Engagement.id.in_(assigned_engagements)
+        ))
+        return query

@@ -48,9 +48,9 @@ const schema = yup
 
 type AddUserForm = yup.TypeOf<typeof schema>;
 
-export const AddUserModel = () => {
+export const AddUserModal = () => {
     const dispatch = useAppDispatch();
-    const { addUserModalOpen, setAddUserModelOpen, loadUserListing } = useContext(UserManagementContext);
+    const { addUserModalOpen, setAddUserModalOpen, loadUserListing } = useContext(UserManagementContext);
     const [isAssigningRole, setIsAssigningRole] = useState(false);
     const [users, setUsers] = useState<User[]>([]);
     const [usersLoading, setUsersLoading] = useState(false);
@@ -85,7 +85,7 @@ export const AddUserModel = () => {
     const { user: userErrors, group: groupErrors, engagement: engagementErrors } = errors;
 
     const handleClose = () => {
-        setAddUserModelOpen(false);
+        setAddUserModalOpen(false);
         reset({});
         setBackendError('');
     };

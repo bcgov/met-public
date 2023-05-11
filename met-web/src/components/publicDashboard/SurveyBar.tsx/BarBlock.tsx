@@ -11,12 +11,17 @@ export const BarBlock = ({ data }: BarBlockProps) => {
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     return (
         <Box marginLeft={{ xs: 0, sm: '2em' }} marginTop={'3em'}>
-            <ResponsiveContainer width={'100%'} height={400} key={data.key}>
-                <BarChart data={data.values} layout="vertical" key={data.key} margin={{ left: isSmallScreen ? 20 : 0 }}>
+            <ResponsiveContainer width={'100%'} height={400} key={data.postion}>
+                <BarChart
+                    data={data.result}
+                    layout="vertical"
+                    key={data.postion}
+                    margin={{ left: isSmallScreen ? 20 : 0 }}
+                >
                     <XAxis hide axisLine={false} type="number" />
                     <YAxis
-                        width={150}
-                        dataKey="name"
+                        width={250}
+                        dataKey="value"
                         type="category"
                         axisLine={true}
                         tickLine={true}
@@ -25,13 +30,13 @@ export const BarBlock = ({ data }: BarBlockProps) => {
                     />
                     <Tooltip />
                     <Bar
-                        dataKey="Count"
+                        dataKey="count"
                         stackId="a"
                         fill={DASHBOARD.BAR_CHART.FILL_COLOR}
                         minPointSize={2}
                         barSize={32}
                     >
-                        <LabelList dataKey="Count" position="insideLeft" style={{ fill: 'primary' }} />
+                        <LabelList dataKey="count" position="insideRight" style={{ fill: 'white' }} />
                     </Bar>
                 </BarChart>
             </ResponsiveContainer>

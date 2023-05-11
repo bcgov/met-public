@@ -21,7 +21,6 @@ services:
       DAGSTER_POSTGRES_PORT: "5432"
       DAGSTER_CURRENT_IMAGE: "dagster_user_code_image"
     networks:
-      - dagster_network
       - metnetwork
 
   # This service runs dagit, which loads your user code from the user code container.
@@ -54,7 +53,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp/io_manager_storage:/tmp/io_manager_storage
     networks:
-      - dagster_network
       - metnetwork
     depends_on:
       - dagster_user_code
@@ -90,15 +88,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp/io_manager_storage:/tmp/io_manager_storage
     networks:
-      - dagster_network
       - metnetwork
     depends_on:
       - dagster_user_code
 
 networks:
-  dagster_network:
-    driver: bridge
-    name: dagster_network
   metnetwork:
     external:
       name: metnetwork

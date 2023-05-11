@@ -1,13 +1,14 @@
 dagster
 dagit
 dagster-docker
+Flask-Cors==3.0.10
 Flask-Migrate==2.7.0
 Flask-Moment==1.0.5
 Flask-SQLAlchemy==2.5.1
-Flask==1.1.2
+Flask==2.2.3
 SQLAlchemy-Utils==0.38.3
 SQLAlchemy==1.3.24
-Werkzeug==2.0.3
+Werkzeug==2.2.3
 flask-marshmallow==0.11.0
 flask-restx==0.5.1
 marshmallow-sqlalchemy==0.25.0
@@ -16,4 +17,4 @@ packaging==21.3
 python-dotenv==0.21.0
 pytz==2022.5
 -e git+https://github.com/bcgov/met-public.git#egg=met-api&subdirectory=met-api
--e git+https://github.com/VineetBala-AOT/met-public.git#egg=met-cron&subdirectory=met-cron
+-e git+https://github.com/bcgov/met-public.git#egg=analytics-api&subdirectory=analytics-api

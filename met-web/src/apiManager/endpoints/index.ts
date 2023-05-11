@@ -16,6 +16,7 @@ const Endpoints = {
         CREATE_UPDATE: `${AppConfig.apiUrl}/user/`,
         GET_LIST: `${AppConfig.apiUrl}/user/`,
         ADD_TO_GROUP: `${AppConfig.apiUrl}/user/user_id/groups`,
+        GET_USER_ENGAGEMENTS: `${AppConfig.apiUrl}/user/user_id/engagements`,
     },
     Document: {
         OSS_HEADER: `${AppConfig.apiUrl}/document/`,
@@ -93,6 +94,15 @@ const Endpoints = {
     AnalyticsUserResponseDetail: {
         GET_COUNT_BY_MONTH: `${AppConfig.analyticsApiUrl}/responses/month/engagement_id`,
         GET_COUNT_BY_WEEK: `${AppConfig.analyticsApiUrl}/responses/week/engagement_id`,
+    },
+    AnalyticsAggregator: {
+        GET_COUNT: `${AppConfig.analyticsApiUrl}/counts/`,
+    },
+    AnalyticsMap: {
+        GET: `${AppConfig.analyticsApiUrl}/engagements/map/engagement_id`,
+    },
+    AnalyticsSurveyResult: {
+        GET: `${AppConfig.analyticsApiUrl}/surveyresult/engagement_id`,
     },
 };
 

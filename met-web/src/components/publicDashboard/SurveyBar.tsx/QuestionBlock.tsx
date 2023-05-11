@@ -1,8 +1,8 @@
 import { Box, List, ListItem, ListItemButton } from '@mui/material';
-import { MetHeader4 } from 'components/common';
+import { MetParagraph } from 'components/common';
 import React from 'react';
-import { Palette } from 'styles/Theme';
 import { SurveyBarData } from '../types';
+import { DASHBOARD } from '../constants';
 
 interface QuestionBlockProps {
     data: SurveyBarData[];
@@ -12,21 +12,36 @@ interface QuestionBlockProps {
 
 export const QuestionBlock = ({ data, selected, handleSelected }: QuestionBlockProps) => {
     return (
-        <Box sx={{ background: Palette.primary.main }}>
+        <Box
+            sx={{
+                background: DASHBOARD.SURVEY_RESULT.BACKGROUND_COLOR,
+                width: '100%',
+                height: '450px',
+                borderRight: '1px solid #cdcdcd',
+            }}
+            overflow="auto"
+        >
             <List sx={{ paddingTop: '2.5em' }}>
                 {data.map((result) => (
-                    <ListItem key={result.key}>
+                    <ListItem key={result.postion}>
                         <ListItemButton
                             onClick={() => handleSelected(result)}
                             sx={{
                                 '&:hover': {
-                                    backgroundColor: Palette.hover.light,
+                                    backgroundColor: DASHBOARD.SURVEY_RESULT.HOVER_COLOR,
                                 },
+                                borderBottom: '1px solid #cdcdcd',
                             }}
                         >
-                            <MetHeader4 color={selected === result.key ? Palette.secondary.main : 'white'} bold>
+                            <MetParagraph
+                                color={
+                                    selected === result.postion
+                                        ? DASHBOARD.SURVEY_RESULT.SELECTED_TEXT_COLOR
+                                        : DASHBOARD.SURVEY_RESULT.UNSELECTED_TEXT_COLOR
+                                }
+                            >
                                 {result.label}
-                            </MetHeader4>
+                            </MetParagraph>
                         </ListItemButton>
                     </ListItem>
                 ))}

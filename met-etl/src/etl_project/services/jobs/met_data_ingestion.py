@@ -6,8 +6,8 @@ from ops.survey_etl_service import get_survey_last_run_cycle_time, extract_surve
     survey_end_run_cycle
 from ops.submission_etl_service import get_submission_last_run_cycle_time, extract_submission, load_submission, \
     load_user_response_details, submission_end_run_cycle
-from ops.comments_etl_service import get_comments_last_run_cycle_time, extract_comments, load_comments, \
-    comments_end_run_cycle
+from ops.email_verification_etl_service import get_email_ver_last_run_cycle_time, extract_email_ver, load_email_ver, \
+    email_ver_end_run_cycle
 
 from resources.db import met_db_session, met_etl_db_session
 
@@ -67,3 +67,16 @@ def met_data_ingestion():
                                                                          submission_new_runcycleid_passed_to_load_reponse)
 
     flag_to_run_step_after_submission = submission_end_run_cycle(submission_new_runcycleid_passed_to_end)
+
+    # etl run for email verification
+    email_ver_last_run_cycle_time, email_ver_new_runcycleid_created = get_email_ver_last_run_cycle_time(
+        flag_to_run_step_after_submission)
+
+    new_email_ver, updated_email_ver, email_ver_new_runcycleid_passed_to_load = extract_email_ver(
+        email_ver_last_run_cycle_time,
+        email_ver_new_runcycleid_created)
+
+    email_ver_new_runcycleid_passed_to_end = load_email_ver(new_email_ver, updated_email_ver,
+                                                                       email_ver_new_runcycleid_passed_to_load)
+
+    flag_to_run_step_after_email_ver = email_ver_end_run_cycle(email_ver_new_runcycleid_passed_to_end)
