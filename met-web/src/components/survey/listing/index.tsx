@@ -73,6 +73,13 @@ const SurveyListing = () => {
         }
     };
 
+    const submissionHasBeenOpened = (survey: Survey) => {
+        return (
+            !!survey.engagement &&
+            [SubmissionStatus.Open, SubmissionStatus.Closed].includes(survey.engagement.submission_status)
+        );
+    };
+
     useEffect(() => {
         loadSurveys();
     }, [paginationOptions, searchFilter]);
@@ -186,6 +193,9 @@ const SurveyListing = () => {
             ),
             allowSort: false,
             renderCell: (row: Survey) => {
+                if (!submissionHasBeenOpened(row)) {
+                    return <></>;
+                }
                 const { approved } = row.comments_meta_data;
                 return (
                     <ApprovedIcon
@@ -218,7 +228,10 @@ const SurveyListing = () => {
             ),
             allowSort: false,
             renderCell: (row: Survey) => {
-                if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
+                if (
+                    !submissionHasBeenOpened(row) ||
+                    (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id)))
+                ) {
                     return <></>;
                 }
                 const { needs_further_review } = row.comments_meta_data;
@@ -253,7 +266,10 @@ const SurveyListing = () => {
             ),
             allowSort: false,
             renderCell: (row: Survey) => {
-                if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
+                if (
+                    !submissionHasBeenOpened(row) ||
+                    (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id)))
+                ) {
                     return <></>;
                 }
                 const { rejected } = row.comments_meta_data;
@@ -288,7 +304,10 @@ const SurveyListing = () => {
             ),
             allowSort: false,
             renderCell: (row: Survey) => {
-                if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
+                if (
+                    !submissionHasBeenOpened(row) ||
+                    (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id)))
+                ) {
                     return <></>;
                 }
                 const { pending } = row.comments_meta_data;
