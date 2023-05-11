@@ -25,6 +25,7 @@ export interface User {
     status: string;
     access_type: string;
     roles: string[];
+    main_role: string;
     username: string;
 }
 
@@ -43,4 +44,5 @@ export const createDefaultUser: User = {
     access_type: '',
     roles: [],
     username: '',
+    main_role: '',
 };
