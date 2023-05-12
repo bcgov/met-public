@@ -58,7 +58,10 @@ class CommentService:
         if not engagement:
             return False
 
-        user = UserModel.get_user_by_external_id(TokenInfo.get_id())
+        if not (user_id := TokenInfo.get_id()):
+            return False
+
+        user = UserModel.get_user_by_external_id(user_id)
         if not user:
             return False
 
@@ -66,9 +69,11 @@ class CommentService:
         return bool(memberships)
 
     @classmethod
-    def get_comments_paginated(cls, user_id, survey_id, pagination_options: PaginationOptions, search_text=''):
+    def get_comments_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text=''):
         """Get comments paginated."""
-        if not user_id:
+        can_view_unapproved_comments = CommentService.can_view_unapproved_comments(survey_id)
+
+        if not can_view_unapproved_comments:
             comment_schema = CommentSchema(many=True, only=('text', 'submission_date'))
             items, total = Comment.get_accepted_comments_by_survey_id_where_engagement_closed_paginated(
                 survey_id, pagination_options)
