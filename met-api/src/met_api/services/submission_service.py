@@ -14,7 +14,6 @@ from met_api.models import Survey as SurveyModel
 from met_api.models.comment import Comment
 from met_api.models.comment_status import CommentStatus
 from met_api.models.db import session_scope
-from met_api.models.membership import Membership as MembershipModel
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.staff_note import StaffNote
 from met_api.models.submission import Submission
@@ -25,9 +24,7 @@ from met_api.services.email_verification_service import EmailVerificationService
 from met_api.services.survey_service import SurveyService
 from met_api.services.user_service import UserService
 from met_api.utils import notification
-from met_api.utils.roles import Role
 from met_api.utils.template import Template
-from met_api.utils.token_info import TokenInfo
 
 
 class SubmissionService:
@@ -235,7 +232,7 @@ class SubmissionService:
             advanced_search_filters: dict
     ):
         """Get submissions by survey id paginated."""
-        if not SubmissionService._can_view_unapproved_comments(survey_id):
+        if not CommentService.can_view_unapproved_comments(survey_id):
             if 'status' in advanced_search_filters:
                 if advanced_search_filters['status'] in (Status.Rejected.value, Status.Pending.value):
                     # Cant view any Rejected/Pending
@@ -254,26 +251,6 @@ class SubmissionService:
             'items': SubmissionSchema(many=True, exclude=['submission_json']).dump(items),
             'total': total
         }
-
-    @staticmethod
-    def _can_view_unapproved_comments(survey_id: int) -> bool:
-        if not survey_id:
-            return False
-
-        user_roles = TokenInfo.get_user_roles()
-        if Role.VIEW_UNAPPROVED_COMMENTS.value in user_roles:
-            return True
-
-        engagement = SurveyModel.find_by_id(survey_id)
-        if not engagement:
-            return False
-
-        user = UserModel.get_user_by_external_id(TokenInfo.get_id())
-        if not user:
-            return False
-
-        memberships = MembershipModel.find_by_engagement_and_user_id(engagement.engagement_id, user.id)
-        return bool(memberships)
 
     @staticmethod
     def _send_rejected_email(submission: Submission, review_note, token) -> None:
