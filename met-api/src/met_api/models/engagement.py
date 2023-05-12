@@ -225,7 +225,7 @@ class Engagement(BaseModel):
     def _filter_by_internal(query, search_options):
         if exclude_internal := search_options.get('exclude_internal'):
             if exclude_internal:
-                query = query.filter(Engagement.is_internal is False)
+                query = query.filter(Engagement.is_internal.is_(False))
         return query
 
     @staticmethod
