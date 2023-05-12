@@ -96,8 +96,8 @@ class Engagements(Resource):
                 'project_name': args.get('project_name', None, type=str),
                 'application_number': args.get('application_number', None, type=str),
                 'client_name': args.get('client_name', None, type=str),
+                'exclude_internal': exclude_internal,
             }
-
 
             engagement_records = EngagementService()\
                 .get_engagements_paginated(
@@ -109,7 +109,6 @@ class Engagements(Resource):
                         default=False,
                         type=lambda v: v.lower() == 'true'
                     ),
-                    exclude_internal=exclude_internal
             )
 
             return engagement_records, HTTPStatus.OK

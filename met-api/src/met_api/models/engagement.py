@@ -53,7 +53,6 @@ class Engagement(BaseModel):
             search_options=None,
             statuses=None,
             assigned_engagements: list[int] | None = None,
-            exclude_internal=None,
     ):
         """Get engagements paginated."""
         query = db.session.query(Engagement).join(EngagementStatus)
@@ -74,7 +73,7 @@ class Engagement(BaseModel):
 
             query = cls._filter_by_project_metadata(query, search_options)
 
-        query = cls._filter_by_internal(query, exclude_internal)
+        query = cls._filter_by_internal(query, search_options)
 
         if assigned_engagements is not None:
             query = cls._filter_by_assigned_engagements(query, assigned_engagements)
@@ -223,9 +222,10 @@ class Engagement(BaseModel):
         return query
 
     @staticmethod
-    def _filter_by_internal(query, exclude_internal):
-        if exclude_internal:
-            query = query.filter(Engagement.is_internal == False)
+    def _filter_by_internal(query, search_options):
+        if exclude_internal := search_options.get('exclude_internal'):
+            if exclude_internal:
+                query = query.filter(Engagement.is_internal is False)
         return query
 
     @staticmethod

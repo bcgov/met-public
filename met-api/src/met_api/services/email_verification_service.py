@@ -43,19 +43,17 @@ class EmailVerificationService:
         """Create an email verification."""
         cls.validate_fields(email_verification)
         email_address: str = email_verification.get('email_address')
-        
         survey = SurveyModel.get_open(email_verification.get('survey_id'))
         engagement: EngagementModel = EngagementModel.find_by_id(survey.engagement_id)
-        if engagement.is_internal and not email_address.endswith("@gov.bc.ca"):
+        if engagement.is_internal and not email_address.endswith('@gov.bc.ca'):
             raise BusinessException(
                 error='Not an internal email address.',
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR)
 
-
         if email_address is not None:
             user = UserService.get_or_create_user(email_address)
             email_verification['user_id'] = user.id
-                    
+
         email_verification['created_by'] = email_verification.get('user_id')
         email_verification['verification_token'] = uuid.uuid4()
         EmailVerification.create(email_verification, session)

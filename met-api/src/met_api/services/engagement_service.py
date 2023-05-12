@@ -49,7 +49,6 @@ class EngagementService:
         pagination_options: PaginationOptions,
         search_options=None,
         include_banner_url=False,
-        exclude_internal=None,
     ):
         """Get engagements paginated."""
         user_roles = TokenInfo.get_user_roles()
@@ -60,7 +59,6 @@ class EngagementService:
             search_options,
             statuses=statuses,
             assigned_engagements=assigned_engagements,
-            exclude_internal=exclude_internal,
         )
         engagements_schema = EngagementSchema(many=True)
         engagements = engagements_schema.dump(items)
