@@ -48,7 +48,8 @@ class EngagementService:
         user_id,
         pagination_options: PaginationOptions,
         search_options=None,
-        include_banner_url=False
+        include_banner_url=False,
+        exclude_internal=None,
     ):
         """Get engagements paginated."""
         user_roles = TokenInfo.get_user_roles()
@@ -58,7 +59,8 @@ class EngagementService:
             pagination_options,
             search_options,
             statuses=statuses,
-            assigned_engagements=assigned_engagements
+            assigned_engagements=assigned_engagements,
+            exclude_internal=exclude_internal,
         )
         engagements_schema = EngagementSchema(many=True)
         engagements = engagements_schema.dump(items)
@@ -136,7 +138,8 @@ class EngagementService:
             scheduled_date=None,
             banner_filename=engagement_data.get('banner_filename', None),
             content=engagement_data.get('content', None),
-            rich_content=engagement_data.get('rich_content', None)
+            rich_content=engagement_data.get('rich_content', None),
+            is_internal=engagement_data.get('is_internal', False)
         )
         new_engagement.save()
         return new_engagement

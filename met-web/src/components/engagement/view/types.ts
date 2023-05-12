@@ -28,6 +28,7 @@ export interface EmailPanelProps {
     handleClose: () => void;
     updateEmail: (string: string) => void;
     isSaving: boolean;
+    isInternal: boolean;
 }
 
 export interface SuccessPanelProps {
@@ -43,6 +44,7 @@ export interface FailurePanelProps {
     tryAgain: () => void;
     handleClose: () => void;
     email: string;
+    isInternal: boolean;
 }
 
 export interface SurveyBlockProps {

@@ -44,6 +44,7 @@ class Engagement(BaseModel):
     surveys = db.relationship('Survey', backref='engagement', cascade='all, delete')
     status_block = db.relationship('EngagementStatusBlock', backref='engagement')
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
+    is_internal = db.Column(db.Boolean, nullable=False)
 
     @classmethod
     def get_engagements_paginated(
@@ -51,7 +52,8 @@ class Engagement(BaseModel):
             pagination_options: PaginationOptions,
             search_options=None,
             statuses=None,
-            assigned_engagements: list[int] | None = None
+            assigned_engagements: list[int] | None = None,
+            exclude_internal=None,
     ):
         """Get engagements paginated."""
         query = db.session.query(Engagement).join(EngagementStatus)
@@ -71,6 +73,8 @@ class Engagement(BaseModel):
             query = cls._filter_by_engagement_status(query, search_options)
 
             query = cls._filter_by_project_metadata(query, search_options)
+
+        query = cls._filter_by_internal(query, exclude_internal)
 
         if assigned_engagements is not None:
             query = cls._filter_by_assigned_engagements(query, assigned_engagements)
@@ -112,6 +116,7 @@ class Engagement(BaseModel):
             banner_filename=engagement.get('banner_filename', None),
             content=engagement.get('content', None),
             rich_content=engagement.get('rich_content', None),
+            is_internal=engagement.get('is_internal', record.is_internal),
         )
         query.update(update_fields)
         db.session.commit()
@@ -215,6 +220,12 @@ class Engagement(BaseModel):
     def _filter_by_search_text(query, search_options):
         if search_text := search_options.get('search_text'):
             query = query.filter(Engagement.name.ilike('%' + search_text + '%'))
+        return query
+
+    @staticmethod
+    def _filter_by_internal(query, exclude_internal):
+        if exclude_internal:
+            query = query.filter(Engagement.is_internal == False)
         return query
 
     @staticmethod
