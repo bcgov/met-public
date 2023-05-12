@@ -103,9 +103,9 @@ class UserService:
             if groups:
                 user['groups'] = [GROUP_NAME_MAPPING.get(group, '') for group in groups]
                 if 'Superuser' in user['groups']:
-                    user['main_role'] = "Administrator"
+                    user['main_role'] = 'Administrator'
                 elif 'Member' in user['groups']:
-                    user['main_role'] = "Member"
+                    user['main_role'] = 'Member'
                 else:
                     user['main_role'] = user['groups'][0]
 

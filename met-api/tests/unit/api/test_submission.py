@@ -16,6 +16,7 @@
 
 Test-Suite to ensure that the /Submission endpoint is working as expected.
 """
+import copy
 import json
 
 import pytest
@@ -23,8 +24,8 @@ import pytest
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestSubmissionInfo
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_email_verification, factory_submission_model, factory_survey_and_eng_model,
-    factory_user_model)
+    factory_auth_header, factory_email_verification, factory_membership_model, factory_submission_model,
+    factory_survey_and_eng_model, factory_user_model)
 
 DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
 
@@ -64,7 +65,7 @@ def test_get_submission_by_id(client, jwt, session, submission_info):  # pylint:
 @pytest.mark.parametrize('submission_info', [TestSubmissionInfo.submission1])
 def test_get_submission_page(client, jwt, session, submission_info):  # pylint:disable=unused-argument
     """Assert that an engagement page can be fetched."""
-    claims = TestJwtClaims.public_user_role
+    claims = TestJwtClaims.staff_admin_role
 
     user_details = factory_user_model()
     survey, eng = factory_survey_and_eng_model()
@@ -74,6 +75,51 @@ def test_get_submission_page(client, jwt, session, submission_info):  # pylint:d
     rv = client.get(f'/api/submissions/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json.get('items', [])[0].get('submission_json', None) is None
+
+
+def test_get_comment_filtering(client, jwt, session):  # pylint:disable=unused-argument
+    """Assert comments filtering works for different users."""
+    user = factory_user_model()
+    survey, eng = factory_survey_and_eng_model()
+    submission_info = TestSubmissionInfo.submission1
+    factory_submission_model(
+        survey.id, eng.id, user.id, submission_info)
+    claims = TestJwtClaims.public_user_role
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.get(f'/api/submissions/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+    assert len(rv.json.get('items')) == 0, 'Public user cant see unapproved comments'
+
+    claims = TestJwtClaims.staff_admin_role
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.get(f'/api/submissions/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+    assert rv.json.get('items', [])[0].get('submission_json', None) is None
+    assert len(rv.json.get('items')) == 1, 'Admin user can see unapproved comments'
+
+    # ada new approved comment
+    claims = TestJwtClaims.public_user_role
+    factory_submission_model(
+        survey.id, eng.id, user.id, TestSubmissionInfo.approved_submission)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.get(f'/api/submissions/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+    assert len(rv.json.get('items')) == 1, 'Public user can see approved comments'
+
+    claims = TestJwtClaims.staff_admin_role
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.get(f'/api/submissions/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+    assert len(rv.json.get('items')) == 2, 'Admin user can see unapproved and unapproved comments'
+
+    # create membership for the public user and see
+    factory_membership_model(user_id=user.id, engagement_id=eng.id)
+    claims = copy.deepcopy(TestJwtClaims.public_user_role.value)
+    claims['sub'] = str(user.external_id)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.get(f'/api/submissions/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+    assert len(rv.json.get('items')) == 2, 'Publc user with team membership can see unapproved and unapproved comments'
 
 
 def test_invalid_submission(client, jwt, session):  # pylint:disable=unused-argument
