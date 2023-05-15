@@ -163,8 +163,8 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
                 <When condition={isInternal}>
                     <Grid item xs={12}>
                         <MetDescription>
-                            <strong>This is an Internal Engagement!</strong> You can only use a {INTERNAL_EMAIL_DOMAIN} email address
-                            to answer this survey.
+                            <strong>This is an Internal Engagement!</strong> You can only use a {INTERNAL_EMAIL_DOMAIN}{' '}
+                            email address to answer this survey.
                         </MetDescription>
                     </Grid>
                 </When>
