@@ -1,6 +1,8 @@
 import React from 'react';
 import { Stepper, Step, StepLabel, Box } from '@mui/material';
 import { FormInfo } from 'components/Form/types';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 export interface ProgressBarProps {
     currentPage: number;
@@ -9,12 +11,15 @@ export interface ProgressBarProps {
 }
 
 function FormStepper({ currentPage, totalPages, pages }: ProgressBarProps) {
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
     return (
         <Box sx={{ pb: 2 }}>
             <Stepper activeStep={currentPage} alternativeLabel>
                 {pages.map((page: FormInfo, index: number) => (
                     <Step key={index}>
-                        <StepLabel>{page.title}</StepLabel>
+                        <StepLabel> {(!isMobile || index === currentPage) && page.title}</StepLabel>
                     </Step>
                 ))}
             </Stepper>
