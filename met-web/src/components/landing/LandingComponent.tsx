@@ -57,7 +57,10 @@ const LandingComponent = () => {
     return (
         <Grid container direction="row" justifyContent={'center'} alignItems="center">
             <Grid item xs={12}>
-                <Banner imageUrl="https://citz-gdx.objectstore.gov.bc.ca/new-bucket-048a62a2/6e20c9fe-e737-49fe-82eb-590c5ce575bc.jpg">
+                <Banner
+                    height={'330px'}
+                    imageUrl="https://camo.githubusercontent.com/a7020c70c0063ae49f9429f742b367a8f72f0e3430985cd1127bda4a00d4c516/68747470733a2f2f696d616765732e7a656e68756275736572636f6e74656e742e636f6d2f3632363162633161303463366139346332656461646464642f64346137383138652d346131392d346433382d613163632d373334316335366630386536"
+                >
                     <Grid
                         container
                         direction="row"
