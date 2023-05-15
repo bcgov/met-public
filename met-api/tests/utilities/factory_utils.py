@@ -114,7 +114,8 @@ def factory_engagement_model(eng_info: dict = TestEngagementInfo.engagement1, st
         status_id=status if status else eng_info.get('status'),
         start_date=eng_info.get('start_date'),
         end_date=eng_info.get('end_date'),
-        tenant_id=eng_info.get('tenant_id')
+        tenant_id=eng_info.get('tenant_id'),
+        is_internal=eng_info.get('is_internal')
     )
     db.session.add(engagement)
     db.session.commit()
