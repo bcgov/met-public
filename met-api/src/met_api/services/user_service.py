@@ -103,9 +103,9 @@ class UserService:
             if groups:
                 user['groups'] = [GROUP_NAME_MAPPING.get(group, '') for group in groups]
                 if 'Superuser' in user['groups']:
-                    user['main_role'] = "Administrator"
+                    user['main_role'] = 'Superuser'
                 elif 'Member' in user['groups']:
-                    user['main_role'] = "Member"
+                    user['main_role'] = 'Member'
                 else:
                     user['main_role'] = user['groups'][0]
 
@@ -183,5 +183,5 @@ class UserService:
         group_names = [group.get('name') for group in groups]
         if KeycloakGroupName.EAO_IT_ADMIN.value in group_names:
             raise BusinessException(
-                error='This user is already an Administrator.',
+                error='This user is already a Superuser.',
                 status_code=HTTPStatus.CONFLICT.value)

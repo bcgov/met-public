@@ -23,7 +23,6 @@ import FiberNewOutlined from '@mui/icons-material/FiberNewOutlined';
 import { PermissionsGate } from 'components/permissionsGate';
 import { CommentStatus } from 'constants/commentStatus';
 import { ActionsDropDown } from './ActionsDropDown';
-import { When } from 'react-if';
 
 const SurveyListing = () => {
     const navigate = useNavigate();
@@ -73,6 +72,13 @@ const SurveyListing = () => {
         }
     };
 
+    const submissionHasBeenOpened = (survey: Survey) => {
+        return (
+            !!survey.engagement &&
+            [SubmissionStatus.Open, SubmissionStatus.Closed].includes(survey.engagement.submission_status)
+        );
+    };
+
     useEffect(() => {
         loadSurveys();
     }, [paginationOptions, searchFilter]);
@@ -93,14 +99,9 @@ const SurveyListing = () => {
             label: 'Survey Name',
             allowSort: true,
             renderCell: (row: Survey) => (
-                <>
-                    <When condition={!!row.engagement}>
-                        <MuiLink component={Link} to={`/surveys/${Number(row.id)}/submit`}>
-                            {row.name}
-                        </MuiLink>
-                    </When>
-                    <When condition={!row.engagement}>{row.name}</When>
-                </>
+                <MuiLink component={Link} to={`/surveys/${Number(row.id)}/submit`}>
+                    {row.name}
+                </MuiLink>
             ),
         },
         {
@@ -186,6 +187,9 @@ const SurveyListing = () => {
             ),
             allowSort: false,
             renderCell: (row: Survey) => {
+                if (!submissionHasBeenOpened(row)) {
+                    return <></>;
+                }
                 const { approved } = row.comments_meta_data;
                 return (
                     <ApprovedIcon
@@ -218,7 +222,10 @@ const SurveyListing = () => {
             ),
             allowSort: false,
             renderCell: (row: Survey) => {
-                if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
+                if (
+                    !submissionHasBeenOpened(row) ||
+                    (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id)))
+                ) {
                     return <></>;
                 }
                 const { needs_further_review } = row.comments_meta_data;
@@ -253,7 +260,10 @@ const SurveyListing = () => {
             ),
             allowSort: false,
             renderCell: (row: Survey) => {
-                if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
+                if (
+                    !submissionHasBeenOpened(row) ||
+                    (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id)))
+                ) {
                     return <></>;
                 }
                 const { rejected } = row.comments_meta_data;
@@ -288,7 +298,10 @@ const SurveyListing = () => {
             ),
             allowSort: false,
             renderCell: (row: Survey) => {
-                if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
+                if (
+                    !submissionHasBeenOpened(row) ||
+                    (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id)))
+                ) {
                     return <></>;
                 }
                 const { pending } = row.comments_meta_data;

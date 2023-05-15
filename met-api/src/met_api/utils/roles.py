@@ -44,3 +44,4 @@ class Role(Enum):
     EDIT_UPCOMING_ENGAGEMENT = 'edit_upcoming_engagement'
     EDIT_OPEN_ENGAGEMENT = 'edit_open_engagement'
     EDIT_CLOSED_ENGAGEMENT = 'edit_closed_engagement'
+    VIEW_UNAPPROVED_COMMENTS = 'view_unapproved_comments'  # can view unapproved comments

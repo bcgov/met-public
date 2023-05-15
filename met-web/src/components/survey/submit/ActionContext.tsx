@@ -8,7 +8,7 @@ import { getEmailVerification } from 'services/emailVerificationService';
 import { getEngagement } from 'services/engagementService';
 import { getSurvey } from 'services/surveyService';
 import { submitSurvey } from 'services/submissionService';
-import { Engagement } from 'models/engagement';
+import { Engagement, createDefaultEngagement } from 'models/engagement';
 
 interface SubmitSurveyContext {
     savedSurvey: Survey;
@@ -111,13 +111,12 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
     }, [savedSurvey]);
     const loadEngagement = async () => {
-        if (isNaN(Number(savedSurvey.engagement_id))) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'The engagement id is invalid',
-                }),
-            );
+        if (isNaN(Number(savedSurvey.engagement_id)) || !savedSurvey.engagement_id) {
+            setSavedEngagement({
+                ...createDefaultEngagement(),
+                name: savedSurvey.name,
+            });
+            setIsEngagementLoading(false);
             return;
         }
 

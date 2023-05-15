@@ -10,7 +10,8 @@ export interface FormBuilderProps {
 }
 
 export interface FormInfo {
-    [key: string]: any;
+    title: string;
+    [key: string]: unknown;
 }
 
 export interface FormBuilderData {

@@ -43,7 +43,7 @@ export const ActionsDropDown = ({ survey }: { survey: Survey }) => {
             return false;
         }
 
-        if (roles.includes(USER_ROLES.VIEW_ALL_SURVEYS)) {
+        if (submissionHasBeenOpened || roles.includes(USER_ROLES.VIEW_ALL_SURVEYS)) {
             return true;
         }
 

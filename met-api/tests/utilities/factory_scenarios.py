@@ -259,6 +259,7 @@ class TestJwtClaims(dict, Enum):
                 'create_admin_user',
                 'view_all_surveys',
                 'edit_all_surveys',
+                'view_unapproved_comments'
             ]
         }
     }
