@@ -35,6 +35,8 @@ def get_named_config(config_name: str = 'development'):
     """
     if config_name in ['production', 'staging', 'default']:
         config = ProdConfig()
+    elif config_name == 'testing':
+        config = DevConfig()
     elif config_name == 'development':
         config = DevConfig()
     else:
