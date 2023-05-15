@@ -1,12 +1,13 @@
 """Service for submission management."""
-from http import HTTPStatus
 from datetime import datetime
+from http import HTTPStatus
 
 from flask import current_app
 
 from met_api.constants.comment_status import Status
 from met_api.constants.email_verification import EmailVerificationType
 from met_api.constants.engagement_status import SubmissionStatus
+from met_api.constants.staff_note_type import StaffNoteType
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models import Engagement as EngagementModel
 from met_api.models import Survey as SurveyModel
@@ -14,8 +15,8 @@ from met_api.models.comment import Comment
 from met_api.models.comment_status import CommentStatus
 from met_api.models.db import session_scope
 from met_api.models.pagination_options import PaginationOptions
-from met_api.models.submission import Submission
 from met_api.models.staff_note import StaffNote
+from met_api.models.submission import Submission
 from met_api.models.user import User as UserModel
 from met_api.schemas.submission import PublicSubmissionSchema, SubmissionSchema
 from met_api.services.comment_service import CommentService
@@ -24,7 +25,6 @@ from met_api.services.survey_service import SurveyService
 from met_api.services.user_service import UserService
 from met_api.utils import notification
 from met_api.utils.template import Template
-from met_api.constants.staff_note_type import StaffNoteType
 
 
 class SubmissionService:
@@ -150,9 +150,9 @@ class SubmissionService:
         if not status_id or status_id == Status.Pending.value or status_id not in valid_statuses:
             raise ValueError('Invalid review status.')
 
-        if status_id == Status.Rejected.value and\
-           not any(set((has_personal_info, has_profanity, has_threat))) and\
-           not rejected_reason_other:
+        if status_id == Status.Rejected.value and \
+                not any(set((has_personal_info, has_profanity, has_threat))) and \
+                not rejected_reason_other:
             raise ValueError('A rejection reason is required.')
 
     @classmethod
@@ -204,10 +204,10 @@ class SubmissionService:
     def is_rejection_reason_changed(submission_id, values: dict):
         """Check if rejection reason has changed."""
         submission = Submission.get(submission_id)
-        if submission.has_personal_info == values.get('has_personal_info') and\
-           submission.has_profanity == values.get('has_profanity') and\
-           submission.has_threat == values.get('has_threat') and\
-           submission.rejected_reason_other == values.get('rejected_reason_other'):
+        if submission.has_personal_info == values.get('has_personal_info') and \
+                submission.has_profanity == values.get('has_profanity') and \
+                submission.has_threat == values.get('has_threat') and \
+                submission.rejected_reason_other == values.get('rejected_reason_other'):
             return False
 
         return True
@@ -225,13 +225,22 @@ class SubmissionService:
 
     @classmethod
     def get_paginated(
-        cls,
-        survey_id,
-        pagination_options: PaginationOptions,
-        search_text: str,
-        advanced_search_filters: dict
+            cls,
+            survey_id,
+            pagination_options: PaginationOptions,
+            search_text: str,
+            advanced_search_filters: dict
     ):
         """Get submissions by survey id paginated."""
+        if not CommentService.can_view_unapproved_comments(survey_id):
+            if 'status' in advanced_search_filters:
+                if advanced_search_filters['status'] in (Status.Rejected.value, Status.Pending.value):
+                    # Cant view any Rejected/Pending
+                    return {'items': [], 'total': 0}
+                if not advanced_search_filters['status']:
+                    # No blanket search.Return only approved if filter doesnt have any status
+                    advanced_search_filters['status'] = Status.Approved.value
+
         items, total = Submission.get_by_survey_id_paginated(
             survey_id,
             pagination_options,

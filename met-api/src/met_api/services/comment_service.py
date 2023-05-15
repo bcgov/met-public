@@ -1,14 +1,20 @@
-
 """Service for comment management."""
 import itertools
 from datetime import datetime
 
+from met_api.constants.comment_status import Status
+from met_api.models import Survey as SurveyModel
 from met_api.models.comment import Comment
+from met_api.models.membership import Membership as MembershipModel
 from met_api.models.pagination_options import PaginationOptions
+from met_api.models.submission import Submission as SubmissionModel
+from met_api.models.user import User as UserModel
 from met_api.schemas.comment import CommentSchema
 from met_api.schemas.submission import SubmissionSchema
 from met_api.schemas.survey import SurveySchema
 from met_api.services.document_generation_service import DocumentGenerationService
+from met_api.utils.roles import Role
+from met_api.utils.token_info import TokenInfo
 
 
 class CommentService:
@@ -30,13 +36,44 @@ class CommentService:
     def get_comments_by_submission(submission_id) -> CommentSchema:
         """Get Comment by the id."""
         comments = Comment.get_by_submission(submission_id)
+        submission = SubmissionModel.get(submission_id)
+        if submission.comment_status_id != Status.Approved.value:
+            can_view_unapproved_comments = CommentService.can_view_unapproved_comments(submission.survey_id)
+            if not can_view_unapproved_comments:
+                return {}
         comment_schema = CommentSchema(many=True)
         return comment_schema.dump(comments)
 
+    @staticmethod
+    def can_view_unapproved_comments(survey_id: int) -> bool:
+        """Return if the current user can see the comments in the survey."""
+        if not survey_id:
+            return False
+
+        user_roles = TokenInfo.get_user_roles()
+        if Role.VIEW_UNAPPROVED_COMMENTS.value in user_roles:
+            return True
+
+        engagement = SurveyModel.find_by_id(survey_id)
+        if not engagement:
+            return False
+
+        if not (user_id := TokenInfo.get_id()):
+            return False
+
+        user = UserModel.get_user_by_external_id(user_id)
+        if not user:
+            return False
+
+        memberships = MembershipModel.find_by_engagement_and_user_id(engagement.engagement_id, user.id)
+        return bool(memberships)
+
     @classmethod
-    def get_comments_paginated(cls, user_id, survey_id, pagination_options: PaginationOptions, search_text=''):
+    def get_comments_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text=''):
         """Get comments paginated."""
-        if not user_id:
+        can_view_unapproved_comments = CommentService.can_view_unapproved_comments(survey_id)
+
+        if not can_view_unapproved_comments:
             comment_schema = CommentSchema(many=True, only=('text', 'submission_date'))
             items, total = Comment.get_accepted_comments_by_survey_id_where_engagement_closed_paginated(
                 survey_id, pagination_options)

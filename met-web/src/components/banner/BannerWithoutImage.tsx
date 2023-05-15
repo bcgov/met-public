@@ -14,7 +14,7 @@ const BannerWithoutImage = ({ children }: BannerProps) => {
         >
             <Box
                 sx={{
-                    height: '38em',
+                    height: '20em',
                     width: '100%',
                 }}
             >
