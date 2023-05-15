@@ -21,9 +21,10 @@ const EngagementInfoSection = ({ savedEngagement, children }: EngagementInfoSect
     const statusName = isPreview ? mockStatus : submission_status;
     const dateFormat = 'MMM DD, YYYY';
 
-    const EngagementDate = `Engagement dates: ${dayjs(start_date).format(dateFormat)} to ${dayjs(end_date).format(
-        dateFormat,
-    )}`;
+    const EngagementDate =
+        start_date && end_date
+            ? `Engagement dates: ${dayjs(start_date).format(dateFormat)} to ${dayjs(end_date).format(dateFormat)}`
+            : 'Engagement dates not defined.';
 
     return (
         <Grid
