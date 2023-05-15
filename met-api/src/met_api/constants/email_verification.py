@@ -14,6 +14,7 @@
 """Constants of email verification."""
 from enum import IntEnum
 
+INTERNAL_EMAIL_DOMAIN = '@gov.bc.ca'
 
 class EmailVerificationType(IntEnum):
     """Enum of email verification types."""

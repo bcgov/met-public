@@ -13,6 +13,7 @@ import { useAppDispatch } from 'hooks';
 import { ActionContext } from './ActionContext';
 import ThankYouPanel from './ThankYouPanel';
 import { EmailVerificationType } from 'models/emailVerification';
+import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
 
 const EmailModal = ({ defaultPanel, open, handleClose }: EmailModalProps) => {
     const dispatch = useAppDispatch();
@@ -29,7 +30,7 @@ const EmailModal = ({ defaultPanel, open, handleClose }: EmailModalProps) => {
     const updateTabValue = () => {
         if (!checkEmail(email)) {
             setFormIndex('error');
-        } else if (savedEngagement.is_internal && !email.endsWith('@gov.bc.ca')) {
+        } else if (savedEngagement.is_internal && !email.endsWith(INTERNAL_EMAIL_DOMAIN)) {
             setFormIndex('error');
         } else {
             handleSubmit();

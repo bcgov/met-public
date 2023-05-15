@@ -18,6 +18,7 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { EngagementTabsContext } from './EngagementTabsContext';
 import { AppConfig } from 'config';
+import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
 
 const EngagementSettings = () => {
     const { savedEngagement } = useContext(ActionContext);
@@ -167,7 +168,7 @@ const EngagementSettings = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <MetBody>
-                        This will make the engagement available to people requesting access from a @gov.bc.ca email
+                        This will make the engagement available to people requesting access from a {INTERNAL_EMAIL_DOMAIN} email
                         address and will not show on the engagement home page.
                     </MetBody>
                 </Grid>

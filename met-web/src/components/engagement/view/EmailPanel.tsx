@@ -24,6 +24,7 @@ import {
     MetDescription,
 } from 'components/common';
 import { When } from 'react-if';
+import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
 
 const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isInternal }: EmailPanelProps) => {
     const [checked, setChecked] = useState(false);
@@ -162,7 +163,7 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
                 <When condition={isInternal}>
                     <Grid item xs={12}>
                         <MetDescription>
-                            <strong>This is an Internal Engagement!</strong> You can only use a @gov.bc.ca email address
+                            <strong>This is an Internal Engagement!</strong> You can only use a {INTERNAL_EMAIL_DOMAIN} email address
                             to answer this survey.
                         </MetDescription>
                     </Grid>
