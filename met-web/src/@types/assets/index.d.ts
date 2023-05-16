@@ -6,3 +6,8 @@ declare module '*.svg' {
 }
 
 declare module '@types/arcgis-core';
+
+declare module '*.png' {
+    const value: string;
+    return value;
+}
