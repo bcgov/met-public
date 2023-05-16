@@ -14,9 +14,19 @@ import {
     Link,
 } from '@mui/material';
 import { EmailPanelProps } from './types';
-import { MetLabel, modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody } from 'components/common';
+import {
+    MetLabel,
+    modalStyle,
+    PrimaryButton,
+    SecondaryButton,
+    MetHeader1,
+    MetBody,
+    MetDescription,
+} from 'components/common';
+import { When } from 'react-if';
+import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
 
-const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: EmailPanelProps) => {
+const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isInternal }: EmailPanelProps) => {
     const [checked, setChecked] = useState(false);
     const [emailFormError, setEmailFormError] = useState({
         terms: false,
@@ -74,12 +84,11 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
                 </Grid>
 
                 <Grid item xs={12}>
-                    <Typography variant="body1">
+                    <MetBody>
                         <strong>Why are we collecting your email?</strong> Email verification helps us to know you are
                         not a robot, and ensures we have your consent to send you the survey link.
-                    </Typography>
+                    </MetBody>
                 </Grid>
-
                 <Grid item xs={12}>
                     <Typography
                         sx={{
@@ -151,6 +160,14 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving }: E
                         />
                     </Grid>
                 </Grid>
+                <When condition={isInternal}>
+                    <Grid item xs={12}>
+                        <MetDescription>
+                            <strong>This is an Internal Engagement!</strong> You can only use a {INTERNAL_EMAIL_DOMAIN}{' '}
+                            email address to answer this survey.
+                        </MetDescription>
+                    </Grid>
+                </When>
 
                 <Grid item container xs={12} direction="row" justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">

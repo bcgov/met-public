@@ -44,6 +44,7 @@ export interface EngagementFormUpdate {
     end_date?: string;
     content?: string;
     rich_content?: string;
+    is_internal?: boolean;
     status_block?: EngagementStatusBlock[];
     project_id: string;
     project_metadata: ProjectMetadata;

@@ -150,6 +150,7 @@ class TestEngagementInfo(dict, Enum):
         'created_by': '123',
         'updated_by': '123',
         'status': SubmissionStatus.Open.value,
+        'is_internal': False,
         'description': 'My Test Engagement Description',
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\"type\":\"unstyled\",\
         \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
@@ -166,6 +167,7 @@ class TestEngagementInfo(dict, Enum):
         'created_by': '123',
         'updated_by': '123',
         'status': SubmissionStatus.Open.value,
+        'is_internal': False,
         'description': 'My Test Engagement Description',
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\"type\":\"unstyled\",\
             \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
@@ -189,6 +191,7 @@ class TestEngagementInfo(dict, Enum):
         'created_by': '123',
         'updated_by': '123',
         'status': SubmissionStatus.Open.value,
+        'is_internal': False,
         'description': 'My Test Engagement Description',
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\"type\":\"unstyled\",\
             \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',

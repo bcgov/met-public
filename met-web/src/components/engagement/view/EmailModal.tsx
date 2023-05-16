@@ -13,6 +13,7 @@ import { useAppDispatch } from 'hooks';
 import { ActionContext } from './ActionContext';
 import ThankYouPanel from './ThankYouPanel';
 import { EmailVerificationType } from 'models/emailVerification';
+import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
 
 const EmailModal = ({ defaultPanel, open, handleClose }: EmailModalProps) => {
     const dispatch = useAppDispatch();
@@ -28,6 +29,8 @@ const EmailModal = ({ defaultPanel, open, handleClose }: EmailModalProps) => {
 
     const updateTabValue = () => {
         if (!checkEmail(email)) {
+            setFormIndex('error');
+        } else if (savedEngagement.is_internal && !email.endsWith(INTERNAL_EMAIL_DOMAIN)) {
             setFormIndex('error');
         } else {
             handleSubmit();
@@ -82,6 +85,7 @@ const EmailModal = ({ defaultPanel, open, handleClose }: EmailModalProps) => {
                             handleClose={() => close()}
                             updateEmail={setEmail}
                             isSaving={isSaving}
+                            isInternal={savedEngagement.is_internal}
                         />
                     </TabPanel>
                     <TabPanel value="success">
@@ -95,6 +99,7 @@ const EmailModal = ({ defaultPanel, open, handleClose }: EmailModalProps) => {
                             tryAgain={() => setFormIndex('email')}
                             handleClose={() => close()}
                             email={email}
+                            isInternal={savedEngagement.is_internal}
                         />
                     </TabPanel>
                 </TabContext>

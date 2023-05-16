@@ -80,6 +80,10 @@ class Engagements(Resource):
                 sort_order=args.get('sort_order', 'asc', str),
             )
 
+            exclude_internal = None
+            if user_id is None:
+                exclude_internal = True
+
             search_options = {
                 'search_text': args.get('search_text', '', type=str),
                 'engagement_status': args.getlist('engagement_status[]'),
@@ -92,6 +96,7 @@ class Engagements(Resource):
                 'project_name': args.get('project_name', None, type=str),
                 'application_number': args.get('application_number', None, type=str),
                 'client_name': args.get('client_name', None, type=str),
+                'exclude_internal': exclude_internal,
             }
 
             engagement_records = EngagementService()\
@@ -103,7 +108,7 @@ class Engagements(Resource):
                         'include_banner_url',
                         default=False,
                         type=lambda v: v.lower() == 'true'
-                    )
+                    ),
             )
 
             return engagement_records, HTTPStatus.OK

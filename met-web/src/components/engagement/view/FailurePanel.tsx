@@ -2,8 +2,9 @@ import React from 'react';
 import { Grid, Stack } from '@mui/material';
 import { FailurePanelProps } from './types';
 import { modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody } from 'components/common';
+import { When } from 'react-if';
 
-const FailurePanel = ({ email, handleClose, tryAgain }: FailurePanelProps) => {
+const FailurePanel = ({ email, handleClose, tryAgain, isInternal }: FailurePanelProps) => {
     return (
         <Grid
             container
@@ -23,6 +24,13 @@ const FailurePanel = ({ email, handleClose, tryAgain }: FailurePanelProps) => {
             <Grid item xs={12}>
                 <MetBody>{email}</MetBody>
             </Grid>
+            <When condition={isInternal}>
+                <Grid item xs={12}>
+                    <MetBody>
+                        <strong>This is an internal engagement.</strong> Make sure you are using a government email.
+                    </MetBody>
+                </Grid>
+            </When>
             <Grid item xs={12}>
                 <MetBody>Please verify your email and try again.</MetBody>
             </Grid>

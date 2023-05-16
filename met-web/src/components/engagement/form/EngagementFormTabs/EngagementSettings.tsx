@@ -1,6 +1,16 @@
 import React, { useState, useContext } from 'react';
-import { Grid, InputAdornment, MenuItem, TextField, Select, Tooltip, SelectChangeEvent } from '@mui/material';
-import { MetLabel, MetPaper, PrimaryButton, MetHeader4, MetDescription } from '../../../common';
+import {
+    Grid,
+    InputAdornment,
+    MenuItem,
+    TextField,
+    Select,
+    Tooltip,
+    SelectChangeEvent,
+    FormControlLabel,
+    Switch,
+} from '@mui/material';
+import { MetLabel, MetPaper, PrimaryButton, MetHeader4, MetDescription, MetBody } from '../../../common';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { ActionContext } from '../ActionContext';
@@ -8,11 +18,12 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { EngagementTabsContext } from './EngagementTabsContext';
 import { AppConfig } from 'config';
+import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
 
 const EngagementSettings = () => {
     const { savedEngagement } = useContext(ActionContext);
     const { engagementFormData, setEngagementFormData } = useContext(EngagementTabsContext);
-    const { project_id, project_metadata } = engagementFormData;
+    const { project_id, project_metadata, is_internal } = engagementFormData;
     const { engagementProjectTypes } = AppConfig.constants;
 
     const dispatch = useAppDispatch();
@@ -32,6 +43,13 @@ const EngagementSettings = () => {
         setEngagementFormData({
             ...engagementFormData,
             [e.target.name]: e.target.value,
+        });
+    };
+
+    const handleChangeIsInternal = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+        setEngagementFormData({
+            ...engagementFormData,
+            is_internal: checked,
         });
     };
 
@@ -145,7 +163,22 @@ const EngagementSettings = () => {
                         onChange={handleChangeMetadata}
                     />
                 </Grid>
-                <Grid item xs={12} mt={5}>
+                <Grid item xs={12} mt={5} mb={1}>
+                    <MetHeader4 bold>Engagement Settings</MetHeader4>
+                </Grid>
+                <Grid item xs={12}>
+                    <MetBody>
+                        This will make the engagement available to people requesting access from a{' '}
+                        {INTERNAL_EMAIL_DOMAIN} email address and will not show on the engagement home page.
+                    </MetBody>
+                </Grid>
+                <Grid item xs={12}>
+                    <FormControlLabel
+                        control={<Switch name="is_internal" checked={is_internal} onChange={handleChangeIsInternal} />}
+                        label={<MetLabel>Set-up as Internal Engagement</MetLabel>}
+                    />
+                </Grid>
+                <Grid item xs={12} mt={1}>
                     <MetLabel>Engagement Link</MetLabel>
                     <MetDescription>
                         This is the link to the public engagement and will only be accessible once the engagement is

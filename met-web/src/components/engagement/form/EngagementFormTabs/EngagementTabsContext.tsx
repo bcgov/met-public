@@ -14,7 +14,7 @@ interface EngagementFormData {
     end_date: string;
     description: string;
     content: string;
-
+    is_internal: boolean;
     project_id: string;
     project_metadata: ProjectMetadata;
 }
@@ -25,6 +25,7 @@ const initialEngagementFormData = {
     end_date: '',
     description: '',
     content: '',
+    is_internal: false,
     project_id: '',
     project_metadata: {
         project_name: '',
@@ -116,12 +117,12 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
     const { savedEngagement, engagementMetadata } = useContext(ActionContext);
     const dispatch = useAppDispatch();
     const [engagementFormData, setEngagementFormData] = useState<EngagementFormData>({
-        name: savedEngagement?.name || '',
+        name: savedEngagement.name || '',
         start_date: savedEngagement.start_date,
         end_date: savedEngagement.end_date,
-        description: savedEngagement?.description || '',
-        content: savedEngagement?.content || '',
-
+        description: savedEngagement.description || '',
+        content: savedEngagement.content || '',
+        is_internal: savedEngagement.is_internal || false,
         project_id: engagementMetadata.project_id,
         project_metadata: {
             project_name: engagementMetadata?.project_metadata?.project_name || '',
