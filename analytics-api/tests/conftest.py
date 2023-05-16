@@ -17,6 +17,7 @@ from sqlalchemy import event, text
 
 from analytics_api import create_app
 from analytics_api.models import db as _db
+from flask_migrate import Migrate, upgrade
 
 
 @pytest.fixture(scope='session')
@@ -48,6 +49,16 @@ def db(app):  # pylint: disable=redefined-outer-name, invalid-name
     Drops schema, and recreate.
     """
     with app.app_context():
+        drop_schema_sql = """DROP SCHEMA public CASCADE;
+                             CREATE SCHEMA public;
+                             GRANT ALL ON SCHEMA public TO postgres;
+                             GRANT ALL ON SCHEMA public TO public;
+                          """
+
+        sess = _db.session()
+        sess.execute(drop_schema_sql)
+        sess.commit()
+
         # ############################################
         # There are 2 approaches, an empty database, or the same one that the app will use
         #     create the tables
@@ -57,6 +68,8 @@ def db(app):  # pylint: disable=redefined-outer-name, invalid-name
         # This is the path we'll use in auth_api!!
 
         # even though this isn't referenced directly, it sets up the internal configs that upgrade needs
+        Migrate(app, _db)
+        upgrade()
 
         return _db
 
