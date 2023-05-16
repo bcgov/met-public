@@ -10,7 +10,7 @@ import { getEngagements } from 'services/engagementService';
 import { addTeamMemberToEngagement } from 'services/membershipService';
 import { When } from 'react-if';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { useAppDispatch } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { debounce } from 'lodash';
 import { Engagement } from 'models/engagement';
 import axios, { AxiosError } from 'axios';
@@ -25,6 +25,7 @@ type AddUserForm = yup.TypeOf<typeof schema>;
 
 export const AddToEngagementModal = () => {
     const dispatch = useAppDispatch();
+    const { assignedEngagements } = useAppSelector((state) => state.user);
     const { savedUser, addUserModalOpen, setAddUserModalOpen } = useContext(ActionContext);
     const [isAssigningRole, setIsAssigningRole] = useState(false);
     const [engagements, setEngagements] = useState<Engagement[]>([]);
@@ -69,7 +70,10 @@ export const AddToEngagementModal = () => {
             const response = await getEngagements({
                 search_text: searchText,
             });
-            setEngagements(response.items);
+            const filteredEngagements = response.items.filter(
+                (engagement) => !assignedEngagements.includes(engagement.id),
+            );
+            setEngagements(filteredEngagements);
             setEngagementsLoading(false);
         } catch (error) {
             dispatch(
