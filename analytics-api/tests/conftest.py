@@ -17,6 +17,7 @@ from sqlalchemy import event, text
 
 from analytics_api import create_app
 from analytics_api.models import db as _db
+from flask_migrate import Migrate, upgrade
 
 
 @pytest.fixture(scope='session')
