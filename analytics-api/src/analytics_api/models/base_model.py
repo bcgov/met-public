@@ -9,7 +9,6 @@ class BaseModel(db.Model):
     """This class manages all of the base model functions."""
 
     __abstract__ = True
-    __bind_key__ = 'met_db_analytics'
 
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
