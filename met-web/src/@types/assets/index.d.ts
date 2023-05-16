@@ -9,5 +9,5 @@ declare module '@types/arcgis-core';
 
 declare module '*.png' {
     const value: string;
-    return value;
+    export default value;
 }
