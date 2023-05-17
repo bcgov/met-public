@@ -11,11 +11,14 @@ import { LandingContext } from './LandingContext';
 import { Container } from '@mui/system';
 import { AppConfig } from 'config';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
+import { getTenant } from 'services/tenantService';
+import { Tenant } from 'models/tenant';
 
 const LandingComponent = () => {
     const { searchFilters, setSearchFilters, setPage, page } = useContext(LandingContext);
     const [engagementOptionsLoading, setEngagementOptionsLoading] = useState(false);
     const [engagementOptions, setEngagementOptions] = useState<Engagement[]>([]);
+    const [tenant, setTenant] = useState<Tenant>();
     const [didMount, setDidMount] = useState(false);
 
     const { engagementProjectTypes } = AppConfig.constants;
@@ -45,15 +48,23 @@ const LandingComponent = () => {
     const tileBlockRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        fetchTenant();
         setDidMount(true);
         return () => setDidMount(false);
     }, []);
+
     useEffect(() => {
         if (didMount) {
             const yOffset = tileBlockRef?.current?.offsetTop;
             window.scrollTo({ top: yOffset || 0, behavior: 'smooth' });
         }
     }, [page]);
+
+    const fetchTenant = async () => {
+        const basename = sessionStorage.getItem('tenantId') ?? '';
+        const tenant = await getTenant(basename);
+        setTenant(tenant);
+    };
 
     return (
         <Grid container direction="row" justifyContent={'center'} alignItems="center">
@@ -89,10 +100,10 @@ const LandingComponent = () => {
                             rowSpacing={2}
                         >
                             <Grid item xs={12}>
-                                <MetHeader1>Environmental Assessment Office</MetHeader1>
+                                <MetHeader1>{tenant?.name}</MetHeader1>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetParagraph>Something about the EAO and public engagements….</MetParagraph>
+                                <MetParagraph>{tenant?.description}</MetParagraph>
                             </Grid>
                         </Grid>
                     </Grid>
