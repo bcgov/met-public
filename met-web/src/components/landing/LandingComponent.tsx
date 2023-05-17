@@ -14,6 +14,7 @@ import LandingPageBanner from 'assets/images/LandingPageBanner.png';
 import { getTenant } from 'services/tenantService';
 import { Tenant } from 'models/tenant';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { useAppDispatch } from 'hooks';
 
 const LandingComponent = () => {
     const { searchFilters, setSearchFilters, setPage, page } = useContext(LandingContext);
