@@ -10,6 +10,14 @@ import { EngagementStatus } from 'constants/engagementStatus';
 import { WidgetType, Widget, WidgetItem } from 'models/widget';
 import { Event, EventItem } from 'models/event';
 import { WidgetMap } from 'models/widgetMap';
+import { Tenant } from 'models/tenant';
+
+const tenant: Tenant = {
+    id: '1',
+    name: 'Tenant 1',
+    title: 'Tenant Title',
+    description: 'Tenant Description',
+};
 
 const survey: Survey = {
     ...createDefaultSurvey(),
@@ -135,6 +143,7 @@ const engagementMetadata: EngagementMetadata = {
 };
 
 export {
+    tenant,
     draftEngagement,
     openEngagement,
     surveys,

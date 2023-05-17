@@ -130,12 +130,16 @@ class TestTenantInfo(dict, Enum):
     tenant1 = {
         'short_name': 'GDX',
         'name': fake.name(),
-        'description': fake.text(max_nb_chars=10),
+        'description': fake.text(max_nb_chars=300),
+        'title': fake.text(max_nb_chars=20),
+        'logo_url': None,
     }
     tenant2 = {
         'short_name': 'EMLI',
         'name': fake.name(),
-        'description': fake.text(max_nb_chars=10),
+        'description': fake.text(max_nb_chars=300),
+                'title': fake.text(max_nb_chars=20),
+        'logo_url': None,
     }
 
 

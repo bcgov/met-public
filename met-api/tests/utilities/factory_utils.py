@@ -128,6 +128,8 @@ def factory_tenant_model(tenant_info: dict = None):
         short_name=tenant_info.get('short_name'),
         name=tenant_info.get('name'),
         description=tenant_info.get('description'),
+        title=tenant_info.get('title'),
+        logo_url=tenant_info.get('logo_url'),
     )
     db.session.add(tenant)
     db.session.commit()
