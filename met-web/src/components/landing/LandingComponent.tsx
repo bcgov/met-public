@@ -13,6 +13,7 @@ import { AppConfig } from 'config';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
 import { getTenant } from 'services/tenantService';
 import { Tenant } from 'models/tenant';
+import { openNotification } from 'services/notificationService/notificationSlice';
 
 const LandingComponent = () => {
     const { searchFilters, setSearchFilters, setPage, page } = useContext(LandingContext);
@@ -20,7 +21,7 @@ const LandingComponent = () => {
     const [engagementOptions, setEngagementOptions] = useState<Engagement[]>([]);
     const [tenant, setTenant] = useState<Tenant>();
     const [didMount, setDidMount] = useState(false);
-
+    const dispatch = useAppDispatch();
     const { engagementProjectTypes } = AppConfig.constants;
 
     const loadEngagementOptions = async (searchText: string) => {
@@ -62,8 +63,19 @@ const LandingComponent = () => {
 
     const fetchTenant = async () => {
         const basename = sessionStorage.getItem('tenantId') ?? '';
-        const tenant = await getTenant(basename);
-        setTenant(tenant);
+        try {
+            const tenant = await getTenant(basename);
+            setTenant(tenant);
+        }
+        catch
+        {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while fetching Tenant information',
+                }),
+            );
+        }
     };
 
     return (

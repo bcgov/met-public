@@ -48,13 +48,21 @@ const App = () => {
         if (!basename) {
             return redirectToDefaultTenant();
         }
-        const tenant = await getTenant(basename);
 
-        if (tenant) {
-            sessionStorage.setItem('tenantId', basename);
-            setTenant(tenant);
-        } else {
+        try {
+            const tenant = await getTenant(basename);
+
+            if (tenant) {
+                sessionStorage.setItem('tenantId', basename);
+                setTenant(tenant);
+            } else {
+                redirectToDefaultTenant();
+            }    
+        }
+        catch
+        {
             redirectToDefaultTenant();
+            console.error('Error occurred while fetching Tenant information');
         }
     };
 
