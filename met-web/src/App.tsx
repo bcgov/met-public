@@ -57,10 +57,8 @@ const App = () => {
                 setTenant(tenant);
             } else {
                 redirectToDefaultTenant();
-            }    
-        }
-        catch
-        {
+            }
+        } catch {
             redirectToDefaultTenant();
             console.error('Error occurred while fetching Tenant information');
         }

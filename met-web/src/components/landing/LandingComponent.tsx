@@ -66,9 +66,7 @@ const LandingComponent = () => {
         try {
             const tenant = await getTenant(basename);
             setTenant(tenant);
-        }
-        catch
-        {
+        } catch {
             dispatch(
                 openNotification({
                     severity: 'error',
