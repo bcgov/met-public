@@ -15,7 +15,7 @@ test('Load Header', async () => {
     setupEnv();
     render(
         <ProviderShell>
-            <LoggedInHeader tenant={tenant}/>
+            <LoggedInHeader tenant={tenant} />
         </ProviderShell>,
     );
 
