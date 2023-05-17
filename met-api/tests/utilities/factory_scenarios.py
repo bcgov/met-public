@@ -138,7 +138,7 @@ class TestTenantInfo(dict, Enum):
         'short_name': 'EMLI',
         'name': fake.name(),
         'description': fake.text(max_nb_chars=300),
-                'title': fake.text(max_nb_chars=20),
+        'title': fake.text(max_nb_chars=20),
         'logo_url': None,
     }
 
