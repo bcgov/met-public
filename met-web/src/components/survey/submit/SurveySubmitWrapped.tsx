@@ -31,7 +31,7 @@ const SurveySubmitWrapped = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <MetPaper elevation={2}>
-                        <When condition={isTokenValid && Boolean(savedSurvey.engagement)}>
+                        <When condition={isTokenValid}>
                             <SurveyForm
                                 handleClose={() => {
                                     navigate(`/engagements/${savedSurvey.engagement?.id}/view`);
