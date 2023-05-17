@@ -17,7 +17,7 @@ import { AppConfig } from 'config';
 import NoAccess from 'routes/NoAccess';
 import { getTenant } from 'services/tenantService';
 import { Tenant } from 'models/tenant';
-import { DEFAULT_TENANT } from 'constants';
+import { DEFAULT_TENANT } from './constants';
 
 const App = () => {
     const drawerWidth = 280;
