@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import BannerWithoutImage from './BannerWithoutImage';
 import { BannerProps } from '../engagement/view/types';
 
-const BannerWithImage = ({ imageUrl, children }: BannerProps) => {
+const BannerWithImage = ({ height, imageUrl, children }: BannerProps) => {
     const [imageError, setImageError] = useState(false);
 
     if (!imageUrl || imageError) {
@@ -14,7 +14,7 @@ const BannerWithImage = ({ imageUrl, children }: BannerProps) => {
         <>
             <Box
                 sx={{
-                    height: '38em',
+                    height: height ? height : '38em',
                     width: '100%',
                     position: 'relative',
                 }}
@@ -23,7 +23,7 @@ const BannerWithImage = ({ imageUrl, children }: BannerProps) => {
                     src={imageUrl}
                     style={{
                         objectFit: 'cover',
-                        height: '38em',
+                        height: height ? height : '38em',
                         width: '100%',
                     }}
                     onError={(_e) => {

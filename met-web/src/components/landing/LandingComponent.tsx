@@ -10,6 +10,7 @@ import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import { LandingContext } from './LandingContext';
 import { Container } from '@mui/system';
 import { AppConfig } from 'config';
+import LandingPageBanner from 'assets/images/LandingPageBanner.png';
 
 const LandingComponent = () => {
     const { searchFilters, setSearchFilters, setPage, page } = useContext(LandingContext);
@@ -57,7 +58,7 @@ const LandingComponent = () => {
     return (
         <Grid container direction="row" justifyContent={'center'} alignItems="center">
             <Grid item xs={12}>
-                <Banner imageUrl="https://citz-gdx.objectstore.gov.bc.ca/new-bucket-048a62a2/6e20c9fe-e737-49fe-82eb-590c5ce575bc.jpg">
+                <Banner height={'330px'} imageUrl={LandingPageBanner}>
                     <Grid
                         container
                         direction="row"
