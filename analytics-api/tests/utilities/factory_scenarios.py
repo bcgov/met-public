@@ -61,3 +61,29 @@ class TestEmailVerificationInfo(dict, Enum):
         'engagement_id': 1,
         'survey_id': 1,
     }
+
+
+class TestUserResponseDetailInfo(dict, Enum):
+    """Test scenarios of user response detail verification."""
+
+    userresponsedetail1 = {
+        'created_date': (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d'),
+        'updated_date': (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d'),
+        'is_active': True,
+        'runcycle_id': 1,
+        'user_id': 1,
+        'engagement_id': 1,
+    }
+
+
+class TestSurveyInfo(dict, Enum):
+    """Test scenarios of survey verification."""
+
+    survey1 = {
+        'created_date': (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d'),
+        'updated_date': (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d'),
+        'is_active': True,
+        'runcycle_id': 1,
+        'source_survey_id': 1,
+        'engagement_id': 1,
+    }
