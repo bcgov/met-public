@@ -17,6 +17,7 @@
 Test-Suite to ensure that the user response detail endpoint is working as expected.
 """
 from analytics_api.utils.util import ContentType
+from datetime import datetime, timedelta
 from tests.utilities.factory_utils import factory_user_response_detail_model, factory_survey_model
 
 
@@ -24,8 +25,8 @@ def test_get_user_responses_by_month(client, session):  # pylint:disable=unused-
     """Assert that user response detail by month can be fetched."""
     survey_data = factory_survey_model()
     user_response_detail = factory_user_response_detail_model(survey_data.id)
-    from_date = '2023-02-04'
-    to_date = '2023-02-04'
+    from_date = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
+    to_date = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
     rv = client.get(f'/api/responses/month/{user_response_detail.engagement_id}\
                     ?&from_date={from_date}&to_date={to_date}', content_type=ContentType.JSON.value)
     assert rv.json[0].get('responses') == 1
@@ -36,8 +37,8 @@ def test_get_user_responses_by_week(client, session):  # pylint:disable=unused-a
     """Assert that user response detail by week can be fetched."""
     survey_data = factory_survey_model()
     user_response_detail = factory_user_response_detail_model(survey_data.id)
-    from_date = '2023-02-04'
-    to_date = '2023-02-04'
+    from_date = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
+    to_date = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
     rv = client.get(f'/api/responses/week/{user_response_detail.engagement_id}\
                     ?&from_date={from_date}&to_date={to_date}', content_type=ContentType.JSON.value)
     assert rv.json[0].get('responses') == 1
