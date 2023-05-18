@@ -88,10 +88,10 @@ class UserResponseDetail(BaseModel):  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def _append_search_options_filters(filters, search_options):
-        if search_options.get('from_date'):
+        if 'from_date' in search_options:
             filters.append(cast(UserResponseDetail.created_date, Date) >= search_options.get('from_date'))
 
-        if search_options.get('to_date'):
+        if 'to_date' in search_options:
             filters.append(cast(UserResponseDetail.created_date, Date) <= search_options.get('to_date'))
 
         return filters

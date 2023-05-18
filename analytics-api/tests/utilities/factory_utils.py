@@ -72,7 +72,7 @@ def factory_email_verification_model(emailinfo: dict = TestEmailVerificationInfo
 def factory_user_response_detail_model(survey_id, 
                                        userresponseinfo: dict = TestUserResponseDetailInfo.userresponsedetail1):
     """Produce a user response detail verification model."""
-    userresponsedetail = UserResponseDetailModel(
+    user_response_detail = UserResponseDetailModel(
         created_date=userresponseinfo.get('created_date'),
         updated_date=userresponseinfo.get('updated_date'),
         is_active=userresponseinfo.get('is_active'),
@@ -81,9 +81,9 @@ def factory_user_response_detail_model(survey_id,
         engagement_id=userresponseinfo.get('engagement_id'),
         survey_id=survey_id,
     )
-    db.session.add(userresponsedetail)
+    db.session.add(user_response_detail)
     db.session.commit()
-    return userresponsedetail
+    return user_response_detail
 
 
 def factory_survey_model(surveyinfo: dict = TestSurveyInfo.survey1):
