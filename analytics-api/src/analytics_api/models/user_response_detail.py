@@ -3,7 +3,7 @@
 Manages the user responses for a survey
 """
 from flask import jsonify
-from sqlalchemy import ForeignKey, extract, func
+from sqlalchemy import Date, ForeignKey, cast, extract, func
 from sqlalchemy.sql.expression import true
 
 from .base_model import BaseModel
@@ -35,9 +35,16 @@ class UserResponseDetail(BaseModel):  # pylint: disable=too-few-public-methods
     @classmethod
     def get_response_count_by_created_month(
         cls,
-        engagement_id
+        engagement_id,
+        search_options=None
     ):
         """Get user response count for an engagement id grouped by created month."""
+        queries = [UserResponseDetail.engagement_id == engagement_id, UserResponseDetail.is_active == true()]
+        if search_options.get('from_date'):
+            queries.append(cast(UserResponseDetail.created_date, Date) >= search_options.get('from_date'))
+        if search_options.get('to_date'):
+            queries.append(cast(UserResponseDetail.created_date, Date) <= search_options.get('to_date'))
+
         response_count_by_created_month = (db.session.query(
             extract('month', func.timezone('America/Vancouver', UserResponseDetail.created_date)).label('orderby'),
             func.concat(extract('year', func.timezone('America/Vancouver', UserResponseDetail.created_date)),
@@ -45,8 +52,7 @@ class UserResponseDetail(BaseModel):  # pylint: disable=too-few-public-methods
                         func.to_char(func.timezone('America/Vancouver', UserResponseDetail.created_date), 'FMMon')
                         ).label('showdataby'),
             func.count(UserResponseDetail.id).label('responses'))
-            .filter(UserResponseDetail.engagement_id == engagement_id)
-            .filter(UserResponseDetail.is_active == true())
+            .filter(*queries)
             .order_by('orderby')
             .group_by('showdataby', 'orderby').all()
         )
@@ -57,9 +63,16 @@ class UserResponseDetail(BaseModel):  # pylint: disable=too-few-public-methods
     @classmethod
     def get_response_count_by_created_week(
         cls,
-        engagement_id
+        engagement_id,
+        search_options=None
     ):
         """Get user response count for an engagement id grouped by created week."""
+        queries = [UserResponseDetail.engagement_id == engagement_id, UserResponseDetail.is_active == true()]
+        if search_options.get('from_date'):
+            queries.append(cast(UserResponseDetail.created_date, Date) >= search_options.get('from_date'))
+        if search_options.get('to_date'):
+            queries.append(cast(UserResponseDetail.created_date, Date) <= search_options.get('to_date'))
+
         response_count_by_created_week = (db.session.query(
             extract('week', func.timezone('America/Vancouver', UserResponseDetail.created_date)).label('orderby'),
             func.concat(extract('year', func.timezone('America/Vancouver', UserResponseDetail.created_date)),
@@ -67,8 +80,7 @@ class UserResponseDetail(BaseModel):  # pylint: disable=too-few-public-methods
                         extract('week', func.timezone('America/Vancouver', UserResponseDetail.created_date))
                         ).label('showdataby'),
             func.count(UserResponseDetail.id).label('responses'))
-            .filter(UserResponseDetail.engagement_id == engagement_id)
-            .filter(UserResponseDetail.is_active == true())
+            .filter(*queries)
             .order_by('orderby')
             .group_by('showdataby', 'orderby').all()
         )
