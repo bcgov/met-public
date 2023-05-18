@@ -4,10 +4,11 @@ from flask import current_app
 from sqlalchemy.exc import SQLAlchemyError
 
 from met_api.models.tenant import Tenant as TenantModel
+from met_api.schemas.tenant import TenantSchema
 from ..utils.cache import cache
 
 
-class TenantService:  # pylint: disable=too-few-public-methods
+class TenantService:
     """Tenant management service."""
 
     @classmethod
@@ -20,3 +21,9 @@ class TenantService:  # pylint: disable=too-few-public-methods
                 cache.set(f'tenant_{key}', tenant)
         except SQLAlchemyError as e:
             current_app.logger.info('Error on building cache {}', e)
+
+    @classmethod
+    def get(cls, tenant_id):
+        """Get a tenant by id."""
+        tenant = TenantModel.find_by_short_name(tenant_id)
+        return TenantSchema().dump(tenant)

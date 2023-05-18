@@ -13,10 +13,12 @@ import { MetHeader1, MetHeader2 } from 'components/common';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
 import { When } from 'react-if';
 import MenuIcon from '@mui/icons-material/Menu';
+import { HeaderProps } from './types';
 
-const InternalHeader = ({ drawerWidth = 280 }) => {
+const InternalHeader = ({ tenant, drawerWidth = 280 }: HeaderProps) => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const [open, setOpen] = useState(false);
+    const [imageError, setImageError] = useState(false);
     return (
         <>
             <AppBar
@@ -42,19 +44,44 @@ const InternalHeader = ({ drawerWidth = 280 }) => {
                             onClick={() => setOpen(!open)}
                         />
                     </When>
-                    <Box
-                        component={BCLogo}
-                        sx={{
-                            height: '5em',
-                            width: { xs: '7em', md: '15em' },
-                            marginRight: { xs: '1em', md: '3em' },
-                        }}
-                        alt="British Columbia Logo"
-                    />
+                    <When condition={tenant.logo_url && !imageError}>
+                        <Box
+                            sx={{
+                                backgroundImage: tenant.logo_url,
+                                height: '5em',
+                                width: { xs: '7em', md: '15em' },
+                                marginRight: { xs: '1em', md: '3em' },
+                            }}
+                        >
+                            <img
+                                src={tenant.logo_url}
+                                alt="Site Logo"
+                                style={{
+                                    objectFit: 'cover',
+                                    height: '5em',
+                                    width: '100%',
+                                }}
+                                onError={(_e) => {
+                                    setImageError(true);
+                                }}
+                            />
+                        </Box>
+                    </When>
+                    <When condition={!tenant.logo_url || imageError}>
+                        <Box
+                            component={BCLogo}
+                            sx={{
+                                height: '5em',
+                                width: { xs: '7em', md: '15em' },
+                                marginRight: { xs: '1em', md: '3em' },
+                            }}
+                            alt="British Columbia Logo"
+                        />
+                    </When>
                     {isMediumScreen ? (
-                        <MetHeader1 sx={{ flexGrow: 1 }}>MET</MetHeader1>
+                        <MetHeader1 sx={{ flexGrow: 1 }}>{tenant.title}</MetHeader1>
                     ) : (
-                        <MetHeader2 sx={{ flexGrow: 1 }}>MET</MetHeader2>
+                        <MetHeader2 sx={{ flexGrow: 1 }}>{tenant.title}</MetHeader2>
                     )}
                     <Button data-testid="button-header" color="inherit" onClick={() => UserService.doLogout()}>
                         Logout
