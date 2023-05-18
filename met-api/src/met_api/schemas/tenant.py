@@ -1,4 +1,4 @@
-"""Feedback schema class."""
+"""Tenant schema class."""
 
 from marshmallow import EXCLUDE, Schema, fields
 
