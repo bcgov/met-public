@@ -168,7 +168,7 @@ const EngagementSettings = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <MetBody>
-                        This will make the engagement available to people requesting access from a{' '}
+                        This will make the engagement only available to people requesting access from a{' '}
                         {INTERNAL_EMAIL_DOMAIN} email address and will not show on the engagement home page.
                     </MetBody>
                 </Grid>
