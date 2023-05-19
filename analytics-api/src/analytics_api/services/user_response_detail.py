@@ -8,13 +8,15 @@ class UserResponseDetailService:
     otherdateformat = '%Y-%m-%d'
 
     @staticmethod
-    def get_response_count_by_created_month(engagement_id):
+    def get_response_count_by_created_month(engagement_id, search_options=None):
         """Get user response count for an engagement id grouped by created month."""
-        response_count_by_created_month = UserResponseDetailModel.get_response_count_by_created_month(engagement_id)
+        response_count_by_created_month = UserResponseDetailModel.get_response_count_by_created_month(
+            engagement_id, search_options)
         return response_count_by_created_month
 
     @staticmethod
-    def get_response_count_by_created_week(engagement_id):
+    def get_response_count_by_created_week(engagement_id, search_options=None):
         """Get user response count for an engagement id grouped by created week."""
-        response_count_by_created_week = UserResponseDetailModel.get_response_count_by_created_week(engagement_id)
+        response_count_by_created_week = UserResponseDetailModel.get_response_count_by_created_week(
+            engagement_id, search_options)
         return response_count_by_created_week

@@ -45,7 +45,7 @@ class MembershipService:
         group_names = [group.get('name') for group in groups]
         if KeycloakGroupName.EAO_IT_ADMIN.value in group_names:
             raise BusinessException(
-                error='This user is already an Administrator.',
+                error='This user is already a Superuser.',
                 status_code=HTTPStatus.CONFLICT.value)
 
         if KeycloakGroupName.EAO_IT_VIEWER.value not in group_names:

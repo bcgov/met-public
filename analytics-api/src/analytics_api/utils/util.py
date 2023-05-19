@@ -66,3 +66,11 @@ class FormIoComponentType(Enum):
     RADIO = 'radio'
     CHECKBOX = 'checkbox'
     TEXT = 'text'
+
+
+class ContentType(Enum):
+    """Http Content Types."""
+
+    JSON = 'application/json'
+    FORM_URL_ENCODED = 'application/x-www-form-urlencoded'
+    PDF = 'application/pdf'

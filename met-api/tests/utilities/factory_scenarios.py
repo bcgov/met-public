@@ -130,12 +130,16 @@ class TestTenantInfo(dict, Enum):
     tenant1 = {
         'short_name': 'GDX',
         'name': fake.name(),
-        'description': fake.text(max_nb_chars=10),
+        'description': fake.text(max_nb_chars=300),
+        'title': fake.text(max_nb_chars=20),
+        'logo_url': None,
     }
     tenant2 = {
         'short_name': 'EMLI',
         'name': fake.name(),
-        'description': fake.text(max_nb_chars=10),
+        'description': fake.text(max_nb_chars=300),
+        'title': fake.text(max_nb_chars=20),
+        'logo_url': None,
     }
 
 
@@ -150,6 +154,7 @@ class TestEngagementInfo(dict, Enum):
         'created_by': '123',
         'updated_by': '123',
         'status': SubmissionStatus.Open.value,
+        'is_internal': False,
         'description': 'My Test Engagement Description',
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\"type\":\"unstyled\",\
         \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
@@ -166,6 +171,7 @@ class TestEngagementInfo(dict, Enum):
         'created_by': '123',
         'updated_by': '123',
         'status': SubmissionStatus.Open.value,
+        'is_internal': False,
         'description': 'My Test Engagement Description',
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\"type\":\"unstyled\",\
             \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
@@ -189,6 +195,7 @@ class TestEngagementInfo(dict, Enum):
         'created_by': '123',
         'updated_by': '123',
         'status': SubmissionStatus.Open.value,
+        'is_internal': False,
         'description': 'My Test Engagement Description',
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\"type\":\"unstyled\",\
             \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
@@ -259,6 +266,7 @@ class TestJwtClaims(dict, Enum):
                 'create_admin_user',
                 'view_all_surveys',
                 'edit_all_surveys',
+                'view_unapproved_comments'
             ]
         }
     }

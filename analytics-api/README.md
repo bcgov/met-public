@@ -1,6 +1,10 @@
 # MET-ANALYTICS
 
-Python flask API application for The Modern Engagement Tool Analytics.
+Python flask API application for The Modern Engagement Tool Analytics. 
+
+As part of the project an analytics data warehouse was modeled and developed to store the data necessary for reporting. An ETL job runs at regular intervals to extract, transform and load the required data from the application database to analytics database. This way we are able to maintain a history for the data without loosing track of changes that might have happened on the data. 
+
+The API was developed to connect and pull data from analytics database for the purpose of reporting. End points are designed to pull aggregated data as required for the visual representation from the analytics database.
 
 ## Getting Started
 
@@ -27,7 +31,7 @@ The following commands support various development scenarios and needs.
 
 > `make test`
 >
-> Runs the application unit tests<br>
+> Runs the application unit tests
 
 > `make db`
 >

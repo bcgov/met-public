@@ -10,13 +10,19 @@ import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import { LandingContext } from './LandingContext';
 import { Container } from '@mui/system';
 import { AppConfig } from 'config';
+import LandingPageBanner from 'assets/images/LandingPageBanner.png';
+import { getTenant } from 'services/tenantService';
+import { Tenant } from 'models/tenant';
+import { openNotification } from 'services/notificationService/notificationSlice';
+import { useAppDispatch } from 'hooks';
 
 const LandingComponent = () => {
     const { searchFilters, setSearchFilters, setPage, page } = useContext(LandingContext);
     const [engagementOptionsLoading, setEngagementOptionsLoading] = useState(false);
     const [engagementOptions, setEngagementOptions] = useState<Engagement[]>([]);
+    const [tenant, setTenant] = useState<Tenant>();
     const [didMount, setDidMount] = useState(false);
-
+    const dispatch = useAppDispatch();
     const { engagementProjectTypes } = AppConfig.constants;
 
     const loadEngagementOptions = async (searchText: string) => {
@@ -44,9 +50,11 @@ const LandingComponent = () => {
     const tileBlockRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        fetchTenant();
         setDidMount(true);
         return () => setDidMount(false);
     }, []);
+
     useEffect(() => {
         if (didMount) {
             const yOffset = tileBlockRef?.current?.offsetTop;
@@ -54,10 +62,25 @@ const LandingComponent = () => {
         }
     }, [page]);
 
+    const fetchTenant = async () => {
+        const basename = sessionStorage.getItem('tenantId') ?? '';
+        try {
+            const tenant = await getTenant(basename);
+            setTenant(tenant);
+        } catch {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while fetching Tenant information',
+                }),
+            );
+        }
+    };
+
     return (
         <Grid container direction="row" justifyContent={'center'} alignItems="center">
             <Grid item xs={12}>
-                <Banner imageUrl="https://citz-gdx.objectstore.gov.bc.ca/new-bucket-048a62a2/6e20c9fe-e737-49fe-82eb-590c5ce575bc.jpg">
+                <Banner height={'330px'} imageUrl={LandingPageBanner}>
                     <Grid
                         container
                         direction="row"
@@ -88,10 +111,10 @@ const LandingComponent = () => {
                             rowSpacing={2}
                         >
                             <Grid item xs={12}>
-                                <MetHeader1>Environmental Assessment Office</MetHeader1>
+                                <MetHeader1>{tenant?.name}</MetHeader1>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetParagraph>Something about the EAO and public engagements….</MetParagraph>
+                                <MetParagraph>{tenant?.description}</MetParagraph>
                             </Grid>
                         </Grid>
                     </Grid>

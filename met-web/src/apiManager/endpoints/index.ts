@@ -91,6 +91,9 @@ const Endpoints = {
         CREATE: `${AppConfig.apiUrl}/widgets/widget_id/maps`,
         SHAPEFILE_PREVIEW: `${AppConfig.apiUrl}/shapefile`,
     },
+    Tenants: {
+        GET: `${AppConfig.apiUrl}/tenants/tenant_id`,
+    },
     AnalyticsUserResponseDetail: {
         GET_COUNT_BY_MONTH: `${AppConfig.analyticsApiUrl}/responses/month/engagement_id`,
         GET_COUNT_BY_WEEK: `${AppConfig.analyticsApiUrl}/responses/week/engagement_id`,

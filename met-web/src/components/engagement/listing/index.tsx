@@ -115,6 +115,10 @@ const EngagementListing = () => {
         }
     };
 
+    const submissionHasBeenOpened = (engagement: Engagement) => {
+        return [SubmissionStatus.Open, SubmissionStatus.Closed].includes(engagement.submission_status);
+    };
+
     const handleSearchBarClick = (engagementNameFilter: string) => {
         setSearchFilter({
             ...searchFilter,
@@ -210,6 +214,10 @@ const EngagementListing = () => {
             ),
             allowSort: false,
             renderCell: (row: Engagement) => {
+                if (!submissionHasBeenOpened(row)) {
+                    return <></>;
+                }
+
                 const { approved } = row.submissions_meta_data;
                 return (
                     <ApprovedIcon
@@ -243,7 +251,10 @@ const EngagementListing = () => {
             ),
             allowSort: false,
             renderCell: (row: Engagement) => {
-                if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
+                if (
+                    !submissionHasBeenOpened(row) ||
+                    (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id)))
+                ) {
                     return <></>;
                 }
                 const { needs_further_review } = row.submissions_meta_data;
@@ -279,7 +290,10 @@ const EngagementListing = () => {
             ),
             allowSort: false,
             renderCell: (row: Engagement) => {
-                if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
+                if (
+                    !submissionHasBeenOpened(row) ||
+                    (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id)))
+                ) {
                     return <></>;
                 }
                 const { rejected } = row.submissions_meta_data;
@@ -315,7 +329,10 @@ const EngagementListing = () => {
             ),
             allowSort: false,
             renderCell: (row: Engagement) => {
-                if (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) {
+                if (
+                    !submissionHasBeenOpened(row) ||
+                    (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id)))
+                ) {
                     return <></>;
                 }
                 const { pending } = row.submissions_meta_data;

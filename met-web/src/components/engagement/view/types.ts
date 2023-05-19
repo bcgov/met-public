@@ -2,6 +2,7 @@ import React from 'react';
 
 export interface BannerProps {
     imageUrl?: string;
+    height?: string;
     children?: JSX.Element | JSX.Element[];
 }
 
@@ -28,6 +29,7 @@ export interface EmailPanelProps {
     handleClose: () => void;
     updateEmail: (string: string) => void;
     isSaving: boolean;
+    isInternal: boolean;
 }
 
 export interface SuccessPanelProps {
@@ -43,6 +45,7 @@ export interface FailurePanelProps {
     tryAgain: () => void;
     handleClose: () => void;
     email: string;
+    isInternal: boolean;
 }
 
 export interface SurveyBlockProps {

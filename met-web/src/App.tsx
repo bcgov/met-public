@@ -1,5 +1,5 @@
 import './App.scss';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import UserService from './services/userService';
 import { useAppSelector, useAppDispatch } from './hooks';
@@ -15,7 +15,9 @@ import { NotificationModal } from 'components/common/modal';
 import { FeedbackModal } from 'components/feedback/FeedbackModal';
 import { AppConfig } from 'config';
 import NoAccess from 'routes/NoAccess';
-import { validBasenames, EAO } from './constants';
+import { getTenant } from 'services/tenantService';
+import { Tenant } from 'models/tenant';
+import { DEFAULT_TENANT } from './constants';
 
 const App = () => {
     const drawerWidth = 280;
@@ -26,9 +28,7 @@ const App = () => {
     const authenticationLoading = useAppSelector((state) => state.user.authentication.loading);
     const pathSegments = window.location.pathname.split('/');
     const basename = pathSegments[1];
-
-    // TODO: Remove this when we have a better way to fetch the valid basenames
-    const isValidBasename = basename && validBasenames.includes(basename);
+    const [tenant, setTenant] = useState<Tenant>();
 
     useEffect(() => {
         UserService.initKeycloak(dispatch);
@@ -36,18 +36,40 @@ const App = () => {
 
     useEffect(() => {
         sessionStorage.setItem('apiurl', String(AppConfig.apiUrl));
-
-        if (isValidBasename) {
-            sessionStorage.setItem('tenantId', basename);
-        } else {
-            sessionStorage.setItem('tenantId', EAO);
-            const path = window.location.pathname.length > 1 ? window.location.pathname : '';
-            window.location.replace(`/${EAO}${path}`);
-        }
+        fetchTenant();
     }, [basename, AppConfig.apiUrl]);
+
+    const redirectToDefaultTenant = () => {
+        const path = window.location.pathname.length > 1 ? window.location.pathname : '';
+        window.location.replace(`/${DEFAULT_TENANT}/${path}`);
+    };
+
+    const fetchTenant = async () => {
+        if (!basename) {
+            return redirectToDefaultTenant();
+        }
+
+        try {
+            const tenant = await getTenant(basename);
+
+            if (tenant) {
+                sessionStorage.setItem('tenantId', basename);
+                setTenant(tenant);
+            } else {
+                redirectToDefaultTenant();
+            }
+        } catch {
+            redirectToDefaultTenant();
+            console.error('Error occurred while fetching Tenant information');
+        }
+    };
 
     if (authenticationLoading) {
         return <MidScreenLoader />;
+    }
+
+    if (!tenant) {
+        return <></>;
     }
 
     if (!isLoggedIn) {
@@ -56,7 +78,7 @@ const App = () => {
                 <PageViewTracker />
                 <Notification />
                 <NotificationModal />
-                <PublicHeader />
+                <PublicHeader tenant={tenant} />
                 <UnauthenticatedRoutes />
                 <FeedbackModal />
             </Router>
@@ -66,7 +88,7 @@ const App = () => {
     if (roles.length === 0) {
         return (
             <Router basename={basename}>
-                <PublicHeader />
+                <PublicHeader tenant={tenant} />
                 <Container>
                     <NoAccess />
                 </Container>
@@ -78,7 +100,7 @@ const App = () => {
     if (!isMediumScreen) {
         return (
             <Router basename={basename}>
-                <InternalHeader />
+                <InternalHeader tenant={tenant} />
                 <Container>
                     <MobileToolbar />
                     <AuthenticatedRoutes />
@@ -91,7 +113,7 @@ const App = () => {
     return (
         <Router basename={basename}>
             <Box sx={{ display: 'flex' }}>
-                <InternalHeader drawerWidth={drawerWidth} />
+                <InternalHeader tenant={tenant} drawerWidth={drawerWidth} />
                 <Notification />
                 <NotificationModal />
                 <Box component="main" sx={{ flexGrow: 1, width: `calc(100% - ${drawerWidth}px)`, marginTop: '17px' }}>

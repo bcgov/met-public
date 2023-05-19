@@ -15,7 +15,9 @@ class Tenant(BaseModel):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     short_name = db.Column(db.String(10), comment='A small code for the tenant ie GDX , EAO.', nullable=False)
     name = db.Column(db.String(50), comment='Full name of the ministry.ie Env Assessment Office')
-    description = db.Column(db.String(100))
+    description = db.Column(db.String(300))
+    title = db.Column(db.String(30), nullable=False)
+    logo_url = db.Column(db.String(300), nullable=True)
 
     @staticmethod
     def find_by_short_name(short_name: str) -> Tenant:

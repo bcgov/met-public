@@ -35,6 +35,8 @@ def get_named_config(config_name: str = 'development'):
     """
     if config_name in ['production', 'staging', 'default']:
         config = ProdConfig()
+    elif config_name == 'testing':
+        config = TestConfig()
     elif config_name == 'development':
         config = DevConfig()
     else:
@@ -59,9 +61,6 @@ class _Config():  # pylint: disable=too-few-public-methods
     DB_HOST = os.getenv('DATABASE_HOST', '')
     DB_PORT = os.getenv('DATABASE_PORT', '5432')
     SQLALCHEMY_DATABASE_URI = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}'
-    SQLALCHEMY_BINDS = {
-        'met_db_analytics': f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}'
-    }
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -86,6 +85,21 @@ class DevConfig(_Config):  # pylint: disable=too-few-public-methods
     TESTING = False
     DEBUG = True
     print(f'SQLAlchemy URL (DevConfig): {_Config.SQLALCHEMY_DATABASE_URI}')
+
+
+class TestConfig(_Config):  # pylint: disable=too-few-public-methods
+    """In support of testing only.used by the py.test suite."""
+
+    DEBUG = True
+    TESTING = True
+    # POSTGRESQL
+    DB_USER = os.getenv('DATABASE_TEST_USERNAME', 'postgres')
+    DB_PASSWORD = os.getenv('DATABASE_TEST_PASSWORD', 'postgres')
+    DB_NAME = os.getenv('DATABASE_TEST_NAME', 'postgres')
+    DB_HOST = os.getenv('DATABASE_TEST_HOST', 'localhost')
+    DB_PORT = os.getenv('DATABASE_TEST_PORT', '5432')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_TEST_URL',
+                                        f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}')
 
 
 class ProdConfig(_Config):  # pylint: disable=too-few-public-methods

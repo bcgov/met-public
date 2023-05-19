@@ -24,6 +24,7 @@ export interface Engagement {
     submission_status: SubmissionStatus;
     submissions_meta_data: SurveySubmissionData;
     status_block: EngagementStatusBlock[];
+    is_internal: boolean;
 }
 
 export interface Status {
@@ -73,6 +74,7 @@ export const createDefaultEngagement = (): Engagement => {
             approved: 0,
         },
         status_block: [],
+        is_internal: false,
     };
 };
 

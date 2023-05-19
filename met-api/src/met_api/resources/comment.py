@@ -22,7 +22,6 @@ from flask_restx import Namespace, Resource
 from met_api.auth import jwt as _jwt
 from met_api.models.pagination_options import PaginationOptions
 from met_api.services.comment_service import CommentService
-from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
@@ -65,7 +64,6 @@ class SurveyComments(Resource):
     def get(survey_id):
         """Get comments page."""
         try:
-            user_id = TokenInfo.get_id()
             args = request.args
 
             pagination_options = PaginationOptions(
@@ -76,7 +74,6 @@ class SurveyComments(Resource):
             )
             comment_records = CommentService()\
                 .get_comments_paginated(
-                    user_id,
                     survey_id,
                     pagination_options,
                     args.get('search_text', '', str),

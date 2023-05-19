@@ -273,7 +273,7 @@ export const AddUserModal = () => {
                                             <FormControlLabel
                                                 value={USER_GROUP.ADMIN.value}
                                                 control={<Radio />}
-                                                label={'Administrator'}
+                                                label={'Superuser'}
                                             />
                                             <FormControlLabel
                                                 value={USER_GROUP.VIEWER.value}

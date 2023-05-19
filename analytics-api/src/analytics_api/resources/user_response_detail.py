@@ -15,6 +15,7 @@
 
 from http import HTTPStatus
 
+from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
@@ -39,7 +40,13 @@ class UserResponseDetailByMonth(Resource):
     def get(engagement_id):
         """Fetch a user responses matching the provided engagement id."""
         try:
-            user_response_record = UserResponseDetailService().get_response_count_by_created_month(engagement_id)
+            args = request.args
+            search_options = {
+                'from_date': args.get('from_date', None, type=str),
+                'to_date': args.get('to_date', None, type=str),
+            }
+            user_response_record = UserResponseDetailService().get_response_count_by_created_month(
+                engagement_id, search_options)
 
             if user_response_record:
                 return user_response_record, HTTPStatus.OK
@@ -62,7 +69,13 @@ class UserResponseDetailByWeek(Resource):
     def get(engagement_id):
         """Fetch a user responses matching the provided engagement id."""
         try:
-            user_response_record = UserResponseDetailService().get_response_count_by_created_week(engagement_id)
+            args = request.args
+            search_options = {
+                'from_date': args.get('from_date', None, type=str),
+                'to_date': args.get('to_date', None, type=str),
+            }
+            user_response_record = UserResponseDetailService().get_response_count_by_created_week(
+                engagement_id, search_options)
 
             if user_response_record:
                 return user_response_record, HTTPStatus.OK
