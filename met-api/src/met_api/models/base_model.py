@@ -62,6 +62,7 @@ class BaseModel(db.Model):
 
     def flush(self):
         """Save and flush."""
+        self._set_tenant_id()
         db.session.add(self)
         db.session.flush()
         return self
@@ -72,14 +73,17 @@ class BaseModel(db.Model):
 
     def save(self):
         """Save and commit."""
+        self._set_tenant_id()
+        db.session.add(self)
+        db.session.flush()
+        db.session.commit()
+
+    def _set_tenant_id(self):
         # add tenant id to the model if the child model has tenant id column
         has_tenant_id = hasattr(g, 'tenant_id') and g.tenant_id
         if has_tenant_id and hasattr(self, TENANT_ID):
             if not getattr(self, TENANT_ID):
                 setattr(self, TENANT_ID, g.tenant_id)
-        db.session.add(self)
-        db.session.flush()
-        db.session.commit()
 
     @classmethod
     def _add_tenant_filter(cls, query):

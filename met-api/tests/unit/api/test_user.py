@@ -19,6 +19,9 @@ Test-Suite to ensure that the /user endpoint is working as expected.
 from http import HTTPStatus
 from unittest.mock import MagicMock
 
+from flask import current_app
+
+from met_api.models import Tenant as TenantModel
 from met_api.utils.enums import ContentType, KeycloakGroupName, UserType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestUserInfo
 from tests.utilities.factory_utils import factory_auth_header, factory_user_model
@@ -46,6 +49,9 @@ def test_create_staff_user(client, jwt, session, ):  # pylint:disable=unused-arg
     assert rv.status_code == HTTPStatus.OK
     assert rv.json.get('email_id') == claims.get('email')
     assert rv.json.get('access_type') == UserType.STAFF.value
+    tenant_short_name = current_app.config.get('DEFAULT_TENANT_SHORT_NAME')
+    tenant = TenantModel.find_by_short_name(tenant_short_name)
+    assert rv.json.get('tenant_id') == str(tenant.id)
 
 
 def test_get_staff_users(client, jwt, session, ):  # pylint:disable=unused-argument
