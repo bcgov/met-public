@@ -17,16 +17,12 @@ depends_on = None
 
 
 def upgrade():
-    op.add_column('tenant', sa.Column('title', sa.String(length=30), nullable=True))
+    op.add_column('tenant', sa.Column('title', sa.String(length=30), nullable=False, server_default="Modern Engagement"))
     op.add_column('tenant', sa.Column('logo_url', sa.String(length=300), nullable=True))
     op.alter_column('tenant', 'description',
                existing_type=sa.String(100),
                type_=sa.String(300))
-    op.execute('UPDATE tenant SET title = \'Modern Engagement\';')
     op.execute('UPDATE tenant SET description = \'British Columbia\'\'s environmental assessment process provides opportunities for Indigenous Nations, government agencies and the public to influence the outcome of environmental assessments in British Columbia.\' WHERE short_name = \'EAO\';')
-    op.alter_column('tenant', 'title',
-               existing_type=sa.String(),
-               nullable=False)
 
 
 def downgrade():
