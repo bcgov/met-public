@@ -12,6 +12,12 @@ import {
 import { createDefaultByMonthData } from '../../../models/analytics/userResponseDetail';
 import { Engagement } from 'models/engagement';
 import { Palette } from 'styles/Theme';
+import { DateCalendar } from '@mui/x-date-pickers-pro';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import { DateRange } from '@mui/x-date-pickers-pro';
+import { Then, If, Else } from 'react-if';
 
 const HEIGHT = 320;
 
@@ -26,15 +32,24 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
     const [chartBy, setChartBy] = React.useState('monthly');
-
+    const [fromDate, setFromDate] = React.useState<Dayjs | null>(null);
+    const [toDate, setToDate] = React.useState<Dayjs | null>(null);
     const fetchData = async () => {
         setIsLoading(true);
         try {
             if (chartBy == 'monthly') {
-                const response = await getUserResponseDetailByMonth(Number(engagement.id));
+                const response = await getUserResponseDetailByMonth(
+                    Number(engagement.id),
+                    fromDate?.toString(),
+                    toDate?.toString(),
+                );
                 setData(response);
             } else if (chartBy == 'weekly') {
-                const response = await getUserResponseDetailByWeek(Number(engagement.id));
+                const response = await getUserResponseDetailByWeek(
+                    Number(engagement.id),
+                    fromDate?.toString(),
+                    toDate?.toString(),
+                );
                 setData(response);
             }
             setIsLoading(false);
@@ -47,13 +62,9 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
 
     useEffect(() => {
         fetchData();
-    }, [engagement.id, chartBy]);
+    }, [engagement.id, fromDate, toDate]);
 
-    const handleToggleChange = (event: React.MouseEvent<HTMLElement>, chartByValue: string) => {
-        setChartBy(chartByValue);
-    };
-
-    if (isLoading || engagementIsLoading) {
+    if (engagementIsLoading) {
         return (
             <>
                 <MetLabel mb={2}>Live Activity - Engagement</MetLabel>
@@ -82,53 +93,65 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
         <>
             <MetLabel mb={2}>Live Activity - Engagement</MetLabel>
             <MetPaper sx={{ p: 2 }}>
-                <Grid item container xs={12} direction="row" justifyContent="center">
-                    <Stack direction={{ xs: 'column', sm: 'row' }} width="100%" justifyContent="flex-end">
-                        <ToggleButtonGroup value={chartBy} exclusive onChange={handleToggleChange}>
-                            <ToggleButton
-                                value="monthly"
-                                sx={{
-                                    '&.Mui-selected': {
-                                        backgroundColor: Palette.primary.main,
-                                        color: 'white',
-                                    },
-                                }}
-                            >
-                                Monthly
-                            </ToggleButton>
-                            <ToggleButton
-                                value="weekly"
-                                sx={{
-                                    '&.Mui-selected': {
-                                        backgroundColor: Palette.primary.main,
-                                        color: 'white',
-                                    },
-                                }}
-                            >
-                                Weekly
-                            </ToggleButton>
-                        </ToggleButtonGroup>
-                    </Stack>
+                <Grid container>
+                    <Grid alignItems={'center'} justifyContent={'center'} container item xs={4}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <Stack direction="row">
+                                <DateCalendar
+                                    value={fromDate}
+                                    onChange={(newDate: Dayjs | null) => setFromDate(newDate)}
+                                />
+                                <DateCalendar value={toDate} onChange={(newDate: Dayjs | null) => setToDate(newDate)} />
+                            </Stack>
+                        </LocalizationProvider>
+                    </Grid>
+                    <Grid item xs={8}>
+                        <If condition={isLoading}>
+                            <Then>
+                                <ResponsiveContainer width="100%" height={isSmallScreen ? 200 : 250}>
+                                    <BarChart
+                                        data={data}
+                                        margin={
+                                            !isSmallScreen
+                                                ? { top: 10, right: 30, left: 0, bottom: 0 }
+                                                : { top: 5, right: 0, left: -20, bottom: 0 }
+                                        }
+                                    >
+                                        <XAxis dataKey="showdataby" />
+                                        <YAxis />
+                                        <Unless condition={isSmallScreen}>
+                                            <Tooltip />
+                                        </Unless>
+                                        <Bar
+                                            dataKey="responses"
+                                            fill={DASHBOARD.BAR_CHART.FILL_COLOR}
+                                            minPointSize={2}
+                                            barSize={50}
+                                        >
+                                            <LabelList
+                                                dataKey="responses"
+                                                position="insideTop"
+                                                style={{ fill: 'white' }}
+                                            />
+                                        </Bar>
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </Then>
+                            <Else>
+                                <Grid
+                                    container
+                                    alignItems="center"
+                                    justifyContent="center"
+                                    direction="row"
+                                    width={'100%'}
+                                    height={HEIGHT}
+                                >
+                                    <CircularProgress color="inherit" />
+                                </Grid>
+                            </Else>
+                        </If>
+                    </Grid>
                 </Grid>
-                <ResponsiveContainer width="100%" height={isSmallScreen ? 200 : 250}>
-                    <BarChart
-                        data={data}
-                        margin={
-                            !isSmallScreen
-                                ? { top: 10, right: 30, left: 0, bottom: 0 }
-                                : { top: 5, right: 0, left: -20, bottom: 0 }
-                        }
-                    >
-                        <XAxis dataKey="showdataby" />
-                        <YAxis />
-                        <Unless condition={isSmallScreen}>
-                            <Tooltip />
-                        </Unless>
-                        <Bar dataKey="responses" fill={DASHBOARD.BAR_CHART.FILL_COLOR} minPointSize={2} barSize={50}>
-                            <LabelList dataKey="responses" position="insideTop" style={{ fill: 'white' }} />
-                        </Bar>
-                    </BarChart>
-                </ResponsiveContainer>
             </MetPaper>
         </>
     );
