@@ -35,6 +35,7 @@ class User(BaseModel):  # pylint: disable=too-few-public-methods
     # a type for the user to identify what kind of user it is..STAFF/PUBLIC_USER etc
     access_type = Column('access_type', String(200), nullable=True)
     status_id = db.Column(db.Integer, ForeignKey('user_status.id'))
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
 
     @classmethod
     def find_users_by_access_type(cls, user_access_type, pagination_options: PaginationOptions, search_text=''):
@@ -65,7 +66,7 @@ class User(BaseModel):  # pylint: disable=too-few-public-methods
     @classmethod
     def create_user(cls, user) -> User:
         """Create user."""
-        new_user = User(
+        user = User(
             first_name=user.get('first_name', None),
             middle_name=user.get('middle_name', None),
             last_name=user.get('last_name', None),
@@ -78,10 +79,9 @@ class User(BaseModel):  # pylint: disable=too-few-public-methods
             updated_date=None,
 
         )
-        db.session.add(new_user)
-        db.session.commit()
+        user.save()
 
-        return new_user
+        return user
 
     @classmethod
     def update_user(cls, user_id, user_dict) -> Optional[User]:
