@@ -37,6 +37,9 @@ export const Palette = {
             border: '#F15A2C',
         },
     },
+    icons: {
+        surveyReady: '#77EB52',
+    },
 };
 
 export const BaseTheme = createTheme({
