@@ -18,6 +18,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import { DateRange } from '@mui/x-date-pickers-pro';
 import { Then, If, Else } from 'react-if';
+import { formatDate } from 'components/common/dateHelper';
 
 const HEIGHT = 320;
 
@@ -40,15 +41,15 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
             if (chartBy == 'monthly') {
                 const response = await getUserResponseDetailByMonth(
                     Number(engagement.id),
-                    fromDate?.toString(),
-                    toDate?.toString(),
+                    fromDate ? formatDate(fromDate) : '',
+                    toDate ? formatDate(toDate) : '',
                 );
                 setData(response);
             } else if (chartBy == 'weekly') {
                 const response = await getUserResponseDetailByWeek(
                     Number(engagement.id),
-                    fromDate?.toString(),
-                    toDate?.toString(),
+                    fromDate ? formatDate(fromDate) : '',
+                    toDate ? formatDate(toDate) : '',
                 );
                 setData(response);
             }
@@ -62,7 +63,11 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
 
     useEffect(() => {
         fetchData();
-    }, [engagement.id, fromDate, toDate]);
+    }, [engagement.id]);
+
+    useEffect(() => {
+        if (fromDate && toDate) fetchData();
+    }, [fromDate, toDate]);
 
     if (engagementIsLoading) {
         return (
