@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-import { Grid, Link as MuiLink, useMediaQuery, Theme } from '@mui/material';
+import { Grid, Link as MuiLink, useMediaQuery, Stack, Theme } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import { MetHeader1, MetPaper, PrimaryButton } from 'components/common';
+import { MetHeader1, MetPaper, PrimaryButton, SecondaryButton } from 'components/common';
 import { ReportBanner } from './ReportBanner';
 import SurveysCompleted from './KPI/SurveysCompleted';
 import ProjectLocation from './KPI/ProjectLocation';
@@ -9,6 +9,9 @@ import SurveyEmailsSent from './KPI/SurveyEmailsSent';
 import SubmissionTrend from './SubmissionTrend/SubmissionTrend';
 import { DashboardContext } from './DashboardContext';
 import SurveyBar from './SurveyBar.tsx';
+import SurveyBarPrintable from './SurveyBarPrintable';
+import { jsPDF } from 'jspdf';
+import * as htmlToImage from 'html-to-image';
 
 export const Dashboard = () => {
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
@@ -17,6 +20,76 @@ export const Dashboard = () => {
 
     const handleReadComments = () => {
         navigate(`/engagements/${engagement.id}/comments`);
+    };
+
+    const createPdf = async () => {
+        const doc = new jsPDF('p', 'mm');
+
+        const padding = 10;
+        const marginTop = 20;
+        let top = marginTop;
+
+        const kpi = document.getElementById('kpi');
+        if (kpi) {
+            const kpiData = await htmlToImage.toPng(kpi);
+            doc.addImage(kpiData, 'PNG', padding, top, 190, 55, 'kpi');
+        }
+
+        const submissiontrend = document.getElementById('submissiontrend');
+        if (submissiontrend) {
+            const submissiontrendData = await htmlToImage.toPng(submissiontrend);
+            doc.addImage(submissiontrendData, 'PNG', padding, top + 75, 190, 60, 'submissiontrend');
+        }
+
+        doc.addPage();
+
+        const question_ids = document.querySelectorAll('[id*="question"]');
+        const length = question_ids.length;
+        for (let i = 0; i < length; i++) {
+            const elements = document.getElementById(question_ids[i].id);
+            if (elements) {
+                const imgData = await htmlToImage.toPng(elements);
+                let elHeight = elements.offsetHeight + 20;
+                let elWidth = elements.offsetWidth + 20;
+                const pageWidth = doc.internal.pageSize.getWidth();
+
+                if (elWidth > pageWidth) {
+                    const ratio = pageWidth / elWidth;
+                    elHeight = elHeight * ratio - padding * 2;
+                    elWidth = elWidth * ratio - padding * 2;
+                }
+
+                const pageHeight = 290;
+
+                if (top + elHeight > pageHeight) {
+                    doc.addPage();
+                    top = marginTop;
+                }
+                doc.addImage(imgData, 'PNG', padding, top, elWidth, elHeight, `image${i}`);
+                top += elHeight + marginTop;
+            }
+        }
+        window.open(doc.output('bloburl'));
+    };
+
+    const showPrintableCharts = async () => {
+        const node = document.getElementById('surveybarprintable');
+        if (node) {
+            node.style.display = 'block';
+        }
+    };
+
+    const hidePrintableCharts = async () => {
+        const node = document.getElementById('surveybarprintable');
+        if (node) {
+            node.style.display = 'none';
+        }
+    };
+
+    const handleCreatePdf = async () => {
+        await showPrintableCharts();
+        await createPdf();
+        await hidePrintableCharts();
     };
 
     return (
@@ -60,37 +133,59 @@ export const Dashboard = () => {
                                 direction={{ xs: 'column', sm: 'row' }}
                                 justifyContent="flex-end"
                             >
-                                <PrimaryButton
-                                    data-testid="SurveyBlock/take-me-to-survey-button"
-                                    onClick={handleReadComments}
-                                >
-                                    Read Comments
-                                </PrimaryButton>
+                                <Stack direction="row" spacing={1}>
+                                    <PrimaryButton
+                                        data-testid="SurveyBlock/take-me-to-survey-button"
+                                        onClick={handleReadComments}
+                                    >
+                                        Read Comments
+                                    </PrimaryButton>
+                                    <SecondaryButton
+                                        onClick={() => {
+                                            handleCreatePdf();
+                                        }}
+                                    >
+                                        Export to PDF
+                                    </SecondaryButton>
+                                </Stack>
                             </Grid>
-                            <Grid ml={isSmallScreen ? 0 : 2} container spacing={isSmallScreen ? 0 : 3} item xs={12}>
-                                <Grid item xs={12} sm={4}>
-                                    <SurveyEmailsSent
+                            <div id={'kpi'} style={{ width: '100%', paddingTop: '30px' }}>
+                                <Grid ml={isSmallScreen ? 0 : 2} container spacing={isSmallScreen ? 0 : 3} item xs={12}>
+                                    <Grid item xs={12} sm={4}>
+                                        <SurveyEmailsSent
+                                            engagement={engagement}
+                                            engagementIsLoading={isEngagementLoading}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={4}>
+                                        <SurveysCompleted
+                                            engagement={engagement}
+                                            engagementIsLoading={isEngagementLoading}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={4}>
+                                        <ProjectLocation
+                                            engagement={engagement}
+                                            engagementIsLoading={isEngagementLoading}
+                                        />
+                                    </Grid>
+                                </Grid>
+                            </div>
+                            <div id={'submissiontrend'} style={{ width: '100%', paddingTop: '30px' }}>
+                                <Grid ml={isSmallScreen ? 0 : 5} item xs={12}>
+                                    <SubmissionTrend
                                         engagement={engagement}
                                         engagementIsLoading={isEngagementLoading}
                                     />
                                 </Grid>
-                                <Grid item xs={12} sm={4}>
-                                    <SurveysCompleted
-                                        engagement={engagement}
-                                        engagementIsLoading={isEngagementLoading}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={4}>
-                                    <ProjectLocation
-                                        engagement={engagement}
-                                        engagementIsLoading={isEngagementLoading}
-                                    />
-                                </Grid>
-                            </Grid>
-                            <Grid ml={isSmallScreen ? 0 : 5} item xs={12}>
-                                <SubmissionTrend engagement={engagement} engagementIsLoading={isEngagementLoading} />
-                            </Grid>
+                            </div>
                             <Grid item xs={12}>
+                                <div id={'surveybarprintable'} style={{ display: 'none ' }}>
+                                    <SurveyBarPrintable
+                                        engagement={engagement}
+                                        engagementIsLoading={isEngagementLoading}
+                                    />
+                                </div>
                                 <SurveyBar engagement={engagement} engagementIsLoading={isEngagementLoading} />
                             </Grid>
                         </Grid>
