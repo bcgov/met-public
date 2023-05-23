@@ -2,11 +2,19 @@ import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
 import { Link, useNavigate } from 'react-router-dom';
-import { MetPageGridContainer, PrimaryButton } from 'components/common';
+import {
+    MetDescription,
+    MetLabel,
+    MetPageGridContainer,
+    MetParagraph,
+    MetSmallText,
+    MetTooltip,
+    PrimaryButton,
+} from 'components/common';
 import { Survey } from 'models/survey';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
-import { Link as MuiLink, Tooltip } from '@mui/material';
+import { Link as MuiLink } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
@@ -136,38 +144,74 @@ const SurveyListing = () => {
             renderCell: (row: Survey) => {
                 if (row.is_hidden) {
                     return (
-                        <Tooltip
-                            title="This survey is only visible to Superusers. Toggle off on the survey edit page to make it ready and available."
-                            placement="top"
+                        <MetTooltip
+                            title={
+                                <>
+                                    <strong>Hidden</strong>
+                                    <p>
+                                        This survey is only visible to Superusers. Toggle off on the survey edit page to
+                                        make it ready and available.
+                                    </p>
+                                </>
+                            }
+                            placement="right"
+                            arrow
                         >
                             <VisibilityOffIcon />
-                        </Tooltip>
+                        </MetTooltip>
                     );
                 }
 
                 if (row.is_template) {
                     return (
-                        <Tooltip title="Templates can be cloned and then edited" placement="top">
+                        <MetTooltip
+                            title={
+                                <>
+                                    <strong>Template</strong>
+                                    <p>Templates can be cloned and then edited.</p>
+                                </>
+                            }
+                            placement="right"
+                            arrow
+                        >
                             <DashboardIcon />
-                        </Tooltip>
+                        </MetTooltip>
                     );
                 }
 
                 if (row.engagement_id) {
                     return (
-                        <Tooltip
-                            title="This survey is attached to an engagement. It can still be cloned and then edited."
-                            placement="top"
+                        <MetTooltip
+                            title={
+                                <>
+                                    <strong>Linked</strong>
+                                    <p>
+                                        This survey is attached to an engagement. It can still be cloned and then
+                                        edited.
+                                    </p>
+                                </>
+                            }
+                            placement="right"
+                            arrow
                         >
                             <LinkIcon />
-                        </Tooltip>
+                        </MetTooltip>
                     );
                 }
 
                 return (
-                    <Tooltip title="This survey is ready to be cloned or attached to an engagement." placement="top">
+                    <MetTooltip
+                        title={
+                            <>
+                                <strong>Ready</strong>
+                                <p>This survey is ready to be cloned or attached to an engagement.</p>
+                            </>
+                        }
+                        placement="right"
+                        arrow
+                    >
                         <CheckIcon sx={{ stroke: Palette.icons.surveyReady, strokeWidth: '2' }} />
-                    </Tooltip>
+                    </MetTooltip>
                 );
             },
         },
