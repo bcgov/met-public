@@ -68,10 +68,10 @@ class EngagementMembershipUser(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.VIEW_MEMBERS.value])
     def get(engagement_id, user_id):  # pylint: disable=unused-argument
         """Get membership by id."""
         try:
+            #TODO add auth for this method
             members = MembershipService.get_assigned_engagements(user_id)
             return jsonify(MembershipSchema().dump(members, many=True)), HTTPStatus.OK
         except BusinessException as err:
