@@ -56,28 +56,19 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
             setIsError(true);
         }
     };
+
     useEffect(() => {
-        const fetchDataAsync = async () => {
-            try {
-                await fetchData();
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        fetchDataAsync().catch(console.error);
+        fetchData().catch((error) => {
+            console.error(error);
+        });
     }, [engagement.id, chartBy]);
 
     useEffect(() => {
-        const fetchDataAsync = async () => {
-            try {
-                if (fromDate && toDate) {
-                    await fetchData();
-                }
-            } catch (error) {
+        if (fromDate && toDate) {
+            fetchData().catch((error) => {
                 console.error(error);
-            }
-        };
-        fetchDataAsync().catch(console.error);
+            });
+        }
     }, [fromDate, toDate]);
 
     const clearDates = async () => {
