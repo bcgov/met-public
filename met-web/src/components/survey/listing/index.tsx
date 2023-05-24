@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
 import { Link, useNavigate } from 'react-router-dom';
-import { MetPageGridContainer, PrimaryButton } from 'components/common';
+import { MetPageGridContainer, MetTooltip, PrimaryButton } from 'components/common';
 import { Survey } from 'models/survey';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
@@ -13,9 +13,8 @@ import Stack from '@mui/material/Stack';
 import { getSurveysPage } from 'services/surveyService';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
+import { SubmissionStatus } from 'constants/engagementStatus';
 import { SCOPES } from 'components/permissionsGate/PermissionMaps';
-import CheckIcon from '@mui/icons-material/Check';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
 import { ApprovedIcon, NewIcon, NFRIcon, RejectedIcon } from 'components/engagement/listing/Icons';
 import CloseRounded from '@mui/icons-material/CloseRounded';
@@ -23,6 +22,11 @@ import FiberNewOutlined from '@mui/icons-material/FiberNewOutlined';
 import { PermissionsGate } from 'components/permissionsGate';
 import { CommentStatus } from 'constants/commentStatus';
 import { ActionsDropDown } from './ActionsDropDown';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import CheckIcon from '@mui/icons-material/Check';
+import LinkIcon from '@mui/icons-material/Link';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import { Palette } from 'styles/Theme';
 
 const SurveyListing = () => {
     const navigate = useNavigate();
@@ -130,26 +134,76 @@ const SurveyListing = () => {
             label: 'Status',
             allowSort: true,
             renderCell: (row: Survey) => {
-                const acceptable_status = [
-                    SubmissionStatus[SubmissionStatus.Open],
-                    SubmissionStatus[SubmissionStatus.Closed],
-                ];
-                if (
-                    row.engagement &&
-                    row.engagement.engagement_status.status_name === EngagementStatus[EngagementStatus.Published]
-                ) {
-                    if (acceptable_status.includes(SubmissionStatus[row.engagement.submission_status])) {
-                        return SubmissionStatus[row.engagement.submission_status];
-                    } else {
-                        return (
-                            EngagementStatus[EngagementStatus.Published].toString() +
-                            ' - ' +
-                            SubmissionStatus[row.engagement.submission_status]
-                        );
-                    }
+                if (row.is_hidden) {
+                    return (
+                        <MetTooltip
+                            title={
+                                <>
+                                    <strong>Hidden</strong>
+                                    <p>
+                                        This survey is only visible to Superusers. Toggle off on the survey edit page to
+                                        make it ready and available.
+                                    </p>
+                                </>
+                            }
+                            placement="right"
+                            arrow
+                        >
+                            <VisibilityOffIcon />
+                        </MetTooltip>
+                    );
                 }
+
+                if (row.is_template) {
+                    return (
+                        <MetTooltip
+                            title={
+                                <>
+                                    <strong>Template</strong>
+                                    <p>Templates can be cloned and then edited.</p>
+                                </>
+                            }
+                            placement="right"
+                            arrow
+                        >
+                            <DashboardIcon />
+                        </MetTooltip>
+                    );
+                }
+
+                if (row.engagement_id) {
+                    return (
+                        <MetTooltip
+                            title={
+                                <>
+                                    <strong>Linked</strong>
+                                    <p>
+                                        This survey is attached to an engagement. It can still be cloned and then
+                                        edited.
+                                    </p>
+                                </>
+                            }
+                            placement="right"
+                            arrow
+                        >
+                            <LinkIcon />
+                        </MetTooltip>
+                    );
+                }
+
                 return (
-                    row.engagement?.engagement_status.status_name || EngagementStatus[EngagementStatus.Draft].toString()
+                    <MetTooltip
+                        title={
+                            <>
+                                <strong>Ready</strong>
+                                <p>This survey is ready to be cloned or attached to an engagement.</p>
+                            </>
+                        }
+                        placement="right"
+                        arrow
+                    >
+                        <CheckIcon sx={{ stroke: Palette.icons.surveyReady, strokeWidth: '2' }} />
+                    </MetTooltip>
                 );
             },
         },

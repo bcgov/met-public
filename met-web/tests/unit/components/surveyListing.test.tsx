@@ -131,11 +131,9 @@ describe('Survey form page tests', () => {
         await waitFor(() => {
             expect(screen.getByText('Survey One')).toBeInTheDocument();
             expect(screen.getByText('2022-09-14')).toBeInTheDocument();
-            expect(screen.getByText('Draft')).toBeInTheDocument();
 
             expect(screen.getByText('Survey Two')).toBeInTheDocument();
             expect(screen.getByText('2022-09-15')).toBeInTheDocument();
-            expect(screen.getByText('Open')).toBeInTheDocument();
             expect(screen.getByText('2022-09-19')).toBeInTheDocument();
         });
 
