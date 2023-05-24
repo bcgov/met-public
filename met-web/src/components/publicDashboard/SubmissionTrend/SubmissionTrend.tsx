@@ -11,6 +11,7 @@ import {
 import { createDefaultByMonthData } from '../../../models/analytics/userResponseDetail';
 import { Engagement } from 'models/engagement';
 import { Palette } from 'styles/Theme';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers-pro';
 import { Dayjs } from 'dayjs';
 import { Then, If, Else, Unless } from 'react-if';
