@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
 import { Stack, useMediaQuery, Theme, Grid, ToggleButtonGroup, ToggleButton, CircularProgress } from '@mui/material';
 import { MetPaper, MetLabel, PrimaryButton } from 'components/common';
-import { Unless } from 'react-if';
 import { DASHBOARD } from '../constants';
 import { ErrorBox } from '../ErrorBox';
 import {
@@ -12,11 +11,9 @@ import {
 import { createDefaultByMonthData } from '../../../models/analytics/userResponseDetail';
 import { Engagement } from 'models/engagement';
 import { Palette } from 'styles/Theme';
-import { DatePicker } from '@mui/x-date-pickers-pro';
-import { LocalizationProvider } from '@mui/x-date-pickers-pro';
-import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-import dayjs, { Dayjs } from 'dayjs';
-import { Then, If, Else } from 'react-if';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers-pro';
+import { Dayjs } from 'dayjs';
+import { Then, If, Else, Unless } from 'react-if';
 import { formatDate } from 'components/common/dateHelper';
 
 const HEIGHT = 320;
@@ -65,7 +62,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     }, [engagement.id, chartBy]);
 
     useEffect(() => {
-        if (fromDate && toDate) fetchData();
+        if (fromDate && toDate) await fetchData();
     }, [fromDate, toDate]);
 
     const handleToggleChange = (event: React.MouseEvent<HTMLElement>, chartByValue: string) => {
@@ -75,7 +72,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     const clearDates = () => {
         setFromDate(null);
         setToDate(null);
-        fetchData();
+        await fetchData();
     };
 
     if (engagementIsLoading) {
