@@ -37,8 +37,8 @@ from met_api.models.widget_item import WidgetItem as WidgetItemModal
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import MembershipStatus
 from tests.utilities.factory_scenarios import (
-    TestCommentInfo, TestEngagementInfo, TestFeedbackInfo, TestSubmissionInfo, TestSurveyInfo, TestUserInfo,
-    TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo)
+    TestCommentInfo, TestEngagementInfo, TestFeedbackInfo, TestSubmissionInfo, TestSurveyInfo, TestTenantInfo,
+    TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo)
 
 CONFIG = get_named_config('testing')
 fake = Faker()
@@ -123,7 +123,7 @@ def factory_engagement_model(eng_info: dict = TestEngagementInfo.engagement1, st
     return engagement
 
 
-def factory_tenant_model(tenant_info: dict = None):
+def factory_tenant_model(tenant_info: dict = TestTenantInfo.tenant1):
     """Produce a tenant model."""
     tenant = Tenant(
         short_name=tenant_info.get('short_name'),
