@@ -20,12 +20,12 @@ import { When } from 'react-if';
 
 export const MetTooltip = styled(({ ...props }: TooltipProps) => <Tooltip {...props} />)(({ theme }) => ({
     [`& .${tooltipClasses.tooltip}`]: {
-        backgroundColor: theme.palette.primary?.main,
+        backgroundColor: Palette.primary.main,
         color: 'white',
         fontSize: 11,
     },
     [`& .${tooltipClasses.arrow}`]: {
-        color: theme.palette.primary?.main,
+        color: Palette.primary.main,
     },
 }));
 
