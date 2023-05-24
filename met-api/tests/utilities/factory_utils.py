@@ -80,6 +80,7 @@ def factory_survey_and_eng_model(survey_info: dict = TestSurveyInfo.survey1):
         updated_date=survey_info.get('updated_date'),
         is_hidden=survey_info.get('is_hidden'),
         is_template=survey_info.get('is_template'),
+        tenant_id=survey_info.get('tenant_id'),
         engagement_id=eng.id
     )
     db.session.add(survey)

@@ -27,7 +27,7 @@ from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_comment_model, factory_submission_model, factory_survey_and_eng_model,
-    factory_user_model)
+    factory_tenant_model, factory_user_model)
 
 fake = Faker()
 
@@ -94,6 +94,7 @@ def test_review_comment_review_note(client, jwt, session):  # pylint:disable=unu
     """Assert that a comment can be reviewed."""
     claims = TestJwtClaims.public_user_role
 
+    factory_tenant_model()
     factory_user_model(TestJwtClaims.public_user_role.get('sub'))
     user_details = factory_user_model()
     survey, eng = factory_survey_and_eng_model()
