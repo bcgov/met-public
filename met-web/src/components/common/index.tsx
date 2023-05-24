@@ -9,6 +9,7 @@ import {
     IconButton,
     Toolbar,
 } from '@mui/material';
+import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import { SxProps, styled } from '@mui/system';
 import EditIcon from '@mui/icons-material/Edit';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
@@ -16,6 +17,18 @@ import { Palette } from 'styles/Theme';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { MET_Header_Font_Family, MET_Header_Font_Weight } from '../../styles/constants';
 import { When } from 'react-if';
+
+export const MetTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+        backgroundColor: theme.palette.primary?.main,
+        fontSize: 11,
+    },
+    [`& .${tooltipClasses.arrow}`]: {
+        color: theme.palette.primary?.main,
+    },
+}));
 
 export const MobileToolbar = styled(Toolbar)(() => ({
     marginBottom: '40px',
