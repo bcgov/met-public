@@ -18,16 +18,14 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { MET_Header_Font_Family, MET_Header_Font_Weight } from '../../styles/constants';
 import { When } from 'react-if';
 
-export const MetTooltip = styled(({ className, ...props }: TooltipProps) => (
-    <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
+export const MetTooltip = styled(({ ...props }: TooltipProps) => <Tooltip {...props} />)(({ theme }) => ({
     [`& .${tooltipClasses.tooltip}`]: {
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary?.main,
         color: 'white',
         fontSize: 11,
     },
     [`& .${tooltipClasses.arrow}`]: {
-        color: theme.palette.primary.main,
+        color: theme.palette.primary?.main,
     },
 }));
 
