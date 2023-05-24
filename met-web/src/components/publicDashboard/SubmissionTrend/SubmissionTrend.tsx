@@ -58,21 +58,29 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     };
 
     useEffect(() => {
-        fetchData();
+        const fetchDataAsync = async () => {
+            await fetchData();
+        };
+        fetchDataAsync();
     }, [engagement.id, chartBy]);
 
     useEffect(() => {
-        if (fromDate && toDate) await fetchData();
+        const fetchDataAsync = async () => {
+            if (fromDate && toDate) {
+                await fetchData();
+            }
+        };
+        fetchDataAsync();
     }, [fromDate, toDate]);
 
-    const handleToggleChange = (event: React.MouseEvent<HTMLElement>, chartByValue: string) => {
-        setChartBy(chartByValue);
-    };
-
-    const clearDates = () => {
+    const clearDates = async () => {
         setFromDate(null);
         setToDate(null);
         await fetchData();
+    };
+
+    const handleToggleChange = (event: React.MouseEvent<HTMLElement>, chartByValue: string) => {
+        setChartBy(chartByValue);
     };
 
     if (engagementIsLoading) {
