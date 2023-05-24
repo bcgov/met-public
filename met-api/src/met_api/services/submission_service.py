@@ -11,6 +11,7 @@ from met_api.constants.staff_note_type import StaffNoteType
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models import Engagement as EngagementModel
 from met_api.models import Survey as SurveyModel
+from met_api.models import Tenant as TenantModel
 from met_api.models.comment import Comment
 from met_api.models.comment_status import CommentStatus
 from met_api.models.db import session_scope
@@ -276,11 +277,12 @@ class SubmissionService:
     def _render_email_template(submission: Submission, review_note, token):
         template = Template.get_template('email_rejected_comment.html')
         engagement: EngagementModel = EngagementModel.find_by_id(submission.engagement_id)
+        tenant: TenantModel = TenantModel.find_by_id(engagement.tenant_id)
         survey: SurveyModel = SurveyModel.find_by_id(submission.survey_id)
         engagement_name = engagement.name
         survey_name = survey.name
 
-        site_url = current_app.config.get('SITE_URL')
+        site_url = current_app.config.get('SITE_URL') + f'/{tenant.short_name}'
         submission_path = current_app.config.get('SUBMISSION_PATH'). \
             format(engagement_id=submission.engagement_id, submission_id=submission.id, token=token)
         subject = current_app.config.get('REJECTED_EMAIL_SUBJECT'). \

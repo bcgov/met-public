@@ -9,6 +9,7 @@ from met_api.constants.email_verification import INTERNAL_EMAIL_DOMAIN, EmailVer
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models import Engagement as EngagementModel
 from met_api.models import Survey as SurveyModel
+from met_api.models import Tenant as TenantModel
 from met_api.models.email_verification import EmailVerification
 from met_api.schemas.email_verification import EmailVerificationSchema
 from met_api.services.user_service import UserService
@@ -121,14 +122,15 @@ class EmailVerificationService:
     @staticmethod
     def _render_subscribe_email_template(survey: SurveyModel, token):
         # url is origin url excluding context path
-        site_url = current_app.config.get('SITE_URL')
         engagement: EngagementModel = EngagementModel.find_by_id(survey.engagement_id)
+        tenant: TenantModel = TenantModel.find_by_id(engagement.tenant_id)
         engagement_name = engagement.name
         template_id = current_app.config.get('SUBSCRIBE_EMAIL_TEMPLATE_ID', None)
         template = Template.get_template('subscribe_email.html')
         subject_template = current_app.config.get('SUBSCRIBE_EMAIL_SUBJECT')
         confirm_path = current_app.config.get('SUBSCRIBE_PATH'). \
             format(engagement_id=engagement.id, token=token)
+        site_url = current_app.config.get('SITE_URL') + f'/{tenant.short_name}'
         args = {
             'engagement_name': engagement_name,
             'confirm_url': f'{site_url}{confirm_path}',
@@ -143,8 +145,8 @@ class EmailVerificationService:
     @staticmethod
     def _render_survey_email_template(survey: SurveyModel, token):
         # url is origin url excluding context path
-        site_url = current_app.config.get('SITE_URL')
         engagement: EngagementModel = EngagementModel.find_by_id(survey.engagement_id)
+        tenant: TenantModel = TenantModel.find_by_id(engagement.tenant_id)
         engagement_name = engagement.name
         template_id = current_app.config.get('VERIFICATION_EMAIL_TEMPLATE_ID', None)
         template = Template.get_template('email_verification.html')
@@ -153,6 +155,7 @@ class EmailVerificationService:
             format(survey_id=survey.id, token=token)
         dashboard_path = current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
             format(engagement_id=survey.engagement_id)
+        site_url = current_app.config.get('SITE_URL') + f'/{tenant.short_name}'
         args = {
             'engagement_name': engagement_name,
             'survey_url': f'{site_url}{survey_path}',

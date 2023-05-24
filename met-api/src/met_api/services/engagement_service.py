@@ -12,7 +12,8 @@ from met_api.models import User as UserModel
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_status_block import EngagementStatusBlock as EngagementStatusBlockModel
 from met_api.models.pagination_options import PaginationOptions
-from met_api.models.submission import Submission
+from met_api.models.submission import Submission as SubmissionModel
+from met_api.models import Tenant as TenantModel
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services import authorization
 from met_api.services.object_storage_service import ObjectStorageService
@@ -215,11 +216,10 @@ class EngagementService:
             raise ValueError('Some required fields are empty')
 
     @staticmethod
-    def _send_closeout_emails(engagement: EngagementSchema) -> None:
+    def _send_closeout_emails(engagement: EngagementModel) -> None:
         """Send the engagement closeout emails.Throws error if fails."""
-        engagement_id = engagement.get('id')
         subject, body, args = EngagementService._render_email_template(engagement)
-        users: List[UserModel] = Submission.get_engaged_users(engagement_id)
+        users: List[UserModel] = SubmissionModel.get_engaged_users(engagement.id)
         template_id = current_app.config.get('ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID', None)
         emails = [user.email_id for user in users]
         # Removes duplicated records
@@ -234,17 +234,17 @@ class EngagementService:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
 
     @staticmethod
-    def _render_email_template(engagement: EngagementSchema):
+    def _render_email_template(engagement: EngagementModel):
+        tenant: TenantModel = TenantModel.find_by_id(engagement.tenant_id)
         template = Template.get_template('email_engagement_closeout.html')
         dashboard_path = current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
-            format(engagement_id=engagement.get('id'))
+            format(engagement_id=engagement.id)
         # url is origin url excluding context path
-        site_url = current_app.config.get('SITE_URL')
-        engagement_name = engagement.get('name')
+        site_url = current_app.config.get('SITE_URL') + f'/{tenant.short_name}'
         subject = current_app.config.get('ENGAGEMENT_CLOSEOUT_EMAIL_SUBJECT'). \
-            format(engagement_name=engagement_name)
+            format(engagement_name=engagement.name)
         args = {
-            'engagement_name': engagement_name,
+            'engagement_name': engagement.name,
             'engagement_url': f'{site_url}{dashboard_path}',
         }
         body = template.render(
