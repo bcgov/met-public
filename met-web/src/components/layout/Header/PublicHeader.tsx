@@ -5,7 +5,6 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import UserService from 'services/userService';
 import { useMediaQuery, Theme } from '@mui/material';
-import { useLocation } from 'react-router-dom';
 import { MetHeader1, MetHeader2 } from 'components/common';
 import EnvironmentBanner from './EnvironmentBanner';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoLight.svg';
