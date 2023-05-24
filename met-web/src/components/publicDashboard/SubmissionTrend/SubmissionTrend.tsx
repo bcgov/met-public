@@ -64,7 +64,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                 console.error(error);
             }
         };
-        fetchDataAsync();
+        fetchDataAsync().catch(console.error);
     }, [engagement.id, chartBy]);
 
     useEffect(() => {
@@ -77,7 +77,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                 console.error(error);
             }
         };
-        fetchDataAsync();
+        fetchDataAsync().catch(console.error);
     }, [fromDate, toDate]);
 
     const clearDates = async () => {
