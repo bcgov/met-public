@@ -2,15 +2,7 @@ import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-    MetDescription,
-    MetLabel,
-    MetPageGridContainer,
-    MetParagraph,
-    MetSmallText,
-    MetTooltip,
-    PrimaryButton,
-} from 'components/common';
+import { MetPageGridContainer, MetTooltip, PrimaryButton } from 'components/common';
 import { Survey } from 'models/survey';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
