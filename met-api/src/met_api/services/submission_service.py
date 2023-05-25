@@ -277,14 +277,13 @@ class SubmissionService:
     def _render_email_template(submission: Submission, review_note, token):
         template = Template.get_template('email_rejected_comment.html')
         engagement: EngagementModel = EngagementModel.find_by_id(submission.engagement_id)
-        tenant: TenantModel = TenantModel.find_by_id(engagement.tenant_id)
         survey: SurveyModel = SurveyModel.find_by_id(submission.survey_id)
         engagement_name = engagement.name
         survey_name = survey.name
 
-        site_url = current_app.config.get('SITE_URL') + f'/{tenant.short_name}'
         submission_path = current_app.config.get('SUBMISSION_PATH'). \
             format(engagement_id=submission.engagement_id, submission_id=submission.id, token=token)
+        submission_url = notification.get_tenant_site_url(engagement.tenant_id, submission_path)
         subject = current_app.config.get('REJECTED_EMAIL_SUBJECT'). \
             format(engagement_name=engagement_name)
         args = {
@@ -294,7 +293,7 @@ class SubmissionService:
             'has_profanity': 'yes' if submission.has_profanity else '',
             'has_other_reason': 'yes' if submission.rejected_reason_other else '',
             'other_reason': submission.rejected_reason_other,
-            'submission_url': f'{site_url}{submission_path}',
+            'submission_url': submission_url,
             'review_note': review_note,
             'end_date': datetime.strftime(engagement.end_date, EmailVerificationService.full_date_format),
         }

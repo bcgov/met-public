@@ -18,10 +18,10 @@ from met_api.schemas.engagement import EngagementSchema
 from met_api.services import authorization
 from met_api.services.object_storage_service import ObjectStorageService
 from met_api.services.membership_service import MembershipService
-from met_api.utils.notification import send_email
 from met_api.utils.template import Template
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
+from met_api.utils import notification 
 
 
 class EngagementService:
@@ -225,7 +225,7 @@ class EngagementService:
         # Removes duplicated records
         emails = list(set(emails))
         try:
-            [send_email(subject=subject, email=email_address, html_body=body,
+            [notification.send_email(subject=subject, email=email_address, html_body=body,
                         args=args, template_id=template_id) for email_address in emails]
         except Exception as exc:  # noqa: B902
             current_app.logger.error('<Notification for engagement closeout failed', exc)
@@ -235,17 +235,15 @@ class EngagementService:
 
     @staticmethod
     def _render_email_template(engagement: EngagementModel):
-        tenant: TenantModel = TenantModel.find_by_id(engagement.tenant_id)
         template = Template.get_template('email_engagement_closeout.html')
         dashboard_path = current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
             format(engagement_id=engagement.id)
-        # url is origin url excluding context path
-        site_url = current_app.config.get('SITE_URL') + f'/{tenant.short_name}'
+        engagement_url = notification.get_tenant_site_url(engagement.tenant_id, dashboard_path)
         subject = current_app.config.get('ENGAGEMENT_CLOSEOUT_EMAIL_SUBJECT'). \
             format(engagement_name=engagement.name)
         args = {
             'engagement_name': engagement.name,
-            'engagement_url': f'{site_url}{dashboard_path}',
+            'engagement_url': engagement_url,
         }
         body = template.render(
             engagement_name=args.get('engagement_name'),

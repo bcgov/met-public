@@ -7,6 +7,7 @@ from flask import current_app
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.user import User as UserModel
+from met_api.models import Tenant as TenantModel
 from met_api.schemas.user import UserSchema
 from met_api.services.keycloak import KeycloakService
 from met_api.utils import notification
@@ -39,14 +40,15 @@ class UserService:
             is_staff_user = user.get('identity_provider', '').lower() == LoginSource.IDIR.value
             access_type = UserType.STAFF.value if is_staff_user else UserType.PUBLIC_USER.value
             user['access_type'] = access_type
+            new_user = UserModel.create_user(user)
             if len(user.get('roles', [])) == 0:
-                self._send_access_request_email(user)
-            return UserModel.create_user(user)
+                self._send_access_request_email(new_user)
+            return new_user
 
         return UserModel.update_user(db_user.id, user)
 
     @staticmethod
-    def _send_access_request_email(user: UserSchema) -> None:
+    def _send_access_request_email(user: UserModel) -> None:
         """Send a new user email.Throws error if fails."""
         to_email_address = current_app.config.get('ACCESS_REQUEST_EMAIL_ADDRESS', None)
         if to_email_address is None:
@@ -67,16 +69,15 @@ class UserService:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
 
     @staticmethod
-    def _render_email_template(user: UserSchema):
+    def _render_email_template(user: UserModel):
         template = Template.get_template('email_access_request.html')
         subject = current_app.config.get('ACCESS_REQUEST_EMAIL_SUBJECT')
-        grant_access_url = current_app.config.get('SITE_URL') + \
-            current_app.config.get('USER_MANAGEMENT_PATH')
+        grant_access_url = notification.get_tenant_site_url(user.tenant_id, current_app.config.get('USER_MANAGEMENT_PATH'))            
         args = {
-            'first_name': user.get('first_name'),
-            'last_name': user.get('last_name'),
-            'username': user.get('username'),
-            'email_address': user.get('email_id'),
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'username': user.username,
+            'email_address': user.email_id,
             'grant_access_url': grant_access_url
         }
         body = template.render(
