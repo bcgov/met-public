@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
-import { Stack, useMediaQuery, Theme, Grid, ToggleButtonGroup, ToggleButton, CircularProgress } from '@mui/material';
+import {
+    Stack,
+    useMediaQuery,
+    Theme,
+    Grid,
+    ToggleButtonGroup,
+    ToggleButton,
+    CircularProgress,
+    TextField,
+} from '@mui/material';
 import { MetPaper, MetLabel, PrimaryButton } from 'components/common';
 import { DASHBOARD } from '../constants';
 import { ErrorBox } from '../ErrorBox';
@@ -11,13 +20,11 @@ import {
 import { createDefaultByMonthData } from '../../../models/analytics/userResponseDetail';
 import { Engagement } from 'models/engagement';
 import { Palette } from 'styles/Theme';
-import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers-pro';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { Dayjs } from 'dayjs';
 import { Then, If, Else, Unless } from 'react-if';
 import { formatDate } from 'components/common/dateHelper';
-
-const HEIGHT = 320;
 
 interface SubmissionTrendProps {
     engagement: Engagement;
@@ -26,6 +33,7 @@ interface SubmissionTrendProps {
 
 const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendProps) => {
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+    const HEIGHT = isSmallScreen ? 200 : 250;
     const [data, setData] = useState(createDefaultByMonthData());
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
@@ -119,23 +127,34 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             direction="row"
                             container
                             item
-                            rowSpacing={0.5}
                             lg={2}
                             md={3}
                         >
-                            <Grid item xs={8}>
-                                <DatePicker
-                                    value={fromDate}
-                                    label="From Date"
-                                    onChange={(newDate: Dayjs | null) => setFromDate(newDate)}
-                                />
+                            <Grid container alignItems="center">
+                                <Grid item xs={4}>
+                                    <MetLabel sx={{ mr: 1 }}>From: </MetLabel>
+                                </Grid>
+                                <Grid item xs={8}>
+                                    <DatePicker
+                                        value={fromDate}
+                                        onChange={(newDate: Dayjs | null) => setFromDate(newDate)}
+                                        inputFormat="MM/DD/YYYY"
+                                        renderInput={(params) => <TextField {...params} />}
+                                    />
+                                </Grid>
                             </Grid>
-                            <Grid item xs={8}>
-                                <DatePicker
-                                    label="To Date"
-                                    value={toDate}
-                                    onChange={(newDate: Dayjs | null) => setToDate(newDate)}
-                                />
+                            <Grid container alignItems="center">
+                                <Grid item xs={4}>
+                                    <MetLabel sx={{ mr: 1 }}>To: </MetLabel>
+                                </Grid>
+                                <Grid item xs={8}>
+                                    <DatePicker
+                                        value={toDate}
+                                        onChange={(newDate: Dayjs | null) => setToDate(newDate)}
+                                        inputFormat="MM/DD/YYYY"
+                                        renderInput={(params) => <TextField {...params} />}
+                                    />
+                                </Grid>
                             </Grid>
 
                             <Grid item xs={8}>
@@ -144,7 +163,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                 </PrimaryButton>
                             </Grid>
                         </Grid>
-                        <Grid item xs={8}>
+                        <Grid item lg={10} md={9}>
                             <Stack direction={{ xs: 'column', sm: 'row' }} width="100%" justifyContent="flex-end">
                                 <ToggleButtonGroup value={chartBy} exclusive onChange={handleToggleChange}>
                                     <ToggleButton
@@ -173,7 +192,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             </Stack>
                             <If condition={!isLoading}>
                                 <Then>
-                                    <ResponsiveContainer width="100%" height={isSmallScreen ? 200 : 250}>
+                                    <ResponsiveContainer width="100%" height={HEIGHT}>
                                         <BarChart
                                             data={data}
                                             margin={
@@ -209,7 +228,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                         justifyContent="center"
                                         direction="row"
                                         width={'100%'}
-                                        height={isSmallScreen ? 200 : 250}
+                                        height={HEIGHT}
                                     >
                                         <CircularProgress color="inherit" />
                                     </Grid>
