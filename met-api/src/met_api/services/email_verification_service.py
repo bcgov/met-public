@@ -9,7 +9,6 @@ from met_api.constants.email_verification import INTERNAL_EMAIL_DOMAIN, EmailVer
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models import Engagement as EngagementModel
 from met_api.models import Survey as SurveyModel
-from met_api.models import Tenant as TenantModel
 from met_api.models.email_verification import EmailVerification
 from met_api.schemas.email_verification import EmailVerificationSchema
 from met_api.services.user_service import UserService

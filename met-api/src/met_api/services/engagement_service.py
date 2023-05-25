@@ -13,7 +13,6 @@ from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_status_block import EngagementStatusBlock as EngagementStatusBlockModel
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.submission import Submission as SubmissionModel
-from met_api.models import Tenant as TenantModel
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services import authorization
 from met_api.services.object_storage_service import ObjectStorageService
@@ -21,7 +20,7 @@ from met_api.services.membership_service import MembershipService
 from met_api.utils.template import Template
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
-from met_api.utils import notification 
+from met_api.utils import notification
 
 
 class EngagementService:
@@ -226,7 +225,7 @@ class EngagementService:
         emails = list(set(emails))
         try:
             [notification.send_email(subject=subject, email=email_address, html_body=body,
-                        args=args, template_id=template_id) for email_address in emails]
+                                     args=args, template_id=template_id) for email_address in emails]
         except Exception as exc:  # noqa: B902
             current_app.logger.error('<Notification for engagement closeout failed', exc)
             raise BusinessException(

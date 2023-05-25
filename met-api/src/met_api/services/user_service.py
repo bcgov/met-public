@@ -7,7 +7,6 @@ from flask import current_app
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.user import User as UserModel
-from met_api.models import Tenant as TenantModel
 from met_api.schemas.user import UserSchema
 from met_api.services.keycloak import KeycloakService
 from met_api.utils import notification
@@ -72,7 +71,8 @@ class UserService:
     def _render_email_template(user: UserModel):
         template = Template.get_template('email_access_request.html')
         subject = current_app.config.get('ACCESS_REQUEST_EMAIL_SUBJECT')
-        grant_access_url = notification.get_tenant_site_url(user.tenant_id, current_app.config.get('USER_MANAGEMENT_PATH'))            
+        grant_access_url = \
+            notification.get_tenant_site_url(user.tenant_id, current_app.config.get('USER_MANAGEMENT_PATH'))
         args = {
             'first_name': user.first_name,
             'last_name': user.last_name,
