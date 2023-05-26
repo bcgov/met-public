@@ -92,7 +92,6 @@ class TestSurveyInfo(dict, Enum):
         'form_json': {'display': 'form', 'components': []},
         'is_hidden': True,
         'is_template': False,
-        'tenant_id': 1
     }
     survey_template = {
         'name': fake.name(),
@@ -103,7 +102,6 @@ class TestSurveyInfo(dict, Enum):
         'form_json': {'display': 'form', 'components': []},
         'is_hidden': False,
         'is_template': True,
-        'tenant_id': 1
     }
 
 
