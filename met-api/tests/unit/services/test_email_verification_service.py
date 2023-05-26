@@ -24,13 +24,14 @@ from faker import Faker
 from met_api.exceptions.business_exception import BusinessException
 from met_api.services.email_verification_service import EmailVerificationService
 from met_api.utils import notification
-from tests.utilities.factory_utils import factory_survey_and_eng_model
+from tests.utilities.factory_utils import factory_survey_and_eng_model, set_global_tenant
 
 fake = Faker()
 
 
 def test_create_email_verification(client, jwt, session, ):  # pylint:disable=unused-argument
     """Assert that an email verification can be Created."""
+    set_global_tenant()
     survey, eng = factory_survey_and_eng_model()
     email = fake.email()
     to_dict = {
@@ -49,6 +50,7 @@ def test_create_email_verification(client, jwt, session, ):  # pylint:disable=un
 
 def test_create_email_verification_exception(client, jwt, session, ):  # pylint:disable=unused-argument
     """Assert that an email verification can be Created."""
+    set_global_tenant()
     survey, eng = factory_survey_and_eng_model()
     email = fake.email()
     to_dict = {
