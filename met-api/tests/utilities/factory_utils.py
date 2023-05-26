@@ -18,7 +18,6 @@ Test Utility for creating model factory.
 from faker import Faker
 from flask import current_app, g
 
-from met_api import db
 from met_api.config import get_named_config
 from met_api.constants.engagement_status import Status
 from met_api.constants.widget import WidgetType
@@ -131,6 +130,7 @@ def factory_tenant_model(tenant_info: dict = TestTenantInfo.tenant1):
         logo_url=tenant_info.get('logo_url'),
     )
     tenant.save()
+    set_global_tenant(tenant.id)
     return tenant
 
 

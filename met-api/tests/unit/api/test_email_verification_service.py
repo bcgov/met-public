@@ -22,7 +22,7 @@ from faker import Faker
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_survey_and_eng_model, factory_tenant_model, set_global_tenant
+    factory_auth_header, factory_tenant_model, factory_survey_and_eng_model
 )
 
 fake = Faker()
@@ -32,7 +32,6 @@ def test_email_verification(client, jwt, session, notify_mock, ):  # pylint:disa
     """Assert that an Email can be sent."""
     claims = TestJwtClaims.public_user_role
     factory_tenant_model()
-    set_global_tenant()
     survey, eng = factory_survey_and_eng_model()
     to_dict = {
         'email_address': fake.email(),

@@ -26,7 +26,7 @@ from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestSurveyInfo, TestTenantInfo
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_engagement_model, factory_survey_model, factory_tenant_model, set_global_tenant)
+    factory_auth_header, factory_engagement_model, factory_survey_model, factory_tenant_model)
 
 
 @pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey1])
@@ -119,7 +119,6 @@ def test_survey_link(client, jwt, session):  # pylint:disable=unused-argument
 def test_get_hidden_survey_for_admins(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that a hidden survey can be fetched by admins."""
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
-    set_global_tenant()
     factory_tenant_model()
     factory_survey_model(TestSurveyInfo.hidden_survey)
 
@@ -155,7 +154,6 @@ def test_get_hidden_survey_for_team_member(client, jwt, session):  # pylint:disa
 def test_get_template_survey(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that a hidden survey cannot be fetched by team members."""
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
-    set_global_tenant()
     factory_tenant_model()
     factory_survey_model(TestSurveyInfo.survey_template)
 
