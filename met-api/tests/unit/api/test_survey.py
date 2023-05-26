@@ -155,6 +155,8 @@ def test_get_hidden_survey_for_team_member(client, jwt, session):  # pylint:disa
 def test_get_template_survey(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that a hidden survey cannot be fetched by team members."""
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    set_global_tenant()
+    factory_tenant_model()
     factory_survey_model(TestSurveyInfo.survey_template)
 
     page = 1
