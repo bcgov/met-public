@@ -119,7 +119,6 @@ def test_survey_link(client, jwt, session):  # pylint:disable=unused-argument
 def test_get_hidden_survey_for_admins(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that a hidden survey can be fetched by admins."""
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
-    factory_tenant_model()
     factory_survey_model(TestSurveyInfo.hidden_survey)
 
     page = 1
@@ -154,7 +153,6 @@ def test_get_hidden_survey_for_team_member(client, jwt, session):  # pylint:disa
 def test_get_template_survey(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that a hidden survey cannot be fetched by team members."""
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
-    factory_tenant_model()
     factory_survey_model(TestSurveyInfo.survey_template)
 
     page = 1

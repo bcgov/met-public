@@ -130,7 +130,6 @@ def factory_tenant_model(tenant_info: dict = TestTenantInfo.tenant1):
         logo_url=tenant_info.get('logo_url'),
     )
     tenant.save()
-    set_global_tenant(tenant.id)
     return tenant
 
 
