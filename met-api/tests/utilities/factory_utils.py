@@ -51,7 +51,7 @@ JWT_HEADER = {
 
 
 def set_global_tenant(tenant_id=1):
-    """Set the global tenant id"""
+    """Set the global tenant id."""
     g.tenant_id = tenant_id
 
 

@@ -94,8 +94,8 @@ def test_review_comment_internal_note(client, jwt, session):  # pylint:disable=u
 def test_review_comment_review_note(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that a comment can be reviewed."""
     claims = TestJwtClaims.public_user_role
-    factory_tenant_model()
-    set_global_tenant()
+    tenant = factory_tenant_model()
+    set_global_tenant(tenant.id)
     factory_user_model(TestJwtClaims.public_user_role.get('sub'))
     user_details = factory_user_model()
     survey, eng = factory_survey_and_eng_model()
