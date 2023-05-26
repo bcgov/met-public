@@ -67,8 +67,7 @@ def factory_survey_model(survey_info: dict = TestSurveyInfo.survey1):
         is_hidden=survey_info.get('is_hidden'),
         is_template=survey_info.get('is_template')
     )
-    db.session.add(survey)
-    db.session.commit()
+    survey.save()
     return survey
 
 
@@ -86,8 +85,7 @@ def factory_survey_and_eng_model(survey_info: dict = TestSurveyInfo.survey1):
         is_template=survey_info.get('is_template'),
         engagement_id=eng.id
     )
-    db.session.add(survey)
-    db.session.commit()
+    survey.save()
     return survey, eng
 
 
@@ -100,8 +98,7 @@ def factory_email_verification(survey_id):
     if survey_id:
         email_verification.survey_id = survey_id
 
-    db.session.add(email_verification)
-    db.session.commit()
+    email_verification.save()
     return email_verification
 
 
@@ -120,8 +117,7 @@ def factory_engagement_model(eng_info: dict = TestEngagementInfo.engagement1, st
         end_date=eng_info.get('end_date'),
         is_internal=eng_info.get('is_internal')
     )
-    db.session.add(engagement)
-    db.session.commit()
+    engagement.save()
     return engagement
 
 
@@ -134,8 +130,7 @@ def factory_tenant_model(tenant_info: dict = TestTenantInfo.tenant1):
         title=tenant_info.get('title'),
         logo_url=tenant_info.get('logo_url'),
     )
-    db.session.add(tenant)
-    db.session.commit()
+    tenant.save()
     return tenant
 
 
@@ -151,8 +146,7 @@ def factory_user_model(external_id=None, user_info: dict = TestUserInfo.user_pub
         external_id=str(external_id),
         access_type=user_info['access_type']
     )
-    db.session.add(user)
-    db.session.commit()
+    user.save()
     return user
 
 
@@ -176,8 +170,7 @@ def factory_feedback_model(feedback_info: dict = TestFeedbackInfo.feedback1, sta
         comment_type=feedback_info.get('comment_type'),
         source=feedback_info.get('source'),
     )
-    db.session.add(feedback)
-    db.session.commit()
+    feedback.save()
     return feedback
 
 
@@ -199,8 +192,7 @@ def factory_widget_model(widget_info: dict = TestWidgetInfo.widget1):
         created_date=widget_info.get('created_date'),
         updated_date=widget_info.get('updated_date'),
     )
-    db.session.add(widget)
-    db.session.commit()
+    widget.save()
     return widget
 
 
@@ -214,8 +206,7 @@ def factory_widget_item_model(widget_info: dict = TestWidgetItemInfo.widget_item
         created_date=widget_info.get('created_date'),
         updated_date=widget_info.get('updated_date'),
     )
-    db.session.add(widget)
-    db.session.commit()
+    widget.save()
     return widget
 
 
@@ -234,8 +225,7 @@ def factory_submission_model(survey_id, engagement_id, user_id, submission_info:
         reviewed_by=submission_info.get('reviewed_by'),
         review_date=submission_info.get('review_date'),
     )
-    db.session.add(submission)
-    db.session.commit()
+    submission.save()
     return submission
 
 
@@ -248,8 +238,7 @@ def factory_comment_model(survey_id, submission_id, comment_info: dict = TestCom
         text=comment_info.get('text'),
         submission_date=comment_info.get('submission_date'),
     )
-    db.session.add(comment)
-    db.session.commit()
+    comment.save()
     return comment
 
 
