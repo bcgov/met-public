@@ -14,7 +14,7 @@ def get_tenant_site_url(tenant_id, path=''):
     if tenant_id is None:
         raise ValueError('Missing tenant id.')
     tenant: Tenant = Tenant.find_by_id(tenant_id)
-    return current_app.config.get('SITE_URL') + f'/{tenant.short_name}' + path
+    return current_app.config.get('SITE_URL', '') + f'/{tenant.short_name}' + path
 
 
 def send_email(subject, email, html_body, args, template_id):
