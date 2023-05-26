@@ -22,7 +22,6 @@ from sqlalchemy import event, text
 from met_api import create_app, setup_jwt_manager
 from met_api.auth import jwt as _jwt
 from met_api.models import db as _db
-from tests.utilities.factory_utils import set_global_tenant
 
 
 @pytest.fixture(scope='session')

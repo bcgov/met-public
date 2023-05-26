@@ -29,7 +29,7 @@ fake = Faker()
 def test_email_verification(client, jwt, session, notify_mock, ):  # pylint:disable=unused-argument
     """Assert that an Email can be sent."""
     claims = TestJwtClaims.public_user_role
-    set_global_tenant()    
+    set_global_tenant()
     survey, eng = factory_survey_and_eng_model()
     to_dict = {
         'email_address': fake.email(),
