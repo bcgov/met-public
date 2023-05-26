@@ -22,7 +22,7 @@ from faker import Faker
 from met_api.schemas.user import UserSchema
 from met_api.services.user_service import UserService
 from tests.utilities.factory_scenarios import TestUserInfo
-from tests.utilities.factory_utils import factory_user_model
+from tests.utilities.factory_utils import factory_user_model, factory_tenant_model, set_global_tenant
 
 fake = Faker()
 
@@ -46,6 +46,8 @@ def test_create_user_invalid_without_external_id(client, jwt, session, ):  # pyl
 
 def test_create_user(client, jwt, session, ):  # pylint:disable=unused-argument
     """Assert that an user can be Created."""
+    factory_tenant_model()
+    set_global_tenant()
     user_data: dict = TestUserInfo.user_public_1
     external_id = str(fake.random_number(digits=5))
     user_data['external_id'] = external_id

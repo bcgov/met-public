@@ -52,7 +52,7 @@ JWT_HEADER = {
 
 def set_global_tenant(tenant_id=1):
     """Set the global tenant id"""
-    setattr(g, 'tenant_id', tenant_id)
+    g.tenant_id = tenant_id
 
 
 def factory_survey_model(survey_info: dict = TestSurveyInfo.survey1):

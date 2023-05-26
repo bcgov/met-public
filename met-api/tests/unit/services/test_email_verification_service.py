@@ -32,6 +32,7 @@ fake = Faker()
 def test_create_email_verification(client, jwt, session, ):  # pylint:disable=unused-argument
     """Assert that an email verification can be Created."""
     factory_tenant_model()
+    set_global_tenant()
     survey, eng = factory_survey_and_eng_model()
     email = fake.email()
     to_dict = {
@@ -50,9 +51,8 @@ def test_create_email_verification(client, jwt, session, ):  # pylint:disable=un
 
 def test_create_email_verification_exception(client, jwt, session, ):  # pylint:disable=unused-argument
     """Assert that an email verification can be Created."""
-
-    set_global_tenant()
     factory_tenant_model()
+    set_global_tenant()
     survey, eng = factory_survey_and_eng_model()
     email = fake.email()
     to_dict = {
