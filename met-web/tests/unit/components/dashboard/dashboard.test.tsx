@@ -22,6 +22,15 @@ jest.mock('components/common', () => ({
     },
 }));
 
+jest.mock('maplibre-gl/dist/maplibre-gl', () => ({
+    Map: () => ({})
+}));
+
+jest.mock('@mui/material', () => ({
+    ...jest.requireActual('@mui/material'),
+    useMediaQuery: jest.fn(() => true),
+}));
+
 describe('Dashboard page tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
