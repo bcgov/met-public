@@ -5,6 +5,9 @@ import Dashboard from 'components/dashboard';
 import { setupEnv } from '../setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as engagementService from 'services/engagementService';
+import * as aggregatorService from 'services/analytics/aggregatorService';
+import * as userResponseDetailService from 'services/analytics/userResponseDetailService';
+import * as surveyResultService from 'services/analytics/surveyResult';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
 import { draftEngagement, openEngagement } from '../factory';
 
@@ -35,6 +38,9 @@ describe('Dashboard page tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
     const getEngagementMock = jest.spyOn(engagementService, 'getEngagements');
+    const getAggregatorMock = jest.spyOn(aggregatorService, 'getAggregatorData');
+    const getUserResponseDetailByMonthMock = jest.spyOn(userResponseDetailService, 'getUserResponseDetailByMonth');
+    const getSurveyResultDataMock = jest.spyOn(surveyResultService, 'getSurveyResultData');
 
     beforeEach(() => {
         setupEnv();
@@ -60,6 +66,29 @@ describe('Dashboard page tests', () => {
             Promise.resolve({
                 items: [draftEngagement, openEngagement],
                 total: 1,
+            }),
+        );
+        getAggregatorMock.mockReturnValue(
+            Promise.resolve({
+                key: '',
+                value: 0,
+            }),
+        );
+        getUserResponseDetailByMonthMock.mockReturnValue(
+            Promise.resolve({
+                showdataby: '',
+                responses: 0,
+            }),
+        );
+        getSurveyResultDataMock.mockReturnValue(
+            Promise.resolve({
+                data: [
+                    {
+                        label: '',
+                        postion: 0,
+                        result: [{ value: '', count: 0 }],
+                    },
+                ],
             }),
         );
         render(<Dashboard />);
