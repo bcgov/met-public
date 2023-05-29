@@ -2,9 +2,13 @@ import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { MetBody, MetLabel } from 'components/common';
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
-import { AppConfig } from 'config';
 import { Engagement } from 'models/engagement';
 import { When } from 'react-if';
+import SurveyEmailsSent from '../publicDashboard/KPI/SurveyEmailsSent';
+import SurveysCompleted from '../publicDashboard/KPI/SurveysCompleted';
+import ProjectLocation from '../publicDashboard/KPI/ProjectLocation';
+import SubmissionTrend from '../publicDashboard/SubmissionTrend/SubmissionTrend';
+import SurveyBar from '../publicDashboard/SurveyBar';
 
 const EngagementsAccordion = ({
     engagements,
@@ -17,7 +21,6 @@ const EngagementsAccordion = ({
     borderColor: string;
     disabled?: boolean;
 }) => {
-    const urlpath = AppConfig.redashDashboardUrl;
     const [openedEngagements, setOpenedEngagements] = useState<number[]>([]);
     if (engagements.length == 0) {
         return (
@@ -76,16 +79,23 @@ const EngagementsAccordion = ({
                         </AccordionSummary>
                         <AccordionDetails>
                             <When condition={openedEngagements.some((id) => id == engagement.id)}>
-                                <iframe
-                                    data-testid={`dashboard-frame-${engagement.id}`}
-                                    style={{
-                                        width: '100%',
-                                        height: '1310px',
-                                        overflow: 'scroll',
-                                        border: 'none',
-                                    }}
-                                    src={`${urlpath}${engagement.id}`}
-                                />
+                                <Grid container spacing={3} xs={12}>
+                                    <Grid item xs={12} sm={4}>
+                                        <SurveyEmailsSent engagement={engagement} engagementIsLoading={false} />
+                                    </Grid>
+                                    <Grid item xs={12} sm={4}>
+                                        <SurveysCompleted engagement={engagement} engagementIsLoading={false} />
+                                    </Grid>
+                                    <Grid item xs={12} sm={4}>
+                                        <ProjectLocation engagement={engagement} engagementIsLoading={false} />
+                                    </Grid>
+                                </Grid>
+                                <Grid item xs={12} mt={2}>
+                                    <SubmissionTrend engagement={engagement} engagementIsLoading={false} />
+                                </Grid>
+                                <Grid item xs={12} mt={2}>
+                                    <SurveyBar engagement={engagement} engagementIsLoading={false} />
+                                </Grid>
                             </When>
                         </AccordionDetails>
                     </Accordion>

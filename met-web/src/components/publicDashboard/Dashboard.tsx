@@ -8,7 +8,7 @@ import ProjectLocation from './KPI/ProjectLocation';
 import SurveyEmailsSent from './KPI/SurveyEmailsSent';
 import SubmissionTrend from './SubmissionTrend/SubmissionTrend';
 import { DashboardContext } from './DashboardContext';
-import SurveyBar from './SurveyBar.tsx';
+import SurveyBar from './SurveyBar';
 import SurveyBarPrintable from './SurveyBarPrintable';
 import { generateDashboardPdf } from './util';
 import { Map } from 'models/analytics/map';
