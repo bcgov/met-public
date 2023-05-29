@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Grid, Link as MuiLink, useMediaQuery, Stack, Theme } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import { MetHeader1, MetHeader2, MetPaper, PrimaryButton, SecondaryButton, MetDescription } from 'components/common';
+import { MetHeader1, MetPaper, PrimaryButton, SecondaryButton, MetDescription } from 'components/common';
 import { ReportBanner } from './ReportBanner';
 import SurveysCompleted from './KPI/SurveysCompleted';
 import ProjectLocation from './KPI/ProjectLocation';
@@ -173,7 +173,7 @@ export const Dashboard = () => {
                                                 xs={12}
                                                 sx={{ mb: 1 }}
                                             >
-                                                <MetHeader2 bold>{engagement.name}</MetHeader2>
+                                                <MetHeader1 bold>{engagement.name}</MetHeader1>
                                             </Grid>
                                             <Grid
                                                 item
