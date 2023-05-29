@@ -23,7 +23,7 @@ jest.mock('components/common', () => ({
 }));
 
 jest.mock('maplibre-gl/dist/maplibre-gl', () => ({
-    Map: () => ({})
+    Map: () => ({}),
 }));
 
 jest.mock('@mui/material', () => ({
