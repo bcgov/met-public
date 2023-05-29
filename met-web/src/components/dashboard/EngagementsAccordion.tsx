@@ -79,7 +79,13 @@ const EngagementsAccordion = ({
                         </AccordionSummary>
                         <AccordionDetails>
                             <When condition={openedEngagements.some((id) => id == engagement.id)}>
-                                <Grid container spacing={3} xs={12} data-testid={`dashboard-frame-${engagement.id}`}>
+                                <Grid
+                                    container
+                                    item
+                                    xs={12}
+                                    spacing={3}
+                                    data-testid={`dashboard-frame-${engagement.id}`}
+                                >
                                     <Grid item xs={12} sm={4}>
                                         <SurveyEmailsSent engagement={engagement} engagementIsLoading={false} />
                                     </Grid>
