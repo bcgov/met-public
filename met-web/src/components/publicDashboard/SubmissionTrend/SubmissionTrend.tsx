@@ -24,7 +24,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { Dayjs } from 'dayjs';
 import { Then, If, Else, Unless } from 'react-if';
-import { formatDate } from 'components/common/dateHelper';
+import { formatToUTC } from 'components/common/dateHelper';
 
 interface SubmissionTrendProps {
     engagement: Engagement;
@@ -46,15 +46,15 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
             if (chartBy == 'monthly') {
                 const response = await getUserResponseDetailByMonth(
                     Number(engagement.id),
-                    fromDate ? formatDate(fromDate) : '',
-                    toDate ? formatDate(toDate) : '',
+                    fromDate ? formatToUTC(fromDate) : '',
+                    toDate ? formatToUTC(toDate) : '',
                 );
                 setData(response);
             } else if (chartBy == 'weekly') {
                 const response = await getUserResponseDetailByWeek(
                     Number(engagement.id),
-                    fromDate ? formatDate(fromDate) : '',
-                    toDate ? formatDate(toDate) : '',
+                    fromDate ? formatToUTC(fromDate) : '',
+                    toDate ? formatToUTC(toDate) : '',
                 );
                 setData(response);
             }
