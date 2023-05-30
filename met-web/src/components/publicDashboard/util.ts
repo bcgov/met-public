@@ -1,6 +1,5 @@
 import { jsPDF } from 'jspdf';
 import * as htmlToImage from 'html-to-image';
-import '@watergis/maplibre-gl-export/dist/maplibre-gl-export.css';
 import { Map } from 'maplibre-gl';
 import { INITIAL_ZOOM, MAP_STYLE } from 'components/map';
 import { Map as IMap } from 'models/analytics/map';
