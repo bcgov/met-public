@@ -60,7 +60,14 @@ export const SurveyBar = ({ engagement, engagementIsLoading }: SurveyQuestionPro
     }, [engagement.id]);
 
     if (isError) {
-        return <ErrorBox sx={{ height: HEIGHT }} onClick={fetchData} />;
+        return (
+            <ErrorBox
+                sx={{ height: HEIGHT }}
+                onClick={() => {
+                    fetchData();
+                }}
+            />
+        );
     }
 
     if (isLoading || engagementIsLoading) {

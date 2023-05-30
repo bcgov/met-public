@@ -43,7 +43,14 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
     }, [engagement.id]);
 
     if (isError) {
-        return <ErrorBox sx={{ height: '100%', minHeight: '213px' }} onClick={fetchData} />;
+        return (
+            <ErrorBox
+                sx={{ height: '100%', minHeight: '213px' }}
+                onClick={() => {
+                    fetchData();
+                }}
+            />
+        );
     }
 
     if (isLoading || engagementIsLoading) {

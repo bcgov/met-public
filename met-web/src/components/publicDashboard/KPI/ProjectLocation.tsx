@@ -41,7 +41,14 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjetMapData 
     }, [engagement.id]);
 
     if (isError) {
-        return <ErrorBox sx={{ height: '100%', minHeight: '213px' }} onClick={fetchData} />;
+        return (
+            <ErrorBox
+                sx={{ height: '100%', minHeight: '213px' }}
+                onClick={() => {
+                    fetchData();
+                }}
+            />
+        );
     }
 
     if (isLoading || engagementIsLoading || !data) {
