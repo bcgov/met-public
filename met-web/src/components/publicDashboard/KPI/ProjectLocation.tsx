@@ -17,7 +17,7 @@ interface SurveysCompletedProps {
 
 const ProjectLocation = ({ engagement, engagementIsLoading, handleProjetMapData }: SurveysCompletedProps) => {
     const [data, setData] = useState<Map | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const circleSize = isSmallScreen ? 100 : 250;
