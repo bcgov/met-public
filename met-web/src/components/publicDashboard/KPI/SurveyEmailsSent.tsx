@@ -32,13 +32,14 @@ const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentP
             setData(response);
             setIsLoading(false);
         } catch (error) {
-            console.log(error);
             setIsError(true);
         }
     };
 
     useEffect(() => {
-        fetchData();
+        if (Number(engagement.id)) {
+            fetchData();
+        }
     }, [engagement.id]);
 
     if (isError) {
