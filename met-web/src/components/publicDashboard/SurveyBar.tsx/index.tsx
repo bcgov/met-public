@@ -4,7 +4,6 @@ import {
     Grid,
     Skeleton,
     Divider,
-    CircularProgress,
     useMediaQuery,
     Theme,
     Stack,
