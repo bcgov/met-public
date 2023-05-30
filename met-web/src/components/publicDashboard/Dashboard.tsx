@@ -131,7 +131,7 @@ const Dashboard = () => {
                                             engagementIsLoading={isEngagementLoading}
                                         />
                                     </Grid>
-                                    <Grid item xs={12} sm={4}>
+                                    <Grid item sm={12} md={4} sx={{ width: '100%' }}>
                                         <ProjectLocation
                                             engagement={engagement}
                                             engagementIsLoading={isEngagementLoading}

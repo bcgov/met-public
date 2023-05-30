@@ -5,7 +5,16 @@ import re
 
 import requests
 from flask import current_app
+from met_api.models.tenant import Tenant
 from met_api.services.rest_service import RestService
+
+
+def get_tenant_site_url(tenant_id, path=''):
+    """Get the tenant specific site url (domain / tenant / path)."""
+    if tenant_id is None:
+        raise ValueError('Missing tenant id.')
+    tenant: Tenant = Tenant.find_by_id(tenant_id)
+    return current_app.config.get('SITE_URL', '') + f'/{tenant.short_name}' + path
 
 
 def send_email(subject, email, html_body, args, template_id):

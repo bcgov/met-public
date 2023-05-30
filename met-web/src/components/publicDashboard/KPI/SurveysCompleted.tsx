@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Stack from '@mui/material/Stack';
-import { Box, Grid, CircularProgress } from '@mui/material';
+import { Box, Grid, CircularProgress, useMediaQuery, Theme } from '@mui/material';
 import { DASHBOARD } from '../constants';
 import { getAggregatorData } from 'services/analytics/aggregatorService';
 import { AggregatorData, createAggregatorData } from '../../../models/analytics/aggregator';
@@ -18,8 +18,9 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
     const [data, setData] = useState<AggregatorData>(createAggregatorData());
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
-    const circleSize = 250;
+    const circleSize = isSmallScreen ? 100 : 250;
 
     const fetchData = async () => {
         setIsLoading(true);
@@ -53,7 +54,6 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
                     <Box
                         sx={{
                             width: '100%',
-                            height: '280px',
                         }}
                     >
                         <Grid
@@ -74,7 +74,7 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
 
     return (
         <>
-            <MetLabel mb={2}>Surveys Completed</MetLabel>
+            <MetLabel mb={isSmallScreen ? 0.5 : 2}>Surveys Completed</MetLabel>
             <MetPaper sx={{ p: 2, textAlign: 'center' }}>
                 <Stack alignItems="center" gap={1}>
                     <RadialBarChart
@@ -82,9 +82,9 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
                         height={circleSize}
                         cx={circleSize / 2}
                         cy={circleSize / 2}
-                        innerRadius={120}
-                        outerRadius={90}
-                        barSize={30}
+                        innerRadius={circleSize / 2}
+                        outerRadius={circleSize / 3}
+                        barSize={circleSize / 4}
                         data={[data]}
                         startAngle={225}
                         endAngle={-270}
@@ -100,7 +100,7 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
                             x={circleSize / 2}
                             y={circleSize / 2}
                             textAnchor="middle"
-                            fontSize="50"
+                            fontSize={`${circleSize / 5}`}
                             dominantBaseline="middle"
                             className="progress-label"
                         >
