@@ -36,6 +36,10 @@ const EngagementsAccordion = ({
         }
     };
 
+    const handleProjetMapData = () => {
+        null;
+    };
+
     return (
         <>
             {engagements.map((engagement) => {
@@ -93,7 +97,11 @@ const EngagementsAccordion = ({
                                         <SurveysCompleted engagement={engagement} engagementIsLoading={false} />
                                     </Grid>
                                     <Grid item xs={12} sm={4}>
-                                        <ProjectLocation engagement={engagement} engagementIsLoading={false} />
+                                        <ProjectLocation
+                                            engagement={engagement}
+                                            engagementIsLoading={false}
+                                            handleProjetMapData={handleProjetMapData}
+                                        />
                                     </Grid>
                                 </Grid>
                                 <Grid item xs={12} mt={2}>
