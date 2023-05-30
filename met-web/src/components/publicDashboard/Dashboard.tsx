@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { Grid, Link as MuiLink, useMediaQuery, Stack, Theme, Box, Backdrop, CircularProgress } from '@mui/material';
+import { Grid, Link as MuiLink, useMediaQuery, Stack, Theme, Box, Backdrop } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { CircularProgressWithLabel, MetHeader1, MetPaper, PrimaryButton, SecondaryButton } from 'components/common';
 import { ReportBanner } from './ReportBanner';
