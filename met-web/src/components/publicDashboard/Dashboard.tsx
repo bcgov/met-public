@@ -74,14 +74,13 @@ const Dashboard = () => {
                     </Grid>
 
                     <Grid container item xs={12}>
-                        <MetPaper elevation={1} sx={{ padding: { md: '2em 2em 0 2em', sm: '1em', xs: '0.5em' } }}>
+                        <MetPaper elevation={1} sx={{ padding: { md: '2em 2em 1em 2em', sm: '1em', xs: '0.5em' } }}>
                             <Grid
                                 container
                                 direction="row"
                                 justifyContent="flex-start"
                                 alignItems="flex-start"
                                 rowSpacing={3}
-                                sx={{ marginBottom: '2em' }}
                             >
                                 <Grid item xs={12} sm={6}>
                                     <MetHeader1 textAlign={{ xs: 'center', sm: 'left' }}>What We Heard</MetHeader1>
@@ -112,59 +111,62 @@ const Dashboard = () => {
                                     </Stack>
                                 </Grid>
                                 <Grid
-                                    id={'kpi'}
-                                    ml={isSmallScreen ? 0 : 2}
-                                    container
-                                    spacing={isSmallScreen ? 0 : 3}
                                     item
-                                    xs={12}
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="flex-start"
+                                    ml={isSmallScreen ? 0 : 5}
+                                    rowSpacing={3}
                                 >
-                                    <Grid id={'kpi-emails-sent'} item xs={12} sm={4}>
-                                        <SurveyEmailsSent
+                                    <Grid id={'kpi'} container spacing={3} item xs={12}>
+                                        <Grid id={'kpi-emails-sent'} item xs={12} sm={4}>
+                                            <SurveyEmailsSent
+                                                engagement={engagement}
+                                                engagementIsLoading={isEngagementLoading}
+                                            />
+                                        </Grid>
+                                        <Grid id={'kpi-surveys-completed'} item xs={12} sm={4}>
+                                            <SurveysCompleted
+                                                engagement={engagement}
+                                                engagementIsLoading={isEngagementLoading}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={4} sx={{ width: '100%' }}>
+                                            <ProjectLocation
+                                                engagement={engagement}
+                                                engagementIsLoading={isEngagementLoading}
+                                                handleProjetMapData={handleProjetMapData}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    <Grid id={'submissiontrend'} item xs={12}>
+                                        <SubmissionTrend
                                             engagement={engagement}
                                             engagementIsLoading={isEngagementLoading}
                                         />
                                     </Grid>
-                                    <Grid id={'kpi-surveys-completed'} item xs={12} sm={4}>
-                                        <SurveysCompleted
-                                            engagement={engagement}
-                                            engagementIsLoading={isEngagementLoading}
-                                        />
-                                    </Grid>
-                                    <Grid item sm={12} md={4} sx={{ width: '100%' }}>
-                                        <ProjectLocation
-                                            engagement={engagement}
-                                            engagementIsLoading={isEngagementLoading}
-                                            handleProjetMapData={handleProjetMapData}
-                                        />
-                                    </Grid>
-                                </Grid>
-                                <Grid id={'submissiontrend'} ml={isSmallScreen ? 0 : 5} item xs={12}>
-                                    <SubmissionTrend
-                                        engagement={engagement}
-                                        engagementIsLoading={isEngagementLoading}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} ml={isSmallScreen ? 0 : 5}>
-                                    <Box id={'surveybarprintable'} sx={{ display: isPrinting ? 'block' : 'none' }}>
-                                        <SurveyBarPrintable
-                                            engagement={engagement}
-                                            engagementIsLoading={isEngagementLoading}
-                                        />
-                                    </Box>
-                                    <SurveyBar engagement={engagement} engagementIsLoading={isEngagementLoading} />
-                                </Grid>
-                                <When condition={isPrinting}>
                                     <Grid item xs={12}>
-                                        <Box
-                                            id={'printableMapContainer'}
-                                            sx={{
-                                                height: '300px',
-                                                width: '300px',
-                                            }}
-                                        ></Box>
+                                        <Box id={'surveybarprintable'} sx={{ display: isPrinting ? 'block' : 'none' }}>
+                                            <SurveyBarPrintable
+                                                engagement={engagement}
+                                                engagementIsLoading={isEngagementLoading}
+                                            />
+                                        </Box>
+                                        <SurveyBar engagement={engagement} engagementIsLoading={isEngagementLoading} />
                                     </Grid>
-                                </When>
+                                    <When condition={isPrinting}>
+                                        <Grid item xs={12}>
+                                            <Box
+                                                id={'printableMapContainer'}
+                                                sx={{
+                                                    height: '300px',
+                                                    width: '300px',
+                                                }}
+                                            ></Box>
+                                        </Grid>
+                                    </When>
+                                </Grid>
                             </Grid>
                         </MetPaper>
                     </Grid>
