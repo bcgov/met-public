@@ -29,6 +29,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
 
     const fetchData = async () => {
         setIsLoading(true);
+        setIsError(false);
         try {
             if (chartBy == 'monthly') {
                 const response = await getUserResponseDetailByMonth(Number(engagement.id));
@@ -38,7 +39,6 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                 setData(response);
             }
             setIsLoading(false);
-            setIsError(false);
         } catch (error) {
             console.log(error);
             setIsError(true);
@@ -52,6 +52,17 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     const handleToggleChange = (event: React.MouseEvent<HTMLElement>, chartByValue: string) => {
         setChartBy(chartByValue);
     };
+
+    if (isError) {
+        return (
+            <ErrorBox
+                sx={{ height: HEIGHT }}
+                onClick={() => {
+                    fetchData();
+                }}
+            />
+        );
+    }
 
     if (isLoading || engagementIsLoading) {
         return (
@@ -73,10 +84,6 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                 </MetPaper>
             </>
         );
-    }
-
-    if (isError) {
-        return <ErrorBox sx={{ height: HEIGHT }} onClick={fetchData} />;
     }
     return (
         <>

@@ -24,6 +24,7 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
 
     const fetchData = async () => {
         setIsLoading(true);
+        setIsError(false);
         try {
             const response = await getAggregatorData({
                 engagement_id: Number(engagement.id),
@@ -31,7 +32,6 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
             });
             setData(response);
             setIsLoading(false);
-            setIsError(false);
         } catch (error) {
             console.log(error);
             setIsError(true);
@@ -41,6 +41,17 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
     useEffect(() => {
         fetchData();
     }, [engagement.id]);
+
+    if (isError) {
+        return (
+            <ErrorBox
+                sx={{ height: '100%', minHeight: '213px' }}
+                onClick={() => {
+                    fetchData();
+                }}
+            />
+        );
+    }
 
     if (isLoading || engagementIsLoading) {
         return (
@@ -66,10 +77,6 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
                 </MetPaper>
             </>
         );
-    }
-
-    if (isError) {
-        return <ErrorBox sx={{ height: '100%', minHeight: '213px' }} onClick={fetchData} />;
     }
 
     return (

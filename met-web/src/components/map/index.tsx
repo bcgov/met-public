@@ -40,17 +40,20 @@ const lineStyle: AnyLayer = {
         'line-color': '#00ffff',
     },
 };
-
+export const MAP_STYLE =
+    'https://governmentofbc.maps.arcgis.com/sharing/rest/content/items/bbe05270d3a642f5b62203d6c454f457/resources/styles/root.json';
+export const INITIAL_ZOOM = 12;
 const MetMap = ({ geojson, latitude, longitude, markerLabel }: MapProps) => {
     return (
         <ReactMapGL
+            id="map-gl-container"
             initialViewState={{
                 longitude: longitude,
                 latitude: latitude,
-                zoom: 12,
+                zoom: INITIAL_ZOOM,
             }}
             mapLib={maplibregl}
-            mapStyle="https://governmentofbc.maps.arcgis.com/sharing/rest/content/items/bbe05270d3a642f5b62203d6c454f457/resources/styles/root.json"
+            mapStyle={MAP_STYLE}
             style={{
                 width: '100%',
                 height: '100%',

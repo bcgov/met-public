@@ -12,9 +12,10 @@ import { geoJSONDecode } from 'components/engagement/form/EngagementWidgets/Map/
 interface SurveysCompletedProps {
     engagement: Engagement;
     engagementIsLoading: boolean;
+    handleProjetMapData: (data: Map) => void;
 }
 
-const ProjectLocation = ({ engagement, engagementIsLoading }: SurveysCompletedProps) => {
+const ProjectLocation = ({ engagement, engagementIsLoading, handleProjetMapData }: SurveysCompletedProps) => {
     const [data, setData] = useState<Map | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
@@ -22,12 +23,13 @@ const ProjectLocation = ({ engagement, engagementIsLoading }: SurveysCompletedPr
     const circleSize = isSmallScreen ? 100 : 250;
 
     const fetchData = async () => {
+        setIsError(false);
         setIsLoading(true);
         try {
             const response = await getMapData(Number(engagement.id));
             setData(response);
+            handleProjetMapData(response);
             setIsLoading(false);
-            setIsError(false);
         } catch (error) {
             console.log(error);
             setIsError(true);
@@ -37,6 +39,17 @@ const ProjectLocation = ({ engagement, engagementIsLoading }: SurveysCompletedPr
     useEffect(() => {
         fetchData();
     }, [engagement.id]);
+
+    if (isError) {
+        return (
+            <ErrorBox
+                sx={{ height: '100%', minHeight: '213px' }}
+                onClick={() => {
+                    fetchData();
+                }}
+            />
+        );
+    }
 
     if (isLoading || engagementIsLoading || !data) {
         return (
@@ -58,10 +71,6 @@ const ProjectLocation = ({ engagement, engagementIsLoading }: SurveysCompletedPr
                 </MetPaper>
             </>
         );
-    }
-
-    if (isError) {
-        return <ErrorBox sx={{ height: '100%', minHeight: '213px' }} onClick={fetchData} />;
     }
 
     return (
