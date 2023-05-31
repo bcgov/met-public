@@ -246,17 +246,21 @@ const SurveyListing = () => {
                 }
                 const { approved } = row.comments_meta_data;
                 return (
-                    <ApprovedIcon
-                        onClick={() => {
-                            navigate(`/surveys/${row.id}/comments`, {
-                                state: {
-                                    status: CommentStatus.Approved,
-                                },
-                            });
-                        }}
-                    >
-                        {approved || 0}
-                    </ApprovedIcon>
+                    <MetTooltip title={'Approved'} placement="right" arrow>
+                        <span>
+                            <ApprovedIcon
+                                onClick={() => {
+                                    navigate(`/surveys/${row.id}/comments`, {
+                                        state: {
+                                            status: CommentStatus.Approved,
+                                        },
+                                    });
+                                }}
+                            >
+                                {approved || 0}
+                            </ApprovedIcon>
+                        </span>
+                    </MetTooltip>
                 );
             },
         },
@@ -284,17 +288,21 @@ const SurveyListing = () => {
                 }
                 const { needs_further_review } = row.comments_meta_data;
                 return (
-                    <NFRIcon
-                        onClick={() => {
-                            navigate(`/surveys/${row.id}/comments`, {
-                                state: {
-                                    status: CommentStatus.NeedsFurtherReview,
-                                },
-                            });
-                        }}
-                    >
-                        {needs_further_review || 0}
-                    </NFRIcon>
+                    <MetTooltip title={'Approved'} placement="right" arrow>
+                        <span>
+                            <NFRIcon
+                                onClick={() => {
+                                    navigate(`/surveys/${row.id}/comments`, {
+                                        state: {
+                                            status: CommentStatus.NeedsFurtherReview,
+                                        },
+                                    });
+                                }}
+                            >
+                                {needs_further_review || 0}
+                            </NFRIcon>
+                        </span>
+                    </MetTooltip>
                 );
             },
         },
@@ -322,17 +330,21 @@ const SurveyListing = () => {
                 }
                 const { rejected } = row.comments_meta_data;
                 return (
-                    <RejectedIcon
-                        onClick={() => {
-                            navigate(`/surveys/${row.id}/comments`, {
-                                state: {
-                                    status: CommentStatus.Rejected,
-                                },
-                            });
-                        }}
-                    >
-                        {rejected || 0}
-                    </RejectedIcon>
+                    <MetTooltip title={'Approved'} placement="right" arrow>
+                        <span>
+                            <RejectedIcon
+                                onClick={() => {
+                                    navigate(`/surveys/${row.id}/comments`, {
+                                        state: {
+                                            status: CommentStatus.Rejected,
+                                        },
+                                    });
+                                }}
+                            >
+                                {rejected || 0}
+                            </RejectedIcon>
+                        </span>
+                    </MetTooltip>
                 );
             },
         },
@@ -360,17 +372,21 @@ const SurveyListing = () => {
                 }
                 const { pending } = row.comments_meta_data;
                 return (
-                    <NewIcon
-                        onClick={() => {
-                            navigate(`/surveys/${row.id}/comments`, {
-                                state: {
-                                    status: CommentStatus.Pending,
-                                },
-                            });
-                        }}
-                    >
-                        {pending || 0}
-                    </NewIcon>
+                    <MetTooltip title={'Approved'} placement="right" arrow>
+                        <span>
+                            <NewIcon
+                                onClick={() => {
+                                    navigate(`/surveys/${row.id}/comments`, {
+                                        state: {
+                                            status: CommentStatus.Pending,
+                                        },
+                                    });
+                                }}
+                            >
+                                {pending || 0}
+                            </NewIcon>
+                        </span>
+                    </MetTooltip>
                 );
             },
         },
