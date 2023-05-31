@@ -30,6 +30,7 @@ from .membership import Membership
 from .membership_status_code import MembershipStatusCode
 from .staff_note import StaffNote
 from .submission import Submission
+from .subscription import Subscription
 from .survey import Survey
 from .tenant import Tenant
 from .user import User

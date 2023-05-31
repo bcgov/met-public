@@ -34,6 +34,11 @@ const Endpoints = {
         GET_LIST: `${AppConfig.apiUrl}/submissions/survey/survey_id`,
         GET: `${AppConfig.apiUrl}/submissions/submission_id`,
     },
+    Subscription: {
+        GET: `${AppConfig.apiUrl}/subscription/user_id`,
+        CREATE: `${AppConfig.apiUrl}/subscription/`,
+        UPDATE: `${AppConfig.apiUrl}/subscription/`,
+    },
     PublicSubmission: {
         CREATE: `${AppConfig.apiUrl}/submissions/public/verification_token`,
         GET_BY_TOKEN: `${AppConfig.apiUrl}/submissions/public/verification_token`,
