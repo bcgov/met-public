@@ -11,7 +11,7 @@ import SurveySubmit from 'components/survey/submit';
 import CommentReview from 'components/comments/admin/review/CommentReview';
 import CommentReviewListing from 'components/comments/admin/reviewListing';
 import CommentTextListing from 'components/comments/admin/textListing';
-import EngagementDashboard from '../components/engagement/dashboard/report';
+import PublicDashboard from 'components/publicDashboard';
 import EngagementComments from '../components/engagement/dashboard/comment';
 import UnderConstruction from './UnderConstruction';
 import FeedbackListing from 'components/feedback/listing';
@@ -39,7 +39,7 @@ const AuthenticatedRoutes = () => {
             </Route>
             <Route path="/engagements/:engagementId/view" element={<EngagementView />} />
             <Route path="/engagements/:engagementId/comments" element={<EngagementComments />} />
-            <Route path="/engagements/:engagementId/dashboard" element={<EngagementDashboard />} />
+            <Route path="/engagements/:engagementId/dashboard" element={<PublicDashboard />} />
             <Route path="/feedback" element={<FeedbackListing />} />
             <Route path="/calendar" element={<UnderConstruction />} />
             <Route path="/reporting" element={<UnderConstruction />} />
