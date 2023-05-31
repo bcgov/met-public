@@ -42,7 +42,7 @@ class TestUserInfo(dict, Enum):
     }
 
     user_public_1 = {
-        'email_adress': fake.email(),
+        'email_address': fake.email(),
     }
 
     user_public_2 = {

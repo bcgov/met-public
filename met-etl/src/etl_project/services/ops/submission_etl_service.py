@@ -5,7 +5,7 @@ from datetime import datetime
 from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 from met_api.models.submission import Submission as MetSubmissionModel
 from met_api.models.survey import Survey as MetSurveyModel
-from met_api.models.staff_user import User as UserModel
+from met_api.models.met_user import MetUser as MetUserModel
 from analytics_api.models.response_type_radio import ResponseTypeRadio as ResponseTypeRadioModel
 from analytics_api.models.response_type_selectbox import ResponseTypeSelectbox as ResponseTypeSelectboxModel
 from analytics_api.models.response_type_textarea import ResponseTypeTextarea as ResponseTypeTextareaModel
@@ -152,7 +152,7 @@ def _extract_submission(form_questions, met_survey, metsession, submission, mete
                     met_survey.id)
                 return
 
-            user = metsession.query(UserModel).filter(UserModel.id == submission.user_id).first()
+            user = metsession.query(MetUserModel).filter(MetUserModel.id == submission.user_id).first()
 
             context.log.info('User : %s Found for submission id : %s with mappedd user id %s', user,
                              submission.id, submission.user_id)

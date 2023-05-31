@@ -20,7 +20,7 @@ from flask import current_app
 from met_api.models.comment import Comment as MetCommentModel
 from met_api.constants.comment_status import Status as CommentStatus
 from met_cron.models.db import db
-from met_api.models.staff_user import User as MetUserModel
+from met_api.models.met_user import MetUser as MetUserModel
 from met_cron.models.user_details import UserDetails as UserDetailsModel
 
 
