@@ -24,8 +24,8 @@ import pytest
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestSubmissionInfo
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_email_verification, factory_membership_model, factory_submission_model,
-    factory_survey_and_eng_model, factory_user_model)
+    factory_auth_header, factory_email_verification, factory_membership_model, factory_public_user_model,
+    factory_submission_model, factory_survey_and_eng_model)
 
 
 DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
@@ -53,7 +53,7 @@ def test_get_submission_by_id(client, jwt, session, submission_info):  # pylint:
     """Assert that an engagement can be fetched."""
     claims = TestJwtClaims.public_user_role
 
-    user_details = factory_user_model()
+    user_details = factory_public_user_model()
     survey, eng = factory_survey_and_eng_model()
     submission = factory_submission_model(
         survey.id, eng.id, user_details.id, submission_info)
@@ -68,7 +68,7 @@ def test_get_submission_page(client, jwt, session, submission_info):  # pylint:d
     """Assert that an engagement page can be fetched."""
     claims = TestJwtClaims.staff_admin_role
 
-    user_details = factory_user_model()
+    user_details = factory_public_user_model()
     survey, eng = factory_survey_and_eng_model()
     factory_submission_model(
         survey.id, eng.id, user_details.id, submission_info)
@@ -80,7 +80,7 @@ def test_get_submission_page(client, jwt, session, submission_info):  # pylint:d
 
 def test_get_comment_filtering(client, jwt, session):  # pylint:disable=unused-argument
     """Assert comments filtering works for different users."""
-    user = factory_user_model()
+    user = factory_public_user_model()
     survey, eng = factory_survey_and_eng_model()
     submission_info = TestSubmissionInfo.submission1
     factory_submission_model(
@@ -153,7 +153,7 @@ def test_advanced_search_submission(client, jwt, session, submission_info):  # p
     """Assert that an engagement page can be fetched."""
     claims = TestJwtClaims.public_user_role
 
-    user_details = factory_user_model()
+    user_details = factory_public_user_model()
     survey, eng = factory_survey_and_eng_model()
     submission_approved = factory_submission_model(
         survey.id, eng.id, user_details.id, submission_info)

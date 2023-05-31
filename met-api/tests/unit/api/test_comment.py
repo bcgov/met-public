@@ -26,8 +26,8 @@ from met_api.utils import notification
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_comment_model, factory_submission_model, factory_survey_and_eng_model,
-    factory_user_model, set_global_tenant)
+    factory_auth_header, factory_comment_model, factory_public_user_model, factory_submission_model,
+    factory_staff_user_model, factory_survey_and_eng_model, set_global_tenant)
 
 fake = Faker()
 
@@ -36,7 +36,7 @@ def test_get_comments(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that comments can be fetched."""
     claims = TestJwtClaims.public_user_role
 
-    user_details = factory_user_model()
+    user_details = factory_public_user_model()
     survey, eng = factory_survey_and_eng_model()
     submission = factory_submission_model(survey.id, eng.id, user_details.id)
     factory_comment_model(survey.id, submission.id)
@@ -49,8 +49,8 @@ def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that a comment can be reviewed."""
     claims = TestJwtClaims.public_user_role
 
-    factory_user_model(TestJwtClaims.public_user_role.get('sub'))
-    user_details = factory_user_model()
+    factory_staff_user_model(TestJwtClaims.public_user_role.get('sub'))
+    user_details = factory_public_user_model()
     survey, eng = factory_survey_and_eng_model()
     submission = factory_submission_model(survey.id, eng.id, user_details.id)
     factory_comment_model(survey.id, submission.id)
@@ -67,8 +67,8 @@ def test_review_comment_internal_note(client, jwt, session):  # pylint:disable=u
     """Assert that a comment can be reviewed."""
     claims = TestJwtClaims.public_user_role
 
-    factory_user_model(TestJwtClaims.public_user_role.get('sub'))
-    user_details = factory_user_model()
+    factory_staff_user_model(TestJwtClaims.public_user_role.get('sub'))
+    user_details = factory_public_user_model()
     survey, eng = factory_survey_and_eng_model()
     submission = factory_submission_model(survey.id, eng.id, user_details.id)
     factory_comment_model(survey.id, submission.id)
@@ -94,8 +94,8 @@ def test_review_comment_review_note(client, jwt, session):  # pylint:disable=unu
     """Assert that a comment can be reviewed."""
     claims = TestJwtClaims.public_user_role
     set_global_tenant()
-    factory_user_model(TestJwtClaims.public_user_role.get('sub'))
-    user_details = factory_user_model()
+    factory_staff_user_model(TestJwtClaims.public_user_role.get('sub'))
+    user_details = factory_public_user_model()
     survey, eng = factory_survey_and_eng_model()
     submission = factory_submission_model(survey.id, eng.id, user_details.id)
     factory_comment_model(survey.id, submission.id)
@@ -147,7 +147,7 @@ def test_get_comments_spreadsheet(mocker, client, jwt, session):  # pylint:disab
         return_value=mock_upload_template_response
     )
 
-    user_details = factory_user_model()
+    user_details = factory_public_user_model()
     survey, eng = factory_survey_and_eng_model()
     submission = factory_submission_model(survey.id, eng.id, user_details.id)
     factory_comment_model(survey.id, submission.id)

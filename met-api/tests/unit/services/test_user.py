@@ -22,14 +22,14 @@ from faker import Faker
 from met_api.schemas.staff_user import UserSchema
 from met_api.services.staff_user_service import UserService
 from tests.utilities.factory_scenarios import TestUserInfo
-from tests.utilities.factory_utils import factory_user_model, set_global_tenant
+from tests.utilities.factory_utils import factory_staff_user_model, set_global_tenant
 
 fake = Faker()
 
 
 def test_getuser(client, jwt, session, ):  # pylint:disable=unused-argument
     """Assert that an user can be fetched."""
-    user_details = factory_user_model()
+    user_details = factory_staff_user_model()
     user: dict = UserService.get_user_by_external_id(user_details.external_id)
     assert user.get('external_id') == user_details.external_id
 
@@ -58,7 +58,7 @@ def test_create_user(client, jwt, session, ):  # pylint:disable=unused-argument
 
 def test_update_user_email(client, jwt, session, ):  # pylint:disable=unused-argument
     """Assert that an user can be Created."""
-    user_details = factory_user_model()
+    user_details = factory_staff_user_model()
     old_email = user_details.email_address
     user_id = user_details.id
     # verify existing details
