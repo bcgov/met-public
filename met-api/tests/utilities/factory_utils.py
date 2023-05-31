@@ -27,9 +27,10 @@ from met_api.models.email_verification import EmailVerification as EmailVerifica
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.feedback import Feedback as FeedbackModel
 from met_api.models.membership import Membership as MembershipModel
+from met_api.models.met_user import MetUser as MetUserModel
 from met_api.models.submission import Submission as SubmissionModel
 from met_api.models.survey import Survey as SurveyModel
-from met_api.models.user import User as UserModel
+from met_api.models.staff_user import StaffUser as StaffUserModel
 from met_api.models.widget import Widget as WidgetModal
 from met_api.models.widget_documents import WidgetDocuments as WidgetDocumentModel
 from met_api.models.widget_item import WidgetItem as WidgetItemModal
@@ -133,17 +134,24 @@ def factory_tenant_model(tenant_info: dict = TestTenantInfo.tenant1):
     return tenant
 
 
-def factory_user_model(external_id=None, user_info: dict = TestUserInfo.user_public_1):
-    """Produce a user model."""
+def factory_staff_user_model(external_id=None, user_info: dict = TestUserInfo.user_staff_1):
+    """Produce a staff user model."""
     # Generate a external id if not passed
     external_id = fake.random_number(digits=5) if external_id is None else external_id
-    user = UserModel(
+    user = StaffUserModel(
         first_name=user_info['first_name'],
         last_name=user_info['last_name'],
         middle_name=user_info['middle_name'],
-        email_id=user_info['email_id'],
+        email_address=user_info['email_address'],
         external_id=str(external_id),
-        access_type=user_info['access_type']
+    )
+    user.save()
+    return user
+
+def factory_public_user_model(user_info: dict = TestUserInfo.user_public_1):
+    """Produce a met user model."""
+    user = MetUserModel(
+        email_address=user_info['email_address'],
     )
     user.save()
     return user

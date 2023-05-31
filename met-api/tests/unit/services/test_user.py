@@ -19,8 +19,8 @@ Test-Suite to ensure that the UserService is working as expected.
 import pytest
 from faker import Faker
 
-from met_api.schemas.user import UserSchema
-from met_api.services.user_service import UserService
+from met_api.schemas.staff_user import UserSchema
+from met_api.services.staff_user_service import UserService
 from tests.utilities.factory_scenarios import TestUserInfo
 from tests.utilities.factory_utils import factory_user_model, set_global_tenant
 
@@ -59,15 +59,15 @@ def test_create_user(client, jwt, session, ):  # pylint:disable=unused-argument
 def test_update_user_email(client, jwt, session, ):  # pylint:disable=unused-argument
     """Assert that an user can be Created."""
     user_details = factory_user_model()
-    old_email = user_details.email_id
+    old_email = user_details.email_address
     user_id = user_details.id
     # verify existing details
     user: dict = UserService.get_user_by_external_id(user_details.external_id)
-    assert user.get('email_id') == old_email
+    assert user.get('email_address') == old_email
     assert user.get('id') == user_id
 
     new_user_data = {
-        'email_id': fake.email(),
+        'email_address': fake.email(),
         'first_name': user_details.first_name,
         'last_name': user_details.last_name,
         'external_id': user_details.external_id,
@@ -79,4 +79,4 @@ def test_update_user_email(client, jwt, session, ):  # pylint:disable=unused-arg
     assert new_user.external_id == user_details.external_id
     assert new_user.first_name == user_details.first_name
     assert new_user.id == user_details.id
-    assert new_user.email_id == new_user_data.get('email_id')
+    assert new_user.email_address == new_user_data.get('email_address')

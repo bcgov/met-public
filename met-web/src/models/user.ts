@@ -15,7 +15,7 @@ export interface User {
     contact_number: string;
     created_date: string;
     description: string;
-    email_id: string;
+    email_address: string;
     external_id: string;
     first_name: string;
     groups: string[];
@@ -23,7 +23,6 @@ export interface User {
     last_name: string;
     updated_date: string;
     status: string;
-    access_type: string;
     roles: string[];
     main_role: string;
     username: string;
@@ -33,7 +32,7 @@ export const createDefaultUser: User = {
     id: 0,
     contact_number: '',
     description: '',
-    email_id: '',
+    email_address: '',
     external_id: '',
     groups: [''],
     first_name: '',
@@ -41,7 +40,6 @@ export const createDefaultUser: User = {
     updated_date: Date(),
     created_date: Date(),
     status: '',
-    access_type: '',
     roles: [],
     username: '',
     main_role: '',

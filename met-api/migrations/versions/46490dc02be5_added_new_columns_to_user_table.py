@@ -10,8 +10,6 @@ from datetime import datetime
 from alembic import op
 import sqlalchemy as sa
 
-from met_api.utils.enums import UserType
-
 # revision identifiers, used by Alembic.
 revision = '46490dc02be5'
 down_revision = '2b12a6cd987a'
@@ -55,11 +53,6 @@ def upgrade():
     op.add_column('met_users', sa.Column('status_id', sa.Integer(), nullable=True))
     op.create_index(op.f('ix_user_username'), 'met_users', ['username'], unique=False)
     op.create_foreign_key('user_status_fk', 'met_users', 'user_status', ['status_id'], ['id'])
-
-    # update IDIR users to type STAFF
-    gov_email_suffix = 'gov.bc.ca'
-    update_staff_type_query = f"update met_users set access_type = '{UserType.STAFF.value}' where email_id like '%{gov_email_suffix}'"
-    op.execute(update_staff_type_query)
 
     # update everyone to active
     update_all_users_to_active = 'UPDATE met_users SET status_id = 1'

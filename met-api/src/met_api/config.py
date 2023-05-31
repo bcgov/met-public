@@ -134,6 +134,8 @@ class _Config():  # pylint: disable=too-few-public-methods
     DEFAULT_TENANT_NAME = os.getenv('DEFAULT_TENANT_NAME', 'Environment Assessment Office')
     DEFAULT_TENANT_DESCRIPTION = os.getenv('DEFAULT_TENANT_DESCRIPTION', 'Environment Assessment Office')
 
+    EMAIL_SECRET_KEY = os.getenv('EMAIL_SECRET_KEY', 'secret')
+
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
     """Dev Config."""

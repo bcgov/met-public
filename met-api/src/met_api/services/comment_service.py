@@ -8,7 +8,7 @@ from met_api.models.comment import Comment
 from met_api.models.membership import Membership as MembershipModel
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.submission import Submission as SubmissionModel
-from met_api.models.user import User as UserModel
+from met_api.models.staff_user import StaffUser as StaffUserModel
 from met_api.schemas.comment import CommentSchema
 from met_api.schemas.submission import SubmissionSchema
 from met_api.schemas.survey import SurveySchema
@@ -61,7 +61,7 @@ class CommentService:
         if not (user_id := TokenInfo.get_id()):
             return False
 
-        user = UserModel.get_user_by_external_id(user_id)
+        user = StaffUserModel.get_user_by_external_id(user_id)
         if not user:
             return False
 

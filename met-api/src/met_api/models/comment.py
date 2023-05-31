@@ -13,7 +13,6 @@ from met_api.constants.comment_status import Status
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement import Engagement
 from met_api.models.submission import Submission
-from met_api.models.user import User
 from met_api.models.survey import Survey
 from met_api.schemas.comment import CommentSchema
 
@@ -142,14 +141,10 @@ class Comment(BaseModel):
             Comment.id,
             Comment.submission_date,
             Comment.text,
-            User.first_name,
-            User.last_name,
             Submission.reviewed_by
         )\
             .join(Submission, Submission.id == Comment.submission_id) \
-            .join(User, User.id == Comment.user_id) \
             .add_entity(Submission)\
-            .add_entity(User)\
             .filter(Comment.survey_id == survey_id)
 
         query = query.order_by(Comment.id.asc())

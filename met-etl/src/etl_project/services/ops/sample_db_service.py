@@ -1,5 +1,5 @@
 from dagster import Out, Output, op
-from met_api.models.user import User as MetUserModel
+from met_api.models.staff_user import User as MetUserModel
 from datetime import datetime
 from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 from sqlalchemy import func

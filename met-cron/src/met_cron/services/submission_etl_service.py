@@ -18,7 +18,7 @@ from typing import List
 from flask import current_app
 from met_api.models.submission import Submission as MetSubmissionModel
 from met_api.models.survey import Survey as MetSurveyModel
-from met_api.models.user import User as UserModel
+from met_api.models.staff_user import User as UserModel
 from met_cron.models.response_type_radio import ResponseTypeRadio as ResponseTypeRadioModel
 from met_cron.models.response_type_selectbox import ResponseTypeSelectbox as ResponseTypeSelectboxModel
 from met_cron.models.response_type_textarea import ResponseTypeTextarea as ResponseTypeTextareaModel

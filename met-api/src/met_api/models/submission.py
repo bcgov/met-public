@@ -11,7 +11,7 @@ from sqlalchemy.dialects import postgresql
 from met_api.constants.comment_status import Status
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.survey import Survey
-from met_api.models.user import User
+from met_api.models.met_user import MetUser
 from met_api.schemas.submission import SubmissionSchema
 
 from .base_model import BaseModel
@@ -192,9 +192,9 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
         return page.items, page.total
 
     @classmethod
-    def get_engaged_users(cls, engagement_id) -> List[User]:
+    def get_engaged_users(cls, engagement_id) -> List[MetUser]:
         """Get users that have submissions for the specified engagement id."""
-        users = db.session.query(User)\
+        users = db.session.query(MetUser)\
             .join(Submission)\
             .join(Survey)\
             .filter(Survey.engagement_id == engagement_id)\

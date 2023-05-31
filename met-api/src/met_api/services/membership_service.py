@@ -2,10 +2,10 @@
 from http import HTTPStatus
 
 from met_api.constants.membership_type import MembershipType
-from met_api.models import User as UserModel
+from met_api.models import StaffUser as StaffUserModel
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.membership import Membership as MembershipModel
-from met_api.services.user_service import KEYCLOAK_SERVICE
+from met_api.services.staff_user_service import KEYCLOAK_SERVICE
 from met_api.utils.enums import KeycloakGroupName, KeycloakGroups, MembershipStatus
 from ..exceptions.business_exception import BusinessException
 
@@ -17,7 +17,7 @@ class MembershipService:
     def create_membership(engagement_id, request_json: dict):
         """Create membership."""
         user_id = request_json.get('user_id')
-        user: UserModel = UserModel.get_user_by_external_id(user_id)
+        user: StaffUserModel = StaffUserModel.get_user_by_external_id(user_id)
         if not user:
             raise BusinessException(
                 error='Invalid User.',

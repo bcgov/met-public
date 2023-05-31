@@ -2,7 +2,7 @@ from dagster import Out, Output, op
 from sqlalchemy import func
 from datetime import datetime
 
-from met_api.models.user import User as MetUserModel
+from met_api.models.staff_user import User as MetUserModel
 from analytics_api.models.user_details import UserDetails as UserDetailsModel
 from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 

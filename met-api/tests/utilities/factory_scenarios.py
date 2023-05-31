@@ -26,7 +26,7 @@ from met_api.constants.comment_status import Status as CommentStatus
 from met_api.constants.engagement_status import SubmissionStatus
 from met_api.constants.feedback import CommentType, FeedbackSourceType, RatingType
 from met_api.constants.widget import WidgetType
-from met_api.utils.enums import LoginSource, UserType
+from met_api.utils.enums import LoginSource
 
 fake = Faker()
 
@@ -42,27 +42,18 @@ class TestUserInfo(dict, Enum):
     }
 
     user_public_1 = {
-        'first_name': fake.name(),
-        'middle_name': fake.name(),
-        'last_name': fake.name(),
-        'email_id': fake.email(),
-        'access_type': UserType.PUBLIC_USER.value
+        'email_adress': fake.email(),
     }
 
     user_public_2 = {
-        'first_name': fake.name(),
-        'middle_name': fake.name(),
-        'last_name': fake.name(),
-        'email_id': fake.email(),
-        'access_type': UserType.PUBLIC_USER.value
+        'email_address': fake.email(),
     }
 
     user_staff_1 = {
         'first_name': fake.name(),
         'middle_name': fake.name(),
         'last_name': fake.name(),
-        'email_id': fake.email(),
-        'access_type': UserType.STAFF.value
+        'email_address': fake.email(),
     }
 
 

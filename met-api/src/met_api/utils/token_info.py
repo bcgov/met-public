@@ -26,7 +26,7 @@ class TokenInfo:
             'external_id': token_info.get('sub', None),
             'first_name': token_info.get('given_name', None),
             'last_name': token_info.get('family_name', None),
-            'email_id': token_info.get('email', None),
+            'email_address': token_info.get('email', None),
             'username': token_info.get('preferred_username', None),
             'identity_provider': token_info.get('identity_provider', ''),
             'roles': TokenInfo.get_user_roles(),

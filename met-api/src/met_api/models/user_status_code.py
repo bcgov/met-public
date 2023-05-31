@@ -15,4 +15,4 @@ class UserStatus(BaseModel):  # pylint: disable=too-few-public-methods
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     status_name = db.Column(db.String(50))
     description = db.Column(db.String(50))
-    user_status_id = db.relationship('User', backref='user_status', cascade='all, delete')
+    user_status_id = db.relationship('StaffUser', backref='user_status', cascade='all, delete')

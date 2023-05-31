@@ -28,11 +28,12 @@ from .generated_document_template import GeneratedDocumentTemplate
 from .generated_document_type import GeneratedDocumentType
 from .membership import Membership
 from .membership_status_code import MembershipStatusCode
+from .met_user import MetUser
 from .staff_note import StaffNote
 from .submission import Submission
 from .survey import Survey
 from .tenant import Tenant
-from .user import User
+from .staff_user import StaffUser
 from .user_status_code import UserStatus
 from .widget import Widget
 from .widget_documents import WidgetDocuments

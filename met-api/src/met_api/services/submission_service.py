@@ -17,12 +17,12 @@ from met_api.models.db import session_scope
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.staff_note import StaffNote
 from met_api.models.submission import Submission
-from met_api.models.user import User as UserModel
+from met_api.models.met_user import MetUser as MetUserModel
 from met_api.schemas.submission import PublicSubmissionSchema, SubmissionSchema
 from met_api.services.comment_service import CommentService
 from met_api.services.email_verification_service import EmailVerificationService
 from met_api.services.survey_service import SurveyService
-from met_api.services.user_service import UserService
+from met_api.services.staff_user_service import StaffUserService
 from met_api.utils import notification
 from met_api.utils.template import Template
 
@@ -103,7 +103,7 @@ class SubmissionService:
     @classmethod
     def review_comment(cls, submission_id, staff_review_details: dict, external_user_id) -> SubmissionSchema:
         """Review comment."""
-        user = UserService.get_user_by_external_id(external_user_id)
+        user = StaffUserService.get_user_by_external_id(external_user_id)
 
         cls.validate_review(staff_review_details, user)
         reviewed_by = ' '.join([user.get('first_name', ''), user.get('last_name', '')])
@@ -256,13 +256,13 @@ class SubmissionService:
     def _send_rejected_email(submission: Submission, review_note, token) -> None:
         """Send an verification email.Throws error if fails."""
         user_id = submission.user_id
-        user: UserModel = UserModel.find_by_id(user_id)
+        user: MetUserModel = MetUserModel.find_by_id(user_id)
 
         template_id = current_app.config.get('REJECTED_EMAIL_TEMPLATE_ID', None)
         subject, body, args = SubmissionService._render_email_template(submission, review_note, token)
         try:
             notification.send_email(subject=subject,
-                                    email=user.email_id,
+                                    email=user.email_address,
                                     html_body=body,
                                     args=args,
                                     template_id=template_id)
