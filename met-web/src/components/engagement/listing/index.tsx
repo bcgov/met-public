@@ -220,7 +220,7 @@ const EngagementListing = () => {
 
                 const { approved } = row.submissions_meta_data;
                 return (
-                    <MetTooltip title={'Approved'} placement="right" arrow>
+                    <MetTooltip disableInteractive title={'Approved'} placement="right" arrow>
                         <span>
                             <ApprovedIcon
                                 onClick={() => {
@@ -263,7 +263,7 @@ const EngagementListing = () => {
                 }
                 const { needs_further_review } = row.submissions_meta_data;
                 return (
-                    <MetTooltip title={'Need further review'} placement="right" arrow>
+                    <MetTooltip disableInteractive title={'Need further review'} placement="right" arrow>
                         <span>
                             <NFRIcon
                                 onClick={() => {
@@ -306,7 +306,7 @@ const EngagementListing = () => {
                 }
                 const { rejected } = row.submissions_meta_data;
                 return (
-                    <MetTooltip title={'Rejected'} placement="right" arrow>
+                    <MetTooltip disableInteractive title={'Rejected'} placement="right" arrow>
                         <span>
                             <RejectedIcon
                                 onClick={() => {
@@ -349,7 +349,7 @@ const EngagementListing = () => {
                 }
                 const { pending } = row.submissions_meta_data;
                 return (
-                    <MetTooltip title={'New comments'} placement="right" arrow>
+                    <MetTooltip disableInteractive title={'New comments'} placement="right" arrow>
                         <span>
                             <NewIcon
                                 onClick={() => {
