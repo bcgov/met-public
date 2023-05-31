@@ -121,7 +121,6 @@ class EmailVerificationService:
     @staticmethod
     def _render_subscribe_email_template(survey: SurveyModel, token):
         # url is origin url excluding context path
-        site_url = current_app.config.get('SITE_URL')
         engagement: EngagementModel = EngagementModel.find_by_id(survey.engagement_id)
         engagement_name = engagement.name
         template_id = current_app.config.get('SUBSCRIBE_EMAIL_TEMPLATE_ID', None)
@@ -129,9 +128,10 @@ class EmailVerificationService:
         subject_template = current_app.config.get('SUBSCRIBE_EMAIL_SUBJECT')
         confirm_path = current_app.config.get('SUBSCRIBE_PATH'). \
             format(engagement_id=engagement.id, token=token)
+        confirm_url = notification.get_tenant_site_url(engagement.tenant_id, confirm_path)
         args = {
             'engagement_name': engagement_name,
-            'confirm_url': f'{site_url}{confirm_path}',
+            'confirm_url': confirm_url,
         }
         subject = subject_template.format(engagement_name=engagement_name)
         body = template.render(
@@ -143,7 +143,6 @@ class EmailVerificationService:
     @staticmethod
     def _render_survey_email_template(survey: SurveyModel, token):
         # url is origin url excluding context path
-        site_url = current_app.config.get('SITE_URL')
         engagement: EngagementModel = EngagementModel.find_by_id(survey.engagement_id)
         engagement_name = engagement.name
         template_id = current_app.config.get('VERIFICATION_EMAIL_TEMPLATE_ID', None)
@@ -153,6 +152,7 @@ class EmailVerificationService:
             format(survey_id=survey.id, token=token)
         dashboard_path = current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
             format(engagement_id=survey.engagement_id)
+        site_url = notification.get_tenant_site_url(engagement.tenant_id)
         args = {
             'engagement_name': engagement_name,
             'survey_url': f'{site_url}{survey_path}',

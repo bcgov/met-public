@@ -280,9 +280,9 @@ class SubmissionService:
         engagement_name = engagement.name
         survey_name = survey.name
 
-        site_url = current_app.config.get('SITE_URL')
         submission_path = current_app.config.get('SUBMISSION_PATH'). \
             format(engagement_id=submission.engagement_id, submission_id=submission.id, token=token)
+        submission_url = notification.get_tenant_site_url(engagement.tenant_id, submission_path)
         subject = current_app.config.get('REJECTED_EMAIL_SUBJECT'). \
             format(engagement_name=engagement_name)
         args = {
@@ -292,7 +292,7 @@ class SubmissionService:
             'has_profanity': 'yes' if submission.has_profanity else '',
             'has_other_reason': 'yes' if submission.rejected_reason_other else '',
             'other_reason': submission.rejected_reason_other,
-            'submission_url': f'{site_url}{submission_path}',
+            'submission_url': submission_url,
             'review_note': review_note,
             'end_date': datetime.strftime(engagement.end_date, EmailVerificationService.full_date_format),
         }

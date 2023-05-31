@@ -12,7 +12,7 @@ import dayjs from 'dayjs';
 import { EngagementStatusChip } from 'components/engagement/status';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { TileSkeleton } from './TileSkeleton';
-import { AppConfig } from 'config';
+import { getBaseUrl } from 'helper';
 
 interface EngagementTileProps {
     passedEngagement?: Engagement;
@@ -22,8 +22,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
     const [loadedEngagement, setLoadedEngagement] = useState<Engagement | null>(passedEngagement || null);
     const [isLoadingEngagement, setIsLoadingEngagement] = useState(true);
     const dateFormat = 'MMM DD, YYYY';
-
-    const baseUrl = AppConfig.publicUrl ? AppConfig.publicUrl : window.location.origin;
+    const baseUrl = getBaseUrl();
     const engagementUrl = loadedEngagement ? `${baseUrl}/engagements/${loadedEngagement.id}/view` : null;
 
     const loadEngagement = async () => {

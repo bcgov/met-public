@@ -67,18 +67,12 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     };
 
     useEffect(() => {
-        fetchData().catch((error) => {
-            console.error(error);
-        });
-    }, [engagement.id, chartBy]);
-
-    useEffect(() => {
-        if (fromDate && toDate) {
+        if ((engagement?.id && chartBy) || (fromDate && toDate)) {
             fetchData().catch((error) => {
                 console.error(error);
             });
         }
-    }, [fromDate, toDate]);
+    }, [engagement.id, chartBy, fromDate, toDate]);
 
     const clearDates = async () => {
         setFromDate(null);
@@ -118,9 +112,9 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     return (
         <>
             <MetLabel mb={2}>Live Activity - Engagement</MetLabel>
-            <MetPaper sx={{ p: isSmallScreen ? 1 : 2 }}>
+            <MetPaper sx={{ p: 2 }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Grid container direction={isSmallScreen ? 'column' : 'row'}>
+                    <Grid container>
                         <Grid
                             alignItems={'center'}
                             justifyContent={'center'}
@@ -129,15 +123,12 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             item
                             lg={2}
                             md={3}
-                            mt={isSmallScreen ? 2 : 0}
-                            rowSpacing={isSmallScreen ? 1 : 0}
-                            mb={isSmallScreen ? 4 : 0}
                         >
-                            <Grid container justifyContent="center" alignItems="center" sx={{ mb: 1 }}>
-                                <Grid item xs={2}>
-                                    <MetLabel sx={{ mr: isSmallScreen ? 0 : 1 }}>From: </MetLabel>
+                            <Grid container alignItems="center">
+                                <Grid item xs={4}>
+                                    <MetLabel sx={{ mr: 1 }}>From: </MetLabel>
                                 </Grid>
-                                <Grid item sm={4} md={8}>
+                                <Grid item xs={8}>
                                     <DatePicker
                                         value={fromDate}
                                         onChange={(newDate: Dayjs | null) => setFromDate(newDate)}
@@ -146,11 +137,11 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     />
                                 </Grid>
                             </Grid>
-                            <Grid container justifyContent="center" alignItems="center" sx={{ mb: 1 }}>
-                                <Grid item xs={2}>
-                                    <MetLabel sx={{ mr: isSmallScreen ? 0 : 1 }}>To: </MetLabel>
+                            <Grid container alignItems="center">
+                                <Grid item xs={4}>
+                                    <MetLabel sx={{ mr: 1 }}>To: </MetLabel>
                                 </Grid>
-                                <Grid item sm={4} md={8}>
+                                <Grid item xs={8}>
                                     <DatePicker
                                         value={toDate}
                                         onChange={(newDate: Dayjs | null) => setToDate(newDate)}
@@ -160,25 +151,15 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                 </Grid>
                             </Grid>
 
-                            <Grid container item xs={8} justifyContent="center" alignItems="center">
-                                <PrimaryButton sx={{ width: isSmallScreen ? '50%' : '100%' }} onClick={clearDates}>
+                            <Grid item xs={8}>
+                                <PrimaryButton sx={{ width: '100%' }} onClick={clearDates}>
                                     Clear
                                 </PrimaryButton>
                             </Grid>
                         </Grid>
                         <Grid item lg={10} md={9}>
-                            <Stack
-                                direction={{ xs: 'column', sm: 'row' }}
-                                width="100%"
-                                justifyContent="flex-end"
-                                alignItems={'flex-end'}
-                            >
-                                <ToggleButtonGroup
-                                    value={chartBy}
-                                    exclusive
-                                    onChange={handleToggleChange}
-                                    size={isSmallScreen ? 'small' : 'medium'}
-                                >
+                            <Stack direction={{ xs: 'column', sm: 'row' }} width="100%" justifyContent="flex-end">
+                                <ToggleButtonGroup value={chartBy} exclusive onChange={handleToggleChange}>
                                     <ToggleButton
                                         value="monthly"
                                         sx={{
