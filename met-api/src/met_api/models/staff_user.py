@@ -5,13 +5,11 @@ Manages the staff user
 from __future__ import annotations
 
 from typing import Optional
-from flask import current_app
 
 from sqlalchemy import Column, ForeignKey, String, asc, desc, func
 from sqlalchemy.orm import column_property
 from sqlalchemy.sql import text
 from sqlalchemy.sql.operators import ilike_op
-from sqlalchemy_utils.types.encrypted.encrypted_type import AesEngine, StringEncryptedType
 
 from .base_model import BaseModel
 from .db import db
@@ -35,7 +33,7 @@ class StaffUser(BaseModel):
     external_id = Column(db.String(50), nullable=False, unique=True)
     status_id = db.Column(db.Integer, ForeignKey('user_status.id'))
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
-    
+
     @classmethod
     def get_all_paginated(cls, pagination_options: PaginationOptions, search_text=''):
         """Fetch list of users by access type."""

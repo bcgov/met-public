@@ -19,31 +19,29 @@ class MetUser(BaseModel):  # pylint: disable=too-few-public-methods
     __tablename__ = 'met_users'
 
     id = Column(db.Integer, primary_key=True, autoincrement=True)
-    
+
     @declared_attr
-    def email_address(cls):
+    def email_address(self):
         """Declare attribute for bank account number."""
-        return db.Column('email_address', StringEncryptedType(String, cls._get_secret, AesEngine, 'pkcs5'),
+        return db.Column('email_address', StringEncryptedType(String, self._get_secret, AesEngine, 'pkcs5'),
                          nullable=True, index=True)
 
     @staticmethod
     def _get_secret():
         """Return email secret key for encryption."""
         return current_app.config.get('EMAIL_SECRET_KEY')
-        
+
     @classmethod
     def get_user_by_email(cls, _email_address) -> MetUser:
-        """Get a met user with the provided external id."""
-        return cls.query.filter(MetUser.email_address == _email_address.lower()).first()
+        """Get a met user with the provided email address."""
+        return cls.query.filter(MetUser.email_address == _email_address.lower()).first()  # pylint: disable=W0143
 
     @classmethod
     def create_user(cls, user) -> MetUser:
-
-        email_address = user.get('email_address', '')
         """Create a met user."""
+        email_address = user.get('email_address', '')
         user = MetUser(
             email_address=email_address.lower(),
         )
         user.save()
-
         return user

@@ -86,6 +86,5 @@ def test_update_user_from_dict_valid(session):
     new_user = StaffUserModel.create_user(user_dict)
     assert new_user.email_address == old_email
     new_email = fake.email()
-    updated_user = StaffUserModel.update_user(new_user.id, {'email_address': new_email
-                                                       })
+    updated_user = StaffUserModel.update_user(new_user.id, {'email_address': new_email})
     assert updated_user.email_address == new_email

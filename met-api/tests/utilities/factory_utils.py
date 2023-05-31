@@ -148,6 +148,7 @@ def factory_staff_user_model(external_id=None, user_info: dict = TestUserInfo.us
     user.save()
     return user
 
+
 def factory_public_user_model(user_info: dict = TestUserInfo.user_public_1):
     """Produce a met user model."""
     user = MetUserModel(
