@@ -67,7 +67,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     };
 
     useEffect(() => {
-        if ((engagement?.id && chartBy) || (fromDate && toDate)) {
+        if (engagement.id && Boolean(fromDate) == Boolean(toDate)) {
             fetchData().catch((error) => {
                 console.error(error);
             });
