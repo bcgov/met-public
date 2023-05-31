@@ -67,18 +67,12 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     };
 
     useEffect(() => {
-        fetchData().catch((error) => {
-            console.error(error);
-        });
-    }, [engagement.id, chartBy]);
-
-    useEffect(() => {
-        if (fromDate && toDate) {
+        if ((engagement?.id && chartBy) || (fromDate && toDate)) {
             fetchData().catch((error) => {
                 console.error(error);
             });
         }
-    }, [fromDate, toDate]);
+    }, [engagement.id, chartBy, fromDate, toDate]);
 
     const clearDates = async () => {
         setFromDate(null);
