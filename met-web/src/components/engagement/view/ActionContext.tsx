@@ -8,7 +8,7 @@ import { Widget } from 'models/widget';
 import { useLazyGetWidgetsQuery } from 'apiManager/apiSlices/widgets';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { verifyEmailVerification } from 'services/emailVerificationService';
-import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+import { createSubscription, unSubscribe } from 'services/subscriptionService';
 
 interface EngagementSchedule {
     id: number;
@@ -24,11 +24,13 @@ export interface EngagementViewContext {
     widgets: Widget[];
     mockStatus: SubmissionStatus;
     updateMockStatus: (status: SubmissionStatus) => void;
+    subscriptionText: string;
 }
 
 export type EngagementParams = {
     engagementId: string;
-    token?: string;
+    subscriptionStatus: string;
+    scriptionKey?: string;
 };
 
 export const ActionContext = createContext<EngagementViewContext>({
@@ -43,10 +45,11 @@ export const ActionContext = createContext<EngagementViewContext>({
     updateMockStatus: (status: SubmissionStatus) => {
         /* nothing returned */
     },
+    subscriptionText: '',
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
-    const { engagementId, token } = useParams<EngagementParams>();
+    const { engagementId, subscriptionStatus, scriptionKey } = useParams<EngagementParams>();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
@@ -54,37 +57,42 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const [widgets, setWidgets] = useState<Widget[]>([]);
     const [isEngagementLoading, setEngagementLoading] = useState(true);
     const [isWidgetsLoading, setIsWidgetsLoading] = useState(true);
+    const [subscriptionText, setSubscriptionText] = useState('');
 
     const [getWidgetsTrigger] = useLazyGetWidgetsQuery();
 
     useEffect(() => {
-        verifySubscribeToken();
-    }, [token]);
+        verifySubscribeKey();
+    }, [scriptionKey]);
 
     useEffect(() => {
         setMockStatus(savedEngagement.submission_status);
     }, [savedEngagement]);
 
-    const verifySubscribeToken = async () => {
+    const verifySubscribeKey = async () => {
         try {
-            if (!token) {
+            if (!scriptionKey) {
                 return;
             }
-            await verifyEmailVerification(token);
-            dispatch(
-                openNotificationModal({
-                    open: true,
-                    data: {
-                        header: 'Subscribed Successfully',
-                        subText: [
-                            {
-                                text: 'Your email has been verified. You will now receive news and updates from us.',
-                            },
-                        ],
-                    },
-                    type: 'update',
-                }),
-            );
+            if (subscriptionStatus == 'subscribe') {
+                const token = scriptionKey;
+                const subscribed_email = await verifyEmailVerification(token);
+                const subscribed = JSON.stringify(subscribed_email);
+                await createSubscription({
+                    email_verification_id: JSON.parse(subscribed).id,
+                    user_id: JSON.parse(subscribed).user_id,
+                    is_subscribed: 'true',
+                });
+                setSubscriptionText('You have successfully confirmed your subscription. Thank you.');
+            }
+            if (subscriptionStatus == 'unsubscribe') {
+                const user_id = scriptionKey;
+                await unSubscribe({
+                    user_id: parseInt(user_id ?? ''),
+                    is_subscribed: 'false',
+                });
+                setSubscriptionText('You have successfully unsubscribed. Thank you.');
+            }
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error Subscribing to Engagement' }));
             return Promise.reject(error);
@@ -165,6 +173,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 isWidgetsLoading,
                 updateMockStatus,
                 mockStatus,
+                subscriptionText,
             }}
         >
             {children}
