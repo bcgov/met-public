@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Divider, FormControl, FormControlLabel, FormLabel, Grid, RadioGroup, Stack, Radio } from '@mui/material';
-import { MetPageGridContainer, PrimaryButton, SecondaryButton, MetHeader3 } from 'components/common';
+import { MetPageGridContainer, PrimaryButton, SecondaryButton, MetHeader3, MetDisclaimer } from 'components/common';
 import CloneOptions from './CloneOptions';
 import { CreateOptions } from './CreateOptions';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +9,7 @@ import LinkOptions from './LinkOptions';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { OptionsFormSkeleton } from './OptionsFormSkeleton';
 import { When } from 'react-if';
+import { Disclaimer } from './Disclaimer';
 
 const OptionsForm = () => {
     const navigate = useNavigate();
@@ -75,6 +76,12 @@ const OptionsForm = () => {
             <When condition={value === 'LINK'}>
                 <Grid item xs={12}>
                     <LinkOptions />
+                </Grid>
+            </When>
+
+            <When condition={!value}>
+                <Grid item xs={12}>
+                    <Disclaimer />
                 </Grid>
             </When>
 

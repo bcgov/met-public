@@ -7,6 +7,7 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
 import { Survey } from 'models/survey';
+import { Disclaimer } from './Disclaimer';
 
 const LinkOptions = () => {
     const navigate = useNavigate();
@@ -16,7 +17,8 @@ const LinkOptions = () => {
     const [loadingSurveys, setLoadingSurveys] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
 
-    const { availableSurveys, setAvailableSurveys, engagementToLink } = useContext(CreateSurveyContext);
+    const { availableSurveys, setAvailableSurveys, engagementToLink, isDisclaimerChecked } =
+        useContext(CreateSurveyContext);
 
     const handleFetchSurveys = async () => {
         try {
@@ -93,8 +95,11 @@ const LinkOptions = () => {
                 />
             </Grid>
             <Grid item xs={12}>
+                <Disclaimer />
+            </Grid>
+            <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <PrimaryButton onClick={handleSave} loading={isSaving}>
+                    <PrimaryButton disabled={!isDisclaimerChecked} onClick={handleSave} loading={isSaving}>
                         {'Save & Continue'}
                     </PrimaryButton>
                     <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
