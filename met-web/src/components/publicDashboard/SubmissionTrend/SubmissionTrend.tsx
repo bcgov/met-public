@@ -61,7 +61,6 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
             setIsLoading(false);
             setIsError(false);
         } catch (error) {
-            console.log(error);
             setIsError(true);
         }
     };
