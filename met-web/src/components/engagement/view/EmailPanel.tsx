@@ -1,7 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import {
     Grid,
-    Typography,
     Checkbox,
     TextField,
     FormControl,
@@ -12,7 +11,6 @@ import {
     Theme,
     Toolbar,
     Link,
-    Box,
 } from '@mui/material';
 import { EmailPanelProps } from './types';
 import {
