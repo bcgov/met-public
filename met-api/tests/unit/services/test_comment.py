@@ -19,8 +19,8 @@ Test-Suite to ensure that the Comment service routines are working as expected.
 from met_api.services.comment_service import CommentService
 from tests.utilities.factory_scenarios import TestJwtClaims, TestSubmissionInfo
 from tests.utilities.factory_utils import (
-    factory_comment_model, factory_membership_model, factory_public_user_model, factory_submission_model,
-    factory_staff_user_model, factory_survey_and_eng_model, patch_token_info)
+    factory_comment_model, factory_membership_model, factory_public_user_model, factory_staff_user_model,
+    factory_submission_model, factory_survey_and_eng_model, patch_token_info)
 
 
 def test_get_comments(session, monkeypatch):  # pylint:disable=unused-argument

@@ -24,8 +24,8 @@ from met_api.services.email_verification_service import EmailVerificationService
 from met_api.services.submission_service import SubmissionService
 
 from tests.utilities.factory_utils import (
-    factory_comment_model, factory_email_verification, factory_public_user_model, factory_submission_model,
-    factory_survey_and_eng_model, factory_staff_user_model)
+    factory_comment_model, factory_email_verification, factory_public_user_model, factory_staff_user_model,
+    factory_submission_model, factory_survey_and_eng_model)
 
 
 def test_create_submission(session):  # pylint:disable=unused-argument
