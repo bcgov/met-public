@@ -44,7 +44,7 @@ def upgrade():
         created_date, updated_date, first_name, middle_name, last_name, username, contact_number,\
         external_id, status_id, tenant_id, created_by, updated_by FROM met_users WHERE username IS NOT NULL;')
     op.execute('DELETE FROM met_users WHERE username is not null;')
-    op.execute('SELECT setval(''staff_users_id_seq'', (SELECT MAX(id) + 1 FROM staff_users), true);')
+    op.execute('SELECT setval(\'staff_users_id_seq\', (SELECT MAX(id) + 1 FROM staff_users), true);')
     op.add_column('met_users', sa.Column('email_address', sqlalchemy_utils.types.encrypted.encrypted_type.StringEncryptedType(), nullable=True))
     op.create_index(op.f('ix_staff_users_username'), 'staff_users', ['username'], unique=True)
     op.drop_constraint('membership_user_id_fkey', 'membership', type_='foreignkey')
