@@ -55,7 +55,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjetMapData 
     if (isLoading || engagementIsLoading || !data) {
         return (
             <>
-                <MetLabel mb={isSmallScreen ? 0.5 : 2}>Project Location</MetLabel>
+                <MetLabel mb={2}>Project Location</MetLabel>
                 <MetPaper sx={{ p: 2, textAlign: 'center' }}>
                     <Stack alignItems="center" gap={1}>
                         <Grid
@@ -76,9 +76,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjetMapData 
 
     return (
         <>
-            <MetLabel mt={isSmallScreen ? 0 : 2} mb={isSmallScreen ? 0 : 2}>
-                Project Location
-            </MetLabel>
+            <MetLabel mb={isSmallScreen ? 0.5 : 2}>Project Location</MetLabel>
             <MetPaper sx={{ textAlign: 'center' }}>
                 <Box
                     sx={{
