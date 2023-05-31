@@ -31,13 +31,14 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjetMapData 
             handleProjetMapData(response);
             setIsLoading(false);
         } catch (error) {
-            console.log(error);
             setIsError(true);
         }
     };
 
     useEffect(() => {
-        fetchData();
+        if (Number(engagement.id)) {
+            fetchData();
+        }
     }, [engagement.id]);
 
     if (isError) {

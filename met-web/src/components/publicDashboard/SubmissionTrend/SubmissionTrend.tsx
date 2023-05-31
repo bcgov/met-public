@@ -40,13 +40,14 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
             }
             setIsLoading(false);
         } catch (error) {
-            console.log(error);
             setIsError(true);
         }
     };
 
     useEffect(() => {
-        fetchData();
+        if (Number(engagement.id)) {
+            fetchData();
+        }
     }, [engagement.id, chartBy]);
 
     const handleToggleChange = (event: React.MouseEvent<HTMLElement>, chartByValue: string) => {
