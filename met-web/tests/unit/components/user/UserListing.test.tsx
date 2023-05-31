@@ -20,7 +20,6 @@ const mockUser1: User = {
     updated_date: Date(),
     created_date: Date(),
     status: 'Active',
-    access_type: 'Staff',
     roles: [],
 };
 
