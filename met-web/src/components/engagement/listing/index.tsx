@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 import { Link, useNavigate } from 'react-router-dom';
-import { MetPageGridContainer, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetPageGridContainer, MetTooltip, PrimaryButton, SecondaryButton } from 'components/common';
 import { Engagement } from 'models/engagement';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
@@ -220,18 +220,22 @@ const EngagementListing = () => {
 
                 const { approved } = row.submissions_meta_data;
                 return (
-                    <ApprovedIcon
-                        onClick={() => {
-                            if (row.surveys.length === 0) return;
-                            navigate(`/surveys/${row.surveys[0].id}/comments`, {
-                                state: {
-                                    status: CommentStatus.Approved,
-                                },
-                            });
-                        }}
-                    >
-                        {approved || 0}
-                    </ApprovedIcon>
+                    <MetTooltip title={'Approved'} placement="right" arrow>
+                        <span>
+                            <ApprovedIcon
+                                onClick={() => {
+                                    if (row.surveys.length === 0) return;
+                                    navigate(`/surveys/${row.surveys[0].id}/comments`, {
+                                        state: {
+                                            status: CommentStatus.Approved,
+                                        },
+                                    });
+                                }}
+                            >
+                                {approved}
+                            </ApprovedIcon>
+                        </span>
+                    </MetTooltip>
                 );
             },
         },
@@ -259,18 +263,22 @@ const EngagementListing = () => {
                 }
                 const { needs_further_review } = row.submissions_meta_data;
                 return (
-                    <NFRIcon
-                        onClick={() => {
-                            if (row.surveys.length === 0) return;
-                            navigate(`/surveys/${row.surveys[0].id}/comments`, {
-                                state: {
-                                    status: CommentStatus.NeedsFurtherReview,
-                                },
-                            });
-                        }}
-                    >
-                        {needs_further_review || 0}
-                    </NFRIcon>
+                    <MetTooltip title={'Need further review'} placement="right" arrow>
+                        <span>
+                            <NFRIcon
+                                onClick={() => {
+                                    if (row.surveys.length === 0) return;
+                                    navigate(`/surveys/${row.surveys[0].id}/comments`, {
+                                        state: {
+                                            status: CommentStatus.NeedsFurtherReview,
+                                        },
+                                    });
+                                }}
+                            >
+                                {needs_further_review || 0}
+                            </NFRIcon>
+                        </span>
+                    </MetTooltip>
                 );
             },
         },
@@ -298,18 +306,22 @@ const EngagementListing = () => {
                 }
                 const { rejected } = row.submissions_meta_data;
                 return (
-                    <RejectedIcon
-                        onClick={() => {
-                            if (row.surveys.length === 0) return;
-                            navigate(`/surveys/${row.surveys[0].id}/comments`, {
-                                state: {
-                                    status: CommentStatus.Rejected,
-                                },
-                            });
-                        }}
-                    >
-                        {rejected || 0}
-                    </RejectedIcon>
+                    <MetTooltip title={'Rejected'} placement="right" arrow>
+                        <span>
+                            <RejectedIcon
+                                onClick={() => {
+                                    if (row.surveys.length === 0) return;
+                                    navigate(`/surveys/${row.surveys[0].id}/comments`, {
+                                        state: {
+                                            status: CommentStatus.Rejected,
+                                        },
+                                    });
+                                }}
+                            >
+                                {rejected || 0}
+                            </RejectedIcon>
+                        </span>
+                    </MetTooltip>
                 );
             },
         },
@@ -337,18 +349,22 @@ const EngagementListing = () => {
                 }
                 const { pending } = row.submissions_meta_data;
                 return (
-                    <NewIcon
-                        onClick={() => {
-                            if (row.surveys.length === 0) return;
-                            navigate(`/surveys/${row.surveys[0].id}/comments`, {
-                                state: {
-                                    status: CommentStatus.Pending,
-                                },
-                            });
-                        }}
-                    >
-                        {pending || 0}
-                    </NewIcon>
+                    <MetTooltip title={'New comments'} placement="right" arrow>
+                        <span>
+                            <NewIcon
+                                onClick={() => {
+                                    if (row.surveys.length === 0) return;
+                                    navigate(`/surveys/${row.surveys[0].id}/comments`, {
+                                        state: {
+                                            status: CommentStatus.Pending,
+                                        },
+                                    });
+                                }}
+                            >
+                                {pending || 0}
+                            </NewIcon>
+                        </span>
+                    </MetTooltip>
                 );
             },
         },
