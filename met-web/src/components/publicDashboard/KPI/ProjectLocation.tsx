@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Stack from '@mui/material/Stack';
-import { Box, Grid, CircularProgress } from '@mui/material';
+import { Box, Grid, CircularProgress, useMediaQuery, Theme } from '@mui/material';
 import { getMapData } from 'services/analytics/mapService';
 import { Map } from '../../../models/analytics/map';
 import { Engagement } from 'models/engagement';
@@ -12,36 +12,50 @@ import { geoJSONDecode } from 'components/engagement/form/EngagementWidgets/Map/
 interface SurveysCompletedProps {
     engagement: Engagement;
     engagementIsLoading: boolean;
+    handleProjetMapData: (data: Map) => void;
 }
 
-const ProjectLocation = ({ engagement, engagementIsLoading }: SurveysCompletedProps) => {
+const ProjectLocation = ({ engagement, engagementIsLoading, handleProjetMapData }: SurveysCompletedProps) => {
     const [data, setData] = useState<Map | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
-
-    const circleSize = 250;
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+    const circleSize = isSmallScreen ? 100 : 250;
 
     const fetchData = async () => {
+        setIsError(false);
         setIsLoading(true);
         try {
             const response = await getMapData(Number(engagement.id));
             setData(response);
+            handleProjetMapData(response);
             setIsLoading(false);
-            setIsError(false);
         } catch (error) {
-            console.log(error);
             setIsError(true);
         }
     };
 
     useEffect(() => {
-        fetchData();
+        if (Number(engagement.id)) {
+            fetchData();
+        }
     }, [engagement.id]);
+
+    if (isError) {
+        return (
+            <ErrorBox
+                sx={{ height: '100%', minHeight: '213px' }}
+                onClick={() => {
+                    fetchData();
+                }}
+            />
+        );
+    }
 
     if (isLoading || engagementIsLoading || !data) {
         return (
             <>
-                <MetLabel mb={2}>Project Location</MetLabel>
+                <MetLabel mb={isSmallScreen ? 0.5 : 2}>Project Location</MetLabel>
                 <MetPaper sx={{ p: 2, textAlign: 'center' }}>
                     <Stack alignItems="center" gap={1}>
                         <Grid
@@ -60,13 +74,11 @@ const ProjectLocation = ({ engagement, engagementIsLoading }: SurveysCompletedPr
         );
     }
 
-    if (isError) {
-        return <ErrorBox sx={{ height: '100%', minHeight: '213px' }} onClick={fetchData} />;
-    }
-
     return (
         <>
-            <MetLabel mb={2}>Project Location</MetLabel>
+            <MetLabel mt={isSmallScreen ? 0 : 2} mb={isSmallScreen ? 0 : 2}>
+                Project Location
+            </MetLabel>
             <MetPaper sx={{ textAlign: 'center' }}>
                 <Box
                     sx={{

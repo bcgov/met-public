@@ -63,7 +63,6 @@ export const DashboardContextProvider = ({ children }: DashboardContextProviderP
             setEngagement({ ...result });
             setEngagementLoading(false);
         } catch (error) {
-            console.log(error);
             dispatch(
                 openNotification({
                     severity: 'error',

@@ -4,7 +4,6 @@ import {
     Grid,
     Skeleton,
     Divider,
-    CircularProgress,
     useMediaQuery,
     Theme,
     Stack,
@@ -20,6 +19,7 @@ import { TreemapBlock } from './TreemapBlock';
 import { getSurveyResultData } from 'services/analytics/surveyResult';
 import { Engagement } from 'models/engagement';
 import { SurveyResultData, createSurveyResultData, defaultData } from '../../../models/analytics/surveyResult';
+import { ErrorBox } from '../ErrorBox';
 
 const HEIGHT = 400;
 
@@ -42,75 +42,36 @@ export const SurveyBar = ({ engagement, engagementIsLoading }: SurveyQuestionPro
 
     const fetchData = async () => {
         setIsLoading(true);
+        setIsError(false);
         try {
             const response = await getSurveyResultData(Number(engagement.id));
             setData(response);
             setSelectedData(response?.data[0]);
             setIsLoading(false);
-            setIsError(false);
         } catch (error) {
-            console.log(error);
             setIsError(true);
         }
     };
 
     useEffect(() => {
-        fetchData();
+        if (Number(engagement.id)) {
+            fetchData();
+        }
     }, [engagement.id]);
+
+    if (isError) {
+        return (
+            <ErrorBox
+                sx={{ height: HEIGHT }}
+                onClick={() => {
+                    fetchData();
+                }}
+            />
+        );
+    }
 
     if (isLoading || engagementIsLoading) {
         return <Skeleton variant="rectangular" width={'100%'} height={HEIGHT} />;
-    }
-
-    if (isError) {
-        <>
-            <Grid item xs={12}>
-                <MetLabel mb={2} color="primary">
-                    Survey Results
-                </MetLabel>
-            </Grid>
-            <Grid ml={isSmallScreen ? 0 : 5} item xs={12}>
-                <MetPaper sx={{ p: 2 }}>
-                    <Grid item xs={12}>
-                        <Stack direction={{ xs: 'column', sm: 'row' }} width="100%" justifyContent="flex-end">
-                            <Grid item container xs={12} direction="row" justifyContent="center">
-                                <MetLabel mb={2} color="primary">
-                                    Click on a question to view results
-                                </MetLabel>
-                                <ToggleButtonGroup value={chartType} exclusive onChange={handleToggleChange}>
-                                    <ToggleButton
-                                        value="bar"
-                                        sx={{
-                                            '&.Mui-selected': {
-                                                backgroundColor: Palette.primary.main,
-                                                color: 'white',
-                                            },
-                                        }}
-                                    >
-                                        Show as Bar Chart
-                                    </ToggleButton>
-                                    <ToggleButton
-                                        value="treemap"
-                                        sx={{
-                                            '&.Mui-selected': {
-                                                backgroundColor: Palette.primary.main,
-                                                color: 'white',
-                                            },
-                                        }}
-                                    >
-                                        Show as TreeMap Chart
-                                    </ToggleButton>
-                                </ToggleButtonGroup>
-                            </Grid>
-                        </Stack>
-                        <Divider sx={{ marginTop: '1em' }} />
-                        <Grid container direction="row" item xs={12} spacing={1} alignItems={'flex-start'}>
-                            <CircularProgress color="inherit" />
-                        </Grid>
-                    </Grid>
-                </MetPaper>
-            </Grid>
-        </>;
     }
 
     return (

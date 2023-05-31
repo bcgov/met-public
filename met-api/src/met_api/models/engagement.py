@@ -135,12 +135,11 @@ class Engagement(BaseModel):
         return engagement
 
     @classmethod
-    def close_engagements_due(cls) -> List[EngagementSchema]:
+    def close_engagements_due(cls) -> List[Engagement]:
         """Update engagement to closed."""
         now = local_datetime()
         # Strip the time off the datetime object
         date_due = datetime(now.year, now.month, now.day)
-        engagements_schema = EngagementSchema(many=True)
         update_fields = dict(
             status_id=Status.Closed.value,
             updated_date=datetime.utcnow(),
@@ -155,7 +154,7 @@ class Engagement(BaseModel):
             return []
         query.update(update_fields)
         db.session.commit()
-        return engagements_schema.dump(records)
+        return records
 
     @classmethod
     def publish_scheduled_engagements_due(cls) -> List[EngagementSchema]:
