@@ -153,7 +153,11 @@ const Dashboard = () => {
                                                 engagementIsLoading={isEngagementLoading}
                                             />
                                         </Box>
-                                        <SurveyBar engagement={engagement} engagementIsLoading={isEngagementLoading} />
+                                        <SurveyBar
+                                            readComments={handleReadComments}
+                                            engagement={engagement}
+                                            engagementIsLoading={isEngagementLoading}
+                                        />
                                     </Grid>
                                     <When condition={isPrinting}>
                                         <Grid item xs={12}>

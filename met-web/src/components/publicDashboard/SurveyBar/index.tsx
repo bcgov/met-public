@@ -11,7 +11,7 @@ import {
     ToggleButton,
 } from '@mui/material';
 import { Palette } from 'styles/Theme';
-import { MetHeader1, MetPaper, MetLabel } from 'components/common';
+import { MetHeader1, MetPaper, MetLabel, PrimaryButton } from 'components/common';
 import { QuestionBlock } from './QuestionBlock';
 import { SurveyBarData } from '../types';
 import { BarBlock } from './BarBlock';
@@ -26,9 +26,10 @@ const HEIGHT = 400;
 interface SurveyQuestionProps {
     engagement: Engagement;
     engagementIsLoading: boolean;
+    readComments?: () => void;
 }
 
-export const SurveyBar = ({ engagement, engagementIsLoading }: SurveyQuestionProps) => {
+export const SurveyBar = ({ readComments, engagement, engagementIsLoading }: SurveyQuestionProps) => {
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const [data, setData] = useState<SurveyResultData>(createSurveyResultData());
     const [selectedData, setSelectedData] = useState(defaultData[0]);
@@ -165,6 +166,18 @@ export const SurveyBar = ({ engagement, engagementIsLoading }: SurveyQuestionPro
                             )}
                         </Grid>
                     </Grid>
+
+                    <When condition={isSmallScreen}>
+                        <Grid container item xs={12} alignItems="center" justifyContent="center">
+                            <PrimaryButton
+                                sx={{ mt: 3, width: '80%' }}
+                                data-testid="SurveyBlock/take-me-to-survey-button-mobile"
+                                onClick={readComments}
+                            >
+                                Read Comments
+                            </PrimaryButton>
+                        </Grid>
+                    </When>
                 </MetPaper>
             </Grid>
         </>
