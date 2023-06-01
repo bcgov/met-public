@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { Grid } from '@mui/material';
 import { MetHeader1, MetParagraph, MetHeader4 } from 'components/common';
 import { Banner } from 'components/banner/Banner';
@@ -8,12 +9,20 @@ import { getTenant } from 'services/tenantService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
-import { ActionContext } from '../../../ActionContext';
-import { When } from 'react-if';
+import { SubscriptionType } from './subscribe';
+import { verifyEmailVerification } from 'services/emailVerificationService';
+import { createSubscription, unSubscribe } from 'services/subscriptionService';
+
+export type SubscriptionParams = {
+    engagementId: string;
+    subscriptionStatus: string;
+    scriptionKey?: string;
+};
 
 export const Subscription = () => {
+    const { subscriptionStatus, scriptionKey } = useParams<SubscriptionParams>();
     const [tenant, setTenant] = useState<Tenant>();
-    const { isSubscribed } = useContext(ActionContext);
+    const [subscriptionText, setSubscriptionText] = useState('');
 
     const dispatch = useAppDispatch();
     const fetchTenant = async () => {
@@ -34,6 +43,40 @@ export const Subscription = () => {
     useEffect(() => {
         fetchTenant();
     }, []);
+
+    useEffect(() => {
+        verifySubscribeKey();
+    }, [scriptionKey]);
+
+    const verifySubscribeKey = async () => {
+        try {
+            if (!scriptionKey) {
+                return;
+            }
+            if (subscriptionStatus == SubscriptionType.SUBSCRIBE) {
+                const token = scriptionKey;
+                const subscribed_email = await verifyEmailVerification(token);
+                const subscribed = JSON.stringify(subscribed_email);
+                await createSubscription({
+                    email_verification_id: JSON.parse(subscribed).id,
+                    user_id: JSON.parse(subscribed).user_id,
+                    is_subscribed: 'true',
+                });
+                setSubscriptionText('You have successfully confirmed your subscription. Thank you.');
+            }
+            if (subscriptionStatus == SubscriptionType.UNSUBSCRIBE) {
+                const user_id = scriptionKey;
+                await unSubscribe({
+                    user_id: parseInt(user_id ?? ''),
+                    is_subscribed: 'false',
+                });
+                setSubscriptionText('You have successfully unsubscribed. Thank you.');
+            }
+        } catch (error) {
+            dispatch(openNotification({ severity: 'error', text: 'Error Subscribing to Engagement' }));
+            return Promise.reject(error);
+        }
+    };
 
     return (
         <Grid container direction="row" justifyContent={'center'} alignItems="center">
@@ -94,16 +137,9 @@ export const Subscription = () => {
                 rowSpacing={2}
             >
                 <CheckCircleRoundedIcon style={{ color: '#2e8540', fontSize: 50 }} />
-                <When condition={isSubscribed}>
-                    <MetHeader4 bold m={{ lg: '.5em 0 0 .5em', md: '3em', sm: '1em' }}>
-                        You have successfully confirmed your subscription. Thank you.
-                    </MetHeader4>
-                </When>
-                <When condition={!isSubscribed}>
-                    <MetHeader4 bold m={{ lg: '.5em 0 0 .5em', md: '3em', sm: '1em' }}>
-                        You have successfully unsubscribed. Thank you.
-                    </MetHeader4>
-                </When>
+                <MetHeader4 bold m={{ lg: '.5em 0 0 .5em', md: '3em', sm: '1em' }}>
+                    {subscriptionText}
+                </MetHeader4>
             </Grid>
         </Grid>
     );

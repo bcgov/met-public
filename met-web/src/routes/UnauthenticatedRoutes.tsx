@@ -7,7 +7,7 @@ import NotFound from './NotFound';
 import EngagementComments from '../components/engagement/dashboard/comment';
 import PublicDashboard from 'components/publicDashboard';
 import Landing from 'components/landing';
-import ManageSubscription from '../components/engagement/view/widgets/Subscribe/Subscribed';
+import ManageSubscription from '../components/engagement/view/widgets/Subscribe/ManageSubscription';
 
 const UnauthenticatedRoutes = () => {
     return (

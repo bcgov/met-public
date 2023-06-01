@@ -8,8 +8,7 @@ import { Widget } from 'models/widget';
 import { useLazyGetWidgetsQuery } from 'apiManager/apiSlices/widgets';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { verifyEmailVerification } from 'services/emailVerificationService';
-import { createSubscription, unSubscribe } from 'services/subscriptionService';
-import { SubscriptionType } from './subscribe';
+import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
 interface EngagementSchedule {
     id: number;
@@ -25,13 +24,11 @@ export interface EngagementViewContext {
     widgets: Widget[];
     mockStatus: SubmissionStatus;
     updateMockStatus: (status: SubmissionStatus) => void;
-    isSubscribed: boolean;
 }
 
 export type EngagementParams = {
     engagementId: string;
-    subscriptionStatus: string;
-    scriptionKey?: string;
+    token?: string;
 };
 
 export const ActionContext = createContext<EngagementViewContext>({
@@ -46,11 +43,10 @@ export const ActionContext = createContext<EngagementViewContext>({
     updateMockStatus: (status: SubmissionStatus) => {
         /* nothing returned */
     },
-    isSubscribed: false,
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
-    const { engagementId, subscriptionStatus, scriptionKey } = useParams<EngagementParams>();
+    const { engagementId, token } = useParams<EngagementParams>();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
@@ -58,42 +54,37 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const [widgets, setWidgets] = useState<Widget[]>([]);
     const [isEngagementLoading, setEngagementLoading] = useState(true);
     const [isWidgetsLoading, setIsWidgetsLoading] = useState(true);
-    const [isSubscribed, setIsSubscribed] = useState(false);
 
     const [getWidgetsTrigger] = useLazyGetWidgetsQuery();
 
     useEffect(() => {
-        verifySubscribeKey();
-    }, [scriptionKey]);
+        verifySubscribeToken();
+    }, [token]);
 
     useEffect(() => {
         setMockStatus(savedEngagement.submission_status);
     }, [savedEngagement]);
 
-    const verifySubscribeKey = async () => {
+    const verifySubscribeToken = async () => {
         try {
-            if (!scriptionKey) {
+            if (!token) {
                 return;
             }
-            if (subscriptionStatus == SubscriptionType.SUBSCRIBE) {
-                const token = scriptionKey;
-                setIsSubscribed(true);
-                const subscribed_email = await verifyEmailVerification(token);
-                const subscribed = JSON.stringify(subscribed_email);
-                await createSubscription({
-                    email_verification_id: JSON.parse(subscribed).id,
-                    user_id: JSON.parse(subscribed).user_id,
-                    is_subscribed: 'true',
-                });
-            }
-            if (subscriptionStatus == SubscriptionType.UNSUBSCRIBE) {
-                const user_id = scriptionKey;
-                setIsSubscribed(false);
-                await unSubscribe({
-                    user_id: parseInt(user_id ?? ''),
-                    is_subscribed: 'false',
-                });
-            }
+            await verifyEmailVerification(token);
+            dispatch(
+                openNotificationModal({
+                    open: true,
+                    data: {
+                        header: 'Subscribed Successfully',
+                        subText: [
+                            {
+                                text: 'Your email has been verified. You will now receive news and updates from us.',
+                            },
+                        ],
+                    },
+                    type: 'update',
+                }),
+            );
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error Subscribing to Engagement' }));
             return Promise.reject(error);
@@ -174,7 +165,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 isWidgetsLoading,
                 updateMockStatus,
                 mockStatus,
-                isSubscribed,
             }}
         >
             {children}
