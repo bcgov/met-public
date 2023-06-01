@@ -1,7 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import {
     Grid,
-    Typography,
     Checkbox,
     TextField,
     FormControl,
@@ -22,6 +21,7 @@ import {
     MetHeader1,
     MetBody,
     MetDescription,
+    MetDisclaimer,
 } from 'components/common';
 import { When } from 'react-if';
 import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
@@ -90,16 +90,7 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
                     </MetBody>
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography
-                        sx={{
-                            p: '1em',
-                            borderLeft: 8,
-                            borderColor: '#003366',
-                            backgroundColor: '#F2F2F2',
-                            mt: '2em',
-                            fontSize: '0.8rem',
-                        }}
-                    >
+                    <MetDisclaimer>
                         {`
                             Personal information (your email address) is collected under Section 26(c) and 26(e) of the Freedom of Information\
                             and Protection of Privacy Act, for the purpose of providing content updates and future opportunities to participate.\
@@ -112,7 +103,7 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
                             please contact the Director of Digital Services at '
                         }
                         <Link href="mailto:Sid.Tobias@gov.bc.ca">Sid.Tobias@gov.bc.ca</Link>
-                    </Typography>
+                    </MetDisclaimer>
                 </Grid>
                 <Grid
                     item
