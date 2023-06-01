@@ -9,24 +9,34 @@ interface BarBlockProps {
 }
 export const BarBlock = ({ data }: BarBlockProps) => {
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+    const height = isSmallScreen ? 250 : 400;
     return (
         <Box marginLeft={{ xs: 0, sm: '2em' }} marginTop={'3em'}>
-            <ResponsiveContainer width={'100%'} height={400} key={data.postion}>
+            <ResponsiveContainer width={'100%'} height={height} key={data.postion}>
                 <BarChart
                     data={data.result}
-                    layout="vertical"
+                    layout={isSmallScreen ? 'horizontal' : 'vertical'}
                     key={data.postion}
                     margin={{ left: isSmallScreen ? 20 : 0 }}
                 >
-                    <XAxis hide axisLine={false} type="number" />
-                    <YAxis
-                        width={250}
-                        dataKey="value"
-                        type="category"
+                    <XAxis
+                        dataKey={isSmallScreen ? 'value' : undefined}
+                        type={isSmallScreen ? 'category' : 'number'}
                         axisLine={true}
                         tickLine={true}
                         minTickGap={10}
                         tickMargin={10}
+                        hide={isSmallScreen ? false : true}
+                    />
+                    <YAxis
+                        width={250}
+                        dataKey={isSmallScreen ? undefined : 'value'}
+                        type={isSmallScreen ? 'number' : 'category'}
+                        axisLine={true}
+                        tickLine={true}
+                        minTickGap={10}
+                        tickMargin={10}
+                        hide={isSmallScreen ? true : false}
                     />
                     <Tooltip />
                     <Bar
@@ -36,7 +46,11 @@ export const BarBlock = ({ data }: BarBlockProps) => {
                         minPointSize={2}
                         barSize={32}
                     >
-                        <LabelList dataKey="count" position="insideRight" style={{ fill: 'white' }} />
+                        <LabelList
+                            dataKey="count"
+                            position={isSmallScreen ? 'insideTop' : 'insideRight'}
+                            style={{ fill: 'white' }}
+                        />
                     </Bar>
                 </BarChart>
             </ResponsiveContainer>

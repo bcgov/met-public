@@ -20,7 +20,7 @@ import { getSurveyResultData } from 'services/analytics/surveyResult';
 import { Engagement } from 'models/engagement';
 import { SurveyResultData, createSurveyResultData, defaultData } from '../../../models/analytics/surveyResult';
 import { ErrorBox } from '../ErrorBox';
-
+import { If, Then, Else, When } from 'react-if';
 const HEIGHT = 400;
 
 interface SurveyQuestionProps {
@@ -77,7 +77,14 @@ export const SurveyBar = ({ engagement, engagementIsLoading }: SurveyQuestionPro
     return (
         <>
             <Grid item xs={12} mb={2}>
-                <MetHeader1>Survey Results</MetHeader1>
+                <If condition={isSmallScreen}>
+                    <Then>
+                        <MetLabel>Survey Results</MetLabel>
+                    </Then>
+                    <Else>
+                        <MetHeader1>Survey Results</MetHeader1>
+                    </Else>
+                </If>
             </Grid>
             <Grid ml={isSmallScreen ? 0 : 5} item xs={12}>
                 <MetPaper sx={{ p: 2 }}>
@@ -88,32 +95,47 @@ export const SurveyBar = ({ engagement, engagementIsLoading }: SurveyQuestionPro
                                     Click on a question to view results
                                 </MetLabel>
                             </Grid>
-                            <Grid item container xs={4} direction="row" justifyContent="flex-end">
-                                <ToggleButtonGroup value={chartType} exclusive onChange={handleToggleChange}>
-                                    <ToggleButton
-                                        value="bar"
-                                        sx={{
-                                            '&.Mui-selected': {
-                                                backgroundColor: Palette.primary.main,
-                                                color: 'white',
-                                            },
-                                        }}
+                            <When condition={!isSmallScreen}>
+                                <Grid
+                                    item
+                                    container
+                                    md={4}
+                                    xs={12}
+                                    direction="row"
+                                    justifyContent={isSmallScreen ? 'center' : 'flex-end'}
+                                    alignItems={isSmallScreen ? 'center' : 'flex-end'}
+                                >
+                                    <ToggleButtonGroup
+                                        size={isSmallScreen ? 'small' : 'medium'}
+                                        value={chartType}
+                                        exclusive
+                                        onChange={handleToggleChange}
                                     >
-                                        Show as Bar Chart
-                                    </ToggleButton>
-                                    <ToggleButton
-                                        value="treemap"
-                                        sx={{
-                                            '&.Mui-selected': {
-                                                backgroundColor: Palette.primary.main,
-                                                color: 'white',
-                                            },
-                                        }}
-                                    >
-                                        Show as TreeMap Chart
-                                    </ToggleButton>
-                                </ToggleButtonGroup>
-                            </Grid>
+                                        <ToggleButton
+                                            value="bar"
+                                            sx={{
+                                                '&.Mui-selected': {
+                                                    backgroundColor: Palette.primary.main,
+                                                    color: 'white',
+                                                },
+                                            }}
+                                        >
+                                            Show as Bar Chart
+                                        </ToggleButton>
+                                        <ToggleButton
+                                            value="treemap"
+                                            sx={{
+                                                '&.Mui-selected': {
+                                                    backgroundColor: Palette.primary.main,
+                                                    color: 'white',
+                                                },
+                                            }}
+                                        >
+                                            Show as TreeMap Chart
+                                        </ToggleButton>
+                                    </ToggleButtonGroup>
+                                </Grid>
+                            </When>
                         </Stack>
                         <Divider sx={{ marginTop: '1em' }} />
                     </Grid>
@@ -123,7 +145,6 @@ export const SurveyBar = ({ engagement, engagementIsLoading }: SurveyQuestionPro
                                 <Box
                                     sx={{
                                         width: '100%',
-                                        height: '50px',
                                     }}
                                 >
                                     <QuestionBlock
