@@ -24,19 +24,10 @@ class SubscriptionService:
         return SubscriptionModel.create(subscription_data)
 
     @classmethod
-    def update_subscription(cls, subscription_data) -> SubscriptionSchema:
-        """Update subscription."""
-        subscription_data['created_by'] = subscription_data.get('user_id')
-        updated_subscription = SubscriptionModel.update(subscription_data)
-        if not updated_subscription:
-            raise ValueError('Subscription to update was not found')
-        return SubscriptionModel.update(subscription_data)
-
-    @classmethod
-    def update_user_subscription(cls, subscription_data) -> SubscriptionSchema:
+    def update_subscription_for_user(cls, subscription_data) -> SubscriptionSchema:
         """Update subscription for a user."""
         subscription_data['updated_by'] = subscription_data.get('user_id')
-        updated_subscription = SubscriptionModel.update_user_subscription(subscription_data)
+        updated_subscription = SubscriptionModel.update_subscription_for_user(subscription_data)
         if not updated_subscription:
             raise ValueError('Subscription to update was not found')
-        return SubscriptionModel.update_user_subscription(subscription_data)
+        return SubscriptionModel.update_subscription_for_user(subscription_data)

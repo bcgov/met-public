@@ -78,8 +78,7 @@ class Subscriptions(Resource):
         try:
             requestjson = request.get_json()
             subscription = SubscriptionSchema().load(requestjson, partial=True)
-            print(subscription)
-            SubscriptionService().update_user_subscription(subscription)
+            SubscriptionService().update_subscription_for_user(subscription)
             return {}, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

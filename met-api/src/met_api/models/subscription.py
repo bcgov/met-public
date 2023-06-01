@@ -55,26 +55,8 @@ class Subscription(BaseModel):  # pylint: disable=too-few-public-methods
         return new_subscription
 
     @classmethod
-    def update(cls, subscription: SubscriptionSchema, session=None) -> Subscription:
-        """Update an subscription."""
-        update_fields = dict(
-            is_subscribed=subscription.get('is_subscribed', None),
-            updated_date=datetime.utcnow(),
-            updated_by=subscription.get('updated_by', None),
-        )
-        subscription_id = subscription.get('id', None)
-        query = Subscription.query.filter_by(id=subscription_id)
-        record = query.first()
-        if not record:
-            raise ValueError('Subscription Not Found')
-        query.update(update_fields)
-        if session is None:
-            db.session.commit()
-        return query.first()
-
-    @classmethod
-    def update_user_subscription(cls, subscription: SubscriptionSchema, session=None) -> Subscription:
-        """Update an subscription."""
+    def update_subscription_for_user(cls, subscription: SubscriptionSchema, session=None) -> Subscription:
+        """Update subscription for a user."""
         update_fields = dict(
             is_subscribed=subscription.get('is_subscribed', None),
             updated_date=datetime.utcnow(),
