@@ -9,10 +9,11 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import { ActionContext } from '../../../ActionContext';
+import { When } from 'react-if';
 
 export const Subscription = () => {
     const [tenant, setTenant] = useState<Tenant>();
-    const { subscriptionText } = useContext(ActionContext);
+    const { isSubscribed } = useContext(ActionContext);
 
     const dispatch = useAppDispatch();
     const fetchTenant = async () => {
@@ -93,9 +94,16 @@ export const Subscription = () => {
                 rowSpacing={2}
             >
                 <CheckCircleRoundedIcon style={{ color: '#2e8540', fontSize: 50 }} />
-                <MetHeader4 bold m={{ lg: '.5em 0 0 .5em', md: '3em', sm: '1em' }}>
-                    {subscriptionText}
-                </MetHeader4>
+                <When condition={isSubscribed}>
+                    <MetHeader4 bold m={{ lg: '.5em 0 0 .5em', md: '3em', sm: '1em' }}>
+                        You have successfully confirmed your subscription. Thank you.
+                    </MetHeader4>
+                </When>
+                <When condition={!isSubscribed}>
+                    <MetHeader4 bold m={{ lg: '.5em 0 0 .5em', md: '3em', sm: '1em' }}>
+                        You have successfully unsubscribed. Thank you.
+                    </MetHeader4>
+                </When>
             </Grid>
         </Grid>
     );
