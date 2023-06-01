@@ -9,6 +9,7 @@ import { useLazyGetWidgetsQuery } from 'apiManager/apiSlices/widgets';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { verifyEmailVerification } from 'services/emailVerificationService';
 import { createSubscription, unSubscribe } from 'services/subscriptionService';
+import { SubscriptionType } from './subscribe';
 
 interface EngagementSchedule {
     id: number;
@@ -24,7 +25,7 @@ export interface EngagementViewContext {
     widgets: Widget[];
     mockStatus: SubmissionStatus;
     updateMockStatus: (status: SubmissionStatus) => void;
-    subscriptionText: string;
+    isSubscribed: boolean;
 }
 
 export type EngagementParams = {
@@ -45,7 +46,7 @@ export const ActionContext = createContext<EngagementViewContext>({
     updateMockStatus: (status: SubmissionStatus) => {
         /* nothing returned */
     },
-    subscriptionText: '',
+    isSubscribed: false,
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -57,7 +58,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const [widgets, setWidgets] = useState<Widget[]>([]);
     const [isEngagementLoading, setEngagementLoading] = useState(true);
     const [isWidgetsLoading, setIsWidgetsLoading] = useState(true);
-    const [subscriptionText, setSubscriptionText] = useState('');
+    const [isSubscribed, setIsSubscribed] = useState(false);
 
     const [getWidgetsTrigger] = useLazyGetWidgetsQuery();
 
@@ -74,8 +75,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
             if (!scriptionKey) {
                 return;
             }
-            if (subscriptionStatus == 'subscribe') {
+            if (subscriptionStatus == SubscriptionType.SUBSCRIBE) {
                 const token = scriptionKey;
+                setIsSubscribed(true);
                 const subscribed_email = await verifyEmailVerification(token);
                 const subscribed = JSON.stringify(subscribed_email);
                 await createSubscription({
@@ -83,15 +85,14 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                     user_id: JSON.parse(subscribed).user_id,
                     is_subscribed: 'true',
                 });
-                setSubscriptionText('You have successfully confirmed your subscription. Thank you.');
             }
-            if (subscriptionStatus == 'unsubscribe') {
+            if (subscriptionStatus == SubscriptionType.UNSUBSCRIBE) {
                 const user_id = scriptionKey;
+                setIsSubscribed(false);
                 await unSubscribe({
                     user_id: parseInt(user_id ?? ''),
                     is_subscribed: 'false',
                 });
-                setSubscriptionText('You have successfully unsubscribed. Thank you.');
             }
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error Subscribing to Engagement' }));
@@ -173,7 +174,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 isWidgetsLoading,
                 updateMockStatus,
                 mockStatus,
-                subscriptionText,
+                isSubscribed,
             }}
         >
             {children}
