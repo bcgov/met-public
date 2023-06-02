@@ -18,6 +18,7 @@ from .comment import Comment
 from .comment_status import CommentStatus
 from .contact import Contact
 from .db import db, ma, migrate
+from .email_queue import EmailQueue
 from .email_verification import EmailVerification
 from .engagement import Engagement
 from .engagement_status import EngagementStatus
