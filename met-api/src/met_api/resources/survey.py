@@ -194,7 +194,6 @@ class Surveys(Resource):
         """Clone a new survey."""
         try:
             requestjson = request.get_json()
-            print(survey_id)
             result = SurveyService().clone(requestjson, survey_id)
             survey_schema = SurveySchema()
             return survey_schema.dump(result), HTTPStatus.OK
