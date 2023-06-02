@@ -22,6 +22,7 @@ class SurveyService:
     """Survey management service."""
 
     otherdateformat = '%Y-%m-%d'
+    formio_survey_default_display = 'form'
 
     @classmethod
     def get(cls, survey_id):
@@ -81,7 +82,27 @@ class SurveyService:
     def create(cls, survey_data: dict):
         """Create survey."""
         cls.validate_create_fields(survey_data)
-        return SurveyModel.create_survey(survey_data)
+        
+        return SurveyModel.create_survey({
+            'name': survey_data.get('name'),
+            'form_json': {
+                'display': survey_data.get('display', cls.formio_survey_default_display),
+                'components': [],
+                },
+        })
+
+    @classmethod
+    def clone(cls, data, survey_id):
+        """Clone survey."""
+        survey_to_clone = cls.get(survey_id)
+
+        if not survey_to_clone:
+            raise KeyError('Survey to clone was not found')
+
+        return SurveyModel.create_survey({
+            'name': data.get('name'),
+            'form_json': survey_to_clone.get('form_json'),
+        })
 
     @classmethod
     def update(cls, data: SurveySchema):
@@ -122,7 +143,7 @@ class SurveyService:
     @staticmethod
     def validate_create_fields(data):
         """Validate all fields."""
-        empty_fields = [not data[field] for field in ['name', 'form_json']]
+        empty_fields = [not data[field] for field in ['name', 'display']]
 
         if any(empty_fields):
             raise ValueError('Some required fields are empty')
