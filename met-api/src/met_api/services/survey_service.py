@@ -82,7 +82,7 @@ class SurveyService:
     def create(cls, survey_data: dict):
         """Create survey."""
         cls.validate_create_fields(survey_data)
-        
+
         return SurveyModel.create_survey({
             'name': survey_data.get('name'),
             'form_json': {

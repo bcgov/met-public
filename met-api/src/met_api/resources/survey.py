@@ -181,10 +181,10 @@ class SurveyUnlink(Resource):
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-        
+
 @cors_preflight('POST, OPTIONS')
 @API.route('/<survey_id>/clone')
-class Surveys(Resource):
+class SurveysClone(Resource):
     """Resource for managing surveys."""
 
     @staticmethod
