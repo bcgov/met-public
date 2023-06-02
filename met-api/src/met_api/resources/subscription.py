@@ -62,8 +62,8 @@ class Subscriptions(Resource):
     def post():
         """Create a new subscription."""
         try:
-            requestjson = request.get_json()
-            subscription = SubscriptionSchema().load(requestjson)
+            request_json = request.get_json()
+            subscription = SubscriptionSchema().load(request_json)
             SubscriptionService().create_subscription(subscription)
             return {}, HTTPStatus.OK
         except KeyError as err:
@@ -76,9 +76,30 @@ class Subscriptions(Resource):
     def patch():
         """Update a existing subscription partially."""
         try:
-            requestjson = request.get_json()
-            subscription = SubscriptionSchema().load(requestjson, partial=True)
+            request_json = request.get_json()
+            subscription = SubscriptionSchema().load(request_json, partial=True)
             SubscriptionService().update_subscription_for_user(subscription)
+            return {}, HTTPStatus.OK
+        except KeyError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@cors_preflight('POST, OPTIONS')
+@API.route('/manage')
+class ManageSubscriptions(Resource):
+    """Resource for managing subscription."""
+
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    def post():
+        """Create or update a subscription."""
+        try:
+            request_json = request.get_json()
+            subscription = SubscriptionSchema().load(request_json)
+            SubscriptionService().create_or_update_subscription(subscription)
             return {}, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

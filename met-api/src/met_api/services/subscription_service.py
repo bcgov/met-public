@@ -31,3 +31,37 @@ class SubscriptionService:
         if not updated_subscription:
             raise ValueError('Subscription to update was not found')
         return SubscriptionModel.update_subscription_for_user(subscription_data)
+
+    @classmethod
+    def update_subscription_for_user_eng(cls, subscription_data) -> SubscriptionSchema:
+        """Update subscription for a user."""
+        subscription_data['updated_by'] = subscription_data.get('user_id')
+        updated_subscription = SubscriptionModel.update_subscription_for_user_eng(subscription_data)
+        if not updated_subscription:
+            raise ValueError('Subscription to update was not found')
+        return SubscriptionModel.update_subscription_for_user_eng(subscription_data)
+
+    @classmethod
+    def create_or_update_subscription(cls, subscription: dict):
+        """Create or update a subscription."""
+        cls.validate_fields(subscription)
+
+        user_id = subscription.get('user_id')
+        engagement_id = subscription.get('engagement_id')
+        db_user = SubscriptionModel.get_by_user_and_eng_id(user_id, engagement_id)
+
+        if db_user is None:
+            return cls.create_subscription(subscription)
+
+        return cls.update_subscription_for_user_eng(subscription)
+
+    @staticmethod
+    def validate_fields(data: SubscriptionSchema):
+        """Validate all fields."""
+        empty_fields = [not data.get(field, None) for field in [
+            'engagement_id',
+            'user_id',
+        ]]
+
+        if any(empty_fields):
+            raise ValueError('Some required fields are empty')

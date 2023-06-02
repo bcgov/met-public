@@ -17,7 +17,7 @@ export const getSubscription = async (user_id: number): Promise<Subscribe> => {
 
 export const createSubscription = async (request: Subscribe): Promise<Subscribe> => {
     try {
-        const response = await http.PostRequest<Subscribe>(Endpoints.Subscription.CREATE, request);
+        const response = await http.PostRequest<Subscribe>(Endpoints.Subscription.CREATE_UPDATE, request);
         return response.data;
     } catch (err) {
         return Promise.reject(err);
