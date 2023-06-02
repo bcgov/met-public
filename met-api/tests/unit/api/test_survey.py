@@ -28,6 +28,7 @@ from tests.utilities.factory_scenarios import TestJwtClaims, TestSurveyInfo, Tes
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_engagement_model, factory_survey_model, factory_tenant_model, set_global_tenant)
 
+surveys_url = '/api/surveys/'
 
 @pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey1])
 def test_create_survey(client, jwt, session, survey_info):  # pylint:disable=unused-argument
@@ -37,7 +38,7 @@ def test_create_survey(client, jwt, session, survey_info):  # pylint:disable=unu
         'name': survey_info.get('name'),
         'display': survey_info.get('form_json').get('display'),
     }
-    rv = client.post('/api/surveys/', data=json.dumps(data),
+    rv = client.post(surveys_url, data=json.dumps(data),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json.get('form_json') == survey_info.get('form_json')
@@ -51,7 +52,7 @@ def test_create_survey_with_tenant(client, jwt, session):  # pylint:disable=unus
     assert tenant is not None
     headers[TENANT_ID_HEADER] = tenant_short_name
 
-    rv = client.post('/api/surveys/', data=json.dumps({
+    rv = client.post(surveys_url, data=json.dumps({
         'name': TestSurveyInfo.survey1.get('name'),
         'display': TestSurveyInfo.survey1.get('form_json').get('display'),
     }), headers=headers, content_type=ContentType.JSON.value)
@@ -70,7 +71,7 @@ def test_create_survey_with_tenant(client, jwt, session):  # pylint:disable=unus
     # Set the tenant ID header for future requests
     headers[TENANT_ID_HEADER] = tenant2_short_name
 
-    rv = client.post('/api/surveys/', data=json.dumps({
+    rv = client.post(surveys_url, data=json.dumps({
         'name': TestSurveyInfo.survey2.get('name'),
         'display': TestSurveyInfo.survey2.get('form_json').get('display'),
     }), headers=headers, content_type=ContentType.JSON.value)
@@ -86,12 +87,12 @@ def test_put_survey(client, jwt, session, survey_info):  # pylint:disable=unused
     survey = factory_survey_model()
     survey_id = str(survey.id)
     new_survey_name = 'new_survey_name'
-    rv = client.put('/api/surveys/', data=json.dumps({'id': survey_id, 'name': new_survey_name}),
+    rv = client.put(surveys_url, data=json.dumps({'id': survey_id, 'name': new_survey_name}),
                     headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.status_code == 200
 
-    rv = client.get(f'/api/surveys/{survey_id}',
+    rv = client.get(f'{surveys_url}{survey_id}',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json.get('form_json') == survey_info.get('form_json')
@@ -109,15 +110,15 @@ def test_survey_link(client, jwt, session):  # pylint:disable=unused-argument
 
     # assert eng id is none in GET Survey
 
-    rv = client.get(f'/api/surveys/{survey_id}',
+    rv = client.get(f'{surveys_url}{survey_id}',
                     headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.json.get('engagement_id') is None
     # link them togother
-    rv = client.put(f'/api/surveys/{survey_id}/link/engagement/{eng_id}',
+    rv = client.put(f'{surveys_url}{survey_id}/link/engagement/{eng_id}',
                     headers=headers, content_type=ContentType.JSON.value)
 
-    rv = client.get(f'/api/surveys/{survey_id}',
+    rv = client.get(f'{surveys_url}{survey_id}',
                     headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.json.get('engagement_id') == str(eng_id)
@@ -134,7 +135,7 @@ def test_get_hidden_survey_for_admins(client, jwt, session):  # pylint:disable=u
     sort_key = 'survey.created_date'
     sort_order = 'desc'
 
-    rv = client.get(f'/api/surveys/?page={page}&size={page_size}&sort_key={sort_key}\
+    rv = client.get(f'{surveys_url}?page={page}&size={page_size}&sort_key={sort_key}\
                     &sort_order={sort_order}&search_text=',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -152,7 +153,7 @@ def test_get_hidden_survey_for_team_member(client, jwt, session):  # pylint:disa
     sort_key = 'survey.created_date'
     sort_order = 'desc'
 
-    rv = client.get(f'/api/surveys/?page={page}&size={page_size}&sort_key={sort_key}\
+    rv = client.get(f'{surveys_url}?page={page}&size={page_size}&sort_key={sort_key}\
                     &sort_order={sort_order}&search_text=',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -170,7 +171,7 @@ def test_get_template_survey(client, jwt, session):  # pylint:disable=unused-arg
     sort_key = 'survey.created_date'
     sort_order = 'desc'
 
-    rv = client.get(f'/api/surveys/?page={page}&size={page_size}&sort_key={sort_key}\
+    rv = client.get(f'{surveys_url}?page={page}&size={page_size}&sort_key={sort_key}\
                     &sort_order={sort_order}&search_text=',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -183,7 +184,7 @@ def test_edit_template_survey_for_admins(client, jwt, session):  # pylint:disabl
     survey = factory_survey_model(TestSurveyInfo.survey_template)
     survey_id = str(survey.id)
     new_survey_name = 'new_survey_name'
-    rv = client.put('/api/surveys/', data=json.dumps({'id': survey_id, 'name': new_survey_name}),
+    rv = client.put(surveys_url, data=json.dumps({'id': survey_id, 'name': new_survey_name}),
                     headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.status_code == 200, 'Admins are able to edit template surveys'
@@ -195,7 +196,7 @@ def test_edit_template_survey_for_team_member(client, jwt, session):  # pylint:d
     survey = factory_survey_model(TestSurveyInfo.survey_template)
     survey_id = str(survey.id)
     new_survey_name = 'new_survey_name'
-    rv = client.put('/api/surveys/', data=json.dumps({'id': survey_id, 'name': new_survey_name}),
+    rv = client.put(surveys_url, data=json.dumps({'id': survey_id, 'name': new_survey_name}),
                     headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.status_code == 403, 'Team members are not able to edit template surveys, so throws exception.'
