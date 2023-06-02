@@ -30,10 +30,9 @@ def test_create_subscription(client, jwt, session):  # pylint:disable=unused-arg
     claims = TestJwtClaims.public_user_role
     set_global_tenant()
     survey, eng = factory_survey_and_eng_model()
-    emailverification = factory_email_verification(survey.id)
     user = factory_user_model()
     to_dict = {
-        'email_verification_id': emailverification.id,
+        'engagement_id': eng.id,
         'user_id': user.id,
         'is_subscribed': True,
     }

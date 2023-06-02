@@ -1,5 +1,5 @@
 export interface Subscribe {
-    email_verification_id: number;
+    engagement_id: number;
     user_id: number;
     is_subscribed: string;
 }

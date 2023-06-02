@@ -20,7 +20,7 @@ export type SubscriptionParams = {
 };
 
 export const Subscription = () => {
-    const { subscriptionStatus, scriptionKey } = useParams<SubscriptionParams>();
+    const { engagementId, subscriptionStatus, scriptionKey } = useParams<SubscriptionParams>();
     const [tenant, setTenant] = useState<Tenant>();
     const [subscriptionText, setSubscriptionText] = useState('');
 
@@ -58,7 +58,7 @@ export const Subscription = () => {
                 const subscribed_email = await verifyEmailVerification(token);
                 const subscribed = JSON.stringify(subscribed_email);
                 await createSubscription({
-                    email_verification_id: JSON.parse(subscribed).id,
+                    engagement_id: parseInt(engagementId ?? ''),
                     user_id: JSON.parse(subscribed).user_id,
                     is_subscribed: 'true',
                 });
