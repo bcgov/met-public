@@ -42,18 +42,18 @@ class SubscriptionService:
         return SubscriptionModel.update_subscription_for_user_eng(subscription_data)
 
     @classmethod
-    def create_or_update_subscription(self, subscription: dict):
+    def create_or_update_subscription(cls, subscription: dict):
         """Create or update a subscription."""
-        self.validate_fields(subscription)
+        cls.validate_fields(subscription)
 
         user_id = subscription.get('user_id')
         engagement_id = subscription.get('engagement_id')
         db_user = SubscriptionModel.get_by_user_and_eng_id(user_id, engagement_id)
 
         if db_user is None:
-            return self.create_subscription(subscription)
+            return cls.create_subscription(subscription)
 
-        return self.update_subscription_for_user_eng(subscription)
+        return cls.update_subscription_for_user_eng(subscription)
 
     @staticmethod
     def validate_fields(data: SubscriptionSchema):

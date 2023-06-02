@@ -36,7 +36,7 @@ class Subscription(BaseModel):  # pylint: disable=too-few-public-methods
             .order_by(Subscription.created_date.desc())\
             .first()
         return db_subscription
-    
+
     @classmethod
     def get_by_user_and_eng_id(cls, user_id, engagement_id) -> Subscription:
         """Get a subscription."""

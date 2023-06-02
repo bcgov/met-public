@@ -99,7 +99,6 @@ class ManageSubscriptions(Resource):
         try:
             request_json = request.get_json()
             subscription = SubscriptionSchema().load(request_json)
-            print(subscription)
             SubscriptionService().create_or_update_subscription(subscription)
             return {}, HTTPStatus.OK
         except KeyError as err:
