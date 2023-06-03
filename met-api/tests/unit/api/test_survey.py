@@ -115,7 +115,7 @@ def test_survey_link(client, jwt, session):  # pylint:disable=unused-argument
 
     assert rv.json.get('engagement_id') is None
     # link them togother
-    rv = client.put(f'{surveys_url}{survey_id}/link/engagement/{eng_id}',
+    client.put(f'{surveys_url}{survey_id}/link/engagement/{eng_id}',
                     headers=headers, content_type=ContentType.JSON.value)
 
     rv = client.get(f'{surveys_url}{survey_id}',
