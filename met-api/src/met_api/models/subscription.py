@@ -47,15 +47,6 @@ class Subscription(BaseModel):  # pylint: disable=too-few-public-methods
         return db_subscription
 
     @classmethod
-    def get_by_user_and_eng_id(cls, user_id, engagement_id) -> Subscription:
-        """Get a subscription."""
-        db_subscription = db.session.query(Subscription)\
-            .filter_by(user_id=user_id, engagement_id=engagement_id)\
-            .order_by(Subscription.created_date.desc())\
-            .first()
-        return db_subscription
-
-    @classmethod
     def create(cls, subscription: SubscriptionSchema, session=None) -> Subscription:
         """Create a subscription."""
         new_subscription = Subscription(

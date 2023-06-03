@@ -3,7 +3,7 @@ from met_api.models.email_queue import EmailQueue as EmailQueueModel
 from met_api.schemas.email_queue import EmailQueueSchema
 
 
-class EmailQueueService:
+class EmailQueueService:  # pylint:disable=too-few-public-methods
     """Email queue service."""
 
     verification_expiry_hours = 24

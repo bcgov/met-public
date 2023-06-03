@@ -4,7 +4,6 @@ Manages the Email queue
 """
 from __future__ import annotations
 from datetime import datetime
-from sqlalchemy import ForeignKey
 
 from met_api.schemas.email_queue import EmailQueueSchema
 
