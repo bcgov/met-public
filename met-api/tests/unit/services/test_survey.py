@@ -22,7 +22,10 @@ from tests.utilities.factory_scenarios import TestSurveyInfo
 
 def test_create_survey(session):  # pylint:disable=unused-argument
     """Assert that a survey can be created."""
-    survey_data = TestSurveyInfo.survey1
+    survey_data = {
+        'name': TestSurveyInfo.survey1.get('name'),
+        'display': TestSurveyInfo.survey1.get('form_json').get('display'),
+    }
     saved_survey = SurveyService().create(survey_data)
     # fetch the survey with id and assert
     fetched_survey = SurveyService().get(saved_survey.id)
