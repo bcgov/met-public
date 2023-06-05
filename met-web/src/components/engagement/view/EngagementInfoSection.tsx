@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Grid, Typography, Stack, useMediaQuery, Theme } from '@mui/material';
+import { Grid, Typography, Stack } from '@mui/material';
 import { MetHeader1 } from 'components/common';
 import { EngagementStatusChip } from '../status';
 import { Editor } from 'react-draft-wysiwyg';
