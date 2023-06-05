@@ -6,11 +6,13 @@ import { postSurvey } from 'services/surveyService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { MetLabel, PrimaryButton, SecondaryButton, MetDescription } from 'components/common';
+import { Disclaimer } from './Disclaimer';
 
 export const CreateOptions = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { surveyForm, handleSurveyFormChange, engagementToLink } = useContext(CreateSurveyContext);
+    const { surveyForm, handleSurveyFormChange, engagementToLink, isDisclaimerChecked } =
+        useContext(CreateSurveyContext);
     const { name } = surveyForm;
     const initialFormError = {
         name: false,
@@ -116,10 +118,13 @@ export const CreateOptions = () => {
                 </MetDescription>
             </Grid>
             <Grid item xs={6}></Grid>
+            <Grid item xs={12}>
+                <Disclaimer />
+            </Grid>
 
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <PrimaryButton onClick={handleSaveClick} loading={isSaving}>
+                    <PrimaryButton disabled={!isDisclaimerChecked} onClick={handleSaveClick} loading={isSaving}>
                         {'Save & Continue'}
                     </PrimaryButton>
                     <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>

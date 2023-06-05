@@ -15,6 +15,8 @@ interface CreateSurveyContextValues {
     setAvailableSurveys: (surveys: Survey[]) => void;
     availableEngagements: Engagement[] | null;
     setAvailableEngagements: (engagements: Engagement[]) => void;
+    isDisclaimerChecked: boolean;
+    setIsDisclaimerChecked: (checked: boolean) => void;
 }
 
 const initialSurveyForm = {
@@ -35,6 +37,10 @@ export const CreateSurveyContext = createContext<CreateSurveyContextValues>({
     setAvailableEngagements: (_engagements: Engagement[]) => {
         //empty method
     },
+    isDisclaimerChecked: false,
+    setIsDisclaimerChecked: (_checked: boolean) => {
+        throw new Error('setIsDisclaimerChecked method not implemented');
+    },
 });
 
 interface SurveyForm {
@@ -50,6 +56,7 @@ export const CreateSurveyContextProvider = ({ children }: { children: JSX.Elemen
     const [engagementToLink, setEngagementToLink] = useState<Engagement | null>(null);
     const [availableSurveys, setAvailableSurveys] = useState<Survey[] | null>(null);
     const [availableEngagements, setAvailableEngagements] = useState<Engagement[] | null>(null);
+    const [isDisclaimerChecked, setIsDisclaimerChecked] = useState(false);
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const engagementId = searchParams.get('engagementId');
@@ -98,6 +105,8 @@ export const CreateSurveyContextProvider = ({ children }: { children: JSX.Elemen
                 setAvailableSurveys,
                 setAvailableEngagements,
                 availableEngagements,
+                isDisclaimerChecked,
+                setIsDisclaimerChecked,
             }}
         >
             {children}

@@ -7,12 +7,16 @@ import NotFound from './NotFound';
 import EngagementComments from '../components/engagement/dashboard/comment';
 import PublicDashboard from 'components/publicDashboard';
 import Landing from 'components/landing';
+import ManageSubscription from '../components/engagement/view/widgets/Subscribe/ManageSubscription';
 
 const UnauthenticatedRoutes = () => {
     return (
         <Routes>
             <Route path="/" element={<Landing />} />
-            <Route path="/engagements/:engagementId/subscribe/:token" element={<EngagementView />} />
+            <Route
+                path="/engagements/:engagementId/:subscriptionStatus/:scriptionKey"
+                element={<ManageSubscription />}
+            />
             <Route path="/engagements/:engagementId/view" element={<EngagementView />} />
             <Route path="/engagements/:engagementId/dashboard" element={<PublicDashboard />} />
             <Route path="/engagements/:engagementId/comments" element={<EngagementComments />} />

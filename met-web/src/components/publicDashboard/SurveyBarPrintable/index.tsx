@@ -29,13 +29,14 @@ export const SurveyBarPrintable = ({ engagement, engagementIsLoading }: SurveyQu
             setIsLoading(false);
             setIsError(false);
         } catch (error) {
-            console.log(error);
             setIsError(true);
         }
     };
 
     useEffect(() => {
-        fetchData();
+        if (Number(engagement.id)) {
+            fetchData();
+        }
     }, [engagement.id]);
 
     if (isLoading || engagementIsLoading) {

@@ -33,6 +33,7 @@ from .engagement_metadata import API as ENGAGEMENT_METADATA_API
 from .engagement_members import API as ENGAGEMENT_MEMBERS_API
 from .feedback import API as FEEDBACK_API
 from .submission import API as SUBMISSION_API
+from .subscription import API as SUBSCRIPTION_API
 from .survey import API as SURVEY_API
 from .staff_user import API as USER_API
 from .value_component import API as VALUE_COMPONENTS_API
@@ -62,6 +63,7 @@ API.add_namespace(USER_API)
 API.add_namespace(DOCUMENT_API)
 API.add_namespace(SURVEY_API)
 API.add_namespace(SUBMISSION_API)
+API.add_namespace(SUBSCRIPTION_API)
 API.add_namespace(COMMENT_API)
 API.add_namespace(EMAIL_VERIFICATION_API)
 API.add_namespace(FEEDBACK_API)

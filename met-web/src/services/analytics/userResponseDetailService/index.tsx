@@ -3,9 +3,13 @@ import { UserResponseDetailByMonth, UserResponseDetailByWeek } from 'models/anal
 import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
 
-export const getUserResponseDetailByMonth = async (engagementId: number): Promise<UserResponseDetailByMonth> => {
+export const getUserResponseDetailByMonth = async (
+    engagementId: number,
+    fromDate?: string,
+    toDate?: string,
+): Promise<UserResponseDetailByMonth> => {
     const url = replaceUrl(
-        Endpoints.AnalyticsUserResponseDetail.GET_COUNT_BY_MONTH,
+        `${Endpoints.AnalyticsUserResponseDetail.GET_COUNT_BY_MONTH}?from_date=${fromDate}&to_date=${toDate}`,
         'engagement_id',
         String(engagementId),
     );
@@ -19,9 +23,13 @@ export const getUserResponseDetailByMonth = async (engagementId: number): Promis
     return Promise.reject('Failed to fetch user response detail');
 };
 
-export const getUserResponseDetailByWeek = async (engagementId: number): Promise<UserResponseDetailByWeek> => {
+export const getUserResponseDetailByWeek = async (
+    engagementId: number,
+    fromDate?: string,
+    toDate?: string,
+): Promise<UserResponseDetailByWeek> => {
     const url = replaceUrl(
-        Endpoints.AnalyticsUserResponseDetail.GET_COUNT_BY_WEEK,
+        `${Endpoints.AnalyticsUserResponseDetail.GET_COUNT_BY_WEEK}?from_date=${fromDate}&to_date=${toDate}`,
         'engagement_id',
         String(engagementId),
     );

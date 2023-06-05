@@ -385,3 +385,25 @@ export const CircularProgressWithLabel = (props: CircularProgressProps & { value
         </Box>
     );
 };
+
+export const MetDisclaimer = ({ children }: { children: React.ReactNode }) => {
+    return (
+        <Box
+            sx={{
+                borderLeft: 8,
+                borderColor: '#003366',
+                backgroundColor: '#F2F2F2',
+            }}
+        >
+            <Typography
+                sx={{
+                    p: '1em',
+                    mt: '2em',
+                    fontSize: '0.8rem',
+                }}
+            >
+                {children}
+            </Typography>
+        </Box>
+    );
+};

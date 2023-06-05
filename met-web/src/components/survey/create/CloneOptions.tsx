@@ -9,6 +9,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
 import { Survey } from 'models/survey';
 import { Engagement } from 'models/engagement';
+import { Disclaimer } from './Disclaimer';
 
 export type EngagementParams = {
     engagementId: string;
@@ -37,6 +38,7 @@ const CloneOptions = () => {
         setAvailableSurveys,
         availableEngagements,
         setAvailableEngagements,
+        isDisclaimerChecked,
     } = useContext(CreateSurveyContext);
     const { name } = surveyForm;
     const initialFormError = {
@@ -219,8 +221,11 @@ const CloneOptions = () => {
                 </Stack>
             </Grid>
             <Grid item xs={12}>
+                <Disclaimer />
+            </Grid>
+            <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <PrimaryButton onClick={handleSave} loading={isSaving}>
+                    <PrimaryButton disabled={!isDisclaimerChecked} onClick={handleSave} loading={isSaving}>
                         {'Save & Continue'}
                     </PrimaryButton>
                     <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
