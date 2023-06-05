@@ -11,7 +11,7 @@ from met_api.models import Engagement as EngagementModel
 from met_api.models import Survey as SurveyModel
 from met_api.models.email_verification import EmailVerification
 from met_api.schemas.email_verification import EmailVerificationSchema
-from met_api.services.met_user_service import MetUserService
+from met_api.services.participant_service import ParticipantService
 from met_api.utils import notification
 from met_api.utils.template import Template
 
@@ -51,10 +51,10 @@ class EmailVerificationService:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR)
 
         if email_address is not None:
-            met_user = MetUserService.get_or_create_user_by_email(email_address)
-            email_verification['user_id'] = met_user.id
+            participant = ParticipantService.get_or_create_by_email(email_address)
+            email_verification['participant_id'] = participant.id
 
-        email_verification['created_by'] = email_verification.get('user_id')
+        email_verification['created_by'] = email_verification.get('participant_id')
         email_verification['verification_token'] = uuid.uuid4()
         EmailVerification.create(email_verification, session)
 
@@ -81,7 +81,7 @@ class EmailVerificationService:
            email_verification.get('submission_id', None) != submission_id:
             raise ValueError('Email verification invalid for submission')
 
-        email_verification['updated_by'] = email_verification['user_id']
+        email_verification['updated_by'] = email_verification['participant_id']
         email_verification['is_active'] = False
         EmailVerification.update(email_verification, session)
         return email_verification

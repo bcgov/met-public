@@ -57,7 +57,7 @@ class TestEmailVerificationInfo(dict, Enum):
         'is_active': True,
         'runcycle_id': 1,
         'source_email_ver_id': 1,
-        'user_id': 1,
+        'participant_id': 1,
         'engagement_id': 1,
         'survey_id': 1,
     }
@@ -71,7 +71,7 @@ class TestUserResponseDetailInfo(dict, Enum):
         'updated_date': (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d'),
         'is_active': True,
         'runcycle_id': 1,
-        'user_id': 1,
+        'participant_id': 1,
         'engagement_id': 1,
     }
 

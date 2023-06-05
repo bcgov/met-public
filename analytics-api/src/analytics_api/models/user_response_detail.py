@@ -18,7 +18,7 @@ class UserResponseDetail(BaseModel):  # pylint: disable=too-few-public-methods
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     survey_id = db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), nullable=False)
     engagement_id = db.Column(db.Integer)
-    user_id = db.Column(db.Integer)
+    participannt_id = db.Column(db.Integer)
 
     @classmethod
     def get_response_count(

@@ -15,9 +15,9 @@ from met_api.models.comment import Comment
 from met_api.models.comment_status import CommentStatus
 from met_api.models.db import session_scope
 from met_api.models.pagination_options import PaginationOptions
+from met_api.models.participant import Participant as ParticipantModel
 from met_api.models.staff_note import StaffNote
 from met_api.models.submission import Submission
-from met_api.models.met_user import MetUser as MetUserModel
 from met_api.schemas.submission import PublicSubmissionSchema, SubmissionSchema
 from met_api.services.comment_service import CommentService
 from met_api.services.email_verification_service import EmailVerificationService
@@ -56,9 +56,9 @@ class SubmissionService:
         # Creates a scoped session that will be committed when diposed or rolledback if a exception occurs
         with session_scope() as session:
             email_verification = EmailVerificationService().verify(token, survey_id, None, session)
-            user_id = email_verification.get('user_id')
-            submission['user_id'] = user_id
-            submission['created_by'] = user_id
+            participant_id = email_verification.get('participant_id')
+            submission['participant_id'] = participant_id
+            submission['created_by'] = participant_id
             submission['engagement_id'] = survey.get('engagement_id')
 
             submission_result = Submission.create(submission, session)
@@ -126,7 +126,7 @@ class SubmissionService:
     @staticmethod
     def _trigger_email(review_note, session, submission):
         email_verification = EmailVerificationService().create({
-            'user_id': submission.user_id,
+            'participant_id': submission.participant_id,
             'survey_id': submission.survey_id,
             'submission_id': submission.id,
             'type': EmailVerificationType.RejectedComment,
@@ -255,14 +255,14 @@ class SubmissionService:
     @staticmethod
     def _send_rejected_email(submission: Submission, review_note, token) -> None:
         """Send an verification email.Throws error if fails."""
-        user_id = submission.user_id
-        user: MetUserModel = MetUserModel.find_by_id(user_id)
+        participant_id = submission.participant_id
+        participant = ParticipantModel.find_by_id(participant_id)
 
         template_id = current_app.config.get('REJECTED_EMAIL_TEMPLATE_ID', None)
         subject, body, args = SubmissionService._render_email_template(submission, review_note, token)
         try:
             notification.send_email(subject=subject,
-                                    email=user.email_address,
+                                    email=participant.email_address,
                                     html_body=body,
                                     args=args,
                                     template_id=template_id)

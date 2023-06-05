@@ -1,6 +1,6 @@
-"""Staff user model class.
+"""Participant model class.
 
-Manages the staff user
+Manages the participant
 """
 from __future__ import annotations
 from flask import current_app
@@ -13,10 +13,10 @@ from .base_model import BaseModel
 from .db import db
 
 
-class MetUser(BaseModel):  # pylint: disable=too-few-public-methods
-    """Definition of the Met User entity."""
+class Participant(BaseModel):  # pylint: disable=too-few-public-methods
+    """Definition of the participant entity."""
 
-    __tablename__ = 'met_users'
+    __tablename__ = 'participant'
 
     id = Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -32,16 +32,16 @@ class MetUser(BaseModel):  # pylint: disable=too-few-public-methods
         return current_app.config.get('EMAIL_SECRET_KEY')
 
     @classmethod
-    def get_user_by_email(cls, _email_address) -> MetUser:
-        """Get a met user with the provided email address."""
-        return cls.query.filter(MetUser.email_address == _email_address.lower()).first()  # pylint: disable=W0143
+    def get_by_email(cls, _email_address) -> Participant:
+        """Get a participant with the provided email address."""
+        return cls.query.filter(Participant.email_address == _email_address.lower()).first()  # pylint: disable=W0143
 
     @classmethod
-    def create_user(cls, user) -> MetUser:
-        """Create a met user."""
-        email_address = user.get('email_address', '')
-        user = MetUser(
+    def create(cls, participant) -> Participant:
+        """Create a participant."""
+        email_address = participant.get('email_address', '')
+        db_participant = Participant(
             email_address=email_address.lower(),
         )
-        user.save()
-        return user
+        db_participant.save()
+        return db_participant

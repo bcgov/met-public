@@ -60,7 +60,7 @@ def factory_email_verification_model(emailinfo: dict = TestEmailVerificationInfo
         is_active=emailinfo.get('is_active'),
         runcycle_id=emailinfo.get('runcycle_id'),
         source_email_ver_id=emailinfo.get('source_email_ver_id'),
-        user_id=emailinfo.get('user_id'),
+        participant_id=emailinfo.get('participant_id'),
         engagement_id=emailinfo.get('engagement_id'),
         survey_id=emailinfo.get('survey_id'),
     )
@@ -77,7 +77,7 @@ def factory_user_response_detail_model(survey_id,
         updated_date=userresponseinfo.get('updated_date'),
         is_active=userresponseinfo.get('is_active'),
         runcycle_id=userresponseinfo.get('runcycle_id'),
-        user_id=userresponseinfo.get('user_id'),
+        participant_id=userresponseinfo.get('participant_id'),
         engagement_id=userresponseinfo.get('engagement_id'),
         survey_id=survey_id,
     )

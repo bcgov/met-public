@@ -92,7 +92,7 @@ def load_email_ver(context, new_email_ver, updated_email_ver, email_ver_new_run_
 
             email_ver_model = EtlEmailVerificationModel(source_email_ver_id=email_ver.id,
                                                         is_active=True,
-                                                        user_id=email_ver.user_id,
+                                                        participant_id=email_ver.participant_id,
                                                         survey_id=email_ver.survey_id,
                                                         engagement_id=survey.engagement_id,
                                                         created_date=email_ver.created_date,

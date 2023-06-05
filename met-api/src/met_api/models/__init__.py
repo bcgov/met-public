@@ -28,7 +28,7 @@ from .generated_document_template import GeneratedDocumentTemplate
 from .generated_document_type import GeneratedDocumentType
 from .membership import Membership
 from .membership_status_code import MembershipStatusCode
-from .met_user import MetUser
+from .participant import Participant
 from .staff_note import StaffNote
 from .submission import Submission
 from .survey import Survey

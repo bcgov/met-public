@@ -101,7 +101,7 @@ class CommentService:
     def validate_fields(data):
         """Validate all fields."""
         # Will empty text return False
-        empty_fields = [not data[field] for field in ['text', 'survey_id', 'user_id']]
+        empty_fields = [not data[field] for field in ['text', 'survey_id', 'participant_id']]
 
         if any(empty_fields):
             raise ValueError('Some required fields for comments are missing')
@@ -113,7 +113,7 @@ class CommentService:
             'component_id': component_id,
             'text': comment_text,
             'survey_id': survey.get('id', None),
-            'user_id': survey_submission.get('user_id', None),
+            'participant_id': survey_submission.get('participant_id', None),
             'submission_id': survey_submission.get('id', None)
         }
 

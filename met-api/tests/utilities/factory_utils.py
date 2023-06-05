@@ -27,7 +27,7 @@ from met_api.models.email_verification import EmailVerification as EmailVerifica
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.feedback import Feedback as FeedbackModel
 from met_api.models.membership import Membership as MembershipModel
-from met_api.models.met_user import MetUser as MetUserModel
+from met_api.models.participant import Participant as ParticipantModel
 from met_api.models.staff_user import StaffUser as StaffUserModel
 from met_api.models.submission import Submission as SubmissionModel
 from met_api.models.survey import Survey as SurveyModel
@@ -149,13 +149,13 @@ def factory_staff_user_model(external_id=None, user_info: dict = TestUserInfo.us
     return user
 
 
-def factory_public_user_model(user_info: dict = TestUserInfo.user_public_1):
+def factory_participant_model(user_info: dict = TestUserInfo.user_public_1):
     """Produce a met user model."""
-    user = MetUserModel(
+    participant = ParticipantModel(
         email_address=user_info['email_address'],
     )
-    user.save()
-    return user
+    participant.save()
+    return participant
 
 
 def factory_membership_model(user_id, engagement_id, member_type='TEAM_MEMBER'):
@@ -218,12 +218,13 @@ def factory_widget_item_model(widget_info: dict = TestWidgetItemInfo.widget_item
     return widget
 
 
-def factory_submission_model(survey_id, engagement_id, user_id, submission_info: dict = TestSubmissionInfo.submission1):
+def factory_submission_model(survey_id, engagement_id, participant_id,
+                             submission_info: dict = TestSubmissionInfo.submission1):
     """Produce a submission model."""
     submission = SubmissionModel(
         survey_id=survey_id,
         engagement_id=engagement_id,
-        user_id=user_id,
+        participant_id=participant_id,
         submission_json=submission_info.get('submission_json'),
         created_by=submission_info.get('created_by'),
         updated_by=submission_info.get('updated_by'),

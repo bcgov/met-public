@@ -27,7 +27,7 @@ erDiagram
         id id PK
         integer survey_id FK "to survey table"
         integer engagement_id
-        integer user_id
+        integer participant_id
         integer runcycle_id
         timestamp created_date
         timestamp updated_date
@@ -50,7 +50,7 @@ erDiagram
     survey ||--o{ request_type_option : has 
     response_type_option {
         integer id PK
-		integer user_id
+		integer participant_id
 		string request_key PK
 		string value
 		string request_id
@@ -77,7 +77,7 @@ erDiagram
     survey ||--o{ request_type_textfield : has 
     response_type_textfield {
         integer id PK
-		integer user_id
+		integer participant_id
 		string request_key PK
 		string value
 		string request_id
@@ -104,7 +104,7 @@ erDiagram
     survey ||--o{ request_type_textarea : has 
     response_type_textarea {
         integer id PK
-		integer user_id
+		integer participant_id
 		string request_key PK
 		string value
 		string request_id
@@ -127,7 +127,7 @@ erDiagram
     user_feedback {
         integer id PK
         integer survey_id FK "to survey table"
-		integer user_id
+		integer participant_id
         string comments
 		string sentiment_analysis
 		string label
