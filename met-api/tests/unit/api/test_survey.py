@@ -237,9 +237,9 @@ def test_surveys_clone_admin(mocker, client, jwt, session, survey_info):
     # Assert the response status code and data
     assert response.status_code == HTTPStatus.OK
     assert response.get_json().get('form_json') == survey.form_json
+
+
 @pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey2])
-
-
 def test_surveys_clone_team_member(mocker, client, jwt, session, survey_info):
     """Assert that a survey can be cloned."""
     survey = factory_survey_model()
