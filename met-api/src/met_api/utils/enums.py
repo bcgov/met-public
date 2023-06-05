@@ -70,3 +70,15 @@ class KeycloakGroupName(Enum):
     EAO_IT_ADMIN = 'EAO_IT_ADMIN'
     EAO_IT_VIEWER = 'EAO_IT_VIEWER'
     EAO_TEAM_MEMBER = 'EAO_TEAM_MEMBER'
+
+
+class SourceType(Enum):
+    """Notification source types."""
+
+    ENGAGEMENT = 'engagement'
+
+
+class SourceAction(Enum):
+    """Notification source types."""
+
+    CREATED = 'created'
