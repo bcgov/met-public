@@ -66,7 +66,7 @@ const EngagementInfoSection = ({ savedEngagement, children }: EngagementInfoSect
                         {EngagementDate}
                     </Typography>
                 </Grid>
-                <Grid item xs={12} mb={{ xs: 2, sm: 2 }}>
+                <Grid item xs={12} mb={{ xs: 1, sm: 1 }}>
                     <Stack direction="row" spacing={1}>
                         <Typography sx={{ fontWeight: 800 }} variant="subtitle1">
                             Status:
