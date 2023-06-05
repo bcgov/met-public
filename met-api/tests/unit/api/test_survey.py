@@ -212,10 +212,38 @@ def test_edit_template_survey_for_team_member(client, jwt, session):  # pylint:d
 
 
 @pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey2])
-def test_surveys_clone(mocker, client, jwt, session, survey_info):
+def test_surveys_clone_admin(mocker, client, jwt, session, survey_info):
     """Assert that a survey can be cloned."""
     survey = factory_survey_model()
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+
+    # Prepare test data
+    request_data = {'name': 'New Survey'}
+
+    # Mock the SurveyService.get method
+    mocker.patch(
+        'met_api.services.survey_service.SurveyService.get',
+        return_value=survey_info
+    )
+
+    # Make a POST request to the SurveysClone endpoint
+    response = client.post(
+        f'{surveys_url}{survey.id}/clone',
+        data=json.dumps(request_data),
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+
+    # Assert the response status code and data
+    assert response.status_code == HTTPStatus.OK
+    assert response.get_json().get('form_json') == survey.form_json
+@pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey2])
+
+
+def test_surveys_clone_team_member(mocker, client, jwt, session, survey_info):
+    """Assert that a survey can be cloned."""
+    survey = factory_survey_model()
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.team_member_role)
 
     # Prepare test data
     request_data = {'name': 'New Survey'}
