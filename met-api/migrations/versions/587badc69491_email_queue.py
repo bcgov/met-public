@@ -1,8 +1,8 @@
 """email queue
 
-Revision ID: 90648f10fb61
+Revision ID: 587badc69491
 Revises: d2e7baa531ce
-Create Date: 2023-06-04 19:08:44.547019
+Create Date: 2023-06-05 06:17:14.373765
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '90648f10fb61'
+revision = '587badc69491'
 down_revision = 'd2e7baa531ce'
 branch_labels = None
 depends_on = None
@@ -25,12 +25,11 @@ def upgrade():
     sa.Column('entity_id', sa.Integer(), nullable=False),
     sa.Column('entity_type', sa.String(length=100), nullable=False),
     sa.Column('action', sa.String(length=100), nullable=True),
-    sa.Column('notification_status', sa.String(length=50)),
+    sa.Column('notification_status', sa.Enum('PROCESSING', 'SENT', name='notificationstatus'), nullable=True),
     sa.Column('created_by', sa.String(length=50), nullable=True),
     sa.Column('updated_by', sa.String(length=50), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-
     # ### end Alembic commands ###
 
 

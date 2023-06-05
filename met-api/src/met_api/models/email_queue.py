@@ -8,6 +8,7 @@ from typing import List
 
 from sqlalchemy import null, or_
 
+from met_api.constants.notification_status import NotificationStatus
 from .base_model import BaseModel
 from .db import db
 
@@ -22,7 +23,7 @@ class EmailQueue(BaseModel):  # pylint: disable=too-few-public-methods
     entity_type = db.Column(db.String(100),
                             nullable=False)  # type of the entity which triggers email ,like engagement , user
     action = db.Column(db.String(100))  # created , deleted etc
-    notification_status = db.Column(db.String(50))
+    notification_status = db.Column(db.Enum(NotificationStatus), nullable=True)
 
     @staticmethod
     def get_unprocessed_mails(max_size: int) -> List[EmailQueue]:
