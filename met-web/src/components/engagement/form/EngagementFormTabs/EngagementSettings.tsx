@@ -10,7 +10,15 @@ import {
     FormControlLabel,
     Switch,
 } from '@mui/material';
-import { MetLabel, MetPaper, PrimaryButton, MetHeader4, MetDescription, MetBody } from '../../../common';
+import {
+    MetLabel,
+    MetPaper,
+    PrimaryButton,
+    SecondaryButton,
+    MetHeader4,
+    MetDescription,
+    MetBody,
+} from '../../../common';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { ActionContext } from '../ActionContext';
@@ -19,13 +27,22 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { EngagementTabsContext } from './EngagementTabsContext';
 import { AppConfig } from 'config';
 import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
+import { SUBMISSION_STATUS } from 'constants/engagementStatus';
+import { useNavigate } from 'react-router-dom';
 
 const EngagementSettings = () => {
-    const { savedEngagement } = useContext(ActionContext);
-    const { engagementFormData, setEngagementFormData } = useContext(EngagementTabsContext);
+    const {
+        handleUpdateEngagementRequest,
+        handleUpdateEngagementMetadataRequest,
+        isSaving,
+        savedEngagement,
+        engagementId,
+    } = useContext(ActionContext);
+    const { engagementFormData, setEngagementFormData, richDescription, richContent, surveyBlockText } =
+        useContext(EngagementTabsContext);
     const { project_id, project_metadata, is_internal } = engagementFormData;
     const { engagementProjectTypes } = AppConfig.constants;
-
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     const newEngagement = !savedEngagement.id || isNaN(Number(savedEngagement.id));
@@ -76,6 +93,49 @@ const EngagementSettings = () => {
         setCopyTooltip(true);
         navigator.clipboard.writeText(engagementUrl);
     };
+
+    const handleUpdateEngagement = async () => {
+        const engagement = await handleUpdateEngagementRequest({
+            ...engagementFormData,
+            rich_description: richDescription,
+            rich_content: richContent,
+            status_block: surveyBlockList,
+        });
+
+        await handleUpdateEngagementMetadataRequest({
+            ...engagementFormData,
+            engagement_id: Number(engagementId),
+        });
+
+        navigate(`/engagements/${engagement.id}/form`);
+
+        return savedEngagement;
+    };
+
+    const handlePreviewEngagement = async () => {
+        const engagement = await handleUpdateEngagement();
+        if (!engagement) {
+            return;
+        }
+
+        navigate(`/engagements/${engagement.id}/view`);
+        window.scrollTo(0, 0);
+    };
+
+    const surveyBlockList = [
+        {
+            survey_status: SUBMISSION_STATUS.UPCOMING,
+            block_text: surveyBlockText.Upcoming,
+        },
+        {
+            survey_status: SUBMISSION_STATUS.OPEN,
+            block_text: surveyBlockText.Open,
+        },
+        {
+            survey_status: SUBMISSION_STATUS.CLOSED,
+            block_text: surveyBlockText.Closed,
+        },
+    ];
 
     return (
         <MetPaper elevation={1}>
@@ -228,6 +288,24 @@ const EngagementSettings = () => {
                             />
                         </Tooltip>
                     </ClickAwayListener>
+                </Grid>
+                <Grid item xs={12}>
+                    <PrimaryButton
+                        data-testid="update-engagement-button"
+                        sx={{ marginRight: 1 }}
+                        onClick={() => handleUpdateEngagement()}
+                        disabled={isSaving}
+                        loading={isSaving}
+                    >
+                        Save
+                    </PrimaryButton>
+                    <SecondaryButton
+                        data-testid="preview-engagement-button"
+                        onClick={() => handlePreviewEngagement()}
+                        disabled={isSaving}
+                    >
+                        {'Preview'}
+                    </SecondaryButton>
                 </Grid>
             </Grid>
         </MetPaper>
