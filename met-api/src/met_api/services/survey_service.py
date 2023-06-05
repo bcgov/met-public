@@ -88,7 +88,7 @@ class SurveyService:
             'form_json': {
                 'display': survey_data.get('display', cls.formio_survey_default_display),
                 'components': [],
-                },
+            },
         })
 
     @classmethod

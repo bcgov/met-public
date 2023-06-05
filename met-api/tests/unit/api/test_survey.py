@@ -30,6 +30,7 @@ from tests.utilities.factory_utils import (
 
 surveys_url = '/api/surveys/'
 
+
 @pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey1])
 def test_create_survey(client, jwt, session, survey_info):  # pylint:disable=unused-argument
     """Assert that an survey can be POSTed."""
@@ -116,7 +117,7 @@ def test_survey_link(client, jwt, session):  # pylint:disable=unused-argument
     assert rv.json.get('engagement_id') is None
     # link them togother
     client.put(f'{surveys_url}{survey_id}/link/engagement/{eng_id}',
-                    headers=headers, content_type=ContentType.JSON.value)
+                headers=headers, content_type=ContentType.JSON.value)
 
     rv = client.get(f'{surveys_url}{survey_id}',
                     headers=headers, content_type=ContentType.JSON.value)
