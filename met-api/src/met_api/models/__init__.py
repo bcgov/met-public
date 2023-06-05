@@ -40,3 +40,4 @@ from .widget_documents import WidgetDocuments
 from .widget_events import WidgetEvents
 from .widget_item import WidgetItem
 from .widget_type import WidgetType
+from .email_queue import EmailQueue
