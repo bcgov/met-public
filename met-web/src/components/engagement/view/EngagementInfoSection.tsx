@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Grid, Typography, Stack } from '@mui/material';
+import { Grid, Typography, Stack, useMediaQuery, Theme } from '@mui/material';
 import { MetHeader1 } from 'components/common';
 import { EngagementStatusChip } from '../status';
 import { Editor } from 'react-draft-wysiwyg';
@@ -20,6 +20,7 @@ const EngagementInfoSection = ({ savedEngagement, children }: EngagementInfoSect
     const isPreview = isLoggedIn;
     const statusName = isPreview ? mockStatus : submission_status;
     const dateFormat = 'MMM DD, YYYY';
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
     const EngagementDate =
         start_date && end_date
@@ -66,7 +67,7 @@ const EngagementInfoSection = ({ savedEngagement, children }: EngagementInfoSect
                         {EngagementDate}
                     </Typography>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} sx={{ mb: isSmallScreen ? 1 : 0 }}>
                     <Stack direction="row" spacing={1}>
                         <Typography sx={{ fontWeight: 800 }} variant="subtitle1">
                             Status:
