@@ -95,7 +95,7 @@ const EngagementSettings = () => {
     };
 
     const handleUpdateEngagement = async () => {
-        const engagement = await handleUpdateEngagementRequest({
+        await handleUpdateEngagementRequest({
             ...engagementFormData,
             rich_description: richDescription,
             rich_content: richContent,
