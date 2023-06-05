@@ -89,6 +89,7 @@ class SurveyService:
                 'display': survey_data.get('display', cls.formio_survey_default_display),
                 'components': [],
             },
+            'engagement_id': survey_data.get('engagement_id', None),
         })
 
     @classmethod
@@ -102,6 +103,7 @@ class SurveyService:
         return SurveyModel.create_survey({
             'name': data.get('name'),
             'form_json': survey_to_clone.get('form_json'),
+            'engagement_id': data.get('engagement_id', None),
         })
 
     @classmethod
