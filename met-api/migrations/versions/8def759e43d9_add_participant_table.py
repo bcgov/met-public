@@ -28,7 +28,7 @@ def upgrade():
     sa.Column('email_address', sqlalchemy_utils.types.encrypted.encrypted_type.StringEncryptedType(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    
+
     op.execute('INSERT INTO participant (id, email_address, created_date, updated_date, created_by, updated_by) \
             SELECT id, email_address, created_date, updated_date, created_by, updated_by FROM met_users;')
 
@@ -50,6 +50,12 @@ def upgrade():
     op.create_foreign_key('submission_participant_id_fkey', 'submission', 'participant', ['participant_id'], ['id'])
     op.execute('UPDATE submission SET participant_id = user_id')
     op.drop_column('submission', 'user_id')
+
+    op.add_column('subscription', sa.Column('participant_id', sa.Integer(), nullable=True))
+    op.drop_constraint('subscription_user_id_fkey', 'subscription', type_='foreignkey')
+    op.create_foreign_key('subscription_participant_id_fkey', 'subscription', 'participant', ['participant_id'], ['id'])
+    op.execute('UPDATE subscription SET participant_id = user_id')
+    op.drop_column('subscription', 'user_id')
 
     op.execute('SELECT setval(\'participant_id_seq\', (SELECT MAX(id) + 1 FROM participant), true);')
     op.drop_table('met_users')

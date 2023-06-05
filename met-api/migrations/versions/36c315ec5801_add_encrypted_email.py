@@ -1,7 +1,7 @@
 """add encrypted_email
 
 Revision ID: 36c315ec5801
-Revises: 196b0abc23b6
+Revises: 587badc69491
 Create Date: 2023-05-30 16:21:19.298002
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy_utils
 
 # revision identifiers, used by Alembic.
 revision = '36c315ec5801'
-down_revision = '196b0abc23b6'
+down_revision = '587badc69491'
 branch_labels = None
 depends_on = None
 
@@ -76,7 +76,6 @@ def downgrade():
     op.add_column('met_users', sa.Column('username', sa.VARCHAR(length=100), autoincrement=False, nullable=True))
     op.add_column('met_users', sa.Column('access_type', sa.VARCHAR(length=200), autoincrement=False, nullable=True))
     op.add_column('met_users', sa.Column('last_name', sa.VARCHAR(length=50), autoincrement=False, nullable=True))
-    op.create_foreign_key('met_users_tenant_fk', 'met_users', 'tenant', ['tenant_id'], ['id'])
     op.create_foreign_key('user_status_fk', 'met_users', 'user_status', ['status_id'], ['id'])
     op.create_unique_constraint('user_external_id_key', 'met_users', ['external_id'])
     op.create_index('ix_met_users_username', 'met_users', ['username'], unique=False)

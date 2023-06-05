@@ -93,10 +93,10 @@ def factory_survey_and_eng_model(survey_info: dict = TestSurveyInfo.survey1):
 def factory_subscription_model():
     """Produce a subscription model."""
     survey, eng = factory_survey_and_eng_model()
-    user = factory_user_model()
+    participant = factory_participant_model()
     subscription = SubscriptionModel(
         engagement_id=eng.id,
-        user_id=user.id,
+        participant_id=participant.id,
         is_subscribed=True,
     )
     subscription.save()

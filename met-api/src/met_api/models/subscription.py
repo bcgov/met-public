@@ -19,7 +19,7 @@ class Subscription(BaseModel):  # pylint: disable=too-few-public-methods
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     engagement_id = db.Column(db.Integer, nullable=True)
-    user_id = db.Column(db.Integer, ForeignKey('met_users.id'), nullable=True)
+    participant_id = db.Column(db.Integer, ForeignKey('participant.id'), nullable=True)
     is_subscribed = db.Column(db.Boolean, nullable=False)
 
     @classmethod
@@ -51,7 +51,7 @@ class Subscription(BaseModel):  # pylint: disable=too-few-public-methods
         """Create a subscription."""
         new_subscription = Subscription(
             engagement_id=subscription.get('engagement_id', None),
-            user_id=subscription.get('user_id', None),
+            participant_id=subscription.get('participant_id', None),
             is_subscribed=subscription.get('is_subscribed', None),
             created_date=datetime.utcnow(),
             created_by=subscription.get('created_by', None),
@@ -71,8 +71,8 @@ class Subscription(BaseModel):  # pylint: disable=too-few-public-methods
             updated_date=datetime.utcnow(),
             updated_by=subscription.get('updated_by', None),
         )
-        user_id = subscription.get('user_id', None)
-        query = Subscription.query.filter_by(user_id=user_id)
+        participant_id = subscription.get('participant_id', None)
+        query = Subscription.query.filter_by(participant_id=participant_id)
         record = query.first()
         if not record:
             raise ValueError('Subscription Not Found')
@@ -89,9 +89,9 @@ class Subscription(BaseModel):  # pylint: disable=too-few-public-methods
             updated_date=datetime.utcnow(),
             updated_by=subscription.get('updated_by', None),
         )
-        user_id = subscription.get('user_id', None)
+        participant_id = subscription.get('participant_id', None)
         engagement_id = subscription.get('engagement_id', None)
-        query = Subscription.query.filter_by(user_id=user_id, engagement_id=engagement_id)
+        query = Subscription.query.filter_by(participant_id=participant_id, engagement_id=engagement_id)
         record = query.first()
         if not record:
             raise ValueError('Subscription Not Found')
