@@ -21,7 +21,7 @@ import json
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_subscription_model, factory_survey_and_eng_model, factory_participant_model,
+    factory_auth_header, factory_participant_model, factory_subscription_model, factory_survey_and_eng_model,
     set_global_tenant)
 
 
