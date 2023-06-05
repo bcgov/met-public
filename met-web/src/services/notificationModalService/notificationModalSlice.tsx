@@ -3,7 +3,7 @@ import { NotificationModalState } from './types';
 
 const initialState: NotificationModalState = {
     open: false,
-    data: { header: '', subText: [] },
+    data: { header: '', subText: [], confirmButtonText: 'Confirm', cancelButtonText: 'Cancel' },
     type: '',
 };
 
