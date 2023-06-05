@@ -1,6 +1,6 @@
 import React, { useContext, useCallback } from 'react';
 import { Link as MuiLink, Skeleton } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppSelector } from 'hooks';
 import { ActionContext } from './ActionContext';
 import { When } from 'react-if';
@@ -11,6 +11,7 @@ export const EngagementLink = () => {
     const dispatch = useDispatch();
     const { savedEngagement, isEngagementLoading } = useContext(ActionContext);
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
+    const navigate = useNavigate();
 
     const handleNavigate = useCallback(
         (link: string) => {
@@ -31,17 +32,17 @@ export const EngagementLink = () => {
                             confirmButtonText: 'Stay on this page',
                             cancelButtonText: 'Leave page',
                             handleConfirm: () => {
-                                window.location.href = link; // Perform the navigation here
+                                navigate(link); // Perform the navigation here
                             },
                         },
                         type: 'confirm',
                     }),
                 );
             } else {
-                window.location.href = link;
+                navigate(link);
             }
         },
-        [dispatch],
+        [dispatch, navigate],
     );
 
     if (isEngagementLoading) {
