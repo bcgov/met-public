@@ -107,8 +107,6 @@ const EngagementSettings = () => {
             engagement_id: Number(engagementId),
         });
 
-        navigate(`/engagements/${engagement.id}/form`);
-
         return savedEngagement;
     };
 
