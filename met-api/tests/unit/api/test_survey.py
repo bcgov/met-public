@@ -101,7 +101,7 @@ def test_put_survey(client, jwt, session, survey_info):  # pylint:disable=unused
 
 
 def test_survey_link(client, jwt, session):  # pylint:disable=unused-argument
-    """Assert that an survey can be POSTed."""
+    """Assert that a survey can be POSTed."""
     survey = factory_survey_model()
     survey_id = survey.id
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
@@ -110,19 +110,27 @@ def test_survey_link(client, jwt, session):  # pylint:disable=unused-argument
     eng_id = eng.id
 
     # assert eng id is none in GET Survey
-
-    rv = client.get(f'{surveys_url}{survey_id}',
-                    headers=headers, content_type=ContentType.JSON.value)
-
+    rv = client.get(
+        f'{surveys_url}{survey_id}',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
     assert rv.json.get('engagement_id') is None
-    # link them togother
-    client.put(f'{surveys_url}{survey_id}/link/engagement/{eng_id}',
-                headers=headers, content_type=ContentType.JSON.value)
 
-    rv = client.get(f'{surveys_url}{survey_id}',
-                    headers=headers, content_type=ContentType.JSON.value)
+    # link them together
+    client.put(
+        f'{surveys_url}{survey_id}/link/engagement/{eng_id}',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
 
+    rv = client.get(
+        f'{surveys_url}{survey_id}',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
     assert rv.json.get('engagement_id') == str(eng_id)
+
 
 
 def test_get_hidden_survey_for_admins(client, jwt, session):  # pylint:disable=unused-argument
