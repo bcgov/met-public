@@ -5,10 +5,11 @@ import React from 'react';
 interface MetDroppableProps {
     children: React.ReactNode;
     droppableId: string;
+    type?: string;
 }
-export const MetDroppable = ({ droppableId, children }: MetDroppableProps) => {
+export const MetDroppable = ({ droppableId, type, children }: MetDroppableProps) => {
     return (
-        <Droppable droppableId={droppableId}>
+        <Droppable droppableId={droppableId} type={type}>
             {(provided: DroppableProvided) => (
                 <Box {...provided.droppableProps} ref={provided.innerRef}>
                     {children}

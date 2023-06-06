@@ -149,42 +149,36 @@ const DocumentFolder = ({
             </MetWidgetPaper>
             <When condition={documentItem.children && documentItem.children.length > 0}>
                 <Grid item xs={12} container justifyContent={'flex-end'} spacing={2}>
-                    <DragDropContext
-                        onDragEnd={() => {
-                            /** */
-                        }}
-                    >
-                        <MetDroppable droppableId="files">
-                            {documentItem.children?.map((item, index) => {
-                                return (
-                                    <Draggable key={item.id} draggableId={String(item.id)} index={index}>
-                                        {(provided: DraggableProvided) => (
-                                            <Box
-                                                sx={{
-                                                    margin: '1em 0',
-                                                }}
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                            >
-                                                <Stack direction="row" spacing={1} alignItems="flex-start">
-                                                    <IconButton
-                                                        sx={{ padding: 0, margin: 0, height: '2em' }}
-                                                        style={{ color: 'inherit' }}
-                                                        color="inherit"
-                                                        aria-label="drag-indicator"
-                                                        disabled={true}
-                                                    >
-                                                        <SubdirectoryArrowRightIcon />
-                                                    </IconButton>
-                                                    <DocumentSwitch documentItem={item} draggableProvided={provided} />
-                                                </Stack>
-                                            </Box>
-                                        )}
-                                    </Draggable>
-                                );
-                            })}
-                        </MetDroppable>
-                    </DragDropContext>
+                    <MetDroppable droppableId={String(documentItem.id)} type="FILE">
+                        {documentItem.children?.map((item, index) => {
+                            return (
+                                <Draggable key={item.id} draggableId={String(item.id)} index={index}>
+                                    {(provided: DraggableProvided) => (
+                                        <Box
+                                            sx={{
+                                                margin: '1em 0',
+                                            }}
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                        >
+                                            <Stack direction="row" spacing={1} alignItems="flex-start">
+                                                <IconButton
+                                                    sx={{ padding: 0, margin: 0, height: '2em' }}
+                                                    style={{ color: 'inherit' }}
+                                                    color="inherit"
+                                                    aria-label="drag-indicator"
+                                                    disabled={true}
+                                                >
+                                                    <SubdirectoryArrowRightIcon />
+                                                </IconButton>
+                                                <DocumentSwitch documentItem={item} draggableProvided={provided} />
+                                            </Stack>
+                                        </Box>
+                                    )}
+                                </Draggable>
+                            );
+                        })}
+                    </MetDroppable>
                 </Grid>
             </When>
         </Grid>

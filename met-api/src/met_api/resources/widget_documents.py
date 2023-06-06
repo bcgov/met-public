@@ -39,7 +39,7 @@ class WidgetDocuments(Resource):
     @staticmethod
     @cross_origin(origins=allowedorigins())
     def get(widget_id):
-        """Fetch a list of widgets by engagement_id."""
+        """Fetch a list of document widgets by engagement_id."""
         try:
             documents = WidgetDocumentService().get_documents_by_widget_id(widget_id)
             return jsonify(documents), HTTPStatus.OK
@@ -55,6 +55,25 @@ class WidgetDocuments(Resource):
         try:
             document = WidgetDocumentService.create_document(widget_id, request_json)
             return WidgetDocumentsSchema().dump(document), HTTPStatus.OK
+        except BusinessException as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@cors_preflight('GET, POST, OPTIONS')
+@API.route('/order')
+class WidgetDocuments(Resource):
+    """Resource for ordering Documents."""
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.requires_auth
+    def patch(widget_id):
+        """Order/sort the documents."""
+        request_json = request.get_json()
+        # args = request.args
+        
+        try:
+            WidgetDocumentService.sort_documents(request_json.get('documents', []))
+            return {}, HTTPStatus.OK
         except BusinessException as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
