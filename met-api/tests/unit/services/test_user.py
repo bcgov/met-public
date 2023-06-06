@@ -36,7 +36,8 @@ def test_getuser(client, jwt, session, ):  # pylint:disable=unused-argument
 
 def test_create_user_invalid_without_external_id(client, jwt, session, ):  # pylint:disable=unused-argument
     """Assert that an user can be Created."""
-    user_data: dict = TestUserInfo.user_public_1
+    user_data: dict = TestUserInfo.user_staff_1
+    user_data['external_id'] = None
     user_schema = StaffUserSchema().load(user_data)
     with pytest.raises(ValueError) as exception:
         StaffUserService().create_or_update_user(user_schema)
@@ -47,7 +48,7 @@ def test_create_user_invalid_without_external_id(client, jwt, session, ):  # pyl
 def test_create_user(client, jwt, session, ):  # pylint:disable=unused-argument
     """Assert that an user can be Created."""
     set_global_tenant()
-    user_data: dict = TestUserInfo.user_public_1
+    user_data: dict = TestUserInfo.user_staff_1
     external_id = str(fake.random_number(digits=5))
     user_data['external_id'] = external_id
     user_schema = StaffUserSchema().load(user_data)
