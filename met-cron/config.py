@@ -133,10 +133,13 @@ class _Config():  # pylint: disable=too-few-public-methods
     ENGAGEMENT_CLOSEOUT_EMAIL_SUBJECT = \
         os.getenv('ENGAGEMENT_CLOSEOUT_EMAIL_SUBJECT', '{engagement_name} - What we heard')
     NOTIFICATIONS_EMAIL_ENDPOINT = os.getenv('NOTIFICATIONS_EMAIL_ENDPOINT')
-    
+
     # config for comment_redact_service
     N_DAYS = os.getenv('N_DAYS', 14)
     REDACTION_TEXT = os.getenv('REDACTION_TEXT', '[Comment Redacted]')
+
+    # config for email queue
+    MAIL_BATCH_SIZE = os.getenv('MAIL_BATCH_SIZE', 10)
 
 
 class MigrationConfig():  # pylint: disable=too-few-public-methods
@@ -254,7 +257,7 @@ class TestConfig(_Config):  # pylint: disable=too-few-public-methods
     JWT_OIDC_AUDIENCE = os.getenv('JWT_OIDC_TEST_AUDIENCE')
     JWT_OIDC_CLIENT_SECRET = os.getenv('JWT_OIDC_TEST_CLIENT_SECRET')
     JWT_OIDC_ISSUER = os.getenv('JWT_OIDC_TEST_ISSUER')
-    
+
     # Service account details
     KEYCLOAK_SERVICE_ACCOUNT_ID = os.getenv('KEYCLOAK_TEST_ADMIN_CLIENTID')
     KEYCLOAK_SERVICE_ACCOUNT_SECRET = os.getenv('KEYCLOAK_TEST_ADMIN_SECRET')
