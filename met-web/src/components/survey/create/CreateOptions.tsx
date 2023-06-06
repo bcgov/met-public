@@ -7,6 +7,7 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { MetLabel, PrimaryButton, SecondaryButton, MetDescription } from 'components/common';
 import { Disclaimer } from './Disclaimer';
+import { FORMIO_FORM, FORMIO_WIZARD } from './constants';
 
 export const CreateOptions = () => {
     const navigate = useNavigate();
@@ -53,10 +54,7 @@ export const CreateOptions = () => {
             const createdSurvey = await postSurvey({
                 name: surveyForm.name,
                 engagement_id: engagementToLink?.id ? String(engagementToLink.id) : undefined,
-                form_json: {
-                    display: multiPageSurvey ? 'wizard' : 'form',
-                    components: [],
-                },
+                display: multiPageSurvey ? FORMIO_WIZARD : FORMIO_FORM,
             });
 
             dispatch(

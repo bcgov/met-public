@@ -24,6 +24,7 @@ const Endpoints = {
     Survey: {
         GET_LIST: `${AppConfig.apiUrl}/surveys/`,
         CREATE: `${AppConfig.apiUrl}/surveys/`,
+        CLONE: `${AppConfig.apiUrl}/surveys/survey_id/clone`,
         UPDATE: `${AppConfig.apiUrl}/surveys/`,
         LINK_TO_ENGAGEMENT: `${AppConfig.apiUrl}/surveys/survey_id/link/engagement/engagement_id`,
         UNLINK_FROM_ENGAGEMENT: `${AppConfig.apiUrl}/surveys/survey_id/unlink/engagement/engagement_id`,

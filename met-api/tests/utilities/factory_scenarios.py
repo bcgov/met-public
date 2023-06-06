@@ -259,7 +259,8 @@ class TestJwtClaims(dict, Enum):
                 'create_admin_user',
                 'view_all_surveys',
                 'edit_all_surveys',
-                'view_unapproved_comments'
+                'view_unapproved_comments',
+                'clone_survey'
             ]
         }
     }
@@ -278,6 +279,7 @@ class TestJwtClaims(dict, Enum):
                 'view_engagement',
                 'view_users',
                 'view_private_engagements',
+                'clone_survey'
             ]
         }
     }

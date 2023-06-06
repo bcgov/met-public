@@ -75,3 +75,4 @@ class SourceAction(Enum):
     """Notification source types."""
 
     CREATED = 'created'
+    PUBLISHED = 'published'
