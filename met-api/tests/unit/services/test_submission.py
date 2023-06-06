@@ -24,20 +24,20 @@ from met_api.services.email_verification_service import EmailVerificationService
 from met_api.services.submission_service import SubmissionService
 
 from tests.utilities.factory_utils import (
-    factory_comment_model, factory_email_verification, factory_submission_model, factory_survey_and_eng_model,
-    factory_user_model)
+    factory_comment_model, factory_email_verification, factory_participant_model, factory_staff_user_model,
+    factory_submission_model, factory_survey_and_eng_model)
 
 
 def test_create_submission(session):  # pylint:disable=unused-argument
     """Assert that a submission can be Created."""
     survey, eng = factory_survey_and_eng_model()
     email_verification = factory_email_verification(survey.id)
-    user_details = factory_user_model()
+    participant = factory_participant_model()
 
     submission_request: SubmissionSchema = {
         'submission_json': '{ "test_question": "test answer"}',
         'survey_id': survey.id,
-        'user_id': user_details.id,
+        'participant_id': participant.id,
         'verification_token': email_verification.verification_token,
     }
     submission = SubmissionService().create(email_verification.verification_token, submission_request)
@@ -51,12 +51,12 @@ def test_create_submission_rollback(session):  # pylint:disable=unused-argument
     """Assert that a submission failure will rollback changes to email verification."""
     survey, eng = factory_survey_and_eng_model()
     email_verification = factory_email_verification(survey.id)
-    user_details = factory_user_model()
+    participant = factory_participant_model()
 
     submission_request: SubmissionSchema = {
         'submission_json': '{ "test_question": "test answer"}',
         'survey_id': survey.id,
-        'user_id': user_details.id,
+        'participant_id': participant.id,
         'verification_token': email_verification.verification_token,
     }
 
@@ -71,10 +71,10 @@ def test_create_submission_rollback(session):  # pylint:disable=unused-argument
 
 def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that a comment can be reviewed."""
-    admin_user = factory_user_model(3)
-    user_details = factory_user_model()
+    admin_user = factory_staff_user_model(3)
+    participant = factory_participant_model()
     survey, eng = factory_survey_and_eng_model()
-    submission = factory_submission_model(survey.id, eng.id, user_details.id)
+    submission = factory_submission_model(survey.id, eng.id, participant.id)
     factory_comment_model(survey.id, submission.id)
     reasons = {
         'status_id': 2,
@@ -87,12 +87,12 @@ def test_auto_approval_of_submissions_without_comment(session):  # pylint:disabl
     """Assert that a submission without comment is auto approved."""
     survey, eng = factory_survey_and_eng_model()
     email_verification = factory_email_verification(survey.id)
-    user_details = factory_user_model()
+    participant = factory_participant_model()
 
     submission_request: SubmissionSchema = {
         'submission_json': {'simplepostalcode': 'abc', 'simpletextarea': '', 'simpletextarea1': ''},
         'survey_id': survey.id,
-        'user_id': user_details.id,
+        'participant_id': participant.id,
         'verification_token': email_verification.verification_token,
     }
     submission = SubmissionService().create(email_verification.verification_token, submission_request)
@@ -105,13 +105,13 @@ def test_submissions_with_comment_are_not_auto_approved(session):  # pylint:disa
     """Assert that a submission with comment is not auto approved."""
     survey, eng = factory_survey_and_eng_model()
     email_verification = factory_email_verification(survey.id)
-    user_details = factory_user_model()
+    participant = factory_participant_model()
 
     submission_request: SubmissionSchema = {
         'submission_json': {'simplepostalcode': 'abc', 'simpletextarea': 'Test Comment',
                             'simpletextarea1': 'Test Comment 2'},
         'survey_id': survey.id,
-        'user_id': user_details.id,
+        'participant_id': participant.id,
         'verification_token': email_verification.verification_token,
     }
     submission = SubmissionService().create(email_verification.verification_token, submission_request)
@@ -124,7 +124,7 @@ def test_check_if_submission_can_handle_multiple_comments(session):
     """Assert that submissions can handle multiple comments."""
     survey, eng = factory_survey_and_eng_model()
     email_verification = factory_email_verification(survey.id)
-    user_details = factory_user_model()
+    participant = factory_participant_model()
 
     # Create a sample submission with a comment in a text field that starts with 'simpletextarea'
     submission_request: SubmissionSchema = {
@@ -132,7 +132,7 @@ def test_check_if_submission_can_handle_multiple_comments(session):
                             'simpletextfield2': 'This is some text 2', 'simpletextarea2': 'This is a comment 1',
                             'simpletextarea1': 'This is a comment 1'},
         'survey_id': survey.id,
-        'user_id': user_details.id,
+        'participant_id': participant.id,
         'verification_token': email_verification.verification_token,
     }
 

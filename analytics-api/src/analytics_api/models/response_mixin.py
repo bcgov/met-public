@@ -23,7 +23,7 @@ class ResponseMixin:  # pylint: disable=too-few-public-methods
         """Survey id column."""
         return db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), nullable=False)
 
-    user_id = db.Column(db.Integer)
+    participant_id = db.Column(db.Integer)
     request_key = db.Column(db.String(100), primary_key=True, nullable=False)
     value = db.Column(db.Text())
     request_id = db.Column(db.String(20))

@@ -19,17 +19,18 @@ Test-Suite to ensure that the Comment service routines are working as expected.
 from met_api.services.comment_service import CommentService
 from tests.utilities.factory_scenarios import TestJwtClaims, TestSubmissionInfo
 from tests.utilities.factory_utils import (
-    factory_comment_model, factory_membership_model, factory_submission_model, factory_survey_and_eng_model,
-    factory_user_model, patch_token_info)
+    factory_comment_model, factory_membership_model, factory_participant_model, factory_staff_user_model,
+    factory_submission_model, factory_survey_and_eng_model, patch_token_info)
 
 
 def test_get_comments(session, monkeypatch):  # pylint:disable=unused-argument
     """Assert that comments can be fetched."""
     patch_token_info(TestJwtClaims.public_user_role, monkeypatch)
-    user_details = factory_user_model(external_id=TestJwtClaims.public_user_role['sub'])
+    user_details = factory_staff_user_model(external_id=TestJwtClaims.public_user_role['sub'])
+    participant = factory_participant_model()
     survey, eng = factory_survey_and_eng_model()
 
-    submission = factory_submission_model(survey.id, eng.id, user_details.id)
+    submission = factory_submission_model(survey.id, eng.id, participant.id)
     factory_comment_model(survey.id, submission.id)
     comment_records = CommentService().get_comments_by_submission(submission.id)
     assert len(comment_records) == 0, 'No membership for the public user.so cant see the records.'
@@ -43,10 +44,10 @@ def test_get_comments(session, monkeypatch):  # pylint:disable=unused-argument
 
 def test_get_comments_approved_comments(session):  # pylint:disable=unused-argument
     """Assert that comments can be fetched."""
-    user_details = factory_user_model()
+    participant = factory_participant_model()
     survey, eng = factory_survey_and_eng_model()
     approved_submission = TestSubmissionInfo.approved_submission
-    submission = factory_submission_model(survey.id, eng.id, user_details.id, approved_submission)
+    submission = factory_submission_model(survey.id, eng.id, participant.id, approved_submission)
     factory_comment_model(survey.id, submission.id)
     comment_records = CommentService().get_comments_by_submission(submission.id)
     assert len(comment_records) == 1

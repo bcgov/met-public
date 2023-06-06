@@ -19,7 +19,7 @@ class Subscription(BaseModel):  # pylint: disable=too-few-public-methods
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     engagement_id = db.Column(db.Integer, nullable=True)
-    user_id = db.Column(db.Integer, ForeignKey('met_users.id'), nullable=True)
+    participant_id = db.Column(db.Integer, ForeignKey('participant.id'), nullable=True)
     is_subscribed = db.Column(db.Boolean, nullable=False)
 
     @classmethod
@@ -29,19 +29,19 @@ class Subscription(BaseModel):  # pylint: disable=too-few-public-methods
         return db_subscription
 
     @classmethod
-    def get_by_user_id(cls, user_id) -> Subscription:
+    def get_by_participant_id(cls, participant_id) -> Subscription:
         """Get a subscription."""
         db_subscription = db.session.query(Subscription)\
-            .filter_by(user_id=user_id)\
+            .filter_by(participant_id=participant_id)\
             .order_by(Subscription.created_date.desc())\
             .first()
         return db_subscription
 
     @classmethod
-    def get_by_user_and_eng_id(cls, user_id, engagement_id) -> Subscription:
+    def get_by_participant_and_eng_id(cls, participant_id, engagement_id) -> Subscription:
         """Get a subscription."""
         db_subscription = db.session.query(Subscription)\
-            .filter_by(user_id=user_id, engagement_id=engagement_id)\
+            .filter_by(participant_id=participant_id, engagement_id=engagement_id)\
             .order_by(Subscription.created_date.desc())\
             .first()
         return db_subscription
@@ -51,7 +51,7 @@ class Subscription(BaseModel):  # pylint: disable=too-few-public-methods
         """Create a subscription."""
         new_subscription = Subscription(
             engagement_id=subscription.get('engagement_id', None),
-            user_id=subscription.get('user_id', None),
+            participant_id=subscription.get('participant_id', None),
             is_subscribed=subscription.get('is_subscribed', None),
             created_date=datetime.utcnow(),
             created_by=subscription.get('created_by', None),
@@ -64,15 +64,15 @@ class Subscription(BaseModel):  # pylint: disable=too-few-public-methods
         return new_subscription
 
     @classmethod
-    def update_subscription_for_user(cls, subscription: SubscriptionSchema, session=None) -> Subscription:
-        """Update subscription for a user."""
+    def update_subscription_for_participant(cls, subscription: SubscriptionSchema, session=None) -> Subscription:
+        """Update subscription for a participant."""
         update_fields = dict(
             is_subscribed=subscription.get('is_subscribed', None),
             updated_date=datetime.utcnow(),
             updated_by=subscription.get('updated_by', None),
         )
-        user_id = subscription.get('user_id', None)
-        query = Subscription.query.filter_by(user_id=user_id)
+        participant_id = subscription.get('participant_id', None)
+        query = Subscription.query.filter_by(participant_id=participant_id)
         record = query.first()
         if not record:
             raise ValueError('Subscription Not Found')
@@ -82,16 +82,16 @@ class Subscription(BaseModel):  # pylint: disable=too-few-public-methods
         return query.first()
 
     @classmethod
-    def update_subscription_for_user_eng(cls, subscription: SubscriptionSchema, session=None) -> Subscription:
-        """Update subscription for a user and engagement."""
+    def update_subscription_for_participant_eng(cls, subscription: SubscriptionSchema, session=None) -> Subscription:
+        """Update subscription for a participant and engagement."""
         update_fields = dict(
             is_subscribed=subscription.get('is_subscribed', None),
             updated_date=datetime.utcnow(),
             updated_by=subscription.get('updated_by', None),
         )
-        user_id = subscription.get('user_id', None)
+        participant_id = subscription.get('participant_id', None)
         engagement_id = subscription.get('engagement_id', None)
-        query = Subscription.query.filter_by(user_id=user_id, engagement_id=engagement_id)
+        query = Subscription.query.filter_by(participant_id=participant_id, engagement_id=engagement_id)
         record = query.first()
         if not record:
             raise ValueError('Subscription Not Found')

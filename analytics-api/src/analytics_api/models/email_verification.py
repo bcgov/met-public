@@ -15,7 +15,7 @@ class EmailVerification(BaseModel):  # pylint: disable=too-few-public-methods
 
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     source_email_ver_id = db.Column(db.Integer, comment='Source System Id.')
-    user_id = db.Column(db.Integer)
+    participant_id = db.Column(db.Integer)
     engagement_id = db.Column(db.Integer, comment='Source System Engagement Id.')
     survey_id = db.Column(db.Integer, comment='Source System Survey Id.')
 

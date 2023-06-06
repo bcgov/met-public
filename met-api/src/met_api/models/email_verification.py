@@ -20,7 +20,7 @@ class EmailVerification(BaseModel):  # pylint: disable=too-few-public-methods
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     verification_token = db.Column(db.String(50), nullable=False)
-    user_id = db.Column(db.Integer, ForeignKey('met_users.id'), nullable=True)
+    participant_id = db.Column(db.Integer, ForeignKey('participant.id'), nullable=True)
     is_active = db.Column(db.Boolean, nullable=False)
     type = db.Column(db.Enum(EmailVerificationType), nullable=False)
     survey_id = db.Column(db.Integer, ForeignKey('survey.id'), nullable=True)
@@ -40,7 +40,7 @@ class EmailVerification(BaseModel):  # pylint: disable=too-few-public-methods
         """Create an email verification."""
         new_email_verification = EmailVerification(
             verification_token=email_verification.get('verification_token', None),
-            user_id=email_verification.get('user_id', None),
+            participant_id=email_verification.get('participant_id', None),
             is_active=True,
             type=email_verification.get('type'),
             survey_id=email_verification.get('survey_id', None),

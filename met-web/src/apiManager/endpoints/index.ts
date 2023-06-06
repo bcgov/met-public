@@ -36,7 +36,7 @@ const Endpoints = {
         GET: `${AppConfig.apiUrl}/submissions/submission_id`,
     },
     Subscription: {
-        GET: `${AppConfig.apiUrl}/subscription/user_id`,
+        GET: `${AppConfig.apiUrl}/subscription/participant_id`,
         CREATE: `${AppConfig.apiUrl}/subscription/`,
         UPDATE: `${AppConfig.apiUrl}/subscription/`,
         CREATE_UPDATE: `${AppConfig.apiUrl}/subscription/manage`,

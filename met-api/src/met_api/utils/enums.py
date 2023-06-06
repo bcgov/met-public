@@ -43,13 +43,6 @@ class GeneratedDocumentTypes(IntEnum):
     COMMENT_SHEET = 1
 
 
-class UserType(Enum):
-    """User Types."""
-
-    STAFF = 'staff'
-    PUBLIC_USER = 'public_user'
-
-
 class LoginSource(Enum):
     """Login Source."""
 
