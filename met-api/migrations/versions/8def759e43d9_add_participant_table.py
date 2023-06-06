@@ -25,7 +25,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('created_by', sa.String(length=50), nullable=True),
     sa.Column('updated_by', sa.String(length=50), nullable=True),
-    sa.Column('email_address', sqlalchemy_utils.types.encrypted.encrypted_type.StringEncryptedType(), nullable=True),
+    sa.Column('email_address', sa.String(length=500), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
 

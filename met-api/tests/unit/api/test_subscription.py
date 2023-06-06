@@ -47,10 +47,10 @@ def test_update_subscription(client, jwt, session):  # pylint:disable=unused-arg
     """Assert that an subscription can be updated."""
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.public_user_role)
     subscription = factory_subscription_model()
-    subscription_user_id = str(subscription.user_id)
+    subscription_participant_id = str(subscription.participant_id)
 
     subscription_edits = {
-        'user_id': subscription_user_id,
+        'participant_id': subscription_participant_id,
         'is_subscribed': False,
     }
 

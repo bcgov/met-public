@@ -52,8 +52,8 @@ def test_get_staff_users(client, jwt, session, ):  # pylint:disable=unused-argum
     rv = client.get('/api/user/',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
-    assert rv.json.get('total') == 2
-    assert len(rv.json.get('items')) == 2
+    assert rv.json.get('total') == 3, "Total: Staff users added plus admin"
+    assert len(rv.json.get('items')) == 3, "Items: Staff users added plus admin"
 
 
 def test_add_user_to_admin_group(mocker, client, jwt, session):  # pylint:disable=unused-argument

@@ -155,7 +155,7 @@ class CommentService:
             {
                 'commentNumber': comment.id,
                 'dateSubmitted': str(comment.submission_date),
-                'author': f'{comment.first_name} {comment.last_name}',
+                'author': '',
                 'commentText': comment.text,
                 'reviewer': comment.reviewed_by,
                 'exportDate': str(datetime.utcnow())

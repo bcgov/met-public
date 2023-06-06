@@ -62,7 +62,7 @@ def upgrade():
     op.drop_column('met_users', 'status_id')
     op.drop_column('met_users', 'external_id')
     op.drop_column('met_users', 'email_id')
-    op.add_column('met_users', sa.Column('email_address', sqlalchemy_utils.types.encrypted.encrypted_type.StringEncryptedType(), nullable=True))
+    op.add_column('met_users', sa.Column('email_address', sa.VARCHAR(length=500), nullable=True))
 
 
 def downgrade():

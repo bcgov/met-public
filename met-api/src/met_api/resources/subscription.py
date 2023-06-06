@@ -30,17 +30,17 @@ API = Namespace('subscription', description='Endpoints for Subscription Manageme
 
 
 @cors_preflight('GET, OPTIONS')
-@API.route('/<user_id>')
+@API.route('/<participant_id>')
 class Subscription(Resource):
     """Resource for managing subscription."""
 
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
-    def get(user_id):
-        """Fetch a subscription matching the provided user id."""
+    def get(participant_id):
+        """Fetch a subscription matching the provided participant id."""
         try:
-            subscription = SubscriptionService().get(user_id)
+            subscription = SubscriptionService().get(participant_id)
             if subscription:
                 return subscription, HTTPStatus.OK
 
@@ -78,7 +78,7 @@ class Subscriptions(Resource):
         try:
             request_json = request.get_json()
             subscription = SubscriptionSchema().load(request_json, partial=True)
-            SubscriptionService().update_subscription_for_user(subscription)
+            SubscriptionService().update_subscription_for_participant(subscription)
             return {}, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
