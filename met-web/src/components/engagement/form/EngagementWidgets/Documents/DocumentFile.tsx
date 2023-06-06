@@ -11,7 +11,7 @@ import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType, Widget } from 'models/widget';
 import Edit from '@mui/icons-material/Edit';
 import { DocumentsContext } from './DocumentsContext';
-import { DragDropContext, Droppable, Draggable, DraggableProvided } from '@hello-pangea/dnd';
+import { DraggableProvided } from '@hello-pangea/dnd';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
 const DocumentFile = ({

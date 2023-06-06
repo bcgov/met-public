@@ -2,8 +2,7 @@ import React, { useContext } from 'react';
 import { Box, Grid, Stack } from '@mui/material';
 import DocumentSwitch from './DocumentSwitch';
 import { DocumentsContext } from './DocumentsContext';
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { DragDropContext, Draggable } from '@hello-pangea/dnd';
 import { MetDroppable } from 'components/common/Dragdrop';
 
 const DocumentsBlock = () => {

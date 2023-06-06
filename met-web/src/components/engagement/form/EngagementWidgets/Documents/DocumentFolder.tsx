@@ -16,8 +16,8 @@ import Edit from '@mui/icons-material/Edit';
 import { DocumentsContext } from './DocumentsContext';
 import { updatedDiff } from 'deep-object-diff';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { DragDropContext, Droppable, Draggable, DraggableProvided } from '@hello-pangea/dnd';
-import { MetDraggable, MetDroppable } from 'components/common/Dragdrop';
+import { DragDropContext, Draggable, DraggableProvided } from '@hello-pangea/dnd';
+import { MetDroppable } from 'components/common/Dragdrop';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
 const DocumentFolder = ({
