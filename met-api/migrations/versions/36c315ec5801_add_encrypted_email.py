@@ -76,6 +76,13 @@ def downgrade():
     op.add_column('met_users', sa.Column('username', sa.VARCHAR(length=100), autoincrement=False, nullable=True))
     op.add_column('met_users', sa.Column('access_type', sa.VARCHAR(length=200), autoincrement=False, nullable=True))
     op.add_column('met_users', sa.Column('last_name', sa.VARCHAR(length=50), autoincrement=False, nullable=True))
+
+    op.execute('INSERT INTO met_users \
+        (id, created_date, updated_date, first_name, middle_name, last_name, username, contact_number, \
+        external_id, status_id, tenant_id, created_by, updated_by) SELECT id, \
+        created_date, updated_date, first_name, middle_name, last_name, username, contact_number,\
+        external_id, status_id, tenant_id, created_by, updated_by FROM staff_users;')
+
     op.create_foreign_key('user_status_fk', 'met_users', 'user_status', ['status_id'], ['id'])
     op.create_unique_constraint('user_external_id_key', 'met_users', ['external_id'])
     op.create_index('ix_met_users_username', 'met_users', ['username'], unique=False)
