@@ -10,6 +10,8 @@ export interface NotificationModalProps {
     subText: ModalSubtext[];
     handleConfirm?: () => void;
     handleClose?: () => void;
+    cancelButtonText?: string;
+    confirmButtonText?: string;
 }
 
 export interface ModalProps {
