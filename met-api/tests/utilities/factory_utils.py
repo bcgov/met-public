@@ -38,8 +38,8 @@ from met_api.models.widget_item import WidgetItem as WidgetItemModal
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import MembershipStatus
 from tests.utilities.factory_scenarios import (
-    TestCommentInfo, TestEngagementInfo, TestFeedbackInfo, TestSubmissionInfo, TestSurveyInfo, TestTenantInfo,
-    TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo)
+    TestCommentInfo, TestEngagementInfo, TestFeedbackInfo, TestParticipantInfo, TestSubmissionInfo, TestSurveyInfo,
+    TestTenantInfo, TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo)
 
 CONFIG = get_named_config('testing')
 fake = Faker()
@@ -163,10 +163,10 @@ def factory_staff_user_model(external_id=None, user_info: dict = TestUserInfo.us
     return user
 
 
-def factory_participant_model(user_info: dict = TestUserInfo.user_public_1):
+def factory_participant_model(participant: dict = TestParticipantInfo.participant):
     """Produce a met user model."""
     participant = ParticipantModel(
-        email_address=user_info['email_address'],
+        email_address=participant['email_address'],
     )
     participant.save()
     return participant

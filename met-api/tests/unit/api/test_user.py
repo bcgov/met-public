@@ -24,7 +24,7 @@ from flask import current_app
 from met_api.models import Tenant as TenantModel
 from met_api.utils.enums import ContentType, KeycloakGroupName
 from tests.utilities.factory_scenarios import TestJwtClaims, TestUserInfo
-from tests.utilities.factory_utils import factory_auth_header, factory_public_user_model, factory_staff_user_model
+from tests.utilities.factory_utils import factory_auth_header, factory_staff_user_model
 
 
 def test_create_staff_user(client, jwt, session, ):  # pylint:disable=unused-argument
@@ -56,32 +56,6 @@ def test_get_staff_users(client, jwt, session, ):  # pylint:disable=unused-argum
     assert len(rv.json.get('items')) == 2
 
 
-def test_get_staff_users_exclude_public_user(client, jwt, session, ):  # pylint:disable=unused-argument
-    """Assert that an user can be POSTed."""
-    staff_1 = dict(TestUserInfo.user_staff_1)
-    staff_2 = dict(TestUserInfo.user_staff_1)
-    public_1 = dict(TestUserInfo.user_public_1)
-    public_email = public_1.get('email_address')
-    staff_email = staff_1.get('email_address')
-    factory_staff_user_model(user_info=staff_1)
-    factory_staff_user_model(user_info=staff_2)
-    factory_public_user_model(user_info=public_1)
-
-    claims = TestJwtClaims.staff_admin_role
-    headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.get('/api/user/',
-                    headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == HTTPStatus.OK
-    assert rv.json.get('total') == 2
-    assert len(rv.json.get('items')) == 2
-    # public user is not fetched
-    public_user = _find_user(public_email, rv)
-    assert public_user is None
-
-    staff_user = _find_user(staff_email, rv)
-    assert staff_user is not None
-
-
 def test_add_user_to_admin_group(mocker, client, jwt, session):  # pylint:disable=unused-argument
     """Assert that you can add a user to admin group."""
     user = factory_staff_user_model()
@@ -106,6 +80,3 @@ def test_add_user_to_admin_group(mocker, client, jwt, session):  # pylint:disabl
     assert rv.status_code == HTTPStatus.OK
     mock_add_user_to_group_keycloak.assert_called()
 
-
-def _find_user(public_email, rv):
-    return next((x for x in rv.json.get('items') if x.get('email_address') == public_email), None)

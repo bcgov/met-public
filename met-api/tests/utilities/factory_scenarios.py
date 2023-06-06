@@ -41,14 +41,6 @@ class TestUserInfo(dict, Enum):
         'first_name': 'System',
     }
 
-    user_public_1 = {
-        'email_address': fake.email(),
-    }
-
-    user_public_2 = {
-        'email_address': fake.email(),
-    }
-
     user_staff_1 = {
         'first_name': fake.name(),
         'middle_name': fake.name(),
@@ -56,6 +48,17 @@ class TestUserInfo(dict, Enum):
         'email_address': fake.email(),
     }
 
+
+class TestParticipantInfo(dict, Enum):
+    """Test scenarios of participant."""
+
+    participant1 = {
+        'email_address': fake.email(),
+    }
+
+    participant2 = {
+        'email_address': fake.email(),
+    }
 
 class TestSurveyInfo(dict, Enum):
     """Test scenarios of Survey."""
