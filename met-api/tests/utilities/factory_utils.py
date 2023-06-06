@@ -163,8 +163,8 @@ def factory_staff_user_model(external_id=None, user_info: dict = TestUserInfo.us
     return user
 
 
-def factory_participant_model(participant: dict = TestParticipantInfo.participant):
-    """Produce a met user model."""
+def factory_participant_model(participant: dict = TestParticipantInfo.participant1):
+    """Produce a participant model."""
     participant = ParticipantModel(
         email_address=participant['email_address'],
     )
