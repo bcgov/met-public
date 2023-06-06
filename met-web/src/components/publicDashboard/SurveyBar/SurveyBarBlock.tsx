@@ -2,9 +2,7 @@ import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
 import { SurveyBarData } from '../types';
 import { DASHBOARD } from '../constants';
-import { Box, Theme, useMediaQuery } from '@mui/material';
-import { If, Then, Else } from 'react-if';
-import { MetPaper } from 'components/common';
+import { Box } from '@mui/material';
 
 interface BarBlockProps {
     data: SurveyBarData;
