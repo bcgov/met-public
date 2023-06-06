@@ -7,7 +7,6 @@ from flask import current_app
 from itsdangerous import URLSafeSerializer
 
 from sqlalchemy import Column
-from sqlalchemy.ext.declarative import declared_attr
 
 from .base_model import BaseModel
 from .db import db
@@ -43,7 +42,8 @@ class Participant(BaseModel):  # pylint: disable=too-few-public-methods
     @classmethod
     def get_by_email(cls, _email_address) -> Participant:
         """Get a participant with the provided email address."""
-        return cls.query.filter(Participant.email_address == cls.encode_email(_email_address)).first()  # pylint: disable=W0143
+        encoded_email = cls.encode_email(_email_address)
+        return cls.query.filter(Participant.email_address == encoded_email).first()  # pylint: disable=W0143
 
     @classmethod
     def create(cls, participant) -> Participant:
