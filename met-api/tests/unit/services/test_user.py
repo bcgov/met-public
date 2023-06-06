@@ -37,7 +37,7 @@ def test_getuser(client, jwt, session, ):  # pylint:disable=unused-argument
 def test_create_user_invalid_without_external_id(client, jwt, session, ):  # pylint:disable=unused-argument
     """Assert that an user can be Created."""
     user_data: dict = TestUserInfo.user_staff_1
-    user_data['external_id'] = None
+    user_data['external_id'] = ''
     user_schema = StaffUserSchema().load(user_data)
     with pytest.raises(ValueError) as exception:
         StaffUserService().create_or_update_user(user_schema)
@@ -45,7 +45,7 @@ def test_create_user_invalid_without_external_id(client, jwt, session, ):  # pyl
     assert str(exception.value) == 'Some required fields are empty'
 
 
-def test_create_user(client, jwt, session, ):  # pylint:disable=unused-argument
+def test_create_user(client, jwt, session, notify_mock, ):  # pylint:disable=unused-argument
     """Assert that an user can be Created."""
     set_global_tenant()
     user_data: dict = TestUserInfo.user_staff_1
