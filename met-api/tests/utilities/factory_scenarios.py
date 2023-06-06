@@ -60,6 +60,7 @@ class TestParticipantInfo(dict, Enum):
         'email_address': fake.email(),
     }
 
+
 class TestSurveyInfo(dict, Enum):
     """Test scenarios of Survey."""
 

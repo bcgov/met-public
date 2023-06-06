@@ -79,4 +79,3 @@ def test_add_user_to_admin_group(mocker, client, jwt, session):  # pylint:disabl
     )
     assert rv.status_code == HTTPStatus.OK
     mock_add_user_to_group_keycloak.assert_called()
-
