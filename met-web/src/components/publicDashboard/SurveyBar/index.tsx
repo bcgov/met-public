@@ -11,7 +11,7 @@ import {
     ToggleButton,
 } from '@mui/material';
 import { Palette } from 'styles/Theme';
-import { MetHeader1, MetPaper, MetLabel, PrimaryButton } from 'components/common';
+import { MetHeader1, MetPaper, MetParagraph, MetLabel, PrimaryButton } from 'components/common';
 import { QuestionBlock } from './QuestionBlock';
 import { SurveyBarData } from '../types';
 import { BarBlock } from './BarBlock';
@@ -21,6 +21,7 @@ import { Engagement } from 'models/engagement';
 import { SurveyResultData, createSurveyResultData, defaultData } from '../../../models/analytics/surveyResult';
 import { ErrorBox } from '../ErrorBox';
 import { If, Then, Else, When } from 'react-if';
+
 const HEIGHT = 400;
 
 interface SurveyQuestionProps {
@@ -158,6 +159,11 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading }: Sur
                                 </Box>
                             </Grid>
                         </Grid>
+                        <When condition={isSmallScreen}>
+                            <Grid item xs={12}>
+                                <MetParagraph sx={{ fontWeight: 'bold' }}>Survey Results</MetParagraph>
+                            </Grid>
+                        </When>
                         <Grid item xs={12} sm={8} alignItems="center">
                             {chartType == 'bar' ? (
                                 <BarBlock data={selectedData} />
