@@ -73,6 +73,10 @@ def downgrade():
     sa.ForeignKeyConstraint(['tenant_id'], ['tenant.id'], name='met_users_tenant_fk'),
     sa.PrimaryKeyConstraint('id', name='user_pkey')
     )
+
+    op.execute('INSERT INTO met_users (id, email_address, created_date, updated_date, created_by, updated_by) \
+        SELECT id, email_address, created_date, updated_date, created_by, updated_by FROM participant;')
+
     op.add_column('submission', sa.Column('user_id', sa.INTEGER(), autoincrement=False, nullable=True))
     op.drop_constraint('submission_participant_id_fkey', 'submission', type_='foreignkey')
     op.create_foreign_key('submission_user_id_fkey', 'submission', 'met_users', ['user_id'], ['id'])
