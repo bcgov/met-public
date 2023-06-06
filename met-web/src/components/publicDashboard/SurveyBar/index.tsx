@@ -92,8 +92,8 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading }: Sur
                 <MetPaper sx={{ p: 2 }}>
                     <Grid item xs={12}>
                         <Stack direction={{ xs: 'column', sm: 'row' }} width="100%" justifyContent="flex-end">
-                            <Grid item container xs={8} direction="row" justifyContent="flex-start">
-                                <MetLabel mb={2} color="primary">
+                            <Grid item container xs={12} md={8} direction="row" justifyContent="flex-start">
+                                <MetLabel mb={{ xs: 1, m: 2 }} color="primary">
                                     Click on a question to view results
                                 </MetLabel>
                             </Grid>
@@ -142,8 +142,8 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading }: Sur
                         <Divider sx={{ marginTop: '1em' }} />
                     </Grid>
                     <Grid container direction="row" item xs={12} spacing={1} alignItems={'flex-start'}>
-                        <Grid container item xs={12} sm={4}>
-                            <Grid item>
+                        <Grid container item xs={12} md={4}>
+                            <Grid item container alignItems={'center'} justifyContent={'center'}>
                                 <Box
                                     sx={{
                                         width: '100%',
