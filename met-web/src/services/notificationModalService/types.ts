@@ -11,6 +11,8 @@ export interface NotificationModalState {
     data: {
         header: string;
         subText: ModalSubtext[];
+        confirmButtonText?: string;
+        cancelButtonText?: string;
         handleConfirm?: () => void;
         handleClose?: () => void;
     };

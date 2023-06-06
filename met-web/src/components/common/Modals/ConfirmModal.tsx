@@ -3,7 +3,14 @@ import { Grid, Stack, useMediaQuery, Theme } from '@mui/material';
 import { modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody } from 'components/common';
 import { NotificationModalProps } from './types';
 
-const ConfirmModal = ({ header, subText, handleConfirm, handleClose }: NotificationModalProps) => {
+const ConfirmModal = ({
+    header,
+    subText,
+    handleConfirm,
+    handleClose,
+    confirmButtonText,
+    cancelButtonText,
+}: NotificationModalProps) => {
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
     return (
@@ -43,15 +50,19 @@ const ConfirmModal = ({ header, subText, handleConfirm, handleClose }: Notificat
                         {isSmallScreen ? (
                             <>
                                 <PrimaryButton onClick={handleConfirm} type="submit" variant={'contained'}>
-                                    Confirm
+                                    {confirmButtonText ? confirmButtonText : 'Confirm'}
                                 </PrimaryButton>
-                                <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
+                                <SecondaryButton onClick={handleClose}>
+                                    {cancelButtonText ? cancelButtonText : 'Cancel'}
+                                </SecondaryButton>
                             </>
                         ) : (
                             <>
-                                <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
+                                <SecondaryButton onClick={handleClose}>
+                                    {cancelButtonText ? cancelButtonText : 'Cancel'}
+                                </SecondaryButton>
                                 <PrimaryButton onClick={handleConfirm} type="submit" variant={'contained'}>
-                                    Confirm
+                                    {confirmButtonText ? confirmButtonText : 'Confirm'}
                                 </PrimaryButton>
                             </>
                         )}
