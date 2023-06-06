@@ -262,7 +262,7 @@ class SubmissionService:
         subject, body, args = SubmissionService._render_email_template(submission, review_note, token)
         try:
             notification.send_email(subject=subject,
-                                    email=participant.email_address,
+                                    email=ParticipantModel.decode_email(participant.email_address),
                                     html_body=body,
                                     args=args,
                                     template_id=template_id)

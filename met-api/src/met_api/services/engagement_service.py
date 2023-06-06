@@ -221,7 +221,7 @@ class EngagementService:
         subject, body, args = EngagementService._render_email_template(engagement)
         participants = SubmissionModel.get_engaged_participants(engagement.id)
         template_id = current_app.config.get('ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID', None)
-        emails = [participant.email_address for participant in participants]
+        emails = [participant.deencode_email(participant.email_address) for participant in participants]
         # Removes duplicated records
         emails = list(set(emails))
         try:
