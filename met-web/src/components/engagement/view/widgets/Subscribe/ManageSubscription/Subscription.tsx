@@ -59,15 +59,15 @@ export const Subscription = () => {
                 const subscribed = JSON.stringify(subscribed_email);
                 await createSubscription({
                     engagement_id: parseInt(engagementId ?? ''),
-                    user_id: JSON.parse(subscribed).user_id,
+                    participant_id: JSON.parse(subscribed).participant_id,
                     is_subscribed: 'true',
                 });
                 setSubscriptionText('You have successfully confirmed your subscription. Thank you.');
             }
             if (subscriptionStatus == SubscriptionType.UNSUBSCRIBE) {
-                const user_id = scriptionKey;
+                const participant_id = scriptionKey;
                 await unSubscribe({
-                    user_id: parseInt(user_id ?? ''),
+                    participant_id: parseInt(participant_id ?? ''),
                     is_subscribed: 'false',
                 });
                 setSubscriptionText('You have successfully unsubscribed. Thank you.');
