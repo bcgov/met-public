@@ -30,6 +30,7 @@ from .membership import Membership
 from .membership_status_code import MembershipStatusCode
 from .staff_note import StaffNote
 from .submission import Submission
+from .subscription import Subscription
 from .survey import Survey
 from .tenant import Tenant
 from .user import User
@@ -39,3 +40,4 @@ from .widget_documents import WidgetDocuments
 from .widget_events import WidgetEvents
 from .widget_item import WidgetItem
 from .widget_type import WidgetType
+from .email_queue import EmailQueue

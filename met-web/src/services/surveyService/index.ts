@@ -43,14 +43,24 @@ export const getSurvey = async (surveyId: number): Promise<Survey> => {
     return Promise.reject('Failed to fetch survey');
 };
 
-interface PostSurveyRequest {
+interface CreateSurveyRequest {
     name: string;
-    components?: unknown[];
     engagement_id?: string;
-    form_json: unknown;
+    display: string;
 }
-export const postSurvey = async (data: PostSurveyRequest): Promise<Survey> => {
+export const postSurvey = async (data: CreateSurveyRequest): Promise<Survey> => {
     const response = await http.PostRequest<Survey>(Endpoints.Survey.CREATE, data);
+    return response.data;
+};
+
+interface CloneSurveyRequest {
+    name: string;
+    engagement_id?: string;
+    survey_id: number;
+}
+export const cloneSurvey = async (data: CloneSurveyRequest): Promise<Survey> => {
+    const url = replaceUrl(Endpoints.Survey.CLONE, 'survey_id', String(data.survey_id));
+    const response = await http.PostRequest<Survey>(url, data);
     return response.data;
 };
 

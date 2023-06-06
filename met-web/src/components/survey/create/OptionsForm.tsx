@@ -9,6 +9,7 @@ import LinkOptions from './LinkOptions';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { OptionsFormSkeleton } from './OptionsFormSkeleton';
 import { When } from 'react-if';
+import { Disclaimer } from './Disclaimer';
 
 const OptionsForm = () => {
     const navigate = useNavigate();
@@ -75,6 +76,12 @@ const OptionsForm = () => {
             <When condition={value === 'LINK'}>
                 <Grid item xs={12}>
                     <LinkOptions />
+                </Grid>
+            </When>
+
+            <When condition={!value}>
+                <Grid item xs={12}>
+                    <Disclaimer />
                 </Grid>
             </When>
 

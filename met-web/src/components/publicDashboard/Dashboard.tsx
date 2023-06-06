@@ -1,7 +1,14 @@
 import React, { useContext, useEffect } from 'react';
 import { Grid, Link as MuiLink, useMediaQuery, Stack, Theme, Box, Backdrop } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import { CircularProgressWithLabel, MetHeader1, MetPaper, PrimaryButton, SecondaryButton } from 'components/common';
+import {
+    CircularProgressWithLabel,
+    MetHeader1,
+    MetPaper,
+    MetDescription,
+    PrimaryButton,
+    SecondaryButton,
+} from 'components/common';
 import { ReportBanner } from './ReportBanner';
 import SurveysCompleted from './KPI/SurveysCompleted';
 import ProjectLocation from './KPI/ProjectLocation';
@@ -82,57 +89,96 @@ const Dashboard = () => {
                                 alignItems="flex-start"
                                 rowSpacing={3}
                             >
-                                <Grid item xs={12} sm={6}>
-                                    <MetHeader1 textAlign={{ xs: 'center', sm: 'left' }}>What We Heard</MetHeader1>
-                                </Grid>
+                                <When condition={!isSmallScreen}>
+                                    <Grid item xs={12} sm={6}>
+                                        <MetHeader1 textAlign={{ xs: 'center', sm: 'left' }}>What We Heard</MetHeader1>
+                                    </Grid>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={6}
+                                        container
+                                        direction={{ xs: 'column', sm: 'row' }}
+                                        justifyContent="flex-end"
+                                    >
+                                        <Stack direction="row" spacing={1}>
+                                            <PrimaryButton
+                                                data-testid="SurveyBlock/take-me-to-survey-button"
+                                                onClick={handleReadComments}
+                                            >
+                                                Read Comments
+                                            </PrimaryButton>
+                                            <SecondaryButton
+                                                onClick={() => {
+                                                    setIsPrinting(true);
+                                                }}
+                                                loading={isPrinting}
+                                            >
+                                                Export to PDF
+                                            </SecondaryButton>
+                                        </Stack>
+                                    </Grid>
+                                </When>
                                 <Grid
+                                    container
+                                    spacing={isSmallScreen ? 0 : 3}
+                                    rowSpacing={isSmallScreen ? 1 : 3}
                                     item
                                     xs={12}
-                                    sm={6}
-                                    container
-                                    direction={{ xs: 'column', sm: 'row' }}
-                                    justifyContent="flex-end"
+                                    ml={isSmallScreen ? 0 : 2}
                                 >
-                                    <Stack direction="row" spacing={1}>
-                                        <PrimaryButton
-                                            data-testid="SurveyBlock/take-me-to-survey-button"
-                                            onClick={handleReadComments}
-                                        >
-                                            Read Comments
-                                        </PrimaryButton>
-                                        <SecondaryButton
-                                            onClick={() => {
-                                                setIsPrinting(true);
-                                            }}
-                                            loading={isPrinting}
-                                        >
-                                            Export to PDF
-                                        </SecondaryButton>
-                                    </Stack>
-                                </Grid>
-                                <Grid
-                                    item
-                                    container
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    alignItems="flex-start"
-                                    ml={isSmallScreen ? 0 : 5}
-                                    rowSpacing={3}
-                                >
-                                    <Grid id={'kpi'} container spacing={3} item xs={12}>
-                                        <Grid id={'kpi-emails-sent'} item xs={12} sm={4}>
+                                    <Grid
+                                        id={'kpi'}
+                                        container
+                                        spacing={1}
+                                        item
+                                        alignItems={'space-evenly'}
+                                        justifyContent={'space-evenly'}
+                                        xs={12}
+                                    >
+                                        <When condition={isSmallScreen}>
+                                            <Grid item container sm={12}>
+                                                <Grid
+                                                    item
+                                                    container
+                                                    alignItems={'center'}
+                                                    justifyContent={'center'}
+                                                    xs={12}
+                                                    sx={{ mb: 1 }}
+                                                >
+                                                    <MetHeader1 bold>{engagement.name}</MetHeader1>
+                                                </Grid>
+                                                <Grid
+                                                    item
+                                                    container
+                                                    alignItems={'center'}
+                                                    justifyContent={'center'}
+                                                    xs={12}
+                                                >
+                                                    <Grid item>
+                                                        <MetDescription sx={{ mr: 1 }}>
+                                                            From: {engagement.start_date}{' '}
+                                                        </MetDescription>
+                                                    </Grid>
+                                                    <Grid item>
+                                                        <MetDescription>To: {engagement.end_date}</MetDescription>
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                        </When>
+                                        <Grid item sm={4}>
                                             <SurveyEmailsSent
                                                 engagement={engagement}
                                                 engagementIsLoading={isEngagementLoading}
                                             />
                                         </Grid>
-                                        <Grid id={'kpi-surveys-completed'} item xs={12} sm={4}>
+                                        <Grid id={'kpi-surveys-completed'} item sm={4}>
                                             <SurveysCompleted
                                                 engagement={engagement}
                                                 engagementIsLoading={isEngagementLoading}
                                             />
                                         </Grid>
-                                        <Grid item xs={12} sm={4} sx={{ width: '100%' }}>
+                                        <Grid item sm={8} md={4} sx={{ width: isSmallScreen ? '90%' : '100%' }}>
                                             <ProjectLocation
                                                 engagement={engagement}
                                                 engagementIsLoading={isEngagementLoading}

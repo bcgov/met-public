@@ -29,6 +29,7 @@ class Role(Enum):
     CREATE_TEAM = 'create_team'
     CREATE_ENGAGEMENT = 'create_engagement'
     CREATE_SURVEY = 'create_survey'
+    CLONE_SURVEY = 'clone_survey'
     PUBLISH_ENGAGEMENT = 'publish_engagement'
     VIEW_ENGAGEMENT = 'view_engagement'
     VIEW_PRIVATE_ENGAGEMENTS = 'view_private_engagements'

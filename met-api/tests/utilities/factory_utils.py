@@ -29,6 +29,7 @@ from met_api.models.feedback import Feedback as FeedbackModel
 from met_api.models.membership import Membership as MembershipModel
 from met_api.models.submission import Submission as SubmissionModel
 from met_api.models.survey import Survey as SurveyModel
+from met_api.models.subscription import Subscription as SubscriptionModel
 from met_api.models.user import User as UserModel
 from met_api.models.widget import Widget as WidgetModal
 from met_api.models.widget_documents import WidgetDocuments as WidgetDocumentModel
@@ -86,6 +87,19 @@ def factory_survey_and_eng_model(survey_info: dict = TestSurveyInfo.survey1):
     )
     survey.save()
     return survey, eng
+
+
+def factory_subscription_model():
+    """Produce a subscription model."""
+    survey, eng = factory_survey_and_eng_model()
+    user = factory_user_model()
+    subscription = SubscriptionModel(
+        engagement_id=eng.id,
+        user_id=user.id,
+        is_subscribed=True,
+    )
+    subscription.save()
+    return subscription
 
 
 def factory_email_verification(survey_id):

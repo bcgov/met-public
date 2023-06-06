@@ -6,11 +6,14 @@ import { postSurvey } from 'services/surveyService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { MetLabel, PrimaryButton, SecondaryButton, MetDescription } from 'components/common';
+import { Disclaimer } from './Disclaimer';
+import { FORMIO_FORM, FORMIO_WIZARD } from './constants';
 
 export const CreateOptions = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { surveyForm, handleSurveyFormChange, engagementToLink } = useContext(CreateSurveyContext);
+    const { surveyForm, handleSurveyFormChange, engagementToLink, isDisclaimerChecked } =
+        useContext(CreateSurveyContext);
     const { name } = surveyForm;
     const initialFormError = {
         name: false,
@@ -51,10 +54,7 @@ export const CreateOptions = () => {
             const createdSurvey = await postSurvey({
                 name: surveyForm.name,
                 engagement_id: engagementToLink?.id ? String(engagementToLink.id) : undefined,
-                form_json: {
-                    display: multiPageSurvey ? 'wizard' : 'form',
-                    components: [],
-                },
+                display: multiPageSurvey ? FORMIO_WIZARD : FORMIO_FORM,
             });
 
             dispatch(
@@ -116,10 +116,13 @@ export const CreateOptions = () => {
                 </MetDescription>
             </Grid>
             <Grid item xs={6}></Grid>
+            <Grid item xs={12}>
+                <Disclaimer />
+            </Grid>
 
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <PrimaryButton onClick={handleSaveClick} loading={isSaving}>
+                    <PrimaryButton disabled={!isDisclaimerChecked} onClick={handleSaveClick} loading={isSaving}>
                         {'Save & Continue'}
                     </PrimaryButton>
                     <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>

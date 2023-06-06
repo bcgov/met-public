@@ -91,6 +91,7 @@ class EmailVerificationService:
         """Send an verification email.Throws error if fails."""
         survey_id = email_verification.get('survey_id')
         email_to = email_verification.get('email_address')
+        user_id = email_verification.get('user_id')
         survey: SurveyModel = SurveyModel.get_open(survey_id)
 
         if not survey:
@@ -99,7 +100,7 @@ class EmailVerificationService:
             raise ValueError('Engagement not found')
 
         subject, body, args, template_id = EmailVerificationService._render_email_template(
-            survey, email_verification.get('verification_token'), email_verification.get('type'))
+            survey, email_verification.get('verification_token'), email_verification.get('type'), user_id)
         try:
             # user hasn't been created yet.so create token using SA.
             notification.send_email(subject=subject, email=email_to, html_body=body, args=args, template_id=template_id)
@@ -110,16 +111,16 @@ class EmailVerificationService:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
 
     @staticmethod
-    def _render_email_template(survey: SurveyModel, token, email_type: EmailVerificationType):
+    def _render_email_template(survey: SurveyModel, token, email_type: EmailVerificationType, user_id):
         if email_type == EmailVerificationType.Subscribe:
-            return EmailVerificationService._render_subscribe_email_template(survey, token)
+            return EmailVerificationService._render_subscribe_email_template(survey, token, user_id)
         # if email_type == EmailVerificationType.RejectedComment:
             # TODO: move reject comment email verification logic here
         #    return
         return EmailVerificationService._render_survey_email_template(survey, token)
 
     @staticmethod
-    def _render_subscribe_email_template(survey: SurveyModel, token):
+    def _render_subscribe_email_template(survey: SurveyModel, token, user_id):
         # url is origin url excluding context path
         engagement: EngagementModel = EngagementModel.find_by_id(survey.engagement_id)
         engagement_name = engagement.name
@@ -128,15 +129,20 @@ class EmailVerificationService:
         subject_template = current_app.config.get('SUBSCRIBE_EMAIL_SUBJECT')
         confirm_path = current_app.config.get('SUBSCRIBE_PATH'). \
             format(engagement_id=engagement.id, token=token)
+        unsubscribe_path = current_app.config.get('UNSUBSCRIBE_PATH'). \
+            format(engagement_id=engagement.id, user_id=user_id)
         confirm_url = notification.get_tenant_site_url(engagement.tenant_id, confirm_path)
+        unsubscribe_url = notification.get_tenant_site_url(engagement.tenant_id, unsubscribe_path)
         args = {
             'engagement_name': engagement_name,
             'confirm_url': confirm_url,
+            'unsubscribe_url': unsubscribe_url,
         }
         subject = subject_template.format(engagement_name=engagement_name)
         body = template.render(
             engagement_name=args.get('engagement_name'),
             confirm_url=args.get('confirm_url'),
+            unsubscribe_url=args.get('unsubscribe_url'),
         )
         return subject, body, args, template_id
 

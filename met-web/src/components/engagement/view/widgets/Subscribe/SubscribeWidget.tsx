@@ -35,7 +35,9 @@ function SubscribeWidget() {
                         header: 'Thank you',
                         subText: [
                             {
-                                text: 'We sent a link to confirm your subscription at the following email address ${email}',
+                                text:
+                                    'We sent a link to confirm your subscription at the following email address ' +
+                                    email,
                             },
                             {
                                 text: 'Please click the link provided to confirm your interest in receiving news and updates from the EAO.',
