@@ -86,7 +86,7 @@ const EngagementSettings = () => {
         navigator.clipboard.writeText(engagementUrl);
     };
 
-    const handleUpdateEngagement = async () => {
+    const handleUpdateEngagementSettings = async () => {
         await handleUpdateEngagementMetadataRequest({
             ...engagementFormData,
             engagement_id: Number(engagementId),
@@ -256,7 +256,7 @@ const EngagementSettings = () => {
                     <PrimaryButton
                         data-testid="update-engagement-button"
                         sx={{ marginRight: 1 }}
-                        onClick={() => handleUpdateEngagement()}
+                        onClick={() => handleUpdateEngagementSettings()}
                         disabled={isSaving}
                         loading={isSaving}
                     >
