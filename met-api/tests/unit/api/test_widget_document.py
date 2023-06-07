@@ -177,15 +177,29 @@ def test_delete_documents(client, jwt, session):  # pylint:disable=unused-argume
                        headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.status_code == HTTPStatus.OK
- 
- 
+
+
 def test_sort_folders(client, jwt, session):
     """Test sorting of folders."""
     engagement = factory_engagement_model()
     widget = factory_widget_model({'engagement_id': engagement.id})
-    folder1 = factory_document_model({'widget_id': widget.id, 'title': 'Folder 1', 'type': 'folder'})
-    folder2 = factory_document_model({'widget_id': widget.id, 'title': 'Folder 2', 'type': 'folder'})
-    folder3 = factory_document_model({'widget_id': widget.id, 'title': 'Folder 3', 'type': 'folder'})
+    folder1 = factory_document_model({
+        'widget_id': widget.id,
+        'title': 'Folder 1',
+        'type': 'folder'
+    })
+
+    folder2 = factory_document_model({
+        'widget_id': widget.id,
+        'title': 'Folder 2',
+        'type': 'folder'
+    })
+
+    folder3 = factory_document_model({
+        'widget_id': widget.id,
+        'title': 'Folder 3',
+        'type': 'folder'
+    })
 
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
 
@@ -236,9 +250,26 @@ def test_sort_files(client, jwt, session):
     engagement = factory_engagement_model()
     widget = factory_widget_model({'engagement_id': engagement.id})
     folder = factory_document_model({'widget_id': widget.id, 'title': 'Folder', 'type': 'folder'})
-    file1 = factory_document_model({'widget_id': widget.id, 'title': 'Document 1', 'parent_document_id': folder.id, 'type': 'file'})
-    file2 = factory_document_model({'widget_id': widget.id, 'title': 'Document 2', 'parent_document_id': folder.id, 'type': 'file'})
-    file3 = factory_document_model({'widget_id': widget.id, 'title': 'Document 3', 'parent_document_id': folder.id,'type': 'file'})
+    file1 = factory_document_model({
+        'widget_id': widget.id,
+        'title': 'Document 1',
+        'parent_document_id': folder.id,
+        'type': 'file'
+    })
+
+    file2 = factory_document_model({
+        'widget_id': widget.id,
+        'title': 'Document 2',
+        'parent_document_id': folder.id,
+        'type': 'file'
+    })
+
+    file3 = factory_document_model({
+        'widget_id': widget.id,
+        'title': 'Document 3',
+        'parent_document_id': folder.id,
+        'type': 'file'
+    })
 
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
 
@@ -246,7 +277,11 @@ def test_sort_files(client, jwt, session):
     rv = client.get(f'/api/widgets/{widget.id}/documents', headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
     retreived_folder = rv.json['children'][0]
-    initial_order = [doc['id'] for doc in retreived_folder.get('children') if doc.get('parent_document_id') == folder.id]
+    initial_order = [
+        doc['id']
+        for doc in retreived_folder.get('children')
+        if doc.get('parent_document_id') == folder.id
+    ]
 
     # Define the desired order of documents
     desired_order = [file2.id, file3.id, file1.id]
@@ -264,7 +299,11 @@ def test_sort_files(client, jwt, session):
     rv = client.get(f'/api/widgets/{widget.id}/documents', headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
     retreived_folder = rv.json['children'][0]
-    updated_order = [doc['id'] for doc in retreived_folder.get('children') if doc.get('parent_document_id') == folder.id]
+    updated_order = [
+        doc['id']
+        for doc in retreived_folder.get('children')
+        if doc.get('parent_document_id') == folder.id
+    ]
 
     # Assert that the order of documents has changed according to the desired order
     assert updated_order == desired_order

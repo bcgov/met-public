@@ -63,6 +63,7 @@ class WidgetDocuments(Resource):
 @API.route('/order')
 class WidgetDocumentsOrder(Resource):
     """Resource for ordering Documents."""
+
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.requires_auth
