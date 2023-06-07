@@ -68,7 +68,7 @@ class WidgetDocumentsOrder(Resource):
     @_jwt.requires_auth
     def patch(widget_id):
         """Order/sort the documents."""
-        request_json = request.get_json()        
+        request_json = request.get_json()
         try:
             WidgetDocumentService.sort_documents(widget_id, request_json.get('documents', []))
             return 'Documents successfully ordered', HTTPStatus.OK
