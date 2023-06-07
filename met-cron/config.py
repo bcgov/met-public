@@ -131,6 +131,7 @@ class _Config():  # pylint: disable=too-few-public-methods
 
     # The GC notify email variables
     # Publish Email Service
+    EMAIL_SECRET_KEY = os.getenv('EMAIL_SECRET_KEY', 'secret')
     PUBLISH_ENGAGEMENT_EMAIL_TEMPLATE_ID = os.getenv('PUBLISH_ENGAGEMENT_EMAIL_TEMPLATE_ID')
     PUBLISH_ENGAGEMENT_EMAIL_SUBJECT = os.getenv('PUBLISH_ENGAGEMENT_EMAIL_SUBJECT', 'New {engagement_name} published')
 

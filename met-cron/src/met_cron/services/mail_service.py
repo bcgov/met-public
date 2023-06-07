@@ -7,7 +7,7 @@ from met_api.constants.notification_status import NotificationStatus
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.email_queue import EmailQueue as EmailQueueModel
 from met_api.models.engagement import Engagement as EngagementModel
-from met_api.models.user import User as UserModel
+from met_api.models.participant import Participant as ParticipantModel
 from met_api.models.subscription import Subscription as SubscriptionModel
 from met_api.utils import notification
 from met_api.utils.enums import SourceType, SourceAction
@@ -56,11 +56,24 @@ class EmailService:  # pylint: disable=too-few-public-methods
         subscription_list: List[SubscriptionModel] = db.session.query(SubscriptionModel).distinct().filter(
             SubscriptionModel.is_subscribed == True).all()
         subscriber: SubscriptionModel
+        email_list = []
         for subscriber in subscription_list:
             try:
-                user: UserModel = UserModel.find_by_id(subscriber.user_id)
+                Participant = ParticipantModel.find_by_id(subscriber.participant_id)
+                if Participant.email_address is not None:
+                    email_address = ParticipantModel.decode_email(Participant.email_address)
+                    if email_address not in email_list:
+                        email_list.append(email_address)
+            except Exception as exc:  # noqa: B902
+                current_app.logger.error('<Extracting email address for subscribers failed', exc)
+                raise BusinessException(
+                    error='Error extracting email address for subscribers.',
+                    status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
+
+        for email in email_list:
+            try:
                 notification.send_email(subject=subject,
-                                        email=user.email_id,
+                                        email=email,
                                         html_body=body,
                                         args=args,
                                         template_id=template_id)                
