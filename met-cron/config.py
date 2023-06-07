@@ -127,6 +127,12 @@ class _Config():  # pylint: disable=too-few-public-methods
     # front end endpoints
     SITE_URL = os.getenv('SITE_URL')
     ENGAGEMENT_DASHBOARD_PATH = os.getenv('ENGAGEMENT_DASHBOARD_PATH', '/engagements/{engagement_id}/dashboard')
+    ENGAGEMENT_VIEW_PATH = os.getenv('ENGAGEMENT_VIEW_PATH', '/engagements/{engagement_id}/view')
+
+    # The GC notify email variables
+    # Publish Email Service
+    PUBLISH_ENGAGEMENT_EMAIL_TEMPLATE_ID = os.getenv('PUBLISH_ENGAGEMENT_EMAIL_TEMPLATE_ID')
+    PUBLISH_ENGAGEMENT_EMAIL_SUBJECT = os.getenv('PUBLISH_ENGAGEMENT_EMAIL_SUBJECT', 'New {engagement_name} published')
 
     # Email Service
     ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID = os.getenv('ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID')
