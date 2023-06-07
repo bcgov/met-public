@@ -4,6 +4,8 @@
 0 17 * * 1-5 default cd /met-cron && ./run_met_closeout.sh
 # ENGAGEMENT PUBLISH Runs At every 5 minutes.
 */5 * * * * default cd /met-cron && ./run_met_publish.sh
+# ENGAGEMENT PUBLISH EMAIL Runs At every 5 minutes.
+*/5 * * * * default cd /met-cron && ./run_met_publish_email.sh
 # PURGE Runs At every 15 days.
 0 0 * * 0 default cd /met-cron && ./run_met_purge.sh
 # REDACT COMMENTS Runs At every day.
