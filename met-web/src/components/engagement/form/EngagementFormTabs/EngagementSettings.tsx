@@ -9,6 +9,7 @@ import {
     SelectChangeEvent,
     FormControlLabel,
     Switch,
+    Divider,
 } from '@mui/material';
 import {
     MetLabel,
@@ -27,22 +28,13 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { EngagementTabsContext } from './EngagementTabsContext';
 import { AppConfig } from 'config';
 import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
-import { SUBMISSION_STATUS } from 'constants/engagementStatus';
-import { useNavigate } from 'react-router-dom';
 
 const EngagementSettings = () => {
-    const {
-        handleUpdateEngagementRequest,
-        handleUpdateEngagementMetadataRequest,
-        isSaving,
-        savedEngagement,
-        engagementId,
-    } = useContext(ActionContext);
-    const { engagementFormData, setEngagementFormData, richDescription, richContent, surveyBlockText } =
-        useContext(EngagementTabsContext);
+    const { handleUpdateEngagementMetadataRequest, isSaving, savedEngagement, engagementId } =
+        useContext(ActionContext);
+    const { engagementFormData, setEngagementFormData } = useContext(EngagementTabsContext);
     const { project_id, project_metadata, is_internal } = engagementFormData;
     const { engagementProjectTypes } = AppConfig.constants;
-    const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     const newEngagement = !savedEngagement.id || isNaN(Number(savedEngagement.id));
@@ -95,13 +87,6 @@ const EngagementSettings = () => {
     };
 
     const handleUpdateEngagement = async () => {
-        await handleUpdateEngagementRequest({
-            ...engagementFormData,
-            rich_description: richDescription,
-            rich_content: richContent,
-            status_block: surveyBlockList,
-        });
-
         await handleUpdateEngagementMetadataRequest({
             ...engagementFormData,
             engagement_id: Number(engagementId),
@@ -109,31 +94,6 @@ const EngagementSettings = () => {
 
         return savedEngagement;
     };
-
-    const handlePreviewEngagement = async () => {
-        const engagement = await handleUpdateEngagement();
-        if (!engagement) {
-            return;
-        }
-
-        navigate(`/engagements/${engagement.id}/view`);
-        window.scrollTo(0, 0);
-    };
-
-    const surveyBlockList = [
-        {
-            survey_status: SUBMISSION_STATUS.UPCOMING,
-            block_text: surveyBlockText.Upcoming,
-        },
-        {
-            survey_status: SUBMISSION_STATUS.OPEN,
-            block_text: surveyBlockText.Open,
-        },
-        {
-            survey_status: SUBMISSION_STATUS.CLOSED,
-            block_text: surveyBlockText.Closed,
-        },
-    ];
 
     return (
         <MetPaper elevation={1}>
@@ -277,9 +237,13 @@ const EngagementSettings = () => {
                                 InputProps={{
                                     endAdornment: (
                                         <InputAdornment position="end" sx={{ height: '100%', maxHeight: '100%' }}>
-                                            <PrimaryButton variant="contained" disableElevation onClick={handleCopyUrl}>
+                                            <SecondaryButton
+                                                variant="contained"
+                                                disableElevation
+                                                onClick={handleCopyUrl}
+                                            >
                                                 <ContentCopyIcon />
-                                            </PrimaryButton>
+                                            </SecondaryButton>
                                         </InputAdornment>
                                     ),
                                 }}
@@ -288,6 +252,7 @@ const EngagementSettings = () => {
                     </ClickAwayListener>
                 </Grid>
                 <Grid item xs={12}>
+                    <Divider sx={{ mt: '1em', mb: '1em' }} />
                     <PrimaryButton
                         data-testid="update-engagement-button"
                         sx={{ marginRight: 1 }}
@@ -297,13 +262,6 @@ const EngagementSettings = () => {
                     >
                         Save
                     </PrimaryButton>
-                    <SecondaryButton
-                        data-testid="preview-engagement-button"
-                        onClick={() => handlePreviewEngagement()}
-                        disabled={isSaving}
-                    >
-                        {'Preview'}
-                    </SecondaryButton>
                 </Grid>
             </Grid>
         </MetPaper>
