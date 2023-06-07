@@ -28,13 +28,22 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { EngagementTabsContext } from './EngagementTabsContext';
 import { AppConfig } from 'config';
 import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
+import { SUBMISSION_STATUS } from 'constants/engagementStatus';
+import { useNavigate } from 'react-router-dom';
 
 const EngagementSettings = () => {
-    const { handleUpdateEngagementMetadataRequest, isSaving, savedEngagement, engagementId } =
-        useContext(ActionContext);
-    const { engagementFormData, setEngagementFormData } = useContext(EngagementTabsContext);
+    const {
+        handleUpdateEngagementRequest,
+        handleUpdateEngagementMetadataRequest,
+        isSaving,
+        savedEngagement,
+        engagementId,
+    } = useContext(ActionContext);
+    const { engagementFormData, setEngagementFormData, richDescription, richContent, surveyBlockText } =
+        useContext(EngagementTabsContext);
     const { project_id, project_metadata, is_internal } = engagementFormData;
     const { engagementProjectTypes } = AppConfig.constants;
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     const newEngagement = !savedEngagement.id || isNaN(Number(savedEngagement.id));
@@ -87,6 +96,13 @@ const EngagementSettings = () => {
     };
 
     const handleUpdateEngagement = async () => {
+        await handleUpdateEngagementRequest({
+            ...engagementFormData,
+            rich_description: richDescription,
+            rich_content: richContent,
+            status_block: surveyBlockList,
+        });
+
         await handleUpdateEngagementMetadataRequest({
             ...engagementFormData,
             engagement_id: Number(engagementId),
@@ -94,6 +110,21 @@ const EngagementSettings = () => {
 
         return savedEngagement;
     };
+
+    const surveyBlockList = [
+        {
+            survey_status: SUBMISSION_STATUS.UPCOMING,
+            block_text: surveyBlockText.Upcoming,
+        },
+        {
+            survey_status: SUBMISSION_STATUS.OPEN,
+            block_text: surveyBlockText.Open,
+        },
+        {
+            survey_status: SUBMISSION_STATUS.CLOSED,
+            block_text: surveyBlockText.Closed,
+        },
+    ];
 
     return (
         <MetPaper elevation={1}>
