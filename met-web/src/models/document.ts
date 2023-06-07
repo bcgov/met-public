@@ -1,3 +1,5 @@
+import { DraggableProvided } from '@hello-pangea/dnd';
+
 export type DocumentType = 'file' | 'folder';
 
 export const DOCUMENT_TYPE: { [x: string]: DocumentType } = {
@@ -12,4 +14,5 @@ export interface DocumentItem {
     url?: string;
     parent_document_id?: number;
     children?: DocumentItem[];
+    draggableProvided?: DraggableProvided;
 }

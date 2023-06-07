@@ -11,8 +11,16 @@ import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType, Widget } from 'models/widget';
 import Edit from '@mui/icons-material/Edit';
 import { DocumentsContext } from './DocumentsContext';
+import { DraggableProvided } from '@hello-pangea/dnd';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
-const DocumentFile = ({ documentItem }: { documentItem: DocumentItem }) => {
+const DocumentFile = ({
+    documentItem,
+    draggableProvided,
+}: {
+    documentItem: DocumentItem;
+    draggableProvided: DraggableProvided;
+}) => {
     const dispatch = useAppDispatch();
     const { handleFileDrawerOpen, handleChangeDocumentToEdit, loadDocuments } = useContext(DocumentsContext);
     const { widgets } = useContext(WidgetDrawerContext);
@@ -35,6 +43,16 @@ const DocumentFile = ({ documentItem }: { documentItem: DocumentItem }) => {
         <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={2} mb={2}>
             <MetWidgetPaper elevation={1} sx={{ width: '100%' }}>
                 <Grid container direction="row" alignItems={'center'} justifyContent="flex-start">
+                    <Grid item xs={2} sx={{ alignItems: 'center', justifyContent: 'center' }}>
+                        <IconButton
+                            sx={{ margin: 0, padding: 0 }}
+                            color="inherit"
+                            aria-label="drag-indicator"
+                            {...draggableProvided.dragHandleProps}
+                        >
+                            <DragIndicatorIcon />
+                        </IconButton>
+                    </Grid>
                     <Grid item xs>
                         <Stack spacing={2} direction="row" alignItems="center">
                             <LinkIcon color="info" />

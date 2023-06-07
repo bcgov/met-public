@@ -16,6 +16,7 @@ export interface DocumentsContextProps {
     handleFileDrawerOpen: (_open: boolean) => void;
     widget: Widget | null;
     handleChangeDocumentToEdit: (_document: DocumentItem | null) => void;
+    setDocuments: React.Dispatch<React.SetStateAction<DocumentItem[]>>;
 }
 
 export type EngagementParams = {
@@ -35,6 +36,9 @@ export const DocumentsContext = createContext<DocumentsContextProps>({
         /* empty default method  */
     },
     widget: null,
+    setDocuments: () => {
+        throw new Error('setDocuments() not implemented');
+    },
 });
 
 export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -89,6 +93,7 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
                 documentToEdit,
                 loadingDocuments,
                 documents,
+                setDocuments,
                 loadDocuments,
                 fileDrawerOpen,
                 handleFileDrawerOpen,
