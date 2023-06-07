@@ -1,25 +1,24 @@
 """Service for engagement management."""
 from datetime import datetime
 from http import HTTPStatus
-from typing import List
 
 from flask import current_app
 
 from met_api.constants.engagement_status import Status
 from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
-from met_api.models import User as UserModel
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_status_block import EngagementStatusBlock as EngagementStatusBlockModel
 from met_api.models.pagination_options import PaginationOptions
-from met_api.models.submission import Submission
+from met_api.models.submission import Submission as SubmissionModel
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services import authorization
-from met_api.services.object_storage_service import ObjectStorageService
 from met_api.services.membership_service import MembershipService
-from met_api.utils.notification import send_email
-from met_api.utils.template import Template
+from met_api.services.object_storage_service import ObjectStorageService
+from met_api.utils import email_util, notification
+from met_api.utils.enums import SourceAction, SourceType
 from met_api.utils.roles import Role
+from met_api.utils.template import Template
 from met_api.utils.token_info import TokenInfo
 
 
@@ -104,6 +103,8 @@ class EngagementService:
     def publish_scheduled_engagements():
         """Publish scheduled engagement due."""
         engagements = EngagementModel.publish_scheduled_engagements_due()
+        email_util.publish_to_email_queue(SourceType.ENGAGEMENT.value, engagements.id,
+                                          SourceAction.PUBLISHED.value, True)
         print('Engagements published: ', engagements)
         return engagements
 
@@ -113,9 +114,11 @@ class EngagementService:
         # TODO add schema and remove this validation
         EngagementService.validate_fields(request_json)
         eng_model = EngagementService._create_engagement_model(request_json)
+
         if request_json.get('status_block'):
             EngagementService._create_eng_status_block(eng_model.id, request_json)
         eng_model.commit()
+        email_util.publish_to_email_queue(SourceType.ENGAGEMENT.value, eng_model.id, SourceAction.CREATED.value, True)
         return eng_model.find_by_id(eng_model.id)
 
     @staticmethod
@@ -215,18 +218,17 @@ class EngagementService:
             raise ValueError('Some required fields are empty')
 
     @staticmethod
-    def _send_closeout_emails(engagement: EngagementSchema) -> None:
+    def _send_closeout_emails(engagement: EngagementModel) -> None:
         """Send the engagement closeout emails.Throws error if fails."""
-        engagement_id = engagement.get('id')
         subject, body, args = EngagementService._render_email_template(engagement)
-        users: List[UserModel] = Submission.get_engaged_users(engagement_id)
+        participants = SubmissionModel.get_engaged_participants(engagement.id)
         template_id = current_app.config.get('ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID', None)
-        emails = [user.email_id for user in users]
+        emails = [participant.decode_email(participant.email_address) for participant in participants]
         # Removes duplicated records
         emails = list(set(emails))
         try:
-            [send_email(subject=subject, email=email_address, html_body=body,
-                        args=args, template_id=template_id) for email_address in emails]
+            [notification.send_email(subject=subject, email=email_address, html_body=body,
+                                     args=args, template_id=template_id) for email_address in emails]
         except Exception as exc:  # noqa: B902
             current_app.logger.error('<Notification for engagement closeout failed', exc)
             raise BusinessException(
@@ -234,18 +236,16 @@ class EngagementService:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
 
     @staticmethod
-    def _render_email_template(engagement: EngagementSchema):
+    def _render_email_template(engagement: EngagementModel):
         template = Template.get_template('email_engagement_closeout.html')
         dashboard_path = current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
-            format(engagement_id=engagement.get('id'))
-        # url is origin url excluding context path
-        site_url = current_app.config.get('SITE_URL')
-        engagement_name = engagement.get('name')
+            format(engagement_id=engagement.id)
+        engagement_url = notification.get_tenant_site_url(engagement.tenant_id, dashboard_path)
         subject = current_app.config.get('ENGAGEMENT_CLOSEOUT_EMAIL_SUBJECT'). \
-            format(engagement_name=engagement_name)
+            format(engagement_name=engagement.name)
         args = {
-            'engagement_name': engagement_name,
-            'engagement_url': f'{site_url}{dashboard_path}',
+            'engagement_name': engagement.name,
+            'engagement_url': engagement_url,
         }
         body = template.render(
             engagement_name=args.get('engagement_name'),

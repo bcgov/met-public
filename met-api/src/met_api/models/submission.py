@@ -11,7 +11,7 @@ from sqlalchemy.dialects import postgresql
 from met_api.constants.comment_status import Status
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.survey import Survey
-from met_api.models.user import User
+from met_api.models.participant import Participant
 from met_api.schemas.submission import SubmissionSchema
 
 from .base_model import BaseModel
@@ -27,7 +27,7 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
     submission_json = db.Column(postgresql.JSONB(astext_type=db.Text()), nullable=False, server_default='{}')
     survey_id = db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), nullable=False)
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), nullable=False)
-    user_id = db.Column(db.Integer, ForeignKey('met_users.id'), nullable=True)
+    participant_id = db.Column(db.Integer, ForeignKey('participant.id'), nullable=True)
     reviewed_by = db.Column(db.String(50))
     review_date = db.Column(db.DateTime)
     comment_status_id = db.Column(db.Integer, ForeignKey('comment_status.id', ondelete='SET NULL'))
@@ -71,7 +71,7 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
             submission_json=submission.get('submission_json', None),
             engagement_id=submission.get('engagement_id', None),
             survey_id=submission.get('survey_id', None),
-            user_id=submission.get('user_id', None),
+            participant_id=submission.get('participant_id', None),
             created_date=datetime.utcnow(),
             updated_date=None,
             created_by=submission.get('created_by', None),
@@ -144,7 +144,7 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
             notify_email=notify_email,
             reviewed_by=comment.get('reviewed_by'),
             review_date=datetime.utcnow(),
-            updated_by=comment.get('user_id'),
+            updated_by=comment.get('participant_id'),
             updated_date=datetime.utcnow(),
         )
 
@@ -192,9 +192,9 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
         return page.items, page.total
 
     @classmethod
-    def get_engaged_users(cls, engagement_id) -> List[User]:
+    def get_engaged_participants(cls, engagement_id) -> List[Participant]:
         """Get users that have submissions for the specified engagement id."""
-        users = db.session.query(User)\
+        users = db.session.query(Participant)\
             .join(Submission)\
             .join(Survey)\
             .filter(Survey.engagement_id == engagement_id)\

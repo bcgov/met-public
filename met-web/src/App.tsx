@@ -1,6 +1,6 @@
 import './App.scss';
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import UserService from './services/userService';
 import { useAppSelector, useAppDispatch } from './hooks';
 import { MidScreenLoader, MobileToolbar } from './components/common';
@@ -18,6 +18,7 @@ import NoAccess from 'routes/NoAccess';
 import { getTenant } from 'services/tenantService';
 import { Tenant } from 'models/tenant';
 import { DEFAULT_TENANT } from './constants';
+import NotFound from 'routes/NotFound';
 
 const App = () => {
     const drawerWidth = 280;
@@ -40,8 +41,10 @@ const App = () => {
     }, [basename, AppConfig.apiUrl]);
 
     const redirectToDefaultTenant = () => {
-        const path = window.location.pathname.length > 1 ? window.location.pathname : '';
-        window.location.replace(`/${DEFAULT_TENANT}/${path}`);
+        console.log('Redirecting to default tenant.');
+        if (!window.location.toString().includes(DEFAULT_TENANT)) {
+            window.location.replace(`/${DEFAULT_TENANT}/`);
+        }
     };
 
     const fetchTenant = async () => {
@@ -55,11 +58,8 @@ const App = () => {
             if (tenant) {
                 sessionStorage.setItem('tenantId', basename);
                 setTenant(tenant);
-            } else {
-                redirectToDefaultTenant();
             }
         } catch {
-            redirectToDefaultTenant();
             console.error('Error occurred while fetching Tenant information');
         }
     };
@@ -69,7 +69,13 @@ const App = () => {
     }
 
     if (!tenant) {
-        return <></>;
+        return (
+            <Router>
+                <Routes>
+                    <Route path="*" element={<NotFound />} />
+                </Routes>
+            </Router>
+        );
     }
 
     if (!isLoggedIn) {

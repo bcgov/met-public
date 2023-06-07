@@ -8,9 +8,9 @@ const formatToPSTTimeZone = (date: string, fmt: string, tz: string) => dayjs.utc
 
 const formatToUTCTimeZone = (date: string, fmt: string) => dayjs(date).utc().format(fmt);
 
-export const formatDate = (date: string, formatString = 'YYYY-MM-DD') => {
+export const formatDate = (date: Dayjs | string, formatString = 'YYYY-MM-DD') => {
     if (date) {
-        return formatToPSTTimeZone(date, formatString, 'America/Vancouver');
+        return formatToPSTTimeZone(date.toString(), formatString, 'America/Vancouver');
     } else {
         return '';
     }

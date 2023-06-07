@@ -181,3 +181,24 @@ class SurveyUnlink(Resource):
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@cors_preflight('POST, OPTIONS')
+@API.route('/<survey_id>/clone')
+class SurveysClone(Resource):
+    """Resource for managing surveys."""
+
+    @staticmethod
+    @_jwt.has_one_of_roles([Role.CLONE_SURVEY.value])
+    @cross_origin(origins=allowedorigins())
+    def post(survey_id):
+        """Clone a new survey."""
+        try:
+            requestjson = request.get_json()
+            result = SurveyService().clone(requestjson, survey_id)
+            survey_schema = SurveySchema()
+            return survey_schema.dump(result), HTTPStatus.OK
+        except KeyError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

@@ -2,13 +2,14 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Grid, TextField, Stack, Autocomplete, Typography } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { useNavigate } from 'react-router-dom';
-import { getSurveysPage, postSurvey } from 'services/surveyService';
+import { cloneSurvey, getSurveysPage } from 'services/surveyService';
 import { getEngagements } from 'services/engagementService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
 import { Survey } from 'models/survey';
 import { Engagement } from 'models/engagement';
+import { Disclaimer } from './Disclaimer';
 
 export type EngagementParams = {
     engagementId: string;
@@ -37,6 +38,7 @@ const CloneOptions = () => {
         setAvailableSurveys,
         availableEngagements,
         setAvailableEngagements,
+        isDisclaimerChecked,
     } = useContext(CreateSurveyContext);
     const { name } = surveyForm;
     const initialFormError = {
@@ -119,10 +121,10 @@ const CloneOptions = () => {
         }
         setIsSaving(true);
         try {
-            const createdSurvey = await postSurvey({
+            const createdSurvey = await cloneSurvey({
                 name: surveyForm.name,
-                form_json: selectedSurvey.form_json,
                 engagement_id: engagementId ? String(engagementId) : undefined,
+                survey_id: selectedSurvey.id,
             });
 
             dispatch(
@@ -219,8 +221,11 @@ const CloneOptions = () => {
                 </Stack>
             </Grid>
             <Grid item xs={12}>
+                <Disclaimer />
+            </Grid>
+            <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <PrimaryButton onClick={handleSave} loading={isSaving}>
+                    <PrimaryButton disabled={!isDisclaimerChecked} onClick={handleSave} loading={isSaving}>
                         {'Save & Continue'}
                     </PrimaryButton>
                     <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>

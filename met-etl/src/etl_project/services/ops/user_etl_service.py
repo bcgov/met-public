@@ -2,7 +2,7 @@ from dagster import Out, Output, op
 from sqlalchemy import func
 from datetime import datetime
 
-from met_api.models.user import User as MetUserModel
+from met_api.models.participant import Participant as ParticipantModel
 from analytics_api.models.user_details import UserDetails as UserDetailsModel
 from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 
@@ -40,25 +40,25 @@ def get_user_last_run_cycle_time(context):
 # extract the users that have been created or updated after the last run
 @op(required_resource_keys={"met_db_session", "met_etl_db_session"},
     out={"new_users": Out(), "updated_users": Out(), "user_details_new_run_cycle_id": Out()})
-def extract_user(context, user_details_last_run_cycle_datetime, user_details_new_run_cycle_id):
+def extract_participant(context, user_details_last_run_cycle_datetime, user_details_new_run_cycle_id):
     session = context.resources.met_db_session
     default_datetime = datetime(1900, 1, 1, 0, 0, 0, 0)
-    new_users = []
-    updated_users = []
+    new_participants = []
+    updated_participants = []
 
     for last_run_cycle_time in user_details_last_run_cycle_datetime:
 
         context.log.info("started extracting new data from user_details table")
-        new_users = session.query(MetUserModel).filter(MetUserModel.created_date > last_run_cycle_time).all()
+        new_participants = session.query(ParticipantModel).filter(ParticipantModel.created_date > last_run_cycle_time).all()
 
         if last_run_cycle_time > default_datetime:
             context.log.info("started extracting updated data from user_details table")
-            updated_users = session.query(MetUserModel).filter(MetUserModel.updated_date > last_run_cycle_time,
-                                                               MetUserModel.updated_date != MetUserModel.created_date).all()
+            updated_participants = session.query(ParticipantModel).filter(ParticipantModel.updated_date > last_run_cycle_time,
+                                                               ParticipantModel.updated_date != ParticipantModel.created_date).all()
 
-    yield Output(new_users, "new_users")
+    yield Output(new_participants, "new_participants")
 
-    yield Output(updated_users, "updated_users")
+    yield Output(updated_participants, "updated_participants")
 
     yield Output(user_details_new_run_cycle_id, "user_details_new_run_cycle_id")
 
@@ -71,19 +71,19 @@ def extract_user(context, user_details_last_run_cycle_datetime, user_details_new
 
 # load the users created or updated after last run to the analytics database
 @op(required_resource_keys={"met_db_session", "met_etl_db_session"}, out={"user_details_new_run_cycle_id": Out()})
-def load_user(context, new_users, updated_users, user_details_new_run_cycle_id):
+def load_user(context, new_participants, updated_participants, user_details_new_run_cycle_id):
     session = context.resources.met_etl_db_session
-    all_users = new_users + updated_users
+    all_participants = new_participants + updated_participants
 
-    if len(all_users) > 0:
+    if len(all_participants) > 0:
 
-        context.log.info("loading new users")
+        context.log.info("loading new participants")
 
-        for user in all_users:
-            session.query(UserDetailsModel).filter(UserDetailsModel.name == user.external_id).update(
+        for participant in all_participants:
+            session.query(UserDetailsModel).filter(UserDetailsModel.name == participant.email_address).update(
                 {'is_active': False})
-            user_model = UserDetailsModel(name=user.external_id, is_active=True, created_date=user.created_date,
-                                          updated_date=user.updated_date, runcycle_id=user_details_new_run_cycle_id)
+            user_model = UserDetailsModel(name=participant.email_address, is_active=True, created_date=participant.created_date,
+                                          updated_date=participant.updated_date, runcycle_id=user_details_new_run_cycle_id)
 
             session.add(user_model)
 

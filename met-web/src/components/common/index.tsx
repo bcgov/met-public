@@ -8,6 +8,8 @@ import {
     Stack,
     IconButton,
     Toolbar,
+    Box,
+    CircularProgressProps,
 } from '@mui/material';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import { SxProps, styled } from '@mui/system';
@@ -18,10 +20,11 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { MET_Header_Font_Family, MET_Header_Font_Weight } from '../../styles/constants';
 import { When } from 'react-if';
 
-export const MetTooltip = styled(({ ...props }: TooltipProps) => <Tooltip {...props} />)(({ theme }) => ({
+export const MetTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
     [`& .${tooltipClasses.tooltip}`]: {
         backgroundColor: theme.palette.primary?.main,
-        color: 'white',
         fontSize: 11,
     },
     [`& .${tooltipClasses.arrow}`]: {
@@ -45,7 +48,7 @@ const StyledPrimaryButton = styled(LoadingButton)(() => ({
     },
 }));
 
-const StyledSecondaryButton = styled(MuiButton)(() => ({
+const StyledSecondaryButton = styled(LoadingButton)(() => ({
     backgroundColor: 'transparent',
     color: Palette.primary.main,
     lineHeight: '1.1rem',
@@ -80,7 +83,11 @@ export const WidgetButton = ({ children, ...rest }: { children: React.ReactNode;
 );
 
 export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
-    <StyledSecondaryButton {...rest} variant="outlined">
+    <StyledSecondaryButton
+        {...rest}
+        variant="outlined"
+        loadingIndicator={<CircularProgress color="primary" size={'1.8em'} />}
+    >
         {children}
     </StyledSecondaryButton>
 );
@@ -352,5 +359,51 @@ export const ModalSubtitle = ({
         <Typography variant={'subtitle1'} {...rest}>
             {children}
         </Typography>
+    );
+};
+
+export const CircularProgressWithLabel = (props: CircularProgressProps & { value: number }) => {
+    return (
+        <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+            <CircularProgress color="inherit" {...props} />
+            <Box
+                sx={{
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    position: 'absolute',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+            >
+                <Typography variant="caption" component="div" color="inherit">{`${Math.round(
+                    props.value,
+                )}%`}</Typography>
+            </Box>
+        </Box>
+    );
+};
+
+export const MetDisclaimer = ({ children }: { children: React.ReactNode }) => {
+    return (
+        <Box
+            sx={{
+                borderLeft: 8,
+                borderColor: '#003366',
+                backgroundColor: '#F2F2F2',
+            }}
+        >
+            <Typography
+                sx={{
+                    p: '1em',
+                    mt: '2em',
+                    fontSize: '0.8rem',
+                }}
+            >
+                {children}
+            </Typography>
+        </Box>
     );
 };

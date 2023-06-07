@@ -22,22 +22,9 @@ from unittest.mock import MagicMock
 from flask import current_app
 
 from met_api.models import Tenant as TenantModel
-from met_api.utils.enums import ContentType, KeycloakGroupName, UserType
+from met_api.utils.enums import ContentType, KeycloakGroupName
 from tests.utilities.factory_scenarios import TestJwtClaims, TestUserInfo
-from tests.utilities.factory_utils import factory_auth_header, factory_user_model
-
-
-def test_create_public_user(client, jwt, session, ):  # pylint:disable=unused-argument
-    """Assert that an user can be POSTed."""
-    claims = TestJwtClaims.public_user_role
-    headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.put('/api/user/',
-                    headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == HTTPStatus.OK
-    # TODO check this
-    # assert rv.json.get('username') is not None
-    assert rv.json.get('email_id') == claims.get('email')
-    assert rv.json.get('access_type') == UserType.PUBLIC_USER.value
+from tests.utilities.factory_utils import factory_auth_header, factory_staff_user_model
 
 
 def test_create_staff_user(client, jwt, session, ):  # pylint:disable=unused-argument
@@ -47,8 +34,7 @@ def test_create_staff_user(client, jwt, session, ):  # pylint:disable=unused-arg
     rv = client.put('/api/user/',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
-    assert rv.json.get('email_id') == claims.get('email')
-    assert rv.json.get('access_type') == UserType.STAFF.value
+    assert rv.json.get('email_address') == claims.get('email')
     tenant_short_name = current_app.config.get('DEFAULT_TENANT_SHORT_NAME')
     tenant = TenantModel.find_by_short_name(tenant_short_name)
     assert rv.json.get('tenant_id') == str(tenant.id)
@@ -58,47 +44,21 @@ def test_get_staff_users(client, jwt, session, ):  # pylint:disable=unused-argum
     """Assert that an user can be POSTed."""
     staff_1 = dict(TestUserInfo.user_staff_1)
     staff_2 = dict(TestUserInfo.user_staff_1)
-    factory_user_model(user_info=staff_1)
-    factory_user_model(user_info=staff_2)
+    factory_staff_user_model(user_info=staff_1)
+    factory_staff_user_model(user_info=staff_2)
 
     claims = TestJwtClaims.staff_admin_role
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get('/api/user/',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
-    assert rv.json.get('total') == 2
-    assert len(rv.json.get('items')) == 2
-
-
-def test_get_staff_users_exclude_public_user(client, jwt, session, ):  # pylint:disable=unused-argument
-    """Assert that an user can be POSTed."""
-    staff_1 = dict(TestUserInfo.user_staff_1)
-    staff_2 = dict(TestUserInfo.user_staff_1)
-    public_1 = dict(TestUserInfo.user_public_1)
-    public_email = public_1.get('email_id')
-    staff_email = staff_1.get('email_id')
-    factory_user_model(user_info=staff_1)
-    factory_user_model(user_info=staff_2)
-    factory_user_model(user_info=public_1)
-
-    claims = TestJwtClaims.staff_admin_role
-    headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.get('/api/user/',
-                    headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == HTTPStatus.OK
-    assert rv.json.get('total') == 2
-    assert len(rv.json.get('items')) == 2
-    # public user is not fetched
-    public_user = _find_user(public_email, rv)
-    assert public_user is None
-
-    staff_user = _find_user(staff_email, rv)
-    assert staff_user is not None
+    assert rv.json.get('total') == 3
+    assert len(rv.json.get('items')) == 3
 
 
 def test_add_user_to_admin_group(mocker, client, jwt, session):  # pylint:disable=unused-argument
     """Assert that you can add a user to admin group."""
-    user = factory_user_model()
+    user = factory_staff_user_model()
 
     mock_add_user_to_group_keycloak_response = MagicMock()
     mock_add_user_to_group_keycloak_response.status_code = HTTPStatus.NO_CONTENT
@@ -119,7 +79,3 @@ def test_add_user_to_admin_group(mocker, client, jwt, session):  # pylint:disabl
     )
     assert rv.status_code == HTTPStatus.OK
     mock_add_user_to_group_keycloak.assert_called()
-
-
-def _find_user(public_email, rv):
-    return next((x for x in rv.json.get('items') if x.get('email_id') == public_email), None)

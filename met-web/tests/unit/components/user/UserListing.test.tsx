@@ -13,14 +13,13 @@ const mockUser1: User = {
     id: 1,
     contact_number: '555 012 4564',
     description: 'mock description',
-    email_id: '1',
+    email_address: '1',
     external_id: '3859G58GJH3921',
     first_name: 'Mock first name',
     last_name: 'Mock last name',
     updated_date: Date(),
     created_date: Date(),
     status: 'Active',
-    access_type: 'Staff',
     roles: [],
 };
 

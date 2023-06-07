@@ -16,9 +16,8 @@
 Test Utility for creating model factory.
 """
 from faker import Faker
-from flask import current_app
+from flask import current_app, g
 
-from met_api import db
 from met_api.config import get_named_config
 from met_api.constants.engagement_status import Status
 from met_api.constants.widget import WidgetType
@@ -28,17 +27,19 @@ from met_api.models.email_verification import EmailVerification as EmailVerifica
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.feedback import Feedback as FeedbackModel
 from met_api.models.membership import Membership as MembershipModel
+from met_api.models.participant import Participant as ParticipantModel
+from met_api.models.staff_user import StaffUser as StaffUserModel
 from met_api.models.submission import Submission as SubmissionModel
 from met_api.models.survey import Survey as SurveyModel
-from met_api.models.user import User as UserModel
+from met_api.models.subscription import Subscription as SubscriptionModel
 from met_api.models.widget import Widget as WidgetModal
 from met_api.models.widget_documents import WidgetDocuments as WidgetDocumentModel
 from met_api.models.widget_item import WidgetItem as WidgetItemModal
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import MembershipStatus
 from tests.utilities.factory_scenarios import (
-    TestCommentInfo, TestEngagementInfo, TestFeedbackInfo, TestSubmissionInfo, TestSurveyInfo, TestUserInfo,
-    TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo)
+    TestCommentInfo, TestEngagementInfo, TestFeedbackInfo, TestParticipantInfo, TestSubmissionInfo, TestSurveyInfo,
+    TestTenantInfo, TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo)
 
 CONFIG = get_named_config('testing')
 fake = Faker()
@@ -48,6 +49,11 @@ JWT_HEADER = {
     'typ': 'JWT',
     'kid': CONFIG.JWT_OIDC_TEST_AUDIENCE
 }
+
+
+def set_global_tenant(tenant_id=1):
+    """Set the global tenant id."""
+    g.tenant_id = tenant_id
 
 
 def factory_survey_model(survey_info: dict = TestSurveyInfo.survey1):
@@ -60,11 +66,9 @@ def factory_survey_model(survey_info: dict = TestSurveyInfo.survey1):
         created_date=survey_info.get('created_date'),
         updated_date=survey_info.get('updated_date'),
         is_hidden=survey_info.get('is_hidden'),
-        is_template=survey_info.get('is_template'),
-        tenant_id=survey_info.get('tenant_id')
+        is_template=survey_info.get('is_template')
     )
-    db.session.add(survey)
-    db.session.commit()
+    survey.save()
     return survey
 
 
@@ -82,9 +86,21 @@ def factory_survey_and_eng_model(survey_info: dict = TestSurveyInfo.survey1):
         is_template=survey_info.get('is_template'),
         engagement_id=eng.id
     )
-    db.session.add(survey)
-    db.session.commit()
+    survey.save()
     return survey, eng
+
+
+def factory_subscription_model():
+    """Produce a subscription model."""
+    survey, eng = factory_survey_and_eng_model()
+    participant = factory_participant_model()
+    subscription = SubscriptionModel(
+        engagement_id=eng.id,
+        participant_id=participant.id,
+        is_subscribed=True,
+    )
+    subscription.save()
+    return subscription
 
 
 def factory_email_verification(survey_id):
@@ -96,8 +112,7 @@ def factory_email_verification(survey_id):
     if survey_id:
         email_verification.survey_id = survey_id
 
-    db.session.add(email_verification)
-    db.session.commit()
+    email_verification.save()
     return email_verification
 
 
@@ -114,15 +129,13 @@ def factory_engagement_model(eng_info: dict = TestEngagementInfo.engagement1, st
         status_id=status if status else eng_info.get('status'),
         start_date=eng_info.get('start_date'),
         end_date=eng_info.get('end_date'),
-        tenant_id=eng_info.get('tenant_id'),
         is_internal=eng_info.get('is_internal')
     )
-    db.session.add(engagement)
-    db.session.commit()
+    engagement.save()
     return engagement
 
 
-def factory_tenant_model(tenant_info: dict = None):
+def factory_tenant_model(tenant_info: dict = TestTenantInfo.tenant1):
     """Produce a tenant model."""
     tenant = Tenant(
         short_name=tenant_info.get('short_name'),
@@ -131,26 +144,32 @@ def factory_tenant_model(tenant_info: dict = None):
         title=tenant_info.get('title'),
         logo_url=tenant_info.get('logo_url'),
     )
-    db.session.add(tenant)
-    db.session.commit()
+    tenant.save()
     return tenant
 
 
-def factory_user_model(external_id=None, user_info: dict = TestUserInfo.user_public_1):
-    """Produce a user model."""
+def factory_staff_user_model(external_id=None, user_info: dict = TestUserInfo.user_staff_1):
+    """Produce a staff user model."""
     # Generate a external id if not passed
     external_id = fake.random_number(digits=5) if external_id is None else external_id
-    user = UserModel(
+    user = StaffUserModel(
         first_name=user_info['first_name'],
         last_name=user_info['last_name'],
         middle_name=user_info['middle_name'],
-        email_id=user_info['email_id'],
+        email_address=user_info['email_address'],
         external_id=str(external_id),
-        access_type=user_info['access_type']
     )
-    db.session.add(user)
-    db.session.commit()
+    user.save()
     return user
+
+
+def factory_participant_model(participant: dict = TestParticipantInfo.participant1):
+    """Produce a participant model."""
+    participant = ParticipantModel(
+        email_address=ParticipantModel.encode_email(participant['email_address']),
+    )
+    participant.save()
+    return participant
 
 
 def factory_membership_model(user_id, engagement_id, member_type='TEAM_MEMBER'):
@@ -173,8 +192,7 @@ def factory_feedback_model(feedback_info: dict = TestFeedbackInfo.feedback1, sta
         comment_type=feedback_info.get('comment_type'),
         source=feedback_info.get('source'),
     )
-    db.session.add(feedback)
-    db.session.commit()
+    feedback.save()
     return feedback
 
 
@@ -196,8 +214,7 @@ def factory_widget_model(widget_info: dict = TestWidgetInfo.widget1):
         created_date=widget_info.get('created_date'),
         updated_date=widget_info.get('updated_date'),
     )
-    db.session.add(widget)
-    db.session.commit()
+    widget.save()
     return widget
 
 
@@ -211,17 +228,17 @@ def factory_widget_item_model(widget_info: dict = TestWidgetItemInfo.widget_item
         created_date=widget_info.get('created_date'),
         updated_date=widget_info.get('updated_date'),
     )
-    db.session.add(widget)
-    db.session.commit()
+    widget.save()
     return widget
 
 
-def factory_submission_model(survey_id, engagement_id, user_id, submission_info: dict = TestSubmissionInfo.submission1):
+def factory_submission_model(survey_id, engagement_id, participant_id,
+                             submission_info: dict = TestSubmissionInfo.submission1):
     """Produce a submission model."""
     submission = SubmissionModel(
         survey_id=survey_id,
         engagement_id=engagement_id,
-        user_id=user_id,
+        participant_id=participant_id,
         submission_json=submission_info.get('submission_json'),
         created_by=submission_info.get('created_by'),
         updated_by=submission_info.get('updated_by'),
@@ -231,8 +248,7 @@ def factory_submission_model(survey_id, engagement_id, user_id, submission_info:
         reviewed_by=submission_info.get('reviewed_by'),
         review_date=submission_info.get('review_date'),
     )
-    db.session.add(submission)
-    db.session.commit()
+    submission.save()
     return submission
 
 
@@ -245,8 +261,7 @@ def factory_comment_model(survey_id, submission_id, comment_info: dict = TestCom
         text=comment_info.get('text'),
         submission_date=comment_info.get('submission_date'),
     )
-    db.session.add(comment)
-    db.session.commit()
+    comment.save()
     return comment
 
 

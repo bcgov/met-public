@@ -43,13 +43,13 @@ pyrsistent==0.19.3
 python-dotenv==1.0.0
 python-jose==3.3.0
 pytz==2023.3
-requests==2.28.2
+requests==2.31.0
 rsa==4.9
 secure==0.3.0
 six==1.16.0
 threadloop==1.0.2
 thrift==0.16.0
-tornado==6.2
+tornado==6.3.2
 typing_extensions==4.5.0
 urllib3==1.26.15
 zipp==3.15.0

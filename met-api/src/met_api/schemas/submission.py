@@ -26,7 +26,7 @@ class SubmissionSchema(Schema):
     updated_date = fields.Str(data_key='updated_date')
     survey_id = fields.Int(data_key='survey_id')
     engagement_id = fields.Int(data_key='engagement_id')
-    user_id = fields.Int(data_key='user_id')
+    participant_id = fields.Int(data_key='participant_id')
     verification_token = fields.Str(data_key='verification_token')
     reviewed_by = fields.Str(data_key='reviewed_by')
     review_date = fields.Str(data_key='review_date')
