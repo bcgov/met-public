@@ -218,6 +218,13 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     ): Promise<EngagementMetadata> => {
         setSaving(true);
         try {
+            if (!savedEngagement.id) {
+                dispatch(
+                    openNotification({ severity: 'error', text: 'Please save the engagement before adding metadata' }),
+                );
+                setSaving(false);
+                return engagementMetadata;
+            }
             const state = { ...engagementMetadata };
             const engagementMetadataToUpdate: EngagementMetadata = {
                 engagement_id: Number(engagementId),
