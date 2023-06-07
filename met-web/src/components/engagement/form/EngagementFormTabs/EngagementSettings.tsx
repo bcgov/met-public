@@ -28,7 +28,6 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { EngagementTabsContext } from './EngagementTabsContext';
 import { AppConfig } from 'config';
 import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
-import { SUBMISSION_STATUS } from 'constants/engagementStatus';
 
 const EngagementSettings = () => {
     const { handleUpdateEngagementMetadataRequest, isSaving, savedEngagement, engagementId } =
