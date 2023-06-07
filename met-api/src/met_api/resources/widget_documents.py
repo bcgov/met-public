@@ -61,19 +61,17 @@ class WidgetDocuments(Resource):
 
 @cors_preflight('GET, POST, OPTIONS')
 @API.route('/order')
-class WidgetDocuments(Resource):
+class WidgetDocumentsOrder(Resource):
     """Resource for ordering Documents."""
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.requires_auth
     def patch(widget_id):
         """Order/sort the documents."""
-        request_json = request.get_json()
-        # args = request.args
-        
+        request_json = request.get_json()        
         try:
-            WidgetDocumentService.sort_documents(request_json.get('documents', []))
-            return {}, HTTPStatus.OK
+            WidgetDocumentService.sort_documents(widget_id, request_json.get('documents', []))
+            return 'Documents successfully ordered', HTTPStatus.OK
         except BusinessException as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 

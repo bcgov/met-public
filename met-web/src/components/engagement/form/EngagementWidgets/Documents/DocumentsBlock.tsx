@@ -38,7 +38,7 @@ const DocumentsBlock = () => {
             const folderIndex = updatedDocuments.findIndex((doc) => String(doc.id) === folderId);
             const folder = updatedDocuments[folderIndex];
 
-            if (!folder || !folder.children) {
+            if (!folder?.children) {
                 throw new Error(`Folder with id ${folderId} not found`);
             }
 
@@ -61,17 +61,17 @@ const DocumentsBlock = () => {
     return (
         <DragDropContext onDragEnd={handleDragEnd}>
             <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={2}>
-                <MetDroppable droppableId="folders" type="FOLDER">
+                <MetDroppable droppableId="folders" type="FOLDER" style={{ width: '100%' }}>
                     {documents.map((document, index) => {
                         return (
                             <Draggable key={document.id} draggableId={String(document.id)} index={index}>
                                 {(provided) => (
                                     <Box
-                                        sx={{
-                                            margin: '1em 0',
-                                        }}
                                         ref={provided.innerRef}
                                         {...provided.draggableProps}
+                                        sx={{
+                                            margin: '1em',
+                                        }}
                                     >
                                         <Stack direction="row" spacing={1} alignItems="flex-start">
                                             <DocumentSwitch

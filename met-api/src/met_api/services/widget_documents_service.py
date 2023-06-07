@@ -122,15 +122,25 @@ class WidgetDocumentService:
         return delete_document
 
     @staticmethod
-    def sort_documents(documents: list, user_id=None):
+    def sort_documents(widget_id, documents: list, user_id=None):
         """Sort widgets."""
-        # WidgetService._validate_widget_ids(engagement_id, widgets)
+        WidgetDocumentService._validate_document_ids(widget_id, documents)
 
         document_sort_mappings = [{
-            'id': widget.get('id'),
+            'id': document.get('id'),
             'sort_index': index + 1,
             'updated_by': user_id
-        } for index, widget in enumerate(documents)
-        ]
+        } for index, document in enumerate(documents)]
 
         WidgetDocumentsModel.update_documents(document_sort_mappings)
+
+    @staticmethod
+    def _validate_document_ids(widget_id, documents):
+        """Validate if documents ids belong to the widget."""
+        widget_documents = WidgetDocumentsModel.get_all_by_widget_id(widget_id)
+        document_ids = [document.id for document in widget_documents]
+        input_document_ids = [document_item.get('id') for document_item in documents]
+        if len(set(input_document_ids) - set(document_ids)) > 0:
+            raise BusinessException(
+                error='Invalid widgets.',
+                status_code=HTTPStatus.BAD_REQUEST)
