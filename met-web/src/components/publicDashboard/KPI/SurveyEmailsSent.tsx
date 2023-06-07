@@ -18,8 +18,8 @@ const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentP
     const [data, setData] = useState<AggregatorData>(createAggregatorData());
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
-    const circleSize = isSmallScreen ? 100 : 250;
+    const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+    const circleSize = isTablet ? 100 : 250;
 
     const fetchData = async () => {
         setIsLoading(true);
@@ -81,7 +81,7 @@ const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentP
 
     return (
         <>
-            <MetLabel mb={isSmallScreen ? 0.5 : 2}>Survey Emails Sent</MetLabel>
+            <MetLabel mb={isTablet ? 0.5 : 2}>Survey Emails Sent</MetLabel>
             <MetPaper sx={{ p: 2, textAlign: 'center' }}>
                 <Stack alignItems="center" gap={1}>
                     <RadialBarChart

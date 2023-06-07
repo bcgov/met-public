@@ -8,8 +8,8 @@ interface BarBlockProps {
     data: SurveyBarData;
 }
 export const BarBlock = ({ data }: BarBlockProps) => {
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
-    return <>{isSmallScreen ? <MobileSurveyBarBlock data={data} /> : <SurveyBarBlock data={data} />}</>;
+    const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+    return <>{isTablet ? <MobileSurveyBarBlock data={data} /> : <SurveyBarBlock data={data} />}</>;
 };
 
 export default BarBlock;

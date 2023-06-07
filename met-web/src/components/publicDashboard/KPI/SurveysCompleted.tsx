@@ -18,9 +18,9 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
     const [data, setData] = useState<AggregatorData>(createAggregatorData());
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+    const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
-    const circleSize = isSmallScreen ? 100 : 250;
+    const circleSize = isTablet ? 100 : 250;
 
     const fetchData = async () => {
         setIsLoading(true);
@@ -82,7 +82,7 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
 
     return (
         <>
-            <MetLabel mb={isSmallScreen ? 0.5 : 2}>Surveys Completed</MetLabel>
+            <MetLabel mb={isTablet ? 0.5 : 2}>Surveys Completed</MetLabel>
             <MetPaper sx={{ p: 2, textAlign: 'center' }}>
                 <Stack alignItems="center" gap={1}>
                     <RadialBarChart

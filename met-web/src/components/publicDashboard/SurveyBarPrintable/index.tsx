@@ -16,7 +16,7 @@ interface SurveyQuestionProps {
 }
 
 export const SurveyBarPrintable = ({ engagement, engagementIsLoading }: SurveyQuestionProps) => {
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+    const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const [data, setData] = useState<SurveyResultData>(createSurveyResultData());
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
@@ -76,7 +76,7 @@ export const SurveyBarPrintable = ({ engagement, engagementIsLoading }: SurveyQu
                                                         data={result.result}
                                                         layout="vertical"
                                                         key={result.postion}
-                                                        margin={{ left: isSmallScreen ? 20 : 0 }}
+                                                        margin={{ left: isTablet ? 20 : 0 }}
                                                     >
                                                         <XAxis hide axisLine={false} type="number" />
                                                         <YAxis

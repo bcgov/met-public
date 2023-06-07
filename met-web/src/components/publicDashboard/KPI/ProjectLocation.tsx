@@ -19,8 +19,8 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjetMapData 
     const [data, setData] = useState<Map | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
-    const circleSize = isSmallScreen ? 100 : 250;
+    const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+    const circleSize = isTablet ? 100 : 250;
 
     const fetchData = async () => {
         setIsError(false);
@@ -76,7 +76,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjetMapData 
 
     return (
         <>
-            <MetLabel mb={isSmallScreen ? 0.5 : 2}>Project Location</MetLabel>
+            <MetLabel mb={isTablet ? 0.5 : 2}>Project Location</MetLabel>
             <MetPaper sx={{ textAlign: 'center' }}>
                 <Box
                     sx={{

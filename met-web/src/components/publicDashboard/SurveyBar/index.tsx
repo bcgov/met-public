@@ -31,7 +31,7 @@ interface SurveyQuestionProps {
 }
 
 export const SurveyBar = ({ readComments, engagement, engagementIsLoading }: SurveyQuestionProps) => {
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+    const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const [data, setData] = useState<SurveyResultData>(createSurveyResultData());
     const [selectedData, setSelectedData] = useState(defaultData[0]);
     const [isLoading, setIsLoading] = useState(true);
@@ -78,8 +78,8 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading }: Sur
 
     return (
         <>
-            <Grid item xs={12} mb={2}>
-                <If condition={isSmallScreen}>
+            <Grid item xs={12} mb={0.5} mt={1}>
+                <If condition={isTablet}>
                     <Then>
                         <MetLabel>Survey Results</MetLabel>
                     </Then>
@@ -88,27 +88,27 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading }: Sur
                     </Else>
                 </If>
             </Grid>
-            <Grid ml={isSmallScreen ? 0 : 5} item xs={12}>
+            <Grid ml={0} item xs={12}>
                 <MetPaper sx={{ p: 2 }}>
                     <Grid item xs={12}>
                         <Stack direction={{ xs: 'column', sm: 'row' }} width="100%" justifyContent="flex-end">
                             <Grid item container xs={12} md={8} direction="row" justifyContent="flex-start">
-                                <MetLabel mb={{ xs: 1, m: 2 }} color="primary">
-                                    Click on a question to view results
+                                <MetLabel mb={{ xs: 1, m: 2 }} color="#494949">
+                                    Click on a question to view results below
                                 </MetLabel>
                             </Grid>
-                            <When condition={!isSmallScreen}>
+                            <When condition={!isTablet}>
                                 <Grid
                                     item
                                     container
                                     md={4}
                                     xs={12}
                                     direction="row"
-                                    justifyContent={isSmallScreen ? 'center' : 'flex-end'}
-                                    alignItems={isSmallScreen ? 'center' : 'flex-end'}
+                                    justifyContent={isTablet ? 'center' : 'flex-end'}
+                                    alignItems={isTablet ? 'center' : 'flex-end'}
                                 >
                                     <ToggleButtonGroup
-                                        size={isSmallScreen ? 'small' : 'medium'}
+                                        size={isTablet ? 'small' : 'medium'}
                                         value={chartType}
                                         exclusive
                                         onChange={handleToggleChange}
@@ -159,12 +159,12 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading }: Sur
                                 </Box>
                             </Grid>
                         </Grid>
-                        <When condition={isSmallScreen}>
+                        <When condition={isTablet}>
                             <Grid item xs={12}>
                                 <MetParagraph sx={{ fontWeight: 'bold' }}>Survey Results</MetParagraph>
                             </Grid>
                         </When>
-                        <Grid item xs={12} sm={8} alignItems="center">
+                        <Grid item xs={12} md={8}>
                             {chartType == 'bar' ? (
                                 <BarBlock data={selectedData} />
                             ) : (
@@ -173,7 +173,7 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading }: Sur
                         </Grid>
                     </Grid>
 
-                    <When condition={isSmallScreen}>
+                    <When condition={isTablet}>
                         <Grid container item xs={12} alignItems="center" justifyContent="center">
                             <PrimaryButton
                                 sx={{ mt: 3, width: '80%' }}

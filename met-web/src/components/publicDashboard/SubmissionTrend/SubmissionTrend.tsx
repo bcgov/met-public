@@ -32,8 +32,8 @@ interface SubmissionTrendProps {
 }
 
 const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendProps) => {
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
-    const HEIGHT = isSmallScreen ? 200 : 250;
+    const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+    const HEIGHT = isTablet ? 200 : 250;
     const [data, setData] = useState(createDefaultByMonthData());
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
@@ -87,7 +87,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     if (engagementIsLoading) {
         return (
             <>
-                <MetLabel mb={2}>Live Activity - Engagement</MetLabel>
+                <MetLabel mb={0.5}>Live Activity - Engagement</MetLabel>
                 <MetPaper sx={{ p: 2 }}>
                     <Stack direction="column" alignItems="center" gap={1}>
                         <Grid
@@ -111,10 +111,12 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     }
     return (
         <>
-            <MetLabel mb={2}>Live Activity - Engagement</MetLabel>
-            <MetPaper sx={{ p: isSmallScreen ? 1 : 2 }}>
+            <MetLabel mb={0.5} mt={1}>
+                Live Activity - Engagement
+            </MetLabel>
+            <MetPaper sx={{ p: isTablet ? 1 : 2 }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Grid container direction={isSmallScreen ? 'column' : 'row'}>
+                    <Grid container direction={isTablet ? 'column' : 'row'}>
                         <Grid
                             alignItems={'center'}
                             justifyContent={'center'}
@@ -123,13 +125,13 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             item
                             lg={2}
                             md={3}
-                            mt={isSmallScreen ? 2 : 0}
-                            rowSpacing={isSmallScreen ? 1 : 0}
-                            mb={isSmallScreen ? 4 : 0}
+                            mt={isTablet ? 2 : 0}
+                            rowSpacing={isTablet ? 1 : 0}
+                            mb={isTablet ? 4 : 0}
                         >
                             <Grid container justifyContent="center" alignItems="center" sx={{ mb: 1 }}>
                                 <Grid item xs={2}>
-                                    <MetLabel sx={{ mr: isSmallScreen ? 0 : 1 }}>From: </MetLabel>
+                                    <MetLabel sx={{ mr: isTablet ? 0 : 1 }}>From: </MetLabel>
                                 </Grid>
                                 <Grid item sm={4} md={8}>
                                     <DatePicker
@@ -142,7 +144,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             </Grid>
                             <Grid container justifyContent="center" alignItems="center" sx={{ mb: 1 }}>
                                 <Grid item xs={2}>
-                                    <MetLabel sx={{ mr: isSmallScreen ? 0 : 1 }}>To: </MetLabel>
+                                    <MetLabel sx={{ mr: isTablet ? 0 : 1 }}>To: </MetLabel>
                                 </Grid>
                                 <Grid item sm={4} md={8}>
                                     <DatePicker
@@ -155,7 +157,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             </Grid>
 
                             <Grid container item xs={8} justifyContent="center" alignItems="center">
-                                <PrimaryButton sx={{ width: isSmallScreen ? '50%' : '100%' }} onClick={clearDates}>
+                                <PrimaryButton sx={{ width: isTablet ? '50%' : '100%' }} onClick={clearDates}>
                                     Clear
                                 </PrimaryButton>
                             </Grid>
@@ -171,7 +173,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     value={chartBy}
                                     exclusive
                                     onChange={handleToggleChange}
-                                    size={isSmallScreen ? 'small' : 'medium'}
+                                    size={isTablet ? 'small' : 'medium'}
                                 >
                                     <ToggleButton
                                         value="monthly"
@@ -203,14 +205,14 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                         <BarChart
                                             data={data}
                                             margin={
-                                                !isSmallScreen
+                                                !isTablet
                                                     ? { top: 10, right: 30, left: 0, bottom: 0 }
                                                     : { top: 5, right: 0, left: -20, bottom: 0 }
                                             }
                                         >
                                             <XAxis dataKey="showdataby" />
                                             <YAxis />
-                                            <Unless condition={isSmallScreen}>
+                                            <Unless condition={isTablet}>
                                                 <Tooltip />
                                             </Unless>
                                             <Bar
