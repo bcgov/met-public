@@ -6,8 +6,6 @@ from __future__ import annotations
 
 from typing import List
 
-from sqlalchemy import null, or_
-
 from met_api.constants.notification_status import NotificationStatus
 from .base_model import BaseModel
 from .db import db
@@ -28,8 +26,7 @@ class EmailQueue(BaseModel):  # pylint: disable=too-few-public-methods
     @staticmethod
     def get_unprocessed_mails(max_size: int) -> List[EmailQueue]:
         """Return a list of unprocessed emails."""
-        query = EmailQueue.query.filter(
-            or_(EmailQueue.notification_status.is_(null()), EmailQueue.notification_status == ''))
+        query = EmailQueue.query.filter(EmailQueue.notification_status.is_(None))
         if max_size != 0:
             query = query.limit(max_size)
         return query.all()
