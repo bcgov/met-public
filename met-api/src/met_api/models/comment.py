@@ -13,7 +13,6 @@ from met_api.constants.comment_status import Status
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement import Engagement
 from met_api.models.submission import Submission
-from met_api.models.user import User
 from met_api.models.survey import Survey
 from met_api.schemas.comment import CommentSchema
 
@@ -30,7 +29,7 @@ class Comment(BaseModel):
     text = db.Column(db.Text, unique=False, nullable=False)
     submission_date = db.Column(db.DateTime)
     survey_id = db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), nullable=False)
-    user_id = db.Column(db.Integer, ForeignKey('met_users.id', ondelete='SET NULL'), nullable=True)
+    participant_id = db.Column(db.Integer, ForeignKey('participant.id', ondelete='SET NULL'), nullable=True)
     submission_id = db.Column(db.Integer, ForeignKey('submission.id', ondelete='SET NULL'), nullable=True)
     component_id = db.Column(db.String(10))
 
@@ -100,9 +99,9 @@ class Comment(BaseModel):
             text=comment.get('text', None),
             submission_date=datetime.utcnow(),
             created_date=datetime.utcnow(),
-            created_by=comment.get('user_id', None),
+            created_by=comment.get('participant_id', None),
             survey_id=comment.get('survey_id', None),
-            user_id=comment.get('user_id', None),
+            participant_id=comment.get('participant_id', None),
             submission_id=comment.get('submission_id', None),
             component_id=comment.get('component_id', None)
         )
@@ -124,7 +123,7 @@ class Comment(BaseModel):
         query = Comment.query.filter_by(id=comment.get('id'), submission_id=submission_id)
         update_fields = dict(
             text=comment.get('text', None),
-            updated_by=comment.get('user_id', None),
+            updated_by=comment.get('participant_id', None),
             updated_date=datetime.utcnow(),
         )
 
@@ -142,14 +141,10 @@ class Comment(BaseModel):
             Comment.id,
             Comment.submission_date,
             Comment.text,
-            User.first_name,
-            User.last_name,
             Submission.reviewed_by
         )\
             .join(Submission, Submission.id == Comment.submission_id) \
-            .join(User, User.id == Comment.user_id) \
             .add_entity(Submission)\
-            .add_entity(User)\
             .filter(Comment.survey_id == survey_id)
 
         query = query.order_by(Comment.id.asc())

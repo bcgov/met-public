@@ -35,7 +35,7 @@ from .feedback import API as FEEDBACK_API
 from .submission import API as SUBMISSION_API
 from .subscription import API as SUBSCRIPTION_API
 from .survey import API as SURVEY_API
-from .user import API as USER_API
+from .staff_user import API as USER_API
 from .value_component import API as VALUE_COMPONENTS_API
 from .widget import API as WIDGET_API
 from .widget_documents import API as WIDGET_DOCUMENTS_API

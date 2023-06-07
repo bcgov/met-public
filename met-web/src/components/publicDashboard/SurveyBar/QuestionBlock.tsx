@@ -1,4 +1,4 @@
-import { Box, List, ListItem, ListItemButton } from '@mui/material';
+import { Box, List, ListItem, ListItemButton, Stack } from '@mui/material';
 import { MetParagraph } from 'components/common';
 import React from 'react';
 import { SurveyBarData } from '../types';
@@ -22,7 +22,7 @@ export const QuestionBlock = ({ data, selected, handleSelected }: QuestionBlockP
             overflow="auto"
         >
             <List sx={{ paddingTop: '2.5em' }}>
-                {data.map((result) => (
+                {data.map((result, index) => (
                     <ListItem key={result.postion}>
                         <ListItemButton
                             onClick={() => handleSelected(result)}
@@ -30,18 +30,17 @@ export const QuestionBlock = ({ data, selected, handleSelected }: QuestionBlockP
                                 '&:hover': {
                                     backgroundColor: DASHBOARD.SURVEY_RESULT.HOVER_COLOR,
                                 },
-                                borderBottom: '1px solid #cdcdcd',
                             }}
                         >
-                            <MetParagraph
-                                color={
-                                    selected === result.postion
-                                        ? DASHBOARD.SURVEY_RESULT.SELECTED_TEXT_COLOR
-                                        : DASHBOARD.SURVEY_RESULT.UNSELECTED_TEXT_COLOR
-                                }
-                            >
-                                {result.label}
-                            </MetParagraph>
+                            <Stack direction="column">
+                                <MetParagraph color={'gray'}>Question {index + 1}</MetParagraph>
+                                <MetParagraph
+                                    sx={{ fontWeight: 'bold' }}
+                                    color={DASHBOARD.SURVEY_RESULT.SELECTED_TEXT_COLOR}
+                                >
+                                    {result.label}
+                                </MetParagraph>
+                            </Stack>
                         </ListItemButton>
                     </ListItem>
                 ))}

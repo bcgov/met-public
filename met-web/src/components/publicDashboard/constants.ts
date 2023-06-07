@@ -24,7 +24,6 @@ export const DASHBOARD = {
     SURVEY_RESULT: {
         BACKGROUND_COLOR: '#FFFFFF',
         HOVER_COLOR: '#ECF5FC',
-        UNSELECTED_TEXT_COLOR: '#003366',
-        SELECTED_TEXT_COLOR: '#4C81AF',
+        SELECTED_TEXT_COLOR: '#494949',
     },
 };

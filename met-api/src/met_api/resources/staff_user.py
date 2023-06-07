@@ -23,9 +23,9 @@ from met_api.auth import jwt as _jwt
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.engagement import EngagementSchema
-from met_api.schemas.user import UserSchema
+from met_api.schemas.staff_user import StaffUserSchema
 from met_api.services.membership_service import MembershipService
-from met_api.services.user_service import UserService
+from met_api.services.staff_user_service import StaffUserService
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
@@ -37,7 +37,7 @@ API = Namespace('user', description='Endpoints for User Management')
 
 @cors_preflight('PUT')
 @API.route('/')
-class User(Resource):
+class StaffUser(Resource):
     """User controller class."""
 
     @staticmethod
@@ -47,9 +47,9 @@ class User(Resource):
         """Update or create a user."""
         try:
             user_data = TokenInfo.get_user_data()
-            user = UserService().create_or_update_user(user_data)
+            user = StaffUserService().create_or_update_user(user_data)
             user.roles = user_data.get('roles')
-            return UserSchema().dump(user), HTTPStatus.OK
+            return StaffUserSchema().dump(user), HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
@@ -67,7 +67,7 @@ class User(Resource):
             sort_key=args.get('sort_key', '', str),
             sort_order=args.get('sort_order', 'asc', str),
         )
-        users = UserService.find_users(
+        users = StaffUserService.find_users(
             pagination_options=pagination_options,
             search_text=args.get('search_text', '', str),
             include_groups=args.get('include_groups', default=False, type=lambda v: v.lower() == 'true'),
@@ -87,7 +87,7 @@ class UserGroup(Resource):
         """Add user to group."""
         try:
             args = request.args
-            user_schema = UserService().add_user_to_group(user_id, args.get('group'))
+            user_schema = StaffUserService().add_user_to_group(user_id, args.get('group'))
             return user_schema, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

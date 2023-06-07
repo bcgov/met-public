@@ -24,11 +24,9 @@ def upgrade():
     op.create_foreign_key('met_users_tenant_fk', 'met_users', 'tenant', ['tenant_id'], ['id'])
     op.execute("commit")
 
-    default_tenant = TenantModel.find_by_short_name(current_app.config.get('DEFAULT_TENANT_SHORT_NAME'))
-    default_id = default_tenant.id
-
-    update_stmt = sa.text('UPDATE met_users SET tenant_id = :default_id')
-    op.execute(update_stmt.params(default_id=default_id))
+    default_short_name = current_app.config.get('DEFAULT_TENANT_SHORT_NAME')
+    update_stmt = sa.text('UPDATE met_users SET tenant_id = (SELECT tenant.id FROM tenant WHERE short_name = :default_short_name)')
+    op.execute(update_stmt.params(default_short_name=default_short_name))
     # ### end Alembic commands ###
 
 

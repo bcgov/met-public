@@ -6,7 +6,7 @@ from flask_restx import abort
 
 from met_api.constants.membership_type import MembershipType
 from met_api.models.membership import Membership as MembershipModel
-from met_api.models.user import User as UserModel
+from met_api.models.staff_user import StaffUser as StaffUserModel
 from met_api.utils.user_context import UserContext, user_context
 
 
@@ -32,7 +32,7 @@ def check_auth(**kwargs):
 def _has_team_membership(kwargs, user_from_context) -> bool:
     eng_id = kwargs.get('engagement_id', None)
     external_id = user_from_context.sub
-    user = UserModel.get_user_by_external_id(external_id)
+    user = StaffUserModel.get_user_by_external_id(external_id)
     if not eng_id or not user:
         return False
     memberships = MembershipModel.find_by_engagement_and_user_id(eng_id, user.id)

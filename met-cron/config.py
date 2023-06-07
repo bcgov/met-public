@@ -127,16 +127,25 @@ class _Config():  # pylint: disable=too-few-public-methods
     # front end endpoints
     SITE_URL = os.getenv('SITE_URL')
     ENGAGEMENT_DASHBOARD_PATH = os.getenv('ENGAGEMENT_DASHBOARD_PATH', '/engagements/{engagement_id}/dashboard')
+    ENGAGEMENT_VIEW_PATH = os.getenv('ENGAGEMENT_VIEW_PATH', '/engagements/{engagement_id}/view')
+
+    # The GC notify email variables
+    # Publish Email Service
+    PUBLISH_ENGAGEMENT_EMAIL_TEMPLATE_ID = os.getenv('PUBLISH_ENGAGEMENT_EMAIL_TEMPLATE_ID')
+    PUBLISH_ENGAGEMENT_EMAIL_SUBJECT = os.getenv('PUBLISH_ENGAGEMENT_EMAIL_SUBJECT', 'New {engagement_name} published')
 
     # Email Service
     ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID = os.getenv('ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID')
     ENGAGEMENT_CLOSEOUT_EMAIL_SUBJECT = \
         os.getenv('ENGAGEMENT_CLOSEOUT_EMAIL_SUBJECT', '{engagement_name} - What we heard')
     NOTIFICATIONS_EMAIL_ENDPOINT = os.getenv('NOTIFICATIONS_EMAIL_ENDPOINT')
-    
+
     # config for comment_redact_service
     N_DAYS = os.getenv('N_DAYS', 14)
     REDACTION_TEXT = os.getenv('REDACTION_TEXT', '[Comment Redacted]')
+
+    # config for email queue
+    MAIL_BATCH_SIZE = os.getenv('MAIL_BATCH_SIZE', 10)
 
 
 class MigrationConfig():  # pylint: disable=too-few-public-methods
@@ -254,7 +263,7 @@ class TestConfig(_Config):  # pylint: disable=too-few-public-methods
     JWT_OIDC_AUDIENCE = os.getenv('JWT_OIDC_TEST_AUDIENCE')
     JWT_OIDC_CLIENT_SECRET = os.getenv('JWT_OIDC_TEST_CLIENT_SECRET')
     JWT_OIDC_ISSUER = os.getenv('JWT_OIDC_TEST_ISSUER')
-    
+
     # Service account details
     KEYCLOAK_SERVICE_ACCOUNT_ID = os.getenv('KEYCLOAK_TEST_ADMIN_CLIENTID')
     KEYCLOAK_SERVICE_ACCOUNT_SECRET = os.getenv('KEYCLOAK_TEST_ADMIN_SECRET')

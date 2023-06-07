@@ -30,8 +30,8 @@ from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import (
     TestEngagementInfo, TestJwtClaims, TestSubmissionInfo, TestTenantInfo, TestUserInfo)
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_engagement_model, factory_membership_model, factory_submission_model,
-    factory_survey_and_eng_model, factory_tenant_model, factory_user_model)
+    factory_auth_header, factory_engagement_model, factory_membership_model, factory_participant_model,
+    factory_staff_user_model, factory_submission_model, factory_survey_and_eng_model, factory_tenant_model)
 
 fake = Faker()
 
@@ -203,7 +203,7 @@ def test_patch_engagement_by_member(client, jwt, session):  # pylint:disable=unu
     }
 
     staff_1 = dict(TestUserInfo.user_staff_1)
-    user = factory_user_model(user_info=staff_1)
+    user = factory_staff_user_model(user_info=staff_1)
     claims = copy.deepcopy(TestJwtClaims.public_user_role.value)
     claims['sub'] = str(user.external_id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
@@ -286,17 +286,17 @@ def test_update_survey_block_engagement(client, jwt, session):  # pylint:disable
 def test_count_submissions(client, jwt, session, engagement_info):  # pylint:disable=unused-argument
     """Assert that an engagement can be POSTed."""
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
-    factory_user_model(TestJwtClaims.public_user_role.get('sub'))
-    user_details = factory_user_model()
+    factory_staff_user_model(TestJwtClaims.public_user_role.get('sub'))
+    participant = factory_participant_model()
     survey, eng = factory_survey_and_eng_model()
     factory_submission_model(
-        survey.id, eng.id, user_details.id, TestSubmissionInfo.approved_submission)
+        survey.id, eng.id, participant.id, TestSubmissionInfo.approved_submission)
     factory_submission_model(
-        survey.id, eng.id, user_details.id, TestSubmissionInfo.rejected_submission)
+        survey.id, eng.id, participant.id, TestSubmissionInfo.rejected_submission)
     factory_submission_model(
-        survey.id, eng.id, user_details.id, TestSubmissionInfo.needs_further_review_submission)
+        survey.id, eng.id, participant.id, TestSubmissionInfo.needs_further_review_submission)
     factory_submission_model(
-        survey.id, eng.id, user_details.id, TestSubmissionInfo.pending_submission)
+        survey.id, eng.id, participant.id, TestSubmissionInfo.pending_submission)
 
     rv = client.get(f'/api/engagements/{eng.id}', data=json.dumps(engagement_info),
                     headers=headers, content_type=ContentType.JSON.value)

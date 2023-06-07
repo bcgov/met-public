@@ -8,7 +8,7 @@ from met_api.models.comment import Comment
 from met_api.models.membership import Membership as MembershipModel
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.submission import Submission as SubmissionModel
-from met_api.models.user import User as UserModel
+from met_api.models.staff_user import StaffUser as StaffUserModel
 from met_api.schemas.comment import CommentSchema
 from met_api.schemas.submission import SubmissionSchema
 from met_api.schemas.survey import SurveySchema
@@ -61,7 +61,7 @@ class CommentService:
         if not (user_id := TokenInfo.get_id()):
             return False
 
-        user = UserModel.get_user_by_external_id(user_id)
+        user = StaffUserModel.get_user_by_external_id(user_id)
         if not user:
             return False
 
@@ -101,7 +101,7 @@ class CommentService:
     def validate_fields(data):
         """Validate all fields."""
         # Will empty text return False
-        empty_fields = [not data[field] for field in ['text', 'survey_id', 'user_id']]
+        empty_fields = [not data[field] for field in ['text', 'survey_id', 'participant_id']]
 
         if any(empty_fields):
             raise ValueError('Some required fields for comments are missing')
@@ -113,7 +113,7 @@ class CommentService:
             'component_id': component_id,
             'text': comment_text,
             'survey_id': survey.get('id', None),
-            'user_id': survey_submission.get('user_id', None),
+            'participant_id': survey_submission.get('participant_id', None),
             'submission_id': survey_submission.get('id', None)
         }
 
@@ -155,7 +155,7 @@ class CommentService:
             {
                 'commentNumber': comment.id,
                 'dateSubmitted': str(comment.submission_date),
-                'author': f'{comment.first_name} {comment.last_name}',
+                'author': '',
                 'commentText': comment.text,
                 'reviewer': comment.reviewed_by,
                 'exportDate': str(datetime.utcnow())

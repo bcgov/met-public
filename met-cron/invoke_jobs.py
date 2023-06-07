@@ -58,20 +58,17 @@ def register_shellcontext(app):
 
 
 def run(job_name):
-    from tasks.met_extractor import MetExtractor
     from tasks.met_closeout import MetEngagementCloseout
     from tasks.met_publish import MetEngagementPublish
     from tasks.met_purge import MetPurge
     from tasks.met_comment_redact import MetCommentRedact
+    from tasks.subscription_mailer import SubscriptionMailer
     application = create_app()
 
     application.app_context().push()
 
     print('Requested Job:', job_name)
-    if job_name == 'EXTRACT_MET':
-        MetExtractor.do_etl()
-        application.logger.info(f'<<<< Completed MET Extraction >>>>')
-    elif job_name == 'ENGAGEMENT_CLOSEOUT':
+    if job_name == 'ENGAGEMENT_CLOSEOUT':
         MetEngagementCloseout.do_closeout()
         application.logger.info(f'<<<< Completed MET Engagement Closeout >>>>')
     elif job_name == 'ENGAGEMENT_PUBLISH':
@@ -83,6 +80,9 @@ def run(job_name):
     elif job_name == 'COMMENT_REDACT':
         MetCommentRedact.do_redact()
         application.logger.info('<<<< Completed MET COMMENT_REDACT >>>>')
+    elif job_name == 'PUBLISH_EMAIL':
+        SubscriptionMailer.do_email()
+        application.logger.info('<<<< Completed MET PUBLISH_EMAIL >>>>')
     else:
         application.logger.debug('No valid args passed.Exiting job without running any ***************')
 

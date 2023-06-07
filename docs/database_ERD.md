@@ -37,7 +37,7 @@ erDiagram
         dateFormat created_on
         dateFormat activeFrom
         dateFormat activeTo
-        string user_id FK "User Id"
+        string participant_id FK "Participannt Id"
         string tenant_id FK "Tenant Id; Not really needed here"
         string engagement_id  FK "Engagement Id"
         string is_active
@@ -47,7 +47,7 @@ erDiagram
         id id
         string json "Stores the submissions in json format"
         string survey_id FK "Survey Id"
-        string user_id FK "User Id"
+        string participant_id FK "Participant Id"
         string is_approved "default is always true"
     }
     SURVEY_COMMENTS {
@@ -55,7 +55,7 @@ erDiagram
         string comments "Could be JSON"
         string is_approved "To handle workflow"
         string survey_id FK "Survey Id"
-        string user_id FK "User Id"
+        string participant_id FK "Participant Id"
     }
     USER  |{--|{ SURVEY_SUBMISSIONS : submits 
     USER  |{--|{ SURVEY_COMMENTS : submits 

@@ -15,8 +15,8 @@ class SubscriptionSchema(Schema):
         unknown = EXCLUDE
 
     id = fields.Int(data_key='id')
-    email_verification_id = fields.Int(data_key='email_verification_id')
-    user_id = fields.Int(data_key='user_id')
+    engagement_id = fields.Int(data_key='engagement_id')
+    participant_id = fields.Int(data_key='participant_id')
     is_subscribed = fields.Bool(data_key='is_subscribed')
     created_by = fields.Str(data_key='created_by')
     created_date = fields.Str(data_key='created_date')

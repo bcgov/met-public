@@ -1,26 +1,25 @@
 """Service for engagement management."""
 from datetime import datetime
 from http import HTTPStatus
-from typing import List
 
 from flask import current_app
 
 from met_api.constants.engagement_status import Status
 from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
-from met_api.models import User as UserModel
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_status_block import EngagementStatusBlock as EngagementStatusBlockModel
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.submission import Submission as SubmissionModel
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services import authorization
-from met_api.services.object_storage_service import ObjectStorageService
 from met_api.services.membership_service import MembershipService
-from met_api.utils.template import Template
+from met_api.services.object_storage_service import ObjectStorageService
+from met_api.utils import email_util, notification
+from met_api.utils.enums import SourceAction, SourceType
 from met_api.utils.roles import Role
+from met_api.utils.template import Template
 from met_api.utils.token_info import TokenInfo
-from met_api.utils import notification
 
 
 class EngagementService:
@@ -104,6 +103,8 @@ class EngagementService:
     def publish_scheduled_engagements():
         """Publish scheduled engagement due."""
         engagements = EngagementModel.publish_scheduled_engagements_due()
+        email_util.publish_to_email_queue(SourceType.ENGAGEMENT.value, engagements.id,
+                                          SourceAction.PUBLISHED.value, True)
         print('Engagements published: ', engagements)
         return engagements
 
@@ -113,9 +114,11 @@ class EngagementService:
         # TODO add schema and remove this validation
         EngagementService.validate_fields(request_json)
         eng_model = EngagementService._create_engagement_model(request_json)
+
         if request_json.get('status_block'):
             EngagementService._create_eng_status_block(eng_model.id, request_json)
         eng_model.commit()
+        email_util.publish_to_email_queue(SourceType.ENGAGEMENT.value, eng_model.id, SourceAction.CREATED.value, True)
         return eng_model.find_by_id(eng_model.id)
 
     @staticmethod
@@ -218,9 +221,9 @@ class EngagementService:
     def _send_closeout_emails(engagement: EngagementModel) -> None:
         """Send the engagement closeout emails.Throws error if fails."""
         subject, body, args = EngagementService._render_email_template(engagement)
-        users: List[UserModel] = SubmissionModel.get_engaged_users(engagement.id)
+        participants = SubmissionModel.get_engaged_participants(engagement.id)
         template_id = current_app.config.get('ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID', None)
-        emails = [user.email_id for user in users]
+        emails = [participant.decode_email(participant.email_address) for participant in participants]
         # Removes duplicated records
         emails = list(set(emails))
         try:
