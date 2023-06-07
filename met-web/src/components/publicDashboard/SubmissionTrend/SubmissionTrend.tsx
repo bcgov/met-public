@@ -134,7 +134,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             rowSpacing={isTablet ? 1 : 0}
                             mb={isTablet ? 4 : 0}
                         >
-                            <Grid container item alignItems={'center'} xs={12} sx={{ mb: 1 }}>
+                            <Grid container item alignItems={'center'} justifyContent={'center'} xs={12} sx={{ mb: 1 }}>
                                 <MetLabel>Select Date Range </MetLabel>
                             </Grid>
                             <Grid
