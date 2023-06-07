@@ -12,7 +12,7 @@ import { FORMIO_FORM, FORMIO_WIZARD } from './constants';
 export const CreateOptions = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { surveyForm, handleSurveyFormChange, engagementToLink, isDisclaimerChecked } =
+    const { surveyForm, handleSurveyFormChange, engagementToLink, isDisclaimerChecked, setDisclaimerError } =
         useContext(CreateSurveyContext);
     const { name } = surveyForm;
     const initialFormError = {
@@ -49,6 +49,12 @@ export const CreateOptions = () => {
         if (validate()) {
             return;
         }
+
+        if (!isDisclaimerChecked) {
+            setDisclaimerError(true);
+            return;
+        }
+
         try {
             setIsSaving(true);
             const createdSurvey = await postSurvey({
@@ -122,7 +128,7 @@ export const CreateOptions = () => {
 
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <PrimaryButton disabled={!isDisclaimerChecked} onClick={handleSaveClick} loading={isSaving}>
+                    <PrimaryButton onClick={handleSaveClick} loading={isSaving}>
                         {'Save & Continue'}
                     </PrimaryButton>
                     <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
