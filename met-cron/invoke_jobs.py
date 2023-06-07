@@ -58,7 +58,6 @@ def register_shellcontext(app):
 
 
 def run(job_name):
-    from tasks.met_extractor import MetExtractor
     from tasks.met_closeout import MetEngagementCloseout
     from tasks.met_publish import MetEngagementPublish
     from tasks.met_purge import MetPurge
@@ -68,10 +67,7 @@ def run(job_name):
     application.app_context().push()
 
     print('Requested Job:', job_name)
-    if job_name == 'EXTRACT_MET':
-        MetExtractor.do_etl()
-        application.logger.info(f'<<<< Completed MET Extraction >>>>')
-    elif job_name == 'ENGAGEMENT_CLOSEOUT':
+    if job_name == 'ENGAGEMENT_CLOSEOUT':
         MetEngagementCloseout.do_closeout()
         application.logger.info(f'<<<< Completed MET Engagement Closeout >>>>')
     elif job_name == 'ENGAGEMENT_PUBLISH':
