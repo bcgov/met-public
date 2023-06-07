@@ -29,7 +29,6 @@ import { EngagementTabsContext } from './EngagementTabsContext';
 import { AppConfig } from 'config';
 import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
 import { SUBMISSION_STATUS } from 'constants/engagementStatus';
-import { useNavigate } from 'react-router-dom';
 
 const EngagementSettings = () => {
     const {
@@ -43,7 +42,6 @@ const EngagementSettings = () => {
         useContext(EngagementTabsContext);
     const { project_id, project_metadata, is_internal } = engagementFormData;
     const { engagementProjectTypes } = AppConfig.constants;
-    const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     const newEngagement = !savedEngagement.id || isNaN(Number(savedEngagement.id));
