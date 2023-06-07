@@ -1,10 +1,11 @@
-import { Checkbox, FormControl, FormControlLabel, Grid } from '@mui/material';
+import { Checkbox, FormControl, FormControlLabel, FormHelperText, Grid } from '@mui/material';
 import { MetDisclaimer } from 'components/common';
 import React, { useContext } from 'react';
 import { CreateSurveyContext } from './CreateSurveyContext';
 
 export const Disclaimer = () => {
-    const { isDisclaimerChecked, setIsDisclaimerChecked } = useContext(CreateSurveyContext);
+    const { isDisclaimerChecked, setIsDisclaimerChecked, disclaimerError, setDisclaimerError } =
+        useContext(CreateSurveyContext);
     return (
         <Grid item xs={12} container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
             <Grid item xs={6}>
@@ -23,11 +24,14 @@ export const Disclaimer = () => {
                 </MetDisclaimer>
             </Grid>
             <Grid item xs={12}>
-                <FormControl required component="fieldset" variant="standard">
+                <FormControl required error={disclaimerError} component="fieldset" variant="standard">
                     <FormControlLabel
                         control={
                             <Checkbox
                                 onChange={(event) => {
+                                    if (!isDisclaimerChecked && disclaimerError) {
+                                        setDisclaimerError(false);
+                                    }
                                     setIsDisclaimerChecked(event.target.checked);
                                 }}
                                 checked={isDisclaimerChecked}
@@ -35,6 +39,9 @@ export const Disclaimer = () => {
                         }
                         label="I agree to the disclaimer and statement of responsibility for Survey Designers."
                     />
+                    <FormHelperText>
+                        {disclaimerError ? 'Please agree to the disclaimer and statement of responsibility' : ''}
+                    </FormHelperText>
                 </FormControl>
             </Grid>
         </Grid>

@@ -39,6 +39,7 @@ const CloneOptions = () => {
         availableEngagements,
         setAvailableEngagements,
         isDisclaimerChecked,
+        setDisclaimerError,
     } = useContext(CreateSurveyContext);
     const { name } = surveyForm;
     const initialFormError = {
@@ -119,6 +120,12 @@ const CloneOptions = () => {
         if (validate()) {
             return;
         }
+
+        if (!isDisclaimerChecked) {
+            setDisclaimerError(true);
+            return;
+        }
+
         setIsSaving(true);
         try {
             const createdSurvey = await cloneSurvey({
@@ -225,7 +232,7 @@ const CloneOptions = () => {
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <PrimaryButton disabled={!isDisclaimerChecked} onClick={handleSave} loading={isSaving}>
+                    <PrimaryButton onClick={handleSave} loading={isSaving}>
                         {'Save & Continue'}
                     </PrimaryButton>
                     <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
