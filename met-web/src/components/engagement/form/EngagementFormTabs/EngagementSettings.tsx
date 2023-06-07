@@ -9,8 +9,17 @@ import {
     SelectChangeEvent,
     FormControlLabel,
     Switch,
+    Divider,
 } from '@mui/material';
-import { MetLabel, MetPaper, PrimaryButton, MetHeader4, MetDescription, MetBody } from '../../../common';
+import {
+    MetLabel,
+    MetPaper,
+    PrimaryButton,
+    SecondaryButton,
+    MetHeader4,
+    MetDescription,
+    MetBody,
+} from '../../../common';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { ActionContext } from '../ActionContext';
@@ -21,11 +30,11 @@ import { AppConfig } from 'config';
 import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
 
 const EngagementSettings = () => {
-    const { savedEngagement } = useContext(ActionContext);
+    const { handleUpdateEngagementMetadataRequest, isSaving, savedEngagement, engagementId } =
+        useContext(ActionContext);
     const { engagementFormData, setEngagementFormData } = useContext(EngagementTabsContext);
     const { project_id, project_metadata, is_internal } = engagementFormData;
     const { engagementProjectTypes } = AppConfig.constants;
-
     const dispatch = useAppDispatch();
 
     const newEngagement = !savedEngagement.id || isNaN(Number(savedEngagement.id));
@@ -75,6 +84,15 @@ const EngagementSettings = () => {
         }
         setCopyTooltip(true);
         navigator.clipboard.writeText(engagementUrl);
+    };
+
+    const handleUpdateEngagementSettings = async () => {
+        await handleUpdateEngagementMetadataRequest({
+            ...engagementFormData,
+            engagement_id: Number(engagementId),
+        });
+
+        return savedEngagement;
     };
 
     return (
@@ -219,15 +237,31 @@ const EngagementSettings = () => {
                                 InputProps={{
                                     endAdornment: (
                                         <InputAdornment position="end" sx={{ height: '100%', maxHeight: '100%' }}>
-                                            <PrimaryButton variant="contained" disableElevation onClick={handleCopyUrl}>
+                                            <SecondaryButton
+                                                variant="contained"
+                                                disableElevation
+                                                onClick={handleCopyUrl}
+                                            >
                                                 <ContentCopyIcon />
-                                            </PrimaryButton>
+                                            </SecondaryButton>
                                         </InputAdornment>
                                     ),
                                 }}
                             />
                         </Tooltip>
                     </ClickAwayListener>
+                </Grid>
+                <Grid item xs={12}>
+                    <Divider sx={{ mt: '1em', mb: '1em' }} />
+                    <PrimaryButton
+                        data-testid="update-engagement-button"
+                        sx={{ marginRight: 1 }}
+                        onClick={() => handleUpdateEngagementSettings()}
+                        disabled={isSaving}
+                        loading={isSaving}
+                    >
+                        Save
+                    </PrimaryButton>
                 </Grid>
             </Grid>
         </MetPaper>

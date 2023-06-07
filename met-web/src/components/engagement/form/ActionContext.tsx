@@ -218,6 +218,13 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     ): Promise<EngagementMetadata> => {
         setSaving(true);
         try {
+            if (!savedEngagement.id) {
+                dispatch(
+                    openNotification({ severity: 'error', text: 'Please save the engagement before adding metadata' }),
+                );
+                setSaving(false);
+                return engagementMetadata;
+            }
             const state = { ...engagementMetadata };
             const engagementMetadataToUpdate: EngagementMetadata = {
                 engagement_id: Number(engagementId),
@@ -230,11 +237,11 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 engagement_id: Number(engagementId),
             });
             setEngagementMetadata(updatedEngagementMetadata);
-            dispatch(openNotification({ severity: 'success', text: 'Engagement metadata Updated Successfully' }));
+            dispatch(openNotification({ severity: 'success', text: 'Engagement metadata saved successfully' }));
             setSaving(false);
             return Promise.resolve(updatedEngagementMetadata);
         } catch (error) {
-            dispatch(openNotification({ severity: 'error', text: 'Error Updating Engagement metadata' }));
+            dispatch(openNotification({ severity: 'error', text: 'Error saving engagement metadata' }));
             setSaving(false);
             console.log(error);
             return Promise.reject(error);
