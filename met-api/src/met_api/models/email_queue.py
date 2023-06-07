@@ -6,8 +6,6 @@ from __future__ import annotations
 
 from typing import List
 
-from sqlalchemy import null, or_
-
 from met_api.constants.notification_status import NotificationStatus
 from .base_model import BaseModel
 from .db import db
