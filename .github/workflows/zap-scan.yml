@@ -38,3 +38,15 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue_title: 'Analytics ZAP Scan Report'
           target: 'https://met-analytics-api-dev.apps.gold.devops.gov.bc.ca/'
+
+  zap_scan_api:
+    runs-on: ubuntu-latest
+    name: Scan the analytics application
+    steps:
+      - name: ZAP Scan
+        uses: zaproxy/action-api-scan@v0.2.0
+        with:
+          allow_issue_writing: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue_title: 'API ZAP Scan Report'
+          target: 'https://met-api-dev.apps.gold.devops.gov.bc.ca/'
