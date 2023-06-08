@@ -161,7 +161,6 @@ class Engagement(BaseModel):
         """Update scheduled engagements to published."""
         datetime_due = datetime.now()
         print('Publish due date ------------------------', datetime_due)
-        engagements_schema = EngagementSchema(many=True)
         update_fields = dict(
             status_id=Status.Published.value,
             published_date=datetime.utcnow(),
@@ -174,10 +173,10 @@ class Engagement(BaseModel):
             .filter(Engagement.scheduled_date <= datetime_due)
         records = query.all()
         if not records:
-            return []
+            return None
         query.update(update_fields)
         db.session.commit()
-        return engagements_schema.dump(records)
+        return records
 
     @staticmethod
     def _get_sort_order(pagination_options):
