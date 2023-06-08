@@ -19,7 +19,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjetMapData 
     const [data, setData] = useState<Map | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
-    const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+    const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const circleSize = isTablet ? 100 : 250;
 
     const fetchData = async () => {

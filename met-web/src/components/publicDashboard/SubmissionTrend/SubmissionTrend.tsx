@@ -33,6 +33,7 @@ interface SubmissionTrendProps {
 
 const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendProps) => {
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+    const isBetweenMdAndLg = useMediaQuery((theme: Theme) => theme.breakpoints.between('lg', 'xl'));
     const HEIGHT = isTablet ? 200 : 250;
     const [data, setData] = useState(createDefaultByMonthData());
     const [isLoading, setIsLoading] = useState(true);
@@ -129,21 +130,16 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             container
                             item
                             lg={3}
-                            md={4}
                             mt={isTablet ? 2 : 0}
                             rowSpacing={isTablet ? 1 : 0}
                             mb={isTablet ? 4 : 0}
+                            md={isBetweenMdAndLg ? 3 : 4}
                         >
                             <Grid container item alignItems={'center'} justifyContent={'center'} xs={12} sx={{ mb: 1 }}>
                                 <MetLabel>Select Date Range </MetLabel>
                             </Grid>
-                            <Grid
-                                container
-                                justifyContent={isTablet ? 'center' : 'flex-start'}
-                                alignItems="center"
-                                sx={{ mb: 1 }}
-                            >
-                                <Grid md={1} lg={3} item sx={{ mr: 1 }}>
+                            <Grid container justifyContent={'center'} alignItems="center" sx={{ mb: 1 }}>
+                                <Grid md={isBetweenMdAndLg ? 1 : 3} lg={3} item sx={{ mr: 1 }}>
                                     <MetLabel>From: </MetLabel>
                                 </Grid>
                                 <Grid lg={7} item>
@@ -157,12 +153,12 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             </Grid>
                             <Grid
                                 container
-                                justifyContent={isTablet ? 'center' : 'flex-start'}
+                                justifyContent={'center'}
                                 alignItems="center"
                                 xs={12}
-                                sx={{ mb: 1 }}
+                                sx={{ mb: 1, ml: isTablet ? 3 : 0 }}
                             >
-                                <Grid md={1} lg={3} item sx={{ mr: 1 }}>
+                                <Grid md={isBetweenMdAndLg ? 1 : 3} lg={3} item sx={{ mr: 1 }}>
                                     <MetLabel>To: </MetLabel>
                                 </Grid>
                                 <Grid lg={7} item>
@@ -181,7 +177,13 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                 </PrimaryButton>
                             </Grid>
                         </Grid>
-                        <Grid item lg={9} md={8} alignItems={'flex-end'} justifyContent={'flex-end'}>
+                        <Grid
+                            item
+                            lg={9}
+                            md={isBetweenMdAndLg ? 9 : 8}
+                            alignItems={'flex-end'}
+                            justifyContent={'flex-end'}
+                        >
                             <Stack
                                 direction={{ xs: 'column', sm: 'row' }}
                                 width="100%"
