@@ -104,7 +104,7 @@ class EngagementService:
         """Publish scheduled engagement due."""
         engagements = EngagementModel.publish_scheduled_engagements_due()
         print('Engagements published: ', engagements)
-        results = [email_util.publish_to_email_queue(SourceType.ENGAGEMENT.value, engagement.id,
+        results = [email_util.publish_to_email_queue(SourceType.ENGAGEMENT.value, engagement['id'],
                                               SourceAction.PUBLISHED.value, True) for engagement in engagements]
         print('Engagements published added to email queue: ', results)
         return engagements
