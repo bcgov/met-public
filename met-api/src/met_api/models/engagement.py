@@ -174,10 +174,10 @@ class Engagement(BaseModel):
             .filter(Engagement.scheduled_date <= datetime_due)
         records = query.all()
         if not records:
-            return []
+            return
         query.update(update_fields)
         db.session.commit()
-        return engagements_schema.dump(records)
+        return records
 
     @staticmethod
     def _get_sort_order(pagination_options):
