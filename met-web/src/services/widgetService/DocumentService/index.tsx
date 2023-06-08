@@ -83,3 +83,20 @@ export const patchDocument = async (
         return Promise.reject(err);
     }
 };
+
+export interface SortDocumentRequest {
+    parent_document_id?: number;
+    documents: DocumentItem[];
+}
+export const sortDocuments = async (widget_id: number, data: SortDocumentRequest): Promise<DocumentItem> => {
+    try {
+        const url = replaceUrl(Endpoints.Documents.ORDER, 'widget_id', String(widget_id));
+        const response = await http.PatchRequest<DocumentItem>(url, data);
+        if (response.data) {
+            return response.data;
+        }
+        return Promise.reject('Failed to update document');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};

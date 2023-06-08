@@ -17,7 +17,7 @@ const LinkOptions = () => {
     const [loadingSurveys, setLoadingSurveys] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
 
-    const { availableSurveys, setAvailableSurveys, engagementToLink, isDisclaimerChecked } =
+    const { availableSurveys, setAvailableSurveys, engagementToLink, isDisclaimerChecked, setDisclaimerError } =
         useContext(CreateSurveyContext);
 
     const handleFetchSurveys = async () => {
@@ -47,6 +47,10 @@ const LinkOptions = () => {
         if (!engagementToLink) {
             dispatch(openNotification({ severity: 'error', text: 'Failed to get the related engagement information' }));
             return;
+        }
+
+        if (!isDisclaimerChecked) {
+            setDisclaimerError(true);
         }
 
         setIsSaving(true);
@@ -99,7 +103,7 @@ const LinkOptions = () => {
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <PrimaryButton disabled={!isDisclaimerChecked} onClick={handleSave} loading={isSaving}>
+                    <PrimaryButton onClick={handleSave} loading={isSaving}>
                         {'Save & Continue'}
                     </PrimaryButton>
                     <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>

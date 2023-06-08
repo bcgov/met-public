@@ -29,8 +29,8 @@ export const EngagementLink = () => {
                                     text: 'You will have to start over by re-entering your email address and obtaining a new link.',
                                 },
                             ],
-                            confirmButtonText: 'Stay on this page',
-                            cancelButtonText: 'Leave page',
+                            confirmButtonText: 'Leave page',
+                            cancelButtonText: 'Stay on this page',
                             handleConfirm: () => {
                                 navigate(link); // Perform the navigation here
                             },
