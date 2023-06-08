@@ -41,7 +41,7 @@ jobs:
 
   zap_scan_api:
     runs-on: ubuntu-latest
-    name: Scan the analytics application
+    name: Scan the API application
     steps:
       - name: ZAP Scan
         uses: zaproxy/action-api-scan@v0.2.0
