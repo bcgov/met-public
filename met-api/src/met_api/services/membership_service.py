@@ -44,7 +44,7 @@ class MembershipService:
 
         if Groups.EAO_REVIEWER.value in user.get('groups'):
             group_name = Groups.EAO_REVIEWER.name
-            membership_type = MembershipType.REVIEWER   
+            membership_type = MembershipType.REVIEWER
         return group_name, membership_type
 
     @staticmethod

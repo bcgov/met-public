@@ -74,6 +74,7 @@ class StaffUsers(Resource):
         )
         return jsonify(users), HTTPStatus.OK
 
+
 @cors_preflight('GET')
 @API.route('/<user_id>')
 class StaffUser(Resource):
@@ -90,6 +91,7 @@ class StaffUser(Resource):
             include_groups=args.get('include_groups', default=False, type=lambda v: v.lower() == 'true'),
         )
         return user, HTTPStatus.OK
+
 
 @cors_preflight('POST')
 @API.route('/<user_id>/groups')
