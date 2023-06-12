@@ -61,11 +61,6 @@ class StaffUser(BaseModel):
         return cls.query.filter(func.lower(StaffUser.external_id) == func.lower(_external_id)).first()
 
     @classmethod
-    def get_user_by_id(cls, _user_id) -> StaffUser:
-        """Get a user with the provided external id."""
-        return cls.query.filter(StaffUser.id == _user_id).first()
-
-    @classmethod
     def create_user(cls, user) -> StaffUser:
         """Create user."""
         user = StaffUser(

@@ -18,7 +18,7 @@ from enum import Enum
 
 class Groups(Enum):
     """Enumeration representing user groups."""
-    
+
     EAO_IT_ADMIN = 'Superuser'
     EAO_TEAM_MEMBER = 'Member'
     EAO_REVIEWER = 'Reviewer'

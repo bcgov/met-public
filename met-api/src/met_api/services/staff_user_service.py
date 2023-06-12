@@ -25,7 +25,7 @@ class StaffUserService:
     def get_user_by_id(cls, _user_id, include_groups=False):
         """Get user by id."""
         user_schema = StaffUserSchema()
-        db_user = StaffUserModel.get_user_by_id(_user_id)
+        db_user = StaffUserModel.find_by_id(_user_id)
         user = user_schema.dump(db_user)
         if include_groups:
             cls.attach_groups([user])

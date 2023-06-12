@@ -19,36 +19,50 @@ class MembershipService:
     def create_membership(engagement_id, request_json: dict):
         """Create membership."""
         user_id = request_json.get('user_id')
-        user_db: StaffUserModel = StaffUserModel.get_user_by_external_id(user_id)
-        if not user_db:
+        user: StaffUserModel = StaffUserModel.get_user_by_external_id(user_id)
+        if not user:
             raise BusinessException(
                 error='Invalid User.',
                 status_code=HTTPStatus.BAD_REQUEST)
 
-        user = StaffUserSchema().dump(user_db)
+        user_details = StaffUserSchema().dump(user)
         # attach and map groups
-        StaffUserService.attach_groups([user])
+        StaffUserService.attach_groups([user_details])
         # this makes sure duplicate membership doesnt happen.
         # Can remove when user can have multiple roles with in same engagement.
-        MembershipService._validate_member(engagement_id, user)
-        group_name, membership_type = MembershipService._get_membership_details(user)
-        MembershipService._add_user_group(user, group_name)
-        membership = MembershipService._create_membership_model(engagement_id, user, membership_type)
+        MembershipService._validate_member(engagement_id, user_details)
+        group_name, membership_type = MembershipService._get_membership_details(user_details)
+        MembershipService._add_user_group(user_details, group_name)
+        membership = MembershipService._create_membership_model(engagement_id, user_details, membership_type)
         membership.commit()
         return membership
 
     @staticmethod
-    def _get_membership_details(user: StaffUserModel):
-        group_name = Groups.EAO_TEAM_MEMBER.name
-        membership_type = MembershipType.TEAM_MEMBER
+    def _get_membership_details(user_details):
+        """Get the group name and membership type for the user based on their assigned groups."""
+        default_group_name = Groups.EAO_TEAM_MEMBER.name
+        default_membership_type = MembershipType.TEAM_MEMBER
 
-        if Groups.EAO_REVIEWER.value in user.get('groups'):
+        is_reviewer = Groups.EAO_REVIEWER.value in user_details.get('groups')
+        is_team_member = Groups.EAO_TEAM_MEMBER.value in user_details.get('groups')
+
+        if is_reviewer:
+            # If the user is assigned to the EAO_REVIEWER group, set the group name and membership type accordingly
             group_name = Groups.EAO_REVIEWER.name
             membership_type = MembershipType.REVIEWER
+        elif is_team_member:
+            # If the user is assigned to the EAO_TEAM_MEMBER group, set the group name and membership type accordingly
+            group_name = Groups.EAO_TEAM_MEMBER.name
+            membership_type = MembershipType.TEAM_MEMBER
+        else:
+            # If the user is not assigned to either group, return default values for group name and membership type
+            group_name = default_group_name
+            membership_type = default_membership_type
+
         return group_name, membership_type
 
     @staticmethod
-    def _add_user_group(user: StaffUserModel, group_name: str):
+    def _add_user_group(user: StaffUserModel, group_name = Groups.EAO_TEAM_MEMBER.name):
         valid_member_teams = [Groups.EAO_TEAM_MEMBER.name, Groups.EAO_REVIEWER.name]
         if group_name not in valid_member_teams:
             raise BusinessException(
@@ -61,21 +75,21 @@ class MembershipService:
         )
 
     @staticmethod
-    def _validate_member(engagement_id, user):
-        groups = user.get('groups')
+    def _validate_member(engagement_id, user_details):
+        groups = user_details.get('groups')
         if KeycloakGroups.EAO_IT_ADMIN.value in groups:
             raise BusinessException(
                 error='This user is already a Superuser.',
                 status_code=HTTPStatus.CONFLICT.value)
 
-        existing_membership = MembershipModel.find_by_engagement_and_user_id(engagement_id, user.get('id'))
+        existing_membership = MembershipModel.find_by_engagement_and_user_id(engagement_id, user_details.get('id'))
         if existing_membership:
             raise BusinessException(
-                error=f'This {user.get("main_group", "user")} is already assigned to this engagement.',
+                error=f'This {user_details.get("main_group", "user")} is already assigned to this engagement.',
                 status_code=HTTPStatus.CONFLICT.value)
 
     @staticmethod
-    def _create_membership_model(engagement_id, user, membership_type):
+    def _create_membership_model(engagement_id, user_details, membership_type = MembershipType.TEAM_MEMBER):
         if membership_type not in MembershipType.__members__.values():
             raise BusinessException(
                 error='Invalid Membership type.',
@@ -84,7 +98,7 @@ class MembershipService:
 
         membership: MembershipModel = MembershipModel(
             engagement_id=engagement_id,
-            user_id=user.get('id'),
+            user_id=user_details.get('id'),
             status=MembershipStatus.ACTIVE.value,
             type=membership_type
         )
