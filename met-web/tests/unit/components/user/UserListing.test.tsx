@@ -63,19 +63,19 @@ describe('User Management tests', () => {
         });
     });
 
-    test('Add user to group modal appears', async () => {
+    test('Assign Role to user modal appears', async () => {
         render(<UserManagementListing />);
 
         await waitFor(() => {
             expect(screen.getByText('User Name')).toBeVisible();
         });
 
-        const exportButton = screen.getByText('+ Add User');
+        const exportButton = screen.getByText('+ Assign Role');
         fireEvent.click(exportButton);
 
         await waitFor(() => {
-            expect(screen.getByText('Add a User')).toBeVisible();
-            expect(screen.getByText('Select the user you want to add')).toBeVisible();
+            expect(screen.getByText('Assign a Role')).toBeVisible();
+            expect(screen.getByText('Select the user you want to assign a role')).toBeVisible();
             expect(screen.getByText('What role would you like to assign to this user?')).toBeVisible();
         });
     });
