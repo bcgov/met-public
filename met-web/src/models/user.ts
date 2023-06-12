@@ -1,13 +1,21 @@
-export type UserGroup = 'EAO_IT_ADMIN' | 'EAO_IT_VIEWER';
+export type UserGroup = 'EAO_IT_ADMIN' | 'EAO_IT_VIEWER' | 'EAO_TEAM_MEMBER' | 'EAO_REVIEWER';
 
 export const USER_GROUP: { [x: string]: { value: UserGroup; label: string } } = {
     ADMIN: {
         value: 'EAO_IT_ADMIN',
-        label: 'Administrator',
+        label: 'Superuser',
     },
     VIEWER: {
         value: 'EAO_IT_VIEWER',
         label: 'Viewer',
+    },
+    TEAM_MEMBER: {
+        value: 'EAO_TEAM_MEMBER',
+        label: 'Member',
+    },
+    REVIEWER: {
+        value: 'EAO_REVIEWER',
+        label: 'Reviewer',
     },
 };
 
@@ -24,7 +32,7 @@ export interface User {
     updated_date: string;
     status: string;
     roles: string[];
-    main_role: string;
+    main_group: string;
     username: string;
 }
 
@@ -42,5 +50,5 @@ export const createDefaultUser: User = {
     status: '',
     roles: [],
     username: '',
-    main_role: '',
+    main_group: '',
 };

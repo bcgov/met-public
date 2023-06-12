@@ -5,7 +5,7 @@ import { User } from 'models/user';
 import { replaceUrl } from 'helper';
 import { Engagement } from 'models/engagement';
 
-interface GetUserParams {
+interface GetUserListParams {
     page?: number;
     size?: number;
     sort_key?: string;
@@ -14,7 +14,7 @@ interface GetUserParams {
     // If yes, user groups will be fetched as well from keycloak
     include_groups?: boolean;
 }
-export const getUserList = async (params: GetUserParams = {}): Promise<Page<User>> => {
+export const getUserList = async (params: GetUserListParams = {}): Promise<Page<User>> => {
     const responseData = await http.GetRequest<Page<User>>(Endpoints.User.GET_LIST, params);
     return (
         responseData.data ?? {
@@ -22,6 +22,20 @@ export const getUserList = async (params: GetUserParams = {}): Promise<Page<User
             total: 0,
         }
     );
+};
+
+interface GetUserParams {
+    user_id: number;
+    // If yes, user groups will be fetched as well from keycloak
+    include_groups?: boolean;
+}
+export const getUser = async (params: GetUserParams): Promise<User> => {
+    const url = replaceUrl(Endpoints.User.GET, 'user_id', String(params.user_id));
+    const response = await http.GetRequest<User>(url, params);
+    if (response.data) {
+        return response.data;
+    }
+    return Promise.reject('Failed to fetch user details');
 };
 
 interface AddUserToGroupProps {

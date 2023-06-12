@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { User, createDefaultUser } from 'models/user';
-import { getUserList, fetchUserEngagements } from 'services/userService/api';
+import { fetchUserEngagements, getUser } from 'services/userService/api';
 import { Engagement } from 'models/engagement';
 
 export interface UserViewContext {
@@ -11,8 +11,10 @@ export interface UserViewContext {
     isUserLoading: boolean;
     addUserModalOpen: boolean;
     memberships: Engagement[];
+    isMembershipLoading: boolean;
     setMemberships: React.Dispatch<React.SetStateAction<Engagement[]>>;
     setAddUserModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    getUserEngagements: () => Promise<void>;
 }
 
 export type UserParams = {
@@ -30,6 +32,10 @@ export const ActionContext = createContext<UserViewContext>({
     setAddUserModalOpen: () => {
         throw new Error('Not implemented');
     },
+    getUserEngagements: () => {
+        throw new Error('Not implemented');
+    },
+    isMembershipLoading: true,
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -38,6 +44,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const dispatch = useAppDispatch();
     const [savedUser, setSavedUser] = useState<User | undefined>(createDefaultUser);
     const [isUserLoading, setUserLoading] = useState(true);
+    const [isMembershipLoading, setMembershipLoading] = useState(true);
     const [memberships, setMemberships] = useState<Engagement[]>([]);
     const [addUserModalOpen, setAddUserModalOpen] = useState(false);
 
@@ -56,11 +63,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
             return Promise.resolve();
         }
         try {
-            const result = await getUserList({ include_groups: true });
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            //@ts-ignore
-            const currentUser = result.items.find((user) => user.id === parseInt(userId));
-            setSavedUser(currentUser);
+            const fetchedUser = await getUser({ user_id: Number(userId), include_groups: true });
+            setSavedUser(fetchedUser);
             setUserLoading(false);
         } catch (error) {
             dispatch(
@@ -76,6 +80,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         const user_engagements = await fetchUserEngagements({ user_id: userId });
 
         setMemberships(user_engagements);
+        setMembershipLoading(false);
     };
 
     return (
@@ -87,6 +92,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 setAddUserModalOpen,
                 memberships,
                 setMemberships,
+                getUserEngagements,
+                isMembershipLoading,
             }}
         >
             {children}
