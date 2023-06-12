@@ -62,12 +62,13 @@ class MembershipService:
         return group_name, membership_type
 
     @staticmethod
-    def _add_user_group(user: StaffUserModel, group_name = Groups.EAO_TEAM_MEMBER.name):
+    def _add_user_group(user: StaffUserModel, group_name=Groups.EAO_TEAM_MEMBER.name):
         valid_member_teams = [Groups.EAO_TEAM_MEMBER.name, Groups.EAO_REVIEWER.name]
         if group_name not in valid_member_teams:
             raise BusinessException(
                 error='Invalid Group name.',
-                status_code=HTTPStatus.BAD_REQUEST)
+                status_code=HTTPStatus.BAD_REQUEST
+            )
 
         KEYCLOAK_SERVICE.add_user_to_group(
             user_id=user.get('external_id'),
@@ -89,7 +90,7 @@ class MembershipService:
                 status_code=HTTPStatus.CONFLICT.value)
 
     @staticmethod
-    def _create_membership_model(engagement_id, user_details, membership_type = MembershipType.TEAM_MEMBER):
+    def _create_membership_model(engagement_id, user_details, membership_type=MembershipType.TEAM_MEMBER):
         if membership_type not in MembershipType.__members__.values():
             raise BusinessException(
                 error='Invalid Membership type.',
