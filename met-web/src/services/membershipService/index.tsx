@@ -2,7 +2,6 @@ import http from 'apiManager/httpRequestHandler';
 import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
 import { EngagementTeamMember } from 'models/engagementTeamMember';
-import { USER_GROUP } from 'models/user';
 
 interface GetTeamMembersParams {
     engagement_id: number;
