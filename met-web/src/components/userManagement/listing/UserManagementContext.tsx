@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect } from 'react';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { createDefaultPageInfo, PageInfo, PaginationOptions } from 'components/common/Table/types';
-import { User } from 'models/user';
+import { User, createDefaultUser } from 'models/user';
 import { getUserList } from 'services/userService/api';
 
 export interface UserManagementContextProps {
@@ -15,6 +15,8 @@ export interface UserManagementContextProps {
     setAddUserModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
     assignRoleModalOpen: boolean;
     setassignRoleModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    user: User;
+    setUser: React.Dispatch<React.SetStateAction<User>>;
     loadUserListing: () => void;
 }
 
@@ -41,6 +43,10 @@ export const UserManagementContext = createContext<UserManagementContextProps>({
     setassignRoleModalOpen: () => {
         throw new Error('Not implemented');
     },
+    user: createDefaultUser,
+    setUser: () => {
+        throw new Error('Not implemented');
+    },
     loadUserListing: () => {
         throw new Error('Load user listing is not implemented');
     },
@@ -49,6 +55,7 @@ export const UserManagementContext = createContext<UserManagementContextProps>({
 export const UserManagementContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     const dispatch = useAppDispatch();
     const [users, setUsers] = useState<User[]>([]);
+    const [user, setUser] = useState<User>(createDefaultUser);
     const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
     const [usersLoading, setUsersLoading] = useState(true);
     const [addUserModalOpen, setAddUserModalOpen] = useState(false);
@@ -106,6 +113,8 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
                 setAddUserModalOpen,
                 assignRoleModalOpen,
                 setassignRoleModalOpen,
+                user,
+                setUser,
                 loadUserListing,
             }}
         >
