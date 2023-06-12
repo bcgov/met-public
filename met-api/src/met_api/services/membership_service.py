@@ -31,19 +31,21 @@ class MembershipService:
         # this makes sure duplicate membership doesnt happen.
         # Can remove when user can have multiple roles with in same engagement.
         MembershipService._validate_member(engagement_id, user)
-        group_name = MembershipService._get_group_name(user)
+        group_name, membership_type = MembershipService._get_membership_details(user)
         MembershipService._add_user_group(user, group_name)
-        membership = MembershipService._create_membership_model(engagement_id, user)
+        membership = MembershipService._create_membership_model(engagement_id, user, membership_type)
         membership.commit()
         return membership
 
     @staticmethod
-    def _get_group_name(user: StaffUserModel):
-        if Groups.EAO_TEAM_MEMBER.value in user.get('groups'):
-            group_name = Groups.EAO_TEAM_MEMBER.name
-        elif Groups.EAO_REVIEWER.value in user.get('groups'):
+    def _get_membership_details(user: StaffUserModel):
+        group_name = Groups.EAO_TEAM_MEMBER.name
+        membership_type = MembershipType.TEAM_MEMBER
+
+        if Groups.EAO_REVIEWER.value in user.get('groups'):
             group_name = Groups.EAO_REVIEWER.name
-        return group_name
+            membership_type = MembershipType.REVIEWER    
+        return group_name, membership_type
 
     @staticmethod
     def _add_user_group(user: StaffUserModel, group_name: str):
@@ -74,12 +76,21 @@ class MembershipService:
                 status_code=HTTPStatus.CONFLICT.value)
 
     @staticmethod
-    def _create_membership_model(engagement_id, user):
-        membership: MembershipModel = MembershipModel(engagement_id=engagement_id,
-                                                      user_id=user.get('id'),
-                                                      status=MembershipStatus.ACTIVE.value,
-                                                      type=MembershipType.TEAM_MEMBER)
+    def _create_membership_model(engagement_id, user, membership_type):
+        if membership_type not in MembershipType.__members__.values():
+            raise BusinessException(
+                error='Invalid Membership type.',
+                status_code=HTTPStatus.BAD_REQUEST
+            )
+
+        membership: MembershipModel = MembershipModel(
+            engagement_id=engagement_id,
+            user_id=user.get('id'),
+            status=MembershipStatus.ACTIVE.value,
+            type=membership_type
+        )
         membership.add_to_session()
+
         return membership
 
     @staticmethod
