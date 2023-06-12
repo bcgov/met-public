@@ -32,7 +32,7 @@ class StaffUserService:
         return user
 
     @classmethod
-    def get_user_by_external_id(cls, _external_id, include_groups=False):
+    def get_user_by_external_id(cls, _external_id):
         """Get user by external id."""
         user_schema = StaffUserSchema()
         db_user = StaffUserModel.get_user_by_external_id(_external_id)
