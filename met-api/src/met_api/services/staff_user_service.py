@@ -10,7 +10,7 @@ from met_api.models.staff_user import StaffUser as StaffUserModel
 from met_api.schemas.staff_user import StaffUserSchema
 from met_api.services.keycloak import KeycloakService
 from met_api.utils import notification
-from met_api.utils.constants import GROUP_NAME_MAPPING
+from met_api.utils.constants import GROUP_NAME_MAPPING, Groups
 from met_api.utils.enums import KeycloakGroupName
 from met_api.utils.template import Template
 
@@ -21,8 +21,18 @@ KEYCLOAK_SERVICE = KeycloakService()
 class StaffUserService:
     """User management service."""
 
-    @staticmethod
-    def get_user_by_external_id(_external_id):
+    @classmethod
+    def get_user_by_id(cls, _user_id, include_groups=False):
+        """Get user by id."""
+        user_schema = StaffUserSchema()
+        db_user = StaffUserModel.get_user_by_id(_user_id)
+        user = user_schema.dump(db_user)
+        if include_groups:
+            cls.attach_groups([user])
+        return user
+
+    @classmethod
+    def get_user_by_external_id(cls, _external_id, include_groups=False):
         """Get user by external id."""
         user_schema = StaffUserSchema()
         db_user = StaffUserModel.get_user_by_external_id(_external_id)
@@ -100,12 +110,14 @@ class StaffUserService:
             user['groups'] = ''
             if groups:
                 user['groups'] = [GROUP_NAME_MAPPING.get(group, '') for group in groups]
-                if 'Superuser' in user['groups']:
-                    user['main_role'] = 'Superuser'
-                elif 'Member' in user['groups']:
-                    user['main_role'] = 'Member'
+                if Groups.EAO_IT_ADMIN.value in user['groups']:
+                    user['main_group'] = Groups.EAO_IT_ADMIN.value
+                elif Groups.EAO_TEAM_MEMBER.value in user['groups']:
+                    user['main_group'] = Groups.EAO_TEAM_MEMBER.value
+                elif Groups.EAO_REVIEWER.value in user['groups']:
+                    user['main_group'] = Groups.EAO_REVIEWER.value
                 else:
-                    user['main_role'] = user['groups'][0]
+                    user['main_group'] = user['groups'][0]
 
     @classmethod
     def find_users(

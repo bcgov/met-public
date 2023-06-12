@@ -37,7 +37,7 @@ API = Namespace('user', description='Endpoints for User Management')
 
 @cors_preflight('PUT')
 @API.route('/')
-class StaffUser(Resource):
+class StaffUsers(Resource):
     """User controller class."""
 
     @staticmethod
@@ -74,6 +74,22 @@ class StaffUser(Resource):
         )
         return jsonify(users), HTTPStatus.OK
 
+@cors_preflight('GET')
+@API.route('/<user_id>')
+class StaffUser(Resource):
+    """User controller class."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.has_one_of_roles([Role.VIEW_USERS.value])
+    def get(user_id):
+        """Return a set of users(staff only)."""
+        args = request.args
+        user = StaffUserService.get_user_by_id(
+            user_id,
+            include_groups=args.get('include_groups', default=False, type=lambda v: v.lower() == 'true'),
+        )
+        return user, HTTPStatus.OK
 
 @cors_preflight('POST')
 @API.route('/<user_id>/groups')

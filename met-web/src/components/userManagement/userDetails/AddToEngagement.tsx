@@ -26,7 +26,7 @@ type AddUserForm = yup.TypeOf<typeof schema>;
 export const AddToEngagementModal = () => {
     const dispatch = useAppDispatch();
     const { assignedEngagements } = useAppSelector((state) => state.user);
-    const { savedUser, addUserModalOpen, setAddUserModalOpen } = useContext(ActionContext);
+    const { savedUser, addUserModalOpen, setAddUserModalOpen, getUserEngagements } = useContext(ActionContext);
     const [isAssigningRole, setIsAssigningRole] = useState(false);
     const [engagements, setEngagements] = useState<Engagement[]>([]);
     const [engagementsLoading, setEngagementsLoading] = useState(false);
@@ -99,6 +99,7 @@ export const AddToEngagementModal = () => {
             user_id: savedUser?.external_id,
             engagement_id: data.engagement?.id,
         });
+        getUserEngagements();
         dispatch(
             openNotification({
                 severity: 'success',

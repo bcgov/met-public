@@ -12,14 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Constants definitions."""
+from enum import Enum
 
-# Group names
-
-# Group Name Mapping. Keeping a constant to keep a lucid structure
-GROUP_NAME_MAPPING = {
-    'EAO_IT_ADMIN': 'Superuser',
-    'EAO_IT_VIEWER': 'Viewer',
-    'EAO_TEAM_MEMBER': 'Member',
-}
+class Groups(Enum):
+    EAO_IT_ADMIN = 'Superuser'
+    EAO_TEAM_MEMBER = 'Member'
+    EAO_REVIEWER = 'Reviewer'
+    EAO_IT_VIEWER = 'Viewer'
+    
+    @staticmethod
+    def get_name_by_value(value):
+        for group in Groups:
+            if group.value == value:
+                return group.name
+        raise ValueError('No matching key found for the given value.')
 
 TENANT_ID_HEADER = 'tenant-id'
+
+GROUP_NAME_MAPPING = {group.name: group.value for group in Groups}
