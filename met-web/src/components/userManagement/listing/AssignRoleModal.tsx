@@ -1,8 +1,6 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import {
-    Autocomplete,
-    CircularProgress,
     FormControl,
     FormControlLabel,
     FormHelperText,
@@ -11,14 +9,13 @@ import {
     Paper,
     Radio,
     Stack,
-    TextField,
     useTheme,
 } from '@mui/material';
 import { MetHeader3, MetLabel, MetSmallText, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
 import { USER_GROUP } from 'models/user';
 import { UserManagementContext } from './UserManagementContext';
 import { Palette } from 'styles/Theme';
-import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
+import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import ControlledRadioGroup from 'components/common/ControlledInputComponents/ControlledRadioGroup';
@@ -63,7 +60,6 @@ export const AssignRoleModal = () => {
 
     const {
         handleSubmit,
-        control,
         reset,
         formState: { errors },
         watch,
