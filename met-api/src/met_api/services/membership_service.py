@@ -48,11 +48,6 @@ class MembershipService:
                 error='This user is already a Superuser.',
                 status_code=HTTPStatus.CONFLICT.value)
 
-        if KeycloakGroupName.EAO_IT_VIEWER.value not in group_names:
-            raise BusinessException(
-                error='User must be a viewer first.',
-                status_code=HTTPStatus.CONFLICT.value)
-
     @staticmethod
     def _create_membership_model(engagement_id, user):
         membership: MembershipModel = MembershipModel(engagement_id=engagement_id,
