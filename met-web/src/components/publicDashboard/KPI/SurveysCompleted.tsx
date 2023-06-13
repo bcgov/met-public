@@ -82,7 +82,7 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
 
     return (
         <>
-            <MetLabel mb={isTablet ? 0.5 : 2}>Surveys Completed</MetLabel>
+            <MetLabel mb={{ md: 0.5, lg: 2 }}>Surveys Completed</MetLabel>
             <MetPaper sx={{ p: 2, textAlign: 'center' }}>
                 <Stack alignItems="center" gap={1}>
                     <RadialBarChart

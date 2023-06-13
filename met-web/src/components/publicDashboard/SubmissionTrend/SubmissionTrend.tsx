@@ -131,7 +131,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             item
                             lg={3}
                             sx={{ mt: { md: 2 }, mb: { md: 4 } }}
-                            rowSpacing={isTablet ? 1 : 0}
+                            rowSpacing={{ md: 1 }}
                             md={isBetweenMdAndLg ? 3 : 4}
                         >
                             <Grid container item alignItems={'center'} justifyContent={'center'} xs={12} sx={{ mb: 1 }}>

@@ -121,11 +121,11 @@ const Dashboard = () => {
                                 </When>
                                 <Grid
                                     container
-                                    spacing={isTablet ? 0 : 3}
-                                    rowSpacing={isTablet ? 1 : 3}
+                                    spacing={{ md: 0, lg: 3 }}
+                                    rowSpacing={{ md: 1, lg: 3 }}
                                     item
                                     xs={12}
-                                    ml={isTablet ? 0 : 2}
+                                    ml={{ md: 0, lg: 2 }}
                                 >
                                     <Grid
                                         id={'kpi'}
@@ -223,8 +223,8 @@ const Dashboard = () => {
                             </Grid>
                         </MetPaper>
                     </Grid>
-                </Grid>
-            </Grid>
+                </Grid >
+            </Grid >
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={isPrinting}

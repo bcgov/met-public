@@ -76,7 +76,7 @@ export const SurveyBarPrintable = ({ engagement, engagementIsLoading }: SurveyQu
                                                         data={result.result}
                                                         layout="vertical"
                                                         key={result.postion}
-                                                        margin={{ left: isTablet ? 20 : 0 }}
+                                                        margin={{ left: { md: 20, lg: 0 } }}
                                                     >
                                                         <XAxis hide axisLine={false} type="number" />
                                                         <YAxis

@@ -76,7 +76,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjetMapData 
 
     return (
         <>
-            <MetLabel mb={isTablet ? 0.5 : 2}>Project Location</MetLabel>
+            <MetLabel mb={{ md: 0.5, lg: 2 }}>Project Location</MetLabel >
             <MetPaper sx={{ textAlign: 'center' }}>
                 <Box
                     sx={{
