@@ -103,9 +103,9 @@ export const AddToEngagementModal = () => {
         dispatch(
             openNotification({
                 severity: 'success',
-                text: `You have successfully added ${
-                    savedUser?.first_name + ' ' + savedUser?.last_name
-                } as a Team Member on ${data.engagement?.name}.`,
+                text: `You have successfully added ${savedUser?.first_name + ' ' + savedUser?.last_name} as a ${
+                    savedUser?.main_group
+                } on ${data.engagement?.name}.`,
             }),
         );
     };

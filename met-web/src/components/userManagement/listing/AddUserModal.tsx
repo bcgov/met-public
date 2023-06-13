@@ -1,48 +1,23 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import Modal from '@mui/material/Modal';
-import {
-    Autocomplete,
-    CircularProgress,
-    FormControl,
-    FormControlLabel,
-    FormHelperText,
-    FormLabel,
-    Grid,
-    Paper,
-    Radio,
-    Stack,
-    TextField,
-    useTheme,
-} from '@mui/material';
+import { Autocomplete, CircularProgress, Grid, Paper, Stack, TextField, useTheme } from '@mui/material';
 import { MetHeader3, MetLabel, MetSmallText, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
-import { User, USER_GROUP } from 'models/user';
 import { UserManagementContext } from './UserManagementContext';
-import { Palette } from 'styles/Theme';
 import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import ControlledRadioGroup from 'components/common/ControlledInputComponents/ControlledRadioGroup';
-import { addUserToGroup, getUserList } from 'services/userService/api';
 import { getEngagements } from 'services/engagementService';
 import { addTeamMemberToEngagement } from 'services/membershipService';
 import { When } from 'react-if';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { useAppDispatch } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { debounce } from 'lodash';
 import { Engagement } from 'models/engagement';
 import axios, { AxiosError } from 'axios';
 
 const schema = yup
     .object({
-        user: yup.object().nullable().required('A user must be selected'),
-        group: yup.string().required('A role must be specified'),
-        engagement: yup
-            .object()
-            .nullable()
-            .when('group', {
-                is: USER_GROUP.VIEWER.value,
-                then: yup.object().nullable().required('An engagement must be selected'),
-            }),
+        engagement: yup.object().nullable(),
     })
     .required();
 
@@ -50,11 +25,9 @@ type AddUserForm = yup.TypeOf<typeof schema>;
 
 export const AddUserModal = () => {
     const dispatch = useAppDispatch();
-    const { addUserModalOpen, setAddUserModalOpen, loadUserListing } = useContext(UserManagementContext);
-    const [isAssigningRole, setIsAssigningRole] = useState(false);
-    const [users, setUsers] = useState<User[]>([]);
-    const [usersLoading, setUsersLoading] = useState(false);
-
+    const { assignedEngagements } = useAppSelector((state) => state.user);
+    const { addUserModalOpen, setAddUserModalOpen, user, loadUserListing } = useContext(UserManagementContext);
+    const [isAddingToEngagement, setIsAddingToEngagement] = useState(false);
     const [engagements, setEngagements] = useState<Engagement[]>([]);
     const [engagementsLoading, setEngagementsLoading] = useState(false);
     const [backendError, setBackendError] = useState('');
@@ -73,8 +46,6 @@ export const AddUserModal = () => {
         watch,
     } = methods;
 
-    const userTypeSelected = watch('group');
-
     const formValues = watch();
     useEffect(() => {
         if (backendError) {
@@ -82,35 +53,12 @@ export const AddUserModal = () => {
         }
     }, [JSON.stringify(formValues)]);
 
-    const { user: userErrors, group: groupErrors, engagement: engagementErrors } = errors;
+    const { engagement: engagementErrors } = errors;
 
     const handleClose = () => {
         setAddUserModalOpen(false);
         reset({});
         setBackendError('');
-    };
-
-    const loadUserOptions = async (searchText: string) => {
-        if (searchText.length < 3) {
-            return;
-        }
-        try {
-            setUsersLoading(true);
-            const response = await getUserList({
-                search_text: searchText,
-                include_groups: false,
-            });
-            setUsers(response.items);
-            setUsersLoading(false);
-        } catch (error) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred while trying to fetch users, please refresh the page or try again at a later time',
-                }),
-            );
-            setUsersLoading(false);
-        }
     };
 
     const loadEngagements = async (searchText: string) => {
@@ -122,7 +70,10 @@ export const AddUserModal = () => {
             const response = await getEngagements({
                 search_text: searchText,
             });
-            setEngagements(response.items);
+            const filteredEngagements = response.items.filter(
+                (engagement) => !assignedEngagements.includes(engagement.id),
+            );
+            setEngagements(filteredEngagements);
             setEngagementsLoading(false);
         } catch (error) {
             dispatch(
@@ -135,39 +86,27 @@ export const AddUserModal = () => {
         }
     };
 
-    const debounceLoadUsers = useRef(
-        debounce((searchText: string) => {
-            loadUserOptions(searchText);
-        }, 1000),
-    ).current;
-
     const debounceLoadEngagements = useRef(
         debounce((searchText: string) => {
-            loadEngagements(searchText);
+            loadEngagements(searchText).catch((error) => {
+                console.error('Error in debounceLoadEngagements:', error);
+            });
         }, 1000),
     ).current;
 
-    const assignRoleToUser = async (data: AddUserForm) => {
-        if (userTypeSelected === USER_GROUP.ADMIN.value) {
-            await addUserToGroup({ user_id: data.user?.external_id, group: data.group });
-            dispatch(
-                openNotification({
-                    severity: 'success',
-                    text: `You have successfully added ${data.user?.username} as an admin`,
-                }),
-            );
-        } else {
-            await addTeamMemberToEngagement({
-                user_id: data.user?.external_id,
-                engagement_id: data.engagement?.id,
-            });
-            dispatch(
-                openNotification({
-                    severity: 'success',
-                    text: `You have successfully added ${data.user?.username} as a Team Member on ${data.engagement?.name}.`,
-                }),
-            );
-        }
+    const addUserToEngagement = async (data: AddUserForm) => {
+        await addTeamMemberToEngagement({
+            user_id: user?.external_id,
+            engagement_id: data.engagement?.id,
+        });
+        dispatch(
+            openNotification({
+                severity: 'success',
+                text: `You have successfully added ${user?.first_name + ' ' + user?.last_name} as a ${
+                    user?.main_group
+                } on ${data.engagement?.name}.`,
+            }),
+        );
     };
 
     const setErrors = (error: AxiosError) => {
@@ -179,13 +118,13 @@ export const AddUserModal = () => {
 
     const onSubmit: SubmitHandler<AddUserForm> = async (data: AddUserForm) => {
         try {
-            setIsAssigningRole(true);
-            await assignRoleToUser(data);
-            setIsAssigningRole(false);
+            setIsAddingToEngagement(true);
+            await addUserToEngagement(data);
+            setIsAddingToEngagement(false);
             loadUserListing();
             handleClose();
         } catch (error) {
-            setIsAssigningRole(false);
+            setIsAddingToEngagement(false);
             if (axios.isAxiosError(error)) {
                 setErrors(error);
             }
@@ -200,7 +139,9 @@ export const AddUserModal = () => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
                             <Grid item xs={12}>
-                                <MetHeader3 bold>Add a User</MetHeader3>
+                                <MetHeader3 bold>
+                                    Add {user?.first_name + ' ' + user?.last_name} to Engagement
+                                </MetHeader3>
                             </Grid>
 
                             <Grid
@@ -214,20 +155,20 @@ export const AddUserModal = () => {
                             >
                                 <Grid item xs={12}>
                                     <MetLabel sx={{ marginBottom: '2px', display: 'flex' }}>
-                                        Select the user you want to add
+                                        Which Engagement would you like to add{' '}
+                                        {user?.first_name + ' ' + user?.last_name} to?
                                     </MetLabel>
-
                                     <Controller
                                         control={control}
-                                        name="user"
+                                        name="engagement"
                                         render={({ field: { ref, onChange, ...field } }) => (
                                             <Autocomplete
-                                                options={users || []}
+                                                options={engagements || []}
                                                 onChange={(_, data) => {
                                                     onChange(data);
                                                 }}
                                                 onInputChange={(_event, newInputValue) => {
-                                                    debounceLoadUsers(newInputValue);
+                                                    debounceLoadEngagements(newInputValue);
                                                 }}
                                                 renderInput={(params) => (
                                                     <TextField
@@ -235,14 +176,14 @@ export const AddUserModal = () => {
                                                         {...field}
                                                         inputRef={ref}
                                                         fullWidth
-                                                        placeholder="Type at least 3 letters of the user's name"
-                                                        error={Boolean(userErrors)}
-                                                        helperText={String(userErrors?.message || '')}
+                                                        placeholder="Type at least 3 letters of the engagement's name"
+                                                        error={Boolean(engagementErrors)}
+                                                        helperText={String(engagementErrors?.message || '')}
                                                         InputProps={{
                                                             ...params.InputProps,
                                                             endAdornment: (
                                                                 <>
-                                                                    {usersLoading ? (
+                                                                    {engagementsLoading ? (
                                                                         <CircularProgress
                                                                             color="primary"
                                                                             size={20}
@@ -255,87 +196,12 @@ export const AddUserModal = () => {
                                                         }}
                                                     />
                                                 )}
-                                                getOptionLabel={(user: User) => `${user.first_name} ${user.last_name}`}
-                                                loading={usersLoading}
+                                                getOptionLabel={(engagement: Engagement) => engagement.name}
+                                                loading={engagementsLoading}
                                             />
                                         )}
                                     />
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <FormControl error={Boolean(errors['group'])}>
-                                        <FormLabel
-                                            id="controlled-radio-buttons-group"
-                                            sx={{ fontWeight: 'bold', color: Palette.text.primary }}
-                                        >
-                                            What role would you like to assign to this user?
-                                        </FormLabel>
-                                        <ControlledRadioGroup name="group">
-                                            <FormControlLabel
-                                                value={USER_GROUP.ADMIN.value}
-                                                control={<Radio />}
-                                                label={'Superuser'}
-                                            />
-                                            <FormControlLabel
-                                                value={USER_GROUP.VIEWER.value}
-                                                control={<Radio />}
-                                                label={'Team Member'}
-                                            />
-                                        </ControlledRadioGroup>
-                                        <When condition={Boolean(groupErrors)}>
-                                            <FormHelperText>{String(groupErrors?.message)}</FormHelperText>
-                                        </When>
-                                    </FormControl>
-                                </Grid>
-                                <When condition={userTypeSelected === USER_GROUP.VIEWER.value}>
-                                    <Grid item xs={12}>
-                                        <MetLabel sx={{ marginBottom: '2px', display: 'flex' }}>
-                                            Which Engagement would you like to add this Team Member to?
-                                        </MetLabel>
-                                        <Controller
-                                            control={control}
-                                            name="engagement"
-                                            render={({ field: { ref, onChange, ...field } }) => (
-                                                <Autocomplete
-                                                    options={engagements || []}
-                                                    onChange={(_, data) => {
-                                                        onChange(data);
-                                                    }}
-                                                    onInputChange={(_event, newInputValue) => {
-                                                        debounceLoadEngagements(newInputValue);
-                                                    }}
-                                                    renderInput={(params) => (
-                                                        <TextField
-                                                            {...params}
-                                                            {...field}
-                                                            inputRef={ref}
-                                                            fullWidth
-                                                            placeholder="Type at least 3 letters of the engagement's name"
-                                                            error={Boolean(engagementErrors)}
-                                                            helperText={String(engagementErrors?.message || '')}
-                                                            InputProps={{
-                                                                ...params.InputProps,
-                                                                endAdornment: (
-                                                                    <>
-                                                                        {engagementsLoading ? (
-                                                                            <CircularProgress
-                                                                                color="primary"
-                                                                                size={20}
-                                                                                sx={{ marginRight: '2em' }}
-                                                                            />
-                                                                        ) : null}
-                                                                        {params.InputProps.endAdornment}
-                                                                    </>
-                                                                ),
-                                                            }}
-                                                        />
-                                                    )}
-                                                    getOptionLabel={(engagement: Engagement) => engagement.name}
-                                                    loading={engagementsLoading}
-                                                />
-                                            )}
-                                        />
-                                    </Grid>
-                                </When>
                             </Grid>
                             <When condition={backendError}>
                                 <Grid item xs={12}>
@@ -359,7 +225,7 @@ export const AddUserModal = () => {
                                     justifyContent="flex-end"
                                 >
                                     <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
-                                    <PrimaryButton loading={isAssigningRole} type="submit">
+                                    <PrimaryButton loading={isAddingToEngagement} type="submit">
                                         Submit
                                     </PrimaryButton>
                                 </Stack>

@@ -23,7 +23,7 @@ const UserManagementListing = () => {
     const dispatch = useDispatch();
     const handleNavigate = useCallback(
         (link: string, row: User) => {
-            if (!row.main_role) {
+            if (!row.main_group) {
                 dispatch(
                     openNotification({
                         severity: 'error',

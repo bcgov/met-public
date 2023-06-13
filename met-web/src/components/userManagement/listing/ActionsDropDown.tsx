@@ -2,8 +2,10 @@ import React, { useMemo, useContext } from 'react';
 import { MenuItem, Select } from '@mui/material';
 import { User } from 'models/user';
 import { Palette } from 'styles/Theme';
+import { AddUserModal } from './AddUserModal';
 import { AssignRoleModal } from './AssignRoleModal';
 import { UserManagementContext } from './UserManagementContext';
+import { USER_GROUP } from 'models/user';
 
 interface ActionDropDownItem {
     value: number;
@@ -12,17 +14,29 @@ interface ActionDropDownItem {
     condition?: boolean;
 }
 export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
-    const { assignRoleModalOpen, setassignRoleModalOpen, setUser } = useContext(UserManagementContext);
+    const { addUserModalOpen, setAddUserModalOpen, assignRoleModalOpen, setassignRoleModalOpen, setUser } =
+        useContext(UserManagementContext);
 
-    const handleClose = () => {
-        setassignRoleModalOpen(true);
+    const handleChange = (selectedItem: number) => {
+        if (selectedItem == 1) {
+            setassignRoleModalOpen(true);
+        } else if (selectedItem == 2) {
+            setAddUserModalOpen(true);
+        }
     };
 
     const hasNoRole = (): boolean => {
-        if (selectedUser.main_role) {
+        if (selectedUser.main_group) {
             return false;
         }
         return true;
+    };
+
+    const isAdmin = (): boolean => {
+        if (selectedUser?.main_group == USER_GROUP.ADMIN.label) {
+            return true;
+        }
+        return false;
     };
 
     const ITEMS: ActionDropDownItem[] = useMemo(
@@ -44,10 +58,10 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
                 action: () => {
                     {
                         setUser(selectedUser);
-                        assignRoleModalOpen ? <AssignRoleModal /> : null;
+                        addUserModalOpen ? <AddUserModal /> : null;
                     }
                 },
-                condition: !hasNoRole(),
+                condition: !hasNoRole() && !isAdmin(),
             },
         ],
         [selectedUser.id],
@@ -60,7 +74,7 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
             fullWidth
             size="small"
             sx={{ backgroundColor: 'white', color: Palette.info.main }}
-            onChange={handleClose}
+            onChange={(e) => handleChange(Number(e.target.value))}
         >
             <MenuItem value={0} sx={{ fontStyle: 'italic', height: '2em' }} color="info" disabled>
                 {'(Select One)'}
