@@ -2,8 +2,6 @@ import React, { useMemo, useContext } from 'react';
 import { MenuItem, Select } from '@mui/material';
 import { User } from 'models/user';
 import { Palette } from 'styles/Theme';
-import { AddUserModal } from './AddUserModal';
-import { AssignRoleModal } from './AssignRoleModal';
 import { UserManagementContext } from './UserManagementContext';
 import { USER_GROUP } from 'models/user';
 
@@ -14,16 +12,7 @@ interface ActionDropDownItem {
     condition?: boolean;
 }
 export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
-    const { addUserModalOpen, setAddUserModalOpen, assignRoleModalOpen, setassignRoleModalOpen, setUser } =
-        useContext(UserManagementContext);
-
-    const handleChange = (selectedItem: number) => {
-        if (selectedItem == 1) {
-            setassignRoleModalOpen(true);
-        } else if (selectedItem == 2) {
-            setAddUserModalOpen(true);
-        }
-    };
+    const { setAddUserModalOpen, setassignRoleModalOpen, setUser } = useContext(UserManagementContext);
 
     const hasNoRole = (): boolean => {
         if (selectedUser.main_group) {
@@ -47,7 +36,7 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
                 action: () => {
                     {
                         setUser(selectedUser);
-                        assignRoleModalOpen ? <AssignRoleModal /> : null;
+                        setassignRoleModalOpen(true);
                     }
                 },
                 condition: hasNoRole(),
@@ -58,7 +47,7 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
                 action: () => {
                     {
                         setUser(selectedUser);
-                        addUserModalOpen ? <AddUserModal /> : null;
+                        setAddUserModalOpen(true);
                     }
                 },
                 condition: !hasNoRole() && !isAdmin(),
@@ -74,7 +63,6 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
             fullWidth
             size="small"
             sx={{ backgroundColor: 'white', color: Palette.info.main }}
-            onChange={(e) => handleChange(Number(e.target.value))}
         >
             <MenuItem value={0} sx={{ fontStyle: 'italic', height: '2em' }} color="info" disabled>
                 {'(Select One)'}
