@@ -1,4 +1,4 @@
-name: Analytics API ZAP Scanner
+name: ZAP Scanner - Analytics API
 on:
   workflow_dispatch:
 
