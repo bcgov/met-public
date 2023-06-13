@@ -75,8 +75,8 @@ class Engagement(BaseModel):
         query = cls._filter_by_internal(query, search_options)
 
         if scope_options.restricted:
-            if scope_options.include_assigned:         
-                exception_status_ids =  scope_options.engagement_status_ids
+            if scope_options.include_assigned:
+                exception_status_ids = scope_options.engagement_status_ids
                 query = cls._filter_by_assigned_engagements(query, external_user_id, exception_status_ids)
             else:
                 statuses = scope_options.engagement_status_ids
