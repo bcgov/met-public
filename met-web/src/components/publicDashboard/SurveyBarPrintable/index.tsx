@@ -16,7 +16,6 @@ interface SurveyQuestionProps {
 }
 
 export const SurveyBarPrintable = ({ engagement, engagementIsLoading }: SurveyQuestionProps) => {
-    const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const [data, setData] = useState<SurveyResultData>(createSurveyResultData());
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);

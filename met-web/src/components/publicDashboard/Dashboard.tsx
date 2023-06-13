@@ -223,8 +223,8 @@ const Dashboard = () => {
                             </Grid>
                         </MetPaper>
                     </Grid>
-                </Grid >
-            </Grid >
+                </Grid>
+            </Grid>
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={isPrinting}
