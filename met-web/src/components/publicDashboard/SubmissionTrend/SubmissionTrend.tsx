@@ -115,7 +115,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
             <MetLabel mb={0.5} mt={1}>
                 Live Activity - Engagement
             </MetLabel>
-            <MetPaper sx={{ p: isTablet ? 1 : 2 }}>
+            <MetPaper sx={{ p: { md: 1, lg: 2 } }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <Grid
                         container
@@ -130,9 +130,8 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             container
                             item
                             lg={3}
-                            mt={isTablet ? 2 : 0}
+                            sx={{ mt: { md: 2 }, mb: { md: 4 } }}
                             rowSpacing={isTablet ? 1 : 0}
-                            mb={isTablet ? 4 : 0}
                             md={isBetweenMdAndLg ? 3 : 4}
                         >
                             <Grid container item alignItems={'center'} justifyContent={'center'} xs={12} sx={{ mb: 1 }}>
@@ -156,7 +155,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                 justifyContent={'center'}
                                 alignItems="center"
                                 xs={12}
-                                sx={{ mb: 1, ml: isTablet ? 3 : 0 }}
+                                sx={{ mb: 1, ml: { md: 3 } }}
                             >
                                 <Grid md={isBetweenMdAndLg ? 1 : 3} lg={3} item sx={{ mr: 1 }}>
                                     <MetLabel>To: </MetLabel>
@@ -195,7 +194,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     exclusive
                                     onChange={handleToggleChange}
                                     size={isTablet ? 'small' : 'medium'}
-                                    sx={{ maxHeight: '34px', mb: isTablet ? 2 : 0 }}
+                                    sx={{ maxHeight: '34px', mb: { md: 2 } }}
                                 >
                                     <ToggleButton
                                         value="weekly"
