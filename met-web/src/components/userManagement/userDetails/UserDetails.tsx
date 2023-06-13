@@ -13,7 +13,8 @@ import { formatDate } from 'components/common/dateHelper';
 
 export const UserDetails = () => {
     const { roles } = useAppSelector((state) => state.user);
-    const { memberships, savedUser, setAddUserModalOpen, isUserLoading } = useContext(ActionContext);
+    const { memberships, savedUser, setAddUserModalOpen, isUserLoading, isMembershipLoading } =
+        useContext(ActionContext);
     const [superUserAssigned, setSuperUser] = useState(false);
     const [deactivatedUser, setDeactivatedUser] = useState(false);
     const dispatch = useAppDispatch();
@@ -103,7 +104,7 @@ export const UserDetails = () => {
                         <MetLabel>Role:</MetLabel>
                     </Grid>
                     <Grid item xs={2}>
-                        <MetParagraph sx={{ pl: 2 }}>{savedUser?.main_role}</MetParagraph>
+                        <MetParagraph sx={{ pl: 2 }}>{savedUser?.main_group}</MetParagraph>
                     </Grid>
                 </Grid>
 
@@ -152,7 +153,12 @@ export const UserDetails = () => {
                 </Grid>
             </Grid>
             <Grid item xs={12}>
-                <MetTable headCells={headCells} rows={memberships} noPagination={true} loading={isUserLoading} />
+                <MetTable
+                    headCells={headCells}
+                    rows={memberships}
+                    noPagination={true}
+                    loading={isUserLoading || isMembershipLoading}
+                />
             </Grid>
         </MetPageGridContainer>
     );
