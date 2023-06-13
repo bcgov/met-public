@@ -14,7 +14,6 @@ from met_api.models.engagement_scope_options import EngagementScopeOptions
 from met_api.models.submission import Submission as SubmissionModel
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services import authorization
-from met_api.services.membership_service import MembershipService
 from met_api.services.object_storage_service import ObjectStorageService
 from met_api.utils import email_util, notification
 from met_api.utils.enums import SourceAction, SourceType
@@ -79,7 +78,7 @@ class EngagementService:
     def _get_scope_options(user_roles):
         if Role.VIEW_PRIVATE_ENGAGEMENTS.value in user_roles:
             return EngagementScopeOptions(restricted=False)
-        elif Role.VIEW_ENGAGEMENT.value in user_roles:
+        if Role.VIEW_ENGAGEMENT.value in user_roles:
             return EngagementScopeOptions(
                 engagement_status_ids=[Status.Published.value, Status.Closed.value],
                 include_assigned=True

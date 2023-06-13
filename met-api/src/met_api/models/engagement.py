@@ -75,7 +75,7 @@ class Engagement(BaseModel):
         query = cls._filter_by_internal(query, search_options)
 
         if scope_options.restricted:
-            if scope_options.include_assigned:                
+            if scope_options.include_assigned:         
                 exception_status_ids =  scope_options.engagement_status_ids
                 query = cls._filter_by_assigned_engagements(query, external_user_id, exception_status_ids)
             else:
@@ -260,7 +260,10 @@ class Engagement(BaseModel):
         return query
 
     @staticmethod
-    def _filter_by_assigned_engagements(query, external_user_id: int, exception_status_ids: list[int] = []):
+    def _filter_by_assigned_engagements(query, external_user_id: int, exception_status_ids: Optional[list[int]] = None):
+        if exception_status_ids is None:
+            exception_status_ids = []
+
         assigned_engagements = (
             db.session.query(Engagement)
             .join(MembershipModel)
@@ -278,7 +281,7 @@ class Engagement(BaseModel):
         )
 
         return query
-    
+
     # filter by statuses
     @staticmethod
     def _filter_by_statuses(query, statuses: list[int]):
