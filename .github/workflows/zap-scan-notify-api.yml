@@ -1,4 +1,4 @@
-name: Notify API ZAP Scanner
+name: ZAP Scanner - Notify API
 on:
   workflow_dispatch:
 
