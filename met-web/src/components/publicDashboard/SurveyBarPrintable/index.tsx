@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Grid, Skeleton, Divider, useMediaQuery, Theme } from '@mui/material';
+import { Box, Grid, Skeleton, Divider } from '@mui/material';
 import { MetHeader1, MetPaper, MetLabel } from 'components/common';
 import { SurveyBarData } from '../types';
 import { getSurveyResultData } from 'services/analytics/surveyResult';
