@@ -17,7 +17,9 @@ from met_api.constants.engagement_status import EngagementDisplayStatus, Status
 from met_api.constants.user import SYSTEM_USER
 from met_api.models.engagement_metadata import EngagementMetadataModel
 from met_api.models.membership import Membership as MembershipModel
+from met_api.models.staff_user import StaffUser
 from met_api.models.pagination_options import PaginationOptions
+from met_api.models.engagement_scope_options import EngagementScopeOptions
 from met_api.schemas.engagement import EngagementSchema
 from met_api.utils.datetime import local_datetime
 from .base_model import BaseModel
@@ -49,18 +51,15 @@ class Engagement(BaseModel):
     @classmethod
     def get_engagements_paginated(
             cls,
+            external_user_id,
             pagination_options: PaginationOptions,
+            scope_options: EngagementScopeOptions,
             search_options=None,
-            statuses=None,
-            assigned_engagements: list[int] | None = None,
     ):
         """Get engagements paginated."""
         query = db.session.query(Engagement).join(EngagementStatus)
 
         query = cls._add_tenant_filter(query)
-
-        if statuses:
-            query = cls._filter_by_statuses(query, statuses)
 
         if search_options:
             query = cls._filter_by_search_text(query, search_options)
@@ -75,8 +74,13 @@ class Engagement(BaseModel):
 
         query = cls._filter_by_internal(query, search_options)
 
-        if assigned_engagements is not None:
-            query = cls._filter_by_assigned_engagements(query, assigned_engagements)
+        if scope_options.restricted:
+            if scope_options.include_assigned:                
+                exception_status_ids =  scope_options.engagement_status_ids
+                query = cls._filter_by_assigned_engagements(query, external_user_id, exception_status_ids)
+            else:
+                statuses = scope_options.engagement_status_ids
+                query = cls._filter_by_statuses(query, statuses)
 
         sort = cls._get_sort_order(pagination_options)
 
@@ -256,15 +260,29 @@ class Engagement(BaseModel):
         return query
 
     @staticmethod
-    def _filter_by_statuses(query, statuses):
-        return query.filter(Engagement.status_id.in_(statuses))
+    def _filter_by_assigned_engagements(query, external_user_id: int, exception_status_ids: list[int] = []):
+        assigned_engagements = (
+            db.session.query(Engagement)
+            .join(MembershipModel)
+            .join(StaffUser, StaffUser.external_id == external_user_id)
+            .filter(MembershipModel.user_id == StaffUser.id)
+            .all()
+        )
+        assigned_engagement_ids = [engagement.id for engagement in assigned_engagements]
 
+        query = query.filter(
+            or_(
+                Engagement.status_id.in_(exception_status_ids),
+                Engagement.id.in_(assigned_engagement_ids)
+            )
+        )
+
+        return query
+    
+    # filter by statuses
     @staticmethod
-    def _filter_by_assigned_engagements(query, assigned_engagements: list[int]):
-        query = query.filter(or_(
-            Engagement.status_id != Status.Draft.value,
-            Engagement.id.in_(assigned_engagements)
-        ))
+    def _filter_by_statuses(query, statuses: list[int]):
+        query = query.filter(Engagement.status_id.in_(statuses))
         return query
 
     @staticmethod
