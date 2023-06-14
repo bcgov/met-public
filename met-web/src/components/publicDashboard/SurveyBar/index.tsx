@@ -93,7 +93,7 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading }: Sur
                     <Grid item xs={12}>
                         <Stack direction={{ xs: 'column', sm: 'row' }} width="100%" justifyContent="flex-end">
                             <Grid item container xs={12} md={8} direction="row" justifyContent="flex-start">
-                                <MetLabel mb={{ xs: 1, m: 2 }} color="#494949">
+                                <MetLabel mb={{ xs: 1, m: 2 }} color={Palette.text.primary}>
                                     Click on a question to view results below
                                 </MetLabel>
                             </Grid>

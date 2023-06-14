@@ -193,10 +193,7 @@ const Dashboard = () => {
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <Box
-                                            id={'surveybarprintable'}
-                                            sx={{ border: '2px solid red', display: isPrinting ? 'block' : 'none' }}
-                                        >
+                                        <Box id={'surveybarprintable'} sx={{ display: isPrinting ? 'block' : 'none' }}>
                                             <SurveyBarPrintable
                                                 engagement={engagement}
                                                 engagementIsLoading={isEngagementLoading}

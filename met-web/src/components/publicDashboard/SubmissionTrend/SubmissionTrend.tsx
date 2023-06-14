@@ -130,8 +130,8 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             container
                             item
                             lg={3}
-                            sx={{ mt: { md: 2 }, mb: { md: 4 } }}
-                            rowSpacing={{ md: 1 }}
+                            sx={{ mt: { xs: 2, sm: 2, md: 2, lg: 0 }, mb: { xs: 4, sm: 4, md: 4, lg: 0 } }}
+                            rowSpacing={{ xs: 1, sm: 1, md: 1, lg: 0 }}
                             md={isBetweenMdAndLg ? 3 : 4}
                         >
                             <Grid container item alignItems={'center'} justifyContent={'center'} xs={12} sx={{ mb: 1 }}>
@@ -155,7 +155,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                 justifyContent={'center'}
                                 alignItems="center"
                                 xs={12}
-                                sx={{ mb: 1, ml: { md: 3 } }}
+                                sx={{ mb: 1, ml: { xs: 3, sm: 3, md: 0 } }}
                             >
                                 <Grid md={isBetweenMdAndLg ? 1 : 3} lg={3} item sx={{ mr: 1 }}>
                                     <MetLabel>To: </MetLabel>
