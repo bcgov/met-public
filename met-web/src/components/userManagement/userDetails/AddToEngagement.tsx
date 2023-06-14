@@ -50,7 +50,7 @@ export const AddToEngagementModal = () => {
     const [engagements, setEngagements] = useState<Engagement[]>([]);
     const [engagementsLoading, setEngagementsLoading] = useState(false);
     const [backendError, setBackendError] = useState('');
-    const userHasRole = savedUser?.groups && savedUser?.groups.length > 0;
+    const userHasGroup = savedUser?.groups && savedUser?.groups.length > 0;
 
     const theme = useTheme();
 
@@ -117,7 +117,7 @@ export const AddToEngagementModal = () => {
     ).current;
 
     const addUserToEngagement = async (data: AddUserForm) => {
-        if (userHasRole) {
+        if (userHasGroup) {
             await addTeamMemberToEngagement({
                 user_id: savedUser?.external_id,
                 engagement_id: data.engagement?.id,
@@ -186,12 +186,12 @@ export const AddToEngagementModal = () => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
                             <Grid item xs={12}>
-                                <When condition={!userHasRole}>
+                                <When condition={!userHasGroup}>
                                     <MetHeader3 bold>
                                         Assign Role to {savedUser?.first_name + ' ' + savedUser?.last_name}
                                     </MetHeader3>
                                 </When>
-                                <When condition={userHasRole}>
+                                <When condition={userHasGroup}>
                                     <MetHeader3 bold>
                                         Add {savedUser?.first_name + ' ' + savedUser?.last_name} to Engagement
                                     </MetHeader3>
@@ -207,7 +207,7 @@ export const AddToEngagementModal = () => {
                                 justifyContent="flex-start"
                                 rowSpacing={4}
                             >
-                                <When condition={!userHasRole}>
+                                <When condition={!userHasGroup}>
                                     <Grid item xs={12}>
                                         <FormControl error={Boolean(errors['group'])}>
                                             <FormLabel
@@ -247,7 +247,7 @@ export const AddToEngagementModal = () => {
                                     condition={
                                         userTypeSelected === USER_GROUP.TEAM_MEMBER.value ||
                                         userTypeSelected === USER_GROUP.REVIEWER.value ||
-                                        userHasRole
+                                        userHasGroup
                                     }
                                 >
                                     <Grid item xs={12}>
