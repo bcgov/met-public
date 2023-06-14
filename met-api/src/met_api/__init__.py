@@ -16,21 +16,11 @@ from met_api.models.tenant import Tenant as TenantModel
 from met_api.utils import constants
 from met_api.utils.cache import cache
 
-# Security Response headers
-csp = (
-    secure.ContentSecurityPolicy()
-    .default_src("'self'")
-    .script_src("'self'")
-    .object_src('self')
-    .connect_src('self')
-)
-
 hsts = secure.StrictTransportSecurity().include_subdomains().preload().max_age(31536000)
 referrer = secure.ReferrerPolicy().no_referrer()
 cache_value = secure.CacheControl().no_store().max_age(0)
 xfo_value = secure.XFrameOptions().deny()
 secure_headers = secure.Secure(
-    csp=csp,
     hsts=hsts,
     referrer=referrer,
     cache=cache_value,
