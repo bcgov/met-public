@@ -16,11 +16,23 @@ from met_api.models.tenant import Tenant as TenantModel
 from met_api.utils import constants
 from met_api.utils.cache import cache
 
+# Security Response headers
+csp = (
+    secure.ContentSecurityPolicy()
+    .default_src("'self'")
+    .script_src("'self' 'unsafe-inline'")
+    .style_src("'self' 'unsafe-inline'")
+    .img_src("'self' data:")
+    .object_src("'self'")
+    .connect_src("'self'")
+)
+
 hsts = secure.StrictTransportSecurity().include_subdomains().preload().max_age(31536000)
 referrer = secure.ReferrerPolicy().no_referrer()
 cache_value = secure.CacheControl().no_store().max_age(0)
 xfo_value = secure.XFrameOptions().deny()
 secure_headers = secure.Secure(
+    csp=csp,
     hsts=hsts,
     referrer=referrer,
     cache=cache_value,
@@ -38,7 +50,7 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
     # All configuration are in config file
     app.config.from_object(get_named_config(run_mode))
 
-    CORS(app, supports_credentials=True)
+    CORS(app, origins=os.getenv('SITE_URL'), supports_credentials=True)
 
     # Register blueprints
     app.register_blueprint(API_BLUEPRINT)
