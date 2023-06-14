@@ -10,10 +10,10 @@ from met_api.exceptions.business_exception import BusinessException
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_status_block import EngagementStatusBlock as EngagementStatusBlockModel
 from met_api.models.pagination_options import PaginationOptions
+from met_api.models.engagement_scope_options import EngagementScopeOptions
 from met_api.models.submission import Submission as SubmissionModel
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services import authorization
-from met_api.services.membership_service import MembershipService
 from met_api.services.object_storage_service import ObjectStorageService
 from met_api.utils import email_util, notification
 from met_api.utils.enums import SourceAction, SourceType
@@ -44,20 +44,19 @@ class EngagementService:
     @classmethod
     def get_engagements_paginated(
         cls,
-        user_id,
+        external_user_id,
         pagination_options: PaginationOptions,
         search_options=None,
         include_banner_url=False,
     ):
         """Get engagements paginated."""
         user_roles = TokenInfo.get_user_roles()
-        statuses = cls._get_statuses_filter(user_roles)
-        assigned_engagements, statuses = cls._get_assigned_engagements(user_id, user_roles, statuses)
+        scope_options = cls._get_scope_options(user_roles)
         items, total = EngagementModel.get_engagements_paginated(
+            external_user_id,
             pagination_options,
+            scope_options,
             search_options,
-            statuses=statuses,
-            assigned_engagements=assigned_engagements,
         )
         engagements_schema = EngagementSchema(many=True)
         engagements = engagements_schema.dump(items)
@@ -76,21 +75,17 @@ class EngagementService:
         return engagements
 
     @staticmethod
-    def _get_statuses_filter(user_roles):
-        """Return the statuses of the engagement which user has access to."""
-        public_statuses = [Status.Published.value, Status.Closed.value]
+    def _get_scope_options(user_roles):
         if Role.VIEW_PRIVATE_ENGAGEMENTS.value in user_roles:
-            return None
-        return public_statuses
-
-    @staticmethod
-    def _get_assigned_engagements(user_id, user_roles, statuses: list):
-        if Role.VIEW_PRIVATE_ENGAGEMENTS.value in user_roles:
-            return None, None
-        memberships = MembershipService.get_assigned_engagements(user_id)
-        if len(memberships) > 0 and statuses:
-            statuses.append(Status.Draft.value)
-        return [membership.engagement_id for membership in memberships], statuses
+            return EngagementScopeOptions(restricted=False)
+        if Role.VIEW_ENGAGEMENT.value in user_roles:
+            return EngagementScopeOptions(
+                engagement_status_ids=[Status.Published.value, Status.Closed.value],
+                include_assigned=True
+            )
+        return EngagementScopeOptions(
+            engagement_status_ids=[Status.Published.value, Status.Closed.value]
+        )
 
     @staticmethod
     def close_engagements_due():

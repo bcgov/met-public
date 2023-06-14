@@ -71,7 +71,7 @@ class Engagements(Resource):
         """Fetch engagements."""
         try:
             args = request.args
-            user_id = TokenInfo.get_id()
+            external_user_id = TokenInfo.get_id()
 
             pagination_options = PaginationOptions(
                 page=args.get('page', None, int),
@@ -81,7 +81,7 @@ class Engagements(Resource):
             )
 
             exclude_internal = None
-            if user_id is None:
+            if external_user_id is None:
                 exclude_internal = True
 
             search_options = {
@@ -101,7 +101,7 @@ class Engagements(Resource):
 
             engagement_records = EngagementService()\
                 .get_engagements_paginated(
-                    user_id,
+                    external_user_id,
                     pagination_options,
                     search_options,
                     include_banner_url=args.get(

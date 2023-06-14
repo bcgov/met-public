@@ -18,9 +18,10 @@ Test suite to ensure that the Engagement model routines are working as expected.
 
 from faker import Faker
 
-from met_api.constants.engagement_status import SubmissionStatus
-from met_api.models import Engagement as EngagementModel
+from met_api.constants.engagement_status import Status
+from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.pagination_options import PaginationOptions
+from met_api.models.engagement_scope_options import EngagementScopeOptions
 from tests.utilities.factory_utils import factory_engagement_model
 
 fake = Faker()
@@ -37,18 +38,23 @@ def test_engagement(session):
 def test_get_engagements_paginated_name_search(session):
     """Assert that an engagement can be created and fetched."""
     eng = factory_engagement_model()
-    for i in range(0, 10):
+    for _ in range(0, 10):
         factory_engagement_model()
-    assert eng.id is not None
+
+    external_user_id = 123
     pagination_options = PaginationOptions(
         page=None,
         size=None,
         sort_key='name',
         sort_order=''
     )
+    scope_options = EngagementScopeOptions(
+        restricted=False,
+        include_assigned=False,
+        engagement_status_ids=None
+    )
     search_options = {
         'search_text': eng.name,
-        'engagement_status': None,
         'created_from_date': None,
         'created_to_date': None,
         'published_from_date': None,
@@ -56,26 +62,35 @@ def test_get_engagements_paginated_name_search(session):
     }
 
     # verify name search
-    result, count = EngagementModel.get_engagements_paginated(pagination_options, search_options)
+    result, count = EngagementModel.get_engagements_paginated(
+        external_user_id,
+        pagination_options,
+        scope_options,
+        search_options
+    )
     assert eng.name == result[0].name
     assert count == 1, 'Name search brings up only search result'
 
 
 def test_get_engagements_paginated_status_search(session):
     """Assert that an engagement can be created and fetched."""
-    eng = factory_engagement_model()
-    for i in range(0, 10):
+    for _ in range(0, 11):
         factory_engagement_model()
-    assert eng.id is not None
+
+    external_user_id = 123
     pagination_options = PaginationOptions(
         page=None,
         size=None,
         sort_key='name',
         sort_order=''
     )
+    scope_options = EngagementScopeOptions(
+        restricted=False,
+        include_assigned=False,
+        engagement_status_ids=None
+    )
     search_options = {
         'search_text': '',
-        'engagement_status': None,
         'created_from_date': None,
         'created_to_date': None,
         'published_from_date': None,
@@ -83,49 +98,59 @@ def test_get_engagements_paginated_status_search(session):
     }
 
     # status search
-    factory_engagement_model(status=SubmissionStatus.Closed.value)
-    factory_engagement_model(status=SubmissionStatus.Closed.value)
-    result, count = EngagementModel.get_engagements_paginated(pagination_options, search_options,
-                                                              statuses=[SubmissionStatus.Closed.value])
+    factory_engagement_model(status=Status.Closed.value)
+    factory_engagement_model(status=Status.Closed.value)
+    result, count = EngagementModel.get_engagements_paginated(
+        external_user_id,
+        pagination_options,
+        scope_options,
+        {
+            **search_options,
+            'engagement_status': [Status.Closed.value],
+        }
+    )
     assert count == 2
 
-    result, count = EngagementModel.get_engagements_paginated(pagination_options, search_options,
-                                                              statuses=[SubmissionStatus.Open.value])
-    # 11 Open ones are created
+    result, count = EngagementModel.get_engagements_paginated(
+        external_user_id,
+        pagination_options,
+        scope_options,
+        {
+            **search_options,
+            'engagement_status': [Status.Published.value],
+        }
+    )
     assert count == 11
     assert len(result) == 11
 
-    result, count = EngagementModel.get_engagements_paginated(pagination_options, search_options,
-                                                              statuses=[SubmissionStatus.Open.value,
-                                                                        SubmissionStatus.Closed.value])
-
-    # 13 Total. Open+Closed ones are created
+    result, count = EngagementModel.get_engagements_paginated(
+        external_user_id,
+        pagination_options,
+        scope_options,
+        {
+            **search_options,
+            'engagement_status': [Status.Published.value, Status.Closed.value],
+        }
+    )
     assert count == 13
     assert len(result) == 13
 
     # pass in pagination options and do the count
-
     pagination_options = PaginationOptions(
         page=1,
         size=2,
         sort_key='name',
         sort_order=''
-
     )
 
-    result, count = EngagementModel.get_engagements_paginated(pagination_options, search_options,
-                                                              [SubmissionStatus.Open.value,
-                                                               SubmissionStatus.Closed.value])
+    result, count = EngagementModel.get_engagements_paginated(
+        external_user_id,
+        pagination_options,
+        scope_options,
+        {
+            **search_options,
+            'engagement_status': [Status.Published.value, Status.Closed.value],
+        }
+    )
     assert count == 13
-    # only two items are returned
     assert len(result) == 2
-
-    # advanced search based on status
-    result, count = EngagementModel.get_engagements_paginated(pagination_options, search_options={
-                                                              'search_text': '',
-                                                              'engagement_status': [SubmissionStatus.Closed.value],
-                                                              'created_from_date': '',
-                                                              'created_to_date': '',
-                                                              'published_from_date': '',
-                                                              'published_to_date': ''})
-    assert count == 2
