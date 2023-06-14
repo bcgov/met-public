@@ -41,11 +41,10 @@ export const getUser = async (params: GetUserParams): Promise<User> => {
 interface AddUserToGroupProps {
     user_id?: string;
     group?: string;
-    engagement_id?: number;
 }
-export const addUserToGroup = async ({ user_id, group, engagement_id }: AddUserToGroupProps): Promise<User> => {
+export const addUserToGroup = async ({ user_id, group }: AddUserToGroupProps): Promise<User> => {
     const url = replaceUrl(Endpoints.User.ADD_TO_GROUP, 'user_id', String(user_id));
-    const responseData = await http.PostRequest<User>(url, {}, { group, engagement_id });
+    const responseData = await http.PostRequest<User>(url, {}, { group });
     return responseData.data;
 };
 

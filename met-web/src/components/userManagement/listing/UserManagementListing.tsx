@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useCallback } from 'react';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
@@ -6,15 +6,36 @@ import SearchIcon from '@mui/icons-material/Search';
 import { User } from 'models/user';
 import { HeadCell, PaginationOptions } from 'components/common/Table/types';
 import { MetPageGridContainer, PrimaryButton } from 'components/common';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Link as MuiLink } from '@mui/material';
+import { useDispatch } from 'react-redux';
 import MetTable from 'components/common/Table';
 import { formatDate } from 'components/common/dateHelper';
 import { UserManagementContext } from './UserManagementContext';
+import { openNotification } from 'services/notificationService/notificationSlice';
+import { ActionsDropDown } from './ActionsDropDown';
 
 const UserManagementListing = () => {
-    const { pageInfo, paginationOptions, setPaginationOptions, users, usersLoading, setAddUserModalOpen } =
+    const { pageInfo, paginationOptions, setPaginationOptions, users, usersLoading } =
         useContext(UserManagementContext);
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const handleNavigate = useCallback(
+        (link: string, row: User) => {
+            if (!row.main_group) {
+                dispatch(
+                    openNotification({
+                        severity: 'error',
+                        text: `Please assign a role to the user ${row.last_name}, ${row.first_name} before proceeding`,
+                    }),
+                );
+            } else {
+                navigate(link);
+            }
+        },
+        [dispatch, navigate],
+    );
 
     const headCells: HeadCell<User>[] = [
         {
@@ -24,7 +45,14 @@ const UserManagementListing = () => {
             label: 'User Name',
             allowSort: true,
             renderCell: (row: User) => (
-                <MuiLink to={`/usermanagement/${row.id}/details`} component={Link}>
+                <MuiLink
+                    to={`/usermanagement/${row.id}/details`}
+                    component={Link}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        handleNavigate(`/usermanagement/${row.id}/details`, row);
+                    }}
+                >
                     {row.last_name + ', ' + row.first_name}
                 </MuiLink>
             ),
@@ -57,6 +85,19 @@ const UserManagementListing = () => {
             Need to change once we have different user status */
             renderCell: () => 'Active',
         },
+        {
+            key: 'id',
+            numeric: true,
+            disablePadding: false,
+            label: 'Actions',
+            allowSort: false,
+            renderCell: (row: User) => {
+                return <ActionsDropDown selectedUser={row} />;
+            },
+            customStyle: {
+                minWidth: '200px',
+            },
+        },
     ];
 
     return (
@@ -83,7 +124,6 @@ const UserManagementListing = () => {
                             <SearchIcon />
                         </PrimaryButton>
                     </Stack>
-                    <PrimaryButton onClick={() => setAddUserModalOpen(true)}>+ Add User</PrimaryButton>
                 </Stack>
             </Grid>
             <Grid item xs={12} lg={10}>
