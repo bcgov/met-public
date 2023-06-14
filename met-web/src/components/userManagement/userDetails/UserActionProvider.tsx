@@ -15,6 +15,7 @@ export interface UserViewContext {
     setMemberships: React.Dispatch<React.SetStateAction<Engagement[]>>;
     setAddUserModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
     getUserEngagements: () => Promise<void>;
+    getUserDetails: () => Promise<void>;
 }
 
 export type UserParams = {
@@ -33,6 +34,9 @@ export const ActionContext = createContext<UserViewContext>({
         throw new Error('Not implemented');
     },
     getUserEngagements: () => {
+        throw new Error('Not implemented');
+    },
+    getUserDetails: () => {
         throw new Error('Not implemented');
     },
     isMembershipLoading: true,
@@ -63,9 +67,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
             return Promise.resolve();
         }
         try {
-            const fetchedUser = await getUser({ user_id: Number(userId), include_groups: true });
-            setSavedUser(fetchedUser);
-            setUserLoading(false);
+            getUserDetails();
         } catch (error) {
             dispatch(
                 openNotification({
@@ -74,6 +76,12 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 }),
             );
         }
+    };
+
+    const getUserDetails = async () => {
+        const fetchedUser = await getUser({ user_id: Number(userId), include_groups: true });
+        setSavedUser(fetchedUser);
+        setUserLoading(false);
     };
 
     const getUserEngagements = async () => {
@@ -93,6 +101,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 memberships,
                 setMemberships,
                 getUserEngagements,
+                getUserDetails,
                 isMembershipLoading,
             }}
         >
