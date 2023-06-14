@@ -32,25 +32,29 @@ import axios, { AxiosError } from 'axios';
 import { Palette } from 'styles/Theme';
 import ControlledRadioGroup from 'components/common/ControlledInputComponents/ControlledRadioGroup';
 
-const schema = yup
-    .object({
-        group: yup.string().nullable(),
-        engagement: yup.object().nullable(),
-    })
-    .required();
-
-type AddUserForm = yup.TypeOf<typeof schema>;
-
 export const AddToEngagementModal = () => {
-    const dispatch = useAppDispatch();
-    const { assignedEngagements } = useAppSelector((state) => state.user);
     const { savedUser, addUserModalOpen, setAddUserModalOpen, getUserEngagements, getUserDetails } =
         useContext(ActionContext);
+    const userHasGroup = savedUser?.groups && savedUser?.groups.length > 0;
+    const schema = yup
+        .object({
+            engagement: yup.object().nullable(),
+            group: yup.string().when([], {
+                is: () => savedUser?.groups.length === 0,
+                then: yup.string().required('Group is required when user has no groups'),
+                otherwise: yup.string(),
+            }),
+        })
+        .required();
+
+    type AddUserForm = yup.TypeOf<typeof schema>;
+
+    const dispatch = useAppDispatch();
+    const { assignedEngagements } = useAppSelector((state) => state.user);
     const [isAssigningRole, setIsAssigningRole] = useState(false);
     const [engagements, setEngagements] = useState<Engagement[]>([]);
     const [engagementsLoading, setEngagementsLoading] = useState(false);
     const [backendError, setBackendError] = useState('');
-    const userHasGroup = savedUser?.groups && savedUser?.groups.length > 0;
 
     const theme = useTheme();
 
