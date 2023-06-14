@@ -55,6 +55,7 @@ export const AddToEngagementModal = () => {
     const [engagements, setEngagements] = useState<Engagement[]>([]);
     const [engagementsLoading, setEngagementsLoading] = useState(false);
     const [backendError, setBackendError] = useState('');
+    const userHasRole = savedUser?.groups && savedUser?.groups.length > 0;
 
     const theme = useTheme();
 
