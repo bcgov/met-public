@@ -26,6 +26,7 @@ from tests.utilities.factory_utils import factory_engagement_model
 
 fake = Faker()
 
+
 def test_engagement(session):
     """Assert that an engagement can be created and fetched."""
     eng = factory_engagement_model()
