@@ -41,7 +41,7 @@ export const AddToEngagementModal = () => {
             engagement: yup.object().nullable(),
             group: yup.string().when([], {
                 is: () => savedUser?.groups.length === 0,
-                then: yup.string().required('Group is required when user has no groups'),
+                then: yup.string().required('A role must be specified'),
                 otherwise: yup.string(),
             }),
         })
