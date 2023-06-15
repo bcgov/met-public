@@ -25,29 +25,31 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { Dayjs } from 'dayjs';
 import { Then, If, Else, Unless } from 'react-if';
 import { formatToUTC } from 'components/common/dateHelper';
-import { makeStyles } from '@mui/core/styles';
 
 interface SubmissionTrendProps {
     engagement: Engagement;
     engagementIsLoading: boolean;
 }
 
-const useToggleButtonStyles = makeStyles({
-    group: {
+const customStyles = {
+    toggleGroup: {
         maxHeight: '34px',
-        marginBottom: '2px',
+        mb: { md: 2 },
     },
-    button: {
+    selectedToggleButton: {
         '&.Mui-selected': {
             backgroundColor: 'Palette.primary.main',
             color: 'white',
         },
     },
-});
+    primaryButton: {
+        width: '100%',
+        maxHeight: '34px',
+    },
+};
 
 const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendProps) => {
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
-    const classes = useToggleButtonStyles();
     const isBetweenMdAndLg = useMediaQuery((theme: Theme) => theme.breakpoints.between('lg', 'xl'));
     const HEIGHT = isTablet ? 200 : 250;
     const [data, setData] = useState(createDefaultByMonthData());
@@ -186,7 +188,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             </Grid>
 
                             <Grid container item xs={8} justifyContent="center" alignItems="center">
-                                <PrimaryButton sx={{ width: '100%', maxHeight: '34px' }} onClick={clearDates}>
+                                <PrimaryButton sx={customStyles.primaryButton} onClick={clearDates}>
                                     Clear
                                 </PrimaryButton>
                             </Grid>
@@ -209,12 +211,12 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     exclusive
                                     onChange={handleToggleChange}
                                     size={isTablet ? 'small' : 'medium'}
-                                    className={classes.group}
+                                    sx={customStyles.toggleGroup}
                                 >
-                                    <ToggleButton value="weekly" className={classes.button}>
+                                    <ToggleButton value="weekly" sx={customStyles.toggleButton}>
                                         Weekly
                                     </ToggleButton>
-                                    <ToggleButton value="monthly" className={classes.button}>
+                                    <ToggleButton value="monthly" sx={customStyles.toggleButton}>
                                         Monthly
                                     </ToggleButton>
                                 </ToggleButtonGroup>
