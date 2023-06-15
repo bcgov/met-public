@@ -69,7 +69,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
-    const isCreate = window.location.pathname.includes('create');
+    const isCreate = window.location.pathname.includes(CREATE);
 
     const handleAddBannerImage = (files: File[]) => {
         if (files.length > 0) {
