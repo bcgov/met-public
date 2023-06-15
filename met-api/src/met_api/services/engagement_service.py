@@ -80,13 +80,15 @@ class EngagementService:
             # If user has VIEW_PRIVATE_ENGAGEMENTS, e.g. Superuser role, return unrestricted scope options
             return EngagementScopeOptions(restricted=False)
         if Role.VIEW_ENGAGEMENT.value in user_roles:
-            # If user has VIEW_ENGAGEMENT role, e.g. TEAM MEMBER, return scope options to include assigned engagements and public engagements
+            # If user has VIEW_ENGAGEMENT role, e.g. TEAM MEMBER, return scope options to include assigned
+            # engagements and public engagements
             return EngagementScopeOptions(
                 engagement_status_ids=[Status.Published.value, Status.Closed.value],
                 include_assigned=True
             )
         if Role.VIEW_ASSIGNED_ENGAGEMENTS.value in user_roles:
-            # If user has VIEW_ASSIGNED_ENGAGEMENTS role, e.g. REVIEWER, return scope options to include only assigned engagements
+            # If user has VIEW_ASSIGNED_ENGAGEMENTS role, e.g. REVIEWER, return scope options to include only
+            # assigned engagements
             return EngagementScopeOptions(
                 include_assigned=True
             )
@@ -94,7 +96,6 @@ class EngagementService:
         return EngagementScopeOptions(
             engagement_status_ids=[Status.Published.value, Status.Closed.value]
         )
-
 
     @staticmethod
     def close_engagements_due():
