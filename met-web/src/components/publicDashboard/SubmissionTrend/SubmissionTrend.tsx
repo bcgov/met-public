@@ -19,7 +19,6 @@ import {
 } from 'services/analytics/userResponseDetailService';
 import { createDefaultByMonthData } from '../../../models/analytics/userResponseDetail';
 import { Engagement } from 'models/engagement';
-import { Palette } from 'styles/Theme';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { Dayjs } from 'dayjs';
@@ -36,7 +35,7 @@ const customStyles = {
         maxHeight: '34px',
         mb: { md: 2 },
     },
-    selectedToggleButton: {
+    toggleButton: {
         '&.Mui-selected': {
             backgroundColor: 'Palette.primary.main',
             color: 'white',
