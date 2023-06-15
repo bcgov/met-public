@@ -25,14 +25,29 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { Dayjs } from 'dayjs';
 import { Then, If, Else, Unless } from 'react-if';
 import { formatToUTC } from 'components/common/dateHelper';
+import { makeStyles } from '@mui/core/styles';
 
 interface SubmissionTrendProps {
     engagement: Engagement;
     engagementIsLoading: boolean;
 }
 
+const useToggleButtonStyles = makeStyles({
+    group: {
+        maxHeight: '34px',
+        marginBottom: '2px',
+    },
+    button: {
+        '&.Mui-selected': {
+            backgroundColor: 'Palette.primary.main',
+            color: 'white',
+        },
+    },
+});
+
 const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendProps) => {
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+    const classes = useToggleButtonStyles();
     const isBetweenMdAndLg = useMediaQuery((theme: Theme) => theme.breakpoints.between('lg', 'xl'));
     const HEIGHT = isTablet ? 200 : 250;
     const [data, setData] = useState(createDefaultByMonthData());
@@ -194,28 +209,12 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     exclusive
                                     onChange={handleToggleChange}
                                     size={isTablet ? 'small' : 'medium'}
-                                    sx={{ maxHeight: '34px', mb: { md: 2 } }}
+                                    className={classes.group}
                                 >
-                                    <ToggleButton
-                                        value="weekly"
-                                        sx={{
-                                            '&.Mui-selected': {
-                                                backgroundColor: Palette.primary.main,
-                                                color: 'white',
-                                            },
-                                        }}
-                                    >
+                                    <ToggleButton value="weekly" className={classes.button}>
                                         Weekly
                                     </ToggleButton>
-                                    <ToggleButton
-                                        value="monthly"
-                                        sx={{
-                                            '&.Mui-selected': {
-                                                backgroundColor: Palette.primary.main,
-                                                color: 'white',
-                                            },
-                                        }}
-                                    >
+                                    <ToggleButton value="monthly" className={classes.button}>
                                         Monthly
                                     </ToggleButton>
                                 </ToggleButtonGroup>
