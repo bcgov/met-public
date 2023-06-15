@@ -138,9 +138,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
 
         const engagementInDraft = savedEngagement.engagement_status.id === EngagementStatus.Draft;
-        console.log('engagementInDraft', engagementInDraft);
         const isAssignedToEngagement = assignedEngagements.includes(Number(savedEngagement.id));
-        console.log('isAssignedToEngagement', isAssignedToEngagement);
         if (!engagementInDraft || !isAssignedToEngagement) {
             navigate('/unauthorized');
             return;
