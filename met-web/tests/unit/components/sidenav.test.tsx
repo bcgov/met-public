@@ -17,15 +17,13 @@ jest.mock('@reduxjs/toolkit/query/react', () => ({
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
     useSelector: jest.fn(() => {
-        return {
-            roles: [
-                SCOPES.viewEngagement,
-                SCOPES.viewAssignedEngagements,
-                SCOPES.viewSurveys,
-                SCOPES.viewUsers,
-                SCOPES.viewFeedbacks,
-            ],
-        };
+        return [
+            SCOPES.viewEngagement,
+            SCOPES.viewAssignedEngagements,
+            SCOPES.viewSurveys,
+            SCOPES.viewUsers,
+            SCOPES.viewFeedbacks,
+        ];
     }),
 }));
 test('Load SideNav', async () => {
