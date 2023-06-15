@@ -149,7 +149,7 @@ export const UserDetails = () => {
             <Grid container item justifyContent={'flex-end'} alignItems={'flex-end'} xs={12}>
                 <Grid item xs={6}></Grid>
                 <Grid container justifyContent={'flex-end'} alignItems={'flex-end'} item xs={6}>
-                    <PrimaryButton onClick={() => setAddUserModalOpen(true)}>+ Add an Engagement</PrimaryButton>
+                    <PrimaryButton onClick={() => setAddUserModalOpen(true)}>+ Add to an Engagement</PrimaryButton>
                 </Grid>
             </Grid>
             <Grid item xs={12}>
