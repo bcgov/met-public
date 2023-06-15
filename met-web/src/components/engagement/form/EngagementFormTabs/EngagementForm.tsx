@@ -44,7 +44,7 @@ const EngagementForm = () => {
 
     const navigate = useNavigate();
 
-    const isNewEngagement = engagementId === 'create';
+    const isNewEngagement = window.location.pathname.includes('create');
 
     const { name, start_date, end_date, description } = engagementFormData;
 

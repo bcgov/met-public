@@ -6,10 +6,12 @@ import { Palette } from '../../../styles/Theme';
 import { SideNavProps } from './types';
 import { MetHeader4 } from 'components/common';
 import { When, Unless } from 'react-if';
+import { useAppSelector } from 'hooks';
 
 const DrawerBox = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const permissions = useAppSelector((state) => state.user.roles);
 
     const getCurrentBaseRoute = () => {
         return Routes.map((route) => route.base)
@@ -19,6 +21,12 @@ const DrawerBox = () => {
 
     const currentBaseRoute = getCurrentBaseRoute();
 
+    const filteredRoutes = Routes.filter((route) => {
+        if (route.authenticated) {
+            return route.allowedRoles.some((role) => permissions.includes(role));
+        }
+        return true;
+    });
     return (
         <Box
             sx={{
@@ -28,7 +36,7 @@ const DrawerBox = () => {
             }}
         >
             <List sx={{ paddingTop: '2.5em' }}>
-                {Routes.map((route) => (
+                {filteredRoutes.map((route) => (
                     <ListItem key={route.name}>
                         <ListItemButton
                             data-testid={`SideNav/${route.name}-button`}

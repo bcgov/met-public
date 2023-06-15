@@ -20,7 +20,9 @@ import { getErrorMessage } from 'utils';
 import { updatedDiff, diff } from 'deep-object-diff';
 import { PatchEngagementRequest } from 'services/engagementService/types';
 import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+import { EngagementStatus } from 'constants/engagementStatus';
 
+const CREATE = 'create';
 export const ActionContext = createContext<EngagementContext>({
     handleCreateEngagementRequest: (_engagement: EngagementForm): Promise<Engagement> => {
         return Promise.reject();
@@ -37,7 +39,7 @@ export const ActionContext = createContext<EngagementContext>({
     isSaving: false,
     savedEngagement: createDefaultEngagement(),
     engagementMetadata: createDefaultEngagementMetadata(),
-    engagementId: 'create',
+    engagementId: CREATE,
     loadingSavedEngagement: true,
     handleAddBannerImage: (_files: File[]) => {
         /* empty default method  */
@@ -48,6 +50,7 @@ export const ActionContext = createContext<EngagementContext>({
     fetchEngagementMetadata: () => {
         /* empty default method  */
     },
+    loadingAuthorization: true,
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
@@ -59,12 +62,14 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     const [isSaving, setSaving] = useState(false);
     const [loadingSavedEngagement, setLoadingSavedEngagement] = useState(true);
+    const [loadingAuthorization, setLoadingAuthorization] = useState(true);
 
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
     const [engagementMetadata, setEngagementMetadata] = useState<EngagementMetadata>(createDefaultEngagementMetadata());
 
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
+    const isCreate = window.location.pathname.includes('create');
 
     const handleAddBannerImage = (files: File[]) => {
         if (files.length > 0) {
@@ -77,11 +82,11 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     };
 
     const fetchEngagement = async () => {
-        if (engagementId !== 'create' && isNaN(Number(engagementId))) {
+        if (!isCreate && isNaN(Number(engagementId))) {
             navigate('/');
         }
 
-        if (engagementId === 'create') {
+        if (isCreate) {
             setLoadingSavedEngagement(false);
             return;
         }
@@ -96,7 +101,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     };
 
     const fetchEngagementMetadata = async () => {
-        if (engagementId === 'create') {
+        if (isCreate) {
             return;
         }
 
@@ -110,26 +115,47 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     };
     const setEngagement = (engagement: Engagement) => {
         setSavedEngagement({ ...engagement });
+
         setSavedBannerImageFileName(engagement.banner_filename);
         setLoadingSavedEngagement(false);
         if (bannerImage) setBannerImage(null);
     };
 
-    const verifyUserAuthorization = () => {
-        if (roles.includes(SCOPES.viewPrivateEngagements)) {
+    const verifyUserCanEdit = () => {
+        const canViewPrivateEngagements = roles.includes(SCOPES.viewPrivateEngagements);
+        if (canViewPrivateEngagements) {
+            setLoadingAuthorization(false);
             return;
         }
 
-        if (!assignedEngagements.includes(Number(engagementId))) {
-            navigate('/unauthorized');
+        if (isCreate) {
+            setLoadingAuthorization(false);
+            return;
         }
+
+        if (!savedEngagement.id) {
+            return;
+        }
+
+        const engagementInDraft = savedEngagement.engagement_status.id === EngagementStatus.Draft;
+        console.log('engagementInDraft', engagementInDraft);
+        const isAssignedToEngagement = assignedEngagements.includes(Number(savedEngagement.id));
+        console.log('isAssignedToEngagement', isAssignedToEngagement);
+        if (!engagementInDraft || !isAssignedToEngagement) {
+            navigate('/unauthorized');
+            return;
+        }
+        setLoadingAuthorization(false);
     };
 
     useEffect(() => {
-        verifyUserAuthorization();
         fetchEngagement();
         fetchEngagementMetadata();
     }, [engagementId]);
+
+    useEffect(() => {
+        verifyUserCanEdit();
+    }, [savedEngagement, engagementId]);
 
     const handleCreateEngagementMetadataRequest = async (
         engagement: EngagementMetadata,
@@ -263,6 +289,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 handleAddBannerImage,
                 fetchEngagement,
                 fetchEngagementMetadata,
+                loadingAuthorization,
             }}
         >
             {children}
