@@ -7,7 +7,6 @@ import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as engagementMetadataService from 'services/engagementMetadataService';
-import * as notificationSlice from 'services/notificationService/notificationSlice';
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
 import * as widgetService from 'services/widgetService';
 import { createDefaultSurvey, Survey } from 'models/survey';
