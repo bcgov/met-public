@@ -15,8 +15,13 @@ import http from 'apiManager/httpRequestHandler';
 import { User } from 'models/user';
 import { getMembershipsByUser } from 'services/membershipService';
 import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+import { KeycloakLogoutOptions } from 'keycloak-js';
 
 const KeycloakData = _kc;
+
+interface ExtendedKeycloakLogoutOptions extends KeycloakLogoutOptions {
+    id_token_hint?: string;
+}
 
 /**
  * Initializes Keycloak instance.
@@ -87,7 +92,13 @@ const userLogout = () => {
 
 const doLogin = KeycloakData.login;
 
-const doLogout = KeycloakData.logout;
+const doLogout = () => {
+    const options: ExtendedKeycloakLogoutOptions = {
+        redirectUri: 'Your redirect URI',
+        id_token_hint: KeycloakData.idToken || KeycloakData.token,
+    };
+    KeycloakData.logout(options);
+};
 
 const getToken = () => KeycloakData.token;
 
