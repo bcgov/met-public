@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Grid, Skeleton, Divider, useMediaQuery, Theme } from '@mui/material';
+import { Box, Grid, Skeleton, Divider } from '@mui/material';
 import { MetHeader1, MetPaper, MetLabel } from 'components/common';
 import { SurveyBarData } from '../types';
 import { getSurveyResultData } from 'services/analytics/surveyResult';
@@ -16,7 +16,6 @@ interface SurveyQuestionProps {
 }
 
 export const SurveyBarPrintable = ({ engagement, engagementIsLoading }: SurveyQuestionProps) => {
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const [data, setData] = useState<SurveyResultData>(createSurveyResultData());
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
@@ -78,7 +77,7 @@ export const SurveyBarPrintable = ({ engagement, engagementIsLoading }: SurveyQu
                                                         data={result.result}
                                                         layout="vertical"
                                                         key={result.postion}
-                                                        margin={{ left: isSmallScreen ? 20 : 0 }}
+                                                        margin={{ left: { md: 20, lg: 0 } }}
                                                     >
                                                         <XAxis hide axisLine={false} type="number" />
                                                         <YAxis

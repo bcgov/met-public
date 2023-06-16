@@ -19,21 +19,39 @@ import {
 } from 'services/analytics/userResponseDetailService';
 import { createDefaultByMonthData } from '../../../models/analytics/userResponseDetail';
 import { Engagement } from 'models/engagement';
-import { Palette } from 'styles/Theme';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { Dayjs } from 'dayjs';
 import { Then, If, Else, Unless } from 'react-if';
 import { formatToUTC } from 'components/common/dateHelper';
+import { Palette } from 'styles/Theme';
 
 interface SubmissionTrendProps {
     engagement: Engagement;
     engagementIsLoading: boolean;
 }
 
+const customStyles = {
+    toggleGroup: {
+        maxHeight: '34px',
+        mb: { md: 2 },
+    },
+    toggleButton: {
+        '&.Mui-selected': {
+            backgroundColor: 'Palette.primary.main',
+            color: 'white',
+        },
+    },
+    primaryButton: {
+        width: '100%',
+        maxHeight: '34px',
+    },
+};
+
 const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendProps) => {
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
-    const HEIGHT = isSmallScreen ? 200 : 250;
+    const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+    const isBetweenMdAndLg = useMediaQuery((theme: Theme) => theme.breakpoints.between('lg', 'xl'));
+    const HEIGHT = isTablet ? 200 : 250;
     const [data, setData] = useState(createDefaultByMonthData());
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
@@ -87,7 +105,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     if (engagementIsLoading) {
         return (
             <>
-                <MetLabel mb={2}>Live Activity - Engagement</MetLabel>
+                <MetLabel mb={0.5}>Live Activity - Engagement</MetLabel>
                 <MetPaper sx={{ p: 2 }}>
                     <Stack direction="column" alignItems="center" gap={1}>
                         <Grid
@@ -111,27 +129,36 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     }
     return (
         <>
-            <MetLabel mb={2}>Live Activity - Engagement</MetLabel>
-            <MetPaper sx={{ p: isSmallScreen ? 1 : 2 }}>
+            <MetLabel mb={0.5} mt={1}>
+                Live Activity - Engagement
+            </MetLabel>
+            <MetPaper sx={{ p: { md: 1, lg: 2 } }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Grid container direction={isSmallScreen ? 'column' : 'row'}>
+                    <Grid
+                        container
+                        direction={isTablet ? 'column' : 'row'}
+                        justifyContent={'space-evenly'}
+                        alignItems={'space-evenly'}
+                    >
                         <Grid
                             alignItems={'center'}
                             justifyContent={'center'}
                             direction="row"
                             container
                             item
-                            lg={2}
-                            md={3}
-                            mt={isSmallScreen ? 2 : 0}
-                            rowSpacing={isSmallScreen ? 1 : 0}
-                            mb={isSmallScreen ? 4 : 0}
+                            lg={3}
+                            sx={{ mt: isTablet ? 2 : 0, mb: isTablet ? 4 : 0 }}
+                            rowSpacing={isTablet ? 1 : 0}
+                            md={isBetweenMdAndLg ? 3 : 4}
                         >
-                            <Grid container justifyContent="center" alignItems="center" sx={{ mb: 1 }}>
-                                <Grid item xs={2}>
-                                    <MetLabel sx={{ mr: isSmallScreen ? 0 : 1 }}>From: </MetLabel>
+                            <Grid container item alignItems={'center'} justifyContent={'center'} xs={12} sx={{ mb: 1 }}>
+                                <MetLabel>Select Date Range </MetLabel>
+                            </Grid>
+                            <Grid container justifyContent={'center'} alignItems="center" sx={{ mb: 1 }}>
+                                <Grid md={isBetweenMdAndLg ? 1 : 3} lg={3} item sx={{ mr: 1 }}>
+                                    <MetLabel>From: </MetLabel>
                                 </Grid>
-                                <Grid item sm={4} md={8}>
+                                <Grid lg={7} item>
                                     <DatePicker
                                         value={fromDate}
                                         onChange={(newDate: Dayjs | null) => setFromDate(newDate)}
@@ -140,11 +167,17 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     />
                                 </Grid>
                             </Grid>
-                            <Grid container justifyContent="center" alignItems="center" sx={{ mb: 1 }}>
-                                <Grid item xs={2}>
-                                    <MetLabel sx={{ mr: isSmallScreen ? 0 : 1 }}>To: </MetLabel>
+                            <Grid
+                                container
+                                justifyContent={'center'}
+                                alignItems="center"
+                                xs={12}
+                                sx={{ mb: 1, ml: { xs: 3, sm: 3, md: 0 } }}
+                            >
+                                <Grid md={isBetweenMdAndLg ? 1 : 3} lg={3} item sx={{ mr: 1 }}>
+                                    <MetLabel>To: </MetLabel>
                                 </Grid>
-                                <Grid item sm={4} md={8}>
+                                <Grid lg={7} item>
                                     <DatePicker
                                         value={toDate}
                                         onChange={(newDate: Dayjs | null) => setToDate(newDate)}
@@ -155,12 +188,18 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             </Grid>
 
                             <Grid container item xs={8} justifyContent="center" alignItems="center">
-                                <PrimaryButton sx={{ width: isSmallScreen ? '50%' : '100%' }} onClick={clearDates}>
+                                <PrimaryButton sx={customStyles.primaryButton} onClick={clearDates}>
                                     Clear
                                 </PrimaryButton>
                             </Grid>
                         </Grid>
-                        <Grid item lg={10} md={9}>
+                        <Grid
+                            item
+                            lg={9}
+                            md={isBetweenMdAndLg ? 9 : 8}
+                            alignItems={'flex-end'}
+                            justifyContent={'flex-end'}
+                        >
                             <Stack
                                 direction={{ xs: 'column', sm: 'row' }}
                                 width="100%"
@@ -171,19 +210,9 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     value={chartBy}
                                     exclusive
                                     onChange={handleToggleChange}
-                                    size={isSmallScreen ? 'small' : 'medium'}
+                                    size={isTablet ? 'small' : 'medium'}
+                                    sx={customStyles.toggleGroup}
                                 >
-                                    <ToggleButton
-                                        value="monthly"
-                                        sx={{
-                                            '&.Mui-selected': {
-                                                backgroundColor: Palette.primary.main,
-                                                color: 'white',
-                                            },
-                                        }}
-                                    >
-                                        Monthly
-                                    </ToggleButton>
                                     <ToggleButton
                                         value="weekly"
                                         sx={{
@@ -195,6 +224,17 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     >
                                         Weekly
                                     </ToggleButton>
+                                    <ToggleButton
+                                        value="monthly"
+                                        sx={{
+                                            '&.Mui-selected': {
+                                                backgroundColor: Palette.primary.main,
+                                                color: 'white',
+                                            },
+                                        }}
+                                    >
+                                        Monthly
+                                    </ToggleButton>
                                 </ToggleButtonGroup>
                             </Stack>
                             <If condition={!isLoading}>
@@ -203,21 +243,21 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                         <BarChart
                                             data={data}
                                             margin={
-                                                !isSmallScreen
+                                                !isTablet
                                                     ? { top: 10, right: 30, left: 0, bottom: 0 }
                                                     : { top: 5, right: 0, left: -20, bottom: 0 }
                                             }
                                         >
                                             <XAxis dataKey="showdataby" />
                                             <YAxis />
-                                            <Unless condition={isSmallScreen}>
+                                            <Unless condition={isTablet}>
                                                 <Tooltip />
                                             </Unless>
                                             <Bar
                                                 dataKey="responses"
                                                 fill={DASHBOARD.BAR_CHART.FILL_COLOR}
                                                 minPointSize={2}
-                                                barSize={50}
+                                                barSize={isTablet ? 25 : 50}
                                             >
                                                 <LabelList
                                                     dataKey="responses"

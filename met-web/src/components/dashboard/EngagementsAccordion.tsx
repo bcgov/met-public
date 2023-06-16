@@ -36,7 +36,7 @@ const EngagementsAccordion = ({
         }
     };
 
-    const handleProjetMapData = () => {
+    const handleProjectMapData = () => {
         return null;
     };
 
@@ -100,7 +100,7 @@ const EngagementsAccordion = ({
                                         <ProjectLocation
                                             engagement={engagement}
                                             engagementIsLoading={false}
-                                            handleProjetMapData={handleProjetMapData}
+                                            handleProjectMapData={handleProjectMapData}
                                         />
                                     </Grid>
                                 </Grid>

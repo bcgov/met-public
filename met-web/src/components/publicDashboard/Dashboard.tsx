@@ -22,14 +22,14 @@ import { Map } from 'models/analytics/map';
 import { When } from 'react-if';
 
 const Dashboard = () => {
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+    const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const navigate = useNavigate();
     const { engagement, isEngagementLoading } = useContext(DashboardContext);
     const [isPrinting, setIsPrinting] = React.useState(false);
     const [projectMapData, setProjectMapData] = React.useState<Map | null>(null);
     const [pdfExportProgress, setPdfExportProgress] = React.useState(0);
 
-    const handleProjetMapData = (data: Map) => {
+    const handleProjectMapData = (data: Map) => {
         setProjectMapData(data);
     };
 
@@ -89,7 +89,7 @@ const Dashboard = () => {
                                 alignItems="flex-start"
                                 rowSpacing={3}
                             >
-                                <When condition={!isSmallScreen}>
+                                <When condition={!isTablet}>
                                     <Grid item xs={12} sm={6}>
                                         <MetHeader1 textAlign={{ xs: 'center', sm: 'left' }}>What We Heard</MetHeader1>
                                     </Grid>
@@ -121,11 +121,11 @@ const Dashboard = () => {
                                 </When>
                                 <Grid
                                     container
-                                    spacing={isSmallScreen ? 0 : 3}
-                                    rowSpacing={isSmallScreen ? 1 : 3}
+                                    spacing={{ md: 0, lg: 3 }}
+                                    rowSpacing={{ md: 1, lg: 3 }}
                                     item
                                     xs={12}
-                                    ml={isSmallScreen ? 0 : 2}
+                                    ml={{ md: 0, lg: 2 }}
                                 >
                                     <Grid
                                         id={'kpi'}
@@ -136,7 +136,7 @@ const Dashboard = () => {
                                         justifyContent={'space-evenly'}
                                         xs={12}
                                     >
-                                        <When condition={isSmallScreen}>
+                                        <When condition={isTablet}>
                                             <Grid item container sm={12}>
                                                 <Grid
                                                     item
@@ -178,11 +178,11 @@ const Dashboard = () => {
                                                 engagementIsLoading={isEngagementLoading}
                                             />
                                         </Grid>
-                                        <Grid item sm={8} md={4} sx={{ width: isSmallScreen ? '90%' : '100%' }}>
+                                        <Grid item sm={8} md={4} sx={{ width: isTablet ? '90%' : '100%' }}>
                                             <ProjectLocation
                                                 engagement={engagement}
                                                 engagementIsLoading={isEngagementLoading}
-                                                handleProjetMapData={handleProjetMapData}
+                                                handleProjectMapData={handleProjectMapData}
                                             />
                                         </Grid>
                                     </Grid>

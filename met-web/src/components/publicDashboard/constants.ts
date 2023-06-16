@@ -23,7 +23,7 @@ export const DASHBOARD = {
     },
     SURVEY_RESULT: {
         BACKGROUND_COLOR: '#FFFFFF',
-        HOVER_COLOR: '#ECF5FC',
+        HOVER_COLOR: '#F2F2F2',
         SELECTED_TEXT_COLOR: '#494949',
     },
 };
