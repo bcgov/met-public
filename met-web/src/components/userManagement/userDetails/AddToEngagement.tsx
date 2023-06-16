@@ -226,11 +226,6 @@ export const AddToEngagementModal = () => {
                                             </FormLabel>
                                             <ControlledRadioGroup name="group">
                                                 <FormControlLabel
-                                                    value={USER_GROUP.ADMIN.value}
-                                                    control={<Radio />}
-                                                    label={'Superuser'}
-                                                />
-                                                <FormControlLabel
                                                     value={USER_GROUP.TEAM_MEMBER.value}
                                                     control={<Radio />}
                                                     label={'Team Member'}
