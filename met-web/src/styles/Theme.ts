@@ -90,6 +90,18 @@ export const BaseTheme = createTheme({
                 focused: false,
             },
         },
+        MuiStepLabel: {
+            styleOverrides: {
+                label: {
+                    color: '#494949 !important',
+                    opacity: '100% !important',
+                },
+                labelContainer: {
+                    color: '#494949 !important',
+                    opacity: '100% !important',
+                },
+            },
+        },
     },
     typography: {
         fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",

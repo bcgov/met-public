@@ -5,7 +5,7 @@ import { User } from 'models/user';
 import { replaceUrl } from 'helper';
 import { Engagement } from 'models/engagement';
 
-interface GetUserParams {
+interface GetUserListParams {
     page?: number;
     size?: number;
     sort_key?: string;
@@ -14,7 +14,7 @@ interface GetUserParams {
     // If yes, user groups will be fetched as well from keycloak
     include_groups?: boolean;
 }
-export const getUserList = async (params: GetUserParams = {}): Promise<Page<User>> => {
+export const getUserList = async (params: GetUserListParams = {}): Promise<Page<User>> => {
     const responseData = await http.GetRequest<Page<User>>(Endpoints.User.GET_LIST, params);
     return (
         responseData.data ?? {
@@ -24,14 +24,27 @@ export const getUserList = async (params: GetUserParams = {}): Promise<Page<User
     );
 };
 
+interface GetUserParams {
+    user_id: number;
+    // If yes, user groups will be fetched as well from keycloak
+    include_groups?: boolean;
+}
+export const getUser = async (params: GetUserParams): Promise<User> => {
+    const url = replaceUrl(Endpoints.User.GET, 'user_id', String(params.user_id));
+    const response = await http.GetRequest<User>(url, params);
+    if (response.data) {
+        return response.data;
+    }
+    return Promise.reject('Failed to fetch user details');
+};
+
 interface AddUserToGroupProps {
     user_id?: string;
     group?: string;
-    engagement_id?: number;
 }
-export const addUserToGroup = async ({ user_id, group, engagement_id }: AddUserToGroupProps): Promise<User> => {
+export const addUserToGroup = async ({ user_id, group }: AddUserToGroupProps): Promise<User> => {
     const url = replaceUrl(Endpoints.User.ADD_TO_GROUP, 'user_id', String(user_id));
-    const responseData = await http.PostRequest<User>(url, {}, { group, engagement_id });
+    const responseData = await http.PostRequest<User>(url, {}, { group });
     return responseData.data;
 };
 

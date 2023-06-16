@@ -14,6 +14,7 @@ export interface EngagementContext {
     handleAddBannerImage: (_files: File[]) => void;
     fetchEngagement: () => void;
     fetchEngagementMetadata: () => void;
+    loadingAuthorization: boolean;
 }
 
 export interface Widget {

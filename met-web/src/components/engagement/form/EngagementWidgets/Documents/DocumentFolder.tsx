@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Grid, IconButton, Stack, TextField, Typography } from '@mui/material';
+import { Box, Grid, IconButton, Stack, TextField, Typography } from '@mui/material';
 import { MetWidgetPaper } from 'components/common';
 import { DocumentItem } from 'models/document';
 import FolderIcon from '@mui/icons-material/Folder';
@@ -16,8 +16,17 @@ import Edit from '@mui/icons-material/Edit';
 import { DocumentsContext } from './DocumentsContext';
 import { updatedDiff } from 'deep-object-diff';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { Draggable, DraggableProvided } from '@hello-pangea/dnd';
+import { MetDroppable } from 'components/common/Dragdrop';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
-const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
+const DocumentFolder = ({
+    documentItem,
+    draggableProvided,
+}: {
+    documentItem: DocumentItem;
+    draggableProvided: DraggableProvided;
+}) => {
     const dispatch = useAppDispatch();
     const { documents, loadDocuments } = useContext(DocumentsContext);
     const { widgets } = useContext(WidgetDrawerContext);
@@ -59,6 +68,16 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
         <Grid item xs={12} container justifyContent={'flex-start'} spacing={2} mb={2}>
             <MetWidgetPaper elevation={2} sx={{ width: '100%' }}>
                 <Grid container direction="row" alignItems={'center'} justifyContent="flex-start">
+                    <Grid item xs={2} sx={{ alignItems: 'center', justifyContent: 'center' }}>
+                        <IconButton
+                            sx={{ margin: 0, padding: 0 }}
+                            color="inherit"
+                            aria-label="drag-indicator"
+                            {...draggableProvided.dragHandleProps}
+                        >
+                            <DragIndicatorIcon />
+                        </IconButton>
+                    </Grid>
                     <Grid item xs>
                         <Stack spacing={2} direction="row" alignItems="center">
                             <FolderIcon color="info" />
@@ -130,24 +149,36 @@ const DocumentFolder = ({ documentItem }: { documentItem: DocumentItem }) => {
             </MetWidgetPaper>
             <When condition={documentItem.children && documentItem.children.length > 0}>
                 <Grid item xs={12} container justifyContent={'flex-end'} spacing={2}>
-                    {documentItem.children?.map((item) => {
-                        return (
-                            <Grid key={`child-document-${item.id}`} item xs={12}>
-                                <Stack direction="row" spacing={1} alignItems="flex-start">
-                                    <IconButton
-                                        sx={{ padding: 0, margin: 0, height: '2em' }}
-                                        style={{ color: 'inherit' }}
-                                        color="inherit"
-                                        aria-label="drag-indicator"
-                                        disabled={true}
-                                    >
-                                        <SubdirectoryArrowRightIcon />
-                                    </IconButton>
-                                    <DocumentSwitch documentItem={item} />
-                                </Stack>
-                            </Grid>
-                        );
-                    })}
+                    <MetDroppable droppableId={String(documentItem.id)} type="FILE" style={{ width: '100%' }}>
+                        {documentItem.children?.map((item, index) => {
+                            return (
+                                <Draggable key={item.id} draggableId={String(item.id)} index={index}>
+                                    {(provided: DraggableProvided) => (
+                                        <Box
+                                            sx={{
+                                                margin: '1em 0',
+                                            }}
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                        >
+                                            <Stack direction="row" spacing={1} alignItems="flex-start">
+                                                <IconButton
+                                                    sx={{ padding: 0, margin: 0, height: '2em' }}
+                                                    style={{ color: 'inherit' }}
+                                                    color="inherit"
+                                                    aria-label="drag-indicator"
+                                                    disabled={true}
+                                                >
+                                                    <SubdirectoryArrowRightIcon />
+                                                </IconButton>
+                                                <DocumentSwitch documentItem={item} draggableProvided={provided} />
+                                            </Stack>
+                                        </Box>
+                                    )}
+                                </Draggable>
+                            );
+                        })}
+                    </MetDroppable>
                 </Grid>
             </When>
         </Grid>

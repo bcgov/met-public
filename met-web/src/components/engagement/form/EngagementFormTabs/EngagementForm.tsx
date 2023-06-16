@@ -12,6 +12,7 @@ import { SUBMISSION_STATUS } from 'constants/engagementStatus';
 import DayCalculatorModal from '../DayCalculator';
 import { ENGAGEMENT_CROPPER_ASPECT_RATIO, ENGAGMENET_UPLOADER_HEIGHT } from './constants';
 
+const CREATE = 'create';
 const EngagementForm = () => {
     const {
         handleCreateEngagementRequest,
@@ -44,7 +45,7 @@ const EngagementForm = () => {
 
     const navigate = useNavigate();
 
-    const isNewEngagement = engagementId === 'create';
+    const isNewEngagement = window.location.pathname.includes(CREATE);
 
     const { name, start_date, end_date, description } = engagementFormData;
 

@@ -11,9 +11,10 @@ import { Link as MuiLink } from '@mui/material';
 import MetTable from 'components/common/Table';
 import { formatDate } from 'components/common/dateHelper';
 import { UserManagementContext } from './UserManagementContext';
+import { ActionsDropDown } from './ActionsDropDown';
 
 const UserManagementListing = () => {
-    const { pageInfo, paginationOptions, setPaginationOptions, users, usersLoading, setAddUserModalOpen } =
+    const { pageInfo, paginationOptions, setPaginationOptions, users, usersLoading } =
         useContext(UserManagementContext);
 
     const headCells: HeadCell<User>[] = [
@@ -30,13 +31,13 @@ const UserManagementListing = () => {
             ),
         },
         {
-            key: 'main_role',
+            key: 'main_group',
             numeric: false,
             disablePadding: true,
             label: 'Role',
             allowSort: true,
             renderCell: (row: User) => {
-                return row.main_role;
+                return row.main_group;
             },
         },
         {
@@ -56,6 +57,19 @@ const UserManagementListing = () => {
             /* TODO Hardcoded value since currently we have all users as active. 
             Need to change once we have different user status */
             renderCell: () => 'Active',
+        },
+        {
+            key: 'id',
+            numeric: true,
+            disablePadding: false,
+            label: 'Actions',
+            allowSort: false,
+            renderCell: (row: User) => {
+                return <ActionsDropDown selectedUser={row} />;
+            },
+            customStyle: {
+                minWidth: '200px',
+            },
         },
     ];
 
@@ -83,7 +97,6 @@ const UserManagementListing = () => {
                             <SearchIcon />
                         </PrimaryButton>
                     </Stack>
-                    <PrimaryButton onClick={() => setAddUserModalOpen(true)}>+ Add User</PrimaryButton>
                 </Stack>
             </Grid>
             <Grid item xs={12} lg={10}>

@@ -59,3 +59,9 @@ class WidgetDocuments(BaseModel):  # pylint: disable=too-few-public-methods
         query.delete()
         db.session.commit()
         return widget_documents
+
+    @classmethod
+    def update_documents(cls, update_mappings: list) -> None:
+        """Update documents.."""
+        db.session.bulk_update_mappings(WidgetDocuments, update_mappings)
+        db.session.commit()

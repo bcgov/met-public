@@ -19,3 +19,4 @@ class MembershipType(IntEnum):
     """Enum of Membership Type."""
 
     TEAM_MEMBER = 1
+    REVIEWER = 2

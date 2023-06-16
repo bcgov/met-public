@@ -30,7 +30,6 @@ class WidgetDocumentService:
     @staticmethod
     def _attach_file_nodes(docs, root):
         files = list(filter(lambda doc: doc.type == WidgetDocumentType.FILE.value, docs))
-        files.sort(key=lambda doc: doc.id)
         for file in files:
             props = WidgetDocumentService._fetch_props(file)
             parent_node = root
@@ -40,9 +39,7 @@ class WidgetDocumentService:
 
     @staticmethod
     def _attach_folder_nodes(docs, root):
-
         folders = list(filter(lambda doc: doc.type == WidgetDocumentType.FOLDER.value, docs))
-        folders.sort(key=lambda doc: doc.id)
         for folder in folders:
             props = WidgetDocumentService._fetch_props(folder)
             AnyNode(**props, parent=root)
@@ -123,3 +120,27 @@ class WidgetDocumentService:
                 error='Document to remove was not found.',
                 status_code=HTTPStatus.BAD_REQUEST)
         return delete_document
+
+    @staticmethod
+    def sort_documents(widget_id, documents: list, user_id=None):
+        """Sort widgets."""
+        WidgetDocumentService._validate_document_ids(widget_id, documents)
+
+        document_sort_mappings = [{
+            'id': document.get('id'),
+            'sort_index': index + 1,
+            'updated_by': user_id
+        } for index, document in enumerate(documents)]
+
+        WidgetDocumentsModel.update_documents(document_sort_mappings)
+
+    @staticmethod
+    def _validate_document_ids(widget_id, documents):
+        """Validate if documents ids belong to the widget."""
+        widget_documents = WidgetDocumentsModel.get_all_by_widget_id(widget_id)
+        document_ids = [document.id for document in widget_documents]
+        input_document_ids = [document_item.get('id') for document_item in documents]
+        if len(set(input_document_ids) - set(document_ids)) > 0:
+            raise BusinessException(
+                error='Invalid widgets.',
+                status_code=HTTPStatus.BAD_REQUEST)

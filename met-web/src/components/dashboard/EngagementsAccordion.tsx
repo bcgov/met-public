@@ -37,7 +37,7 @@ const EngagementsAccordion = ({
     };
 
     const handleProjectMapData = () => {
-        null;
+        return null;
     };
 
     return (

@@ -7,6 +7,7 @@ import * as reactRouter from 'react-router';
 import * as userService from 'services/userService/api';
 import { User, createDefaultUser } from 'models/user';
 import UserManagementListing from 'components/userManagement/listing';
+import { draftEngagement } from '../factory';
 
 const mockUser1: User = {
     ...createDefaultUser,
@@ -37,6 +38,15 @@ jest.mock('components/common', () => ({
     },
 }));
 
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useSelector: jest.fn(() => {
+        return {
+            assignedEngagements: [draftEngagement.id],
+        };
+    }),
+}));
+
 describe('User Management tests', () => {
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
@@ -63,20 +73,12 @@ describe('User Management tests', () => {
         });
     });
 
-    test('Add user to group modal appears', async () => {
+    test('Assign Role to user modal appears', async () => {
         render(<UserManagementListing />);
 
         await waitFor(() => {
             expect(screen.getByText('User Name')).toBeVisible();
-        });
-
-        const exportButton = screen.getByText('+ Add User');
-        fireEvent.click(exportButton);
-
-        await waitFor(() => {
-            expect(screen.getByText('Add a User')).toBeVisible();
-            expect(screen.getByText('Select the user you want to add')).toBeVisible();
-            expect(screen.getByText('What role would you like to assign to this user?')).toBeVisible();
+            expect(screen.getByText('Actions')).toBeVisible();
         });
     });
 });
