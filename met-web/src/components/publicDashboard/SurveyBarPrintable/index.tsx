@@ -44,13 +44,15 @@ export const SurveyBarPrintable = ({ engagement, engagementIsLoading }: SurveyQu
     }
 
     if (isError) {
-        <>
-            <Grid item xs={12}>
-                <MetLabel mb={2} color="primary">
-                    Survey Results
-                </MetLabel>
-            </Grid>
-        </>;
+        return (
+            <>
+                <Grid item xs={12}>
+                    <MetLabel mb={2} color="primary">
+                        Survey Results
+                    </MetLabel>
+                </Grid>
+            </>
+        );
     }
 
     return (
