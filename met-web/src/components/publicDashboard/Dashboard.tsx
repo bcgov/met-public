@@ -29,7 +29,7 @@ const Dashboard = () => {
     const [projectMapData, setProjectMapData] = React.useState<Map | null>(null);
     const [pdfExportProgress, setPdfExportProgress] = React.useState(0);
 
-    const handleProjetMapData = (data: Map) => {
+    const handleProjectMapData = (data: Map) => {
         setProjectMapData(data);
     };
 
@@ -178,11 +178,11 @@ const Dashboard = () => {
                                                 engagementIsLoading={isEngagementLoading}
                                             />
                                         </Grid>
-                                        <Grid item sm={8} md={4} sx={{ width: isTablet ? '90%' : '100%' }}>
+                                        <Grid item sm={8} md={4}>
                                             <ProjectLocation
                                                 engagement={engagement}
                                                 engagementIsLoading={isEngagementLoading}
-                                                handleProjetMapData={handleProjetMapData}
+                                                handleProjectMapData={handleProjectMapData}
                                             />
                                         </Grid>
                                     </Grid>

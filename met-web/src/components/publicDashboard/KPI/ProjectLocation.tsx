@@ -12,10 +12,10 @@ import { geoJSONDecode } from 'components/engagement/form/EngagementWidgets/Map/
 interface SurveysCompletedProps {
     engagement: Engagement;
     engagementIsLoading: boolean;
-    handleProjetMapData: (data: Map) => void;
+    handleProjectMapData: (data: Map) => void;
 }
 
-const ProjectLocation = ({ engagement, engagementIsLoading, handleProjetMapData }: SurveysCompletedProps) => {
+const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData }: SurveysCompletedProps) => {
     const [data, setData] = useState<Map | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
@@ -28,7 +28,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjetMapData 
         try {
             const response = await getMapData(Number(engagement.id));
             setData(response);
-            handleProjetMapData(response);
+            handleProjectMapData(response);
             setIsLoading(false);
         } catch (error) {
             setIsError(true);
@@ -76,7 +76,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjetMapData 
 
     return (
         <>
-            <MetLabel mb={{ md: 0.5, lg: 2 }}>Project Location</MetLabel>
+            <MetLabel mb={isTablet ? 0.5 : 2}>Project Location</MetLabel>
             <MetPaper sx={{ textAlign: 'center' }}>
                 <Box
                     sx={{
