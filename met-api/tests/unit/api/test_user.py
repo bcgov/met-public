@@ -79,3 +79,53 @@ def test_add_user_to_admin_group(mocker, client, jwt, session):  # pylint:disabl
     )
     assert rv.status_code == HTTPStatus.OK
     mock_add_user_to_group_keycloak.assert_called()
+
+def test_add_user_to_reviewer_group(mocker, client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that you can add a user to the reviewer group."""
+    user = factory_staff_user_model()
+
+    mock_add_user_to_group_keycloak_response = MagicMock()
+    mock_add_user_to_group_keycloak_response.status_code = HTTPStatus.NO_CONTENT
+    mock_add_user_to_group_keycloak = mocker.patch(
+        'met_api.services.keycloak.KeycloakService.add_user_to_group',
+        return_value=mock_add_user_to_group_keycloak_response
+    )
+    mock_get_user_groups_keycloak = mocker.patch(
+        'met_api.services.keycloak.KeycloakService.get_user_groups',
+        return_value=[{'name': KeycloakGroupName.EAO_REVIEWER.value}]
+    )
+
+    claims = TestJwtClaims.staff_admin_role
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.post(
+        f'/api/user/{user.external_id}/groups?group=Reviewer',
+        headers=headers, content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == HTTPStatus.OK
+    mock_add_user_to_group_keycloak.assert_called()
+    mock_get_user_groups_keycloak.assert_called()
+
+def test_add_user_to_team_member_group(mocker, client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that you can add a user to the team member group."""
+    user = factory_staff_user_model()
+
+    mock_add_user_to_group_keycloak_response = MagicMock()
+    mock_add_user_to_group_keycloak_response.status_code = HTTPStatus.NO_CONTENT
+    mock_add_user_to_group_keycloak = mocker.patch(
+        'met_api.services.keycloak.KeycloakService.add_user_to_group',
+        return_value=mock_add_user_to_group_keycloak_response
+    )
+    mock_get_user_groups_keycloak = mocker.patch(
+        'met_api.services.keycloak.KeycloakService.get_user_groups',
+        return_value=[{'name': KeycloakGroupName.EAO_TEAM_MEMBER.value}]
+    )
+
+    claims = TestJwtClaims.staff_admin_role
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.post(
+        f'/api/user/{user.external_id}/groups?group=TeamMember',
+        headers=headers, content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == HTTPStatus.OK
+    mock_add_user_to_group_keycloak.assert_called()
+    mock_get_user_groups_keycloak.assert_called()
