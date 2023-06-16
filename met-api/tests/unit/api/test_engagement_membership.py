@@ -15,6 +15,7 @@ from tests.utilities.factory_utils import factory_auth_header, factory_engagemen
 
 memberships_url = '/api/engagements/{}/members'
 
+
 def test_create_engagement_membership_team_member(mocker, client, jwt, session):
     """Assert that a team member engagement membership can be created."""
     engagement = factory_engagement_model()
