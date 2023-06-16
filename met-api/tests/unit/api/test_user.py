@@ -80,6 +80,7 @@ def test_add_user_to_admin_group(mocker, client, jwt, session):  # pylint:disabl
     assert rv.status_code == HTTPStatus.OK
     mock_add_user_to_group_keycloak.assert_called()
 
+
 def test_add_user_to_reviewer_group(mocker, client, jwt, session):  # pylint:disable=unused-argument
     """Assert that you can add a user to the reviewer group."""
     user = factory_staff_user_model()
@@ -104,6 +105,7 @@ def test_add_user_to_reviewer_group(mocker, client, jwt, session):  # pylint:dis
     assert rv.status_code == HTTPStatus.OK
     mock_add_user_to_group_keycloak.assert_called()
     mock_get_user_groups_keycloak.assert_called()
+
 
 def test_add_user_to_team_member_group(mocker, client, jwt, session):  # pylint:disable=unused-argument
     """Assert that you can add a user to the team member group."""
