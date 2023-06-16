@@ -30,10 +30,10 @@ from tests.utilities.factory_utils import factory_auth_header, factory_staff_use
 KEYCLOAK_SERVICE_MODULE = 'met_api.services.keycloak.KeycloakService'
 
 
-def mock_add_user_to_group(mocker, mock_response_status_code, mock_group_names):
+def mock_add_user_to_group(mocker, mock_group_names):
     """Mock the KeycloakService.add_user_to_group method."""
     mock_response = MagicMock()
-    mock_response.status_code = mock_response_status_code
+    mock_response.status_code = HTTPStatus.NO_CONTENT
 
     mock_add_user_to_group_keycloak = mocker.patch(
         f'{KEYCLOAK_SERVICE_MODULE}.add_user_to_group',
@@ -80,8 +80,7 @@ def test_add_user_to_admin_group(mocker, client, jwt, session):
 
     mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak = mock_add_user_to_group(
         mocker,
-        HTTPStatus.NO_CONTENT,
-        [KeycloakGroupName.EAO_IT_ADMIN.value]
+        [KeycloakGroupName.EAO_IT_VIEWER.value]
     )
 
     claims = TestJwtClaims.staff_admin_role
@@ -102,8 +101,7 @@ def test_add_user_to_reviewer_group(mocker, client, jwt, session):
 
     mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak = mock_add_user_to_group(
         mocker,
-        HTTPStatus.NO_CONTENT,
-        [KeycloakGroupName.EAO_REVIEWER.value]
+        [KeycloakGroupName.EAO_IT_VIEWER.value]
     )
 
     claims = TestJwtClaims.staff_admin_role
@@ -124,8 +122,7 @@ def test_add_user_to_team_member_group(mocker, client, jwt, session):
 
     mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak = mock_add_user_to_group(
         mocker,
-        HTTPStatus.NO_CONTENT,
-        [KeycloakGroupName.EAO_TEAM_MEMBER.value]
+        [KeycloakGroupName.EAO_IT_VIEWER.value]
     )
 
     claims = TestJwtClaims.staff_admin_role
