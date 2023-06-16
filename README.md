@@ -4,6 +4,8 @@
 
 [![codecov](https://codecov.io/gh/bcgov/met-public/branch/main/graph/badge.svg?token=E1JXYU701O)](https://codecov.io/gh/bcgov/met-public)
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bcgov_met-public&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=bcgov_met-public)
+
 ## The Modern Engagement Tools (MET) 
 
 This project is to develop modern engagement tools that address shortfalls identified in the Province’s existing public engagement processes.
