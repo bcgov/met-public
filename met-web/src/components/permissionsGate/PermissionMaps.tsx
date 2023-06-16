@@ -1,4 +1,4 @@
-export const SCOPES: { [scope: string]: string } = {
+export const SCOPES = {
     createTenant: 'create_tenant',
     viewTenant: 'view_tenant',
     viewUsers: 'view_users',
@@ -6,13 +6,17 @@ export const SCOPES: { [scope: string]: string } = {
     createTeam: 'create_team',
     createEngagement: 'create_engagement',
     editEngagement: 'edit_engagement',
+    editDraftEngagement: 'edit_draft_engagement',
     createSurvey: 'create_survey',
     publishEngagement: 'publish_engagement',
     viewEngagement: 'view_engagement',
+    viewPrivateEngagements: 'view_private_engagements',
+    viewAssignedEngagements: 'view_assigned_engagements',
     reviewComments: 'review_comments',
     accessDashboard: 'access_dashboard',
     viewMembers: 'view_members',
     editMembers: 'edit_members',
     appAdmin: 'app-admin',
-    viewPrivateEngagements: 'view_private_engagements',
+    viewSurveys: 'view_surveys',
+    viewFeedbacks: 'view_feedbacks',
 };

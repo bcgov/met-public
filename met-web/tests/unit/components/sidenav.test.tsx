@@ -5,12 +5,26 @@ import SideNav from '../../../src/components/layout/SideNav/SideNav';
 import ProviderShell from './ProviderShell';
 import { setupEnv } from './setEnvVars';
 import { Routes } from '../../../src/components/layout/SideNav/SideNavElements';
+import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 
 const drawerWidth = 280;
 
 jest.mock('@reduxjs/toolkit/query/react', () => ({
     ...jest.requireActual('@reduxjs/toolkit/query/react'),
     fetchBaseQuery: jest.fn(),
+}));
+
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useSelector: jest.fn(() => {
+        return [
+            SCOPES.viewEngagement,
+            SCOPES.viewAssignedEngagements,
+            SCOPES.viewSurveys,
+            SCOPES.viewUsers,
+            SCOPES.viewFeedbacks,
+        ];
+    }),
 }));
 test('Load SideNav', async () => {
     setupEnv();

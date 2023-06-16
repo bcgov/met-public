@@ -6,9 +6,10 @@ import { Grid } from '@mui/material';
 import WidgetsBlock from './EngagementWidgets';
 
 const EngagementFormWrapper = () => {
-    const { loadingSavedEngagement } = useContext(ActionContext);
+    const { loadingSavedEngagement, loadingAuthorization } = useContext(ActionContext);
 
-    if (loadingSavedEngagement) {
+    const loading = loadingSavedEngagement || loadingAuthorization;
+    if (loading) {
         return <MidScreenLoader data-testid="loader" />;
     }
 

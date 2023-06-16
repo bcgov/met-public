@@ -76,9 +76,11 @@ class Engagement(BaseModel):
 
         if scope_options.restricted:
             if scope_options.include_assigned:
+                # the engagement status ids that should not be filtered out
                 exception_status_ids = scope_options.engagement_status_ids
                 query = cls._filter_by_assigned_engagements(query, external_user_id, exception_status_ids)
             else:
+                # the engagement status ids of the engagements that should fetched
                 statuses = scope_options.engagement_status_ids
                 query = cls._filter_by_statuses(query, statuses)
 
@@ -264,15 +266,18 @@ class Engagement(BaseModel):
         if exception_status_ids is None:
             exception_status_ids = []
 
-        assigned_engagements = (
-            db.session.query(Engagement)
-            .join(MembershipModel)
-            .join(StaffUser, StaffUser.external_id == external_user_id)
-            .filter(MembershipModel.user_id == StaffUser.id)
-            .all()
-        )
-        assigned_engagement_ids = [engagement.id for engagement in assigned_engagements]
+        assigned_engagement_ids = [
+            engagement_id
+            for engagement_id, in (
+                db.session.query(Engagement.id)
+                .join(MembershipModel)
+                .join(StaffUser, StaffUser.external_id == external_user_id)
+                .filter(MembershipModel.user_id == StaffUser.id)
+                .all()
+            )
+        ]
 
+        # filter out all engagements that are not assigned to the user except ones with the exception status ids
         query = query.filter(
             or_(
                 Engagement.status_id.in_(exception_status_ids),
