@@ -185,7 +185,7 @@ const CommentReview = () => {
 
     const handleNoteChange = (note: string, note_type: string, note_id: number) => {
         const newStaffNoteArray = [...updatedStaffNote];
-        newStaffNoteArray.map((staffNote) => {
+        newStaffNoteArray.forEach((staffNote) => {
             if (staffNote.id === note_id && staffNote.note_type === note_type) {
                 staffNote.note = note;
             }
