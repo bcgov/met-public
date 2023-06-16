@@ -24,6 +24,7 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { Dayjs } from 'dayjs';
 import { Then, If, Else, Unless } from 'react-if';
 import { formatToUTC } from 'components/common/dateHelper';
+import { Palette } from 'styles/Theme';
 
 interface SubmissionTrendProps {
     engagement: Engagement;
@@ -212,10 +213,26 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     size={isTablet ? 'small' : 'medium'}
                                     sx={customStyles.toggleGroup}
                                 >
-                                    <ToggleButton value="weekly" sx={customStyles.toggleButton}>
+                                    <ToggleButton
+                                        value="weekly"
+                                        sx={{
+                                            '&.Mui-selected': {
+                                                backgroundColor: Palette.primary.main,
+                                                color: 'white',
+                                            },
+                                        }}
+                                    >
                                         Weekly
                                     </ToggleButton>
-                                    <ToggleButton value="monthly" sx={customStyles.toggleButton}>
+                                    <ToggleButton
+                                        value="monthly"
+                                        sx={{
+                                            '&.Mui-selected': {
+                                                backgroundColor: Palette.primary.main,
+                                                color: 'white',
+                                            },
+                                        }}
+                                    >
                                         Monthly
                                     </ToggleButton>
                                 </ToggleButtonGroup>
