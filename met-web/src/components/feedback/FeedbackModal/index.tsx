@@ -9,7 +9,6 @@ import {
     TextField,
     Theme,
     SvgIcon,
-    useTheme,
 } from '@mui/material';
 import * as React from 'react';
 import ModeCommentIcon from '@mui/icons-material/ModeComment';
@@ -33,7 +32,6 @@ export const FeedbackModal = () => {
     const [isSaving, setIsSaving] = useState(false);
     const { comment, rating, comment_type } = feedbackFormData;
     const dispatch = useAppDispatch();
-    const theme = useTheme();
 
     const IconContainer = (props: IconContainerProps) => {
         const { value, ...other } = props;

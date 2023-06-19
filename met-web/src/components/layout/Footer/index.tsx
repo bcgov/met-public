@@ -12,7 +12,7 @@ import { Unless } from 'react-if';
 import { NavLink } from 'react-router-dom';
 import { FOOTER_COLORS } from './constants';
 
-export const Footer = () => {
+const Footer = () => {
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     return (
         <Grid container justifyContent="center" alignItems="center" spacing={0} mt="2em">
@@ -148,3 +148,5 @@ export const Footer = () => {
         </Grid>
     );
 };
+
+export default Footer;

@@ -4,7 +4,7 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import UserService from './services/userService';
 import { useAppSelector, useAppDispatch } from './hooks';
 import { MidScreenLoader, MobileToolbar } from './components/common';
-import { Box, Container, useMediaQuery, Theme, Toolbar, useTheme } from '@mui/material';
+import { Box, Container, useMediaQuery, Theme, Toolbar } from '@mui/material';
 import InternalHeader from './components/layout/Header/InternalHeader';
 import PublicHeader from './components/layout/Header/PublicHeader';
 import UnauthenticatedRoutes from './routes/UnauthenticatedRoutes';
@@ -19,14 +19,13 @@ import { getTenant } from 'services/tenantService';
 import { Tenant } from 'models/tenant';
 import { DEFAULT_TENANT } from './constants';
 import NotFound from 'routes/NotFound';
-import { Footer } from 'components/layout/Footer';
+import Footer from 'components/layout/Footer';
 import { ZIndex } from 'styles/Theme';
 
 const App = () => {
     const drawerWidth = 280;
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const dispatch = useAppDispatch();
-    const theme = useTheme();
     const roles = useAppSelector((state) => state.user.roles);
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const authenticationLoading = useAppSelector((state) => state.user.authentication.loading);
