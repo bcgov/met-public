@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from typing import List
 
-from sqlalchemy import ForeignKey, and_
+from sqlalchemy import ForeignKey, and_, or_
 
 from met_api.constants.membership_type import MembershipType
 from met_api.utils.enums import MembershipStatus
@@ -46,7 +46,8 @@ class Membership(BaseModel):
         memberships = db.session.query(Membership) \
             .join(StaffUser, StaffUser.id == Membership.user_id) \
             .filter(and_(StaffUser.external_id == user_external_id,
-                         Membership.type == MembershipType.TEAM_MEMBER
+                         or_(Membership.type == MembershipType.TEAM_MEMBER,
+                             Membership.type == MembershipType.REVIEWER)
                          )
                     ) \
             .all()
