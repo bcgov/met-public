@@ -55,6 +55,7 @@ class KeycloakGroups(Enum):
     EAO_IT_ADMIN = 'Superuser'
     EAO_IT_VIEWER = 'Viewer'
     EAO_TEAM_MEMBER = 'Member'
+    EAO_REVIEWER = 'Reviewer'
 
 
 class KeycloakGroupName(Enum):
@@ -63,6 +64,7 @@ class KeycloakGroupName(Enum):
     EAO_IT_ADMIN = 'EAO_IT_ADMIN'
     EAO_IT_VIEWER = 'EAO_IT_VIEWER'
     EAO_TEAM_MEMBER = 'EAO_TEAM_MEMBER'
+    EAO_REVIEWER = 'EAO_REVIEWER'
 
 
 class SourceType(Enum):
