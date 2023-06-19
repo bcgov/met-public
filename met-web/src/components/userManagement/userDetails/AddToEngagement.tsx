@@ -226,14 +226,14 @@ export const AddToEngagementModal = () => {
                                             </FormLabel>
                                             <ControlledRadioGroup name="group">
                                                 <FormControlLabel
-                                                    value={USER_GROUP.TEAM_MEMBER.value}
-                                                    control={<Radio />}
-                                                    label={'Team Member'}
-                                                />
-                                                <FormControlLabel
                                                     value={USER_GROUP.REVIEWER.value}
                                                     control={<Radio />}
                                                     label={'Reviewer'}
+                                                />
+                                                <FormControlLabel
+                                                    value={USER_GROUP.TEAM_MEMBER.value}
+                                                    control={<Radio />}
+                                                    label={'Team Member'}
                                                 />
                                             </ControlledRadioGroup>
                                             <When condition={Boolean(groupErrors)}>
