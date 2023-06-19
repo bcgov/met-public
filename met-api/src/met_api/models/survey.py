@@ -149,7 +149,12 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def _filter_by_assigned_engagements(query, assigned_engagements: list[int]):
-        filter_conditions = [Engagement.status_id != Status.Draft.value,
-                             Engagement.id.in_(assigned_engagements), Survey.engagement_id.is_(None)]
+        filter_conditions = [
+            # Exclude draft engagements that the user is not assigned to
+            Engagement.status_id != Status.Draft.value,
+            # Include all assigned engagements even if its draft
+            Engagement.id.in_(assigned_engagements),
+            # Include Un-linked surveys
+            Survey.engagement_id.is_(None)]
         query = query.filter(or_(*filter_conditions))
         return query
