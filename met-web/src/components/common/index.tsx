@@ -76,6 +76,17 @@ const StyledWidgetButton = styled(MuiButton)(() => ({
     },
 }));
 
+const StyledSocialIconButton = styled(IconButton)(() => ({
+    border: '1px solid #494949',
+    color: '#494949',
+}));
+
+export const SocialIconButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
+    <StyledSocialIconButton color="info" {...rest}>
+        {children}
+    </StyledSocialIconButton>
+);
+
 export const WidgetButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
     <StyledWidgetButton {...rest} variant="outlined">
         {children}

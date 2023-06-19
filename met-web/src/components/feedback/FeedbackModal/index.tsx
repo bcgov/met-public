@@ -9,6 +9,7 @@ import {
     TextField,
     Theme,
     SvgIcon,
+    useTheme,
 } from '@mui/material';
 import * as React from 'react';
 import ModeCommentIcon from '@mui/icons-material/ModeComment';
@@ -23,6 +24,7 @@ import { createFeedback } from 'services/feedbackService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
 import { customRatings, commentTypes } from './constants';
+import { ZIndex } from 'styles/Theme';
 
 export const FeedbackModal = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -31,6 +33,7 @@ export const FeedbackModal = () => {
     const [isSaving, setIsSaving] = useState(false);
     const { comment, rating, comment_type } = feedbackFormData;
     const dispatch = useAppDispatch();
+    const theme = useTheme();
 
     const IconContainer = (props: IconContainerProps) => {
         const { value, ...other } = props;
@@ -91,6 +94,7 @@ export const FeedbackModal = () => {
                     bottom: (theme: Theme) => theme.spacing(10),
                     right: (theme: Theme) => theme.spacing(-7),
                     transform: 'rotate(-90deg)',
+                    zIndex: ZIndex.footer + 1,
                 }}
             >
                 <ModeCommentIcon fontSize="small" sx={{ marginRight: 1 }} /> Feedback

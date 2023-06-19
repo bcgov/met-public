@@ -155,3 +155,7 @@ export const PublicTheme = createTheme(BaseTheme, {
         },
     },
 });
+
+export const ZIndex = {
+    footer: BaseTheme.zIndex.drawer + 1,
+};
