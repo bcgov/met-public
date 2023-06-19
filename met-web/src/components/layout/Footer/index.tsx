@@ -96,7 +96,7 @@ const Footer = () => {
                         </Link>
                     </Grid>
                     <Grid item xs={6}>
-                        <Link href="http://www2.gov.bc.ca/gov/content/home/copyright" color={Palette.text.primary}>
+                        <Link href="https://www2.gov.bc.ca/gov/content/home/copyright" color={Palette.text.primary}>
                             Copyright
                         </Link>
                     </Grid>
@@ -120,7 +120,7 @@ const Footer = () => {
                         </Grid>
                     </Unless>
                     <Grid item xs={6}>
-                        <Link href="http://www2.gov.bc.ca/gov/content/home/privacy" color={Palette.text.primary}>
+                        <Link href="https://www2.gov.bc.ca/gov/content/home/privacy" color={Palette.text.primary}>
                             Privacy
                         </Link>
                     </Grid>
