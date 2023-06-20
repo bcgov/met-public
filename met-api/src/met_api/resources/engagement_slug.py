@@ -28,18 +28,6 @@ class EngagementSlug(Resource):
     @staticmethod
     @cross_origin()
     @auth.require
-    def post(slug):
-        """Create a new engagement slug."""
-        try:
-            engagement_id = request.json.get('engagement_id')
-            engagement_slug = EngagementSlugService.create_engagement_slug(engagement_id, slug)
-            return engagement_slug.to_dict(), HTTPStatus.CREATED
-        except BusinessException as e:
-            return {'error': str(e)}, HTTPStatus.INTERNAL_SERVER_ERROR
-
-    @staticmethod
-    @cross_origin()
-    @auth.require
     def patch(slug):
         """Update an existing engagement slug."""
         try:

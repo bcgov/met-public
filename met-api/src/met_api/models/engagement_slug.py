@@ -1,7 +1,6 @@
 from sqlalchemy import ForeignKey, Index
 from sqlalchemy.orm import relationship
 
-from typing import Optional
 from .base_model import BaseModel
 from .db import db
 
