@@ -6,7 +6,7 @@ from __future__ import annotations
 from datetime import datetime
 from operator import or_
 
-from sqlalchemy import TEXT, and_, asc, cast, desc
+from sqlalchemy import and_, asc, desc
 from sqlalchemy.sql import text
 from sqlalchemy.sql.schema import ForeignKey
 
@@ -42,7 +42,7 @@ class Comment(BaseModel):
             .join(Survey)\
             .filter(Comment.submission_id == submission_id)\
             .all()
-        
+
     @classmethod
     def get_comments_by_survey_id_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text=''):
         """Get comments paginated."""
@@ -113,7 +113,7 @@ class Comment(BaseModel):
             query = query.filter(Comment.text.ilike('%' + search_text + '%'))
 
         if advanced_search_filters:
-            query = Submission._filter_by_advanced_filters(query, advanced_search_filters)
+            query = cls._filter_by_advanced_filters(query, advanced_search_filters)
 
         sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == 'asc'\
             else desc(text(pagination_options.sort_key))
@@ -142,6 +142,27 @@ class Comment(BaseModel):
             submission_id=comment.get('submission_id', None),
             component_id=comment.get('component_id', None)
         )
+
+    @staticmethod
+    def _filter_by_advanced_filters(query, advanced_search_filters: dict):
+        if status := advanced_search_filters.get('status'):
+            query = query.filter(Submission.comment_status_id == status)
+
+        if comment_date_to := advanced_search_filters.get('comment_date_to'):
+            query = query.filter(Submission.created_date <= comment_date_to)
+
+        if comment_date_from := advanced_search_filters.get('comment_date_from'):
+            query = query.filter(Submission.created_date >= comment_date_from)
+
+        if reviewer := advanced_search_filters.get('reviewer'):
+            query = query.filter(Submission.reviewed_by.ilike(f'%{reviewer}%'))
+
+        if reviewed_date_from := advanced_search_filters.get('reviewed_date_from'):
+            query = query.filter(Submission.review_date >= reviewed_date_from)
+
+        if reviewed_date_to := advanced_search_filters.get('reviewed_date_to'):
+            query = query.filter(Submission.review_date <= reviewed_date_to)
+        return query
 
     @classmethod
     def add_all_comments(cls, comments: list, session=None) -> list[Comment]:

@@ -5,11 +5,10 @@ Manages the Submission
 from __future__ import annotations
 from datetime import datetime
 from typing import List
-from sqlalchemy import TEXT, ForeignKey, and_, asc, cast, desc, or_, text
+from sqlalchemy import ForeignKey
 from sqlalchemy.dialects import postgresql
 
 from met_api.constants.comment_status import Status
-from met_api.models.pagination_options import PaginationOptions
 from met_api.models.survey import Survey
 from met_api.models.participant import Participant
 from met_api.schemas.submission import SubmissionSchema
@@ -165,24 +164,3 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
             .filter(Survey.engagement_id == engagement_id)\
             .all()
         return users
-
-    @staticmethod
-    def _filter_by_advanced_filters(query, advanced_search_filters: dict):
-        if status := advanced_search_filters.get('status'):
-            query = query.filter(Submission.comment_status_id == status)
-
-        if comment_date_to := advanced_search_filters.get('comment_date_to'):
-            query = query.filter(Submission.created_date <= comment_date_to)
-
-        if comment_date_from := advanced_search_filters.get('comment_date_from'):
-            query = query.filter(Submission.created_date >= comment_date_from)
-
-        if reviewer := advanced_search_filters.get('reviewer'):
-            query = query.filter(Submission.reviewed_by.ilike(f'%{reviewer}%'))
-
-        if reviewed_date_from := advanced_search_filters.get('reviewed_date_from'):
-            query = query.filter(Submission.review_date >= reviewed_date_from)
-
-        if reviewed_date_to := advanced_search_filters.get('reviewed_date_to'):
-            query = query.filter(Submission.review_date <= reviewed_date_to)
-        return query
