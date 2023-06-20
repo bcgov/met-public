@@ -1,6 +1,6 @@
 {
   "makefile.extensionOutputFolder": "./.vscode",
-  "python.pythonPath": "met-api/venv/bin/python",
+  "python.defaultInterpreterPath": "${workspaceFolder}/met-api/venv/bin/python",
   "python.envFile": "${workspaceFolder}/met-api/.env",
   "python.analysis.extraPaths": ["./met-api/src", "./met-cron/src", "./analytics-api/src"]
 }
