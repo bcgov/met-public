@@ -55,7 +55,7 @@ class SurveyService:
         search_options.assigned_engagements = SurveyService._get_assigned_engagements(user_id, user_roles)
 
         # check if user can view surveys linked to unassigned engagement
-        search_options.can_view_all_engagements =SurveyService._can_view_all_engagements(user_roles)
+        search_options.can_view_all_engagements = SurveyService._can_view_all_engagements(user_roles)
 
         items, total = SurveyModel.get_surveys_paginated(
             pagination_options,
