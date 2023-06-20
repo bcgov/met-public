@@ -11,11 +11,13 @@ import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoLight
 import { Unless, When } from 'react-if';
 import { useAppSelector } from 'hooks';
 import { HeaderProps } from './types';
+import { useNavigate } from 'react-router-dom';
 
 const PublicHeader = ({ tenant }: HeaderProps) => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const [imageError, setImageError] = useState(false);
+    const navigate = useNavigate();
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
@@ -61,7 +63,7 @@ const PublicHeader = ({ tenant }: HeaderProps) => {
                         <MetHeader2 sx={{ flexGrow: 1 }}>{tenant.title}</MetHeader2>
                     </Unless>
                     <When condition={isLoggedIn}>
-                        <Button color="inherit" onClick={() => UserService.doLogout()}>
+                        <Button color="inherit" onClick={() => UserService.doLogout(() => navigate('/'))}>
                             Logout
                         </Button>
                     </When>

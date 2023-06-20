@@ -14,11 +14,13 @@ import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.
 import { When } from 'react-if';
 import MenuIcon from '@mui/icons-material/Menu';
 import { HeaderProps } from './types';
+import { useNavigate } from 'react-router-dom';
 
 const InternalHeader = ({ tenant, drawerWidth = 280 }: HeaderProps) => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const [open, setOpen] = useState(false);
     const [imageError, setImageError] = useState(false);
+    const navigate = useNavigate();
     return (
         <>
             <AppBar
@@ -83,7 +85,11 @@ const InternalHeader = ({ tenant, drawerWidth = 280 }: HeaderProps) => {
                     ) : (
                         <MetHeader2 sx={{ flexGrow: 1 }}>{tenant.title}</MetHeader2>
                     )}
-                    <Button data-testid="button-header" color="inherit" onClick={() => UserService.doLogout()}>
+                    <Button
+                        data-testid="button-header"
+                        color="inherit"
+                        onClick={() => UserService.doLogout(() => navigate('/'))}
+                    >
                         Logout
                     </Button>
                 </Toolbar>

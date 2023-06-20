@@ -15,9 +15,9 @@ import http from 'apiManager/httpRequestHandler';
 import { User } from 'models/user';
 import { getMembershipsByUser } from 'services/membershipService';
 import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+import { getBaseUrl } from 'helper';
 
 const KeycloakData = _kc;
-
 /**
  * Initializes Keycloak instance.
  */
@@ -83,12 +83,17 @@ const userLogout = () => {
     sessionStorage.clear();
     clearInterval(refreshInterval);
     doLogout();
+    window.location.href = getBaseUrl();
 };
 
 const doLogin = KeycloakData.login;
 
-const doLogout = KeycloakData.logout;
-
+const doLogout = async (navigateCallback?: () => void) => {
+    if (navigateCallback) {
+        navigateCallback();
+    }
+    await KeycloakData.logout();
+};
 const getToken = () => KeycloakData.token;
 
 const isLoggedIn = () => !!KeycloakData.token;
