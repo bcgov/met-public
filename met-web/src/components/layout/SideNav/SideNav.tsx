@@ -70,6 +70,7 @@ const SideNav = ({ open, setOpen, isMediumScreen, drawerWidth = 280 }: SideNavPr
                 <Drawer
                     variant="permanent"
                     sx={{
+                        height: '100vh',
                         width: drawerWidth,
                         flexShrink: 0,
                         [`& .MuiDrawer-paper`]: {

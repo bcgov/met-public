@@ -65,11 +65,6 @@ const PublicHeader = ({ tenant }: HeaderProps) => {
                             Logout
                         </Button>
                     </When>
-                    <Unless condition={isLoggedIn}>
-                        <Button color="inherit" onClick={() => UserService.doLogin()}>
-                            Login
-                        </Button>
-                    </Unless>
                 </Toolbar>
                 <EnvironmentBanner />
             </AppBar>

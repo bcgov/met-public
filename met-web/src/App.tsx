@@ -19,6 +19,8 @@ import { getTenant } from 'services/tenantService';
 import { Tenant } from 'models/tenant';
 import { DEFAULT_TENANT } from './constants';
 import NotFound from 'routes/NotFound';
+import Footer from 'components/layout/Footer';
+import { ZIndex } from 'styles/Theme';
 
 const App = () => {
     const drawerWidth = 280;
@@ -87,6 +89,7 @@ const App = () => {
                 <PublicHeader tenant={tenant} />
                 <UnauthenticatedRoutes />
                 <FeedbackModal />
+                <Footer />
             </Router>
         );
     }
@@ -99,6 +102,7 @@ const App = () => {
                     <NoAccess />
                 </Container>
                 <FeedbackModal />
+                <Footer />
             </Router>
         );
     }
@@ -111,6 +115,7 @@ const App = () => {
                     <MobileToolbar />
                     <AuthenticatedRoutes />
                     <FeedbackModal />
+                    <Footer />
                 </Container>
             </Router>
         );
@@ -127,6 +132,16 @@ const App = () => {
                     <AuthenticatedRoutes />
                     <FeedbackModal />
                 </Box>
+            </Box>
+            <Box
+                sx={{
+                    backgroundColor: 'white',
+                    zIndex: ZIndex.footer,
+                    position: 'relative',
+                    paddingTop: '5em',
+                }}
+            >
+                <Footer />
             </Box>
         </Router>
     );
