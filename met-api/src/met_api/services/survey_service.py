@@ -53,6 +53,10 @@ class SurveyService:
             search_options.exclude_hidden = True
 
         search_options.assigned_engagements = SurveyService._get_assigned_engagements(user_id, user_roles)
+
+        # check if user can view surveys linked to unassigned engagement
+        search_options.can_view_all_engagements =SurveyService._can_view_all_engagements(user_roles)
+
         items, total = SurveyModel.get_surveys_paginated(
             pagination_options,
             search_options,
@@ -70,6 +74,12 @@ class SurveyService:
             return None
         memberships = MembershipService.get_assigned_engagements(user_id)
         return [membership.engagement_id for membership in memberships]
+
+    @staticmethod
+    def _can_view_all_engagements(user_roles):
+        if Role.VIEW_ENGAGEMENT.value in user_roles:
+            return True
+        return False
 
     @staticmethod
     def _can_view_all_surveys(user_roles):
