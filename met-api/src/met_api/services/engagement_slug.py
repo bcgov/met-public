@@ -22,7 +22,7 @@ class EngagementSlugService:
         if existing_slug:
             raise ValueError(f'Engagement slug already exists for engagement {engagement_id}')
 
-        EngagementSlugService.verify_engagement(engagement_id)
+        EngagementSlugService._verify_engagement(engagement_id)
 
         engagement_slug = EngagementSlugModel(engagement_id=engagement_id, slug=slug)
         engagement_slug.save()
@@ -35,7 +35,7 @@ class EngagementSlugService:
         if not engagement_slug:
             raise ValueError(f'No engagement found for {slug}')
 
-        EngagementSlugService.verify_engagement(engagement_id)
+        EngagementSlugService._verify_engagement(engagement_id)
 
         engagement_slug.slug = slug
         engagement_slug.save()
