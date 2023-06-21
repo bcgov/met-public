@@ -1,3 +1,7 @@
+"""Engagement slug model class.
+
+Manages the engagement slug
+"""
 from sqlalchemy import ForeignKey, Index
 from sqlalchemy.orm import relationship
 
