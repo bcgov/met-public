@@ -2,7 +2,7 @@
 
 Manages the engagement slug
 """
-from sqlalchemy import ForeignKey, Index
+from sqlalchemy import ForeignKey, Index, or_
 from sqlalchemy.orm import relationship
 
 from .base_model import BaseModel
@@ -32,3 +32,13 @@ class EngagementSlug(BaseModel):
     def find_by_engagement_id(cls, engagement_id):
         """Return engagement slug by engagement id."""
         return cls.query.filter_by(engagement_id=engagement_id).first()
+    
+    @classmethod
+    def find_similar_slugs(cls, target_slug: str):
+        similar_slugs = EngagementSlug.query.filter(
+            or_(
+                EngagementSlug.slug == target_slug,
+                EngagementSlug.slug.ilike(target_slug + '-%')
+            )
+        ).all()
+        return similar_slugs

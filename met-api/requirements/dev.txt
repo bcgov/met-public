@@ -22,4 +22,4 @@ pydocstyle
 FreezeGun
 lovely-pytest-docker
 Faker
-
+awesome-slugify==1.6.5

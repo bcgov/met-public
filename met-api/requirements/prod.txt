@@ -33,3 +33,4 @@ aws-requests-auth
 requests
 anytree
 geopandas
+awesome-slugify==1.6.5
