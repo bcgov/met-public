@@ -13,3 +13,4 @@ class SurveySearchOptions:  # pylint: disable=too-many-instance-attributes
     assigned_engagements: List[int] = None
     search_text: str = ''
     unlinked: bool = False
+    can_view_all_engagements: bool = True

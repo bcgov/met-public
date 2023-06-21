@@ -31,7 +31,11 @@ export const ActionsDropDown = ({ survey }: { survey: Survey }) => {
             return true;
         }
 
-        if (isEngagementDraft && assignedEngagements.includes(engagementId)) {
+        if (
+            isEngagementDraft &&
+            assignedEngagements.includes(engagementId) &&
+            roles.includes(USER_ROLES.VIEW_ENGAGEMENT)
+        ) {
             return true;
         }
 

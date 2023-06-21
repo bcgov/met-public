@@ -67,8 +67,14 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         if survey_search_options.unlinked:
             query = query.filter(Survey.engagement_id.is_(None))
 
-        if survey_search_options.assigned_engagements is not None:
-            query = cls._filter_by_assigned_engagements(query, survey_search_options.assigned_engagements)
+        # if role has access to view all engagements then include all surveys which are in ready status or
+        # surveys linked to draft and assigned engagements
+        if survey_search_options.can_view_all_engagements:
+            if survey_search_options.assigned_engagements is not None:
+                query = cls._filter_accessible_surveys(query, survey_search_options.assigned_engagements)
+        # else include all surveys linked to assigned engagements
+        else:
+            query = query.filter(Engagement.id.in_(survey_search_options.assigned_engagements))
 
         if survey_search_options.search_text:
             query = query.filter(Survey.name.ilike('%' + survey_search_options.search_text + '%'))
@@ -148,7 +154,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         return survey
 
     @staticmethod
-    def _filter_by_assigned_engagements(query, assigned_engagements: list[int]):
+    def _filter_accessible_surveys(query, assigned_engagements: list[int]):
         filter_conditions = [
             # Exclude draft engagements that the user is not assigned to
             Engagement.status_id != Status.Draft.value,
