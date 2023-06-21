@@ -42,7 +42,7 @@ class EngagementSlugService:
         return engagement_slug
 
     @staticmethod
-    def verify_engagement(engagement_id):
+    def _verify_engagement(engagement_id):
         if not engagement_id:
             raise KeyError('engagement_id is required')
         engagement = EngagementModel.find_by_id(engagement_id)

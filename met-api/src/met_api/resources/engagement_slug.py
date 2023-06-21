@@ -26,6 +26,7 @@ from met_api.utils.util import allowedorigins, cors_preflight
 
 API = Namespace('engagementslugs', description='Endpoints for Engagement Slug Management')
 
+
 @cors_preflight('GET, PATCH, OPTIONS')
 @API.route('/<slug>')
 class EngagementSlug(Resource):

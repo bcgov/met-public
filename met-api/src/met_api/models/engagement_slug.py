@@ -8,6 +8,7 @@ from sqlalchemy.orm import relationship
 from .base_model import BaseModel
 from .db import db
 
+
 class EngagementSlug(BaseModel):
     """Definition of the EngagementSlug entity."""
 
