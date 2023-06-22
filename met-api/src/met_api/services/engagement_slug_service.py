@@ -29,7 +29,6 @@ class EngagementSlugService:
         engagement_slug.save()
         return engagement_slug
 
-
     @classmethod
     def generate_unique_slug(cls, text: str) -> str:
         """Generate a unique slug."""
@@ -51,9 +50,8 @@ class EngagementSlugService:
 
         counter = max(suffix_numbers) + 1 if suffix_numbers else 1
 
-        unique_slug = f"{normalized_slug}{suffix_separator}{counter}"
+        unique_slug = f'{normalized_slug}{suffix_separator}{counter}'
         return unique_slug
-
 
     @classmethod
     def update_engagement_slug(cls, slug: str, engagement_id: int) -> EngagementSlugModel:

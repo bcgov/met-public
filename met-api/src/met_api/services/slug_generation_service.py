@@ -10,7 +10,7 @@ class SlugGenerationService:
         """Generate a slug from the provided text."""
         normalized_text = slugify(
             text,
-            to_lower=True, # NOSONAR # to_lower is a valid paramter for awesome-slugify
+            to_lower=True,  # NOSONAR # to_lower is a valid paramter for awesome-slugify
             max_length=100
         )
         return normalized_text
