@@ -4,12 +4,14 @@ Manages the comment
 """
 from __future__ import annotations
 from datetime import datetime
+from operator import or_
 
-from sqlalchemy import TEXT, and_, asc, cast, desc
+from sqlalchemy import and_, asc, desc
 from sqlalchemy.sql import text
 from sqlalchemy.sql.schema import ForeignKey
 
-from met_api.constants.comment_status import Status
+from met_api.constants.comment_status import Status as CommentStatus
+from met_api.constants.engagement_status import Status as EngagementStatus
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement import Engagement
 from met_api.models.submission import Submission
@@ -17,7 +19,7 @@ from met_api.models.survey import Survey
 from met_api.schemas.comment import CommentSchema
 
 from .base_model import BaseModel
-from .comment_status import CommentStatus
+from .comment_status import CommentStatus as CommentStatusModel
 from .db import db
 
 
@@ -49,8 +51,7 @@ class Comment(BaseModel):
             .filter(Comment.survey_id == survey_id)\
 
         if search_text:
-            # Remove all non-digit characters from search text
-            query = query.filter(cast(Comment.id, TEXT).like('%' + search_text + '%'))
+            query = query.filter(Comment.text.ilike('%' + search_text + '%'))
 
         sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == 'asc'\
             else desc(text(pagination_options.sort_key))
@@ -72,18 +73,54 @@ class Comment(BaseModel):
         """Get comments for closed engagements."""
         query = db.session.query(Comment)\
             .join(Submission, Submission.id == Comment.submission_id)\
-            .join(CommentStatus, Submission.comment_status_id == CommentStatus.id)\
+            .join(CommentStatusModel, Submission.comment_status_id == CommentStatusModel.id)\
             .join(Survey, Survey.id == Submission.survey_id)\
             .join(Engagement, Engagement.id == Survey.engagement_id)\
             .filter(
                 and_(
                     Comment.survey_id == survey_id,
-                    CommentStatus.id == Status.Approved.value
+                    CommentStatusModel.id == CommentStatus.Approved.value,
+                    Engagement.status_id == EngagementStatus.Closed.value
                 ))\
 
         query = query.order_by(Comment.id.desc())
 
         no_pagination_options = not pagination_options or not pagination_options.page or not pagination_options.size
+        if no_pagination_options:
+            items = query.all()
+            return items, len(items)
+
+        page = query.paginate(page=pagination_options.page, per_page=pagination_options.size)
+
+        return page.items, page.total
+
+    @classmethod
+    def get_by_survey_id_paginated(
+        cls,
+        survey_id,
+        pagination_options: PaginationOptions,
+        search_text='',
+        advanced_search_filters=None
+    ):
+        """Get submissions by survey id paginated."""
+        null_value = None
+        query = db.session.query(Submission)\
+            .filter(and_(Submission.survey_id == survey_id,
+                         or_(Submission.reviewed_by != 'System', Submission.reviewed_by == null_value)))\
+
+        if search_text:
+            # Remove all non-digit characters from search text
+            query = query.filter(Comment.text.ilike('%' + search_text + '%'))
+
+        if advanced_search_filters:
+            query = cls._filter_by_advanced_filters(query, advanced_search_filters)
+
+        sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == 'asc'\
+            else desc(text(pagination_options.sort_key))
+
+        query = query.order_by(sort)
+
+        no_pagination_options = not pagination_options.page or not pagination_options.size
         if no_pagination_options:
             items = query.all()
             return items, len(items)
@@ -105,6 +142,27 @@ class Comment(BaseModel):
             submission_id=comment.get('submission_id', None),
             component_id=comment.get('component_id', None)
         )
+
+    @staticmethod
+    def _filter_by_advanced_filters(query, advanced_search_filters: dict):
+        if status := advanced_search_filters.get('status'):
+            query = query.filter(Submission.comment_status_id == status)
+
+        if comment_date_to := advanced_search_filters.get('comment_date_to'):
+            query = query.filter(Submission.created_date <= comment_date_to)
+
+        if comment_date_from := advanced_search_filters.get('comment_date_from'):
+            query = query.filter(Submission.created_date >= comment_date_from)
+
+        if reviewer := advanced_search_filters.get('reviewer'):
+            query = query.filter(Submission.reviewed_by.ilike(f'%{reviewer}%'))
+
+        if reviewed_date_from := advanced_search_filters.get('reviewed_date_from'):
+            query = query.filter(Submission.review_date >= reviewed_date_from)
+
+        if reviewed_date_to := advanced_search_filters.get('reviewed_date_to'):
+            query = query.filter(Submission.review_date <= reviewed_date_to)
+        return query
 
     @classmethod
     def add_all_comments(cls, comments: list, session=None) -> list[Comment]:
