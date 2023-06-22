@@ -48,17 +48,18 @@ class EngagementSlugService:
             return normalized_slug
 
         suffix_separator = '-'
-        suffix_numbers = [
-            int(re.search(r'(\d+)$', s.slug.split(normalized_slug + suffix_separator)[-1], re.ASCII).group(1))
-            for s in similar_slugs
-            if re.search(r'(\d+)$', s.slug.split(normalized_slug + suffix_separator)[-1], re.ASCII)
-        ]
+        suffix_numbers = []
+        for s in similar_slugs:
+            slug_parts = s.slug.split(normalized_slug + suffix_separator)
+            if len(slug_parts) > 1:
+                suffix = slug_parts[-1]
+                if suffix.isdigit():
+                    suffix_numbers.append(int(suffix))
 
         counter = max(suffix_numbers) + 1 if suffix_numbers else 1
 
         unique_slug = f"{normalized_slug}{suffix_separator}{counter}"
         return unique_slug
-
 
 
     @classmethod
