@@ -21,6 +21,7 @@ import { Engagement } from 'models/engagement';
 import { SurveyResultData, createSurveyResultData, defaultData } from '../../../models/analytics/surveyResult';
 import { ErrorBox } from '../ErrorBox';
 import { If, Then, Else, When } from 'react-if';
+import { dashboardCustomStyles } from '../SubmissionTrend/SubmissionTrend';
 
 const HEIGHT = 400;
 
@@ -101,7 +102,6 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading }: Sur
                                 <Grid
                                     item
                                     container
-                                    md={4}
                                     xs={12}
                                     direction="row"
                                     justifyContent={isTablet ? 'center' : 'flex-end'}
@@ -112,6 +112,7 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading }: Sur
                                         value={chartType}
                                         exclusive
                                         onChange={handleToggleChange}
+                                        sx={dashboardCustomStyles.toggleGroup}
                                     >
                                         <ToggleButton
                                             value="bar"
