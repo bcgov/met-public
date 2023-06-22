@@ -32,9 +32,10 @@ class EngagementSlug(BaseModel):
     def find_by_engagement_id(cls, engagement_id):
         """Return engagement slug by engagement id."""
         return cls.query.filter_by(engagement_id=engagement_id).first()
-    
+
     @classmethod
     def find_similar_slugs(cls, target_slug: str):
+        """Find already saved slugs with similar name and pattern."""
         similar_slugs = EngagementSlug.query.filter(
             or_(
                 EngagementSlug.slug == target_slug,

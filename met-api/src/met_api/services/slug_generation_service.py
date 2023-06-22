@@ -1,4 +1,6 @@
+"""Service for generating slugs."""
 from slugify import slugify
+
 
 class SlugGenerationService:
     """Service for generating slugs."""
