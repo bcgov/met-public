@@ -1,5 +1,4 @@
 """Service for engagement slug management."""
-import re
 from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.constants.engagement_status import Status
@@ -43,8 +42,8 @@ class EngagementSlugService:
 
         suffix_separator = '-'
         suffix_numbers = []
-        for s in similar_slugs:
-            slug_parts = s.slug.split(normalized_slug + suffix_separator)
+        for similar_slug in similar_slugs:
+            slug_parts = similar_slug.slug.split(normalized_slug + suffix_separator)
             if len(slug_parts) > 1:
                 suffix = slug_parts[-1]
                 if suffix.isdigit():
