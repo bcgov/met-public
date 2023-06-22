@@ -36,6 +36,7 @@ class EngagementSlugService:
         engagement_slug.save()
         return engagement_slug
 
+
     @classmethod
     def generate_unique_slug(cls, text: str) -> str:
         """Generate a unique slug."""
@@ -48,15 +49,16 @@ class EngagementSlugService:
 
         suffix_separator = '-'
         suffix_numbers = [
-            int(re.search(r'(\d+)$', s.slug.split(normalized_slug + suffix_separator)[-1]).group(1))
+            int(re.search(r'(\d+)$', s.slug.split(normalized_slug + suffix_separator)[-1], re.ASCII).group(1))
             for s in similar_slugs
-            if re.search(r'(\d+)$', s.slug.split(normalized_slug + suffix_separator)[-1])
+            if re.search(r'(\d+)$', s.slug.split(normalized_slug + suffix_separator)[-1], re.ASCII)
         ]
 
         counter = max(suffix_numbers) + 1 if suffix_numbers else 1
 
         unique_slug = f"{normalized_slug}{suffix_separator}{counter}"
         return unique_slug
+
 
 
     @classmethod
