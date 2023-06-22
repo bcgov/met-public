@@ -8,5 +8,5 @@ class SlugGenerationService:
     @staticmethod
     def generate_slug(text: str) -> str:
         """Generate a slug from the provided text."""
-        normalized_text = slugify(text, lowercase=True, max_length=100)
+        normalized_text = slugify(text, to_lower=True, max_length=100) # noqa: S930
         return normalized_text

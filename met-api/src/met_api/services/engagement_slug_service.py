@@ -9,12 +9,6 @@ from met_api.services.slug_generation_service import SlugGenerationService
 class EngagementSlugService:
     """Service for engagement slug management."""
 
-    slug_generation_service: SlugGenerationService
-
-    def __init__(self, slug_generation_service=SlugGenerationService()):
-        """Initialize the EngagementSlugService."""
-        self.slug_generation_service = slug_generation_service
-
     @classmethod
     def get_engagement_slug(cls, slug: str) -> EngagementSlugModel:
         """Get an engagement slug by slug."""
@@ -40,7 +34,7 @@ class EngagementSlugService:
     @classmethod
     def generate_unique_slug(cls, text: str) -> str:
         """Generate a unique slug."""
-        normalized_slug = cls.slug_generation_service.generate_slug(text)
+        normalized_slug = SlugGenerationService.generate_slug(text)
 
         similar_slugs = EngagementSlugModel.find_similar_slugs(normalized_slug)
 
