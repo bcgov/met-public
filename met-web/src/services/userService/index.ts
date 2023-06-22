@@ -83,7 +83,6 @@ const userLogout = () => {
     sessionStorage.clear();
     clearInterval(refreshInterval);
     doLogout();
-    window.location.href = getBaseUrl();
 };
 
 const doLogin = KeycloakData.login;
