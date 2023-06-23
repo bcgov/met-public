@@ -14,7 +14,21 @@ class EngagementSlugService:
         engagement_slug = EngagementSlugModel.find_by_slug(slug)
         if not engagement_slug:
             raise ValueError(f'No engagement slug found for {slug}')
-        return engagement_slug
+        return {
+            'slug': engagement_slug.slug,
+            'engagement_id': engagement_slug.engagement_id,
+        }
+
+    @classmethod
+    def get_engagement_slug_by_engagement_id(cls, engagement_id: int) -> EngagementSlugModel:
+        """Get an engagement slug by slug."""
+        engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement_id)
+        if not engagement_slug:
+            raise ValueError(f'No engagement slug found for engagement {engagement_id}')
+        return {
+            'slug': engagement_slug.slug,
+            'engagement_id': engagement_slug.engagement_id,
+        }
 
     @classmethod
     def create_engagement_slug(cls, engagement_id: int) -> EngagementSlugModel:
@@ -27,7 +41,10 @@ class EngagementSlugService:
         slug = cls.generate_unique_slug(engagement.name)
         engagement_slug = EngagementSlugModel(engagement_id=engagement_id, slug=slug)
         engagement_slug.save()
-        return engagement_slug
+        return {
+            'slug': engagement_slug.slug,
+            'engagement_id': engagement_slug.engagement_id,
+        }
 
     @classmethod
     def generate_unique_slug(cls, text: str) -> str:
@@ -60,11 +77,18 @@ class EngagementSlugService:
         if not engagement_slug:
             raise ValueError(f'No engagement found for {slug}')
 
+        existing_slug = EngagementSlugModel.find_by_slug(slug)
+        if existing_slug:
+            raise ValueError(f'{slug} is already used by another engagement')
+
         cls._verify_engagement(engagement_id)
 
         engagement_slug.slug = slug
         engagement_slug.save()
-        return engagement_slug
+        return {
+            'slug': engagement_slug.slug,
+            'engagement_id': engagement_slug.engagement_id,
+        }
 
     @staticmethod
     def _verify_engagement(engagement_id):

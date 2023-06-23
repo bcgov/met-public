@@ -38,7 +38,11 @@ class EngagementSlug(Resource):
         """Fetch an engagement slug matching the provided slug."""
         try:
             engagement_slug = EngagementSlugService.get_engagement_slug(slug)
-            return engagement_slug.to_dict(), HTTPStatus.OK
+            return engagement_slug, HTTPStatus.OK
+        except KeyError as err:
+            return {'message': str(err)}, HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return {'message': str(err)}, HTTPStatus.INTERNAL_SERVER_ERROR
         except BusinessException as e:
             return {'error': str(e)}, HTTPStatus.NOT_FOUND
 
@@ -50,6 +54,29 @@ class EngagementSlug(Resource):
         try:
             engagement_id = request.json.get('engagement_id')
             engagement_slug = EngagementSlugService.update_engagement_slug(slug, engagement_id)
-            return engagement_slug.to_dict(), HTTPStatus.OK
+            return engagement_slug, HTTPStatus.OK
+        except KeyError as err:
+            return {'message': str(err)}, HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return {'message': str(err)}, HTTPStatus.INTERNAL_SERVER_ERROR
         except BusinessException as e:
-            return {'error': str(e)}, HTTPStatus.INTERNAL_SERVER_ERROR
+            return {'error': str(e)}, HTTPStatus.INTERNAL_SERVER_ERROR@cors_preflight('GET, PATCH, OPTIONS')
+
+
+@API.route('/engagements/<engagement_id>')
+class EngagementSlug(Resource):
+    """Resource for managing an engagement slug."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    def get(engagement_id):
+        """Fetch an engagement slug for a specific engagement."""
+        try:
+            engagement_slug = EngagementSlugService.get_engagement_slug_by_engagement_id(engagement_id)
+            return engagement_slug, HTTPStatus.OK
+        except KeyError as err:
+            return {'message': str(err)}, HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return {'message': str(err)}, HTTPStatus.INTERNAL_SERVER_ERROR
+        except BusinessException as e:
+            return {'error': str(e)}, HTTPStatus.NOT_FOUND

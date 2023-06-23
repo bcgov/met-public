@@ -19,15 +19,17 @@ import {
     MetHeader4,
     MetDescription,
     MetBody,
-} from '../../../common';
+} from '../../../../common';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
-import { ActionContext } from '../ActionContext';
+import { ActionContext } from '../../ActionContext';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { EngagementTabsContext } from './EngagementTabsContext';
+import { EngagementTabsContext } from '../EngagementTabsContext';
 import { AppConfig } from 'config';
 import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
+import { Unless } from 'react-if';
+import { EngagementSlug } from './EngagementSlug';
 
 const EngagementSettings = () => {
     const { handleUpdateEngagementMetadataRequest, isSaving, savedEngagement, engagementId } =
@@ -181,6 +183,18 @@ const EngagementSettings = () => {
                         onChange={handleChangeMetadata}
                     />
                 </Grid>
+                <Grid item xs={12}>
+                    <PrimaryButton
+                        data-testid="update-engagement-button"
+                        sx={{ marginRight: 1 }}
+                        onClick={() => handleUpdateEngagementSettings()}
+                        disabled={isSaving}
+                        loading={isSaving}
+                    >
+                        Save
+                    </PrimaryButton>
+                    <Divider sx={{ mt: '1em' }} />
+                </Grid>
                 <Grid item xs={12} mt={5} mb={1}>
                     <MetHeader4 bold>Engagement Settings</MetHeader4>
                 </Grid>
@@ -197,71 +211,7 @@ const EngagementSettings = () => {
                     />
                 </Grid>
                 <Grid item xs={12} mt={1}>
-                    <MetLabel>Engagement Link</MetLabel>
-                    <MetDescription>
-                        This is the link to the public engagement and will only be accessible once the engagement is
-                        published.
-                    </MetDescription>
-                    <ClickAwayListener onClickAway={handleTooltipClose}>
-                        <Tooltip
-                            title="Link copied!"
-                            PopperProps={{
-                                disablePortal: true,
-                            }}
-                            onClose={handleTooltipClose}
-                            open={copyTooltip}
-                            disableFocusListener
-                            disableHoverListener
-                            disableTouchListener
-                            placement="right"
-                        >
-                            <TextField
-                                id="engagement-name"
-                                variant="outlined"
-                                label=" "
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                                fullWidth
-                                value={engagementUrl}
-                                disabled
-                                sx={{
-                                    '.MuiInputBase-input': {
-                                        marginRight: 0,
-                                        padding: '0 0 0 1em',
-                                    },
-                                    '.MuiInputBase-root': {
-                                        padding: 0,
-                                    },
-                                }}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position="end" sx={{ height: '100%', maxHeight: '100%' }}>
-                                            <SecondaryButton
-                                                variant="contained"
-                                                disableElevation
-                                                onClick={handleCopyUrl}
-                                            >
-                                                <ContentCopyIcon />
-                                            </SecondaryButton>
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            />
-                        </Tooltip>
-                    </ClickAwayListener>
-                </Grid>
-                <Grid item xs={12}>
-                    <Divider sx={{ mt: '1em', mb: '1em' }} />
-                    <PrimaryButton
-                        data-testid="update-engagement-button"
-                        sx={{ marginRight: 1 }}
-                        onClick={() => handleUpdateEngagementSettings()}
-                        disabled={isSaving}
-                        loading={isSaving}
-                    >
-                        Save
-                    </PrimaryButton>
+                    <EngagementSlug />
                 </Grid>
             </Grid>
         </MetPaper>

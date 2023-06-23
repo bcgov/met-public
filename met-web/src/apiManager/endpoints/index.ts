@@ -12,6 +12,11 @@ const Endpoints = {
         UPDATE: `${AppConfig.apiUrl}/engagementsmetadata/`,
         GET: `${AppConfig.apiUrl}/engagementsmetadata/engagement_id`,
     },
+    EngagementSlug: {
+        UPDATE: `${AppConfig.apiUrl}/slugs/slug_id`,
+        GET: `${AppConfig.apiUrl}/slugs/slug_id`,
+        GET_ENG_ID: `${AppConfig.apiUrl}/slugs/engagements/engagement_id`,
+    },
     User: {
         GET: `${AppConfig.apiUrl}/user/user_id`,
         CREATE_UPDATE: `${AppConfig.apiUrl}/user/`,
