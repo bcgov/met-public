@@ -1,16 +1,19 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { InputAdornment, TextField, Tooltip, Grid, Divider } from '@mui/material';
-import { SecondaryButton, MetDescription, PrimaryButton, MetHeader4 } from 'components/common';
+import { InputAdornment, TextField, Tooltip, Grid, Divider, useTheme } from '@mui/material';
+import { SecondaryButton, MetDescription, PrimaryButton, MetHeader4, MetSmallText } from 'components/common';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { ActionContext } from 'components/engagement/form/ActionContext';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getSlugByEngagementId, patchEngagementSlug } from 'services/engagementSlugService';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import { When } from 'react-if';
 
+const HttpStatusBadRequest = 400;
 export const EngagementSlug = () => {
     const dispatch = useAppDispatch();
+    const theme = useTheme();
 
     const { savedEngagement } = useContext(ActionContext);
 
@@ -18,6 +21,7 @@ export const EngagementSlug = () => {
     const [slug, setSlug] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const [copyTooltip, setCopyTooltip] = useState(false);
+    const [backendError, setBackendError] = useState('');
 
     const handleTooltipClose = () => {
         setCopyTooltip(false);
@@ -62,6 +66,19 @@ export const EngagementSlug = () => {
         handleGetSlug();
     }, [savedEngagement.id]);
 
+    const handleBackendError = (error: AxiosError) => {
+        if (error.response?.status !== HttpStatusBadRequest) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Failed to update engagement link',
+                }),
+            );
+            return;
+        }
+        setBackendError(error.response?.data.message || '');
+    };
+
     const handleSaveSlug = async () => {
         if (!savedEngagement.id || savedSlug === slug) return;
         setIsSaving(true);
@@ -81,13 +98,7 @@ export const EngagementSlug = () => {
         } catch (error) {
             setIsSaving(false);
             if (axios.isAxiosError(error)) {
-                console.log(error.response);
-                dispatch(
-                    openNotification({
-                        severity: 'error',
-                        text: error.response?.data.message || 'Failed to update engagement link',
-                    }),
-                );
+                handleBackendError(error);
             } else {
                 dispatch(
                     openNotification({
@@ -159,10 +170,18 @@ export const EngagementSlug = () => {
                             }}
                             onChange={(e) => {
                                 setSlug(e.target.value);
+                                if (backendError) {
+                                    setBackendError('');
+                                }
                             }}
                         />
                     </Tooltip>
                 </ClickAwayListener>
+                <When condition={backendError}>
+                    <Grid item xs={12}>
+                        <MetSmallText sx={{ color: theme.palette.error.main }}>{backendError}</MetSmallText>
+                    </Grid>
+                </When>
             </Grid>
             <Grid item xs={12}>
                 <PrimaryButton
