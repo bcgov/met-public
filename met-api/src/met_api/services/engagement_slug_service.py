@@ -24,7 +24,7 @@ class EngagementSlugService:
         """Get an engagement slug by slug."""
         engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement_id)
         if not engagement_slug:
-            raise ValueError(f'No engagement slug found for engagement {engagement_id}')
+            return cls.create_engagement_slug(engagement_id)
         return {
             'slug': engagement_slug.slug,
             'engagement_id': engagement_slug.engagement_id,
