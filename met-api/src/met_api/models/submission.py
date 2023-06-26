@@ -5,11 +5,10 @@ Manages the Submission
 from __future__ import annotations
 from datetime import datetime
 from typing import List
-from sqlalchemy import TEXT, ForeignKey, and_, asc, cast, desc, or_, text
+from sqlalchemy import ForeignKey
 from sqlalchemy.dialects import postgresql
 
 from met_api.constants.comment_status import Status
-from met_api.models.pagination_options import PaginationOptions
 from met_api.models.survey import Survey
 from met_api.models.participant import Participant
 from met_api.schemas.submission import SubmissionSchema
@@ -157,41 +156,6 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
         return query.first()
 
     @classmethod
-    def get_by_survey_id_paginated(
-        cls,
-        survey_id,
-        pagination_options: PaginationOptions,
-        search_text='',
-        advanced_search_filters=None
-    ):
-        """Get submissions by survey id paginated."""
-        null_value = None
-        query = db.session.query(Submission)\
-            .filter(and_(Submission.survey_id == survey_id,
-                         or_(Submission.reviewed_by != 'System', Submission.reviewed_by == null_value)))\
-
-        if search_text:
-            # Remove all non-digit characters from search text
-            query = query.filter(cast(Submission.id, TEXT).like('%' + search_text + '%'))
-
-        if advanced_search_filters:
-            query = cls._filter_by_advanced_filters(query, advanced_search_filters)
-
-        sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == 'asc'\
-            else desc(text(pagination_options.sort_key))
-
-        query = query.order_by(sort)
-
-        no_pagination_options = not pagination_options.page or not pagination_options.size
-        if no_pagination_options:
-            items = query.all()
-            return items, len(items)
-
-        page = query.paginate(page=pagination_options.page, per_page=pagination_options.size)
-
-        return page.items, page.total
-
-    @classmethod
     def get_engaged_participants(cls, engagement_id) -> List[Participant]:
         """Get users that have submissions for the specified engagement id."""
         users = db.session.query(Participant)\
@@ -200,24 +164,3 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
             .filter(Survey.engagement_id == engagement_id)\
             .all()
         return users
-
-    @staticmethod
-    def _filter_by_advanced_filters(query, advanced_search_filters: dict):
-        if status := advanced_search_filters.get('status'):
-            query = query.filter(Submission.comment_status_id == status)
-
-        if comment_date_to := advanced_search_filters.get('comment_date_to'):
-            query = query.filter(Submission.created_date <= comment_date_to)
-
-        if comment_date_from := advanced_search_filters.get('comment_date_from'):
-            query = query.filter(Submission.created_date >= comment_date_from)
-
-        if reviewer := advanced_search_filters.get('reviewer'):
-            query = query.filter(Submission.reviewed_by.ilike(f'%{reviewer}%'))
-
-        if reviewed_date_from := advanced_search_filters.get('reviewed_date_from'):
-            query = query.filter(Submission.review_date >= reviewed_date_from)
-
-        if reviewed_date_to := advanced_search_filters.get('reviewed_date_to'):
-            query = query.filter(Submission.review_date <= reviewed_date_to)
-        return query

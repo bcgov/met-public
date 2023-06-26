@@ -241,7 +241,7 @@ class SubmissionService:
                     # No blanket search.Return only approved if filter doesnt have any status
                     advanced_search_filters['status'] = Status.Approved.value
 
-        items, total = Submission.get_by_survey_id_paginated(
+        items, total = Comment.get_by_survey_id_paginated(
             survey_id,
             pagination_options,
             search_text,

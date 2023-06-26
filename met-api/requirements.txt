@@ -10,7 +10,7 @@ Flask-Migrate==2.7.0
 Flask-Script==2.0.5
 flask-restplus==0.13.0
 Flask-SQLAlchemy==2.5.1
-greenlet==1.1.0
+greenlet
 itsdangerous==2.0.1
 Jinja2==3.0.1
 jsonschema==3.2.0
@@ -19,7 +19,7 @@ MarkupSafe==2.1.1
 marshmallow==3.12.1
 marshmallow-sqlalchemy==0.26.1
 mistune==2.0.3
-psycopg2-binary==2.8.6
+psycopg2-binary==2.9.1
 PyJWT==2.4.0
 pyrsistent==0.17.3
 python-dateutil==2.8.1

@@ -9,15 +9,14 @@
             "type": "python",
             "request": "launch",
             "module": "flask",
+            "python": "${workspaceFolder}/met-api/venv/bin/python",
             "env": {
                 "FLASK_APP": "src/met_api",
                 "FLASK_ENV": "development",
-                "FLASK_DEBUG": "0"
+                "FLASK_DEBUG": "0",
             },
             "args": [
                 "run",
-                "--no-debugger",
-                "--no-reload"
             ],
             "jinja": true,
             "justMyCode": false

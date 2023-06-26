@@ -31,16 +31,10 @@ interface SubmissionTrendProps {
     engagementIsLoading: boolean;
 }
 
-const customStyles = {
+export const dashboardCustomStyles = {
     toggleGroup: {
         maxHeight: '34px',
         mb: { md: 2 },
-    },
-    toggleButton: {
-        '&.Mui-selected': {
-            backgroundColor: 'Palette.primary.main',
-            color: 'white',
-        },
     },
     primaryButton: {
         width: '100%',
@@ -188,7 +182,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             </Grid>
 
                             <Grid container item xs={8} justifyContent="center" alignItems="center">
-                                <PrimaryButton sx={customStyles.primaryButton} onClick={clearDates}>
+                                <PrimaryButton sx={dashboardCustomStyles.primaryButton} onClick={clearDates}>
                                     Clear
                                 </PrimaryButton>
                             </Grid>
@@ -211,7 +205,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     exclusive
                                     onChange={handleToggleChange}
                                     size={isTablet ? 'small' : 'medium'}
-                                    sx={customStyles.toggleGroup}
+                                    sx={dashboardCustomStyles.toggleGroup}
                                 >
                                     <ToggleButton
                                         value="weekly"
