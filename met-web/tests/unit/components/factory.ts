@@ -142,6 +142,10 @@ const engagementMetadata: EngagementMetadata = {
     engagement_id: 1,
 };
 
+const engagementSlugData = {
+    slug: 'test-engagement-slug',
+};
+
 export {
     tenant,
     draftEngagement,
@@ -154,4 +158,5 @@ export {
     eventWidgetItem,
     eventWidget,
     engagementMetadata,
+    engagementSlugData,
 };

@@ -59,6 +59,7 @@ const App = () => {
 
             if (tenant) {
                 sessionStorage.setItem('tenantId', basename);
+                sessionStorage.setItem('appBaseUrl', window.location.origin + '/' + basename);
                 setTenant(tenant);
             }
         } catch {

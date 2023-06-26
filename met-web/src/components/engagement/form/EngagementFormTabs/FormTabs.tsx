@@ -2,7 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import TabContext from '@mui/lab/TabContext';
 import EngagementForm from './EngagementForm';
-import EngagementSettings from './EngagementSettings';
+import EngagementSettings from './Settings/EngagementSettings';
 import { MetTab, MetTabList, MetTabPanel } from '../StyledTabComponents';
 import { EngagementFormTabValues, ENGAGEMENT_FORM_TABS } from './constants';
 import EngagementUserManagement from './EngagementUserManagement';

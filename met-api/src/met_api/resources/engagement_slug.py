@@ -20,7 +20,6 @@ from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
 from met_api.auth import auth
-from met_api.exceptions.business_exception import BusinessException
 from met_api.services.engagement_slug_service import EngagementSlugService
 from met_api.utils.util import allowedorigins, cors_preflight
 
@@ -29,7 +28,7 @@ API = Namespace('engagementslugs', description='Endpoints for Engagement Slug Ma
 
 @cors_preflight('GET, PATCH, OPTIONS')
 @API.route('/<slug>')
-class EngagementSlug(Resource):
+class Slug(Resource):
     """Resource for managing an engagement slug."""
 
     @staticmethod
@@ -38,9 +37,11 @@ class EngagementSlug(Resource):
         """Fetch an engagement slug matching the provided slug."""
         try:
             engagement_slug = EngagementSlugService.get_engagement_slug(slug)
-            return engagement_slug.to_dict(), HTTPStatus.OK
-        except BusinessException as e:
-            return {'error': str(e)}, HTTPStatus.NOT_FOUND
+            return engagement_slug, HTTPStatus.OK
+        except KeyError as err:
+            return {'message': str(err)}, HTTPStatus.BAD_REQUEST
+        except ValueError as err:
+            return {'message': str(err)}, HTTPStatus.BAD_REQUEST
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
@@ -50,6 +51,25 @@ class EngagementSlug(Resource):
         try:
             engagement_id = request.json.get('engagement_id')
             engagement_slug = EngagementSlugService.update_engagement_slug(slug, engagement_id)
-            return engagement_slug.to_dict(), HTTPStatus.OK
-        except BusinessException as e:
-            return {'error': str(e)}, HTTPStatus.INTERNAL_SERVER_ERROR
+            return engagement_slug, HTTPStatus.OK
+        except KeyError as err:
+            return {'message': str(err)}, HTTPStatus.BAD_REQUEST
+        except ValueError as err:
+            return {'message': str(err)}, HTTPStatus.BAD_REQUEST
+
+
+@API.route('/engagements/<engagement_id>')
+class EngagementSlug(Resource):
+    """Resource for managing an engagement slug."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    def get(engagement_id):
+        """Fetch an engagement slug for a specific engagement."""
+        try:
+            engagement_slug = EngagementSlugService.get_engagement_slug_by_engagement_id(engagement_id)
+            return engagement_slug, HTTPStatus.OK
+        except KeyError as err:
+            return {'message': str(err)}, HTTPStatus.BAD_REQUEST
+        except ValueError as err:
+            return {'message': str(err)}, HTTPStatus.BAD_REQUEST
