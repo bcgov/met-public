@@ -39,3 +39,4 @@ pyhumps==1.6.1
 pylint==2.13.9
 aws-requests-auth
 requests
+awesome-slugify==1.6.5

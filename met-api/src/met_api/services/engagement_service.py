@@ -15,6 +15,7 @@ from met_api.models.submission import Submission as SubmissionModel
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services import authorization
 from met_api.services.object_storage_service import ObjectStorageService
+from met_api.services.engagement_slug_service import EngagementSlugService
 from met_api.utils import email_util, notification
 from met_api.utils.enums import SourceAction, SourceType
 from met_api.utils.roles import Role
@@ -126,6 +127,7 @@ class EngagementService:
             EngagementService._create_eng_status_block(eng_model.id, request_json)
         eng_model.commit()
         email_util.publish_to_email_queue(SourceType.ENGAGEMENT.value, eng_model.id, SourceAction.CREATED.value, True)
+        EngagementSlugService.create_engagement_slug(eng_model.id)
         return eng_model.find_by_id(eng_model.id)
 
     @staticmethod
