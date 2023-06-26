@@ -137,7 +137,7 @@ class _Config():  # pylint: disable=too-few-public-methods
 
     EMAIL_SECRET_KEY = os.getenv('EMAIL_SECRET_KEY', 'secret')
 
-    #Slug generation
+    # Slug generation
     SLUG_MAX_CHARACTERS = int(os.getenv('SLUG_MAX_CHARACTERS', '100'))
 
 
