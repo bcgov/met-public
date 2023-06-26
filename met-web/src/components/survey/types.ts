@@ -1,5 +1,6 @@
 export type SurveyParams = {
-    surveyId: string;
+    surveyId?: string;
+    slug?: string;
     token: string;
 };
 

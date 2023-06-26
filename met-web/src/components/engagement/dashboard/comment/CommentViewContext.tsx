@@ -8,6 +8,7 @@ import { getErrorMessage } from 'utils';
 import { getCommentsPage } from 'services/commentService';
 import { Comment } from 'models/comment';
 import { createDefaultPageInfo, PageInfo, PaginationOptions } from 'components/common/Table/types';
+import { getEngagementIdBySlug } from 'services/engagementSlugService';
 
 export interface EngagementCommentContextProps {
     engagement: Engagement | null;
@@ -21,7 +22,8 @@ export interface EngagementCommentContextProps {
 }
 
 export type EngagementParams = {
-    engagementId: string;
+    engagementId?: string;
+    slug?: string;
 };
 
 export const CommentViewContext = createContext<EngagementCommentContextProps>({
@@ -38,10 +40,13 @@ export const CommentViewContext = createContext<EngagementCommentContextProps>({
 });
 
 export const CommentViewProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
-    const { engagementId } = useParams<EngagementParams>();
+    const { engagementId: engagementIdParam, slug } = useParams<EngagementParams>();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
+    const [engagementId, setEngagementId] = useState<number | null>(
+        engagementIdParam ? Number(engagementIdParam) : null,
+    );
     const [engagement, setEngagement] = useState<Engagement | null>(null);
     const [isEngagementLoading, setEngagementLoading] = useState(true);
     const [isCommentsListLoading, setIsCommentsListLoading] = useState(true);
@@ -55,27 +60,47 @@ export const CommentViewProvider = ({ children }: { children: JSX.Element | JSX.
 
     const { page, size } = paginationOptions;
 
+    const handleFetchEngagementIdBySlug = async () => {
+        if (!slug) {
+            return;
+        }
+        try {
+            const result = await getEngagementIdBySlug(slug);
+            setEngagementId(result.engagement_id);
+        } catch (error) {
+            navigate('/404');
+        }
+    };
+
     useEffect(() => {
-        const fetchEngagement = async () => {
-            if (isNaN(Number(engagementId))) {
-                navigate('/');
-                return;
-            }
-            try {
-                const result = await getEngagement(Number(engagementId));
-                setEngagement({ ...result });
-                setEngagementLoading(false);
-            } catch (error) {
-                console.log(error);
-                dispatch(
-                    openNotification({
-                        severity: 'error',
-                        text: getErrorMessage(error) || 'Error occurred while fetching Engagement information',
-                    }),
-                );
-                navigate('/');
-            }
-        };
+        handleFetchEngagementIdBySlug();
+    }, [slug]);
+
+    const fetchEngagement = async () => {
+        if (!engagementId && slug) {
+            return;
+        }
+        if (isNaN(Number(engagementId))) {
+            navigate('/');
+            return;
+        }
+        try {
+            const result = await getEngagement(Number(engagementId));
+            setEngagement({ ...result });
+            setEngagementLoading(false);
+        } catch (error) {
+            console.log(error);
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: getErrorMessage(error) || 'Error occurred while fetching Engagement information',
+                }),
+            );
+            navigate('/');
+        }
+    };
+
+    useEffect(() => {
         fetchEngagement();
     }, [engagementId]);
 

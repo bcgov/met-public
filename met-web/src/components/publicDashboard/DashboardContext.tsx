@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getEngagement } from 'services/engagementService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getErrorMessage } from 'utils';
+import { getEngagementIdBySlug } from 'services/engagementSlugService';
 
 export interface DashboardContextState {
     engagement: Engagement;
@@ -22,14 +23,19 @@ interface DashboardContextProviderProps {
 }
 
 type EngagementParams = {
-    engagementId: string;
+    engagementId?: string;
+    slug?: string;
 };
 
 export const DashboardContextProvider = ({ children }: DashboardContextProviderProps) => {
-    const { engagementId } = useParams<EngagementParams>();
+    const { engagementId: engagementIdParam, slug } = useParams<EngagementParams>();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const roles = useAppSelector((state) => state.user.roles);
+
+    const [engagementId, setEngagementId] = useState<number | null>(
+        engagementIdParam ? Number(engagementIdParam) : null,
+    );
 
     const [engagement, setEngagement] = useState<Engagement>(createDefaultEngagement());
     const [isEngagementLoading, setEngagementLoading] = useState(true);
@@ -53,6 +59,9 @@ export const DashboardContextProvider = ({ children }: DashboardContextProviderP
     };
 
     const fetchEngagement = async () => {
+        if (!engagementId && slug) {
+            return;
+        }
         if (isNaN(Number(engagementId))) {
             navigate('/404');
             return;
@@ -74,6 +83,22 @@ export const DashboardContextProvider = ({ children }: DashboardContextProviderP
     useEffect(() => {
         fetchEngagement();
     }, [engagementId]);
+
+    const handleFetchEngagementIdBySlug = async () => {
+        if (!slug) {
+            return;
+        }
+        try {
+            const result = await getEngagementIdBySlug(slug);
+            setEngagementId(result.engagement_id);
+        } catch (error) {
+            navigate('/404');
+        }
+    };
+
+    useEffect(() => {
+        handleFetchEngagementIdBySlug();
+    }, [slug]);
 
     return (
         <DashboardContext.Provider

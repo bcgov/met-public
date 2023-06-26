@@ -9,6 +9,7 @@ import { useLazyGetWidgetsQuery } from 'apiManager/apiSlices/widgets';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { verifyEmailVerification } from 'services/emailVerificationService';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+import { getEngagementIdBySlug } from 'services/engagementSlugService';
 
 interface EngagementSchedule {
     id: number;
@@ -27,8 +28,9 @@ export interface EngagementViewContext {
 }
 
 export type EngagementParams = {
-    engagementId: string;
+    engagementId?: string;
     token?: string;
+    slug?: string;
 };
 
 export const ActionContext = createContext<EngagementViewContext>({
@@ -46,9 +48,12 @@ export const ActionContext = createContext<EngagementViewContext>({
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
-    const { engagementId, token } = useParams<EngagementParams>();
+    const { engagementId: engagementIdParam, token, slug } = useParams<EngagementParams>();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const [engagementId, setEngagementId] = useState<number | null>(
+        engagementIdParam ? Number(engagementIdParam) : null,
+    );
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
     const [mockStatus, setMockStatus] = useState(savedEngagement.submission_status);
     const [widgets, setWidgets] = useState<Widget[]>([]);
@@ -110,6 +115,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     };
 
     const fetchEngagement = async () => {
+        if (!engagementId && slug) {
+            return;
+        }
         if (isNaN(Number(engagementId))) {
             navigate('/404');
             return;
@@ -146,6 +154,22 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
             );
         }
     };
+
+    const handleFetchEngagementIdBySlug = async () => {
+        if (!slug) {
+            return;
+        }
+        try {
+            const result = await getEngagementIdBySlug(slug);
+            setEngagementId(result.engagement_id);
+        } catch (error) {
+            navigate('/404');
+        }
+    };
+
+    useEffect(() => {
+        handleFetchEngagementIdBySlug();
+    }, [slug]);
 
     useEffect(() => {
         fetchEngagement();
