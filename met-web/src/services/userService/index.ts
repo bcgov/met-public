@@ -15,7 +15,6 @@ import http from 'apiManager/httpRequestHandler';
 import { User } from 'models/user';
 import { getMembershipsByUser } from 'services/membershipService';
 import { SCOPES } from 'components/permissionsGate/PermissionMaps';
-import { getBaseUrl } from 'helper';
 
 const KeycloakData = _kc;
 /**
