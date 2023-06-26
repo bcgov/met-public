@@ -1,5 +1,6 @@
 """Service for generating slugs."""
 from slugify import slugify
+from met_api.config import _Config
 
 
 class SlugGenerationService:
@@ -11,6 +12,6 @@ class SlugGenerationService:
         normalized_text = slugify(
             text,
             to_lower=True,  # NOSONAR # to_lower is a valid paramter for awesome-slugify
-            max_length=100
+            max_length=_Config.SLUG_MAX_CHARACTERS
         )
         return normalized_text
