@@ -27,7 +27,7 @@ export const EngagementSlug = () => {
         setCopyTooltip(false);
     };
     const newEngagement = !savedEngagement.id || isNaN(Number(savedEngagement.id));
-    const baseUrl = sessionStorage.getItem('appBaseUrl') || window.location.origin;
+    const baseUrl = sessionStorage.getItem('appBaseUrl') ?? window.location.origin;
 
     const engagementUrl = !savedSlug ? 'Link will appear when the engagement is saved' : `${baseUrl}/${slug}`;
 
