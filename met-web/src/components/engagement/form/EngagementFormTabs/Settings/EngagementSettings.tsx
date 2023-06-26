@@ -1,34 +1,10 @@
-import React, { useState, useContext } from 'react';
-import {
-    Grid,
-    InputAdornment,
-    MenuItem,
-    TextField,
-    Select,
-    Tooltip,
-    SelectChangeEvent,
-    FormControlLabel,
-    Switch,
-    Divider,
-} from '@mui/material';
-import {
-    MetLabel,
-    MetPaper,
-    PrimaryButton,
-    SecondaryButton,
-    MetHeader4,
-    MetDescription,
-    MetBody,
-} from '../../../../common';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import ClickAwayListener from '@mui/material/ClickAwayListener';
+import React, { useContext } from 'react';
+import { Grid, MenuItem, TextField, Select, SelectChangeEvent, FormControlLabel, Switch, Divider } from '@mui/material';
+import { MetLabel, MetPaper, PrimaryButton, MetHeader4, MetBody } from '../../../../common';
 import { ActionContext } from '../../ActionContext';
-import { useAppDispatch } from 'hooks';
-import { openNotification } from 'services/notificationService/notificationSlice';
 import { EngagementTabsContext } from '../EngagementTabsContext';
 import { AppConfig } from 'config';
 import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
-import { Unless } from 'react-if';
 import { EngagementSlug } from './EngagementSlug';
 
 const EngagementSettings = () => {
@@ -37,18 +13,6 @@ const EngagementSettings = () => {
     const { engagementFormData, setEngagementFormData } = useContext(EngagementTabsContext);
     const { project_id, project_metadata, is_internal } = engagementFormData;
     const { engagementProjectTypes } = AppConfig.constants;
-    const dispatch = useAppDispatch();
-
-    const newEngagement = !savedEngagement.id || isNaN(Number(savedEngagement.id));
-    const engagementUrl = newEngagement
-        ? 'Link will appear when the engagement is saved'
-        : `${window.location.origin}/engagements/${savedEngagement.id}/view`;
-
-    const [copyTooltip, setCopyTooltip] = useState(false);
-
-    const handleTooltipClose = () => {
-        setCopyTooltip(false);
-    };
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setEngagementFormData({
@@ -72,20 +36,6 @@ const EngagementSettings = () => {
                 [e.target.name]: e.target.value,
             },
         });
-    };
-
-    const handleCopyUrl = () => {
-        if (newEngagement) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Engagement link can only be copied after the engagement is saved',
-                }),
-            );
-            return;
-        }
-        setCopyTooltip(true);
-        navigator.clipboard.writeText(engagementUrl);
     };
 
     const handleUpdateEngagementSettings = async () => {
