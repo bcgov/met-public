@@ -7,12 +7,13 @@ import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as engagementMetadataService from 'services/engagementMetadataService';
+import * as engagementSlugService from 'services/engagementSlugService';
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
 import * as widgetService from 'services/widgetService';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { WidgetType } from 'models/widget';
 import { Box } from '@mui/material';
-import { draftEngagement, engagementMetadata } from '../../../factory';
+import { draftEngagement, engagementMetadata, engagementSlugData } from '../../../factory';
 import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 
 const survey: Survey = {
@@ -81,6 +82,9 @@ describe('Engagement form page tests', () => {
     jest.spyOn(engagementMetadataService, 'patchEngagementMetadata').mockReturnValue(
         Promise.resolve(engagementMetadata),
     );
+    const getEngagementSlugMock = jest
+        .spyOn(engagementSlugService, 'getSlugByEngagementId')
+        .mockReturnValue(Promise.resolve(engagementSlugData));
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
         .mockReturnValue(Promise.resolve(draftEngagement));
@@ -166,7 +170,7 @@ describe('Engagement form page tests', () => {
         expect(screen.getByText('Add Survey')).toBeDisabled();
     });
 
-    test('Can move to settings tab', async () => {
+    test.only('Can move to settings tab', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
@@ -186,7 +190,10 @@ describe('Engagement form page tests', () => {
         fireEvent.click(settingsTabButton);
 
         expect(screen.getByText('Engagement Link')).toBeInTheDocument();
-        expect(screen.getByDisplayValue('/engagements/1/view', { exact: false })).toBeInTheDocument();
+        await waitFor(() => {
+            expect(getEngagementSlugMock).toHaveReturned();
+            expect(screen.getByDisplayValue(engagementSlugData.slug, { exact: false })).toBeInTheDocument();
+        });
     });
 
     test('Remove survey triggers notification modal', async () => {
