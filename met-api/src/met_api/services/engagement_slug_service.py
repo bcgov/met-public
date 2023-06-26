@@ -34,8 +34,11 @@ class EngagementSlugService:
     def create_engagement_slug(cls, engagement_id: int) -> EngagementSlugModel:
         """Create an engagement slug."""
         existing_slug = EngagementSlugModel.find_by_engagement_id(engagement_id)
-        if existing_slug:
-            raise ValueError(f'Engagement slug already exists for engagement {engagement_id}')
+        if existing_slug:            
+            return {
+                'slug': existing_slug.slug,
+                'engagement_id': existing_slug.engagement_id,
+            }
 
         engagement = cls._verify_engagement(engagement_id)
         slug = cls.generate_unique_slug(engagement.name)
@@ -57,6 +60,15 @@ class EngagementSlugService:
             return normalized_slug
 
         suffix_separator = '-'
+        suffix_numbers = cls._get_suffix_numbers(normalized_slug, similar_slugs, suffix_separator)
+
+        counter = max(suffix_numbers) + 1 if suffix_numbers else 1
+
+        unique_slug = f'{normalized_slug}{suffix_separator}{counter}'
+        return unique_slug
+
+    @classmethod
+    def _get_suffix_numbers(cls, normalized_slug, similar_slugs, suffix_separator):
         suffix_numbers = []
         for similar_slug in similar_slugs:
             slug_parts = similar_slug.slug.split(normalized_slug + suffix_separator)
@@ -64,11 +76,7 @@ class EngagementSlugService:
                 suffix = slug_parts[-1]
                 if suffix.isdigit():
                     suffix_numbers.append(int(suffix))
-
-        counter = max(suffix_numbers) + 1 if suffix_numbers else 1
-
-        unique_slug = f'{normalized_slug}{suffix_separator}{counter}'
-        return unique_slug
+        return suffix_numbers
 
     @classmethod
     def update_engagement_slug(cls, slug: str, engagement_id: int) -> EngagementSlugModel:
