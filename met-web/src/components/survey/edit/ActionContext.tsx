@@ -64,7 +64,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             const result = await getEngagementIdBySlug(slug);
             setEngagementId(result.engagement_id);
         } catch (error) {
-            navigate('/404');
+            navigate('/not-found');
         }
     };
 
@@ -88,7 +88,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     const verifyToken = async () => {
         if (!token) {
-            navigate(`/404`);
+            navigate(`/not-found`);
             return;
         }
 
@@ -133,7 +133,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     const loadEngagement = async () => {
         if (isNaN(Number(engagementId))) {
-            navigate('/404');
+            navigate('/not-found');
             return;
         }
 

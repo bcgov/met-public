@@ -119,7 +119,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
             return;
         }
         if (isNaN(Number(engagementId))) {
-            navigate('/404');
+            navigate('/not-found');
             return;
         }
         try {
@@ -163,7 +163,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
             const result = await getEngagementIdBySlug(slug);
             setEngagementId(result.engagement_id);
         } catch (error) {
-            navigate('/404');
+            navigate('/not-found');
         }
     };
 

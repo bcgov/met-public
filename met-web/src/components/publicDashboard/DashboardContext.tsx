@@ -63,7 +63,7 @@ export const DashboardContextProvider = ({ children }: DashboardContextProviderP
             return;
         }
         if (isNaN(Number(engagementId))) {
-            navigate('/404');
+            navigate('/not-found');
             return;
         }
         try {
@@ -92,7 +92,7 @@ export const DashboardContextProvider = ({ children }: DashboardContextProviderP
             const result = await getEngagementIdBySlug(slug);
             setEngagementId(result.engagement_id);
         } catch (error) {
-            navigate('/404');
+            navigate('/not-found');
         }
     };
 

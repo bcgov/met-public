@@ -48,7 +48,7 @@ export const EngagementDashboard = () => {
     useEffect(() => {
         const fetchEngagement = async () => {
             if (isNaN(Number(engagementId))) {
-                navigate('/404');
+                navigate('/not-found');
                 return;
             }
             try {
