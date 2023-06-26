@@ -34,7 +34,7 @@ class EngagementSlugService:
     def create_engagement_slug(cls, engagement_id: int) -> EngagementSlugModel:
         """Create an engagement slug."""
         existing_slug = EngagementSlugModel.find_by_engagement_id(engagement_id)
-        if existing_slug:            
+        if existing_slug:
             return {
                 'slug': existing_slug.slug,
                 'engagement_id': existing_slug.engagement_id,

@@ -20,7 +20,6 @@ from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
 from met_api.auth import auth
-from met_api.exceptions.business_exception import BusinessException
 from met_api.services.engagement_slug_service import EngagementSlugService
 from met_api.utils.util import allowedorigins, cors_preflight
 
@@ -29,7 +28,7 @@ API = Namespace('engagementslugs', description='Endpoints for Engagement Slug Ma
 
 @cors_preflight('GET, PATCH, OPTIONS')
 @API.route('/<slug>')
-class EngagementSlug(Resource):
+class Slug(Resource):
     """Resource for managing an engagement slug."""
 
     @staticmethod
