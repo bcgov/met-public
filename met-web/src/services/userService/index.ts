@@ -17,7 +17,6 @@ import { getMembershipsByUser } from 'services/membershipService';
 import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 
 const KeycloakData = _kc;
-
 /**
  * Initializes Keycloak instance.
  */
@@ -87,8 +86,12 @@ const userLogout = () => {
 
 const doLogin = KeycloakData.login;
 
-const doLogout = KeycloakData.logout;
-
+const doLogout = async (navigateCallback?: () => void) => {
+    if (navigateCallback) {
+        navigateCallback();
+    }
+    await KeycloakData.logout();
+};
 const getToken = () => KeycloakData.token;
 
 const isLoggedIn = () => !!KeycloakData.token;
