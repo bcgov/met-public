@@ -39,7 +39,7 @@ def get_user_last_run_cycle_time(context):
 
 # extract the users that have been created or updated after the last run
 @op(required_resource_keys={"met_db_session", "met_etl_db_session"},
-    out={"new_users": Out(), "updated_users": Out(), "user_details_new_run_cycle_id": Out()})
+    out={"new_participants": Out(), "updated_participants": Out(), "user_details_new_run_cycle_id": Out()})
 def extract_participant(context, user_details_last_run_cycle_datetime, user_details_new_run_cycle_id):
     session = context.resources.met_db_session
     default_datetime = datetime(1900, 1, 1, 0, 0, 0, 0)

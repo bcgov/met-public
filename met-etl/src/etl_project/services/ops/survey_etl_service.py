@@ -4,10 +4,6 @@ from datetime import datetime
 
 from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 from analytics_api.models.request_type_option import RequestTypeOption as MetRequestTypeOption
-from analytics_api.models.request_type_radio import RequestTypeRadio as MetRequestTypeRadioModel
-from analytics_api.models.request_type_selectbox import RequestTypeSelectbox as MetRequestTypeSelectBoxesModel
-from analytics_api.models.request_type_textarea import RequestTypeTextarea as MetRequestTypeTextAreaModel
-from analytics_api.models.request_type_textfield import RequestTypeTextfield as MetRequestTypeTextModel
 from analytics_api.models.survey import Survey as EtlSurveyModel
 from met_api.models.survey import Survey as MetSurveyModel
 from analytics_api.utils.util import FormIoComponentType
@@ -123,7 +119,7 @@ def extract_survey_components(context, session, survey, survey_new_runcycleid, f
 
     for component in form_components:
         position = position + 1
-        component_type = component.get('inputType', None)
+        component_type = component.get('type', None)
         context.log.info('Survey: %s.%sProcessing component with id %s and type: %s and label %s ',
                         survey.id,
                         survey.name,
@@ -134,14 +130,14 @@ def extract_survey_components(context, session, survey, survey_new_runcycleid, f
         if not component_type:
             continue
 
-        model_type = _identify_form_type(context, component_type)
+        has_valid_question_type = _validate_form_type(context, component_type)
 
-        if model_type:
+        if has_valid_question_type:
             etl_survey = session.query(EtlSurveyModel.id).filter(EtlSurveyModel.source_survey_id == survey.id,
                                                                 EtlSurveyModel.is_active == True)
             for survey_id in etl_survey:
-                _do_etl_survey_inputs(model_type, session, survey_id, component, survey_new_runcycleid,
-                                    position)
+                _do_etl_survey_inputs(session, survey_id, component, component_type, 
+                                      survey_new_runcycleid, position)
 
 # inactivate if record is existing in analytics database
 def _inactivate_old_questions(session, source_survey_id):
@@ -154,14 +150,6 @@ def _inactivate_old_questions(session, source_survey_id):
 
     for survey_id in etl_survey_model:
         session.query(MetRequestTypeOption).filter(MetRequestTypeOption.survey_id == survey_id).update(deactive_flag)
-        session.query(MetRequestTypeRadioModel).filter(MetRequestTypeRadioModel.survey_id == survey_id).update(
-            deactive_flag)
-        session.query(MetRequestTypeSelectBoxesModel).filter(
-            MetRequestTypeSelectBoxesModel.survey_id == survey_id).update(deactive_flag)
-        session.query(MetRequestTypeTextModel).filter(MetRequestTypeTextModel.survey_id == survey_id).update(
-            deactive_flag)
-        session.query(MetRequestTypeTextAreaModel).filter(MetRequestTypeTextAreaModel.survey_id == survey_id).update(
-            deactive_flag)
 
 
 def _do_etl_survey_data(session, survey, survey_new_runcycleid):
@@ -178,53 +166,55 @@ def _do_etl_survey_data(session, survey, survey_new_runcycleid):
 
 
 # load data to table request type tables
-def _do_etl_survey_inputs(model_type, session, survey_id, component, survey_new_runcycleid, position):
-    model_name = model_type(survey_id=survey_id,
-                            request_id=component['id'],
-                            label=component['label'],
-                            is_active=True,
-                            key=component['key'],
-                            type=component['type'],
-                            runcycle_id=survey_new_runcycleid,
-                            postion=position
-                            )
+def _do_etl_survey_inputs(session, survey_id, component, component_type, survey_new_runcycleid, position):
+    if component_type == FormIoComponentType.SURVEY.value:
+        questions = component.get('questions', None)
 
-    session.add(model_name)
+        if not questions:
+            return
 
-    session.commit()
+        for question in questions:
+            model_name = MetRequestTypeOption(survey_id=survey_id,
+                                                request_id=component['id'] + '-' + question['value'],
+                                                label=question['label'],
+                                                is_active=True,
+                                                key=component['key'],
+                                                type=component['type'],
+                                                runcycle_id=survey_new_runcycleid,
+                                                postion=position
+                                                )
 
-    if model_type == MetRequestTypeRadioModel or model_type == MetRequestTypeSelectBoxesModel:
+            session.add(model_name)
+
+            session.commit()
+    else:
         model_name = MetRequestTypeOption(survey_id=survey_id,
-                                          request_id=component['id'],
-                                          label=component['label'],
-                                          is_active=True,
-                                          key=component['key'],
-                                          type=component['type'],
-                                          runcycle_id=survey_new_runcycleid,
-                                          postion=position
-                                          )
+                                    request_id=component['id'],
+                                    label=component['label'],
+                                    is_active=True,
+                                    key=component['key'],
+                                    type=component['type'],
+                                    runcycle_id=survey_new_runcycleid,
+                                    postion=position
+                                    )
 
         session.add(model_name)
 
         session.commit()
 
 
-def _identify_form_type(context, component_type):
-    model_type = None
+
+def _validate_form_type(context, component_type):
     component_type = component_type.lower()
 
-    if component_type == FormIoComponentType.RADIO.value:
-        # radio save only the question label
-        model_type = MetRequestTypeRadioModel
-    elif component_type == FormIoComponentType.CHECKBOX.value:
-        # select box save only the question label
-        model_type = MetRequestTypeSelectBoxesModel
-    elif component_type == FormIoComponentType.TEXT.value:
-        model_type = MetRequestTypeTextAreaModel
-        # select box save only the question label
+    if component_type == FormIoComponentType.RADIO.value or\
+    component_type == FormIoComponentType.CHECKBOX.value or\
+    component_type == FormIoComponentType.SELECTLIST.value or\
+    component_type == FormIoComponentType.SURVEY.value:
+        return True
     else:
         context.log.info('*************Component Type Missed to match %s', component_type)
-    return model_type
+        return False
 
 
 # update the status for survey etl in run cycle table as successful

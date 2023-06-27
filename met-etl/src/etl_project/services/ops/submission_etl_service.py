@@ -6,9 +6,6 @@ from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 from met_api.models.submission import Submission as MetSubmissionModel
 from met_api.models.survey import Survey as MetSurveyModel
 from met_api.models.participant import Participant as ParticipantModel
-from analytics_api.models.response_type_radio import ResponseTypeRadio as ResponseTypeRadioModel
-from analytics_api.models.response_type_selectbox import ResponseTypeSelectbox as ResponseTypeSelectboxModel
-from analytics_api.models.response_type_textarea import ResponseTypeTextarea as ResponseTypeTextareaModel
 from analytics_api.models.response_type_option import ResponseTypeOption as ResponseTypeOptionModel
 from analytics_api.models.user_response_detail import UserResponseDetail as UserResponseDetailModel
 from analytics_api.models.survey import Survey as EtlSurveyModel
@@ -171,7 +168,7 @@ def _extract_submission(form_questions, met_survey, metsession, submission, mete
                 if component['key'] == 'categorycommentcontainer':
                     continue
 
-                component_type = component['inputType'].lower()
+                component_type = component['type'].lower()
                 context.log.info('Type for submission id : %s. is %s ', submission.id, component_type)
 
                 if component_type == FormIoComponentType.RADIO.value:
@@ -180,9 +177,12 @@ def _extract_submission(form_questions, met_survey, metsession, submission, mete
                 elif component_type == FormIoComponentType.CHECKBOX.value:
                     _save_checkbox(metetlsession, context, answer_key, component, etl_survey, user, submission,
                                    submission_new_runcycleid)
-                elif component_type == FormIoComponentType.TEXT.value:
-                    _save_text(metetlsession, context, etl_survey, component, answer_key, user, submission,
-                               submission_new_runcycleid)
+                elif component_type == FormIoComponentType.SELECTLIST.value:
+                    _save_select(metetlsession, context, answer_key, component, etl_survey, user, submission,
+                                   submission_new_runcycleid)
+                elif component_type == FormIoComponentType.SURVEY.value:
+                    _save_survey(metetlsession, context, answer_key, component, etl_survey, user, submission,
+                                   submission_new_runcycleid)
                 else:
                     context.log.info('No Mapping Found for .Type for submission id : %s. is %s .Skipping',
                                      submission.id, component_type)
@@ -193,33 +193,11 @@ def _extract_submission(form_questions, met_survey, metsession, submission, mete
                 metetlsession.commit()
 
 
-# load data to table response_type_textarea
-def _save_text(metetlsession, context, survey, component, answer_key, participant, submission, submission_new_runcycleid):
-    # text answer is a string.so value has to be found from question
-    context.log.info('Input type  ResponseTypeTextModel is created:survey id: %s. '
-                     'request_key is %s value:%s request_id:%s', survey.id, component['key'], answer_key,
-                     component['id'])
-
-    model_type = ResponseTypeTextareaModel(
-        survey_id=survey.id,
-        request_key=component['key'],
-        value=answer_key,
-        request_id=component['id'],
-        participant_id=getattr(participant, 'id', None),
-        is_active=True,
-        runcycle_id=submission_new_runcycleid,
-        created_date=submission.created_date,
-        updated_date=submission.updated_date
-    )
-
-    metetlsession.add(model_type)
-
-
-# load data to table response_type_radio
+# load responses for a radio type question
 def _save_radio(metetlsession, context, answer_key, component, survey, participant, submission, submission_new_runcycleid):
-    # radio answer is a key.so value has to be found from question
-    context.log.info('Input type ResponseTypeRadioModel is created:survey id: %s. '
-                     'request_key is %s ', survey.id, component['key'])
+    # radio responses just has the key to the value selected, so value has to be found from question
+    context.log.info('Input type Radio is created:survey id: %s. request_key is %s ',
+                     survey.id, component['key'])
     answer_key_str = str(answer_key)
     answer = next((x for x in component.get('values') if x.get('value') == answer_key_str), None)
 
@@ -227,35 +205,18 @@ def _save_radio(metetlsession, context, answer_key, component, survey, participa
         return
 
     answer_value = answer.get('label')
-    context.log.info('Input type  ResponseTypeRadioModel is created:survey id: %s. '
-                     'request_key is %s value:%s request_id:%s', survey.id, component['key'],
-                     answer_value,
-                     component['id'])
+    context.log.info('Input type Radio is created:survey id: %s. request_key is %s value:%s request_id:%s',
+                     survey.id, component['key'], answer_value, component['id'])
 
-    radio_response = ResponseTypeRadioModel(
-        survey_id=survey.id,
-        request_key=component['key'],
-        value=answer_value,
-        request_id=component['id'],
-        participant_id=getattr(participant, 'id', None),
-        is_active=True,
-        runcycle_id=submission_new_runcycleid,
-        created_date=submission.created_date,
-        updated_date=submission.updated_date
-    )
-
-    metetlsession.add(radio_response)
-
-    _save_options(metetlsession, survey, component, answer_value, getattr(user, 'id', None), submission_new_runcycleid,
-                  submission)
+    _save_options(metetlsession, survey, component, answer_value, getattr(participant, 'id', None),
+                  submission_new_runcycleid, submission)
 
 
-# load data to table response_type_selectbox
+# load responses for a checkbox type question
 def _save_checkbox(metetlsession, context, answer_key, component, survey, participant, submission, submission_new_runcycleid):
-    # selectbox answer(answer_key) is a list.so values have to be found from question
-    # answers is another dict if the question is simple chekboxes
-    context.log.info('Input type  ResponseTypeSelectboxModel is created:survey id: %s. '
-                     'request_key is %s  Answer Key %s', survey.id, component['key'], answer_key)
+    # checkbox responses just has the key to the value selected, so value has to be found from question
+    context.log.info('Input type Selectbox is created:survey id: %s. request_key is %s  Answer Key %s',
+                     survey.id, component['key'], answer_key)
 
     selectbox_mapping = {}
 
@@ -265,36 +226,77 @@ def _save_checkbox(metetlsession, context, answer_key, component, survey, partic
 
     if answer_key is not None:
         for key, value in answer_key.items():
-            # each answer is a row for simplebox.It belongs to answer in a multiple checkbox
+            # each answer is a row for simplecheckboxes. It belongs to answer in a multiple checkbox
             is_yes = _is_truthy(value)
 
             if is_yes:
                 # need to find the label of the drop down.
                 answer_label = selectbox_mapping.get(key)
 
-                context.log.info('Input type  ResponseTypeSelectboxModel is created:survey id: %s. '
+                context.log.info('Input type Selectbox is created:survey id: %s. '
                                  'request_key is %s value:%s request_id:%s', survey.id, component['key'],
                                  answer_label,
                                  component['id'])
 
-                selectbox_response = ResponseTypeSelectboxModel(
-                    survey_id=survey.id,
-                    request_key=component['key'],
-                    value=answer_label,
-                    request_id=component['id'],
-                    participant_id=getattr(participant, 'id', None),
-                    is_active=True,
-                    runcycle_id=submission_new_runcycleid,
-                    created_date=submission.created_date,
-                    updated_date=submission.updated_date
-                )
-
-                metetlsession.add(selectbox_response)
-
-                _save_options(metetlsession, survey, component, answer_label, getattr(user, 'id', None),
+                _save_options(metetlsession, survey, component, answer_label, getattr(participant, 'id', None),
                               submission_new_runcycleid, submission)
 
-            # load data to table response_type_option
+
+# load responses for a select type question
+def _save_select(metetlsession, context, answer_key, component, survey, participant, submission, submission_new_runcycleid):
+    # selected responses just has the key to the value selected, so value has to be found from question
+    context.log.info('Input type Select is created:survey id: %s. request_key is %s ',
+                     survey.id, component['key'])
+    answer_key_str = str(answer_key)
+    component_data = component.get('data')
+    answer = next((x for x in component_data.get('values') if x.get('value') == answer_key_str), None)
+
+    if not answer:
+        return
+
+    answer_value = answer.get('label')
+    context.log.info('Input type Select is created:survey id: %s. request_key is %s value:%s request_id:%s',
+                     survey.id, component['key'], answer_value, component['id'])
+
+    _save_options(metetlsession, survey, component, answer_value, getattr(participant, 'id', None),
+                  submission_new_runcycleid, submission)
+
+
+# load responses for a survey type question
+def _save_survey(metetlsession, context, answer_key, component, survey, participant, submission, submission_new_runcycleid):
+    # selected survey just has the key to the value selected, so value has to be found from question
+    context.log.info('Input type Survey is created:survey id: %s. request_key is %s ',
+                     survey.id, component['key'])
+
+    survey_mapping = {}
+
+    if component.get('values') is not None:
+        for item in component.get('values'):
+            survey_mapping[item.get('value')] = item.get('label')
+
+    if answer_key is not None:
+        for key, value in answer_key.items():
+            answer_label = survey_mapping.get(value)
+
+            context.log.info('Input type Survey is created:survey id: %s. '
+                             'request_key is %s value:%s request_id:%s', survey.id, component['key'],
+                             answer_label, component['id'])
+
+            # id for survey type question is same for all sub questions so request id is a combination of 
+            # id and the key
+            radio_response = ResponseTypeOptionModel(
+                survey_id=survey.id,
+                request_key=component['key'],
+                value=answer_label,
+                request_id=component['id']+'-'+key,
+                participant_id=getattr(participant, 'id', None),
+                is_active=True,
+                runcycle_id=submission_new_runcycleid,
+                created_date=submission.created_date,
+                updated_date=submission.updated_date
+            )
+
+            metetlsession.add(radio_response)
 
 
 def _save_options(metetlsession, survey, component, value, participant, submission_new_runcycleid, submission):

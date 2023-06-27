@@ -63,9 +63,11 @@ def escape_wam_friendly_url(param):
 class FormIoComponentType(Enum):
     """FormIO Component Types."""
 
-    RADIO = 'radio'
-    CHECKBOX = 'checkbox'
-    TEXT = 'text'
+    RADIO = 'simpleradios'
+    CHECKBOX = 'simplecheckboxes'
+    SELECTLIST = 'simpleselect'
+    SURVEY = 'simplesurvey'
+    TEXT = 'simpletextarea'
 
 
 class ContentType(Enum):
