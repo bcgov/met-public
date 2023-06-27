@@ -18,11 +18,16 @@ const UnauthenticatedRoutes = () => {
                 element={<ManageSubscription />}
             />
             <Route path="/engagements/:engagementId/view" element={<EngagementView />} />
+            <Route path="/:slug" element={<EngagementView />} />
             <Route path="/engagements/:engagementId/dashboard" element={<PublicDashboard />} />
+            <Route path="/:slug/dashboard" element={<PublicDashboard />} />
             <Route path="/engagements/:engagementId/comments" element={<EngagementComments />} />
-            <Route path="/surveys/submit/:surveyId/:token" element={<SurveySubmit />} />
+            <Route path="/:slug/comments" element={<EngagementComments />} />
             <Route path="/engagements/:engagementId/edit/:token" element={<EditSurvey />} />
+            <Route path="/:slug/edit/:token" element={<EditSurvey />} />
+            <Route path="/surveys/submit/:surveyId/:token" element={<SurveySubmit />} />
             <Route path="*" element={<NotFound />} />
+            <Route path="/not-found" element={<NotFound />} />
         </Routes>
     );
 };

@@ -54,7 +54,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
 
         if (!token) {
-            navigate(`/404`);
+            navigate(`/not-found`);
             return;
         }
 
@@ -81,7 +81,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     }, []);
     const loadSurvey = async () => {
         if (isNaN(Number(surveyId))) {
-            navigate('/404');
+            navigate('/not-found');
             dispatch(
                 openNotification({
                     severity: 'error',

@@ -7,10 +7,12 @@ import { getEngagement } from 'services/engagementService';
 import { getSubmissionByToken, updateSubmission } from 'services/submissionService';
 import { Engagement } from 'models/engagement';
 import { PublicSubmission } from 'models/surveySubmission';
+import { getEngagementIdBySlug } from 'services/engagementSlugService';
 
 type EditSurveyParams = {
     token: string;
-    engagementId: string;
+    engagementId?: string;
+    slug?: string;
 };
 
 interface EditSurveyContext {
@@ -43,18 +45,41 @@ export const ActionContext = createContext<EditSurveyContext>({
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { engagementId, token } = useParams<EditSurveyParams>();
+    const { engagementId: engagementIdParam, token, slug } = useParams<EditSurveyParams>();
+
+    const [engagementId, setEngagementId] = useState<number | null>(
+        engagementIdParam ? Number(engagementIdParam) : null,
+    );
     const [isTokenValid, setTokenValid] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [savedEngagement, setSavedEngagement] = useState<Engagement | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [submission, setSubmission] = useState<PublicSubmission | null>(null);
 
+    const handleFetchEngagementIdBySlug = async () => {
+        if (!slug) {
+            return;
+        }
+        try {
+            const result = await getEngagementIdBySlug(slug);
+            setEngagementId(result.engagement_id);
+        } catch (error) {
+            navigate('/not-found');
+        }
+    };
+
+    useEffect(() => {
+        handleFetchEngagementIdBySlug();
+    }, [slug]);
+
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [engagementId]);
 
     const fetchData = async () => {
+        if (!engagementId && slug) {
+            return;
+        }
         await loadEngagement();
         await verifyToken();
         await loadSubmission();
@@ -63,7 +88,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     const verifyToken = async () => {
         if (!token) {
-            navigate(`/404`);
+            navigate(`/not-found`);
             return;
         }
 
@@ -108,7 +133,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     const loadEngagement = async () => {
         if (isNaN(Number(engagementId))) {
-            navigate('/404');
+            navigate('/not-found');
             return;
         }
 
