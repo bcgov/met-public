@@ -12,7 +12,7 @@ import dayjs from 'dayjs';
 import { EngagementStatusChip } from 'components/engagement/status';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { TileSkeleton } from './TileSkeleton';
-import { getBaseUrl } from 'helper';
+import { getSlugByEngagementId } from 'services/engagementSlugService';
 
 interface EngagementTileProps {
     passedEngagement?: Engagement;
@@ -21,9 +21,9 @@ interface EngagementTileProps {
 const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps) => {
     const [loadedEngagement, setLoadedEngagement] = useState<Engagement | null>(passedEngagement || null);
     const [isLoadingEngagement, setIsLoadingEngagement] = useState(true);
+    const [slug, setSlug] = useState('');
     const dateFormat = 'MMM DD, YYYY';
-    const baseUrl = getBaseUrl();
-    const engagementUrl = loadedEngagement ? `${baseUrl}/engagements/${loadedEngagement.id}/view` : null;
+    const engagementUrl = `/${slug}`;
 
     const loadEngagement = async () => {
         if (passedEngagement) {
@@ -48,6 +48,22 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
     useEffect(() => {
         loadEngagement();
     }, [passedEngagement, engagementId]);
+
+    const loadSlug = async () => {
+        if (!loadedEngagement) {
+            return;
+        }
+        try {
+            const response = await getSlugByEngagementId(loadedEngagement.id);
+            setSlug(response.slug);
+        } catch (error) {
+            setSlug('');
+        }
+    };
+
+    useEffect(() => {
+        loadSlug();
+    }, [loadedEngagement]);
 
     if (isLoadingEngagement) {
         return <TileSkeleton />;
