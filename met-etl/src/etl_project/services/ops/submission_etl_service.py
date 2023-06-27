@@ -92,7 +92,7 @@ def extract_submission(context, submission_last_run_cycle_time, submission_new_r
 def load_submission(context, new_submission, updated_submission, submission_new_runcycleid):
     all_submissions = new_submission + updated_submission
     metsession = context.resources.met_db_session
-    metetlsession = context.resources.met_etl_db_session
+    met_etl_session = context.resources.met_etl_db_session
     # check if there are any new or updated records
     if len(all_submissions) > 0:
 
@@ -101,7 +101,7 @@ def load_submission(context, new_submission, updated_submission, submission_new_
         for submission in all_submissions:
 
             met_survey = metsession.query(MetSurveyModel).filter(MetSurveyModel.id == submission.survey_id).first()
-            etl_survey = metetlsession.query(EtlSurveyModel).filter(
+            etl_survey = met_etl_session.query(EtlSurveyModel).filter(
                 EtlSurveyModel.source_survey_id == submission.survey_id,
                 EtlSurveyModel.is_active == True).first()
 
@@ -121,7 +121,7 @@ def load_submission(context, new_submission, updated_submission, submission_new_
             # check and load data for single page survey.
             if form_type == 'form':
                 form_questions = met_survey.form_json.get('components', None)
-                _extract_submission(form_questions, met_survey, metsession, submission, metetlsession, context,
+                _extract_submission(form_questions, met_survey, metsession, submission, met_etl_session, context,
                                     submission_new_runcycleid, etl_survey)
 
             # check and load data for multi page survey.
@@ -129,18 +129,18 @@ def load_submission(context, new_submission, updated_submission, submission_new_
                 pages = met_survey.form_json.get('components', None)
                 for page in pages:
                     form_questions = page.get('components', None)
-                    _extract_submission(form_questions, met_survey, metsession, submission, metetlsession, context,
+                    _extract_submission(form_questions, met_survey, metsession, submission, met_etl_session, context,
                                         submission_new_runcycleid, etl_survey)
 
     metsession.close()
 
-    metetlsession.close()
+    met_etl_session.close()
 
     yield Output(submission_new_runcycleid, "submission_new_runcycleid")
 
 
 # load data to table response_type_textarea
-def _extract_submission(form_questions, met_survey, metsession, submission, metetlsession, context,
+def _extract_submission(form_questions, met_survey, metsession, submission, met_etl_session, context,
                         submission_new_runcycleid, etl_survey):
             if (form_questions) is None:
                 # throw error or notify by logging
@@ -172,16 +172,16 @@ def _extract_submission(form_questions, met_survey, metsession, submission, mete
                 context.log.info('Type for submission id : %s. is %s ', submission.id, component_type)
 
                 if component_type == FormIoComponentType.RADIO.value:
-                    _save_radio(metetlsession, context, answer_key, component, etl_survey, user, submission,
+                    _save_radio(met_etl_session, context, answer_key, component, etl_survey, user, submission,
                                 submission_new_runcycleid)
                 elif component_type == FormIoComponentType.CHECKBOX.value:
-                    _save_checkbox(metetlsession, context, answer_key, component, etl_survey, user, submission,
+                    _save_checkbox(met_etl_session, context, answer_key, component, etl_survey, user, submission,
                                    submission_new_runcycleid)
                 elif component_type == FormIoComponentType.SELECTLIST.value:
-                    _save_select(metetlsession, context, answer_key, component, etl_survey, user, submission,
+                    _save_select(met_etl_session, context, answer_key, component, etl_survey, user, submission,
                                    submission_new_runcycleid)
                 elif component_type == FormIoComponentType.SURVEY.value:
-                    _save_survey(metetlsession, context, answer_key, component, etl_survey, user, submission,
+                    _save_survey(met_etl_session, context, answer_key, component, etl_survey, user, submission,
                                    submission_new_runcycleid)
                 else:
                     context.log.info('No Mapping Found for .Type for submission id : %s. is %s .Skipping',
@@ -190,11 +190,11 @@ def _extract_submission(form_questions, met_survey, metsession, submission, mete
                     '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Extraction Done for Submission id %s . Survey : %s.',
                     submission.id, met_survey.id)
 
-                metetlsession.commit()
+                met_etl_session.commit()
 
 
 # load responses for a radio type question
-def _save_radio(metetlsession, context, answer_key, component, survey, participant, submission, submission_new_runcycleid):
+def _save_radio(met_etl_session, context, answer_key, component, survey, participant, submission, submission_new_runcycleid):
     # radio responses just has the key to the value selected, so value has to be found from question
     context.log.info('Input type Radio is created:survey id: %s. request_key is %s ',
                      survey.id, component['key'])
@@ -208,12 +208,12 @@ def _save_radio(metetlsession, context, answer_key, component, survey, participa
     context.log.info('Input type Radio is created:survey id: %s. request_key is %s value:%s request_id:%s',
                      survey.id, component['key'], answer_value, component['id'])
 
-    _save_options(metetlsession, survey, component, answer_value, getattr(participant, 'id', None),
+    _save_options(met_etl_session, survey, component, answer_value, getattr(participant, 'id', None),
                   submission_new_runcycleid, submission)
 
 
 # load responses for a checkbox type question
-def _save_checkbox(metetlsession, context, answer_key, component, survey, participant, submission, submission_new_runcycleid):
+def _save_checkbox(met_etl_session, context, answer_key, component, survey, participant, submission, submission_new_runcycleid):
     # checkbox responses just has the key to the value selected, so value has to be found from question
     context.log.info('Input type Selectbox is created:survey id: %s. request_key is %s  Answer Key %s',
                      survey.id, component['key'], answer_key)
@@ -238,12 +238,12 @@ def _save_checkbox(metetlsession, context, answer_key, component, survey, partic
                                  answer_label,
                                  component['id'])
 
-                _save_options(metetlsession, survey, component, answer_label, getattr(participant, 'id', None),
+                _save_options(met_etl_session, survey, component, answer_label, getattr(participant, 'id', None),
                               submission_new_runcycleid, submission)
 
 
 # load responses for a select type question
-def _save_select(metetlsession, context, answer_key, component, survey, participant, submission, submission_new_runcycleid):
+def _save_select(met_etl_session, context, answer_key, component, survey, participant, submission, submission_new_runcycleid):
     # selected responses just has the key to the value selected, so value has to be found from question
     context.log.info('Input type Select is created:survey id: %s. request_key is %s ',
                      survey.id, component['key'])
@@ -258,12 +258,12 @@ def _save_select(metetlsession, context, answer_key, component, survey, particip
     context.log.info('Input type Select is created:survey id: %s. request_key is %s value:%s request_id:%s',
                      survey.id, component['key'], answer_value, component['id'])
 
-    _save_options(metetlsession, survey, component, answer_value, getattr(participant, 'id', None),
+    _save_options(met_etl_session, survey, component, answer_value, getattr(participant, 'id', None),
                   submission_new_runcycleid, submission)
 
 
 # load responses for a survey type question
-def _save_survey(metetlsession, context, answer_key, component, survey, participant, submission, submission_new_runcycleid):
+def _save_survey(met_etl_session, context, answer_key, component, survey, participant, submission, submission_new_runcycleid):
     # selected survey just has the key to the value selected, so value has to be found from question
     context.log.info('Input type Survey is created:survey id: %s. request_key is %s ',
                      survey.id, component['key'])
@@ -296,10 +296,10 @@ def _save_survey(metetlsession, context, answer_key, component, survey, particip
                 updated_date=submission.updated_date
             )
 
-            metetlsession.add(radio_response)
+            met_etl_session.add(radio_response)
 
 
-def _save_options(metetlsession, survey, component, value, participant, submission_new_runcycleid, submission):
+def _save_options(met_etl_session, survey, component, value, participant, submission_new_runcycleid, submission):
     radio_response = ResponseTypeOptionModel(
         survey_id=survey.id,
         request_key=component['key'],
@@ -312,7 +312,7 @@ def _save_options(metetlsession, survey, component, value, participant, submissi
         updated_date=submission.updated_date
     )
 
-    metetlsession.add(radio_response)
+    met_etl_session.add(radio_response)
 
 
 def _is_truthy(answer):

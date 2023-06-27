@@ -105,6 +105,7 @@ class Comment(BaseModel):
         """Get submissions by survey id paginated."""
         null_value = None
         query = db.session.query(Submission)\
+            .join(Comment, Submission.id == Comment.submission_id)\
             .filter(and_(Submission.survey_id == survey_id,
                          or_(Submission.reviewed_by != 'System', Submission.reviewed_by == null_value)))\
 
