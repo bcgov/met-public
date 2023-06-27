@@ -7,6 +7,7 @@ Create Date: 2023-06-20 15:35:49.824000
 """
 from alembic import op
 import sqlalchemy as sa
+from met_api.services.slug_generation_service import SlugGenerationService
 
 # revision identifiers, used by Alembic.
 revision = '88aba309bc23'
@@ -30,7 +31,35 @@ def upgrade():
     sa.UniqueConstraint('engagement_id'),
     sa.UniqueConstraint('slug')
     )
-    op.create_index('idx_slug', 'engagement_slug', ['slug'], unique=False)
+    op.create_index('idx_slug', 'engagement_slug', ['slug'], unique=False)  
+
+    # Retrieve engagement names that don't have slugs
+    connection = op.get_bind()
+    result = connection.execute("""
+        SELECT id, name
+        FROM engagement
+    """)
+    
+    engagements_without_slugs = result.fetchall()
+
+    # Generate unique slugs for each engagement
+    slugify = SlugGenerationService.create_custom_unique_slugify()
+    for engagement in engagements_without_slugs:
+        engagement_id = engagement[0]
+        engagement_name = engagement[1]
+        slug = slugify(engagement_name)
+
+        # Insert the generated slug into the engagement_slug table
+        connection.execute(
+            sa.text("""
+                INSERT INTO engagement_slug (engagement_id, slug, created_date, updated_date)
+                VALUES (:engagement_id, :slug, CURRENT_TIMESTAMP, NULL)
+            """),
+            engagement_id=engagement_id,
+            slug=slug
+        )
+
+    op.execute("COMMIT")
     # ### end Alembic commands ###
 
 
