@@ -24,7 +24,10 @@ class EngagementSlugService:
         """Get an engagement slug by slug."""
         engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement_id)
         if not engagement_slug:
-            return cls.create_engagement_slug(engagement_id)
+            return {
+                'slug': '',
+                'engagement_id': engagement_id,
+            }
         return {
             'slug': engagement_slug.slug,
             'engagement_id': engagement_slug.engagement_id,
@@ -81,17 +84,17 @@ class EngagementSlugService:
     @classmethod
     def update_engagement_slug(cls, slug: str, engagement_id: int) -> EngagementSlugModel:
         """Update an engagement slug."""
-        engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement_id)
-        if not engagement_slug:
-            raise ValueError(f'No engagement found for {slug}')
-
+        cls._verify_engagement(engagement_id)
         existing_slug = EngagementSlugModel.find_by_slug(slug)
         if existing_slug:
             raise ValueError(f'{slug} is already used by another engagement')
 
-        cls._verify_engagement(engagement_id)
+        engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement_id)
+        if engagement_slug:
+            engagement_slug.slug = slug
+        else:
+            engagement_slug = EngagementSlugModel(engagement_id=engagement_id, slug=slug)
 
-        engagement_slug.slug = slug
         engagement_slug.save()
         return {
             'slug': engagement_slug.slug,
