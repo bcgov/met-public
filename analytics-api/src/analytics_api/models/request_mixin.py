@@ -19,5 +19,5 @@ class RequestMixin:  # pylint: disable=too-few-public-methods
     key = db.Column(db.String(100), nullable=False)
     type = db.Column(db.String(100))
     label = db.Column(db.String(200))
-    request_id = db.Column(db.String(20))
+    request_id = db.Column(db.String(250))
     postion = db.Column(db.Integer)
