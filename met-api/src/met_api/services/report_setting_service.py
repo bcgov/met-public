@@ -2,7 +2,6 @@
 from datetime import datetime
 
 from met_api.models.report_setting import ReportSetting as ReportSettingModel
-from met_api.models.survey import Survey as SurveyModel
 from met_api.schemas.report_setting import ReportSettingSchema
 from met_api.constants.report_setting_type import FormIoComponentType
 
@@ -26,8 +25,9 @@ class ReportSettingService:
         survey_id = report_setting_data.get('id', None)
 
         report_setting = ReportSettingModel.get_report_settings_by_survey_id(survey_id)
-        if report_setting:
-            return report_setting
+        settings = ReportSettingSchema(many=True).dump(report_setting)
+        if settings:
+            return settings
 
         form_json = report_setting_data.get('form_json', None)
         form_type = form_json.get('display', None)
@@ -44,7 +44,7 @@ class ReportSettingService:
                 cls._extract_and_load_survey_components(survey_id, form_components, user_id)
 
         return report_setting
-    
+
     @classmethod
     def update_report_setting(cls, report_setting_data, user_id):
         """Update report setting."""

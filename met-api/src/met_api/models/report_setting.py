@@ -1,6 +1,6 @@
 """Report setting model class.
 
-Used to store the setting for each question on the survey. Based on the value for the column display the 
+Used to store the setting for each question on the survey. Based on the value for the column display the
 questions will either be displayed/hidden on the dashboard
 """
 from __future__ import annotations
