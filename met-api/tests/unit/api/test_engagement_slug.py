@@ -36,7 +36,7 @@ def test_get_engagement_slug_by_engagement_id(client, jwt, session, engagement_s
         'engagement_id': eng.id
     }
     eng_slug = factory_engagement_slug_model(engagement_slug_info)
-    headers = factory_auth_header(jwt=jwt, claims=TestUserInfo.user)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.team_member_role)
     rv = client.get(f'/api/slugs/engagements/{eng.id}', headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
     assert rv.json.get('slug') == eng_slug.slug
