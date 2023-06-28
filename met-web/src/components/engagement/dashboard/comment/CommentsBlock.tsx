@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Grid, Skeleton } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { CommentViewContext } from './CommentViewContext';
 import { PrimaryButton, MetPaper, MetHeader4 } from 'components/common';
 import CommentTable from './CommentTable';
@@ -9,10 +9,12 @@ import { SubmissionStatus } from 'constants/engagementStatus';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
 export const CommentsBlock = () => {
+    const { slug } = useParams();
     const { engagement, isEngagementLoading } = useContext(CommentViewContext);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const canAccessDashboard = useAppSelector((state) => state.user.roles.includes('access_dashboard'));
+    const basePath = slug ? `/${slug}` : `/engagements/${engagement?.id}`;
 
     const handleViewDashboard = () => {
         /* check to ensure that users with role access_dashboard can access the dashboard while engagement not closed*/
@@ -22,25 +24,25 @@ export const CommentsBlock = () => {
         }
 
         /* check to ensure that all other users can access the dashboard only after the engagement is closed*/
-        if (engagement?.submission_status === SubmissionStatus.Closed) {
-            navigate(`/engagements/${engagement.id}/dashboard`);
+        if (engagement?.submission_status !== SubmissionStatus.Closed) {
+            dispatch(
+                openNotificationModal({
+                    open: true,
+                    data: {
+                        header: 'View Report',
+                        subText: [
+                            {
+                                text: 'The report will only be available to view after the engagement period is over and the engagement is closed.',
+                            },
+                        ],
+                    },
+                    type: 'update',
+                }),
+            );
             return;
         }
 
-        dispatch(
-            openNotificationModal({
-                open: true,
-                data: {
-                    header: 'View Report',
-                    subText: [
-                        {
-                            text: 'The report will only be available to view after the engagement period is over and the engagement is closed.',
-                        },
-                    ],
-                },
-                type: 'update',
-            }),
-        );
+        navigate(`${basePath}/dashboard`);
     };
 
     if (isEngagementLoading || !engagement) {
@@ -50,7 +52,7 @@ export const CommentsBlock = () => {
     return (
         <>
             <Grid item xs={12} container direction="row" justifyContent="flex-end">
-                <Link to={`/engagements/${engagement.id}/view`} style={{ color: '#1A5A96' }}>
+                <Link to={slug ? basePath : `/engagements/${engagement.id}/view`} style={{ color: '#1A5A96' }}>
                     {'<<Return to ' + engagement.name + ' Engagement'}
                 </Link>
             </Grid>

@@ -9,6 +9,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { getSlugByEngagementId, patchEngagementSlug } from 'services/engagementSlugService';
 import axios, { AxiosError } from 'axios';
 import { When } from 'react-if';
+import { getBaseUrl } from 'helper';
 
 const HttpStatusBadRequest = 400;
 export const EngagementSlug = () => {
@@ -27,7 +28,7 @@ export const EngagementSlug = () => {
         setCopyTooltip(false);
     };
     const newEngagement = !savedEngagement.id || isNaN(Number(savedEngagement.id));
-    const baseUrl = sessionStorage.getItem('appBaseUrl') ?? window.location.origin;
+    const baseUrl = getBaseUrl();
 
     const engagementUrl = !savedSlug ? 'Link will appear when the engagement is saved' : `${baseUrl}/${slug}`;
 

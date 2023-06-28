@@ -10,7 +10,7 @@ import { EngagementLink } from './EngagementLink';
 import { When } from 'react-if';
 
 const SurveySubmitWrapped = () => {
-    const { savedSurvey, isTokenValid } = useContext(ActionContext);
+    const { savedSurvey, isTokenValid, slug } = useContext(ActionContext);
     const navigate = useNavigate();
     return (
         <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2}>
@@ -34,14 +34,14 @@ const SurveySubmitWrapped = () => {
                         <When condition={isTokenValid}>
                             <SurveyForm
                                 handleClose={() => {
-                                    navigate(`/engagements/${savedSurvey.engagement?.id}/view`);
+                                    navigate(`/${slug}`);
                                 }}
                             />
                         </When>
                         <InvalidTokenModal
                             open={!isTokenValid && Boolean(savedSurvey.engagement)}
                             handleClose={() => {
-                                navigate(`/engagements/${savedSurvey.engagement?.id}/view`);
+                                navigate(`/${slug}`);
                             }}
                         />
                     </MetPaper>

@@ -9,6 +9,7 @@ import { getEngagement } from 'services/engagementService';
 import { getSurvey } from 'services/surveyService';
 import { submitSurvey } from 'services/submissionService';
 import { Engagement, createDefaultEngagement } from 'models/engagement';
+import { getSlugByEngagementId } from 'services/engagementSlugService';
 
 interface SubmitSurveyContext {
     savedSurvey: Survey;
@@ -20,6 +21,7 @@ interface SubmitSurveyContext {
     savedEngagement: Engagement | null;
     isEngagementLoading: boolean;
     loadEngagement: null | (() => void);
+    slug: string;
 }
 
 export const ActionContext = createContext<SubmitSurveyContext>({
@@ -33,6 +35,7 @@ export const ActionContext = createContext<SubmitSurveyContext>({
     savedEngagement: null,
     isEngagementLoading: true,
     loadEngagement: null,
+    slug: '',
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
@@ -46,6 +49,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [savedEngagement, setSavedEngagement] = useState<Engagement | null>(null);
     const [isEngagementLoading, setIsEngagementLoading] = useState(true);
+    const [slug, setSlug] = useState<string>('');
 
     const verifyToken = async () => {
         if (isLoggedIn) {
@@ -136,6 +140,22 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
     };
 
+    const handleFetchSlug = async () => {
+        if (!savedSurvey.engagement_id) {
+            return;
+        }
+        try {
+            const response = await getSlugByEngagementId(savedSurvey.engagement_id);
+            setSlug(response.slug);
+        } catch (error) {
+            setSlug('');
+        }
+    };
+
+    useEffect(() => {
+        handleFetchSlug();
+    }, [savedSurvey.engagement_id]);
+
     const handleSubmit = async (submissionData: unknown) => {
         try {
             setIsSubmitting(true);
@@ -155,7 +175,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                     text: 'Survey was successfully submitted',
                 }),
             );
-            navigate(`/engagements/${savedSurvey.engagement_id}/view`, {
+            navigate(`/${slug}`, {
                 state: {
                     open: true,
                 },
@@ -184,6 +204,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 savedEngagement,
                 isEngagementLoading,
                 loadEngagement,
+                slug,
             }}
         >
             {children}

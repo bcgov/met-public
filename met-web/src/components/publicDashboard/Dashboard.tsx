@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { Grid, Link as MuiLink, useMediaQuery, Stack, Theme, Box, Backdrop } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
     CircularProgressWithLabel,
     MetHeader1,
@@ -22,19 +22,21 @@ import { Map } from 'models/analytics/map';
 import { When } from 'react-if';
 
 const Dashboard = () => {
+    const { slug } = useParams();
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const navigate = useNavigate();
     const { engagement, isEngagementLoading } = useContext(DashboardContext);
     const [isPrinting, setIsPrinting] = React.useState(false);
     const [projectMapData, setProjectMapData] = React.useState<Map | null>(null);
     const [pdfExportProgress, setPdfExportProgress] = React.useState(0);
+    const basePath = slug ? `/${slug}` : `/engagements/${engagement?.id}`;
 
     const handleProjectMapData = (data: Map) => {
         setProjectMapData(data);
     };
 
     const handleReadComments = () => {
-        navigate(`/engagements/${engagement.id}/comments`);
+        navigate(`${basePath}/comments`);
     };
 
     const handlePdfExportProgress = (progress: number) => {
@@ -75,7 +77,7 @@ const Dashboard = () => {
                     m={{ lg: '1em 8em 2em 3em', sm: '2em', xs: '0.5em' }}
                 >
                     <Grid item xs={12} container justifyContent="flex-end">
-                        <MuiLink component={Link} to={`/engagements/${engagement.id}/view`}>
+                        <MuiLink component={Link} to={slug ? basePath : `/engagements/${engagement.id}/view`}>
                             {`<< Return to ${engagement.name} Engagement`}
                         </MuiLink>
                     </Grid>

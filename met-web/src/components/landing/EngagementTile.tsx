@@ -12,6 +12,7 @@ import dayjs from 'dayjs';
 import { EngagementStatusChip } from 'components/engagement/status';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { TileSkeleton } from './TileSkeleton';
+import { getSlugByEngagementId } from 'services/engagementSlugService';
 import { getBaseUrl } from 'helper';
 
 interface EngagementTileProps {
@@ -21,9 +22,10 @@ interface EngagementTileProps {
 const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps) => {
     const [loadedEngagement, setLoadedEngagement] = useState<Engagement | null>(passedEngagement || null);
     const [isLoadingEngagement, setIsLoadingEngagement] = useState(true);
+    const [slug, setSlug] = useState('');
     const dateFormat = 'MMM DD, YYYY';
-    const baseUrl = getBaseUrl();
-    const engagementUrl = loadedEngagement ? `${baseUrl}/engagements/${loadedEngagement.id}/view` : null;
+    const engagementPath = `/${slug}`;
+    const engagementUrl = `${getBaseUrl()}${engagementPath}`;
 
     const loadEngagement = async () => {
         if (passedEngagement) {
@@ -48,6 +50,22 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
     useEffect(() => {
         loadEngagement();
     }, [passedEngagement, engagementId]);
+
+    const loadSlug = async () => {
+        if (!loadedEngagement) {
+            return;
+        }
+        try {
+            const response = await getSlugByEngagementId(loadedEngagement.id);
+            setSlug(response.slug);
+        } catch (error) {
+            setSlug('');
+        }
+    };
+
+    useEffect(() => {
+        loadSlug();
+    }, [loadedEngagement]);
 
     if (isLoadingEngagement) {
         return <TileSkeleton />;
@@ -94,12 +112,8 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                         <PrimaryButton
                             fullWidth
                             onClick={() => {
-                                if (!engagementUrl) {
-                                    return;
-                                }
                                 window.open(engagementUrl, '_blank');
                             }}
-                            disabled={!engagementUrl}
                         >
                             Share your thoughts
                         </PrimaryButton>
@@ -108,12 +122,8 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                         <SecondaryButton
                             fullWidth
                             onClick={() => {
-                                if (!engagementUrl) {
-                                    return;
-                                }
                                 window.open(engagementUrl, '_blank');
                             }}
-                            disabled={!engagementUrl}
                         >
                             View Engagement
                         </SecondaryButton>

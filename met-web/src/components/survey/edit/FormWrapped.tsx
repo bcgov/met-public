@@ -6,13 +6,15 @@ import { EditForm } from './EditForm';
 import { ActionContext } from './ActionContext';
 import { MetPaper } from 'components/common';
 import { InvalidTokenModal } from './InvalidTokenModal';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { When } from 'react-if';
 import EngagementInfoSection from 'components/engagement/view/EngagementInfoSection';
 
 const FormWrapped = () => {
+    const { slug } = useParams();
     const { isTokenValid, isLoading, savedEngagement, submission } = useContext(ActionContext);
     const navigate = useNavigate();
+    const engagementPath = slug ? `/${slug}` : `/engagements/${savedEngagement?.id}/view`;
 
     if (isLoading || !savedEngagement) {
         return <Skeleton variant="rectangular" width="100%" height="38em" />;
@@ -35,7 +37,7 @@ const FormWrapped = () => {
                 m={{ lg: '0 8em 1em 3em', md: '2em', xs: '1em' }}
             >
                 <Grid item container direction="row" justifyContent="flex-end">
-                    <MuiLink component={Link} to={`/engagements/${savedEngagement.id}/view`}>
+                    <MuiLink component={Link} to={engagementPath}>
                         {`<< Return to ${savedEngagement.name} Engagement`}
                     </MuiLink>
                 </Grid>
@@ -44,7 +46,7 @@ const FormWrapped = () => {
                         <MetPaper elevation={2}>
                             <EditForm
                                 handleClose={() => {
-                                    navigate(`/engagements/${savedEngagement.id}/view`);
+                                    navigate(engagementPath);
                                 }}
                             />
                         </MetPaper>
@@ -53,7 +55,7 @@ const FormWrapped = () => {
                 <InvalidTokenModal
                     open={!isTokenValid}
                     handleClose={() => {
-                        navigate(`/engagements/${savedEngagement.id}/view`);
+                        navigate(engagementPath);
                     }}
                 />
             </Grid>
