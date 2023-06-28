@@ -24,8 +24,8 @@ import pytest
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestSubmissionInfo
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_email_verification, factory_membership_model, factory_participant_model,
-    factory_staff_user_model, factory_submission_model, factory_survey_and_eng_model)
+    factory_auth_header, factory_comment_model, factory_email_verification, factory_membership_model,
+    factory_participant_model, factory_staff_user_model, factory_submission_model, factory_survey_and_eng_model)
 
 
 DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
@@ -70,8 +70,9 @@ def test_get_submission_page(client, jwt, session, submission_info):  # pylint:d
 
     participant = factory_participant_model()
     survey, eng = factory_survey_and_eng_model()
-    factory_submission_model(
+    submission = factory_submission_model(
         survey.id, eng.id, participant.id, submission_info)
+    factory_comment_model(survey.id, submission.id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/submissions/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -83,8 +84,9 @@ def test_get_comment_filtering(client, jwt, session):  # pylint:disable=unused-a
     participant = factory_participant_model()
     survey, eng = factory_survey_and_eng_model()
     submission_info = TestSubmissionInfo.submission1
-    factory_submission_model(
+    submission = factory_submission_model(
         survey.id, eng.id, participant.id, submission_info)
+    factory_comment_model(survey.id, submission.id)
     claims = TestJwtClaims.public_user_role
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/submissions/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
@@ -98,10 +100,11 @@ def test_get_comment_filtering(client, jwt, session):  # pylint:disable=unused-a
     assert rv.json.get('items', [])[0].get('submission_json', None) is None
     assert len(rv.json.get('items')) == 1, 'Admin user can see unapproved comments'
 
-    # ada new approved comment
+    # add new approved comment
     claims = TestJwtClaims.public_user_role
-    factory_submission_model(
+    submission_approved = factory_submission_model(
         survey.id, eng.id, participant.id, TestSubmissionInfo.approved_submission)
+    factory_comment_model(survey.id, submission_approved.id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/submissions/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -158,10 +161,13 @@ def test_advanced_search_submission(client, jwt, session, submission_info):  # p
     survey, eng = factory_survey_and_eng_model()
     submission_approved = factory_submission_model(
         survey.id, eng.id, participant.id, submission_info)
-    factory_submission_model(
+    factory_comment_model(survey.id, submission_approved.id)
+    submission_rejected = factory_submission_model(
         survey.id, eng.id, participant.id, TestSubmissionInfo.rejected_submission)
-    factory_submission_model(
+    factory_comment_model(survey.id, submission_rejected.id)
+    submission_pending = factory_submission_model(
         survey.id, eng.id, participant.id, TestSubmissionInfo.pending_submission)
+    factory_comment_model(survey.id, submission_pending.id)
 
     params = {
         'status': submission_approved.comment_status_id,
