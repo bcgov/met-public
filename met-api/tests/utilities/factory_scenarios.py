@@ -503,3 +503,13 @@ class TestWidgetDocumentInfo(dict, Enum):
         'url': fake.image_url(),
         'sort_index': 1,
     }
+
+
+class TestEngagementSlugInfo(dict, Enum):
+    """Test scenarios of feedback."""
+
+    slug1 = {
+        'engagement_id': 1,
+        'slug': fake.text(max_nb_chars=20),
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+    }

@@ -24,6 +24,7 @@ from met_api.constants.widget import WidgetType
 from met_api.models import Tenant
 from met_api.models.comment import Comment as CommentModel
 from met_api.models.email_verification import EmailVerification as EmailVerificationModel
+from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.feedback import Feedback as FeedbackModel
 from met_api.models.membership import Membership as MembershipModel
@@ -39,7 +40,7 @@ from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import MembershipStatus
 from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementInfo, TestFeedbackInfo, TestParticipantInfo, TestSubmissionInfo, TestSurveyInfo,
-    TestTenantInfo, TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo)
+    TestTenantInfo, TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo, TestEngagementSlugInfo)
 
 CONFIG = get_named_config('testing')
 fake = Faker()
@@ -287,3 +288,14 @@ def patch_token_info(claims, monkeypatch):
         return claims
 
     monkeypatch.setattr('met_api.utils.user_context._get_token_info', token_info)
+
+
+def factory_engagement_slug_model(eng_slug_info: dict = TestEngagementSlugInfo.slug1):
+    """Produce a engagement model."""
+    slug = EngagementSlugModel(
+        slug=eng_slug_info.get('slug'),
+        engagement_id=eng_slug_info.get('engagement_id'),     
+        created_date=eng_slug_info.get('created_date'),   
+    )
+    slug.save()
+    return slug
