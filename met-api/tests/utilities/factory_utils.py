@@ -117,10 +117,10 @@ def factory_email_verification(survey_id):
     return email_verification
 
 
-def factory_engagement_model(eng_info: dict = TestEngagementInfo.engagement1, status=None):
+def factory_engagement_model(eng_info: dict = TestEngagementInfo.engagement1, name=None, status=None):
     """Produce a engagement model."""
     engagement = EngagementModel(
-        name=eng_info.get('name', fake.name()),
+        name=name if name else fake.name(),
         description=eng_info.get('description'),
         rich_description=eng_info.get('rich_description'),
         content=eng_info.get('content'),

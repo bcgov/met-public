@@ -69,7 +69,7 @@ def test_get_engagements_paginated_name_search(session):
         search_options
     )
     assert eng.name == result[0].name
-    assert count == 1, 'Name search brings up only search result'
+    assert count == 1  #  Name search brings up only search result
 
 
 def test_get_engagements_paginated_status_search(session):

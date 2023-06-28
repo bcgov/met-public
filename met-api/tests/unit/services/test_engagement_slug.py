@@ -51,16 +51,12 @@ def test_create_engagement_slug(session):
 
 def test_create_engagement_slug_existing_slug(session):
     """Test create engagement slug with existing slug."""
-    engagement_info = {
-        **TestEngagementInfo.engagement1,
-        'name': 'Test Engagement'
-    }
-    engagement_1 = factory_engagement_model(engagement_info, status=Status.Draft)
+    engagement_1 = factory_engagement_model(TestEngagementInfo.engagement1, status=Status.Draft, name='Test Engagement')
 
     eng_slug = EngagementSlugService.create_engagement_slug(engagement_1.id)
     slug_1 = eng_slug.get('slug')
 
-    engagement_2 = factory_engagement_model(engagement_info, status=Status.Draft)
+    engagement_2 = factory_engagement_model(TestEngagementInfo.engagement1, status=Status.Draft, name='Test Engagement')
 
     result = EngagementSlugService.create_engagement_slug(engagement_2.id)
 
