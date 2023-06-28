@@ -44,6 +44,7 @@ from .widget_map import API as WIDGET_MAPS_API
 from .shape_file import API as SHAPEFILE_API
 from .tenant import API as TENANT_API
 from .engagement_slug import API as ENGAGEMENT_SLUG_API
+from .report_setting import API as REPORT_SETTING_API
 
 __all__ = ('API_BLUEPRINT',)
 
@@ -79,3 +80,4 @@ API.add_namespace(ENGAGEMENT_MEMBERS_API, path='/engagements/<string:engagement_
 API.add_namespace(WIDGET_EVENTS_API, path='/widgets/<int:widget_id>/events')
 API.add_namespace(WIDGET_MAPS_API, path='/widgets/<int:widget_id>/maps')
 API.add_namespace(ENGAGEMENT_SLUG_API, path='/slugs')
+API.add_namespace(REPORT_SETTING_API)

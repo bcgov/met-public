@@ -43,3 +43,4 @@ from .widget_item import WidgetItem
 from .widget_type import WidgetType
 from .email_queue import EmailQueue
 from .engagement_slug import EngagementSlug
+from .report_setting import ReportSetting

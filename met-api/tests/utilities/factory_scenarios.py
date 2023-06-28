@@ -78,6 +78,17 @@ class TestSurveyInfo(dict, Enum):
         'name': fake.name(),
         'form_json': {'display': 'form', 'components': []}
     }
+    survey3 = {
+        'name': fake.name(),
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+        'created_by': '123',
+        'updated_by': '123',
+        'form_json': {'display': 'form', 'components': [{'id': 'ex2zzg', 'key': 'simplecheckboxes',
+                                                         'label': fake.name(), 'type': 'simplecheckboxes'}]},
+        'is_hidden': False,
+        'is_template': False
+    }
     hidden_survey = {
         'name': fake.name(),
         'created_date': datetime.now().strftime('%Y-%m-%d'),
