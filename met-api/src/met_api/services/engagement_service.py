@@ -8,6 +8,7 @@ from met_api.constants.engagement_status import Status
 from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.engagement import Engagement as EngagementModel
+from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
 from met_api.models.engagement_status_block import EngagementStatusBlock as EngagementStatusBlockModel
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement_scope_options import EngagementScopeOptions
@@ -247,8 +248,7 @@ class EngagementService:
     @staticmethod
     def _render_email_template(engagement: EngagementModel):
         template = Template.get_template('email_engagement_closeout.html')
-        dashboard_path = current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
-            format(engagement_id=engagement.id)
+        dashboard_path = EngagementService._get_dashboard_path(engagement)
         engagement_url = notification.get_tenant_site_url(engagement.tenant_id, dashboard_path)
         subject = current_app.config.get('ENGAGEMENT_CLOSEOUT_EMAIL_SUBJECT'). \
             format(engagement_name=engagement.name)
@@ -261,3 +261,12 @@ class EngagementService:
             engagement_url=args.get('engagement_url'),
         )
         return subject, body, args
+    
+    @staticmethod
+    def _get_dashboard_path(engagement: EngagementModel):        
+        engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement.id)
+        if engagement_slug:
+            return current_app.config.get('ENGAGEMENT_DASHBOARD_PATH_SLUG'). \
+            format(slug=engagement_slug.slug)
+        return current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
+            format(engagement_id=engagement.id)

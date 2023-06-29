@@ -8,6 +8,7 @@ from met_api.constants.email_verification import INTERNAL_EMAIL_DOMAIN, EmailVer
 
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models import Engagement as EngagementModel
+from met_api.models import EngagementSlug as EngagementSlugModel
 from met_api.models import Survey as SurveyModel
 from met_api.models.email_verification import EmailVerification
 from met_api.schemas.email_verification import EmailVerificationSchema
@@ -156,8 +157,7 @@ class EmailVerificationService:
         subject_template = current_app.config.get('VERIFICATION_EMAIL_SUBJECT')
         survey_path = current_app.config.get('SURVEY_PATH'). \
             format(survey_id=survey.id, token=token)
-        dashboard_path = current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
-            format(engagement_id=survey.engagement_id)
+        dashboard_path = EmailVerificationService._get_dashboard_path(engagement)
         site_url = notification.get_tenant_site_url(engagement.tenant_id)
         args = {
             'engagement_name': engagement_name,
@@ -173,6 +173,15 @@ class EmailVerificationService:
             end_date=args.get('end_date'),
         )
         return subject, body, args, template_id
+
+    @staticmethod
+    def _get_dashboard_path(engagement: EngagementModel):  
+        engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement.id)
+        if engagement_slug:
+            return current_app.config.get('ENGAGEMENT_DASHBOARD_PATH_SLUG'). \
+            format(slug=engagement_slug.slug)
+        return current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
+            format(engagement_id=engagement.id)
 
     @staticmethod
     def validate_email_verification(email_verification: EmailVerificationSchema):
