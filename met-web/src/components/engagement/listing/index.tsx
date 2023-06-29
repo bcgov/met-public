@@ -22,7 +22,7 @@ import AdvancedSearch from './AdvancedSearch/SearchComponent';
 import AdvancedSearchMobile from './AdvancedSearch/SearchComponentMobile';
 import { SearchOptions } from './AdvancedSearch/SearchTypes';
 import { PermissionsGate } from 'components/permissionsGate';
-import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+import { USER_ROLES } from 'services/userService/constants';
 import CheckIcon from '@mui/icons-material/Check';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
 import { ApprovedIcon, NewIcon, NFRIcon, RejectedIcon } from './Icons';
@@ -71,7 +71,7 @@ const EngagementListing = () => {
 
     const { roles, assignedEngagements } = useAppSelector((state) => state.user);
 
-    const canViewPrivateEngagements = roles.includes(SCOPES.viewPrivateEngagements);
+    const canViewPrivateEngagements = roles.includes(USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS);
 
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
@@ -457,7 +457,7 @@ const EngagementListing = () => {
                             Advanced Search
                         </SecondaryButton>
                     </When>
-                    <PermissionsGate scopes={[SCOPES.createEngagement]} errorProps={{ disabled: true }}>
+                    <PermissionsGate scopes={[USER_ROLES.CREATE_ENGAGEMENT]} errorProps={{ disabled: true }}>
                         <PrimaryButton
                             component={Link}
                             to="/engagements/create/form"

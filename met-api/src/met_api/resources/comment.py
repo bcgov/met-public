@@ -31,29 +31,6 @@ API = Namespace('comments', description='Endpoints for Comments Management')
 """
 
 
-@cors_preflight('GET, PUT, OPTIONS')
-@API.route('/<comment_id>')
-class Comment(Resource):
-    """Resource for managing a single comment."""
-
-    @staticmethod
-    @cross_origin(origins=allowedorigins())
-    @_jwt.requires_auth
-    def get(comment_id):
-        """Fetch a single comment matching the provided id."""
-        try:
-            comment_record = CommentService().get_comment(comment_id)
-
-            if comment_record:
-                return comment_record, HTTPStatus.OK
-
-            raise KeyError('comment record is None')
-        except KeyError:
-            return 'Comment was not found', HTTPStatus.INTERNAL_SERVER_ERROR
-        except ValueError as err:
-            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-
-
 @cors_preflight('GET, OPTIONS')
 @API.route('/survey/<survey_id>')
 class SurveyComments(Resource):

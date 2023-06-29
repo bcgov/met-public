@@ -14,7 +14,7 @@ import ArticleIcon from '@mui/icons-material/Article';
 import { formatDate } from 'components/common/dateHelper';
 import { When } from 'react-if';
 import { PermissionsGate } from 'components/permissionsGate';
-import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+import { USER_ROLES } from 'services/userService/constants';
 
 export const PreviewBanner = () => {
     const isSmallScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
@@ -186,14 +186,14 @@ export const PreviewBanner = () => {
                         </SecondaryButton>
 
                         <When condition={isDraft}>
-                            <PermissionsGate scopes={[SCOPES.publishEngagement]} errorProps={{ disabled: true }}>
+                            <PermissionsGate scopes={[USER_ROLES.PUBLISH_ENGAGEMENT]} errorProps={{ disabled: true }}>
                                 <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => setIsOpen(true)}>
                                     Schedule Engagement
                                 </PrimaryButton>
                             </PermissionsGate>
                         </When>
                         <When condition={isScheduled}>
-                            <PermissionsGate scopes={[SCOPES.publishEngagement]} errorProps={{ disabled: true }}>
+                            <PermissionsGate scopes={[USER_ROLES.PUBLISH_ENGAGEMENT]} errorProps={{ disabled: true }}>
                                 <PrimaryButton sx={{ marginLeft: '1em' }} onClick={() => setIsOpen(true)}>
                                     Reschedule Engagement
                                 </PrimaryButton>

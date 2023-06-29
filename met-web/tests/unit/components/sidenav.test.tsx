@@ -18,11 +18,11 @@ jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
     useSelector: jest.fn(() => {
         return [
-            SCOPES.viewEngagement,
-            SCOPES.viewAssignedEngagements,
-            SCOPES.viewSurveys,
-            SCOPES.viewUsers,
-            SCOPES.viewFeedbacks,
+            SCOPES.VIEW_ENGAGEMENT,
+            SCOPES.VIEW_ASSIGNED_ENGAGEMENTS,
+            SCOPES.VIEW_SURVEYS,
+            SCOPES.VIEW_USERS,
+            SCOPES.VIEW_FEEDBACKS,
         ];
     }),
 }));
