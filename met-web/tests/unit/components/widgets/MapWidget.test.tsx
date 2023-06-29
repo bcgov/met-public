@@ -10,7 +10,7 @@ import * as widgetService from 'services/widgetService';
 import { Box } from '@mui/material';
 import { WidgetType } from 'models/widget';
 import { draftEngagement, surveys, mockMap, mapWidget } from '../factory';
-import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+import { USER_ROLES } from 'services/userService/constants';
 
 jest.mock('components/map', () => () => {
     return <div></div>;
@@ -20,7 +20,7 @@ jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
     useSelector: jest.fn(() => {
         return {
-            roles: [SCOPES.VIEW_PRIVATE_ENGAGEMENTS, SCOPES.EDIT_ENGAGEMENT, SCOPES.CREATE_ENGAGEMENT],
+            roles: [USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS, USER_ROLES.EDIT_ENGAGEMENT, USER_ROLES.CREATE_ENGAGEMENT],
             assignedEngagements: [draftEngagement.id],
         };
     }),

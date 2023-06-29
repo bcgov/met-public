@@ -5,7 +5,7 @@ import SideNav from '../../../src/components/layout/SideNav/SideNav';
 import ProviderShell from './ProviderShell';
 import { setupEnv } from './setEnvVars';
 import { Routes } from '../../../src/components/layout/SideNav/SideNavElements';
-import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+import { USER_ROLES } from 'services/userService/constants';
 
 const drawerWidth = 280;
 
@@ -18,11 +18,11 @@ jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
     useSelector: jest.fn(() => {
         return [
-            SCOPES.VIEW_ENGAGEMENT,
-            SCOPES.VIEW_ASSIGNED_ENGAGEMENTS,
-            SCOPES.VIEW_SURVEYS,
-            SCOPES.VIEW_USERS,
-            SCOPES.VIEW_FEEDBACKS,
+            USER_ROLES.VIEW_ENGAGEMENT,
+            USER_ROLES.VIEW_ASSIGNED_ENGAGEMENTS,
+            USER_ROLES.VIEW_SURVEYS,
+            USER_ROLES.VIEW_USERS,
+            USER_ROLES.VIEW_FEEDBACKS,
         ];
     }),
 }));

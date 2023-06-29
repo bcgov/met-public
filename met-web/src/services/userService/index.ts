@@ -110,7 +110,7 @@ const updateUser = async () => {
 };
 
 const getAssignedEngagements = async (externalId: string, roles: string[]) => {
-    if (roles.includes(USER_ROLES.VIEW_PRIVATE_ENGAGMENTS) || !externalId) {
+    if (roles.includes(USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS) || !externalId) {
         return [];
     }
     try {

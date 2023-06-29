@@ -10,7 +10,7 @@ export const SCOPES = {
     CREATE_SURVEY: 'create_survey',
     PUBLISH_ENGAGMENT: 'publish_engagement',
     VIEW_ENGAGEMENT: 'view_engagement',
-    VIEW_PRIVATE_ENGAGMENTS: 'view_private_engagements',
+    VIEW_PRIVATE_ENGAGEMENTS: 'view_private_engagements',
     VIEW_ASSIGNED_ENGAGEMENTS: 'view_assigned_engagements',
     REVIEW_COMMENTS: 'review_comments',
     ACCESS_DASHBOARD: 'access_dashboard',

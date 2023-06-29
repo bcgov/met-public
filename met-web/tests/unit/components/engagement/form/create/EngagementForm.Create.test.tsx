@@ -10,13 +10,13 @@ import * as engagementMetadataService from 'services/engagementMetadataService';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
 import { Box } from '@mui/material';
 import { draftEngagement, engagementMetadata } from '../../../factory';
-import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+import { USER_ROLES } from 'services/userService/constants';
 
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
     useSelector: jest.fn(() => {
         return {
-            roles: [SCOPES.VIEW_PRIVATE_ENGAGEMENTS, SCOPES.EDIT_ENGAGEMENT, SCOPES.CREATE_ENGAGEMENT],
+            roles: [USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS, USER_ROLES.EDIT_ENGAGEMENT, USER_ROLES.CREATE_ENGAGEMENT],
             assignedEngagements: [draftEngagement.id],
         };
     }),

@@ -49,7 +49,7 @@ const SurveyListing = () => {
 
     const { roles, assignedEngagements } = useAppSelector((state) => state.user);
 
-    const canViewPrivateEngagements = roles.includes(USER_ROLES.VIEW_PRIVATE_ENGAGMENTS);
+    const canViewPrivateEngagements = roles.includes(USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS);
 
     const dispatch = useAppDispatch();
 
