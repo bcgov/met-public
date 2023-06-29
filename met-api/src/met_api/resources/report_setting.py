@@ -42,11 +42,11 @@ class ReportSetting(Resource):
     @cross_origin(origins=allowedorigins())
     @_jwt.requires_auth
     def post():
-        """Create a new report setting."""
+        """Refresh the report setting to match the questions on survey."""
         try:
             requestjson = request.get_json()
             user_id = TokenInfo.get_id()
-            ReportSettingService().create_report_setting(requestjson, user_id)
+            ReportSettingService().refresh_report_setting(requestjson, user_id)
 
             return {}, HTTPStatus.OK
         except KeyError as err:
