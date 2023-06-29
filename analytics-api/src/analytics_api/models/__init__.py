@@ -17,14 +17,6 @@
 from .db import db, ma, migrate
 from .email_verification import EmailVerification
 from .engagement import Engagement
-from .request_type_radio import RequestTypeRadio
-from .request_type_selectbox import RequestTypeSelectbox
-from .request_type_textarea import RequestTypeTextarea
-from .request_type_textfield import RequestTypeTextfield
-from .response_type_radio import ResponseTypeRadio
-from .response_type_selectbox import ResponseTypeSelectbox
-from .response_type_textarea import ResponseTypeTextarea
-from .response_type_textfield import ResponseTypeTextfield
 from .survey import Survey
 from .user_details import UserDetails
 from .user_feedback import UserFeedback

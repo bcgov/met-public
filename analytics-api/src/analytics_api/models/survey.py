@@ -15,6 +15,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
     source_survey_id = db.Column(db.Integer)
     name = db.Column(db.String(100))
     engagement_id = db.Column(db.Integer, comment='Source System Engagement Id.MET DB Eng Id')
+    generate_dashboard = db.Column(db.Boolean)
 
     @classmethod
     def find_by_source_id(cls, source_identifier: int):
