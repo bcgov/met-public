@@ -175,7 +175,7 @@ class EmailVerificationService:
         return subject, body, args, template_id
 
     @staticmethod
-    def _get_dashboard_path(engagement: EngagementModel):  
+    def _get_dashboard_path(engagement: EngagementModel):
         engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement.id)
         if engagement_slug:
             return current_app.config.get('ENGAGEMENT_DASHBOARD_PATH_SLUG'). \

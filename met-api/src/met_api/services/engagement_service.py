@@ -261,9 +261,9 @@ class EngagementService:
             engagement_url=args.get('engagement_url'),
         )
         return subject, body, args
-    
+
     @staticmethod
-    def _get_dashboard_path(engagement: EngagementModel):        
+    def _get_dashboard_path(engagement: EngagementModel):
         engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement.id)
         if engagement_slug:
             return current_app.config.get('ENGAGEMENT_DASHBOARD_PATH_SLUG'). \
