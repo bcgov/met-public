@@ -267,6 +267,6 @@ class EngagementService:
         engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement.id)
         if engagement_slug:
             return current_app.config.get('ENGAGEMENT_DASHBOARD_PATH_SLUG'). \
-            format(slug=engagement_slug.slug)
+                format(slug=engagement_slug.slug)
         return current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
             format(engagement_id=engagement.id)
