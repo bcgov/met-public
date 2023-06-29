@@ -84,14 +84,30 @@ class ReportSettingService:
 
     @staticmethod
     def _load_report_setting_data(survey_id, component, user_id) -> ReportSettingModel:
-        report_setting = ReportSettingModel(survey_id=survey_id,
-                                            question_id=component['id'],
-                                            question_key=component['key'],
-                                            question_type=component['type'],
-                                            question=component['label'],
-                                            display=True,
-                                            created_by=user_id,
-                                            created_date=datetime.utcnow()
-                                            )
-        report_setting.save()
-        return report_setting
+        if component['type'] == FormIoComponentType.SURVEY.value:
+            questions = component['questions']
+            if not questions:
+                return
+            
+            for question in questions:
+                report_setting = ReportSettingModel(survey_id=survey_id,
+                                                question_id=component['id'] + '-' + question['value'],
+                                                question_key=component['key'],
+                                                question_type=component['type'],
+                                                question=question['label'],
+                                                display=True,
+                                                created_by=user_id,
+                                                created_date=datetime.utcnow()
+                                                )
+                report_setting.save()
+        else:
+            report_setting = ReportSettingModel(survey_id=survey_id,
+                                                question_id=component['id'],
+                                                question_key=component['key'],
+                                                question_type=component['type'],
+                                                question=component['label'],
+                                                display=True,
+                                                created_by=user_id,
+                                                created_date=datetime.utcnow()
+                                                )
+            report_setting.save()

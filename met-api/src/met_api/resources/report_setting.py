@@ -46,9 +46,9 @@ class ReportSetting(Resource):
         try:
             requestjson = request.get_json()
             user_id = TokenInfo.get_id()
-            report_setting = ReportSettingService().create_report_setting(requestjson, user_id)
+            ReportSettingService().create_report_setting(requestjson, user_id)
 
-            return jsonify(report_setting), HTTPStatus.OK
+            return {}, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
