@@ -1,12 +1,32 @@
+# Copyright © 2019 Province of British Columbia
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""Tests to verify the Engagement slug API end-point.
+
+Test-Suite to ensure that the /Engagement slug endpoint is working as expected.
+"""
 import json
-import pytest
-from faker import Faker
 from http import HTTPStatus
 
-from met_api.utils.enums import ContentType
+import pytest
+from faker import Faker
+
 from met_api.constants.engagement_status import Status
-from tests.utilities.factory_scenarios import TestUserInfo, TestEngagementSlugInfo, TestJwtClaims
-from tests.utilities.factory_utils import factory_engagement_model, factory_auth_header, factory_engagement_slug_model
+from met_api.utils.enums import ContentType
+from tests.utilities.factory_scenarios import TestEngagementSlugInfo, TestJwtClaims, TestUserInfo
+from tests.utilities.factory_utils import factory_auth_header, factory_engagement_model, factory_engagement_slug_model
+
 
 fake = Faker()
 
