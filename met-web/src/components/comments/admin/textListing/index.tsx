@@ -5,7 +5,7 @@ import { MetPageGridContainer, PrimaryButton, MetParagraph, MetLabel } from 'com
 import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { Link as MuiLink, Grid, Stack, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { useAppDispatch } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { CommentStatusChip } from '../../status';
 import { CommentStatus } from 'constants/commentStatus';
@@ -13,8 +13,10 @@ import { When } from 'react-if';
 import { getSubmissionPage } from 'services/submissionService';
 import { SurveySubmission } from 'models/surveySubmission';
 import { formatDate } from 'components/common/dateHelper';
+import { USER_ROLES } from 'services/userService/constants';
 
 const CommentTextListing = () => {
+    const { roles } = useAppSelector((state) => state.user);
     const badgeStyle: React.CSSProperties = {
         padding: 0,
         margin: 0,
@@ -87,11 +89,16 @@ const CommentTextListing = () => {
             disablePadding: false,
             label: 'ID',
             allowSort: true,
-            renderCell: (row: SurveySubmission) => (
-                <MuiLink component={Link} to={`/surveys/${Number(row.survey_id)}/submissions/${row.id}/review`}>
-                    {row.id}
-                </MuiLink>
-            ),
+            renderCell: (row) => {
+                if (roles.includes(USER_ROLES.REVIEW_COMMENTS)) {
+                    return (
+                        <MuiLink component={Link} to={`/surveys/${Number(row.survey_id)}/submissions/${row.id}/review`}>
+                            {row.id}
+                        </MuiLink>
+                    );
+                }
+                return row.id;
+            },
         },
         {
             key: 'comments',
