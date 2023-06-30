@@ -157,12 +157,12 @@ class SubmissionService:
                 not any(set((has_personal_info, has_profanity, has_threat))) and \
                 not rejected_reason_other:
             raise ValueError('A rejection reason is required.')
-        
+
         submission = Submission.get(submission_id)
         if not submission:
             raise ValueError('Invalid submission.')
         authorization.check_auth(
-            one_of_roles=(MembershipType.TEAM_MEMBER.name, Role.REVIEW_ALL_COMMENTS),
+            one_of_roles=(MembershipType.TEAM_MEMBER.name, Role.REVIEW_ALL_COMMENTS.value),
             engagement_id=submission.engagement_id
         )
 
