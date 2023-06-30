@@ -11,6 +11,7 @@ import { createDefaultSubmission } from 'models/surveySubmission';
 import { createDefaultComment } from 'models/comment';
 import SubmissionListing from 'components/comments/admin/reviewListing';
 import * as utils from 'utils';
+import { USER_ROLES } from 'services/userService/constants';
 
 const mockSurveyOne = {
     ...createDefaultSurvey(),
@@ -63,8 +64,17 @@ jest.mock('react-router-dom', () => ({
     useNavigate: jest.fn(),
 }));
 
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useSelector: jest.fn(() => {
+        return {
+            roles: [USER_ROLES.REVIEW_COMMENTS, USER_ROLES.VIEW_UNAPPROVED_COMMENTS],
+            assignedEngagements: [mockSurveyOne.engagement_id],
+        };
+    }),
+}));
+
 describe('Comment listing tests', () => {
-    jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(surveyService, 'getSurvey').mockReturnValue(Promise.resolve(mockSurveyOne));
     jest.spyOn(submissionService, 'getSubmissionPage').mockReturnValue(
