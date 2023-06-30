@@ -46,7 +46,7 @@ class ReportSetting(Resource):
             requestjson = request.get_json()
             report_setting = ReportSettingService().refresh_report_setting(requestjson)
 
-            return {}, HTTPStatus.OK
+            return jsonify(report_setting), HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
