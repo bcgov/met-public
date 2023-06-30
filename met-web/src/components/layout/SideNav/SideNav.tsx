@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListItemButton, List, ListItem, Box, Drawer, Toolbar } from '@mui/material';
+import { ListItemButton, List, ListItem, Box, Drawer, Toolbar, Divider } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Routes } from './SideNavElements';
 import { Palette } from '../../../styles/Theme';
@@ -7,6 +7,7 @@ import { SideNavProps } from './types';
 import { MetHeader4 } from 'components/common';
 import { When, Unless } from 'react-if';
 import { useAppSelector } from 'hooks';
+import UserGuideNav from './UserGuideNav';
 
 const DrawerBox = () => {
     const navigate = useNavigate();
@@ -58,6 +59,8 @@ const DrawerBox = () => {
                         </ListItemButton>
                     </ListItem>
                 ))}
+                <Divider sx={{ backgroundColor: 'white' }} />
+                <UserGuideNav />
             </List>
         </Box>
     );
