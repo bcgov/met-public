@@ -45,7 +45,6 @@ const UserGuideNav = () => {
             }
         });
 
-        console.log('leastDifferenceScore', leastDifferenceScore);
         if (leastDifferenceScore < THRESHOLD_SIMILARITY_SCORE) {
             return keyWithLeastDifference;
         } else {
