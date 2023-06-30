@@ -3,15 +3,25 @@
 Manages the report setting
 """
 
-from met_api.models import ReportSetting as ReportSettingModel
-
-from .base_schema import BaseSchema
+from marshmallow import EXCLUDE, Schema, fields
 
 
-class ReportSettingSchema(BaseSchema):  # pylint: disable=too-many-ancestors, too-few-public-methods
-    """This is the schema for the report setting model."""
+class ReportSettingSchema(Schema):
+    """Schema for report setting."""
 
-    class Meta(BaseSchema.Meta):  # pylint: disable=too-few-public-methods
-        """Maps all of the report setting fields to a default schema."""
+    class Meta:  # pylint: disable=too-few-public-methods
+        """Exclude unknown fields in the deserialized output."""
 
-        model = ReportSettingModel
+        unknown = EXCLUDE
+
+    id = fields.Int(data_key='id')
+    survey_id = fields.Int(data_key='survey_id')
+    question_id = fields.Str(data_key='question_id')
+    question_key = fields.Str(data_key='question_key')
+    question_type = fields.Str(data_key='question_type')
+    question = fields.Str(data_key='question')
+    display = fields.Bool(data_key='display')
+    created_by = fields.Str(data_key='created_by')
+    created_date = fields.Str(data_key='created_date')
+    updated_by = fields.Str(data_key='updated_by')
+    updated_date = fields.Str(data_key='updated_date')
