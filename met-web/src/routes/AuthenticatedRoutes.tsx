@@ -29,7 +29,6 @@ const AuthenticatedRoutes = () => {
             <ScrollToTop />
             <Routes>
                 <Route path="/" element={<Dashboard />} />
-                <Route path="/asdasds" element={<Dashboard />} />
                 <Route path="/engagements" element={<EngagementListing />} />
                 <Route path="/surveys" element={<SurveyListing />} />
                 <Route path="/surveys/create" element={<CreateSurvey />} />
