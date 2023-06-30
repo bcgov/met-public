@@ -23,7 +23,6 @@ from marshmallow import ValidationError
 from met_api.auth import auth
 from met_api.auth import jwt as _jwt
 from met_api.services.report_setting_service import ReportSettingService
-from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
@@ -45,10 +44,9 @@ class ReportSetting(Resource):
         """Refresh the report setting to match the questions on survey."""
         try:
             requestjson = request.get_json()
-            user_id = TokenInfo.get_id()
-            ReportSettingService().refresh_report_setting(requestjson, user_id)
+            report_setting = ReportSettingService().refresh_report_setting(requestjson)
 
-            return {}, HTTPStatus.OK
+            return jsonify(report_setting), HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
@@ -62,8 +60,7 @@ class ReportSetting(Resource):
         """Update saved report setting partially."""
         try:
             requestjson = request.get_json()
-            user_id = TokenInfo.get_id()
-            report_setting = ReportSettingService().update_report_setting(requestjson, user_id)
+            report_setting = ReportSettingService().update_report_setting(requestjson)
 
             return jsonify(report_setting), HTTPStatus.OK
         except KeyError as err:

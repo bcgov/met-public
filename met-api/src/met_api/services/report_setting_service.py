@@ -1,5 +1,4 @@
 """Service for report setting management."""
-from datetime import datetime
 
 from met_api.models.report_setting import ReportSetting as ReportSettingModel
 from met_api.schemas.report_setting import ReportSettingSchema
@@ -17,7 +16,7 @@ class ReportSettingService:
         return settings
 
     @classmethod
-    def refresh_report_setting(cls, report_setting_data, user_id):
+    def refresh_report_setting(cls, report_setting_data):
         """Refresh report setting."""
         if report_setting_data.get('form_json', None) is None:
             raise ValueError('No question available on survey to access settings')
@@ -32,18 +31,18 @@ class ReportSettingService:
 
         if is_single_page_survey:
             form_components = form_json.get('components', None)
-            cls._extract_form_component(survey_id, form_components, user_id)
+            cls._extract_form_component(survey_id, form_components)
 
         if is_multi_page_survey:
             pages = form_json.get('components', None)
             for page in pages:
                 form_components = page.get('components', None)
-                cls._extract_form_component(survey_id, form_components, user_id)
+                cls._extract_form_component(survey_id, form_components)
 
         return report_setting_data
 
     @classmethod
-    def _extract_form_component(cls, survey_id, form_components, user_id):
+    def _extract_form_component(cls, survey_id, form_components):
         """Loop through the form json to extract each form component."""
         position = 0
         for component in form_components:
@@ -51,7 +50,7 @@ class ReportSettingService:
             component_type = component.get('type', None)
             has_valid_question_type = cls._validate_component_type(component_type)
             if has_valid_question_type:
-                cls._check_for_survey_type_component(survey_id, component, user_id)
+                cls._check_for_survey_type_component(survey_id, component)
 
     @staticmethod
     def _validate_component_type(component_type):
@@ -66,7 +65,7 @@ class ReportSettingService:
         return False
 
     @classmethod
-    def _check_for_survey_type_component(cls, survey_id, component, user_id):
+    def _check_for_survey_type_component(cls, survey_id, component):
         # Check if the component type is SURVEY then loop through each question to extract the survey questions
         if component['type'] == FormIoComponentType.SURVEY.value:
             questions = component['questions']
@@ -74,20 +73,18 @@ class ReportSettingService:
                 return
 
             for question in questions:
-                cls._create_or_update_data_for_survey_type(survey_id, component, user_id, question)
+                cls._create_or_update_data_for_survey_type(survey_id, component, question)
         else:
-            cls._create_or_update_data(survey_id, component, user_id)
+            cls._create_or_update_data(survey_id, component)
 
     @staticmethod
-    def _create_or_update_data(survey_id, component, user_id) -> ReportSettingModel:
-        report_setting_exists = ReportSettingModel.find_by_question_key(survey_id, component['key'])
+    def _create_or_update_data(survey_id, component) -> ReportSettingModel:
+        report_setting = ReportSettingModel.find_by_question_key(survey_id, component['key'])
 
         # Update the record if its existing
-        if report_setting_exists:
-            report_setting_exists.question_id = component['id']
-            report_setting_exists.question = component['label']
-            report_setting_exists.updated_date = datetime.utcnow()
-            report_setting_exists.save()
+        if report_setting:
+            report_setting.question_id = component['id']
+            report_setting.question = component['label']
         else:
             # Create the record if its not existing
             report_setting = ReportSettingModel(survey_id=survey_id,
@@ -95,26 +92,23 @@ class ReportSettingService:
                                                 question_key=component['key'],
                                                 question_type=component['type'],
                                                 question=component['label'],
-                                                display=True,
-                                                created_by=user_id,
-                                                created_date=datetime.utcnow()
+                                                display=True
                                                 )
-            report_setting.save()
+
+        report_setting.save()
 
     @staticmethod
-    def _create_or_update_data_for_survey_type(survey_id, component, user_id, question) -> ReportSettingModel:
+    def _create_or_update_data_for_survey_type(survey_id, component, question) -> ReportSettingModel:
         # For component type SURVEY the unique identifier is a combination of key and value. The key for each
         # question will be same as its part of a single component within form json
-        report_setting_exists = ReportSettingModel.find_by_question_key(survey_id,
-                                                                        component['key'] + '-' + question['value'])
+        report_setting = ReportSettingModel.find_by_question_key(survey_id,
+                                                                 component['key'] + '-' + question['value'])
 
         # Update the record if its existing
-        if report_setting_exists:
-            report_setting_exists.question_id = component['id'] + '-' + question['value']
-            report_setting_exists.question_key = component['key'] + '-' + question['value']
-            report_setting_exists.question = component['label']
-            report_setting_exists.updated_date = datetime.utcnow()
-            report_setting_exists.save()
+        if report_setting:
+            report_setting.question_id = component['id'] + '-' + question['value']
+            report_setting.question_key = component['key'] + '-' + question['value']
+            report_setting.question = component['label']
         else:
             # Create the record if its not existing
             report_setting = ReportSettingModel(survey_id=survey_id,
@@ -122,14 +116,13 @@ class ReportSettingService:
                                                 question_key=component['key'] + '-' + question['value'],
                                                 question_type=component['type'],
                                                 question=question['label'],
-                                                display=True,
-                                                created_by=user_id,
-                                                created_date=datetime.utcnow()
+                                                display=True
                                                 )
-            report_setting.save()
+
+        report_setting.save()
 
     @classmethod
-    def update_report_setting(cls, report_setting_data, user_id):
+    def update_report_setting(cls, report_setting_data):
         """Update report setting."""
         for data in report_setting_data:
             report_setting_id = data.get('id', None)
@@ -138,8 +131,6 @@ class ReportSettingService:
                 raise ValueError(f'No report setting found for {report_setting_id}')
 
             report_setting.display = data.get('display', None)
-            report_setting.updated_by = user_id
-            report_setting.updated_date = datetime.utcnow()
             report_setting.save()
 
         return report_setting_data

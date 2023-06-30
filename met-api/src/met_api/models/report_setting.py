@@ -5,7 +5,7 @@ questions will either be displayed/hidden on the dashboard
 """
 from __future__ import annotations
 
-from sqlalchemy import ForeignKey, and_
+from sqlalchemy import ForeignKey
 from .base_model import BaseModel
 from .db import db
 
@@ -21,7 +21,8 @@ class ReportSetting(BaseModel):  # pylint: disable=too-few-public-methods
     question_key = db.Column(db.String(100))
     question_type = db.Column(db.String(100))
     question = db.Column(db.String(200))
-    display = db.Column(db.Boolean, default=True)
+    display = db.Column(db.Boolean, default=True,
+                        comment='Flag to identify if the question needs to be diplayed on the dashboard.')
 
     @classmethod
     def find_by_survey_id(cls, survey_id):
@@ -35,8 +36,5 @@ class ReportSetting(BaseModel):  # pylint: disable=too-few-public-methods
     def find_by_question_key(cls, survey_id, question_key):
         """Return report setting by survey id."""
         report_settings = db.session.query(ReportSetting) \
-            .filter(and_(
-                        ReportSetting.survey_id == survey_id,
-                        ReportSetting.question_key == question_key
-                    )).first()
+            .filter(ReportSetting.survey_id == survey_id, ReportSetting.question_key == question_key).first()
         return report_settings
