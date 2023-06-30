@@ -71,7 +71,7 @@ def test_create_submission_rollback(session):  # pylint:disable=unused-argument
 
 
 def test_review_comment(client, jwt, session, monkeypatch):  # pylint:disable=unused-argument
-    """Assert that a comment can be reviewed."""    
+    """Assert that a comment can be reviewed."""
     with patch.object(authorization, 'check_auth', return_value=True):
         admin_user = factory_staff_user_model(3)
         participant = factory_participant_model()
