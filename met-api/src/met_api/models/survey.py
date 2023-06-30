@@ -38,6 +38,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
     is_hidden = db.Column(db.Boolean, nullable=False)
     is_template = db.Column(db.Boolean, nullable=False)
+    generate_dashboard = db.Column(db.Boolean, default=True)
 
     @classmethod
     def get_open(cls, survey_id) -> Survey:
@@ -106,7 +107,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
             engagement_id=survey.get('engagement_id', None),
             is_hidden=survey.get('is_hidden', False),
             is_template=survey.get('is_template', False),
-
+            generate_dashboard=survey.get('generate_dashboard', True),
         )
         new_survey.save()
         return new_survey
@@ -126,6 +127,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
             name=survey.get('name', record.name),
             is_hidden=survey.get('is_hidden', record.is_hidden),
             is_template=survey.get('is_template', record.is_template),
+            generate_dashboard=survey.get('generate_dashboard', record.generate_dashboard),
         )
         query.update(update_fields)
         db.session.commit()

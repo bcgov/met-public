@@ -21,3 +21,4 @@ class RequestMixin:  # pylint: disable=too-few-public-methods
     label = db.Column(db.String(200))
     request_id = db.Column(db.String(250))
     postion = db.Column(db.Integer)
+    display = db.Column(db.Boolean)

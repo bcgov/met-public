@@ -8,6 +8,10 @@ erDiagram
         timestamp end_date
 		timestamp published_date
         integer runcycle_id
+        double latitude
+        double longitude
+        text geojson
+        string marker_label
         timestamp created_date
         timestamp updated_date
         boolean is_active
@@ -18,6 +22,7 @@ erDiagram
         string name
         integer engagement_id
         integer runcycle_id
+        boolean generate_dashboard
         timestamp created_date
         timestamp updated_date
         boolean is_active
@@ -43,6 +48,7 @@ erDiagram
         integer survey_id FK "to survey table"
         string postion
         integer runcycle_id
+        boolean display
         timestamp created_date
         timestamp updated_date
         boolean is_active
@@ -61,61 +67,6 @@ erDiagram
         boolean is_active
     }
     request_type_option ||--o{ response_type_option : has
-    request_type_textfield {
-        integer id PK
-		string key
-		string type
-		string label
-		string request_id
-        integer survey_id FK "to survey table"
-        string postion
-        integer runcycle_id
-        timestamp created_date
-        timestamp updated_date
-        boolean is_active
-    }
-    survey ||--o{ request_type_textfield : has 
-    response_type_textfield {
-        integer id PK
-		integer participant_id
-		string request_key PK
-		string value
-		string request_id
-        integer survey_id FK "to survey table"
-        integer runcycle_id
-        timestamp created_date
-        timestamp updated_date
-        boolean is_active
-    }
-    request_type_textfield ||--o{ response_type_textfield : has
-    request_type_textarea {
-        integer id PK
-		string key
-		string type
-		string label
-		string request_id
-        integer survey_id FK "to survey table"
-        string postion
-        integer runcycle_id
-        timestamp created_date
-        timestamp updated_date
-        boolean is_active
-    }
-    survey ||--o{ request_type_textarea : has 
-    response_type_textarea {
-        integer id PK
-		integer participant_id
-		string request_key PK
-		string value
-		string request_id
-        integer survey_id FK "to survey table"
-		string sentiment
-        integer runcycle_id
-        timestamp created_date
-        timestamp updated_date
-        boolean is_active
-    }
-    request_type_textarea ||--o{ response_type_textarea : has
     user_details {
         integer id PK
         string name
