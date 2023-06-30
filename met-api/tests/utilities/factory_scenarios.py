@@ -261,7 +261,8 @@ class TestJwtClaims(dict, Enum):
                 'edit_all_surveys',
                 'view_unapproved_comments',
                 'clone_survey',
-                'edit_members'
+                'edit_members',
+                'review_comments'
             ]
         }
     }
