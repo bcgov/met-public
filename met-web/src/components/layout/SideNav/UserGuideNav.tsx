@@ -55,11 +55,11 @@ const UserGuideNav = () => {
     const openHelpPage = () => {
         const key = handleSimilarityScore();
         if (!key) {
-            window.open(DEFAULT_HELP_PATH, '_blank');
+            window.open(DEFAULT_HELP_PATH, '_blank', 'noopener');
             return;
         }
         const helpPagePath = key ? helpPaths[key] : DEFAULT_HELP_PATH;
-        window.open(helpPagePath, '_blank');
+        window.open(helpPagePath, '_blank', 'noopener');
     };
 
     return (
