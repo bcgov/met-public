@@ -301,21 +301,3 @@ def factory_engagement_slug_model(eng_slug_info: dict = TestEngagementSlugInfo.s
     )
     slug.save()
     return slug
-
-
-def factory_report_setting_model(survey_info: dict = TestSurveyInfo.survey3):
-    """Produce a Report setting model."""
-    eng = factory_engagement_model(status=Status.Published.value)
-    survey = SurveyModel(
-        name=fake.name(),
-        form_json=survey_info.get('form_json'),
-        created_by=survey_info.get('created_by'),
-        updated_by=survey_info.get('updated_by'),
-        created_date=survey_info.get('created_date'),
-        updated_date=survey_info.get('updated_date'),
-        is_hidden=survey_info.get('is_hidden'),
-        is_template=survey_info.get('is_template'),
-        engagement_id=eng.id
-    )
-    survey.save()
-    return survey, eng
