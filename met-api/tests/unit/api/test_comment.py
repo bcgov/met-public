@@ -47,9 +47,9 @@ def test_get_comments(client, jwt, session):  # pylint:disable=unused-argument
 
 def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that a comment can be reviewed."""
-    claims = TestJwtClaims.public_user_role
+    claims = TestJwtClaims.staff_admin_role
 
-    factory_staff_user_model(TestJwtClaims.public_user_role.get('sub'))
+    factory_staff_user_model(TestJwtClaims.staff_admin_role.get('sub'))
     participant = factory_participant_model()
     survey, eng = factory_survey_and_eng_model()
     submission = factory_submission_model(survey.id, eng.id, participant.id)
@@ -65,9 +65,9 @@ def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
 
 def test_review_comment_internal_note(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that a comment can be reviewed."""
-    claims = TestJwtClaims.public_user_role
+    claims = TestJwtClaims.staff_admin_role
 
-    factory_staff_user_model(TestJwtClaims.public_user_role.get('sub'))
+    factory_staff_user_model(TestJwtClaims.staff_admin_role.get('sub'))
     participant = factory_participant_model()
     survey, eng = factory_survey_and_eng_model()
     submission = factory_submission_model(survey.id, eng.id, participant.id)
@@ -92,9 +92,9 @@ def test_review_comment_internal_note(client, jwt, session):  # pylint:disable=u
 
 def test_review_comment_review_note(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that a comment can be reviewed."""
-    claims = TestJwtClaims.public_user_role
+    claims = TestJwtClaims.staff_admin_role
     set_global_tenant()
-    factory_staff_user_model(TestJwtClaims.public_user_role.get('sub'))
+    factory_staff_user_model(TestJwtClaims.staff_admin_role.get('sub'))
     participant = factory_participant_model()
     survey, eng = factory_survey_and_eng_model()
     submission = factory_submission_model(survey.id, eng.id, participant.id)

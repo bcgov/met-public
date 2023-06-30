@@ -51,7 +51,7 @@ def test_valid_submission(client, jwt, session):  # pylint:disable=unused-argume
 @pytest.mark.parametrize('submission_info', [TestSubmissionInfo.submission1])
 def test_get_submission_by_id(client, jwt, session, submission_info):  # pylint:disable=unused-argument
     """Assert that an engagement can be fetched."""
-    claims = TestJwtClaims.public_user_role
+    claims = TestJwtClaims.staff_admin_role
 
     participant = factory_participant_model()
     survey, eng = factory_survey_and_eng_model()
