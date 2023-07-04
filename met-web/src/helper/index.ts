@@ -31,3 +31,25 @@ export const filterQueryParams = (queryParams: { [x: string]: unknown }) => {
     });
     return filteredQueryParams;
 };
+
+// used to measure the distance (similarity/difference) between two strings
+export const levenshteinDistance = (string1: string, string2: string): number => {
+    if (string1.length < string2.length) {
+        return levenshteinDistance(string2, string1);
+    }
+    if (string2.length === 0) {
+        return string1.length;
+    }
+    const previousRow = Array.from({ length: string2.length + 1 }, (_, i) => i);
+    for (let i = 0; i < string1.length; i++) {
+        const currentRow = [i + 1];
+        for (let j = 0; j < string2.length; j++) {
+            const insertions = previousRow[j + 1] + 1;
+            const deletions = currentRow[j] + 1;
+            const substitutions = previousRow[j] + (string1[i] !== string2[j] ? 1 : 0);
+            currentRow.push(Math.min(insertions, deletions, substitutions));
+        }
+        previousRow.splice(0, previousRow.length, ...currentRow);
+    }
+    return previousRow[string2.length];
+};
