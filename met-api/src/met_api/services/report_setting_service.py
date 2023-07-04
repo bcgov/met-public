@@ -128,8 +128,8 @@ class ReportSettingService:
 
     @classmethod
     def _delete_questions_removed_from_form(cls, survey_id, survey_question_keys):
-        """Loop through the data from report setting and delete any record which does not exist on
-        survey form. This will happen if a existing survey question is deleted from the survey"""
+        # Loop through the data from report setting and delete any record which does not exist on
+        # survey form. This will happen if a existing survey question is deleted from the survey
         report_settings = cls.get_report_setting(survey_id)
         for report_setting in report_settings:
             if report_setting['question_key'] not in survey_question_keys:

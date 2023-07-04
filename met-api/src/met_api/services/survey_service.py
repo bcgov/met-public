@@ -112,7 +112,7 @@ class SurveyService:
         if not survey_to_clone:
             raise KeyError('Survey to clone was not found')
 
-        cloned_survey =  SurveyModel.create_survey({
+        cloned_survey = SurveyModel.create_survey({
             'name': data.get('name'),
             'form_json': survey_to_clone.get('form_json'),
             'engagement_id': data.get('engagement_id', None),
