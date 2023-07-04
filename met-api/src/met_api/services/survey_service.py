@@ -5,7 +5,9 @@ from met_api.constants.engagement_status import Status
 from met_api.constants.membership_type import MembershipType
 from met_api.models import Engagement as EngagementModel
 from met_api.models import Survey as SurveyModel
+from met_api.models.db import session_scope
 from met_api.models.pagination_options import PaginationOptions
+from met_api.models.report_setting import ReportSetting
 from met_api.models.survey_search_options import SurveySearchOptions
 from met_api.schemas.engagement import EngagementSchema
 from met_api.schemas.survey import SurveySchema
@@ -110,11 +112,26 @@ class SurveyService:
         if not survey_to_clone:
             raise KeyError('Survey to clone was not found')
 
-        return SurveyModel.create_survey({
+        cloned_survey =  SurveyModel.create_survey({
             'name': data.get('name'),
             'form_json': survey_to_clone.get('form_json'),
             'engagement_id': data.get('engagement_id', None),
         })
+
+        cls.create_report_setting(survey_to_clone.get('id'), cloned_survey.id)
+
+        return cloned_survey
+
+    @classmethod
+    def create_report_setting(cls, survey_id, cloned_survey_id):
+        """Create report setting."""
+        report_settings = ReportSetting.find_by_survey_id(survey_id)
+
+        with session_scope() as session:
+            new_report_setting = ReportSetting.add_all_report_settings(cloned_survey_id,
+                                                                       report_settings, session)
+
+        return new_report_setting
 
     @classmethod
     def update(cls, data: SurveySchema):

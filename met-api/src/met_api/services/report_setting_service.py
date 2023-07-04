@@ -28,29 +28,30 @@ class ReportSettingService:
 
         is_single_page_survey = form_type == 'form'
         is_multi_page_survey = form_type == 'wizard'
+        survey_question_keys = []
 
         if is_single_page_survey:
             form_components = form_json.get('components', None)
-            cls._extract_form_component(survey_id, form_components)
+            cls._extract_form_component(survey_id, form_components, survey_question_keys)
 
         if is_multi_page_survey:
             pages = form_json.get('components', None)
             for page in pages:
                 form_components = page.get('components', None)
-                cls._extract_form_component(survey_id, form_components)
+                cls._extract_form_component(survey_id, form_components, survey_question_keys)
+
+        cls._delete_questions_removed_from_form(survey_id, survey_question_keys)
 
         return report_setting_data
 
     @classmethod
-    def _extract_form_component(cls, survey_id, form_components):
+    def _extract_form_component(cls, survey_id, form_components, survey_question_keys):
         """Loop through the form json to extract each form component."""
-        position = 0
         for component in form_components:
-            position = position + 1
             component_type = component.get('type', None)
             has_valid_question_type = cls._validate_component_type(component_type)
             if has_valid_question_type:
-                cls._check_for_survey_type_component(survey_id, component)
+                cls._check_for_survey_type_component(survey_id, component, survey_question_keys)
 
     @staticmethod
     def _validate_component_type(component_type):
@@ -65,7 +66,7 @@ class ReportSettingService:
         return False
 
     @classmethod
-    def _check_for_survey_type_component(cls, survey_id, component):
+    def _check_for_survey_type_component(cls, survey_id, component, survey_question_keys):
         # Check if the component type is SURVEY then loop through each question to extract the survey questions
         if component['type'] == FormIoComponentType.SURVEY.value:
             questions = component['questions']
@@ -73,13 +74,15 @@ class ReportSettingService:
                 return
 
             for question in questions:
-                cls._create_or_update_data_for_survey_type(survey_id, component, question)
+                cls._create_or_update_data_for_survey_type(survey_id, component, question,
+                                                           survey_question_keys)
         else:
-            cls._create_or_update_data(survey_id, component)
+            cls._create_or_update_data(survey_id, component, survey_question_keys)
 
     @staticmethod
-    def _create_or_update_data(survey_id, component) -> ReportSettingModel:
+    def _create_or_update_data(survey_id, component, survey_question_keys) -> ReportSettingModel:
         report_setting = ReportSettingModel.find_by_question_key(survey_id, component['key'])
+        survey_question_keys.append(component['key'])
 
         # Update the record if its existing
         if report_setting:
@@ -98,11 +101,13 @@ class ReportSettingService:
         report_setting.save()
 
     @staticmethod
-    def _create_or_update_data_for_survey_type(survey_id, component, question) -> ReportSettingModel:
+    def _create_or_update_data_for_survey_type(survey_id, component, question,
+                                               survey_question_keys) -> ReportSettingModel:
         # For component type SURVEY the unique identifier is a combination of key and value. The key for each
         # question will be same as its part of a single component within form json
         report_setting = ReportSettingModel.find_by_question_key(survey_id,
                                                                  component['key'] + '-' + question['value'])
+        survey_question_keys.append(component['key'] + '-' + question['value'])
 
         # Update the record if its existing
         if report_setting:
@@ -120,6 +125,15 @@ class ReportSettingService:
                                                 )
 
         report_setting.save()
+
+    @classmethod
+    def _delete_questions_removed_from_form(cls, survey_id, survey_question_keys):
+        """Loop through the data from report setting and delete any record which does not exist on
+        survey form. This will happen if a existing survey question is deleted from the survey"""
+        report_settings = cls.get_report_setting(survey_id)
+        for report_setting in report_settings:
+            if report_setting['question_key'] not in survey_question_keys:
+                ReportSettingModel.delete_report_settings(survey_id, report_setting['question_key'])
 
     @classmethod
     def update_report_setting(cls, report_setting_data):

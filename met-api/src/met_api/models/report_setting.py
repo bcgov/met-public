@@ -5,6 +5,8 @@ questions will either be displayed/hidden on the dashboard
 """
 from __future__ import annotations
 
+from met_api.schemas.report_setting import ReportSettingSchema
+
 from sqlalchemy import ForeignKey
 from .base_model import BaseModel
 from .db import db
@@ -38,3 +40,36 @@ class ReportSetting(BaseModel):  # pylint: disable=too-few-public-methods
         report_settings = db.session.query(ReportSetting) \
             .filter(ReportSetting.survey_id == survey_id, ReportSetting.question_key == question_key).first()
         return report_settings
+
+    @staticmethod
+    def __create_new_report_settings_entity(survey_id, report_setting: ReportSettingSchema):
+        """Create new comment entity."""
+        return ReportSetting(
+            survey_id=survey_id,
+            question_id=report_setting.question_id,
+            question_key=report_setting.question_key,
+            question_type=report_setting.question_type,
+            question=report_setting.question,
+            display=report_setting.display
+        )
+
+    @classmethod
+    def add_all_report_settings(cls, survey_id, report_settings: list, session=None) -> list[ReportSetting]:
+        """Create report setting."""
+        new_report_setting = [cls.__create_new_report_settings_entity(survey_id, report_setting)
+                        for report_setting in report_settings]
+        if session is None:
+            db.session.add_all(survey_id, new_report_setting)
+            db.session.commit()
+        else:
+            session.add_all(new_report_setting)
+        return new_report_setting
+
+    @classmethod
+    def delete_report_settings(cls, survey_id, question_key):
+        """Delete report setting by survey id and question key."""
+        db.session.query(ReportSetting).filter(ReportSetting.survey_id == survey_id,
+                                               ReportSetting.question_key == question_key).delete()
+        db.session.commit()
+
+        return survey_id, question_key
