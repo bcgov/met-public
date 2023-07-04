@@ -5,9 +5,9 @@ from datetime import datetime
 from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 from met_api.models.submission import Submission as MetSubmissionModel
 from met_api.models.survey import Survey as MetSurveyModel
-from met_api.models.participant import Participant as ParticipantModel
-from analytics_api.models.response_type_option import ResponseTypeOption as ResponseTypeOptionModel
-from analytics_api.models.user_response_detail import UserResponseDetail as UserResponseDetailModel
+from met_api.models.participant import Participant as MetParticipantModel
+from analytics_api.models.response_type_option import ResponseTypeOption as EtlResponseTypeOptionModel
+from analytics_api.models.user_response_detail import UserResponseDetail as EtlUserResponseDetailModel
 from analytics_api.models.survey import Survey as EtlSurveyModel
 from analytics_api.utils.util import FormIoComponentType
 
@@ -20,7 +20,7 @@ from analytics_api.utils.util import FormIoComponentType
 # get the last run cycle id for submission etl
 @op(required_resource_keys={"met_db_session", "met_etl_db_session"},
     out={"submission_last_run_cycle_time": Out(), "submission_new_runcycleid": Out()})
-def get_submission_last_run_cycle_time(context, flag_to_trigger_submission_etl):
+def get_submission_last_run_cycle_time(context, flag_to_run_step_after_setting):
     met_etl_db_session = context.resources.met_etl_db_session
     # default date to load the whole data on first run
     default_datetime = datetime(2022, 8, 1, 0, 0, 0, 0)
@@ -149,7 +149,7 @@ def _extract_submission(form_questions, met_survey, metsession, submission, met_
                     met_survey.id)
                 return
 
-            user = metsession.query(ParticipantModel).filter(ParticipantModel.id == submission.participant_id).first()
+            user = metsession.query(MetParticipantModel).filter(MetParticipantModel.id == submission.participant_id).first()
 
             context.log.info('User : %s Found for submission id : %s with mappedd user id %s', user,
                              submission.id, submission.participant_id)
@@ -284,7 +284,7 @@ def _save_survey(met_etl_session, context, answer_key, component, survey, partic
 
             # id for survey type question is same for all sub questions so request id is a combination of 
             # id and the key
-            radio_response = ResponseTypeOptionModel(
+            radio_response = EtlResponseTypeOptionModel(
                 survey_id=survey.id,
                 request_key=component['key'],
                 value=answer_label,
@@ -300,7 +300,7 @@ def _save_survey(met_etl_session, context, answer_key, component, survey, partic
 
 
 def _save_options(met_etl_session, survey, component, value, participant, submission_new_runcycleid, submission):
-    radio_response = ResponseTypeOptionModel(
+    radio_response = EtlResponseTypeOptionModel(
         survey_id=survey.id,
         request_key=component['key'],
         value=value,
@@ -350,9 +350,9 @@ def load_user_response_details(context, new_submission, updated_submission, subm
                     met_survey.id)
                 continue
 
-            context.log.info('Creating new UserResponseDetailModel in Analytics DB: %s.', submission.id)
+            context.log.info('Creating new EtlUserResponseDetailModel in Analytics DB: %s.', submission.id)
 
-            user_response_detail = UserResponseDetailModel(
+            user_response_detail = EtlUserResponseDetailModel(
                 survey_id=etl_survey.id,
                 engagement_id=met_survey.engagement_id,
                 participant_id=submission.participant_id,

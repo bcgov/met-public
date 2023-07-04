@@ -4,6 +4,8 @@ from ops.user_etl_service import load_user,get_user_last_run_cycle_time,extract_
 
 from ops.survey_etl_service import get_survey_last_run_cycle_time, extract_survey, load_survey, \
     survey_end_run_cycle
+from ops.report_setting_etl_service import get_setting_last_run_cycle_time, extract_setting, load_setting, \
+    setting_end_run_cycle
 from ops.submission_etl_service import get_submission_last_run_cycle_time, extract_submission, load_submission, \
     load_user_response_details, submission_end_run_cycle
 from ops.email_verification_etl_service import get_email_ver_last_run_cycle_time, extract_email_ver, load_email_ver, \
@@ -52,9 +54,24 @@ def met_data_ingestion():
 
     flag_to_run_step_after_survey = survey_end_run_cycle(survey_new_runcycleid_passed_to_end)
 
+
+    # etl run for report setting
+    setting_last_run_cycle_time, setting_new_runcycleid_created = get_setting_last_run_cycle_time(
+        flag_to_run_step_after_survey)
+
+    new_setting, updated_setting, setting_new_runcycleid_passed_to_load = extract_setting(
+        setting_last_run_cycle_time,
+        setting_new_runcycleid_created)
+
+    setting_new_runcycleid_passed_to_end = load_setting(new_setting, updated_setting,
+                                                        setting_new_runcycleid_passed_to_load)
+
+    flag_to_run_step_after_setting = setting_end_run_cycle(setting_new_runcycleid_passed_to_end)
+
+
     # etl run for submissions
     submission_last_run_cycle_time, submission_new_runcycleid_created = get_submission_last_run_cycle_time(
-        flag_to_run_step_after_survey)
+        flag_to_run_step_after_setting)
 
     new_submission, updated_submission, submission_new_runcycleid_passed_to_load = extract_submission(
         submission_last_run_cycle_time,
@@ -67,6 +84,7 @@ def met_data_ingestion():
                                                                          submission_new_runcycleid_passed_to_load_reponse)
 
     flag_to_run_step_after_submission = submission_end_run_cycle(submission_new_runcycleid_passed_to_end)
+
 
     # etl run for email verification
     email_ver_last_run_cycle_time, email_ver_new_runcycleid_created = get_email_ver_last_run_cycle_time(

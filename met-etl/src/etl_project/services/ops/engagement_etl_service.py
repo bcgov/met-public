@@ -1,5 +1,5 @@
 from dagster import Out, Output, op
-from met_api.constants.engagement_status import Status as EngagementStatus
+from met_api.constants.engagement_status import Status as MetEngagementStatus
 from met_api.models.engagement import Engagement as MetEngagementModel
 from met_api.models.widget_map import WidgetMap as MetWidgetMap
 from analytics_api.models.engagement import Engagement as EtlEngagementModel
@@ -8,7 +8,7 @@ from datetime import datetime
 from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 
 
-# get the last run cycle id for user detail etl
+# get the last run cycle id for engagement etl
 @op(required_resource_keys={"met_db_session", "met_etl_db_session"},
     out={"engagement_last_run_cycle_datetime": Out(), "engagement_new_run_cycle_id": Out()})
 def get_engagement_last_run_cycle_time(context, flag_to_run_step_after_user):
@@ -38,7 +38,7 @@ def get_engagement_last_run_cycle_time(context, flag_to_run_step_after_user):
     yield Output(new_run_cycle_id, "engagement_new_run_cycle_id")
 
 
-# extract the surveys that have been created or updated after the last run
+# extract the engagement that have been created or updated after the last run
 @op(required_resource_keys={"met_db_session", "met_etl_db_session"},
     out={"new_engagements": Out(), "updated_engagements": Out(), "eng_new_runcycleid": Out()})
 def extract_engagement(context, eng_last_run_cycle_time, eng_new_runcycleid):
@@ -51,7 +51,7 @@ def extract_engagement(context, eng_last_run_cycle_time, eng_new_runcycleid):
         context.log.info("started extracting new data from engagement table")
         new_engagements = session.query(MetEngagementModel).filter(
             MetEngagementModel.created_date > last_run_cycle_time,
-            MetEngagementModel.status_id != EngagementStatus.Draft.value).all()
+            MetEngagementModel.status_id != MetEngagementStatus.Draft.value).all()
         
         context.log.info(last_run_cycle_time)	
         context.log.info(len(new_engagements))
@@ -59,7 +59,7 @@ def extract_engagement(context, eng_last_run_cycle_time, eng_new_runcycleid):
         if last_run_cycle_time > default_datetime:
             updated_engagements = session.query(MetEngagementModel).filter(
 				MetEngagementModel.updated_date > last_run_cycle_time,
-				MetEngagementModel.status_id != EngagementStatus.Draft.value).all()
+				MetEngagementModel.status_id != MetEngagementStatus.Draft.value).all()
 
         context.log.info(len(updated_engagements))
 
@@ -76,7 +76,7 @@ def extract_engagement(context, eng_last_run_cycle_time, eng_new_runcycleid):
     session.close()
 
 
-# load the surveys created or updated after last run to the analytics database
+# load the engagement created or updated after last run to the analytics database
 @op(required_resource_keys={"met_db_session", "met_etl_db_session"}, out={"engagement_new_runcycleid": Out()})
 def load_engagement(context, new_engagements, updated_engagements, engagement_new_runcycleid):
     met_session = context.resources.met_db_session
@@ -84,7 +84,7 @@ def load_engagement(context, new_engagements, updated_engagements, engagement_ne
     all_engagements = new_engagements + updated_engagements
     if len(all_engagements) > 0:
 
-        context.log.info("loading new inputs")
+        context.log.info("loading new engagement")
         for engagement in all_engagements:
             session.query(EtlEngagementModel).filter(EtlEngagementModel.source_engagement_id == engagement.id).update(
                 {'is_active': False})
@@ -127,7 +127,7 @@ def load_engagement(context, new_engagements, updated_engagements, engagement_ne
     session.close()
 
 
-# update the status for survey etl in run cycle table as successful
+# update the status for engagement etl in run cycle table as successful
 @op(required_resource_keys={"met_db_session", "met_etl_db_session"}, out={"flag_to_run_step_after_engagement": Out()})
 def engagement_end_run_cycle(context, engagement_new_runcycleid):
     met_etl_db_session = context.resources.met_etl_db_session
@@ -135,7 +135,7 @@ def engagement_end_run_cycle(context, engagement_new_runcycleid):
     met_etl_db_session.query(EtlRunCycleModel).filter(
         EtlRunCycleModel.id == engagement_new_runcycleid, EtlRunCycleModel.packagename == 'engagement',
         EtlRunCycleModel.success == False).update(
-        {'success': True, 'enddatetime': datetime.utcnow(), 'description': 'ended the load for tables Engagement'})
+        {'success': True, 'enddatetime': datetime.utcnow(), 'description': 'ended the load for table engagement'})
 
     context.log.info("run cycle ended for Engagement table")
 
@@ -143,4 +143,4 @@ def engagement_end_run_cycle(context, engagement_new_runcycleid):
 
     met_etl_db_session.close()
 
-    yield Output("survey", "flag_to_run_step_after_engagement")
+    yield Output("engagement", "flag_to_run_step_after_engagement")

@@ -23,16 +23,17 @@ class RequestTypeOption(BaseModel, RequestMixin):  # pylint: disable=too-few-pub
     ):
         """Get the analytics survey id for an engagement id."""
         analytics_survey_id = (db.session.query(SurveyModel.id)
-                               .filter(SurveyModel.engagement_id == engagement_id)
-                               .filter(SurveyModel.is_active == true())
+                               .filter_by(SurveyModel.engagement_id == engagement_id,
+                                          SurveyModel.is_active == true())
                                .subquery())
 
         # Get all the survey questions specific to a survey id which are in active status.
         survey_question = (db.session.query(RequestTypeOption.postion.label('postion'),
                                             RequestTypeOption.label.label('label'),
                                             RequestTypeOption.request_id)
-                           .filter(RequestTypeOption.survey_id.in_(analytics_survey_id))
-                           .filter(RequestTypeOption.is_active == true())
+                           .filter_by(RequestTypeOption.survey_id.in_(analytics_survey_id),
+                                      RequestTypeOption.is_active == true(),
+                                      RequestTypeOption.display == true())
                            .order_by(RequestTypeOption.postion)
                            .subquery())
 
@@ -40,8 +41,8 @@ class RequestTypeOption(BaseModel, RequestMixin):  # pylint: disable=too-few-pub
         # are in active status.
         survey_response = (db.session.query(ResponseTypeOptionModel.request_id, ResponseTypeOptionModel.value,
                                             func.count(ResponseTypeOptionModel.request_id).label('response'))
-                           .filter(ResponseTypeOptionModel.survey_id.in_(analytics_survey_id))
-                           .filter(ResponseTypeOptionModel.is_active == true())
+                           .filter_by(ResponseTypeOptionModel.survey_id.in_(analytics_survey_id),
+                                      ResponseTypeOptionModel.is_active == true())
                            .group_by(ResponseTypeOptionModel.request_id, ResponseTypeOptionModel.value)
                            .subquery())
 
