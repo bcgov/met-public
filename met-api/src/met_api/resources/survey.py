@@ -87,7 +87,10 @@ class Surveys(Resource):
                 exclude_hidden=args.get('exclude_hidden', False, bool),
                 exclude_template=args.get('exclude_template', False, bool),
                 search_text=args.get('search_text', '', str),
-                unlinked=args.get('unlinked', False, bool),
+                is_unlinked=args.get('is_unlinked', default=False, type=lambda v: v.lower() == 'true'),
+                is_linked=args.get('is_linked', default=False, type=lambda v: v.lower() == 'true'),
+                is_hidden=args.get('is_hidden', default=False, type=lambda v: v.lower() == 'true'),
+                is_template=args.get('is_template', default=False, type=lambda v: v.lower() == 'true'),
             )
 
             survey_records = SurveyService()\

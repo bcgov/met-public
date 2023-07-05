@@ -65,8 +65,17 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         if survey_search_options.exclude_template:
             query = query.filter(Survey.is_template.is_(False))
 
-        if survey_search_options.unlinked:
+        if survey_search_options.is_unlinked:
             query = query.filter(Survey.engagement_id.is_(None))
+
+        if survey_search_options.is_linked:
+            query = query.filter(Survey.engagement_id.isnot(None))
+
+        if survey_search_options.is_hidden:
+            query = query.filter(Survey.is_hidden.is_(True))
+
+        if survey_search_options.is_template:
+            query = query.filter(Survey.is_template.is_(True))
 
         # if role has access to view all engagements then include all surveys which are in ready status or
         # surveys linked to draft and assigned engagements
@@ -165,4 +174,20 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
             # Include Un-linked surveys
             Survey.engagement_id.is_(None)]
         query = query.filter(or_(*filter_conditions))
+        return query
+
+    @staticmethod
+    def _filter_by_created_date(query, search_options):
+        if created_from_date := search_options.get('created_from_date'):
+            query = query.filter(Survey.created_date >= created_from_date)
+        if created_to_date := search_options.get('created_to_date'):
+            query = query.filter(Survey.created_date <= created_to_date)
+        return query
+
+    @classmethod
+    def _filter_by_published_date(cls, query, search_options):
+        if published_from_date := search_options.get('published_from_date'):
+            query = query.filter(Engagement.published_date >= published_from_date)
+        if published_to_date := search_options.get('published_to_date'):
+            query = query.filter(Engagement.published_date <= published_to_date)
         return query
