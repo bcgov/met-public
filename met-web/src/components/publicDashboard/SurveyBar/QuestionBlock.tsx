@@ -23,7 +23,7 @@ export const QuestionBlock = ({ data, selected, handleSelected }: QuestionBlockP
         >
             <List sx={{ paddingTop: '2.5em' }}>
                 {data.map((result, index) => (
-                    <ListItem key={result.postion}>
+                    <ListItem key={result.position}>
                         <ListItemButton
                             onClick={() => handleSelected(result)}
                             sx={{

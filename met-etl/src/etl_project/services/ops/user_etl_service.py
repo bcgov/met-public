@@ -2,8 +2,8 @@ from dagster import Out, Output, op
 from sqlalchemy import func
 from datetime import datetime
 
-from met_api.models.participant import Participant as ParticipantModel
-from analytics_api.models.user_details import UserDetails as UserDetailsModel
+from met_api.models.participant import Participant as MetParticipantModel
+from analytics_api.models.user_details import UserDetails as EtlUserDetailsModel
 from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 
 
@@ -49,12 +49,12 @@ def extract_participant(context, user_details_last_run_cycle_datetime, user_deta
     for last_run_cycle_time in user_details_last_run_cycle_datetime:
 
         context.log.info("started extracting new data from user_details table")
-        new_participants = session.query(ParticipantModel).filter(ParticipantModel.created_date > last_run_cycle_time).all()
+        new_participants = session.query(MetParticipantModel).filter(MetParticipantModel.created_date > last_run_cycle_time).all()
 
         if last_run_cycle_time > default_datetime:
             context.log.info("started extracting updated data from user_details table")
-            updated_participants = session.query(ParticipantModel).filter(ParticipantModel.updated_date > last_run_cycle_time,
-                                                               ParticipantModel.updated_date != ParticipantModel.created_date).all()
+            updated_participants = session.query(MetParticipantModel).filter(MetParticipantModel.updated_date > last_run_cycle_time,
+                                                               MetParticipantModel.updated_date != MetParticipantModel.created_date).all()
 
     yield Output(new_participants, "new_participants")
 
@@ -80,9 +80,9 @@ def load_user(context, new_participants, updated_participants, user_details_new_
         context.log.info("loading new participants")
 
         for participant in all_participants:
-            session.query(UserDetailsModel).filter(UserDetailsModel.name == participant.email_address).update(
+            session.query(EtlUserDetailsModel).filter(EtlUserDetailsModel.name == participant.email_address).update(
                 {'is_active': False})
-            user_model = UserDetailsModel(name=participant.email_address, is_active=True, created_date=participant.created_date,
+            user_model = EtlUserDetailsModel(name=participant.email_address, is_active=True, created_date=participant.created_date,
                                           updated_date=participant.updated_date, runcycle_id=user_details_new_run_cycle_id)
 
             session.add(user_model)

@@ -28,12 +28,13 @@ class RequestTypeOption(BaseModel, RequestMixin):  # pylint: disable=too-few-pub
                                .subquery())
 
         # Get all the survey questions specific to a survey id which are in active status.
-        survey_question = (db.session.query(RequestTypeOption.postion.label('postion'),
+        survey_question = (db.session.query(RequestTypeOption.position.label('position'),
                                             RequestTypeOption.label.label('label'),
                                             RequestTypeOption.request_id)
                            .filter(RequestTypeOption.survey_id.in_(analytics_survey_id))
                            .filter(RequestTypeOption.is_active == true())
-                           .order_by(RequestTypeOption.postion)
+                           .filter(RequestTypeOption.display == true())
+                           .order_by(RequestTypeOption.position)
                            .subquery())
 
         # Get all the survey responses with the counts for each response specific to a survey id which
@@ -50,12 +51,12 @@ class RequestTypeOption(BaseModel, RequestMixin):  # pylint: disable=too-few-pub
         # - label: is the the survey question
         # - value: user selected response for each question
         # - count: number of time the same value is selected as a response to each question
-        survey_result = (db.session.query((survey_question.c.postion).label('postion'),
+        survey_result = (db.session.query((survey_question.c.position).label('position'),
                                           (survey_question.c.label).label('question'),
                                           func.json_agg(func.json_build_object('value', survey_response.c.value,
                                                                                'count', survey_response.c.response))
                                           .label('result'))
                          .join(survey_response, survey_response.c.request_id == survey_question.c.request_id)
-                         .group_by(survey_question.c.postion, survey_question.c.label))
+                         .group_by(survey_question.c.position, survey_question.c.label))
 
         return survey_result.all()

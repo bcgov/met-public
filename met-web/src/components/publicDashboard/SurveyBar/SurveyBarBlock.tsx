@@ -11,8 +11,8 @@ export const SurveyBarBlock = ({ data }: BarBlockProps) => {
     const height = 400;
     return (
         <Box marginLeft={{ xs: 0, sm: '2em' }} marginTop={'3em'}>
-            <ResponsiveContainer width={'100%'} height={height} key={data.postion}>
-                <BarChart data={data.result} layout={'vertical'} key={data.postion} margin={{ left: 0 }}>
+            <ResponsiveContainer width={'100%'} height={height} key={data.position}>
+                <BarChart data={data.result} layout={'vertical'} key={data.position} margin={{ left: 0 }}>
                     <XAxis
                         dataKey={undefined}
                         type={'number'}

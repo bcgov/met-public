@@ -46,7 +46,7 @@ erDiagram
 		string label
 		string request_id
         integer survey_id FK "to survey table"
-        string postion
+        string position
         integer runcycle_id
         boolean display
         timestamp created_date

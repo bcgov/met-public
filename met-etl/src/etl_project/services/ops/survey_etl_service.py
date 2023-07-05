@@ -3,7 +3,7 @@ from sqlalchemy import func
 from datetime import datetime
 
 from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
-from analytics_api.models.request_type_option import RequestTypeOption as MetRequestTypeOption
+from analytics_api.models.request_type_option import RequestTypeOption as EtlRequestTypeOption
 from analytics_api.models.survey import Survey as EtlSurveyModel
 from met_api.models.survey import Survey as MetSurveyModel
 from analytics_api.utils.util import FormIoComponentType
@@ -78,13 +78,13 @@ def load_survey(context, new_survey, updated_survey, survey_new_runcycleid):
 
     if len(all_surveys) > 0:
 
-        context.log.info("loading new inputs")
+        context.log.info("loading new survey")
         for survey in all_surveys:
 
             _do_etl_survey_data(session, survey, survey_new_runcycleid)
 
             if survey.form_json is None:
-                context.log.info('Survey Found without form_json: %s.Skipping it', survey.id)
+                context.log.info('Survey Found without form_json: %s. Skipping it', survey.id)
                 continue
 
             form_type = survey.form_json.get('display', None)
@@ -110,7 +110,7 @@ def load_survey(context, new_survey, updated_survey, survey_new_runcycleid):
 # extract components within a survey
 def extract_survey_components(context, session, survey, survey_new_runcycleid, form_components):
     if (form_components) is None:
-        context.log.info('Survey Found without any component in form_json: %s.Skipping it', survey.id)
+        context.log.info('Survey Found without any component in form_json: %s. Skipping it', survey.id)
         return
 
     _inactivate_old_questions(session, survey.id)
@@ -120,7 +120,7 @@ def extract_survey_components(context, session, survey, survey_new_runcycleid, f
     for component in form_components:
         position = position + 1
         component_type = component.get('type', None)
-        context.log.info('Survey: %s.%sProcessing component with id %s and type: %s and label %s ',
+        context.log.info('Survey: %s.%s Processing component with id %s and type: %s and label %s ',
                         survey.id,
                         survey.name,
                         component.get('id', None),
@@ -149,7 +149,7 @@ def _inactivate_old_questions(session, source_survey_id):
     deactive_flag = {'is_active': False}
 
     for survey_id in etl_survey_model:
-        session.query(MetRequestTypeOption).filter(MetRequestTypeOption.survey_id == survey_id).update(deactive_flag)
+        session.query(EtlRequestTypeOption).filter(EtlRequestTypeOption.survey_id == survey_id).update(deactive_flag)
 
 
 def _do_etl_survey_data(session, survey, survey_new_runcycleid):
@@ -158,7 +158,7 @@ def _do_etl_survey_data(session, survey, survey_new_runcycleid):
     survey_model = EtlSurveyModel(name=survey.name, source_survey_id=survey.id,
                                   engagement_id=survey.engagement_id, is_active=True,
                                   created_date=survey.created_date, updated_date=survey.updated_date,
-                                  runcycle_id=survey_new_runcycleid)
+                                  runcycle_id=survey_new_runcycleid, generate_dashboard=survey.generate_dashboard)
 
     session.add(survey_model)
 
@@ -174,28 +174,28 @@ def _do_etl_survey_inputs(session, survey_id, component, component_type, survey_
             return
 
         for question in questions:
-            model_name = MetRequestTypeOption(survey_id=survey_id,
+            model_name = EtlRequestTypeOption(survey_id=survey_id,
                                                 request_id=component['id'] + '-' + question['value'],
                                                 label=question['label'],
                                                 is_active=True,
-                                                key=component['key'],
+                                                key=component['key'] + '-' + question['value'],
                                                 type=component['type'],
                                                 runcycle_id=survey_new_runcycleid,
-                                                postion=position
+                                                position=position
                                                 )
 
             session.add(model_name)
 
             session.commit()
     else:
-        model_name = MetRequestTypeOption(survey_id=survey_id,
+        model_name = EtlRequestTypeOption(survey_id=survey_id,
                                     request_id=component['id'],
                                     label=component['label'],
                                     is_active=True,
                                     key=component['key'],
                                     type=component['type'],
                                     runcycle_id=survey_new_runcycleid,
-                                    postion=position
+                                    position=position
                                     )
 
         session.add(model_name)
@@ -203,14 +203,11 @@ def _do_etl_survey_inputs(session, survey_id, component, component_type, survey_
         session.commit()
 
 
-
 def _validate_form_type(context, component_type):
     component_type = component_type.lower()
 
-    if component_type == FormIoComponentType.RADIO.value or\
-    component_type == FormIoComponentType.CHECKBOX.value or\
-    component_type == FormIoComponentType.SELECTLIST.value or\
-    component_type == FormIoComponentType.SURVEY.value:
+    if component_type in (FormIoComponentType.RADIO.value, FormIoComponentType.CHECKBOX.value,
+                          FormIoComponentType.SELECTLIST.value, FormIoComponentType.SURVEY.value):
         return True
     else:
         context.log.info('*************Component Type Missed to match %s', component_type)

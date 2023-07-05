@@ -5,7 +5,7 @@ interface ResultData {
 
 interface SurveyData {
     label: string;
-    postion: number;
+    position: number;
     result: ResultData[];
 }
 
@@ -18,7 +18,7 @@ export const createSurveyResultData = (): SurveyResultData => {
         data: [
             {
                 label: '',
-                postion: 0,
+                position: 0,
                 result: [{ value: '', count: 0 }],
             },
         ],
@@ -28,7 +28,7 @@ export const createSurveyResultData = (): SurveyResultData => {
 export const defaultData = [
     {
         label: '',
-        postion: 0,
+        position: 0,
         result: [
             {
                 value: '',
