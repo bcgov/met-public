@@ -95,7 +95,7 @@ const Surveys = () => {
             disablePadding: false,
             label: 'Date Published',
             allowSort: true,
-            renderCell: (row: Survey) => formatDate(row.engagement?.published_date || ''),
+            renderCell: (row: Survey) => formatDate(row.engagement?.published_date ?? ''),
         },
         {
             key: 'engagement',
