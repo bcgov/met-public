@@ -100,6 +100,7 @@ class _Config():  # pylint: disable=too-few-public-methods
     # engagement dashboard path is used to pass the survey result to the public user.
     # The link is changed such that public user can access the comments page from the email and not the dashboard.
     ENGAGEMENT_DASHBOARD_PATH = os.getenv('ENGAGEMENT_DASHBOARD_PATH', '/engagements/{engagement_id}/comments')
+    ENGAGEMENT_DASHBOARD_PATH_SLUG = os.getenv('ENGAGEMENT_DASHBOARD_PATH_SLUG', '/{slug}/comments')
     USER_MANAGEMENT_PATH = os.getenv('USER_MANAGEMENT_PATH', '/usermanagement')
     SITE_URL = os.getenv('SITE_URL')
 
