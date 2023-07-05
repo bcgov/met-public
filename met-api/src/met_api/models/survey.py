@@ -77,6 +77,12 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         if survey_search_options.is_template:
             query = query.filter(Survey.is_template.is_(True))
 
+        if survey_search_options.created_date_from or survey_search_options.created_date_to:
+            query = cls._filter_by_created_date(query, survey_search_options)
+
+        if survey_search_options.published_date_from or survey_search_options.published_date_to:
+            query = cls._filter_by_published_date(query, survey_search_options)
+
         # if role has access to view all engagements then include all surveys which are in ready status or
         # surveys linked to draft and assigned engagements
         if survey_search_options.can_view_all_engagements:
