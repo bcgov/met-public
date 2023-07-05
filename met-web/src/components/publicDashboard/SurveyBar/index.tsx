@@ -152,7 +152,7 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading }: Sur
                                 >
                                     <QuestionBlock
                                         data={data.data}
-                                        selected={selectedData.postion}
+                                        selected={selectedData.position}
                                         handleSelected={(data: SurveyBarData) => {
                                             setSelectedData(data);
                                         }}

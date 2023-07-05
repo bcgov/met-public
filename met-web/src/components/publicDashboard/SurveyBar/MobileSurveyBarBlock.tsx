@@ -11,8 +11,8 @@ export const MobileSurveyBarBlock = ({ data }: BarBlockProps) => {
     const height = 250;
     return (
         <MetPaper sx={{ pt: 4, pb: 1 }}>
-            <ResponsiveContainer width={'100%'} height={height} key={data.postion}>
-                <BarChart data={data.result} layout={'horizontal'} key={data.postion} margin={{ left: 20 }}>
+            <ResponsiveContainer width={'100%'} height={height} key={data.position}>
+                <BarChart data={data.result} layout={'horizontal'} key={data.position} margin={{ left: 20 }}>
                     <XAxis
                         dataKey={'value'}
                         type={'category'}

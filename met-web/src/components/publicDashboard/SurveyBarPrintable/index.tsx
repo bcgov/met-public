@@ -64,7 +64,7 @@ export const SurveyBarPrintable = ({ engagement, engagementIsLoading }: SurveyQu
                     return value.map((result: SurveyBarData, i: number) => {
                         return (
                             <div id={'question' + i} key={i}>
-                                <Grid key={result.postion} mb={2} item xs={12}>
+                                <Grid key={result.position} mb={2} item xs={12}>
                                     <MetPaper sx={{ p: 2 }}>
                                         <Grid item xs={12}>
                                             <MetLabel mb={2} color="primary">
@@ -72,11 +72,11 @@ export const SurveyBarPrintable = ({ engagement, engagementIsLoading }: SurveyQu
                                             </MetLabel>
                                             <Divider sx={{ marginTop: '1em' }} />
                                             <Box marginLeft={{ xs: 0, sm: '2em' }} marginTop={'3em'}>
-                                                <ResponsiveContainer width={'100%'} height={400} key={result.postion}>
+                                                <ResponsiveContainer width={'100%'} height={400} key={result.position}>
                                                     <BarChart
                                                         data={result.result}
                                                         layout="vertical"
-                                                        key={result.postion}
+                                                        key={result.position}
                                                         margin={{ left: { md: 20, lg: 0 } }}
                                                     >
                                                         <XAxis hide axisLine={false} type="number" />

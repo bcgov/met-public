@@ -85,7 +85,7 @@ describe('Dashboard page tests', () => {
                 data: [
                     {
                         label: '',
-                        postion: 0,
+                        position: 0,
                         result: [{ value: '', count: 0 }],
                     },
                 ],

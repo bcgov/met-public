@@ -181,7 +181,7 @@ def _do_etl_survey_inputs(session, survey_id, component, component_type, survey_
                                                 key=component['key'] + '-' + question['value'],
                                                 type=component['type'],
                                                 runcycle_id=survey_new_runcycleid,
-                                                postion=position
+                                                position=position
                                                 )
 
             session.add(model_name)
@@ -195,7 +195,7 @@ def _do_etl_survey_inputs(session, survey_id, component, component_type, survey_
                                     key=component['key'],
                                     type=component['type'],
                                     runcycle_id=survey_new_runcycleid,
-                                    postion=position
+                                    position=position
                                     )
 
         session.add(model_name)
