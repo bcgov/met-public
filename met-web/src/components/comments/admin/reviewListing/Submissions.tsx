@@ -16,6 +16,8 @@ import { downloadFile } from 'utils';
 import { AdvancedSearch } from './AdvancedSearch';
 import { CommentListingContext } from './CommentListingContext';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useAppSelector } from 'hooks';
+import { USER_ROLES } from 'services/userService/constants';
 
 const Submissions = () => {
     const {
@@ -30,6 +32,7 @@ const Submissions = () => {
         pageInfo,
         loading,
     } = useContext(CommentListingContext);
+    const { roles } = useAppSelector((state) => state.user);
     const { state } = useLocation();
     const [isExporting, setIsExporting] = useState(false);
     const [isAdvancedSearchOpen, setIsAdvancedSearchOpen] = useState(Boolean(state));
@@ -56,11 +59,16 @@ const Submissions = () => {
             disablePadding: false,
             label: 'ID',
             allowSort: true,
-            renderCell: (row) => (
-                <MuiLink component={Link} to={`/surveys/${Number(row.survey_id)}/submissions/${row.id}/review`}>
-                    {row.id}
-                </MuiLink>
-            ),
+            renderCell: (row) => {
+                if (roles.includes(USER_ROLES.REVIEW_COMMENTS)) {
+                    return (
+                        <MuiLink component={Link} to={`/surveys/${Number(row.survey_id)}/submissions/${row.id}/review`}>
+                            {row.id}
+                        </MuiLink>
+                    );
+                }
+                return row.id;
+            },
         },
         {
             key: 'created_date',

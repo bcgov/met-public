@@ -25,6 +25,7 @@ from met_api.schemas import utils as schema_utils
 from met_api.schemas.submission import SubmissionSchema
 from met_api.services.submission_service import SubmissionService
 from met_api.utils.token_info import TokenInfo
+from met_api.utils.roles import Role
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
@@ -40,7 +41,7 @@ class Submission(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.requires_auth
+    @_jwt.has_one_of_roles([Role.VIEW_UNAPPROVED_COMMENTS.value])
     def get(submission_id):
         """Fetch a single submission."""
         try:
@@ -53,7 +54,7 @@ class Submission(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.requires_auth
+    @_jwt.has_one_of_roles([Role.REVIEW_COMMENTS.value])
     def put(submission_id):
         """Update comment status by submission id."""
         try:

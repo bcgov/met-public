@@ -65,7 +65,6 @@ class EngagementSlug(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.VIEW_ENGAGEMENT.value])
     def get(engagement_id):
         """Fetch an engagement slug for a specific engagement."""
         try:

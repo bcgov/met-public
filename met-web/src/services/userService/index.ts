@@ -14,7 +14,7 @@ import Endpoints from 'apiManager/endpoints';
 import http from 'apiManager/httpRequestHandler';
 import { User } from 'models/user';
 import { getMembershipsByUser } from 'services/membershipService';
-import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+import { USER_ROLES } from 'services/userService/constants';
 
 const KeycloakData = _kc;
 /**
@@ -110,7 +110,7 @@ const updateUser = async () => {
 };
 
 const getAssignedEngagements = async (externalId: string, roles: string[]) => {
-    if (roles.includes(SCOPES.viewPrivateEngagements) || !externalId) {
+    if (roles.includes(USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS) || !externalId) {
         return [];
     }
     try {

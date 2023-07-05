@@ -14,7 +14,7 @@ import { getSurveysPage } from 'services/surveyService';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { SubmissionStatus } from 'constants/engagementStatus';
-import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+import { USER_ROLES } from 'services/userService/constants';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
 import { ApprovedIcon, NewIcon, NFRIcon, RejectedIcon } from 'components/engagement/listing/Icons';
 import CloseRounded from '@mui/icons-material/CloseRounded';
@@ -49,7 +49,7 @@ const SurveyListing = () => {
 
     const { roles, assignedEngagements } = useAppSelector((state) => state.user);
 
-    const canViewPrivateEngagements = roles.includes(SCOPES.viewPrivateEngagements);
+    const canViewPrivateEngagements = roles.includes(USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS);
 
     const dispatch = useAppDispatch();
 
@@ -434,7 +434,7 @@ const SurveyListing = () => {
                             <SearchIcon />
                         </PrimaryButton>
                     </Stack>
-                    <PermissionsGate scopes={[SCOPES.createSurvey]} errorProps={{ disabled: true }}>
+                    <PermissionsGate scopes={[USER_ROLES.CREATE_SURVEY]} errorProps={{ disabled: true }}>
                         <PrimaryButton component={Link} to="/surveys/create">
                             + Create Survey
                         </PrimaryButton>

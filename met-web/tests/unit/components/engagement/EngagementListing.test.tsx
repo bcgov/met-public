@@ -11,7 +11,7 @@ import { createDefaultEngagement } from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import assert from 'assert';
-import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+import { USER_ROLES } from 'services/userService/constants';
 
 const mockSurvey = {
     ...createDefaultSurvey(),
@@ -100,7 +100,7 @@ jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
     useSelector: jest.fn(() => {
         return {
-            roles: [SCOPES.viewPrivateEngagements, SCOPES.editEngagement, SCOPES.createEngagement],
+            roles: [USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS, USER_ROLES.EDIT_ENGAGEMENT, USER_ROLES.CREATE_ENGAGEMENT],
             assignedEngagements: [mockEngagementOne.id, mockEngagementTwo.id],
         };
     }),

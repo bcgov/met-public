@@ -19,7 +19,7 @@ import { useAppDispatch, useAppSelector } from 'hooks';
 import { getErrorMessage } from 'utils';
 import { updatedDiff, diff } from 'deep-object-diff';
 import { PatchEngagementRequest } from 'services/engagementService/types';
-import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+import { USER_ROLES } from 'services/userService/constants';
 import { EngagementStatus } from 'constants/engagementStatus';
 
 const CREATE = 'create';
@@ -122,7 +122,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     };
 
     const verifyUserCanEdit = () => {
-        const canViewPrivateEngagements = roles.includes(SCOPES.viewPrivateEngagements);
+        const canViewPrivateEngagements = roles.includes(USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS);
         if (canViewPrivateEngagements) {
             setLoadingAuthorization(false);
             return;

@@ -17,6 +17,7 @@ Test suite to ensure that the Submission service routines are working as expecte
 """
 from unittest.mock import patch
 
+from met_api.services import authorization
 from met_api.constants.comment_status import Status
 from met_api.schemas.submission import SubmissionSchema
 from met_api.services.comment_service import CommentService
@@ -69,18 +70,19 @@ def test_create_submission_rollback(session):  # pylint:disable=unused-argument
         assert actual_email_verification['is_active'] is True
 
 
-def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
+def test_review_comment(client, jwt, session, monkeypatch):  # pylint:disable=unused-argument
     """Assert that a comment can be reviewed."""
-    admin_user = factory_staff_user_model(3)
-    participant = factory_participant_model()
-    survey, eng = factory_survey_and_eng_model()
-    submission = factory_submission_model(survey.id, eng.id, participant.id)
-    factory_comment_model(survey.id, submission.id)
-    reasons = {
-        'status_id': 2,
-    }
-    submission_record = SubmissionService().review_comment(submission.id, reasons, admin_user.external_id)
-    assert submission_record.get('comment_status_id') == 2
+    with patch.object(authorization, 'check_auth', return_value=True):
+        admin_user = factory_staff_user_model(3)
+        participant = factory_participant_model()
+        survey, eng = factory_survey_and_eng_model()
+        submission = factory_submission_model(survey.id, eng.id, participant.id)
+        factory_comment_model(survey.id, submission.id)
+        reasons = {
+            'status_id': 2,
+        }
+        submission_record = SubmissionService().review_comment(submission.id, reasons, admin_user.external_id)
+        assert submission_record.get('comment_status_id') == 2
 
 
 def test_auto_approval_of_submissions_without_comment(session):  # pylint:disable=unused-argument

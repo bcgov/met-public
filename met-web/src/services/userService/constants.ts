@@ -13,6 +13,7 @@ export const USER_ROLES = {
     VIEW_PRIVATE_ENGAGEMENTS: 'view_private_engagements',
     EDIT_ENGAGEMENT: 'edit_engagement',
     REVIEW_COMMENTS: 'review_comments',
+    REVIEW_ALL_COMMENTS: 'review_all_comments',
     ACCESS_DASHBOARD: 'access_dashboard',
     VIEW_MEMBERS: 'view_members',
     EDIT_MEMBERS: 'edit_members',
@@ -23,4 +24,9 @@ export const USER_ROLES = {
     EDIT_UPCOMING_ENGAGEMENT: 'edit_upcoming_engagement',
     EDIT_OPEN_ENGAGEMENT: 'edit_open_engagement',
     EDIT_CLOSED_ENGAGEMENT: 'edit_closed_engagement',
+    VIEW_ASSIGNED_ENGAGEMENTS: 'view_assigned_engagements',
+    VIEW_UNAPPROVED_COMMENTS: 'view_unapproved_comments',
+    APP_ADMIN: 'app-admin',
+    VIEW_SURVEYS: 'view_surveys',
+    VIEW_FEEDBACKS: 'view_feedbacks',
 };

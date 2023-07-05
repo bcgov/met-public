@@ -19,7 +19,7 @@ import UserManagementListing from 'components/userManagement/listing';
 import Dashboard from 'components/dashboard';
 import Unauthorized from './Unauthorized';
 import AuthGate from './AuthGate';
-import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+import { USER_ROLES } from 'services/userService/constants';
 import UserProfile from 'components/userManagement/userDetails';
 import ScrollToTop from 'components/scrollToTop';
 
@@ -34,29 +34,35 @@ const AuthenticatedRoutes = () => {
                 <Route path="/surveys/create" element={<CreateSurvey />} />
                 <Route path="/surveys/:surveyId/build" element={<SurveyFormBuilder />} />
                 <Route path="/surveys/:surveyId/submit" element={<SurveySubmit />} />
-                <Route path="/surveys/:surveyId/comments" element={<CommentReviewListing />} />
-                <Route path="/surveys/:surveyId/comments/all" element={<CommentTextListing />} />
-                <Route path="/surveys/:surveyId/submissions/:submissionId/review" element={<CommentReview />} />
-                <Route element={<AuthGate allowedRoles={[SCOPES.createEngagement]} />}>
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_UNAPPROVED_COMMENTS]} />}>
+                    <Route path="/surveys/:surveyId/comments" element={<CommentReviewListing />} />
+                </Route>
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_UNAPPROVED_COMMENTS]} />}>
+                    <Route path="/surveys/:surveyId/comments/all" element={<CommentTextListing />} />
+                </Route>
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.REVIEW_COMMENTS]} />}>
+                    <Route path="/surveys/:surveyId/submissions/:submissionId/review" element={<CommentReview />} />
+                </Route>
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.CREATE_ENGAGEMENT]} />}>
                     <Route path="/engagements/create/form" element={<EngagementForm />} />
                 </Route>
-                <Route element={<AuthGate allowedRoles={[SCOPES.editEngagement]} />}>
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
                     <Route path="/engagements/:engagementId/form" element={<EngagementForm />} />
                 </Route>
                 <Route path="/engagements/:engagementId/view" element={<EngagementView />} />
                 <Route path="/engagements/:engagementId/comments" element={<EngagementComments />} />
                 <Route path="/engagements/:engagementId/dashboard" element={<PublicDashboard />} />
 
-                <Route element={<AuthGate allowedRoles={[SCOPES.viewFeedbacks]} />}>
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_FEEDBACKS]} />}>
                     <Route path="/feedback" element={<FeedbackListing />} />
                 </Route>
 
                 <Route path="/calendar" element={<UnderConstruction />} />
                 <Route path="/reporting" element={<UnderConstruction />} />
-                <Route element={<AuthGate allowedRoles={[SCOPES.viewUsers]} />}>
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_USERS]} />}>
                     <Route path="/usermanagement" element={<UserManagementListing />} />
                 </Route>
-                <Route element={<AuthGate allowedRoles={[SCOPES.viewUsers]} />}>
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_USERS]} />}>
                     <Route path="/usermanagement/:userId/details" element={<UserProfile />} />
                 </Route>
                 <Route path="/unauthorized" element={<Unauthorized />} />

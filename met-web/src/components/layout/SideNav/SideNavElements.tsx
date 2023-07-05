@@ -1,4 +1,4 @@
-import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+import { USER_ROLES } from 'services/userService/constants';
 
 interface Route {
     name: string;
@@ -15,21 +15,27 @@ export const Routes: Route[] = [
         path: '/engagements',
         base: '/engagements',
         authenticated: true,
-        allowedRoles: [SCOPES.viewEngagement, SCOPES.viewAssignedEngagements],
+        allowedRoles: [USER_ROLES.VIEW_ENGAGEMENT, USER_ROLES.VIEW_ASSIGNED_ENGAGEMENTS],
     },
-    { name: 'Surveys', path: '/surveys', base: '/surveys', authenticated: true, allowedRoles: [SCOPES.viewSurveys] },
+    {
+        name: 'Surveys',
+        path: '/surveys',
+        base: '/surveys',
+        authenticated: true,
+        allowedRoles: [USER_ROLES.VIEW_SURVEYS],
+    },
     {
         name: 'User Management',
         path: '/usermanagement',
         base: 'usermanagement',
         authenticated: true,
-        allowedRoles: [SCOPES.viewUsers],
+        allowedRoles: [USER_ROLES.VIEW_USERS],
     },
     {
         name: 'Feedback Tool',
         path: '/feedback',
         base: 'feedback',
         authenticated: true,
-        allowedRoles: [SCOPES.viewFeedbacks],
+        allowedRoles: [USER_ROLES.VIEW_FEEDBACKS],
     },
 ];

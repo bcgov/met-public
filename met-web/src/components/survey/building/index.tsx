@@ -29,7 +29,7 @@ import { Engagement } from 'models/engagement';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { Palette } from 'styles/Theme';
 import { PermissionsGate } from 'components/permissionsGate';
-import { SCOPES } from 'components/permissionsGate/PermissionMaps';
+import { USER_ROLES } from 'services/userService/constants';
 import axios from 'axios';
 
 const SurveyFormBuilder = () => {
@@ -296,7 +296,7 @@ const SurveyFormBuilder = () => {
                     <FormGroup>
                         <FormControlLabel
                             control={
-                                <PermissionsGate scopes={[SCOPES.createSurvey]} errorProps={{ disabled: true }}>
+                                <PermissionsGate scopes={[USER_ROLES.CREATE_SURVEY]} errorProps={{ disabled: true }}>
                                     <Switch
                                         checked={isTemplateSurvey}
                                         disabled={Boolean(savedSurvey?.engagement_id)}
@@ -334,7 +334,7 @@ const SurveyFormBuilder = () => {
                     <FormGroup>
                         <FormControlLabel
                             control={
-                                <PermissionsGate scopes={[SCOPES.createSurvey]} errorProps={{ disabled: true }}>
+                                <PermissionsGate scopes={[USER_ROLES.CREATE_SURVEY]} errorProps={{ disabled: true }}>
                                     <Switch
                                         checked={isHiddenSurvey}
                                         disabled={Boolean(savedSurvey?.engagement_id)}

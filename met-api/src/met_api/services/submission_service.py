@@ -7,6 +7,7 @@ from flask import current_app
 from met_api.constants.comment_status import Status
 from met_api.constants.email_verification import EmailVerificationType
 from met_api.constants.engagement_status import SubmissionStatus
+from met_api.constants.membership_type import MembershipType
 from met_api.constants.staff_note_type import StaffNoteType
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models import Engagement as EngagementModel
@@ -19,11 +20,13 @@ from met_api.models.participant import Participant as ParticipantModel
 from met_api.models.staff_note import StaffNote
 from met_api.models.submission import Submission
 from met_api.schemas.submission import PublicSubmissionSchema, SubmissionSchema
+from met_api.services import authorization
 from met_api.services.comment_service import CommentService
 from met_api.services.email_verification_service import EmailVerificationService
-from met_api.services.survey_service import SurveyService
 from met_api.services.staff_user_service import StaffUserService
+from met_api.services.survey_service import SurveyService
 from met_api.utils import notification
+from met_api.utils.roles import Role
 from met_api.utils.template import Template
 
 
@@ -105,7 +108,7 @@ class SubmissionService:
         """Review comment."""
         user = StaffUserService.get_user_by_external_id(external_user_id)
 
-        cls.validate_review(staff_review_details, user)
+        cls.validate_review(staff_review_details, user, submission_id)
         reviewed_by = ' '.join([user.get('first_name', ''), user.get('last_name', '')])
 
         staff_review_details['reviewed_by'] = reviewed_by
@@ -134,7 +137,7 @@ class SubmissionService:
         SubmissionService._send_rejected_email(submission, review_note, email_verification.get('verification_token'))
 
     @classmethod
-    def validate_review(cls, values: dict, user):
+    def validate_review(cls, values: dict, user, submission_id):
         """Validate a review comment request."""
         status_id = values.get('status_id', None)
         has_personal_info = values.get('has_personal_info', None)
@@ -154,6 +157,14 @@ class SubmissionService:
                 not any(set((has_personal_info, has_profanity, has_threat))) and \
                 not rejected_reason_other:
             raise ValueError('A rejection reason is required.')
+
+        submission = Submission.get(submission_id)
+        if not submission:
+            raise ValueError('Invalid submission.')
+        authorization.check_auth(
+            one_of_roles=(MembershipType.TEAM_MEMBER.name, Role.REVIEW_ALL_COMMENTS.value),
+            engagement_id=submission.engagement_id
+        )
 
     @classmethod
     def add_or_update_staff_note(cls, survey_id, submission_id, staff_notes):
