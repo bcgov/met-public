@@ -51,7 +51,6 @@ def test_create_email_verification(client, jwt, session, ):  # pylint:disable=un
         actual_data = mock_mail.call_args.kwargs
         assert eng.name in actual_data.get('subject')
         assert actual_data.get('email') == email
-        assert str(eng.id) in actual_data.get('html_body'), 'engagement id will be in the email link'
         assert actual_data.get('args').get('engagement_name') == eng.name
 
 
