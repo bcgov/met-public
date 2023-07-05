@@ -77,6 +77,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
 
     @classmethod
     def filter_by_search_options(cls, survey_search_options: SurveySearchOptions, query):
+        """Filter by search options."""
         if survey_search_options.exclude_hidden:
             query = query.filter(Survey.is_hidden.is_(False))
 

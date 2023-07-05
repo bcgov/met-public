@@ -1,8 +1,8 @@
 """This module holds data classes."""
 
-from typing import List
+from typing import List, Optional
+
 from attr import dataclass
-from typing import Optional
 
 
 @dataclass
