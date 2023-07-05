@@ -79,6 +79,7 @@ jest.mock('@mui/material', () => ({
     Link: ({ children }: { children: ReactNode }) => {
         return <a>{children}</a>;
     },
+    useMediaQuery: () => false,
 }));
 
 jest.mock('components/common', () => ({
