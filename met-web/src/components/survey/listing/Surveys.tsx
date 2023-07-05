@@ -12,7 +12,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
 import { useAppSelector } from 'hooks';
 import { SubmissionStatus } from 'constants/engagementStatus';
-import { SCOPES } from 'components/permissionsGate/PermissionMaps';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
 import { ApprovedIcon, NewIcon, NFRIcon, RejectedIcon } from 'components/engagement/listing/Icons';
 import CloseRounded from '@mui/icons-material/CloseRounded';
@@ -28,6 +27,7 @@ import { Palette } from 'styles/Theme';
 import { AdvancedSearch } from './AdvancedSearch';
 import { SurveyListingContext } from './SurveyListingContext';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { USER_ROLES } from 'services/userService/constants';
 
 const Surveys = () => {
     const {
@@ -49,7 +49,7 @@ const Surveys = () => {
 
     const { roles, assignedEngagements } = useAppSelector((state) => state.user);
 
-    const canViewPrivateEngagements = roles.includes(SCOPES.viewPrivateEngagements);
+    const canViewPrivateEngagements = roles.includes(USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS);
 
     const submissionHasBeenOpened = (survey: Survey) => {
         return (
@@ -388,7 +388,7 @@ const Surveys = () => {
             <Grid item xs={12}>
                 <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="100%" justifyContent="space-between">
                     <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} alignItems="center">
-                        <Stack direction="row" spacing={1} width="100%">
+                        <Stack direction="row" spacing={1} width={{ xs: '100%', md: 'auto' }}>
                             <TextField
                                 id="engagement-name"
                                 variant="outlined"
@@ -420,12 +420,12 @@ const Surveys = () => {
                                     }}
                                 />
                             }
-                            fullWidth
+                            fullWidth={isMediumScreen ? true : false}
                         >
                             Advanced Search
                         </SecondaryButton>
                     </Stack>
-                    <PermissionsGate scopes={[SCOPES.createSurvey]} errorProps={{ disabled: true }}>
+                    <PermissionsGate scopes={[USER_ROLES.CREATE_SURVEY]} errorProps={{ disabled: true }}>
                         <PrimaryButton component={Link} to="/surveys/create">
                             + Create Survey
                         </PrimaryButton>

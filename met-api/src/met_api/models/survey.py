@@ -59,6 +59,24 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         query = db.session.query(Survey).join(Engagement, isouter=True).join(EngagementStatus, isouter=True)
         query = cls._add_tenant_filter(query)
 
+        query = cls.filter_by_search_options(survey_search_options, query)
+
+        sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == 'asc'\
+            else desc(text(pagination_options.sort_key))
+
+        query = query.order_by(sort)
+
+        no_pagination_options = not pagination_options.page or not pagination_options.size
+        if no_pagination_options:
+            items = query.all()
+            return items, len(items)
+
+        page = query.paginate(page=pagination_options.page, per_page=pagination_options.size)
+
+        return page.items, page.total
+
+    @classmethod
+    def filter_by_search_options(cls, survey_search_options: SurveySearchOptions, query):
         if survey_search_options.exclude_hidden:
             query = query.filter(Survey.is_hidden.is_(False))
 
@@ -77,11 +95,9 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         if survey_search_options.is_template:
             query = query.filter(Survey.is_template.is_(True))
 
-        if survey_search_options.created_date_from or survey_search_options.created_date_to:
-            query = cls._filter_by_created_date(query, survey_search_options)
+        query = cls._filter_by_created_date(query, survey_search_options)
 
-        if survey_search_options.published_date_from or survey_search_options.published_date_to:
-            query = cls._filter_by_published_date(query, survey_search_options)
+        query = cls._filter_by_published_date(query, survey_search_options)
 
         # if role has access to view all engagements then include all surveys which are in ready status or
         # surveys linked to draft and assigned engagements
@@ -94,20 +110,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
 
         if survey_search_options.search_text:
             query = query.filter(Survey.name.ilike('%' + survey_search_options.search_text + '%'))
-
-        sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == 'asc'\
-            else desc(text(pagination_options.sort_key))
-
-        query = query.order_by(sort)
-
-        no_pagination_options = not pagination_options.page or not pagination_options.size
-        if no_pagination_options:
-            items = query.all()
-            return items, len(items)
-
-        page = query.paginate(page=pagination_options.page, per_page=pagination_options.size)
-
-        return page.items, page.total
+        return query
 
     @classmethod
     def create_survey(cls, survey: SurveySchema) -> Survey:
@@ -183,17 +186,17 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         return query
 
     @staticmethod
-    def _filter_by_created_date(query, search_options):
-        if created_from_date := search_options.get('created_from_date'):
-            query = query.filter(Survey.created_date >= created_from_date)
-        if created_to_date := search_options.get('created_to_date'):
-            query = query.filter(Survey.created_date <= created_to_date)
+    def _filter_by_created_date(query, search_options: SurveySearchOptions):
+        if search_options.created_date_from:
+            query = query.filter(Survey.created_date >= search_options.created_date_from)
+        if search_options.created_date_to:
+            query = query.filter(Survey.created_date <= search_options.created_date_to)
         return query
 
     @classmethod
-    def _filter_by_published_date(cls, query, search_options):
-        if published_from_date := search_options.get('published_from_date'):
-            query = query.filter(Engagement.published_date >= published_from_date)
-        if published_to_date := search_options.get('published_to_date'):
-            query = query.filter(Engagement.published_date <= published_to_date)
+    def _filter_by_published_date(cls, query, search_options: SurveySearchOptions):
+        if search_options.published_date_from:
+            query = query.filter(Engagement.published_date >= search_options.published_date_from)
+        if search_options.published_date_to:
+            query = query.filter(Engagement.published_date <= search_options.published_date_to)
         return query

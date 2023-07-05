@@ -174,7 +174,7 @@ export const AdvancedSearch = () => {
             </Grid>
             <Grid item xs={12} container justifyContent="flex-end">
                 <Stack
-                    direction={{ sm: 'column-reverse', lg: 'row' }}
+                    direction={{ xs: 'column-reverse', md: 'row' }}
                     spacing={2}
                     width="100%"
                     justifyContent="flex-end"
@@ -182,6 +182,7 @@ export const AdvancedSearch = () => {
                     <SecondaryButton
                         onClick={() => {
                             setAdvancedSearchFilters(initialSearchFilters);
+                            setSearchFilters(initialSearchFilters);
                         }}
                     >
                         Reset All Filters
