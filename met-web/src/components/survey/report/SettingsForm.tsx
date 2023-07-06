@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
+    Checkbox,
     ClickAwayListener,
     FormControlLabel,
     Grid,
@@ -23,39 +24,13 @@ import { HeadCell } from 'components/common/Table/types';
 import MetTable from 'components/common/Table';
 import { ClientSidePagination } from 'components/common/Table/ClientSidePagination';
 import { SurveyReportSetting } from 'models/surveyReportSetting';
+import { ReportSettingsContext } from './ReportSettingsContext';
+import SettingsTable from './SettingsTable';
+import SearchBar from './SearchBar';
 
 const SettingsForm = () => {
-    const [searchFilter, setSearchFilter] = React.useState<{ key: string; value: string }>({
-        key: 'question_text',
-        value: '',
-    });
+    const { searchFilter, setSearchFilter } = useContext(ReportSettingsContext);
     const [searchText, setSearchText] = React.useState<string>('');
-    const headCells: HeadCell<SurveyReportSetting>[] = [
-        {
-            key: 'id',
-            numeric: false,
-            disablePadding: true,
-            label: 'Include in Report',
-            allowSort: true,
-            renderCell: (row: SurveyReportSetting) => <></>,
-        },
-        {
-            key: 'question_text',
-            numeric: false,
-            disablePadding: true,
-            label: 'Question',
-            allowSort: true,
-            renderCell: (row: SurveyReportSetting) => row.question_text,
-        },
-        {
-            key: 'question_type',
-            numeric: false,
-            disablePadding: true,
-            label: 'Question Type',
-            allowSort: true,
-            renderCell: (row: SurveyReportSetting) => row.question_type,
-        },
-    ];
 
     return (
         <MetPageGridContainer container spacing={1}>
@@ -138,36 +113,10 @@ const SettingsForm = () => {
                             <MetLabel>Select the questions you would like to display on the public report</MetLabel>
                         </Grid>
                         <Grid item xs={6}>
-                            <Stack direction="row" spacing={1} alignItems="center">
-                                <TextField
-                                    id="engagement-name"
-                                    variant="outlined"
-                                    label="Search by name"
-                                    fullWidth
-                                    name="searchText"
-                                    value={searchText}
-                                    onChange={(e) => {
-                                        setSearchText(e.target.value);
-                                    }}
-                                    size="small"
-                                />
-                                <PrimaryButton
-                                    data-testid="survey/listing/search-button"
-                                    onClick={() => {
-                                        setSearchFilter({
-                                            ...searchFilter,
-                                            value: searchText,
-                                        });
-                                    }}
-                                >
-                                    <SearchIcon />
-                                </PrimaryButton>
-                            </Stack>
+                            <SearchBar />
                         </Grid>
                         <Grid item xs={12}>
-                            <ClientSidePagination rows={[]} searchFilter={searchFilter}>
-                                {(props) => <MetTable {...props} headCells={headCells} loading={false} />}
-                            </ClientSidePagination>
+                            <SettingsTable />
                         </Grid>
                     </Grid>
                 </MetPaper>

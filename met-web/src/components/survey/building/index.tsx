@@ -160,12 +160,8 @@ const SurveyFormBuilder = () => {
                         : 'The survey was successfully built',
                 }),
             );
-            if (savedSurvey.engagement?.id) {
-                navigate(`/engagements/${savedSurvey.engagement.id}/form`);
-                return;
-            }
 
-            navigate('/surveys');
+            navigate(`/surveys/${savedSurvey.id}/report`);
         } catch (error) {
             setIsSaving(false);
             if (axios.isAxiosError(error)) {

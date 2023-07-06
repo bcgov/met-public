@@ -80,4 +80,4 @@ API.add_namespace(ENGAGEMENT_MEMBERS_API, path='/engagements/<string:engagement_
 API.add_namespace(WIDGET_EVENTS_API, path='/widgets/<int:widget_id>/events')
 API.add_namespace(WIDGET_MAPS_API, path='/widgets/<int:widget_id>/maps')
 API.add_namespace(ENGAGEMENT_SLUG_API, path='/slugs')
-API.add_namespace(REPORT_SETTING_API, path='/surveys/<int:survey_id>/reportsetting')
+API.add_namespace(REPORT_SETTING_API, path='/surveys/<int:survey_id>/reportsettings')

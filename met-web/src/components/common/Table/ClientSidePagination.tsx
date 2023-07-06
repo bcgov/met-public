@@ -17,32 +17,43 @@ export function ClientSidePagination<T>({ rows, searchFilter, children }: Client
         size: 10, // default page size
     });
     const [pageInfo, setPageInfo] = React.useState({ total: rows.length });
-    const [filteredRows, setFilteredRows] = React.useState<T[]>(rows);
+    const [searchFilteredRows, setSearchFilteredRows] = React.useState<T[]>([]); // TODO: replace any with T[
+    const [paginatedRows, setPaginatedRows] = React.useState<T[]>([]);
 
     const handleChangePagination = (newPaginationOptions: PaginationOptions<T>) => {
         const { page, size } = newPaginationOptions;
-        const rowsFiltered = filteredRows.slice((page - 1) * size, page * size);
+        const paginated = searchFilteredRows.slice((page - 1) * size, page * size);
         setPaginationOptions(newPaginationOptions);
         setPageInfo({ total: rows.length });
-        setFilteredRows(rowsFiltered);
+        setPaginatedRows(paginated);
     };
 
-    const handleFilter = (filterKey: keyof T, filterValue: string) => {
-        const filteredRows = rows.filter((row) => String(row[filterKey]).includes(filterValue));
-        const newTotal = filteredRows.length;
-        setFilteredRows(filteredRows);
+    const handleFilter = () => {
+        if (!searchFilter || !searchFilter.value) {
+            setSearchFilteredRows(rows);
+            setPageInfo({ total: rows.length });
+            setPaginationOptions({ ...paginationOptions, page: 1 });
+            return;
+        }
+        const filtered = rows.filter((row) =>
+            String(row[searchFilter.key]).toLowerCase().includes(searchFilter.value.toLowerCase()),
+        );
+        const newTotal = filtered.length;
+        setSearchFilteredRows(filtered);
         setPageInfo({ total: newTotal });
         setPaginationOptions({ ...paginationOptions, page: 1 });
     };
 
     useEffect(() => {
-        if (searchFilter) {
-            handleFilter(searchFilter.key, searchFilter.value);
-        }
-    }, [searchFilter]);
+        handleFilter();
+    }, [searchFilter, rows]);
+
+    useEffect(() => {
+        handleChangePagination(paginationOptions);
+    }, [searchFilteredRows]);
 
     const metTableComponent = children({
-        rows: filteredRows, // Use the filtered rows for rendering
+        rows: paginatedRows, // Use the filtered rows for rendering
         loading: false,
         handleChangePagination,
         paginationOptions,

@@ -26,13 +26,13 @@ from met_api.services.report_setting_service import ReportSettingService
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
-API = Namespace('reportsetting', description='Endpoints for report setting management')
+API = Namespace('reportsettings', description='Endpoints for report setting management')
 """Custom exception messages
 """
 
 
-@cors_preflight('POST, OPTIONS, PATCH')
-@API.route('/')
+@cors_preflight('GET, POST, PATCH, OPTIONS')
+@API.route('')
 class ReportSetting(Resource):
     """Resource for managing report setting."""
 
