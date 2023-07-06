@@ -22,6 +22,7 @@ import AuthGate from './AuthGate';
 import { USER_ROLES } from 'services/userService/constants';
 import UserProfile from 'components/userManagement/userDetails';
 import ScrollToTop from 'components/scrollToTop';
+import ReportSettings from 'components/survey/report';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -34,6 +35,7 @@ const AuthenticatedRoutes = () => {
                 <Route path="/surveys/create" element={<CreateSurvey />} />
                 <Route path="/surveys/:surveyId/build" element={<SurveyFormBuilder />} />
                 <Route path="/surveys/:surveyId/submit" element={<SurveySubmit />} />
+                <Route path="/surveys/:surveyId/report" element={<ReportSettings />} />
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_UNAPPROVED_COMMENTS]} />}>
                     <Route path="/surveys/:surveyId/comments" element={<CommentReviewListing />} />
                 </Route>
