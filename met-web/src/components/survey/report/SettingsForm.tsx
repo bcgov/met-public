@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-    Checkbox,
     ClickAwayListener,
     FormControlLabel,
     Grid,
@@ -22,46 +21,39 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import SearchIcon from '@mui/icons-material/Search';
 import { HeadCell } from 'components/common/Table/types';
 import MetTable from 'components/common/Table';
-import { Survey } from 'models/survey';
 import { ClientSidePagination } from 'components/common/Table/ClientSidePagination';
+import { SurveyReportSetting } from 'models/surveyReportSetting';
 
 const SettingsForm = () => {
-    const headCells: HeadCell<Survey>[] = [
+    const [searchFilter, setSearchFilter] = React.useState<{ key: string; value: string }>({
+        key: 'question_text',
+        value: '',
+    });
+    const [searchText, setSearchText] = React.useState<string>('');
+    const headCells: HeadCell<SurveyReportSetting>[] = [
         {
-            key: 'name',
-            nestedSortKey: 'survey.name',
+            key: 'id',
             numeric: false,
             disablePadding: true,
             label: 'Include in Report',
             allowSort: true,
-            renderCell: (row: Survey) => row.name,
+            renderCell: (row: SurveyReportSetting) => <></>,
         },
         {
-            key: 'name',
-            nestedSortKey: 'survey.name',
+            key: 'question_text',
             numeric: false,
             disablePadding: true,
             label: 'Question',
             allowSort: true,
-            renderCell: (row: Survey) => row.name,
+            renderCell: (row: SurveyReportSetting) => row.question_text,
         },
         {
-            key: 'name',
-            nestedSortKey: 'survey.name',
+            key: 'question_type',
             numeric: false,
             disablePadding: true,
             label: 'Question Type',
             allowSort: true,
-            renderCell: (row: Survey) => row.name,
-        },
-        {
-            key: 'name',
-            nestedSortKey: 'survey.name',
-            numeric: false,
-            disablePadding: true,
-            label: 'Survey Page',
-            allowSort: true,
-            renderCell: (row: Survey) => row.name,
+            renderCell: (row: SurveyReportSetting) => row.question_type,
         },
     ];
 
@@ -137,12 +129,7 @@ const SettingsForm = () => {
                                                 </InputAdornment>
                                             ),
                                         }}
-                                        // onChange={(e) => {
-                                        //     setSlug(e.target.value);
-                                        //     if (backendError) {
-                                        //         setBackendError('');
-                                        //     }
-                                        // }}
+                                        disabled
                                     />
                                 </Tooltip>
                             </ClickAwayListener>
@@ -158,20 +145,27 @@ const SettingsForm = () => {
                                     label="Search by name"
                                     fullWidth
                                     name="searchText"
-                                    // value={searchText}
-                                    // onChange={(e) => setSearchText(e.target.value)}
+                                    value={searchText}
+                                    onChange={(e) => {
+                                        setSearchText(e.target.value);
+                                    }}
                                     size="small"
                                 />
                                 <PrimaryButton
                                     data-testid="survey/listing/search-button"
-                                    // onClick={() => handleSearchBarClick(searchText)}
+                                    onClick={() => {
+                                        setSearchFilter({
+                                            ...searchFilter,
+                                            value: searchText,
+                                        });
+                                    }}
                                 >
                                     <SearchIcon />
                                 </PrimaryButton>
                             </Stack>
                         </Grid>
                         <Grid item xs={12}>
-                            <ClientSidePagination rows={[]}>
+                            <ClientSidePagination rows={[]} searchFilter={searchFilter}>
                                 {(props) => <MetTable {...props} headCells={headCells} loading={false} />}
                             </ClientSidePagination>
                         </Grid>
