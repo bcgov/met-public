@@ -1,6 +1,7 @@
 """This module holds data classes."""
 
-from typing import List
+from typing import List, Optional
+
 from attr import dataclass
 
 
@@ -10,7 +11,14 @@ class SurveySearchOptions:  # pylint: disable=too-many-instance-attributes
 
     exclude_hidden: bool
     exclude_template: bool
-    assigned_engagements: List[int] = None
+    assigned_engagements: Optional[List[int]] = None
     search_text: str = ''
-    unlinked: bool = False
     can_view_all_engagements: bool = True
+    is_unlinked: bool = False
+    is_linked: bool = False
+    is_hidden: bool = False
+    is_template: bool = False
+    created_date_from: Optional[str] = None
+    created_date_to: Optional[str] = None
+    published_date_from: Optional[str] = None
+    published_date_to: Optional[str] = None

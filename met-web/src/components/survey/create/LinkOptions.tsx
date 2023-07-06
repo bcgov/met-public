@@ -23,7 +23,7 @@ const LinkOptions = () => {
     const handleFetchSurveys = async () => {
         try {
             const fetchedSurveys = await fetchSurveys({
-                unlinked: true,
+                is_unlinked: true,
                 exclude_hidden: true,
                 exclude_template: true,
             });
