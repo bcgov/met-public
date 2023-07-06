@@ -6,31 +6,31 @@ import { MetHeader4 } from 'components/common';
 import { levenshteinDistance } from 'helper';
 
 const THRESHOLD_SIMILARITY_SCORE = 10;
-const DEFAULT_HELP_PATH = 'https://www.example.com/help/dashboard';
+const HELP_URL = 'https://bcgov.github.io/met-guide';
 
 const UserGuideNav = () => {
     const { pathname } = useLocation();
 
     const helpPaths: { [key: string]: string } = {
-        '/': 'https://www.example.com/help/dashboard',
-        '/engagements': 'https://www.example.com/help/engagements',
-        '/surveys': 'https://www.example.com/help/surveys',
-        '/surveys/create': 'https://www.example.com/help/create-survey',
-        '/surveys/1/build': 'https://www.example.com/help/survey-builder',
-        '/surveys/1/submit': 'https://www.example.com/help/survey-submission',
-        '/surveys/1/comments': 'https://www.example.com/help/survey-comments',
-        '/surveys/1/comments/all': 'https://www.example.com/help/all-comments',
-        '/surveys/1/submissions/1/review': 'https://www.example.com/help/review-submission',
-        '/engagements/create/form': 'https://www.example.com/help/create-engagement',
-        '/engagements/1/form': 'https://www.example.com/help/edit-engagement',
-        '/engagements/1/view': 'https://www.example.com/help/view-engagement',
-        '/engagements/1/comments': 'https://www.example.com/help/engagement-comments',
-        '/engagements/1/dashboard': 'https://www.example.com/help/engagement-dashboard',
-        '/feedback': 'https://www.example.com/help/feedback',
-        '/calendar': 'https://www.example.com/help/calendar',
-        '/reporting': 'https://www.example.com/help/reporting',
-        '/usermanagement': 'https://www.example.com/help/user-management',
-        '/usermanagement/1/details': 'https://www.example.com/help/user-details',
+        '/': HELP_URL,
+        '/engagements': `${HELP_URL}/posts/engagement-listing/`,
+        '/surveys': `${HELP_URL}/posts/survey-listing/`,
+        '/surveys/create': `${HELP_URL}/posts/create-survey/`,
+        '/surveys/1/build': `${HELP_URL}/posts/survey-builder/`,
+        '/surveys/1/submit': `${HELP_URL}/posts/survey-builder/`,
+        '/surveys/1/comments': `${HELP_URL}/posts/comment-review/`,
+        '/surveys/1/comments/all': `${HELP_URL}/posts/comment-review/`,
+        '/surveys/1/submissions/1/review': `${HELP_URL}/posts/comment-review/`,
+        '/engagements/create/form': `${HELP_URL}/posts/create-engagement/`,
+        '/engagements/1/form': `${HELP_URL}/posts/edit-engagement/`,
+        '/engagements/1/view': `${HELP_URL}/posts/preview-engagement/`,
+        '/engagements/1/comments': `${HELP_URL}/posts/preview-engagement/`,
+        '/engagements/1/dashboard': `${HELP_URL}/posts/manage-engagement/`,
+        '/feedback': `${HELP_URL}/posts/feedback-tool/`,
+        '/calendar': HELP_URL,
+        '/reporting': `${HELP_URL}/posts/report/`,
+        '/usermanagement': `${HELP_URL}/posts/user-management/`,
+        '/usermanagement/1/details': `${HELP_URL}/posts/user-details/`,
     };
 
     const handleSimilarityScore = () => {
@@ -55,10 +55,10 @@ const UserGuideNav = () => {
     const openHelpPage = () => {
         const key = handleSimilarityScore();
         if (!key) {
-            window.open(DEFAULT_HELP_PATH, '_blank', 'noopener');
+            window.open(HELP_URL, '_blank', 'noopener');
             return;
         }
-        const helpPagePath = key ? helpPaths[key] : DEFAULT_HELP_PATH;
+        const helpPagePath = key ? helpPaths[key] : HELP_URL;
         window.open(helpPagePath, '_blank', 'noopener');
     };
 
