@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { SurveyReportSetting } from 'models/surveyReportSetting';
 import { useDispatch } from 'react-redux';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { fetchSurveyReportSettings, updateSurveyReportSettings } from 'services/surveyService/reportSettingsService';
 import { getSurvey } from 'services/surveyService';
@@ -53,15 +53,14 @@ export const ReportSettingsContextProvider = ({ children }: { children: JSX.Elem
     const [surveyReportSettings, setSurveyReportSettings] = useState<SurveyReportSetting[]>([]);
     const [savingSettings, setSavingSettings] = useState<boolean>(false);
     const [survey, setSurvey] = useState<Survey | null>(null);
-    const [loadingSurvey, setLoadingSurvey] = useState<boolean>(false);
-    const [loadingEngagementSlug, setLoadingEngagementSlug] = useState<boolean>(false);
+    const [loadingSurvey, setLoadingSurvey] = useState<boolean>(true);
+    const [loadingEngagementSlug, setLoadingEngagementSlug] = useState<boolean>(true);
     const [engagementSlug, setEngagementSlug] = useState<string | null>(null);
 
     const { surveyId } = useParams<{ surveyId: string }>();
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const location = useLocation();
 
     const loadSurveySettings = async () => {
         if (!surveyId || isNaN(Number(surveyId))) {
@@ -88,23 +87,33 @@ export const ReportSettingsContextProvider = ({ children }: { children: JSX.Elem
             return;
         }
         try {
-            setLoadingSurvey(true);
             const settings = await getSurvey(Number(surveyId));
             setSurvey(settings);
+            setLoadingSurvey(false);
         } catch (error) {
             setLoadingSurvey(false);
         }
     };
 
     const loadEngagementSlug = async () => {
-        if (!survey || !survey.engagement_id) {
+        if (!survey) {
+            dispatch(openNotification({ severity: 'error', text: 'Failed to load dashboard link.' }));
+            return;
+        }
+
+        if (!survey.engagement_id) {
+            setLoadingEngagementSlug(false);
             return;
         }
 
         try {
             const slug = await getSlugByEngagementId(survey.engagement_id);
             setEngagementSlug(slug.slug);
-        } catch (error) {}
+            setLoadingEngagementSlug(false);
+        } catch (error) {
+            setLoadingEngagementSlug(false);
+            dispatch(openNotification({ severity: 'error', text: 'Failed to load dashboard link.' }));
+        }
     };
 
     useEffect(() => {
@@ -113,12 +122,14 @@ export const ReportSettingsContextProvider = ({ children }: { children: JSX.Elem
     }, [surveyId]);
 
     useEffect(() => {
-        loadEngagementSlug();
-    }, [survey]);
+        if (!loadingSurvey) {
+            loadEngagementSlug();
+        }
+    }, [loadingSurvey]);
 
     const handleNavigateOnSave = () => {
-        if (location.state.engagementId) {
-            navigate(`/engagements/${location.state.engagementId}/form`);
+        if (survey?.engagement_id) {
+            navigate(`/engagements/${survey.engagement_id}/form`);
             return;
         }
         navigate(`/surveys`);
