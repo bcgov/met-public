@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { ClickAwayListener, FormControlLabel, Grid, InputAdornment, Switch, TextField, Tooltip } from '@mui/material';
 import {
     MetHeader3,
@@ -12,9 +12,28 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { ReportSettingsContext } from './ReportSettingsContext';
 import SettingsTable from './SettingsTable';
 import SearchBar from './SearchBar';
+import { getBaseUrl } from 'helper';
 
 const SettingsForm = () => {
-    const { setSavingSettings, savingSettings } = useContext(ReportSettingsContext);
+    const { setSavingSettings, savingSettings, engagementSlug, loadingEngagementSlug, survey } =
+        useContext(ReportSettingsContext);
+
+    const [copyTooltip, setCopyTooltip] = useState(false);
+
+    const baseUrl = getBaseUrl();
+    const engagementUrl = !survey?.engagement_id
+        ? 'Link will appear when the survey is linked to an engagement'
+        : `${baseUrl}/${engagementSlug}`;
+
+    const handleTooltipClose = () => {
+        setCopyTooltip(false);
+    };
+
+    const handleCopyUrl = () => {
+        if (!engagementSlug) return;
+        setCopyTooltip(true);
+        navigator.clipboard.writeText(engagementUrl);
+    };
 
     return (
         <MetPageGridContainer container spacing={1}>
@@ -37,18 +56,14 @@ const SettingsForm = () => {
                         <Grid item xs={6}>
                             <MetLabel>Link to Public Dashboard Report</MetLabel>
 
-                            <ClickAwayListener
-                                onClickAway={() => {
-                                    /**/
-                                }}
-                            >
+                            <ClickAwayListener onClickAway={handleTooltipClose}>
                                 <Tooltip
                                     title="Link copied!"
                                     PopperProps={{
                                         disablePortal: true,
                                     }}
-                                    // onClose={handleTooltipClose}
-                                    // open={copyTooltip}
+                                    onClose={handleTooltipClose}
+                                    open={copyTooltip}
                                     disableFocusListener
                                     disableHoverListener
                                     disableTouchListener
@@ -62,8 +77,8 @@ const SettingsForm = () => {
                                             shrink: false,
                                         }}
                                         fullWidth
-                                        // disabled={!savedSlug}
-                                        // value={slug}
+                                        disabled={true}
+                                        value={loadingEngagementSlug ? 'Loading...' : engagementUrl}
                                         sx={{
                                             '.MuiInputBase-input': {
                                                 marginRight: 0,
@@ -81,14 +96,13 @@ const SettingsForm = () => {
                                                     <SecondaryButton
                                                         variant="contained"
                                                         disableElevation
-                                                        // onClick={handleCopyUrl}
+                                                        onClick={handleCopyUrl}
                                                     >
                                                         <ContentCopyIcon />
                                                     </SecondaryButton>
                                                 </InputAdornment>
                                             ),
                                         }}
-                                        disabled
                                     />
                                 </Tooltip>
                             </ClickAwayListener>

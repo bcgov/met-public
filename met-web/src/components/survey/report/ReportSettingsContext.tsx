@@ -4,6 +4,9 @@ import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { fetchSurveyReportSettings, updateSurveyReportSettings } from 'services/surveyService/reportSettingsService';
+import { getSurvey } from 'services/surveyService';
+import { Survey } from 'models/survey';
+import { getSlugByEngagementId } from 'services/engagementSlugService';
 
 export interface SearchFilter {
     key: keyof SurveyReportSetting;
@@ -17,6 +20,9 @@ export interface SurveyReportSettingsContextProps {
     savingSettings: boolean;
     setSavingSettings: React.Dispatch<React.SetStateAction<boolean>>;
     handleSaveSettings: (settings: SurveyReportSetting[]) => void;
+    survey: Survey | null;
+    loadingEngagementSlug: boolean;
+    engagementSlug: string | null;
 }
 
 export const ReportSettingsContext = createContext<SurveyReportSettingsContextProps>({
@@ -33,6 +39,9 @@ export const ReportSettingsContext = createContext<SurveyReportSettingsContextPr
     handleSaveSettings: () => {
         throw new Error('handleSaveSettings function must be overridden');
     },
+    survey: null,
+    loadingEngagementSlug: false,
+    engagementSlug: null,
 });
 
 export const ReportSettingsContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -43,6 +52,11 @@ export const ReportSettingsContextProvider = ({ children }: { children: JSX.Elem
     });
     const [surveyReportSettings, setSurveyReportSettings] = useState<SurveyReportSetting[]>([]);
     const [savingSettings, setSavingSettings] = useState<boolean>(false);
+    const [survey, setSurvey] = useState<Survey | null>(null);
+    const [loadingSurvey, setLoadingSurvey] = useState<boolean>(false);
+    const [loadingEngagementSlug, setLoadingEngagementSlug] = useState<boolean>(false);
+    const [engagementSlug, setEngagementSlug] = useState<string | null>(null);
+
     const { surveyId } = useParams<{ surveyId: string }>();
 
     const dispatch = useDispatch();
@@ -51,6 +65,7 @@ export const ReportSettingsContextProvider = ({ children }: { children: JSX.Elem
 
     const loadSurveySettings = async () => {
         if (!surveyId || isNaN(Number(surveyId))) {
+            navigate('/surveys');
             return;
         }
         try {
@@ -67,9 +82,39 @@ export const ReportSettingsContextProvider = ({ children }: { children: JSX.Elem
             );
         }
     };
+
+    const loadSurvey = async () => {
+        if (!surveyId || isNaN(Number(surveyId))) {
+            return;
+        }
+        try {
+            setLoadingSurvey(true);
+            const settings = await getSurvey(Number(surveyId));
+            setSurvey(settings);
+        } catch (error) {
+            setLoadingSurvey(false);
+        }
+    };
+
+    const loadEngagementSlug = async () => {
+        if (!survey || !survey.engagement_id) {
+            return;
+        }
+
+        try {
+            const slug = await getSlugByEngagementId(survey.engagement_id);
+            setEngagementSlug(slug.slug);
+        } catch (error) {}
+    };
+
     useEffect(() => {
         loadSurveySettings();
+        loadSurvey();
     }, [surveyId]);
+
+    useEffect(() => {
+        loadEngagementSlug();
+    }, [survey]);
 
     const handleNavigateOnSave = () => {
         if (location.state.engagementId) {
@@ -120,6 +165,9 @@ export const ReportSettingsContextProvider = ({ children }: { children: JSX.Elem
                 savingSettings,
                 setSavingSettings,
                 handleSaveSettings,
+                survey,
+                engagementSlug,
+                loadingEngagementSlug,
             }}
         >
             {children}
