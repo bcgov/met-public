@@ -29,6 +29,7 @@ from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
 from met_api.models.feedback import Feedback as FeedbackModel
 from met_api.models.membership import Membership as MembershipModel
 from met_api.models.participant import Participant as ParticipantModel
+from met_api.models.report_setting import ReportSetting as ReportSettingModel
 from met_api.models.staff_user import StaffUser as StaffUserModel
 from met_api.models.submission import Submission as SubmissionModel
 from met_api.models.subscription import Subscription as SubscriptionModel
@@ -40,8 +41,8 @@ from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import MembershipStatus
 from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementInfo, TestEngagementSlugInfo, TestFeedbackInfo, TestParticipantInfo,
-    TestSubmissionInfo, TestSurveyInfo, TestTenantInfo, TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo,
-    TestWidgetItemInfo)
+    TestReportSettingInfo, TestSubmissionInfo, TestSurveyInfo, TestTenantInfo, TestUserInfo, TestWidgetDocumentInfo,
+    TestWidgetInfo, TestWidgetItemInfo)
 
 
 CONFIG = get_named_config('testing')
@@ -301,3 +302,17 @@ def factory_engagement_slug_model(eng_slug_info: dict = TestEngagementSlugInfo.s
     )
     slug.save()
     return slug
+
+
+def factory_survey_report_setting_model(eng_slug_info: dict = TestReportSettingInfo.report_setting_1):
+    """Produce a engagement model."""
+    setting = ReportSettingModel(
+        survey_id=eng_slug_info.get('survey_id'),
+        question_id=eng_slug_info.get('question_id'),
+        question_key=eng_slug_info.get('question_key'),
+        question_type=eng_slug_info.get('question_type'),
+        question=eng_slug_info.get('question'),
+        display=eng_slug_info.get('display'),
+    )
+    setting.save()
+    return setting
