@@ -57,27 +57,11 @@ class ReportSetting(Resource):
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
     @_jwt.requires_auth
-    def post(survey_id):
-        """Refresh the report setting to match the questions on survey."""
-        try:
-            requestjson = request.get_json()
-            report_setting = ReportSettingService().refresh_report_setting(requestjson)
-
-            return jsonify(report_setting), HTTPStatus.OK
-        except KeyError as err:
-            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-        except ValueError as err:
-            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-
-    @staticmethod
-    # @TRACER.trace()
-    @cross_origin(origins=allowedorigins())
-    @_jwt.requires_auth
     def patch(survey_id):
         """Update saved report setting partially."""
         try:
-            requestjson = request.get_json()
-            report_setting = ReportSettingService().update_report_setting(requestjson)
+            new_report_settings = request.get_json()
+            report_setting = ReportSettingService().update_report_setting(survey_id, new_report_settings)
 
             return jsonify(report_setting), HTTPStatus.OK
         except KeyError as err:

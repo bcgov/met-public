@@ -1,6 +1,7 @@
 """Service for report setting management."""
 
 from met_api.models.report_setting import ReportSetting as ReportSettingModel
+from met_api.models.survey import Survey as SurveyModel
 from met_api.schemas.report_setting import ReportSettingSchema
 from met_api.constants.report_setting_type import FormIoComponentType
 
@@ -136,15 +137,20 @@ class ReportSettingService:
                 ReportSettingModel.delete_report_settings(survey_id, report_setting['question_key'])
 
     @classmethod
-    def update_report_setting(cls, report_setting_data):
+    def update_report_setting(cls, survey_id, new_report_settings):
         """Update report setting."""
-        for data in report_setting_data:
-            report_setting_id = data.get('id', None)
+        survey = SurveyModel.find_by_id(survey_id)
+        if not survey:
+                raise KeyError(f'No survey found for {survey_id}')
+        for setting in new_report_settings:
+            report_setting_id = setting.get('id', None)
             report_setting = ReportSettingModel.find_by_id(report_setting_id)
             if not report_setting:
                 raise ValueError(f'No report setting found for {report_setting_id}')
+            if report_setting.survey_id != survey_id:
+                raise KeyError(f'Report setting {report_setting.id} does not belong to survey {survey_id}')
 
-            report_setting.display = data.get('display', None)
+            report_setting.display = setting.get('display', None)
             report_setting.save()
 
-        return report_setting_data
+        return new_report_settings
