@@ -533,15 +533,15 @@ class TestReportSettingInfo(dict, Enum):
     """Test scenarios of feedback."""
 
     report_setting_1 = {
-        "created_by": str(fake.pyint()),
-        "created_date": datetime.now().strftime('%Y-%m-%d'),
-        "display": True,
-        "id": 1,
-        "question": "What is your opinion about this?",
-        "question_id": str(fake.pyint()),
-        "question_key": "simpletextarea",
-        "question_type": "simpletextarea",
-        "survey_id": 1,
-        "updated_by": str(fake.pyint()),
-        "updated_date": datetime.now().strftime('%Y-%m-%d')
+        'created_by': str(fake.pyint()),
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'display': True,
+        'id': 1,
+        'question': 'What is your opinion about this?',
+        'question_id': str(fake.pyint()),
+        'question_key': 'simpletextarea',
+        'question_type': 'simpletextarea',
+        'survey_id': 1,
+        'updated_by': str(fake.pyint()),
+        'updated_date': datetime.now().strftime('%Y-%m-%d')
     }

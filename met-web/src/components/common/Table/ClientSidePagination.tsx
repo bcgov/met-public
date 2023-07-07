@@ -17,7 +17,7 @@ export function ClientSidePagination<T>({ rows, searchFilter, children }: Client
         size: 10, // default page size
     });
     const [pageInfo, setPageInfo] = React.useState({ total: rows.length });
-    const [searchFilteredRows, setSearchFilteredRows] = React.useState<T[]>([]); // TODO: replace any with T[
+    const [searchFilteredRows, setSearchFilteredRows] = React.useState<T[]>([]);
     const [paginatedRows, setPaginatedRows] = React.useState<T[]>([]);
 
     const handleChangePagination = (newPaginationOptions: PaginationOptions<T>) => {
@@ -29,7 +29,7 @@ export function ClientSidePagination<T>({ rows, searchFilter, children }: Client
     };
 
     const handleFilter = () => {
-        if (!searchFilter || !searchFilter.value) {
+        if (!searchFilter?.value) {
             setSearchFilteredRows(rows);
             setPageInfo({ total: rows.length });
             setPaginationOptions({ ...paginationOptions, page: 1 });
