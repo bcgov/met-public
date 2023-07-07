@@ -16,41 +16,25 @@
 
 Test-Suite to ensure that the Report setting endpoint is working as expected.
 """
-import json
-
 from met_api.utils.enums import ContentType
-from tests.utilities.factory_scenarios import TestJwtClaims, TestSurveyInfo
-from tests.utilities.factory_utils import factory_auth_header, factory_survey_and_eng_model
-
-
-def test_create_report_setting(client, jwt, session):  # pylint:disable=unused-argument
-    """Assert that an report setting can be POSTed."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
-    survey, eng = factory_survey_and_eng_model(TestSurveyInfo.survey3)
-    data = {
-        'id': survey.id,
-        'form_json': survey.form_json,
-    }
-    rv = client.post('/api/reportsetting/', data=json.dumps(data),
-                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+from tests.utilities.factory_scenarios import TestJwtClaims, TestReportSettingInfo, TestSurveyInfo
+from tests.utilities.factory_utils import (
+    factory_auth_header, factory_survey_and_eng_model, factory_survey_report_setting_model)
 
 
 def test_get_report_setting(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that report setting can be fetched."""
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
-    survey, eng = factory_survey_and_eng_model(TestSurveyInfo.survey3)
+    survey, _ = factory_survey_and_eng_model(TestSurveyInfo.survey3)
 
-    data = {
-        'id': survey.id,
-        'form_json': survey.form_json,
+    report_setting_data = {
+        **TestReportSettingInfo.report_setting_1,
+        'survey_id': survey.id,
     }
-    rv = client.post('/api/reportsetting/', data=json.dumps(data),
-                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    factory_survey_report_setting_model(report_setting_data)
 
     rv = client.get(
-        f'/api/reportsetting/{survey.id}',
+        f'/api/surveys/{survey.id}/reportsettings',
         headers=headers,
         content_type=ContentType.JSON.value
     )

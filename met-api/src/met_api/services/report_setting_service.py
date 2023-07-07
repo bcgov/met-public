@@ -141,7 +141,7 @@ class ReportSettingService:
         """Update report setting."""
         survey = SurveyModel.find_by_id(survey_id)
         if not survey:
-                raise KeyError(f'No survey found for {survey_id}')
+            raise KeyError(f'No survey found for {survey_id}')
         for setting in new_report_settings:
             report_setting_id = setting.get('id', None)
             report_setting = ReportSettingModel.find_by_id(report_setting_id)
