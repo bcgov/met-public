@@ -1,7 +1,9 @@
 import { SurveyReportSetting } from 'models/surveyReportSetting';
 import React, { createContext, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { fetchSurveyReportSettings } from 'services/surveyService/reportSettingsService';
+import { useDispatch } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { openNotification } from 'services/notificationService/notificationSlice';
+import { fetchSurveyReportSettings, updateSurveyReportSettings } from 'services/surveyService/reportSettingsService';
 
 export interface SearchFilter {
     key: keyof SurveyReportSetting;
@@ -12,6 +14,9 @@ export interface SurveyReportSettingsContextProps {
     surveyReportSettings: SurveyReportSetting[];
     searchFilter: SearchFilter;
     setSearchFilter: React.Dispatch<React.SetStateAction<SearchFilter>>;
+    savingSettings: boolean;
+    setSavingSettings: React.Dispatch<React.SetStateAction<boolean>>;
+    handleSaveSettings: (settings: SurveyReportSetting[]) => void;
 }
 
 export const ReportSettingsContext = createContext<SurveyReportSettingsContextProps>({
@@ -21,6 +26,13 @@ export const ReportSettingsContext = createContext<SurveyReportSettingsContextPr
     setSearchFilter: () => {
         throw new Error('setSearchFilter function must be overridden');
     },
+    savingSettings: false,
+    setSavingSettings: () => {
+        throw new Error('setSavingSettings function must be overridden');
+    },
+    handleSaveSettings: () => {
+        throw new Error('handleSaveSettings function must be overridden');
+    },
 });
 
 export const ReportSettingsContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -29,8 +41,12 @@ export const ReportSettingsContextProvider = ({ children }: { children: JSX.Elem
         key: 'question',
         value: '',
     });
-    const [surveyReportSettings, setSurveyReportSettings] = React.useState<SurveyReportSetting[]>([]); // TODO: replace any with SurveyReportSetting[
+    const [surveyReportSettings, setSurveyReportSettings] = React.useState<SurveyReportSetting[]>([]);
+    const [savingSettings, setSavingSettings] = React.useState<boolean>(false);
     const { surveyId } = useParams<{ surveyId: string }>();
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const loadSurveySettings = async () => {
         if (!surveyId || isNaN(Number(surveyId))) {
@@ -45,6 +61,32 @@ export const ReportSettingsContextProvider = ({ children }: { children: JSX.Elem
         loadSurveySettings();
     }, [surveyId]);
 
+    const handleSaveSettings = async (settings: SurveyReportSetting[]) => {
+        if (!surveyId || isNaN(Number(surveyId)) || !settings.length) {
+            setSavingSettings(false);
+            return;
+        }
+        try {
+            await updateSurveyReportSettings(surveyId, settings);
+            setSavingSettings(false);
+            dispatch(
+                openNotification({
+                    severity: 'success',
+                    text: 'Settings saved successfully.',
+                }),
+            );
+            navigate(`/surveys`);
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while saving settings. Please try again.',
+                }),
+            );
+            setSavingSettings(false);
+        }
+    };
+
     return (
         <ReportSettingsContext.Provider
             value={{
@@ -52,6 +94,9 @@ export const ReportSettingsContextProvider = ({ children }: { children: JSX.Elem
                 surveyReportSettings,
                 searchFilter,
                 setSearchFilter,
+                savingSettings,
+                setSavingSettings,
+                handleSaveSettings,
             }}
         >
             {children}

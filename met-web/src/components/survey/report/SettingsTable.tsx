@@ -1,24 +1,41 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Checkbox } from '@mui/material';
-
 import { HeadCell } from 'components/common/Table/types';
 import MetTable from 'components/common/Table';
 import { ClientSidePagination } from 'components/common/Table/ClientSidePagination';
 import { SurveyReportSetting } from 'models/surveyReportSetting';
 import { ReportSettingsContext } from './ReportSettingsContext';
+import { updatedDiff } from 'deep-object-diff';
 
 const SettingsTable = () => {
-    const { surveyReportSettings, searchFilter } = useContext(ReportSettingsContext);
-    const [displayedMap, setDisplayedMap] = React.useState<{ [key: number]: boolean }>({});
+    const { surveyReportSettings, searchFilter, savingSettings, handleSaveSettings, tableLoading } =
+        useContext(ReportSettingsContext);
+    const [displayedMap, setDisplayedMap] = useState<{ [key: number]: boolean }>({});
 
     useEffect(() => {
-        console.log('ran');
         const map = surveyReportSettings.reduce((acc, curr) => {
             acc[curr.id] = curr.display;
             return acc;
         }, {} as { [key: number]: boolean });
         setDisplayedMap(map);
     }, [surveyReportSettings]);
+
+    useEffect(() => {
+        if (!savingSettings) {
+            return;
+        }
+        const updatedSettings = surveyReportSettings.map((setting) => {
+            return {
+                ...setting,
+                display: displayedMap[setting.id],
+            };
+        });
+        const diff = updatedDiff(surveyReportSettings, updatedSettings);
+        const diffKeys = Object.keys(diff);
+        const updatedDiffSettings = diffKeys.map((key) => updatedSettings[Number(key)]);
+
+        handleSaveSettings(updatedDiffSettings);
+    }, [savingSettings]);
 
     const headCells: HeadCell<SurveyReportSetting>[] = [
         {
@@ -59,7 +76,7 @@ const SettingsTable = () => {
 
     return (
         <ClientSidePagination rows={surveyReportSettings} searchFilter={searchFilter}>
-            {(props) => <MetTable {...props} headCells={headCells} loading={false} />}
+            {(props) => <MetTable {...props} headCells={headCells} loading={tableLoading} />}
         </ClientSidePagination>
     );
 };

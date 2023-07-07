@@ -1,15 +1,5 @@
-import React, { useContext, useEffect } from 'react';
-import {
-    Checkbox,
-    ClickAwayListener,
-    FormControlLabel,
-    Grid,
-    InputAdornment,
-    Stack,
-    Switch,
-    TextField,
-    Tooltip,
-} from '@mui/material';
+import React, { useContext } from 'react';
+import { ClickAwayListener, FormControlLabel, Grid, InputAdornment, Switch, TextField, Tooltip } from '@mui/material';
 import {
     MetHeader3,
     MetLabel,
@@ -19,18 +9,12 @@ import {
     SecondaryButton,
 } from 'components/common';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import SearchIcon from '@mui/icons-material/Search';
-import { HeadCell } from 'components/common/Table/types';
-import MetTable from 'components/common/Table';
-import { ClientSidePagination } from 'components/common/Table/ClientSidePagination';
-import { SurveyReportSetting } from 'models/surveyReportSetting';
 import { ReportSettingsContext } from './ReportSettingsContext';
 import SettingsTable from './SettingsTable';
 import SearchBar from './SearchBar';
 
 const SettingsForm = () => {
-    const { searchFilter, setSearchFilter } = useContext(ReportSettingsContext);
-    const [searchText, setSearchText] = React.useState<string>('');
+    const { setSavingSettings, savingSettings } = useContext(ReportSettingsContext);
 
     return (
         <MetPageGridContainer container spacing={1}>
@@ -117,6 +101,11 @@ const SettingsForm = () => {
                         </Grid>
                         <Grid item xs={12}>
                             <SettingsTable />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <PrimaryButton onClick={() => setSavingSettings(true)} loading={savingSettings}>
+                                Save
+                            </PrimaryButton>
                         </Grid>
                     </Grid>
                 </MetPaper>

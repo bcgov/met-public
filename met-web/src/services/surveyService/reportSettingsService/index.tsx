@@ -9,11 +9,7 @@ export const fetchSurveyReportSettings = async (surveyId: string): Promise<Surve
     return responseData.data ?? [];
 };
 
-interface PatchSurveyReportSetting {
-    id: string;
-    form_json: unknown;
-}
-export const updateSurveyReportSettings = async (surveyId: string, settingData: PatchSurveyReportSetting) => {
+export const updateSurveyReportSettings = async (surveyId: string, settingData: SurveyReportSetting[]) => {
     const url = replaceUrl(Endpoints.SurveyReportSetting.UPDATE, 'survey_id', surveyId);
     const responseData = await http.PatchRequest<SurveyReportSetting[]>(url, settingData);
     return responseData.data ?? [];
