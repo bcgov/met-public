@@ -79,6 +79,7 @@ jest.mock('@mui/material', () => ({
     Link: ({ children }: { children: ReactNode }) => {
         return <a>{children}</a>;
     },
+    useMediaQuery: () => false,
 }));
 
 jest.mock('components/common', () => ({
@@ -166,6 +167,14 @@ describe('Survey form page tests', () => {
                 sort_key: 'survey.created_date',
                 sort_order: 'desc',
                 search_text: 'Survey One',
+                is_unlinked: false,
+                is_template: false,
+                is_hidden: false,
+                is_linked: false,
+                created_date_from: '',
+                created_date_to: '',
+                published_date_from: '',
+                published_date_to: '',
             });
         });
     });

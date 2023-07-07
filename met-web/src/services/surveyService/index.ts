@@ -5,7 +5,7 @@ import { replaceAllInURL, replaceUrl } from 'helper';
 import { Page } from 'services/type';
 
 interface FetchSurveyParams {
-    unlinked?: boolean;
+    is_unlinked?: boolean;
     exclude_hidden?: boolean;
     exclude_template?: boolean;
 }
@@ -22,6 +22,14 @@ interface GetSurveysParams {
     search_text?: string;
     exclude_hidden?: boolean;
     exclude_template?: boolean;
+    is_unlinked?: boolean;
+    is_linked?: boolean;
+    is_template?: boolean;
+    is_hidden?: boolean;
+    created_date_from?: string;
+    created_date_to?: string;
+    published_date_from?: string;
+    published_date_to?: string;
 }
 export const getSurveysPage = async (params: GetSurveysParams = {}): Promise<Page<Survey>> => {
     const response = await http.GetRequest<Page<Survey>>(Endpoints.Survey.GET_LIST, params);

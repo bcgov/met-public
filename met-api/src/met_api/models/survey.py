@@ -59,26 +59,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         query = db.session.query(Survey).join(Engagement, isouter=True).join(EngagementStatus, isouter=True)
         query = cls._add_tenant_filter(query)
 
-        if survey_search_options.exclude_hidden:
-            query = query.filter(Survey.is_hidden.is_(False))
-
-        if survey_search_options.exclude_template:
-            query = query.filter(Survey.is_template.is_(False))
-
-        if survey_search_options.unlinked:
-            query = query.filter(Survey.engagement_id.is_(None))
-
-        # if role has access to view all engagements then include all surveys which are in ready status or
-        # surveys linked to draft and assigned engagements
-        if survey_search_options.can_view_all_engagements:
-            if survey_search_options.assigned_engagements is not None:
-                query = cls._filter_accessible_surveys(query, survey_search_options.assigned_engagements)
-        # else include all surveys linked to assigned engagements
-        else:
-            query = query.filter(Engagement.id.in_(survey_search_options.assigned_engagements))
-
-        if survey_search_options.search_text:
-            query = query.filter(Survey.name.ilike('%' + survey_search_options.search_text + '%'))
+        query = cls.filter_by_search_options(survey_search_options, query)
 
         sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == 'asc'\
             else desc(text(pagination_options.sort_key))
@@ -93,6 +74,44 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         page = query.paginate(page=pagination_options.page, per_page=pagination_options.size)
 
         return page.items, page.total
+
+    @classmethod
+    def filter_by_search_options(cls, survey_search_options: SurveySearchOptions, query):
+        """Filter by search options."""
+        if survey_search_options.exclude_hidden:
+            query = query.filter(Survey.is_hidden.is_(False))
+
+        if survey_search_options.exclude_template:
+            query = query.filter(Survey.is_template.is_(False))
+
+        if survey_search_options.is_unlinked:
+            query = query.filter(Survey.engagement_id.is_(None))
+
+        if survey_search_options.is_linked:
+            query = query.filter(Survey.engagement_id.isnot(None))
+
+        if survey_search_options.is_hidden:
+            query = query.filter(Survey.is_hidden.is_(True))
+
+        if survey_search_options.is_template:
+            query = query.filter(Survey.is_template.is_(True))
+
+        query = cls._filter_by_created_date(query, survey_search_options)
+
+        query = cls._filter_by_published_date(query, survey_search_options)
+
+        # if role has access to view all engagements then include all surveys which are in ready status or
+        # surveys linked to draft and assigned engagements
+        if survey_search_options.can_view_all_engagements:
+            if survey_search_options.assigned_engagements is not None:
+                query = cls._filter_accessible_surveys(query, survey_search_options.assigned_engagements)
+        # else include all surveys linked to assigned engagements
+        else:
+            query = query.filter(Engagement.id.in_(survey_search_options.assigned_engagements))
+
+        if survey_search_options.search_text:
+            query = query.filter(Survey.name.ilike('%' + survey_search_options.search_text + '%'))
+        return query
 
     @classmethod
     def create_survey(cls, survey: SurveySchema) -> Survey:
@@ -165,4 +184,20 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
             # Include Un-linked surveys
             Survey.engagement_id.is_(None)]
         query = query.filter(or_(*filter_conditions))
+        return query
+
+    @staticmethod
+    def _filter_by_created_date(query, search_options: SurveySearchOptions):
+        if search_options.created_date_from:
+            query = query.filter(Survey.created_date >= search_options.created_date_from)
+        if search_options.created_date_to:
+            query = query.filter(Survey.created_date <= search_options.created_date_to)
+        return query
+
+    @classmethod
+    def _filter_by_published_date(cls, query, search_options: SurveySearchOptions):
+        if search_options.published_date_from:
+            query = query.filter(Engagement.published_date >= search_options.published_date_from)
+        if search_options.published_date_to:
+            query = query.filter(Engagement.published_date <= search_options.published_date_to)
         return query

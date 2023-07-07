@@ -23,7 +23,7 @@ const TeamMemberListing = () => {
             label: 'Team Members',
             allowSort: false,
             renderCell: (row: EngagementTeamMember) => (
-                <MuiLink component={Link} to={``}>
+                <MuiLink component={Link} to={`/usermanagement/${row.user_id}/details`}>
                     {row.user?.last_name + ', ' + row.user?.first_name}
                 </MuiLink>
             ),
