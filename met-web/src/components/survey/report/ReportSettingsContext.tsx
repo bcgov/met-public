@@ -1,7 +1,7 @@
+import React, { createContext, useEffect, useState } from 'react';
 import { SurveyReportSetting } from 'models/surveyReportSetting';
-import React, { createContext, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { fetchSurveyReportSettings, updateSurveyReportSettings } from 'services/surveyService/reportSettingsService';
 
@@ -36,36 +36,59 @@ export const ReportSettingsContext = createContext<SurveyReportSettingsContextPr
 });
 
 export const ReportSettingsContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
-    const [tableLoading, setTableLoading] = React.useState<boolean>(false);
-    const [searchFilter, setSearchFilter] = React.useState<SearchFilter>({
+    const [tableLoading, setTableLoading] = useState<boolean>(false);
+    const [searchFilter, setSearchFilter] = useState<SearchFilter>({
         key: 'question',
         value: '',
     });
-    const [surveyReportSettings, setSurveyReportSettings] = React.useState<SurveyReportSetting[]>([]);
-    const [savingSettings, setSavingSettings] = React.useState<boolean>(false);
+    const [surveyReportSettings, setSurveyReportSettings] = useState<SurveyReportSetting[]>([]);
+    const [savingSettings, setSavingSettings] = useState<boolean>(false);
     const { surveyId } = useParams<{ surveyId: string }>();
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const loadSurveySettings = async () => {
         if (!surveyId || isNaN(Number(surveyId))) {
             return;
         }
-        setTableLoading(true);
-        const settings = await fetchSurveyReportSettings(surveyId);
-        setSurveyReportSettings(settings);
-        setTableLoading(false);
+        try {
+            setTableLoading(true);
+            const settings = await fetchSurveyReportSettings(surveyId);
+            setSurveyReportSettings(settings);
+            setTableLoading(false);
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while loading settings. Please try again.',
+                }),
+            );
+        }
     };
     useEffect(() => {
         loadSurveySettings();
     }, [surveyId]);
 
+    const handleNavigateOnSave = () => {
+        if (location.state.engagementId) {
+            navigate(`/engagements/${location.state.engagementId}/form`);
+            return;
+        }
+        navigate(`/surveys`);
+    };
     const handleSaveSettings = async (settings: SurveyReportSetting[]) => {
-        if (!surveyId || isNaN(Number(surveyId)) || !settings.length) {
+        if (!surveyId || isNaN(Number(surveyId))) {
             setSavingSettings(false);
             return;
         }
+
+        if (!settings.length) {
+            handleNavigateOnSave();
+            return;
+        }
+
         try {
             await updateSurveyReportSettings(surveyId, settings);
             setSavingSettings(false);
@@ -75,7 +98,7 @@ export const ReportSettingsContextProvider = ({ children }: { children: JSX.Elem
                     text: 'Settings saved successfully.',
                 }),
             );
-            navigate(`/surveys`);
+            handleNavigateOnSave();
         } catch (error) {
             dispatch(
                 openNotification({

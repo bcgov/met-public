@@ -161,7 +161,7 @@ const SurveyFormBuilder = () => {
                 }),
             );
 
-            navigate(`/surveys/${savedSurvey.id}/report`);
+            navigate(`/surveys/${savedSurvey.id}/report`, { state: { engagementId: savedSurvey?.engagement?.id } });
         } catch (error) {
             setIsSaving(false);
             if (axios.isAxiosError(error)) {
