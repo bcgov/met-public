@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { ClickAwayListener, FormControlLabel, Grid, InputAdornment, Switch, TextField, Tooltip } from '@mui/material';
+import { ClickAwayListener, Grid, InputAdornment, TextField, Tooltip } from '@mui/material';
 import {
     MetHeader3,
     MetLabel,
@@ -47,12 +47,6 @@ const SettingsForm = () => {
                     }}
                 >
                     <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <FormControlLabel
-                                control={<Switch defaultChecked />}
-                                label="Send report to all participants at the end of the engagement period"
-                            />
-                        </Grid>
                         <Grid item xs={6}>
                             <MetLabel>Link to Public Dashboard Report</MetLabel>
 
