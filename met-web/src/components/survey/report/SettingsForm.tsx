@@ -111,7 +111,11 @@ const SettingsForm = () => {
                             <SettingsTable />
                         </Grid>
                         <Grid item xs={12}>
-                            <PrimaryButton onClick={() => setSavingSettings(true)} loading={savingSettings}>
+                            <PrimaryButton
+                                data-testid={'survey/report/save-button'}
+                                onClick={() => setSavingSettings(true)}
+                                loading={savingSettings}
+                            >
                                 Save
                             </PrimaryButton>
                         </Grid>
