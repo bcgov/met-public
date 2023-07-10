@@ -19,4 +19,5 @@ export enum WidgetType {
     Subscribe = 4,
     Events = 5,
     Map = 6,
+    Video = 7,
 }
