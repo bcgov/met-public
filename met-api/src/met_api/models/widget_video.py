@@ -25,7 +25,7 @@ class WidgetVideo(BaseModel):  # pylint: disable=too-few-public-methods, too-man
         """Get video."""
         widget_video = db.session.query(WidgetVideo) \
             .filter(WidgetVideo.widget_id == widget_id) \
-            .all()
+            .first()
         return widget_video
 
     @classmethod
