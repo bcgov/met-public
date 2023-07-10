@@ -42,8 +42,8 @@ export const ENGAGEMENT_PHASES = {
         phaseId: EngagementPhases.EarlyEngagement,
         title: 'Early Engagement',
         backgroundColor: '#54858D',
-        accordionBackground: '#cce5e9',
-        learnMoreBackgroundColor: '#cce5e9',
+        accordionBackground: '#EFFBFD',
+        learnMoreBackgroundColor: '#EFFBFD',
         learnMoreText: (
             <Grid item xs={12}>
                 <MetParagraph>
@@ -59,8 +59,8 @@ export const ENGAGEMENT_PHASES = {
         phaseId: EngagementPhases.ReadinessDecision,
         title: 'Readiness Decision',
         backgroundColor: '#DA6D65',
-        learnMoreBackgroundColor: '#ead0ce',
-        accordionBackground: '#ead0ce',
+        learnMoreBackgroundColor: '#F2DEDE',
+        accordionBackground: '#F2DEDE',
         learnMoreText: (
             <Grid item xs={12}>
                 <MetParagraph>
@@ -74,8 +74,8 @@ export const ENGAGEMENT_PHASES = {
         phaseId: EngagementPhases.ProcessPlanning,
         title: 'Process Planning',
         backgroundColor: '#043673',
-        accordionBackground: '#bed1e7',
-        learnMoreBackgroundColor: '#bed1e7',
+        accordionBackground: '#ECF3FC',
+        learnMoreBackgroundColor: '#ECF3FC',
         learnMoreText: (
             <Grid item xs={12}>
                 <MetParagraph>
@@ -92,8 +92,8 @@ export const ENGAGEMENT_PHASES = {
         phaseId: EngagementPhases.ApplicationDevelopmentReview,
         title: 'Application Development & Review',
         backgroundColor: '#4D95D0',
-        accordionBackground: '#bbd3e7',
-        learnMoreBackgroundColor: '#bbd3e7',
+        accordionBackground: '#DDF0FE',
+        learnMoreBackgroundColor: '#DDF0FE',
         learnMoreText: (
             <>
                 <Grid item xs={12}>
@@ -122,8 +122,8 @@ export const ENGAGEMENT_PHASES = {
         phaseId: EngagementPhases.EffectsAssessmentRecommendation,
         title: 'Effects Assessment & Recommendation',
         backgroundColor: '#E7A913',
-        accordionBackground: '#f2e1b6',
-        learnMoreBackgroundColor: '#f2e1b6',
+        accordionBackground: '#FFEFCB',
+        learnMoreBackgroundColor: '#FFEFCB',
         learnMoreText: (
             <>
                 <Grid item xs={12}>
@@ -149,8 +149,8 @@ export const ENGAGEMENT_PHASES = {
         phaseId: EngagementPhases.Decision,
         title: 'Decision',
         backgroundColor: '#6A54A3',
-        accordionBackground: '#dbd7e5',
-        learnMoreBackgroundColor: '#dbd7e5',
+        accordionBackground: '#F3EFFF',
+        learnMoreBackgroundColor: '#F3EFFF',
         learnMoreText: (
             <Grid item xs={12}>
                 <MetParagraph sx={{ fontStyle: 'italic' }}>
@@ -164,8 +164,8 @@ export const ENGAGEMENT_PHASES = {
         phaseId: EngagementPhases.PostCertificate,
         title: 'Post-Certificate',
         backgroundColor: '#A6BB2E',
-        accordionBackground: '#e9eecc',
-        learnMoreBackgroundColor: '#e9eecc',
+        accordionBackground: '#F4F7E2',
+        learnMoreBackgroundColor: '#F4F7E2',
         learnMoreText: (
             <>
                 <Grid item xs={12}>
