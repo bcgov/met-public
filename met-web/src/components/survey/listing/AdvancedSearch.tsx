@@ -12,6 +12,11 @@ import {
 } from '@mui/material';
 import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
 import { AdvancedSearchFilters, SurveyListingContext } from './SurveyListingContext';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import CheckIcon from '@mui/icons-material/Check';
+import LinkIcon from '@mui/icons-material/Link';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import { Palette } from 'styles/Theme';
 
 export const AdvancedSearch = () => {
     const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
@@ -58,21 +63,48 @@ export const AdvancedSearch = () => {
                     <FormGroup row={isMediumScreen}>
                         <FormControlLabel
                             control={<Checkbox checked={status.hidden} onChange={handleStatusChange} name="hidden" />}
-                            label="Hidden"
+                            label={
+                                <Stack direction="row" alignItems="center" spacing={1}>
+                                    <VisibilityOffIcon fontSize="small" />
+                                    <span>Hidden</span>
+                                </Stack>
+                            }
                         />
                         <FormControlLabel
                             control={
                                 <Checkbox checked={status.template} onChange={handleStatusChange} name="template" />
                             }
-                            label="Template"
+                            label={
+                                <Stack direction="row" alignItems="center" spacing={1}>
+                                    <DashboardIcon fontSize="small" />
+                                    <span>Template</span>
+                                </Stack>
+                            }
                         />
                         <FormControlLabel
                             control={<Checkbox checked={status.ready} onChange={handleStatusChange} name="ready" />}
-                            label="Ready"
+                            label={
+                                <>
+                                    <Stack direction="row" alignItems="center" spacing={1}>
+                                        <CheckIcon
+                                            fontSize="small"
+                                            sx={{ stroke: Palette.icons.surveyReady, strokeWidth: '2' }}
+                                        />
+                                        <span>Ready</span>
+                                    </Stack>
+                                </>
+                            }
                         />
                         <FormControlLabel
                             control={<Checkbox checked={status.linked} onChange={handleStatusChange} name="linked" />}
-                            label="Linked"
+                            label={
+                                <>
+                                    <Stack direction="row" alignItems="center" spacing={1}>
+                                        <LinkIcon fontSize="small" />
+                                        <span>Linked</span>
+                                    </Stack>
+                                </>
+                            }
                         />
                     </FormGroup>
                 </FormControl>

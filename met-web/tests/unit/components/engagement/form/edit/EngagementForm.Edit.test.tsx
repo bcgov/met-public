@@ -170,7 +170,7 @@ describe('Engagement form page tests', () => {
         expect(screen.getByText('Add Survey')).toBeDisabled();
     });
 
-    test.only('Can move to settings tab', async () => {
+    test('Can move to settings tab', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({

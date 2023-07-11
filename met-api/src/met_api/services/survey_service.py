@@ -13,6 +13,7 @@ from met_api.schemas.engagement import EngagementSchema
 from met_api.schemas.survey import SurveySchema
 from met_api.services import authorization
 from met_api.services.membership_service import MembershipService
+from met_api.services.report_setting_service import ReportSettingService
 from met_api.services.object_storage_service import ObjectStorageService
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
@@ -151,7 +152,14 @@ class SurveyService:
 
         if engagement and engagement.get('status_id', None) != Status.Draft.value:
             raise ValueError('Engagement already published')
-        return SurveyModel.update_survey(data)
+
+        updated_survey = SurveyModel.update_survey(data)
+        ReportSettingService.refresh_report_setting({
+            'id': updated_survey.id,
+            'form_json': updated_survey.form_json,
+        })
+
+        return updated_survey
 
     @staticmethod
     def validate_update_fields(data):

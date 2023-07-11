@@ -41,6 +41,11 @@ const Endpoints = {
         GET_LIST: `${AppConfig.apiUrl}/submissions/survey/survey_id`,
         GET: `${AppConfig.apiUrl}/submissions/submission_id`,
     },
+    SurveyReportSetting: {
+        GET_LIST: `${AppConfig.apiUrl}/surveys/survey_id/reportsettings`,
+        UPDATE: `${AppConfig.apiUrl}/surveys/survey_id/reportsettings`,
+        CREATE: `${AppConfig.apiUrl}/surveys/survey_id/reportsettings`,
+    },
     Subscription: {
         GET: `${AppConfig.apiUrl}/subscription/participant_id`,
         CREATE: `${AppConfig.apiUrl}/subscription/`,

@@ -29,6 +29,10 @@ In the tools namespace use the following to create the build configurations:
     oc process -f ./met-analytics.bc.yml | oc create -f -
 ```
 
+```
+    oc process -f ./analytics-api.bc.yml | oc create -f -
+```
+
 ## Image Puller Configuration
 
 Allow image pullers from the other namespaces to pull images from tools namespace:

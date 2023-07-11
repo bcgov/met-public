@@ -26,55 +26,15 @@ from met_api.services.report_setting_service import ReportSettingService
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
-API = Namespace('reportsetting', description='Endpoints for report setting management')
+API = Namespace('reportsettings', description='Endpoints for report setting management')
 """Custom exception messages
 """
 
 
-@cors_preflight('POST, OPTIONS, PATCH')
-@API.route('/')
+@cors_preflight('GET, POST, PATCH, OPTIONS')
+@API.route('')
 class ReportSetting(Resource):
     """Resource for managing report setting."""
-
-    @staticmethod
-    # @TRACER.trace()
-    @cross_origin(origins=allowedorigins())
-    @_jwt.requires_auth
-    def post():
-        """Refresh the report setting to match the questions on survey."""
-        try:
-            requestjson = request.get_json()
-            report_setting = ReportSettingService().refresh_report_setting(requestjson)
-
-            return jsonify(report_setting), HTTPStatus.OK
-        except KeyError as err:
-            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-        except ValueError as err:
-            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-
-    @staticmethod
-    # @TRACER.trace()
-    @cross_origin(origins=allowedorigins())
-    @_jwt.requires_auth
-    def patch():
-        """Update saved report setting partially."""
-        try:
-            requestjson = request.get_json()
-            report_setting = ReportSettingService().update_report_setting(requestjson)
-
-            return jsonify(report_setting), HTTPStatus.OK
-        except KeyError as err:
-            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-        except ValueError as err:
-            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-        except ValidationError as err:
-            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR
-
-
-@cors_preflight('GET, OPTIONS')
-@API.route('/<survey_id>')
-class ReportSettings(Resource):
-    """Resource for managing a report setting."""
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
@@ -92,3 +52,21 @@ class ReportSettings(Resource):
             return 'Report setting was not found', HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    @_jwt.requires_auth
+    def patch(survey_id):
+        """Update saved report setting partially."""
+        try:
+            new_report_settings = request.get_json()
+            report_setting = ReportSettingService().update_report_setting(survey_id, new_report_settings)
+
+            return jsonify(report_setting), HTTPStatus.OK
+        except KeyError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValidationError as err:
+            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR
