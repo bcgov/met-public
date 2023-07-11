@@ -84,17 +84,18 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         if survey_search_options.exclude_template:
             query = query.filter(Survey.is_template.is_(False))
 
-        if survey_search_options.is_unlinked:
-            query = query.filter(Survey.engagement_id.is_(None))
-
+        # filter by status
+        status_filters = []
         if survey_search_options.is_linked:
-            query = query.filter(Survey.engagement_id.isnot(None))
-
-        if survey_search_options.is_hidden:
-            query = query.filter(Survey.is_hidden.is_(True))
-
+            status_filters.append(Survey.engagement_id.isnot(None))
+        if survey_search_options.is_unlinked:
+            status_filters.append(Survey.engagement_id.is_(None))
         if survey_search_options.is_template:
-            query = query.filter(Survey.is_template.is_(True))
+            status_filters.append(Survey.is_template.is_(True))
+        if survey_search_options.is_hidden:
+            status_filters.append(Survey.is_hidden.is_(True))
+        if status_filters:
+            query = query.filter(or_(*status_filters))
 
         query = cls._filter_by_created_date(query, survey_search_options)
 
