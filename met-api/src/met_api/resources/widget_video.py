@@ -33,7 +33,7 @@ API = Namespace('widget_videos', description='Endpoints for Video Widget Managem
 
 @cors_preflight('GET, POST, PATCH, OPTIONS')
 @API.route('')
-class Video(Resource):
+class Videos(Resource):
     """Resource for managing video widgets."""
 
     @staticmethod
@@ -58,20 +58,6 @@ class Video(Resource):
         except BusinessException as err:
             return str(err), err.status_code
 
-    @staticmethod
-    @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
-    def patch(widget_id):
-        """Update video widget."""
-        request_json = request.get_json()
-        valid_format, errors = schema_utils.validate(request_json, 'video_widget_update')
-        if not valid_format:
-            return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
-        try:
-            widget_video = WidgetVideoService().update_video(widget_id, request_json)
-            return WidgetVideoSchema().dump(widget_video), HTTPStatus.OK
-        except BusinessException as err:
-            return str(err), err.status_code
 
 @cors_preflight('PATCH')
 @API.route('/<int:video_widget_id>')
