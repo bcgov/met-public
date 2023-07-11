@@ -1,7 +1,4 @@
 """Service for Widget Video management."""
-from http import HTTPStatus
-
-from met_api.exceptions.business_exception import BusinessException
 from met_api.models.widget_video import WidgetVideo as WidgetVideoModel
 
 
@@ -23,14 +20,16 @@ class WidgetVideoService:
         return widget_video
 
     @staticmethod
-    def update_video(widget_id, request_json):
+    def update_video(widget_id, video_widget_id, video_data):
         """Update video widget."""
-        widget_video: WidgetVideoModel = WidgetVideoModel.get_video(widget_id)
+        widget_video: WidgetVideoModel = WidgetVideoModel.find_by_id(video_widget_id)
+        if not widget_video:
+            raise KeyError('Video widget not found')
+
         if widget_video.widget_id != widget_id:
-            raise BusinessException(
-                error='Invalid widgets and video',
-                status_code=HTTPStatus.BAD_REQUEST)
-        return WidgetVideoModel.update_video(widget_id, request_json)
+            raise ValueError('Invalid widgets and video')
+
+        return WidgetVideoModel.update_video(widget_video.id, video_data)
 
     @staticmethod
     def _create_video_model(widget_id, video_data: dict):

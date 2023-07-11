@@ -17,7 +17,7 @@ class WidgetVideo(BaseModel):  # pylint: disable=too-few-public-methods, too-man
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     widget_id = db.Column(db.Integer, ForeignKey('widget.id', ondelete='CASCADE'), nullable=True)
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), nullable=True)
-    video_url = db.Column(db.String(), nullable=False)
+    video_url = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text())
 
     @classmethod
@@ -25,16 +25,15 @@ class WidgetVideo(BaseModel):  # pylint: disable=too-few-public-methods, too-man
         """Get video."""
         widget_video = db.session.query(WidgetVideo) \
             .filter(WidgetVideo.widget_id == widget_id) \
-            .first()
+            .all()
         return widget_video
 
     @classmethod
-    def update_video(cls, widget_id, video_data: dict) -> WidgetVideo:
+    def update_video(cls, video_widget_id, video_data: dict) -> WidgetVideo:
         """Update video."""
-        query = WidgetVideo.query.filter_by(WidgetVideo.widget_id == widget_id)
-        widget_video: WidgetVideo = query.first()
-        if not widget_video:
-            return video_data
-        query.update(video_data)
-        db.session.commit()
+        widget_video: WidgetVideo = WidgetVideo.query.get(video_widget_id)
+        if widget_video:
+            for key, value in video_data.items():
+                setattr(widget_video, key, value)
+            widget_video.save()
         return widget_video

@@ -12,7 +12,7 @@ import { WidgetTabValues } from '../type';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
 
-const MapOptionCard = () => {
+const VideoOptionCard = () => {
     const { widgets, loadWidgets, handleWidgetDrawerOpen, handleWidgetDrawerTabValueChange } =
         useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
@@ -32,7 +32,7 @@ const MapOptionCard = () => {
             await createWidget({
                 widget_type_id: WidgetType.Video,
                 engagement_id: savedEngagement.id,
-            });
+            }).unwrap();
             await loadWidgets();
             dispatch(
                 openNotification({
@@ -44,7 +44,7 @@ const MapOptionCard = () => {
             handleWidgetDrawerTabValueChange(WidgetTabValues.VIDEO_FORM);
         } catch (error) {
             setIsCreatingWidget(false);
-            dispatch(openNotification({ severity: 'error', text: 'Error occurred while creating map widget' }));
+            dispatch(openNotification({ severity: 'error', text: 'Error occurred while creating video widget' }));
             handleWidgetDrawerOpen(false);
         }
     };
@@ -90,4 +90,4 @@ const MapOptionCard = () => {
     );
 };
 
-export default MapOptionCard;
+export default VideoOptionCard;

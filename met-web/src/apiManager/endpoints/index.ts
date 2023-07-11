@@ -105,6 +105,11 @@ const Endpoints = {
         CREATE: `${AppConfig.apiUrl}/widgets/widget_id/maps`,
         SHAPEFILE_PREVIEW: `${AppConfig.apiUrl}/shapefile`,
     },
+    VideoWidgets: {
+        GET: `${AppConfig.apiUrl}/widgets/widget_id/videos`,
+        CREATE: `${AppConfig.apiUrl}/widgets/widget_id/videos`,
+        UPDATE: `${AppConfig.apiUrl}/widgets/widget_id/videos/video_widget_id`,
+    },
     Tenants: {
         GET: `${AppConfig.apiUrl}/tenants/tenant_id`,
     },
