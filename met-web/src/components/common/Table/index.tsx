@@ -66,7 +66,7 @@ function MetTableHead<T>({ order, orderBy, onRequestSort, headCells, loading, ne
     );
 }
 
-interface MetTableProps<T> {
+export interface MetTableProps<T> {
     headCells: HeadCell<T>[];
     rows: T[];
     hideHeader?: boolean;
@@ -87,7 +87,7 @@ function MetTable<T>({
     noPagination = false,
     commentTable = false,
     // eslint-disable-next-line
-    handleChangePagination = (_pagination: PaginationOptions<T>) => { },
+    handleChangePagination = (_pagination: PaginationOptions<T>) => {},
     loading = false,
     paginationOptions = {
         page: 1,

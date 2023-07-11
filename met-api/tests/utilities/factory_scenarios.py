@@ -28,6 +28,7 @@ from met_api.constants.feedback import CommentType, FeedbackSourceType, RatingTy
 from met_api.constants.widget import WidgetType
 from met_api.utils.enums import LoginSource
 
+
 fake = Faker()
 
 CONFIG = get_named_config('testing')
@@ -525,4 +526,22 @@ class TestEngagementSlugInfo(dict, Enum):
         'engagement_id': 1,
         'slug': fake.text(max_nb_chars=20),
         'created_date': datetime.now().strftime('%Y-%m-%d'),
+    }
+
+
+class TestReportSettingInfo(dict, Enum):
+    """Test scenarios of feedback."""
+
+    report_setting_1 = {
+        'created_by': str(fake.pyint()),
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'display': True,
+        'id': 1,
+        'question': 'What is your opinion about this?',
+        'question_id': str(fake.pyint()),
+        'question_key': 'simpletextarea',
+        'question_type': 'simpletextarea',
+        'survey_id': 1,
+        'updated_by': str(fake.pyint()),
+        'updated_date': datetime.now().strftime('%Y-%m-%d')
     }
