@@ -304,15 +304,15 @@ def factory_engagement_slug_model(eng_slug_info: dict = TestEngagementSlugInfo.s
     return slug
 
 
-def factory_survey_report_setting_model(eng_slug_info: dict = TestReportSettingInfo.report_setting_1):
+def factory_survey_report_setting_model(report_setting_info: dict = TestReportSettingInfo.report_setting_1):
     """Produce a engagement model."""
     setting = ReportSettingModel(
-        survey_id=eng_slug_info.get('survey_id'),
-        question_id=eng_slug_info.get('question_id'),
-        question_key=eng_slug_info.get('question_key'),
-        question_type=eng_slug_info.get('question_type'),
-        question=eng_slug_info.get('question'),
-        display=eng_slug_info.get('display'),
+        survey_id=report_setting_info.get('survey_id'),
+        question_id=report_setting_info.get('question_id'),
+        question_key=report_setting_info.get('question_key'),
+        question_type=report_setting_info.get('question_type'),
+        question=report_setting_info.get('question'),
+        display=report_setting_info.get('display'),
     )
     setting.save()
     return setting

@@ -21,7 +21,7 @@ from tests.utilities.factory_utils import factory_survey_and_eng_model
 
 
 def test_refresh_report_setting(session):  # pylint:disable=unused-argument
-    """Assert that an Org can be created."""
+    """Assert report settings are refreshed."""
     survey, _ = factory_survey_and_eng_model(TestSurveyInfo.survey3)
     survey_data = {
         'id': survey.id,
