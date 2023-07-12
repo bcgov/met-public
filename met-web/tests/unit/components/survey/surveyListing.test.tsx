@@ -1,8 +1,8 @@
 import React, { ReactNode } from 'react';
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import SurveyListing from '../../../src/components/survey/listing';
-import { setupEnv } from './setEnvVars';
+import SurveyListing from '../../../../src/components/survey/listing';
+import { setupEnv } from '../setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as surveyService from 'services/surveyService';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
