@@ -9,8 +9,8 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { optionCardStyle } from '../Phases/PhasesOptionCard';
 import { WidgetTabValues } from '../type';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
+import MovieIcon from '@mui/icons-material/Movie';
 
 const VideoOptionCard = () => {
     const { widgets, loadWidgets, handleWidgetDrawerOpen, handleWidgetDrawerTabValueChange } =
@@ -65,7 +65,7 @@ const VideoOptionCard = () => {
                 <Else>
                     <Grid container alignItems="center" justifyContent="flex-start" direction="row" columnSpacing={1}>
                         <Grid item sx={{ mr: 0.5 }}>
-                            <LocationOnIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
+                            <MovieIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
                         </Grid>
                         <Grid
                             container
