@@ -102,6 +102,14 @@ export const ActionsDropDown = ({ survey }: { survey: Survey }) => {
                 },
                 condition: canViewAllComments(),
             },
+            {
+                value: 4,
+                label: 'Edit Settings',
+                action: () => {
+                    navigate(`/surveys/${survey.id}/report`);
+                },
+                condition: canEditSurvey(),
+            },
         ],
         [engagementId],
     );

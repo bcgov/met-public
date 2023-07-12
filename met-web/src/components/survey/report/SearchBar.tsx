@@ -24,7 +24,7 @@ const SearchBar = () => {
                     size="small"
                 />
                 <PrimaryButton
-                    data-testid="survey/listing/search-button"
+                    data-testid="survey/report/search-button"
                     onClick={() => {
                         setSearchFilter({
                             ...searchFilter,

@@ -46,6 +46,7 @@ const SettingsTable = () => {
             allowSort: true,
             renderCell: (row: SurveyReportSetting) => (
                 <Checkbox
+                    data-testid={`checkbox-${row.id}`}
                     checked={displayedMap[row.id]}
                     onClick={() => {
                         setDisplayedMap({
