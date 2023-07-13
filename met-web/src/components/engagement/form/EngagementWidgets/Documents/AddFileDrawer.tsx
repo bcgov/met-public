@@ -24,9 +24,9 @@ const schema = yup
     })
     .required();
 
-type FileForm = yup.TypeOf<typeof schema>;
+type AddFileForm = yup.TypeOf<typeof schema>;
 
-const FileDrawer = () => {
+const AddFileDrawer = () => {
     const dispatch = useAppDispatch();
     const { documentToEdit, documents, loadDocuments, handleFileDrawerOpen, fileDrawerOpen, widget } =
         useContext(DocumentsContext);
@@ -34,7 +34,7 @@ const FileDrawer = () => {
     const parentDocument = documents.find(
         (document: DocumentItem) => document.id === documentToEdit?.parent_document_id,
     );
-    const methods = useForm<FileForm>({
+    const methods = useForm<AddFileForm>({
         resolver: yupResolver(schema),
         defaultValues: {
             name: '',
@@ -56,7 +56,7 @@ const FileDrawer = () => {
         handleFileDrawerOpen(false);
     };
 
-    const updateDocument = async (data: FileForm) => {
+    const updateDocument = async (data: AddFileForm) => {
         if (!(documentToEdit && widget)) {
             return;
         }
@@ -80,7 +80,7 @@ const FileDrawer = () => {
         handleClose();
     };
 
-    const createDocument = async (data: FileForm) => {
+    const createDocument = async (data: AddFileForm) => {
         if (!widget) {
             return;
         }
@@ -103,14 +103,14 @@ const FileDrawer = () => {
         handleClose();
     };
 
-    const saveDocument = async (data: FileForm) => {
+    const saveDocument = async (data: AddFileForm) => {
         if (documentToEdit) {
             return await updateDocument(data);
         }
         return await createDocument(data);
     };
 
-    const onSubmit: SubmitHandler<FileForm> = async (data: FileForm) => {
+    const onSubmit: SubmitHandler<AddFileForm> = async (data: AddFileForm) => {
         if (!widget) {
             return;
         }
@@ -242,4 +242,4 @@ const FileDrawer = () => {
     );
 };
 
-export default FileDrawer;
+export default AddFileDrawer;

@@ -1,13 +1,13 @@
 import React from 'react';
 import { DocumentsProvider } from './DocumentsContext';
 import DocumentForm from './DocumentForm';
-import FileDrawer from './FileDrawer';
+import AddFileDrawer from './AddFileDrawer';
 
 export const Documents = () => {
     return (
         <DocumentsProvider>
             <DocumentForm />
-            <FileDrawer />
+            <AddFileDrawer />
         </DocumentsProvider>
     );
 };
