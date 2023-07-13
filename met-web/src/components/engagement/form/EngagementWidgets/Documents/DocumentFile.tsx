@@ -22,13 +22,13 @@ const DocumentFile = ({
     draggableProvided: DraggableProvided;
 }) => {
     const dispatch = useAppDispatch();
-    const { handleFileDrawerOpen, handleChangeDocumentToEdit, loadDocuments } = useContext(DocumentsContext);
+    const { handleAddFileDrawerOpen, handleChangeDocumentToEdit, loadDocuments } = useContext(DocumentsContext);
     const { widgets } = useContext(WidgetDrawerContext);
     const documentWidget = widgets.find((widget: Widget) => widget.widget_type_id === WidgetType.Document);
 
     const handleEditDocument = () => {
         handleChangeDocumentToEdit(documentItem);
-        handleFileDrawerOpen(true);
+        handleAddFileDrawerOpen(true);
     };
 
     const handleDeleteDocument = async () => {

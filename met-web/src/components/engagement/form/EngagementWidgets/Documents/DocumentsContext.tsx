@@ -12,8 +12,8 @@ export interface DocumentsContextProps {
     loadingDocuments: boolean;
     documents: DocumentItem[];
     loadDocuments: () => Promise<DocumentItem[] | undefined>;
-    fileDrawerOpen: boolean;
-    handleFileDrawerOpen: (_open: boolean) => void;
+    addFileDrawerOpen: boolean;
+    handleAddFileDrawerOpen: (_open: boolean) => void;
     widget: Widget | null;
     handleChangeDocumentToEdit: (_document: DocumentItem | null) => void;
     setDocuments: React.Dispatch<React.SetStateAction<DocumentItem[]>>;
@@ -28,8 +28,8 @@ export const DocumentsContext = createContext<DocumentsContextProps>({
     loadingDocuments: false,
     documents: [],
     loadDocuments: () => Promise.resolve([]),
-    fileDrawerOpen: false,
-    handleFileDrawerOpen: (_open: boolean) => {
+    addFileDrawerOpen: false,
+    handleAddFileDrawerOpen: (_open: boolean) => {
         /* empty default method  */
     },
     handleChangeDocumentToEdit: () => {
@@ -48,7 +48,7 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
     const [documentToEdit, setDocumentToEdit] = useState<DocumentItem | null>(null);
     const [documents, setDocuments] = useState<DocumentItem[]>([]);
     const [loadingDocuments, setLoadingDocuments] = useState(true);
-    const [fileDrawerOpen, setDrawerFileOpen] = useState(false);
+    const [addFileDrawerOpen, setAddDrawerFileOpen] = useState(false);
 
     const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Document) || null;
 
@@ -76,8 +76,8 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
         setDocumentToEdit(document);
     };
 
-    const handleFileDrawerOpen = (open: boolean) => {
-        setDrawerFileOpen(open);
+    const handleAddFileDrawerOpen = (open: boolean) => {
+        setAddDrawerFileOpen(open);
         if (!open && documentToEdit) {
             setDocumentToEdit(null);
         }
@@ -95,8 +95,8 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
                 documents,
                 setDocuments,
                 loadDocuments,
-                fileDrawerOpen,
-                handleFileDrawerOpen,
+                addFileDrawerOpen,
+                handleAddFileDrawerOpen,
                 widget,
             }}
         >

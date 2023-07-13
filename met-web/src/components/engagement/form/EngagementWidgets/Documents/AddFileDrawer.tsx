@@ -28,7 +28,7 @@ type AddFileForm = yup.TypeOf<typeof schema>;
 
 const AddFileDrawer = () => {
     const dispatch = useAppDispatch();
-    const { documentToEdit, documents, loadDocuments, handleFileDrawerOpen, fileDrawerOpen, widget } =
+    const { documentToEdit, documents, loadDocuments, handleAddFileDrawerOpen, addFileDrawerOpen, widget } =
         useContext(DocumentsContext);
     const [isCreatingFile, setIsCreatingDocument] = useState(false);
     const parentDocument = documents.find(
@@ -53,7 +53,7 @@ const AddFileDrawer = () => {
 
     const handleClose = () => {
         reset();
-        handleFileDrawerOpen(false);
+        handleAddFileDrawerOpen(false);
     };
 
     const updateDocument = async (data: AddFileForm) => {
@@ -125,9 +125,9 @@ const AddFileDrawer = () => {
     return (
         <Drawer
             anchor="right"
-            open={fileDrawerOpen}
+            open={addFileDrawerOpen}
             onClose={() => {
-                handleFileDrawerOpen(false);
+                handleAddFileDrawerOpen(false);
             }}
         >
             <Box sx={{ width: '40vw', paddingTop: '7em' }} role="presentation">
