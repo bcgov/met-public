@@ -64,7 +64,7 @@ class ReportSetting(BaseModel):  # pylint: disable=too-few-public-methods
         else:
             session.add_all(new_report_setting)
         return new_report_setting
-    
+
     @classmethod
     def delete_report_settings(cls, survey_id, question_keys: list) -> ReportSetting:
         """Delete report setting by survey id and question key."""
