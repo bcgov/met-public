@@ -15,7 +15,7 @@ import ControlledSelect from 'components/common/ControlledInputComponents/Contro
 import { postDocument } from 'services/widgetService/DocumentService';
 import { DOCUMENT_TYPE, DocumentItem } from 'models/document';
 import { saveDocument } from 'services/objectStorageService';
-import FileUpload from 'components/common/FileUploadTwo/FileUpload';
+import FileUpload from 'components/common/FileUpload';
 import { If, Then, Else } from 'react-if';
 
 const schema = yup

@@ -19,7 +19,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { MapContext } from './MapContext';
 import { postMap, previewShapeFile } from 'services/widgetService/MapService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
-import FileUpload from 'components/common/FileUpload/FileUpload';
+import FileUpload from 'components/engagement/form/EngagementWidgets/Map/ShapeFileUpload/FileUpload';
 import { geoJSONDecode } from './utils';
 import { GeoJSON } from 'geojson';
 import LinkIcon from '@mui/icons-material/Link';
