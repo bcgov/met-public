@@ -21,7 +21,6 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
         try {
             const videos = await fetchVideoWidgets(widget.id);
             const video = videos[videos.length - 1];
-            console.log(video);
             setVideoWidget(video);
             setIsLoading(false);
         } catch (error) {
