@@ -43,9 +43,9 @@ const DocumentFile = ({
         <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={2} mb={2}>
             <MetWidgetPaper elevation={1} sx={{ width: '100%' }}>
                 <Grid container direction="row" alignItems={'center'} justifyContent="flex-start">
-                    <Grid item xs={2} sx={{ alignItems: 'center', justifyContent: 'center' }}>
+                    <Grid item sx={{ alignItems: 'center', justifyContent: 'center' }}>
                         <IconButton
-                            sx={{ margin: 0, padding: 0 }}
+                            sx={{ margin: '0 0.5em 0 0', padding: 0 }}
                             color="inherit"
                             aria-label="drag-indicator"
                             {...draggableProvided.dragHandleProps}

@@ -5,7 +5,8 @@ import { ActionContext } from '../../ActionContext';
 import { DocumentItem } from 'models/document';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { Widget, WidgetType } from 'models/widget';
-import { fetchDocuments } from 'services/widgetService/DocumentService';
+import { fetchDocuments, postDocument } from 'services/widgetService/DocumentService';
+import { saveDocument } from 'services/objectStorageService';
 
 export interface DocumentsContextProps {
     documentToEdit: DocumentItem | null;
@@ -17,6 +18,8 @@ export interface DocumentsContextProps {
     widget: Widget | null;
     handleChangeDocumentToEdit: (_document: DocumentItem | null) => void;
     setDocuments: React.Dispatch<React.SetStateAction<DocumentItem[]>>;
+    uploadFileDrawerOpen: boolean;
+    setUploadFileDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export type EngagementParams = {
@@ -39,6 +42,10 @@ export const DocumentsContext = createContext<DocumentsContextProps>({
     setDocuments: () => {
         throw new Error('setDocuments() not implemented');
     },
+    uploadFileDrawerOpen: false,
+    setUploadFileDrawerOpen: () => {
+        throw new Error('setUploadFileDrawerOpen not implemented');
+    },
 });
 
 export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -49,6 +56,7 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
     const [documents, setDocuments] = useState<DocumentItem[]>([]);
     const [loadingDocuments, setLoadingDocuments] = useState(true);
     const [addFileDrawerOpen, setAddDrawerFileOpen] = useState(false);
+    const [uploadFileDrawerOpen, setUploadFileDrawerOpen] = useState(false);
 
     const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Document) || null;
 
@@ -86,6 +94,7 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
     useEffect(() => {
         loadDocuments();
     }, [savedEngagement, widget]);
+
     return (
         <DocumentsContext.Provider
             value={{
@@ -98,6 +107,8 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
                 addFileDrawerOpen,
                 handleAddFileDrawerOpen,
                 widget,
+                uploadFileDrawerOpen,
+                setUploadFileDrawerOpen,
             }}
         >
             {children}
