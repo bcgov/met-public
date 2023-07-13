@@ -34,7 +34,7 @@ class RequestTypeOption(BaseModel, RequestMixin):  # pylint: disable=too-few-pub
                            .filter(and_(RequestTypeOption.survey_id.in_(analytics_survey_id),
                                         RequestTypeOption.is_active == true(),
                                         or_(RequestTypeOption.display == true(),
-                                            RequestTypeOption.display is None)))
+                                            RequestTypeOption.display.is_(None))))
                            .order_by(RequestTypeOption.position)
                            .subquery())
 
