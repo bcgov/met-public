@@ -2,7 +2,7 @@
 
 Manages the option type questions (radio/checkbox) on a survey
 """
-from sqlalchemy import func, and_, or_
+from sqlalchemy import and_, func, or_
 from sqlalchemy.sql.expression import true
 from analytics_api.models.survey import Survey as SurveyModel
 from analytics_api.models.response_type_option import ResponseTypeOption as ResponseTypeOptionModel
@@ -34,7 +34,7 @@ class RequestTypeOption(BaseModel, RequestMixin):  # pylint: disable=too-few-pub
                            .filter(and_(RequestTypeOption.survey_id.in_(analytics_survey_id),
                                         RequestTypeOption.is_active == true(),
                                         or_(RequestTypeOption.display == true(),
-                                            RequestTypeOption.display == None)))
+                                            RequestTypeOption.display is None)))
                            .order_by(RequestTypeOption.position)
                            .subquery())
 

@@ -134,7 +134,7 @@ class ReportSettingService:
         report_settings = cls.get_report_setting(survey_id)
 
         report_setting_keys_to_delete = [report_setting['question_key'] for report_setting in report_settings
-                                        if report_setting['question_key'] not in survey_question_keys]
+                                         if report_setting['question_key'] not in survey_question_keys]
         if len(report_setting_keys_to_delete) > 0:
             ReportSettingModel.delete_report_settings(survey_id, report_setting_keys_to_delete)
 
@@ -150,7 +150,7 @@ class ReportSettingService:
         report_settings_update_mapping = [{
             'id': setting.get('id', None),
             'display': setting.get('display', None)
-        } for setting in new_report_settings]            
+        } for setting in new_report_settings]
 
         updated_report_settings = ReportSettingModel.update_report_settings_bulk(report_settings_update_mapping)
         return updated_report_settings
