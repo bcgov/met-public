@@ -90,6 +90,19 @@ export const WidgetCardSwitch = ({ widget, removeWidget }: WidgetCardSwitchProps
                         }}
                     />
                 </Case>
+                <Case condition={widget.widget_type_id === WidgetType.Video}>
+                    <MetWidget
+                        testId={`event-${widget.widget_type_id}`}
+                        title="Video"
+                        onDelete={() => {
+                            removeWidget(widget.id);
+                        }}
+                        onEdit={() => {
+                            handleWidgetDrawerTabValueChange(WidgetTabValues.VIDEO_FORM);
+                            handleWidgetDrawerOpen(true);
+                        }}
+                    />
+                </Case>
             </Switch>
         </>
     );

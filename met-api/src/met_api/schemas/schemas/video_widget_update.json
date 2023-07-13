@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://met.gov.bc.ca/.well_known/schemas/video_widget_update",
+  "type": "object",
+  "title": "The root schema",
+  "description": "The root schema comprises the entire JSON document.",
+  "default": {},
+  "examples": [
+    {
+      "description": "A video widget description",
+      "video_url": "https://www.youtube.com"
+    }
+  ],
+  "required": [],
+  "properties": {
+    "description": {
+      "$id": "#/properties/description",
+      "type": "string",
+      "title": "Video description",
+      "description": "The description of this video.",
+      "examples": ["A video widget description"]
+    },
+    "video_url": {
+      "$id": "#/properties/video_url",
+      "type": "string",
+      "title": "Video url",
+      "description": "The url link to this video.",
+      "examples": ["https://www.youtube.com"]
+    }
+  }
+}

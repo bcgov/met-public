@@ -9,6 +9,7 @@ import Documents from './Documents';
 import Phases from './Phases';
 import EventsForm from './Events';
 import MapForm from './Map';
+import VideoForm from './Video';
 
 const WidgetDrawerTabs = () => {
     const { widgetDrawerTabValue } = useContext(WidgetDrawerContext);
@@ -32,6 +33,9 @@ const WidgetDrawerTabs = () => {
                 </TabPanel>
                 <TabPanel sx={{ width: '100%' }} value={WidgetTabValues.MAP_FORM}>
                     <MapForm />
+                </TabPanel>
+                <TabPanel sx={{ width: '100%' }} value={WidgetTabValues.VIDEO_FORM}>
+                    <VideoForm />
                 </TabPanel>
             </TabContext>
         </>

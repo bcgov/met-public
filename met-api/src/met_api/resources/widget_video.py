@@ -11,38 +11,38 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""API endpoints for managing map resource."""
-import json
+"""API endpoints for managing a video widget resource."""
 from http import HTTPStatus
 
-from flask import jsonify, request
+from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
 from met_api.auth import jwt as _jwt
 from met_api.exceptions.business_exception import BusinessException
-from met_api.schemas.widget_map import WidgetMapSchema
-from met_api.services.widget_map_service import WidgetMapService
+from met_api.schemas import utils as schema_utils
+from met_api.schemas.widget_video import WidgetVideoSchema
+from met_api.services.widget_video_service import WidgetVideoService
 from met_api.utils.roles import Role
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
-API = Namespace('widget_maps', description='Endpoints for Map Widget Management')
-"""Widget Maps"""
+API = Namespace('widget_videos', description='Endpoints for Video Widget Management')
+"""Widget Videos"""
 
 
 @cors_preflight('GET, POST, PATCH, OPTIONS')
 @API.route('')
-class Map(Resource):
-    """Resource for managing map widgets."""
+class Videos(Resource):
+    """Resource for managing video widgets."""
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
     def get(widget_id):
-        """Get map widget."""
+        """Get video widget."""
         try:
-            widget_map = WidgetMapService().get_map(widget_id)
-            return jsonify(WidgetMapSchema().dump(widget_map, many=True)), HTTPStatus.OK
+            widget_video = WidgetVideoService().get_video(widget_id)
+            return WidgetVideoSchema().dump(widget_video, many=True), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
 
@@ -50,25 +50,31 @@ class Map(Resource):
     @cross_origin(origins=allowedorigins())
     @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
     def post(widget_id):
-        """Create map widget."""
+        """Create video widget."""
         try:
-            file = request.files.get('file')
-            request_json = request.form or request.form.get('data')
-            widget_map = WidgetMapService().create_map(widget_id, request_json, file)
-            if widget_map.geojson:
-                widget_map.geojson = json.loads(widget_map.geojson)
-            return WidgetMapSchema().dump(widget_map), HTTPStatus.OK
+            request_json = request.get_json()
+            widget_video = WidgetVideoService().create_video(widget_id, request_json)
+            return WidgetVideoSchema().dump(widget_video), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
+
+
+@cors_preflight('PATCH')
+@API.route('/<int:video_widget_id>')
+class Video(Resource):
+    """Resource for managing video widgets."""
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
-    def patch(widget_id):
-        """Update map widget."""
+    def patch(widget_id, video_widget_id):
+        """Update video widget."""
         request_json = request.get_json()
+        valid_format, errors = schema_utils.validate(request_json, 'video_widget_update')
+        if not valid_format:
+            return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
         try:
-            widget_map = WidgetMapService().update_map(widget_id, request_json)
-            return WidgetMapSchema().dump(widget_map), HTTPStatus.OK
+            widget_video = WidgetVideoService().update_video(widget_id, video_widget_id, request_json)
+            return WidgetVideoSchema().dump(widget_video), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
