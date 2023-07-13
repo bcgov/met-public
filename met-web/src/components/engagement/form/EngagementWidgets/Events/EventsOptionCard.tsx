@@ -21,7 +21,7 @@ const EventsOptionCard = () => {
     const [isCreatingWidget, setIsCreatingWidget] = useState(false);
 
     const handleCreateWidget = async () => {
-        const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Events);
+        const alreadyExists = widgets.some((widget) => widget.widget_type_id === WidgetType.Events);
         if (alreadyExists) {
             handleWidgetDrawerTabValueChange(WidgetTabValues.EVENTS_FORM);
             return;

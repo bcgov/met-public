@@ -21,7 +21,7 @@ const VideoOptionCard = () => {
     const [isCreatingWidget, setIsCreatingWidget] = useState(false);
 
     const handleCreateWidget = async () => {
-        const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Video);
+        const alreadyExists = widgets.some((widget) => widget.widget_type_id === WidgetType.Video);
         if (alreadyExists) {
             handleWidgetDrawerTabValueChange(WidgetTabValues.VIDEO_FORM);
             return;

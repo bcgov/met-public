@@ -19,7 +19,7 @@ const SubscribeOptionCard = () => {
     const [isCreatingWidget, setIsCreatingWidget] = useState(false);
 
     const handleCreateWidget = async () => {
-        const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Subscribe);
+        const alreadyExists = widgets.some((widget) => widget.widget_type_id === WidgetType.Subscribe);
         if (alreadyExists) {
             return;
         }
