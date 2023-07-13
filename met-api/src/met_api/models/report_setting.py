@@ -64,12 +64,21 @@ class ReportSetting(BaseModel):  # pylint: disable=too-few-public-methods
         else:
             session.add_all(new_report_setting)
         return new_report_setting
+    
+    @classmethod
+    def delete_report_settings(cls, survey_id, question_keys: list) -> ReportSetting:
+        """Delete report setting by survey id and question key."""
+        db.session\
+            .query(ReportSetting)\
+            .filter(ReportSetting.survey_id == survey_id,
+                    ReportSetting.question_key.in_(question_keys))\
+            .delete(synchronize_session='fetch')
+        db.session.commit()
+        return survey_id, question_keys
 
     @classmethod
-    def delete_report_settings(cls, survey_id, question_key):
-        """Delete report setting by survey id and question key."""
-        db.session.query(ReportSetting).filter(ReportSetting.survey_id == survey_id,
-                                               ReportSetting.question_key == question_key).delete()
+    def update_report_settings_bulk(cls, report_settings: list) -> list[ReportSetting]:
+        """Save report settings."""
+        db.session.bulk_update_mappings(ReportSetting, report_settings)
         db.session.commit()
-
-        return survey_id, question_key
+        return report_settings

@@ -132,9 +132,13 @@ class ReportSettingService:
         # Loop through the data from report setting and delete any record which does not exist on
         # survey form. This will happen if a existing survey question is deleted from the survey
         report_settings = cls.get_report_setting(survey_id)
-        for report_setting in report_settings:
-            if report_setting['question_key'] not in survey_question_keys:
-                ReportSettingModel.delete_report_settings(survey_id, report_setting['question_key'])
+
+        report_setting_keys_to_delete = [report_setting['question_key'] for report_setting in report_settings
+                                        if report_setting['question_key'] not in survey_question_keys]
+        if len(report_setting_keys_to_delete) > 0:
+            ReportSettingModel.delete_report_settings(survey_id, report_setting_keys_to_delete)
+
+        return report_setting_keys_to_delete
 
     @classmethod
     def update_report_setting(cls, survey_id, new_report_settings):
@@ -142,15 +146,11 @@ class ReportSettingService:
         survey = SurveyModel.find_by_id(survey_id)
         if not survey:
             raise KeyError(f'No survey found for {survey_id}')
-        for setting in new_report_settings:
-            report_setting_id = setting.get('id', None)
-            report_setting = ReportSettingModel.find_by_id(report_setting_id)
-            if not report_setting:
-                raise ValueError(f'No report setting found for {report_setting_id}')
-            if report_setting.survey_id != survey_id:
-                raise KeyError(f'Report setting {report_setting.id} does not belong to survey {survey_id}')
 
-            report_setting.display = setting.get('display', None)
-            report_setting.save()
+        report_settings_update_mapping = [{
+            'id': setting.get('id', None),
+            'display': setting.get('display', None)
+        } for setting in new_report_settings]            
 
-        return new_report_settings
+        updated_report_settings = ReportSettingModel.update_report_settings_bulk(report_settings_update_mapping)
+        return updated_report_settings
