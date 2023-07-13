@@ -20,7 +20,7 @@ const WhoIsListeningOptionCard = () => {
     const [isCreatingWidget, setIsCreatingWidget] = useState(false);
 
     const handleCreateWidget = async () => {
-        const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.WhoIsListening);
+        const alreadyExists = widgets.some((widget) => widget.widget_type_id === WidgetType.WhoIsListening);
         if (alreadyExists) {
             handleWidgetDrawerTabValueChange(WidgetTabValues.WHO_IS_LISTENING_FORM);
             return;

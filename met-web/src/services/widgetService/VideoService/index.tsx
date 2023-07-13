@@ -24,10 +24,7 @@ export const postVideo = async (widget_id: number, data: PostVideoRequest): Prom
     try {
         const url = replaceUrl(Endpoints.VideoWidgets.CREATE, 'widget_id', String(widget_id));
         const response = await http.PostRequest<VideoWidget>(url, data);
-        if (response.data) {
-            return response.data;
-        }
-        return Promise.reject('Failed to create video widget');
+        return response.data || Promise.reject('Failed to create video widget');
     } catch (err) {
         return Promise.reject(err);
     }
@@ -52,10 +49,7 @@ export const patchVideo = async (
             },
         });
         const response = await http.PatchRequest<VideoWidget>(url, data);
-        if (response.data) {
-            return response.data;
-        }
-        return Promise.reject('Failed to create video widget');
+        return response.data || Promise.reject('Failed to create video widget');
     } catch (err) {
         return Promise.reject(err);
     }
