@@ -201,6 +201,7 @@ objects:
       app-group: met-app
     name: ${APP}
   data:
+    ACCESS_REQUEST_EMAIL_ADDRESS: ${ACCESS_REQUEST_EMAIL_ADDRESS}
     NOTIFICATIONS_EMAIL_ENDPOINT: ${NOTIFICATIONS_EMAIL_ENDPOINT}    
     SITE_URL: ${SITE_URL}
     VERIFICATION_EMAIL_TEMPLATE_ID: ${VERIFICATION_EMAIL_TEMPLATE_ID}
@@ -255,6 +256,10 @@ parameters:
     description: "The email notification endpoint"
     required: true
     value: 'https://met-notify-api-dev.apps.gold.devops.gov.bc.ca/api/v1/notifications/email'
+  - name: ACCESS_REQUEST_EMAIL_ADDRESS
+    description: "The access request email address"
+    required: true
+    value: vineet.balachandran@gov.bc.ca
   - name: VERIFICATION_EMAIL_TEMPLATE_ID
     description: "The email verification template id"
     required: true
