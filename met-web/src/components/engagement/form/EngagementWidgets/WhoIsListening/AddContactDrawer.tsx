@@ -14,7 +14,7 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { updatedDiff } from 'deep-object-diff';
 import { WhoIsListeningContext } from './WhoIsListeningContext';
-import { saveDocument } from 'services/objectStorageService';
+import { saveObject } from 'services/objectStorageService';
 import { Contact } from 'models/contact';
 
 const schema = yup
@@ -66,7 +66,7 @@ const AddContactDrawer = () => {
             return avatarFileName;
         }
         try {
-            const savedDocumentDetails = await saveDocument(avatarImage, { filename: avatarImage.name });
+            const savedDocumentDetails = await saveObject(avatarImage, { filename: avatarImage.name });
             return savedDocumentDetails?.uniquefilename || '';
         } catch (error) {
             console.log(error);

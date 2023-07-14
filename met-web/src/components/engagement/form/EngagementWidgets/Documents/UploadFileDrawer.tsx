@@ -14,7 +14,7 @@ import { DocumentsContext } from './DocumentsContext';
 import ControlledSelect from 'components/common/ControlledInputComponents/ControlledSelect';
 import { postDocument } from 'services/widgetService/DocumentService';
 import { DOCUMENT_TYPE, DocumentItem } from 'models/document';
-import { saveDocument } from 'services/objectStorageService';
+import { saveObject } from 'services/objectStorageService';
 import FileUpload from 'components/common/FileUpload';
 import { If, Then, Else } from 'react-if';
 
@@ -64,7 +64,7 @@ const UploadFileDrawer = () => {
             return Promise.reject('No file to upload');
         }
         const fileExtension = fileToUpload.name.split('.').pop();
-        const savedDocumentDetails = await saveDocument(fileToUpload, {
+        const savedDocumentDetails = await saveObject(fileToUpload, {
             filename: `${fileName}.${fileExtension}`,
         });
         return savedDocumentDetails;
