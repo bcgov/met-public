@@ -70,7 +70,7 @@ const CreateFolderForm = () => {
                     <WidgetButton onClick={() => setCreateFolderMode(true)}>Create Folder</WidgetButton>
                 </Grid>
                 <Grid item>
-                    <WidgetButton onClick={() => handleAddFileDrawerOpen(true)}>Add Document</WidgetButton>
+                    <WidgetButton onClick={() => handleAddFileDrawerOpen(true)}>Add Document Link</WidgetButton>
                 </Grid>
                 <Grid item>
                     <WidgetButton onClick={() => setUploadFileDrawerOpen(true)}>Upload Document</WidgetButton>

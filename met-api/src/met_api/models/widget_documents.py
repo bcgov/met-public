@@ -40,12 +40,12 @@ class WidgetDocuments(BaseModel):  # pylint: disable=too-few-public-methods
         """Update document."""
         widget_document_query = db.session.query(WidgetDocuments) \
             .filter(WidgetDocuments.widget_id == widget_id, WidgetDocuments.id == document_id)
-        widget_documents: WidgetDocuments = widget_document_query.first()
-        if not widget_documents:
+        widget_document: WidgetDocuments = widget_document_query.first()
+        if not widget_document:
             return None
         widget_document_query.update(widget_document_data)
         db.session.commit()
-        return widget_documents
+        return widget_document
 
     @classmethod
     def remove_widget_document(cls, widget_id, document_id) -> List[WidgetDocuments]:

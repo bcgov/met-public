@@ -106,11 +106,16 @@ class WidgetDocumentService:
     @staticmethod
     def edit_document(widget_id, document_id, data: dict):
         """Update document from a document widget."""
-        updated_document = WidgetDocumentsModel.edit_widget_document(widget_id, document_id, data)
-        if not updated_document:
+        document = WidgetDocumentsModel.find_by_id(document_id)
+        if not document:
             raise BusinessException(
                 error='Document to update was not found.',
                 status_code=HTTPStatus.BAD_REQUEST)
+        update_data = {
+            **data,
+            'url': data.get('url', document.url) if not document.is_uploaded else document.url,
+        }
+        updated_document = WidgetDocumentsModel.edit_widget_document(widget_id, document_id, update_data)
         return updated_document
 
     @staticmethod
