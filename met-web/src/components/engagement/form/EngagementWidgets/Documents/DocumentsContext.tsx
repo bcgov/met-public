@@ -5,8 +5,7 @@ import { ActionContext } from '../../ActionContext';
 import { DocumentItem } from 'models/document';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { Widget, WidgetType } from 'models/widget';
-import { fetchDocuments, postDocument } from 'services/widgetService/DocumentService';
-import { saveDocument } from 'services/objectStorageService';
+import { fetchDocuments } from 'services/widgetService/DocumentService';
 
 export interface DocumentsContextProps {
     documentToEdit: DocumentItem | null;

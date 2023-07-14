@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext } from 'react';
 
 export interface FileUploadContextState {
     handleAddFile: (_files: File[]) => void;
