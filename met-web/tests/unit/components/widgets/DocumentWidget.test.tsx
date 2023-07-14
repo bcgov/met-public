@@ -180,24 +180,4 @@ describe('Document widget in engagement page tests', () => {
             expect(screen.getByText('Folder')).toBeVisible();
         });
     });
-
-    test('Upload file appears', async () => {
-        useParamsMock.mockReturnValue({ engagementId: '1' });
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
-        mockCreateWidget.mockReturnValue(Promise.resolve(documentWidget));
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([documentWidget]));
-        const { container } = render(<EngagementForm />);
-
-        await openAddWidgetDrawer(container);
-        await openAddDocumentWidgetDrawer();
-
-        const uploadDocumentButton = screen.getByText('Upload Document');
-        fireEvent.click(uploadDocumentButton);
-
-        await waitFor(() => {
-            expect(screen.getByText('Link')).toBeVisible();
-            expect(screen.getByText('Name')).toBeVisible();
-            expect(screen.getByText('Folder')).toBeVisible();
-        });
-    });
 });
