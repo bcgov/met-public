@@ -7,6 +7,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { VideoWidget } from 'models/videoWidget';
 import { fetchVideoWidgets } from 'services/widgetService/VideoService';
 import ReactPlayer from 'react-player/lazy';
+import { AppConfig } from 'config';
 
 interface VideoWidgetProps {
     widget: Widget;
@@ -16,6 +17,14 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
     const dispatch = useAppDispatch();
     const [videoWidget, setVideoWidget] = useState<VideoWidget | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+
+    const playerConfig = {
+        youtube: {
+            playerVars: {
+                origin: window.location.origin,
+            },
+        },
+    };
 
     const fetchVideo = async () => {
         try {
@@ -79,7 +88,7 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
                         <MetParagraph>{videoWidget.description}</MetParagraph>
                     </Grid>
                     <Grid item xs={12}>
-                        <ReactPlayer url={videoWidget.video_url} controls width="100%" />
+                        <ReactPlayer url={videoWidget.video_url} controls width="100%" config={playerConfig} />
                     </Grid>
                 </Grid>
             </MetPaper>
