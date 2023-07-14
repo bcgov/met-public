@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
-import { Grid, MenuItem, Stack } from '@mui/material';
+import { Grid, MenuItem } from '@mui/material';
 import { MetHeader3, MetLabel, MetParagraph, MetWidgetPaper, PrimaryButton, SecondaryButton } from 'components/common';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -157,7 +157,7 @@ const UploadFileDrawer = () => {
                                     >
                                         <Grid item xs={12}>
                                             <MetLabel sx={{ marginBottom: '2px' }}>
-                                                You have successfully aded this document
+                                                You have successfully added this document
                                             </MetLabel>
                                         </Grid>
                                         <Grid item xs={12}>
