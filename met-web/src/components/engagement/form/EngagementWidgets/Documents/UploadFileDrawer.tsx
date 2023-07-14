@@ -86,6 +86,7 @@ const UploadFileDrawer = () => {
             url: link,
             widget_id: widget.id,
             type: 'file',
+            is_uploaded: true,
         });
         dispatch(
             openNotification({

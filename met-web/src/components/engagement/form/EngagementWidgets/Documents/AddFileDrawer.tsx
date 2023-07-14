@@ -159,6 +159,7 @@ const AddFileDrawer = () => {
                                     }}
                                     fullWidth
                                     size="small"
+                                    disabled={documentToEdit?.is_uploaded}
                                 />
                             </Grid>
                         </Grid>

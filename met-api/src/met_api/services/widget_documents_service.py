@@ -53,6 +53,7 @@ class WidgetDocumentService:
             'sort_index': doc.sort_index,
             'url': doc.url,
             'parent_document_id': doc.parent_document_id,
+            'is_uploaded': doc.is_uploaded,
         }
         # remove null
         return dict(props.items())
@@ -71,6 +72,7 @@ class WidgetDocumentService:
     def _create_document_from_dict(doc_details, parent_id, widget_id):
         doc: WidgetDocumentsModel = WidgetDocumentsModel()
         doc.type = doc_details.get('type')
+        doc.is_uploaded = doc_details.get('is_uploaded')
         doc.title = doc_details.get('title')
         doc.parent_document_id = parent_id
         doc.url = doc_details.get('url')

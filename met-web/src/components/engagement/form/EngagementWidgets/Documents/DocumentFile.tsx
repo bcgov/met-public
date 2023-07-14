@@ -13,6 +13,8 @@ import Edit from '@mui/icons-material/Edit';
 import { DocumentsContext } from './DocumentsContext';
 import { DraggableProvided } from '@hello-pangea/dnd';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import FilePresentIcon from '@mui/icons-material/FilePresent';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 const DocumentFile = ({
     documentItem,
@@ -55,7 +57,7 @@ const DocumentFile = ({
                     </Grid>
                     <Grid item xs>
                         <Stack spacing={2} direction="row" alignItems="center">
-                            <LinkIcon color="info" />
+                            {documentItem.is_uploaded ? <UploadFileIcon /> : <FilePresentIcon />}
                             <Typography>{documentItem.title}</Typography>
                         </Stack>
                     </Grid>

@@ -25,6 +25,7 @@ class WidgetDocuments(BaseModel):  # pylint: disable=too-few-public-methods
     # defines the sorting within the specific widget.Not the overall sorting.
     sort_index = db.Column(db.Integer, nullable=True, default=1)
     widget_id = db.Column(db.Integer, ForeignKey('widget.id', ondelete='CASCADE'), nullable=True)
+    is_uploaded = db.Column(db.Boolean, nullable=True, default=False)
 
     @classmethod
     def get_all_by_widget_id(cls, widget_id) -> List[WidgetDocuments]:
