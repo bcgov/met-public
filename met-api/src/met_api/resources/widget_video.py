@@ -14,7 +14,7 @@
 """API endpoints for managing a video widget resource."""
 from http import HTTPStatus
 
-from flask import request
+from flask import jsonify, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
@@ -42,7 +42,7 @@ class Videos(Resource):
         """Get video widget."""
         try:
             widget_video = WidgetVideoService().get_video(widget_id)
-            return WidgetVideoSchema().dump(widget_video, many=True), HTTPStatus.OK
+            return jsonify(WidgetVideoSchema().dump(widget_video, many=True)), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
 
