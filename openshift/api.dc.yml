@@ -259,7 +259,7 @@ parameters:
   - name: ACCESS_REQUEST_EMAIL_ADDRESS
     description: "The access request email address"
     required: true
-    value: vineet.balachandran@gov.bc.ca
+    value: sample@sample.com
   - name: VERIFICATION_EMAIL_TEMPLATE_ID
     description: "The email verification template id"
     required: true
