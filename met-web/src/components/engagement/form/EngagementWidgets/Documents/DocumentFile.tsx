@@ -3,7 +3,6 @@ import { Grid, IconButton, Stack, Typography } from '@mui/material';
 import { MetWidgetPaper } from 'components/common';
 import { DocumentItem } from 'models/document';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import LinkIcon from '@mui/icons-material/Link';
 import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { deleteDocument } from 'services/widgetService/DocumentService';
