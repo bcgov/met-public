@@ -7,17 +7,9 @@ import LinkIcon from '@mui/icons-material/Link';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 interface UploaderProps {
-    margin?: number;
-    helpText?: string;
-    height?: string;
     acceptedFormat?: Accept;
 }
-const Uploader = ({
-    margin = 2,
-    helpText = 'Drag and drop some files here, or click to select files',
-    height = '10em',
-    acceptedFormat = { 'application/zip': ['.zip'] },
-}: UploaderProps) => {
+const Uploader = ({ acceptedFormat = { 'application/zip': ['.zip'] } }: UploaderProps) => {
     const { handleAddFile, savedFileName, addedFileName, setAddedFileName } = useContext(FileUploadContext);
 
     const existingFile = addedFileName;
@@ -32,7 +24,7 @@ const Uploader = ({
                         setAddedFileName(acceptedFiles[0].name);
                     }}
                 >
-                    {({ getRootProps, getInputProps, open }) => (
+                    {({ getInputProps, open }) => (
                         <section>
                             <input {...getInputProps()} />
                             <WidgetButton onClick={open} sx={{ mb: 1 }}>
@@ -75,7 +67,7 @@ const Uploader = ({
                 setAddedFileName(acceptedFiles[0].name);
             }}
         >
-            {({ getRootProps, getInputProps, open }) => (
+            {({ getInputProps, open }) => (
                 <section>
                     <input {...getInputProps()} />
                     <WidgetButton onClick={open}>Upload Shapefile </WidgetButton>

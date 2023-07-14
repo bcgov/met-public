@@ -4,26 +4,16 @@ import Uploader from './Uploader';
 import { Accept } from 'react-dropzone';
 
 interface UploaderProps {
-    margin?: number;
     handleAddFile: (_files: File[]) => void;
     savedFile?: File;
     savedFileName?: string;
-    helpText?: string;
-    height?: string;
     acceptedFormat?: Accept;
 }
 
-export const FileUpload = ({
-    margin = 2,
-    handleAddFile,
-    savedFileName = '',
-    helpText = 'Drag and drop some files here, or click to select files',
-    height = '10em',
-    acceptedFormat,
-}: UploaderProps) => {
+export const FileUpload = ({ handleAddFile, savedFileName = '', acceptedFormat }: UploaderProps) => {
     return (
         <FileUploadContextProvider handleAddFile={handleAddFile} savedFileName={savedFileName}>
-            <Uploader acceptedFormat={acceptedFormat} margin={margin} helpText={helpText} height={height} />
+            <Uploader acceptedFormat={acceptedFormat} />
         </FileUploadContextProvider>
     );
 };
