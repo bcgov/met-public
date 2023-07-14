@@ -171,7 +171,7 @@ describe('Document widget in engagement page tests', () => {
         await openAddWidgetDrawer(container);
         await openAddDocumentWidgetDrawer();
 
-        const addDocumentButton = screen.getByText('Add Document');
+        const addDocumentButton = screen.getByText('Add Document Link');
         fireEvent.click(addDocumentButton);
 
         await waitFor(() => {
@@ -191,7 +191,7 @@ describe('Document widget in engagement page tests', () => {
         await openAddWidgetDrawer(container);
         await openAddDocumentWidgetDrawer();
 
-        const uploadDocumentButton = screen.getByText('Uplload Document');
+        const uploadDocumentButton = screen.getByText('Upload Document');
         fireEvent.click(uploadDocumentButton);
 
         await waitFor(() => {
