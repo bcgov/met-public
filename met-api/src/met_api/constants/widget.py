@@ -23,3 +23,5 @@ class WidgetType(IntEnum):
     PHASES = 3
     SUBSCRIBE = 4
     EVENTS = 5
+    Map = 6
+    Video = 7

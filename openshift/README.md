@@ -197,6 +197,14 @@ oc process -f ./cron.dc.yml \
 
 ```
 
+Deploy the analytics api 
+```
+oc process -f ./analytics-api.dc.yml \
+ -p ENV=dev \
+ -p IMAGE_TAG=latest
+ | oc create -f -
+```
+
 Deploy the redash analytics helm chart:
 ```
 cd redash

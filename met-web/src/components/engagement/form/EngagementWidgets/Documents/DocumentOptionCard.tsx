@@ -20,7 +20,7 @@ const DocumentOptionCard = () => {
     const [isCreatingWidget, setIsCreatingWidget] = useState(false);
 
     const handleCreateWidget = async () => {
-        const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Document);
+        const alreadyExists = widgets.some((widget) => widget.widget_type_id === WidgetType.Document);
         if (alreadyExists) {
             handleWidgetDrawerTabValueChange(WidgetTabValues.DOCUMENT_FORM);
             return;

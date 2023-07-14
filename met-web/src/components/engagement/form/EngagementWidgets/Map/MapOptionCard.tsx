@@ -21,7 +21,7 @@ const MapOptionCard = () => {
     const [isCreatingWidget, setIsCreatingWidget] = useState(false);
 
     const handleCreateWidget = async () => {
-        const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Map);
+        const alreadyExists = widgets.some((widget) => widget.widget_type_id === WidgetType.Map);
         if (alreadyExists) {
             handleWidgetDrawerTabValueChange(WidgetTabValues.MAP_FORM);
             return;

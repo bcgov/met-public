@@ -26,7 +26,7 @@ const PhasesOptionCard = () => {
     const [isCreatingWidget, setIsCreatingWidget] = useState(false);
 
     const handleCreateWidget = async () => {
-        const alreadyExists = widgets.map((widget) => widget.widget_type_id).includes(WidgetType.Phases);
+        const alreadyExists = widgets.some((widget) => widget.widget_type_id === WidgetType.Phases);
         if (alreadyExists) {
             handleWidgetDrawerTabValueChange(WidgetTabValues.PHASES_FORM);
             return;

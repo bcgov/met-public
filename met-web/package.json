@@ -55,6 +55,7 @@
         "react-hook-form": "^7.37.0",
         "react-if": "^4.1.4",
         "react-map-gl": "^7.0.21",
+        "react-player": "^2.12.0",
         "react-redux": "^7.2.8",
         "react-router-dom": "^6.10.0",
         "react-scripts": "5.0.1",
