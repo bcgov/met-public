@@ -174,6 +174,7 @@ objects:
   data:
     ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID: ${ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID}
     NOTIFICATIONS_EMAIL_ENDPOINT: ${NOTIFICATIONS_EMAIL_ENDPOINT}
+    PUBLISH_ENGAGEMENT_EMAIL_TEMPLATE_ID: ${PUBLISH_ENGAGEMENT_EMAIL_TEMPLATE_ID}
     SITE_URL: ${SITE_URL}
 - kind: Secret
   apiVersion: v1
@@ -244,6 +245,9 @@ parameters:
 - name: ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID
   description: "The engagement closeout email template id"
   value: 'b7ea041b-fc30-4ad3-acb2-82119dd4f95d'
+- name: PUBLISH_ENGAGEMENT_EMAIL_TEMPLATE_ID
+  description: "The publish engagement email template id"
+  value: '7bf2ffcd-d69e-4c3f-9aa0-e8e89b491e92'
 - name: MET_ADMIN_CLIENT_ID
   description: "The MET admin service account id"
   required: true
