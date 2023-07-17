@@ -7,7 +7,6 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { VideoWidget } from 'models/videoWidget';
 import { fetchVideoWidgets } from 'services/widgetService/VideoService';
 import ReactPlayer from 'react-player/lazy';
-import { AppConfig } from 'config';
 
 interface VideoWidgetProps {
     widget: Widget;
