@@ -78,7 +78,19 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
     const { name, end_date, start_date, description, status_id, banner_url, submission_status } = loadedEngagement;
     const EngagementDate = `${dayjs(start_date).format(dateFormat)} to ${dayjs(end_date).format(dateFormat)}`;
     return (
-        <Card sx={{ maxWidth: 345 }}>
+        <Card
+            sx={{
+                maxWidth: 345,
+                '&:hover': {
+                    backgroundColor: '#F2F2F2',
+                    cursor: 'pointer',
+                    opacity: 0.5,
+                },
+            }}
+            onClick={() => {
+                window.open(engagementUrl, '_blank');
+            }}
+        >
             <When condition={Boolean(banner_url)}>
                 <CardMedia sx={{ height: 140 }} image={banner_url} title={name} />
             </When>
