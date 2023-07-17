@@ -168,7 +168,7 @@ const Dashboard = () => {
                                                 </Grid>
                                             </Grid>
                                         </When>
-                                        <Grid item sm={4}>
+                                        <Grid id={'kpi-emails-sent'} item sm={4}>
                                             <SurveyEmailsSent
                                                 engagement={engagement}
                                                 engagementIsLoading={isEngagementLoading}
