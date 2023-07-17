@@ -87,6 +87,9 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                     opacity: 0.5,
                 },
             }}
+            onClick={() => {
+                window.open(engagementUrl, '_blank');
+            }}
         >
             <When condition={Boolean(banner_url)}>
                 <CardMedia sx={{ height: 140 }} image={banner_url} title={name} />
