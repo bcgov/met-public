@@ -75,19 +75,28 @@ export const SurveyBarPrintable = ({ engagement, engagementIsLoading }: SurveyQu
                                                 <ResponsiveContainer width={'100%'} height={400} key={result.position}>
                                                     <BarChart
                                                         data={result.result}
-                                                        layout="vertical"
+                                                        layout={'vertical'}
                                                         key={result.position}
-                                                        margin={{ left: { md: 20, lg: 0 } }}
+                                                        margin={{ left: 0 }}
                                                     >
-                                                        <XAxis hide axisLine={false} type="number" />
-                                                        <YAxis
-                                                            width={250}
-                                                            dataKey="value"
-                                                            type="category"
+                                                        <XAxis
+                                                            dataKey={undefined}
+                                                            type={'number'}
                                                             axisLine={true}
                                                             tickLine={true}
                                                             minTickGap={10}
                                                             tickMargin={10}
+                                                            hide={true}
+                                                        />
+                                                        <YAxis
+                                                            width={250}
+                                                            dataKey={'value'}
+                                                            type={'category'}
+                                                            axisLine={true}
+                                                            tickLine={true}
+                                                            minTickGap={10}
+                                                            tickMargin={10}
+                                                            hide={false}
                                                         />
                                                         <Tooltip />
                                                         <Bar
@@ -99,7 +108,7 @@ export const SurveyBarPrintable = ({ engagement, engagementIsLoading }: SurveyQu
                                                         >
                                                             <LabelList
                                                                 dataKey="count"
-                                                                position="insideRight"
+                                                                position={'insideRight'}
                                                                 style={{ fill: 'white' }}
                                                             />
                                                         </Bar>

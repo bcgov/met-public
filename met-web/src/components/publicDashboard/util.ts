@@ -64,14 +64,14 @@ export const generateDashboardPdf = async (
     const emailsSent = document.getElementById('kpi-emails-sent');
     if (emailsSent) {
         const emailsSentData = await toPng(emailsSent);
-        addImageToPdf(doc, emailsSentData, padding, top, 75, 75);
+        addImageToPdf(doc, emailsSentData, padding + 15, top, 70, 70);
     }
     handlePdfExportProgress(20);
 
     const surveysCompleted = document.getElementById('kpi-surveys-completed');
     if (surveysCompleted) {
         const surveysCompletedData = await toPng(surveysCompleted);
-        addImageToPdf(doc, surveysCompletedData, padding, top + 75, 75, 75);
+        addImageToPdf(doc, surveysCompletedData, padding + 95, top, 70, 70);
     }
     handlePdfExportProgress(40);
 
@@ -79,8 +79,8 @@ export const generateDashboardPdf = async (
 
     doc.setFontSize(9);
     doc.setFont('helvetica', 'bold');
-    doc.text('Project Map\n\n', 10, top + 155);
-    addImageToPdf(doc, mapImageDataURL, 10, top + 160, 75, 75);
+    doc.text('Project Map\n\n', padding + 55, top + 80);
+    addImageToPdf(doc, mapImageDataURL, padding + 55, top + 85, 75, 75);
     doc.addPage();
     handlePdfExportProgress(60);
 
