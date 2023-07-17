@@ -1,9 +1,9 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import { Grid, MenuItem } from '@mui/material';
-import { MetHeader3, MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetHeader3, MetLabel, MetParagraph, MetWidgetPaper, PrimaryButton, SecondaryButton } from 'components/common';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -12,85 +12,81 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { DocumentsContext } from './DocumentsContext';
 import ControlledSelect from 'components/common/ControlledInputComponents/ControlledSelect';
-import { postDocument, patchDocument, PatchDocumentRequest } from 'services/widgetService/DocumentService';
+import { postDocument } from 'services/widgetService/DocumentService';
 import { DOCUMENT_TYPE, DocumentItem } from 'models/document';
-import { updatedDiff } from 'deep-object-diff';
+import { saveObject } from 'services/objectStorageService';
+import FileUpload from 'components/common/FileUpload';
+import { If, Then, Else } from 'react-if';
 
 const schema = yup
     .object({
         name: yup.string().max(50, 'Document name should not exceed 50 characters').required(),
-        link: yup.string().max(2000, 'URL should not exceed 2000 characters').required(),
         folderId: yup.number(),
     })
     .required();
 
-type FileForm = yup.TypeOf<typeof schema>;
+type UploadFileForm = yup.TypeOf<typeof schema>;
 
-const FileDrawer = () => {
+const OneMegaByte = 1000000;
+
+const UploadFileDrawer = () => {
     const dispatch = useAppDispatch();
-    const { documentToEdit, documents, loadDocuments, handleFileDrawerOpen, fileDrawerOpen, widget } =
+    const { documentToEdit, documents, loadDocuments, widget, uploadFileDrawerOpen, setUploadFileDrawerOpen } =
         useContext(DocumentsContext);
-    const [isCreatingFile, setIsCreatingDocument] = useState(false);
+    const [isUploadingFile, setIsUploadingFile] = useState(false);
+    const [fileToUpload, setFileToUpload] = useState<File | null>(null);
+
     const parentDocument = documents.find(
         (document: DocumentItem) => document.id === documentToEdit?.parent_document_id,
     );
-    const methods = useForm<FileForm>({
+    const methods = useForm<UploadFileForm>({
         resolver: yupResolver(schema),
         defaultValues: {
             name: '',
-            link: '',
             folderId: 0,
         },
     });
 
     const { handleSubmit, reset } = methods;
 
-    useEffect(() => {
-        methods.setValue('name', documentToEdit?.title || '');
-        methods.setValue('link', documentToEdit?.url || '');
-        methods.setValue('folderId', documentToEdit?.parent_document_id || 0);
-    }, [documentToEdit]);
+    const resetState = () => {
+        reset();
+        setFileToUpload(null);
+    };
 
     const handleClose = () => {
-        reset();
-        handleFileDrawerOpen(false);
+        resetState();
+        setUploadFileDrawerOpen(false);
     };
 
-    const updateDocument = async (data: FileForm) => {
-        if (!(documentToEdit && widget)) {
-            return;
+    const handleUploadFile = async (fileName: string) => {
+        if (!fileToUpload) {
+            return Promise.reject('No file to upload');
         }
-        setIsCreatingDocument(true);
-        const documentEditsToPatch = updatedDiff(documentToEdit, {
-            title: data.name,
-            parent_document_id: data.folderId === 0 ? null : data.folderId,
-            url: data.link,
-        }) as PatchDocumentRequest;
-        await patchDocument(widget.id, documentToEdit.id, {
-            ...documentEditsToPatch,
+        const fileExtension = fileToUpload.name.split('.').pop();
+        const savedDocumentDetails = await saveObject(fileToUpload, {
+            filename: `${fileName}.${fileExtension}`,
         });
-        dispatch(
-            openNotification({
-                severity: 'success',
-                text: 'Document was successfully updated',
-            }),
-        );
-        await loadDocuments();
-        setIsCreatingDocument(false);
-        handleClose();
+        return savedDocumentDetails;
     };
 
-    const createDocument = async (data: FileForm) => {
+    interface CreateDocumentParams {
+        name: string;
+        folderId: number | null;
+        link: string;
+    }
+    const createDocument = async (data: CreateDocumentParams) => {
         if (!widget) {
             return;
         }
-        setIsCreatingDocument(true);
+        const { folderId, name, link } = data;
         await postDocument(widget.id, {
-            title: data.name,
-            parent_document_id: data.folderId === 0 ? null : data.folderId,
-            url: data.link,
+            title: name,
+            parent_document_id: folderId,
+            url: link,
             widget_id: widget.id,
             type: 'file',
+            is_uploaded: true,
         });
         dispatch(
             openNotification({
@@ -98,36 +94,40 @@ const FileDrawer = () => {
                 text: 'Document was successfully created',
             }),
         );
-        await loadDocuments();
-        setIsCreatingDocument(false);
-        handleClose();
     };
 
-    const saveDocument = async (data: FileForm) => {
-        if (documentToEdit) {
-            return await updateDocument(data);
-        }
-        return await createDocument(data);
-    };
-
-    const onSubmit: SubmitHandler<FileForm> = async (data: FileForm) => {
+    const onSubmit: SubmitHandler<UploadFileForm> = async (data: UploadFileForm) => {
         if (!widget) {
             return;
         }
         try {
-            return await saveDocument(data);
+            setIsUploadingFile(true);
+            const { folderId, name } = await schema.validate(data);
+
+            const uploadDetails = await handleUploadFile(name);
+            await createDocument({
+                folderId: folderId || null,
+                name: name,
+                link: uploadDetails.filepath,
+            });
+
+            await loadDocuments();
+            setFileToUpload(null);
+            setIsUploadingFile(false);
+            handleClose();
         } catch (err) {
             console.log(err);
-            dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to save File' }));
+            dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to upload File' }));
+            setIsUploadingFile(false);
         }
     };
 
     return (
         <Drawer
             anchor="right"
-            open={fileDrawerOpen}
+            open={uploadFileDrawerOpen}
             onClose={() => {
-                handleFileDrawerOpen(false);
+                handleClose();
             }}
         >
             <Box sx={{ width: '40vw', paddingTop: '7em' }} role="presentation">
@@ -146,21 +146,58 @@ const FileDrawer = () => {
                         </Grid>
 
                         <Grid item xs={12} container direction="row" spacing={2}>
-                            <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Link</MetLabel>
-                                <ControlledTextField
-                                    name="link"
-                                    id="document-link"
-                                    data-testid="document-form/link"
-                                    variant="outlined"
-                                    label=" "
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
-                                    size="small"
-                                />
-                            </Grid>
+                            <If condition={Boolean(fileToUpload)}>
+                                <Then>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        container
+                                        direction="row"
+                                        alignItems="flex-start"
+                                        justifyContent="flex-start"
+                                    >
+                                        <Grid item xs={12}>
+                                            <MetLabel sx={{ marginBottom: '2px' }}>
+                                                You have successfully added this document
+                                            </MetLabel>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <MetWidgetPaper elevation={1} sx={{ width: '100%' }}>
+                                                <Grid
+                                                    container
+                                                    direction="row"
+                                                    alignItems={'center'}
+                                                    justifyContent="flex-start"
+                                                    spacing={1}
+                                                >
+                                                    <Grid item xs={12}>
+                                                        <MetLabel>{fileToUpload?.name}</MetLabel>
+                                                    </Grid>
+                                                    <Grid item xs={12}>
+                                                        <MetParagraph>{fileToUpload?.type}</MetParagraph>
+                                                    </Grid>
+                                                    <Grid item xs={12}>
+                                                        {fileToUpload && (
+                                                            <MetParagraph>
+                                                                {`${fileToUpload.size / OneMegaByte} MB`}
+                                                            </MetParagraph>
+                                                        )}
+                                                    </Grid>
+                                                </Grid>
+                                            </MetWidgetPaper>
+                                        </Grid>
+                                    </Grid>
+                                </Then>
+                                <Else>
+                                    <Grid item xs={12}>
+                                        <FileUpload
+                                            handleAddFile={(file: File[]) => {
+                                                setFileToUpload(file[0]);
+                                            }}
+                                        />
+                                    </Grid>
+                                </Else>
+                            </If>
                         </Grid>
 
                         <Grid item xs={12} container direction="row" spacing={2}>
@@ -227,12 +264,15 @@ const FileDrawer = () => {
                             marginTop="8em"
                         >
                             <Grid item>
-                                <PrimaryButton loading={isCreatingFile} onClick={handleSubmit(onSubmit)}>
+                                <PrimaryButton loading={isUploadingFile} onClick={handleSubmit(onSubmit)}>
                                     {`Save & Close`}
                                 </PrimaryButton>
                             </Grid>
                             <Grid item>
-                                <SecondaryButton onClick={() => handleClose()}>{`Cancel`}</SecondaryButton>
+                                <SecondaryButton
+                                    disabled={isUploadingFile}
+                                    onClick={() => handleClose()}
+                                >{`Cancel`}</SecondaryButton>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -242,4 +282,4 @@ const FileDrawer = () => {
     );
 };
 
-export default FileDrawer;
+export default UploadFileDrawer;

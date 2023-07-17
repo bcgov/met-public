@@ -12,4 +12,4 @@ class WidgetDocumentsSchema(Schema):
         """Exclude unknown fields in the deserialized output."""
 
         model = WidgetDocumentModel
-        fields = ('id', 'title', 'type', 'parent_document_id', 'url', 'sort_index')
+        fields = ('id', 'title', 'type', 'parent_document_id', 'url', 'sort_index', 'is_uploaded')

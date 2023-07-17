@@ -22,6 +22,7 @@ interface PostDocumentRequest {
     parent_document_id?: number | null;
     url?: string;
     type: DocumentType;
+    is_uploaded?: boolean;
 }
 export const postDocument = async (widget_id: number, data: PostDocumentRequest): Promise<DocumentItem> => {
     try {

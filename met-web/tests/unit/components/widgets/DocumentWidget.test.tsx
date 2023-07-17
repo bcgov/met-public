@@ -138,7 +138,8 @@ describe('Document widget in engagement page tests', () => {
         });
         expect(getWidgetsMock).toHaveBeenCalledTimes(2);
         expect(screen.getByText('Create Folder')).toBeVisible();
-        expect(screen.getByText('Add Document')).toBeVisible();
+        expect(screen.getByText('Add Document Link')).toBeVisible();
+        expect(screen.getByText('Upload Document')).toBeVisible();
     });
 
     test('Create folder appears', async () => {
@@ -170,7 +171,7 @@ describe('Document widget in engagement page tests', () => {
         await openAddWidgetDrawer(container);
         await openAddDocumentWidgetDrawer();
 
-        const addDocumentButton = screen.getByText('Add Document');
+        const addDocumentButton = screen.getByText('Add Document Link');
         fireEvent.click(addDocumentButton);
 
         await waitFor(() => {

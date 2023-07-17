@@ -11,7 +11,7 @@ import { WidgetType } from 'models/widget';
 import { DOCUMENT_TYPE } from 'models/document';
 
 const CreateFolderForm = () => {
-    const { loadDocuments, handleFileDrawerOpen } = useContext(DocumentsContext);
+    const { loadDocuments, handleAddFileDrawerOpen, setUploadFileDrawerOpen } = useContext(DocumentsContext);
     const { widgets } = useContext(WidgetDrawerContext);
     const dispatch = useAppDispatch();
     const [createFolderMode, setCreateFolderMode] = useState(false);
@@ -70,7 +70,10 @@ const CreateFolderForm = () => {
                     <WidgetButton onClick={() => setCreateFolderMode(true)}>Create Folder</WidgetButton>
                 </Grid>
                 <Grid item>
-                    <WidgetButton onClick={() => handleFileDrawerOpen(true)}>Add Document</WidgetButton>
+                    <WidgetButton onClick={() => handleAddFileDrawerOpen(true)}>Add Document Link</WidgetButton>
+                </Grid>
+                <Grid item>
+                    <WidgetButton onClick={() => setUploadFileDrawerOpen(true)}>Upload Document</WidgetButton>
                 </Grid>
             </Grid>
 

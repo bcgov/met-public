@@ -1,9 +1,8 @@
 import React, { useMemo, useContext } from 'react';
 import { MenuItem, Select } from '@mui/material';
-import { User } from 'models/user';
+import { User, USER_GROUP } from 'models/user';
 import { Palette } from 'styles/Theme';
 import { UserManagementContext } from './UserManagementContext';
-import { USER_GROUP } from 'models/user';
 
 interface ActionDropDownItem {
     value: number;

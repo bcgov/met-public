@@ -19,7 +19,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { MapContext } from './MapContext';
 import { postMap, previewShapeFile } from 'services/widgetService/MapService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
-import FileUpload from 'components/common/FileUpload/FileUpload';
+import ShapeFileUpload from 'components/engagement/form/EngagementWidgets/Map/ShapeFileUpload/FileUpload';
 import { geoJSONDecode } from './utils';
 import { GeoJSON } from 'geojson';
 import LinkIcon from '@mui/icons-material/Link';
@@ -174,12 +174,11 @@ const Form = () => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Grid container direction="row" alignItems="baseline" justifyContent="flex-start" spacing={2}>
                             <Grid item xs={12}>
-                                <FileUpload
+                                <ShapeFileUpload
                                     data-testid="shapefile-upload"
                                     handleAddFile={handleAddFile}
                                     savedFileName={uploadName}
                                     savedFile={methods.getValues('shapefile')}
-                                    helpText="Drag and drop a shapefile here or click to select one"
                                 />
                             </Grid>
                             <When condition={Boolean(filename)}>

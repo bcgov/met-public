@@ -15,4 +15,5 @@ export interface DocumentItem {
     parent_document_id?: number;
     children?: DocumentItem[];
     draggableProvided?: DraggableProvided;
+    is_uploaded?: boolean;
 }

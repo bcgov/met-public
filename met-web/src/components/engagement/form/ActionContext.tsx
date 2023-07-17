@@ -13,7 +13,7 @@ import {
     Engagement,
     EngagementMetadata,
 } from '../../../models/engagement';
-import { saveDocument } from 'services/objectStorageService';
+import { saveObject } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { getErrorMessage } from 'utils';
@@ -204,7 +204,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             return savedBannerImageFileName;
         }
         try {
-            const savedDocumentDetails = await saveDocument(bannerImage, { filename: bannerImage.name });
+            const savedDocumentDetails = await saveObject(bannerImage, { filename: bannerImage.name });
             return savedDocumentDetails?.uniquefilename || '';
         } catch (error) {
             console.log(error);

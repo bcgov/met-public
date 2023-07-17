@@ -3,7 +3,6 @@ import { Grid, IconButton, Stack, Typography } from '@mui/material';
 import { MetWidgetPaper } from 'components/common';
 import { DocumentItem } from 'models/document';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import LinkIcon from '@mui/icons-material/Link';
 import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { deleteDocument } from 'services/widgetService/DocumentService';
@@ -13,6 +12,8 @@ import Edit from '@mui/icons-material/Edit';
 import { DocumentsContext } from './DocumentsContext';
 import { DraggableProvided } from '@hello-pangea/dnd';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import LinkIcon from '@mui/icons-material/Link';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 
 const DocumentFile = ({
     documentItem,
@@ -22,13 +23,13 @@ const DocumentFile = ({
     draggableProvided: DraggableProvided;
 }) => {
     const dispatch = useAppDispatch();
-    const { handleFileDrawerOpen, handleChangeDocumentToEdit, loadDocuments } = useContext(DocumentsContext);
+    const { handleAddFileDrawerOpen, handleChangeDocumentToEdit, loadDocuments } = useContext(DocumentsContext);
     const { widgets } = useContext(WidgetDrawerContext);
     const documentWidget = widgets.find((widget: Widget) => widget.widget_type_id === WidgetType.Document);
 
     const handleEditDocument = () => {
         handleChangeDocumentToEdit(documentItem);
-        handleFileDrawerOpen(true);
+        handleAddFileDrawerOpen(true);
     };
 
     const handleDeleteDocument = async () => {
@@ -43,9 +44,9 @@ const DocumentFile = ({
         <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={2} mb={2}>
             <MetWidgetPaper elevation={1} sx={{ width: '100%' }}>
                 <Grid container direction="row" alignItems={'center'} justifyContent="flex-start">
-                    <Grid item xs={2} sx={{ alignItems: 'center', justifyContent: 'center' }}>
+                    <Grid item sx={{ alignItems: 'center', justifyContent: 'center' }}>
                         <IconButton
-                            sx={{ margin: 0, padding: 0 }}
+                            sx={{ margin: '0 0.5em 0 0', padding: 0 }}
                             color="inherit"
                             aria-label="drag-indicator"
                             {...draggableProvided.dragHandleProps}
@@ -55,7 +56,7 @@ const DocumentFile = ({
                     </Grid>
                     <Grid item xs>
                         <Stack spacing={2} direction="row" alignItems="center">
-                            <LinkIcon color="info" />
+                            {documentItem.is_uploaded ? <InsertDriveFileIcon /> : <LinkIcon />}
                             <Typography>{documentItem.title}</Typography>
                         </Stack>
                     </Grid>

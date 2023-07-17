@@ -25,6 +25,7 @@ class WidgetDocuments(BaseModel):  # pylint: disable=too-few-public-methods
     # defines the sorting within the specific widget.Not the overall sorting.
     sort_index = db.Column(db.Integer, nullable=True, default=1)
     widget_id = db.Column(db.Integer, ForeignKey('widget.id', ondelete='CASCADE'), nullable=True)
+    is_uploaded = db.Column(db.Boolean, nullable=True, default=False)
 
     @classmethod
     def get_all_by_widget_id(cls, widget_id) -> List[WidgetDocuments]:
@@ -39,12 +40,12 @@ class WidgetDocuments(BaseModel):  # pylint: disable=too-few-public-methods
         """Update document."""
         widget_document_query = db.session.query(WidgetDocuments) \
             .filter(WidgetDocuments.widget_id == widget_id, WidgetDocuments.id == document_id)
-        widget_documents: WidgetDocuments = widget_document_query.first()
-        if not widget_documents:
+        widget_document: WidgetDocuments = widget_document_query.first()
+        if not widget_document:
             return None
         widget_document_query.update(widget_document_data)
         db.session.commit()
-        return widget_documents
+        return widget_document
 
     @classmethod
     def remove_widget_document(cls, widget_id, document_id) -> List[WidgetDocuments]:
