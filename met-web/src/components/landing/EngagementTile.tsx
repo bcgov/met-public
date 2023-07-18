@@ -95,7 +95,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                 <CardMedia sx={{ height: 140 }} image={banner_url} title={name} />
             </When>
             <CardContent>
-                <Box sx={{ height: 200 }}>
+                <Box sx={{ minHeight: 200 }}>
                     <MetHeader4>{name}</MetHeader4>
                     <MetParagraph
                         sx={{
