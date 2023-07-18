@@ -1,17 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import {
-    Box,
-    Grid,
-    Skeleton,
-    Divider,
-    useMediaQuery,
-    Theme,
-    Stack,
-    ToggleButtonGroup,
-    ToggleButton,
-} from '@mui/material';
+import { Box, Grid, Skeleton, Divider, useMediaQuery, Theme, Stack, ToggleButtonGroup } from '@mui/material';
 import { Palette } from 'styles/Theme';
-import { MetHeader1, MetPaper, MetParagraph, MetLabel, PrimaryButton } from 'components/common';
+import { MetHeader1, MetPaper, MetParagraph, MetLabel, PrimaryButton, MetToggleButton } from 'components/common';
 import { QuestionBlock } from './QuestionBlock';
 import { SurveyBarData } from '../types';
 import { BarBlock } from './BarBlock';
@@ -114,28 +104,8 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading }: Sur
                                         onChange={handleToggleChange}
                                         sx={dashboardCustomStyles.toggleGroup}
                                     >
-                                        <ToggleButton
-                                            value="bar"
-                                            sx={{
-                                                '&.Mui-selected': {
-                                                    backgroundColor: Palette.primary.main,
-                                                    color: 'white',
-                                                },
-                                            }}
-                                        >
-                                            Show as Bar Chart
-                                        </ToggleButton>
-                                        <ToggleButton
-                                            value="treemap"
-                                            sx={{
-                                                '&.Mui-selected': {
-                                                    backgroundColor: Palette.primary.main,
-                                                    color: 'white',
-                                                },
-                                            }}
-                                        >
-                                            Show as TreeMap Chart
-                                        </ToggleButton>
+                                        <MetToggleButton value="bar">Show as Bar Chart</MetToggleButton>
+                                        <MetToggleButton value="treemap">Show as TreeMap Chart</MetToggleButton>
                                     </ToggleButtonGroup>
                                 </Grid>
                             </When>
