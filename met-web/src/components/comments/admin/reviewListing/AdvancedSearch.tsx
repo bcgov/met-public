@@ -63,7 +63,7 @@ export const AdvancedSearch = () => {
                     </TextField>
                 </Grid>
                 <Grid item xs={12} sm={6} md={4} lg={4}>
-                    <MetLabel>Filter by Comment Date - From</MetLabel>
+                    <MetLabel>Comment Date - From</MetLabel>
                     <TextField
                         name="commentDateFrom"
                         type="date"
@@ -79,7 +79,7 @@ export const AdvancedSearch = () => {
                     />
                 </Grid>
                 <Grid item xs={12} sm={6} md={4} lg={4}>
-                    <MetLabel>Filter by Comment Date - To</MetLabel>
+                    <MetLabel>Comment Date - To</MetLabel>
                     <TextField
                         name="commentDateTo"
                         type="date"
@@ -120,7 +120,7 @@ export const AdvancedSearch = () => {
                     />
                 </Grid>
                 <Grid item xs={12} sm={6} md={4} lg={4}>
-                    <MetLabel>Filter by Reviewed Date - From</MetLabel>
+                    <MetLabel>Review Date - From</MetLabel>
                     <TextField
                         name="reviewedDateFrom"
                         type="date"
@@ -136,7 +136,7 @@ export const AdvancedSearch = () => {
                     />
                 </Grid>
                 <Grid item xs={12} sm={6} md={4} lg={4}>
-                    <MetLabel>Filter by Reviewed Date - To</MetLabel>
+                    <MetLabel>Review Date - To</MetLabel>
                     <TextField
                         name="reviewedDateTo"
                         type="date"
@@ -160,7 +160,6 @@ export const AdvancedSearch = () => {
                     justifyContent="flex-end"
                 >
                     <SecondaryButton
-                        size="small"
                         onClick={() => {
                             setAdvancedSearchFilters(initialSearchFilters);
                             setSearchFilters(initialSearchFilters);
