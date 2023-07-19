@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { EditorState, ContentState, convertFromHTML, convertFromRaw, convertToRaw } from 'draft-js';
+import { EditorState, convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import { FormControl, FormHelperText } from '@mui/material';
-import { MetPaper } from '../../common';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './RichEditorStyles.css';
+import { getEditorStateFromHtml, getEditorStateFromRaw } from './utils';
+import { MetPaper } from '..';
 
 const RichTextEditor = ({
     setRawText = (_rawText: string) => {
@@ -20,30 +21,17 @@ const RichTextEditor = ({
 }) => {
     const getStateFromInitialValue = () => {
         if (initialRawEditorState) {
-            setEditorState(getEditorState(initialRawEditorState));
+            setEditorState(getEditorStateFromRaw(initialRawEditorState));
             return;
         }
 
         if (initialHTMLText) {
-            const blocksFromHTML = convertFromHTML(initialHTMLText);
-            const contentState = ContentState.createFromBlockArray(
-                blocksFromHTML.contentBlocks,
-                blocksFromHTML.entityMap,
-            );
-            setEditorState(EditorState.createWithContent(contentState));
-            return;
+            const contentState = getEditorStateFromHtml(initialHTMLText);
+            setEditorState(contentState);
         }
     };
 
-    const getEditorState = (rawTextToConvert: string) => {
-        if (!rawTextToConvert) {
-            return EditorState.createEmpty();
-        }
-        const rawContentFromStore = convertFromRaw(JSON.parse(rawTextToConvert));
-        return EditorState.createWithContent(rawContentFromStore);
-    };
-
-    const [editorState, setEditorState] = React.useState(getEditorState(initialRawEditorState));
+    const [editorState, setEditorState] = React.useState(getEditorStateFromRaw(initialRawEditorState));
 
     const handleChange = (newEditorState: EditorState) => {
         const plainText = newEditorState.getCurrentContent().getPlainText();
