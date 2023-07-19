@@ -58,11 +58,15 @@ export const ActionsDropDown = ({ engagement }: { engagement: Engagement }) => {
     };
 
     const canViewSurvey = (): boolean => {
-        if (engagement.engagement_status.id === EngagementStatus.Draft) {
-            return roles.includes(USER_ROLES.VIEW_ALL_SURVEYS) || assignedEngagements.includes(engagement.id);
+        if (engagement.engagement_status.id !== EngagementStatus.Draft) {
+            return true;
         }
 
-        return true;
+        if (engagement.surveys.length === 0) {
+            return false;
+        }
+
+        return roles.includes(USER_ROLES.VIEW_ALL_SURVEYS) || assignedEngagements.includes(engagement.id);
     };
 
     const ITEMS: ActionDropDownItem[] = useMemo(
