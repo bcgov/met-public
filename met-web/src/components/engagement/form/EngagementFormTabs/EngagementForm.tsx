@@ -9,7 +9,7 @@ import { If, Then, Else } from 'react-if';
 import { EngagementTabsContext } from './EngagementTabsContext';
 import { SUBMISSION_STATUS } from 'constants/engagementStatus';
 import DayCalculatorModal from '../DayCalculator';
-import { ENGAGEMENT_CROPPER_ASPECT_RATIO, ENGAGMENET_UPLOADER_HEIGHT } from './constants';
+import { ENGAGEMENT_CROPPER_ASPECT_RATIO, ENGAGEMENT_UPLOADER_HEIGHT } from './constants';
 import RichTextEditor from 'components/common/RichTextEditor';
 
 const CREATE = 'create';
@@ -308,7 +308,7 @@ const EngagementForm = () => {
                         handleAddFile={handleAddBannerImage}
                         savedImageUrl={savedEngagement.banner_url}
                         savedImageName={savedEngagement.banner_filename}
-                        height={ENGAGMENET_UPLOADER_HEIGHT}
+                        height={ENGAGEMENT_UPLOADER_HEIGHT}
                         cropAspectRatio={ENGAGEMENT_CROPPER_ASPECT_RATIO}
                     />
                 </Grid>

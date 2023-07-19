@@ -90,7 +90,6 @@ const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
     '&.Mui-selected': {
         backgroundColor: Palette.primary.main,
         color: '#fff',
-        border: 'none',
         '&:hover': {
             backgroundColor: Palette.primary.main,
         },
@@ -100,7 +99,6 @@ const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
         textDecoration: 'underline',
         backgroundColor: Palette.primary.main,
         color: '#FFFFFF',
-        border: `2px solid ${Palette.primary.main}`,
         '&.Mui-selected:hover': {
             textDecoration: 'underline',
         },
