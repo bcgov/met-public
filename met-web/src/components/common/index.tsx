@@ -10,6 +10,7 @@ import {
     Toolbar,
     Box,
     CircularProgressProps,
+    ToggleButton,
 } from '@mui/material';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import { SxProps, styled } from '@mui/system';
@@ -81,6 +82,31 @@ const StyledSocialIconButton = styled(IconButton)(() => ({
     color: '#494949',
 }));
 
+const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
+    backgroundColor: 'transparent',
+    color: Palette.primary.main,
+    lineHeight: '1.1rem',
+    border: `2px solid ${Palette.primary.main}`,
+    '&.Mui-selected': {
+        backgroundColor: Palette.primary.main,
+        color: '#fff',
+        border: 'none',
+        '&:hover': {
+            backgroundColor: Palette.primary.main,
+        },
+    },
+    '&:hover': {
+        opacity: '0.8',
+        textDecoration: 'underline',
+        backgroundColor: Palette.primary.main,
+        color: '#FFFFFF',
+        border: `2px solid ${Palette.primary.main}`,
+        '&.Mui-selected:hover': {
+            textDecoration: 'underline',
+        },
+    },
+}));
+
 export const SocialIconButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
     <StyledSocialIconButton color="info" {...rest}>
         {children}
@@ -111,6 +137,18 @@ export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode
     >
         {children}
     </StyledPrimaryButton>
+);
+
+interface MetToggleButtonProps {
+    children: React.ReactNode;
+    value: string;
+    [prop: string]: unknown;
+}
+
+export const MetToggleButton = ({ value, children, ...rest }: MetToggleButtonProps) => (
+    <StyledToggleButton {...rest} value={value}>
+        {children}
+    </StyledToggleButton>
 );
 
 const StyledPaper = styled(MuiPaper)(() => ({

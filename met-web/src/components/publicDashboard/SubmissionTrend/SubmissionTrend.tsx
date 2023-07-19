@@ -1,16 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
-import {
-    Stack,
-    useMediaQuery,
-    Theme,
-    Grid,
-    ToggleButtonGroup,
-    ToggleButton,
-    CircularProgress,
-    TextField,
-} from '@mui/material';
-import { MetPaper, MetLabel, PrimaryButton } from 'components/common';
+import { Stack, useMediaQuery, Theme, Grid, ToggleButtonGroup, CircularProgress, TextField } from '@mui/material';
+import { MetPaper, MetLabel, PrimaryButton, MetToggleButton } from 'components/common';
 import { DASHBOARD } from '../constants';
 import { ErrorBox } from '../ErrorBox';
 import {
@@ -24,7 +15,6 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { Dayjs } from 'dayjs';
 import { Then, If, Else, Unless } from 'react-if';
 import { formatToUTC } from 'components/common/dateHelper';
-import { Palette } from 'styles/Theme';
 
 interface SubmissionTrendProps {
     engagement: Engagement;
@@ -207,28 +197,8 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     size={isTablet ? 'small' : 'medium'}
                                     sx={dashboardCustomStyles.toggleGroup}
                                 >
-                                    <ToggleButton
-                                        value="weekly"
-                                        sx={{
-                                            '&.Mui-selected': {
-                                                backgroundColor: Palette.primary.main,
-                                                color: 'white',
-                                            },
-                                        }}
-                                    >
-                                        Weekly
-                                    </ToggleButton>
-                                    <ToggleButton
-                                        value="monthly"
-                                        sx={{
-                                            '&.Mui-selected': {
-                                                backgroundColor: Palette.primary.main,
-                                                color: 'white',
-                                            },
-                                        }}
-                                    >
-                                        Monthly
-                                    </ToggleButton>
+                                    <MetToggleButton value="weekly">Weekly</MetToggleButton>
+                                    <MetToggleButton value="monthly">Monthly</MetToggleButton>
                                 </ToggleButtonGroup>
                             </Stack>
                             <If condition={!isLoading}>
