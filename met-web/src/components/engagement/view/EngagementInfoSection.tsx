@@ -3,11 +3,11 @@ import { Grid, Typography, Stack } from '@mui/material';
 import { MetHeader1 } from 'components/common';
 import { EngagementStatusChip } from '../status';
 import { Editor } from 'react-draft-wysiwyg';
-import { getEditorState } from 'utils';
 import dayjs from 'dayjs';
 import { ActionContext } from './ActionContext';
 import { Engagement } from 'models/engagement';
 import { useAppSelector } from 'hooks';
+import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 
 interface EngagementInfoSectionProps {
     savedEngagement: Engagement;
@@ -58,7 +58,7 @@ const EngagementInfoSection = ({ savedEngagement, children }: EngagementInfoSect
                 <Grid item xs={12} sx={{ maxHeight: '20em', overflowY: 'auto', overflowX: 'auto' }}>
                     <MetHeader1>{name}</MetHeader1>
                     <Grid item xs={12} sx={{ mb: 1 }}>
-                        <Editor editorState={getEditorState(rich_description)} readOnly={true} toolbarHidden />
+                        <Editor editorState={getEditorStateFromRaw(rich_description)} readOnly={true} toolbarHidden />
                     </Grid>
                 </Grid>
                 <Grid item xs={12}>

@@ -154,20 +154,23 @@ export const PreviewBanner = () => {
                         <Stack spacing={1} direction={{ md: 'row' }} alignItems="center" justifyContent="center">
                             <IconButton onClick={() => updateMockStatus(SubmissionStatus.Upcoming)}>
                                 <EngagementStatusChip
-                                    preview={mockStatus !== SubmissionStatus.Upcoming}
                                     submissionStatus={SubmissionStatus.Upcoming}
+                                    active={mockStatus === SubmissionStatus.Upcoming}
+                                    clickable
                                 />
                             </IconButton>
                             <IconButton onClick={() => updateMockStatus(SubmissionStatus.Open)}>
                                 <EngagementStatusChip
-                                    preview={mockStatus !== SubmissionStatus.Open}
                                     submissionStatus={SubmissionStatus.Open}
+                                    active={mockStatus === SubmissionStatus.Open}
+                                    clickable
                                 />
                             </IconButton>
                             <IconButton onClick={() => updateMockStatus(SubmissionStatus.Closed)}>
                                 <EngagementStatusChip
-                                    preview={mockStatus !== SubmissionStatus.Closed}
                                     submissionStatus={SubmissionStatus.Closed}
+                                    active={mockStatus === SubmissionStatus.Closed}
+                                    clickable
                                 />
                             </IconButton>
                         </Stack>

@@ -10,11 +10,12 @@ import { When } from 'react-if';
 import EngagementInfoSection from './EngagementInfoSection';
 
 export const EngagementBanner = ({ startSurvey }: EngagementBannerProps) => {
-    const { isEngagementLoading, savedEngagement } = useContext(ActionContext);
+    const { isEngagementLoading, savedEngagement, mockStatus } = useContext(ActionContext);
     const surveyId = savedEngagement.surveys[0]?.id || '';
-    const isOpen = savedEngagement.submission_status === SubmissionStatus.Open;
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isPreview = isLoggedIn;
+    const currentStatus = isPreview ? mockStatus : savedEngagement.submission_status;
+    const isOpen = currentStatus === SubmissionStatus.Open;
 
     if (isEngagementLoading) {
         return <Skeleton variant="rectangular" width="100%" height="35em" />;
@@ -23,7 +24,7 @@ export const EngagementBanner = ({ startSurvey }: EngagementBannerProps) => {
     return (
         <Banner imageUrl={savedEngagement.banner_url}>
             <EngagementInfoSection savedEngagement={savedEngagement}>
-                <When condition={!!surveyId && (isOpen || isPreview)}>
+                <When condition={surveyId && isOpen}>
                     <Grid item container direction={{ xs: 'column', sm: 'row' }} xs={12} justifyContent="flex-end">
                         <PrimaryButton data-testid="EngagementBanner/share-your-thoughts-button" onClick={startSurvey}>
                             Share your thoughts

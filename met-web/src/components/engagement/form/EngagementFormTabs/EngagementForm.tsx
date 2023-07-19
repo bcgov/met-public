@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Typography, Grid, TextField, Stack, Box } from '@mui/material';
 import { MetPaper, MetLabel, PrimaryButton, SecondaryButton, MetDescription } from '../../../common';
-import RichTextEditor from '../RichTextEditor';
 import { ActionContext } from '../ActionContext';
 import ImageUpload from 'components/imageUpload';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +10,7 @@ import { EngagementTabsContext } from './EngagementTabsContext';
 import { SUBMISSION_STATUS } from 'constants/engagementStatus';
 import DayCalculatorModal from '../DayCalculator';
 import { ENGAGEMENT_CROPPER_ASPECT_RATIO, ENGAGMENET_UPLOADER_HEIGHT } from './constants';
+import RichTextEditor from 'components/common/RichTextEditor';
 
 const CREATE = 'create';
 const EngagementForm = () => {

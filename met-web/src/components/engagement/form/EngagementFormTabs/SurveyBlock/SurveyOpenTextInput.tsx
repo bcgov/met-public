@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { defaultOpenText } from 'constants/submissionStatusText';
-import RichTextEditor from '../../RichTextEditor';
+import RichTextEditor from 'components/common/RichTextEditor';
 import { EngagementTabsContext } from '../EngagementTabsContext';
 
 export const SurveyOpenTextInput = () => {
