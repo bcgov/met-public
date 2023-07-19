@@ -76,13 +76,12 @@ const Dashboard = () => {
                     alignItems="flex-end"
                     m={{ lg: '1em 8em 2em 3em', sm: '2em', xs: '0.5em' }}
                 >
-                    <Grid item xs={12} container justifyContent="flex-end">
-                        <MuiLink component={Link} to={slug ? basePath : `/engagements/${engagement.id}/view`}>
-                            {`<< Return to ${engagement.name} Engagement`}
-                        </MuiLink>
-                    </Grid>
-
-                    <Grid container item xs={12}>
+                    <Grid container item xs={12} flexDirection="column">
+                        <Grid item xs={12} container justifyContent="flex-end">
+                            <MuiLink component={Link} to={slug ? basePath : `/engagements/${engagement.id}/view`}>
+                                {`<< Return to ${engagement.name} Engagement`}
+                            </MuiLink>
+                        </Grid>
                         <MetPaper elevation={1} sx={{ padding: { md: '2em 2em 1em 2em', sm: '1em', xs: '0.5em' } }}>
                             <Grid
                                 container
