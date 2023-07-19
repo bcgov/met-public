@@ -28,7 +28,6 @@ const RichTextEditor = ({
         if (initialHTMLText) {
             const contentState = getEditorStateFromHtml(initialHTMLText);
             setEditorState(contentState);
-            return;
         }
     };
 
