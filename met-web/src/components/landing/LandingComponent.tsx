@@ -126,8 +126,7 @@ const LandingComponent = () => {
                         ref={tileBlockRef}
                     >
                         <Grid item xs={12} sm={6} md={4} lg={4}>
-                            <MetLabel sx={{ marginBottom: '2px', display: 'flex' }}>Engagement name</MetLabel>
-
+                            <MetLabel>Engagement name</MetLabel>
                             <TextField
                                 fullWidth
                                 placeholder="Type engagement's name..."
