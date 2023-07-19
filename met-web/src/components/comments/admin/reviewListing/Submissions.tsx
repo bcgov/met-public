@@ -112,49 +112,51 @@ const Submissions = () => {
             container
             rowSpacing={1}
         >
-            <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="100%" justifyContent="space-between">
-                <Stack direction="row" spacing={1}>
-                    <TextField
-                        id="comments"
-                        variant="outlined"
-                        label="Search Comments"
-                        value={searchText}
-                        onChange={(e) => setSearchText(e.target.value)}
-                        size="small"
-                    />
-                    <PrimaryButton
-                        data-testid="CommentListing/search-button"
-                        onClick={() => handleSearchBarClick(searchText)}
-                    >
-                        <SearchIcon />
-                    </PrimaryButton>
-                    <SecondaryButton
-                        data-testid="comment-listing/advanced-search-button"
-                        onClick={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)}
-                        startIcon={
-                            <ExpandMoreIcon
-                                sx={{
-                                    transition: (theme) =>
-                                        theme.transitions.create('transform', {
-                                            duration: theme.transitions.duration.shortest,
-                                        }),
-                                    transform: isAdvancedSearchOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                                }}
-                            />
-                        }
-                    >
-                        Advanced Search
-                    </SecondaryButton>
+            <Grid item xs={12}>
+                <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="100%" justifyContent="space-between">
+                    <Stack direction="row" spacing={1}>
+                        <TextField
+                            id="comments"
+                            variant="outlined"
+                            label="Search Comments"
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                            size="small"
+                        />
+                        <PrimaryButton
+                            data-testid="CommentListing/search-button"
+                            onClick={() => handleSearchBarClick(searchText)}
+                        >
+                            <SearchIcon />
+                        </PrimaryButton>
+                        <SecondaryButton
+                            data-testid="comment-listing/advanced-search-button"
+                            onClick={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)}
+                            startIcon={
+                                <ExpandMoreIcon
+                                    sx={{
+                                        transition: (theme) =>
+                                            theme.transitions.create('transform', {
+                                                duration: theme.transitions.duration.shortest,
+                                            }),
+                                        transform: isAdvancedSearchOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                                    }}
+                                />
+                            }
+                        >
+                            Advanced Search
+                        </SecondaryButton>
+                    </Stack>
+                    <Stack direction="row" spacing={1}>
+                        <PrimaryButton component={Link} to={`/surveys/${survey.id}/comments/all`}>
+                            Read All Comments
+                        </PrimaryButton>
+                        <SecondaryButton onClick={handleExportComments} loading={isExporting}>
+                            Export to CSV
+                        </SecondaryButton>
+                    </Stack>
                 </Stack>
-                <Stack direction="row" spacing={1}>
-                    <PrimaryButton component={Link} to={`/surveys/${survey.id}/comments/all`}>
-                        Read All Comments
-                    </PrimaryButton>
-                    <SecondaryButton onClick={handleExportComments} loading={isExporting}>
-                        Export to CSV
-                    </SecondaryButton>
-                </Stack>
-            </Stack>
+            </Grid>
 
             <Grid item xs={12}>
                 <Collapse in={isAdvancedSearchOpen}>
