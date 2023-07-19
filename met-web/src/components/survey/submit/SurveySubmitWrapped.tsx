@@ -8,12 +8,16 @@ import { InvalidTokenModal } from './InvalidTokenModal';
 import { useNavigate } from 'react-router';
 import { EngagementLink } from './EngagementLink';
 import { When } from 'react-if';
+import { PreviewBanner } from './PreviewBanner';
 
 const SurveySubmitWrapped = () => {
     const { savedSurvey, isTokenValid, slug } = useContext(ActionContext);
     const navigate = useNavigate();
     return (
-        <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={2}>
+        <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
+            <Grid item xs={12}>
+                <PreviewBanner />
+            </Grid>
             <Grid item xs={12}>
                 <SurveyBanner />
             </Grid>
@@ -24,7 +28,7 @@ const SurveySubmitWrapped = () => {
                 direction="row"
                 justifyContent={'flex-start'}
                 alignItems="flex-start"
-                m={{ lg: '0 8em 1em 3em', md: '2em', xs: '1em' }}
+                m={{ lg: '2em 8em 1em 3em', md: '2em', xs: '1em' }}
             >
                 <Grid item container direction="row" justifyContent="flex-end">
                     <EngagementLink />
