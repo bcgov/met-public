@@ -12,7 +12,7 @@ import { When } from 'react-if';
 import { getBaseUrl } from 'helper';
 
 const HttpStatusBadRequest = 400;
-export const EngagementSlug = () => {
+export const PublicUrls = () => {
     const dispatch = useAppDispatch();
     const theme = useTheme();
 
