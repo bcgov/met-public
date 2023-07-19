@@ -11,8 +11,15 @@ const TileBlock = () => {
 
     if (loadingEngagements) {
         return (
-            <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
-                <RepeatedGrid times={4} item xs={3}>
+            <Grid
+                container
+                direction="row"
+                alignItems={'flex-start'}
+                justifyContent="flex-start"
+                columnSpacing={2}
+                rowSpacing={4}
+            >
+                <RepeatedGrid times={4} item xs={12} sm={6} md={4} lg={3}>
                     <TileSkeleton />
                 </RepeatedGrid>
             </Grid>
