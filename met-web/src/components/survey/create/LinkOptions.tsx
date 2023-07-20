@@ -51,6 +51,7 @@ const LinkOptions = () => {
 
         if (!isDisclaimerChecked) {
             setDisclaimerError(true);
+            return;
         }
 
         setIsSaving(true);

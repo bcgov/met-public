@@ -42,18 +42,6 @@ export const ActionsDropDown = ({ survey }: { survey: Survey }) => {
         return false;
     };
 
-    const canViewSurvey = (): boolean => {
-        if (!survey.engagement) {
-            return false;
-        }
-
-        if (submissionHasBeenOpened || roles.includes(USER_ROLES.VIEW_ALL_SURVEYS)) {
-            return true;
-        }
-
-        return assignedEngagements.includes(engagementId);
-    };
-
     const canViewReport = (): boolean => {
         return (
             submissionHasBeenOpened &&
@@ -80,14 +68,6 @@ export const ActionsDropDown = ({ survey }: { survey: Survey }) => {
             },
             {
                 value: 2,
-                label: 'View Survey',
-                action: () => {
-                    navigate(`/surveys/${survey.id}/submit`);
-                },
-                condition: canViewSurvey(),
-            },
-            {
-                value: 3,
                 label: 'View Report',
                 action: () => {
                     navigate(`/engagements/${engagementId}/dashboard`);
@@ -95,7 +75,7 @@ export const ActionsDropDown = ({ survey }: { survey: Survey }) => {
                 condition: canViewReport(),
             },
             {
-                value: 4,
+                value: 3,
                 label: 'View All Comments',
                 action: () => {
                     navigate(`/surveys/${survey.id}/comments`);
