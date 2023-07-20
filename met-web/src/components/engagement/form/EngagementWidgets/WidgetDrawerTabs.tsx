@@ -10,6 +10,7 @@ import Phases from './Phases';
 import EventsForm from './Events';
 import MapForm from './Map';
 import VideoForm from './Video';
+import SubscribeForm from './Subscribe';
 
 const WidgetDrawerTabs = () => {
     const { widgetDrawerTabValue } = useContext(WidgetDrawerContext);
@@ -24,6 +25,9 @@ const WidgetDrawerTabs = () => {
                 </TabPanel>
                 <TabPanel sx={{ width: '100%' }} value={WidgetTabValues.DOCUMENT_FORM}>
                     <Documents />
+                </TabPanel>
+                <TabPanel sx={{ width: '100%' }} value={WidgetTabValues.SUBSCRIBE_FORM}>
+                    <SubscribeForm />
                 </TabPanel>
                 <TabPanel sx={{ width: '100%' }} value={WidgetTabValues.PHASES_FORM}>
                     <Phases />

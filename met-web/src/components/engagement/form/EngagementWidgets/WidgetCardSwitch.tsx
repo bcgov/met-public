@@ -62,6 +62,10 @@ export const WidgetCardSwitch = ({ widget, removeWidget }: WidgetCardSwitchProps
                         onDelete={() => {
                             removeWidget(widget.id);
                         }}
+                        onEdit={() => {
+                            handleWidgetDrawerTabValueChange(WidgetTabValues.SUBSCRIBE_FORM);
+                            handleWidgetDrawerOpen(true);
+                        }}
                     />
                 </Case>
                 <Case condition={widget.widget_type_id === WidgetType.Events}>

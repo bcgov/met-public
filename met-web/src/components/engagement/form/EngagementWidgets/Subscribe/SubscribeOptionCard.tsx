@@ -10,9 +10,11 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { optionCardStyle } from '../Phases/PhasesOptionCard';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
+import { WidgetTabValues } from '../type';
 
 const SubscribeOptionCard = () => {
-    const { widgets, loadWidgets, handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
+    const { widgets, loadWidgets, handleWidgetDrawerOpen, handleWidgetDrawerTabValueChange } =
+        useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
     const [createWidget] = useCreateWidgetMutation();
@@ -21,6 +23,7 @@ const SubscribeOptionCard = () => {
     const handleCreateWidget = async () => {
         const alreadyExists = widgets.some((widget) => widget.widget_type_id === WidgetType.Subscribe);
         if (alreadyExists) {
+            handleWidgetDrawerTabValueChange(WidgetTabValues.SUBSCRIBE_FORM);
             return;
         }
 
@@ -38,7 +41,7 @@ const SubscribeOptionCard = () => {
                 }),
             );
             setIsCreatingWidget(false);
-            handleWidgetDrawerOpen(false);
+            handleWidgetDrawerTabValueChange(WidgetTabValues.SUBSCRIBE_FORM);
         } catch (error) {
             setIsCreatingWidget(false);
             dispatch(
@@ -76,7 +79,7 @@ const SubscribeOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetHeader4>Sign Up for Updates</MetHeader4>
+                                <MetHeader4> Sign Up for Updates/Subscribe</MetHeader4>
                             </Grid>
                             <Grid item xs={12}>
                                 <MetBody>Offer members of the public to sign up for updates</MetBody>
