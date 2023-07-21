@@ -38,6 +38,11 @@ export interface EngagementMetadata {
     project_metadata: ProjectMetadata;
 }
 
+export interface EngagementSettings {
+    engagement_id: number;
+    send_report: boolean;
+}
+
 export interface ProjectMetadata {
     project_name: string;
     type: string;
@@ -88,5 +93,12 @@ export const createDefaultEngagementMetadata = (): EngagementMetadata => {
             project_name: '',
             application_number: '',
         },
+    };
+};
+
+export const createDefaultEngagementSettings = (): EngagementSettings => {
+    return {
+        engagement_id: 0,
+        send_report: true,
     };
 };

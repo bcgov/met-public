@@ -6,7 +6,8 @@ import { EngagementTeamMember } from 'models/engagementTeamMember';
 import { getTeamMembers } from 'services/membershipService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
-import { ProjectMetadata } from 'models/engagement';
+import { EngagementSettings, ProjectMetadata } from 'models/engagement';
+import { getEngagementSettings } from 'services/engagementSettingService';
 
 interface EngagementFormData {
     name: string;
@@ -68,6 +69,9 @@ export interface EngagementTabsContextState {
     setTeamMembers: React.Dispatch<React.SetStateAction<EngagementTeamMember[]>>;
     teamMembersLoading: boolean;
     loadTeamMembers: () => void;
+    settings: EngagementSettings | null;
+    settingsLoading: boolean;
+    loadSettings: () => void;
 }
 
 export const EngagementTabsContext = createContext<EngagementTabsContextState>({
@@ -110,6 +114,11 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
     teamMembersLoading: false,
     loadTeamMembers: () => {
         throw new Error('Load team members not implemented');
+    },
+    settings: null,
+    settingsLoading: false,
+    loadSettings: () => {
+        throw new Error('loadSettings not implemented');
     },
 });
 
@@ -171,6 +180,24 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         }
     };
 
+    const [settings, setSettings] = useState<EngagementSettings | null>(null);
+    const [settingsLoading, setSettingsLoading] = useState(true);
+    const loadSettings = async () => {
+        try {
+            const response = await getEngagementSettings(savedEngagement.id);
+            setSettings(response);
+            setSettingsLoading(false);
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while trying to fetch settings, please refresh the page or try again at a later time',
+                }),
+            );
+            setSettingsLoading(false);
+        }
+    };
+
     return (
         <EngagementTabsContext.Provider
             value={{
@@ -192,6 +219,9 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
                 setTeamMembers,
                 teamMembersLoading,
                 loadTeamMembers,
+                settings,
+                settingsLoading,
+                loadSettings,
             }}
         >
             {children}

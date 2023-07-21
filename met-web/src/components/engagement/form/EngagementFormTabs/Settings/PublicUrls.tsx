@@ -25,10 +25,6 @@ export const PublicUrls = () => {
     const [copyTooltipDashboardLink, setCopyTooltipDashboardLink] = useState(false);
     const [backendError, setBackendError] = useState('');
 
-    const handleTooltipClose = () => {
-        setCopyTooltipEngagementLink(false);
-        setCopyTooltipDashboardLink(false);
-    };
     const newEngagement = !savedEngagement.id || isNaN(Number(savedEngagement.id));
     const baseUrl = getBaseUrl();
 
@@ -141,7 +137,7 @@ export const PublicUrls = () => {
                         placement="right"
                     >
                         <TextField
-                            id="engagement-name"
+                            id="engagement-link"
                             variant="outlined"
                             label=" "
                             InputLabelProps={{

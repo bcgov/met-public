@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid } from '@mui/material';
-import { MetPaper, MetHeader4 } from '../../../../common';
+import { MetPaper } from '../../../../common';
 
 import EngagementInformation from './EngagementInformation';
 import InternalEngagement from './InternalEngagement';
@@ -28,10 +28,6 @@ const EngagementSettings = () => {
 
                 <Grid item xs={12}>
                     <SendReport />
-                </Grid>
-
-                <Grid item xs={12} mt={1}>
-                    <MetHeader4 bold>{`Public URLs (Links)`}</MetHeader4>
                 </Grid>
 
                 <Grid item xs={12}>
