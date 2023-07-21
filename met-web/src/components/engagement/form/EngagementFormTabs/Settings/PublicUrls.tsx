@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { InputAdornment, TextField, Tooltip, Grid, Divider, useTheme } from '@mui/material';
-import { SecondaryButton, MetDescription, PrimaryButton, MetHeader4, MetSmallText } from 'components/common';
+import { SecondaryButton, MetDescription, PrimaryButton, MetHeader4, MetSmallText, MetLabel } from 'components/common';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { ActionContext } from 'components/engagement/form/ActionContext';
@@ -21,29 +21,31 @@ export const PublicUrls = () => {
     const [savedSlug, setSavedSlug] = useState('');
     const [slug, setSlug] = useState('');
     const [isSaving, setIsSaving] = useState(false);
-    const [copyTooltip, setCopyTooltip] = useState(false);
+    const [copyTooltipEngagementLink, setCopyTooltipEngagementLink] = useState(false);
+    const [copyTooltipDashboardLink, setCopyTooltipDashboardLink] = useState(false);
     const [backendError, setBackendError] = useState('');
 
     const handleTooltipClose = () => {
-        setCopyTooltip(false);
+        setCopyTooltipEngagementLink(false);
+        setCopyTooltipDashboardLink(false);
     };
     const newEngagement = !savedEngagement.id || isNaN(Number(savedEngagement.id));
     const baseUrl = getBaseUrl();
 
-    const engagementUrl = !savedSlug ? 'Link will appear when the engagement is saved' : `${baseUrl}/${slug}`;
+    const engagementUrl = !savedSlug ? 'Link will appear when the engagement is saved' : `${baseUrl}/${savedSlug}`;
+    const dashboardUrl = !savedSlug ? 'Link will appear when the engagement is saved' : `${engagementUrl}/dashboard`;
 
-    const handleCopyUrl = () => {
+    const handleCopyUrl = (url: string) => {
         if (newEngagement) {
             dispatch(
                 openNotification({
                     severity: 'error',
-                    text: 'Engagement link can only be copied after the engagement is saved',
+                    text: 'Link can only be copied after the engagement is saved',
                 }),
             );
             return;
         }
-        setCopyTooltip(true);
-        navigator.clipboard.writeText(engagementUrl);
+        navigator.clipboard.writeText(url);
     };
 
     const handleGetSlug = async () => {
@@ -114,22 +116,25 @@ export const PublicUrls = () => {
     return (
         <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={3}>
             <Grid item xs={12}>
-                <Divider />
+                <MetHeader4 bold>{'Public URLs(Links)'}</MetHeader4>
             </Grid>
             <Grid item xs={12}>
-                <MetHeader4 bold>Engagement Link</MetHeader4>
+                <MetLabel>Link to Public Engagement Page</MetLabel>
                 <MetDescription>
                     This is the link to the public engagement and will only be accessible once the engagement is
                     published.
                 </MetDescription>
-                <ClickAwayListener onClickAway={handleTooltipClose}>
+                <ClickAwayListener
+                    onClickAway={() => {
+                        setCopyTooltipEngagementLink(false);
+                    }}
+                >
                     <Tooltip
                         title="Link copied!"
                         PopperProps={{
                             disablePortal: true,
                         }}
-                        onClose={handleTooltipClose}
-                        open={copyTooltip}
+                        open={copyTooltipEngagementLink}
                         disableFocusListener
                         disableHoverListener
                         disableTouchListener
@@ -163,7 +168,14 @@ export const PublicUrls = () => {
                                 ),
                                 endAdornment: (
                                     <InputAdornment position="end" sx={{ height: '100%', maxHeight: '100%' }}>
-                                        <SecondaryButton variant="contained" disableElevation onClick={handleCopyUrl}>
+                                        <SecondaryButton
+                                            variant="contained"
+                                            disableElevation
+                                            onClick={() => {
+                                                handleCopyUrl(engagementUrl);
+                                                setCopyTooltipEngagementLink(true);
+                                            }}
+                                        >
                                             <ContentCopyIcon />
                                         </SecondaryButton>
                                     </InputAdornment>
@@ -192,9 +204,74 @@ export const PublicUrls = () => {
                     disabled={isSaving}
                     loading={isSaving}
                 >
-                    Save
+                    Save URL
                 </PrimaryButton>
-                <Divider sx={{ mt: '1em' }} />
+            </Grid>
+            <Grid item xs={12}>
+                <MetLabel>Link to Public Dashboad Report</MetLabel>
+            </Grid>
+            <Grid item xs={12}>
+                <MetDescription>
+                    This is the link to the public dashboard. This link will become active once the survey is open to
+                    the public.
+                </MetDescription>
+            </Grid>
+            <Grid item xs={12}>
+                <ClickAwayListener
+                    onClickAway={() => {
+                        setCopyTooltipDashboardLink(false);
+                    }}
+                >
+                    <Tooltip
+                        title="Link copied!"
+                        PopperProps={{
+                            disablePortal: true,
+                        }}
+                        open={copyTooltipDashboardLink}
+                        disableFocusListener
+                        disableHoverListener
+                        disableTouchListener
+                        placement="right"
+                    >
+                        <TextField
+                            id="dashboard-link"
+                            variant="outlined"
+                            label=" "
+                            InputLabelProps={{
+                                shrink: false,
+                            }}
+                            fullWidth
+                            value={dashboardUrl}
+                            sx={{
+                                '.MuiInputBase-input': {
+                                    marginRight: 0,
+                                },
+                                '.MuiInputBase-root': {
+                                    padding: 0,
+                                },
+                            }}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end" sx={{ height: '100%', maxHeight: '100%' }}>
+                                        <SecondaryButton
+                                            variant="contained"
+                                            disableElevation
+                                            onClick={() => {
+                                                handleCopyUrl(dashboardUrl);
+                                                setCopyTooltipDashboardLink(true);
+                                            }}
+                                        >
+                                            <ContentCopyIcon />
+                                        </SecondaryButton>
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                    </Tooltip>
+                </ClickAwayListener>
+            </Grid>
+            <Grid item xs={12}>
+                <Divider />
             </Grid>
         </Grid>
     );
