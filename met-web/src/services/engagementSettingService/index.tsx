@@ -23,7 +23,11 @@ export const postEngagementSettings = async (data: EngagementSettings): Promise<
     return Promise.reject('Failed to create engagement metadata');
 };
 
-export const patchEngagementSettings = async (data: EngagementSettings): Promise<EngagementSettings> => {
+export interface PatchEngagementSettingsRequest {
+    engagement_id: number;
+    send_report?: boolean;
+}
+export const patchEngagementSettings = async (data: PatchEngagementSettingsRequest): Promise<EngagementSettings> => {
     const response = await http.PatchRequest<EngagementSettings>(Endpoints.EngagementSettings.UPDATE, data);
     if (response.data) {
         return response.data;

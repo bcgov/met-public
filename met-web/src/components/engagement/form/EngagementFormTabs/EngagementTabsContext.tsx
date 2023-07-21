@@ -6,8 +6,13 @@ import { EngagementTeamMember } from 'models/engagementTeamMember';
 import { getTeamMembers } from 'services/membershipService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
-import { EngagementSettings, ProjectMetadata } from 'models/engagement';
-import { getEngagementSettings } from 'services/engagementSettingService';
+import { EngagementSettings, ProjectMetadata, createDefaultEngagementSettings } from 'models/engagement';
+import {
+    PatchEngagementSettingsRequest,
+    getEngagementSettings,
+    patchEngagementSettings,
+} from 'services/engagementSettingService';
+import { updatedDiff } from 'deep-object-diff';
 
 interface EngagementFormData {
     name: string;
@@ -18,6 +23,10 @@ interface EngagementFormData {
     is_internal: boolean;
     project_id: string;
     project_metadata: ProjectMetadata;
+}
+
+interface EngagementSettingsFormData {
+    send_report: boolean;
 }
 
 const initialEngagementFormData = {
@@ -69,9 +78,11 @@ export interface EngagementTabsContextState {
     setTeamMembers: React.Dispatch<React.SetStateAction<EngagementTeamMember[]>>;
     teamMembersLoading: boolean;
     loadTeamMembers: () => void;
-    settings: EngagementSettings | null;
+    settings: EngagementSettings;
     settingsLoading: boolean;
     loadSettings: () => void;
+    updateEngagementSettings: (settingsForm: EngagementSettingsFormData) => void;
+    updatingSettings?: boolean;
 }
 
 export const EngagementTabsContext = createContext<EngagementTabsContextState>({
@@ -115,11 +126,15 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
     loadTeamMembers: () => {
         throw new Error('Load team members not implemented');
     },
-    settings: null,
+    settings: createDefaultEngagementSettings(),
     settingsLoading: false,
     loadSettings: () => {
         throw new Error('loadSettings not implemented');
     },
+    updateEngagementSettings: () => {
+        throw new Error('updateEngagementSettings not implemented');
+    },
+    updatingSettings: false,
 });
 
 export const EngagementTabsContextProvider = ({ children }: { children: React.ReactNode }) => {
@@ -180,10 +195,12 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         }
     };
 
-    const [settings, setSettings] = useState<EngagementSettings | null>(null);
+    const [settings, setSettings] = useState<EngagementSettings>(createDefaultEngagementSettings());
     const [settingsLoading, setSettingsLoading] = useState(true);
+    const [updatingSettings, setUpdatingSettings] = useState(false);
     const loadSettings = async () => {
         try {
+            setSettingsLoading(true);
             const response = await getEngagementSettings(savedEngagement.id);
             setSettings(response);
             setSettingsLoading(false);
@@ -198,6 +215,32 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         }
     };
 
+    const updateEngagementSettings = async (settingsForm: EngagementSettingsFormData) => {
+        try {
+            const updatedSettings = updatedDiff(
+                {
+                    send_report: settings.send_report,
+                },
+                settingsForm,
+            ) as PatchEngagementSettingsRequest;
+
+            if (Object.keys(updatedSettings).length === 0) {
+                return;
+            }
+            await patchEngagementSettings({
+                ...updatedSettings,
+                engagement_id: savedEngagement.id,
+            });
+            loadSettings();
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while trying to update settings, please refresh the page or try again at a later time',
+                }),
+            );
+        }
+    };
     return (
         <EngagementTabsContext.Provider
             value={{
@@ -222,6 +265,8 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
                 settings,
                 settingsLoading,
                 loadSettings,
+                updateEngagementSettings,
+                updatingSettings,
             }}
         >
             {children}

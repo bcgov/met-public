@@ -1,19 +1,39 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Grid, Divider, FormGroup, FormControlLabel, Switch } from '@mui/material';
-import { MetHeader4, MetBody } from 'components/common';
+import { MetHeader4, MetBody, PrimaryButton } from 'components/common';
 import { EngagementTabsContext } from '../EngagementTabsContext';
+import { ActionContext } from '../../ActionContext';
+import { useAppDispatch } from 'hooks';
+import { openNotification } from 'services/notificationService/notificationSlice';
 
 const SendReport = () => {
-    const { settings, settingsLoading, loadSettings } = useContext(EngagementTabsContext);
-    const [sendReport, setSendReport] = useState(Boolean(settings?.send_report));
+    const { settings, settingsLoading, loadSettings, updateEngagementSettings, updatingSettings } =
+        useContext(EngagementTabsContext);
+    const { savedEngagement } = useContext(ActionContext);
+    const [sendReport, setSendReport] = useState(Boolean(settings.send_report));
 
-    useEffect(() => {
+    const dispatch = useAppDispatch();
+
+    const fetchSettings = async () => {
+        if (savedEngagement.id) {
+            return;
+        }
+
         if (!settings) {
             loadSettings();
         } else {
             setSendReport(settings.send_report);
         }
+    };
+    useEffect(() => {
+        fetchSettings();
     }, [settings]);
+
+    const handleUpdateSettings = async () => {
+        updateEngagementSettings({
+            send_report: sendReport,
+        });
+    };
 
     return (
         <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1}>
@@ -33,6 +53,12 @@ const SendReport = () => {
                             <Switch
                                 checked={sendReport}
                                 onChange={() => {
+                                    if (savedEngagement.id) {
+                                        dispatch(
+                                            openNotification({ text: 'Must save engagement first', severity: 'error' }),
+                                        );
+                                        return;
+                                    }
                                     setSendReport(!sendReport);
                                 }}
                                 disabled={settingsLoading}
@@ -41,6 +67,11 @@ const SendReport = () => {
                         label="Send report"
                     />
                 </FormGroup>
+            </Grid>
+            <Grid item xs={12}>
+                <PrimaryButton loading={updatingSettings} onClick={handleUpdateSettings}>
+                    Save
+                </PrimaryButton>
             </Grid>
             <Grid item xs={12}>
                 <Divider sx={{ mt: '1em' }} />
