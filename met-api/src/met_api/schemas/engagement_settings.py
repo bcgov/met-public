@@ -2,6 +2,7 @@
 
 from marshmallow import EXCLUDE, Schema, fields
 
+
 class EngagementSettingsSchema(Schema):
     """Engagement settings schema."""
 
