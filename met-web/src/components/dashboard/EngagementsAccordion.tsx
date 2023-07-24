@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { MetBody, MetLabel } from 'components/common';
-import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, useMediaQuery, Theme } from '@mui/material';
 import { Engagement } from 'models/engagement';
 import { When } from 'react-if';
 import SurveyEmailsSent from '../publicDashboard/KPI/SurveyEmailsSent';
@@ -22,6 +22,8 @@ const EngagementsAccordion = ({
     disabled?: boolean;
 }) => {
     const [openedEngagements, setOpenedEngagements] = useState<number[]>([]);
+    const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('xs'));
+
     if (engagements.length == 0) {
         return (
             <Grid item xs={12}>
@@ -70,15 +72,17 @@ const EngagementsAccordion = ({
                                 borderBottom: `solid 1px ${borderColor}`,
                             }}
                         >
-                            <Grid item xs={7}>
-                                <MetLabel>{engagement.name}</MetLabel>
-                            </Grid>
-                            <Grid item xs={5} textAlign="right">
-                                <MetBody>
-                                    {engagement.start_date}
-                                    {' - '}
-                                    {engagement.end_date}
-                                </MetBody>
+                            <Grid container direction={isMobile ? 'column' : 'row'}>
+                                <Grid item md={7} sm={12}>
+                                    <MetLabel>{engagement.name}</MetLabel>
+                                </Grid>
+                                <Grid item md={5} sm={12} textAlign={isMobile ? 'left' : 'right'}>
+                                    <MetBody>
+                                        {engagement.start_date}
+                                        {' - '}
+                                        {engagement.end_date}
+                                    </MetBody>
+                                </Grid>
                             </Grid>
                         </AccordionSummary>
                         <AccordionDetails>
