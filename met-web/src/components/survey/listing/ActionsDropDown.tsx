@@ -52,7 +52,9 @@ export const ActionsDropDown = ({ survey }: { survey: Survey }) => {
     const canViewAllComments = (): boolean => {
         return (
             submissionHasBeenOpened &&
-            (roles.includes(USER_ROLES.REVIEW_COMMENTS) || assignedEngagements.includes(engagementId))
+            (roles.includes(USER_ROLES.REVIEW_COMMENTS) ||
+                roles.includes(USER_ROLES.VIEW_APPROVED_COMMENTS) ||
+                assignedEngagements.includes(engagementId))
         );
     };
 
