@@ -1,9 +1,6 @@
-"""Widget schema class."""
+"""Engagement settings schema class."""
 
-from marshmallow import Schema
-
-from met_api.models.engagement_settings import EngagementSettingsModel
-
+from marshmallow import EXCLUDE, Schema, fields
 
 class EngagementSettingsSchema(Schema):
     """Engagement settings schema."""
@@ -11,5 +8,7 @@ class EngagementSettingsSchema(Schema):
     class Meta:  # pylint: disable=too-few-public-methods
         """Exclude unknown fields in the deserialized output."""
 
-        model = EngagementSettingsModel
-        fields = ('engagement_id', 'send_report')
+        unknown = EXCLUDE
+
+    engagement_id = fields.Int(data_key='engagement_id')
+    send_report = fields.Bool(data_key='send_report')

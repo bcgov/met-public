@@ -6,10 +6,11 @@ import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { ActionContext } from 'components/engagement/form/ActionContext';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { getSlugByEngagementId, patchEngagementSlug } from 'services/engagementSlugService';
+import { patchEngagementSlug } from 'services/engagementSlugService';
 import axios, { AxiosError } from 'axios';
 import { When } from 'react-if';
 import { getBaseUrl } from 'helper';
+import { EngagementTabsContext } from '../EngagementTabsContext';
 
 const HttpStatusBadRequest = 400;
 export const PublicUrls = () => {
@@ -17,8 +18,8 @@ export const PublicUrls = () => {
     const theme = useTheme();
 
     const { savedEngagement } = useContext(ActionContext);
+    const { savedSlug, setSavedSlug } = useContext(EngagementTabsContext);
 
-    const [savedSlug, setSavedSlug] = useState('');
     const [slug, setSlug] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const [copyTooltipEngagementLink, setCopyTooltipEngagementLink] = useState(false);
@@ -30,6 +31,10 @@ export const PublicUrls = () => {
 
     const engagementUrl = !savedSlug ? 'Link will appear when the engagement is saved' : `${baseUrl}/${savedSlug}`;
     const dashboardUrl = !savedSlug ? 'Link will appear when the engagement is saved' : `${engagementUrl}/dashboard`;
+
+    useEffect(() => {
+        setSlug(savedSlug);
+    }, [savedSlug]);
 
     const handleCopyUrl = (url: string) => {
         if (newEngagement) {
@@ -43,27 +48,6 @@ export const PublicUrls = () => {
         }
         navigator.clipboard.writeText(url);
     };
-
-    const handleGetSlug = async () => {
-        if (!savedEngagement.id) return;
-
-        try {
-            const response = await getSlugByEngagementId(savedEngagement.id);
-            setSavedSlug(response.slug);
-            setSlug(response.slug);
-        } catch (error) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Failed to get slug',
-                }),
-            );
-        }
-    };
-
-    useEffect(() => {
-        handleGetSlug();
-    }, [savedEngagement.id]);
 
     const handleBackendError = (error: AxiosError) => {
         if (error.response?.status !== HttpStatusBadRequest) {

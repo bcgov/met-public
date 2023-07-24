@@ -88,7 +88,6 @@ class EngagementsMetadata(Resource):
             setting_schema = EngagementSettingsSchema()
             setting_schema.load(requestjson, partial=True)
             setting = EngagementSettingsService().update_settings(requestjson)
-
             return setting_schema.dump(setting), HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

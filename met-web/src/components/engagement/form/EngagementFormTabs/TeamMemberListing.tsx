@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { HeadCell } from 'components/common/Table/types';
 import { Link } from 'react-router-dom';
 import { Link as MuiLink } from '@mui/material';
@@ -7,13 +7,7 @@ import { EngagementTabsContext } from './EngagementTabsContext';
 import { EngagementTeamMember } from 'models/engagementTeamMember';
 
 const TeamMemberListing = () => {
-    const { teamMembers, loadTeamMembers, teamMembersLoading } = useContext(EngagementTabsContext);
-
-    useEffect(() => {
-        if (teamMembers.length === 0) {
-            loadTeamMembers();
-        }
-    }, []);
+    const { teamMembers, teamMembersLoading } = useContext(EngagementTabsContext);
 
     const headCells: HeadCell<EngagementTeamMember>[] = [
         {

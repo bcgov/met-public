@@ -37,10 +37,17 @@ class EngagementSettingsService:
     def update_settings(data: dict):
         """Update engagement settings partially."""
         engagement_id = data.get('engagement_id', None)
-        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name,
-                                               Role.EDIT_ENGAGEMENT.value), engagement_id=engagement_id)
-        if data:
-            updated_settings = EngagementSettingsModel.update(data)
-            if not updated_settings:
-                EngagementSettingsService._create_settings_model(data)
-        return EngagementSettingsModel.find_by_id(engagement_id)
+        
+        authorization.check_auth(
+            one_of_roles=(MembershipType.TEAM_MEMBER.name, Role.EDIT_ENGAGEMENT.value),
+            engagement_id=engagement_id
+        )
+
+        saved_settings = EngagementSettingsModel.find_by_id(engagement_id)
+        
+        if saved_settings:
+            updated_settings = EngagementSettingsModel.update(engagement_id, data)
+        else:
+            updated_settings = EngagementSettingsService._create_settings_model(data)
+
+        return updated_settings

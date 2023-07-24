@@ -7,26 +7,14 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
 const SendReport = () => {
-    const { settings, settingsLoading, loadSettings, updateEngagementSettings, updatingSettings } =
-        useContext(EngagementTabsContext);
+    const { settings, settingsLoading, updateEngagementSettings, updatingSettings } = useContext(EngagementTabsContext);
     const { savedEngagement } = useContext(ActionContext);
     const [sendReport, setSendReport] = useState(Boolean(settings.send_report));
 
     const dispatch = useAppDispatch();
 
-    const fetchSettings = async () => {
-        if (savedEngagement.id) {
-            return;
-        }
-
-        if (!settings) {
-            loadSettings();
-        } else {
-            setSendReport(settings.send_report);
-        }
-    };
     useEffect(() => {
-        fetchSettings();
+        setSendReport(Boolean(settings.send_report));
     }, [settings]);
 
     const handleUpdateSettings = async () => {
@@ -53,7 +41,7 @@ const SendReport = () => {
                             <Switch
                                 checked={sendReport}
                                 onChange={() => {
-                                    if (savedEngagement.id) {
+                                    if (!savedEngagement.id) {
                                         dispatch(
                                             openNotification({ text: 'Must save engagement first', severity: 'error' }),
                                         );
