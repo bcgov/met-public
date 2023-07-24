@@ -10,10 +10,8 @@ import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementPara
 import {
     createDefaultEngagement,
     createDefaultEngagementMetadata,
-    createDefaultEngagementSettings,
     Engagement,
     EngagementMetadata,
-    EngagementSettings,
 } from '../../../models/engagement';
 import { saveObject } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
