@@ -188,7 +188,7 @@ export const PublicUrls = () => {
                 </PrimaryButton>
             </Grid>
             <Grid item xs={12}>
-                <MetLabel>Link to Public Dashboad Report</MetLabel>
+                <MetLabel>Link to Public Dashboard Report</MetLabel>
             </Grid>
             <Grid item xs={12}>
                 <MetDescription>
