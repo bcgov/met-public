@@ -66,7 +66,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
     const [engagementMetadata, setEngagementMetadata] = useState<EngagementMetadata>(createDefaultEngagementMetadata());
-
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
     const isCreate = window.location.pathname.includes(CREATE);

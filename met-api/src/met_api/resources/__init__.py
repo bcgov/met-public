@@ -46,6 +46,7 @@ from .tenant import API as TENANT_API
 from .engagement_slug import API as ENGAGEMENT_SLUG_API
 from .report_setting import API as REPORT_SETTING_API
 from .widget_video import API as WIDGET_VIDEO_API
+from .engagement_settings import API as ENGAGEMENT_SETTINGS_API
 
 __all__ = ('API_BLUEPRINT',)
 
@@ -83,3 +84,4 @@ API.add_namespace(WIDGET_MAPS_API, path='/widgets/<int:widget_id>/maps')
 API.add_namespace(ENGAGEMENT_SLUG_API, path='/slugs')
 API.add_namespace(REPORT_SETTING_API, path='/surveys/<int:survey_id>/reportsettings')
 API.add_namespace(WIDGET_VIDEO_API, path='/widgets/<int:widget_id>/videos')
+API.add_namespace(ENGAGEMENT_SETTINGS_API)

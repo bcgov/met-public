@@ -189,10 +189,13 @@ describe('Engagement form page tests', () => {
 
         fireEvent.click(settingsTabButton);
 
-        expect(screen.getByText('Engagement Link')).toBeInTheDocument();
+        expect(screen.getByText('Engagement Information')).toBeInTheDocument();
+        expect(screen.getByText('Internal Engagement')).toBeInTheDocument();
+        expect(screen.getByText('Send Report')).toBeInTheDocument();
+        expect(screen.getByText('Public URLs(Links)')).toBeInTheDocument();
         await waitFor(() => {
             expect(getEngagementSlugMock).toHaveReturned();
-            expect(screen.getByDisplayValue(engagementSlugData.slug, { exact: false })).toBeInTheDocument();
+            expect(screen.getAllByDisplayValue(engagementSlugData.slug, { exact: false })).toBeArrayOfSize(2);
         });
     });
 
