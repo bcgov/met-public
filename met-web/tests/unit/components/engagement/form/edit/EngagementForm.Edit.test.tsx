@@ -195,7 +195,7 @@ describe('Engagement form page tests', () => {
         expect(screen.getByText('Public URLs(Links)')).toBeInTheDocument();
         await waitFor(() => {
             expect(getEngagementSlugMock).toHaveReturned();
-            expect(screen.getAllByDisplayValue(engagementSlugData.slug, { exact: false })).toBeInTheDocument();
+            expect(screen.getAllByDisplayValue(engagementSlugData.slug, { exact: false })).toBeArrayOfSize(2);
         });
     });
 
