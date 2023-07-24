@@ -19,6 +19,10 @@ export interface SubscribeContextProps {
     handleChangeSubscribeToEdit: (_Subscribe: Subscribe | null) => void;
     handleSubscribeDrawerOpen: (_Subscribe: SubscribeTypeLabel, _open: boolean) => void;
     updateWidgetSubscribeSorting: (widget_Subscribe: Subscribe[]) => void;
+    richEmailListDescription: string;
+    setRichEmailListDescription: React.Dispatch<React.SetStateAction<string>>;
+    richFormSignUpDescription: string;
+    setRichFormSignUpDescription: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export type EngagementParams = {
@@ -51,6 +55,14 @@ export const SubscribeContext = createContext<SubscribeContextProps>({
     updateWidgetSubscribeSorting: (widget_Subscribe: Subscribe[]) => {
         /* empty default method  */
     },
+    richEmailListDescription: '',
+    setRichEmailListDescription: () => {
+        throw new Error('setrichEmailListDescription is unimplemented');
+    },
+    richFormSignUpDescription: '',
+    setRichFormSignUpDescription: () => {
+        throw new Error('setrichEmailListDescription is unimplemented');
+    },
 });
 
 export const SubscribeProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -62,7 +74,8 @@ export const SubscribeProvider = ({ children }: { children: JSX.Element | JSX.El
     const [formSignUpTabOpen, setFormSignUpTabOpen] = useState(false);
     const [isLoadingSubscribe, setIsLoadingSubscribe] = useState(true);
     const [Subscribe, setSubscribe] = useState<Subscribe[]>([]);
-
+    const [richEmailListDescription, setRichEmailListDescription] = useState('');
+    const [richFormSignUpDescription, setRichFormSignUpDescription] = useState('');
     const loadSubscribe = async () => {
         // if (!widget) {
         //     return;
@@ -124,6 +137,10 @@ export const SubscribeProvider = ({ children }: { children: JSX.Element | JSX.El
                 setSubscribe,
                 Subscribe,
                 updateWidgetSubscribeSorting,
+                richEmailListDescription,
+                richFormSignUpDescription,
+                setRichFormSignUpDescription,
+                setRichEmailListDescription,
             }}
         >
             {children}

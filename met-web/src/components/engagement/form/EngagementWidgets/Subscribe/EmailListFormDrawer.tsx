@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
-import { Grid, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
+import { Grid, FormGroup, FormControlLabel, Radio } from '@mui/material';
 import { MetHeader3, MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
 import { useForm, FormProvider, SubmitHandler, Controller, ControllerRenderProps } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -10,6 +10,7 @@ import * as yup from 'yup';
 import { SubscribeContext } from './SubscribeContext';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
 import { Subscribe_TYPE } from 'models/subscription';
+import RichTextEditor from 'components/common/RichTextEditor';
 
 const schema = yup
     .object({
@@ -24,16 +25,28 @@ type EmailList = yup.TypeOf<typeof schema> & {
 };
 
 const EmailListDrawer = () => {
-    const { handleSubscribeDrawerOpen, emailListTabOpen } = useContext(SubscribeContext);
+    const { handleSubscribeDrawerOpen, emailListTabOpen, richEmailListDescription, setRichEmailListDescription } =
+        useContext(SubscribeContext);
     const [isCreating] = useState(false);
+    const [initialRichDescription, setInitialRichDescription] = useState('');
+    const [descriptionCharCount, setDescriptionCharCount] = useState(0);
     const methods = useForm<EmailList>({
         resolver: yupResolver(schema),
     });
+
+    const getTextFromDraftJsContentState = (contentJSON: string): string => {
+        if (!contentJSON) return '';
+        const contentState = JSON.parse(contentJSON);
+        return contentState.blocks.map((block: { text: string }) => block.text).join(' ');
+    };
 
     useEffect(() => {
         methods.setValue('description', '');
         methods.setValue('cta_type', 'link');
         methods.setValue('cta_text', '');
+        const initialDescription = getTextFromDraftJsContentState(richEmailListDescription);
+        setInitialRichDescription(richEmailListDescription);
+        setDescriptionCharCount(initialDescription.length);
     }, []);
 
     const { handleSubmit } = methods;
@@ -48,6 +61,14 @@ const EmailListDrawer = () => {
 
     const onSubmit: SubmitHandler<EmailList> = async (data: EmailList) => {
         return;
+    };
+
+    const handleDescriptionChange = (rawText: string) => {
+        setDescriptionCharCount(rawText.length);
+    };
+
+    const handleRichDescriptionChange = (newState: string) => {
+        setRichEmailListDescription(newState);
     };
 
     return (
@@ -75,15 +96,12 @@ const EmailListDrawer = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <MetLabel sx={{ marginBottom: '2px' }}>Description</MetLabel>
-                                <ControlledTextField
-                                    name="description"
-                                    variant="outlined"
-                                    label=" "
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
-                                    size="small"
+                                <RichTextEditor
+                                    setRawText={handleDescriptionChange}
+                                    handleEditorStateChange={handleRichDescriptionChange}
+                                    initialRawEditorState={initialRichDescription || ''}
+                                    error={false}
+                                    helperText={'Maximum 550 Characters.'}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -98,7 +116,7 @@ const EmailListDrawer = () => {
                                             field: ControllerRenderProps<EmailList, 'cta_type'>;
                                         }) => (
                                             <FormControlLabel
-                                                control={<Checkbox />}
+                                                control={<Radio />}
                                                 label="Link"
                                                 checked={field.value === 'link'}
                                                 onChange={() => field.onChange('link')}
@@ -114,7 +132,7 @@ const EmailListDrawer = () => {
                                             field: ControllerRenderProps<EmailList, 'cta_type'>;
                                         }) => (
                                             <FormControlLabel
-                                                control={<Checkbox />}
+                                                control={<Radio />}
                                                 label="Button"
                                                 checked={field.value === 'button'}
                                                 onChange={() => field.onChange('button')}
