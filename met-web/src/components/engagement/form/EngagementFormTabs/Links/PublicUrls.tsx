@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { InputAdornment, TextField, Tooltip, Grid, Divider, useTheme } from '@mui/material';
+import { InputAdornment, TextField, Tooltip, Grid, useTheme } from '@mui/material';
 import { SecondaryButton, MetDescription, PrimaryButton, MetHeader4, MetSmallText, MetLabel } from 'components/common';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
