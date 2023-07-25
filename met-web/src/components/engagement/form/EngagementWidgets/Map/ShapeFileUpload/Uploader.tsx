@@ -70,7 +70,7 @@ const Uploader = ({ acceptedFormat = { 'application/zip': ['.zip'] } }: Uploader
             {({ getInputProps, open }) => (
                 <section>
                     <input {...getInputProps()} />
-                    <WidgetButton onClick={open}>Upload Shapefile </WidgetButton>
+                    <WidgetButton onClick={open}>Upload Shapefile</WidgetButton>
                 </section>
             )}
         </Dropzone>

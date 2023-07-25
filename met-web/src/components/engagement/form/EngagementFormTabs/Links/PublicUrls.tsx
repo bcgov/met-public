@@ -178,7 +178,6 @@ export const PublicUrls = () => {
             </Grid>
             <Grid item xs={12}>
                 <PrimaryButton
-                    data-testid="update-engagement-button"
                     sx={{ marginRight: 1 }}
                     onClick={() => handleSaveSlug()}
                     disabled={isSaving}

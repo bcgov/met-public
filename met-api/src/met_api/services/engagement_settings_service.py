@@ -22,9 +22,10 @@ class EngagementSettingsService:
         settings_model = EngagementSettingsService._create_settings_model(data)
         settings_model.commit()
         return settings_model.find_by_id(settings_model.engagement_id)
-    
+
     @staticmethod
     def create_default_settings(engagement_id: int):
+        """Create default engagement settings."""
         data = {
             'engagement_id': engagement_id,
             'send_report': True
