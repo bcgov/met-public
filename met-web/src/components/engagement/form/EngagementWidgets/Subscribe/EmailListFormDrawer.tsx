@@ -137,27 +137,12 @@ const EmailListDrawer = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <MetLabel sx={{ marginBottom: '2px' }}>Description</MetLabel>
-                                <Controller
-                                    name="description"
-                                    control={methods.control}
-                                    defaultValue={initialRichDescription || ''}
-                                    render={({ field }) => (
-                                        <RichTextEditor
-                                            setRawText={handleDescriptionChange}
-                                            handleEditorStateChange={(newState: string) => {
-                                                const text = getTextFromDraftJsContentState(newState);
-                                                setDescriptionCharCount(text.length);
-                                                field.onChange(newState);
-                                            }}
-                                            initialRawEditorState={field.value}
-                                            error={methods.formState.errors.description.length > 500}
-                                            helperText={
-                                                methods.formState.errors.description
-                                                    ? methods.formState.errors.description.message
-                                                    : 'Maximum 500 characters.'
-                                            }
-                                        />
-                                    )}
+                                <RichTextEditor
+                                    setRawText={handleDescriptionChange}
+                                    handleEditorStateChange={handleRichDescriptionChange}
+                                    initialRawEditorState={initialRichDescription || ''}
+                                    error={getTextFromDraftJsContentState(richEmailListDescription).length > 550}
+                                    helperText={'Maximum 550 Characters.'}
                                 />
                             </Grid>
                             <Grid item xs={12}>

@@ -27,13 +27,14 @@ export const createSubscription = async (request: Subscribe): Promise<Subscribe>
 interface SubscribeFormProps {
     widget_id: number;
     description?: string;
-    cta_type?: string;
-    cta_text?: string;
+    call_to_action_type?: string;
+    call_to_action_text?: string;
     form_type: SubscribeTypeLabel;
 }
 
 export const createSubscribeForm = async (widget_id: number, data: SubscribeFormProps): Promise<Subscribe> => {
     try {
+        console.log(data);
         const url = replaceUrl(Endpoints.Subscription.CREATE_FORM, 'widget_id', String(widget_id));
         const response = await http.PostRequest<Subscribe>(url, data);
         if (response.data) {
