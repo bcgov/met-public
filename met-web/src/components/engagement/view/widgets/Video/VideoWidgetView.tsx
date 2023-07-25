@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { MetPaper, MetHeader2, MetParagraph } from 'components/common';
+import { MetPaper, MetHeader2, MetParagraph, AspectRatioContainer, ReactPlayerWrapper } from 'components/common';
 import { Grid, Skeleton, Divider } from '@mui/material';
 import { Widget } from 'models/widget';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { VideoWidget } from 'models/videoWidget';
 import { fetchVideoWidgets } from 'services/widgetService/VideoService';
-import ReactPlayer from 'react-player/lazy';
 
 interface VideoWidgetProps {
     widget: Widget;
@@ -87,7 +86,16 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
                         <MetParagraph>{videoWidget.description}</MetParagraph>
                     </Grid>
                     <Grid item xs={12}>
-                        <ReactPlayer url={videoWidget.video_url} controls width="100%" config={playerConfig} />
+                        <AspectRatioContainer>
+                            <ReactPlayerWrapper
+                                url={videoWidget.video_url}
+                                controls
+                                width="100%"
+                                height={'100%'}
+                                config={playerConfig}
+                                light
+                            />
+                        </AspectRatioContainer>
                     </Grid>
                 </Grid>
             </MetPaper>
