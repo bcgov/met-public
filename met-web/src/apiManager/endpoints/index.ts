@@ -56,6 +56,7 @@ const Endpoints = {
         CREATE: `${AppConfig.apiUrl}/subscription/`,
         UPDATE: `${AppConfig.apiUrl}/subscription/`,
         CREATE_UPDATE: `${AppConfig.apiUrl}/subscription/manage`,
+        CREATE_FORM: `${AppConfig.apiUrl}/widgets/widget_id/subscription`,
     },
     PublicSubmission: {
         CREATE: `${AppConfig.apiUrl}/submissions/public/verification_token`,

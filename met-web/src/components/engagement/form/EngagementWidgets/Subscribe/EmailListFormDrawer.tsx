@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { useAppDispatch } from 'hooks';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
@@ -11,39 +12,45 @@ import { SubscribeContext } from './SubscribeContext';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
 import { Subscribe_TYPE } from 'models/subscription';
 import RichTextEditor from 'components/common/RichTextEditor';
+import { createSubscribeForm } from 'services/subscriptionService';
+import { openNotification } from 'services/notificationService/notificationSlice';
+import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor/utils';
 
 const schema = yup
     .object({
-        description: yup.string().max(500, 'Description cannot exceed 500 characters'),
-        cta_type: yup.string(),
-        cta_text: yup.string().max(25, 'Description cannot exceed 25 characters'),
+        description: yup.string(),
+        call_to_action_type: yup.string(),
+        call_to_action_text: yup
+            .string()
+            .max(25, 'Call to action cannot exceed 25 characters')
+            .required('Call to action is required'),
     })
     .required();
 
 type EmailList = yup.TypeOf<typeof schema> & {
-    cta_type: 'link' | 'button';
+    call_to_action_type: 'link' | 'button';
 };
 
 const EmailListDrawer = () => {
-    const { handleSubscribeDrawerOpen, emailListTabOpen, richEmailListDescription, setRichEmailListDescription } =
-        useContext(SubscribeContext);
-    const [isCreating] = useState(false);
+    const {
+        widget,
+        handleSubscribeDrawerOpen,
+        emailListTabOpen,
+        richEmailListDescription,
+        setRichEmailListDescription,
+    } = useContext(SubscribeContext);
+    const [isCreating, setIsCreating] = useState(false);
     const [initialRichDescription, setInitialRichDescription] = useState('');
     const [descriptionCharCount, setDescriptionCharCount] = useState(0);
+    const dispatch = useAppDispatch();
     const methods = useForm<EmailList>({
         resolver: yupResolver(schema),
     });
 
-    const getTextFromDraftJsContentState = (contentJSON: string): string => {
-        if (!contentJSON) return '';
-        const contentState = JSON.parse(contentJSON);
-        return contentState.blocks.map((block: { text: string }) => block.text).join(' ');
-    };
-
     useEffect(() => {
         methods.setValue('description', '');
-        methods.setValue('cta_type', 'link');
-        methods.setValue('cta_text', '');
+        methods.setValue('call_to_action_type', 'link');
+        methods.setValue('call_to_action_text', 'Click here to sign up');
         const initialDescription = getTextFromDraftJsContentState(richEmailListDescription);
         setInitialRichDescription(richEmailListDescription);
         setDescriptionCharCount(initialDescription.length);
@@ -56,11 +63,45 @@ const EmailListDrawer = () => {
     };
 
     const createEmailListForm = async (data: EmailList) => {
-        return;
+        const validatedData = await schema.validate(data);
+        const { description, call_to_action_type, call_to_action_text } = validatedData;
+        if (widget) {
+            const createdWidgetEvent = await createSubscribeForm(widget.id, {
+                widget_id: widget.id,
+                description: richEmailListDescription,
+                call_to_action_type: call_to_action_type,
+                call_to_action_text: call_to_action_text,
+                form_type: Subscribe_TYPE.EMAIL_LIST,
+            });
+        }
+        dispatch(openNotification({ severity: 'success', text: 'Email list form was successfully created' }));
+    };
+
+    const saveForm = async (data: EmailList) => {
+        // if (!richEmailListDescription) {
+        //     return updateEmailListForm(data);
+        // }
+        return createEmailListForm(data);
     };
 
     const onSubmit: SubmitHandler<EmailList> = async (data: EmailList) => {
-        return;
+        if (!widget) {
+            return;
+        }
+        try {
+            setIsCreating(true);
+            await saveForm(data);
+            setIsCreating(false);
+            handleSubscribeDrawerOpen(Subscribe_TYPE.EMAIL_LIST, false);
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'An error occurred while trying to create email list form',
+                }),
+            );
+            setIsCreating(false);
+        }
     };
 
     const handleDescriptionChange = (rawText: string) => {
@@ -96,12 +137,27 @@ const EmailListDrawer = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <MetLabel sx={{ marginBottom: '2px' }}>Description</MetLabel>
-                                <RichTextEditor
-                                    setRawText={handleDescriptionChange}
-                                    handleEditorStateChange={handleRichDescriptionChange}
-                                    initialRawEditorState={initialRichDescription || ''}
-                                    error={false}
-                                    helperText={'Maximum 550 Characters.'}
+                                <Controller
+                                    name="description"
+                                    control={methods.control}
+                                    defaultValue={initialRichDescription || ''}
+                                    render={({ field }) => (
+                                        <RichTextEditor
+                                            setRawText={handleDescriptionChange}
+                                            handleEditorStateChange={(newState: string) => {
+                                                const text = getTextFromDraftJsContentState(newState);
+                                                setDescriptionCharCount(text.length);
+                                                field.onChange(newState);
+                                            }}
+                                            initialRawEditorState={field.value}
+                                            error={methods.formState.errors.description.length > 500}
+                                            helperText={
+                                                methods.formState.errors.description
+                                                    ? methods.formState.errors.description.message
+                                                    : 'Maximum 500 characters.'
+                                            }
+                                        />
+                                    )}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -109,11 +165,11 @@ const EmailListDrawer = () => {
                                 <FormGroup>
                                     <Controller
                                         control={methods.control}
-                                        name="cta_type"
+                                        name="call_to_action_type"
                                         render={({
                                             field,
                                         }: {
-                                            field: ControllerRenderProps<EmailList, 'cta_type'>;
+                                            field: ControllerRenderProps<EmailList, 'call_to_action_type'>;
                                         }) => (
                                             <FormControlLabel
                                                 control={<Radio />}
@@ -125,11 +181,11 @@ const EmailListDrawer = () => {
                                     />
                                     <Controller
                                         control={methods.control}
-                                        name="cta_type"
+                                        name="call_to_action_type"
                                         render={({
                                             field,
                                         }: {
-                                            field: ControllerRenderProps<EmailList, 'cta_type'>;
+                                            field: ControllerRenderProps<EmailList, 'call_to_action_type'>;
                                         }) => (
                                             <FormControlLabel
                                                 control={<Radio />}
@@ -144,7 +200,7 @@ const EmailListDrawer = () => {
                             <Grid item xs={12}>
                                 <MetLabel sx={{ marginBottom: '2px' }}>Call-to-action</MetLabel>
                                 <ControlledTextField
-                                    name="cta_text"
+                                    name="call_to_action_text"
                                     variant="outlined"
                                     label=""
                                     InputLabelProps={{

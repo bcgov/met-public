@@ -12,17 +12,18 @@ import { SubscribeContext } from './SubscribeContext';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
 import { Subscribe_TYPE } from 'models/subscription';
 import RichTextEditor from 'components/common/RichTextEditor';
+import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor/utils';
 
 const schema = yup
     .object({
         description: yup.string().max(500, 'Description cannot exceed 500 characters'),
-        cta_type: yup.string(),
-        cta_text: yup.string().max(25, 'Description cannot exceed 25 characters'),
+        call_to_action_type: yup.string(),
+        call_to_action_text: yup.string().max(25, 'call to action cannot exceed 25 characters'),
     })
     .required();
 
 type FormSignUp = yup.TypeOf<typeof schema> & {
-    cta_type: 'link' | 'button';
+    call_to_action_type: 'link' | 'button';
 };
 
 const FormSignUpDrawer = () => {
@@ -36,16 +37,10 @@ const FormSignUpDrawer = () => {
         resolver: yupResolver(schema),
     });
 
-    const getTextFromDraftJsContentState = (contentJSON: string): string => {
-        if (!contentJSON) return '';
-        const contentState = JSON.parse(contentJSON);
-        return contentState.blocks.map((block: { text: string }) => block.text).join(' ');
-    };
-
     useEffect(() => {
         methods.setValue('description', '');
-        methods.setValue('cta_type', 'link');
-        methods.setValue('cta_text', '');
+        methods.setValue('call_to_action_type', 'link');
+        methods.setValue('call_to_action_text', '');
         const initialDescription = getTextFromDraftJsContentState(richFormSignUpDescription);
         setInitialRichDescription(richFormSignUpDescription);
         setDescriptionCharCount(initialDescription.length);
@@ -111,11 +106,11 @@ const FormSignUpDrawer = () => {
                                 <FormGroup>
                                     <Controller
                                         control={methods.control}
-                                        name="cta_type"
+                                        name="call_to_action_type"
                                         render={({
                                             field,
                                         }: {
-                                            field: ControllerRenderProps<FormSignUp, 'cta_type'>;
+                                            field: ControllerRenderProps<FormSignUp, 'call_to_action_type'>;
                                         }) => (
                                             <FormControlLabel
                                                 control={<Radio />}
@@ -127,11 +122,11 @@ const FormSignUpDrawer = () => {
                                     />
                                     <Controller
                                         control={methods.control}
-                                        name="cta_type"
+                                        name="call_to_action_type"
                                         render={({
                                             field,
                                         }: {
-                                            field: ControllerRenderProps<FormSignUp, 'cta_type'>;
+                                            field: ControllerRenderProps<FormSignUp, 'call_to_action_type'>;
                                         }) => (
                                             <FormControlLabel
                                                 control={<Radio />}
@@ -146,7 +141,7 @@ const FormSignUpDrawer = () => {
                             <Grid item xs={12}>
                                 <MetLabel sx={{ marginBottom: '2px' }}>Call-to-action</MetLabel>
                                 <ControlledTextField
-                                    name="cta_text"
+                                    name="call_to_action_text"
                                     variant="outlined"
                                     label=""
                                     InputLabelProps={{

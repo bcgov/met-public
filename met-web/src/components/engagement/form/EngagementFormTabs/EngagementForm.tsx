@@ -11,6 +11,7 @@ import { SUBMISSION_STATUS } from 'constants/engagementStatus';
 import DayCalculatorModal from '../DayCalculator';
 import { ENGAGEMENT_CROPPER_ASPECT_RATIO, ENGAGEMENT_UPLOADER_HEIGHT } from './constants';
 import RichTextEditor from 'components/common/RichTextEditor';
+import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor/utils';
 
 const CREATE = 'create';
 const EngagementForm = () => {
@@ -63,12 +64,6 @@ const EngagementForm = () => {
             block_text: surveyBlockText.Closed,
         },
     ];
-
-    const getTextFromDraftJsContentState = (contentJSON: string): string => {
-        if (!contentJSON) return '';
-        const contentState = JSON.parse(contentJSON);
-        return contentState.blocks.map((block: { text: string }) => block.text).join(' ');
-    };
 
     useEffect(() => {
         const initialDescription = getTextFromDraftJsContentState(richDescription || savedEngagement.rich_description);
