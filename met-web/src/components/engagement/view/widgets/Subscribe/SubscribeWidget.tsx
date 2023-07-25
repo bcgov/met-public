@@ -127,7 +127,7 @@ function SubscribeWidget() {
                 </Grid>
                 <Grid item xs={12}>
                     <PrimaryButton onClick={() => setOpen(true)} sx={{ width: '100%' }}>
-                        Sign Up for Updates from the EAO
+                        Sign Up for Updates
                     </PrimaryButton>
                 </Grid>
             </Grid>

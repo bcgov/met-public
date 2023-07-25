@@ -32,6 +32,37 @@ export const getMapImageDataUrl = async (projectMapData: IMap | null): Promise<s
         center: [projectMapData.longitude, projectMapData.latitude],
         zoom: INITIAL_ZOOM,
     });
+    // Add marker
+    map.on('load', function () {
+        map.addLayer({
+            id: 'mapLine',
+            type: 'circle',
+            source: {
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features: [
+                        {
+                            type: 'Feature',
+                            geometry: {
+                                type: 'Point',
+                                coordinates: [projectMapData.longitude, projectMapData.latitude],
+                            },
+                            properties: {
+                                title: 'Project Location',
+                            },
+                        },
+                    ],
+                },
+            },
+            paint: {
+                'circle-radius': 8,
+                'circle-color': 'red',
+                'circle-stroke-width': 1,
+                'circle-blur': 0.5,
+            },
+        });
+    });
 
     // Wait for the map to load completely
     await new Promise((resolve) => {
@@ -79,7 +110,7 @@ export const generateDashboardPdf = async (
 
     doc.setFontSize(9);
     doc.setFont('helvetica', 'bold');
-    doc.text('Project Map\n\n', padding + 55, top + 80);
+    doc.text('Project Location\n\n', padding + 55, top + 80);
     addImageToPdf(doc, mapImageDataURL, padding + 55, top + 85, 75, 75);
     doc.addPage();
     handlePdfExportProgress(60);

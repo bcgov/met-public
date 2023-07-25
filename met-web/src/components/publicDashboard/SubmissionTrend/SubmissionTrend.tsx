@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
 import { Stack, useMediaQuery, Theme, Grid, ToggleButtonGroup, CircularProgress, TextField } from '@mui/material';
-import { MetPaper, MetLabel, PrimaryButton, MetToggleButton } from 'components/common';
+import { MetPaper, MetLabel, SecondaryButton, MetToggleButton } from 'components/common';
 import { DASHBOARD } from '../constants';
 import { ErrorBox } from '../ErrorBox';
 import {
@@ -15,6 +15,7 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { Dayjs } from 'dayjs';
 import { Then, If, Else, Unless } from 'react-if';
 import { formatToUTC } from 'components/common/dateHelper';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 interface SubmissionTrendProps {
     engagement: Engagement;
@@ -111,6 +112,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     if (isError) {
         return <ErrorBox sx={{ height: HEIGHT }} onClick={fetchData} />;
     }
+
     return (
         <>
             <MetLabel mb={0.5} mt={1}>
@@ -138,43 +140,53 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             <Grid container item alignItems={'center'} justifyContent={'center'} xs={12} sx={{ mb: 1 }}>
                                 <MetLabel>Select Date Range </MetLabel>
                             </Grid>
-                            <Grid container justifyContent={'center'} alignItems="center" sx={{ mb: 1 }}>
-                                <Grid md={isBetweenMdAndLg ? 1 : 3} lg={3} item sx={{ mr: 1 }}>
+                            <Grid container item sx={{ mb: 1 }} direction="column" alignItems="center">
+                                <Stack flexDirection={'column'} alignItems={'flex-start'}>
                                     <MetLabel>From: </MetLabel>
-                                </Grid>
-                                <Grid lg={7} item>
                                     <DatePicker
                                         value={fromDate}
                                         onChange={(newDate: Dayjs | null) => setFromDate(newDate)}
+                                        label="mm/dd/yyyy"
                                         inputFormat="MM/DD/YYYY"
-                                        renderInput={(params) => <TextField {...params} />}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                InputProps={{
+                                                    ...params.InputProps,
+                                                    endAdornment: <CalendarTodayIcon sx={{ fontSize: 20 }} />,
+                                                }}
+                                            />
+                                        )}
                                     />
-                                </Grid>
+                                </Stack>
                             </Grid>
-                            <Grid
-                                container
-                                justifyContent={'center'}
-                                alignItems="center"
-                                xs={12}
-                                sx={{ mb: 1, ml: { xs: 3, sm: 3, md: 0 } }}
-                            >
-                                <Grid md={isBetweenMdAndLg ? 1 : 3} lg={3} item sx={{ mr: 1 }}>
+                            <Grid container item sx={{ mb: 1 }} direction="column" alignItems="center">
+                                <Stack flexDirection={'column'} alignItems={'flex-start'}>
                                     <MetLabel>To: </MetLabel>
-                                </Grid>
-                                <Grid lg={7} item>
                                     <DatePicker
-                                        value={toDate}
+                                        value={fromDate}
                                         onChange={(newDate: Dayjs | null) => setToDate(newDate)}
+                                        label="mm/dd/yyyy"
                                         inputFormat="MM/DD/YYYY"
-                                        renderInput={(params) => <TextField {...params} />}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                InputProps={{
+                                                    ...params.InputProps,
+                                                    endAdornment: <CalendarTodayIcon sx={{ fontSize: 20 }} />,
+                                                }}
+                                            />
+                                        )}
                                     />
-                                </Grid>
+                                </Stack>
                             </Grid>
-
-                            <Grid container item xs={8} justifyContent="center" alignItems="center">
-                                <PrimaryButton sx={dashboardCustomStyles.primaryButton} onClick={clearDates}>
-                                    Clear
-                                </PrimaryButton>
+                            <Grid container item justifyContent="center" alignItems="center">
+                                <SecondaryButton
+                                    sx={{ ...dashboardCustomStyles.primaryButton, width: 'auto' }}
+                                    onClick={clearDates}
+                                >
+                                    Reset All Filters
+                                </SecondaryButton>
                             </Grid>
                         </Grid>
                         <Grid
