@@ -1,18 +1,14 @@
 import React, { useContext } from 'react';
-import { Grid, FormControlLabel, Switch, Divider } from '@mui/material';
-import { MetLabel, MetHeader4, MetBody } from '../../../../common';
-import { EngagementTabsContext } from '../EngagementTabsContext';
+import { Grid, FormControlLabel, Switch } from '@mui/material';
+import { MetLabel, MetHeader4, MetDescription } from '../../../../common';
 import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
+import { EngagementSettingsContext } from './EngagementSettingsContext';
 
 const InternalEngagement = () => {
-    const { engagementFormData, setEngagementFormData } = useContext(EngagementTabsContext);
-    const { is_internal } = engagementFormData;
+    const { isInternal, setIsInternal } = useContext(EngagementSettingsContext);
 
     const handleChangeIsInternal = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEngagementFormData({
-            ...engagementFormData,
-            is_internal: e.target.checked,
-        });
+        setIsInternal(e.target.checked);
     };
 
     return (
@@ -21,19 +17,16 @@ const InternalEngagement = () => {
                 <MetHeader4 bold>Internal Engagement</MetHeader4>
             </Grid>
             <Grid item xs={12}>
-                <MetBody>
+                <MetDescription>
                     This will make the engagement only available to people requesting access from a{' '}
                     {INTERNAL_EMAIL_DOMAIN} email address and will not show on the engagement home page.
-                </MetBody>
+                </MetDescription>
             </Grid>
             <Grid item xs={12}>
                 <FormControlLabel
-                    control={<Switch name="is_internal" checked={is_internal} onChange={handleChangeIsInternal} />}
+                    control={<Switch name="is_internal" checked={isInternal} onChange={handleChangeIsInternal} />}
                     label={<MetLabel>Set-up as Internal Engagement</MetLabel>}
                 />
-            </Grid>
-            <Grid item xs={12}>
-                <Divider sx={{ mt: '1em' }} />
             </Grid>
         </Grid>
     );

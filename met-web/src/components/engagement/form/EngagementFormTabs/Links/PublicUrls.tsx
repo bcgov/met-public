@@ -96,7 +96,7 @@ export const PublicUrls = () => {
     return (
         <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={3}>
             <Grid item xs={12}>
-                <MetHeader4 bold>{'Public URLs(Links)'}</MetHeader4>
+                <MetHeader4 bold>{'Public URLs (links)'}</MetHeader4>
             </Grid>
             <Grid item xs={12}>
                 <MetLabel>Link to Public Engagement Page</MetLabel>
@@ -189,14 +189,10 @@ export const PublicUrls = () => {
             </Grid>
             <Grid item xs={12}>
                 <MetLabel>Link to Public Dashboard Report</MetLabel>
-            </Grid>
-            <Grid item xs={12}>
                 <MetDescription>
                     This is the link to the public dashboard. This link will become active once the survey is open to
                     the public.
                 </MetDescription>
-            </Grid>
-            <Grid item xs={12}>
                 <ClickAwayListener
                     onClickAway={() => {
                         setCopyTooltipDashboardLink(false);
@@ -249,9 +245,6 @@ export const PublicUrls = () => {
                         />
                     </Tooltip>
                 </ClickAwayListener>
-            </Grid>
-            <Grid item xs={12}>
-                <Divider />
             </Grid>
         </Grid>
     );

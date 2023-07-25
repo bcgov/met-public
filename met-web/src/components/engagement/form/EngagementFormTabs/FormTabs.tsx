@@ -2,10 +2,11 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import TabContext from '@mui/lab/TabContext';
 import EngagementForm from './EngagementForm';
-import EngagementSettings from './Settings/EngagementSettings';
 import { MetTab, MetTabList, MetTabPanel } from '../StyledTabComponents';
 import { EngagementFormTabValues, ENGAGEMENT_FORM_TABS } from './constants';
 import EngagementUserManagement from './EngagementUserManagement';
+import EngagementLinks from './Links';
+import EngagementSettings from './Settings';
 
 const FormTabs = () => {
     const [value, setValue] = React.useState<EngagementFormTabValues>(ENGAGEMENT_FORM_TABS.DETAILS);
@@ -25,6 +26,7 @@ const FormTabs = () => {
                         <MetTab label="Engagement Details" value={ENGAGEMENT_FORM_TABS.DETAILS} />
                         <MetTab label="User Management" value={ENGAGEMENT_FORM_TABS.USER_MANAGEMENT} />
                         <MetTab label="Settings" value={ENGAGEMENT_FORM_TABS.SETTINGS} />
+                        <MetTab label="Links" value={ENGAGEMENT_FORM_TABS.LINKS} />
                     </MetTabList>
                 </Box>
                 <MetTabPanel value={ENGAGEMENT_FORM_TABS.DETAILS}>
@@ -35,6 +37,9 @@ const FormTabs = () => {
                 </MetTabPanel>
                 <MetTabPanel value={ENGAGEMENT_FORM_TABS.SETTINGS}>
                     <EngagementSettings />
+                </MetTabPanel>
+                <MetTabPanel value={ENGAGEMENT_FORM_TABS.LINKS}>
+                    <EngagementLinks />
                 </MetTabPanel>
             </TabContext>
         </Box>

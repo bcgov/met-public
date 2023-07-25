@@ -1,13 +1,10 @@
 import React, { useContext } from 'react';
-import { Grid, MenuItem, TextField, Select, SelectChangeEvent, Divider } from '@mui/material';
-import { MetLabel, PrimaryButton, MetHeader4 } from 'components/common';
-import { ActionContext } from '../../ActionContext';
+import { Grid, MenuItem, TextField, Select, SelectChangeEvent } from '@mui/material';
+import { MetLabel, MetHeader4 } from 'components/common';
 import { EngagementTabsContext } from '../EngagementTabsContext';
 import { AppConfig } from 'config';
 
 const EngagementInformation = () => {
-    const { handleUpdateEngagementMetadataRequest, isSaving, savedEngagement, engagementId } =
-        useContext(ActionContext);
     const { engagementFormData, setEngagementFormData } = useContext(EngagementTabsContext);
     const { project_id, project_metadata } = engagementFormData;
     const { engagementProjectTypes } = AppConfig.constants;
@@ -27,15 +24,6 @@ const EngagementInformation = () => {
                 [e.target.name]: e.target.value,
             },
         });
-    };
-
-    const handleUpdateEngagementSettings = async () => {
-        await handleUpdateEngagementMetadataRequest({
-            ...engagementFormData,
-            engagement_id: Number(engagementId),
-        });
-
-        return savedEngagement;
     };
 
     return (
@@ -115,18 +103,6 @@ const EngagementInformation = () => {
                     fullWidth
                     onChange={handleChangeMetadata}
                 />
-            </Grid>
-            <Grid item xs={12}>
-                <PrimaryButton
-                    data-testid="update-engagement-button"
-                    sx={{ marginRight: 1 }}
-                    onClick={() => handleUpdateEngagementSettings()}
-                    disabled={isSaving}
-                    loading={isSaving}
-                >
-                    Save
-                </PrimaryButton>
-                <Divider sx={{ mt: '1em' }} />
             </Grid>
         </Grid>
     );
