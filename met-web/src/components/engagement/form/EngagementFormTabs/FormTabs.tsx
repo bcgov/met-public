@@ -22,11 +22,12 @@ const FormTabs = () => {
                         TabIndicatorProps={{
                             style: { transition: 'none', display: 'none' },
                         }}
+                        variant="scrollable"
                     >
                         <MetTab label="Engagement Details" value={ENGAGEMENT_FORM_TABS.DETAILS} />
                         <MetTab label="User Management" value={ENGAGEMENT_FORM_TABS.USER_MANAGEMENT} />
                         <MetTab label="Settings" value={ENGAGEMENT_FORM_TABS.SETTINGS} />
-                        <MetTab label="Links" value={ENGAGEMENT_FORM_TABS.LINKS} />
+                        <MetTab label="URL (links)" value={ENGAGEMENT_FORM_TABS.LINKS} />
                     </MetTabList>
                 </Box>
                 <MetTabPanel value={ENGAGEMENT_FORM_TABS.DETAILS}>
