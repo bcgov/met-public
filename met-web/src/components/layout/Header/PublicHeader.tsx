@@ -9,30 +9,32 @@ import { MetHeader1, MetHeader2 } from 'components/common';
 import EnvironmentBanner from './EnvironmentBanner';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoLight.svg';
 import { Unless, When } from 'react-if';
-import { useAppSelector } from 'hooks';
-import { HeaderProps } from './types';
+import { useAppSelector, useAppTranslation } from 'hooks';
 import { useNavigate } from 'react-router-dom';
 
-const PublicHeader = ({ tenant }: HeaderProps) => {
+const PublicHeader = () => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const [imageError, setImageError] = useState(false);
     const navigate = useNavigate();
+    const { t: translate } = useAppTranslation();
+
+    const logoUrl = translate('common.logoUrl');
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
                 <Toolbar>
-                    <When condition={tenant.logo_url && !imageError}>
+                    <When condition={logoUrl && !imageError}>
                         <Box
                             sx={{
-                                backgroundImage: tenant.logo_url,
+                                backgroundImage: logoUrl,
                                 height: '5em',
                                 width: { xs: '7em', md: '15em' },
                                 marginRight: { xs: '1em', md: '3em' },
                             }}
                         >
                             <img
-                                src={tenant.logo_url}
+                                src={logoUrl}
                                 alt="Site Logo"
                                 style={{
                                     objectFit: 'cover',
@@ -45,7 +47,7 @@ const PublicHeader = ({ tenant }: HeaderProps) => {
                             />
                         </Box>
                     </When>
-                    <When condition={!tenant.logo_url || imageError}>
+                    <When condition={!logoUrl || imageError}>
                         <Box
                             component={BCLogo}
                             sx={{
@@ -57,10 +59,10 @@ const PublicHeader = ({ tenant }: HeaderProps) => {
                         />
                     </When>
                     <When condition={isMediumScreen}>
-                        <MetHeader1 sx={{ flexGrow: 1 }}>{tenant.title}</MetHeader1>
+                        <MetHeader1 sx={{ flexGrow: 1 }}>{translate('header.title')}</MetHeader1>
                     </When>
                     <Unless condition={isMediumScreen}>
-                        <MetHeader2 sx={{ flexGrow: 1 }}>{tenant.title}</MetHeader2>
+                        <MetHeader2 sx={{ flexGrow: 1 }}>{translate('header.title')}</MetHeader2>
                     </Unless>
                     <When condition={isLoggedIn}>
                         <Button color="inherit" onClick={() => UserService.doLogout(() => navigate('/'))}>

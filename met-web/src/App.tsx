@@ -1,8 +1,8 @@
 import './App.scss';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import UserService from './services/userService';
-import { useAppSelector, useAppDispatch } from './hooks';
+import { useAppSelector, useAppDispatch, useAppTranslation } from './hooks';
 import { MidScreenLoader, MobileToolbar } from './components/common';
 import { Box, Container, useMediaQuery, Theme, Toolbar } from '@mui/material';
 import InternalHeader from './components/layout/Header/InternalHeader';
@@ -16,11 +16,13 @@ import { FeedbackModal } from 'components/feedback/FeedbackModal';
 import { AppConfig } from 'config';
 import NoAccess from 'routes/NoAccess';
 import { getTenant } from 'services/tenantService';
-import { Tenant } from 'models/tenant';
 import { DEFAULT_TENANT } from './constants';
 import NotFound from 'routes/NotFound';
 import Footer from 'components/layout/Footer';
 import { ZIndex } from 'styles/Theme';
+import { TenantState, loadingTenant, saveTenant } from 'reduxSlices/tenantSlice';
+import { openNotification } from 'services/notificationService/notificationSlice';
+import i18n from './i18n';
 
 const App = () => {
     const drawerWidth = 280;
@@ -31,7 +33,9 @@ const App = () => {
     const authenticationLoading = useAppSelector((state) => state.user.authentication.loading);
     const pathSegments = window.location.pathname.split('/');
     const basename = pathSegments[1];
-    const [tenant, setTenant] = useState<Tenant>();
+
+    const tenant: TenantState = useAppSelector((state) => state.tenant);
+    const { t: translate } = useAppTranslation();
 
     useEffect(() => {
         UserService.initKeycloak(dispatch);
@@ -57,16 +61,42 @@ const App = () => {
         try {
             const tenant = await getTenant(basename);
 
-            if (tenant) {
-                sessionStorage.setItem('tenantId', basename);
-                setTenant(tenant);
-            }
+            localStorage.setItem('tenantId', basename);
+            dispatch(
+                saveTenant({
+                    name: tenant.name,
+                    logoUrl: tenant.logo_url || '',
+                    basename: basename,
+                }),
+            );
         } catch {
+            dispatch(loadingTenant(false));
             console.error('Error occurred while fetching Tenant information');
         }
     };
 
-    if (authenticationLoading) {
+    const loadTranslation = async () => {
+        if (!tenant.basename) {
+            return;
+        }
+
+        const language = 'en'; // Default language is English, change as needed
+        i18n.changeLanguage(language); // Set the language for react-i18next
+
+        try {
+            const translationFile = await import(`./locales/${language}/${basename}.json`);
+            i18n.addResourceBundle(language, basename, translationFile);
+            dispatch(loadingTenant(false));
+        } catch (error) {
+            dispatch(openNotification({ text: translate('landing.error.loadTranslation'), severity: 'error' }));
+        }
+    };
+
+    useEffect(() => {
+        loadTranslation();
+    }, [tenant.basename]);
+
+    if (authenticationLoading || tenant.loading) {
         return <MidScreenLoader />;
     }
 
@@ -86,7 +116,7 @@ const App = () => {
                 <PageViewTracker />
                 <Notification />
                 <NotificationModal />
-                <PublicHeader tenant={tenant} />
+                <PublicHeader />
                 <UnauthenticatedRoutes />
                 <FeedbackModal />
                 <Footer />
@@ -97,7 +127,7 @@ const App = () => {
     if (roles.length === 0) {
         return (
             <Router basename={basename}>
-                <PublicHeader tenant={tenant} />
+                <PublicHeader />
                 <Container>
                     <NoAccess />
                 </Container>
@@ -110,7 +140,7 @@ const App = () => {
     if (!isMediumScreen) {
         return (
             <Router basename={basename}>
-                <InternalHeader tenant={tenant} />
+                <InternalHeader />
                 <Container>
                     <MobileToolbar />
                     <AuthenticatedRoutes />
@@ -124,7 +154,7 @@ const App = () => {
     return (
         <Router basename={basename}>
             <Box sx={{ display: 'flex' }}>
-                <InternalHeader tenant={tenant} drawerWidth={drawerWidth} />
+                <InternalHeader drawerWidth={drawerWidth} />
                 <Notification />
                 <NotificationModal />
                 <Box component="main" sx={{ flexGrow: 1, width: `calc(100% - ${drawerWidth}px)`, marginTop: '17px' }}>

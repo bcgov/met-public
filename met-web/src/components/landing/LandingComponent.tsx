@@ -9,17 +9,13 @@ import { LandingContext } from './LandingContext';
 import { Container } from '@mui/system';
 import { AppConfig } from 'config';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
-import { getTenant } from 'services/tenantService';
-import { Tenant } from 'models/tenant';
-import { openNotification } from 'services/notificationService/notificationSlice';
-import { useAppDispatch } from 'hooks';
+import { useAppTranslation } from 'hooks';
 
 const LandingComponent = () => {
     const { searchFilters, setSearchFilters, setPage, page } = useContext(LandingContext);
-    const [tenant, setTenant] = useState<Tenant>();
     const [didMount, setDidMount] = useState(false);
-    const dispatch = useAppDispatch();
     const { engagementProjectTypes } = AppConfig.constants;
+    const { t: translate } = useAppTranslation();
 
     const debounceSetSearchFilters = useRef(
         debounce((searchText: string) => {
@@ -33,7 +29,6 @@ const LandingComponent = () => {
     const tileBlockRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        fetchTenant();
         setDidMount(true);
         return () => setDidMount(false);
     }, []);
@@ -44,21 +39,6 @@ const LandingComponent = () => {
             window.scrollTo({ top: yOffset || 0, behavior: 'smooth' });
         }
     }, [page]);
-
-    const fetchTenant = async () => {
-        const basename = sessionStorage.getItem('tenantId') ?? '';
-        try {
-            const tenant = await getTenant(basename);
-            setTenant(tenant);
-        } catch {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred while fetching Tenant information',
-                }),
-            );
-        }
-    };
 
     return (
         <Grid container direction="row" justifyContent={'center'} alignItems="center">
@@ -94,10 +74,10 @@ const LandingComponent = () => {
                             rowSpacing={2}
                         >
                             <Grid item xs={12}>
-                                <MetHeader1>{tenant?.name}</MetHeader1>
+                                <MetHeader1>{translate('landing.banner.header')}</MetHeader1>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetParagraph>{tenant?.description}</MetParagraph>
+                                <MetParagraph>{translate('landing.banner.description')}</MetParagraph>
                             </Grid>
                         </Grid>
                     </Grid>

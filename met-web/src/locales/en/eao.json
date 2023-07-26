@@ -1,0 +1,18 @@
+{
+    "common": {
+        "logoUrl": ""
+    },
+    "header": {
+        "title": "Public Engagement",
+        "description": "Public participation in environmental assessments is critical, giving citizens input into decisions on whether or not major projects should proceed, and if they do, what safeguards should be in place."
+    },
+    "landing": {
+        "banner": {
+            "header": "Environmental Assessment Office Public Engagement",
+            "description": "Description: Public participation in environmental assessments is critical, giving citizens input into decisions on whether or not major projects should proceed, and if they do, what safeguards should be in place."
+        },
+        "error": {
+            "loadTranslation": "Error while trying to load texts. Please try again later."
+        }
+    }
+}

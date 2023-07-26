@@ -4,9 +4,7 @@ import { Grid } from '@mui/material';
 import { MetHeader1, MetParagraph, MetHeader4 } from 'components/common';
 import { Banner } from 'components/banner/Banner';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
-import { Tenant } from 'models/tenant';
-import { getTenant } from 'services/tenantService';
-import { useAppDispatch } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import { SubscriptionType } from './subscribe';
@@ -21,28 +19,11 @@ export type SubscriptionParams = {
 
 export const Subscription = () => {
     const { engagementId, subscriptionStatus, scriptionKey } = useParams<SubscriptionParams>();
-    const [tenant, setTenant] = useState<Tenant>();
     const [subscriptionText, setSubscriptionText] = useState('');
 
     const dispatch = useAppDispatch();
-    const fetchTenant = async () => {
-        const basename = sessionStorage.getItem('tenantId') ?? '';
-        try {
-            const tenant = await getTenant(basename);
-            setTenant(tenant);
-        } catch {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred while fetching Tenant information',
-                }),
-            );
-        }
-    };
 
-    useEffect(() => {
-        fetchTenant();
-    }, []);
+    const tenant = useAppSelector((state) => state.tenant);
 
     useEffect(() => {
         verifySubscribeKey();
@@ -115,7 +96,7 @@ export const Subscription = () => {
                                 <MetHeader1>{tenant?.name}</MetHeader1>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetParagraph>{tenant?.description}</MetParagraph>
+                                <MetParagraph>{'Description'}</MetParagraph>
                             </Grid>
                         </Grid>
                     </Grid>
