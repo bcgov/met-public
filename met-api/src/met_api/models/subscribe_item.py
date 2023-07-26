@@ -17,7 +17,7 @@ class SubscribeItem(BaseModel):  # pylint: disable=too-few-public-methods, too-m
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     description = db.Column(db.String(550))
     call_to_action_text = db.Column(db.String(25))
-    call_to_action_type = db.Column(db.Enum(SubscribeTypeLabel), nullable=False)
+    call_to_action_type = db.Column((db.String(25)), nullable=False)
     sort_index = db.Column(db.Integer, nullable=True, default=1)
     widget_subscribe_id = db.Column(db.Integer, ForeignKey('widget_subscribe.id', ondelete='CASCADE'), nullable=True)
 

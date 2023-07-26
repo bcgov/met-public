@@ -52,9 +52,12 @@ class WidgetSubscribe(Resource):
     def post(widget_id):
         """Add new subscribe to the widgets."""
         request_json = request.get_json()
+        print(f"Post request JSON for WidgetSubscribe: {request_json}")
         try:
             subscribe = WidgetSubscribeService().create_subscribe(widget_id, request_json)
-            return WidgetSubscribeSchema().dump(subscribe), HTTPStatus.OK
+            serialized_subscribe = WidgetSubscribeSchema().dump(subscribe)
+            print(f"Created WidgetSubscribe: {serialized_subscribe}")
+            return serialized_subscribe, HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
 
@@ -69,6 +72,7 @@ class WidgetSubscribeItems(Resource):
     def post(widget_id, subscribe_id):
         """Add new subscribe to the widgets."""
         request_json = request.get_json()
+        print(request_json)
         try:
             subscribe = WidgetSubscribeService().create_subscribe_items(widget_id, subscribe_id, request_json)
             return WidgetSubscribeSchema().dump(subscribe), HTTPStatus.OK

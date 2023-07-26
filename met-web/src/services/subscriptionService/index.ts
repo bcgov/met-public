@@ -1,7 +1,7 @@
 import http from 'apiManager/httpRequestHandler';
 import Endpoints from 'apiManager/endpoints';
-import { replaceUrl } from 'helper';
-import { Subscribe, SubscribeTypeLabel, Unsubscribe } from 'models/subscription';
+import { replaceUrl, replaceAllInURL } from 'helper';
+import { Subscribe, SubscribeForm, SubscribeTypeLabel, Unsubscribe } from 'models/subscription';
 
 export const getSubscription = async (participant_id: number): Promise<Subscribe> => {
     if (!participant_id) {
@@ -24,27 +24,123 @@ export const createSubscription = async (request: Subscribe): Promise<Subscribe>
     }
 };
 
-interface SubscribeFormProps {
-    widget_id: number;
-    description?: string;
-    call_to_action_type?: string;
-    call_to_action_text?: string;
-    form_type: SubscribeTypeLabel;
-}
-
-export const createSubscribeForm = async (widget_id: number, data: SubscribeFormProps): Promise<Subscribe> => {
+export const getSubscriptionsForms = async (widget_id: number): Promise<SubscribeForm[]> => {
     try {
-        console.log(data);
-        const url = replaceUrl(Endpoints.Subscription.CREATE_FORM, 'widget_id', String(widget_id));
-        const response = await http.PostRequest<Subscribe>(url, data);
-        if (response.data) {
-            return response.data;
-        }
-        return Promise.reject('Failed to create subscribe form');
+        const url = replaceUrl(Endpoints.Subscription.GET_FORM_LIST, 'widget_id', String(widget_id));
+        const responseData = await http.GetRequest<SubscribeForm[]>(url);
+        return responseData.data || [];
     } catch (err) {
         return Promise.reject(err);
     }
 };
+
+interface PostSubscribeProps {
+    widget_id: number;
+    title?: string;
+    type: SubscribeTypeLabel;
+    items: {
+        description?: string;
+        call_to_action_type?: string;
+        call_to_action_text?: string;
+        form_type: SubscribeTypeLabel;
+    }[];
+}
+
+export const postSubscribeForm = async (widget_id: number, data: PostSubscribeProps): Promise<SubscribeForm> => {
+    try {
+        const url = replaceUrl(Endpoints.Subscription.CREATE_FORM, 'widget_id', String(widget_id));
+        const response = await http.PostRequest<SubscribeForm>(url, data);
+        if (response.data) {
+            return response.data;
+        }
+        return Promise.reject('Failed to create subscription');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
+export interface PatchSubscribeProps {
+    widget_id: number;
+    title?: string;
+    type: SubscribeTypeLabel;
+    items: {
+        description?: string;
+        call_to_action_type?: string;
+        call_to_action_text?: string;
+        form_type: SubscribeTypeLabel;
+    }[];
+}
+
+export const patchSubscribeForm = async (
+    widget_id: number,
+    subscribe_id: number,
+    item_id: number,
+    data: PatchSubscribeProps,
+): Promise<SubscribeForm> => {
+    try {
+        const url = replaceAllInURL({
+            URL: Endpoints.Subscription.UPDATE_FORM,
+            params: {
+                widget_id: String(widget_id),
+                subscribe_id: String(subscribe_id),
+                item_id: String(item_id),
+            },
+        });
+        const response = await http.PatchRequest<SubscribeForm>(url, data);
+        if (response.data) {
+            return response.data;
+        }
+        return Promise.reject('Failed to patch subscribe');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
+export const deleteSubscribeForm = async (widget_id: number, subscribe_id: number): Promise<SubscribeForm> => {
+    try {
+        const url = replaceAllInURL({
+            URL: Endpoints.Subscription.DELETE_FORM,
+            params: {
+                widget_id: String(widget_id),
+                subscribe_id: String(subscribe_id),
+            },
+        });
+        const response = await http.DeleteRequest<SubscribeForm>(url);
+        if (response.data) {
+            return response.data;
+        }
+        return Promise.reject('Failed to delete subscribe');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
+export const sortWidgetEvents = async (widget_id: number, data: Subscribe[]): Promise<SubscribeForm> => {
+    try {
+        const url = replaceUrl(Endpoints.Subscription.SORT_FORMS, 'widget_id', String(widget_id));
+        const response = await http.PatchRequest<SubscribeForm>(url, data);
+        if (response.data) {
+            return response.data;
+        }
+        return Promise.reject('Failed to update sort order');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
+// export const createSubscribeForm = async (widget_id: number, data: SubscribeFormProps): Promise<Subscribe> => {
+//     try {
+//         console.log(data);
+//         const url = replaceUrl(Endpoints.Subscription.CREATE_FORM, 'widget_id', String(widget_id));
+//         const response = await http.PostRequest<Subscribe>(url, data);
+//         if (response.data) {
+//             return response.data;
+//         }
+//         return Promise.reject('Failed to create subscribe form');
+//     } catch (err) {
+//         return Promise.reject(err);
+//     }
+// };
 
 export const unSubscribe = async (request: Unsubscribe): Promise<Unsubscribe> => {
     try {

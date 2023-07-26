@@ -10,11 +10,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { SubscribeContext } from './SubscribeContext';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
-import { Subscribe_TYPE } from 'models/subscription';
+import { Subscribe_TYPE, SubscribeForm } from 'models/subscription';
 import RichTextEditor from 'components/common/RichTextEditor';
-import { createSubscribeForm } from 'services/subscriptionService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor/utils';
+import { postSubscribeForm, patchSubscribeForm } from 'services/subscriptionService';
 
 const schema = yup
     .object({
@@ -38,6 +38,7 @@ const EmailListDrawer = () => {
         emailListTabOpen,
         richEmailListDescription,
         setRichEmailListDescription,
+        setSubscribe,
     } = useContext(SubscribeContext);
     const [isCreating, setIsCreating] = useState(false);
     const [initialRichDescription, setInitialRichDescription] = useState('');
@@ -64,15 +65,22 @@ const EmailListDrawer = () => {
 
     const createEmailListForm = async (data: EmailList) => {
         const validatedData = await schema.validate(data);
-        const { description, call_to_action_type, call_to_action_text } = validatedData;
+        const { call_to_action_type, call_to_action_text } = validatedData;
         if (widget) {
-            const createdWidgetEvent = await createSubscribeForm(widget.id, {
+            const createdWidgetForm = await postSubscribeForm(widget.id, {
                 widget_id: widget.id,
-                description: richEmailListDescription,
-                call_to_action_type: call_to_action_type,
-                call_to_action_text: call_to_action_text,
-                form_type: Subscribe_TYPE.EMAIL_LIST,
+                type: Subscribe_TYPE.EMAIL_LIST,
+                items: [
+                    {
+                        description: richEmailListDescription,
+                        call_to_action_type: call_to_action_type,
+                        call_to_action_text: call_to_action_text,
+                        form_type: Subscribe_TYPE.EMAIL_LIST,
+                    },
+                ],
             });
+
+            setSubscribe((prevWidgetForms: SubscribeForm[]) => [...prevWidgetForms, createdWidgetForm]);
         }
         dispatch(openNotification({ severity: 'success', text: 'Email list form was successfully created' }));
     };

@@ -21,7 +21,7 @@ class WidgetSubscribe(BaseModel):  # pylint: disable=too-few-public-methods
     type = db.Column(db.Enum(SubscribeTypes), nullable=False)
     sort_index = db.Column(db.Integer, nullable=True, default=1)
     widget_id = db.Column(db.Integer, ForeignKey('widget.id', ondelete='CASCADE'), nullable=True)
-    subscribe_items = db.relationship('SubscribeItem', cascade='all,delete,delete-orphan')
+    subscribe_items = db.relationship('SubscribeItem', backref='widget_subscribe', cascade='all,delete,delete-orphan')
 
     @classmethod
     def get_all_by_widget_id(cls, widget_id) -> List[WidgetSubscribe]:
