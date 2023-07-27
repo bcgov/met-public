@@ -88,7 +88,12 @@ const App = () => {
             i18n.addResourceBundle(language, basename, translationFile);
             dispatch(loadingTenant(false));
         } catch (error) {
-            dispatch(openNotification({ text: translate('landing.error.loadTranslation'), severity: 'error' }));
+            dispatch(
+                openNotification({
+                    text: 'Error while trying to load texts. Please try again later.',
+                    severity: 'error',
+                }),
+            );
         }
     };
 
