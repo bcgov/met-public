@@ -3,6 +3,7 @@ import { ActionContext } from '../../ActionContext';
 import { EngagementTabsContext } from '../EngagementTabsContext';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { SubmissionStatus } from 'constants/engagementStatus';
 
 export interface EngagementSettingsContextState {
     isInternal: boolean;
@@ -11,6 +12,7 @@ export interface EngagementSettingsContextState {
     setSendReport: (sendReport: boolean) => void;
     handleSaveSettings: () => void;
     updatingSettings: boolean;
+    hasBeenOpened: boolean;
 }
 
 export const EngagementSettingsContext = createContext<EngagementSettingsContextState>({
@@ -26,6 +28,7 @@ export const EngagementSettingsContext = createContext<EngagementSettingsContext
         return;
     },
     updatingSettings: false,
+    hasBeenOpened: false,
 });
 
 export const EngagementSettingsContextProvider = ({ children }: { children: React.ReactNode }) => {
@@ -76,6 +79,11 @@ export const EngagementSettingsContextProvider = ({ children }: { children: Reac
             dispatch(openNotification({ text: 'Error saving engagement settings', severity: 'error' }));
         }
     };
+
+    const hasBeenOpened = [SubmissionStatus.Closed, SubmissionStatus.Open].includes(
+        savedEngagement.engagement_status.id,
+    );
+
     return (
         <EngagementSettingsContext.Provider
             value={{
@@ -85,6 +93,7 @@ export const EngagementSettingsContextProvider = ({ children }: { children: Reac
                 setSendReport,
                 handleSaveSettings,
                 updatingSettings,
+                hasBeenOpened,
             }}
         >
             {children}

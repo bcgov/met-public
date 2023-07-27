@@ -1,7 +1,9 @@
 """Service for engagement management."""
 from datetime import datetime
 
+from met_api.constants.engagement_status import SubmissionStatus
 from met_api.constants.membership_type import MembershipType
+from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_metadata import EngagementMetadataModel
 from met_api.schemas.engagement_metadata import EngagementMetadataSchema
 from met_api.services import authorization
@@ -42,10 +44,28 @@ class EngagementMetadataService:
     def update_metadata(data: dict):
         """Update engagement metadata partially."""
         engagement_id = data.get('engagement_id', None)
-        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name,
-                                               Role.EDIT_ENGAGEMENT.value), engagement_id=engagement_id)
-        if data:
-            updated_metadata = EngagementMetadataModel.update(data)
-            if not updated_metadata:
-                updated_metadata = EngagementMetadataService._create_metadata_model(data)
-        return EngagementMetadataModel.find_by_id(engagement_id)
+        if not engagement_id:
+            raise KeyError('Engagement id is required.')
+
+        authorization.check_auth(
+            one_of_roles=(MembershipType.TEAM_MEMBER.name, Role.EDIT_ENGAGEMENT.value),
+            engagement_id=engagement_id
+        )
+
+        EngagementMetadataService.validate_engagement_for_update(engagement_id)
+
+        saved_metadata = EngagementMetadataModel.find_by_id(engagement_id)
+
+        if saved_metadata:
+            updated_metadata = EngagementMetadataModel.update(engagement_id, data)
+        else:
+            updated_metadata = EngagementMetadataService._create_metadata_model(data)
+
+        return updated_metadata
+    
+    @staticmethod
+    def validate_engagement_for_update(engagement_id: int):
+        """Validate engagement can be edited."""
+        engagement: EngagementModel = EngagementModel.find_by_id(engagement_id)
+        if engagement.status_id ==  SubmissionStatus.Open.value:
+            raise ValueError('Engagement is already published, cannot update metadata.')
