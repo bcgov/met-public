@@ -176,7 +176,7 @@ class EngagementService:
     def validate_engagement_status_update(engagement: EngagementModel):
         """Validate engagement not published."""
         if engagement.status_id == SubmissionStatus.Open.value:
-            raise ValueError('Cannot update published engagement')  
+            raise ValueError('Cannot update published engagement')
 
     def update_engagement(self, request_json: dict):
         """Update engagement."""
@@ -227,7 +227,7 @@ class EngagementService:
                 raise ValueError('Engagement to update was not found')
         if survey_block:
             EngagementService._save_or_update_eng_block(engagement_id, survey_block)
-        return EngagementModel.find_by_id(engagement_id)          
+        return EngagementModel.find_by_id(engagement_id)
 
     @staticmethod
     def validate_fields(data):

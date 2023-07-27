@@ -57,12 +57,12 @@ class EngagementMetadataService:
         saved_metadata = EngagementMetadataModel.find_by_id(engagement_id)
 
         if saved_metadata:
-            updated_metadata = EngagementMetadataModel.update(engagement_id, data)
+            updated_metadata = EngagementMetadataModel.update(data)
         else:
             updated_metadata = EngagementMetadataService._create_metadata_model(data)
 
         return updated_metadata
-    
+
     @staticmethod
     def validate_engagement_for_update(engagement_id: int):
         """Validate engagement can be edited."""

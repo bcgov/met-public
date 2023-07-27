@@ -66,7 +66,7 @@ class EngagementSettingsService:
             updated_settings = EngagementSettingsService._create_settings_model(data)
 
         return updated_settings
-    
+
     @staticmethod
     def validate_engagement_for_update(engagement_id: int):
         """Validate engagement can be edited."""
