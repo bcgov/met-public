@@ -34,7 +34,7 @@ class WidgetSubscribe(BaseModel):  # pylint: disable=too-few-public-methods
 
     @classmethod
     def get_all_by_type(cls, type_):
-        return cls.query.filter_by(type=type_).all()
+        return db.session.query(cls).filter_by(type=type_).all()
 
     @classmethod
     def update_widget_events_bulk(cls, update_mappings: list) -> list[WidgetSubscribe]:

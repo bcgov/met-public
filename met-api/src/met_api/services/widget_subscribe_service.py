@@ -64,9 +64,9 @@ class WidgetSubscribeService:
         return subscribe
 
     @classmethod
-    def get_by_type_and_widget_id(cls, type, widget_id):
+    def get_by_type_and_widget_id(cls, _type, widget_id):
         """Filter by type"""
-        return cls.query.filter_by(type=type, widget_id=widget_id).all()
+        return cls.query.filter_by(type=_type, widget_id=widget_id).all()
 
     @staticmethod
     def _find_highest_sort_index(widget_id):

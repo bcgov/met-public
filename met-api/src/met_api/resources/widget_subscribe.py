@@ -60,7 +60,7 @@ class WidgetSubscribe(Resource):
             return serialized_subscribe, HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
-        
+
     @staticmethod
     @cross_origin(origins=allowedorigins())
     def delete(widget_id, subscribe_id):

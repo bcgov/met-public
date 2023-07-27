@@ -324,6 +324,13 @@ class TestWidgetInfo(dict, Enum):
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
     }
+    widget_subscribe = {
+        'widget_type_id': WidgetType.SUBSCRIBE.value,
+        'created_by': '123',
+        'updated_by': '123',
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+    }
 
 
 class TestWidgetItemInfo(dict, Enum):
