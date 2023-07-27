@@ -79,8 +79,8 @@ class EmailVerifications(Resource):
         try:
             requestjson = request.get_json()
             email_verification = EmailVerificationSchema().load(requestjson)
-            email_verification = EmailVerificationService().create(email_verification)
-            return email_verification, HTTPStatus.OK
+            created_email_verification = EmailVerificationService().create(email_verification)
+            return created_email_verification, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:

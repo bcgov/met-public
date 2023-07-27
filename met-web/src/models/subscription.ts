@@ -1,4 +1,4 @@
-export interface CreateSubscription {
+export interface Subscription {
     engagement_id: number;
     email_address: string;
     is_subscribed: string;

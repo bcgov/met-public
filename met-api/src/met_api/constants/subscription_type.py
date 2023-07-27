@@ -16,7 +16,14 @@ from enum import IntEnum
 
 
 class SubscriptionType(IntEnum):
-    """Enum of Subscription Type."""
+    """Enum of Subscription Type.
+
+    User is able to subscribe to various notifications from the application. Subscription Type helps determine
+    the subscription user has chosen.
+    ENGAGEMENT - Provides user with notification on a particular engagement
+    PROJECT - Provides user with notification on all engagements within a particular project
+    TENANT - Provides user with notification on all engagements within a tenant
+    """
 
     ENGAGEMENT = 1
     PROJECT = 2
