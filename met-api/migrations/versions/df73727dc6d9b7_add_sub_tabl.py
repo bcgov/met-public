@@ -1,7 +1,7 @@
 """ Add subscribe_item table to database
 
 Revision ID: df73727dc6d9b7_add_sub_tbl
-Revises: df842dc6d0b7
+Revises: 0329d7d10a5f
 Create Date: 2023-07-26 13:03:24.113767
 
 """
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = 'df73727dc6d9b7_add_sub_tbl'
-down_revision = 'df842dc6d0b7'
+down_revision = '0329d7d10a5f'
 branch_labels = None
 depends_on = None
 

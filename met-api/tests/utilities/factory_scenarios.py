@@ -552,3 +552,15 @@ class TestReportSettingInfo(dict, Enum):
         'updated_by': str(fake.pyint()),
         'updated_date': datetime.now().strftime('%Y-%m-%d')
     }
+
+
+class TestSubscribeInfo(Enum):
+    """
+    Test scenarios of subscribe.
+    """
+    subscribe_info_1 = {
+        'description': '{"blocks":[{"key":"8vfub","text":"test description","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
+        'call_to_action_type': 'link',
+        'call_to_action_text': 'Click here to sign up',
+        'form_type': 'EMAIL_LIST'
+    }

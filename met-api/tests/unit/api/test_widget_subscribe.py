@@ -18,7 +18,7 @@ def test_create_subscribe(client, jwt, session):  # pylint:disable=unused-argume
     engagement = factory_engagement_model()
     TestWidgetInfo.widget1['engagement_id'] = engagement.id
     widget = factory_widget_model(TestWidgetInfo.widget1)
-    subscribe_info = TestSubscribeInfo.subscribe_1
+    subscribe_info = TestSubscribeInfo.subscribe_info_1
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
 
     data = {
