@@ -4,21 +4,20 @@ from http import HTTPStatus
 
 from flask import current_app
 
-from met_api.constants.engagement_status import Status
-from met_api.constants.engagement_status import SubmissionStatus
+from met_api.constants.engagement_status import Status, SubmissionStatus
 from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.engagement import Engagement as EngagementModel
+from met_api.models.engagement_scope_options import EngagementScopeOptions
 from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
 from met_api.models.engagement_status_block import EngagementStatusBlock as EngagementStatusBlockModel
 from met_api.models.pagination_options import PaginationOptions
-from met_api.models.engagement_scope_options import EngagementScopeOptions
 from met_api.models.submission import Submission as SubmissionModel
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services import authorization
-from met_api.services.object_storage_service import ObjectStorageService
-from met_api.services.engagement_slug_service import EngagementSlugService
 from met_api.services.engagement_settings_service import EngagementSettingsService
+from met_api.services.engagement_slug_service import EngagementSlugService
+from met_api.services.object_storage_service import ObjectStorageService
 from met_api.utils import email_util, notification
 from met_api.utils.enums import SourceAction, SourceType
 from met_api.utils.roles import Role
