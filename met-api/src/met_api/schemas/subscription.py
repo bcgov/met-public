@@ -18,6 +18,8 @@ class SubscriptionSchema(Schema):
     engagement_id = fields.Int(data_key='engagement_id')
     participant_id = fields.Int(data_key='participant_id')
     is_subscribed = fields.Bool(data_key='is_subscribed')
+    project_id = fields.Str(data_key='project_id')
+    type = fields.Str(data_key='type')
     created_by = fields.Str(data_key='created_by')
     created_date = fields.Str(data_key='created_date')
     updated_by = fields.Str(data_key='updated_by')
