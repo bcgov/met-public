@@ -2,8 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useAppDispatch } from 'hooks';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { Widget, WidgetType } from 'models/widget';
-import { Subscribe, Unsubscribe, Subscribe_TYPE, SubscribeTypeLabel, SubscribeForm } from 'models/subscription';
-import { getSubscriptionsForms } from 'services/subscriptionService';
+import { Subscribe, Subscribe_TYPE, SubscribeTypeLabel, SubscribeForm } from 'models/subscription';
+import { getSubscriptionsForms, sortWidgetSubscribeForms } from 'services/subscriptionService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
 export interface SubscribeContextProps {
@@ -105,14 +105,14 @@ export const SubscribeProvider = ({ children }: { children: JSX.Element | JSX.El
     }, [widget]);
 
     const updateWidgetSubscribeSorting = async (resortedWidgetSubscribe: Subscribe[]) => {
-        // if (!widget) {
-        //     return;
-        // }
-        // try {
-        //     await sortWidgetSubscribe(widget.id, resortedWidgetSubscribe);
-        // } catch (err) {
-        //     dispatch(openNotification({ severity: 'error', text: 'Error sorting widget Subscribe' }));
-        // }
+        if (!widget) {
+            return;
+        }
+        try {
+            await sortWidgetSubscribeForms(widget.id, resortedWidgetSubscribe);
+        } catch (err) {
+            dispatch(openNotification({ severity: 'error', text: 'Error sorting widget Subscribe' }));
+        }
     };
 
     return (

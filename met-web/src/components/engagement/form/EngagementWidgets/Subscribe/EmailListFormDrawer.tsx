@@ -14,7 +14,7 @@ import { Subscribe_TYPE, SubscribeForm } from 'models/subscription';
 import RichTextEditor from 'components/common/RichTextEditor';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor/utils';
-import { postSubscribeForm, patchSubscribeForm } from 'services/subscriptionService';
+import { postSubscribeForm } from 'services/subscriptionService';
 
 const schema = yup
     .object({
@@ -58,10 +58,6 @@ const EmailListDrawer = () => {
     }, []);
 
     const { handleSubmit } = methods;
-
-    const updateEmailListForm = async (data: EmailList) => {
-        return;
-    };
 
     const createEmailListForm = async (data: EmailList) => {
         const validatedData = await schema.validate(data);
