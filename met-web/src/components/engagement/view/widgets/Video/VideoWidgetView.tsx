@@ -92,7 +92,6 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
                             width="100%"
                             height={'100%'}
                             config={playerConfig}
-                            light
                         />
                     </AspectRatioContainer>
                 </Grid>
