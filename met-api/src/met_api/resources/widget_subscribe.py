@@ -32,7 +32,7 @@ API = Namespace('widgets_subscribe', description='Endpoints for Widget Subscribe
 """
 
 
-@cors_preflight('GET, POST, OPTIONS')
+@cors_preflight('GET, POST, OPTIONS, DELETE')
 @API.route('')
 class WidgetSubscribe(Resource):
     """Resource for managing a Widget Subscribe."""
@@ -60,6 +60,17 @@ class WidgetSubscribe(Resource):
             return serialized_subscribe, HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
+        
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    def delete(widget_id, subscribe_id):
+        """Delete  an subscribe ."""
+        try:
+            WidgetSubscribeService().delete_subscribe(subscribe_id, widget_id)
+            response, status = {}, HTTPStatus.OK
+        except BusinessException as err:
+            response, status = str(err), err.status_code
+        return response, status
 
 
 @cors_preflight('GET,POST,OPTIONS')
@@ -78,23 +89,6 @@ class WidgetSubscribeItems(Resource):
             return WidgetSubscribeSchema().dump(subscribe), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
-
-
-@cors_preflight('DELETE')
-@API.route('/<int:subscribe_id>', methods=['DELETE'])
-class WidgetSubscribe(Resource):
-    """Resource for managing a Widget Subscribe."""
-
-    @staticmethod
-    @cross_origin(origins=allowedorigins())
-    def delete(widget_id, subscribe_id):
-        """Delete  an subscribe ."""
-        try:
-            WidgetSubscribeService().delete_subscribe(subscribe_id, widget_id)
-            response, status = {}, HTTPStatus.OK
-        except BusinessException as err:
-            response, status = str(err), err.status_code
-        return response, status
 
 
 @cors_preflight('PATCH')
@@ -125,7 +119,7 @@ class WidgetSubscribeSort(Resource):
         """Sort subscribe for an subscribe widget."""
         try:
             request_json = request.get_json()
-            sort_widget_subscribe = WidgetSubscribeService().save_widget_subscribe_bulk(widget_id, request_json,
+            sort_widget_subscribe = WidgetSubscribeService().save_widget_subscribes_bulk(widget_id, request_json,
                                                                                user_id=TokenInfo.get_id())
             return WidgetSubscribeSchema().dump(sort_widget_subscribe), HTTPStatus.OK
         except BusinessException as err:

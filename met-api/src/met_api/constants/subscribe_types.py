@@ -20,8 +20,3 @@ class SubscribeTypes(IntEnum):
 
     EMAIL_LIST = 0
     SIGN_UP = 1
-    
-class SubscribeTypeLabel(IntEnum):
-    """Enum of subscribe cta types."""
-    LINK = 0
-    BUTTON = 1
