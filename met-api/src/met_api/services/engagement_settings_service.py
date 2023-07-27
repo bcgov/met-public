@@ -1,5 +1,7 @@
 """Service for engagement settings management."""
+from met_api.constants.engagement_status import SubmissionStatus
 from met_api.constants.membership_type import MembershipType
+from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_settings import EngagementSettingsModel
 from met_api.schemas.engagement_settings import EngagementSettingsSchema
 from met_api.services import authorization
@@ -46,11 +48,15 @@ class EngagementSettingsService:
     def update_settings(data: dict):
         """Update engagement settings partially."""
         engagement_id = data.get('engagement_id', None)
+        if not engagement_id:
+            raise KeyError('Engagement id is required.')
 
         authorization.check_auth(
             one_of_roles=(MembershipType.TEAM_MEMBER.name, Role.EDIT_ENGAGEMENT.value),
             engagement_id=engagement_id
         )
+
+        EngagementSettingsService.validate_engagement_for_update(engagement_id)
 
         saved_settings = EngagementSettingsModel.find_by_id(engagement_id)
 
@@ -60,3 +66,10 @@ class EngagementSettingsService:
             updated_settings = EngagementSettingsService._create_settings_model(data)
 
         return updated_settings
+
+    @staticmethod
+    def validate_engagement_for_update(engagement_id: int):
+        """Validate engagement can be edited."""
+        engagement: EngagementModel = EngagementModel.find_by_id(engagement_id)
+        if engagement.status_id == SubmissionStatus.Open.value:
+            raise ValueError('Engagement is already published, cannot update settings.')

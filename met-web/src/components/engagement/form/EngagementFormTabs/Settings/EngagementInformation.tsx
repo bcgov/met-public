@@ -3,9 +3,11 @@ import { Grid, MenuItem, TextField, Select, SelectChangeEvent } from '@mui/mater
 import { MetLabel, MetHeader4 } from 'components/common';
 import { EngagementTabsContext } from '../EngagementTabsContext';
 import { AppConfig } from 'config';
+import { EngagementSettingsContext } from './EngagementSettingsContext';
 
 const EngagementInformation = () => {
     const { engagementFormData, setEngagementFormData } = useContext(EngagementTabsContext);
+    const { hasBeenOpened } = useContext(EngagementSettingsContext);
     const { project_id, project_metadata } = engagementFormData;
     const { engagementProjectTypes } = AppConfig.constants;
 
@@ -44,6 +46,7 @@ const EngagementInformation = () => {
                     variant="outlined"
                     fullWidth
                     onChange={handleChangeMetadata}
+                    disabled={hasBeenOpened}
                 />
             </Grid>
             <Grid item xs={12} lg={6} p={1}>
@@ -55,6 +58,7 @@ const EngagementInformation = () => {
                     variant="outlined"
                     fullWidth
                     onChange={handleChangeMetadata}
+                    disabled={hasBeenOpened}
                 />
             </Grid>
             <Grid item xs={12} lg={6} p={1}>
@@ -66,6 +70,7 @@ const EngagementInformation = () => {
                     variant="outlined"
                     fullWidth
                     onChange={handleChange}
+                    disabled={hasBeenOpened}
                 />
             </Grid>
             <Grid item xs={12} lg={6} p={1}>
@@ -80,6 +85,7 @@ const EngagementInformation = () => {
                     fullWidth
                     size="small"
                     onChange={handleChangeMetadata}
+                    disabled={hasBeenOpened}
                 >
                     <MenuItem value={''} sx={{ fontStyle: 'italic', height: '2em' }}>
                         none
@@ -102,6 +108,7 @@ const EngagementInformation = () => {
                     variant="outlined"
                     fullWidth
                     onChange={handleChangeMetadata}
+                    disabled={hasBeenOpened}
                 />
             </Grid>
         </Grid>

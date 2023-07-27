@@ -10,7 +10,7 @@ import { EngagementSettingsContext } from './EngagementSettingsContext';
 const SendReport = () => {
     const { settings, settingsLoading } = useContext(EngagementTabsContext);
     const { savedEngagement } = useContext(ActionContext);
-    const { sendReport, setSendReport } = useContext(EngagementSettingsContext);
+    const { sendReport, setSendReport, hasBeenOpened } = useContext(EngagementSettingsContext);
 
     const dispatch = useAppDispatch();
 
@@ -25,8 +25,8 @@ const SendReport = () => {
             </Grid>
             <Grid item xs={12}>
                 <MetDescription>
-                    Toggle this option off if you do not want an email with a link to the report to be automatically at
-                    the end of the engagement period.
+                    Toggle this option off if you do not want an email with a link to the report to be automatically
+                    sent at the end of the engagement period.
                 </MetDescription>
             </Grid>
             <Grid item xs={12}>
@@ -44,7 +44,7 @@ const SendReport = () => {
                                     }
                                     setSendReport(!sendReport);
                                 }}
-                                disabled={settingsLoading}
+                                disabled={settingsLoading || hasBeenOpened}
                             />
                         }
                         sx={{ fontWeight: 'bold' }}

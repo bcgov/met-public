@@ -101,8 +101,8 @@ export const PublicUrls = () => {
             <Grid item xs={12}>
                 <MetLabel>Link to Public Engagement Page</MetLabel>
                 <MetDescription>
-                    This is the link to the public engagement and will only be accessible once the engagement is
-                    published.
+                    This is the link to the engagement. You can edit the link anytime before the engagement is
+                    published. The link will become active when the engagement is published
                 </MetDescription>
                 <ClickAwayListener
                     onClickAway={() => {
@@ -225,6 +225,7 @@ export const PublicUrls = () => {
                                     padding: 0,
                                 },
                             }}
+                            disabled
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end" sx={{ height: '100%', maxHeight: '100%' }}>

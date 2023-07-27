@@ -6,6 +6,7 @@ import { EngagementSettingsContext } from './EngagementSettingsContext';
 
 const InternalEngagement = () => {
     const { isInternal, setIsInternal } = useContext(EngagementSettingsContext);
+    const { hasBeenOpened } = useContext(EngagementSettingsContext);
 
     const handleChangeIsInternal = (e: React.ChangeEvent<HTMLInputElement>) => {
         setIsInternal(e.target.checked);
@@ -26,6 +27,7 @@ const InternalEngagement = () => {
                 <FormControlLabel
                     control={<Switch name="is_internal" checked={isInternal} onChange={handleChangeIsInternal} />}
                     label={<MetLabel>Set-up as Internal Engagement</MetLabel>}
+                    disabled={hasBeenOpened}
                 />
             </Grid>
         </Grid>
