@@ -2,7 +2,7 @@ import './App.scss';
 import React, { useEffect } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import UserService from './services/userService';
-import { useAppSelector, useAppDispatch, useAppTranslation } from './hooks';
+import { useAppSelector, useAppDispatch } from './hooks';
 import { MidScreenLoader, MobileToolbar } from './components/common';
 import { Box, Container, useMediaQuery, Theme, Toolbar } from '@mui/material';
 import InternalHeader from './components/layout/Header/InternalHeader';
@@ -35,7 +35,6 @@ const App = () => {
     const basename = pathSegments[1];
 
     const tenant: TenantState = useAppSelector((state) => state.tenant);
-    const { t: translate } = useAppTranslation();
 
     useEffect(() => {
         UserService.initKeycloak(dispatch);
@@ -65,7 +64,7 @@ const App = () => {
             dispatch(
                 saveTenant({
                     name: tenant.name,
-                    logoUrl: tenant.logo_url || '',
+                    logoUrl: tenant.logo_url ?? '',
                     basename: basename,
                 }),
             );
