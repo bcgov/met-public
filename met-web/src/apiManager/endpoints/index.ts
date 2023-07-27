@@ -54,8 +54,9 @@ const Endpoints = {
     Subscription: {
         GET: `${AppConfig.apiUrl}/subscription/participant_id`,
         CREATE: `${AppConfig.apiUrl}/subscription/`,
-        UPDATE: `${AppConfig.apiUrl}/subscription/`,
+        UNSUBSCRIBE: `${AppConfig.apiUrl}/subscription/`,
         CREATE_UPDATE: `${AppConfig.apiUrl}/subscription/manage`,
+        CONFIRM_SUBSCRIPTION: `${AppConfig.apiUrl}/subscription/manage`,
     },
     PublicSubmission: {
         CREATE: `${AppConfig.apiUrl}/submissions/public/verification_token`,

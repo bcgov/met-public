@@ -1,7 +1,7 @@
 import http from 'apiManager/httpRequestHandler';
 import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
-import { Subscribe, Unsubscribe } from 'models/subscription';
+import { CreateSubscription, Subscribe, Unsubscribe } from 'models/subscription';
 
 export const getSubscription = async (participant_id: number): Promise<Subscribe> => {
     if (!participant_id) {
@@ -15,7 +15,7 @@ export const getSubscription = async (participant_id: number): Promise<Subscribe
     return Promise.reject('Failed to fetch subscription');
 };
 
-export const createSubscription = async (request: Subscribe): Promise<Subscribe> => {
+export const createSubscription = async (request: CreateSubscription): Promise<Subscribe> => {
     try {
         const response = await http.PostRequest<Subscribe>(Endpoints.Subscription.CREATE_UPDATE, request);
         return response.data;
@@ -24,9 +24,18 @@ export const createSubscription = async (request: Subscribe): Promise<Subscribe>
     }
 };
 
+export const confirmSubscription = async (request: Subscribe): Promise<Subscribe> => {
+    try {
+        const response = await http.PatchRequest<Subscribe>(Endpoints.Subscription.CONFIRM_SUBSCRIPTION, request);
+        return response.data;
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
 export const unSubscribe = async (request: Unsubscribe): Promise<Unsubscribe> => {
     try {
-        const response = await http.PatchRequest<Unsubscribe>(Endpoints.Subscription.UPDATE, request);
+        const response = await http.PatchRequest<Unsubscribe>(Endpoints.Subscription.UNSUBSCRIBE, request);
         return response.data;
     } catch (err) {
         return Promise.reject(err);

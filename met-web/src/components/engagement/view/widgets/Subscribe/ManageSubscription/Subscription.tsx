@@ -11,7 +11,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import { SubscriptionType } from './subscribe';
 import { verifyEmailVerification } from 'services/emailVerificationService';
-import { createSubscription, unSubscribe } from 'services/subscriptionService';
+import { confirmSubscription, unSubscribe } from 'services/subscriptionService';
 
 export type SubscriptionParams = {
     engagementId: string;
@@ -57,7 +57,7 @@ export const Subscription = () => {
                 const token = scriptionKey;
                 const subscribed_email = await verifyEmailVerification(token);
                 const subscribed = JSON.stringify(subscribed_email);
-                await createSubscription({
+                await confirmSubscription({
                     engagement_id: parseInt(engagementId ?? ''),
                     participant_id: JSON.parse(subscribed).participant_id,
                     is_subscribed: 'true',

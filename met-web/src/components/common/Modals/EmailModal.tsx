@@ -11,6 +11,7 @@ const EmailModal = ({
     updateModal,
     header,
     subText,
+    signupoptions,
     termsOfService,
     handleConfirm,
     isSaving,
@@ -59,6 +60,8 @@ const EmailModal = ({
                             <MetBody bold={subtext.bold}>{subtext.text}</MetBody>
                         </Grid>
                     ))}
+
+                    {signupoptions}
 
                     <Grid item xs={12}>
                         {termsOfService}

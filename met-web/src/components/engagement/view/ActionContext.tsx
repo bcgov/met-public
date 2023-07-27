@@ -1,7 +1,13 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getEngagement, patchEngagement } from '../../../services/engagementService';
-import { createDefaultEngagement, Engagement } from '../../../models/engagement';
+import { getEngagementMetadata } from '../../../services/engagementMetadataService';
+import {
+    createDefaultEngagement,
+    createDefaultEngagementMetadata,
+    Engagement,
+    EngagementMetadata,
+} from '../../../models/engagement';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { Widget } from 'models/widget';
@@ -19,8 +25,10 @@ interface EngagementSchedule {
 
 export interface EngagementViewContext {
     savedEngagement: Engagement;
+    engagementMetadata: EngagementMetadata;
     isEngagementLoading: boolean;
     isWidgetsLoading: boolean;
+    isEngagementMetadataLoading: boolean;
     scheduleEngagement: (_engagement: EngagementSchedule) => Promise<Engagement>;
     widgets: Widget[];
     mockStatus: SubmissionStatus;
@@ -38,8 +46,10 @@ export const ActionContext = createContext<EngagementViewContext>({
         return Promise.reject();
     },
     savedEngagement: createDefaultEngagement(),
+    engagementMetadata: createDefaultEngagementMetadata(),
     isEngagementLoading: true,
     isWidgetsLoading: true,
+    isEngagementMetadataLoading: true,
     widgets: [],
     mockStatus: SubmissionStatus.Upcoming,
     updateMockStatus: (status: SubmissionStatus) => {
@@ -55,10 +65,12 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         engagementIdParam ? Number(engagementIdParam) : null,
     );
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
+    const [engagementMetadata, setEngagementMetadata] = useState<EngagementMetadata>(createDefaultEngagementMetadata());
     const [mockStatus, setMockStatus] = useState(savedEngagement.submission_status);
     const [widgets, setWidgets] = useState<Widget[]>([]);
     const [isEngagementLoading, setEngagementLoading] = useState(true);
     const [isWidgetsLoading, setIsWidgetsLoading] = useState(true);
+    const [isEngagementMetadataLoading, setIsEngagementMetadataLoading] = useState(true);
 
     const [getWidgetsTrigger] = useLazyGetWidgetsQuery();
 
@@ -155,6 +167,25 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         }
     };
 
+    const fetchEngagementMetadata = async () => {
+        if (!savedEngagement.id) {
+            return;
+        }
+        try {
+            const result = await getEngagementMetadata(Number(engagementId));
+            setEngagementMetadata(result);
+            setIsEngagementMetadataLoading(false);
+        } catch (error) {
+            setIsEngagementMetadataLoading(false);
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while fetching Engagement Metadata',
+                }),
+            );
+        }
+    };
+
     const handleFetchEngagementIdBySlug = async () => {
         if (!slug) {
             return;
@@ -177,16 +208,19 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
 
     useEffect(() => {
         fetchWidgets();
+        fetchEngagementMetadata();
     }, [savedEngagement]);
 
     return (
         <ActionContext.Provider
             value={{
                 savedEngagement,
+                engagementMetadata,
                 isEngagementLoading,
                 scheduleEngagement,
                 widgets,
                 isWidgetsLoading,
+                isEngagementMetadataLoading,
                 updateMockStatus,
                 mockStatus,
             }}

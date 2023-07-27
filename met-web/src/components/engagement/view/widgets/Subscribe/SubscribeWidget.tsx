@@ -1,28 +1,42 @@
 import React, { useState, useContext } from 'react';
-import { MetBody, MetHeader2, MetPaper, PrimaryButton } from 'components/common';
+import { MetBody, MetHeader2, MetLabel, MetPaper, MetParagraph, PrimaryButton } from 'components/common';
 import { ActionContext } from '../../ActionContext';
-import { Grid, Divider, Link, Typography, Box } from '@mui/material';
+import { Grid, Divider, Link, Typography, Box, RadioGroup, Radio, FormControlLabel } from '@mui/material';
 import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import EmailModal from 'components/common/Modals/EmailModal';
 import { createEmailVerification } from 'services/emailVerificationService';
+import { createSubscription } from 'services/subscriptionService';
 import { EmailVerificationType } from 'models/emailVerification';
+import { SubscriptionType } from 'constants/subscriptionType';
 
 function SubscribeWidget() {
     const dispatch = useAppDispatch();
-    const { savedEngagement } = useContext(ActionContext);
+    const { savedEngagement, engagementMetadata } = useContext(ActionContext);
+    const defaultType = engagementMetadata.project_id ? SubscriptionType.PROJECT : SubscriptionType.ENGAGEMENT;
     const [email, setEmail] = useState('');
     const [open, setOpen] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [subscriptionType, setSubscriptionType] = useState('');
 
     const sendEmail = async () => {
         try {
             setIsSaving(true);
-            await createEmailVerification({
+            const email_verification = await createEmailVerification({
                 email_address: email,
                 survey_id: savedEngagement.surveys[0].id,
                 type: EmailVerificationType.Subscribe,
             });
+
+            await createSubscription({
+                engagement_id: savedEngagement.id,
+                email_address: email_verification.email_address,
+                is_subscribed: 'false',
+                participant_id: email_verification.participant_id,
+                project_id: engagementMetadata.project_id,
+                type: subscriptionType ? subscriptionType : defaultType,
+            });
+
             window.snowplow('trackSelfDescribingEvent', {
                 schema: 'iglu:ca.bc.gov.met/verify-email/jsonschema/1-0-0',
                 data: { survey_id: savedEngagement.surveys[0].id, engagement_id: savedEngagement.id },
@@ -75,6 +89,10 @@ function SubscribeWidget() {
         }
     };
 
+    const handleSubscriptionChange = (type: string) => {
+        setSubscriptionType(type);
+    };
+
     return (
         <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
             <EmailModal
@@ -91,7 +109,7 @@ function SubscribeWidget() {
                             borderLeft: 8,
                             borderColor: '#003366',
                             backgroundColor: '#F2F2F2',
-                            mt: '2em',
+                            mt: '0.5em',
                         }}
                     >
                         <Typography sx={{ fontSize: '0.8rem', mb: 1 }}>
@@ -110,9 +128,46 @@ function SubscribeWidget() {
                 header={'Sign Up for Updates'}
                 subText={[
                     {
-                        text: 'Sign up to receive news and updates on public engagements at the EAO.',
+                        text: 'Sign up to receive news and updates on public engagements.',
                     },
                 ]}
+                signupoptions={
+                    <Grid item xs={12}>
+                        <MetLabel>Please choose your preferred email update option:</MetLabel>
+                        <RadioGroup
+                            defaultValue={defaultType}
+                            onChange={(e) => handleSubscriptionChange(e.target.value)}
+                        >
+                            <FormControlLabel
+                                value={
+                                    engagementMetadata.project_id
+                                        ? SubscriptionType.PROJECT
+                                        : SubscriptionType.ENGAGEMENT
+                                }
+                                control={<Radio />}
+                                label={
+                                    <MetParagraph>
+                                        I want to receive updates for {''}
+                                        {engagementMetadata.project_id
+                                            ? engagementMetadata.project_id
+                                            : savedEngagement.name}
+                                        {''} only
+                                    </MetParagraph>
+                                }
+                            />
+                            <FormControlLabel
+                                value={SubscriptionType.TENANT}
+                                control={<Radio />}
+                                label={
+                                    <MetParagraph>
+                                        I want to receive updates for all the projects at the Environmental Assessment
+                                        Office
+                                    </MetParagraph>
+                                }
+                            />
+                        </RadioGroup>
+                    </Grid>
+                }
             />
             <Grid spacing={2} container xs={12}>
                 <Grid item xs={12}>

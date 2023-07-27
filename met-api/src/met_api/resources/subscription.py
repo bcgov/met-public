@@ -105,3 +105,17 @@ class ManageSubscriptions(Resource):
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    def patch():
+        """Update a existing subscription partially."""
+        try:
+            request_json = request.get_json()
+            subscription = SubscriptionSchema().load(request_json, partial=True)
+            SubscriptionService().update_subscription_for_participant_eng(subscription)
+            return {}, HTTPStatus.OK
+        except KeyError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

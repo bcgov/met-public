@@ -41,7 +41,7 @@ class EngagementMetadata(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.require
+    @auth.optional
     def get(engagement_id):
         """Fetch a single engagement metadata matching the provided id."""
         try:
