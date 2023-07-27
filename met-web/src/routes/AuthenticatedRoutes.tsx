@@ -36,22 +36,10 @@ const AuthenticatedRoutes = () => {
                 <Route path="/surveys/:surveyId/build" element={<SurveyFormBuilder />} />
                 <Route path="/surveys/:surveyId/submit" element={<SurveySubmit />} />
                 <Route path="/surveys/:surveyId/report" element={<ReportSettings />} />
-                <Route
-                    element={
-                        <AuthGate
-                            allowedRoles={[USER_ROLES.VIEW_UNAPPROVED_COMMENTS, USER_ROLES.VIEW_APPROVED_COMMENTS]}
-                        />
-                    }
-                >
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_UNAPPROVED_COMMENTS]} />}>
                     <Route path="/surveys/:surveyId/comments" element={<CommentReviewListing />} />
                 </Route>
-                <Route
-                    element={
-                        <AuthGate
-                            allowedRoles={[USER_ROLES.VIEW_UNAPPROVED_COMMENTS, USER_ROLES.VIEW_APPROVED_COMMENTS]}
-                        />
-                    }
-                >
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_UNAPPROVED_COMMENTS]} />}>
                     <Route path="/surveys/:surveyId/comments/all" element={<CommentTextListing />} />
                 </Route>
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.REVIEW_COMMENTS]} />}>

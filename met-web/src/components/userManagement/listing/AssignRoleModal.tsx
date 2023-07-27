@@ -39,7 +39,7 @@ const schema = yup
             .object()
             .nullable()
             .when('group', {
-                is: USER_GROUP.REVIEWER.value,
+                is: USER_GROUP.VIEWER.value,
                 then: yup.object().nullable().required('An engagement must be selected'),
             }),
     })
@@ -130,14 +130,6 @@ export const AssignRoleModal = () => {
                     text: `You have successfully added ${user?.first_name} ${user?.last_name} to the group ${USER_GROUP.ADMIN.label}`,
                 }),
             );
-        } else if (userTypeSelected === USER_GROUP.VIEWER.value) {
-            await addUserToGroup({ user_id: user?.external_id, group: data.group });
-            dispatch(
-                openNotification({
-                    severity: 'success',
-                    text: `You have successfully added ${user?.first_name} ${user?.last_name} to the group ${USER_GROUP.VIEWER.label}`,
-                }),
-            );
         } else {
             await addUserToGroup({ user_id: user?.external_id, group: data.group });
             await addTeamMemberToEngagement({
@@ -199,11 +191,6 @@ export const AssignRoleModal = () => {
                                             What role would you like to assign to this user?
                                         </FormLabel>
                                         <ControlledRadioGroup name="group">
-                                            <FormControlLabel
-                                                value={USER_GROUP.VIEWER.value}
-                                                control={<Radio />}
-                                                label={'Viewer'}
-                                            />
                                             <FormControlLabel
                                                 value={USER_GROUP.REVIEWER.value}
                                                 control={<Radio />}
