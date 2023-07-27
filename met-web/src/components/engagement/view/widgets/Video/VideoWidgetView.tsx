@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { MetPaper, MetHeader2, MetParagraph } from 'components/common';
+import { MetPaper, MetHeader2, MetParagraph, AspectRatioContainer, ReactPlayerWrapper } from 'components/common';
 import { Grid, Skeleton, Divider } from '@mui/material';
 import { Widget } from 'models/widget';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { VideoWidget } from 'models/videoWidget';
 import { fetchVideoWidgets } from 'services/widgetService/VideoService';
-import ReactPlayer from 'react-player/lazy';
 
 interface VideoWidgetProps {
     widget: Widget;
@@ -69,29 +68,36 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
     }
 
     return (
-        <>
-            <MetPaper elevation={1} sx={{ paddingTop: '0.5em', padding: '1em' }}>
-                <Grid container justifyContent={{ xs: 'center' }} alignItems="center" rowSpacing={2}>
-                    <Grid
-                        item
-                        container
-                        justifyContent={{ xs: 'center', md: 'flex-start' }}
-                        flexDirection={'column'}
-                        xs={12}
-                        paddingBottom={0}
-                    >
-                        <MetHeader2 bold>Video</MetHeader2>
-                        <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <MetParagraph>{videoWidget.description}</MetParagraph>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <ReactPlayer url={videoWidget.video_url} controls width="100%" config={playerConfig} />
-                    </Grid>
+        <MetPaper elevation={1} sx={{ paddingTop: '0.5em', padding: '1em' }}>
+            <Grid container justifyContent={{ xs: 'center' }} alignItems="center" rowSpacing={2}>
+                <Grid
+                    item
+                    container
+                    justifyContent={{ xs: 'center', md: 'flex-start' }}
+                    flexDirection={'column'}
+                    xs={12}
+                    paddingBottom={0}
+                >
+                    <MetHeader2 bold>Video</MetHeader2>
+                    <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
                 </Grid>
-            </MetPaper>
-        </>
+                <Grid item xs={12}>
+                    <MetParagraph>{videoWidget.description}</MetParagraph>
+                </Grid>
+                <Grid item xs={12}>
+                    <AspectRatioContainer>
+                        <ReactPlayerWrapper
+                            url={videoWidget.video_url}
+                            controls
+                            width="100%"
+                            height={'100%'}
+                            config={playerConfig}
+                            light
+                        />
+                    </AspectRatioContainer>
+                </Grid>
+            </Grid>
+        </MetPaper>
     );
 };
 
