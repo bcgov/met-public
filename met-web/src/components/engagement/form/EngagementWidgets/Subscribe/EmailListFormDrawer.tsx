@@ -42,7 +42,6 @@ const EmailListDrawer = () => {
     } = useContext(SubscribeContext);
     const [isCreating, setIsCreating] = useState(false);
     const [initialRichDescription, setInitialRichDescription] = useState('');
-    const [descriptionCharCount, setDescriptionCharCount] = useState(0);
     const dispatch = useAppDispatch();
     const methods = useForm<EmailList>({
         resolver: yupResolver(schema),
@@ -52,9 +51,7 @@ const EmailListDrawer = () => {
         methods.setValue('description', '');
         methods.setValue('call_to_action_type', 'link');
         methods.setValue('call_to_action_text', 'Click here to sign up');
-        const initialDescription = getTextFromDraftJsContentState(richEmailListDescription);
         setInitialRichDescription(richEmailListDescription);
-        setDescriptionCharCount(initialDescription.length);
     }, []);
 
     const { handleSubmit } = methods;
@@ -105,10 +102,6 @@ const EmailListDrawer = () => {
         }
     };
 
-    const handleDescriptionChange = (rawText: string) => {
-        setDescriptionCharCount(rawText.length);
-    };
-
     const handleRichDescriptionChange = (newState: string) => {
         setRichEmailListDescription(newState);
     };
@@ -139,7 +132,6 @@ const EmailListDrawer = () => {
                             <Grid item xs={12}>
                                 <MetLabel sx={{ marginBottom: '2px' }}>Description</MetLabel>
                                 <RichTextEditor
-                                    setRawText={handleDescriptionChange}
                                     handleEditorStateChange={handleRichDescriptionChange}
                                     initialRawEditorState={initialRichDescription || ''}
                                     error={getTextFromDraftJsContentState(richEmailListDescription).length > 550}

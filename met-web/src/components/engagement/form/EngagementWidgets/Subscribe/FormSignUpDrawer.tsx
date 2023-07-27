@@ -7,12 +7,10 @@ import { MetHeader3, MetLabel, PrimaryButton, SecondaryButton } from 'components
 import { useForm, FormProvider, SubmitHandler, Controller, ControllerRenderProps } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useAppDispatch } from 'hooks';
 import { SubscribeContext } from './SubscribeContext';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
 import { Subscribe_TYPE } from 'models/subscription';
 import RichTextEditor from 'components/common/RichTextEditor';
-import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor/utils';
 
 const schema = yup
     .object({
@@ -27,12 +25,10 @@ type FormSignUp = yup.TypeOf<typeof schema> & {
 };
 
 const FormSignUpDrawer = () => {
-    const dispatch = useAppDispatch();
     const { handleSubscribeDrawerOpen, formSignUpTabOpen, richFormSignUpDescription, setRichFormSignUpDescription } =
         useContext(SubscribeContext);
-    const [isCreating, setIsCreating] = useState(false);
+    const [isCreating] = useState(false);
     const [initialRichDescription, setInitialRichDescription] = useState('');
-    const [descriptionCharCount, setDescriptionCharCount] = useState(0);
     const methods = useForm<FormSignUp>({
         resolver: yupResolver(schema),
     });
@@ -41,27 +37,17 @@ const FormSignUpDrawer = () => {
         methods.setValue('description', '');
         methods.setValue('call_to_action_type', 'link');
         methods.setValue('call_to_action_text', '');
-        const initialDescription = getTextFromDraftJsContentState(richFormSignUpDescription);
         setInitialRichDescription(richFormSignUpDescription);
-        setDescriptionCharCount(initialDescription.length);
     }, []);
 
     const { handleSubmit } = methods;
-
-    const updateSubscribeForm = async (data: FormSignUp) => {
-        return;
-    };
-
-    const createSubscribeForm = async (data: FormSignUp) => {
-        return;
-    };
 
     const onSubmit: SubmitHandler<FormSignUp> = async (data: FormSignUp) => {
         return;
     };
 
     const handleDescriptionChange = (rawText: string) => {
-        setDescriptionCharCount(rawText.length);
+        return rawText;
     };
 
     const handleRichDescriptionChange = (newState: string) => {
