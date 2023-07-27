@@ -1,13 +1,14 @@
-import React from 'react';
-import { Grid } from '@mui/material';
-import { MetPaper } from '../../../../common';
-
+import React, { useContext } from 'react';
+import { Divider, Grid } from '@mui/material';
+import { MetPaper, PrimaryButton } from 'components/common';
 import EngagementInformation from './EngagementInformation';
 import InternalEngagement from './InternalEngagement';
 import SendReport from './SendReport';
-import { PublicUrls } from './PublicUrls';
+import { EngagementSettingsContext } from './EngagementSettingsContext';
 
-const EngagementSettings = () => {
+const EngagementSettingsForm = () => {
+    const { handleSaveSettings, updatingSettings } = useContext(EngagementSettingsContext);
+
     return (
         <MetPaper elevation={1}>
             <Grid
@@ -15,27 +16,32 @@ const EngagementSettings = () => {
                 direction="row"
                 justifyContent="flex-start"
                 alignItems="flex-start"
-                spacing={1}
+                spacing={2}
                 sx={{ padding: '2em' }}
             >
                 <Grid item xs={12}>
                     <EngagementInformation />
                 </Grid>
-
+                <Grid item xs={12}>
+                    <Divider />
+                </Grid>
                 <Grid item xs={12}>
                     <InternalEngagement />
                 </Grid>
-
+                <Grid item xs={12}>
+                    <Divider />
+                </Grid>
                 <Grid item xs={12}>
                     <SendReport />
                 </Grid>
-
                 <Grid item xs={12}>
-                    <PublicUrls />
+                    <PrimaryButton loading={updatingSettings} onClick={handleSaveSettings}>
+                        Save
+                    </PrimaryButton>
                 </Grid>
             </Grid>
         </MetPaper>
     );
 };
 
-export default EngagementSettings;
+export default EngagementSettingsForm;

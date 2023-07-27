@@ -15,6 +15,7 @@ import { WidgetType } from 'models/widget';
 import { Box } from '@mui/material';
 import { draftEngagement, engagementMetadata, engagementSlugData } from '../../../factory';
 import { USER_ROLES } from 'services/userService/constants';
+import assert from 'assert';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
@@ -114,7 +115,7 @@ describe('Engagement form page tests', () => {
         expect(screen.getByText('Survey 1')).toBeInTheDocument();
     });
 
-    test('Save engagement button should trigger Put call', async () => {
+    test('Save engagement button should trigger patch call', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         const { container } = render(<EngagementForm />);
 
@@ -124,6 +125,9 @@ describe('Engagement form page tests', () => {
         });
         const updateButton = screen.getByTestId('update-engagement-button');
 
+        const nameInput = container.querySelector('input[name="name"]');
+        assert(nameInput, 'Unable to find engagement name input');
+        fireEvent.change(nameInput, { target: { value: 'Survey 1 Updated' } });
         fireEvent.click(updateButton);
 
         await waitFor(() => {
@@ -192,7 +196,30 @@ describe('Engagement form page tests', () => {
         expect(screen.getByText('Engagement Information')).toBeInTheDocument();
         expect(screen.getByText('Internal Engagement')).toBeInTheDocument();
         expect(screen.getByText('Send Report')).toBeInTheDocument();
-        expect(screen.getByText('Public URLs(Links)')).toBeInTheDocument();
+    });
+
+    test('Can move to links tab', async () => {
+        useParamsMock.mockReturnValue({ engagementId: '1' });
+        getEngagementMock.mockReturnValueOnce(
+            Promise.resolve({
+                ...draftEngagement,
+                surveys: surveys,
+            }),
+        );
+        const { container } = render(<EngagementForm />);
+
+        await waitFor(() => {
+            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
+        });
+
+        const settingsTabButton = screen.getByText('URL (links)');
+
+        fireEvent.click(settingsTabButton);
+
+        expect(screen.getByText('Public URLs (links)')).toBeInTheDocument();
+        expect(screen.getByText('Link to Public Engagement Page')).toBeInTheDocument();
+        expect(screen.getByText('Link to Public Dashboard Report')).toBeInTheDocument();
         await waitFor(() => {
             expect(getEngagementSlugMock).toHaveReturned();
             expect(screen.getAllByDisplayValue(engagementSlugData.slug, { exact: false })).toBeArrayOfSize(2);

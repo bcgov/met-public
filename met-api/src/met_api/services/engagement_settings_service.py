@@ -17,11 +17,20 @@ class EngagementSettingsService:
         return settings
 
     @staticmethod
-    def create_settings(request_json: dict):
+    def create_settings(data: dict):
         """Create engagement settings."""
-        settings_model = EngagementSettingsService._create_settings_model(request_json)
+        settings_model = EngagementSettingsService._create_settings_model(data)
         settings_model.commit()
         return settings_model.find_by_id(settings_model.engagement_id)
+
+    @staticmethod
+    def create_default_settings(engagement_id: int):
+        """Create default engagement settings."""
+        data = {
+            'engagement_id': engagement_id,
+            'send_report': True
+        }
+        return EngagementSettingsService.create_settings(data)
 
     @staticmethod
     def _create_settings_model(settings: dict) -> EngagementSettingsModel:
