@@ -86,9 +86,6 @@ const EmailListDrawer = () => {
     };
 
     const saveForm = async (data: EmailList) => {
-        // if (!richEmailListDescription) {
-        //     return updateEmailListForm(data);
-        // }
         return createEmailListForm(data);
     };
 

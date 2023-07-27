@@ -15,7 +15,7 @@ class SubscribeItem(BaseModel):  # pylint: disable=too-few-public-methods, too-m
 
     __tablename__ = 'subscribe_item'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    description = db.Column(db.String(550))
+    description = db.Column(db.Text)
     call_to_action_text = db.Column(db.String(25))
     call_to_action_type = db.Column((db.String(25)), nullable=False)
     sort_index = db.Column(db.Integer, nullable=True, default=1)

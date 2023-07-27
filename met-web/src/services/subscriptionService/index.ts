@@ -24,6 +24,15 @@ export const createSubscription = async (request: Subscribe): Promise<Subscribe>
     }
 };
 
+export const unSubscribe = async (request: Unsubscribe): Promise<Unsubscribe> => {
+    try {
+        const response = await http.PatchRequest<Unsubscribe>(Endpoints.Subscription.UPDATE, request);
+        return response.data;
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
 export const getSubscriptionsForms = async (widget_id: number): Promise<SubscribeForm[]> => {
     try {
         const url = replaceUrl(Endpoints.Subscription.GET_FORM_LIST, 'widget_id', String(widget_id));
@@ -115,7 +124,7 @@ export const deleteSubscribeForm = async (widget_id: number, subscribe_id: numbe
     }
 };
 
-export const sortWidgetEvents = async (widget_id: number, data: Subscribe[]): Promise<SubscribeForm> => {
+export const sortWidgetSubscribeForms = async (widget_id: number, data: Subscribe[]): Promise<SubscribeForm> => {
     try {
         const url = replaceUrl(Endpoints.Subscription.SORT_FORMS, 'widget_id', String(widget_id));
         const response = await http.PatchRequest<SubscribeForm>(url, data);
@@ -123,29 +132,6 @@ export const sortWidgetEvents = async (widget_id: number, data: Subscribe[]): Pr
             return response.data;
         }
         return Promise.reject('Failed to update sort order');
-    } catch (err) {
-        return Promise.reject(err);
-    }
-};
-
-// export const createSubscribeForm = async (widget_id: number, data: SubscribeFormProps): Promise<Subscribe> => {
-//     try {
-//         console.log(data);
-//         const url = replaceUrl(Endpoints.Subscription.CREATE_FORM, 'widget_id', String(widget_id));
-//         const response = await http.PostRequest<Subscribe>(url, data);
-//         if (response.data) {
-//             return response.data;
-//         }
-//         return Promise.reject('Failed to create subscribe form');
-//     } catch (err) {
-//         return Promise.reject(err);
-//     }
-// };
-
-export const unSubscribe = async (request: Unsubscribe): Promise<Unsubscribe> => {
-    try {
-        const response = await http.PatchRequest<Unsubscribe>(Endpoints.Subscription.UPDATE, request);
-        return response.data;
     } catch (err) {
         return Promise.reject(err);
     }
