@@ -31,5 +31,5 @@ class WidgetSubscribeSchema(BaseSchema):  # pylint: disable=too-many-ancestors, 
 
         model = WidgetSubscribeModel
 
-    event_items = fields.List(fields.Nested(SubscribeItemSchema))
+    subscribe_items = fields.List(fields.Nested(SubscribeItemSchema))
     type = EnumField(SubscribeTypes)

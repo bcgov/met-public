@@ -31,6 +31,10 @@ class WidgetSubscribe(BaseModel):  # pylint: disable=too-few-public-methods
             .order_by(WidgetSubscribe.sort_index.asc()) \
             .all()
         return widget_subscribe_forms
+    
+    @classmethod
+    def get_all_by_type(cls, type):
+        return cls.query.filter_by(type=type).all()
 
     @classmethod
     def update_widget_events_bulk(cls, update_mappings: list) -> list[WidgetSubscribe]:

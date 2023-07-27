@@ -22,6 +22,7 @@ class SubscribeItem(BaseModel):  # pylint: disable=too-few-public-methods, too-m
     widget_subscribe_id = db.Column(db.Integer, ForeignKey('widget_subscribe.id', ondelete='CASCADE'), nullable=True)
 
     @classmethod
-    def save_subscribe_items(cls, event_items: list) -> None:
+    def save_subscribe_items(cls, subscribe_items: list) -> None:
         """Update widgets.."""
-        db.session.bulk_save_objects(event_items)
+        db.session.bulk_save_objects(subscribe_items)
+

@@ -11,26 +11,33 @@ class WidgetSubscribeService:
 
     @staticmethod
     def get_subscribe_by_widget_id(widget_id):
-        print("Entering get_subscribe_by_widget_id method...")
         subscribe = WidgetSubscribeModel.get_all_by_widget_id(widget_id)
-        print(f"Returning subscribe for widget_id {widget_id}...")
         return subscribe
 
     @staticmethod
     def create_subscribe(widget_id, subscribe_details: dict):
-        print("Entering create_subscribe method...")
+        # Retrieve the type from the incoming request data
+        subscribe_type = subscribe_details.get('type')
+
+        # Find all existing subscribes of this type
+        existing_subscribes = WidgetSubscribeModel.get_all_by_type(subscribe_type)
+
+        # Delete all existing subscribes of this type
+        for existing_subscribe in existing_subscribes:
+            existing_subscribe.delete()
+
+        # Now proceed with creating the new subscribe
         subscribe = WidgetSubscribeService._create_subscribe_model(widget_id, subscribe_details)
         subscribe_items = subscribe_details.get('items', [])
         if subscribe_items:
             created_subscribe_items = WidgetSubscribeService._create_subscribe_item_models(subscribe_items, subscribe.id)
-            subscribe.subscribe_items = created_subscribe_items  # Attach the fetched SubscribeItem instances to your subscribe
+            subscribe.subscribe_items = created_subscribe_items
         subscribe.commit()
-        print(f"Subscribe for widget_id {widget_id} created.")
         return subscribe
+
 
     @staticmethod
     def create_subscribe_items(widget_id, subscribe_id, subscribe_item_details):
-        print("Entering create_subscribe_items method...")
         subscribe: WidgetSubscribeModel = WidgetSubscribeModel.find_by_id(subscribe_id)
         if subscribe.widget_id != widget_id:
             raise BusinessException(
@@ -39,57 +46,49 @@ class WidgetSubscribeService:
         if subscribe_item_details:
             WidgetSubscribeService._create_subscribe_item_models(subscribe_item_details, subscribe.id)
         subscribe.commit()
-        print(f"Subscribe items for widget_id {widget_id} and subscribe_id {subscribe_id} created.")
         return subscribe
 
     @staticmethod
     def _create_subscribe_model(widget_id, subscribe_details: dict):
-        print("Entering _create_subscribe_model method...")
         subscribe = WidgetSubscribeModel()
         subscribe.widget_id = widget_id
         subscribe.type = subscribe_details.get('type')
-        sort_index = WidgetSubscribeService._find_higest_sort_index(widget_id)
+        sort_index = WidgetSubscribeService._find_highest_sort_index(widget_id)
         subscribe.sort_index = sort_index + 1
         subscribe.flush()
-        print(f"Subscribe model for widget_id {widget_id} created.")
         return subscribe
     
     @classmethod
     def get_by_type_and_widget_id(cls, type, widget_id):
-        print(f"Entering get_by_type_and_widget_id method for type {type} and widget_id {widget_id}...")
         return cls.query.filter_by(type=type, widget_id=widget_id).all()
 
     @staticmethod
-    def _find_higest_sort_index(widget_id):
-        print("Entering _find_higest_sort_index method...")
+    def _find_highest_sort_index(widget_id):
         sort_index = 0
         widget_subscribes = WidgetSubscribeModel.get_all_by_widget_id(widget_id)
         if widget_subscribes:
             sort_index = max(widget_subscribe.sort_index for widget_subscribe in widget_subscribes)
-        print(f"Highest sort index for widget_id {widget_id} found: {sort_index}")
         return sort_index
 
     @staticmethod
     def _create_subscribe_item_models(subscribe_items: List, widget_subscribes_id):
-        print("Entering _create_subscribe_item_models method...")
         item_list = []
         for subscribe in subscribe_items:
             subscribe_item = WidgetSubscribeService._create_subscribe_item(subscribe, widget_subscribes_id)
             item_list.append(subscribe_item)
         SubscribeItemsModel.save_subscribe_items(item_list)
-        print(f"Subscribe item models for widget_subscribes_id {widget_subscribes_id} created.")
         return item_list  # Return the list of SubscribeItem instances
+
 
     @staticmethod
     def _create_subscribe_item(subscribe, widget_subscribe_id):
-        print("Entering _create_subscribe_item method...")
         subscribe_item = SubscribeItemsModel()
         subscribe_item.description = subscribe.get('description')
         subscribe_item.call_to_action_text = subscribe.get('call_to_action_text')
         subscribe_item.call_to_action_type = subscribe.get('call_to_action_type')
-        subscribe_item.widget_subscribe_id = widget_subscribe_id
-        print(f"Subscribe item for widget_subscribe_id {widget_subscribe_id} created.")
+        subscribe_item.widget_subscribe_id = widget_subscribe_id    
         return subscribe_item
+
 
     @staticmethod
     def update_subscribe_item(widget_id, subscribe_id, item_id, request_json):

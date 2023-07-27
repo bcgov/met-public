@@ -22,6 +22,6 @@ class SubscribeItemSchema(BaseSchema):  # pylint: disable=too-many-ancestors, to
     """This is the schema for the Contact link model."""
 
     class Meta(BaseSchema.Meta):  # pylint: disable=too-few-public-methods
-        """Maps all of the Widget Events fields to a default schema."""
+        """Maps all of the Widget subscribe fields to a default schema."""
 
         model = SubscribeItemModel
