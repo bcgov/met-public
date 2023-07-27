@@ -24,8 +24,7 @@ const SubscribeForm = () => {
                     <MetParagraph>
                         The email list will collect email addresses for a mailing list. A "double-opt-in" email will be
                         sent to confirm the subscription. Only the email addresses that have been double-opted-in will
-                        be on the list. The form sign-up will open the pre-defined form. The text and CTA for both are
-                        customizable.
+                        be on the list.
                     </MetParagraph>
                 </Grid>
                 <Grid item xs={12} marginBottom="1em">
