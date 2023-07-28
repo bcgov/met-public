@@ -7,13 +7,13 @@ import { getTeamMembers } from 'services/membershipService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
 import { EngagementSettings, ProjectMetadata, createDefaultEngagementSettings } from 'models/engagement';
+import { updatedDiff } from 'deep-object-diff';
+import { getSlugByEngagementId } from 'services/engagementSlugService';
 import {
     PatchEngagementSettingsRequest,
     getEngagementSettings,
     patchEngagementSettings,
 } from 'services/engagementSettingService';
-import { updatedDiff } from 'deep-object-diff';
-import { getSlugByEngagementId } from 'services/engagementSlugService';
 
 interface EngagementFormData {
     name: string;
@@ -81,8 +81,7 @@ export interface EngagementTabsContextState {
     loadTeamMembers: () => void;
     settings: EngagementSettings;
     settingsLoading: boolean;
-    updateEngagementSettings: (settingsForm: EngagementSettingsFormData) => void;
-    updatingSettings: boolean;
+    updateEngagementSettings: (settingsForm: EngagementSettingsFormData) => Promise<void>;
     savedSlug: string;
     setSavedSlug: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -133,7 +132,6 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
     updateEngagementSettings: () => {
         throw new Error('updateEngagementSettings not implemented');
     },
-    updatingSettings: false,
     savedSlug: '',
     setSavedSlug: () => {
         throw new Error('setSavedSlug not implemented');
@@ -204,7 +202,6 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
 
     const [settings, setSettings] = useState<EngagementSettings>(createDefaultEngagementSettings());
     const [settingsLoading, setSettingsLoading] = useState(true);
-    const [updatingSettings, setUpdatingSettings] = useState(false);
 
     const loadSettings = async () => {
         try {
@@ -231,7 +228,6 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
 
     const updateEngagementSettings = async (settingsForm: EngagementSettingsFormData) => {
         try {
-            setUpdatingSettings(true);
             const updatedSettings = updatedDiff(
                 {
                     send_report: settings.send_report,
@@ -240,17 +236,15 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
             ) as PatchEngagementSettingsRequest;
 
             if (Object.keys(updatedSettings).length === 0) {
-                setUpdatingSettings(false);
-                return;
+                return Promise.resolve();
             }
             await patchEngagementSettings({
                 ...updatedSettings,
                 engagement_id: savedEngagement.id,
             });
             await loadSettings();
-            setUpdatingSettings(false);
+            return Promise.resolve();
         } catch (error) {
-            setUpdatingSettings(false);
             dispatch(
                 openNotification({
                     severity: 'error',
@@ -306,7 +300,6 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
                 settings,
                 settingsLoading,
                 updateEngagementSettings,
-                updatingSettings,
                 savedSlug,
                 setSavedSlug,
             }}

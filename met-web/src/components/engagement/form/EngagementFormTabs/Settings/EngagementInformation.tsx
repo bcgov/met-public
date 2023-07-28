@@ -1,14 +1,13 @@
 import React, { useContext } from 'react';
-import { Grid, MenuItem, TextField, Select, SelectChangeEvent, Divider } from '@mui/material';
-import { MetLabel, PrimaryButton, MetHeader4 } from 'components/common';
-import { ActionContext } from '../../ActionContext';
+import { Grid, MenuItem, TextField, Select, SelectChangeEvent } from '@mui/material';
+import { MetLabel, MetHeader4 } from 'components/common';
 import { EngagementTabsContext } from '../EngagementTabsContext';
 import { AppConfig } from 'config';
+import { EngagementSettingsContext } from './EngagementSettingsContext';
 
 const EngagementInformation = () => {
-    const { handleUpdateEngagementMetadataRequest, isSaving, savedEngagement, engagementId } =
-        useContext(ActionContext);
     const { engagementFormData, setEngagementFormData } = useContext(EngagementTabsContext);
+    const { hasBeenOpened } = useContext(EngagementSettingsContext);
     const { project_id, project_metadata } = engagementFormData;
     const { engagementProjectTypes } = AppConfig.constants;
 
@@ -29,15 +28,6 @@ const EngagementInformation = () => {
         });
     };
 
-    const handleUpdateEngagementSettings = async () => {
-        await handleUpdateEngagementMetadataRequest({
-            ...engagementFormData,
-            engagement_id: Number(engagementId),
-        });
-
-        return savedEngagement;
-    };
-
     return (
         <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1}>
             <Grid item xs={12} mb={1}>
@@ -56,6 +46,7 @@ const EngagementInformation = () => {
                     variant="outlined"
                     fullWidth
                     onChange={handleChangeMetadata}
+                    disabled={hasBeenOpened}
                 />
             </Grid>
             <Grid item xs={12} lg={6} p={1}>
@@ -67,6 +58,7 @@ const EngagementInformation = () => {
                     variant="outlined"
                     fullWidth
                     onChange={handleChangeMetadata}
+                    disabled={hasBeenOpened}
                 />
             </Grid>
             <Grid item xs={12} lg={6} p={1}>
@@ -78,6 +70,7 @@ const EngagementInformation = () => {
                     variant="outlined"
                     fullWidth
                     onChange={handleChange}
+                    disabled={hasBeenOpened}
                 />
             </Grid>
             <Grid item xs={12} lg={6} p={1}>
@@ -92,6 +85,7 @@ const EngagementInformation = () => {
                     fullWidth
                     size="small"
                     onChange={handleChangeMetadata}
+                    disabled={hasBeenOpened}
                 >
                     <MenuItem value={''} sx={{ fontStyle: 'italic', height: '2em' }}>
                         none
@@ -114,19 +108,8 @@ const EngagementInformation = () => {
                     variant="outlined"
                     fullWidth
                     onChange={handleChangeMetadata}
+                    disabled={hasBeenOpened}
                 />
-            </Grid>
-            <Grid item xs={12}>
-                <PrimaryButton
-                    data-testid="update-engagement-button"
-                    sx={{ marginRight: 1 }}
-                    onClick={() => handleUpdateEngagementSettings()}
-                    disabled={isSaving}
-                    loading={isSaving}
-                >
-                    Save
-                </PrimaryButton>
-                <Divider sx={{ mt: '1em' }} />
             </Grid>
         </Grid>
     );

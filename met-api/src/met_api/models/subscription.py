@@ -8,6 +8,8 @@ from sqlalchemy import ForeignKey
 
 from met_api.schemas.subscription import SubscriptionSchema
 
+from met_api.constants.subscription_type import SubscriptionType
+
 from .base_model import BaseModel
 from .db import db
 
@@ -21,6 +23,8 @@ class Subscription(BaseModel):  # pylint: disable=too-few-public-methods
     engagement_id = db.Column(db.Integer, nullable=True)
     participant_id = db.Column(db.Integer, ForeignKey('participant.id'), nullable=True)
     is_subscribed = db.Column(db.Boolean, nullable=False)
+    project_id = db.Column(db.String(50))
+    type = db.Column(db.Enum(SubscriptionType), nullable=True)
 
     @classmethod
     def get(cls) -> Subscription:
@@ -53,6 +57,8 @@ class Subscription(BaseModel):  # pylint: disable=too-few-public-methods
             engagement_id=subscription.get('engagement_id', None),
             participant_id=subscription.get('participant_id', None),
             is_subscribed=subscription.get('is_subscribed', None),
+            project_id=subscription.get('project_id', None),
+            type=subscription.get('type', None),
             created_date=datetime.utcnow(),
             created_by=subscription.get('created_by', None),
         )

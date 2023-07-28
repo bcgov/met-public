@@ -215,11 +215,17 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         setSaving(true);
         try {
             const uploadedBannerImageFileName = await handleUploadBannerImage();
-            const state = { ...savedEngagement, status_block: undefined };
+            const state = { ...savedEngagement };
             const engagementEditsToPatch = updatedDiff(state, {
                 ...engagement,
                 banner_filename: uploadedBannerImageFileName,
             }) as PatchEngagementRequest;
+
+            if (Object.keys(engagementEditsToPatch).length === 0) {
+                setSaving(false);
+                return savedEngagement;
+            }
+
             const updatedEngagement = await patchEngagement({
                 ...engagementEditsToPatch,
                 id: Number(engagementId),
@@ -239,13 +245,11 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const handleUpdateEngagementMetadataRequest = async (
         engagement: EngagementFormUpdate,
     ): Promise<EngagementMetadata> => {
-        setSaving(true);
         try {
             if (!savedEngagement.id) {
                 dispatch(
                     openNotification({ severity: 'error', text: 'Please save the engagement before adding metadata' }),
                 );
-                setSaving(false);
                 return engagementMetadata;
             }
             const state = { ...engagementMetadata };
@@ -255,13 +259,17 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 project_metadata: engagement.project_metadata,
             };
             const metadataDiff = diff(state, engagementMetadataToUpdate) as EngagementMetadata;
+
+            if (Object.keys(metadataDiff).length === 0) {
+                return engagementMetadata;
+            }
+
             const updatedEngagementMetadata = await patchEngagementMetadata({
                 ...metadataDiff,
                 engagement_id: Number(engagementId),
             });
             setEngagementMetadata(updatedEngagementMetadata);
             dispatch(openNotification({ severity: 'success', text: 'Engagement metadata saved successfully' }));
-            setSaving(false);
             return Promise.resolve(updatedEngagementMetadata);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error saving engagement metadata' }));

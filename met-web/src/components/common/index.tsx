@@ -20,6 +20,7 @@ import { Palette } from 'styles/Theme';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { MET_Header_Font_Family, MET_Header_Font_Weight } from '../../styles/constants';
 import { When } from 'react-if';
+import ReactPlayer from 'react-player';
 
 export const MetTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} classes={{ popper: className }} />
@@ -454,3 +455,17 @@ export const MetDisclaimer = ({ children }: { children: React.ReactNode }) => {
         </Box>
     );
 };
+
+export const AspectRatioContainer = styled('div')({
+    position: 'relative',
+    width: '100%',
+    paddingTop: '56.25%' /* 16:9 aspect ratio (height / width * 100) */,
+});
+
+export const ReactPlayerWrapper = styled(ReactPlayer)({
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+});

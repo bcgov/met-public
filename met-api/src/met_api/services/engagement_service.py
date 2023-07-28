@@ -4,19 +4,20 @@ from http import HTTPStatus
 
 from flask import current_app
 
-from met_api.constants.engagement_status import Status
+from met_api.constants.engagement_status import Status, SubmissionStatus
 from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.engagement import Engagement as EngagementModel
+from met_api.models.engagement_scope_options import EngagementScopeOptions
 from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
 from met_api.models.engagement_status_block import EngagementStatusBlock as EngagementStatusBlockModel
 from met_api.models.pagination_options import PaginationOptions
-from met_api.models.engagement_scope_options import EngagementScopeOptions
 from met_api.models.submission import Submission as SubmissionModel
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services import authorization
-from met_api.services.object_storage_service import ObjectStorageService
+from met_api.services.engagement_settings_service import EngagementSettingsService
 from met_api.services.engagement_slug_service import EngagementSlugService
+from met_api.services.object_storage_service import ObjectStorageService
 from met_api.utils import email_util, notification
 from met_api.utils.enums import SourceAction, SourceType
 from met_api.utils.roles import Role
@@ -129,6 +130,7 @@ class EngagementService:
         eng_model.commit()
         email_util.publish_to_email_queue(SourceType.ENGAGEMENT.value, eng_model.id, SourceAction.CREATED.value, True)
         EngagementSlugService.create_engagement_slug(eng_model.id)
+        EngagementSettingsService.create_default_settings(eng_model.id)
         return eng_model.find_by_id(eng_model.id)
 
     @staticmethod
@@ -169,12 +171,22 @@ class EngagementService:
 
         new_status_block.save_status_blocks(status_blocks)
 
+    @staticmethod
+    def validate_engagement_status_update(engagement: EngagementModel):
+        """Validate engagement not published."""
+        if engagement.status_id == SubmissionStatus.Open.value:
+            raise ValueError('Cannot update published engagement')
+
     def update_engagement(self, request_json: dict):
         """Update engagement."""
         self.validate_fields(request_json)
         engagement_id = request_json.get('id', None)
         authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name,
                                                Role.EDIT_ENGAGEMENT.value), engagement_id=engagement_id)
+
+        saved_engagement = EngagementModel.find_by_id(engagement_id)
+        self.validate_engagement_status_update(saved_engagement)
+
         engagement = EngagementModel.update_engagement(request_json)
         if (status_block := request_json.get('status_block')) is not None:
             EngagementService._save_or_update_eng_block(engagement_id, status_block)

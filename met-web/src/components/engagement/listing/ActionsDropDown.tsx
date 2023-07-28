@@ -105,7 +105,9 @@ export const ActionsDropDown = ({ engagement }: { engagement: Engagement }) => {
                 },
                 condition:
                     submissionHasBeenOpened &&
-                    (roles.includes(USER_ROLES.REVIEW_COMMENTS) || assignedEngagements.includes(engagement.id)),
+                    (roles.includes(USER_ROLES.REVIEW_COMMENTS) ||
+                        roles.includes(USER_ROLES.VIEW_APPROVED_COMMENTS) ||
+                        assignedEngagements.includes(engagement.id)),
             },
         ],
         [engagement.id],

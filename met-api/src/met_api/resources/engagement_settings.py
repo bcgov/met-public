@@ -24,7 +24,6 @@ from met_api.auth import auth
 from met_api.auth import jwt as _jwt
 from met_api.schemas.engagement_settings import EngagementSettingsSchema
 from met_api.services.engagement_settings_service import EngagementSettingsService
-from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
@@ -53,27 +52,10 @@ class EngagementMetadata(Resource):
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
-@cors_preflight('POST, PATCH, OPTIONS')
+@cors_preflight('PATCH, OPTIONS')
 @API.route('/')
 class EngagementsMetadata(Resource):
     """Resource for managing engagement settings."""
-
-    @staticmethod
-    @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.CREATE_ENGAGEMENT.value])
-    def post():
-        """Create new engagement settings."""
-        try:
-            requestjson = request.get_json()
-            settings_schema = EngagementSettingsSchema()
-            settings_model = EngagementSettingsService().create_settings(requestjson)
-            return settings_schema.dump(settings_model), HTTPStatus.OK
-        except KeyError as err:
-            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-        except ValueError as err:
-            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-        except ValidationError as err:
-            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
