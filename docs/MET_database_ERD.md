@@ -1,3 +1,4 @@
+```mermaid
 erDiagram
     engagement {
         integer id PK
