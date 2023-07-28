@@ -8,7 +8,7 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export const useAppTranslation = () => {
     const translate = useTranslation();
-    const basename = localStorage.getItem('tenantId');
+    const basename = sessionStorage.getItem('tenantId');
 
     const { t } = translate;
 

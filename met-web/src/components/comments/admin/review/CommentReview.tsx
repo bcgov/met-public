@@ -13,7 +13,7 @@ import {
     FormHelperText,
 } from '@mui/material';
 import { getSubmission, reviewComments } from 'services/submissionService';
-import { useAppDispatch } from 'hooks';
+import { useAppDispatch, useAppTranslation } from 'hooks';
 import { useParams, useNavigate } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import {
@@ -24,6 +24,7 @@ import {
     SecondaryButton,
     MetHeader3,
     MetHeader4,
+    MetSmallText,
 } from 'components/common';
 import { CommentStatus } from 'constants/commentStatus';
 import { StaffNoteType } from 'constants/staffNoteType';
@@ -56,6 +57,7 @@ const CommentReview = () => {
     const [survey, setSurvey] = useState<Survey>(createDefaultSurvey());
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const { t: translate } = useAppTranslation();
     const { submissionId, surveyId } = useParams();
     const reviewNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Review);
     const internalNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Internal);
@@ -331,7 +333,9 @@ const CommentReview = () => {
                                         }
                                     />
                                     <FormControlLabel
-                                        label={<MetParagraph>Contains profanity or swear words</MetParagraph>}
+                                        label={
+                                            <MetParagraph>Contains profanity or inappropriate language</MetParagraph>
+                                        }
                                         control={
                                             <Checkbox
                                                 checked={hasProfanity}
@@ -348,10 +352,9 @@ const CommentReview = () => {
                                             />
                                         }
                                     />
-                                    <MetParagraph color="#d32f2f" fontSize={'13px'} marginLeft={'3em'}>
-                                        If there is a threat/menace in the comments, select this checkbox and contact
-                                        {`<TBD>`}. No email will be sent.
-                                    </MetParagraph>
+                                    <MetSmallText bold color="#d32f2f" marginLeft={'3em'} mt={'-1em'}>
+                                        {translate('comment.admin.review.ifThreatContact')}
+                                    </MetSmallText>
                                     <FormControlLabel
                                         label={<MetParagraph sx={{ color: '#494949' }}>Other</MetParagraph>}
                                         control={

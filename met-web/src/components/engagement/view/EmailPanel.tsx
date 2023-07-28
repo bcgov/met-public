@@ -80,13 +80,17 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
                 </Grid>
 
                 <Grid item xs={12}>
-                    <MetBody>You will receive a link to access the survey at the email address you provide.</MetBody>
+                    <MetBody>
+                        You will receive a link to provide your feedback at the email address you provide.
+                    </MetBody>
                 </Grid>
 
                 <Grid item xs={12}>
                     <MetBody>
                         <strong>Why are we collecting your email?</strong> Email verification helps us to know you are
-                        not a robot, and ensures we have your consent to send you the survey link.
+                        not a robot, and ensures we have your consent to collect your feedback. Your email address will
+                        remain confidential, and will only be used to authenticate your participation in this public
+                        comment period and (TBD).
                     </MetBody>
                 </Grid>
                 <Grid item xs={12}>
@@ -159,29 +163,19 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
                         </MetDescription>
                     </Grid>
                 </When>
-
                 <Grid item container xs={12} direction="row" justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
-                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
-                        {isSmallScreen ? (
-                            <>
-                                <PrimaryButton type="submit" variant={'contained'} loading={isSaving}>
-                                    Submit
-                                </PrimaryButton>
-                                <SecondaryButton onClick={handleClose} disabled={isSaving}>
-                                    Cancel
-                                </SecondaryButton>
-                                <Toolbar />
-                            </>
-                        ) : (
-                            <>
-                                <SecondaryButton onClick={handleClose} disabled={isSaving}>
-                                    Cancel
-                                </SecondaryButton>
-                                <PrimaryButton type="submit" variant={'contained'} loading={isSaving}>
-                                    Submit
-                                </PrimaryButton>
-                            </>
-                        )}
+                    <Stack
+                        direction={{ md: 'column-reverse', lg: 'row' }}
+                        spacing={1}
+                        width="100%"
+                        justifyContent="flex-end"
+                    >
+                        <SecondaryButton onClick={handleClose} disabled={isSaving}>
+                            Cancel
+                        </SecondaryButton>
+                        <PrimaryButton type="submit" variant={'contained'} loading={isSaving}>
+                            Submit
+                        </PrimaryButton>
                     </Stack>
                 </Grid>
             </Grid>
