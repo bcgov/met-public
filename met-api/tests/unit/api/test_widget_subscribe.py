@@ -51,10 +51,10 @@ def test_create_subscribe(client, jwt, session):  # pylint:disable=unused-argume
     assert rv.json.get('type') == subscribe_info.get('type')
     response_subscribe_items = rv.json.get('subscribe_items')
     assert len(response_subscribe_items) == 1
-    response_description = json.loads(json.loads(
-        response_subscribe_items[0].get('description')))
+    response_description = json.loads(
+        response_subscribe_items[0].get('description').strip('"'))
     assert response_description == json.loads(
-        subscribe_info.get('description'))
+        subscribe_info.get('description').strip('"'))
 
 
 def test_get_subscribe(client, jwt, session):  # pylint:disable=unused-argument
