@@ -27,7 +27,8 @@ from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
-API = Namespace('widgets_subscribe', description='Endpoints for Widget Subscribe')
+API = Namespace('widgets_subscribe',
+                description='Endpoints for Widget Subscribe')
 """Widget Subscribe
 """
 
@@ -54,7 +55,7 @@ class WidgetSubscribe(Resource):
         request_json = request.get_json()
         try:
             subscribe = WidgetSubscribeService().create_subscribe(widget_id, request_json)
-            return WidgetSubscribeSchema().dump(subscribe, many=True), HTTPStatus.OK
+            return WidgetSubscribeSchema().dump(subscribe, many=False), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
 
@@ -82,7 +83,8 @@ class WidgetSubscribeItems(Resource):
         request_json = request.get_json()
         print(request_json)
         try:
-            subscribe = WidgetSubscribeService().create_subscribe_items(widget_id, subscribe_id, request_json)
+            subscribe = WidgetSubscribeService().create_subscribe_items(
+                widget_id, subscribe_id, request_json)
             return WidgetSubscribeSchema().dump(subscribe), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
@@ -99,7 +101,8 @@ class SubscribeItems(Resource):
         """Update subscribe item."""
         request_json = request.get_json()
         try:
-            subscribe = WidgetSubscribeService().update_subscribe_item(widget_id, subscribe_id, item_id, request_json)
+            subscribe = WidgetSubscribeService().update_subscribe_item(
+                widget_id, subscribe_id, item_id, request_json)
             return SubscribeItemSchema().dump(subscribe), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
@@ -117,7 +120,7 @@ class WidgetSubscribeSort(Resource):
         try:
             request_json = request.get_json()
             sort_widget_subscribe = WidgetSubscribeService().save_widget_subscribes_bulk(widget_id, request_json,
-                                                                               user_id=TokenInfo.get_id())
+                                                                                         user_id=TokenInfo.get_id())
             return WidgetSubscribeSchema().dump(sort_widget_subscribe), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code

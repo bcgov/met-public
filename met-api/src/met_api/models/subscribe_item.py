@@ -9,6 +9,7 @@ from sqlalchemy.sql.schema import ForeignKey
 from .base_model import BaseModel
 from .db import db
 
+
 class SubscribeItem(BaseModel):  # pylint: disable=too-few-public-methods, too-many-instance-attributes
     """Subscribe Item table."""
 
@@ -18,7 +19,8 @@ class SubscribeItem(BaseModel):  # pylint: disable=too-few-public-methods, too-m
     call_to_action_text = db.Column(db.String(25))
     call_to_action_type = db.Column((db.String(25)), nullable=False)
     sort_index = db.Column(db.Integer, nullable=True, default=1)
-    widget_subscribe_id = db.Column(db.Integer, ForeignKey('widget_subscribe.id', ondelete='CASCADE'), nullable=True)
+    widget_subscribe_id = db.Column(db.Integer, ForeignKey(
+        'widget_subscribe.id', ondelete='CASCADE'), nullable=True)
 
     @classmethod
     def save_subscribe_items(cls, subscribe_items: list) -> None:

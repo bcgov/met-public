@@ -20,8 +20,10 @@ class WidgetSubscribe(BaseModel):  # pylint: disable=too-few-public-methods
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     type = db.Column(db.Enum(SubscribeTypes), nullable=False)
     sort_index = db.Column(db.Integer, nullable=True, default=1)
-    widget_id = db.Column(db.Integer, ForeignKey('widget.id', ondelete='CASCADE'), nullable=True)
-    subscribe_items = db.relationship('SubscribeItem', backref='widget_subscribe', cascade='all,delete,delete-orphan')
+    widget_id = db.Column(db.Integer, ForeignKey(
+        'widget.id', ondelete='CASCADE'), nullable=True)
+    subscribe_items = db.relationship(
+        'SubscribeItem', backref='widget_subscribe', cascade='all,delete,delete-orphan')
 
     @classmethod
     def get_all_by_widget_id(cls, widget_id) -> List[WidgetSubscribe]:
@@ -34,6 +36,7 @@ class WidgetSubscribe(BaseModel):  # pylint: disable=too-few-public-methods
 
     @classmethod
     def get_all_by_type(cls, type_):
+        """Get widget subscribe by type"""
         return db.session.query(cls).filter_by(type=type_).all()
 
     @classmethod
