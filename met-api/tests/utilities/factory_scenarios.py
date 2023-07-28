@@ -559,8 +559,14 @@ class TestSubscribeInfo(Enum):
     Test scenarios of subscribe.
     """
     subscribe_info_1 = {
-        'description': '{"blocks":[{"key":"8vfub","text":"test description","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
-        'call_to_action_type': 'link',
-        'call_to_action_text': 'Click here to sign up',
-        'form_type': 'EMAIL_LIST'
+        "widget_id": 1,
+        "type": "EMAIL_LIST",
+        "items": [
+            {
+                "description": "{\"blocks\":[{\"key\":\"ddksd\",\"text\":\"dsadsadsadsa\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}",
+                "call_to_action_type": "link",
+                "call_to_action_text": "Click here to sign up",
+                "form_type": "EMAIL_LIST"
+            }
+        ]
     }
