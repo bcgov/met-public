@@ -1,7 +1,7 @@
 import http from 'apiManager/httpRequestHandler';
 import Endpoints from 'apiManager/endpoints';
 import { replaceUrl, replaceAllInURL } from 'helper';
-import { Subscribe, SubscribeForm, SubscribeTypeLabel, Unsubscribe } from 'models/subscription';
+import { Subscribe, Subscription, SubscribeForm, SubscribeTypeLabel, Unsubscribe } from 'models/subscription';
 
 export const getSubscription = async (participant_id: number): Promise<Subscribe> => {
     if (!participant_id) {
