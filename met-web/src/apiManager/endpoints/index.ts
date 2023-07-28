@@ -54,13 +54,14 @@ const Endpoints = {
     Subscription: {
         GET: `${AppConfig.apiUrl}/subscription/participant_id`,
         CREATE: `${AppConfig.apiUrl}/subscription/`,
-        UPDATE: `${AppConfig.apiUrl}/subscription/`,
+        UNSUBSCRIBE: `${AppConfig.apiUrl}/subscription/`,
         CREATE_UPDATE: `${AppConfig.apiUrl}/subscription/manage`,
         CREATE_FORM: `${AppConfig.apiUrl}/widgets/widget_id/subscribe`,
         GET_FORM_LIST: `${AppConfig.apiUrl}/widgets/widget_id/subscribe`,
         UPDATE_FORM: `${AppConfig.apiUrl}/widgets/widget_id/subscribe/subscribe_id/item/item_id`,
         DELETE_FORM: `${AppConfig.apiUrl}/widgets/widget_id/subscribe/subscribe_id`,
         SORT_FORMS: `${AppConfig.apiUrl}/widgets/widget_id/subscribe/sort_index`,
+        CONFIRM_SUBSCRIPTION: `${AppConfig.apiUrl}/subscription/manage`,
     },
     PublicSubmission: {
         CREATE: `${AppConfig.apiUrl}/submissions/public/verification_token`,

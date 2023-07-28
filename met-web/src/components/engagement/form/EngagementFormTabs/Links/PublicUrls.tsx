@@ -102,7 +102,7 @@ export const PublicUrls = () => {
                 <MetLabel>Link to Public Engagement Page</MetLabel>
                 <MetDescription>
                     This is the link to the engagement. You can edit the link anytime before the engagement is
-                    published. The link will become active when the engagement is published
+                    published. The link will become active when the engagement is published.
                 </MetDescription>
                 <ClickAwayListener
                     onClickAway={() => {
