@@ -555,18 +555,18 @@ class TestReportSettingInfo(dict, Enum):
 
 
 class TestSubscribeInfo(Enum):
-    """
-    Test scenarios of subscribe.
-    """
+    """Test scenarios of subscribe."""
+
     subscribe_info_1 = {
-        "widget_id": 1,
-        "type": "EMAIL_LIST",
-        "items": [
+        'widget_id': 1,
+        'type': 'EMAIL_LIST',
+        'items': [
             {
-                "description": "{\"blocks\":[{\"key\":\"ddksd\",\"text\":\"dsadsadsadsa\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}",
-                "call_to_action_type": "link",
-                "call_to_action_text": "Click here to sign up",
-                "form_type": "EMAIL_LIST"
+                'description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\"type\":\"unstyled\",\
+                    \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
+                'call_to_action_type': 'link',
+                'call_to_action_text': 'Click here to sign up',
+                'form_type': 'EMAIL_LIST'
             }
         ]
     }

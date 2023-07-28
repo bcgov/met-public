@@ -69,12 +69,12 @@ class WidgetSubscribeService:
 
     @staticmethod
     def get_by_type_and_widget_id(_type, widget_id):
-        """Filter by type"""
+        """Filter by type."""
         return WidgetSubscribeModel.query.filter_by(type=_type, widget_id=widget_id).all()
 
     @staticmethod
     def _find_highest_sort_index(widget_id):
-        """Find highest sort index"""
+        """Find highest sort index."""
         sort_index = 0
         widget_subscribes = WidgetSubscribeModel.get_all_by_widget_id(
             widget_id)
@@ -96,7 +96,7 @@ class WidgetSubscribeService:
 
     @staticmethod
     def _create_subscribe_item(subscribe, widget_subscribe_id):
-        """Get subscribe item data from json"""
+        """Get subscribe item data from json."""
         subscribe_item = SubscribeItemsModel()
         subscribe_item.description = subscribe.get('description')
         subscribe_item.call_to_action_text = subscribe.get(

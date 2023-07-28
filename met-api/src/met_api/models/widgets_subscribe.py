@@ -36,7 +36,7 @@ class WidgetSubscribe(BaseModel):  # pylint: disable=too-few-public-methods
 
     @classmethod
     def get_all_by_type(cls, type_):
-        """Get widget subscribe by type"""
+        """Get widget subscribe by type."""
         return db.session.query(cls).filter_by(type=type_).all()
 
     @classmethod
