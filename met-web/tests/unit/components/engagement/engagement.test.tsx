@@ -1,5 +1,5 @@
 import { render, waitFor, screen } from '@testing-library/react';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import '@testing-library/jest-dom';
 import EngagementView from 'components/engagement/view';
 import { Contact } from 'models/contact';
@@ -101,6 +101,13 @@ jest.mock('apiManager/apiSlices/contacts', () => ({
 jest.mock('components/map', () => () => {
     return <div></div>;
 });
+
+jest.mock('components/permissionsGate', () => ({
+    ...jest.requireActual('components/permissionsGate'),
+    PermissionsGate: ({ children }: { children: ReactNode }) => {
+        return <>{children}</>;
+    },
+}));
 
 describe('Engagement View page tests', () => {
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
