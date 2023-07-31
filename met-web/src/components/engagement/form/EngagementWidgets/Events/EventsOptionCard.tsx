@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { MetPaper, MetBody, MetHeader4 } from 'components/common';
+import { MetPaper, MetLabel, MetDescription } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
@@ -8,7 +8,7 @@ import { Else, If, Then } from 'react-if';
 import { ActionContext } from '../../ActionContext';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { optionCardStyle } from '../Phases/PhasesOptionCard';
+import { optionCardStyle } from '../constants';
 import { WidgetTabValues } from '../type';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
 
@@ -63,8 +63,14 @@ const EventsOptionCard = () => {
                     </Grid>
                 </Then>
                 <Else>
-                    <Grid container alignItems="center" justifyContent="flex-start" direction="row" columnSpacing={1}>
-                        <Grid item sx={{ mr: 0.5 }}>
+                    <Grid
+                        container
+                        alignItems="flex-start"
+                        justifyContent="flex-start"
+                        direction="row"
+                        columnSpacing={1}
+                    >
+                        <Grid item>
                             <EventNoteIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
                         </Grid>
                         <Grid
@@ -77,10 +83,12 @@ const EventsOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetHeader4>Events</MetHeader4>
+                                <MetLabel>Events</MetLabel>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody>Add info about open houses and virtual sessions</MetBody>
+                                <MetDescription>
+                                    Add information about in-person or virtual information sessions
+                                </MetDescription>
                             </Grid>
                         </Grid>
                     </Grid>
