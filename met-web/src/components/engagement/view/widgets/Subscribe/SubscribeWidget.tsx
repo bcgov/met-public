@@ -149,7 +149,7 @@ function SubscribeWidget() {
                                     <MetParagraph>
                                         I want to receive updates for {''}
                                         {engagementMetadata.project_id
-                                            ? engagementMetadata.project_id
+                                            ? engagementMetadata.project_metadata.project_name
                                             : savedEngagement.name}
                                         {''} only
                                     </MetParagraph>
