@@ -196,6 +196,7 @@ const CommentReview = () => {
     };
 
     const defaultVerdict = comment_status_id !== CommentStatus.Pending ? comment_status_id : CommentStatus.Approved;
+    const threatEmailContact = translate('comment.admin.review.threatContactEmail');
     return (
         <MetPageGridContainer>
             <EmailPreviewModal
@@ -353,7 +354,8 @@ const CommentReview = () => {
                                         }
                                     />
                                     <MetSmallText bold color="#d32f2f" marginLeft={'3em'} mt={'-1em'}>
-                                        {translate('comment.admin.review.ifThreatContact')}
+                                        {translate('comment.admin.review.ifThreatContact')}{' '}
+                                        <a href={`mailto:${threatEmailContact}`}>{threatEmailContact}</a>
                                     </MetSmallText>
                                     <FormControlLabel
                                         label={<MetParagraph sx={{ color: '#494949' }}>Other</MetParagraph>}

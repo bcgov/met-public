@@ -9,13 +9,14 @@
     "landing": {
         "banner": {
             "header": "Environmental Assessment Office Public Engagement",
-            "description": "Description: Public participation in environmental assessments is critical, giving citizens input into decisions on whether or not major projects should proceed, and if they do, what safeguards should be in place."
+            "description": "Public participation in environmental assessments is critical, giving citizens input into decisions on whether or not major projects should proceed, and if they do, what safeguards should be in place."
         }
     },
     "comment": {
         "admin": {
             "review": {
-                "ifThreatContact": "If there is a threat/menace in the comments, check the box below. No email will be sent. Contact Sarah Plank at sarah.plank@gov.bc.ca"
+                "ifThreatContact": "If there is a threat/menace in the comments, check the box below. No email will be sent. Contact Sarah Plank at",
+                "threatContactEmail": "sarah.plank@gov.bc.ca"
             }
         }
     }
