@@ -45,7 +45,7 @@ export const PhasesWidget = () => {
             <MetPaper elevation={1} sx={{ padding: '2em', pt: '25px' }}>
                 <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
                     <Grid item xs={12}>
-                        <MetHeader3 bold>The EA Process</MetHeader3>
+                        <MetHeader3 bold>The Environmental Assessment Process</MetHeader3>
                     </Grid>
 
                     <When condition={Boolean(currentPhaseId) && currentPhaseId !== EngagementPhases.Standalone}>
@@ -57,9 +57,10 @@ export const PhasesWidget = () => {
                     </When>
                     <Grid item xs={12}>
                         <MetBody>
-                            Click on the sections below to expand them and learn more about each EA process phase. You
-                            can also learn more about each engagement period by clicking the engagement icon.
-                            {<ForumIcon fontSize="1.2em" sx={{ marginLeft: '0.5em' }} />}
+                            Click ‘learn more’ on the sections below for more details about each phase in the
+                            Environmental Assessment process. Click the speech bubble icon
+                            {<ForumIcon fontSize="1.2em" sx={{ marginLeft: '0.5em' }} />} to learn more about each
+                            unique public comment period.
                         </MetBody>
                     </Grid>
                     <Grid item xs={12} sx={{ maxWidth: '99%' }}>

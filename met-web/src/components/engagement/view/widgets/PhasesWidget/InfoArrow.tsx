@@ -13,7 +13,7 @@ export const InfoArrow = () => {
                 }}
             >
                 <MetSmallText color="white">
-                    Engagement and consensus-seeking with participating Indigenous nations occur at each stage of the
+                    Engagement and consensus-seeking with participating First Nations occur at each stage of the
                     process, supported by dispute resolution at certain stages if required.
                 </MetSmallText>
             </Box>
