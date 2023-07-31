@@ -562,8 +562,7 @@ class TestSubscribeInfo(Enum):
         'type': 'EMAIL_LIST',
         'items': [
             {
-                'description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\"type\":\"unstyled\",\
-                    \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
+                'description': "{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\"type\":\"unstyled\", \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}",
                 'call_to_action_type': 'link',
                 'call_to_action_text': 'Click here to sign up',
                 'form_type': 'EMAIL_LIST'
