@@ -41,20 +41,28 @@ def test_create_subscribe(client, jwt, session):  # pylint:disable=unused-argume
         'widget_id': widget.id,
     }
 
+    print(f"Data: {data}")  # Debug print statement
+
     rv = client.post(
         f'/api/widgets/{widget.id}/subscribe',
         data=json.dumps(data),
         headers=headers,
         content_type=ContentType.JSON.value
     )
+    print(f"Status code: {rv.status_code}")  # Debug print statement
+    print(f"Response: {rv.json}")  # Debug print statement
+
     assert rv.status_code == 200
     assert rv.json.get('type') == subscribe_info.get('type')
     response_subscribe_items = rv.json.get('subscribe_items')
     assert len(response_subscribe_items) == 1
-    response_description = json.loads(
-        response_subscribe_items[0].get('description').strip('"'))
-    assert response_description == json.loads(
-        subscribe_info.get('description').strip('"'))
+    response_description_str = response_subscribe_items[0].get(
+        'description', '')
+    response_description_str = response_subscribe_items[0].get('description', '')
+    response_description = json.loads(response_description_str.strip('"')) if response_description_str is not None else None
+    subscribe_info_description_str = subscribe_info.get('description', '')
+    subscribe_info_description = json.loads(subscribe_info_description_str.strip('"')) if subscribe_info_description_str is not None else None
+    assert response_description == subscribe_info_description
 
 
 def test_get_subscribe(client, jwt, session):  # pylint:disable=unused-argument
@@ -69,12 +77,17 @@ def test_get_subscribe(client, jwt, session):  # pylint:disable=unused-argument
         **subscribe_info,
         'widget_id': widget.id,
     }
+    print(f"Data: {data}")  # Debug print statement
+
     rv = client.post(
         f'/api/widgets/{widget.id}/subscribe',
         data=json.dumps(data),
         headers=headers,
         content_type=ContentType.JSON.value
     )
+    print(f"Status code: {rv.status_code}")  # Debug print statement
+    print(f"Response: {rv.json}")  # Debug print statement
+
     assert rv.status_code == 200
 
     rv = client.get(
@@ -82,5 +95,8 @@ def test_get_subscribe(client, jwt, session):  # pylint:disable=unused-argument
         headers=headers,
         content_type=ContentType.JSON.value
     )
+    print(f"Status code: {rv.status_code}")  # Debug print statement
+    print(f"Response: {rv.json}")  # Debug print statement
+
     assert rv.status_code == 200
     assert rv.json[0].get('type') == subscribe_info.get('type')
