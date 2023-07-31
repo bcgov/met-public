@@ -11,6 +11,7 @@ import {
     Checkbox,
     TextField,
     FormHelperText,
+    Link,
 } from '@mui/material';
 import { getSubmission, reviewComments } from 'services/submissionService';
 import { useAppDispatch, useAppTranslation } from 'hooks';
@@ -355,7 +356,7 @@ const CommentReview = () => {
                                     />
                                     <MetSmallText bold color="#d32f2f" marginLeft={'3em'} mt={'-1em'}>
                                         {translate('comment.admin.review.ifThreatContact')}{' '}
-                                        <a href={`mailto:${threatEmailContact}`}>{threatEmailContact}</a>
+                                        <Link href={`mailto:${threatEmailContact}`}>{threatEmailContact}</Link>
                                     </MetSmallText>
                                     <FormControlLabel
                                         label={<MetParagraph sx={{ color: '#494949' }}>Other</MetParagraph>}
