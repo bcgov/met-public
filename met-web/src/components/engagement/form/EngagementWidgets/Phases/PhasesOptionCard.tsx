@@ -82,10 +82,12 @@ const PhasesOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetLabel>EA Process</MetLabel>
+                                <MetLabel>Environmental Assessment Process</MetLabel>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetDescription>Add the EA process info to this engagement</MetDescription>
+                                <MetDescription>
+                                    Add the environmental assessment process info to this engagement
+                                </MetDescription>
                             </Grid>
                         </Grid>
                     </Grid>

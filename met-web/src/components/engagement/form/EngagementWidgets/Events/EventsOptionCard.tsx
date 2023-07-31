@@ -86,7 +86,9 @@ const EventsOptionCard = () => {
                                 <MetLabel>Events</MetLabel>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetDescription>Add info about open houses and virtual sessions</MetDescription>
+                                <MetDescription>
+                                    Add information about in-person or virtual information sessions
+                                </MetDescription>
                             </Grid>
                         </Grid>
                     </Grid>

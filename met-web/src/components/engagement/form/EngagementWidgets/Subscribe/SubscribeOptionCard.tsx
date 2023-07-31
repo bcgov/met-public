@@ -85,7 +85,7 @@ const SubscribeOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetLabel> Sign Up for Updates/Subscribe</MetLabel>
+                                <MetLabel>Sign Up for Updates</MetLabel>
                             </Grid>
                             <Grid item xs={12}>
                                 <MetDescription>Offer members of the public to sign up for updates</MetDescription>

@@ -86,7 +86,7 @@ const MapOptionCard = () => {
                                 <MetLabel>Map</MetLabel>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetDescription>Add a map with the location of the project</MetDescription>
+                                <MetDescription>Add a map with the project location</MetDescription>
                             </Grid>
                         </Grid>
                     </Grid>

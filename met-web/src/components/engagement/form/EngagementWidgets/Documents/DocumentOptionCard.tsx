@@ -85,7 +85,7 @@ const DocumentOptionCard = () => {
                                 <MetLabel>Documents</MetLabel>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetDescription>Add a document</MetDescription>
+                                <MetDescription>Add documents and folders</MetDescription>
                             </Grid>
                         </Grid>
                     </Grid>

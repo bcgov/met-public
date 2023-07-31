@@ -86,7 +86,7 @@ const WhoIsListeningOptionCard = () => {
                                 <MetLabel>Who is Listening</MetLabel>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetDescription>Add one or a few contacts to this engagement</MetDescription>
+                                <MetDescription>Add contacts to this engagement</MetDescription>
                             </Grid>
                         </Grid>
                     </Grid>
