@@ -29,7 +29,7 @@ from tests.utilities.factory_utils import factory_auth_header, factory_engagemen
 fake = Faker()
 
 
-def test_create_subscribe(client, jwt):
+def test_create_subscribe(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that widget subscribe can be POSTed."""
     engagement = factory_engagement_model()
 
@@ -59,7 +59,7 @@ def test_create_subscribe(client, jwt):
     # ...
 
 
-def test_get_subscribe(client, jwt):
+def test_get_subscribe(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that a widget's subscription can be retrieved."""
     engagement = factory_engagement_model()
 
