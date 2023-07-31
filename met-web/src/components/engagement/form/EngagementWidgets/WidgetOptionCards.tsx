@@ -11,7 +11,7 @@ import VideoOptionCard from './Video/VideoOptionCard';
 
 const WidgetOptionCards = () => {
     return (
-        <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
+        <Grid item xs={12} container alignItems="stretch" justifyContent={'flex-start'} spacing={3}>
             <Grid item xs={12}>
                 <MetHeader3>Select Widget</MetHeader3>
                 <Divider sx={{ marginTop: '1em' }} />

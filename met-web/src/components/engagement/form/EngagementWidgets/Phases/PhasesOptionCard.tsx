@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { MetPaper, MetBody, MetHeader4 } from 'components/common';
+import { MetPaper, MetLabel, MetDescription } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetTabValues } from '../type';
@@ -10,13 +10,7 @@ import { WidgetType } from 'models/widget';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
 import { Else, If, Then } from 'react-if';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
-
-export const optionCardStyle = {
-    padding: '10px 2px 10px 2px',
-    cursor: 'pointer',
-    '&:hover': { backgroundColor: 'rgb(242, 242, 242)' },
-    minHeight: '110px',
-};
+import { optionCardStyle } from '../constants';
 
 const PhasesOptionCard = () => {
     const { savedEngagement } = useContext(ActionContext);
@@ -75,7 +69,7 @@ const PhasesOptionCard = () => {
                         columnSpacing={2}
                         spacing={1}
                     >
-                        <Grid item sx={{ mr: 0.5 }}>
+                        <Grid item>
                             <ChatBubbleOutlineOutlinedIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
                         </Grid>
                         <Grid
@@ -88,10 +82,12 @@ const PhasesOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetHeader4>EA Process</MetHeader4>
+                                <MetLabel>Environmental Assessment Process</MetLabel>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody>Add the EA process info to this engagement</MetBody>
+                                <MetDescription>
+                                    Add the environmental assessment process info to this engagement
+                                </MetDescription>
                             </Grid>
                         </Grid>
                     </Grid>
