@@ -9,7 +9,6 @@ import {
     Stack,
     useMediaQuery,
     Theme,
-    Toolbar,
     Link,
 } from '@mui/material';
 import { EmailPanelProps } from './types';
