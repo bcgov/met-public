@@ -22,16 +22,8 @@ import json
 from faker import Faker
 
 from met_api.utils.enums import ContentType
-from tests.utilities.factory_scenarios import (
-    TestJwtClaims,
-    TestSubscribeInfo,
-    TestWidgetInfo,
-)
-from tests.utilities.factory_utils import (
-    factory_auth_header,
-    factory_engagement_model,
-    factory_widget_model,
-)
+from tests.utilities.factory_scenarios import TestJwtClaims, TestSubscribeInfo, TestWidgetInfo
+from tests.utilities.factory_utils import factory_auth_header, factory_engagement_model, factory_widget_model
 
 
 fake = Faker()
