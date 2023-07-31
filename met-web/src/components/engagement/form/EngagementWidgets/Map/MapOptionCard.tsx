@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { MetPaper, MetBody, MetHeader4 } from 'components/common';
+import { MetPaper, MetLabel, MetDescription } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType } from 'models/widget';
@@ -7,7 +7,7 @@ import { Else, If, Then } from 'react-if';
 import { ActionContext } from '../../ActionContext';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { optionCardStyle } from '../Phases/PhasesOptionCard';
+import { optionCardStyle } from '../constants';
 import { WidgetTabValues } from '../type';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
@@ -63,8 +63,14 @@ const MapOptionCard = () => {
                     </Grid>
                 </Then>
                 <Else>
-                    <Grid container alignItems="center" justifyContent="flex-start" direction="row" columnSpacing={1}>
-                        <Grid item sx={{ mr: 0.5 }}>
+                    <Grid
+                        container
+                        alignItems="flex-start"
+                        justifyContent="flex-start"
+                        direction="row"
+                        columnSpacing={1}
+                    >
+                        <Grid item>
                             <LocationOnIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
                         </Grid>
                         <Grid
@@ -77,10 +83,10 @@ const MapOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetHeader4>Map</MetHeader4>
+                                <MetLabel>Map</MetLabel>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody>Add a map with the location of the project</MetBody>
+                                <MetDescription>Add a map with the location of the project</MetDescription>
                             </Grid>
                         </Grid>
                     </Grid>

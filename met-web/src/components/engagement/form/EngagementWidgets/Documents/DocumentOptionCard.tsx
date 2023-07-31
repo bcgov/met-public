@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { MetPaper, MetBody, MetHeader4 } from 'components/common';
+import { MetPaper, MetLabel, MetDescription } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
@@ -9,7 +9,7 @@ import { Else, If, Then } from 'react-if';
 import { ActionContext } from '../../ActionContext';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { optionCardStyle } from '../Phases/PhasesOptionCard';
+import { optionCardStyle } from '../constants';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
 
 const DocumentOptionCard = () => {
@@ -63,7 +63,7 @@ const DocumentOptionCard = () => {
                 <Else>
                     <Grid
                         container
-                        alignItems="center"
+                        alignItems="flex-start"
                         justifyContent="flex-start"
                         direction="row"
                         columnSpacing={1}
@@ -82,10 +82,10 @@ const DocumentOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetHeader4>Documents</MetHeader4>
+                                <MetLabel>Documents</MetLabel>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody>Add a document</MetBody>
+                                <MetDescription>Add a document</MetDescription>
                             </Grid>
                         </Grid>
                     </Grid>

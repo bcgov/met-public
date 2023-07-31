@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { MetPaper, MetBody, MetHeader4 } from 'components/common';
+import { MetPaper, MetLabel, MetDescription } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
@@ -8,7 +8,7 @@ import { Else, If, Then } from 'react-if';
 import { ActionContext } from '../../ActionContext';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { optionCardStyle } from '../Phases/PhasesOptionCard';
+import { optionCardStyle } from '../constants';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
 import { WidgetTabValues } from '../type';
 
@@ -65,8 +65,14 @@ const SubscribeOptionCard = () => {
                     </Grid>
                 </Then>
                 <Else>
-                    <Grid container alignItems="center" justifyContent="flex-start" direction="row" columnSpacing={1}>
-                        <Grid item sx={{ mr: 0.5 }}>
+                    <Grid
+                        container
+                        alignItems="flex-start"
+                        justifyContent="flex-start"
+                        direction="row"
+                        columnSpacing={1}
+                    >
+                        <Grid item>
                             <EmailOutlinedIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
                         </Grid>
                         <Grid
@@ -79,10 +85,10 @@ const SubscribeOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetHeader4> Sign Up for Updates/Subscribe</MetHeader4>
+                                <MetLabel> Sign Up for Updates/Subscribe</MetLabel>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody>Offer members of the public to sign up for updates</MetBody>
+                                <MetDescription>Offer members of the public to sign up for updates</MetDescription>
                             </Grid>
                         </Grid>
                     </Grid>

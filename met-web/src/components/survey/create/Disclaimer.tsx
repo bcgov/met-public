@@ -19,7 +19,7 @@ export const Disclaimer = () => {
                     It is your responsibility to obtain consent to collect information as required by law.
                     Before publishing or distributing your survey, you are required to discuss the intention of the survey with your Ministry Privacy Officer
                     and to complete a Privacy Impact Assessment (PIA) as required. It is your responsibility to comply with this disclaimer for all surveys,
-                    even if they do not collect personally information.
+                    even if they do not collect personal information.
                 `}
                 </MetDisclaimer>
             </Grid>
