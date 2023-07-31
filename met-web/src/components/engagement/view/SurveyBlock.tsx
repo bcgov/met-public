@@ -8,13 +8,15 @@ import { useAppSelector } from 'hooks';
 import { submissionStatusArray } from 'constants/submissionStatusText';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromHtml, getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
+import { Case, Switch } from 'react-if';
+import { useNavigate } from 'react-router-dom';
 
 const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
     const { savedEngagement, isEngagementLoading, mockStatus } = useContext(ActionContext);
+    const navigate = useNavigate();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isPreview = isLoggedIn;
     const currentStatus = isPreview ? mockStatus : savedEngagement.submission_status;
-    const isOpen = currentStatus === SubmissionStatus.Open;
     const surveyId = savedEngagement.surveys[0]?.id || '';
     const status_block = savedEngagement.status_block;
     const status_text = status_block.find(
@@ -38,15 +40,32 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
                         toolbarHidden
                     />
                 </Grid>
-                <Grid item container direction={{ xs: 'column', sm: 'row' }} xs={12} justifyContent="flex-end">
-                    <PrimaryButton
-                        data-testid="SurveyBlock/take-me-to-survey-button"
-                        disabled={!surveyId || !isOpen}
-                        onClick={startSurvey}
-                    >
-                        Take me to the survey
-                    </PrimaryButton>
-                </Grid>
+                <Switch>
+                    <Case condition={currentStatus === SubmissionStatus.Open}>
+                        <Grid item container direction={{ xs: 'column', sm: 'row' }} xs={12} justifyContent="flex-end">
+                            <PrimaryButton
+                                data-testid="SurveyBlock/take-me-to-survey-button"
+                                disabled={!surveyId}
+                                onClick={startSurvey}
+                            >
+                                Share Your Thoughts
+                            </PrimaryButton>
+                        </Grid>
+                    </Case>
+                    <Case condition={currentStatus === SubmissionStatus.Closed}>
+                        <Grid item container direction={{ xs: 'column', sm: 'row' }} xs={12} justifyContent="flex-end">
+                            <PrimaryButton
+                                data-testid="SurveyBlock/view-feedback-button"
+                                disabled={!surveyId}
+                                onClick={() => {
+                                    navigate(`/engagements/${savedEngagement.id}/dashboard`);
+                                }}
+                            >
+                                View Feedback
+                            </PrimaryButton>
+                        </Grid>
+                    </Case>
+                </Switch>
             </Grid>
         </MetPaper>
     );
