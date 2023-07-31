@@ -1,4 +1,4 @@
-import { Grid, Toolbar, Typography, SvgIcon } from '@mui/material';
+import { Grid, Toolbar, SvgIcon, Box } from '@mui/material';
 import { MetHeader1, MetHeader4 } from 'components/common';
 import React from 'react';
 import { ReactComponent as ErrorSvg } from 'assets/images/404.svg';
@@ -8,10 +8,8 @@ const listItemStyle = { marginBottom: 1 };
 const marginStyle = { mr: 2 };
 
 const SuggestionsList = () => (
-    <Typography component="div">
-        <Typography component="p" sx={{ fontWeight: 'bold' }} mb={1}>
-            Suggestions to help find what you're looking for:
-        </Typography>
+    <Box>
+        <p style={{ ...listItemStyle, fontWeight: 'bold' }}>Suggestions to help find what you're looking for:</p>
         <ul>
             <li style={listItemStyle}>Check that the web URL has been entered correctly</li>
             <li style={listItemStyle}>
@@ -21,7 +19,7 @@ const SuggestionsList = () => (
             <li style={listItemStyle}>Telephone Device for the Deaf (TDD) across B.C.: 711</li>
             <li style={listItemStyle}>If you would like to email us, please contact *********@gov.bc.ca.</li>
         </ul>
-    </Typography>
+    </Box>
 );
 
 const NotFound = () => (
@@ -35,12 +33,12 @@ const NotFound = () => (
             spacing={1}
             padding={'2em 2em 1em 2em'}
         >
-            <Grid item sx={marginStyle}>
+            <Grid item sx={{ ...marginStyle, marginBottom: 3 }}>
                 <MetHeader1 bold sx={{ fontSize: '2em' }}>
                     The page you're looking for cannot be found.
                 </MetHeader1>
             </Grid>
-            <Grid item sx={marginStyle}>
+            <Grid item sx={{ marginStyle, marginBottom: 2 }}>
                 <SvgIcon
                     fontSize="inherit"
                     component={ErrorSvg}
