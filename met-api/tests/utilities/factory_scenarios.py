@@ -324,6 +324,13 @@ class TestWidgetInfo(dict, Enum):
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
     }
+    widget_subscribe = {
+        'widget_type_id': WidgetType.SUBSCRIBE.value,
+        'created_by': '123',
+        'updated_by': '123',
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+    }
 
 
 class TestWidgetItemInfo(dict, Enum):
@@ -544,4 +551,24 @@ class TestReportSettingInfo(dict, Enum):
         'survey_id': 1,
         'updated_by': str(fake.pyint()),
         'updated_date': datetime.now().strftime('%Y-%m-%d')
+    }
+
+
+class TestSubscribeInfo(Enum):
+    """Test scenarios of subscribe."""
+
+    subscribe_info_1 = {
+        'widget_id': 1,
+        'type': 'EMAIL_LIST',
+        'items': [
+            {
+                'description': '{\"blocks\":[{\"key\":\"2ku94\",\"text\":\
+                    "Rich Description Sample\",\"type\":\"unstyled\", \
+                    "depth\":0,\"inlineStyleRanges\":[],\
+                    "entityRanges\":[],\"data\":{}}],\"entityMap\":{}}',
+                'call_to_action_type': 'link',
+                'call_to_action_text': 'Click here to sign up',
+                'form_type': 'EMAIL_LIST'
+            }
+        ]
     }

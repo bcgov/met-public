@@ -1,4 +1,4 @@
-"""Widget Documents model class.
+"""Widget Events model class.
 
 Manages the Widget Events
 """

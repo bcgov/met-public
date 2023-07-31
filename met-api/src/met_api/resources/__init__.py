@@ -40,6 +40,7 @@ from .value_component import API as VALUE_COMPONENTS_API
 from .widget import API as WIDGET_API
 from .widget_documents import API as WIDGET_DOCUMENTS_API
 from .widget_events import API as WIDGET_EVENTS_API
+from .widget_subscribe import API as WIDGET_SUBSCRIBE_API
 from .widget_map import API as WIDGET_MAPS_API
 from .shape_file import API as SHAPEFILE_API
 from .tenant import API as TENANT_API
@@ -80,6 +81,7 @@ API.add_namespace(TENANT_API)
 API.add_namespace(WIDGET_DOCUMENTS_API, path='/widgets/<string:widget_id>/documents')
 API.add_namespace(ENGAGEMENT_MEMBERS_API, path='/engagements/<string:engagement_id>/members')
 API.add_namespace(WIDGET_EVENTS_API, path='/widgets/<int:widget_id>/events')
+API.add_namespace(WIDGET_SUBSCRIBE_API, path='/widgets/<int:widget_id>/subscribe')
 API.add_namespace(WIDGET_MAPS_API, path='/widgets/<int:widget_id>/maps')
 API.add_namespace(ENGAGEMENT_SLUG_API, path='/slugs')
 API.add_namespace(REPORT_SETTING_API, path='/surveys/<int:survey_id>/reportsettings')
