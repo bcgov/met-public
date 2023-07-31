@@ -26,10 +26,24 @@ export const Subscribe_TYPE: { [x: string]: SubscribeTypeLabel } = {
 };
 
 export interface SubscribeForm {
+    id: number;
+    title: string;
+    type: SubscribeTypeLabel;
+    sort_index: number;
     widget_id: number;
+    created_date: string;
+    updated_date: string;
+    subscribe_items: SubscribeFormItem[];
+}
+
+export interface SubscribeFormItem {
+    id: number;
     title?: string;
-    description?: string;
+    description: string;
     call_to_action_type?: string;
     call_to_action_text?: string;
     form_type: SubscribeTypeLabel;
+    created_date: string;
+    updated_date: string;
+    widget_subscribe: number;
 }
