@@ -204,7 +204,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                 <SecondaryButton
                                     sx={{
                                         ...dashboardCustomStyles.primaryButton,
-                                        fontSize: isExtraSmall ? '10px' : 'inherit',
+                                        fontSize: isExtraSmall ? '12px' : 'inherit',
                                         width: isExtraSmall ? '80%' : 'auto',
                                     }}
                                     onClick={clearDates}
@@ -240,7 +240,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     <MetToggleButton
                                         value="weekly"
                                         sx={{
-                                            fontSize: isExtraSmall ? '10px' : 'inherit',
+                                            fontSize: isExtraSmall ? '12px' : 'inherit',
                                             width: isExtraSmall ? '40%' : '100%',
                                         }}
                                     >
@@ -249,7 +249,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     <MetToggleButton
                                         value="monthly"
                                         sx={{
-                                            fontSize: isExtraSmall ? '10px' : 'inherit',
+                                            fontSize: isExtraSmall ? '12px' : 'inherit',
                                             width: isExtraSmall ? '40%' : '100%',
                                         }}
                                     >
