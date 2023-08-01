@@ -9,11 +9,11 @@ const marginStyle = { mr: 2 };
 
 const SuggestionsList = () => (
     <Box>
-        <p style={{ ...listItemStyle, fontWeight: 'bold' }}>Suggestions to help find what you're looking for:</p>
+        <p style={{ ...listItemStyle, fontWeight: 'bold' }}>Suggestions to help you find what you're looking for:</p>
         <ul>
             <li style={listItemStyle}>Check that the web URL has been entered correctly</li>
             <li style={listItemStyle}>
-                Go to our <Link to="/">homepage</Link> and browse through our past and current public engagements
+                Go to our <Link to="/">homepage</Link> and browse through our past and current engagements
             </li>
             <li style={listItemStyle}>Use the Search function at the top of this page</li>
             <li style={listItemStyle}>Telephone Device for the Deaf (TDD) across B.C.: 711</li>
