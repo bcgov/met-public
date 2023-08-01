@@ -178,15 +178,17 @@ export const PreviewBanner = () => {
                 </Grid>
                 <Grid sx={{ pt: 2 }} item xs={12} container direction="row" justifyContent="flex-end" spacing={1}>
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-start">
-                        <SecondaryButton
-                            sx={{
-                                backgroundColor: 'background.paper',
-                                borderRadius: '4px',
-                            }}
-                            onClick={() => navigate(`/engagements/${engagementId}/form`)}
-                        >
-                            Close Preview
-                        </SecondaryButton>
+                        <PermissionsGate scopes={[USER_ROLES.EDIT_ENGAGEMENT]} errorProps={{ disabled: true }}>
+                            <SecondaryButton
+                                sx={{
+                                    backgroundColor: 'background.paper',
+                                    borderRadius: '4px',
+                                }}
+                                onClick={() => navigate(`/engagements/${engagementId}/form`)}
+                            >
+                                Edit Engagement
+                            </SecondaryButton>
+                        </PermissionsGate>
 
                         <When condition={isDraft}>
                             <PermissionsGate scopes={[USER_ROLES.PUBLISH_ENGAGEMENT]} errorProps={{ disabled: true }}>

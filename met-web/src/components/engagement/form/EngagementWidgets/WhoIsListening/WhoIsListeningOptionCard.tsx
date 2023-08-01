@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { MetPaper, MetBody, MetHeader4 } from 'components/common';
+import { MetPaper, MetLabel, MetDescription } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetTabValues } from '../type';
@@ -9,8 +9,8 @@ import { useAppDispatch } from 'hooks';
 import { WidgetType } from 'models/widget';
 import { Else, If, Then } from 'react-if';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
-import { optionCardStyle } from '../Phases/PhasesOptionCard';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
+import { optionCardStyle } from '../constants';
 
 const WhoIsListeningOptionCard = () => {
     const { savedEngagement } = useContext(ActionContext);
@@ -63,8 +63,14 @@ const WhoIsListeningOptionCard = () => {
                     </Grid>
                 </Then>
                 <Else>
-                    <Grid container alignItems="center" justifyContent="flex-start" direction="row" columnSpacing={1}>
-                        <Grid item sx={{ mr: 0.5 }}>
+                    <Grid
+                        container
+                        alignItems="flex-start"
+                        justifyContent="flex-start"
+                        direction="row"
+                        columnSpacing={1}
+                    >
+                        <Grid item>
                             <PeopleAltOutlinedIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
                         </Grid>
                         <Grid
@@ -77,10 +83,10 @@ const WhoIsListeningOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetHeader4>Who is Listening</MetHeader4>
+                                <MetLabel>Who is Listening</MetLabel>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody>Add one or a few contacts to this engagement</MetBody>
+                                <MetDescription>Add contacts to this engagement</MetDescription>
                             </Grid>
                         </Grid>
                     </Grid>
