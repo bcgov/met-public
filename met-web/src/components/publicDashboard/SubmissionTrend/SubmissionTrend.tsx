@@ -47,7 +47,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     const marginXStyling = { marginX: isTablet ? 1 : 0 };
     const extraSmallStyling = {
         fontSize: isExtraSmall ? '12px' : 'inherit',
-        width: isExtraSmall ? '80%' : 'auto',
+        width: isExtraSmall ? '40%' : 'auto',
     };
 
     const fetchData = async () => {
@@ -210,7 +210,8 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                 <SecondaryButton
                                     sx={{
                                         ...dashboardCustomStyles.primaryButton,
-                                        ...extraSmallStyling
+                                        ...extraSmallStyling,
+                                        width: isExtraSmall ? '80%' : '100%',
                                     }}
                                     onClick={clearDates}
                                 >
@@ -242,16 +243,10 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                         ...marginXStyling,
                                     }}
                                 >
-                                    <MetToggleButton
-                                        value="weekly"
-                                        sx={extraSmallStyling}
-                                    >
+                                    <MetToggleButton value="weekly" sx={extraSmallStyling}>
                                         Weekly
                                     </MetToggleButton>
-                                    <MetToggleButton
-                                        value="monthly"
-                                        sx={extraSmallStyling}
-                                    >
+                                    <MetToggleButton value="monthly" sx={extraSmallStyling}>
                                         Monthly
                                     </MetToggleButton>
                                 </ToggleButtonGroup>
