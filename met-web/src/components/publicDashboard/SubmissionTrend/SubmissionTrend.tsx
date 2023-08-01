@@ -88,31 +88,31 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
         setChartBy(chartByValue);
     };
 
-    // if (engagementIsLoading) {
-    //     return (
-    //         <>
-    //             <MetLabel mb={0.5}>Live Activity - Engagement</MetLabel>
-    //             <MetPaper sx={{ p: 2 }}>
-    //                 <Stack direction="column" alignItems="center" gap={1}>
-    //                     <Grid
-    //                         container
-    //                         alignItems="center"
-    //                         justifyContent="center"
-    //                         direction="row"
-    //                         width={'100%'}
-    //                         height={HEIGHT}
-    //                     >
-    //                         <CircularProgress color="inherit" />
-    //                     </Grid>
-    //                 </Stack>
-    //             </MetPaper>
-    //         </>
-    //     );
-    // }
+    if (engagementIsLoading) {
+        return (
+            <>
+                <MetLabel mb={0.5}>Live Activity - Engagement</MetLabel>
+                <MetPaper sx={{ p: 2 }}>
+                    <Stack direction="column" alignItems="center" gap={1}>
+                        <Grid
+                            container
+                            alignItems="center"
+                            justifyContent="center"
+                            direction="row"
+                            width={'100%'}
+                            height={HEIGHT}
+                        >
+                            <CircularProgress color="inherit" />
+                        </Grid>
+                    </Stack>
+                </MetPaper>
+            </>
+        );
+    }
 
-    // if (isError) {
-    //     return <ErrorBox sx={{ height: HEIGHT }} onClick={fetchData} />;
-    // }
+    if (isError) {
+        return <ErrorBox sx={{ height: HEIGHT }} onClick={fetchData} />;
+    }
 
     return (
         <>
