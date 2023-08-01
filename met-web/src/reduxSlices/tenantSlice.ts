@@ -5,12 +5,14 @@ export interface TenantState {
     logoUrl: string;
     basename: string;
     loading: boolean;
+    isLoaded: boolean;
 }
 const initialState: TenantState = {
     name: '',
     logoUrl: '',
     basename: '',
     loading: true,
+    isLoaded: false,
 };
 
 export const userSlice = createSlice({
@@ -24,6 +26,7 @@ export const userSlice = createSlice({
             state.name = action.payload.name;
             state.logoUrl = action.payload.logoUrl || '';
             state.basename = action.payload.basename;
+            state.isLoaded = true;
         },
     },
 });
