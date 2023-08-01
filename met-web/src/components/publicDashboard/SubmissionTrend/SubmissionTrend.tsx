@@ -44,6 +44,12 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     const [chartBy, setChartBy] = React.useState('monthly');
     const [fromDate, setFromDate] = React.useState<Dayjs | null>(null);
     const [toDate, setToDate] = React.useState<Dayjs | null>(null);
+    const marginXStyling = { marginX: isTablet ? 1 : 0 };
+    const extraSmallStyling = {
+        fontSize: isExtraSmall ? '12px' : 'inherit',
+        width: isExtraSmall ? '80%' : 'auto',
+    };
+
     const fetchData = async () => {
         setIsLoading(true);
         try {
@@ -144,14 +150,14 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                 alignItems={'center'}
                                 justifyContent={'center'}
                                 xs={12}
-                                sx={{ marginX: 1, mb: 1 }}
+                                sx={{ ...marginXStyling, mb: 1 }}
                             >
                                 <MetLabel>Select Date Range </MetLabel>
                             </Grid>
                             <Grid
                                 container
                                 item
-                                sx={{ mb: 1, marginX: isTablet ? 1 : 0 }}
+                                sx={{ mb: 1, ...marginXStyling }}
                                 direction="column"
                                 alignItems="center"
                             >
@@ -177,7 +183,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             <Grid
                                 container
                                 item
-                                sx={{ mb: 1, marginX: isTablet ? 1 : 0 }}
+                                sx={{ mb: 1, ...marginXStyling }}
                                 direction="column"
                                 alignItems="center"
                             >
@@ -204,8 +210,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                 <SecondaryButton
                                     sx={{
                                         ...dashboardCustomStyles.primaryButton,
-                                        fontSize: isExtraSmall ? '12px' : 'inherit',
-                                        width: isExtraSmall ? '80%' : 'auto',
+                                        ...extraSmallStyling
                                     }}
                                     onClick={clearDates}
                                 >
@@ -234,24 +239,18 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     size={isTablet ? 'small' : 'medium'}
                                     sx={{
                                         ...dashboardCustomStyles.toggleGroup,
-                                        marginX: isTablet ? 1 : 0,
+                                        ...marginXStyling,
                                     }}
                                 >
                                     <MetToggleButton
                                         value="weekly"
-                                        sx={{
-                                            fontSize: isExtraSmall ? '12px' : 'inherit',
-                                            width: isExtraSmall ? '40%' : '100%',
-                                        }}
+                                        sx={extraSmallStyling}
                                     >
                                         Weekly
                                     </MetToggleButton>
                                     <MetToggleButton
                                         value="monthly"
-                                        sx={{
-                                            fontSize: isExtraSmall ? '12px' : 'inherit',
-                                            width: isExtraSmall ? '40%' : '100%',
-                                        }}
+                                        sx={extraSmallStyling}
                                     >
                                         Monthly
                                     </MetToggleButton>
