@@ -23,6 +23,7 @@ from .engagement import Engagement
 from .engagement_status import EngagementStatus
 from .engagement_status_block import EngagementStatusBlock
 from .event_item import EventItem
+from .subscribe_item import SubscribeItem
 from .feedback import Feedback
 from .generated_document_template import GeneratedDocumentTemplate
 from .generated_document_type import GeneratedDocumentType
@@ -39,6 +40,7 @@ from .user_status_code import UserStatus
 from .widget import Widget
 from .widget_documents import WidgetDocuments
 from .widget_events import WidgetEvents
+from .widgets_subscribe import WidgetSubscribe
 from .widget_item import WidgetItem
 from .widget_type import WidgetType
 from .email_queue import EmailQueue

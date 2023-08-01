@@ -15,3 +15,10 @@ export const getEditorStateFromHtml = (htmlToConvert: string) => {
     const contentState = ContentState.createFromBlockArray(blocksFromHTML.contentBlocks, blocksFromHTML.entityMap);
     return EditorState.createWithContent(contentState);
 };
+
+//Turn get text from draft-js state
+export const getTextFromDraftJsContentState = (contentJSON: string): string => {
+    if (!contentJSON) return '';
+    const contentState = JSON.parse(contentJSON);
+    return contentState.blocks.map((block: { text: string }) => block.text).join(' ');
+};

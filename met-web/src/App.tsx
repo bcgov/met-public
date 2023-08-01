@@ -60,7 +60,7 @@ const App = () => {
         try {
             const tenant = await getTenant(basename);
 
-            localStorage.setItem('tenantId', basename);
+            sessionStorage.setItem('tenantId', basename);
             dispatch(
                 saveTenant({
                     name: tenant.name,
