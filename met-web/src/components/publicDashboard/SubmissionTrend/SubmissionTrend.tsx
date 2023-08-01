@@ -35,6 +35,7 @@ export const dashboardCustomStyles = {
 
 const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendProps) => {
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+    const isExtraSmall = useMediaQuery('(max-width:299px)');
     const isBetweenMdAndLg = useMediaQuery((theme: Theme) => theme.breakpoints.between('lg', 'xl'));
     const HEIGHT = isTablet ? 200 : 250;
     const [data, setData] = useState(createDefaultByMonthData());
@@ -137,13 +138,20 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             rowSpacing={isTablet ? 1 : 0}
                             md={isBetweenMdAndLg ? 3 : 4}
                         >
-                            <Grid container item alignItems={'center'} justifyContent={'center'} xs={12} sx={{ mb: 1 }}>
+                            <Grid
+                                container
+                                item
+                                alignItems={'center'}
+                                justifyContent={'center'}
+                                xs={12}
+                                sx={{ marginX: 1, mb: 1 }}
+                            >
                                 <MetLabel>Select Date Range </MetLabel>
                             </Grid>
                             <Grid
                                 container
                                 item
-                                sx={{ mb: 1, marginX: isTablet ? 2 : 0 }}
+                                sx={{ mb: 1, marginX: isTablet ? 1 : 0 }}
                                 direction="column"
                                 alignItems="center"
                             >
@@ -169,7 +177,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             <Grid
                                 container
                                 item
-                                sx={{ mb: 1, marginX: isTablet ? 2 : 0 }}
+                                sx={{ mb: 1, marginX: isTablet ? 1 : 0 }}
                                 direction="column"
                                 alignItems="center"
                             >
@@ -194,7 +202,11 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             </Grid>
                             <Grid container item justifyContent="center" alignItems="center">
                                 <SecondaryButton
-                                    sx={{ ...dashboardCustomStyles.primaryButton, width: 'auto' }}
+                                    sx={{
+                                        ...dashboardCustomStyles.primaryButton,
+                                        fontSize: isExtraSmall ? '10px' : 'inherit',
+                                        width: isExtraSmall ? '80%' : 'auto',
+                                    }}
                                     onClick={clearDates}
                                 >
                                     Reset All Filters
@@ -213,16 +225,36 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                 width="100%"
                                 justifyContent="flex-end"
                                 alignItems={'flex-end'}
+                                mb={1}
                             >
                                 <ToggleButtonGroup
                                     value={chartBy}
                                     exclusive
                                     onChange={handleToggleChange}
                                     size={isTablet ? 'small' : 'medium'}
-                                    sx={{ ...dashboardCustomStyles.toggleGroup, marginX: isTablet ? 2 : 0 }}
+                                    sx={{
+                                        ...dashboardCustomStyles.toggleGroup,
+                                        marginX: isTablet ? 1 : 0,
+                                    }}
                                 >
-                                    <MetToggleButton value="weekly">Weekly</MetToggleButton>
-                                    <MetToggleButton value="monthly">Monthly</MetToggleButton>
+                                    <MetToggleButton
+                                        value="weekly"
+                                        sx={{
+                                            fontSize: isExtraSmall ? '10px' : 'inherit',
+                                            width: isExtraSmall ? '40%' : '100%',
+                                        }}
+                                    >
+                                        Weekly
+                                    </MetToggleButton>
+                                    <MetToggleButton
+                                        value="monthly"
+                                        sx={{
+                                            fontSize: isExtraSmall ? '10px' : 'inherit',
+                                            width: isExtraSmall ? '40%' : '100%',
+                                        }}
+                                    >
+                                        Monthly
+                                    </MetToggleButton>
                                 </ToggleButtonGroup>
                             </Stack>
                             <If condition={!isLoading}>
