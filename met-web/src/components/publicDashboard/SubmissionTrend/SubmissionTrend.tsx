@@ -87,31 +87,31 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
         setChartBy(chartByValue);
     };
 
-    if (engagementIsLoading) {
-        return (
-            <>
-                <MetLabel mb={0.5}>Live Activity - Engagement</MetLabel>
-                <MetPaper sx={{ p: 2 }}>
-                    <Stack direction="column" alignItems="center" gap={1}>
-                        <Grid
-                            container
-                            alignItems="center"
-                            justifyContent="center"
-                            direction="row"
-                            width={'100%'}
-                            height={HEIGHT}
-                        >
-                            <CircularProgress color="inherit" />
-                        </Grid>
-                    </Stack>
-                </MetPaper>
-            </>
-        );
-    }
+    // if (engagementIsLoading) {
+    //     return (
+    //         <>
+    //             <MetLabel mb={0.5}>Live Activity - Engagement</MetLabel>
+    //             <MetPaper sx={{ p: 2 }}>
+    //                 <Stack direction="column" alignItems="center" gap={1}>
+    //                     <Grid
+    //                         container
+    //                         alignItems="center"
+    //                         justifyContent="center"
+    //                         direction="row"
+    //                         width={'100%'}
+    //                         height={HEIGHT}
+    //                     >
+    //                         <CircularProgress color="inherit" />
+    //                     </Grid>
+    //                 </Stack>
+    //             </MetPaper>
+    //         </>
+    //     );
+    // }
 
-    if (isError) {
-        return <ErrorBox sx={{ height: HEIGHT }} onClick={fetchData} />;
-    }
+    // if (isError) {
+    //     return <ErrorBox sx={{ height: HEIGHT }} onClick={fetchData} />;
+    // }
 
     return (
         <>
@@ -140,7 +140,13 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             <Grid container item alignItems={'center'} justifyContent={'center'} xs={12} sx={{ mb: 1 }}>
                                 <MetLabel>Select Date Range </MetLabel>
                             </Grid>
-                            <Grid container item sx={{ mb: 1 }} direction="column" alignItems="center">
+                            <Grid
+                                container
+                                item
+                                sx={{ mb: 1, marginX: isTablet ? 2 : 0 }}
+                                direction="column"
+                                alignItems="center"
+                            >
                                 <Stack flexDirection={'column'} alignItems={'flex-start'}>
                                     <MetLabel>From: </MetLabel>
                                     <DatePicker
@@ -160,7 +166,13 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     />
                                 </Stack>
                             </Grid>
-                            <Grid container item sx={{ mb: 1 }} direction="column" alignItems="center">
+                            <Grid
+                                container
+                                item
+                                sx={{ mb: 1, marginX: isTablet ? 2 : 0 }}
+                                direction="column"
+                                alignItems="center"
+                            >
                                 <Stack flexDirection={'column'} alignItems={'flex-start'}>
                                     <MetLabel>To: </MetLabel>
                                     <DatePicker
@@ -207,7 +219,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     exclusive
                                     onChange={handleToggleChange}
                                     size={isTablet ? 'small' : 'medium'}
-                                    sx={dashboardCustomStyles.toggleGroup}
+                                    sx={{ ...dashboardCustomStyles.toggleGroup, marginX: isTablet ? 2 : 0 }}
                                 >
                                     <MetToggleButton value="weekly">Weekly</MetToggleButton>
                                     <MetToggleButton value="monthly">Monthly</MetToggleButton>
