@@ -74,7 +74,7 @@ const App = () => {
         }
     };
 
-    const getTranslationFile = async (): Promise<Record<string, any>> => {
+    const getTranslationFile = async () => {
         try {
             const translationFile = await import(`./locales/${language}/${basename}.json`);
             return translationFile;
