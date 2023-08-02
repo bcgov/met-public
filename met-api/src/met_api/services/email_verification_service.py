@@ -10,6 +10,7 @@ from met_api.exceptions.business_exception import BusinessException
 from met_api.models import Engagement as EngagementModel
 from met_api.models import EngagementSlug as EngagementSlugModel
 from met_api.models import Survey as SurveyModel
+from met_api.models import Tenant as TenantModel
 from met_api.models.email_verification import EmailVerification
 from met_api.schemas.email_verification import EmailVerificationSchema
 from met_api.services.participant_service import ParticipantService
@@ -157,31 +158,37 @@ class EmailVerificationService:
         subject_template = current_app.config.get('VERIFICATION_EMAIL_SUBJECT')
         survey_path = current_app.config.get('SURVEY_PATH'). \
             format(survey_id=survey.id, token=token)
-        dashboard_path = EmailVerificationService._get_dashboard_path(engagement)
+        engagement_path = EmailVerificationService._get_engagement_path(engagement)
         site_url = notification.get_tenant_site_url(engagement.tenant_id)
+        tenant_name = EmailVerificationService._get_tenant_name(engagement.tenant_id)
         args = {
             'engagement_name': engagement_name,
             'survey_url': f'{site_url}{survey_path}',
-            'engagement_url': f'{site_url}{dashboard_path}',
-            'end_date': datetime.strftime(engagement.end_date, EmailVerificationService.full_date_format),
+            'engagement_url': f'{site_url}{engagement_path}',
+            'tenant_name': tenant_name,
         }
         subject = subject_template.format(engagement_name=engagement_name)
         body = template.render(
             engagement_name=args.get('engagement_name'),
             survey_url=args.get('survey_url'),
             engagement_url=args.get('engagement_url'),
-            end_date=args.get('end_date'),
+            tenant_name=args.get('tenant_name'),
         )
         return subject, body, args, template_id
 
     @staticmethod
-    def _get_dashboard_path(engagement: EngagementModel):
+    def _get_engagement_path(engagement: EngagementModel):
         engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement.id)
         if engagement_slug:
-            return current_app.config.get('ENGAGEMENT_DASHBOARD_PATH_SLUG'). \
+            return current_app.config.get('ENGAGEMENT_PATH_SLUG'). \
                 format(slug=engagement_slug.slug)
-        return current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
+        return current_app.config.get('ENGAGEMENT_PATH'). \
             format(engagement_id=engagement.id)
+
+    @staticmethod
+    def _get_tenant_name(tenantId):
+        tenant = TenantModel.find_by_id(tenantId)
+        return tenant.name
 
     @staticmethod
     def validate_email_verification(email_verification: EmailVerificationSchema):
