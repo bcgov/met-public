@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { Grid, Typography, Stack } from '@mui/material';
-import { MetHeader1, MetHeader4, MetLabel } from 'components/common';
+import { Grid, Stack } from '@mui/material';
+import { MetHeader1, MetLabel } from 'components/common';
 import { EngagementStatusChip } from '../status';
 import { Editor } from 'react-draft-wysiwyg';
 import dayjs from 'dayjs';
