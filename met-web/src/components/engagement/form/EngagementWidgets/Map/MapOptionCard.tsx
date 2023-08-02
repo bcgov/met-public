@@ -12,6 +12,7 @@ import { WidgetTabValues } from '../type';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
 
+const Title = 'Map';
 const MapOptionCard = () => {
     const { widgets, loadWidgets, handleWidgetDrawerOpen, handleWidgetDrawerTabValueChange } =
         useContext(WidgetDrawerContext);
@@ -32,6 +33,7 @@ const MapOptionCard = () => {
             await createWidget({
                 widget_type_id: WidgetType.Map,
                 engagement_id: savedEngagement.id,
+                title: Title,
             });
             await loadWidgets();
             dispatch(
@@ -83,7 +85,7 @@ const MapOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetLabel>Map</MetLabel>
+                                <MetLabel>{Title}</MetLabel>
                             </Grid>
                             <Grid item xs={12}>
                                 <MetDescription>Add a map with the project location</MetDescription>

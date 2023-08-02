@@ -12,6 +12,7 @@ import { optionCardStyle } from '../constants';
 import { WidgetTabValues } from '../type';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
 
+const Title = 'Events';
 const EventsOptionCard = () => {
     const { widgets, loadWidgets, handleWidgetDrawerOpen, handleWidgetDrawerTabValueChange } =
         useContext(WidgetDrawerContext);
@@ -32,6 +33,7 @@ const EventsOptionCard = () => {
             await createWidget({
                 widget_type_id: WidgetType.Events,
                 engagement_id: savedEngagement.id,
+                title: Title,
             });
             await loadWidgets();
             dispatch(
@@ -83,7 +85,7 @@ const EventsOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetLabel>Events</MetLabel>
+                                <MetLabel>{Title}</MetLabel>
                             </Grid>
                             <Grid item xs={12}>
                                 <MetDescription>

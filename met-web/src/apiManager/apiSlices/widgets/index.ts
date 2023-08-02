@@ -25,6 +25,14 @@ export const widgetsApi = createApi({
             }),
             invalidatesTags: ['Widgets'],
         }),
+        updateWidget: builder.mutation<Widget, { id: number; engagementId: number; data: Partial<Widget> }>({
+            query: ({ engagementId, id, data }) => ({
+                url: `widgets/${id}/engagements/${engagementId}`,
+                method: 'PATCH',
+                body: data,
+            }),
+            invalidatesTags: ['Widgets'],
+        }),
         sortWidgets: builder.mutation<Widget, { engagementId: number; widgets: Widget[] }>({
             query: ({ engagementId, widgets }) => ({
                 url: `widgets/engagement/${engagementId}/sort_index`,
@@ -47,5 +55,10 @@ export const widgetsApi = createApi({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useLazyGetWidgetsQuery, useCreateWidgetMutation, useSortWidgetsMutation, useDeleteWidgetMutation } =
-    widgetsApi;
+export const {
+    useLazyGetWidgetsQuery,
+    useCreateWidgetMutation,
+    useSortWidgetsMutation,
+    useDeleteWidgetMutation,
+    useUpdateWidgetMutation,
+} = widgetsApi;

@@ -89,8 +89,8 @@ class EngagementWidgetSort(Resource):
             return {'message': err.error}, err.status_code
 
 
-@cors_preflight('DELETE')
-@API.route('/engagement/<engagement_id>/widget/<widget_id>')
+@cors_preflight('DELETE, PATCH')
+@API.route('/<widget_id>/engagements/<engagement_id>')
 class EngagementWidget(Resource):
     """Resource for managing widgets with engagements."""
 
@@ -106,6 +106,25 @@ class EngagementWidget(Resource):
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.requires_auth
+    def patch(engagement_id, widget_id):
+        """Update widget."""
+        try:
+            user_id = TokenInfo.get_id()
+            widget_data = request.get_json()
+            valid_format, errors = schema_utils.validate(widget_data, 'widget_update')
+            if not valid_format:
+                return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
+
+            updated_widget = WidgetService().update_widget(engagement_id, widget_id, widget_data, user_id)
+            return updated_widget, HTTPStatus.OK
+        except (KeyError, ValueError) as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValidationError as err:
+            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 @cors_preflight('POST,OPTIONS')
@@ -133,4 +152,4 @@ class WidgetItems(Resource):
         except (KeyError, ValueError) as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValidationError as err:
-            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR
+            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR@cors_preflight('GET, POST, OPTIONS')

@@ -9,6 +9,7 @@ import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType } from 'models/widget';
 import ContactBlock from './ContactBlock';
 import { WhoIsListeningContext } from './WhoIsListeningContext';
+import { WidgetTitle } from './WidgetTitle';
 
 const WhoIsListeningForm = () => {
     const { handleWidgetDrawerOpen, widgets, loadWidgets } = useContext(WidgetDrawerContext);
@@ -86,7 +87,7 @@ const WhoIsListeningForm = () => {
         <>
             <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
                 <Grid item xs={12}>
-                    <MetHeader3>Who is Listening</MetHeader3>
+                    <WidgetTitle widget={widget} />
                     <Divider sx={{ marginTop: '1em' }} />
                 </Grid>
                 <Grid item xs={12} container direction="row" justifyContent={'flex-start'} spacing={1}>
