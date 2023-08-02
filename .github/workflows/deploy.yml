@@ -36,7 +36,7 @@ jobs:
       - name: Login Openshift
         shell: bash
         run: |
-          oc login --server=${{secrets.OPENSHIFT_LOGIN_REGISTRY}} --token=${{secrets.OPENSHIFT_SA_TOKEN}}
+          oc login --server=${{env.OPENSHIFT_LOGIN_REGISTRY}} --token=${{env.OPENSHIFT_SA_TOKEN}}
 
       - name: Tag Images and Rollout
         shell: bash
