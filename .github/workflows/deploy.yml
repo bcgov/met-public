@@ -20,7 +20,6 @@ defaults:
 env:
   TAG_NAME: "test"
   PROJECT_TYPE: "${{ github.event.inputs.project_type || 'GDX' }}" # If the project type is manually selected, use the input value; otherwise, use 'GDX' as default
-  oc project ${{ env.OPENSHIFT_REPOSITORY}}-tools
 
  # Set OpenShift related variables based on PROJECT_TYPE
   OPENSHIFT_LOGIN_REGISTRY: ${{ secrets.OPENSHIFT_LOGIN_REGISTRY }}
@@ -43,7 +42,7 @@ jobs:
       - name: Tag Images and Rollout
         shell: bash
         run: |
-          oc project ${{ env.OPENSHIFT_REPOSITORY}}-tools \
+          oc project ${{env.OPENSHIFT_REPOSITORY}}-tools \
           sh deploy.sh ${{ github.event.inputs.environment }} \
           oc rollout status dc/met-api -n ${{ env.OPENSHIFT_REPOSITORY }}-${{ env.TAG_NAME }} -w
           oc rollout status dc/met-web -n ${{ env.OPENSHIFT_REPOSITORY }}-${{ env.TAG_NAME }} -w
