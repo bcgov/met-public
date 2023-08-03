@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Grid, Divider } from '@mui/material';
-import { PrimaryButton, MetHeader3, WidgetButton } from 'components/common';
+import { PrimaryButton, WidgetButton } from 'components/common';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { EventsContext } from './EventsContext';
 import EventsInfoBlock from './EventsInfoBlock';
