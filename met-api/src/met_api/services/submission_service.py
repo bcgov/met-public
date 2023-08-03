@@ -28,6 +28,7 @@ from met_api.services.survey_service import SurveyService
 from met_api.utils import notification
 from met_api.utils.roles import Role
 from met_api.utils.template import Template
+from met_api.models import Tenant as TenantModel
 
 
 class SubmissionService:
@@ -58,7 +59,8 @@ class SubmissionService:
 
         # Creates a scoped session that will be committed when diposed or rolledback if a exception occurs
         with session_scope() as session:
-            email_verification = EmailVerificationService().verify(token, survey_id, None, session)
+            email_verification = EmailVerificationService().verify(
+                token, survey_id, None, session)
             participant_id = email_verification.get('participant_id')
             submission['participant_id'] = participant_id
             submission['created_by'] = participant_id
@@ -66,7 +68,8 @@ class SubmissionService:
 
             submission_result = Submission.create(submission, session)
             submission['id'] = submission_result.id
-            comments = CommentService.extract_comments_from_survey(submission, survey)
+            comments = CommentService.extract_comments_from_survey(
+                submission, survey)
             CommentService().create_comments(comments, session)
         return submission_result
 
@@ -85,8 +88,10 @@ class SubmissionService:
         submission.comment_status_id = Status.Pending
 
         with session_scope() as session:
-            EmailVerificationService().verify(token, submission.survey_id, submission.id, session)
-            comments_result = [Comment.update(submission.id, comment, session) for comment in data.get('comments', [])]
+            EmailVerificationService().verify(
+                token, submission.survey_id, submission.id, session)
+            comments_result = [Comment.update(
+                submission.id, comment, session) for comment in data.get('comments', [])]
             Submission.update(SubmissionSchema().dump(submission), session)
             return comments_result
 
@@ -96,7 +101,8 @@ class SubmissionService:
         """Validate all fields."""
         survey_id = submission.get('survey_id', None)
         survey: SurveyModel = SurveyModel.find_by_id(survey_id)
-        engagement: EngagementModel = EngagementModel.find_by_id(survey.engagement_id)
+        engagement: EngagementModel = EngagementModel.find_by_id(
+            survey.engagement_id)
         if not engagement:
             raise ValueError('Survey not linked to an Engagement')
 
@@ -109,20 +115,26 @@ class SubmissionService:
         user = StaffUserService.get_user_by_external_id(external_user_id)
 
         cls.validate_review(staff_review_details, user, submission_id)
-        reviewed_by = ' '.join([user.get('first_name', ''), user.get('last_name', '')])
+        reviewed_by = ' '.join(
+            [user.get('first_name', ''), user.get('last_name', '')])
 
         staff_review_details['reviewed_by'] = reviewed_by
         staff_review_details['user_id'] = user.get('id')
 
         with session_scope() as session:
-            should_send_email = SubmissionService._should_send_email(submission_id, staff_review_details)
-            submission = Submission.update_comment_status(submission_id, staff_review_details, session)
+            should_send_email = SubmissionService._should_send_email(
+                submission_id, staff_review_details)
+            submission = Submission.update_comment_status(
+                submission_id, staff_review_details, session)
             if staff_notes := staff_review_details.get('staff_note', []):
-                cls.add_or_update_staff_note(submission.survey_id, submission_id, staff_notes)
+                cls.add_or_update_staff_note(
+                    submission.survey_id, submission_id, staff_notes)
 
             if should_send_email:
-                rejection_review_note = StaffNote.get_staff_note_by_type(submission_id, StaffNoteType.Review.name)
-                SubmissionService._trigger_email(rejection_review_note[0].note, session, submission)
+                rejection_review_note = StaffNote.get_staff_note_by_type(
+                    submission_id, StaffNoteType.Review.name)
+                SubmissionService._trigger_email(
+                    rejection_review_note[0].note, session, submission)
         session.commit()
         return SubmissionSchema().dump(submission)
 
@@ -134,7 +146,8 @@ class SubmissionService:
             'submission_id': submission.id,
             'type': EmailVerificationType.RejectedComment,
         }, session)
-        SubmissionService._send_rejected_email(submission, review_note, email_verification.get('verification_token'))
+        SubmissionService._send_rejected_email(
+            submission, review_note, email_verification.get('verification_token'))
 
     @classmethod
     def validate_review(cls, values: dict, user, submission_id):
@@ -145,7 +158,8 @@ class SubmissionService:
         has_threat = values.get('has_threat', None)
         rejected_reason_other = values.get('rejected_reason_other', None)
 
-        valid_statuses = [status.id for status in CommentStatus.get_comment_statuses()]
+        valid_statuses = [
+            status.id for status in CommentStatus.get_comment_statuses()]
 
         if not user:
             raise ValueError('Invalid user.')
@@ -162,7 +176,8 @@ class SubmissionService:
         if not submission:
             raise ValueError('Invalid submission.')
         authorization.check_auth(
-            one_of_roles=(MembershipType.TEAM_MEMBER.name, Role.REVIEW_ALL_COMMENTS.value),
+            one_of_roles=(MembershipType.TEAM_MEMBER.name,
+                          Role.REVIEW_ALL_COMMENTS.value),
             engagement_id=submission.engagement_id
         )
 
@@ -170,13 +185,20 @@ class SubmissionService:
     def add_or_update_staff_note(cls, survey_id, submission_id, staff_notes):
         """Process staff note for a comment."""
         for staff_note in staff_notes:
-            note = StaffNote.get_staff_note_by_type(submission_id, staff_note.get('note_type'))
+            note = StaffNote.get_staff_note_by_type(
+                submission_id, staff_note.get('note_type'))
             if note:
                 note[0].note = staff_note['note']
                 note[0].flush()
             else:
-                doc = SubmissionService._create_staff_notes(survey_id, submission_id, staff_note)
+                doc = SubmissionService._create_staff_notes(
+                    survey_id, submission_id, staff_note)
                 doc.flush()
+
+    @staticmethod
+    def _get_tenant_name(tenant_id):
+        tenant = TenantModel.find_by_id(tenant_id)
+        return tenant.name
 
     @staticmethod
     def _create_staff_notes(survey_id, submission_id, staff_note):
@@ -203,10 +225,12 @@ class SubmissionService:
         if staff_comment_details.get('notify_email') is False:
             return False
         if staff_comment_details.get('status_id') == Status.Rejected.value:
-            has_review_note_changed = SubmissionService.is_review_note_changed(submission_id, staff_comment_details)
+            has_review_note_changed = SubmissionService.is_review_note_changed(
+                submission_id, staff_comment_details)
             if has_review_note_changed:
                 return True
-            has_reason_changed = SubmissionService.is_rejection_reason_changed(submission_id, staff_comment_details)
+            has_reason_changed = SubmissionService.is_rejection_reason_changed(
+                submission_id, staff_comment_details)
             if has_reason_changed:
                 return True
         return False
@@ -229,7 +253,8 @@ class SubmissionService:
         staff_notes = values.get('staff_note', [])
         for staff_note in staff_notes:
             if staff_note['note_type'] == StaffNoteType.Review.name:
-                note = StaffNote.get_staff_note_by_type(submission_id, StaffNoteType.Review.name)
+                note = StaffNote.get_staff_note_by_type(
+                    submission_id, StaffNoteType.Review.name)
                 if not note or note[0].note != staff_note.get('note'):
                     return True
         return False
@@ -256,7 +281,8 @@ class SubmissionService:
             survey_id,
             pagination_options,
             search_text,
-            advanced_search_filters if any(advanced_search_filters.values()) else None
+            advanced_search_filters if any(
+                advanced_search_filters.values()) else None
         )
         return {
             'items': SubmissionSchema(many=True, exclude=['submission_json']).dump(items),
@@ -269,16 +295,20 @@ class SubmissionService:
         participant_id = submission.participant_id
         participant = ParticipantModel.find_by_id(participant_id)
 
-        template_id = current_app.config.get('REJECTED_EMAIL_TEMPLATE_ID', None)
-        subject, body, args = SubmissionService._render_email_template(submission, review_note, token)
+        template_id = current_app.config.get(
+            'REJECTED_EMAIL_TEMPLATE_ID', None)
+        subject, body, args = SubmissionService._render_email_template(
+            submission, review_note, token)
         try:
             notification.send_email(subject=subject,
-                                    email=ParticipantModel.decode_email(participant.email_address),
+                                    email=ParticipantModel.decode_email(
+                                        participant.email_address),
                                     html_body=body,
                                     args=args,
                                     template_id=template_id)
         except Exception as exc:  # noqa: B902
-            current_app.logger.error('<Notification for rejected comment failed', exc)
+            current_app.logger.error(
+                '<Notification for rejected comment failed', exc)
             raise BusinessException(
                 error='Error sending rejected comment notification email.',
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
@@ -286,14 +316,18 @@ class SubmissionService:
     @staticmethod
     def _render_email_template(submission: Submission, review_note, token):
         template = Template.get_template('email_rejected_comment.html')
-        engagement: EngagementModel = EngagementModel.find_by_id(submission.engagement_id)
+        engagement: EngagementModel = EngagementModel.find_by_id(
+            submission.engagement_id)
         survey: SurveyModel = SurveyModel.find_by_id(submission.survey_id)
         engagement_name = engagement.name
         survey_name = survey.name
-
+        tenant_name = SubmissionService._get_tenant_name(
+            engagement.tenant_id)
         submission_path = current_app.config.get('SUBMISSION_PATH'). \
-            format(engagement_id=submission.engagement_id, submission_id=submission.id, token=token)
-        submission_url = notification.get_tenant_site_url(engagement.tenant_id, submission_path)
+            format(engagement_id=submission.engagement_id,
+                   submission_id=submission.id, token=token)
+        submission_url = notification.get_tenant_site_url(
+            engagement.tenant_id, submission_path)
         subject = current_app.config.get('REJECTED_EMAIL_SUBJECT'). \
             format(engagement_name=engagement_name)
         args = {
@@ -306,6 +340,7 @@ class SubmissionService:
             'submission_url': submission_url,
             'review_note': review_note,
             'end_date': datetime.strftime(engagement.end_date, EmailVerificationService.full_date_format),
+            'tenant_name': tenant_name,
         }
         body = template.render(
             engagement_name=args.get('engagement_name'),
