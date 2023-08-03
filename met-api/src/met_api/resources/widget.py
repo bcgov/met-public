@@ -152,4 +152,4 @@ class WidgetItems(Resource):
         except (KeyError, ValueError) as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValidationError as err:
-            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR@cors_preflight('GET, POST, OPTIONS')
+            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR
