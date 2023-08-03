@@ -92,8 +92,7 @@ class WidgetService:
         widget = WidgetModel.get_widget_by_id(widget_id)
         if not widget:
             raise KeyError('Widget ' + widget_id + ' does not exist')
-        return widget    
-    
+        return widget
 
     @staticmethod
     def create_widget_items_bulk(widget_items: list, user_id):
