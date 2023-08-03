@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { Grid, Typography, Stack } from '@mui/material';
-import { MetHeader1 } from 'components/common';
+import { Grid, Stack } from '@mui/material';
+import { MetHeader1, MetLabel } from 'components/common';
 import { EngagementStatusChip } from '../status';
 import { Editor } from 'react-draft-wysiwyg';
 import dayjs from 'dayjs';
@@ -51,26 +51,22 @@ const EngagementInfoSection = ({ savedEngagement, children }: EngagementInfoSect
                     backgroundColor: 'rgba(242, 242, 242, 0.95)',
                     padding: '1em',
                     margin: '1em',
-                    maxWidth: '90%',
                 }}
                 m={{ lg: '3em 5em 0 3em', md: '3em', sm: '1em' }}
+                spacing={1}
             >
                 <Grid item xs={12} sx={{ maxHeight: '20em', overflowY: 'auto', overflowX: 'auto' }}>
                     <MetHeader1>{name}</MetHeader1>
-                    <Grid item xs={12} sx={{ mb: 1 }}>
+                    <Grid item xs={12}>
                         <Editor editorState={getEditorStateFromRaw(rich_description)} readOnly={true} toolbarHidden />
                     </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography sx={{ fontWeight: 'bold' }} variant="subtitle1" color="black">
-                        {EngagementDate}
-                    </Typography>
+                    <MetLabel>{EngagementDate}</MetLabel>
                 </Grid>
-                <Grid item xs={12} mb={{ xs: 1, sm: 1 }}>
+                <Grid item xs={12}>
                     <Stack direction="row" spacing={1}>
-                        <Typography sx={{ fontWeight: 800 }} variant="subtitle1">
-                            Status:
-                        </Typography>
+                        <MetLabel>Status:</MetLabel>
                         <EngagementStatusChip submissionStatus={statusName} />
                     </Stack>
                 </Grid>
