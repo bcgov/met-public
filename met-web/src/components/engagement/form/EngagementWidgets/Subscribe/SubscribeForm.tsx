@@ -33,7 +33,7 @@ const Form = () => {
                             be sent to confirm the subscription.Only the email addresses that have been double-opted-in
                             will be on the list. Please include the unsubscribe link provided on the Email List screen
                             in every future communication. Unsubscribed email addresses will be removed from the list.
-                            Please downloaded the list before each communication.
+                            Please download the list before each communication.
                         </MetParagraph>
                     </Grid>
                     <Grid item xs={12} marginBottom="1em">

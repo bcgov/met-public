@@ -24,7 +24,7 @@ class WidgetSubscribeService:
 
         # Find all existing subscribes of this type
         existing_subscribes = WidgetSubscribeModel.get_all_by_type(
-            subscribe_type)
+            subscribe_type, widget_id)
 
         # Delete all existing subscribes of this type
         for existing_subscribe in existing_subscribes:

@@ -241,7 +241,7 @@ const EngagementForm = () => {
                     <Grid item xs={12}>
                         <MetLabel>Engagement Date </MetLabel>
                         <MetDescription>
-                            This is the date the public engagement will be open to the public.
+                            This is the date range of the public comment period, when the public may provide feedback.
                         </MetDescription>
                     </Grid>
                     <Grid item md={4} xs={12}>

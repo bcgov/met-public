@@ -14,7 +14,7 @@ from ..constants.subscribe_types import SubscribeTypes
 
 
 class WidgetSubscribe(BaseModel):  # pylint: disable=too-few-public-methods
-    """Widget Events table."""
+    """Widget Subscribe table."""
 
     __tablename__ = 'widget_subscribe'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -35,9 +35,9 @@ class WidgetSubscribe(BaseModel):  # pylint: disable=too-few-public-methods
         return widget_subscribe_forms
 
     @classmethod
-    def get_all_by_type(cls, type_):
+    def get_all_by_type(cls, type_, widget_id):
         """Get widget subscribe by type."""
-        return db.session.query(cls).filter_by(type=type_).all()
+        return db.session.query(cls).filter_by(type=type_, widget_id=widget_id).all()
 
     @classmethod
     def update_widget_events_bulk(cls, update_mappings: list) -> list[WidgetSubscribe]:

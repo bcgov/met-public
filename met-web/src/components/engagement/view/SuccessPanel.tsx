@@ -21,7 +21,7 @@ const SuccessPanel = ({ email, handleClose }: SuccessPanelProps) => {
                 </Grid>
                 <Grid item xs={12}>
                     <MetBody id="modal-modal-header">
-                        We sent a link to access the survey at the following email address:
+                        We sent a link to provide your feedback at the following email address:
                     </MetBody>
                     <MetBody sx={{ mt: 1 }}>{email}</MetBody>
                 </Grid>
@@ -29,11 +29,23 @@ const SuccessPanel = ({ email, handleClose }: SuccessPanelProps) => {
             <Grid container direction="row" item xs={12}>
                 <Grid item xs={12}>
                     <MetBody sx={{ mb: 1, fontWeight: 'bold' }}>
-                        Please click the link provided to access the survey.
+                        If you don't see the email in your inbox within a few minutes, please check your junk/spam
+                        folder, or your promotion folder (Gmail).
+                    </MetBody>
+                </Grid>
+                <Grid item xs={12}>
+                    <MetBody sx={{ mb: 1, fontWeight: 'bold' }}>
+                        Please click the link provided to provide your feedback.
                     </MetBody>
                 </Grid>
                 <Grid item xs={12}>
                     <MetBody sx={{ mb: 1, fontWeight: 'bold' }}>The link will be valid for 24 hours.</MetBody>
+                </Grid>
+                <Grid item xs={12}>
+                    <MetBody sx={{ mb: 1, fontWeight: 'bold', fontStyle: 'italic' }}>
+                        If you are not able to provide feedback within 24 hours, you may request a new link. Refer to
+                        the verification email for more information.
+                    </MetBody>
                 </Grid>
 
                 <Grid

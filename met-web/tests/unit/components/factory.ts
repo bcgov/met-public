@@ -13,7 +13,6 @@ import { WidgetMap } from 'models/widgetMap';
 import { Tenant } from 'models/tenant';
 
 const tenant: Tenant = {
-    id: '1',
     name: 'Tenant 1',
     title: 'Tenant Title',
     description: 'Tenant Description',

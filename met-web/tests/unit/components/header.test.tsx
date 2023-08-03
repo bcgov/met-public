@@ -4,18 +4,26 @@ import LoggedInHeader from '../../../src/components/layout/Header/InternalHeader
 import { render, waitFor, screen } from '@testing-library/react';
 import ProviderShell from './ProviderShell';
 import { setupEnv } from './setEnvVars';
-import { tenant } from './factory';
 
 jest.mock('@reduxjs/toolkit/query/react', () => ({
     ...jest.requireActual('@reduxjs/toolkit/query/react'),
     fetchBaseQuery: jest.fn(),
 }));
 
+jest.mock('hooks', () => ({
+    ...jest.requireActual('hooks'),
+    useAppTranslation: jest.fn(() => {
+        return {
+            t: (key: string) => key,
+        };
+    }),
+}));
+
 test('Load Header', async () => {
     setupEnv();
     render(
         <ProviderShell>
-            <LoggedInHeader tenant={tenant} />
+            <LoggedInHeader />
         </ProviderShell>,
     );
 

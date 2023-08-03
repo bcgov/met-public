@@ -47,6 +47,7 @@ class Contact(BaseModel):  # pylint: disable=too-few-public-methods
             updated_date=datetime.utcnow(),
             created_by=contact.get('created_by', None),
             updated_by=contact.get('updated_by', None),
+            avatar_filename=contact.get('avatar_filename', None),
         )
         new_contact.save()
 

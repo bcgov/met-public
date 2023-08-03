@@ -15,12 +15,16 @@ import { When } from 'react-if';
 import MenuIcon from '@mui/icons-material/Menu';
 import { HeaderProps } from './types';
 import { useNavigate } from 'react-router-dom';
+import { useAppTranslation } from 'hooks';
 
-const InternalHeader = ({ tenant, drawerWidth = 280 }: HeaderProps) => {
+const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const [open, setOpen] = useState(false);
     const [imageError, setImageError] = useState(false);
     const navigate = useNavigate();
+    const { t: translate } = useAppTranslation();
+
+    const logoUrl = translate('common.logoUrl');
     return (
         <>
             <AppBar
@@ -46,17 +50,17 @@ const InternalHeader = ({ tenant, drawerWidth = 280 }: HeaderProps) => {
                             onClick={() => setOpen(!open)}
                         />
                     </When>
-                    <When condition={tenant.logo_url && !imageError}>
+                    <When condition={logoUrl && !imageError}>
                         <Box
                             sx={{
-                                backgroundImage: tenant.logo_url,
+                                backgroundImage: logoUrl,
                                 height: '5em',
                                 width: { xs: '7em', md: '15em' },
                                 marginRight: { xs: '1em', md: '3em' },
                             }}
                         >
                             <img
-                                src={tenant.logo_url}
+                                src={logoUrl}
                                 alt="Site Logo"
                                 style={{
                                     objectFit: 'cover',
@@ -69,7 +73,7 @@ const InternalHeader = ({ tenant, drawerWidth = 280 }: HeaderProps) => {
                             />
                         </Box>
                     </When>
-                    <When condition={!tenant.logo_url || imageError}>
+                    <When condition={!logoUrl || imageError}>
                         <Box
                             component={BCLogo}
                             sx={{
@@ -81,9 +85,9 @@ const InternalHeader = ({ tenant, drawerWidth = 280 }: HeaderProps) => {
                         />
                     </When>
                     {isMediumScreen ? (
-                        <MetHeader1 sx={{ flexGrow: 1 }}>{tenant.title}</MetHeader1>
+                        <MetHeader1 sx={{ flexGrow: 1 }}>{translate('header.title')}</MetHeader1>
                     ) : (
-                        <MetHeader2 sx={{ flexGrow: 1 }}>{tenant.title}</MetHeader2>
+                        <MetHeader2 sx={{ flexGrow: 1 }}>{translate('header.title')}</MetHeader2>
                     )}
                     <Button
                         data-testid="button-header"

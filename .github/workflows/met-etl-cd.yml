@@ -14,6 +14,10 @@ on:
         description: "Environment (dev/test/prod)"
         required: true
         default: "dev"
+      project_type:
+        description: "Project Type (EAO/GDX)"
+        required: false
+        default: "GDX" # Default value is GDX    
 
 defaults:
   run:
@@ -24,6 +28,14 @@ env:
   APP_NAME: "dagster-etl"
   DEPLOYMENT_NAME: "dagster-dagster-user-deployments-k8s-example-user-code-1"
   TAG_NAME: "dev"
+  
+  PROJECT_TYPE: "${{ github.event.inputs.project_type || 'GDX' }}" # If the project type is manually selected, use the input value; otherwise, use 'GDX' as default
+
+  OPENSHIFT_LOGIN_REGISTRY: ${{ secrets.OPENSHIFT_LOGIN_REGISTRY }}
+  OPENSHIFT_SA_TOKEN: ${{ github.event.inputs.project_type == 'EAO' && secrets.OPENSHIFT_SA_TOKEN_EAO || secrets.OPENSHIFT_SA_TOKEN }}
+  OPENSHIFT_SA_NAME: ${{ github.event.inputs.project_type == 'EAO' && secrets.OPENSHIFT_SA_NAME_EAO || secrets.OPENSHIFT_SA_NAME }}
+  OPENSHIFT_IMAGE_REGISTRY: ${{ github.event.inputs.project_type == 'EAO' && secrets.OPENSHIFT_IMAGE_REGISTRY_EAO || secrets.OPENSHIFT_IMAGE_REGISTRY }}
+  OPENSHIFT_REPOSITORY: ${{ github.event.inputs.project_type == 'EAO' && secrets.OPENSHIFT_REPOSITORY_EAO || secrets.OPENSHIFT_REPOSITORY }}
 
 jobs:
   met-cron-cd:
@@ -39,12 +51,12 @@ jobs:
       - name: Login Openshift
         shell: bash
         run: |
-          oc login --server=${{secrets.OPENSHIFT_LOGIN_REGISTRY}} --token=${{secrets.OPENSHIFT_SA_TOKEN}}
+          oc login --server=${{env.OPENSHIFT_LOGIN_REGISTRY}} --token=${{env.OPENSHIFT_SA_TOKEN}}
 
       - name: Login Docker
         run: |
-          echo "${{ secrets.OPENSHIFT_SA_TOKEN }}" | 
-          docker login ${{ secrets.OPENSHIFT_IMAGE_REGISTRY }} -u ${{ secrets.OPENSHIFT_SA_NAME}} --password-stdin
+          echo "${{ env.OPENSHIFT_SA_TOKEN }}" | 
+          docker login ${{ env.OPENSHIFT_IMAGE_REGISTRY }} -u ${{ env.OPENSHIFT_SA_NAME}} --password-stdin
 
       - name: Build image
         run: |
@@ -52,7 +64,7 @@ jobs:
 
       - name: Push image
         run: |
-          IMAGE_ID=${{ secrets.OPENSHIFT_IMAGE_REGISTRY }}/"${{ secrets.OPENSHIFT_REPOSITORY}}-tools"/$APP_NAME
+          IMAGE_ID=${{ env.OPENSHIFT_IMAGE_REGISTRY }}/"${{ env.OPENSHIFT_REPOSITORY}}-tools"/$APP_NAME
           docker tag image $IMAGE_ID:latest
           docker push $IMAGE_ID:latest
           docker image tag $IMAGE_ID:latest $IMAGE_ID:$TAG_NAME
@@ -61,4 +73,4 @@ jobs:
       - name: Rollout
         shell: bash
         run: |
-          oc rollout status deployment/${{ env.DEPLOYMENT_NAME }} -n ${{ secrets.OPENSHIFT_REPOSITORY }}-${{ env.TAG_NAME }} -w
+          oc rollout status deployment/${{ env.DEPLOYMENT_NAME }} -n ${{ env.OPENSHIFT_REPOSITORY }}-${{ env.TAG_NAME }} -w

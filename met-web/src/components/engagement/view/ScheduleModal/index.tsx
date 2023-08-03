@@ -94,13 +94,13 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
                 <Grid container direction="row" item xs={12}>
                     <Grid item xs={12}>
                         <MetBody sx={{ mb: 1 }}>
-                            (The Engagement page will be visible on the date selected but the survey won't be accessible
-                            until the Engagement Date.)
+                            The Engagement page will be visible on the date selected below but the public won’t be able
+                            to provide feedback until the public comment period opens.
                         </MetBody>
                     </Grid>
                     <Grid item xs={12}>
                         <MetBody sx={{ mb: 1, fontWeight: 'bold' }}>
-                            Enter the date & time you want the Engagement to go live.
+                            Enter the date & time you want the Engagement page to go live.
                         </MetBody>
                     </Grid>
                     <Grid
