@@ -43,7 +43,7 @@ export const widgetsApi = createApi({
         }),
         deleteWidget: builder.mutation<Widget, { engagementId: number; widgetId: number }>({
             query: ({ engagementId, widgetId }) => ({
-                url: `widgets/engagement/${engagementId}/widget/${widgetId}`,
+                url: `widgets/${widgetId}/engagements/${engagementId}`,
                 method: 'DELETE',
             }),
             invalidatesTags: (_result, _error, arg) => [{ type: 'Widgets', id: arg.widgetId }],

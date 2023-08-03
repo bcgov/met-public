@@ -66,7 +66,13 @@ export const WidgetTitle = ({ widget }: { widget: Widget }) => {
                     justifyContent={'space-between'}
                     width={'100%'}
                 >
-                    <TextField name="title" value={title} onChange={(e) => handleTitleChange(e.target.value)} />
+                    <TextField
+                        name="title"
+                        value={title}
+                        onChange={(e) => handleTitleChange(e.target.value)}
+                        inputProps={{ maxLength: 100 }}
+                        fullWidth
+                    />
                     <If condition={isSaving}>
                         <Then>
                             <CircularProgress size={20} color="info" />
