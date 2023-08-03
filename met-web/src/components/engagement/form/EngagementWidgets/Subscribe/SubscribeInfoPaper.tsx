@@ -43,14 +43,28 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
                         <Grid item xs={3}>
                             <MetParagraph>Description:</MetParagraph>
                         </Grid>
-                        <Grid item xs={9} sx={{ border: '2px solid red' }}>
-                            <MetParagraph sx={{ lineHeight: 0, display: 'flex', maxHeight: '20px' }}>
-                                <Editor
-                                    editorState={getEditorStateFromRaw(subscribeItem.description)}
-                                    readOnly={true}
-                                    toolbarHidden
-                                />
-                            </MetParagraph>
+                        <Grid item xs={9} sx={{ position: 'relative', height: 'auto', border: '2px solid red' }}>
+                            <Editor
+                                editorState={getEditorStateFromRaw(subscribeItem.description)}
+                                readOnly={true}
+                                toolbarHidden
+                                wrapperStyle={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    lineHeight: 0,
+                                    display: 'flex',
+                                    padding: 0,
+                                    height: '20px',
+                                    width: '100%',
+                                }}
+                                editorStyle={{
+                                    display: 'inherit',
+                                    padding: '0px',
+                                    lineHeight: 0,
+                                    border: '2px solid yellow',
+                                }}
+                            />
                         </Grid>
                     </When>
 
