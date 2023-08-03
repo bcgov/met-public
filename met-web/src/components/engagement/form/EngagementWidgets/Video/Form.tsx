@@ -163,7 +163,7 @@ const Form = () => {
                             <Grid item xs={12}>
                                 <MetLabel>Video Link</MetLabel>
                                 <MetDescription>
-                                    The video must be hosted on one of the following platforms:
+                                    The video must be hosted on one of the following platforms: YouTube, Vimeo
                                 </MetDescription>
                                 <ControlledTextField
                                     name="videoUrl"
