@@ -42,7 +42,4 @@ jobs:
       - name: Tag Images and Rollout
         shell: bash
         run: |
-          oc project ${{env.OPENSHIFT_REPOSITORY}}-tools \
-          sh deploy.sh ${{ github.event.inputs.environment }} \
-          oc rollout status dc/met-api -n ${{ env.OPENSHIFT_REPOSITORY }}-${{ env.TAG_NAME }} \
-          oc rollout status dc/met-web -n ${{ env.OPENSHIFT_REPOSITORY }}-${{ env.TAG_NAME }} 
+          sh deploy.sh ${{ github.event.inputs.environment }} ${{env.OPENSHIFT_REPOSITORY }}
