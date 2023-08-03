@@ -88,7 +88,7 @@ const mockEventItem: EventItem = {
 
 const mockEvent: Event = {
     id: 1,
-    title: 'Jace',
+    title: 'Events',
     type: 'OPENHOUSE',
     sort_index: 1,
     widget_id: 1,
@@ -106,6 +106,7 @@ const eventWidgetItem: WidgetItem = {
 
 const eventWidget: Widget = {
     id: 1,
+    title: 'Events',
     widget_type_id: WidgetType.Events,
     engagement_id: 1,
     items: [eventWidgetItem],
@@ -120,6 +121,7 @@ const mapWidgetItem: WidgetItem = {
 
 const mapWidget: Widget = {
     id: 1,
+    title: 'Map',
     widget_type_id: WidgetType.Map,
     engagement_id: 1,
     items: [mapWidgetItem],
