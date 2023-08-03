@@ -4,15 +4,20 @@ import { PrimaryButton, MetHeader3, WidgetButton } from 'components/common';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { EventsContext } from './EventsContext';
 import EventsInfoBlock from './EventsInfoBlock';
+import { WidgetTitle } from '../WidgetTitle';
 
 const Form = () => {
     const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
-    const { setInPersonFormTabOpen, setVirtualSessionFormTabOpen } = useContext(EventsContext);
+    const { setInPersonFormTabOpen, setVirtualSessionFormTabOpen, widget } = useContext(EventsContext);
+
+    if (!widget) {
+        return null;
+    }
 
     return (
         <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
             <Grid item xs={12}>
-                <MetHeader3 bold>Events</MetHeader3>
+                <WidgetTitle widget={widget} />
                 <Divider sx={{ marginTop: '1em' }} />
             </Grid>
             <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'}>

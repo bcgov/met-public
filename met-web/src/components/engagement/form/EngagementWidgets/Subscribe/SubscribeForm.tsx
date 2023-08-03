@@ -1,27 +1,26 @@
 import React, { useContext } from 'react';
-import { Grid, Divider, FormControlLabel, Checkbox } from '@mui/material';
-import { PrimaryButton, MetHeader3, WidgetButton, MetParagraph, MetLabel } from 'components/common';
+import { Grid, Divider } from '@mui/material';
+import { PrimaryButton, WidgetButton, MetParagraph } from 'components/common';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
-import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { SubscribeContext } from './SubscribeContext';
 import { Subscribe_TYPE } from 'models/subscription';
+import { WidgetTitle } from '../WidgetTitle';
 
 const Form = () => {
     const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
-    const { handleSubscribeDrawerOpen } = useContext(SubscribeContext);
+    const { handleSubscribeDrawerOpen, widget } = useContext(SubscribeContext);
+
+    if (!widget) {
+        return null;
+    }
 
     return (
         <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
             <Grid item xs={12}>
-                <Grid container item>
-                    <MetHeader3 bold sx={{ paddingRight: 1 }}>
-                        Sign-up for updates
-                    </MetHeader3>
-                    <BorderColorIcon />
-                </Grid>
+                <WidgetTitle widget={widget} />
                 <Divider sx={{ marginTop: '1em' }} />
-                <FormControlLabel control={<Checkbox />} label={<MetLabel>Hide title</MetLabel>} />
             </Grid>
+
             <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'}>
                 <Grid item xs={12}>
                     <MetParagraph>

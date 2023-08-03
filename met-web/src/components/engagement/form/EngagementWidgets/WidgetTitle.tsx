@@ -8,7 +8,7 @@ import { Else, If, Then } from 'react-if';
 import { useUpdateWidgetMutation } from 'apiManager/apiSlices/widgets';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { WidgetDrawerContext } from '../WidgetDrawerContext';
+import { WidgetDrawerContext } from './WidgetDrawerContext';
 
 export const WidgetTitle = ({ widget }: { widget: Widget }) => {
     const [editing, setEditing] = React.useState(false);
