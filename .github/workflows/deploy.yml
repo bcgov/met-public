@@ -44,5 +44,5 @@ jobs:
         run: |
           oc project ${{env.OPENSHIFT_REPOSITORY}}-tools \
           sh deploy.sh ${{ github.event.inputs.environment }} \
-          oc rollout status dc/met-api -n ${{ env.OPENSHIFT_REPOSITORY }}-${{ env.TAG_NAME }} -w
+          oc rollout status dc/met-api -n ${{ env.OPENSHIFT_REPOSITORY }}-${{ env.TAG_NAME }} -w \
           oc rollout status dc/met-web -n ${{ env.OPENSHIFT_REPOSITORY }}-${{ env.TAG_NAME }} -w
