@@ -28,6 +28,7 @@ from met_api.services.survey_service import SurveyService
 from met_api.utils import notification
 from met_api.utils.roles import Role
 from met_api.utils.template import Template
+from met_api.models import Tenant as TenantModel
 
 
 class SubmissionService:
@@ -195,6 +196,11 @@ class SubmissionService:
                 doc.flush()
 
     @staticmethod
+    def _get_tenant_name(tenant_id):
+        tenant = TenantModel.find_by_id(tenant_id)
+        return tenant.name
+
+    @staticmethod
     def _create_staff_notes(survey_id, submission_id, staff_note):
         doc: StaffNote = StaffNote()
         doc.note = staff_note['note']
@@ -315,7 +321,7 @@ class SubmissionService:
         survey: SurveyModel = SurveyModel.find_by_id(submission.survey_id)
         engagement_name = engagement.name
         survey_name = survey.name
-        tenant_name = EmailVerificationService._get_tenant_name(
+        tenant_name = SubmissionService._get_tenant_name(
             engagement.tenant_id)
         submission_path = current_app.config.get('SUBMISSION_PATH'). \
             format(engagement_id=submission.engagement_id,
