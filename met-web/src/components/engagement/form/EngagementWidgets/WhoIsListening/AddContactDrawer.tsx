@@ -163,7 +163,7 @@ const AddContactDrawer = () => {
                                 handleAddFile={handleAddAvatarImage}
                                 savedImageUrl={contactToEdit?.avatar_url}
                                 savedImageName={contactToEdit?.avatar_filename}
-                                helpText="Drag and drop an image here or click to select one"
+                                helpText={'Drop an image here or click to select one.'}
                             />
                         </Grid>
                         <Grid item xs={12} lg={8} container direction="row" spacing={2}>

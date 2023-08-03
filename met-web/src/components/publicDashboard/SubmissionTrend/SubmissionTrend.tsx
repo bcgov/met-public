@@ -35,6 +35,7 @@ export const dashboardCustomStyles = {
 
 const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendProps) => {
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+    const isExtraSmall = useMediaQuery('(max-width:299px)');
     const isBetweenMdAndLg = useMediaQuery((theme: Theme) => theme.breakpoints.between('lg', 'xl'));
     const HEIGHT = isTablet ? 200 : 250;
     const [data, setData] = useState(createDefaultByMonthData());
@@ -43,6 +44,12 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     const [chartBy, setChartBy] = React.useState('monthly');
     const [fromDate, setFromDate] = React.useState<Dayjs | null>(null);
     const [toDate, setToDate] = React.useState<Dayjs | null>(null);
+    const marginXStyling = { marginX: isTablet ? 1 : 0 };
+    const extraSmallStyling = {
+        fontSize: isExtraSmall ? '12px' : 'inherit',
+        width: isExtraSmall ? '40%' : 'auto',
+    };
+
     const fetchData = async () => {
         setIsLoading(true);
         try {
@@ -137,10 +144,23 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             rowSpacing={isTablet ? 1 : 0}
                             md={isBetweenMdAndLg ? 3 : 4}
                         >
-                            <Grid container item alignItems={'center'} justifyContent={'center'} xs={12} sx={{ mb: 1 }}>
+                            <Grid
+                                container
+                                item
+                                alignItems={'center'}
+                                justifyContent={'center'}
+                                xs={12}
+                                sx={{ ...marginXStyling, mb: 1 }}
+                            >
                                 <MetLabel>Select Date Range </MetLabel>
                             </Grid>
-                            <Grid container item sx={{ mb: 1 }} direction="column" alignItems="center">
+                            <Grid
+                                container
+                                item
+                                sx={{ mb: 1, ...marginXStyling }}
+                                direction="column"
+                                alignItems="center"
+                            >
                                 <Stack flexDirection={'column'} alignItems={'flex-start'}>
                                     <MetLabel>From: </MetLabel>
                                     <DatePicker
@@ -153,14 +173,24 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                                 {...params}
                                                 InputProps={{
                                                     ...params.InputProps,
-                                                    endAdornment: <CalendarTodayIcon sx={{ fontSize: 20 }} />,
+                                                    endAdornment: isExtraSmall ? (
+                                                        <></>
+                                                    ) : (
+                                                        <CalendarTodayIcon sx={{ fontSize: 20 }} />
+                                                    ),
                                                 }}
                                             />
                                         )}
                                     />
                                 </Stack>
                             </Grid>
-                            <Grid container item sx={{ mb: 1 }} direction="column" alignItems="center">
+                            <Grid
+                                container
+                                item
+                                sx={{ mb: 1, ...marginXStyling }}
+                                direction="column"
+                                alignItems="center"
+                            >
                                 <Stack flexDirection={'column'} alignItems={'flex-start'}>
                                     <MetLabel>To: </MetLabel>
                                     <DatePicker
@@ -173,7 +203,11 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                                 {...params}
                                                 InputProps={{
                                                     ...params.InputProps,
-                                                    endAdornment: <CalendarTodayIcon sx={{ fontSize: 20 }} />,
+                                                    endAdornment: isExtraSmall ? (
+                                                        <></>
+                                                    ) : (
+                                                        <CalendarTodayIcon sx={{ fontSize: 20 }} />
+                                                    ),
                                                 }}
                                             />
                                         )}
@@ -182,7 +216,11 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             </Grid>
                             <Grid container item justifyContent="center" alignItems="center">
                                 <SecondaryButton
-                                    sx={{ ...dashboardCustomStyles.primaryButton, width: 'auto' }}
+                                    sx={{
+                                        ...dashboardCustomStyles.primaryButton,
+                                        ...extraSmallStyling,
+                                        width: isExtraSmall ? '80%' : '100%',
+                                    }}
                                     onClick={clearDates}
                                 >
                                     Reset All Filters
@@ -201,16 +239,24 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                 width="100%"
                                 justifyContent="flex-end"
                                 alignItems={'flex-end'}
+                                mb={1}
                             >
                                 <ToggleButtonGroup
                                     value={chartBy}
                                     exclusive
                                     onChange={handleToggleChange}
                                     size={isTablet ? 'small' : 'medium'}
-                                    sx={dashboardCustomStyles.toggleGroup}
+                                    sx={{
+                                        ...dashboardCustomStyles.toggleGroup,
+                                        ...marginXStyling,
+                                    }}
                                 >
-                                    <MetToggleButton value="weekly">Weekly</MetToggleButton>
-                                    <MetToggleButton value="monthly">Monthly</MetToggleButton>
+                                    <MetToggleButton value="weekly" sx={extraSmallStyling}>
+                                        Weekly
+                                    </MetToggleButton>
+                                    <MetToggleButton value="monthly" sx={extraSmallStyling}>
+                                        Monthly
+                                    </MetToggleButton>
                                 </ToggleButtonGroup>
                             </Stack>
                             <If condition={!isLoading}>

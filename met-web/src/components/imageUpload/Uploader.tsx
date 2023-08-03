@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react';
 import { Grid, Stack, Typography } from '@mui/material';
-import Dropzone from 'react-dropzone';
+import Dropzone, { Accept } from 'react-dropzone';
 import { PrimaryButton, SecondaryButton } from 'components/common';
 import { ImageUploadContext } from './imageUploadContext';
 
@@ -8,11 +8,13 @@ interface UploaderProps {
     margin?: number;
     helpText?: string;
     height?: string;
+    accept?: Accept;
 }
 const Uploader = ({
     margin = 2,
     helpText = 'Drag and drop some files here, or click to select files',
     height = '10em',
+    accept = {},
 }: UploaderProps) => {
     const {
         handleAddFile,
@@ -88,6 +90,7 @@ const Uploader = ({
                             onClick={() => {
                                 setCropModalOpen(true);
                             }}
+                            size="small"
                         >
                             Crop
                         </PrimaryButton>
@@ -99,11 +102,13 @@ const Uploader = ({
     return (
         <Dropzone
             onDrop={(acceptedFiles) => {
+                if (acceptedFiles.length === 0) return;
                 const createdObjectURL = URL.createObjectURL(acceptedFiles[0]);
                 handleAddFile(acceptedFiles);
                 setAddedImageFileUrl(createdObjectURL);
                 setAddedImageFileName(acceptedFiles[0].name);
             }}
+            accept={accept}
         >
             {({ getRootProps, getInputProps }) => (
                 <section>

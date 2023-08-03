@@ -17,6 +17,7 @@ const BannerWithImage = ({ height, imageUrl, children }: BannerProps) => {
                     height: height ? height : '38em',
                     width: '100%',
                     position: 'relative',
+                    overflow: 'clip',
                 }}
             >
                 <img
