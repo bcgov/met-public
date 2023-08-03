@@ -186,8 +186,8 @@ class EmailVerificationService:
             format(engagement_id=engagement.id)
 
     @staticmethod
-    def _get_tenant_name(tenantId):
-        tenant = TenantModel.find_by_id(tenantId)
+    def _get_tenant_name(tenant_id):
+        tenant = TenantModel.find_by_id(tenant_id)
         return tenant.name
 
     @staticmethod
