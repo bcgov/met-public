@@ -31,6 +31,10 @@ class SurveyService:
     def get(cls, survey_id):
         """Get survey by the id."""
         survey_model: SurveyModel = SurveyModel.find_by_id(survey_id)
+        engagement_model: EngagementModel = EngagementModel.find_by_id(survey_model.engagement_id)
+        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name,
+                                               MembershipType.REVIEWER.name,
+                                               Role.VIEW_SURVEYS.value), engagement_id=engagement_model.id)
         survey = SurveySchema().dump(survey_model)
         return survey
 

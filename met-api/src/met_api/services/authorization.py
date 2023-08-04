@@ -20,16 +20,20 @@ def check_auth(**kwargs):
     has_valid_roles = bool(set(token_roles) & set(permitted_roles))
     if has_valid_roles:
         return
-    if MembershipType.TEAM_MEMBER.name in permitted_roles:
+
+    team_permitted_roles = [role for role in [MembershipType.TEAM_MEMBER.name, MembershipType.REVIEWER.name] if
+                            role in permitted_roles]
+
+    if team_permitted_roles:
         # check if he is a member of particular engagement.
-        is_a_member = _has_team_membership(kwargs, user_from_context)
+        is_a_member = _has_team_membership(kwargs, user_from_context, team_permitted_roles)
         if is_a_member:
             return
 
     abort(403)
 
 
-def _has_team_membership(kwargs, user_from_context) -> bool:
+def _has_team_membership(kwargs, user_from_context, team_permitted_roles) -> bool:
     eng_id = kwargs.get('engagement_id', None)
     external_id = user_from_context.sub
     user = StaffUserModel.get_user_by_external_id(external_id)
@@ -37,6 +41,6 @@ def _has_team_membership(kwargs, user_from_context) -> bool:
         return False
     memberships = MembershipModel.find_by_engagement_and_user_id(eng_id, user.id)
     # TODO when multiple memberships are supported , iterate list and check role.
-    if memberships and memberships[0].type == MembershipType.TEAM_MEMBER:
+    if memberships and memberships[0].type in team_permitted_roles:
         return True
     return False
