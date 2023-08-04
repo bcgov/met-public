@@ -12,8 +12,8 @@ const Form = () => {
     const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const { handleSubscribeDrawerOpen, subscribe, widget } = useContext(SubscribeContext);
     const subscribeFormExists = subscribe.length > 0;
-    
-  if (!widget) {
+
+    if (!widget) {
         return null;
     }
 
