@@ -9,6 +9,7 @@ import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType } from 'models/widget';
 import ContactBlock from './ContactBlock';
 import { WhoIsListeningContext } from './WhoIsListeningContext';
+import { useCreateWidgetItemsMutation } from 'apiManager/apiSlices/widgets';
 
 const WhoIsListeningForm = () => {
     const { handleWidgetDrawerOpen, widgets, loadWidgets } = useContext(WidgetDrawerContext);
@@ -17,6 +18,7 @@ const WhoIsListeningForm = () => {
     const dispatch = useAppDispatch();
     const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
     const [savingWidgetItems, setSavingWidgetItems] = useState(false);
+    const [createWidgetItems] = useCreateWidgetItemsMutation();
 
     const widget = widgets.filter((widget) => widget.widget_type_id === WidgetType.WhoIsListening)[0] || null;
     useEffect(() => {
@@ -68,7 +70,7 @@ const WhoIsListeningForm = () => {
         });
         try {
             setSavingWidgetItems(true);
-            await postWidgetItems(widget.id, widgetsToUpdate);
+            await createWidgetItems({ widget_id: widget.id, widget_items_data: widgetsToUpdate }).unwrap();
             await loadWidgets();
             dispatch(openNotification({ severity: 'success', text: 'Widgets successfully added' }));
             handleWidgetDrawerOpen(false);

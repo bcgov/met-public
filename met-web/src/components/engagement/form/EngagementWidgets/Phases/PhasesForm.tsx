@@ -4,9 +4,9 @@ import { MetHeader3, MetLabel, PrimaryButton, SecondaryButton } from 'components
 import { EngagementPhases } from 'models/engagementPhases';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { postWidgetItem } from 'services/widgetService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType } from 'models/widget';
+import { useCreateWidgetItemsMutation } from 'apiManager/apiSlices/widgets';
 
 interface ISelectOptions {
     id: EngagementPhases;
@@ -20,6 +20,8 @@ const PhasesForm = () => {
     const [isStandalone, setIsStandalone] = useState<boolean>(false);
     const [savingWidgetItems, setSavingWidgetItems] = useState(false);
     const widget = widgets.filter((widget) => widget.widget_type_id === WidgetType.Phases)[0] || null;
+
+    const [createWidgetItems] = useCreateWidgetItemsMutation();
 
     useEffect(() => {
         if (widget && widget.items.length > 0) {
@@ -66,7 +68,7 @@ const PhasesForm = () => {
         };
         try {
             setSavingWidgetItems(true);
-            await postWidgetItem(widget.id, widgetsToUpdate);
+            await createWidgetItems({ widget_id: widget.id, widget_items_data: [widgetsToUpdate] }).unwrap();
             await loadWidgets();
             dispatch(openNotification({ severity: 'success', text: 'Widget successfully added' }));
             handleWidgetDrawerOpen(false);
