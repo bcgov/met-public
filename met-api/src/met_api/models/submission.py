@@ -9,6 +9,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.dialects import postgresql
 
 from met_api.constants.comment_status import Status
+from met_api.constants.user import SYSTEM_REVIEWER
 from met_api.models.survey import Survey
 from met_api.models.participant import Participant
 from met_api.schemas.submission import SubmissionSchema
@@ -63,7 +64,7 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
             const_review_date = None
         else:
             const_comment_status = Status.Approved.value
-            const_reviewed_by = 'System'
+            const_reviewed_by = SYSTEM_REVIEWER
             const_review_date = datetime.utcnow()
 
         new_submission = Submission(

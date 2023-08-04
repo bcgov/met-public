@@ -20,6 +20,7 @@ from os import listdir, path
 from typing import Tuple
 
 from jsonschema import Draft7Validator, RefResolver, SchemaError, draft7_format_checker
+from met_api.constants.user import SYSTEM_REVIEWER
 
 
 BASE_URI = 'https://met.gov.bc.ca/.well_known/schemas'
@@ -115,3 +116,12 @@ def serialize(errors):
     for error in errors:
         error_message.append(error.message)
     return error_message
+
+
+def count_comments_by_status(submissions, status):
+    return len([
+        submission 
+        for submission in submissions 
+        if (submission.comment_status_id == status
+        and submission.reviewed_by != SYSTEM_REVIEWER)
+])

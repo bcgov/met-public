@@ -15,3 +15,4 @@
 
 
 SYSTEM_USER = 1
+SYSTEM_REVIEWER = 'System'
