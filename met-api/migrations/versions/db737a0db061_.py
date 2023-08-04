@@ -22,8 +22,8 @@ def upgrade():
             CASE 
                 WHEN widget_type_id = 1 THEN 'Who is Listening'
                 WHEN widget_type_id = 2 THEN 'Documents'
-                WHEN widget_type_id = 3 THEN 'EA Process'
-                WHEN widget_type_id = 4 THEN 'Subscribe'
+                WHEN widget_type_id = 3 THEN 'Environmental Assessment Process'
+                WHEN widget_type_id = 4 THEN 'Sign Up for Updates'
                 WHEN widget_type_id = 5 THEN 'Events'
                 WHEN widget_type_id = 6 THEN 'Map'
                 WHEN widget_type_id = 7 THEN 'Video'
