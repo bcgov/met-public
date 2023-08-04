@@ -11,7 +11,7 @@ import SubscribeInfoBlock from './SubscribeInfoBlock';
 const Form = () => {
     const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const { handleSubscribeDrawerOpen, subscribe } = useContext(SubscribeContext);
-    const subscribeFormExists = subscribe != [];
+    const subscribeFormExists = subscribe.length > 0;
 
     return (
         <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
