@@ -230,7 +230,7 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
                                     </PrimaryButton>
                                 </When>
                                 <When condition={item.subscribe_items[0].call_to_action_type == CallToActionType.LINK}>
-                                    <Link onClick={() => setOpen(true)}>
+                                    <Link onClick={() => setOpen(true)} sx={{ cursor: 'pointer' }}>
                                         {item.subscribe_items[0].call_to_action_text}
                                     </Link>
                                 </When>
