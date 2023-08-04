@@ -69,13 +69,7 @@ export const widgetsApi = createApi({
 export const {
     useLazyGetWidgetsQuery,
     useCreateWidgetMutation,
-    useSortWidgetsMutation,
-    useDeleteWidgetMutation,
     useUpdateWidgetMutation,
-} = widgetsApi;
-export const {
-    useLazyGetWidgetsQuery,
-    useCreateWidgetMutation,
     useSortWidgetsMutation,
     useDeleteWidgetMutation,
     useCreateWidgetItemsMutation,
