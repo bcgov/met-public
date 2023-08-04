@@ -9,7 +9,11 @@ import { SubscribeForm } from 'models/subscription';
 import { SubscribeContext } from './SubscribeContext';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
+import { styled } from '@mui/system';
 
+const EditorGrid = styled(Grid)`
+    padding-top: 0px !important;
+`;
 export interface SubscribeInfoPaperProps {
     subscribeForm: SubscribeForm;
     removeSubscribeForm: (_subscribeId: number) => void;
@@ -47,29 +51,22 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
                         <Grid item xs={3}>
                             <MetParagraph>Description:</MetParagraph>
                         </Grid>
-                        <Grid item xs={9} sx={{ position: 'relative', height: 'auto', border: '2px solid red' }}>
+                        <EditorGrid item xs={9} sx={{ position: 'relative', height: 'auto' }}>
                             <Editor
                                 editorState={getEditorStateFromRaw(subscribeItem.description)}
                                 readOnly={true}
                                 toolbarHidden
                                 wrapperStyle={{
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    lineHeight: 0,
                                     display: 'flex',
-                                    padding: 0,
-                                    height: '20px',
-                                    width: '100%',
+                                    paddingTop: 3,
+                                    lineHeight: '0', // Adjust line-height to match MetParagraph, or as desired
                                 }}
                                 editorStyle={{
                                     display: 'inherit',
                                     padding: '0px',
-                                    lineHeight: 0,
-                                    border: '2px solid yellow',
                                 }}
                             />
-                        </Grid>
+                        </EditorGrid>
                     </When>
 
                     <Grid item xs={3}>
