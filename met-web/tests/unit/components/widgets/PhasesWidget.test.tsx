@@ -55,9 +55,16 @@ jest.mock('components/map', () => () => {
 });
 
 const mockCreateWidget = jest.fn(() => Promise.resolve(phasesWidget));
+const mockCreateWidgetItems = jest.fn(() => Promise.resolve([phaseWidgetItem]));
+const mockCreateWidgetItemsTrigger = jest.fn(() => {
+    return {
+        unwrap: mockCreateWidgetItems,
+    };
+});
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
     useCreateWidgetMutation: () => [mockCreateWidget],
+    useCreateWidgetItemsMutation: () => [mockCreateWidgetItemsTrigger],
     useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
@@ -75,7 +82,7 @@ describe('Phases widget tests', () => {
         setupEnv();
     });
 
-    test('Phases widget is created when option is clicked', async () => {
+    test.only('Phases widget is created when option is clicked', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
@@ -84,9 +91,8 @@ describe('Phases widget tests', () => {
             }),
         );
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
-        const postWidgetItemMock = jest.spyOn(widgetService, 'postWidgetItem');
         mockCreateWidget.mockReturnValue(Promise.resolve(phasesWidget));
-        postWidgetItemMock.mockReturnValue(Promise.resolve(phaseWidgetItem));
+        mockCreateWidgetItems.mockReturnValue(Promise.resolve([phaseWidgetItem]));
         render(<EngagementForm />);
 
         await waitFor(() => {
@@ -129,9 +135,14 @@ describe('Phases widget tests', () => {
             expect(saveWidgetButton).not.toBeVisible();
         });
 
-        expect(postWidgetItemMock).toHaveBeenNthCalledWith(1, phasesWidget.id, {
+        expect(mockCreateWidgetItemsTrigger).toHaveBeenNthCalledWith(1, {
             widget_id: phasesWidget.id,
-            widget_data_id: 0,
+            widget_items_data: [
+                {
+                    widget_id: phasesWidget.id,
+                    widget_data_id: 0,
+                },
+            ],
         });
     });
 });

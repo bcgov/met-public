@@ -36,14 +36,6 @@ interface PostWidgetItemRequest {
 /**
  * @deprecated The method was replaced by Redux RTK query to have caching behaviour
  */
-export const postWidgetItem = async (widget_id: number, data: PostWidgetItemRequest): Promise<WidgetItem> => {
-    const result = await postWidgetItems(widget_id, [data]);
-    return result[0];
-};
-
-/**
- * @deprecated The method was replaced by Redux RTK query to have caching behaviour
- */
 export const postWidgetItems = async (widget_id: number, data: PostWidgetItemRequest[]): Promise<WidgetItem[]> => {
     try {
         const url = replaceUrl(Endpoints.Widget_items.CREATE, 'widget_id', String(widget_id));

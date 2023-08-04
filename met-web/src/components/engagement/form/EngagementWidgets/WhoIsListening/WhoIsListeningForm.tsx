@@ -4,7 +4,6 @@ import { MetLabel, PrimaryButton, SecondaryButton, MetHeader3 } from 'components
 import { Contact } from 'models/contact';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { postWidgetItems } from 'services/widgetService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType } from 'models/widget';
 import ContactBlock from './ContactBlock';
