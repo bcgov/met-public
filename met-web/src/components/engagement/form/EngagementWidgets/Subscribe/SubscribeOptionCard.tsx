@@ -12,6 +12,7 @@ import { optionCardStyle } from '../constants';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
 import { WidgetTabValues } from '../type';
 
+const Title = 'Sign Up for Updates';
 const SubscribeOptionCard = () => {
     const { widgets, loadWidgets, handleWidgetDrawerOpen, handleWidgetDrawerTabValueChange } =
         useContext(WidgetDrawerContext);
@@ -32,6 +33,7 @@ const SubscribeOptionCard = () => {
             await createWidget({
                 widget_type_id: WidgetType.Subscribe,
                 engagement_id: savedEngagement.id,
+                title: Title,
             });
             await loadWidgets();
             dispatch(
@@ -85,7 +87,7 @@ const SubscribeOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetLabel>Sign Up for Updates</MetLabel>
+                                <MetLabel>{Title}</MetLabel>
                             </Grid>
                             <Grid item xs={12}>
                                 <MetDescription>Offer members of the public to sign up for updates</MetDescription>

@@ -30,6 +30,7 @@ const phaseWidgetItem: WidgetItem = {
 
 const phasesWidget: Widget = {
     id: 2,
+    title: 'Environmental Assessment Process',
     widget_type_id: WidgetType.Phases,
     engagement_id: 1,
     items: [],
@@ -58,6 +59,7 @@ const mockCreateWidget = jest.fn(() => Promise.resolve(phasesWidget));
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
     useCreateWidgetMutation: () => [mockCreateWidget],
+    useUpdateWidgetMutation: () => [jest.fn(() => Promise.resolve(phasesWidget))],
     useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
@@ -112,6 +114,7 @@ describe('Phases widget tests', () => {
         expect(mockCreateWidget).toHaveBeenNthCalledWith(1, {
             widget_type_id: WidgetType.Phases,
             engagement_id: draftEngagement.id,
+            title: phasesWidget.title,
         });
         expect(getWidgetsMock).toHaveBeenCalledTimes(2);
 

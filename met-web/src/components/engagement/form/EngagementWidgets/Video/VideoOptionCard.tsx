@@ -12,6 +12,7 @@ import { WidgetTabValues } from '../type';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
 import MovieIcon from '@mui/icons-material/Movie';
 
+const Title = 'Video';
 const VideoOptionCard = () => {
     const { widgets, loadWidgets, handleWidgetDrawerOpen, handleWidgetDrawerTabValueChange } =
         useContext(WidgetDrawerContext);
@@ -32,6 +33,7 @@ const VideoOptionCard = () => {
             await createWidget({
                 widget_type_id: WidgetType.Video,
                 engagement_id: savedEngagement.id,
+                title: Title,
             }).unwrap();
             await loadWidgets();
             dispatch(
@@ -83,7 +85,7 @@ const VideoOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetLabel>Video</MetLabel>
+                                <MetLabel>{Title}</MetLabel>
                             </Grid>
                             <Grid item xs={12}>
                                 <MetDescription>Add a link to a hosted video and link preview</MetDescription>

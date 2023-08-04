@@ -9,6 +9,7 @@ import { useDeleteWidgetMutation, useSortWidgetsMutation } from 'apiManager/apiS
 
 export interface WidgetDrawerContextProps {
     widgets: Widget[];
+    setWidgets: React.Dispatch<React.SetStateAction<Widget[]>>;
     widgetDrawerOpen: boolean;
     handleWidgetDrawerOpen: (_open: boolean) => void;
     widgetDrawerTabValue: string;
@@ -25,6 +26,9 @@ export type EngagementParams = {
 
 export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
     widgets: [],
+    setWidgets: () => {
+        return;
+    },
     isWidgetsLoading: false,
     widgetDrawerOpen: false,
     handleWidgetDrawerOpen: (_open: boolean) => {
@@ -103,6 +107,7 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
         <WidgetDrawerContext.Provider
             value={{
                 widgets,
+                setWidgets,
                 deleteWidget,
                 updateWidgetsSorting,
                 widgetDrawerOpen,
