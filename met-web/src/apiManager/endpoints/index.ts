@@ -84,7 +84,7 @@ const Endpoints = {
     Widgets: {
         GET_LIST: `${AppConfig.apiUrl}/widgets/engagement/engagement_id`,
         CREATE: `${AppConfig.apiUrl}/widgets/engagement/engagement_id`,
-        DELETE: `${AppConfig.apiUrl}/widgets/engagement/engagement_id/widget/widget_id`,
+        DELETE: `${AppConfig.apiUrl}/widgets/widget_id/engagements/engagement_id`,
         SORT: `${AppConfig.apiUrl}/widgets/engagement/engagement_id/sort_index`,
     },
     Widget_items: {

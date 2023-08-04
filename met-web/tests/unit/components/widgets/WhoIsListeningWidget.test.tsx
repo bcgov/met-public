@@ -44,6 +44,7 @@ const contactWidgetItem: WidgetItem = {
 
 const whoIsListeningWidget: Widget = {
     id: 1,
+    title: 'Who is Listening',
     widget_type_id: WidgetType.WhoIsListening,
     engagement_id: 1,
     items: [contactWidgetItem],
@@ -114,6 +115,7 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
     useCreateWidgetMutation: () => [mockCreateWidget],
     useCreateWidgetItemsMutation: () => [mockCreateWidgetItemsTrigger],
+    useUpdateWidgetMutation: () => [jest.fn(() => Promise.resolve(whoIsListeningWidget))],
     useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
@@ -171,6 +173,7 @@ describe('Who is Listening widget  tests', () => {
         expect(mockCreateWidget).toHaveBeenNthCalledWith(1, {
             widget_type_id: WidgetType.WhoIsListening,
             engagement_id: draftEngagement.id,
+            title: whoIsListeningWidget.title,
         });
         expect(getWidgetsMock).toHaveBeenCalledTimes(2);
         expect(screen.getByText('Add This Contact')).toBeVisible();

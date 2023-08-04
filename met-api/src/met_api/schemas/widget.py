@@ -14,6 +14,7 @@ class WidgetSchema(Schema):
         unknown = EXCLUDE
 
     id = fields.Int(data_key='id')
+    title = fields.Str(data_key='title')
     widget_type_id = fields.Int(data_key='widget_type_id', required=True)
     engagement_id = fields.Int(data_key='engagement_id', required=True)
     created_by = fields.Str(data_key='created_by')

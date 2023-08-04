@@ -1,14 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import Divider from '@mui/material/Divider';
 import { Grid } from '@mui/material';
-import {
-    MetDescription,
-    MetHeader3,
-    MetLabel,
-    MidScreenLoader,
-    PrimaryButton,
-    SecondaryButton,
-} from 'components/common';
+import { MetDescription, MetLabel, MidScreenLoader, PrimaryButton, SecondaryButton } from 'components/common';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -19,6 +12,7 @@ import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { VideoContext } from './VideoContext';
 import { patchVideo, postVideo } from 'services/widgetService/VideoService';
 import { updatedDiff } from 'deep-object-diff';
+import { WidgetTitle } from '../WidgetTitle';
 
 const schema = yup
     .object({
@@ -120,7 +114,7 @@ const Form = () => {
         }
     };
 
-    if (isLoadingVideoWidget) {
+    if (isLoadingVideoWidget || !widget) {
         return (
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" spacing={2}>
                 <Grid item xs={12}>
@@ -133,7 +127,7 @@ const Form = () => {
     return (
         <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
             <Grid item xs={12}>
-                <MetHeader3 bold>Video</MetHeader3>
+                <WidgetTitle widget={widget} />
                 <Divider sx={{ marginTop: '1em' }} />
             </Grid>
             <Grid item xs={12}>

@@ -2,7 +2,6 @@ import React, { useContext, useState, useEffect } from 'react';
 import Divider from '@mui/material/Divider';
 import { Grid, Typography, Stack, IconButton } from '@mui/material';
 import {
-    MetHeader3,
     MetLabel,
     PrimaryButton,
     SecondaryButton,
@@ -26,6 +25,7 @@ import LinkIcon from '@mui/icons-material/Link';
 import { When } from 'react-if';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import * as turf from '@turf/turf';
+import { WidgetTitle } from '../WidgetTitle';
 
 const schema = yup
     .object({
@@ -163,10 +163,14 @@ const Form = () => {
         );
     }
 
+    if (!widget) {
+        return null;
+    }
+
     return (
         <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
             <Grid item xs={12}>
-                <MetHeader3 bold>Map</MetHeader3>
+                <WidgetTitle widget={widget} />
                 <Divider sx={{ marginTop: '1em' }} />
             </Grid>
             <Grid item xs={12}>
