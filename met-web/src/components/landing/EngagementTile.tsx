@@ -123,7 +123,8 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                     <Then>
                         <PrimaryButton
                             fullWidth
-                            onClick={() => {
+                            onClick={(event: React.MouseEvent) => {
+                                event.stopPropagation();
                                 window.open(engagementUrl, '_blank');
                             }}
                         >
@@ -133,7 +134,8 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                     <Else>
                         <SecondaryButton
                             fullWidth
-                            onClick={() => {
+                            onClick={(event: React.MouseEvent) => {
+                                event.stopPropagation();
                                 window.open(engagementUrl, '_blank');
                             }}
                         >

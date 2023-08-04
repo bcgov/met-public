@@ -66,6 +66,16 @@ class WidgetService:
         WidgetModel.update_widgets(widget_sort_mappings)
 
     @staticmethod
+    def update_widget(engagement_id, widget_id: list, widget_data: dict, user_id=None):
+        """Sort widgets."""
+        WidgetService._verify_widget(widget_id)
+
+        widget_data['updated_by'] = user_id
+
+        updated_widget = WidgetModel.update_widget(engagement_id, widget_id, widget_data)
+        return WidgetSchema().dump(updated_widget)
+
+    @staticmethod
     def _validate_widget_ids(engagement_id, widgets):
         """Validate if widget ids belong to the engagement."""
         eng_widgets = WidgetModel.get_widgets_by_engagement_id(engagement_id)
@@ -75,6 +85,14 @@ class WidgetService:
             raise BusinessException(
                 error='Invalid widgets.',
                 status_code=HTTPStatus.BAD_REQUEST)
+
+    @staticmethod
+    def _verify_widget(widget_id):
+        """Verify if widget exists."""
+        widget = WidgetModel.get_widget_by_id(widget_id)
+        if not widget:
+            raise KeyError('Widget ' + widget_id + ' does not exist')
+        return widget
 
     @staticmethod
     def create_widget_items_bulk(widget_items: list, user_id):

@@ -45,7 +45,7 @@ export const PhasesWidget = () => {
             <MetPaper elevation={1} sx={{ padding: '2em', pt: '25px' }}>
                 <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
                     <Grid item xs={12}>
-                        <MetHeader3 bold>The Environmental Assessment Process</MetHeader3>
+                        <MetHeader3 bold>{phasesWidget.title}</MetHeader3>
                     </Grid>
 
                     <When condition={Boolean(currentPhaseId) && currentPhaseId !== EngagementPhases.Standalone}>

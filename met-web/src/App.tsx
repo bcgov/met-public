@@ -32,8 +32,8 @@ const App = () => {
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const authenticationLoading = useAppSelector((state) => state.user.authentication.loading);
     const pathSegments = window.location.pathname.split('/');
-    const basename = pathSegments[1];
     const language = 'en'; // Default language is English, change as needed
+    const basename = pathSegments[1].toLowerCase();
 
     const tenant: TenantState = useAppSelector((state) => state.tenant);
 

@@ -12,6 +12,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { optionCardStyle } from '../constants';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
 
+const Title = 'Documents';
 const DocumentOptionCard = () => {
     const { widgets, loadWidgets, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
@@ -31,6 +32,7 @@ const DocumentOptionCard = () => {
             await createWidget({
                 widget_type_id: WidgetType.Document,
                 engagement_id: savedEngagement.id,
+                title: Title,
             });
             await loadWidgets();
             dispatch(
@@ -82,7 +84,7 @@ const DocumentOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetLabel>Documents</MetLabel>
+                                <MetLabel>{Title}</MetLabel>
                             </Grid>
                             <Grid item xs={12}>
                                 <MetDescription>Add documents and folders</MetDescription>

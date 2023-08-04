@@ -50,6 +50,7 @@ const mockFolder: DocumentItem = {
 
 const documentWidget: Widget = {
     id: 1,
+    title: 'Documents',
     widget_type_id: WidgetType.Document,
     engagement_id: 1,
     items: [],
@@ -74,6 +75,7 @@ const mockCreateWidget = jest.fn(() => Promise.resolve(documentWidget));
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
     useCreateWidgetMutation: () => [mockCreateWidget],
+    useUpdateWidgetMutation: () => [jest.fn(() => Promise.resolve(documentWidget))],
     useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
@@ -135,6 +137,7 @@ describe('Document widget in engagement page tests', () => {
         expect(mockCreateWidget).toHaveBeenNthCalledWith(1, {
             widget_type_id: WidgetType.Document,
             engagement_id: engagement.id,
+            title: documentWidget.title,
         });
         expect(getWidgetsMock).toHaveBeenCalledTimes(2);
         expect(screen.getByText('Create Folder')).toBeVisible();

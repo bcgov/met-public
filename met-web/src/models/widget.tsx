@@ -10,6 +10,7 @@ export interface Widget {
     widget_type_id: number;
     engagement_id: number;
     items: WidgetItem[];
+    title: string;
 }
 
 export enum WidgetType {

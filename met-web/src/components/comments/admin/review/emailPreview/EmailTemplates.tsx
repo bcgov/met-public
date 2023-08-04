@@ -49,7 +49,7 @@ export const RejectEmailTemplate = ({
                     <Grid item xs={12}>
                         <MetBody
                             sx={{ mb: 1 }}
-                        >{`One or many of your comments can't be published because of (${otherReason}).`}</MetBody>
+                        >{`One or many of your comments can't be published because of ${otherReason}.`}</MetBody>
                     </Grid>
                 </li>
             </When>

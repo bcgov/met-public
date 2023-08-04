@@ -2,6 +2,7 @@ import React from 'react';
 import { CropModal } from './cropModal';
 import { ImageUploadContextProvider } from './imageUploadContext';
 import Uploader from './Uploader';
+import { Accept } from 'react-dropzone';
 
 interface UploaderProps {
     margin?: number;
@@ -11,15 +12,21 @@ interface UploaderProps {
     helpText?: string;
     height?: string;
     cropAspectRatio?: number;
+    accept?: Accept;
 }
 export const ImageUpload = ({
     margin = 2,
     handleAddFile,
     savedImageUrl = '',
     savedImageName = '',
-    helpText = 'Drag and drop some files here, or click to select files',
+    helpText = 'Drag and drop an image here, or click to select an image from your device. Formats accepted are: .jpg, .jpeg, .png, .webp.',
     height = '10em',
     cropAspectRatio = 1,
+    accept = {
+        'image/jpeg': [],
+        'image/png': [],
+        'image/webp': [],
+    },
 }: UploaderProps) => {
     return (
         <ImageUploadContextProvider
@@ -28,7 +35,7 @@ export const ImageUpload = ({
             savedImageName={savedImageName}
             cropAspectRatio={cropAspectRatio}
         >
-            <Uploader margin={margin} helpText={helpText} height={height} />
+            <Uploader margin={margin} helpText={helpText} height={height} accept={accept} />
             <CropModal />
         </ImageUploadContextProvider>
     );

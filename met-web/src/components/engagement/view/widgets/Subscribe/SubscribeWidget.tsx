@@ -9,8 +9,9 @@ import { createEmailVerification } from 'services/emailVerificationService';
 import { createSubscription } from 'services/subscriptionService';
 import { EmailVerificationType } from 'models/emailVerification';
 import { SubscriptionType } from 'constants/subscriptionType';
+import { Widget } from 'models/widget';
 
-function SubscribeWidget() {
+const SubscribeWidget = ({ widget }: { widget: Widget }) => {
     const dispatch = useAppDispatch();
     const { savedEngagement, engagementMetadata } = useContext(ActionContext);
     const defaultType = engagementMetadata.project_id ? SubscriptionType.PROJECT : SubscriptionType.ENGAGEMENT;
@@ -171,7 +172,7 @@ function SubscribeWidget() {
             />
             <Grid spacing={2} container xs={12}>
                 <Grid item xs={12}>
-                    <MetHeader2 bold>Sign Up for Updates</MetHeader2>
+                    <MetHeader2 bold>{widget.title}</MetHeader2>
                     <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
                 </Grid>
                 <Grid item xs={12}>
@@ -188,6 +189,6 @@ function SubscribeWidget() {
             </Grid>
         </MetPaper>
     );
-}
+};
 
 export default SubscribeWidget;
