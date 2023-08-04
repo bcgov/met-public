@@ -119,9 +119,15 @@ def serialize(errors):
 
 
 def count_comments_by_status(submissions, status):
+    """Count the comments by their status.
+
+    :param submissions: List of submissions
+    :param status: Status of the comments
+    :return: Number of comments with the provided status
+    """
     return len([
         submission 
         for submission in submissions 
         if (submission.comment_status_id == status
         and submission.reviewed_by != SYSTEM_REVIEWER)
-])
+    ])
