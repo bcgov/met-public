@@ -7,11 +7,12 @@ from datetime import datetime
 
 from marshmallow import EXCLUDE, Schema, ValidationError, fields, validate, validates_schema
 
-from met_api.constants.engagement_status import Status, SubmissionStatus
 from met_api.constants.comment_status import Status as CommentStatus
-from met_api.schemas.engagement_survey import EngagementSurveySchema
-from met_api.utils.datetime import local_datetime
+from met_api.constants.engagement_status import Status, SubmissionStatus
 from met_api.schemas.engagement_status_block import EngagementStatusBlockSchema
+from met_api.schemas.engagement_survey import EngagementSurveySchema
+from met_api.schemas.utils import count_comments_by_status
+from met_api.utils.datetime import local_datetime
 
 from .engagement_status import EngagementStatusSchema
 
@@ -61,17 +62,13 @@ class EngagementSchema(Schema):
         submissions = obj.surveys[0].submissions
         return {
             'total': len(submissions),
-            'pending': self._count_comments_by_status(submissions, CommentStatus.Pending.value),
-            'approved': self._count_comments_by_status(submissions, CommentStatus.Approved.value),
-            'rejected': self._count_comments_by_status(submissions, CommentStatus.Rejected.value),
-            'needs_further_review': self._count_comments_by_status(
+            'pending': count_comments_by_status(submissions, CommentStatus.Pending.value),
+            'approved': count_comments_by_status(submissions, CommentStatus.Approved.value),
+            'rejected': count_comments_by_status(submissions, CommentStatus.Rejected.value),
+            'needs_further_review': count_comments_by_status(
                 submissions,
                 CommentStatus.Needs_further_review.value)
         }
-
-    def _count_comments_by_status(self, submissios, status):
-        return len([submission for submission in submissios
-                    if submission.comment_status_id == status])
 
     def get_submission_status(self, obj):
         """Get the submission status of the engagement."""
