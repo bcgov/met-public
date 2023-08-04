@@ -39,7 +39,7 @@ export const SurveyBanner = () => {
     }
 
     return (
-        <Banner imageUrl={savedEngagement.banner_url}>
+        <Banner imageUrl={savedEngagement.banner_url} height="480px">
             <EngagementInfoSection savedEngagement={savedEngagement} />
         </Banner>
     );

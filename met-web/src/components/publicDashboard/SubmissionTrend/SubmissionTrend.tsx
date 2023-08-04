@@ -173,7 +173,11 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                                 {...params}
                                                 InputProps={{
                                                     ...params.InputProps,
-                                                    endAdornment: <CalendarTodayIcon sx={{ fontSize: 20 }} />,
+                                                    endAdornment: isExtraSmall ? (
+                                                        <></>
+                                                    ) : (
+                                                        <CalendarTodayIcon sx={{ fontSize: 20 }} />
+                                                    ),
                                                 }}
                                             />
                                         )}
@@ -199,7 +203,11 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                                 {...params}
                                                 InputProps={{
                                                     ...params.InputProps,
-                                                    endAdornment: <CalendarTodayIcon sx={{ fontSize: 20 }} />,
+                                                    endAdornment: isExtraSmall ? (
+                                                        <></>
+                                                    ) : (
+                                                        <CalendarTodayIcon sx={{ fontSize: 20 }} />
+                                                    ),
                                                 }}
                                             />
                                         )}
