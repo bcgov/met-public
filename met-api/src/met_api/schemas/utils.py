@@ -128,6 +128,6 @@ def count_comments_by_status(submissions, status):
     return len([
         submission
         for submission in submissions
-        if (submission.comment_status_id == status
-            and submission.reviewed_by != SYSTEM_REVIEWER)
+        if (submission.comment_status_id == status and
+            submission.reviewed_by != SYSTEM_REVIEWER)
     ])
