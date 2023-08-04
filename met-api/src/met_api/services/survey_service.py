@@ -29,12 +29,24 @@ class SurveyService:
 
     @classmethod
     def get(cls, survey_id):
-        """Get survey by the id."""
-        survey_model: SurveyModel = SurveyModel.find_by_id(survey_id)
-        engagement_model: EngagementModel = EngagementModel.find_by_id(survey_model.engagement_id)
-        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name,
-                                               MembershipType.REVIEWER.name,
-                                               Role.VIEW_SURVEYS.value), engagement_id=engagement_model.id)
+        """Get survey by the ID."""
+        survey_model = SurveyModel.find_by_id(survey_id)
+        eng_id = None
+        one_of_roles = (Role.VIEW_SURVEYS.value,)
+
+        if survey_model.is_hidden:
+            one_of_roles = (Role.VIEW_ALL_SURVEYS.value,)
+        elif survey_model.engagement_id:
+            engagement_model = EngagementModel.find_by_id(survey_model.engagement_id)
+            if engagement_model:
+                eng_id = engagement_model.id
+                one_of_roles = (
+                    MembershipType.TEAM_MEMBER.name,
+                    MembershipType.REVIEWER.name,
+                    Role.VIEW_SURVEYS.value
+                )
+
+        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=eng_id)
         survey = SurveySchema().dump(survey_model)
         return survey
 
