@@ -78,7 +78,7 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
                     xs={12}
                     paddingBottom={0}
                 >
-                    <MetHeader2 bold>Video</MetHeader2>
+                    <MetHeader2 bold>{widget.title}</MetHeader2>
                     <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
                 </Grid>
                 <Grid item xs={12}>
