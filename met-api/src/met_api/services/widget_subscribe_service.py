@@ -115,13 +115,16 @@ class WidgetSubscribeService:
             raise BusinessException(
                 error='Invalid widgets and subscribe',
                 status_code=HTTPStatus.BAD_REQUEST)
+
         subscribe_item: SubscribeItemsModel = SubscribeItemsModel.find_by_id(
             item_id)
-        if subscribe_item.widget_subscribes_id != subscribe_id:
+        if subscribe_item.widget_subscribe_id != subscribe_id:
             raise BusinessException(
                 error='Invalid widgets and subscribe',
                 status_code=HTTPStatus.BAD_REQUEST)
-        WidgetSubscribeService._update_from_dict(subscribe_item, request_json)
+
+        WidgetSubscribeService._update_from_dict(
+            subscribe_item, request_json)
         subscribe_item.commit()
         return SubscribeItemsModel.find_by_id(item_id)
 

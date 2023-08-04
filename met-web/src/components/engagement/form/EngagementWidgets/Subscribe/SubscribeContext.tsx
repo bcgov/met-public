@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useAppDispatch } from 'hooks';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { Widget, WidgetType } from 'models/widget';
-import { Subscribe, Subscribe_TYPE, SubscribeTypeLabel, SubscribeForm } from 'models/subscription';
+import { Subscribe_TYPE, SubscribeTypeLabel, SubscribeForm } from 'models/subscription';
 import { getSubscriptionsForms, sortWidgetSubscribeForms } from 'services/subscriptionService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
@@ -19,7 +19,7 @@ export interface SubscribeContextProps {
     setSubscribe: React.Dispatch<React.SetStateAction<SubscribeForm[]>>;
     setSubscribeToEdit: React.Dispatch<React.SetStateAction<SubscribeForm | null>>;
     handleSubscribeDrawerOpen: (_Subscribe: SubscribeTypeLabel, _open: boolean) => void;
-    updateWidgetSubscribeSorting: (widget_Subscribe: Subscribe[]) => void;
+    updateWidgetSubscribeSorting: (widget_Subscribe: SubscribeForm[]) => void;
     richEmailListDescription: string;
     setRichEmailListDescription: React.Dispatch<React.SetStateAction<string>>;
     richFormSignUpDescription: string;
@@ -51,7 +51,7 @@ export const SubscribeContext = createContext<SubscribeContextProps>({
     handleSubscribeDrawerOpen: (_Subscribe: SubscribeTypeLabel, _open: boolean) => {
         /* empty default method  */
     },
-    updateWidgetSubscribeSorting: (widget_Subscribe: Subscribe[]) => {
+    updateWidgetSubscribeSorting: (widget_Subscribe: SubscribeForm[]) => {
         /* empty default method  */
     },
     richEmailListDescription: '',
@@ -104,7 +104,7 @@ export const SubscribeProvider = ({ children }: { children: JSX.Element | JSX.El
         loadSubscribe();
     }, [widget]);
 
-    const updateWidgetSubscribeSorting = async (resortedWidgetSubscribe: Subscribe[]) => {
+    const updateWidgetSubscribeSorting = async (resortedWidgetSubscribe: SubscribeForm[]) => {
         if (!widget) {
             return;
         }

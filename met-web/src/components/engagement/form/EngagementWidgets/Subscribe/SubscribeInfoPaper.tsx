@@ -19,6 +19,10 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
     const subscribeItem = subscribeForm.subscribe_items[0];
     const { setSubscribeToEdit, handleSubscribeDrawerOpen } = useContext(SubscribeContext);
 
+    function capitalizeFirstLetter(str: string) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
     return (
         <MetWidgetPaper elevation={1} {...rest}>
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
@@ -69,7 +73,7 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
                     </When>
 
                     <Grid item xs={3}>
-                        <MetParagraph>{subscribeItem.call_to_action_type}</MetParagraph>
+                        <MetParagraph>{capitalizeFirstLetter(subscribeItem.call_to_action_type)}</MetParagraph>
                     </Grid>
                     <Grid item xs={9}>
                         <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">

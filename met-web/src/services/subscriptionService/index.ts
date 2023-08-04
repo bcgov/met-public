@@ -78,15 +78,9 @@ export const postSubscribeForm = async (widget_id: number, data: PostSubscribePr
 };
 
 export interface PatchSubscribeProps {
-    widget_id: number;
-    title?: string;
-    type: SubscribeTypeLabel;
-    items: {
-        description?: string;
-        call_to_action_type?: string;
-        call_to_action_text?: string;
-        form_type: SubscribeTypeLabel;
-    }[];
+    description?: string;
+    call_to_action_type?: string;
+    call_to_action_text?: string;
 }
 
 export const patchSubscribeForm = async (
@@ -133,7 +127,7 @@ export const deleteSubscribeForm = async (widget_id: number, subscribe_id: numbe
     }
 };
 
-export const sortWidgetSubscribeForms = async (widget_id: number, data: Subscribe[]): Promise<SubscribeForm> => {
+export const sortWidgetSubscribeForms = async (widget_id: number, data: SubscribeForm[]): Promise<SubscribeForm> => {
     try {
         const url = replaceUrl(Endpoints.Subscription.SORT_FORMS, 'widget_id', String(widget_id));
         const response = await http.PatchRequest<SubscribeForm>(url, data);

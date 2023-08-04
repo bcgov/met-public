@@ -40,8 +40,8 @@ export interface SubscribeFormItem {
     id: number;
     title?: string;
     description: string;
-    call_to_action_type?: string;
-    call_to_action_text?: string;
+    call_to_action_type: 'link' | 'button';
+    call_to_action_text: string;
     form_type: SubscribeTypeLabel;
     created_date: string;
     updated_date: string;
