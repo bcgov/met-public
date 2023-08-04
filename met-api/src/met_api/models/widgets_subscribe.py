@@ -40,7 +40,7 @@ class WidgetSubscribe(BaseModel):  # pylint: disable=too-few-public-methods
         return db.session.query(cls).filter_by(type=type_, widget_id=widget_id).all()
 
     @classmethod
-    def update_widget_events_bulk(cls, update_mappings: list) -> list[WidgetSubscribe]:
+    def update_widget_subscribes_bulk(cls, update_mappings: list) -> list[WidgetSubscribe]:
         """Save widget subscribe sorting."""
         db.session.bulk_update_mappings(WidgetSubscribe, update_mappings)
         db.session.commit()
