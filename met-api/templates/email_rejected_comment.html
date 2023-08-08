@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="email_template.css">
-
 <h1>Thank you for taking the time to provide your feedback on {{ engagement_name }}.</h1>
 <br />
 <p>We have reviewed your feedback and can't accept it for the following reason(s):</p>
@@ -19,13 +17,15 @@
   {% endif %}
 </ul>
 <br />
+<p>{{review_notes}}</p>
+<br/>
 <p>You can edit and re-submit your feedback.</p>
 <p>
   The comment period is open until {{ end_date }}. You must re-submit
   your feedback before the comment period closes.
 </p>
 <br />
-<button class="met-button" onclick="location.href='{{ submission_url }}';">Edit Feedback</button>
+<p><a href='{{ submission_url }}'>Edit Feedback</a></p>
 <br />
 <p>Thank you,</p>
 <br />

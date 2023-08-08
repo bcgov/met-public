@@ -1,12 +1,10 @@
-<link rel="stylesheet" href="email_template.css">
-
-<h1>Thank you for sharing your feedback about {{engagement_name}}</h1>
+<h1>Thank you for sharing your feedback about {{engagement_name}}.</h1>
 <br />
 <p>Please click the link below to provide your feedback.</p>
 <br />
 <p>Access will expire in 24 hours and is only valid once. If your access has expired, you can request access again at <a href='{{ engagement_url }}'>{{ engagement_url }}</a>.</p>
 <br />
-<button  class="met-button" onclick="location.href='{{ survey_url }}';">Provide Feedback</button>
+<p><a href='{{ survey_url }}'>Provide Feedback</a></p>
 <br />
 <p>Written public feedback will be posted as soon as it is reviewed and approved (within 7 days). A report will be available after the public comment period is over, starting on {{ end_date }}.</p> 
 <br />
