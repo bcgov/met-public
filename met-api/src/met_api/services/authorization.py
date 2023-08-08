@@ -23,7 +23,6 @@ def check_auth(**kwargs):
 
     team_permitted_roles = [role for role in [MembershipType.TEAM_MEMBER.name, MembershipType.REVIEWER.name] if
                             role in permitted_roles]
-
     if team_permitted_roles:
         # check if he is a member of particular engagement.
         is_a_member = _has_team_membership(kwargs, user_from_context, team_permitted_roles)
@@ -40,7 +39,8 @@ def _has_team_membership(kwargs, user_from_context, team_permitted_roles) -> boo
     if not eng_id or not user:
         return False
     memberships = MembershipModel.find_by_engagement_and_user_id(eng_id, user.id)
+
     # TODO when multiple memberships are supported , iterate list and check role.
-    if memberships and memberships[0].type in team_permitted_roles:
+    if memberships and str(memberships[0].type.name) in team_permitted_roles:
         return True
     return False
