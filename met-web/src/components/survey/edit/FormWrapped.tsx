@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
-import { Grid, Link as MuiLink, Skeleton } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Grid, Skeleton } from '@mui/material';
 import { Banner } from 'components/banner/Banner';
 import { EditForm } from './EditForm';
 import { ActionContext } from './ActionContext';
@@ -36,11 +35,6 @@ const FormWrapped = () => {
                 alignItems="flex-start"
                 m={{ lg: '0 8em 1em 3em', md: '2em', xs: '1em' }}
             >
-                <Grid item container direction="row" justifyContent="flex-end">
-                    <MuiLink component={Link} to={engagementPath}>
-                        {`<< Return to ${savedEngagement.name} Engagement`}
-                    </MuiLink>
-                </Grid>
                 <When condition={isTokenValid && !!submission}>
                     <Grid item xs={12}>
                         <MetPaper elevation={2}>
