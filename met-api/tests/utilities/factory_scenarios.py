@@ -24,6 +24,8 @@ from faker import Faker
 from met_api.config import get_named_config
 from met_api.constants.comment_status import Status as CommentStatus
 from met_api.constants.engagement_status import SubmissionStatus
+from met_api.constants.engagement_status import Status as EngagementStatus
+
 from met_api.constants.feedback import CommentType, FeedbackSourceType, RatingType
 from met_api.constants.widget import WidgetType
 from met_api.utils.enums import LoginSource
@@ -158,7 +160,7 @@ class TestEngagementInfo(dict, Enum):
         'banner_url': '',
         'created_by': '123',
         'updated_by': '123',
-        'status': SubmissionStatus.Open.value,
+        'status': EngagementStatus.Published.value,
         'is_internal': False,
         'description': 'My Test Engagement Description',
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\"type\":\"unstyled\",\
@@ -166,6 +168,23 @@ class TestEngagementInfo(dict, Enum):
         'content': 'Content Sample',
         'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\"type\":\"unstyled\",\"depth\":0,\
         \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"'
+    }
+
+    engagement_draft = {
+        'name': fake.name(),
+        'start_date': (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d'),
+        'end_date': (datetime.today() + timedelta(days=1)).strftime('%Y-%m-%d'),
+        'banner_url': '',
+        'created_by': '123',
+        'updated_by': '123',
+        'status': EngagementStatus.Draft.value,
+        'is_internal': False,
+        'description': 'My Test Engagement Description',
+        'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\"type\":\"unstyled\",\
+            \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
+        'content': 'Content Sample',
+        'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\"type\":\"unstyled\",\"depth\":0,\
+            \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"'
     }
 
     engagement2 = {
@@ -313,7 +332,6 @@ class TestJwtClaims(dict, Enum):
         'realm_access': {
             'roles': [
                 'staff',
-                'view_engagement',
                 'view_users',
             ]
         }
