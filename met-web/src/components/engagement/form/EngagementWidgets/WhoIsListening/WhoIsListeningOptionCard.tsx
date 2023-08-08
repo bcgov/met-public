@@ -12,6 +12,7 @@ import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
 import { optionCardStyle } from '../constants';
 
+const Title = 'Who is Listening';
 const WhoIsListeningOptionCard = () => {
     const { savedEngagement } = useContext(ActionContext);
     const { widgets, loadWidgets, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
@@ -31,6 +32,7 @@ const WhoIsListeningOptionCard = () => {
             await createWidget({
                 widget_type_id: WidgetType.WhoIsListening,
                 engagement_id: savedEngagement.id,
+                title: Title,
             });
             await loadWidgets();
             dispatch(
@@ -83,7 +85,7 @@ const WhoIsListeningOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetLabel>Who is Listening</MetLabel>
+                                <MetLabel>{Title}</MetLabel>
                             </Grid>
                             <Grid item xs={12}>
                                 <MetDescription>Add contacts to this engagement</MetDescription>

@@ -28,7 +28,7 @@ export const WidgetSwitch = ({ widget }: WidgetSwitchProps) => {
                     <MapWidget widget={widget} />
                 </Case>
                 <Case condition={widget.widget_type_id === WidgetType.Subscribe}>
-                    <SubscribeWidget />
+                    <SubscribeWidget widget={widget} />
                 </Case>
                 <Case condition={widget.widget_type_id === WidgetType.Video}>
                     <VideoWidgetView widget={widget} />

@@ -62,6 +62,7 @@ const mockCreateWidget = jest.fn(() => Promise.resolve(eventWidget));
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
     useCreateWidgetMutation: () => [mockCreateWidget],
+    useUpdateWidgetMutation: () => [jest.fn(() => Promise.resolve(eventWidget))],
     useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
@@ -118,6 +119,7 @@ describe('Event Widget tests', () => {
         expect(mockCreateWidget).toHaveBeenNthCalledWith(1, {
             widget_type_id: WidgetType.Events,
             engagement_id: draftEngagement.id,
+            title: mockEvent.title,
         });
         expect(getWidgetsMock).toHaveBeenCalledTimes(2);
         expect(screen.getByText('Add In-Person Event')).toBeVisible();

@@ -33,7 +33,7 @@ API = Namespace('widgets_subscribe',
 """
 
 
-@cors_preflight('GET, POST, OPTIONS, DELETE')
+@cors_preflight('GET, POST, OPTIONS')
 @API.route('')
 class WidgetSubscribe(Resource):
     """Resource for managing a Widget Subscribe."""
@@ -58,17 +58,6 @@ class WidgetSubscribe(Resource):
             return WidgetSubscribeSchema().dump(subscribe, many=False), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
-
-    @staticmethod
-    @cross_origin(origins=allowedorigins())
-    def delete(widget_id, subscribe_id):
-        """Delete  an subscribe ."""
-        try:
-            WidgetSubscribeService().delete_subscribe(subscribe_id, widget_id)
-            response, status = {}, HTTPStatus.OK
-        except BusinessException as err:
-            response, status = str(err), err.status_code
-        return response, status
 
 
 @cors_preflight('GET,POST,OPTIONS')
@@ -124,3 +113,20 @@ class WidgetSubscribeSort(Resource):
             return WidgetSubscribeSchema().dump(sort_widget_subscribe), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
+
+
+@cors_preflight('DELETE')
+@API.route('/<int:subscribe_id>', methods=['DELETE'])
+class WidgetEvent(Resource):
+    """Resource for managing a Widget Events."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    def delete(widget_id, subscribe_id):
+        """Delete  an subscribe ."""
+        try:
+            WidgetSubscribeService().delete_subscribe(subscribe_id, widget_id)
+            response, status = {}, HTTPStatus.OK
+        except BusinessException as err:
+            response, status = str(err), err.status_code
+        return response, status

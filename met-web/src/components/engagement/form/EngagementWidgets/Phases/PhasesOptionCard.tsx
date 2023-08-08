@@ -12,6 +12,7 @@ import { Else, If, Then } from 'react-if';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import { optionCardStyle } from '../constants';
 
+const Title = 'Environmental Assessment Process';
 const PhasesOptionCard = () => {
     const { savedEngagement } = useContext(ActionContext);
     const { widgets, loadWidgets, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
@@ -31,6 +32,7 @@ const PhasesOptionCard = () => {
             await createWidget({
                 widget_type_id: WidgetType.Phases,
                 engagement_id: savedEngagement.id,
+                title: Title,
             });
             await loadWidgets();
             dispatch(
@@ -82,7 +84,7 @@ const PhasesOptionCard = () => {
                             xs={8}
                         >
                             <Grid item xs={12}>
-                                <MetLabel>Environmental Assessment Process</MetLabel>
+                                <MetLabel>{Title}</MetLabel>
                             </Grid>
                             <Grid item xs={12}>
                                 <MetDescription>

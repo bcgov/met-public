@@ -41,6 +41,7 @@ const widgetItem: WidgetItem = {
 
 const whoIsListeningWidget: Widget = {
     id: 1,
+    title: 'Who is Listening',
     widget_type_id: WidgetType.WhoIsListening,
     engagement_id: 1,
     items: [widgetItem],
@@ -48,6 +49,7 @@ const whoIsListeningWidget: Widget = {
 
 const engagementPhasesWidget: Widget = {
     id: 2,
+    title: 'Engagement Phases',
     widget_type_id: WidgetType.Phases,
     engagement_id: 1,
     items: [],

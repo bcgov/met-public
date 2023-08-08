@@ -19,7 +19,7 @@ export const WidgetCardSwitch = ({ widget, removeWidget }: WidgetCardSwitchProps
                     <MetWidget
                         sortable={false}
                         testId={`phases-${widget.widget_type_id}`}
-                        title="EA Process"
+                        title={widget.title}
                         onDelete={() => {
                             removeWidget(widget.id);
                         }}
@@ -32,7 +32,7 @@ export const WidgetCardSwitch = ({ widget, removeWidget }: WidgetCardSwitchProps
                 <Case condition={widget.widget_type_id === WidgetType.WhoIsListening}>
                     <MetWidget
                         testId={`who-is-listening-${widget.widget_type_id}`}
-                        title="Who is Listening"
+                        title={widget.title}
                         onDelete={() => {
                             removeWidget(widget.id);
                         }}
@@ -45,7 +45,7 @@ export const WidgetCardSwitch = ({ widget, removeWidget }: WidgetCardSwitchProps
                 <Case condition={widget.widget_type_id === WidgetType.Document}>
                     <MetWidget
                         testId={`document-${widget.widget_type_id}`}
-                        title="Document"
+                        title={widget.title}
                         onDelete={() => {
                             removeWidget(widget.id);
                         }}
@@ -58,7 +58,7 @@ export const WidgetCardSwitch = ({ widget, removeWidget }: WidgetCardSwitchProps
                 <Case condition={widget.widget_type_id === WidgetType.Subscribe}>
                     <MetWidget
                         testId={`subscribe-${widget.widget_type_id}`}
-                        title="Subscribe"
+                        title={widget.title}
                         onDelete={() => {
                             removeWidget(widget.id);
                         }}
@@ -71,7 +71,7 @@ export const WidgetCardSwitch = ({ widget, removeWidget }: WidgetCardSwitchProps
                 <Case condition={widget.widget_type_id === WidgetType.Events}>
                     <MetWidget
                         testId={`event-${widget.widget_type_id}`}
-                        title="Events"
+                        title={widget.title}
                         onDelete={() => {
                             removeWidget(widget.id);
                         }}
@@ -84,7 +84,7 @@ export const WidgetCardSwitch = ({ widget, removeWidget }: WidgetCardSwitchProps
                 <Case condition={widget.widget_type_id === WidgetType.Map}>
                     <MetWidget
                         testId={`event-${widget.widget_type_id}`}
-                        title="Map"
+                        title={widget.title}
                         onDelete={() => {
                             removeWidget(widget.id);
                         }}
@@ -97,7 +97,7 @@ export const WidgetCardSwitch = ({ widget, removeWidget }: WidgetCardSwitchProps
                 <Case condition={widget.widget_type_id === WidgetType.Video}>
                     <MetWidget
                         testId={`event-${widget.widget_type_id}`}
-                        title="Video"
+                        title={widget.title}
                         onDelete={() => {
                             removeWidget(widget.id);
                         }}

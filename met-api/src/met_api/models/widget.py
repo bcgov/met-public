@@ -4,6 +4,7 @@ Manages the widget
 """
 from __future__ import annotations
 from datetime import datetime
+from typing import Optional
 
 from sqlalchemy.sql.schema import ForeignKey
 
@@ -65,6 +66,7 @@ class Widget(BaseModel):  # pylint: disable=too-few-public-methods
             updated_date=datetime.utcnow(),
             created_by=widget.get('created_by', None),
             updated_by=widget.get('updated_by', None),
+            title=widget.get('title', None),
         )
 
     @classmethod
@@ -87,3 +89,15 @@ class Widget(BaseModel):  # pylint: disable=too-few-public-methods
         """Update widgets.."""
         db.session.bulk_update_mappings(Widget, update_mappings)
         db.session.commit()
+
+    @classmethod
+    def update_widget(cls, engagement_id, widget_id, widget_data: dict) -> Optional[Widget]:
+        """Update widget."""
+        query = Widget.query.filter_by(id=widget_id, engagement_id=engagement_id)
+        widget: Widget = query.first()
+        if not widget:
+            return None
+        widget_data['updated_date'] = datetime.utcnow()
+        query.update(widget_data)
+        db.session.commit()
+        return widget

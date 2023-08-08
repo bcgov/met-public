@@ -14,11 +14,10 @@ import { Subscribe_TYPE, SubscribeForm } from 'models/subscription';
 import RichTextEditor from 'components/common/RichTextEditor';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor/utils';
-import { postSubscribeForm } from 'services/subscriptionService';
+import { patchSubscribeForm, postSubscribeForm, PatchSubscribeProps } from 'services/subscriptionService';
 
 const schema = yup
     .object({
-        description: yup.string(),
         call_to_action_type: yup.string(),
         call_to_action_text: yup
             .string()
@@ -39,22 +38,53 @@ const EmailListDrawer = () => {
         richEmailListDescription,
         setRichEmailListDescription,
         setSubscribe,
+        subscribeToEdit,
+        loadSubscribe,
     } = useContext(SubscribeContext);
     const [isCreating, setIsCreating] = useState(false);
     const [initialRichDescription, setInitialRichDescription] = useState('');
+    const subscribeItem = subscribeToEdit ? subscribeToEdit.subscribe_items[0] : null;
     const dispatch = useAppDispatch();
     const methods = useForm<EmailList>({
         resolver: yupResolver(schema),
     });
 
     useEffect(() => {
-        methods.setValue('description', '');
         methods.setValue('call_to_action_type', 'link');
         methods.setValue('call_to_action_text', 'Click here to sign up');
         setInitialRichDescription(richEmailListDescription);
     }, []);
 
+    useEffect(() => {
+        methods.setValue('call_to_action_type', subscribeItem ? subscribeItem.call_to_action_type : 'link');
+        methods.setValue(
+            'call_to_action_text',
+            subscribeItem ? subscribeItem.call_to_action_text : 'Click here to sign up',
+        );
+        setInitialRichDescription(subscribeItem ? subscribeItem.description : richEmailListDescription);
+    }, [subscribeToEdit]);
+
     const { handleSubmit } = methods;
+
+    const updateEmailListForm = async (data: EmailList) => {
+        const validatedData = await schema.validate(data);
+        const { call_to_action_type, call_to_action_text } = validatedData;
+        if (subscribeToEdit && subscribeItem && widget) {
+            const subscribeUpdatesToPatch = {
+                description: richEmailListDescription,
+                call_to_action_type: call_to_action_type,
+                call_to_action_text: call_to_action_text,
+            } as PatchSubscribeProps;
+
+            await patchSubscribeForm(widget.id, subscribeToEdit.id, subscribeItem.id, {
+                ...subscribeUpdatesToPatch,
+            });
+
+            loadSubscribe();
+
+            dispatch(openNotification({ severity: 'success', text: 'EmailListForm was successfully updated' }));
+        }
+    };
 
     const createEmailListForm = async (data: EmailList) => {
         const validatedData = await schema.validate(data);
@@ -73,12 +103,18 @@ const EmailListDrawer = () => {
                 ],
             });
 
-            setSubscribe((prevWidgetForms: SubscribeForm[]) => [...prevWidgetForms, createdWidgetForm]);
+            setSubscribe((prevWidgetForms: SubscribeForm[]) => {
+                const filteredForms = prevWidgetForms.filter((form) => form.type !== Subscribe_TYPE.EMAIL_LIST);
+                return [...filteredForms, createdWidgetForm];
+            });
         }
         dispatch(openNotification({ severity: 'success', text: 'Email list form was successfully created' }));
     };
 
     const saveForm = async (data: EmailList) => {
+        if (subscribeToEdit) {
+            return updateEmailListForm(data);
+        }
         return createEmailListForm(data);
     };
 
