@@ -135,6 +135,13 @@ class SurveyService:
 
         if not survey_to_clone:
             raise KeyError('Survey to clone was not found')
+        eng_id = None
+        if engagement_id := data.get('engagement_id', None):
+            engagement_model = EngagementModel.find_by_id(engagement_id)
+            eng_id = getattr(engagement_model, 'id', None)
+
+        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name,
+                                               Role.CLONE_SURVEY.value), engagement_id=eng_id)
 
         cloned_survey = SurveyModel.create_survey({
             'name': data.get('name'),

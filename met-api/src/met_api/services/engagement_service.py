@@ -40,10 +40,9 @@ class EngagementService:
                     and engagement_model.status_id not in (Status.Published.value, Status.Closed.value):
                 # Non authenticated users only have access to published and closed engagements
                 return None
-            if engagement_model.status_id == Status.Draft.value:
+            if engagement_model.status_id in (Status.Draft.value, Status.Scheduled.value):
                 one_of_roles = (
                     MembershipType.TEAM_MEMBER.name,
-                    MembershipType.REVIEWER.name,
                     Role.VIEW_ENGAGEMENT.value
                 )
                 authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
@@ -54,11 +53,11 @@ class EngagementService:
 
     @classmethod
     def get_engagements_paginated(
-        cls,
-        external_user_id,
-        pagination_options: PaginationOptions,
-        search_options=None,
-        include_banner_url=False,
+            cls,
+            external_user_id,
+            pagination_options: PaginationOptions,
+            search_options=None,
+            include_banner_url=False,
     ):
         """Get engagements paginated."""
         user_roles = TokenInfo.get_user_roles()
@@ -207,7 +206,7 @@ class EngagementService:
             # see if there is one existing for the status ;if not create one
             survey_status = survey_block.get('survey_status')
             survey_block = survey_block.get('block_text')
-            status_block: EngagementStatusBlockModel = EngagementStatusBlockModel.\
+            status_block: EngagementStatusBlockModel = EngagementStatusBlockModel. \
                 get_by_status(engagement_id, survey_status)
             if status_block:
                 status_block.block_text = survey_block
