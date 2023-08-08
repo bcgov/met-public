@@ -13,6 +13,9 @@ interface PostWidget {
     widget_type_id: number;
     engagement_id: number;
 }
+/**
+ * @deprecated The method was replaced by Redux RTK query to have caching behaviour
+ */
 export const postWidget = async (engagement_id: number, data: PostWidget): Promise<Widget> => {
     try {
         const url = replaceUrl(Endpoints.Widgets.CREATE, 'engagement_id', String(engagement_id));
@@ -30,11 +33,9 @@ interface PostWidgetItemRequest {
     widget_id: number;
     widget_data_id: number;
 }
-export const postWidgetItem = async (widget_id: number, data: PostWidgetItemRequest): Promise<WidgetItem> => {
-    const result = await postWidgetItems(widget_id, [data]);
-    return result[0];
-};
-
+/**
+ * @deprecated The method was replaced by Redux RTK query to have caching behaviour
+ */
 export const postWidgetItems = async (widget_id: number, data: PostWidgetItemRequest[]): Promise<WidgetItem[]> => {
     try {
         const url = replaceUrl(Endpoints.Widget_items.CREATE, 'widget_id', String(widget_id));
@@ -48,6 +49,9 @@ export const postWidgetItems = async (widget_id: number, data: PostWidgetItemReq
     }
 };
 
+/**
+ * @deprecated The method was replaced by Redux RTK query to have caching behaviour
+ */
 export const removeWidget = async (engagement_id: number, widget_id: number): Promise<Widget[]> => {
     try {
         const url = replaceAllInURL({
@@ -67,6 +71,9 @@ export const removeWidget = async (engagement_id: number, widget_id: number): Pr
     }
 };
 
+/**
+ * @deprecated The method was replaced by Redux RTK query to have caching behaviour
+ */
 export const sortWidgets = async (engagement_id: number, data: Widget[]): Promise<void> => {
     try {
         const url = replaceUrl(Endpoints.Widgets.SORT, 'engagement_id', String(engagement_id));
