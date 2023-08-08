@@ -13,11 +13,10 @@ from met_api.schemas.engagement import EngagementSchema
 from met_api.schemas.survey import SurveySchema
 from met_api.services import authorization
 from met_api.services.membership_service import MembershipService
-from met_api.services.report_setting_service import ReportSettingService
 from met_api.services.object_storage_service import ObjectStorageService
+from met_api.services.report_setting_service import ReportSettingService
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
-
 from ..exceptions.business_exception import BusinessException
 
 
@@ -29,8 +28,32 @@ class SurveyService:
 
     @classmethod
     def get(cls, survey_id):
-        """Get survey by the id."""
-        survey_model: SurveyModel = SurveyModel.find_by_id(survey_id)
+        """Get survey by the ID."""
+        survey_model = SurveyModel.find_by_id(survey_id)
+        eng_id = None
+        one_of_roles = (Role.VIEW_SURVEYS.value,)
+        skip_auth = False
+
+        if survey_model.is_hidden:
+            # Only Admins can view hidden surveys.
+            one_of_roles = (Role.VIEW_ALL_SURVEYS.value,)
+        elif survey_model.engagement_id:
+            engagement_model = EngagementModel.find_by_id(survey_model.engagement_id)
+            if engagement_model:
+                eng_id = engagement_model.id
+                if engagement_model.status_id == Status.Published.value:
+                    # Published Engagement anyone can access.
+                    skip_auth = True
+                else:
+                    one_of_roles = (
+                        MembershipType.TEAM_MEMBER.name,
+                        MembershipType.REVIEWER.name,
+                        Role.VIEW_SURVEYS.value
+                    )
+
+        if not skip_auth:
+            authorization.check_auth(one_of_roles=one_of_roles, engagement_id=eng_id)
+
         survey = SurveySchema().dump(survey_model)
         return survey
 
@@ -112,6 +135,13 @@ class SurveyService:
 
         if not survey_to_clone:
             raise KeyError('Survey to clone was not found')
+        eng_id = None
+        if engagement_id := data.get('engagement_id', None):
+            engagement_model = EngagementModel.find_by_id(engagement_id)
+            eng_id = getattr(engagement_model, 'id', None)
+
+        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name,
+                                               Role.CLONE_SURVEY.value), engagement_id=eng_id)
 
         cloned_survey = SurveyModel.create_survey({
             'name': data.get('name'),
@@ -143,7 +173,7 @@ class SurveyService:
         engagement_id = survey.get('engagement_id', None)
 
         authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name,
-                                               Role.EDIT_ALL_SURVEYS.value), engagement_id=engagement_id)
+                                               Role.EDIT_SURVEY.value), engagement_id=engagement_id)
 
         # check if user has edit all surveys access to edit template surveys as well
         user_roles = TokenInfo.get_user_roles()
@@ -189,6 +219,8 @@ class SurveyService:
     def link(cls, survey_id, engagement_id):
         """Update survey."""
         cls.validate_link_fields(survey_id, engagement_id)
+        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name,
+                                               Role.EDIT_SURVEY.value), engagement_id=engagement_id)
         return SurveyModel.link_survey(survey_id, engagement_id)
 
     @classmethod
@@ -210,6 +242,8 @@ class SurveyService:
     def unlink(cls, survey_id, engagement_id):
         """Unlink survey."""
         cls.validate_unlink_fields(survey_id, engagement_id)
+        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name,
+                                               Role.EDIT_SURVEY.value), engagement_id=engagement_id)
         return SurveyModel.unlink_survey(survey_id)
 
     @classmethod

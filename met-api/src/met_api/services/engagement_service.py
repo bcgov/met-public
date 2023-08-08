@@ -31,26 +31,33 @@ class EngagementService:
     otherdateformat = '%Y-%m-%d'
 
     @staticmethod
-    def get_engagement(engagement_id, user_id) -> EngagementSchema:
+    def get_engagement(engagement_id) -> EngagementSchema:
         """Get Engagement by the id."""
         engagement_model: EngagementModel = EngagementModel.find_by_id(engagement_id)
 
         if engagement_model:
-            if user_id is None \
+            if TokenInfo.get_id() is None \
                     and engagement_model.status_id not in (Status.Published.value, Status.Closed.value):
                 # Non authenticated users only have access to published and closed engagements
                 return None
+            if engagement_model.status_id in (Status.Draft.value, Status.Scheduled.value):
+                one_of_roles = (
+                    MembershipType.TEAM_MEMBER.name,
+                    Role.VIEW_ENGAGEMENT.value
+                )
+                authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
+
             engagement = EngagementSchema().dump(engagement_model)
             engagement['banner_url'] = ObjectStorageService.get_url(engagement_model.banner_filename)
         return engagement
 
     @classmethod
     def get_engagements_paginated(
-        cls,
-        external_user_id,
-        pagination_options: PaginationOptions,
-        search_options=None,
-        include_banner_url=False,
+            cls,
+            external_user_id,
+            pagination_options: PaginationOptions,
+            search_options=None,
+            include_banner_url=False,
     ):
         """Get engagements paginated."""
         user_roles = TokenInfo.get_user_roles()
@@ -199,7 +206,7 @@ class EngagementService:
             # see if there is one existing for the status ;if not create one
             survey_status = survey_block.get('survey_status')
             survey_block = survey_block.get('block_text')
-            status_block: EngagementStatusBlockModel = EngagementStatusBlockModel.\
+            status_block: EngagementStatusBlockModel = EngagementStatusBlockModel. \
                 get_by_status(engagement_id, survey_status)
             if status_block:
                 status_block.block_text = survey_block

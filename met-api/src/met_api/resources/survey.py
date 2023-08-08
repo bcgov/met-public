@@ -49,7 +49,6 @@ class Survey(Resource):
         try:
             user_id = TokenInfo.get_id()
             if user_id:
-                # authenticated users have access to any survey/engagement status
                 survey_record = SurveyService().get(survey_id)
             else:
                 survey_record = SurveyService().get_open(survey_id)
