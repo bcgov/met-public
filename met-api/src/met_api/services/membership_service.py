@@ -30,7 +30,7 @@ class MembershipService:
         StaffUserService.attach_groups([user_details])
         # this makes sure duplicate membership doesnt happen.
         # Can remove when user can have multiple roles with in same engagement.
-        MembershipService._validate_member(engagement_id, user_details)
+        # MembershipService._validate_member(engagement_id, user_details)
         group_name, membership_type = MembershipService._get_membership_details(user_details)
         MembershipService._add_user_group(user_details, group_name)
         membership = MembershipService._create_membership_model(engagement_id, user_details, membership_type)

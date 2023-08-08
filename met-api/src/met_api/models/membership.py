@@ -24,6 +24,7 @@ class Membership(BaseModel):
     status = db.Column(
         ForeignKey('membership_status_codes.id')
     )
+    revoked_date = db.Column(db.DateTime, nullable=True)
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), nullable=False)
     user_id = db.Column(db.Integer, ForeignKey('staff_users.id'), nullable=True)
     type = db.Column(db.Enum(MembershipType), nullable=False)

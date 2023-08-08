@@ -1,7 +1,7 @@
 import React from 'react';
 import FormTabs from './FormTabs';
 import { EngagementTabsContextProvider } from './EngagementTabsContext';
-import { AddTeamMemberModal } from './AddTeamMemberModal';
+import { AddTeamMemberModal } from './UserManagement/AddTeamMemberModal';
 
 const EngagementFormTabs = () => {
     return (
