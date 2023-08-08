@@ -31,15 +31,23 @@ class EngagementService:
     otherdateformat = '%Y-%m-%d'
 
     @staticmethod
-    def get_engagement(engagement_id, user_id) -> EngagementSchema:
+    def get_engagement(engagement_id) -> EngagementSchema:
         """Get Engagement by the id."""
         engagement_model: EngagementModel = EngagementModel.find_by_id(engagement_id)
 
         if engagement_model:
-            if user_id is None \
+            if TokenInfo.get_id() is None \
                     and engagement_model.status_id not in (Status.Published.value, Status.Closed.value):
                 # Non authenticated users only have access to published and closed engagements
                 return None
+            if engagement_model.status_id == Status.Draft.value:
+                one_of_roles = (
+                    MembershipType.TEAM_MEMBER.name,
+                    MembershipType.REVIEWER.name,
+                    Role.VIEW_ENGAGEMENT.value
+                )
+                authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
+
             engagement = EngagementSchema().dump(engagement_model)
             engagement['banner_url'] = ObjectStorageService.get_url(engagement_model.banner_filename)
         return engagement

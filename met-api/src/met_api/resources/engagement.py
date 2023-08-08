@@ -46,8 +46,7 @@ class Engagement(Resource):
     def get(engagement_id):
         """Fetch a single engagement matching the provided id."""
         try:
-            user_id = TokenInfo.get_id()
-            engagement_record = EngagementService().get_engagement(engagement_id, user_id)
+            engagement_record = EngagementService().get_engagement(engagement_id)
 
             if engagement_record:
                 return engagement_record, HTTPStatus.OK
