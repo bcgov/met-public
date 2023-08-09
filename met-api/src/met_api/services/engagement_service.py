@@ -43,7 +43,8 @@ class EngagementService:
             if engagement_model.status_id in (Status.Draft.value, Status.Scheduled.value):
                 one_of_roles = (
                     MembershipType.TEAM_MEMBER.name,
-                    Role.VIEW_ENGAGEMENT.value
+                    MembershipType.REVIEWER.name,
+                    Role.VIEW_ALL_ENGAGEMENTS.value
                 )
                 authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
 
