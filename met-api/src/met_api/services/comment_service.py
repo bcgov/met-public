@@ -3,6 +3,7 @@ import itertools
 from datetime import datetime
 
 from met_api.constants.comment_status import Status
+from met_api.constants.membership_type import MembershipType
 from met_api.models import Survey as SurveyModel
 from met_api.models.comment import Comment
 from met_api.models.membership import Membership as MembershipModel
@@ -66,7 +67,11 @@ class CommentService:
             return False
 
         memberships = MembershipModel.find_by_engagement_and_user_id(engagement.engagement_id, user.id)
-        return bool(memberships)
+
+        # only Team member can view unapproved comments.Reviewer cant see unapproved comments.
+        has_team_member = any(membership.type == MembershipType.TEAM_MEMBER for membership in memberships)
+
+        return has_team_member
 
     @classmethod
     def get_comments_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text=''):
