@@ -12,13 +12,14 @@ from met_api.constants.staff_note_type import StaffNoteType
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models import Engagement as EngagementModel
 from met_api.models import Survey as SurveyModel
+from met_api.models import Tenant as TenantModel
 from met_api.models.comment import Comment
 from met_api.models.comment_status import CommentStatus
 from met_api.models.db import session_scope
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.participant import Participant as ParticipantModel
 from met_api.models.staff_note import StaffNote
-from met_api.models.submission import Submission
+from met_api.models.submission import Submission as SubmissionModel
 from met_api.schemas.submission import PublicSubmissionSchema, SubmissionSchema
 from met_api.services import authorization
 from met_api.services.comment_service import CommentService
@@ -28,7 +29,6 @@ from met_api.services.survey_service import SurveyService
 from met_api.utils import notification
 from met_api.utils.roles import Role
 from met_api.utils.template import Template
-from met_api.models import Tenant as TenantModel
 
 
 class SubmissionService:
@@ -39,15 +39,34 @@ class SubmissionService:
     @classmethod
     def get(cls, submission_id):
         """Get submission by the id."""
-        db_data = Submission.get(submission_id)
-        return SubmissionSchema(exclude=['submission_json']).dump(db_data)
+        submission: SubmissionModel = SubmissionModel.find_by_id(submission_id)
+
+        # if submission is approved , anyone can see .No need to do auth
+        if submission.comment_status_id != Status.Approved.value:
+            cls._check_comment_auth(submission)
+
+        return SubmissionSchema(exclude=['submission_json']).dump(submission)
+
+    @classmethod
+    def _check_comment_auth(cls, submission):
+        """Verify comment auth."""
+        survey: SurveyModel = SurveyModel.find_by_id(submission.survey_id)
+        engagement: EngagementModel = EngagementModel.find_by_id(
+            survey.engagement_id)
+        # TM can see all comments if assigned
+        # who ever has REVIEW_COMMENTS
+        one_of_roles = (
+            MembershipType.TEAM_MEMBER.name,
+            Role.REVIEW_COMMENTS.value
+        )
+        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement.id)
 
     @classmethod
     def get_by_token(cls, token):
         """Get submission by the verification token."""
         email_verification = EmailVerificationService().get_active(token)
         submission_id = email_verification.get('submission_id')
-        submission = Submission.get(submission_id)
+        submission = SubmissionModel.find_by_id(submission_id)
         return PublicSubmissionSchema().dump(submission)
 
     @classmethod
@@ -66,7 +85,7 @@ class SubmissionService:
             submission['created_by'] = participant_id
             submission['engagement_id'] = survey.get('engagement_id')
 
-            submission_result = Submission.create(submission, session)
+            submission_result = SubmissionModel.create(submission, session)
             submission['id'] = submission_result.id
             comments = CommentService.extract_comments_from_survey(
                 submission, survey)
@@ -77,14 +96,15 @@ class SubmissionService:
     def update(cls, data: SubmissionSchema):
         """Update submission."""
         cls._validate_fields(data)
-        return Submission.update(data)
+        return SubmissionModel.update(data)
 
     @classmethod
     def update_comments(cls, token, data: PublicSubmissionSchema):
         """Update submission comments."""
         email_verification = EmailVerificationService().get_active(token)
         submission_id = email_verification.get('submission_id')
-        submission = Submission.get(submission_id)
+        submission = SubmissionModel.find_by_id(submission_id)
+
         submission.comment_status_id = Status.Pending
 
         with session_scope() as session:
@@ -92,7 +112,7 @@ class SubmissionService:
                 token, submission.survey_id, submission.id, session)
             comments_result = [Comment.update(
                 submission.id, comment, session) for comment in data.get('comments', [])]
-            Submission.update(SubmissionSchema().dump(submission), session)
+            SubmissionModel.update(SubmissionSchema().dump(submission), session)
             return comments_result
 
     @staticmethod
@@ -113,8 +133,9 @@ class SubmissionService:
     def review_comment(cls, submission_id, staff_review_details: dict, external_user_id) -> SubmissionSchema:
         """Review comment."""
         user = StaffUserService.get_user_by_external_id(external_user_id)
-
-        cls.validate_review(staff_review_details, user, submission_id)
+        submission = SubmissionModel.find_by_id(submission_id)
+        cls._check_comment_auth(submission)
+        cls.validate_review(staff_review_details, user, submission)
         reviewed_by = ' '.join(
             [user.get('first_name', ''), user.get('last_name', '')])
 
@@ -124,7 +145,7 @@ class SubmissionService:
         with session_scope() as session:
             should_send_email = SubmissionService._should_send_email(
                 submission_id, staff_review_details)
-            submission = Submission.update_comment_status(
+            submission = SubmissionModel.update_comment_status(
                 submission_id, staff_review_details, session)
             if staff_notes := staff_review_details.get('staff_note', []):
                 cls.add_or_update_staff_note(
@@ -150,7 +171,7 @@ class SubmissionService:
             submission, review_note, email_verification.get('verification_token'))
 
     @classmethod
-    def validate_review(cls, values: dict, user, submission_id):
+    def validate_review(cls, values: dict, user, submission):
         """Validate a review comment request."""
         status_id = values.get('status_id', None)
         has_personal_info = values.get('has_personal_info', None)
@@ -172,7 +193,6 @@ class SubmissionService:
                 not rejected_reason_other:
             raise ValueError('A rejection reason is required.')
 
-        submission = Submission.get(submission_id)
         if not submission:
             raise ValueError('Invalid submission.')
         authorization.check_auth(
@@ -238,7 +258,7 @@ class SubmissionService:
     @staticmethod
     def is_rejection_reason_changed(submission_id, values: dict):
         """Check if rejection reason has changed."""
-        submission = Submission.get(submission_id)
+        submission = SubmissionModel.find_by_id(submission_id)
         if submission.has_personal_info == values.get('has_personal_info') and \
                 submission.has_profanity == values.get('has_profanity') and \
                 submission.has_threat == values.get('has_threat') and \
@@ -290,7 +310,7 @@ class SubmissionService:
         }
 
     @staticmethod
-    def _send_rejected_email(submission: Submission, review_note, token) -> None:
+    def _send_rejected_email(submission: SubmissionModel, review_note, token) -> None:
         """Send an verification email.Throws error if fails."""
         participant_id = submission.participant_id
         participant = ParticipantModel.find_by_id(participant_id)
@@ -314,7 +334,7 @@ class SubmissionService:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
 
     @staticmethod
-    def _render_email_template(submission: Submission, review_note, token):
+    def _render_email_template(submission: SubmissionModel, review_note, token):
         template = Template.get_template('email_rejected_comment.html')
         engagement: EngagementModel = EngagementModel.find_by_id(
             submission.engagement_id)
