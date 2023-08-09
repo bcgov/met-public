@@ -52,3 +52,4 @@ class Role(Enum):
     VIEW_APPROVED_COMMENTS = 'view_approved_comments'
     VIEW_UNAPPROVED_COMMENTS = 'view_unapproved_comments'
     VIEW_FEEDBACKS = 'view_feedbacks'
+    VIEW_ALL_ENGAGEMENTS = 'view_all_engagements'  # Allows user access to all engagements including draft
