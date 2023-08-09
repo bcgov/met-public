@@ -21,7 +21,6 @@ export const ActionsDropDown = ({ membership }: { membership: EngagementTeamMemb
     const handleRevoke = async () => {
         try {
             setLoading(true);
-            await new Promise((resolve) => setTimeout(resolve, 5000));
             const revokedMembership = await revokeMembership(membership.engagement_id, membership.id);
             setTeamMembers((prev) =>
                 prev.map((prevMembership) =>
@@ -38,7 +37,6 @@ export const ActionsDropDown = ({ membership }: { membership: EngagementTeamMemb
     const handleReinstate = async () => {
         try {
             setLoading(true);
-            await new Promise((resolve) => setTimeout(resolve, 5000));
             const reinstatedMembership = await reinstateMembership(membership.engagement_id, membership.id);
             setTeamMembers((prev) =>
                 prev.map((prevMembership) =>
