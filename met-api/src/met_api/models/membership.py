@@ -56,7 +56,7 @@ class Membership(BaseModel):
 
     @classmethod
     def find_by_engagement_and_user_id(cls, eng_id, userid, status=MembershipStatus.ACTIVE.value) \
-            -> List[Membership]:
+            -> Membership:
         """Get a survey."""
         memberships = db.session.query(Membership) \
             .join(StaffUser, StaffUser.id == Membership.user_id) \
@@ -65,5 +65,5 @@ class Membership(BaseModel):
                          Membership.status == status
                          )
                     ) \
-            .all()
+            .first()
         return memberships

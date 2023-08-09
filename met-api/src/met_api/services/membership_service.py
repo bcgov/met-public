@@ -1,5 +1,6 @@
 """Service for membership."""
 from http import HTTPStatus
+from datetime import datetime
 
 from met_api.constants.membership_type import MembershipType
 from met_api.models import StaffUser as StaffUserModel
@@ -124,3 +125,54 @@ class MembershipService:
     def get_engagements_by_user(user_id):
         """Get engagements by user id."""
         return EngagementModel.get_assigned_engagements(user_id)
+
+    
+    @staticmethod
+    def revoke_membership(engagement_id, user_id):
+        """Revoke membership."""
+        user: StaffUserModel = StaffUserModel.get_user_by_external_id(user_id)
+        if not user:
+            raise BusinessException(
+                error='Invalid User.',
+                status_code=HTTPStatus.BAD_REQUEST)
+
+        membership = MembershipModel.find_by_engagement_and_user_id(engagement_id, user_id)
+
+        if not membership:
+            raise BusinessException(
+                error='Invalid Membership.',
+                status_code=HTTPStatus.BAD_REQUEST)
+        if membership.status == MembershipStatus.REVOKED.value:
+            raise BusinessException(
+                error='Membership already revoked.',
+                status_code=HTTPStatus.BAD_REQUEST)
+
+        membership.status = MembershipStatus.REVOKED.value
+        membership.revoked_date = datetime.utcnow()
+        membership.save()
+        return membership
+
+    @staticmethod
+    def reinstate_membership(engagement_id, user_id):
+        """Reinstate membership."""
+        user: StaffUserModel = StaffUserModel.get_user_by_external_id(user_id)
+        if not user:
+            raise BusinessException(
+                error='Invalid User.',
+                status_code=HTTPStatus.BAD_REQUEST)
+
+        membership = MembershipModel.find_by_engagement_and_user_id(engagement_id, user_id, MembershipStatus.REVOKED.value)
+
+        if not membership:
+            raise BusinessException(
+                error='Invalid Membership.',
+                status_code=HTTPStatus.BAD_REQUEST)
+
+        if membership.status == MembershipStatus.ACTIVE.value:
+            raise BusinessException(
+                error='Membership already active.',
+                status_code=HTTPStatus.BAD_REQUEST)
+
+        membership.status = MembershipStatus.ACTIVE.value
+        membership.save()
+        return membership
