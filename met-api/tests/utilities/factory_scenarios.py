@@ -297,6 +297,7 @@ class TestJwtClaims(dict, Enum):
                 'edit_members',
                 'review_comments',
                 'review_all_comments',
+                'view_all_engagements',
             ]
         }
     }

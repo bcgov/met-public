@@ -128,10 +128,10 @@ def test_get_engagements_reviewer(client, jwt, session, engagement_info):  # pyl
 
     factory_membership_model(user_id=user.id, engagement_id=eng_id, member_type='REVIEWER')
 
-    # Reveiwer has no access to draft engagement
+    # Reveiwer has access to draft engagement if he is assigned
     rv = client.get(f'/api/engagements/{eng_id}',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == HTTPStatus.FORBIDDEN.value
+    assert rv.status_code == HTTPStatus.OK.value
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
