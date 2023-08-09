@@ -1,6 +1,6 @@
 import http from 'apiManager/httpRequestHandler';
 import Endpoints from 'apiManager/endpoints';
-import { replaceUrl } from 'helper';
+import { replaceAllInURL, replaceUrl } from 'helper';
 import { EngagementTeamMember } from 'models/engagementTeamMember';
 
 interface GetTeamMembersParams {
@@ -37,4 +37,31 @@ export const getMembershipsByUser = async ({
     const url = replaceUrl(Endpoints.EngagementTeamMembers.GET_LIST_BY_USER, 'user_id', String(user_id));
     const responseData = await http.GetRequest<EngagementTeamMember[]>(url);
     return responseData.data ?? [];
+};
+
+export const revokeMembership = async (engagement_id: number, membership_id: number): Promise<EngagementTeamMember> => {
+    const url = replaceAllInURL({
+        URL: Endpoints.EngagementTeamMembers.REVOKE,
+        params: {
+            engagement_id: String(engagement_id),
+            membership_id: String(membership_id),
+        },
+    });
+    const responseData = await http.PutRequest<EngagementTeamMember>(url);
+    return responseData.data;
+};
+
+export const reinstateMembership = async (
+    engagement_id: number,
+    membership_id: number,
+): Promise<EngagementTeamMember> => {
+    const url = replaceAllInURL({
+        URL: Endpoints.EngagementTeamMembers.REINSTATE,
+        params: {
+            engagement_id: String(engagement_id),
+            membership_id: String(membership_id),
+        },
+    });
+    const responseData = await http.PutRequest<EngagementTeamMember>(url);
+    return responseData.data;
 };

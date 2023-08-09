@@ -54,6 +54,7 @@ const TeamMemberListing = () => {
             disablePadding: true,
             label: 'Actions',
             allowSort: false,
+            customStyle: { width: '170px' },
             renderCell: (row: EngagementTeamMember) => {
                 return <ActionsDropDown membership={row} />;
             },

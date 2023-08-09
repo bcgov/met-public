@@ -76,3 +76,37 @@ class EngagementMembershipUser(Resource):
             return jsonify(MembershipSchema().dump(members, many=True)), HTTPStatus.OK
         except BusinessException as err:
             return {'message': err.error}, err.status_code
+
+
+@cors_preflight('PUT,OPTIONS')
+@API.route('/<membership_id>/revoke')
+class RevokeMembership(Resource):
+    """Resource for revoking engagement membership for a user."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.has_one_of_roles([Role.EDIT_MEMBERS.value])
+    def put(engagement_id, membership_id):
+        """Revoke engagement membership for a user."""
+        try:
+            membership = MembershipService.revoke_membership(engagement_id, membership_id)
+            return MembershipSchema().dump(membership), HTTPStatus.OK
+        except BusinessException as err:
+            return {'message': err.error}, err.status_code
+
+
+@cors_preflight('PUT,OPTIONS')
+@API.route('/<membership_id>/reinstate')
+class ReinstateMembership(Resource):
+    """Resource for reinstating engagement membership for a user."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.has_one_of_roles([Role.EDIT_MEMBERS.value])
+    def put(engagement_id, membership_id):
+        """Reinstate engagement membership for a user."""
+        try:
+            membership = MembershipService.reinstate_membership(engagement_id, membership_id)
+            return MembershipSchema().dump(membership), HTTPStatus.OK
+        except BusinessException as err:
+            return {'message': err.error}, err.status_code
