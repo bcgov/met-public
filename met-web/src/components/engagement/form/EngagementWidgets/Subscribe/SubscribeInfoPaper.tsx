@@ -10,10 +10,12 @@ import { SubscribeContext } from './SubscribeContext';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { styled } from '@mui/system';
+import './RichEditorStyles.css';
 
 const EditorGrid = styled(Grid)`
     padding-top: 0px !important;
 `;
+
 export interface SubscribeInfoPaperProps {
     subscribeForm: SubscribeForm;
     removeSubscribeForm: (_subscribeId: number) => void;
@@ -51,26 +53,27 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
                         <Grid item xs={3}>
                             <MetParagraph>Description:</MetParagraph>
                         </Grid>
-                        <EditorGrid item xs={9} sx={{ position: 'relative', height: 'auto' }}>
-                            <Editor
-                                editorState={getEditorStateFromRaw(subscribeItem.description)}
-                                readOnly={true}
-                                toolbarHidden
-                                wrapperStyle={{
-                                    display: 'flex',
-                                    paddingTop: 3,
-                                    lineHeight: '0', // Adjust line-height to match MetParagraph, or as desired
-                                }}
-                                editorStyle={{
-                                    display: 'inherit',
-                                    padding: '0px',
-                                }}
-                            />
+                        <EditorGrid
+                            item
+                            xs={9}
+                            sx={{
+                                position: 'relative',
+                                height: 'auto',
+                                marginTop: -1,
+                            }}
+                        >
+                            <div className="subscribe-editor-wrapper">
+                                <Editor
+                                    editorState={getEditorStateFromRaw(subscribeItem.description)}
+                                    readOnly={true}
+                                    toolbarHidden
+                                />
+                            </div>
                         </EditorGrid>
                     </When>
 
                     <Grid item xs={3}>
-                        <MetParagraph>{capitalizeFirstLetter(subscribeItem.call_to_action_type)}</MetParagraph>
+                        <MetParagraph>{capitalizeFirstLetter(subscribeItem.call_to_action_type)}:</MetParagraph>
                     </Grid>
                     <Grid item xs={9}>
                         <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
