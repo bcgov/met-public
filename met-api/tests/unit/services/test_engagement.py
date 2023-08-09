@@ -21,20 +21,21 @@ from faker import Faker
 
 from met_api.services import authorization
 from met_api.services.engagement_service import EngagementService
-from tests.utilities.factory_scenarios import TestEngagementInfo, TestUserInfo
-from tests.utilities.factory_utils import factory_engagement_model
+from tests.utilities.factory_scenarios import TestEngagementInfo, TestJwtClaims
+from tests.utilities.factory_utils import factory_engagement_model, factory_staff_user_model, patch_token_info
 
 fake = Faker()
 date_format = '%Y-%m-%d'
 
 
-def test_create_engagement(session):  # pylint:disable=unused-argument
+def test_create_engagement(session, monkeypatch):  # pylint:disable=unused-argument
     """Assert that an Org can be created."""
-    user_id = TestUserInfo.user['id']
     engagement_data = TestEngagementInfo.engagement1
     saved_engagament = EngagementService().create_engagement(engagement_data)
     # fetch the engagement with id and assert
-    fetched_engagement = EngagementService().get_engagement(saved_engagament.id, user_id)
+    factory_staff_user_model()
+    patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
+    fetched_engagement = EngagementService().get_engagement(saved_engagament.id)
     assert fetched_engagement.get('id') == saved_engagament.id
     assert fetched_engagement.get('name') == engagement_data.get('name')
     assert fetched_engagement.get('description') == engagement_data.get('description')
@@ -42,13 +43,14 @@ def test_create_engagement(session):  # pylint:disable=unused-argument
     assert fetched_engagement.get('end_date')
 
 
-def test_create_engagement_with_survey_block(session):  # pylint:disable=unused-argument
+def test_create_engagement_with_survey_block(session, monkeypatch):  # pylint:disable=unused-argument
     """Assert that an Org can be created."""
-    user_id = TestUserInfo.user['id']
     engagement_data = TestEngagementInfo.engagement2
     saved_engagament = EngagementService().create_engagement(engagement_data)
+    factory_staff_user_model()
+    patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
     # fetch the engagement with id and assert
-    fetched_engagement = EngagementService().get_engagement(saved_engagament.id, user_id)
+    fetched_engagement = EngagementService().get_engagement(saved_engagament.id)
     assert fetched_engagement.get('id') == saved_engagament.id
     assert fetched_engagement.get('name') == engagement_data.get('name')
     assert fetched_engagement.get('description') == engagement_data.get('description')

@@ -30,6 +30,7 @@ class Role(Enum):
     CREATE_ENGAGEMENT = 'create_engagement'
     VIEW_SURVEYS = 'view_surveys'
     CREATE_SURVEY = 'create_survey'
+    EDIT_SURVEY = 'edit_survey'
     CLONE_SURVEY = 'clone_survey'
     PUBLISH_ENGAGEMENT = 'publish_engagement'
     VIEW_ENGAGEMENT = 'view_engagement'
@@ -41,7 +42,7 @@ class Role(Enum):
     ACCESS_DASHBOARD = 'access_dashboard'
     VIEW_MEMBERS = 'view_members'
     EDIT_MEMBERS = 'edit_members'
-    VIEW_ALL_SURVEYS = 'view_all_surveys'
+    VIEW_ALL_SURVEYS = 'view_all_surveys'  # Super user can view all kind of surveys including hidden
     EDIT_ALL_SURVEYS = 'edit_all_surveys'
     EDIT_DRAFT_ENGAGEMENT = 'edit_draft_engagement'
     EDIT_SCHEDULED_ENGAGEMENT = 'edit_scheduled_engagement'

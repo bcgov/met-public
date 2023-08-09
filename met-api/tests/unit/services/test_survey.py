@@ -17,15 +17,18 @@ Test suite to ensure that the Survey service routines are working as expected.
 """
 
 from met_api.services.survey_service import SurveyService
-from tests.utilities.factory_scenarios import TestSurveyInfo
+from tests.utilities.factory_scenarios import TestJwtClaims, TestSurveyInfo
+from tests.utilities.factory_utils import factory_staff_user_model, patch_token_info
 
 
-def test_create_survey(session):  # pylint:disable=unused-argument
+def test_create_survey(session, monkeypatch,):  # pylint:disable=unused-argument
     """Assert that a survey can be created."""
     survey_data = {
         'name': TestSurveyInfo.survey1.get('name'),
         'display': TestSurveyInfo.survey1.get('form_json').get('display'),
     }
+    factory_staff_user_model()
+    patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
     saved_survey = SurveyService().create(survey_data)
     # fetch the survey with id and assert
     fetched_survey = SurveyService().get(saved_survey.id)

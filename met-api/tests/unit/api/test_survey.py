@@ -16,18 +16,24 @@
 
 Test-Suite to ensure that the /Engagement endpoint is working as expected.
 """
+import copy
 import json
 from http import HTTPStatus
 
 import pytest
 from flask import current_app
 
+from met_api.constants.engagement_status import Status
+from met_api.models.engagement import Engagement as EngagementModel
+from met_api.models.membership import Membership as MembershipModel
 from met_api.models.tenant import Tenant as TenantModel
 from met_api.utils.constants import TENANT_ID_HEADER
-from met_api.utils.enums import ContentType
-from tests.utilities.factory_scenarios import TestJwtClaims, TestSurveyInfo, TestTenantInfo
+from met_api.utils.enums import ContentType, MembershipStatus
+from tests.utilities.factory_scenarios import TestJwtClaims, TestSurveyInfo, TestTenantInfo, TestUserInfo
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_engagement_model, factory_survey_model, factory_tenant_model, set_global_tenant)
+    factory_auth_header, factory_engagement_model, factory_membership_model, factory_staff_user_model,
+    factory_survey_model, factory_tenant_model, set_global_tenant)
+
 
 surveys_url = '/api/surveys/'
 
@@ -105,7 +111,7 @@ def test_survey_link(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that a survey can be POSTed."""
     survey = factory_survey_model()
     survey_id = survey.id
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
 
     eng = factory_engagement_model()
     eng_id = eng.id
@@ -149,6 +155,59 @@ def test_get_hidden_survey_for_admins(client, jwt, session):  # pylint:disable=u
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json.get('total') == 1
+
+
+def test_get_survey_for_reviewer(client, jwt, session):  # pylint:disable=unused-argument
+    """Assert reviewers different permission."""
+    staff_1 = dict(TestUserInfo.user_staff_1)
+    user = factory_staff_user_model(user_info=staff_1)
+    claims = copy.deepcopy(TestJwtClaims.reviewer_role.value)
+    claims['sub'] = str(user.external_id)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    set_global_tenant()
+    survey1 = factory_survey_model(TestSurveyInfo.survey1)
+
+    # Attempt to access unlinked survey
+    rv = client.get(f'{surveys_url}{survey1.id}',
+                    headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 403
+
+    # Link to a draft engagement
+    eng: EngagementModel = factory_engagement_model(status=Status.Draft.value)
+    survey1.engagement_id = eng.id
+    survey1.commit()
+
+    # Attempt to access survey linked to draft engagement
+    rv = client.get(f'{surveys_url}{survey1.id}',
+                    headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 403
+
+    # Add user as a reviewer in the team
+    factory_membership_model(user_id=user.id, engagement_id=eng.id, member_type='REVIEWER')
+
+    # Assert Reviewer can see the survey since he is added to the team.
+    rv = client.get(f'{surveys_url}{survey1.id}',
+                    headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+
+    # Deactivate membership
+    membership_model: MembershipModel = MembershipModel.find_by_engagement_and_user_id(eng.id, user.id)
+    membership_model[0].status = MembershipStatus.INACTIVE.value
+    membership_model[0].commit()
+
+    rv = client.get(f'{surveys_url}{survey1.id}',
+                    headers=headers, content_type=ContentType.JSON.value)
+    # Verify reviewer lost access after being removed from the team
+    assert rv.status_code == 403
+
+    # Publish the engagement
+    eng.status_id = Status.Published.value
+    eng.commit()
+    rv = client.get(f'{surveys_url}{survey1.id}',
+                    headers=headers, content_type=ContentType.JSON.value)
+
+    # Assert user can access  the survey even when he is removed from the team since its published.
+    assert rv.status_code == 200
 
 
 def test_get_hidden_survey_for_team_member(client, jwt, session):  # pylint:disable=unused-argument

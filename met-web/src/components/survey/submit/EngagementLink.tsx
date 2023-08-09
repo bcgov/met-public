@@ -9,7 +9,7 @@ import { openNotificationModal } from 'services/notificationModalService/notific
 
 export const EngagementLink = () => {
     const dispatch = useDispatch();
-    const { savedEngagement, isEngagementLoading, slug } = useContext(ActionContext);
+    const { savedEngagement, isEngagementLoading } = useContext(ActionContext);
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const navigate = useNavigate();
 
@@ -55,11 +55,6 @@ export const EngagementLink = () => {
 
     return (
         <>
-            <When condition={!!savedEngagement.id}>
-                <MuiLink component={Link} to={slug ? `/${slug}` : `/engagements/${savedEngagement.id}/view`}>
-                    {`<< Return to ${savedEngagement.name} Engagement`}
-                </MuiLink>
-            </When>
             <When condition={!savedEngagement.id}>
                 <MuiLink
                     component={Link}

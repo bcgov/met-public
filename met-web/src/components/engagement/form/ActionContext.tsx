@@ -215,8 +215,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         setSaving(true);
         try {
             const uploadedBannerImageFileName = await handleUploadBannerImage();
-            const state = { ...savedEngagement };
-            const engagementEditsToPatch = updatedDiff(state, {
+
+            const engagementEditsToPatch = updatedDiff(savedEngagement, {
                 ...engagement,
                 banner_filename: uploadedBannerImageFileName,
             }) as PatchEngagementRequest;
@@ -229,6 +229,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             const updatedEngagement = await patchEngagement({
                 ...engagementEditsToPatch,
                 id: Number(engagementId),
+                status_block: engagement.status_block?.filter((_, index) => {
+                    return engagementEditsToPatch.status_block?.[index];
+                }),
             });
             setEngagement(updatedEngagement);
             dispatch(openNotification({ severity: 'success', text: 'Engagement Updated Successfully' }));
