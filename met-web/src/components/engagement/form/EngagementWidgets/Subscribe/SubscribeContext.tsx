@@ -92,11 +92,20 @@ export const SubscribeProvider = ({ children }: { children: JSX.Element | JSX.El
         }
     };
 
+    const resetFormData = () => {
+        setSubscribeToEdit(null);
+        setRichEmailListDescription('');
+        setRichFormSignUpDescription('');
+    };
+
     const handleSubscribeDrawerOpen = (type: SubscribeTypeLabel, open: boolean) => {
         if (type == Subscribe_TYPE.EMAIL_LIST) {
             setEmailListTabOpen(open);
         } else if (type == Subscribe_TYPE.FORM) {
             setFormSignUpTabOpen(open);
+        }
+        if (open == false) {
+            resetFormData();
         }
     };
 
