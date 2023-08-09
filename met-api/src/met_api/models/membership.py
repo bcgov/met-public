@@ -32,12 +32,17 @@ class Membership(BaseModel):
     membership_status = db.relationship('MembershipStatusCode', foreign_keys=[status], lazy='select')
     engagement = db.relationship('Engagement', foreign_keys=[engagement_id], lazy='select')
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
+    version = db.Column(db.Integer, nullable=False, default=1)
+    is_latest = db.Column(db.Boolean, nullable=False, default=True)
 
     @classmethod
     def find_by_engagement(cls, engagement_id) -> List[Membership]:
         """Get a survey."""
         memberships = db.session.query(Membership) \
-            .filter(Membership.engagement_id == engagement_id) \
+            .filter(and_(
+                Membership.engagement_id == engagement_id,
+                bool(Membership.is_latest)
+            )) \
             .all()
         return memberships
 
@@ -48,7 +53,8 @@ class Membership(BaseModel):
             .join(StaffUser, StaffUser.id == Membership.user_id) \
             .filter(and_(StaffUser.external_id == user_external_id,
                          or_(Membership.type == MembershipType.TEAM_MEMBER,
-                             Membership.type == MembershipType.REVIEWER)
+                             Membership.type == MembershipType.REVIEWER),
+                         bool(Membership.is_latest)
                          )
                     ) \
             .all()
@@ -62,8 +68,34 @@ class Membership(BaseModel):
             .join(StaffUser, StaffUser.id == Membership.user_id) \
             .filter(and_(Membership.engagement_id == eng_id,
                          Membership.user_id == userid,
-                         Membership.status == status
+                         Membership.status == status,
+                         bool(Membership.is_latest)
                          )
                     ) \
             .first()
         return memberships
+
+    @classmethod
+    def create_new_version(cls, engagement_id, user_id, new_membership: dict) -> Membership:
+        """Create new version of membership."""
+        latest_membership = db.session.query(Membership) \
+            .filter(and_(Membership.engagement_id == engagement_id,
+                         Membership.user_id == user_id,
+                         bool(Membership.is_latest)
+                         )
+                    ) \
+            .first()
+        latest_membership.is_latest = False
+        latest_membership.save()
+
+        new_membership: Membership = Membership(
+            engagement_id=engagement_id,
+            user_id=user_id,
+            status=new_membership.get('status'),
+            type=new_membership.get('type'),
+            revoked_date=new_membership.get('revoked_date', None),
+            is_latest=True,
+            version=latest_membership.version + 1
+        )
+        new_membership.save()
+        return new_membership

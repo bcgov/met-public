@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Box, CircularProgress, MenuItem, Select } from '@mui/material';
+import { CircularProgress, MenuItem, Select } from '@mui/material';
 import { Palette } from 'styles/Theme';
 import { ENGAGEMENT_MEMBERSHIP_STATUS, EngagementTeamMember } from 'models/engagementTeamMember';
 import { reinstateMembership, revokeMembership } from 'services/membershipService';
@@ -15,18 +15,14 @@ interface ActionDropDownItem {
 }
 export const ActionsDropDown = ({ membership }: { membership: EngagementTeamMember }) => {
     const [loading, setLoading] = React.useState(false);
-    const { setTeamMembers } = React.useContext(EngagementTabsContext);
+    const { loadTeamMembers } = React.useContext(EngagementTabsContext);
     const dispatch = useAppDispatch();
 
     const handleRevoke = async () => {
         try {
             setLoading(true);
-            const revokedMembership = await revokeMembership(membership.engagement_id, membership.id);
-            setTeamMembers((prev) =>
-                prev.map((prevMembership) =>
-                    prevMembership.id === membership.id ? { ...revokedMembership } : prevMembership,
-                ),
-            );
+            await revokeMembership(membership.engagement_id, membership.id);
+            loadTeamMembers();
             setLoading(false);
         } catch (error) {
             setLoading(false);
@@ -37,12 +33,8 @@ export const ActionsDropDown = ({ membership }: { membership: EngagementTeamMemb
     const handleReinstate = async () => {
         try {
             setLoading(true);
-            const reinstatedMembership = await reinstateMembership(membership.engagement_id, membership.id);
-            setTeamMembers((prev) =>
-                prev.map((prevMembership) =>
-                    prevMembership.id === membership.id ? { ...reinstatedMembership } : prevMembership,
-                ),
-            );
+            await reinstateMembership(membership.engagement_id, membership.id);
+            loadTeamMembers();
             setLoading(false);
         } catch (error) {
             setLoading(false);

@@ -126,11 +126,9 @@ class MembershipService:
         """Get engagements by user id."""
         return EngagementModel.get_assigned_engagements(user_id)
 
-    
     @staticmethod
     def revoke_membership(engagement_id: int, membership_id: int):
         """Revoke membership."""
-
         membership = MembershipModel.find_by_id(membership_id)
 
         if membership.engagement_id != int(engagement_id):
@@ -142,17 +140,19 @@ class MembershipService:
         if membership.status == MembershipStatus.REVOKED.value:
             raise ValueError('Membership already revoked.')
 
-        membership.status = MembershipStatus.REVOKED.value
-        membership.revoked_date = datetime.utcnow()
-        membership.save()
-        return membership
+        new_membership_details = {
+            'status': MembershipStatus.REVOKED.value,
+            'type': membership.type,
+            'revoked_date': datetime.utcnow(),
+        }
+        new_membership = MembershipModel.create_new_version(engagement_id, membership.user_id, new_membership_details)
+
+        return new_membership
 
     @staticmethod
     def reinstate_membership(engagement_id: int, membership_id: int):
         """Reinstate membership."""
-
         membership = MembershipModel.find_by_id(membership_id)
-        
 
         if membership.engagement_id != int(engagement_id):
             raise ValueError('Membership does not belong to this engagement.')
@@ -163,6 +163,11 @@ class MembershipService:
         if membership.status == MembershipStatus.ACTIVE.value:
             raise ValueError('Membership already active.')
 
-        membership.status = MembershipStatus.ACTIVE.value
-        membership.save()
-        return membership
+        new_membership_details = {
+            'engagement_id': engagement_id,
+            'user_id': membership.user_id,
+            'status': MembershipStatus.ACTIVE.value,
+            'type': membership.type,
+        }
+        new_membership = MembershipModel.create_new_version(engagement_id, membership.user_id, new_membership_details)
+        return new_membership
