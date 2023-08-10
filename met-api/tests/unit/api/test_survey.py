@@ -192,8 +192,8 @@ def test_get_survey_for_reviewer(client, jwt, session):  # pylint:disable=unused
 
     # Deactivate membership
     membership_model: MembershipModel = MembershipModel.find_by_engagement_and_user_id(eng.id, user.id)
-    membership_model[0].status = MembershipStatus.INACTIVE.value
-    membership_model[0].commit()
+    membership_model.status = MembershipStatus.INACTIVE.value
+    membership_model.commit()
 
     rv = client.get(f'{surveys_url}{survey1.id}',
                     headers=headers, content_type=ContentType.JSON.value)

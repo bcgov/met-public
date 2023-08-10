@@ -45,4 +45,7 @@ def _has_team_membership(kwargs, user_from_context, team_permitted_roles) -> boo
 
     membership = MembershipModel.find_by_engagement_and_user_id(eng_id, user.id)
 
+    if not membership:
+        return False
+
     return membership.type.name in team_permitted_roles

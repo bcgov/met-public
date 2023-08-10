@@ -45,7 +45,7 @@ def test_create_engagement_membership_team_member(mocker, client, jwt, session):
     assert rv.json.get('engagement_id') == engagement.id
     assert rv.json.get('user_id') == staff_user.id
     assert rv.json.get('type') == MembershipType.TEAM_MEMBER
-    assert rv.json.get('status') == str(MembershipStatus.ACTIVE.value)
+    assert rv.json.get('status') == MembershipStatus.ACTIVE.value
     mock_add_user_to_group_keycloak.assert_called()
     mock_get_users_groups_keycloak.assert_called()
 
@@ -79,7 +79,7 @@ def test_create_engagement_membership_reviewer(mocker, client, jwt, session):
     assert rv.json.get('engagement_id') == engagement.id
     assert rv.json.get('user_id') == staff_user.id
     assert rv.json.get('type') == MembershipType.REVIEWER
-    assert rv.json.get('status') == str(MembershipStatus.ACTIVE.value)
+    assert rv.json.get('status') == MembershipStatus.ACTIVE.value
     mock_add_user_to_group_keycloak.assert_called()
     mock_get_users_groups_keycloak.assert_called()
 

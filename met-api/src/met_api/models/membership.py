@@ -7,6 +7,7 @@ from __future__ import annotations
 from typing import List
 
 from sqlalchemy import ForeignKey, and_, or_
+from sqlalchemy.schema import UniqueConstraint
 
 from met_api.constants.membership_type import MembershipType
 from met_api.utils.enums import MembershipStatus
@@ -36,24 +37,26 @@ class Membership(BaseModel):
     is_latest = db.Column(db.Boolean, nullable=False, default=True)
 
     @classmethod
-    def find_by_engagement(cls, engagement_id) -> List[Membership]:
+    def find_by_engagement(cls, engagement_id, status=MembershipStatus.ACTIVE.value) -> List[Membership]:
         """Get a survey."""
         memberships = db.session.query(Membership) \
             .filter(and_(
                 Membership.engagement_id == engagement_id,
+                Membership.status == status,
                 bool(Membership.is_latest)
             )) \
             .all()
         return memberships
 
     @classmethod
-    def find_by_user_id(cls, user_external_id) -> List[Membership]:
+    def find_by_user_id(cls, user_external_id, status=MembershipStatus.ACTIVE.value) -> List[Membership]:
         """Get memberships by user id."""
         memberships = db.session.query(Membership) \
             .join(StaffUser, StaffUser.id == Membership.user_id) \
             .filter(and_(StaffUser.external_id == user_external_id,
                          or_(Membership.type == MembershipType.TEAM_MEMBER,
                              Membership.type == MembershipType.REVIEWER),
+                         Membership.status == status,
                          bool(Membership.is_latest)
                          )
                     ) \

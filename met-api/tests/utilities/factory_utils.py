@@ -180,6 +180,8 @@ def factory_membership_model(user_id, engagement_id, member_type='TEAM_MEMBER', 
     membership = MembershipModel(user_id=user_id,
                                  engagement_id=engagement_id,
                                  type=member_type,
+                                 is_latest=True,
+                                 version=1,
                                  status=status)
 
     membership.created_by_id = user_id
