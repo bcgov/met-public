@@ -180,6 +180,8 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         filter_conditions = [
             # Exclude draft engagements that the user is not assigned to
             Engagement.status_id != Status.Draft.value,
+            # Scheduled surveys are still not viewable
+            Engagement.status_id != Status.Scheduled.value,
             # Include all assigned engagements even if its draft
             Engagement.id.in_(assigned_engagements),
             # Include Un-linked surveys
