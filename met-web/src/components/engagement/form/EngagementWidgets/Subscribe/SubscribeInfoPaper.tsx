@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { MetParagraph, MetWidgetPaper } from 'components/common';
-import { Grid, IconButton } from '@mui/material';
+import { Grid, IconButton, useMediaQuery } from '@mui/material';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
@@ -24,7 +24,7 @@ export interface SubscribeInfoPaperProps {
 const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: SubscribeInfoPaperProps) => {
     const subscribeItem = subscribeForm.subscribe_items[0];
     const { setSubscribeToEdit, handleSubscribeDrawerOpen } = useContext(SubscribeContext);
-
+    const isMediumScreen = useMediaQuery('(max-width:1100px)');
     function capitalizeFirstLetter(str: string) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
@@ -50,12 +50,12 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
                         <MetParagraph fontWeight={'bold'}>Email List</MetParagraph>
                     </Grid>
                     <When condition={!!subscribeItem.description}>
-                        <Grid item xs={3}>
+                        <Grid item xs={isMediumScreen ? 4 : 3}>
                             <MetParagraph>Description:</MetParagraph>
                         </Grid>
                         <EditorGrid
                             item
-                            xs={9}
+                            xs={isMediumScreen ? 8 : 9}
                             sx={{
                                 position: 'relative',
                                 height: 'auto',
