@@ -178,14 +178,16 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
     @staticmethod
     def _filter_accessible_surveys(query, assigned_engagements: list[int]):
         filter_conditions = [
-            # Exclude draft engagements that the user is not assigned to
-            Engagement.status_id != Status.Draft.value,
-            # Scheduled surveys are still not viewable
-            Engagement.status_id != Status.Scheduled.value,
-            # Include all assigned engagements even if its draft
+            # Exclude draft engagements and scheduled engagements that the user is not assigned to
+            and_(
+                Engagement.status_id != Status.Draft.value,
+                Engagement.status_id != Status.Scheduled.value
+            ),
+            # Include all assigned engagements even if they are in draft status
             Engagement.id.in_(assigned_engagements),
             # Include Un-linked surveys
-            Survey.engagement_id.is_(None)]
+            Survey.engagement_id.is_(None)
+        ]
         query = query.filter(or_(*filter_conditions))
         return query
 
