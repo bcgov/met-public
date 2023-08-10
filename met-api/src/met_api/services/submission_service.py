@@ -195,11 +195,7 @@ class SubmissionService:
 
         if not submission:
             raise ValueError('Invalid submission.')
-        authorization.check_auth(
-            one_of_roles=(MembershipType.TEAM_MEMBER.name,
-                          Role.REVIEW_ALL_COMMENTS.value),
-            engagement_id=submission.engagement_id
-        )
+
 
     @classmethod
     def add_or_update_staff_note(cls, survey_id, submission_id, staff_notes):
