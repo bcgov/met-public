@@ -17,17 +17,20 @@
 Test-Suite to ensure that the /Comment endpoint is working as expected.
 """
 import json
+from http import HTTPStatus
 from unittest.mock import MagicMock, patch
 
 from faker import Faker
 
+from met_api.constants.membership_type import MembershipType
 from met_api.constants.staff_note_type import StaffNoteType
 from met_api.utils import notification
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_comment_model, factory_participant_model, factory_staff_user_model,
-    factory_submission_model, factory_survey_and_eng_model, set_global_tenant)
+    factory_auth_header, factory_comment_model, factory_membership_model, factory_participant_model,
+    factory_staff_user_model, factory_submission_model, factory_survey_and_eng_model, set_global_tenant)
+
 
 fake = Faker()
 
@@ -61,6 +64,58 @@ def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
     rv = client.put(f'/api/submissions/{submission.id}',
                     data=json.dumps(to_dict), headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
+
+
+def test_review_comment_by_team_member(client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that a comment can be reviewed."""
+    claims = TestJwtClaims.team_member_role
+
+    user = factory_staff_user_model(TestJwtClaims.staff_admin_role.get('sub'))
+
+    participant = factory_participant_model()
+    survey, eng = factory_survey_and_eng_model()
+    factory_membership_model(user_id=user.id, engagement_id=eng.id, member_type=MembershipType.TEAM_MEMBER.name)
+    submission = factory_submission_model(survey.id, eng.id, participant.id)
+    factory_comment_model(survey.id, submission.id)
+    to_dict = {
+        'status_id': 2,
+    }
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.put(f'/api/submissions/{submission.id}',
+                    data=json.dumps(to_dict), headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.OK.value
+
+    # Trying to put an engagement which he is a not a team member of
+    survey, eng = factory_survey_and_eng_model()
+    submission = factory_submission_model(survey.id, eng.id, participant.id)
+    factory_comment_model(survey.id, submission.id)
+    to_dict = {
+        'status_id': 2,
+    }
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.put(f'/api/submissions/{submission.id}',
+                    data=json.dumps(to_dict), headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.FORBIDDEN.value
+
+
+def test_review_comment_by_reviewer(client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that a comment can be reviewed."""
+    claims = TestJwtClaims.reviewer_role
+
+    user = factory_staff_user_model(TestJwtClaims.staff_admin_role.get('sub'))
+
+    participant = factory_participant_model()
+    survey, eng = factory_survey_and_eng_model()
+    factory_membership_model(user_id=user.id, engagement_id=eng.id, member_type=MembershipType.REVIEWER.name)
+    submission = factory_submission_model(survey.id, eng.id, participant.id)
+    factory_comment_model(survey.id, submission.id)
+    to_dict = {
+        'status_id': 2,
+    }
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.put(f'/api/submissions/{submission.id}',
+                    data=json.dumps(to_dict), headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.FORBIDDEN.value
 
 
 def test_review_comment_internal_note(client, jwt, session):  # pylint:disable=unused-argument

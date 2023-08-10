@@ -51,6 +51,8 @@ const Surveys = () => {
 
     const canViewPrivateEngagements = roles.includes(USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS);
 
+    const canViewAllCommentStatus = roles.includes(USER_ROLES.SHOW_ALL_COMMENT_STATUS);
+
     const submissionHasBeenOpened = (survey: Survey) => {
         return (
             !!survey.engagement &&
@@ -253,7 +255,8 @@ const Surveys = () => {
             renderCell: (row: Survey) => {
                 if (
                     !submissionHasBeenOpened(row) ||
-                    (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id)))
+                    (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.engagement_id))) ||
+                    !canViewAllCommentStatus
                 ) {
                     return <></>;
                 }
@@ -295,7 +298,8 @@ const Surveys = () => {
             renderCell: (row: Survey) => {
                 if (
                     !submissionHasBeenOpened(row) ||
-                    (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id)))
+                    (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.engagement_id))) ||
+                    !canViewAllCommentStatus
                 ) {
                     return <></>;
                 }
@@ -337,7 +341,8 @@ const Surveys = () => {
             renderCell: (row: Survey) => {
                 if (
                     !submissionHasBeenOpened(row) ||
-                    (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id)))
+                    (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.engagement_id))) ||
+                    !canViewAllCommentStatus
                 ) {
                     return <></>;
                 }
