@@ -7,7 +7,6 @@ from __future__ import annotations
 from typing import List
 
 from sqlalchemy import ForeignKey, and_, or_
-from sqlalchemy.schema import UniqueConstraint
 
 from met_api.constants.membership_type import MembershipType
 from met_api.utils.enums import MembershipStatus
