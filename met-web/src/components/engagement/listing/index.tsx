@@ -73,6 +73,8 @@ const EngagementListing = () => {
 
     const canViewPrivateEngagements = roles.includes(USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS);
 
+    const canViewAllCommentStatus = roles.includes(USER_ROLES.SHOW_ALL_COMMENT_STATUS);
+
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
     useEffect(() => {
@@ -257,7 +259,8 @@ const EngagementListing = () => {
             renderCell: (row: Engagement) => {
                 if (
                     !submissionHasBeenOpened(row) ||
-                    (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id)))
+                    (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) ||
+                    !canViewAllCommentStatus
                 ) {
                     return <></>;
                 }
@@ -300,7 +303,8 @@ const EngagementListing = () => {
             renderCell: (row: Engagement) => {
                 if (
                     !submissionHasBeenOpened(row) ||
-                    (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id)))
+                    (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) ||
+                    !canViewAllCommentStatus
                 ) {
                     return <></>;
                 }
@@ -343,7 +347,8 @@ const EngagementListing = () => {
             renderCell: (row: Engagement) => {
                 if (
                     !submissionHasBeenOpened(row) ||
-                    (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id)))
+                    (!canViewPrivateEngagements && !assignedEngagements.includes(Number(row.id))) ||
+                    !canViewAllCommentStatus
                 ) {
                     return <></>;
                 }
