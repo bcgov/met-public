@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { MetBody, MetHeader2, MetLabel, MetPaper, MetParagraph, PrimaryButton } from 'components/common';
+import { MetBody, MetHeader2, MetLabel, MetPaper, MetParagraph, SecondaryButton } from 'components/common';
 import { ActionContext } from '../../ActionContext';
 import { Grid, Divider, Link, Typography, Box, RadioGroup, Radio, FormControlLabel, Skeleton } from '@mui/material';
 import { useAppDispatch } from 'hooks';
@@ -221,18 +221,22 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
                             <Grid item xs={12}>
                                 <MetBody>{getTextFromDraftJsContentState(item.subscribe_items[0].description)}</MetBody>
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid container item xs={12} justifyContent={'flex-end'}>
                                 <When
                                     condition={item.subscribe_items[0].call_to_action_type == CallToActionType.BUTTON}
                                 >
-                                    <PrimaryButton onClick={() => setOpen(true)} sx={{ width: '100%' }}>
-                                        {item.subscribe_items[0].call_to_action_text}
-                                    </PrimaryButton>
+                                    <Grid item xs={6}>
+                                        <SecondaryButton onClick={() => setOpen(true)} sx={{ width: '100%' }}>
+                                            {item.subscribe_items[0].call_to_action_text}
+                                        </SecondaryButton>
+                                    </Grid>
                                 </When>
                                 <When condition={item.subscribe_items[0].call_to_action_type == CallToActionType.LINK}>
-                                    <Link onClick={() => setOpen(true)} sx={{ cursor: 'pointer' }}>
-                                        {item.subscribe_items[0].call_to_action_text}
-                                    </Link>
+                                    <Grid item xs={12}>
+                                        <Link onClick={() => setOpen(true)} sx={{ cursor: 'pointer' }}>
+                                            {item.subscribe_items[0].call_to_action_text}
+                                        </Link>
+                                    </Grid>
                                 </When>
                             </Grid>
                         </Grid>
