@@ -46,21 +46,13 @@ export const ActionsDropDown = ({ membership }: { membership: EngagementTeamMemb
             {
                 value: 1,
                 label: 'Revoke',
-                action: () => {
-                    {
-                        handleRevoke();
-                    }
-                },
+                action: handleRevoke,
                 condition: membership.status !== ENGAGEMENT_MEMBERSHIP_STATUS.Revoked,
             },
             {
                 value: 2,
                 label: 'Reinstate',
-                action: () => {
-                    {
-                        handleReinstate();
-                    }
-                },
+                action: handleReinstate,
                 condition: membership.status !== ENGAGEMENT_MEMBERSHIP_STATUS.Active,
             },
         ],
