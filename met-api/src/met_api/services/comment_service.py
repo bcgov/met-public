@@ -37,7 +37,7 @@ class CommentService:
     def get_comments_by_submission(submission_id) -> CommentSchema:
         """Get Comment by the id."""
         comments = Comment.get_by_submission(submission_id)
-        submission = SubmissionModel.get(submission_id)
+        submission = SubmissionModel.find_by_id(submission_id)
         if submission.comment_status_id != Status.Approved.value:
             can_view_unapproved_comments = CommentService.can_view_unapproved_comments(submission.survey_id)
             if not can_view_unapproved_comments:
@@ -52,7 +52,7 @@ class CommentService:
             return False
 
         user_roles = TokenInfo.get_user_roles()
-        if Role.VIEW_UNAPPROVED_COMMENTS.value in user_roles:
+        if Role.REVIEW_COMMENTS.value in user_roles:
             return True
 
         engagement = SurveyModel.find_by_id(survey_id)

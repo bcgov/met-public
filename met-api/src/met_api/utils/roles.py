@@ -49,8 +49,7 @@ class Role(Enum):
     EDIT_UPCOMING_ENGAGEMENT = 'edit_upcoming_engagement'
     EDIT_OPEN_ENGAGEMENT = 'edit_open_engagement'
     EDIT_CLOSED_ENGAGEMENT = 'edit_closed_engagement'
-    VIEW_APPROVED_COMMENTS = 'view_approved_comments'
-    VIEW_UNAPPROVED_COMMENTS = 'view_unapproved_comments'
+    VIEW_APPROVED_COMMENTS = 'view_approved_comments'  # used just in the front end to show the comment page
     VIEW_FEEDBACKS = 'view_feedbacks'
     VIEW_ALL_ENGAGEMENTS = 'view_all_engagements'  # Allows user access to all engagements including draft
     SHOW_ALL_COMMENT_STATUS = 'show_all_comment_status'  # Allows user to see all comment status

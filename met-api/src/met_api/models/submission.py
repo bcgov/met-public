@@ -42,11 +42,6 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
     staff_note = db.relationship('StaffNote', backref='submission', cascade='all, delete')
 
     @classmethod
-    def get(cls, submission_id) -> Submission:
-        """Get a submission by id."""
-        return db.session.query(Submission).filter_by(id=submission_id).first()
-
-    @classmethod
     def get_by_survey_id(cls, survey_id) -> List[SubmissionSchema]:
         """Get submissions by survey id."""
         return db.session.query(Submission).filter_by(survey_id=survey_id).all()
