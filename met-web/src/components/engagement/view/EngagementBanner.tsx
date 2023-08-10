@@ -22,7 +22,7 @@ export const EngagementBanner = ({ startSurvey }: EngagementBannerProps) => {
     }
 
     return (
-        <Banner imageUrl={savedEngagement.banner_url}>
+        <Banner imageUrl={savedEngagement.banner_url} height="480px">
             <EngagementInfoSection savedEngagement={savedEngagement}>
                 <When condition={surveyId && isOpen}>
                     <Grid item container direction={{ xs: 'column', sm: 'row' }} xs={12} justifyContent="flex-end">

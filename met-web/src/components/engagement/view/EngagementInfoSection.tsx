@@ -55,7 +55,7 @@ const EngagementInfoSection = ({ savedEngagement, children }: EngagementInfoSect
                 m={{ lg: '3em 5em 0 3em', md: '3em', sm: '1em' }}
                 spacing={1}
             >
-                <Grid item xs={12} sx={{ maxHeight: '20em', overflowY: 'auto', overflowX: 'auto' }}>
+                <Grid item xs={12} sx={{ maxHeight: '15em', overflowY: 'auto', overflowX: 'auto' }}>
                     <MetHeader1>{name}</MetHeader1>
                     <Grid item xs={12}>
                         <Editor editorState={getEditorStateFromRaw(rich_description)} readOnly={true} toolbarHidden />
