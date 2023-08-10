@@ -373,9 +373,11 @@ const CommentReview = () => {
                                         }
                                     />
                                     <MetParagraph sx={{ marginLeft: '3em', color: '#707070', fontSize: '13px' }}>
-                                        This will be inserted in the email sent to the respondent: We have reviewed your
-                                        feedback and can't accept it for the following reason(s): - Your feedback
-                                        contains "other"
+                                        This will be inserted in the email sent to the respondent:
+                                        <MetParagraph sx={{ fontStyle: 'italic' }}>
+                                            We have reviewed your feedback and can't accept it for the following
+                                            reason(s): - Your feedback contains "other"
+                                        </MetParagraph>
                                     </MetParagraph>
                                     <TextField
                                         disabled={!hasOtherReason}
