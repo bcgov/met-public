@@ -19,7 +19,7 @@ export const ImageUpload = ({
     handleAddFile,
     savedImageUrl = '',
     savedImageName = '',
-    helpText = 'Drag and drop an image here, or click to select an image from your device. Formats accepted are: .jpg, .jpeg, .png, .webp.',
+    helpText = 'Drag and drop an image here, or click to select an image from your device. Formats accepted are: jpg, png, webp.',
     height = '10em',
     cropAspectRatio = 1,
     accept = {
