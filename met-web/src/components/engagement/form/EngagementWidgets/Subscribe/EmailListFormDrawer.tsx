@@ -62,6 +62,7 @@ const EmailListDrawer = () => {
             subscribeItem ? subscribeItem.call_to_action_text : 'Click here to sign up',
         );
         setInitialRichDescription(subscribeItem ? subscribeItem.description : richEmailListDescription);
+        setRichEmailListDescription(subscribeItem ? subscribeItem.description : '');
     }, [subscribeToEdit]);
 
     const { handleSubmit } = methods;
