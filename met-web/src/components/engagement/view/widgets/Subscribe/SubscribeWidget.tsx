@@ -225,8 +225,8 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
                                 <When
                                     condition={item.subscribe_items[0].call_to_action_type == CallToActionType.BUTTON}
                                 >
-                                    <Grid item xs={6}>
-                                        <SecondaryButton onClick={() => setOpen(true)} sx={{ width: '100%' }}>
+                                    <Grid container xs={12} direction="row" justifyContent="flex-end">
+                                        <SecondaryButton onClick={() => setOpen(true)}>
                                             {item.subscribe_items[0].call_to_action_text}
                                         </SecondaryButton>
                                     </Grid>
