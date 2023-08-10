@@ -105,9 +105,16 @@ jest.mock('@hello-pangea/dnd', () => ({
 }));
 
 const mockCreateWidget = jest.fn(() => Promise.resolve(whoIsListeningWidget));
+const mockCreateWidgetItems = jest.fn(() => Promise.resolve(contactWidgetItem));
+const mockCreateWidgetItemsTrigger = jest.fn(() => {
+    return {
+        unwrap: mockCreateWidgetItems,
+    };
+});
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
     useCreateWidgetMutation: () => [mockCreateWidget],
+    useCreateWidgetItemsMutation: () => [mockCreateWidgetItemsTrigger],
     useUpdateWidgetMutation: () => [jest.fn(() => Promise.resolve(whoIsListeningWidget))],
     useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],

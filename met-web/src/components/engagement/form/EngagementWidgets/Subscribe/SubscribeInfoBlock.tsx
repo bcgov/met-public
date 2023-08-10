@@ -50,13 +50,13 @@ const SubscribeInfoBlock = () => {
             openNotificationModal({
                 open: true,
                 data: {
-                    header: 'Remove SubscribeForm',
+                    header: 'Remove Subscribe Form',
                     subText: [
                         {
-                            text: 'You will be removing this subscribeForm from the engagement.',
+                            text: 'You will be removing this subscribe form from the engagement.',
                         },
                         {
-                            text: 'Do you want to remove this subscribeForm?',
+                            text: 'Do you want to remove this subscribe form?',
                         },
                     ],
                     handleConfirm: () => {
@@ -74,11 +74,16 @@ const SubscribeInfoBlock = () => {
                 await deleteSubscribeForm(widget.id, subscribeFormId);
                 const newSubscribe = subscribe.filter((subscribeForm) => subscribeForm.id !== subscribeFormId);
                 setSubscribe([...newSubscribe]);
-                dispatch(openNotification({ severity: 'success', text: 'The subscribeForm was removed successfully' }));
+                dispatch(
+                    openNotification({ severity: 'success', text: 'The subscribe form was removed successfully' }),
+                );
             }
         } catch (error) {
             dispatch(
-                openNotification({ severity: 'error', text: 'An error occurred while trying to remove subscribeForm' }),
+                openNotification({
+                    severity: 'error',
+                    text: 'An error occurred while trying to remove subscribe form',
+                }),
             );
         }
     };

@@ -44,7 +44,6 @@ from tests.utilities.factory_scenarios import (
     TestReportSettingInfo, TestSubmissionInfo, TestSurveyInfo, TestTenantInfo, TestUserInfo, TestWidgetDocumentInfo,
     TestWidgetInfo, TestWidgetItemInfo)
 
-
 CONFIG = get_named_config('testing')
 fake = Faker()
 
@@ -176,12 +175,12 @@ def factory_participant_model(participant: dict = TestParticipantInfo.participan
     return participant
 
 
-def factory_membership_model(user_id, engagement_id, member_type='TEAM_MEMBER'):
+def factory_membership_model(user_id, engagement_id, member_type='TEAM_MEMBER', status=MembershipStatus.ACTIVE.value):
     """Produce a Membership model."""
     membership = MembershipModel(user_id=user_id,
                                  engagement_id=engagement_id,
                                  type=member_type,
-                                 status=MembershipStatus.ACTIVE.value)
+                                 status=status)
 
     membership.created_by_id = user_id
     membership.save()

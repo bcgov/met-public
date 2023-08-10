@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { AppConfig } from 'config';
-import { Widget } from 'models/widget';
+import { Widget, WidgetItem } from 'models/widget';
 import { prepareHeaders } from 'apiManager//apiSlices/util';
 
 // Define a service using a base URL and expected endpoints
@@ -33,6 +33,17 @@ export const widgetsApi = createApi({
             }),
             invalidatesTags: ['Widgets'],
         }),
+        createWidgetItems: builder.mutation<
+            WidgetItem[],
+            { widget_id: number; widget_items_data: Partial<WidgetItem>[] }
+        >({
+            query: ({ widget_id, widget_items_data }) => ({
+                url: `widgets/${widget_id}/items`,
+                method: 'POST',
+                body: widget_items_data,
+            }),
+            invalidatesTags: ['Widgets'],
+        }),
         sortWidgets: builder.mutation<Widget, { engagementId: number; widgets: Widget[] }>({
             query: ({ engagementId, widgets }) => ({
                 url: `widgets/engagement/${engagementId}/sort_index`,
@@ -58,7 +69,8 @@ export const widgetsApi = createApi({
 export const {
     useLazyGetWidgetsQuery,
     useCreateWidgetMutation,
+    useUpdateWidgetMutation,
     useSortWidgetsMutation,
     useDeleteWidgetMutation,
-    useUpdateWidgetMutation,
+    useCreateWidgetItemsMutation,
 } = widgetsApi;

@@ -1,7 +1,7 @@
-import React, { useState, useContext } from 'react';
-import { MetBody, MetHeader2, MetLabel, MetPaper, MetParagraph, PrimaryButton } from 'components/common';
+import React, { useEffect, useState, useContext } from 'react';
+import { MetBody, MetHeader2, MetLabel, MetPaper, MetParagraph, SecondaryButton } from 'components/common';
 import { ActionContext } from '../../ActionContext';
-import { Grid, Divider, Link, Typography, Box, RadioGroup, Radio, FormControlLabel } from '@mui/material';
+import { Grid, Divider, Link, Typography, Box, RadioGroup, Radio, FormControlLabel, Skeleton } from '@mui/material';
 import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import EmailModal from 'components/common/Modals/EmailModal';
@@ -10,15 +10,24 @@ import { createSubscription } from 'services/subscriptionService';
 import { EmailVerificationType } from 'models/emailVerification';
 import { SubscriptionType } from 'constants/subscriptionType';
 import { Widget } from 'models/widget';
+import { getSubscriptionsForms } from 'services/subscriptionService';
+import { WidgetType } from 'models/widget';
+import { openNotification } from 'services/notificationService/notificationSlice';
+import { Subscribe_TYPE, SubscribeForm, CallToActionType } from 'models/subscription';
+import { When } from 'react-if';
+import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor/utils';
 
 const SubscribeWidget = ({ widget }: { widget: Widget }) => {
     const dispatch = useAppDispatch();
-    const { savedEngagement, engagementMetadata } = useContext(ActionContext);
+    const { savedEngagement, engagementMetadata, widgets } = useContext(ActionContext);
     const defaultType = engagementMetadata.project_id ? SubscriptionType.PROJECT : SubscriptionType.ENGAGEMENT;
     const [email, setEmail] = useState('');
     const [open, setOpen] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [subscriptionType, setSubscriptionType] = useState('');
+    const subscribeWidget = widgets.find((widget) => widget.widget_type_id === WidgetType.Subscribe);
+    const [subscribeItems, setSubscribeItems] = useState<SubscribeForm[]>([]);
+    const [isLoadingSubscribeItems, setIsLoadingSubscribeItems] = useState(true);
 
     const sendEmail = async () => {
         try {
@@ -90,9 +99,40 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
         }
     };
 
+    const loadSubscribeItems = async () => {
+        if (!subscribeWidget) {
+            return;
+        }
+        try {
+            setIsLoadingSubscribeItems(true);
+            const loadedSubscribe = await getSubscriptionsForms(subscribeWidget.id);
+            setSubscribeItems(loadedSubscribe);
+            setIsLoadingSubscribeItems(false);
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'An error occurred while trying to load the Subscribe Items',
+                }),
+            );
+        }
+    };
+
+    useEffect(() => {
+        loadSubscribeItems();
+    }, [widgets]);
+
     const handleSubscriptionChange = (type: string) => {
         setSubscriptionType(type);
     };
+
+    if (isLoadingSubscribeItems) {
+        return (
+            <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
+                <Skeleton />
+            </MetPaper>
+        );
+    }
 
     return (
         <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
@@ -170,23 +210,39 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
                     </Grid>
                 }
             />
-            <Grid spacing={2} container xs={12}>
-                <Grid item xs={12}>
-                    <MetHeader2 bold>{widget.title}</MetHeader2>
-                    <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
-                </Grid>
-                <Grid item xs={12}>
-                    <MetBody>
-                        If you are interested in getting updates on public engagements at the EAO, you can sign up
-                        below:
-                    </MetBody>
-                </Grid>
-                <Grid item xs={12}>
-                    <PrimaryButton onClick={() => setOpen(true)} sx={{ width: '100%' }}>
-                        Sign Up for Updates
-                    </PrimaryButton>
-                </Grid>
-            </Grid>
+            {subscribeItems?.map((item) => {
+                return (
+                    <When condition={item.type == Subscribe_TYPE.EMAIL_LIST}>
+                        <Grid spacing={2} container xs={12}>
+                            <Grid item xs={12}>
+                                <MetHeader2 bold>{widget.title}</MetHeader2>
+                                <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <MetBody>{getTextFromDraftJsContentState(item.subscribe_items[0].description)}</MetBody>
+                            </Grid>
+                            <Grid container item xs={12} justifyContent={'flex-end'}>
+                                <When
+                                    condition={item.subscribe_items[0].call_to_action_type == CallToActionType.BUTTON}
+                                >
+                                    <Grid item xs={6}>
+                                        <SecondaryButton onClick={() => setOpen(true)} sx={{ width: '100%' }}>
+                                            {item.subscribe_items[0].call_to_action_text}
+                                        </SecondaryButton>
+                                    </Grid>
+                                </When>
+                                <When condition={item.subscribe_items[0].call_to_action_type == CallToActionType.LINK}>
+                                    <Grid item xs={12}>
+                                        <Link onClick={() => setOpen(true)} sx={{ cursor: 'pointer' }}>
+                                            {item.subscribe_items[0].call_to_action_text}
+                                        </Link>
+                                    </Grid>
+                                </When>
+                            </Grid>
+                        </Grid>
+                    </When>
+                );
+            })}
         </MetPaper>
     );
 };

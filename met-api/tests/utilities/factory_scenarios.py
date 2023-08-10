@@ -24,6 +24,8 @@ from faker import Faker
 from met_api.config import get_named_config
 from met_api.constants.comment_status import Status as CommentStatus
 from met_api.constants.engagement_status import SubmissionStatus
+from met_api.constants.engagement_status import Status as EngagementStatus
+
 from met_api.constants.feedback import CommentType, FeedbackSourceType, RatingType
 from met_api.constants.widget import WidgetType
 from met_api.utils.enums import LoginSource
@@ -158,7 +160,7 @@ class TestEngagementInfo(dict, Enum):
         'banner_url': '',
         'created_by': '123',
         'updated_by': '123',
-        'status': SubmissionStatus.Open.value,
+        'status': EngagementStatus.Published.value,
         'is_internal': False,
         'description': 'My Test Engagement Description',
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\"type\":\"unstyled\",\
@@ -166,6 +168,23 @@ class TestEngagementInfo(dict, Enum):
         'content': 'Content Sample',
         'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\"type\":\"unstyled\",\"depth\":0,\
         \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"'
+    }
+
+    engagement_draft = {
+        'name': fake.name(),
+        'start_date': (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d'),
+        'end_date': (datetime.today() + timedelta(days=1)).strftime('%Y-%m-%d'),
+        'banner_url': '',
+        'created_by': '123',
+        'updated_by': '123',
+        'status': EngagementStatus.Draft.value,
+        'is_internal': False,
+        'description': 'My Test Engagement Description',
+        'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\"type\":\"unstyled\",\
+            \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
+        'content': 'Content Sample',
+        'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\"type\":\"unstyled\",\"depth\":0,\
+            \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"'
     }
 
     engagement2 = {
@@ -270,12 +289,15 @@ class TestJwtClaims(dict, Enum):
                 'view_private_engagements',
                 'create_admin_user',
                 'view_all_surveys',
+                'view_surveys',
                 'edit_all_surveys',
+                'edit_survey',
                 'view_unapproved_comments',
                 'clone_survey',
                 'edit_members',
                 'review_comments',
                 'review_all_comments',
+                'view_all_engagements',
             ]
         }
     }
@@ -295,6 +317,23 @@ class TestJwtClaims(dict, Enum):
                 'view_users',
                 'view_private_engagements',
                 'clone_survey'
+            ]
+        }
+    }
+
+    reviewer_role = {
+        'iss': CONFIG.JWT_OIDC_TEST_ISSUER,
+        'sub': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302064',
+        'idp_userid': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302064',
+        'preferred_username': f'{fake.user_name()}@idir',
+        'given_name': fake.first_name(),
+        'family_name': fake.last_name(),
+        'email': 'staff@gov.bc.ca',
+        'identity_provider': LoginSource.IDIR.value,
+        'realm_access': {
+            'roles': [
+                'staff',
+                'view_users',
             ]
         }
     }

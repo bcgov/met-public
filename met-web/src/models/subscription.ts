@@ -1,5 +1,7 @@
 export type SubscribeTypeLabel = 'EMAIL_LIST' | 'FORM';
 
+export type CallToActionTypes = 'link' | 'button';
+
 export interface Subscription {
     engagement_id: number;
     email_address: string;
@@ -23,6 +25,11 @@ export interface Unsubscribe {
 export const Subscribe_TYPE: { [x: string]: SubscribeTypeLabel } = {
     EMAIL_LIST: 'EMAIL_LIST',
     FORM: 'FORM',
+};
+
+export const CallToActionType: { [x: string]: CallToActionTypes } = {
+    LINK: 'link',
+    BUTTON: 'button',
 };
 
 export interface SubscribeForm {

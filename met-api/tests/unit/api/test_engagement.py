@@ -18,6 +18,7 @@ Test-Suite to ensure that the /Engagement endpoint is working as expected.
 """
 import copy
 import json
+from http import HTTPStatus
 
 import pytest
 from faker import Faker
@@ -105,6 +106,32 @@ def test_get_engagements(client, jwt, session, engagement_info):  # pylint:disab
 
     assert created_eng.get('name') == rv.json.get('name')
     assert created_eng.get('content') == rv.json.get('content')
+
+
+@pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement_draft])
+def test_get_engagements_reviewer(client, jwt, session, engagement_info):  # pylint:disable=unused-argument
+    """Assert reviewers access on an engagement."""
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
+                     headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.OK.value
+    created_eng = rv.json
+    eng_id = created_eng.get('id')
+    staff_1 = dict(TestUserInfo.user_staff_1)
+    user = factory_staff_user_model(user_info=staff_1)
+    claims = copy.deepcopy(TestJwtClaims.reviewer_role.value)
+    claims['sub'] = str(user.external_id)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.get(f'/api/engagements/{eng_id}',
+                    headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.FORBIDDEN.value
+
+    factory_membership_model(user_id=user.id, engagement_id=eng_id, member_type='REVIEWER')
+
+    # Reveiwer has access to draft engagement if he is assigned
+    rv = client.get(f'/api/engagements/{eng_id}',
+                    headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.OK.value
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])

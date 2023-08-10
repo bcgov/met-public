@@ -30,6 +30,7 @@ class Role(Enum):
     CREATE_ENGAGEMENT = 'create_engagement'
     VIEW_SURVEYS = 'view_surveys'
     CREATE_SURVEY = 'create_survey'
+    EDIT_SURVEY = 'edit_survey'
     CLONE_SURVEY = 'clone_survey'
     PUBLISH_ENGAGEMENT = 'publish_engagement'
     VIEW_ENGAGEMENT = 'view_engagement'
@@ -41,13 +42,14 @@ class Role(Enum):
     ACCESS_DASHBOARD = 'access_dashboard'
     VIEW_MEMBERS = 'view_members'
     EDIT_MEMBERS = 'edit_members'
-    VIEW_ALL_SURVEYS = 'view_all_surveys'
+    VIEW_ALL_SURVEYS = 'view_all_surveys'  # Super user can view all kind of surveys including hidden
     EDIT_ALL_SURVEYS = 'edit_all_surveys'
     EDIT_DRAFT_ENGAGEMENT = 'edit_draft_engagement'
     EDIT_SCHEDULED_ENGAGEMENT = 'edit_scheduled_engagement'
     EDIT_UPCOMING_ENGAGEMENT = 'edit_upcoming_engagement'
     EDIT_OPEN_ENGAGEMENT = 'edit_open_engagement'
     EDIT_CLOSED_ENGAGEMENT = 'edit_closed_engagement'
-    VIEW_APPROVED_COMMENTS = 'view_approved_comments'
-    VIEW_UNAPPROVED_COMMENTS = 'view_unapproved_comments'
+    VIEW_APPROVED_COMMENTS = 'view_approved_comments'  # used just in the front end to show the comment page
     VIEW_FEEDBACKS = 'view_feedbacks'
+    VIEW_ALL_ENGAGEMENTS = 'view_all_engagements'  # Allows user access to all engagements including draft
+    SHOW_ALL_COMMENT_STATUS = 'show_all_comment_status'  # Allows user to see all comment status

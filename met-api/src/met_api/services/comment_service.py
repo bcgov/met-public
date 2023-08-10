@@ -3,6 +3,7 @@ import itertools
 from datetime import datetime
 
 from met_api.constants.comment_status import Status
+from met_api.constants.membership_type import MembershipType
 from met_api.models import Survey as SurveyModel
 from met_api.models.comment import Comment
 from met_api.models.membership import Membership as MembershipModel
@@ -36,7 +37,7 @@ class CommentService:
     def get_comments_by_submission(submission_id) -> CommentSchema:
         """Get Comment by the id."""
         comments = Comment.get_by_submission(submission_id)
-        submission = SubmissionModel.get(submission_id)
+        submission = SubmissionModel.find_by_id(submission_id)
         if submission.comment_status_id != Status.Approved.value:
             can_view_unapproved_comments = CommentService.can_view_unapproved_comments(submission.survey_id)
             if not can_view_unapproved_comments:
@@ -51,7 +52,7 @@ class CommentService:
             return False
 
         user_roles = TokenInfo.get_user_roles()
-        if Role.VIEW_UNAPPROVED_COMMENTS.value in user_roles:
+        if Role.REVIEW_COMMENTS.value in user_roles:
             return True
 
         engagement = SurveyModel.find_by_id(survey_id)
@@ -66,7 +67,11 @@ class CommentService:
             return False
 
         memberships = MembershipModel.find_by_engagement_and_user_id(engagement.engagement_id, user.id)
-        return bool(memberships)
+
+        # only Team member can view unapproved comments.Reviewer cant see unapproved comments.
+        has_team_member = any(membership.type == MembershipType.TEAM_MEMBER for membership in memberships)
+
+        return has_team_member
 
     @classmethod
     def get_comments_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text=''):

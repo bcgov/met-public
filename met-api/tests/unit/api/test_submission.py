@@ -21,6 +21,7 @@ import json
 
 import pytest
 
+from met_api.constants.membership_type import MembershipType
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestSubmissionInfo
 from tests.utilities.factory_utils import (
@@ -116,15 +117,25 @@ def test_get_comment_filtering(client, jwt, session):  # pylint:disable=unused-a
     assert rv.status_code == 200
     assert len(rv.json.get('items')) == 2, 'Admin user can see unapproved and unapproved comments'
 
-    # create membership for the public user and see
+    # create membership for the reviewer user and see
     user = factory_staff_user_model()
-    factory_membership_model(user_id=user.id, engagement_id=eng.id)
-    claims = copy.deepcopy(TestJwtClaims.public_user_role.value)
+    factory_membership_model(user_id=user.id, engagement_id=eng.id, member_type=MembershipType.REVIEWER.name)
+    claims = copy.deepcopy(TestJwtClaims.reviewer_role.value)
     claims['sub'] = str(user.external_id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/submissions/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert len(rv.json.get('items')) == 2, 'Publc user with team membership can see unapproved and unapproved comments'
+    assert len(rv.json.get('items')) == 1, 'Reviewer with reviewer team membership can see only approved comments'
+
+    # create membership for the team member and see
+    user = factory_staff_user_model()
+    factory_membership_model(user_id=user.id, engagement_id=eng.id, member_type=MembershipType.TEAM_MEMBER.name)
+    claims = copy.deepcopy(TestJwtClaims.team_member_role.value)
+    claims['sub'] = str(user.external_id)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.get(f'/api/submissions/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+    assert len(rv.json.get('items')) == 2, 'Team Member with team membership can see unapproved and unapproved comments'
 
 
 def test_invalid_submission(client, jwt, session):  # pylint:disable=unused-argument

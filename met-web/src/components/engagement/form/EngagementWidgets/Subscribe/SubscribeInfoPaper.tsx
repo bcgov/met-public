@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { MetParagraph, MetWidgetPaper } from 'components/common';
-import { Grid, IconButton } from '@mui/material';
+import { Grid, IconButton, useMediaQuery } from '@mui/material';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
@@ -10,10 +10,12 @@ import { SubscribeContext } from './SubscribeContext';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { styled } from '@mui/system';
+import './RichEditorStyles.css';
 
 const EditorGrid = styled(Grid)`
     padding-top: 0px !important;
 `;
+
 export interface SubscribeInfoPaperProps {
     subscribeForm: SubscribeForm;
     removeSubscribeForm: (_subscribeId: number) => void;
@@ -22,7 +24,7 @@ export interface SubscribeInfoPaperProps {
 const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: SubscribeInfoPaperProps) => {
     const subscribeItem = subscribeForm.subscribe_items[0];
     const { setSubscribeToEdit, handleSubscribeDrawerOpen } = useContext(SubscribeContext);
-
+    const isMediumScreen = useMediaQuery('(max-width:1100px)');
     function capitalizeFirstLetter(str: string) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
@@ -48,29 +50,30 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
                         <MetParagraph fontWeight={'bold'}>Email List</MetParagraph>
                     </Grid>
                     <When condition={!!subscribeItem.description}>
-                        <Grid item xs={3}>
+                        <Grid item xs={isMediumScreen ? 4 : 3}>
                             <MetParagraph>Description:</MetParagraph>
                         </Grid>
-                        <EditorGrid item xs={9} sx={{ position: 'relative', height: 'auto' }}>
-                            <Editor
-                                editorState={getEditorStateFromRaw(subscribeItem.description)}
-                                readOnly={true}
-                                toolbarHidden
-                                wrapperStyle={{
-                                    display: 'flex',
-                                    paddingTop: 3,
-                                    lineHeight: '0', // Adjust line-height to match MetParagraph, or as desired
-                                }}
-                                editorStyle={{
-                                    display: 'inherit',
-                                    padding: '0px',
-                                }}
-                            />
+                        <EditorGrid
+                            item
+                            xs={isMediumScreen ? 8 : 9}
+                            sx={{
+                                position: 'relative',
+                                height: 'auto',
+                                marginTop: -1,
+                            }}
+                        >
+                            <div className="subscribe-editor-wrapper">
+                                <Editor
+                                    editorState={getEditorStateFromRaw(subscribeItem.description)}
+                                    readOnly={true}
+                                    toolbarHidden
+                                />
+                            </div>
                         </EditorGrid>
                     </When>
 
                     <Grid item xs={3}>
-                        <MetParagraph>{capitalizeFirstLetter(subscribeItem.call_to_action_type)}</MetParagraph>
+                        <MetParagraph>{capitalizeFirstLetter(subscribeItem.call_to_action_type)}:</MetParagraph>
                     </Grid>
                     <Grid item xs={9}>
                         <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
