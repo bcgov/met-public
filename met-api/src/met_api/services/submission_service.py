@@ -196,7 +196,6 @@ class SubmissionService:
         if not submission:
             raise ValueError('Invalid submission.')
 
-
     @classmethod
     def add_or_update_staff_note(cls, survey_id, submission_id, staff_notes):
         """Process staff note for a comment."""
