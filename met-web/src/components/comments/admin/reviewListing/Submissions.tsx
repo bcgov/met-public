@@ -63,7 +63,7 @@ const Submissions = () => {
             renderCell: (row) => {
                 if (
                     roles.includes(USER_ROLES.REVIEW_COMMENTS) ||
-                    (assignedEngagements.includes(parseInt(survey.engagement_id.toString())) &&
+                    (assignedEngagements.includes(Number(survey.engagement_id)) &&
                         userDetail.groups?.includes('/' + USER_GROUP.TEAM_MEMBER.value))
                 ) {
                     return (
