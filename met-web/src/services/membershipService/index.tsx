@@ -39,29 +39,32 @@ export const getMembershipsByUser = async ({
     return responseData.data ?? [];
 };
 
-export const revokeMembership = async (engagement_id: number, membership_id: number): Promise<EngagementTeamMember> => {
+export const revokeMembership = async (engagement_id: number, user_id: number): Promise<EngagementTeamMember> => {
     const url = replaceAllInURL({
-        URL: Endpoints.EngagementTeamMembers.REVOKE,
+        URL: Endpoints.EngagementTeamMembers.UPDATE_STATUS,
         params: {
             engagement_id: String(engagement_id),
-            membership_id: String(membership_id),
+            user_id: String(user_id),
         },
     });
-    const responseData = await http.PutRequest<EngagementTeamMember>(url);
+    const body = {
+        action: 'revoke',
+    };
+    const responseData = await http.PatchRequest<EngagementTeamMember>(url, body);
     return responseData.data;
 };
 
-export const reinstateMembership = async (
-    engagement_id: number,
-    membership_id: number,
-): Promise<EngagementTeamMember> => {
+export const reinstateMembership = async (engagement_id: number, user_id: number): Promise<EngagementTeamMember> => {
     const url = replaceAllInURL({
-        URL: Endpoints.EngagementTeamMembers.REINSTATE,
+        URL: Endpoints.EngagementTeamMembers.UPDATE_STATUS,
         params: {
             engagement_id: String(engagement_id),
-            membership_id: String(membership_id),
+            user_id: String(user_id),
         },
     });
-    const responseData = await http.PutRequest<EngagementTeamMember>(url);
+    const body = {
+        action: 'reinstate',
+    };
+    const responseData = await http.PatchRequest<EngagementTeamMember>(url, body);
     return responseData.data;
 };

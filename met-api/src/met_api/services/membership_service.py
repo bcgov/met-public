@@ -127,9 +127,9 @@ class MembershipService:
         return EngagementModel.get_assigned_engagements(user_id)
 
     @staticmethod
-    def revoke_membership(engagement_id: int, membership_id: int):
-        """Revoke membership."""
-        membership = MembershipModel.find_by_id(membership_id)
+    def update_membership_status(engagement_id: int, user_id: int, action: str):
+        """Update membership status."""
+        membership = MembershipModel.find_by_engagement_and_user_id(engagement_id, user_id)
 
         if membership.engagement_id != int(engagement_id):
             raise ValueError('Membership does not belong to this engagement.')
@@ -137,6 +137,17 @@ class MembershipService:
         if not membership:
             raise ValueError('Invalid Membership.')
 
+        if action == 'revoke':
+            return MembershipService.revoke_membership(membership)
+
+        if action == 'reinstate':
+            return MembershipService.reinstate_membership(membership)
+
+        raise ValueError('Invalid action.')
+
+    @staticmethod
+    def revoke_membership(membership: MembershipModel):
+        """Revoke membership."""
         if membership.status == MembershipStatus.REVOKED.value:
             raise ValueError('Membership already revoked.')
 
@@ -145,29 +156,25 @@ class MembershipService:
             'type': membership.type,
             'revoked_date': datetime.utcnow(),
         }
-        new_membership = MembershipModel.create_new_version(engagement_id, membership.user_id, new_membership_details)
+        new_membership = MembershipModel.create_new_version(
+            membership.engagement_id,
+            membership.user_id,
+            new_membership_details
+        )
 
         return new_membership
 
     @staticmethod
-    def reinstate_membership(engagement_id: int, membership_id: int):
+    def reinstate_membership(membership: MembershipModel):
         """Reinstate membership."""
-        membership = MembershipModel.find_by_id(membership_id)
-
-        if membership.engagement_id != int(engagement_id):
-            raise ValueError('Membership does not belong to this engagement.')
-
-        if not membership:
-            raise ValueError('Invalid Membership.')
-
         if membership.status == MembershipStatus.ACTIVE.value:
             raise ValueError('Membership already active.')
 
         new_membership_details = {
-            'engagement_id': engagement_id,
+            'engagement_id': membership.engagement_id,
             'user_id': membership.user_id,
             'status': MembershipStatus.ACTIVE.value,
             'type': membership.type,
         }
-        new_membership = MembershipModel.create_new_version(engagement_id, membership.user_id, new_membership_details)
+        new_membership = MembershipModel.create_new_version(membership.engagement_id, membership.user_id, new_membership_details)
         return new_membership

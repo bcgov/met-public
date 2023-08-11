@@ -21,7 +21,7 @@ export const ActionsDropDown = ({ membership }: { membership: EngagementTeamMemb
     const handleRevoke = async () => {
         try {
             setLoading(true);
-            await revokeMembership(membership.engagement_id, membership.id);
+            await revokeMembership(membership.engagement_id, membership.user_id);
             loadTeamMembers();
             setLoading(false);
         } catch (error) {
@@ -33,7 +33,7 @@ export const ActionsDropDown = ({ membership }: { membership: EngagementTeamMemb
     const handleReinstate = async () => {
         try {
             setLoading(true);
-            await reinstateMembership(membership.engagement_id, membership.id);
+            await reinstateMembership(membership.engagement_id, membership.user_id);
             loadTeamMembers();
             setLoading(false);
         } catch (error) {

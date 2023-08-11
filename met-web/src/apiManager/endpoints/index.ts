@@ -108,8 +108,7 @@ const Endpoints = {
         GET_LIST: `${AppConfig.apiUrl}/engagements/engagement_id/members`,
         GET_LIST_BY_USER: `${AppConfig.apiUrl}/engagements/all/members/user_id`,
         CREATE: `${AppConfig.apiUrl}/engagements/engagement_id/members`,
-        REVOKE: `${AppConfig.apiUrl}/engagements/engagement_id/members/membership_id/revoke`,
-        REINSTATE: `${AppConfig.apiUrl}/engagements/engagement_id/members/membership_id/reinstate`,
+        UPDATE_STATUS: `${AppConfig.apiUrl}/engagements/engagement_id/members/user_id/status`,
     },
     Events: {
         CREATE: `${AppConfig.apiUrl}/widgets/widget_id/events`,

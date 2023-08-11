@@ -66,7 +66,7 @@ class CommentService:
         if user:
             membership = MembershipModel.find_by_engagement_and_user_id(engagement.engagement_id, user.id)
             if membership:
-                return membership.type == MembershipType.TEAM_MEMBER        
+                return membership.type == MembershipType.TEAM_MEMBER
 
         return False
 
