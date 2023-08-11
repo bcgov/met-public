@@ -60,14 +60,13 @@ class Membership(BaseModel):
                         Membership.type == MembershipType.REVIEWER
                     ),
                     Membership.is_latest.is_(True)
-                )
-            )
+                ))
+
         if status:
             query = query.filter(Membership.status == status)
 
         memberships = query.all()
         return memberships
-
 
     @classmethod
     def find_by_engagement_and_user_id(cls, eng_id, userid, status=None) \
