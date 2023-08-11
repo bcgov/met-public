@@ -16,6 +16,7 @@ export interface SurveySubmission {
     notify_email?: boolean;
     comments?: Comment[];
     staff_note: StaffNote[];
+    engagement_id: number;
 }
 
 export interface PublicSubmission {
@@ -33,5 +34,6 @@ export const createDefaultSubmission = (): SurveySubmission => {
         reviewed_by: '',
         comment_status_id: 1,
         staff_note: [],
+        engagement_id: 0,
     };
 };

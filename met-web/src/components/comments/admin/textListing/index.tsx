@@ -14,9 +14,10 @@ import { getSubmissionPage } from 'services/submissionService';
 import { SurveySubmission } from 'models/surveySubmission';
 import { formatDate } from 'components/common/dateHelper';
 import { USER_ROLES } from 'services/userService/constants';
+import { USER_GROUP } from 'models/user';
 
 const CommentTextListing = () => {
-    const { roles } = useAppSelector((state) => state.user);
+    const { roles, userDetail, assignedEngagements } = useAppSelector((state) => state.user);
     const badgeStyle: React.CSSProperties = {
         padding: 0,
         margin: 0,
@@ -90,7 +91,11 @@ const CommentTextListing = () => {
             label: 'ID',
             allowSort: true,
             renderCell: (row) => {
-                if (roles.includes(USER_ROLES.REVIEW_COMMENTS)) {
+                if (
+                    roles.includes(USER_ROLES.REVIEW_COMMENTS) ||
+                    (assignedEngagements.includes(parseInt(row.engagement_id.toString())) &&
+                        userDetail.groups?.includes('/' + USER_GROUP.TEAM_MEMBER.value))
+                ) {
                     return (
                         <MuiLink component={Link} to={`/surveys/${Number(row.survey_id)}/submissions/${row.id}/review`}>
                             {row.id}
