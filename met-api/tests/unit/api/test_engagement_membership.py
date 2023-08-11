@@ -11,11 +11,8 @@ from met_api.constants.membership_type import MembershipType
 from met_api.utils.enums import ContentType, KeycloakGroupName, MembershipStatus
 from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import (
-    factory_auth_header,
-    factory_engagement_model,
-    factory_staff_user_model,
-    factory_membership_model
-)
+    factory_auth_header, factory_engagement_model, factory_membership_model, factory_staff_user_model)
+
 
 memberships_url = '/api/engagements/{}/members'
 
@@ -128,7 +125,11 @@ def test_reinstate_membership(client, jwt, session):
     """Test that a membership can be reinstated."""
     engagement = factory_engagement_model()
     staff_user = factory_staff_user_model()
-    membership = factory_membership_model(user_id=staff_user.id, engagement_id=engagement.id, status=MembershipStatus.REVOKED.value)
+    membership = factory_membership_model(
+        user_id=staff_user.id,
+        engagement_id=engagement.id,
+        status=MembershipStatus.REVOKED.value
+    )
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
     data = {
         'action': 'reinstate'
@@ -145,6 +146,7 @@ def test_reinstate_membership(client, jwt, session):
 
 
 def test_update_membership_status_invalid_action(client, jwt, session):
+    """Test that an invalid action cannot be performed on a membership."""
     engagement = factory_engagement_model()
     staff_user = factory_staff_user_model()
     membership = factory_membership_model(user_id=staff_user.id, engagement_id=engagement.id)
@@ -167,7 +169,11 @@ def test_revoke_already_revoked_membership(client, jwt, session):
     """Test that an already revoked membership cannot be revoked again."""
     engagement = factory_engagement_model()
     staff_user = factory_staff_user_model()
-    membership = factory_membership_model(user_id=staff_user.id, engagement_id=engagement.id, status=MembershipStatus.REVOKED.value)
+    membership = factory_membership_model(
+        user_id=staff_user.id,
+        engagement_id=engagement.id,
+        status=MembershipStatus.REVOKED.value
+    )
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
     data = {
         'action': 'revoke'
