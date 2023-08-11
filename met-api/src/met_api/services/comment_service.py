@@ -63,14 +63,13 @@ class CommentService:
             return False
 
         user = StaffUserModel.get_user_by_external_id(user_id)
-        membership = MembershipModel.find_by_engagement_and_user_id(engagement.engagement_id, user.id)
-        if not user or not membership:
-            return False
+        if user:
+            membership = MembershipModel.find_by_engagement_and_user_id(engagement.engagement_id, user.id)
+            if membership:
+                return membership.type == MembershipType.TEAM_MEMBER        
 
-        # only Team member can view unapproved comments.Reviewer cant see unapproved comments.
-        has_team_member = membership.type == MembershipType.TEAM_MEMBER
+        return False
 
-        return has_team_member
 
     @classmethod
     def get_comments_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text=''):
