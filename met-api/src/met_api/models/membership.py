@@ -9,7 +9,6 @@ from typing import List
 from sqlalchemy import ForeignKey, and_, or_
 
 from met_api.constants.membership_type import MembershipType
-from met_api.utils.enums import MembershipStatus
 
 from .base_model import BaseModel
 from .staff_user import StaffUser
@@ -61,8 +60,7 @@ class Membership(BaseModel):
                         Membership.type == MembershipType.TEAM_MEMBER,
                         Membership.type == MembershipType.REVIEWER
                     ),
-                    bool(Membership.is_latest)
-            ))
+                    bool(Membership.is_latest)))
         if status:
             query = query.filter(Membership.status == status)
 

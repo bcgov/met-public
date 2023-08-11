@@ -180,5 +180,9 @@ class MembershipService:
             'status': MembershipStatus.ACTIVE.value,
             'type': membership.type,
         }
-        new_membership = MembershipModel.create_new_version(membership.engagement_id, membership.user_id, new_membership_details)
+        new_membership = MembershipModel.create_new_version(
+            membership.engagement_id,
+            membership.user_id,
+            new_membership_details
+        )
         return new_membership
