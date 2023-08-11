@@ -146,10 +146,7 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
         )
 
         query.update(update_fields)
-        if session is None:
-            db.session.commit()
-        else:
-            session.flush()
+        db.session.commit()
 
         return query.first()
 
