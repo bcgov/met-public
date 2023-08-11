@@ -58,7 +58,7 @@ class Membership(BaseModel):
                     or_(
                         Membership.type == MembershipType.TEAM_MEMBER,
                         Membership.type == MembershipType.REVIEWER
-                    ),                    
+                    ),
                 Membership.is_latest.is_(True)))
         if status:
             query = query.filter(Membership.status == status)
@@ -73,7 +73,7 @@ class Membership(BaseModel):
         query = db.session.query(Membership) \
             .join(StaffUser, StaffUser.id == Membership.user_id) \
             .filter(and_(Membership.engagement_id == eng_id,
-                         Membership.user_id == userid,                         
+                         Membership.user_id == userid,
                          Membership.is_latest.is_(True)
                          )
                     )
