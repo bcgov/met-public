@@ -146,7 +146,7 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
         )
 
         query.update(update_fields)
-        db.session.commit()
+        session.commit()
 
         return query.first()
 
