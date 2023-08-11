@@ -36,46 +36,54 @@ class Membership(BaseModel):
     is_latest = db.Column(db.Boolean, nullable=False, default=True)
 
     @classmethod
-    def find_by_engagement(cls, engagement_id, status=MembershipStatus.ACTIVE.value) -> List[Membership]:
+    def find_by_engagement(cls, engagement_id, status=None) -> List[Membership]:
         """Get a survey."""
-        memberships = db.session.query(Membership) \
+        query = db.session.query(Membership) \
             .filter(and_(
                 Membership.engagement_id == engagement_id,
                 Membership.status == status,
                 bool(Membership.is_latest)
-            )) \
-            .all()
+            ))
+        if status:
+            query = query.filter(Membership.status == status)
+        memberships = query.all()
         return memberships
 
     @classmethod
-    def find_by_user_id(cls, user_external_id, status=MembershipStatus.ACTIVE.value) -> List[Membership]:
+    def find_by_user_id(cls, user_external_id, status=None) -> List[Membership]:
         """Get memberships by user id."""
-        memberships = db.session.query(Membership) \
+        query = db.session.query(Membership) \
             .join(StaffUser, StaffUser.id == Membership.user_id) \
-            .filter(and_(StaffUser.external_id == user_external_id,
-                         or_(Membership.type == MembershipType.TEAM_MEMBER,
-                             Membership.type == MembershipType.REVIEWER),
-                         Membership.status == status,
-                         bool(Membership.is_latest)
-                         )
-                    ) \
-            .all()
+            .filter(
+                and_(
+                    StaffUser.external_id == user_external_id,
+                    or_(
+                        Membership.type == MembershipType.TEAM_MEMBER,
+                        Membership.type == MembershipType.REVIEWER
+                    ),
+                    bool(Membership.is_latest)
+            ))
+        if status:
+            query = query.filter(Membership.status == status)
+
+        memberships = query.all()
         return memberships
 
     @classmethod
-    def find_by_engagement_and_user_id(cls, eng_id, userid, status=MembershipStatus.ACTIVE.value) \
+    def find_by_engagement_and_user_id(cls, eng_id, userid, status=None) \
             -> Membership:
         """Get a survey."""
-        memberships = db.session.query(Membership) \
+        query = db.session.query(Membership) \
             .join(StaffUser, StaffUser.id == Membership.user_id) \
             .filter(and_(Membership.engagement_id == eng_id,
                          Membership.user_id == userid,
-                         Membership.status == status,
                          bool(Membership.is_latest)
                          )
-                    ) \
-            .first()
-        return memberships
+                    )
+        if status:
+            query = query.filter(Membership.status == status)
+        membership = query.first()
+        return membership
 
     @classmethod
     def create_new_version(cls, engagement_id, user_id, new_membership: dict) -> Membership:

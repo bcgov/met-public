@@ -84,7 +84,11 @@ class MembershipService:
                 error='This user is already a Superuser.',
                 status_code=HTTPStatus.CONFLICT.value)
 
-        existing_membership = MembershipModel.find_by_engagement_and_user_id(engagement_id, user_details.get('id'))
+        existing_membership = MembershipModel.find_by_engagement_and_user_id(
+            engagement_id,
+            user_details.get('id'),
+            status=MembershipStatus.ACTIVE.value
+        )
         if existing_membership:
             raise BusinessException(
                 error=f'This {user_details.get("main_group", "user")} is already assigned to this engagement.',
@@ -113,13 +117,13 @@ class MembershipService:
         """Get memberships by engagement id."""
         # get user to be added from request json
 
-        memberships = MembershipModel.find_by_engagement(engagement_id)
+        memberships = MembershipModel.find_by_engagement(engagement_id, status=MembershipStatus.ACTIVE.value)
         return memberships
 
     @staticmethod
     def get_assigned_engagements(user_id):
         """Get memberships by user id."""
-        return MembershipModel.find_by_user_id(user_id)
+        return MembershipModel.find_by_user_id(user_id, status=MembershipStatus.ACTIVE.value)
 
     @staticmethod
     def get_engagements_by_user(user_id):

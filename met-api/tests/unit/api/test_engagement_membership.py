@@ -10,7 +10,7 @@ from unittest.mock import MagicMock
 from met_api.constants.membership_type import MembershipType
 from met_api.utils.enums import ContentType, KeycloakGroupName, MembershipStatus
 from tests.utilities.factory_scenarios import TestJwtClaims
-from tests.utilities.factory_utils import factory_auth_header, factory_engagement_model, factory_staff_user_model
+from tests.utilities.factory_utils import factory_auth_header, factory_engagement_model, factory_staff_user_model, factory_membership_model
 
 
 memberships_url = '/api/engagements/{}/members'
@@ -98,3 +98,95 @@ def test_create_engagement_membership_unauthorized(client, jwt, session):
         content_type=ContentType.JSON.value
     )
     assert rv.status_code == HTTPStatus.UNAUTHORIZED
+
+def test_revoke_membership(client, jwt, session):
+    engagement = factory_engagement_model()
+    staff_user = factory_staff_user_model()
+    membership = factory_membership_model(user_id=staff_user.id, engagement_id=engagement.id)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    data = {
+        'action': 'revoke'
+    }
+    
+    rv = client.patch(
+        f'/api/engagements/{engagement.id}/members/{membership.user_id}/status',
+        data=json.dumps(data),
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    
+    assert rv.status_code == HTTPStatus.OK
+
+def test_reinstate_membership(client, jwt, session):
+    engagement = factory_engagement_model()
+    staff_user = factory_staff_user_model()
+    membership = factory_membership_model(user_id=staff_user.id, engagement_id=engagement.id, status=MembershipStatus.REVOKED.value)
+    print('>>>>>>')
+    print(membership)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    data = {
+        'action': 'reinstate'
+    }
+    
+    rv = client.patch(
+        f'/api/engagements/{engagement.id}/members/{membership.user_id}/status',
+        data=json.dumps(data),
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    
+    assert rv.status_code == HTTPStatus.OK
+
+def test_update_membership_status_invalid_action(client, jwt, session):
+    engagement = factory_engagement_model()
+    staff_user = factory_staff_user_model()
+    membership = factory_membership_model(user_id=staff_user.id, engagement_id=engagement.id)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    data = {
+        'action': 'invalid'
+    }
+    
+    rv = client.patch(
+        f'/api/engagements/{engagement.id}/members/{membership.user_id}/status',
+        data=json.dumps(data),
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    
+    assert rv.status_code == HTTPStatus.BAD_REQUEST
+    
+def test_revoke_already_revoked_membership(client, jwt, session):
+    engagement = factory_engagement_model()
+    staff_user = factory_staff_user_model()
+    membership = factory_membership_model(user_id=staff_user.id, engagement_id=engagement.id, status=MembershipStatus.REVOKED.value)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    data = {
+        'action': 'revoke'
+    }
+    
+    rv = client.patch(
+        f'/api/engagements/{engagement.id}/members/{membership.user_id}/status',
+        data=json.dumps(data),
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    
+    assert rv.status_code == HTTPStatus.BAD_REQUEST
+
+def reinstate_already_active_membership(client, jwt, session):
+    engagement = factory_engagement_model()
+    staff_user = factory_staff_user_model()
+    membership = factory_membership_model(user_id=staff_user.id, engagement_id=engagement.id)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    data = {
+        'action': 'reinstate'
+    }
+    
+    rv = client.patch(
+        f'/api/engagements/{engagement.id}/members/{membership.user_id}/status',
+        data=json.dumps(data),
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    
+    assert rv.status_code == HTTPStatus.BAD_REQUEST

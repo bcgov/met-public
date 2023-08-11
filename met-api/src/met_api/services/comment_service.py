@@ -16,6 +16,7 @@ from met_api.schemas.survey import SurveySchema
 from met_api.services.document_generation_service import DocumentGenerationService
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
+from met_api.utils.enums import MembershipStatus
 
 
 class CommentService:
@@ -64,7 +65,7 @@ class CommentService:
 
         user = StaffUserModel.get_user_by_external_id(user_id)
         if user:
-            membership = MembershipModel.find_by_engagement_and_user_id(engagement.engagement_id, user.id)
+            membership = MembershipModel.find_by_engagement_and_user_id(engagement.engagement_id, user.id, status=MembershipStatus.ACTIVE.value)
             if membership:
                 return membership.type == MembershipType.TEAM_MEMBER
 

@@ -92,5 +92,5 @@ class RevokeMembership(Resource):
             action = request.get_json().get('action', str)
             membership = MembershipService.update_membership_status(engagement_id, user_id, action)
             return MembershipSchema().dump(membership), HTTPStatus.OK
-        except BusinessException as err:
-            return {'message': err.error}, err.status_code
+        except ValueError as err:
+            return str(err), HTTPStatus.BAD_REQUEST
