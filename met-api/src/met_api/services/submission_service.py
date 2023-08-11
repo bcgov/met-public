@@ -155,12 +155,12 @@ class SubmissionService:
                 rejection_review_note = StaffNote.get_staff_note_by_type(
                     submission_id, StaffNoteType.Review.name)
                 SubmissionService._trigger_email(
-                    rejection_review_note[0].note, session, submission)
+                    rejection_review_note[0].note, session, staff_review_details, submission)
         session.commit()
         return SubmissionSchema().dump(submission)
 
     @staticmethod
-    def _trigger_email(review_note, session, submission):
+    def _trigger_email(review_note, session, staff_review_details: dict, submission):
         email_verification = EmailVerificationService().create({
             'participant_id': submission.participant_id,
             'survey_id': submission.survey_id,
@@ -168,7 +168,7 @@ class SubmissionService:
             'type': EmailVerificationType.RejectedComment,
         }, session)
         SubmissionService._send_rejected_email(
-            submission, review_note, email_verification.get('verification_token'))
+            staff_review_details, submission, review_note, email_verification.get('verification_token'))
 
     @classmethod
     def validate_review(cls, values: dict, user, submission):
@@ -305,7 +305,7 @@ class SubmissionService:
         }
 
     @staticmethod
-    def _send_rejected_email(submission: SubmissionModel, review_note, token) -> None:
+    def _send_rejected_email(staff_review_details: dict, submission: SubmissionModel, review_note, token) -> None:
         """Send an verification email.Throws error if fails."""
         participant_id = submission.participant_id
         participant = ParticipantModel.find_by_id(participant_id)
@@ -313,7 +313,7 @@ class SubmissionService:
         template_id = current_app.config.get(
             'REJECTED_EMAIL_TEMPLATE_ID', None)
         subject, body, args = SubmissionService._render_email_template(
-            submission, review_note, token)
+            staff_review_details, submission, review_note, token)
         try:
             notification.send_email(subject=subject,
                                     email=ParticipantModel.decode_email(
@@ -329,7 +329,7 @@ class SubmissionService:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
 
     @staticmethod
-    def _render_email_template(submission: SubmissionModel, review_note, token):
+    def _render_email_template(staff_review_details: dict, submission: SubmissionModel, review_note, token):
         template = Template.get_template('email_rejected_comment.html')
         engagement: EngagementModel = EngagementModel.find_by_id(
             submission.engagement_id)
@@ -348,10 +348,10 @@ class SubmissionService:
         args = {
             'engagement_name': engagement_name,
             'survey_name': survey_name,
-            'has_personal_info': 'yes' if submission.has_personal_info else '',
-            'has_profanity': 'yes' if submission.has_profanity else '',
-            'has_other_reason': 'yes' if submission.rejected_reason_other else '',
-            'other_reason': submission.rejected_reason_other,
+            'has_personal_info': 'yes' if staff_review_details.get('has_personal_info', None) else '',
+            'has_profanity': 'yes' if staff_review_details.get('has_profanity', None) else '',
+            'has_other_reason': 'yes' if staff_review_details.get('rejected_reason_other', None) else '',
+            'other_reason': staff_review_details.get('rejected_reason_other', None),
             'submission_url': submission_url,
             'review_note': review_note,
             'end_date': datetime.strftime(engagement.end_date, EmailVerificationService.full_date_format),
