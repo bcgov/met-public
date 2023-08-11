@@ -4,7 +4,7 @@ import TabContext from '@mui/lab/TabContext';
 import EngagementForm from './EngagementForm';
 import { MetTab, MetTabList, MetTabPanel } from '../StyledTabComponents';
 import { EngagementFormTabValues, ENGAGEMENT_FORM_TABS } from './constants';
-import EngagementUserManagement from './EngagementUserManagement';
+import EngagementUserManagement from './UserManagement/EngagementUserManagement';
 import EngagementLinks from './Links';
 import EngagementSettings from './Settings';
 

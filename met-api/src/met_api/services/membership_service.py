@@ -1,5 +1,6 @@
 """Service for membership."""
 from http import HTTPStatus
+from datetime import datetime
 
 from met_api.constants.membership_type import MembershipType
 from met_api.models import StaffUser as StaffUserModel
@@ -30,7 +31,7 @@ class MembershipService:
         StaffUserService.attach_groups([user_details])
         # this makes sure duplicate membership doesnt happen.
         # Can remove when user can have multiple roles with in same engagement.
-        MembershipService._validate_member(engagement_id, user_details)
+        # MembershipService._validate_member(engagement_id, user_details)
         group_name, membership_type = MembershipService._get_membership_details(user_details)
         MembershipService._add_user_group(user_details, group_name)
         membership = MembershipService._create_membership_model(engagement_id, user_details, membership_type)
@@ -83,7 +84,11 @@ class MembershipService:
                 error='This user is already a Superuser.',
                 status_code=HTTPStatus.CONFLICT.value)
 
-        existing_membership = MembershipModel.find_by_engagement_and_user_id(engagement_id, user_details.get('id'))
+        existing_membership = MembershipModel.find_by_engagement_and_user_id(
+            engagement_id,
+            user_details.get('id'),
+            status=MembershipStatus.ACTIVE.value
+        )
         if existing_membership:
             raise BusinessException(
                 error=f'This {user_details.get("main_group", "user")} is already assigned to this engagement.',
@@ -112,15 +117,72 @@ class MembershipService:
         """Get memberships by engagement id."""
         # get user to be added from request json
 
-        memberships = MembershipModel.find_by_engagement(engagement_id)
+        memberships = MembershipModel.find_by_engagement(engagement_id, status=MembershipStatus.ACTIVE.value)
         return memberships
 
     @staticmethod
     def get_assigned_engagements(user_id):
         """Get memberships by user id."""
-        return MembershipModel.find_by_user_id(user_id)
+        return MembershipModel.find_by_user_id(user_id, status=MembershipStatus.ACTIVE.value)
 
     @staticmethod
     def get_engagements_by_user(user_id):
         """Get engagements by user id."""
         return EngagementModel.get_assigned_engagements(user_id)
+
+    @staticmethod
+    def update_membership_status(engagement_id: int, user_id: int, action: str):
+        """Update membership status."""
+        membership = MembershipModel.find_by_engagement_and_user_id(engagement_id, user_id)
+
+        if membership.engagement_id != int(engagement_id):
+            raise ValueError('Membership does not belong to this engagement.')
+
+        if not membership:
+            raise ValueError('Invalid Membership.')
+
+        if action == 'revoke':
+            return MembershipService.revoke_membership(membership)
+
+        if action == 'reinstate':
+            return MembershipService.reinstate_membership(membership)
+
+        raise ValueError('Invalid action.')
+
+    @staticmethod
+    def revoke_membership(membership: MembershipModel):
+        """Revoke membership."""
+        if membership.status == MembershipStatus.REVOKED.value:
+            raise ValueError('Membership already revoked.')
+
+        new_membership_details = {
+            'status': MembershipStatus.REVOKED.value,
+            'type': membership.type,
+            'revoked_date': datetime.utcnow(),
+        }
+        new_membership = MembershipModel.create_new_version(
+            membership.engagement_id,
+            membership.user_id,
+            new_membership_details
+        )
+
+        return new_membership
+
+    @staticmethod
+    def reinstate_membership(membership: MembershipModel):
+        """Reinstate membership."""
+        if membership.status == MembershipStatus.ACTIVE.value:
+            raise ValueError('Membership already active.')
+
+        new_membership_details = {
+            'engagement_id': membership.engagement_id,
+            'user_id': membership.user_id,
+            'status': MembershipStatus.ACTIVE.value,
+            'type': membership.type,
+        }
+        new_membership = MembershipModel.create_new_version(
+            membership.engagement_id,
+            membership.user_id,
+            new_membership_details
+        )
+        return new_membership

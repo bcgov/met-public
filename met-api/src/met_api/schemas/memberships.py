@@ -16,10 +16,9 @@ class MembershipSchema(Schema):
         unknown = EXCLUDE
 
     id = fields.Int(data_key='id')
-    status = fields.Str(data_key='status')
     created_date = fields.DateTime(data_key='created_date')
     engagement_id = fields.Int(data_key='engagement_id')
-    status = fields.Str(data_key='status')
+    status = fields.Int(data_key='status')
     user_id = fields.Int(data_key='user_id')
     user = fields.Nested(StaffUserSchema)
     type = EnumField(MembershipType, by_value=True)

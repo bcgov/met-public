@@ -76,3 +76,21 @@ class EngagementMembershipUser(Resource):
             return jsonify(MembershipSchema().dump(members, many=True)), HTTPStatus.OK
         except BusinessException as err:
             return {'message': err.error}, err.status_code
+
+
+@cors_preflight('PATCH,OPTIONS')
+@API.route('/<user_id>/status')
+class RevokeMembership(Resource):
+    """Resource for revoking engagement membership for a user."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.has_one_of_roles([Role.EDIT_MEMBERS.value])
+    def patch(engagement_id, user_id):
+        """Update membership status."""
+        try:
+            action = request.get_json().get('action', str)
+            membership = MembershipService.update_membership_status(engagement_id, user_id, action)
+            return MembershipSchema().dump(membership), HTTPStatus.OK
+        except ValueError as err:
+            return str(err), HTTPStatus.BAD_REQUEST

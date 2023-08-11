@@ -8,6 +8,7 @@ from met_api.constants.membership_type import MembershipType
 from met_api.models.membership import Membership as MembershipModel
 from met_api.models.staff_user import StaffUser as StaffUserModel
 from met_api.utils.user_context import UserContext, user_context
+from met_api.utils.enums import MembershipStatus
 
 
 # pylint: disable=unused-argument
@@ -43,6 +44,9 @@ def _has_team_membership(kwargs, user_from_context, team_permitted_roles) -> boo
     if not user:
         return False
 
-    memberships = MembershipModel.find_by_engagement_and_user_id(eng_id, user.id)
+    membership = MembershipModel.find_by_engagement_and_user_id(eng_id, user.id, status=MembershipStatus.ACTIVE.value)
 
-    return any(membership.type.name in team_permitted_roles for membership in memberships)
+    if not membership:
+        return False
+
+    return membership.type.name in team_permitted_roles

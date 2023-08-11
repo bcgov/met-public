@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { Grid } from '@mui/material';
 import { MetLabel, MetPaper, PrimaryButton, MetParagraph } from 'components/common';
-import { ActionContext } from '../ActionContext';
-import TeamMemberListing from './TeamMemberListing';
-import { EngagementTabsContext } from './EngagementTabsContext';
+import { ActionContext } from '../../ActionContext';
+import { EngagementTabsContext } from '../EngagementTabsContext';
 import { formatDate } from 'components/common/dateHelper';
+import TeamMemberListing from './TeamMemberListing';
 
 const EngagementUserManagement = () => {
     const { savedEngagement } = useContext(ActionContext);

@@ -16,6 +16,7 @@ from met_api.schemas.survey import SurveySchema
 from met_api.services.document_generation_service import DocumentGenerationService
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
+from met_api.utils.enums import MembershipStatus
 
 
 class CommentService:
@@ -63,15 +64,16 @@ class CommentService:
             return False
 
         user = StaffUserModel.get_user_by_external_id(user_id)
-        if not user:
-            return False
+        if user:
+            membership = MembershipModel.find_by_engagement_and_user_id(
+                engagement.engagement_id,
+                user.id,
+                status=MembershipStatus.ACTIVE.value
+            )
+            if membership:
+                return membership.type == MembershipType.TEAM_MEMBER
 
-        memberships = MembershipModel.find_by_engagement_and_user_id(engagement.engagement_id, user.id)
-
-        # only Team member can view unapproved comments.Reviewer cant see unapproved comments.
-        has_team_member = any(membership.type == MembershipType.TEAM_MEMBER for membership in memberships)
-
-        return has_team_member
+        return False
 
     @classmethod
     def get_comments_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text=''):
