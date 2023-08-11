@@ -154,10 +154,10 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
                         }}
                     >
                         <Typography sx={{ fontSize: '0.8rem', mb: 1 }}>
-                            Personal information (your email address) is collected under Section 26(c) and 26(e) of the
-                            Freedom of Information and Protection of Privacy Act, for the purpose of providing content
-                            updates and future opportunities to participate. Your email is never shared with third
-                            parties.
+                            Personal information is collected under Section 26(c) of the Freedom of Information and
+                            Protection of Privacy Act, for the purpose of providing content updates and future
+                            opportunities to participate in engagements, as well as for the purpose of providing general
+                            feedback to evaluate engagements conducted by the Environmental Assessment Office.
                         </Typography>
                         <Typography sx={{ fontSize: '0.8rem', mb: 1 }}>
                             If you have any questions about the collection, use and disclosure of your personal
