@@ -22,6 +22,7 @@ from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement_scope_options import EngagementScopeOptions
 from met_api.schemas.engagement import EngagementSchema
 from met_api.utils.datetime import local_datetime
+from met_api.utils.enums import MembershipStatus
 from .base_model import BaseModel
 from .db import db
 from .engagement_status import EngagementStatus
@@ -296,6 +297,13 @@ class Engagement(BaseModel):
     @staticmethod
     def get_assigned_engagements(user_id: int) -> List[Engagement]:
         """Get engagements assigned to the given user id."""
-        engagements = db.session.query(Engagement).join(MembershipModel).filter(
-            MembershipModel.user_id == user_id).all()
+        engagements = db.session.query(Engagement) \
+            .join(MembershipModel) \
+            .filter(
+                and_(
+                    MembershipModel.user_id == user_id,
+                    MembershipModel.is_latest.is_(True),
+                    MembershipModel.status == MembershipStatus.ACTIVE.value
+                )) \
+            .all()
         return engagements
