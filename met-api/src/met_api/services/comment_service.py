@@ -63,11 +63,8 @@ class CommentService:
             return False
 
         user = StaffUserModel.get_user_by_external_id(user_id)
-        if not user:
-            return False
-
         membership = MembershipModel.find_by_engagement_and_user_id(engagement.engagement_id, user.id)
-        if not membership:
+        if not user or not membership:
             return False
 
         # only Team member can view unapproved comments.Reviewer cant see unapproved comments.
