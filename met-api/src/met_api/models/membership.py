@@ -40,8 +40,7 @@ class Membership(BaseModel):
         query = db.session.query(Membership) \
             .filter(and_(
                 Membership.engagement_id == engagement_id,
-                Membership.status == status,
-                bool(Membership.is_latest)
+                Membership.is_latest.is_(True)
             ))
         if status:
             query = query.filter(Membership.status == status)
@@ -59,8 +58,8 @@ class Membership(BaseModel):
                     or_(
                         Membership.type == MembershipType.TEAM_MEMBER,
                         Membership.type == MembershipType.REVIEWER
-                    ),
-                    bool(Membership.is_latest)))
+                    ),                    
+                Membership.is_latest.is_(True)))
         if status:
             query = query.filter(Membership.status == status)
 
@@ -74,8 +73,8 @@ class Membership(BaseModel):
         query = db.session.query(Membership) \
             .join(StaffUser, StaffUser.id == Membership.user_id) \
             .filter(and_(Membership.engagement_id == eng_id,
-                         Membership.user_id == userid,
-                         bool(Membership.is_latest)
+                         Membership.user_id == userid,                         
+                         Membership.is_latest.is_(True)
                          )
                     )
         if status:
@@ -89,7 +88,7 @@ class Membership(BaseModel):
         latest_membership = db.session.query(Membership) \
             .filter(and_(Membership.engagement_id == engagement_id,
                          Membership.user_id == user_id,
-                         bool(Membership.is_latest)
+                         Membership.is_latest.is_(True)
                          )
                     ) \
             .first()

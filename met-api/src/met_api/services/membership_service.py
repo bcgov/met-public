@@ -117,7 +117,7 @@ class MembershipService:
         """Get memberships by engagement id."""
         # get user to be added from request json
 
-        memberships = MembershipModel.find_by_engagement(engagement_id, status=MembershipStatus.ACTIVE.value)
+        memberships = MembershipModel.find_by_engagement(engagement_id)
         return memberships
 
     @staticmethod
