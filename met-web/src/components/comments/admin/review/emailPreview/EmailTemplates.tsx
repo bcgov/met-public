@@ -1,6 +1,6 @@
 import React from 'react';
 import { MetBody } from 'components/common';
-import { Grid, Link } from '@mui/material';
+import { Grid } from '@mui/material';
 import { When } from 'react-if';
 import { StaffNote } from 'models/staffNote';
 
@@ -21,35 +21,28 @@ export const RejectEmailTemplate = ({
     <>
         <Grid item xs={12}>
             <MetBody sx={{ mb: 1 }}>
-                We reviewed your comments and can't publish them on our public site for the following reason(s):
+                We have reviewed your feedback and can’t accept it for the following reason(s):
             </MetBody>
         </Grid>
         <ul>
             <When condition={hasPersonalInfo}>
                 <li>
                     <Grid item xs={12}>
-                        <MetBody sx={{ mb: 1 }}>
-                            One or many of your comments contain personal information such as name, address, or other
-                            information that could identify you.
-                        </MetBody>
+                        <MetBody sx={{ mb: 1 }}>Your feedback contains personal information</MetBody>
                     </Grid>
                 </li>
             </When>
             <When condition={hasProfanity}>
                 <li>
                     <Grid item xs={12}>
-                        <MetBody sx={{ mb: 1 }}>
-                            One or many of your comments contain swear words or profanities.
-                        </MetBody>
+                        <MetBody sx={{ mb: 1 }}>Your feedback contains profanity or inappropriate language</MetBody>
                     </Grid>
                 </li>
             </When>
             <When condition={otherReason}>
                 <li>
                     <Grid item xs={12}>
-                        <MetBody
-                            sx={{ mb: 1 }}
-                        >{`One or many of your comments can't be published because of ${otherReason}.`}</MetBody>
+                        <MetBody sx={{ mb: 1 }}>{` Your feedback contains ${otherReason}.`}</MetBody>
                     </Grid>
                 </li>
             </When>
@@ -60,10 +53,5 @@ export const RejectEmailTemplate = ({
                 <MetBody sx={{ mb: 1 }}>{reviewNotes ? reviewNotes[0]?.note : ''}</MetBody>
             </Grid>
         </When>
-        <Grid item xs={12}>
-            <MetBody sx={{ mb: 1 }}>
-                You can access and edit your answers <Link>here</Link>
-            </MetBody>
-        </Grid>
     </>
 );

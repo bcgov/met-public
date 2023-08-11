@@ -1,9 +1,11 @@
-import { Box, Grid, Stack } from '@mui/material';
+import { Box, Grid, Stack, Link } from '@mui/material';
 import * as React from 'react';
-import { MetHeader4, MetBody } from 'components/common';
+import { MetBody } from 'components/common';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
 import { Survey } from 'models/survey';
 import { formatDate } from 'components/common/dateHelper';
+import { useAppSelector } from 'hooks';
+import { TenantState } from 'reduxSlices/tenantSlice';
 
 export default function EmailPreview({
     survey,
@@ -15,6 +17,7 @@ export default function EmailPreview({
     [prop: string]: unknown;
 }) {
     const scheduledDate = formatDate(survey.engagement?.scheduled_date || '', 'MMM DD YYYY');
+    const tenant: TenantState = useAppSelector((state) => state.tenant);
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Box style={container}>
@@ -30,21 +33,34 @@ export default function EmailPreview({
                     />
                 </Stack>
                 <Grid item xs={12}>
-                    <MetHeader4 bold sx={{ mb: 1 }}>
-                        Thank you for taking the time to fill in our survey about {survey.name}.
-                    </MetHeader4>
+                    <MetBody sx={{ mb: 1 }}>
+                        Thank you for taking the time to provide your feedback on {survey.engagement?.name || ''}.
+                    </MetBody>
                 </Grid>
                 {children}
                 <Grid item xs={12}>
-                    <MetHeader4 bold sx={{ mb: 1 }}>
-                        The engagement period is open until {scheduledDate}.
-                    </MetHeader4>
+                    <MetBody sx={{ mb: 2 }}>
+                        You can edit and re-submit your feedback. The comment period is open until {scheduledDate}. You
+                        must re-submit your feedback before the comment period closes.
+                    </MetBody>
+                </Grid>
+                <Grid item xs={12}>
+                    <MetBody
+                        sx={{
+                            borderLeft: '4px solid grey',
+                            paddingLeft: '8px',
+                            color: '#555',
+                            mb: 2,
+                        }}
+                    >
+                        <Link>Edit your feedback</Link>
+                    </MetBody>
                 </Grid>
                 <Grid item xs={12}>
                     <MetBody sx={{ mb: 1 }}>Thank you,</MetBody>
                 </Grid>
                 <Grid item xs={12}>
-                    <MetBody sx={{ mb: 1 }}>The EAO Team</MetBody>
+                    <MetBody sx={{ mb: 1 }}>The {tenant.name} Team</MetBody>
                 </Grid>
             </Box>
         </Box>
