@@ -17,6 +17,7 @@ class MembershipSchema(Schema):
 
     id = fields.Int(data_key='id')
     created_date = fields.DateTime(data_key='created_date')
+    revoked_date = fields.DateTime(data_key='revoked_date')
     engagement_id = fields.Int(data_key='engagement_id')
     status = fields.Int(data_key='status')
     user_id = fields.Int(data_key='user_id')
