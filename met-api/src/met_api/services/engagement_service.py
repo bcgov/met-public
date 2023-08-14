@@ -31,8 +31,11 @@ class EngagementService:
 
     otherdateformat = '%Y-%m-%d'
 
-    @staticmethod
-    def get_engagement(engagement_id) -> EngagementSchema:
+    def __init__(self):
+        """Initialize."""
+        self.object_storage = ObjectStorageService()
+
+    def get_engagement(self, engagement_id) -> EngagementSchema:
         """Get Engagement by the id."""
         engagement_model: EngagementModel = EngagementModel.find_by_id(engagement_id)
 
@@ -50,12 +53,11 @@ class EngagementService:
                 authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
 
             engagement = EngagementSchema().dump(engagement_model)
-            engagement['banner_url'] = ObjectStorageService.get_url(engagement_model.banner_filename)
+            engagement['banner_url'] = self.object_storage.get_url(engagement['banner_filename'])
         return engagement
 
-    @classmethod
     def get_engagements_paginated(
-            cls,
+            self,
             external_user_id,
             pagination_options: PaginationOptions,
             search_options=None,
@@ -63,7 +65,7 @@ class EngagementService:
     ):
         """Get engagements paginated."""
         user_roles = TokenInfo.get_user_roles()
-        scope_options = cls._get_scope_options(user_roles)
+        scope_options = self._get_scope_options(user_roles)
         items, total = EngagementModel.get_engagements_paginated(
             external_user_id,
             pagination_options,
@@ -74,16 +76,15 @@ class EngagementService:
         engagements = engagements_schema.dump(items)
 
         if include_banner_url:
-            engagements = cls._attach_banner_url(engagements)
+            engagements = self._attach_banner_url(engagements)
         return {
             'items': engagements,
             'total': total
         }
 
-    @staticmethod
-    def _attach_banner_url(engagements: list):
+    def _attach_banner_url(self, engagements: list):
         for engagement in engagements:
-            engagement['banner_url'] = ObjectStorageService.get_url(engagement['banner_filename'])
+            engagement['banner_url'] = self.object_storage.get_url(engagement['banner_filename'])
         return engagements
 
     @staticmethod

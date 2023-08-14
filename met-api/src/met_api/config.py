@@ -23,6 +23,7 @@ import os
 import sys
 
 from dotenv import find_dotenv, load_dotenv
+from flask import g
 
 # this will load all the envars from a .env file located in the project root (api)
 load_dotenv(find_dotenv())
@@ -44,6 +45,29 @@ def get_named_config(config_name: str = 'development'):
     else:
         raise KeyError("Unknown configuration '{config_name}'")
     return config
+
+
+def get_s3_config(key: str):
+    """Return the s3 configuration object based on the tenant short name.
+
+    :raise: KeyError: if an unknown configuration is requested
+    """
+    tenant_short_name = g.get('tenant_name', None)
+    if not tenant_short_name:
+        return _Config.S3_CONFIG['DEFAULT'][key]
+
+    tenant_short_name = tenant_short_name.upper()
+
+    if tenant_short_name in _Config.S3_CONFIG:
+        return _Config.S3_CONFIG[tenant_short_name][key]
+
+    config_key = f'{tenant_short_name}_{key}'
+    config_value = os.getenv(config_key)
+
+    if not config_value:
+        return _Config.S3_CONFIG['DEFAULT'][key]
+
+    return config_value
 
 
 class _Config():  # pylint: disable=too-few-public-methods
@@ -81,6 +105,17 @@ class _Config():  # pylint: disable=too-few-public-methods
     S3_HOST = os.getenv('S3_HOST')
     S3_REGION = os.getenv('S3_REGION')
     S3_SERVICE = os.getenv('S3_SERVICE')
+
+    S3_CONFIG = {
+        'DEFAULT': {
+            'S3_BUCKET': os.getenv('S3_BUCKET'),
+            'S3_ACCESS_KEY_ID': os.getenv('S3_ACCESS_KEY_ID'),
+            'S3_SECRET_ACCESS_KEY': os.getenv('S3_SECRET_ACCESS_KEY'),
+            'S3_HOST': os.getenv('S3_HOST'),
+            'S3_REGION': os.getenv('S3_REGION'),
+            'S3_SERVICE': os.getenv('S3_SERVICE')
+        }
+    }
 
     # Service account details
     KEYCLOAK_BASE_URL = os.getenv('KEYCLOAK_BASE_URL')
