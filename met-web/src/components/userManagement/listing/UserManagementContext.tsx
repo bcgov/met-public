@@ -4,13 +4,16 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { createDefaultPageInfo, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { User, createDefaultUser } from 'models/user';
 import { getUserList } from 'services/userService/api';
+import { RootState } from 'store';
+import { setTablePagination } from 'services/listingService/listingSlice';
+import { useSelector } from 'react-redux';
 
 export interface UserManagementContextProps {
     usersLoading: boolean;
     pageInfo: PageInfo;
     users: User[];
     paginationOptions: PaginationOptions<User>;
-    setPaginationOptions: React.Dispatch<React.SetStateAction<PaginationOptions<User>>>;
+    setPaginationOptions: (value: PaginationOptions<User>) => void;
     addUserModalOpen: boolean;
     setAddUserModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
     assignRoleModalOpen: boolean;
@@ -60,20 +63,17 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
     const [usersLoading, setUsersLoading] = useState(true);
     const [addUserModalOpen, setAddUserModalOpen] = useState(false);
     const [assignRoleModalOpen, setassignRoleModalOpen] = useState(false);
-
-    const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<User>>({
-        page: 1,
-        size: 10,
-        sort_key: 'first_name',
-        nested_sort_key: 'first_name',
-        sort_order: 'asc',
-    });
+    const paginationOptions = useSelector((state: RootState) => state.table.user_management.pagination);
 
     useEffect(() => {
         loadUserListing();
     }, [paginationOptions]);
 
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
+
+    const setPaginationOptions = (paginationOptions: PaginationOptions<User>) => {
+        dispatch(setTablePagination({ tableName: 'user_management', pagination: paginationOptions }));
+    };
 
     const loadUserListing = async () => {
         try {

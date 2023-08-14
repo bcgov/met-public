@@ -30,30 +30,22 @@ import CloseRounded from '@mui/icons-material/CloseRounded';
 import FiberNewOutlined from '@mui/icons-material/FiberNewOutlined';
 import { CommentStatus } from 'constants/commentStatus';
 import { ActionsDropDown } from './ActionsDropDown';
-
+import { useSelector } from 'react-redux';
+import { setTablePagination } from 'services/listingService/listingSlice';
+import { RootState } from 'store';
 const EngagementListing = () => {
+    const paginationOptions = useSelector((state: RootState) => state.table.engagement.pagination);
     const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const navigate = useNavigate();
-
     const [searchFilter, setSearchFilter] = useState({
         key: 'name',
         value: '',
     });
     const [searchText, setSearchText] = useState('');
     const [engagements, setEngagements] = useState<Engagement[]>([]);
-    const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Engagement>>({
-        page: 1,
-        size: 10,
-        sort_key: 'created_date',
-        nested_sort_key: 'engagement.created_date',
-        sort_order: 'desc',
-    });
-
     const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
     const [tableLoading, setTableLoading] = useState(true);
-
     const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
-
     const [searchOptions, setSearchOptions] = useState<SearchOptions>({
         status_list: [],
         project_name: '',
@@ -487,7 +479,7 @@ const EngagementListing = () => {
                     headCells={headCells}
                     rows={engagements}
                     handleChangePagination={(paginationOptions: PaginationOptions<Engagement>) =>
-                        setPaginationOptions(paginationOptions)
+                        dispatch(setTablePagination({ tableName: 'engagement', pagination: paginationOptions }))
                     }
                     paginationOptions={paginationOptions}
                     loading={tableLoading}

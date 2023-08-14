@@ -4,6 +4,9 @@ import { useAppDispatch } from 'hooks';
 import { Survey } from 'models/survey';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getSurveysPage } from 'services/surveyService';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store';
+import { setTablePagination } from 'services/listingService/listingSlice';
 
 interface SurveyFilterStatus {
     linked: boolean;
@@ -95,13 +98,7 @@ export const SurveyListingContextProvider = ({ children }: SurveyListingContextP
     });
     const [searchText, setSearchText] = useState('');
     const [surveys, setSurveys] = useState<Survey[]>([]);
-    const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Survey>>({
-        page: 1,
-        size: 10,
-        sort_key: 'created_date',
-        nested_sort_key: 'survey.created_date',
-        sort_order: 'desc',
-    });
+    const paginationOptions = useSelector((state: RootState) => state.table.survey.pagination);
     const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
 
     const [tableLoading, setTableLoading] = useState(true);
@@ -141,6 +138,10 @@ export const SurveyListingContextProvider = ({ children }: SurveyListingContextP
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching surveys' }));
             setTableLoading(false);
         }
+    };
+
+    const setPaginationOptions = (paginationOptions: PaginationOptions<Survey>) => {
+        dispatch(setTablePagination({ tableName: 'survey', pagination: paginationOptions }));
     };
 
     useEffect(() => {

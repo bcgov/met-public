@@ -10,16 +10,12 @@ import MetTable from 'components/common/Table';
 import { getFeedbacksPage } from 'services/feedbackService';
 import { formatDate } from 'components/common/dateHelper';
 import { customRatings } from 'components/feedback/FeedbackModal/constants';
-
+import { useSelector } from 'react-redux';
+import { setTablePagination } from 'services/listingService/listingSlice';
+import { RootState } from 'store';
 const FeedbackListing = () => {
     const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
-    const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Feedback>>({
-        page: 1,
-        size: 10,
-        sort_key: 'rating',
-        nested_sort_key: null,
-        sort_order: 'asc',
-    });
+    const paginationOptions = useSelector((state: RootState) => state.table.feedback.pagination);
     const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
     const [tableLoading, setTableLoading] = useState(true);
     const dispatch = useAppDispatch();
@@ -122,7 +118,7 @@ const FeedbackListing = () => {
                     headCells={headCells}
                     rows={feedbacks}
                     handleChangePagination={(paginationOptions: PaginationOptions<Feedback>) =>
-                        setPaginationOptions(paginationOptions)
+                        dispatch(setTablePagination({ tableName: 'feedback', pagination: paginationOptions }))
                     }
                     paginationOptions={paginationOptions}
                     loading={tableLoading}
