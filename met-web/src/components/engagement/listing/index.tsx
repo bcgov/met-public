@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { MetPageGridContainer, MetTooltip, PrimaryButton, SecondaryButton } from 'components/common';
 import { Engagement } from 'models/engagement';
 import { useAppDispatch, useAppSelector } from 'hooks';
@@ -34,7 +34,10 @@ import { ActionsDropDown } from './ActionsDropDown';
 const EngagementListing = () => {
     const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const navigate = useNavigate();
-
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const pageFromURL = searchParams.get('page');
+    const sizeFromURL = searchParams.get('size');
     const [searchFilter, setSearchFilter] = useState({
         key: 'name',
         value: '',
@@ -42,8 +45,8 @@ const EngagementListing = () => {
     const [searchText, setSearchText] = useState('');
     const [engagements, setEngagements] = useState<Engagement[]>([]);
     const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Engagement>>({
-        page: 1,
-        size: 10,
+        page: Number(pageFromURL) || 1,
+        size: Number(sizeFromURL) || 10,
         sort_key: 'created_date',
         nested_sort_key: 'engagement.created_date',
         sort_order: 'desc',
@@ -67,6 +70,11 @@ const EngagementListing = () => {
         published_to_date: '',
     });
 
+    const updateURLWithPagination = () => {
+        const newURL = `?page=${paginationOptions.page}&size=${paginationOptions.size}`;
+        navigate(newURL);
+    };
+
     const dispatch = useAppDispatch();
 
     const { roles, assignedEngagements } = useAppSelector((state) => state.user);
@@ -78,6 +86,7 @@ const EngagementListing = () => {
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
     useEffect(() => {
+        updateURLWithPagination();
         loadEngagements();
     }, [paginationOptions, searchFilter, searchOptions]);
 
