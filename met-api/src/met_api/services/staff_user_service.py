@@ -80,12 +80,14 @@ class StaffUserService:
         subject = current_app.config.get('ACCESS_REQUEST_EMAIL_SUBJECT')
         grant_access_url = \
             notification.get_tenant_site_url(user.tenant_id, current_app.config.get('USER_MANAGEMENT_PATH'))
+        email_environment = current_app.config.get('EMAIL_ENVIRONMENT', '')
         args = {
             'first_name': user.first_name,
             'last_name': user.last_name,
             'username': user.username,
             'email_address': user.email_address,
-            'grant_access_url': grant_access_url
+            'grant_access_url': grant_access_url,
+            'email_environment': email_environment,
         }
         body = template.render(
             first_name=args.get('first_name'),
@@ -93,6 +95,7 @@ class StaffUserService:
             username=args.get('username'),
             email_address=args.get('email_address'),
             grant_access_url=args.get('grant_access_url'),
+            email_environment=args.get('email_environment'),
         )
         return subject, body, args
 

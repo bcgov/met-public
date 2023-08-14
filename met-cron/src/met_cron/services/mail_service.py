@@ -90,14 +90,17 @@ class EmailService:  # pylint: disable=too-few-public-methods
             format(engagement_id=eng.id)
         template = Template.get_template('publish_engagement.html')
         subject_template = current_app.config.get('PUBLISH_ENGAGEMENT_EMAIL_SUBJECT')
+        email_environment = current_app.config.get('EMAIL_ENVIRONMENT', '')
         args = {
             'engagement_name': eng.name,
             'link': f'{site_url}{view_path}',
+            'email_environment': email_environment,
         }
         subject = subject_template.format(engagement_name=eng.name)
         body = template.render(
             engagement_name=args.get('engagement_name'),
             link=args.get('link'),
+            email_environment=args.get('email_environment'),
         )
         return subject, body, args
 

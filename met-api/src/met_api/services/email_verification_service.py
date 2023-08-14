@@ -144,16 +144,24 @@ class EmailVerificationService:
             engagement.tenant_id, confirm_path)
         unsubscribe_url = notification.get_tenant_site_url(
             engagement.tenant_id, unsubscribe_path)
+        email_environment = current_app.config.get(
+            'EMAIL_ENVIRONMENT', '')
+        tenant_name = EmailVerificationService._get_tenant_name(
+            engagement.tenant_id)
         args = {
             'engagement_name': engagement_name,
             'confirm_url': confirm_url,
             'unsubscribe_url': unsubscribe_url,
+            'email_environment': email_environment,
+            'tenant_name': tenant_name,
         }
         subject = subject_template.format(engagement_name=engagement_name)
         body = template.render(
             engagement_name=args.get('engagement_name'),
             confirm_url=args.get('confirm_url'),
             unsubscribe_url=args.get('unsubscribe_url'),
+            email_environment=args.get('email_environment'),
+            tenant_name=args.get('tenant_name'),
         )
         return subject, body, args, template_id
 
@@ -165,6 +173,8 @@ class EmailVerificationService:
         engagement_name = engagement.name
         template_id = current_app.config.get(
             'VERIFICATION_EMAIL_TEMPLATE_ID', None)
+        email_environment = current_app.config.get(
+            'EMAIL_ENVIRONMENT', '')
         template = Template.get_template('email_verification.html')
         subject_template = current_app.config.get('VERIFICATION_EMAIL_SUBJECT')
         survey_path = current_app.config.get('SURVEY_PATH'). \
@@ -180,6 +190,7 @@ class EmailVerificationService:
             'engagement_url': f'{site_url}{engagement_path}',
             'tenant_name': tenant_name,
             'end_date': datetime.strftime(engagement.end_date, EmailVerificationService.full_date_format),
+            'email_environment': email_environment,
         }
         subject = subject_template.format(engagement_name=engagement_name)
         body = template.render(
@@ -187,6 +198,8 @@ class EmailVerificationService:
             survey_url=args.get('survey_url'),
             engagement_url=args.get('engagement_url'),
             tenant_name=args.get('tenant_name'),
+            end_date=args.get('end_date'),
+            email_environment=args.get('email_environment'),
         )
         return subject, body, args, template_id
 
