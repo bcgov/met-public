@@ -297,11 +297,6 @@ class EngagementService:
         return tenant.name
 
     @staticmethod
-    def _get_tenant_name(tenant_id):
-        tenant = TenantModel.find_by_id(tenant_id)
-        return tenant.name
-
-    @staticmethod
     def _get_dashboard_path(engagement: EngagementModel):
         engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement.id)
         if engagement_slug:
