@@ -51,7 +51,6 @@ def get_s3_config(key: str):
 
     :raise: KeyError: if an unknown configuration is requested
     """
-    print(">>>>>")
     tenant_short_name = g.get('tenant_name', None)
     if not tenant_short_name:
         return _Config.S3_CONFIG['DEFAULT'][key]
@@ -64,12 +63,9 @@ def get_s3_config(key: str):
     config_key = f'{tenant_short_name}_{key}'
     config_value = os.getenv(config_key)
 
-    print(config_key)
     if not config_value:
-        print("default")
         return _Config.S3_CONFIG['DEFAULT'][key]
 
-    print('config_value')
     return config_value
 
 class _Config():  # pylint: disable=too-few-public-methods
