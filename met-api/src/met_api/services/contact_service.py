@@ -7,6 +7,7 @@ from met_api.services.object_storage_service import ObjectStorageService
 
 class ContactService:
     """Contact management service."""
+
     def __init__(self):
         """Initialize the service."""
         self.object_storage = ObjectStorageService()

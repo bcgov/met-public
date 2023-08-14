@@ -29,7 +29,7 @@ class EngagementService:
     """Engagement management service."""
 
     otherdateformat = '%Y-%m-%d'
-    
+
     def __init__(self):
         """Initialize."""
         self.object_storage = ObjectStorageService()

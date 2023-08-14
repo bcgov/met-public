@@ -46,6 +46,7 @@ def get_named_config(config_name: str = 'development'):
         raise KeyError("Unknown configuration '{config_name}'")
     return config
 
+
 def get_s3_config(key: str):
     """Return the s3 configuration object based on the tenant short name.
 
@@ -67,6 +68,7 @@ def get_s3_config(key: str):
         return _Config.S3_CONFIG['DEFAULT'][key]
 
     return config_value
+
 
 class _Config():  # pylint: disable=too-few-public-methods
     """Base class configuration that should set reasonable defaults for all the other configurations."""
