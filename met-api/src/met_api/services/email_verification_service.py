@@ -127,6 +127,7 @@ class EmailVerificationService:
         return EmailVerificationService._render_survey_email_template(survey, token)
 
     @staticmethod
+    # pylint: disable-msg=too-many-locals
     def _render_subscribe_email_template(survey: SurveyModel, token, participant_id):
         # url is origin url excluding context path
         engagement: EngagementModel = EngagementModel.find_by_id(

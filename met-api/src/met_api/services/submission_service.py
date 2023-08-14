@@ -329,6 +329,7 @@ class SubmissionService:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
 
     @staticmethod
+    # pylint: disable-msg=too-many-locals
     def _render_email_template(staff_review_details: dict, submission: SubmissionModel, review_note, token):
         template = Template.get_template('email_rejected_comment.html')
         engagement: EngagementModel = EngagementModel.find_by_id(

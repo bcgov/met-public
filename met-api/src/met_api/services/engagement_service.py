@@ -290,7 +290,7 @@ class EngagementService:
             email_environment=args.get('email_environment'),
         )
         return subject, body, args
-    
+
     @staticmethod
     def _get_tenant_name(tenant_id):
         tenant = TenantModel.find_by_id(tenant_id)
