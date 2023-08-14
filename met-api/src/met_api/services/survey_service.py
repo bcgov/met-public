@@ -64,7 +64,7 @@ class SurveyService:
         engagement_model: EngagementModel = EngagementModel.find_by_id(survey_model.engagement_id)
         survey = SurveySchema().dump(survey_model)
         eng = EngagementSchema().dump(engagement_model)
-        eng['banner_url'] = ObjectStorageService.get_url(engagement_model.banner_filename)
+        eng['banner_url'] = ObjectStorageService().get_url(engagement_model.banner_filename)
         survey['engagement'] = eng
         return survey
 

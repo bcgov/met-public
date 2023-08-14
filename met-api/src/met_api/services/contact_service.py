@@ -7,23 +7,24 @@ from met_api.services.object_storage_service import ObjectStorageService
 
 class ContactService:
     """Contact management service."""
+    def __init__(self):
+        """Initialize the service."""
+        self.object_storage = ObjectStorageService()
 
-    @staticmethod
-    def get_contact_by_id(contact_id):
+    def get_contact_by_id(self, contact_id):
         """Get contact by id."""
         contact_record = Contact.find_by_id(contact_id)
         contact = ContactSchema().dump(contact_record)
-        contact['avatar_url'] = ObjectStorageService.get_url(contact.get('avatar_filename', None))
+        contact['avatar_url'] = self.object_storage.get_url(contact.get('avatar_filename', None))
         return contact
 
-    @staticmethod
-    def get_contacts():
+    def get_contacts(self):
         """Get contacts."""
         contacts_records = Contact.get_contacts()
         contacts = ContactSchema(many=True).dump(contacts_records)
         contacts = [{
             **contact,
-            'avatar_url': ObjectStorageService.get_url(contact.get('avatar_filename', None))
+            'avatar_url': self.object_storage.get_url(contact.get('avatar_filename', None))
         } for contact in contacts]
         return contacts
 
