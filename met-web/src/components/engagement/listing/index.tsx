@@ -33,6 +33,7 @@ import { ActionsDropDown } from './ActionsDropDown';
 import { useSelector } from 'react-redux';
 import { setTablePagination } from 'services/listingService/listingSlice';
 import { RootState } from 'store';
+import { AllModels } from 'services/listingService/types';
 const EngagementListing = () => {
     const paginationOptions = useSelector((state: RootState) => state.table.engagement.pagination);
     const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
@@ -479,7 +480,12 @@ const EngagementListing = () => {
                     headCells={headCells}
                     rows={engagements}
                     handleChangePagination={(paginationOptions: PaginationOptions<Engagement>) =>
-                        dispatch(setTablePagination({ tableName: 'engagement', pagination: paginationOptions }))
+                        dispatch(
+                            setTablePagination({
+                                tableName: 'engagement',
+                                pagination: paginationOptions as PaginationOptions<AllModels>,
+                            }),
+                        )
                     }
                     paginationOptions={paginationOptions}
                     loading={tableLoading}

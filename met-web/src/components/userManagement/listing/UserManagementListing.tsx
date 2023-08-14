@@ -12,6 +12,7 @@ import MetTable from 'components/common/Table';
 import { formatDate } from 'components/common/dateHelper';
 import { UserManagementContext } from './UserManagementContext';
 import { ActionsDropDown } from './ActionsDropDown';
+import { AllModels } from 'services/listingService/types';
 
 const UserManagementListing = () => {
     const { pageInfo, paginationOptions, setPaginationOptions, users, usersLoading } =
@@ -103,8 +104,8 @@ const UserManagementListing = () => {
                 <MetTable
                     headCells={headCells}
                     rows={users}
-                    handleChangePagination={(paginationOptions: PaginationOptions<User>) =>
-                        setPaginationOptions(paginationOptions)
+                    handleChangePagination={(paginationOptions) =>
+                        setPaginationOptions(paginationOptions as PaginationOptions<AllModels>)
                     }
                     paginationOptions={paginationOptions}
                     loading={usersLoading}

@@ -28,6 +28,7 @@ import { AdvancedSearch } from './AdvancedSearch';
 import { SurveyListingContext } from './SurveyListingContext';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { USER_ROLES } from 'services/userService/constants';
+import { AllModels } from 'services/listingService/types';
 
 const Surveys = () => {
     const {
@@ -448,8 +449,8 @@ const Surveys = () => {
                 <MetTable
                     headCells={headCells}
                     rows={surveys}
-                    handleChangePagination={(paginationOptions: PaginationOptions<Survey>) =>
-                        setPaginationOptions(paginationOptions)
+                    handleChangePagination={(paginationOptions) =>
+                        setPaginationOptions(paginationOptions as PaginationOptions<AllModels>)
                     }
                     paginationOptions={paginationOptions}
                     loading={tableLoading}

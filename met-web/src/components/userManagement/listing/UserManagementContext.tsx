@@ -7,6 +7,7 @@ import { getUserList } from 'services/userService/api';
 import { RootState } from 'store';
 import { setTablePagination } from 'services/listingService/listingSlice';
 import { useSelector } from 'react-redux';
+import { AllModels } from 'services/listingService/types';
 
 export interface UserManagementContextProps {
     usersLoading: boolean;
@@ -72,7 +73,12 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
     const setPaginationOptions = (paginationOptions: PaginationOptions<User>) => {
-        dispatch(setTablePagination({ tableName: 'user_management', pagination: paginationOptions }));
+        dispatch(
+            setTablePagination({
+                tableName: 'user_management',
+                pagination: paginationOptions as PaginationOptions<AllModels>,
+            }),
+        );
     };
 
     const loadUserListing = async () => {

@@ -13,6 +13,7 @@ import { customRatings } from 'components/feedback/FeedbackModal/constants';
 import { useSelector } from 'react-redux';
 import { setTablePagination } from 'services/listingService/listingSlice';
 import { RootState } from 'store';
+import { AllModels } from 'services/listingService/types';
 const FeedbackListing = () => {
     const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
     const paginationOptions = useSelector((state: RootState) => state.table.feedback.pagination);
@@ -117,8 +118,13 @@ const FeedbackListing = () => {
                 <MetTable
                     headCells={headCells}
                     rows={feedbacks}
-                    handleChangePagination={(paginationOptions: PaginationOptions<Feedback>) =>
-                        dispatch(setTablePagination({ tableName: 'feedback', pagination: paginationOptions }))
+                    handleChangePagination={(paginationOptions) =>
+                        dispatch(
+                            setTablePagination({
+                                tableName: 'feedback',
+                                pagination: paginationOptions as PaginationOptions<AllModels>,
+                            }),
+                        )
                     }
                     paginationOptions={paginationOptions}
                     loading={tableLoading}

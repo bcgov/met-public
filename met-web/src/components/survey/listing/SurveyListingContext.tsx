@@ -7,6 +7,7 @@ import { getSurveysPage } from 'services/surveyService';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store';
 import { setTablePagination } from 'services/listingService/listingSlice';
+import { AllModels } from 'services/listingService/types';
 
 interface SurveyFilterStatus {
     linked: boolean;
@@ -45,7 +46,7 @@ export interface SurveyListingContextState {
     searchText: string;
     setSearchText: (value: string) => void;
     paginationOptions: PaginationOptions<Survey>;
-    setPaginationOptions: (value: PaginationOptions<Survey>) => void;
+    setPaginationOptions: (value: PaginationOptions<AllModels>) => void;
     pageInfo: PageInfo;
     setPageInfo: (value: PageInfo) => void;
     tableLoading: boolean;
@@ -140,7 +141,7 @@ export const SurveyListingContextProvider = ({ children }: SurveyListingContextP
         }
     };
 
-    const setPaginationOptions = (paginationOptions: PaginationOptions<Survey>) => {
+    const setPaginationOptions = (paginationOptions: PaginationOptions<AllModels>) => {
         dispatch(setTablePagination({ tableName: 'survey', pagination: paginationOptions }));
     };
 
