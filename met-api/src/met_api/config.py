@@ -116,6 +116,8 @@ class _Config():  # pylint: disable=too-few-public-methods
     # Rejected comments
     REJECTED_EMAIL_TEMPLATE_ID = os.getenv('REJECTED_EMAIL_TEMPLATE_ID')
     REJECTED_EMAIL_SUBJECT = os.getenv('REJECTED_EMAIL_SUBJECT', '{engagement_name} - About your Comments')
+    # Environment from which email is sent
+    EMAIL_ENVIRONMENT = os.getenv('EMAIL_ENVIRONMENT', '')
     # New User Registration
     ACCESS_REQUEST_EMAIL_TEMPLATE_ID = os.getenv('ACCESS_REQUEST_EMAIL_TEMPLATE_ID')
     ACCESS_REQUEST_EMAIL_SUBJECT = os.getenv('ACCESS_REQUEST_EMAIL_SUBJECT', 'MET - New User Access Request')

@@ -23,6 +23,7 @@ from met_api.utils.enums import SourceAction, SourceType
 from met_api.utils.roles import Role
 from met_api.utils.template import Template
 from met_api.utils.token_info import TokenInfo
+from met_api.models import Tenant as TenantModel
 
 
 class EngagementService:
@@ -272,15 +273,28 @@ class EngagementService:
         engagement_url = notification.get_tenant_site_url(engagement.tenant_id, dashboard_path)
         subject = current_app.config.get('ENGAGEMENT_CLOSEOUT_EMAIL_SUBJECT'). \
             format(engagement_name=engagement.name)
+        email_environment = current_app.config.get(
+            'EMAIL_ENVIRONMENT', '')
+        tenant_name = EngagementService._get_tenant_name(
+            engagement.tenant_id)
         args = {
             'engagement_name': engagement.name,
             'engagement_url': engagement_url,
+            'tenant_name': tenant_name,
+            'email_environment': email_environment,
         }
         body = template.render(
             engagement_name=args.get('engagement_name'),
             engagement_url=args.get('engagement_url'),
+            tenant_name=args.get('tenant_name'),
+            email_environment=args.get('email_environment'),
         )
         return subject, body, args
+
+    @staticmethod
+    def _get_tenant_name(tenant_id):
+        tenant = TenantModel.find_by_id(tenant_id)
+        return tenant.name
 
     @staticmethod
     def _get_dashboard_path(engagement: EngagementModel):
