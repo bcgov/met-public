@@ -84,7 +84,7 @@ jest.mock('@mui/material', () => ({
 
 jest.mock('components/common', () => ({
     ...jest.requireActual('components/common'),
-    PrimaryButton: ({ children, ...rest }: { children: ReactNode; [prop: string]: unknown }) => {
+    PrimaryButton: ({ children, ...rest }: { children: ReactNode;[prop: string]: unknown }) => {
         return <button {...rest}>{children}</button>;
     },
 }));
@@ -109,6 +109,9 @@ jest.mock('react-redux', () => ({
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
     useNavigate: jest.fn(),
+    useLocation: jest.fn(() => ({
+        search: ''
+    }))
 }));
 
 describe('Survey form page tests', () => {

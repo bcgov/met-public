@@ -47,6 +47,13 @@ jest.mock('react-redux', () => ({
     }),
 }));
 
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useLocation: jest.fn(() => ({
+        search: ''
+    }))
+}));
+
 describe('User Management tests', () => {
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
