@@ -10,7 +10,9 @@ from met_api.models.membership import Membership as MembershipModel
 from met_api.services.staff_user_service import KEYCLOAK_SERVICE, StaffUserService
 from met_api.utils.enums import KeycloakGroups, MembershipStatus
 from met_api.utils.constants import Groups
-from ..exceptions.business_exception import BusinessException
+from met_api.services import authorization
+from met_api.exceptions.business_exception import BusinessException
+from met_api.utils.roles import Role
 
 
 class MembershipService:
@@ -137,6 +139,12 @@ class MembershipService:
 
         if membership.engagement_id != int(engagement_id):
             raise ValueError('Membership does not belong to this engagement.')
+
+        one_of_roles = (
+            MembershipType.TEAM_MEMBER.name,
+            Role.EDIT_MEMBERS.value
+        )
+        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
 
         if not membership:
             raise ValueError('Invalid Membership.')
