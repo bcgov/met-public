@@ -35,7 +35,7 @@ jest.mock('@mui/material', () => ({
 
 jest.mock('components/common', () => ({
     ...jest.requireActual('components/common'),
-    PrimaryButton: ({ children, ...rest }: { children: ReactNode;[prop: string]: unknown }) => {
+    PrimaryButton: ({ children, ...rest }: { children: ReactNode, [prop: string]: unknown }) => {
         return <button {...rest}>{children}</button>;
     },
 }));
@@ -43,8 +43,8 @@ jest.mock('components/common', () => ({
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
     useLocation: jest.fn(() => ({
-        search: ''
-    }))
+        search: '',
+    })),
 }));
 
 describe('Feedback Listing tests', () => {
