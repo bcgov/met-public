@@ -9,17 +9,14 @@ import { DashboardContext } from './DashboardContext';
 import { Palette } from 'styles/Theme';
 
 const EngagementList = () => {
-    const { engagements, isLoading } = useContext(DashboardContext);
-    const openEngagements = engagements.filter((engagement) => engagement.submission_status == SubmissionStatus.Open);
-    const upcomingEngagements = engagements.filter(
-        (engagement) => engagement.submission_status == SubmissionStatus.Upcoming,
-    );
+    const { openEngagements, upcomingEngagements, closedEngagements, isLoading } = useContext(DashboardContext);
+
     const lastMonthDate = new Date(new Date().setDate(new Date().getDate() - 30));
-    const recentlyClosedEngagements = engagements.filter(
+    const recentlyClosedEngagements = closedEngagements.filter(
         (engagement) =>
             engagement.submission_status == SubmissionStatus.Closed && new Date(engagement.end_date) >= lastMonthDate,
     );
-    const oldClosedEngagements = engagements.filter(
+    const oldClosedEngagements = closedEngagements.filter(
         (engagement) =>
             engagement.submission_status == SubmissionStatus.Closed && new Date(engagement.end_date) < lastMonthDate,
     );

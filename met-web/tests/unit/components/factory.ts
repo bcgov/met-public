@@ -47,6 +47,28 @@ const draftEngagement: Engagement = {
     },
 };
 
+const closedEngagement = {
+    ...draftEngagement,
+    id: 3,
+    name: 'Closed Engagement',
+    engagement_status: {
+        id: EngagementStatus.Closed,
+        status_name: 'Closed',
+    },
+    start_date: '2022-09-01',
+    end_date: '2023-03-30',
+    created_date: '2022-09-15 10:00:00',
+    published_date: '2022-09-19 10:00:00',
+    surveys: surveys,
+    submissions_meta_data: {
+        total: 1,
+        pending: 0,
+        needs_further_review: 0,
+        rejected: 0,
+        approved: 1,
+    },
+};
+
 const openEngagement = {
     ...draftEngagement,
     id: 2,
@@ -151,6 +173,7 @@ export {
     tenant,
     draftEngagement,
     openEngagement,
+    closedEngagement,
     surveys,
     mockEvent,
     mockEventItem,

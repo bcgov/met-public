@@ -4,11 +4,14 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { createDefaultPageInfo, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { getEngagements } from 'services/engagementService';
 import { Engagement } from 'models/engagement';
+import { EngagementDisplayStatus } from 'constants/engagementStatus';
 
 export interface DashboardContextProps {
     isLoading: boolean;
     pageInfo: PageInfo;
-    engagements: Engagement[];
+    openEngagements: Engagement[];
+    upcomingEngagements: Engagement[];
+    closedEngagements: Engagement[];
     paginationOptions: PaginationOptions<Engagement>;
     setPaginationOptions: React.Dispatch<React.SetStateAction<PaginationOptions<Engagement>>>;
 }
@@ -16,7 +19,9 @@ export interface DashboardContextProps {
 export const DashboardContext = createContext<DashboardContextProps>({
     isLoading: true,
     pageInfo: createDefaultPageInfo(),
-    engagements: [],
+    openEngagements: [],
+    upcomingEngagements: [],
+    closedEngagements: [],
     paginationOptions: {
         page: 0,
         size: 0,
@@ -28,7 +33,9 @@ export const DashboardContext = createContext<DashboardContextProps>({
 
 export const DashboardContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     const dispatch = useAppDispatch();
-    const [engagements, setEngagements] = useState<Engagement[]>([]);
+    const [openEngagements, setOpenEngagements] = useState<Engagement[]>([]);
+    const [upcomingEngagements, setUpcomingEngagements] = useState<Engagement[]>([]);
+    const [closedEngagements, setClosedEngagements] = useState<Engagement[]>([]);
     const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
     const [isLoading, setIsLoading] = useState(true);
 
@@ -49,16 +56,33 @@ export const DashboardContextProvider = ({ children }: { children: JSX.Element |
     const loadEngagements = async () => {
         try {
             setIsLoading(true);
-            const response = await getEngagements({
+            const openEngagement = await getEngagements({
                 page,
                 size,
                 sort_key: nested_sort_key || sort_key,
                 sort_order,
+                engagement_status: [EngagementDisplayStatus.Open],
             });
-            setEngagements(response.items);
+            setOpenEngagements(openEngagement.items);
             setPageInfo({
-                total: response.total,
+                total: openEngagement.total,
             });
+            const upcomingEngagement = await getEngagements({
+                page,
+                size,
+                sort_key: nested_sort_key || sort_key,
+                sort_order,
+                engagement_status: [EngagementDisplayStatus.Upcoming],
+            });
+            setUpcomingEngagements(upcomingEngagement.items);
+            const closedEngagement = await getEngagements({
+                page,
+                size,
+                sort_key: nested_sort_key || sort_key,
+                sort_order,
+                engagement_status: [EngagementDisplayStatus.Closed],
+            });
+            setClosedEngagements(closedEngagement.items);
             setIsLoading(false);
         } catch (error) {
             console.log(error);
@@ -75,7 +99,9 @@ export const DashboardContextProvider = ({ children }: { children: JSX.Element |
     return (
         <DashboardContext.Provider
             value={{
-                engagements,
+                openEngagements,
+                upcomingEngagements,
+                closedEngagements,
                 pageInfo,
                 isLoading,
                 paginationOptions,
