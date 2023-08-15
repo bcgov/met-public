@@ -46,6 +46,8 @@ const engagementSlug = {
     slug: 'engagement-name',
 };
 
+jest.mock('axios')
+
 jest.mock('hooks', () => ({
     ...jest.requireActual('hooks'),
     useAppSelector: jest.fn(() => true),

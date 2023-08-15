@@ -8,6 +8,8 @@ import { setupEnv } from '../setEnvVars';
 import { FeedbackModal } from 'components/feedback/FeedbackModal';
 import { CommentTypeEnum, SourceTypeEnum } from 'models/feedback';
 
+jest.mock('axios')
+
 describe('Feedback modal tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());

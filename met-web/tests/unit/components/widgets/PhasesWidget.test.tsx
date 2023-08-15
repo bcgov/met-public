@@ -19,6 +19,8 @@ const survey: Survey = {
     engagement_id: 1,
 };
 
+jest.mock('axios')
+
 const surveys = [survey];
 
 const phaseWidgetItem: WidgetItem = {

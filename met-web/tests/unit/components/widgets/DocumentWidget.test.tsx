@@ -56,6 +56,8 @@ const documentWidget: Widget = {
     items: [],
 };
 
+jest.mock('axios')
+
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
     useSelector: jest.fn(() => {

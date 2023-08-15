@@ -11,6 +11,9 @@ jest.mock('@reduxjs/toolkit/query/react', () => ({
     ...jest.requireActual('@reduxjs/toolkit/query/react'),
     fetchBaseQuery: jest.fn(),
 }));
+
+jest.mock('axios')
+
 describe('Schedule modal tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());

@@ -50,6 +50,8 @@ const whoIsListeningWidget: Widget = {
     items: [contactWidgetItem],
 };
 
+jest.mock('axios')
+
 jest.mock('components/map', () => () => {
     return <div></div>;
 });
