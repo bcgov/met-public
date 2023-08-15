@@ -271,9 +271,11 @@ class Engagement(BaseModel):
             engagement_id
             for engagement_id, in (
                 db.session.query(Engagement.id)
-                .join(MembershipModel)
+                .join(MembershipModel, MembershipModel.engagement_id == Engagement.id)
                 .join(StaffUser, StaffUser.external_id == external_user_id)
                 .filter(MembershipModel.user_id == StaffUser.id)
+                .filter(MembershipModel.is_latest.is_(True))
+                .filter(MembershipModel.status == MembershipStatus.ACTIVE.value)
                 .all()
             )
         ]
