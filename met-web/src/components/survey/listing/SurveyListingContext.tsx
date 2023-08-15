@@ -4,6 +4,8 @@ import { useAppDispatch } from 'hooks';
 import { Survey } from 'models/survey';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getSurveysPage } from 'services/surveyService';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { updateURLWithPagination } from 'components/common/Table/utils';
 
 interface SurveyFilterStatus {
     linked: boolean;
@@ -93,11 +95,15 @@ export const SurveyListingContextProvider = ({ children }: SurveyListingContextP
         key: 'name',
         value: '',
     });
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const pageFromURL = searchParams.get('page');
+    const sizeFromURL = searchParams.get('size');
     const [searchText, setSearchText] = useState('');
     const [surveys, setSurveys] = useState<Survey[]>([]);
     const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Survey>>({
-        page: 1,
-        size: 10,
+        page: Number(pageFromURL) || 1,
+        size: Number(sizeFromURL) || 10,
         sort_key: 'created_date',
         nested_sort_key: 'survey.created_date',
         sort_order: 'desc',
@@ -111,7 +117,6 @@ export const SurveyListingContextProvider = ({ children }: SurveyListingContextP
     });
 
     const dispatch = useAppDispatch();
-
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
     const loadSurveys = async () => {
@@ -144,6 +149,7 @@ export const SurveyListingContextProvider = ({ children }: SurveyListingContextP
     };
 
     useEffect(() => {
+        updateURLWithPagination(paginationOptions);
         loadSurveys();
     }, [paginationOptions, searchFilter, advancedSearchFilters]);
 
