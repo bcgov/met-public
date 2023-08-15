@@ -30,6 +30,7 @@ import CloseRounded from '@mui/icons-material/CloseRounded';
 import FiberNewOutlined from '@mui/icons-material/FiberNewOutlined';
 import { CommentStatus } from 'constants/commentStatus';
 import { ActionsDropDown } from './ActionsDropDown';
+import { updateURLWithPagination } from 'components/common/Table/utils';
 
 const EngagementListing = () => {
     const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
@@ -70,11 +71,6 @@ const EngagementListing = () => {
         published_to_date: '',
     });
 
-    const updateURLWithPagination = () => {
-        const newURL = `?page=${paginationOptions.page}&size=${paginationOptions.size}`;
-        navigate(newURL);
-    };
-
     const dispatch = useAppDispatch();
 
     const { roles, assignedEngagements } = useAppSelector((state) => state.user);
@@ -86,7 +82,7 @@ const EngagementListing = () => {
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
     useEffect(() => {
-        updateURLWithPagination();
+        updateURLWithPagination(paginationOptions);
         loadEngagements();
     }, [paginationOptions, searchFilter, searchOptions]);
 

@@ -5,6 +5,7 @@ import { Survey } from 'models/survey';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getSurveysPage } from 'services/surveyService';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { updateURLWithPagination } from 'components/common/Table/utils';
 
 interface SurveyFilterStatus {
     linked: boolean;
@@ -94,7 +95,6 @@ export const SurveyListingContextProvider = ({ children }: SurveyListingContextP
         key: 'name',
         value: '',
     });
-    const navigate = useNavigate();
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const pageFromURL = searchParams.get('page');
@@ -148,13 +148,8 @@ export const SurveyListingContextProvider = ({ children }: SurveyListingContextP
         }
     };
 
-    const updateURLWithPagination = () => {
-        const newURL = `?page=${paginationOptions.page}&size=${paginationOptions.size}`;
-        navigate(newURL);
-    };
-
     useEffect(() => {
-        updateURLWithPagination();
+        updateURLWithPagination(paginationOptions);
         loadSurveys();
     }, [paginationOptions, searchFilter, advancedSearchFilters]);
 

@@ -10,11 +10,11 @@ import MetTable from 'components/common/Table';
 import { getFeedbacksPage } from 'services/feedbackService';
 import { formatDate } from 'components/common/dateHelper';
 import { customRatings } from 'components/feedback/FeedbackModal/constants';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { updateURLWithPagination } from 'components/common/Table/utils';
 
 const FeedbackListing = () => {
     const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
-    const navigate = useNavigate();
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const pageFromURL = searchParams.get('page');
@@ -32,14 +32,9 @@ const FeedbackListing = () => {
 
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
-    const updateURLWithPagination = () => {
-        const newURL = `?page=${paginationOptions.page}&size=${paginationOptions.size}`;
-        navigate(newURL);
-    };
-
     useEffect(() => {
         loadFeedbacks();
-        updateURLWithPagination();
+        updateURLWithPagination(paginationOptions);
     }, [paginationOptions]);
 
     const loadFeedbacks = async () => {

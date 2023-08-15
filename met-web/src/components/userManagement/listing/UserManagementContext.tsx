@@ -5,6 +5,7 @@ import { createDefaultPageInfo, PageInfo, PaginationOptions } from 'components/c
 import { User, createDefaultUser } from 'models/user';
 import { getUserList } from 'services/userService/api';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { updateURLWithPagination } from 'components/common/Table/utils';
 
 export interface UserManagementContextProps {
     usersLoading: boolean;
@@ -54,7 +55,6 @@ export const UserManagementContext = createContext<UserManagementContextProps>({
 });
 
 export const UserManagementContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
-    const navigate = useNavigate();
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const pageFromURL = searchParams.get('page');
@@ -75,13 +75,8 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
         sort_order: 'asc',
     });
 
-    const updateURLWithPagination = () => {
-        const newURL = `?page=${paginationOptions.page}&size=${paginationOptions.size}`;
-        navigate(newURL);
-    };
-
     useEffect(() => {
-        updateURLWithPagination();
+        updateURLWithPagination(paginationOptions);
         loadUserListing();
     }, [paginationOptions]);
 

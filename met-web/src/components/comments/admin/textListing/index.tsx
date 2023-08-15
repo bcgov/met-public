@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton, MetParagraph, MetLabel } from 'components/common';
 import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { Link as MuiLink, Grid, Stack, TextField } from '@mui/material';
@@ -15,9 +15,14 @@ import { SurveySubmission } from 'models/surveySubmission';
 import { formatDate } from 'components/common/dateHelper';
 import { USER_ROLES } from 'services/userService/constants';
 import { USER_GROUP } from 'models/user';
+import { updateURLWithPagination } from 'components/common/Table/utils';
 
 const CommentTextListing = () => {
     const { roles, userDetail, assignedEngagements } = useAppSelector((state) => state.user);
+    const { search } = useLocation();
+    const searchParams = new URLSearchParams(search);
+    const pageFromURL = searchParams.get('page');
+    const sizeFromURL = searchParams.get('size');
     const badgeStyle: React.CSSProperties = {
         padding: 0,
         margin: 0,
@@ -29,8 +34,8 @@ const CommentTextListing = () => {
     });
     const [searchText, setSearchText] = useState('');
     const [paginationOptions, setPagination] = useState<PaginationOptions<SurveySubmission>>({
-        page: 1,
-        size: 10,
+        page: Number(pageFromURL) || 1,
+        size: Number(sizeFromURL) || 10,
         sort_key: 'id',
         nested_sort_key: 'submission.id',
         sort_order: 'desc',
@@ -74,6 +79,7 @@ const CommentTextListing = () => {
 
     useEffect(() => {
         loadSubmissions();
+        updateURLWithPagination(paginationOptions);
     }, [paginationOptions, surveyId, searchFilter]);
 
     const handleSearchBarClick = (filter: string) => {
