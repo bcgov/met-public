@@ -39,7 +39,7 @@ jest.mock('@mui/material', () => ({
 describe('Dashboard page tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
-    const getEngagementMock = jest.spyOn(engagementService, 'getEngagements');
+    const getEngagementMock = jest.spyOn(engagementService, 'getEngagements').mockReturnValue(Promise.resolve({ items: [], total: 0 }));
     const getAggregatorMock = jest.spyOn(aggregatorService, 'getAggregatorData');
     const getUserResponseDetailByMonthMock = jest.spyOn(userResponseDetailService, 'getUserResponseDetailByMonth');
     const getSurveyResultDataMock = jest.spyOn(surveyResultService, 'getSurveyResultData');

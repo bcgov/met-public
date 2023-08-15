@@ -7,12 +7,16 @@ import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as widgetService from 'services/widgetService';
+import * as engagementMetadataService from 'services/engagementMetadataService';
+import * as membershipService from 'services/membershipService';
+import * as engagementSettingService from 'services/engagementSettingService';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { Widget, WidgetItem, WidgetType } from 'models/widget';
 import { Contact } from 'models/contact';
 import { Box } from '@mui/material';
-import { draftEngagement } from '../factory';
+import { draftEngagement, engagementMetadata } from '../factory';
 import { USER_ROLES } from 'services/userService/constants';
+import { EngagementSettings, createDefaultEngagementSettings } from 'models/engagement';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
@@ -49,6 +53,10 @@ const whoIsListeningWidget: Widget = {
     engagement_id: 1,
     items: [contactWidgetItem],
 };
+
+const mockEngagementSettings: EngagementSettings = {
+    ...createDefaultEngagementSettings()
+}
 
 jest.mock('axios')
 
@@ -121,10 +129,18 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
     useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
+jest.spyOn(engagementMetadataService, 'getEngagementMetadata')
+    .mockReturnValue(Promise.resolve(engagementMetadata));
 
 describe('Who is Listening widget  tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
+    jest.spyOn(engagementMetadataService, 'getEngagementMetadata')
+        .mockReturnValue(Promise.resolve(engagementMetadata));
+    jest.spyOn(membershipService, 'getTeamMembers')
+        .mockReturnValue(Promise.resolve([]));
+    jest.spyOn(engagementSettingService, 'getEngagementSettings')
+        .mockReturnValue(Promise.resolve(mockEngagementSettings));
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')

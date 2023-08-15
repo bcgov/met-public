@@ -7,10 +7,18 @@ import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as widgetService from 'services/widgetService';
+import * as engagementMetadataService from 'services/engagementMetadataService';
+import * as membershipService from 'services/membershipService';
+import * as engagementSettingService from 'services/engagementSettingService';
 import { Box } from '@mui/material';
 import { WidgetType } from 'models/widget';
-import { draftEngagement, surveys, mockMap, mapWidget } from '../factory';
+import { draftEngagement, surveys, mockMap, mapWidget, engagementMetadata } from '../factory';
 import { USER_ROLES } from 'services/userService/constants';
+import { EngagementSettings, createDefaultEngagementSettings } from 'models/engagement';
+
+const mockEngagementSettings: EngagementSettings = {
+    ...createDefaultEngagementSettings()
+}
 
 jest.mock('components/map', () => () => {
     return <div></div>;
@@ -69,6 +77,9 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
 
+jest.spyOn(engagementMetadataService, 'getEngagementMetadata')
+    .mockReturnValue(Promise.resolve(engagementMetadata));
+
 describe('Map Widget tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
@@ -77,6 +88,10 @@ describe('Map Widget tests', () => {
         .spyOn(engagementService, 'getEngagement')
         .mockReturnValue(Promise.resolve(draftEngagement));
     const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([mapWidget]));
+    jest.spyOn(membershipService, 'getTeamMembers')
+        .mockReturnValue(Promise.resolve([]));
+    jest.spyOn(engagementSettingService, 'getEngagementSettings')
+        .mockReturnValue(Promise.resolve(mockEngagementSettings));
 
     beforeEach(() => {
         setupEnv();
