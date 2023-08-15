@@ -4,7 +4,7 @@ import { useAppDispatch } from 'hooks';
 import { Survey } from 'models/survey';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getSurveysPage } from 'services/surveyService';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { updateURLWithPagination } from 'components/common/Table/utils';
 
 interface SurveyFilterStatus {
