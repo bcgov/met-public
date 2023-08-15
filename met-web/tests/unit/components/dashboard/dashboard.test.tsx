@@ -9,7 +9,7 @@ import * as aggregatorService from 'services/analytics/aggregatorService';
 import * as userResponseDetailService from 'services/analytics/userResponseDetailService';
 import * as surveyResultService from 'services/analytics/surveyResult';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
-import { draftEngagement, openEngagement } from '../factory';
+import { openEngagement, closedEngagement } from '../factory';
 
 jest.mock('@mui/material', () => ({
     ...jest.requireActual('@mui/material'),
@@ -47,40 +47,40 @@ describe('Dashboard page tests', () => {
     });
 
     test('Dashboard is rendered and engagements are fetched', async () => {
-        getEngagementMock.mockReturnValue(
+        getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
-                items: [draftEngagement, openEngagement],
+                items: [openEngagement, closedEngagement],
                 total: 2,
             }),
         );
         render(<Dashboard />);
 
         await waitFor(() => {
-            expect(screen.getByText('Test Engagement')).toBeInTheDocument();
             expect(screen.getByText('Open Engagement')).toBeInTheDocument();
+            expect(screen.getByText('Closed Engagement')).toBeInTheDocument();
         });
     });
 
     test('Accordion expands and dashboard is displayed', async () => {
-        getEngagementMock.mockReturnValue(
+        getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
-                items: [draftEngagement, openEngagement],
+                items: [closedEngagement, openEngagement],
                 total: 1,
             }),
         );
-        getAggregatorMock.mockReturnValue(
+        getAggregatorMock.mockReturnValueOnce(
             Promise.resolve({
                 key: '',
                 value: 0,
             }),
         );
-        getUserResponseDetailByMonthMock.mockReturnValue(
+        getUserResponseDetailByMonthMock.mockReturnValueOnce(
             Promise.resolve({
                 showdataby: '',
                 responses: 0,
             }),
         );
-        getSurveyResultDataMock.mockReturnValue(
+        getSurveyResultDataMock.mockReturnValueOnce(
             Promise.resolve({
                 data: [
                     {
