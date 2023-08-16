@@ -6,11 +6,11 @@ import { UserDetailsContext } from './UserDetailsContext';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { formatDate } from 'components/common/dateHelper';
+import AssignedEngagementsListing from './AssignedEngagementsListing';
 
 export const UserDetails = () => {
     const { roles } = useAppSelector((state) => state.user);
-    const { savedUser, setAddUserModalOpen } =
-        useContext(UserDetailsContext);
+    const { savedUser, setAddUserModalOpen } = useContext(UserDetailsContext);
     const [superUserAssigned, setSuperUser] = useState(false);
     const [deactivatedUser, setDeactivatedUser] = useState(false);
     const dispatch = useAppDispatch();
@@ -134,6 +134,7 @@ export const UserDetails = () => {
                 </Grid>
             </Grid>
             <Grid item xs={12}>
+                <AssignedEngagementsListing />
             </Grid>
         </MetPageGridContainer>
     );

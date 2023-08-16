@@ -31,7 +31,7 @@ interface GetMembershipsByUserParams {
 }
 export const getMembershipsByUser = async ({
     user_external_id,
-    include_engagement_details
+    include_engagement_details,
 }: GetMembershipsByUserParams): Promise<EngagementTeamMember[]> => {
     if (!user_external_id) {
         return [];

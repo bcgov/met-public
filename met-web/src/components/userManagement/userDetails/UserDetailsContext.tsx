@@ -91,7 +91,7 @@ export const UserDetailsContextProvider = ({ children }: { children: JSX.Element
         }
         const user_engagements = await getMembershipsByUser({
             user_external_id: savedUser.external_id,
-            include_engagement_details: true
+            include_engagement_details: true,
         });
 
         setMemberships(user_engagements);

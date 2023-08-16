@@ -8,9 +8,8 @@ import { formatDate } from 'components/common/dateHelper';
 import { ActionsDropDown } from '../../engagement/form/EngagementFormTabs/UserManagement/ActionsDropDown';
 import { UserDetailsContext } from './UserDetailsContext';
 
-export const UserDetails = () => {
-    const { memberships, isUserLoading, isMembershipLoading } =
-        useContext(UserDetailsContext);
+export const AssignedEngagementsListing = () => {
+    const { memberships, isUserLoading, isMembershipLoading } = useContext(UserDetailsContext);
 
     const headCells: HeadCell<EngagementTeamMember>[] = [
         {
@@ -20,7 +19,6 @@ export const UserDetails = () => {
             label: 'Engagement',
             allowSort: true,
             renderCell: (row: EngagementTeamMember) => (
-
                 <MuiLink component={Link} to={`/engagements/${Number(row.id)}/view`}>
                     {row.engagement?.name}
                 </MuiLink>
@@ -64,7 +62,6 @@ export const UserDetails = () => {
     ];
 
     return (
-
         <MetTable
             headCells={headCells}
             rows={memberships}
@@ -74,4 +71,4 @@ export const UserDetails = () => {
     );
 };
 
-export default UserDetails;
+export default AssignedEngagementsListing;
