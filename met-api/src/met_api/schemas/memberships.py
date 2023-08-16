@@ -15,7 +15,7 @@ class MembershipSchema(Schema):
         """Exclude unknown fields in the deserialized output."""
 
         unknown = EXCLUDE
-
+        
     id = fields.Int(data_key='id')
     created_date = fields.DateTime(data_key='created_date')
     revoked_date = fields.DateTime(data_key='revoked_date')
@@ -24,4 +24,3 @@ class MembershipSchema(Schema):
     user_id = fields.Int(data_key='user_id')
     user = fields.Nested(StaffUserSchema)
     type = EnumField(MembershipType, by_value=True)
-    engagement = fields.Nested(EngagementSchema)

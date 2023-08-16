@@ -22,6 +22,7 @@ from flask_restx import Namespace, Resource
 from met_api.auth import jwt as _jwt
 from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas.memberships import MembershipSchema
+from met_api.schemas.membership_engagement import MembershipEngagementSchema
 from met_api.services.membership_service import MembershipService
 from met_api.utils.roles import Role
 from met_api.utils.util import allowedorigins, cors_preflight
@@ -73,7 +74,7 @@ class EngagementMembershipUser(Resource):
         try:
             # TODO add auth for this method
 
-            assert engagement_id == 'all' # Only all is supported for engagement_id
+            assert engagement_id == 'alll' # Only all is supported for engagement_id
             args = request.args
             include_engagement_details = args.get(
                 'include_engagement_details',
@@ -87,12 +88,18 @@ class EngagementMembershipUser(Resource):
             )
             members = MembershipService.get_assigned_engagements(
                 user_id,
-                include_engagement_details,
                 include_revoked
             )
-            return jsonify(MembershipSchema().dump(members, many=True)), HTTPStatus.OK
+
+            membership_schema = MembershipEngagementSchema() if include_engagement_details else MembershipSchema()
+
+            return jsonify(membership_schema.dump(members, many=True)), HTTPStatus.OK
         except BusinessException as err:
             return {'message': err.error}, err.status_code
+        except ValueError as err:
+            return str(err), HTTPStatus.BAD_REQUEST
+        except AssertionError:
+            return 'Invalid engagement id', HTTPStatus.BAD_REQUEST
 
 
 @cors_preflight('PATCH,OPTIONS')

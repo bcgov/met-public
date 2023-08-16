@@ -53,14 +53,10 @@ class Membership(BaseModel):
         cls,
         user_external_id,
         status=None,
-        include_engagement_details=False,
     ) -> List[Membership]:
         """Get memberships by user id."""
         query = db.session.query(Membership) \
             .join(StaffUser, StaffUser.id == Membership.user_id)
-
-        if include_engagement_details:
-            query = query.options(subqueryload(Membership.engagement))
 
         query = query.filter(
             and_(

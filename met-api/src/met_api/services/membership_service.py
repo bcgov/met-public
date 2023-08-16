@@ -125,7 +125,6 @@ class MembershipService:
     @staticmethod
     def get_assigned_engagements(
         user_id,
-        include_engagement_details=False,
         include_revoked=False,
     ):
         """Get memberships by user id."""
@@ -133,7 +132,6 @@ class MembershipService:
         return MembershipModel.find_by_user_id(
             user_id,
             status=status,
-            include_engagement_details=include_engagement_details
         )
 
     @staticmethod
