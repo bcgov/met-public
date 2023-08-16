@@ -4,6 +4,8 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { createDefaultPageInfo, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { User, createDefaultUser } from 'models/user';
 import { getUserList } from 'services/userService/api';
+import { useLocation } from 'react-router-dom';
+import { updateURLWithPagination } from 'components/common/Table/utils';
 
 export interface UserManagementContextProps {
     usersLoading: boolean;
@@ -53,6 +55,10 @@ export const UserManagementContext = createContext<UserManagementContextProps>({
 });
 
 export const UserManagementContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const pageFromURL = searchParams.get('page');
+    const sizeFromURL = searchParams.get('size');
     const dispatch = useAppDispatch();
     const [users, setUsers] = useState<User[]>([]);
     const [user, setUser] = useState<User>(createDefaultUser);
@@ -62,14 +68,15 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
     const [assignRoleModalOpen, setassignRoleModalOpen] = useState(false);
 
     const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<User>>({
-        page: 1,
-        size: 10,
+        page: Number(pageFromURL) || 1,
+        size: Number(sizeFromURL) || 10,
         sort_key: 'first_name',
         nested_sort_key: 'first_name',
         sort_order: 'asc',
     });
 
     useEffect(() => {
+        updateURLWithPagination(paginationOptions);
         loadUserListing();
     }, [paginationOptions]);
 

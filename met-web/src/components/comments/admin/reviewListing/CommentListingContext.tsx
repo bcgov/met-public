@@ -8,6 +8,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getSubmissionPage } from 'services/submissionService';
 import { getSurvey } from 'services/surveyService';
+import { updateURLWithPagination } from 'components/common/Table/utils';
 
 export interface AdvancedSearchFilters {
     status: CommentStatus | null;
@@ -94,7 +95,10 @@ export const CommentListingContextProvider = ({ children }: CommentListingContex
         key: 'id',
         value: '',
     });
-    const { state } = useLocation();
+    const { state, search } = useLocation();
+    const searchParams = new URLSearchParams(search);
+    const pageFromURL = searchParams.get('page');
+    const sizeFromURL = searchParams.get('size');
     const [advancedSearchFilters, setAdvancedSearchFilters] = useState<AdvancedSearchFilters>({
         ...initialSearchFilters,
         status: state?.status || null,
@@ -103,8 +107,8 @@ export const CommentListingContextProvider = ({ children }: CommentListingContex
     const [survey, setSurvey] = useState<Survey>(createDefaultSurvey());
     const [submissions, setSubmissions] = useState<SurveySubmission[]>([]);
     const [paginationOptions, setPagination] = useState<PaginationOptions<SurveySubmission>>({
-        page: 1,
-        size: 10,
+        page: Number(pageFromURL) || 1,
+        size: Number(sizeFromURL) || 10,
         sort_key: 'id',
         nested_sort_key: 'submission.id',
         sort_order: 'desc',
@@ -172,6 +176,7 @@ export const CommentListingContextProvider = ({ children }: CommentListingContex
             return;
         }
         loadData();
+        updateURLWithPagination(paginationOptions);
     }, [surveyId, paginationOptions, searchFilter, advancedSearchFilters]);
 
     return (

@@ -87,7 +87,7 @@ function MetTable<T>({
     noPagination = false,
     commentTable = false,
     // eslint-disable-next-line
-    handleChangePagination = (_pagination: PaginationOptions<T>) => {},
+    handleChangePagination = (_pagination: PaginationOptions<T>) => { },
     loading = false,
     paginationOptions = {
         page: 1,
