@@ -1,26 +1,28 @@
 import React, { useContext } from 'react';
-import { HeadCell } from 'components/common/Table/types';
-import { Link } from 'react-router-dom';
 import { Link as MuiLink } from '@mui/material';
 import MetTable from 'components/common/Table';
-import { EngagementTabsContext } from '../EngagementTabsContext';
+import { Link } from 'react-router-dom';
+import { HeadCell } from 'components/common/Table/types';
 import { ENGAGEMENT_MEMBERSHIP_STATUS_NAME, EngagementTeamMember } from 'models/engagementTeamMember';
 import { formatDate } from 'components/common/dateHelper';
-import { ActionsDropDown } from 'components/engagement/form/EngagementFormTabs/UserManagement/ActionsDropDown';
+import { ActionsDropDown } from '../../engagement/form/EngagementFormTabs/UserManagement/ActionsDropDown';
+import { UserDetailsContext } from './UserDetailsContext';
 
-const TeamMemberListing = () => {
-    const { teamMembers, teamMembersLoading } = useContext(EngagementTabsContext);
+export const UserDetails = () => {
+    const { memberships, isUserLoading, isMembershipLoading } =
+        useContext(UserDetailsContext);
 
     const headCells: HeadCell<EngagementTeamMember>[] = [
         {
-            key: 'user',
+            key: 'engagement',
             numeric: false,
             disablePadding: true,
-            label: 'Team Members',
-            allowSort: false,
+            label: 'Engagement',
+            allowSort: true,
             renderCell: (row: EngagementTeamMember) => (
-                <MuiLink component={Link} to={`/usermanagement/${row.user_id}/details`}>
-                    {row.user?.last_name + ', ' + row.user?.first_name}
+
+                <MuiLink component={Link} to={`/engagements/${Number(row.id)}/view`}>
+                    {row.engagement?.name}
                 </MuiLink>
             ),
         },
@@ -61,7 +63,15 @@ const TeamMemberListing = () => {
         },
     ];
 
-    return <MetTable headCells={headCells} rows={teamMembers} loading={teamMembersLoading} noPagination={true} />;
+    return (
+
+        <MetTable
+            headCells={headCells}
+            rows={memberships}
+            noPagination={true}
+            loading={isUserLoading || isMembershipLoading}
+        />
+    );
 };
 
-export default TeamMemberListing;
+export default UserDetails;

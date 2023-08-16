@@ -26,16 +26,18 @@ export const addTeamMemberToEngagement = async ({
 };
 
 interface GetMembershipsByUserParams {
-    user_id?: string;
+    user_external_id?: string;
+    include_engagement_details?: boolean;
 }
 export const getMembershipsByUser = async ({
-    user_id,
+    user_external_id,
+    include_engagement_details
 }: GetMembershipsByUserParams): Promise<EngagementTeamMember[]> => {
-    if (!user_id) {
+    if (!user_external_id) {
         return [];
     }
-    const url = replaceUrl(Endpoints.EngagementTeamMembers.GET_LIST_BY_USER, 'user_id', String(user_id));
-    const responseData = await http.GetRequest<EngagementTeamMember[]>(url);
+    const url = replaceUrl(Endpoints.EngagementTeamMembers.GET_LIST_BY_USER, 'user_id', String(user_external_id));
+    const responseData = await http.GetRequest<EngagementTeamMember[]>(url, { include_engagement_details });
     return responseData.data ?? [];
 };
 

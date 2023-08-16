@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { MetHeader3, MetLabel, MetSmallText, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
 import { USER_GROUP } from 'models/user';
-import { ActionContext } from './UserActionProvider';
+import { ActionContext } from './UserDetailsContext';
 import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -33,7 +33,7 @@ import { Palette } from 'styles/Theme';
 import ControlledRadioGroup from 'components/common/ControlledInputComponents/ControlledRadioGroup';
 
 export const AddToEngagementModal = () => {
-    const { savedUser, addUserModalOpen, setAddUserModalOpen, getUserEngagements, getUserDetails } =
+    const { savedUser, addUserModalOpen, setAddUserModalOpen, getUserMemberships, getUserDetails } =
         useContext(ActionContext);
     const userHasGroup = savedUser?.groups && savedUser?.groups.length > 0;
     const schema = yup
@@ -129,9 +129,8 @@ export const AddToEngagementModal = () => {
             dispatch(
                 openNotification({
                     severity: 'success',
-                    text: `You have successfully added ${savedUser?.first_name + ' ' + savedUser?.last_name} as a ${
-                        savedUser?.main_group
-                    } on ${data.engagement?.name}.`,
+                    text: `You have successfully added ${savedUser?.first_name + ' ' + savedUser?.last_name} as a ${savedUser?.main_group
+                        } on ${data.engagement?.name}.`,
                 }),
             );
         } else {
@@ -158,7 +157,7 @@ export const AddToEngagementModal = () => {
             }
             getUserDetails();
         }
-        getUserEngagements();
+        getUserMemberships();
     };
 
     const setErrors = (error: AxiosError) => {

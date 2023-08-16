@@ -40,7 +40,7 @@ class EngagementMembership(Resource):
     @cross_origin(origins=allowedorigins())
     @_jwt.has_one_of_roles([Role.VIEW_MEMBERS.value])
     def get(engagement_id):
-        """Create a new membership."""
+        """Get memberships."""
         # TODO validate against a schema.
         try:
             members = MembershipService.get_memberships(engagement_id)
@@ -68,11 +68,17 @@ class EngagementMembershipUser(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    def get(engagement_id, user_id):  # pylint: disable=unused-argument
+    def get(_, user_id):  # pylint: disable=unused-argument
         """Get membership by id."""
         try:
             # TODO add auth for this method
-            members = MembershipService.get_assigned_engagements(user_id)
+
+            include_engagement_details = request.args.get(
+                'include_engagement_details',
+                default=False,
+                type=lambda v: v.lower() == 'true'
+            )
+            members = MembershipService.get_assigned_engagements(user_id, include_engagement_details)
             return jsonify(MembershipSchema().dump(members, many=True)), HTTPStatus.OK
         except BusinessException as err:
             return {'message': err.error}, err.status_code

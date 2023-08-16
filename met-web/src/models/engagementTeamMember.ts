@@ -18,6 +18,7 @@ export interface EngagementTeamMember {
     user_id: number;
     user: User;
     type: EngagementMembershipType;
+    engagement?: Engagement;
 }
 export type MembershipStatusName = 'Active' | 'Inactive' | 'Revoked';
 

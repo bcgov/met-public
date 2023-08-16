@@ -123,7 +123,7 @@ class MembershipService:
         return memberships
 
     @staticmethod
-    def get_assigned_engagements(user_id):
+    def get_assigned_engagements(user_id, include_engagement_details=False):
         """Get memberships by user id."""
         return MembershipModel.find_by_user_id(user_id, status=MembershipStatus.ACTIVE.value)
 

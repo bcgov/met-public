@@ -3,18 +3,19 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { User, createDefaultUser } from 'models/user';
-import { fetchUserEngagements, getUser } from 'services/userService/api';
-import { Engagement } from 'models/engagement';
+import { getUser } from 'services/userService/api';
+import { getMembershipsByUser } from 'services/membershipService';
+import { EngagementTeamMember } from 'models/engagementTeamMember';
 
 export interface UserViewContext {
     savedUser: User | undefined;
     isUserLoading: boolean;
     addUserModalOpen: boolean;
-    memberships: Engagement[];
     isMembershipLoading: boolean;
-    setMemberships: React.Dispatch<React.SetStateAction<Engagement[]>>;
+    memberships: EngagementTeamMember[];
+    setMemberships: React.Dispatch<React.SetStateAction<EngagementTeamMember[]>>;
     setAddUserModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    getUserEngagements: () => Promise<void>;
+    getUserMemberships: () => Promise<void>;
     getUserDetails: () => Promise<void>;
 }
 
@@ -22,7 +23,7 @@ export type UserParams = {
     userId: string;
 };
 
-export const ActionContext = createContext<UserViewContext>({
+export const UserDetailsContext = createContext<UserViewContext>({
     savedUser: createDefaultUser,
     isUserLoading: true,
     addUserModalOpen: false,
@@ -33,7 +34,7 @@ export const ActionContext = createContext<UserViewContext>({
     setAddUserModalOpen: () => {
         throw new Error('Not implemented');
     },
-    getUserEngagements: () => {
+    getUserMemberships: () => {
         throw new Error('Not implemented');
     },
     getUserDetails: () => {
@@ -42,20 +43,20 @@ export const ActionContext = createContext<UserViewContext>({
     isMembershipLoading: true,
 });
 
-export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
+export const UserDetailsContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     const { userId } = useParams<UserParams>();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [savedUser, setSavedUser] = useState<User | undefined>(createDefaultUser);
     const [isUserLoading, setUserLoading] = useState(true);
     const [isMembershipLoading, setMembershipLoading] = useState(true);
-    const [memberships, setMemberships] = useState<Engagement[]>([]);
+    const [memberships, setMemberships] = useState<EngagementTeamMember[]>([]);
     const [addUserModalOpen, setAddUserModalOpen] = useState(false);
 
     useEffect(() => {
         const loadData = () => {
             fetchUser()
-                .then(() => getUserEngagements())
+                .then(() => getUserMemberships())
                 .catch((error) => console.error(error));
         };
         loadData();
@@ -84,15 +85,21 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         setUserLoading(false);
     };
 
-    const getUserEngagements = async () => {
-        const user_engagements = await fetchUserEngagements({ user_id: userId });
+    const getUserMemberships = async () => {
+        if (!savedUser) {
+            return;
+        }
+        const user_engagements = await getMembershipsByUser({
+            user_external_id: savedUser.external_id,
+            include_engagement_details: true
+        });
 
         setMemberships(user_engagements);
         setMembershipLoading(false);
     };
 
     return (
-        <ActionContext.Provider
+        <UserDetailsContext.Provider
             value={{
                 savedUser,
                 isUserLoading,
@@ -100,12 +107,12 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 setAddUserModalOpen,
                 memberships,
                 setMemberships,
-                getUserEngagements,
+                getUserMemberships,
                 getUserDetails,
                 isMembershipLoading,
             }}
         >
             {children}
-        </ActionContext.Provider>
+        </UserDetailsContext.Provider>
     );
 };

@@ -11,6 +11,7 @@ from sqlalchemy import ForeignKey, and_, or_
 from met_api.constants.membership_type import MembershipType
 
 from .base_model import BaseModel
+from .engagement import Engagement as EngagementModel
 from .staff_user import StaffUser
 from .db import db
 
@@ -48,19 +49,23 @@ class Membership(BaseModel):
         return memberships
 
     @classmethod
-    def find_by_user_id(cls, user_external_id, status=None) -> List[Membership]:
+    def find_by_user_id(cls, user_external_id, status=None, include_engagement_details=False) -> List[Membership]:
         """Get memberships by user id."""
         query = db.session.query(Membership) \
-            .join(StaffUser, StaffUser.id == Membership.user_id) \
-            .filter(
-                and_(
-                    StaffUser.external_id == user_external_id,
-                    or_(
-                        Membership.type == MembershipType.TEAM_MEMBER,
-                        Membership.type == MembershipType.REVIEWER
-                    ),
-                    Membership.is_latest.is_(True)
-                ))
+            .join(StaffUser, StaffUser.id == Membership.user_id)
+
+        if include_engagement_details:
+            query = query.join(EngagementModel, EngagementModel.id == Membership.engagement_id)
+
+        query = query.filter(
+            and_(
+                StaffUser.external_id == user_external_id,
+                or_(
+                    Membership.type == MembershipType.TEAM_MEMBER,
+                    Membership.type == MembershipType.REVIEWER
+                ),
+                Membership.is_latest.is_(True)
+            ))
 
         if status:
             query = query.filter(Membership.status == status)

@@ -115,7 +115,7 @@ const getAssignedEngagements = async (externalId: string, roles: string[]) => {
     }
     try {
         const memberships = await getMembershipsByUser({
-            user_id: externalId,
+            user_external_id: externalId,
         });
         return memberships.map((membership) => membership.engagement_id);
     } catch (e: unknown) {
