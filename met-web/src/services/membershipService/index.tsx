@@ -39,7 +39,10 @@ export const getMembershipsByUser = async ({
         return [];
     }
     const url = replaceUrl(Endpoints.EngagementTeamMembers.GET_LIST_BY_USER, 'user_id', String(user_external_id));
-    const responseData = await http.GetRequest<EngagementTeamMember[]>(url, { include_engagement_details, include_revoked, });
+    const responseData = await http.GetRequest<EngagementTeamMember[]>(url, {
+        include_engagement_details,
+        include_revoked,
+    });
     return responseData.data ?? [];
 };
 

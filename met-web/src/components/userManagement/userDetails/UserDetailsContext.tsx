@@ -63,7 +63,7 @@ export const UserDetailsContextProvider = ({ children }: { children: JSX.Element
             return Promise.resolve();
         }
         try {
-            getUserDetails();
+            await getUserDetails();
         } catch (error) {
             dispatch(
                 openNotification({

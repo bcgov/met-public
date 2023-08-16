@@ -23,11 +23,12 @@ export const ActionsDropDown = ({ membership }: { membership: EngagementTeamMemb
             setLoading(true);
             await revokeMembership(membership.engagement_id, membership.user_id);
             getUserMemberships();
-            dispatch(openNotification(
-                {
+            dispatch(
+                openNotification({
                     text: `You have successfully revoked ${membership.user.first_name} ${membership.user.last_name} from ${membership.engagement?.name}`,
-                    severity: 'success'
-                }));
+                    severity: 'success',
+                }),
+            );
             setLoading(false);
         } catch (error) {
             setLoading(false);
@@ -40,11 +41,12 @@ export const ActionsDropDown = ({ membership }: { membership: EngagementTeamMemb
             setLoading(true);
             await reinstateMembership(membership.engagement_id, membership.user_id);
             getUserMemberships();
-            dispatch(openNotification(
-                {
+            dispatch(
+                openNotification({
                     text: `You have successfully reinstated ${membership.user.first_name} ${membership.user.last_name} on ${membership.engagement?.name}`,
-                    severity: 'success'
-                }));
+                    severity: 'success',
+                }),
+            );
             setLoading(false);
         } catch (error) {
             setLoading(false);
