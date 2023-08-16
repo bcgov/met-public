@@ -5,7 +5,6 @@ from marshmallow_enum import EnumField
 from met_api.constants.membership_type import MembershipType
 
 from .staff_user import StaffUserSchema
-from .engagement import EngagementSchema
 
 
 class MembershipSchema(Schema):
@@ -15,7 +14,7 @@ class MembershipSchema(Schema):
         """Exclude unknown fields in the deserialized output."""
 
         unknown = EXCLUDE
-        
+
     id = fields.Int(data_key='id')
     created_date = fields.DateTime(data_key='created_date')
     revoked_date = fields.DateTime(data_key='revoked_date')

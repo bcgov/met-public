@@ -74,7 +74,7 @@ class EngagementMembershipUser(Resource):
         try:
             # TODO add auth for this method
 
-            assert engagement_id == 'alll' # Only all is supported for engagement_id
+            assert engagement_id == 'all'  # Only all is supported for engagement_id
             args = request.args
             include_engagement_details = args.get(
                 'include_engagement_details',
