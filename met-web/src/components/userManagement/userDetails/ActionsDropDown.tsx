@@ -25,8 +25,8 @@ export const ActionsDropDown = ({ membership }: { membership: EngagementTeamMemb
             getUserMemberships();
             dispatch(openNotification(
                 {
-                    text: `You have successfully revoked ${membership.user.username} from ${membership.engagement?.name}`,
-                    severity: 'error'
+                    text: `You have successfully revoked ${membership.user.first_name} ${membership.user.last_name} from ${membership.engagement?.name}`,
+                    severity: 'success'
                 }));
             setLoading(false);
         } catch (error) {
@@ -42,8 +42,8 @@ export const ActionsDropDown = ({ membership }: { membership: EngagementTeamMemb
             getUserMemberships();
             dispatch(openNotification(
                 {
-                    text: `You have successfully reinstated ${membership.user.username} on ${membership.engagement?.name}`,
-                    severity: 'error'
+                    text: `You have successfully reinstated ${membership.user.first_name} ${membership.user.last_name} on ${membership.engagement?.name}`,
+                    severity: 'success'
                 }));
             setLoading(false);
         } catch (error) {

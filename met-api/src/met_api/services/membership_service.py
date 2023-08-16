@@ -123,9 +123,18 @@ class MembershipService:
         return memberships
 
     @staticmethod
-    def get_assigned_engagements(user_id, include_engagement_details=False):
+    def get_assigned_engagements(
+        user_id,
+        include_engagement_details=False,
+        include_revoked=False,
+    ):
         """Get memberships by user id."""
-        return MembershipModel.find_by_user_id(user_id, status=MembershipStatus.ACTIVE.value)
+        status = MembershipStatus.ACTIVE.value if not include_revoked else None
+        return MembershipModel.find_by_user_id(
+            user_id,
+            status=status,
+            include_engagement_details=include_engagement_details
+        )
 
     @staticmethod
     def get_engagements_by_user(user_id):

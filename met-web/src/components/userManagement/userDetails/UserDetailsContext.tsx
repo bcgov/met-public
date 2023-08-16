@@ -54,12 +54,7 @@ export const UserDetailsContextProvider = ({ children }: { children: JSX.Element
     const [addUserModalOpen, setAddUserModalOpen] = useState(false);
 
     useEffect(() => {
-        const loadData = () => {
-            fetchUser()
-                .then(() => getUserMemberships())
-                .catch((error) => console.error(error));
-        };
-        loadData();
+        fetchUser();
     }, [userId]);
 
     const fetchUser = async () => {
@@ -85,16 +80,21 @@ export const UserDetailsContextProvider = ({ children }: { children: JSX.Element
         setUserLoading(false);
     };
 
+    useEffect(() => {
+        getUserMemberships();
+    }, [savedUser]);
+
     const getUserMemberships = async () => {
         if (!savedUser) {
             return;
         }
-        const user_engagements = await getMembershipsByUser({
+        const userMemberships = await getMembershipsByUser({
             user_external_id: savedUser.external_id,
             include_engagement_details: true,
+            include_revoked: true,
         });
 
-        setMemberships(user_engagements);
+        setMemberships(userMemberships);
         setMembershipLoading(false);
     };
 

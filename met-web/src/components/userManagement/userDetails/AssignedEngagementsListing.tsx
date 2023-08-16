@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 import { HeadCell } from 'components/common/Table/types';
 import { ENGAGEMENT_MEMBERSHIP_STATUS_NAME, EngagementTeamMember } from 'models/engagementTeamMember';
 import { formatDate } from 'components/common/dateHelper';
-import { ActionsDropDown } from '../../engagement/form/EngagementFormTabs/UserManagement/ActionsDropDown';
 import { UserDetailsContext } from './UserDetailsContext';
+import { ActionsDropDown } from './ActionsDropDown';
 
 export const AssignedEngagementsListing = () => {
     const { memberships, isUserLoading, isMembershipLoading } = useContext(UserDetailsContext);

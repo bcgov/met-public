@@ -7,11 +7,11 @@ from __future__ import annotations
 from typing import List
 
 from sqlalchemy import ForeignKey, and_, or_
+from sqlalchemy.orm import subqueryload
 
 from met_api.constants.membership_type import MembershipType
 
 from .base_model import BaseModel
-from .engagement import Engagement as EngagementModel
 from .staff_user import StaffUser
 from .db import db
 
@@ -49,13 +49,18 @@ class Membership(BaseModel):
         return memberships
 
     @classmethod
-    def find_by_user_id(cls, user_external_id, status=None, include_engagement_details=False) -> List[Membership]:
+    def find_by_user_id(
+        cls,
+        user_external_id,
+        status=None,
+        include_engagement_details=False,
+    ) -> List[Membership]:
         """Get memberships by user id."""
         query = db.session.query(Membership) \
             .join(StaffUser, StaffUser.id == Membership.user_id)
 
         if include_engagement_details:
-            query = query.join(EngagementModel, EngagementModel.id == Membership.engagement_id)
+            query = query.options(subqueryload(Membership.engagement))
 
         query = query.filter(
             and_(

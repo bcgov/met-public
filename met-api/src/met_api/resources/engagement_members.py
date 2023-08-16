@@ -68,17 +68,28 @@ class EngagementMembershipUser(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    def get(_, user_id):  # pylint: disable=unused-argument
+    def get(engagement_id, user_id):  # pylint: disable=unused-argument
         """Get membership by id."""
         try:
             # TODO add auth for this method
 
-            include_engagement_details = request.args.get(
+            assert engagement_id == 'all' # Only all is supported for engagement_id
+            args = request.args
+            include_engagement_details = args.get(
                 'include_engagement_details',
                 default=False,
                 type=lambda v: v.lower() == 'true'
             )
-            members = MembershipService.get_assigned_engagements(user_id, include_engagement_details)
+            include_revoked = args.get(
+                'include_revoked',
+                default=False,
+                type=lambda v: v.lower() == 'true'
+            )
+            members = MembershipService.get_assigned_engagements(
+                user_id,
+                include_engagement_details,
+                include_revoked
+            )
             return jsonify(MembershipSchema().dump(members, many=True)), HTTPStatus.OK
         except BusinessException as err:
             return {'message': err.error}, err.status_code
