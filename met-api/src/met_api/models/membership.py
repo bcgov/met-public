@@ -55,17 +55,16 @@ class Membership(BaseModel):
     ) -> List[Membership]:
         """Get memberships by user id."""
         query = db.session.query(Membership) \
-            .join(StaffUser, StaffUser.id == Membership.user_id)
-
-        query = query.filter(
-            and_(
-                StaffUser.external_id == user_external_id,
-                or_(
-                    Membership.type == MembershipType.TEAM_MEMBER,
-                    Membership.type == MembershipType.REVIEWER
-                ),
-                Membership.is_latest.is_(True)
-            ))
+            .join(StaffUser, StaffUser.id == Membership.user_id) \
+            .filter(
+                and_(
+                    StaffUser.external_id == user_external_id,
+                    or_(
+                        Membership.type == MembershipType.TEAM_MEMBER,
+                        Membership.type == MembershipType.REVIEWER
+                    ),
+                    Membership.is_latest.is_(True)
+                ))
 
         if status:
             query = query.filter(Membership.status == status)

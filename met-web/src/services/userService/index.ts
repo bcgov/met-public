@@ -62,7 +62,7 @@ const refreshToken = (dispatch: Dispatch<Action>) => {
     refreshInterval = setInterval(async () => {
         if (KeycloakData) {
             try {
-                const refreshed = await KeycloakData.updateToken(300000);
+                const refreshed = await KeycloakData.updateToken(3000);
                 if (refreshed) {
                     dispatch(userToken(KeycloakData.token));
                 }
