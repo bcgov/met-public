@@ -74,7 +74,9 @@ class EngagementMembershipUser(Resource):
         try:
             # TODO add auth for this method
 
-            assert engagement_id == 'all'  # Only all is supported for engagement_id
+            if engagement_id != 'all':
+                return 'Invalid engagement id', HTTPStatus.BAD_REQUEST
+
             args = request.args
             include_engagement_details = args.get(
                 'include_engagement_details',
@@ -98,8 +100,6 @@ class EngagementMembershipUser(Resource):
             return {'message': err.error}, err.status_code
         except ValueError as err:
             return str(err), HTTPStatus.BAD_REQUEST
-        except AssertionError:
-            return 'Invalid engagement id', HTTPStatus.BAD_REQUEST
 
 
 @cors_preflight('PATCH,OPTIONS')
