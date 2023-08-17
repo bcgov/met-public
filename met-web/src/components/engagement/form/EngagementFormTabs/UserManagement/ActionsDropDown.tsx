@@ -24,6 +24,12 @@ export const ActionsDropDown = ({ membership }: { membership: EngagementTeamMemb
             await revokeMembership(membership.engagement_id, membership.user_id);
             loadTeamMembers();
             setLoading(false);
+            dispatch(
+                openNotification({
+                    text: `You have successfully revoked ${membership.user.first_name} ${membership.user.last_name} from ${membership.engagement?.name}`,
+                    severity: 'success',
+                }),
+            );
         } catch (error) {
             setLoading(false);
             dispatch(openNotification({ text: 'Failed to revoke membership', severity: 'error' }));
@@ -36,6 +42,12 @@ export const ActionsDropDown = ({ membership }: { membership: EngagementTeamMemb
             await reinstateMembership(membership.engagement_id, membership.user_id);
             loadTeamMembers();
             setLoading(false);
+            dispatch(
+                openNotification({
+                    text: `You have successfully reinstated ${membership.user.first_name} ${membership.user.last_name} on ${membership.engagement?.name}`,
+                    severity: 'success',
+                }),
+            );
         } catch (error) {
             setLoading(false);
             dispatch(openNotification({ text: 'Failed to reinstate membership', severity: 'error' }));
