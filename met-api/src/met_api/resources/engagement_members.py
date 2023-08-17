@@ -22,6 +22,7 @@ from flask_restx import Namespace, Resource
 from met_api.auth import jwt as _jwt
 from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas.memberships import MembershipSchema
+from met_api.schemas.membership_engagement import MembershipEngagementSchema
 from met_api.services.membership_service import MembershipService
 from met_api.utils.roles import Role
 from met_api.utils.util import allowedorigins, cors_preflight
@@ -40,7 +41,7 @@ class EngagementMembership(Resource):
     @cross_origin(origins=allowedorigins())
     @_jwt.has_one_of_roles([Role.VIEW_MEMBERS.value])
     def get(engagement_id):
-        """Create a new membership."""
+        """Get memberships."""
         # TODO validate against a schema.
         try:
             members = MembershipService.get_memberships(engagement_id)
@@ -72,10 +73,33 @@ class EngagementMembershipUser(Resource):
         """Get membership by id."""
         try:
             # TODO add auth for this method
-            members = MembershipService.get_assigned_engagements(user_id)
-            return jsonify(MembershipSchema().dump(members, many=True)), HTTPStatus.OK
+
+            if engagement_id != 'all':
+                return 'Invalid engagement id', HTTPStatus.BAD_REQUEST
+
+            args = request.args
+            include_engagement_details = args.get(
+                'include_engagement_details',
+                default=False,
+                type=lambda v: v.lower() == 'true'
+            )
+            include_revoked = args.get(
+                'include_revoked',
+                default=False,
+                type=lambda v: v.lower() == 'true'
+            )
+            members = MembershipService.get_assigned_engagements(
+                user_id,
+                include_revoked
+            )
+
+            membership_schema = MembershipEngagementSchema() if include_engagement_details else MembershipSchema()
+
+            return jsonify(membership_schema.dump(members, many=True)), HTTPStatus.OK
         except BusinessException as err:
             return {'message': err.error}, err.status_code
+        except ValueError as err:
+            return str(err), HTTPStatus.BAD_REQUEST
 
 
 @cors_preflight('PATCH,OPTIONS')

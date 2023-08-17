@@ -48,7 +48,11 @@ class Membership(BaseModel):
         return memberships
 
     @classmethod
-    def find_by_user_id(cls, user_external_id, status=None) -> List[Membership]:
+    def find_by_user_id(
+        cls,
+        user_external_id,
+        status=None,
+    ) -> List[Membership]:
         """Get memberships by user id."""
         query = db.session.query(Membership) \
             .join(StaffUser, StaffUser.id == Membership.user_id) \

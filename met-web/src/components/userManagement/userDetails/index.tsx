@@ -1,14 +1,14 @@
 import React from 'react';
 import { UserDetails } from './UserDetails';
-import { ActionProvider } from './UserActionProvider';
 import { AddToEngagementModal } from './AddToEngagement';
+import { UserDetailsContextProvider } from './UserDetailsContext';
 
 export const UserProfile = () => {
     return (
-        <ActionProvider>
+        <UserDetailsContextProvider>
             <UserDetails />
             <AddToEngagementModal />
-        </ActionProvider>
+        </UserDetailsContextProvider>
     );
 };
 
