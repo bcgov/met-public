@@ -19,7 +19,6 @@ const EmailPreviewModal = ({ open, header, renderEmail, handleClose }: EmailModa
                 justifyContent="center"
                 sx={{
                     ...modalStyle,
-                    overflowY: 'scroll',
                 }}
                 rowSpacing={2}
             >
