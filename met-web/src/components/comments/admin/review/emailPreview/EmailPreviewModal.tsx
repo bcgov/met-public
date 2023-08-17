@@ -17,7 +17,10 @@ const EmailPreviewModal = ({ open, header, renderEmail, handleClose }: EmailModa
                 direction="column"
                 alignItems="center"
                 justifyContent="center"
-                sx={{ ...modalStyle }}
+                sx={{
+                    ...modalStyle,
+                    overflowY: 'scroll',
+                }}
                 rowSpacing={2}
             >
                 <Grid sx={{ alignItems: 'center', justifyContent: 'center' }} item xs={12}>

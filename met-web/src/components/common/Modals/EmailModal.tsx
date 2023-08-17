@@ -1,5 +1,15 @@
 import React, { FormEvent, useState } from 'react';
-import { Grid, Checkbox, TextField, FormControl, FormControlLabel, FormHelperText, Stack } from '@mui/material';
+import {
+    Grid,
+    Checkbox,
+    TextField,
+    FormControl,
+    FormControlLabel,
+    FormHelperText,
+    Stack,
+    useMediaQuery,
+    Theme,
+} from '@mui/material';
 import { MetLabel, modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody } from 'components/common';
 import Modal from '@mui/material/Modal';
 import { ModalProps } from './types';
@@ -17,6 +27,7 @@ const EmailModal = ({
     isSaving,
 }: ModalProps) => {
     const [checked, setChecked] = useState(false);
+    const isSmallScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const [emailFormError, setEmailFormError] = useState({
         terms: false,
         email: false,
@@ -44,7 +55,10 @@ const EmailModal = ({
                 <Grid
                     container
                     direction="row"
-                    sx={{ ...modalStyle }}
+                    sx={{
+                        ...modalStyle,
+                        overflowY: 'scroll',
+                    }}
                     alignItems="flex-start"
                     justifyContent="flex-start"
                     rowSpacing={2}
@@ -128,7 +142,9 @@ const EmailModal = ({
                             width="100%"
                             justifyContent="flex-end"
                         >
-                            <SecondaryButton onClick={() => updateModal(false)}>Cancel</SecondaryButton>
+                            <SecondaryButton sx={{ mb: isSmallScreen ? 2 : 0 }} onClick={() => updateModal(false)}>
+                                Cancel
+                            </SecondaryButton>
                             <PrimaryButton loading={isSaving} type="submit" variant={'contained'}>
                                 Submit
                             </PrimaryButton>
