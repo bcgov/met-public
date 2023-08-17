@@ -93,6 +93,25 @@ class StaffUser(Resource):
         return user, HTTPStatus.OK
 
 
+@cors_preflight('PATCH')
+@API.route('/<user_id>/active')
+class StaffUser(Resource):
+    """User controller class."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.has_one_of_roles([Role.TOGGLE_USER_STATUS.value])
+    def patch(user_id):
+        """Return a set of users(staff only)."""
+        data = request.get_json()
+        # to do validate data
+        user = StaffUserService.toggle_user_active_status(
+            user_id,
+            active=data.get('active'),
+        )
+        return user, HTTPStatus.OK
+
+
 @cors_preflight('POST')
 @API.route('/<user_id>/groups')
 class UserGroup(Resource):

@@ -175,3 +175,20 @@ class StaffUserService:
             raise BusinessException(
                 error='This user is already a Superuser.',
                 status_code=HTTPStatus.CONFLICT.value)
+
+    @staticmethod
+    def toggle_user_active_status(user_external_id: str, active: bool):
+        """Toggle user active status."""
+        db_user = StaffUserModel.get_user_by_external_id(user_external_id)
+        if db_user is None:
+            raise KeyError('User not found')
+
+        if db_user.active == active and active:
+            raise ValueError('This user is already active.')
+        elif db_user.active == active and not active:
+            raise ValueError('This user is already inactive.')
+
+        KEYCLOAK_SERVICE.toggle_user_enabled_status(user_id=user_external_id, enabled=active)        
+        db_user.active = active
+        db_user.save()
+        return StaffUserSchema().dump(db_user)            
