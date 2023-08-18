@@ -28,7 +28,7 @@ from met_api.constants.engagement_status import Status as EngagementStatus
 
 from met_api.constants.feedback import CommentType, FeedbackSourceType, RatingType
 from met_api.constants.widget import WidgetType
-from met_api.utils.enums import LoginSource
+from met_api.utils.enums import LoginSource, UserStatus
 
 
 fake = Faker()
@@ -42,6 +42,7 @@ class TestUserInfo(dict, Enum):
     user = {
         'id': 123,
         'first_name': 'System',
+        'status_id': UserStatus.ACTIVE.value,
     }
 
     user_staff_1 = {
@@ -49,6 +50,7 @@ class TestUserInfo(dict, Enum):
         'middle_name': fake.name(),
         'last_name': fake.name(),
         'email_address': fake.email(),
+        'status_id': UserStatus.ACTIVE.value,
     }
 
 
@@ -298,6 +300,7 @@ class TestJwtClaims(dict, Enum):
                 'review_comments',
                 'review_all_comments',
                 'view_all_engagements',
+                'toggle_user_status',
             ]
         }
     }

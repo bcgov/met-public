@@ -1,4 +1,4 @@
-import React, { useContext, useState, ChangeEvent } from 'react';
+import React, { useContext, useState } from 'react';
 import { Grid, FormControlLabel, Switch } from '@mui/material';
 import { MetLabel, MetParagraph, MetPageGridContainer, PrimaryButton } from 'components/common';
 import { useAppSelector, useAppDispatch } from 'hooks';
@@ -7,15 +7,16 @@ import { openNotificationModal } from 'services/notificationModalService/notific
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { formatDate } from 'components/common/dateHelper';
 import AssignedEngagementsListing from './AssignedEngagementsListing';
+import UserStatusToggle from './UserStatusToggle';
+import UserDetailsSkeleton from './UserDetailsSkeleton';
 
 export const UserDetails = () => {
     const { roles } = useAppSelector((state) => state.user);
-    const { savedUser, setAddUserModalOpen } = useContext(UserDetailsContext);
+    const { savedUser, setAddUserModalOpen, isUserLoading } = useContext(UserDetailsContext);
     const [superUserAssigned, setSuperUser] = useState(false);
-    const [deactivatedUser, setDeactivatedUser] = useState(false);
     const dispatch = useAppDispatch();
 
-    const handleToggleChange = (event: ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    const handleToggleChange = () => {
         if (roles.includes('SuperUser')) {
             dispatch(
                 openNotificationModal({
@@ -41,32 +42,10 @@ export const UserDetails = () => {
             dispatch(openNotification({ severity: 'error', text: 'You do not have permissions to give user roles' }));
         }
     };
-    const handleUserDeactivated = (event: ChangeEvent<HTMLInputElement>, checked: boolean) => {
-        if (roles.includes('SuperUser')) {
-            dispatch(
-                openNotificationModal({
-                    open: true,
-                    data: {
-                        header: `Remove SuperUser role from ${savedUser?.username}`,
-                        subText: [
-                            {
-                                text: `You are attempting to remove the SuperUser role from ${savedUser?.username}`,
-                            },
-                            {
-                                text: 'Are you sure?',
-                            },
-                        ],
-                        handleConfirm: () => {
-                            setDeactivatedUser(!deactivatedUser);
-                        },
-                    },
-                    type: 'confirm',
-                }),
-            );
-        } else {
-            dispatch(openNotification({ severity: 'error', text: 'You do not have permissions to remove user roles' }));
-        }
-    };
+
+    if (isUserLoading) {
+        return <UserDetailsSkeleton />;
+    }
 
     return (
         <MetPageGridContainer>
@@ -120,10 +99,7 @@ export const UserDetails = () => {
 
                 <Grid container direction="row" item xs={6} spacing={1}>
                     <Grid item xs={12}>
-                        <FormControlLabel
-                            control={<Switch checked={deactivatedUser} onChange={handleUserDeactivated} />}
-                            label={<MetLabel>Deactivate User</MetLabel>}
-                        />
+                        <UserStatusToggle />
                     </Grid>
                 </Grid>
             </Grid>
