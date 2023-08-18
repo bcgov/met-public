@@ -75,6 +75,8 @@ const Endpoints = {
     Feedback: {
         GET_LIST: `${AppConfig.apiUrl}/feedbacks/`,
         CREATE: `${AppConfig.apiUrl}/feedbacks/`,
+        UPDATE: `${AppConfig.apiUrl}/feedbacks/`,
+        DELETE: `${AppConfig.apiUrl}/feedbacks/`,
     },
     EmailVerification: {
         GET: `${AppConfig.apiUrl}/email_verification/verification_token`,

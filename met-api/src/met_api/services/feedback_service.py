@@ -39,3 +39,18 @@ class FeedbackService:
         new_feedback = Feedback.create_feedback(feedback)
         feedback_schema = FeedbackSchema()
         return feedback_schema.dump(new_feedback)
+
+    @classmethod
+    def update_feedback(cls, feedback_id, feedback_data):
+        """Update feedback by its ID."""
+        updated_feedback = Feedback.update_feedback(feedback_id, feedback_data)
+        if updated_feedback:
+            feedback_schema = FeedbackSchema()
+            return feedback_schema.dump(updated_feedback)
+        return None
+
+    @classmethod
+    def delete_feedback(cls, feedback_id):
+        """Remove Feedback from engagement."""
+        is_deleted = Feedback.delete_by_id(feedback_id)
+        return is_deleted
