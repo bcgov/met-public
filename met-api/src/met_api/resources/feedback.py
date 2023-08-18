@@ -19,18 +19,12 @@ from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
-from met_api.auth import auth
 from met_api.auth import jwt as _jwt
 from met_api.models.pagination_options import PaginationOptions
-from met_api.schemas import utils as schema_utils
 from met_api.services.feedback_service import FeedbackService
-from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
-
 API = Namespace('feedbacks', description='Endpoints for Feedbacks Management')
-"""Custom exception messages
-"""
 
 
 @cors_preflight('GET, POST, OPTIONS, DELETE, PATCH',)
@@ -69,7 +63,6 @@ class Feedback(Resource):
             if result:
                 return 'Feedback successfully removed', HTTPStatus.OK
             return 'Feedback not found', HTTPStatus.NOT_FOUND
-
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
@@ -83,8 +76,6 @@ class Feedback(Resource):
         feedback_data = request.get_json()
         updated_feedback = FeedbackService.update_feedback(
             feedback_id, feedback_data)
-
         if updated_feedback:
             return updated_feedback, HTTPStatus.OK
-        else:
-            return {'message': 'Feedback not found'}, HTTPStatus.NOT_FOUND
+        return {'message': 'Feedback not found'}, HTTPStatus.NOT_FOUND
