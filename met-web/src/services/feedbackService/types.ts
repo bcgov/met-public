@@ -6,8 +6,21 @@ export interface GetFeedbackRequest {
     search_text?: string;
 }
 
+export enum FeedbackStatus {
+    NotReviewed = 0,
+    Archived = 1,
+}
+
 export interface PostFeedbackRequest {
     rating: number;
     comment_type: number;
     comment: string;
+    status: FeedbackStatus;
+}
+
+export interface UpdateFeedbackRequest {
+    rating?: number;
+    comment_type?: number;
+    comment?: string;
+    status?: FeedbackStatus;
 }

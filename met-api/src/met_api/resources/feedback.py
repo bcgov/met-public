@@ -33,7 +33,7 @@ API = Namespace('feedbacks', description='Endpoints for Feedbacks Management')
 """
 
 
-@cors_preflight('GET, POST, OPTIONS')
+@cors_preflight('GET, POST, OPTIONS, DELETE, PATCH',)
 @API.route('/')
 class Feedback(Resource):
     """Resource for managing feedbacks."""
@@ -52,7 +52,8 @@ class Feedback(Resource):
                 sort_key=args.get('sort_key', 'name', str),
                 sort_order=args.get('sort_order', 'asc', str),
             )
-            feedback_records = FeedbackService().get_feedback_paginated(pagination_options, search_text)
+            feedback_records = FeedbackService().get_feedback_paginated(
+                pagination_options, search_text)
 
             return feedback_records, HTTPStatus.OK
         except ValueError as err:
@@ -60,18 +61,30 @@ class Feedback(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.optional
-    def post():
-        """Create a new feedback."""
+    @_jwt.requires_auth
+    def delete(feedback_id):
+        """Remove Feedback for an engagement."""
         try:
-            user_id = TokenInfo.get_id()
-            request_json = request.get_json()
-            valid_format, errors = schema_utils.validate(request_json, 'feedback')
-            if not valid_format:
-                return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
-            result = FeedbackService().create_feedback(request_json, user_id)
-            return result, HTTPStatus.OK
-        except KeyError:
-            return 'feedback was not found', HTTPStatus.INTERNAL_SERVER_ERROR
+            result = FeedbackService().delete_feedback(feedback_id)
+            if result:
+                return 'Feedback successfully removed', HTTPStatus.OK
+            return 'Feedback not found', HTTPStatus.NOT_FOUND
+
+        except KeyError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.requires_auth
+    def patch(feedback_id):
+        """Update feedback by ID."""
+        feedback_data = request.get_json()
+        updated_feedback = FeedbackService.update_feedback(
+            feedback_id, feedback_data)
+
+        if updated_feedback:
+            return updated_feedback, HTTPStatus.OK
+        else:
+            return {'message': 'Feedback not found'}, HTTPStatus.NOT_FOUND
