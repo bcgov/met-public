@@ -192,6 +192,7 @@ def factory_membership_model(user_id, engagement_id, member_type='TEAM_MEMBER', 
 def factory_feedback_model(feedback_info: dict = TestFeedbackInfo.feedback1, status=None):
     """Produce a feedback model."""
     feedback = FeedbackModel(
+        status=feedback_info.get('status'),
         comment=fake.text(),
         rating=feedback_info.get('rating'),
         comment_type=feedback_info.get('comment_type'),
