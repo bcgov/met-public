@@ -150,7 +150,7 @@ def mock_toggle_user_status(mocker):
     return mock_toggle_user_status
 
 
-def test_toggle_user_active_status(mocker, client ,jwt, session):
+def test_toggle_user_active_status(mocker, client, jwt, session):
     """Assert that a user can be toggled."""
     user = factory_staff_user_model()
     mocked_toggle_user_status = mock_toggle_user_status(mocker)
@@ -203,6 +203,7 @@ def test_reviewer_cannot_toggle_user_active_status(mocker, client, jwt, session)
     )
     assert rv.status_code == HTTPStatus.UNAUTHORIZED
     mocked_toggle_user_status.assert_not_called()
+
 
 def test_toggle_user_active_status_empty_body(mocker, client, jwt, session):
     """Assert that returns bad request if bad request body."""

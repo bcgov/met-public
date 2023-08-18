@@ -100,6 +100,7 @@ const UserStatusToggle = () => {
         <FormControlLabel
             control={
                 <Switch
+                    data-testid="user-status-toggle"
                     disabled={togglingUserStatus}
                     checked={userStatus}
                     onChange={(e) => handleToggleUserStatus(e.target.checked)}
