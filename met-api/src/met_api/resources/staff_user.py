@@ -103,15 +103,18 @@ class StaffUserStatus(Resource):
     @_jwt.has_one_of_roles([Role.TOGGLE_USER_STATUS.value])
     def patch(user_id):
         """Return a set of users(staff only)."""
-        data = request.get_json()
-        if data.get('active', None) is None:
-            return {'message': 'active field is required'}, HTTPStatus.BAD_REQUEST
+        try :
+            data = request.get_json()
+            if data.get('active', None) is None:
+                return {'message': 'active field is required'}, HTTPStatus.BAD_REQUEST
 
-        user = StaffUserService.toggle_user_active_status(
-            user_id,
-            active=data.get('active'),
-        )
-        return user, HTTPStatus.OK
+            user = StaffUserService.toggle_user_active_status(
+                user_id,
+                active=data.get('active'),
+            )
+            return user, HTTPStatus.OK
+        except (KeyError, ValueError) as err:
+            return str(err), HTTPStatus.BAD_REQUEST
 
 
 @cors_preflight('POST')

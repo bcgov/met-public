@@ -23,7 +23,7 @@ from unittest.mock import MagicMock
 from flask import current_app
 
 from met_api.models import Tenant as TenantModel
-from met_api.utils.enums import ContentType, KeycloakGroupName
+from met_api.utils.enums import ContentType, KeycloakGroupName, UserStatus
 from tests.utilities.factory_scenarios import TestJwtClaims, TestUserInfo
 from tests.utilities.factory_utils import factory_auth_header, factory_staff_user_model
 
@@ -135,3 +135,87 @@ def test_add_user_to_team_member_group(mocker, client, jwt, session):
     assert rv.status_code == HTTPStatus.OK
     mock_add_user_to_group_keycloak.assert_called()
     mock_get_user_groups_keycloak.assert_called()
+
+
+def mock_toggle_user_status(mocker):
+    """Mock the KeycloakService.add_user_to_group method."""
+    mock_response = MagicMock()
+    mock_response.status_code = HTTPStatus.NO_CONTENT
+
+    mock_toggle_user_status = mocker.patch(
+        f'{KEYCLOAK_SERVICE_MODULE}.toggle_user_enabled_status',
+        return_value=mock_response
+    )
+
+    return mock_toggle_user_status
+
+
+def test_toggle_user_active_status(mocker, client ,jwt, session):
+    """Assert that a user can be toggled."""
+    user = factory_staff_user_model()
+    mocked_toggle_user_status = mock_toggle_user_status(mocker)
+
+    assert user.status_id == UserStatus.ACTIVE.value
+    claims = TestJwtClaims.staff_admin_role
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.patch(
+        f'/api/user/{user.external_id}/status',
+        headers=headers,
+        json={'active': False},
+        content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == HTTPStatus.OK
+    assert rv.json.get('status_id') == UserStatus.INACTIVE.value
+    mocked_toggle_user_status.assert_called()
+
+
+def test_team_member_cannot_toggle_user_active_status(mocker, client, jwt, session):
+    """Assert that a team member cannot toggle user status."""
+    user = factory_staff_user_model()
+    mocked_toggle_user_status = mock_toggle_user_status(mocker)
+
+    assert user.status_id == UserStatus.ACTIVE.value
+    claims = TestJwtClaims.team_member_role
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.patch(
+        f'/api/user/{user.external_id}/status',
+        headers=headers,
+        json={'active': False},
+        content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == HTTPStatus.UNAUTHORIZED
+    mocked_toggle_user_status.assert_not_called()
+
+
+def test_reviewer_cannot_toggle_user_active_status(mocker, client, jwt, session):
+    """Assert that a reviewer cannot toggle user status."""
+    user = factory_staff_user_model()
+    mocked_toggle_user_status = mock_toggle_user_status(mocker)
+
+    assert user.status_id == UserStatus.ACTIVE.value
+    claims = TestJwtClaims.reviewer_role
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.patch(
+        f'/api/user/{user.external_id}/status',
+        headers=headers,
+        json={'active': False},
+        content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == HTTPStatus.UNAUTHORIZED
+    mocked_toggle_user_status.assert_not_called()
+
+def test_toggle_user_active_status_empty_body(mocker, client, jwt, session):
+    """Assert that returns bad request if bad request body."""
+    user = factory_staff_user_model()
+    mocked_toggle_user_status = mock_toggle_user_status(mocker)
+
+    assert user.status_id == UserStatus.ACTIVE.value
+    claims = TestJwtClaims.staff_admin_role
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.patch(
+        f'/api/user/{user.external_id}/status',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == HTTPStatus.BAD_REQUEST
+    mocked_toggle_user_status.assert_not_called()
