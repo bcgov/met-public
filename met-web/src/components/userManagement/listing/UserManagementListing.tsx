@@ -55,7 +55,7 @@ const UserManagementListing = () => {
             label: 'Status',
             allowSort: true,
             renderCell: (row: User) =>
-                Object.values(USER_STATUS).find((status) => status.value === row.status_id)?.label || '',
+                Object.values(USER_STATUS).find((status) => status.value === row.status_id)?.label ?? '',
         },
         {
             key: 'id',

@@ -12,7 +12,7 @@ import UserDetailsSkeleton from './UserDetailsSkeleton';
 
 export const UserDetails = () => {
     const { roles } = useAppSelector((state) => state.user);
-    const { savedUser, setAddUserModalOpen, isUserLoading, isMembershipLoading } = useContext(UserDetailsContext);
+    const { savedUser, setAddUserModalOpen, isUserLoading } = useContext(UserDetailsContext);
     const [superUserAssigned, setSuperUser] = useState(false);
     const dispatch = useAppDispatch();
 

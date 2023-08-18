@@ -186,4 +186,4 @@ class StaffUserService:
         KEYCLOAK_SERVICE.toggle_user_enabled_status(user_id=user_external_id, enabled=active)
         db_user.status_id = UserStatus.ACTIVE.value if active else UserStatus.INACTIVE.value
         db_user.save()
-        return StaffUserSchema().dump(db_user)    
+        return StaffUserSchema().dump(db_user)

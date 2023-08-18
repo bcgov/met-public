@@ -80,8 +80,9 @@ class SourceAction(Enum):
     CREATED = 'created'
     PUBLISHED = 'published'
 
+
 class UserStatus(IntEnum):
-    """User Membership status."""
+    """User status."""
 
     ACTIVE = 1
     INACTIVE = 2

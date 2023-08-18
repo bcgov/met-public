@@ -20,7 +20,7 @@ const mockUser1: User = {
     last_name: 'Mock last name',
     updated_date: Date(),
     created_date: Date(),
-    status: 'Active',
+    status_id: 1,
     roles: [],
 };
 
