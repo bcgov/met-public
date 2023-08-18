@@ -30,11 +30,22 @@ export interface User {
     id: number;
     last_name: string;
     updated_date: string;
-    status: string;
     roles: string[];
     main_group: string;
     username: string;
+    status_id: number;
 }
+
+export const USER_STATUS: { [x: string]: { value: number; label: string } } = {
+    ACTIVE: {
+        value: 1,
+        label: 'Active',
+    },
+    INACTIVE: {
+        value: 2,
+        label: 'Inactive',
+    },
+};
 
 export const createDefaultUser: User = {
     id: 0,
@@ -47,8 +58,8 @@ export const createDefaultUser: User = {
     last_name: '',
     updated_date: Date(),
     created_date: Date(),
-    status: '',
     roles: [],
     username: '',
     main_group: '',
+    status_id: 0,
 };

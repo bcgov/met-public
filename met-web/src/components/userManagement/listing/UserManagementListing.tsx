@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import SearchIcon from '@mui/icons-material/Search';
-import { User } from 'models/user';
+import { USER_STATUS, User } from 'models/user';
 import { HeadCell, PaginationOptions } from 'components/common/Table/types';
 import { MetPageGridContainer, PrimaryButton } from 'components/common';
 import { Link } from 'react-router-dom';
@@ -49,14 +49,13 @@ const UserManagementListing = () => {
             renderCell: (row: User) => formatDate(row.created_date),
         },
         {
-            key: 'status',
+            key: 'status_id',
             numeric: false,
             disablePadding: true,
             label: 'Status',
             allowSort: true,
-            /* TODO Hardcoded value since currently we have all users as active. 
-            Need to change once we have different user status */
-            renderCell: () => 'Active',
+            renderCell: (row: User) =>
+                Object.values(USER_STATUS).find((status) => status.value === row.status_id)?.label || '',
         },
         {
             key: 'id',

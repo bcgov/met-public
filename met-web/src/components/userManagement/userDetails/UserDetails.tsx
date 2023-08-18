@@ -8,10 +8,11 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { formatDate } from 'components/common/dateHelper';
 import AssignedEngagementsListing from './AssignedEngagementsListing';
 import UserStatusToggle from './UserStatusToggle';
+import UserDetailsSkeleton from './UserDetailsSkeleton';
 
 export const UserDetails = () => {
     const { roles } = useAppSelector((state) => state.user);
-    const { savedUser, setAddUserModalOpen } = useContext(UserDetailsContext);
+    const { savedUser, setAddUserModalOpen, isUserLoading, isMembershipLoading } = useContext(UserDetailsContext);
     const [superUserAssigned, setSuperUser] = useState(false);
     const dispatch = useAppDispatch();
 
@@ -41,6 +42,10 @@ export const UserDetails = () => {
             dispatch(openNotification({ severity: 'error', text: 'You do not have permissions to give user roles' }));
         }
     };
+
+    if (isUserLoading) {
+        return <UserDetailsSkeleton />;
+    }
 
     return (
         <MetPageGridContainer>

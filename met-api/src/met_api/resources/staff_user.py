@@ -94,7 +94,7 @@ class StaffUser(Resource):
 
 
 @cors_preflight('PATCH')
-@API.route('/<user_id>/active')
+@API.route('/<user_id>/status')
 class StaffUser(Resource):
     """User controller class."""
 

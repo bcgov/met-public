@@ -26,3 +26,4 @@ class StaffUserSchema(Schema):
     updated_date = fields.Str(data_key='updated_date')
     roles = fields.List(fields.Str(data_key='roles'))
     tenant_id = fields.Str(data_key='tenant_id')
+    status_id = fields.Int(data_key='status_id')

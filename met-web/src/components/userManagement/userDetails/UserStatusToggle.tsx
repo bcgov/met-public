@@ -16,7 +16,7 @@ const UserStatusToggle = () => {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        console.log('savedUser', savedUser);
+        setUserStatus(savedUser?.status_id === 1);
     }, [savedUser]);
 
     const handleUpdateActiveStatus = async (active: boolean) => {
