@@ -104,7 +104,9 @@ class StaffUserStatus(Resource):
     def patch(user_id):
         """Return a set of users(staff only)."""
         data = request.get_json()
-        # to do validate data
+        if not data.get('active'):
+            return {'message': 'active is required'}, HTTPStatus.BAD_REQUEST
+
         user = StaffUserService.toggle_user_active_status(
             user_id,
             active=data.get('active'),
