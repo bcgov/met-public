@@ -26,7 +26,7 @@ from met_api.constants.comment_status import Status as CommentStatus
 from met_api.constants.engagement_status import SubmissionStatus
 from met_api.constants.engagement_status import Status as EngagementStatus
 
-from met_api.constants.feedback import CommentType, FeedbackSourceType, RatingType
+from met_api.constants.feedback import CommentType, FeedbackSourceType, RatingType, FeedbackStatusType
 from met_api.constants.widget import WidgetType
 from met_api.utils.enums import LoginSource, UserStatus
 
@@ -235,6 +235,7 @@ class TestFeedbackInfo(dict, Enum):
     """Test scenarios of feedback."""
 
     feedback1 = {
+        'status': FeedbackStatusType.Unreviewed,
         'comment': 'A feedback comment',
         'rating': RatingType.Satisfied,
         'comment_type': CommentType.Idea,
