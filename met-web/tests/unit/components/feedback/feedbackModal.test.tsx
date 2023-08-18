@@ -6,7 +6,7 @@ import * as feedbackService from 'services/feedbackService';
 import '@testing-library/jest-dom';
 import { setupEnv } from '../setEnvVars';
 import { FeedbackModal } from 'components/feedback/FeedbackModal';
-import { CommentTypeEnum, SourceTypeEnum } from 'models/feedback';
+import { CommentTypeEnum, FeedbackStatusEnum, SourceTypeEnum } from 'models/feedback';
 
 describe('Feedback modal tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
@@ -54,6 +54,7 @@ describe('Feedback modal tests', () => {
     test('Submit shows thank you message', async () => {
         createFeedbackMock.mockReturnValue(
             Promise.resolve({
+                status: FeedbackStatusEnum.NotReviewed,
                 comment_type: CommentTypeEnum.None,
                 comment: '',
                 rating: 1,
