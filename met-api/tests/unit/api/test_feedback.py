@@ -31,7 +31,7 @@ def test_feedback(client, jwt, session):  # pylint:disable=unused-argument
 
     feedback = factory_feedback_model()
     to_dict = {
-        status: feedback.status,
+        'status': feedback.status,
         'rating': feedback.rating,
         'comment_type': feedback.comment_type,
         'comment': feedback.comment
