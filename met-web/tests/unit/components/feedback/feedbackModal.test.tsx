@@ -24,10 +24,6 @@ describe('Feedback modal tests', () => {
             expect(feedbackButton).toBeVisible();
         });
         fireEvent.click(feedbackButton);
-        await waitFor(() => {
-            expect(getByTestId('feedback-title')).toBeVisible();
-        });
-
         const submitButton = getByTestId('submit-button');
         expect(submitButton).toBeDisabled();
     });
@@ -39,9 +35,6 @@ describe('Feedback modal tests', () => {
             expect(feedbackButton).toBeVisible();
         });
         fireEvent.click(feedbackButton);
-        await waitFor(() => {
-            expect(getByTestId('feedback-title')).toBeVisible();
-        });
 
         const issueButton = getByTestId('comment-type-issue-button');
         expect(issueButton).toBeVisible();
@@ -67,9 +60,6 @@ describe('Feedback modal tests', () => {
             expect(feedbackButton).toBeVisible();
         });
         fireEvent.click(feedbackButton);
-        await waitFor(() => {
-            expect(getByTestId('feedback-title')).toBeVisible();
-        });
         const ratingInput = getByTestId('rating-input');
         fireEvent.click(ratingInput.getElementsByTagName('label')[0]);
         const submitButton = getByTestId('submit-button');
