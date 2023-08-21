@@ -28,6 +28,12 @@ class MembershipService:
                 error='Invalid User.',
                 status_code=HTTPStatus.BAD_REQUEST)
 
+        one_of_roles = (
+            MembershipType.TEAM_MEMBER.name,
+            Role.EDIT_MEMBERS.value
+        )
+        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
+
         user_details = StaffUserSchema().dump(user)
         # attach and map groups
         StaffUserService.attach_groups([user_details])

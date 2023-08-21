@@ -96,6 +96,7 @@ class Engagements(Resource):
                 'application_number': args.get('application_number', None, type=str),
                 'client_name': args.get('client_name', None, type=str),
                 'exclude_internal': exclude_internal,
+                'role': args.get('role', None, type=str),
             }
 
             engagement_records = EngagementService()\
