@@ -19,9 +19,12 @@ from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
+from met_api.auth import auth
 from met_api.auth import jwt as _jwt
+from met_api.schemas import utils as schema_utils
 from met_api.models.pagination_options import PaginationOptions
 from met_api.services.feedback_service import FeedbackService
+from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
 API = Namespace('feedbacks', description='Endpoints for Feedbacks Management')
@@ -50,6 +53,25 @@ class Feedback(Resource):
                 pagination_options, search_text)
 
             return feedback_records, HTTPStatus.OK
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @auth.optional
+    def post():
+        """Create a new feedback."""
+        try:
+            user_id = TokenInfo.get_id()
+            request_json = request.get_json()
+            valid_format, errors = schema_utils.validate(
+                request_json, 'feedback')
+            if not valid_format:
+                return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
+            result = FeedbackService().create_feedback(request_json, user_id)
+            return result, HTTPStatus.OK
+        except KeyError:
+            return 'feedback was not found', HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
