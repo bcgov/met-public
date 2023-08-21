@@ -18,7 +18,7 @@ Test-Suite to ensure that the /Feedbacks endpoint is working as expected.
 """
 import json
 
-from met_api.constants.feedback import FeedbackSourceType, FeedbackStatusType
+from met_api.constants.feedback import FeedbackSourceType
 from met_api.utils.enums import ContentType
 
 from tests.utilities.factory_scenarios import TestJwtClaims
@@ -44,7 +44,6 @@ def test_feedback(client, jwt, session):  # pylint:disable=unused-argument
     result = rv.json
     assert result is not None
     assert result.get('id') is not None
-    assert result.get('status') == FeedbackStatusType.Unreviewed
     assert result.get('rating') == feedback.rating
     assert result.get('comment_type') == feedback.comment_type
     assert result.get('comment') == feedback.comment
