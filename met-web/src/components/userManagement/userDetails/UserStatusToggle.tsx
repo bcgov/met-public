@@ -29,11 +29,13 @@ const UserStatusToggle = () => {
             setTogglingUserStatus(true);
             await toggleUserStatus(savedUser.external_id, active);
             dispatch(
-                openNotification(
-                    {
-                        severity: 'success',
-                        text: `You have successfully ${active ? "activated" : "deactivated"} ${savedUser.first_name} ${savedUser.last_name}.`
-                    }));
+                openNotification({
+                    severity: 'success',
+                    text: `You have successfully ${active ? 'activated' : 'deactivated'} ${savedUser.first_name} ${
+                        savedUser.last_name
+                    }.`,
+                }),
+            );
             setTogglingUserStatus(false);
         } catch (error) {
             setUserStatus(!active);
