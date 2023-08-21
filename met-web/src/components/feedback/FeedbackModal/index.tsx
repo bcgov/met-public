@@ -15,7 +15,7 @@ import ModeCommentIcon from '@mui/icons-material/ModeComment';
 import CloseIcon from '@mui/icons-material/Close';
 import { ReactComponent as CheckIcon } from 'assets/images/check.svg';
 import { useState } from 'react';
-import { MetBody, MetHeader3, MetLabel, modalStyle, PrimaryButton } from '../../common';
+import { MetBody, MetHeader3, MetLabel, modalStyle, PrimaryButton, MetDisclaimer } from '../../common';
 import { CommentTypeEnum, createDefaultFeedback, RatingTypeEnum } from 'models/feedback';
 import { Else, If, Then, When } from 'react-if';
 import { CommentTypeButton, StyledRating } from './styledComponents';
@@ -129,20 +129,22 @@ export const FeedbackModal = () => {
                             </Grid>
                         </Then>
                         <Else>
-                            <Grid item xs={12} display="flex">
-                                <Box flexGrow={1}>
-                                    <MetHeader3 id="modal-title" data-testid="feedback-title">
-                                        Send us your feedback
-                                    </MetHeader3>
-                                </Box>
-                                <Box sx={{ marginTop: -1, padding: 0 }}>
+                            <Grid
+                                item
+                                xs={12}
+                                display="flex"
+                                alignItems={'flex-start'}
+                                justifyContent={'flex-end'}
+                                sx={{ marginTop: -2 }}
+                            >
+                                <Box sx={{ padding: 0 }}>
                                     <IconButton aria-label="close" onClick={handleClose} sx={{ color: 'black' }}>
                                         <CloseIcon fontSize="small" />
                                     </IconButton>
                                 </Box>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetLabel>How do you like our engagement platform?</MetLabel>
+                                <MetLabel>How do you like our feedback platform?</MetLabel>
                             </Grid>
                             <Grid item xs={12} textAlign="center">
                                 <StyledRating
@@ -162,7 +164,7 @@ export const FeedbackModal = () => {
                             <Grid item xs={12}>
                                 <MetLabel>What else would you like to share with us?</MetLabel>
                             </Grid>
-                            <Grid item xs={12} alignItems="flex-start" justifyContent="space-around">
+                            <Grid item container xs={12} alignItems="space-evenly" justifyContent="space-evenly">
                                 <CommentTypeButton
                                     data-testid="comment-type-issue-button"
                                     onClick={() => handleCommentTypeChanged(CommentTypeEnum.Issue)}
@@ -182,15 +184,6 @@ export const FeedbackModal = () => {
                                     <Stack spacing={0} justifyContent="space-around" alignItems="center">
                                         <MetBody>{commentTypes[CommentTypeEnum.Idea].label}</MetBody>
                                         <When condition={!comment_type}>{commentTypes[CommentTypeEnum.Idea].icon}</When>
-                                    </Stack>
-                                </CommentTypeButton>
-                                <CommentTypeButton
-                                    onClick={() => handleCommentTypeChanged(CommentTypeEnum.Else)}
-                                    sx={{ border: comment_type == CommentTypeEnum.Else ? '2px solid black' : '' }}
-                                >
-                                    <Stack spacing={0} justifyContent="space-around" alignItems="center">
-                                        <MetBody>{commentTypes[CommentTypeEnum.Else].label}</MetBody>
-                                        <When condition={!comment_type}>{commentTypes[CommentTypeEnum.Else].icon}</When>
                                     </Stack>
                                 </CommentTypeButton>
                             </Grid>
@@ -232,6 +225,12 @@ export const FeedbackModal = () => {
                                         }}
                                     />
                                 </When>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <MetDisclaimer marginTop={0}>
+                                    Please do not include any personal information in your feedback. Feedback that
+                                    includes personal information will be deleted.
+                                </MetDisclaimer>
                             </Grid>
                             <Grid item xs={12} display="flex" alignItems="end" justifyContent="flex-end">
                                 <PrimaryButton

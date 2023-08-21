@@ -434,7 +434,13 @@ export const CircularProgressWithLabel = (props: CircularProgressProps & { value
     );
 };
 
-export const MetDisclaimer = ({ children }: { children: React.ReactNode }) => {
+export const MetDisclaimer = ({
+    children,
+    marginTop = '2em',
+}: {
+    children: React.ReactNode;
+    marginTop?: number | string;
+}) => {
     return (
         <Box
             sx={{
@@ -446,7 +452,7 @@ export const MetDisclaimer = ({ children }: { children: React.ReactNode }) => {
             <Typography
                 sx={{
                     p: '1em',
-                    mt: '2em',
+                    mt: marginTop,
                     fontSize: '0.8rem',
                 }}
             >

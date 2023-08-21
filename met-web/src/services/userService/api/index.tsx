@@ -60,3 +60,12 @@ export const fetchUserEngagements = async ({ user_id }: GetUserEngagementsParams
     const responseData = await http.GetRequest<Engagement[]>(url);
     return responseData.data ?? [];
 };
+
+export const toggleUserStatus = async (user_id: string, active: boolean): Promise<User> => {
+    const url = replaceUrl(Endpoints.User.TOGGLE_USER_STATUS, 'user_id', String(user_id));
+    const data = {
+        active,
+    };
+    const responseData = await http.PatchRequest<User>(url, data);
+    return responseData.data;
+};

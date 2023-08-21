@@ -11,7 +11,7 @@ from met_api.schemas.staff_user import StaffUserSchema
 from met_api.services.keycloak import KeycloakService
 from met_api.utils import notification
 from met_api.utils.constants import GROUP_NAME_MAPPING, Groups
-from met_api.utils.enums import KeycloakGroupName
+from met_api.utils.enums import KeycloakGroupName, UserStatus
 from met_api.utils.template import Template
 
 
@@ -175,3 +175,15 @@ class StaffUserService:
             raise BusinessException(
                 error='This user is already a Superuser.',
                 status_code=HTTPStatus.CONFLICT.value)
+
+    @staticmethod
+    def toggle_user_active_status(user_external_id: str, active: bool):
+        """Toggle user active status."""
+        db_user = StaffUserModel.get_user_by_external_id(user_external_id)
+        if db_user is None:
+            raise KeyError('User not found')
+
+        KEYCLOAK_SERVICE.toggle_user_enabled_status(user_id=user_external_id, enabled=active)
+        db_user.status_id = UserStatus.ACTIVE.value if active else UserStatus.INACTIVE.value
+        db_user.save()
+        return StaffUserSchema().dump(db_user)

@@ -161,6 +161,7 @@ def factory_staff_user_model(external_id=None, user_info: dict = TestUserInfo.us
         middle_name=user_info['middle_name'],
         email_address=user_info['email_address'],
         external_id=str(external_id),
+        status_id=user_info['status_id'],
     )
     user.save()
     return user
