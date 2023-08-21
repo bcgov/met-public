@@ -51,7 +51,7 @@ class EngagementMembership(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.EDIT_MEMBERS.value])
+    @_jwt.requires_auth
     def post(engagement_id):
         """Create a new membership."""
         # TODO validate against a schema.

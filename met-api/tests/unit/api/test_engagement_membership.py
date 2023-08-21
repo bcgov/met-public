@@ -98,7 +98,7 @@ def test_create_engagement_membership_unauthorized(client, jwt, session):
         headers=headers,
         content_type=ContentType.JSON.value
     )
-    assert rv.status_code == HTTPStatus.UNAUTHORIZED
+    assert rv.status_code == HTTPStatus.FORBIDDEN
 
 
 def test_revoke_membership(client, jwt, session):

@@ -318,7 +318,6 @@ class TestJwtClaims(dict, Enum):
                 'staff',
                 'view_engagement',
                 'view_users',
-                'view_private_engagements',
                 'clone_survey'
             ]
         }
