@@ -12,7 +12,7 @@ import { formatDate } from 'components/common/dateHelper';
 import { customRatings } from 'components/feedback/FeedbackModal/constants';
 import { useLocation } from 'react-router-dom';
 import { updateURLWithPagination } from 'components/common/Table/utils';
-
+import { ActionsDropDown } from './actionDropdown';
 const FeedbackListing = () => {
     const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
     const location = useLocation();
@@ -103,6 +103,19 @@ const FeedbackListing = () => {
             label: 'Message',
             allowSort: true,
             renderCell: (row: Feedback) => row.comment,
+        },
+        {
+            key: 'comment',
+            numeric: true,
+            disablePadding: false,
+            label: 'Actions',
+            allowSort: false,
+            renderCell: (row: Feedback) => {
+                return <ActionsDropDown feedback={row} />;
+            },
+            customStyle: {
+                minWidth: '200px',
+            },
         },
     ];
 

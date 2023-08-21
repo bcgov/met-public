@@ -1,4 +1,5 @@
 export interface Feedback {
+    id?: number;
     created_date: string;
     rating: number;
     comment: string;
