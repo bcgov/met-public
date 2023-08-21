@@ -65,8 +65,8 @@ class EngagementService:
     ):
         """Get engagements paginated."""
         user_roles = TokenInfo.get_user_roles()
-        roles = search_options.get('roles')
-        scope_options = self._get_scope_options(user_roles, roles)
+        has_team_access = search_options.get('has_team_access')
+        scope_options = self._get_scope_options(user_roles, has_team_access)
         items, total = EngagementModel.get_engagements_paginated(
             external_user_id,
             pagination_options,
@@ -89,11 +89,11 @@ class EngagementService:
         return engagements
 
     @staticmethod
-    def _get_scope_options(user_roles, required_access):
+    def _get_scope_options(user_roles, has_team_access):
         if Role.VIEW_PRIVATE_ENGAGEMENTS.value in user_roles:
             # If user has VIEW_PRIVATE_ENGAGEMENTS, e.g. Superuser role, return unrestricted scope options
             return EngagementScopeOptions(restricted=False)
-        if required_access == Role.EDIT_MEMBERS.value:
+        if has_team_access:
             # return those engagements where user has access for edit members..
             # either he has edit_member role or check if he is a team member
             has_edit_role = Role.EDIT_MEMBERS.value in user_roles

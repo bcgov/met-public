@@ -32,7 +32,8 @@ from tests.utilities.factory_scenarios import (
     TestEngagementInfo, TestJwtClaims, TestSubmissionInfo, TestTenantInfo, TestUserInfo)
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_engagement_model, factory_membership_model, factory_participant_model,
-    factory_staff_user_model, factory_submission_model, factory_survey_and_eng_model, factory_tenant_model)
+    factory_staff_user_model, factory_submission_model, factory_survey_and_eng_model, factory_tenant_model,
+    set_global_tenant)
 
 fake = Faker()
 
@@ -155,6 +156,90 @@ def test_search_engagements_by_status(client, jwt,
                     headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.json.get('total') == 1
+
+
+def test_search_engagements(client, jwt, session):  # pylint:disable=unused-argument
+    """Verify the functionality of searching engagements with different access levels."""
+    similar_engagement_base_name = fake.name()  # Generate a base name for similar engagements
+    set_global_tenant()
+
+    similar_engagements = []
+    total_similar_engagements = 4
+
+    # Create multiple engagements with similar names for testing search
+    for i in range(total_similar_engagements):
+        name = f'{similar_engagement_base_name}{i}'  # Append a number to distinguish names
+        similar_engagements.append(factory_engagement_model(name=name))
+
+    # Create a dissimilar engagement
+    name2 = fake.name()
+    eng2 = factory_engagement_model(name=name2)
+
+    total_no_engagements = total_similar_engagements + 1
+
+    # Perform a public search with no parameters to return all engagements
+    rv = client.get('/api/engagements/', content_type=ContentType.JSON.value)
+    assert rv.json.get('total') == total_no_engagements
+    assert rv.status_code == 200
+
+    # Perform a public search for similar engagements
+    rv = client.get(f'/api/engagements/?search_text={similar_engagement_base_name}',
+                    content_type=ContentType.JSON.value)
+    assert rv.json.get('total') == total_similar_engagements
+
+    # Attempt a public user search for team-level access (should not return anything)
+    rv = client.get(f'/api/engagements/?search_text={similar_engagement_base_name}&has_team_access=true',
+                    content_type=ContentType.JSON.value)
+    assert rv.json.get('total') == 0, 'No role, so no results expected'
+
+    # Admin-level searches
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    rv = client.get(f'/api/engagements/?search_text={similar_engagement_base_name}', headers=headers,
+                    content_type=ContentType.JSON.value)
+    assert rv.json.get('total') == total_similar_engagements, 'Matching similar names count for admin'
+
+    # Admin searches with team-level access
+    rv = client.get(f'/api/engagements/?search_text={similar_engagement_base_name}&has_team_access=true',
+                    headers=headers, content_type=ContentType.JSON.value)
+    assert rv.json.get(
+        'total') == total_similar_engagements, 'Matching similar names count for admin even with team access'
+
+    # Team member level checks
+    staff_1 = dict(TestUserInfo.user_staff_1)
+    user = factory_staff_user_model(user_info=staff_1)
+    claims = copy.deepcopy(TestJwtClaims.team_member_role.value)
+    claims['sub'] = str(user.external_id)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+
+    # Team member searches for similar engagements
+    rv = client.get(f'/api/engagements/?search_text={similar_engagement_base_name}', headers=headers,
+                    content_type=ContentType.JSON.value)
+    assert rv.json.get('total') == total_similar_engagements, 'Name search fetches all engagements for team member'
+
+    # Team member with no membership, access should be denied
+    rv = client.get(f'/api/engagements/?search_text={similar_engagement_base_name}&has_team_access=true',
+                    headers=headers, content_type=ContentType.JSON.value)
+    assert rv.json.get('total') == 0, 'Team member with no membership should not fetch any results'
+
+    # Create membership for a specific engagement for the team member
+    factory_membership_model(user_id=user.id, engagement_id=similar_engagements[0].id, member_type='TEAM_MEMBER')
+
+    # Team member search with membership, should return the specific engagement
+    rv = client.get(f'/api/engagements/?search_text={similar_engagement_base_name}&has_team_access=true',
+                    headers=headers, content_type=ContentType.JSON.value)
+    assert rv.json.get('total') == 1, 'Name search works for team member with membership'
+
+    # Create membership for a different engagement and search with the base name
+    factory_membership_model(user_id=user.id, engagement_id=eng2.id, member_type='TEAM_MEMBER')
+    rv = client.get(f'/api/engagements/?search_text={similar_engagement_base_name}&has_team_access=true',
+                    headers=headers, content_type=ContentType.JSON.value)
+    assert rv.json.get('total') == 1, 'Different name, so returns only base name results.'
+
+    # Create membership for another similar engagement and perform the search
+    factory_membership_model(user_id=user.id, engagement_id=similar_engagements[1].id, member_type='TEAM_MEMBER')
+    rv = client.get(f'/api/engagements/?search_text={similar_engagement_base_name}&has_team_access=true',
+                    headers=headers, content_type=ContentType.JSON.value)
+    assert rv.json.get('total') == 2, 'Similar name, team member search fetches multiple results'
 
 
 def test_search_engagements_not_logged_in(client, session):  # pylint:disable=unused-argument
