@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
-import { MetPageGridContainer } from 'components/common';
-import { CommentTypeEnum, Feedback, SourceTypeEnum } from 'models/feedback';
+import { MetPageGridContainer, PrimaryButton } from 'components/common';
+import { CommentTypeEnum, Feedback, FeedbackStatusEnum, SourceTypeEnum } from 'models/feedback';
 import { useAppDispatch } from 'hooks';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import Stack from '@mui/material/Stack';
@@ -28,6 +28,7 @@ const FeedbackListing = () => {
     });
     const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
     const [tableLoading, setTableLoading] = useState(true);
+    const [statusFilter, setStatusFilter] = useState(FeedbackStatusEnum.NotReviewed);
     const dispatch = useAppDispatch();
 
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
@@ -111,7 +112,7 @@ const FeedbackListing = () => {
             label: 'Actions',
             allowSort: false,
             renderCell: (row: Feedback) => {
-                return <ActionsDropDown feedback={row} />;
+                return <ActionsDropDown reload={loadFeedbacks} feedback={row} />;
             },
             customStyle: {
                 minWidth: '200px',
@@ -135,12 +136,24 @@ const FeedbackListing = () => {
                     width="100%"
                     justifyContent="flex-end"
                     sx={{ p: 2 }}
-                ></Stack>
+                >
+                    <PrimaryButton
+                        onClick={() =>
+                            setStatusFilter(
+                                statusFilter == FeedbackStatusEnum.NotReviewed
+                                    ? FeedbackStatusEnum.Archived
+                                    : FeedbackStatusEnum.NotReviewed,
+                            )
+                        }
+                    >
+                        {statusFilter == FeedbackStatusEnum.NotReviewed ? 'View Archive' : 'View Feedback'}
+                    </PrimaryButton>
+                </Stack>
             </Grid>
             <Grid item xs={12} lg={10}>
                 <MetTable
                     headCells={headCells}
-                    rows={feedbacks}
+                    rows={feedbacks.filter((feedback) => feedback.status == statusFilter)}
                     handleChangePagination={(paginationOptions: PaginationOptions<Feedback>) =>
                         setPaginationOptions(paginationOptions)
                     }

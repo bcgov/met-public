@@ -2,9 +2,11 @@ import React, { useMemo } from 'react';
 import { USER_ROLES } from 'services/userService/constants';
 import { MenuItem, Select } from '@mui/material';
 import { Feedback, FeedbackStatusEnum } from 'models/feedback';
-import { useAppSelector } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { Palette } from 'styles/Theme';
 import { updateFeedback, deleteFeedback } from 'services/feedbackService';
+import { openNotification } from 'services/notificationService/notificationSlice';
+import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
 interface ActionDropDownItem {
     value: number;
@@ -12,36 +14,77 @@ interface ActionDropDownItem {
     action?: () => void;
     condition?: boolean;
 }
-export const ActionsDropDown = ({ feedback }: { feedback: Feedback }) => {
+export const ActionsDropDown = ({ feedback, reload }: { feedback: Feedback; reload: () => void }) => {
     const { roles } = useAppSelector((state) => state.user);
-
+    const dispatch = useAppDispatch();
+    const isArchived = feedback.status == FeedbackStatusEnum.Archived;
     const canEditFeedback = (): boolean => {
         const authorized = roles.includes(USER_ROLES.APP_ADMIN);
 
-        // if (!authorized) {
-        //     return false;
-        // }
+        if (!authorized) {
+            return false;
+        }
 
         return true;
+    };
+
+    const archiveFeedback = async () => {
+        try {
+            await updateFeedback(feedback.id, { ...feedback, status: FeedbackStatusEnum.Archived });
+            dispatch(openNotification({ severity: 'success', text: 'Feedback has been archived.' }));
+            reload();
+        } catch (error) {
+            dispatch(openNotification({ severity: 'error', text: 'Error occurred while archiving feedback.' }));
+        }
+    };
+
+    const removeFeedback = async () => {
+        dispatch(
+            openNotificationModal({
+                open: true,
+                data: {
+                    header: 'Delete Feedback',
+                    subText: [
+                        { text: 'You will be permanently deleting this feedback.' },
+                        { text: 'Please click the Cancel or Confirm button to continue.', bold: true },
+                    ],
+                    handleConfirm: () => {
+                        try {
+                            deleteFeedback(feedback.id);
+                            dispatch(openNotification({ severity: 'success', text: 'Feedback has been deleted.' }));
+                            reload();
+                        } catch (error) {
+                            dispatch(
+                                openNotification({
+                                    severity: 'error',
+                                    text: 'Error occurred while deleting feedback.',
+                                }),
+                            );
+                        }
+                    },
+                },
+                type: 'confirm',
+            }),
+        );
     };
 
     const ITEMS: ActionDropDownItem[] = useMemo(
         () => [
             {
                 value: 1,
-                label: 'Mark As Resolved',
+                label: isArchived ? 'Resolved' : 'Mark As Resolved',
                 action: () => {
                     //Archive said feedback
-                    updateFeedback(feedback.id, { ...feedback, status: FeedbackStatusEnum.Archived });
+                    archiveFeedback();
                 },
-                condition: canEditFeedback(),
+                condition: canEditFeedback() && !isArchived,
             },
             {
                 value: 2,
                 label: 'Delete Feedback',
                 action: () => {
                     //Delete function for feedback
-                    deleteFeedback(feedback.id);
+                    removeFeedback();
                 },
                 condition: canEditFeedback(),
             },
