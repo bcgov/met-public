@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
 import { USER_ROLES } from 'services/userService/constants';
 import { MenuItem, Select } from '@mui/material';
-import { Feedback } from 'models/feedback';
+import { Feedback, FeedbackStatusEnum } from 'models/feedback';
 import { useAppSelector } from 'hooks';
 import { Palette } from 'styles/Theme';
+import { updateFeedback, deleteFeedback } from 'services/feedbackService';
 
 interface ActionDropDownItem {
     value: number;
@@ -17,9 +18,9 @@ export const ActionsDropDown = ({ feedback }: { feedback: Feedback }) => {
     const canEditFeedback = (): boolean => {
         const authorized = roles.includes(USER_ROLES.APP_ADMIN);
 
-        if (!authorized) {
-            return false;
-        }
+        // if (!authorized) {
+        //     return false;
+        // }
 
         return true;
     };
@@ -28,17 +29,19 @@ export const ActionsDropDown = ({ feedback }: { feedback: Feedback }) => {
         () => [
             {
                 value: 1,
-                label: 'Delete Feedback',
+                label: 'Mark As Resolved',
                 action: () => {
-                    //Delete function for feedback
+                    //Archive said feedback
+                    updateFeedback(feedback.id, { ...feedback, status: FeedbackStatusEnum.Archived });
                 },
                 condition: canEditFeedback(),
             },
             {
                 value: 2,
-                label: 'Archive Feedback',
+                label: 'Delete Feedback',
                 action: () => {
-                    //Archive said feedback
+                    //Delete function for feedback
+                    deleteFeedback(feedback.id);
                 },
                 condition: canEditFeedback(),
             },

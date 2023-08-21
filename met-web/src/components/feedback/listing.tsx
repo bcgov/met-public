@@ -105,7 +105,7 @@ const FeedbackListing = () => {
             renderCell: (row: Feedback) => row.comment,
         },
         {
-            key: 'comment',
+            key: 'id',
             numeric: true,
             disablePadding: false,
             label: 'Actions',
