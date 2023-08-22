@@ -163,13 +163,15 @@ class _Config():  # pylint: disable=too-few-public-methods
             'VERIFICATION_EMAIL_TEMPLATE_ID': os.getenv('VERIFICATION_EMAIL_TEMPLATE_ID'),
             'VERIFICATION_EMAIL_SUBJECT': os.getenv('VERIFICATION_EMAIL_SUBJECT', '{engagement_name} - Survey link'),
             'SUBSCRIBE_EMAIL_TEMPLATE_ID': os.getenv('SUBSCRIBE_EMAIL_TEMPLATE_ID'),
-            'SUBSCRIBE_EMAIL_SUBJECT': os.getenv('SUBSCRIBE_EMAIL_SUBJECT', 'Confirm your Subscription to {engagement_name}'),
+            'SUBSCRIBE_EMAIL_SUBJECT': os.getenv(
+                'SUBSCRIBE_EMAIL_SUBJECT',
+                'Confirm your Subscription to {engagement_name}'),
             'REJECTED_EMAIL_TEMPLATE_ID': os.getenv('REJECTED_EMAIL_TEMPLATE_ID'),
             'REJECTED_EMAIL_SUBJECT': os.getenv('REJECTED_EMAIL_SUBJECT', '{engagement_name} - About your Comments'),
             'EMAIL_ENVIRONMENT': os.getenv('EMAIL_ENVIRONMENT', ''),
             'ACCESS_REQUEST_EMAIL_TEMPLATE_ID': os.getenv('ACCESS_REQUEST_EMAIL_TEMPLATE_ID'),
             'ACCESS_REQUEST_EMAIL_SUBJECT': os.getenv('ACCESS_REQUEST_EMAIL_SUBJECT', 'MET - New User Access Request'),
-            'ACCESS_REQUEST_EMAIL_ADDRESS': os.getenv('ACCESS_REQUEST_EMAIL_ADDRESS')            
+            'ACCESS_REQUEST_EMAIL_ADDRESS': os.getenv('ACCESS_REQUEST_EMAIL_ADDRESS')
         }
     }
 
