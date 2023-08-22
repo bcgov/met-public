@@ -100,6 +100,7 @@ class EngagementService:
             if has_edit_role:
                 return EngagementScopeOptions(restricted=False)
 
+            # check if user
             return EngagementScopeOptions(
                 include_assigned=True
             )
