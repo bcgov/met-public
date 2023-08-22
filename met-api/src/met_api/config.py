@@ -158,22 +158,6 @@ class _Config():  # pylint: disable=too-few-public-methods
     SITE_URL = os.getenv('SITE_URL')
 
     # The GC notify email variables
-    # Email address verification
-    VERIFICATION_EMAIL_TEMPLATE_ID = os.getenv('VERIFICATION_EMAIL_TEMPLATE_ID')
-    VERIFICATION_EMAIL_SUBJECT = os.getenv('VERIFICATION_EMAIL_SUBJECT', '{engagement_name} - Survey link')
-    # Email address verification
-    SUBSCRIBE_EMAIL_TEMPLATE_ID = os.getenv('SUBSCRIBE_EMAIL_TEMPLATE_ID')
-    SUBSCRIBE_EMAIL_SUBJECT = os.getenv('SUBSCRIBE_EMAIL_SUBJECT', 'Confirm your Subscription to {engagement_name}')
-    # Rejected comments
-    REJECTED_EMAIL_TEMPLATE_ID = os.getenv('REJECTED_EMAIL_TEMPLATE_ID')
-    REJECTED_EMAIL_SUBJECT = os.getenv('REJECTED_EMAIL_SUBJECT', '{engagement_name} - About your Comments')
-    # Environment from which email is sent
-    EMAIL_ENVIRONMENT = os.getenv('EMAIL_ENVIRONMENT', '')
-    # New User Registration
-    ACCESS_REQUEST_EMAIL_TEMPLATE_ID = os.getenv('ACCESS_REQUEST_EMAIL_TEMPLATE_ID')
-    ACCESS_REQUEST_EMAIL_SUBJECT = os.getenv('ACCESS_REQUEST_EMAIL_SUBJECT', 'MET - New User Access Request')
-    ACCESS_REQUEST_EMAIL_ADDRESS = os.getenv('ACCESS_REQUEST_EMAIL_ADDRESS')
-
     GC_NOTIFY_CONFIG = {
         'DEFAULT': {
             'VERIFICATION_EMAIL_TEMPLATE_ID': os.getenv('VERIFICATION_EMAIL_TEMPLATE_ID'),
