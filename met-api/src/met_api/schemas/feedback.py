@@ -2,7 +2,7 @@
 
 from marshmallow import EXCLUDE, Schema, fields
 from marshmallow_enum import EnumField
-from met_api.constants.feedback import CommentType, FeedbackSourceType, RatingType
+from met_api.constants.feedback import CommentType, FeedbackSourceType, RatingType, FeedbackStatusType
 
 
 class FeedbackSchema(Schema):
@@ -16,6 +16,7 @@ class FeedbackSchema(Schema):
     id = fields.Int(data_key='id')
     comment = fields.Str(data_key='comment')
     created_date = fields.DateTime(data_key='created_date')
+    status = EnumField(FeedbackStatusType, by_value=True)
     rating = EnumField(RatingType, by_value=True)
     comment_type = EnumField(CommentType, by_value=True)
     source = EnumField(FeedbackSourceType, by_value=True)

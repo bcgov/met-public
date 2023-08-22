@@ -11,7 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""API endpoints for managing an feedback resource."""
+
+"""API endpoints for managing a feedback resource."""
 
 from http import HTTPStatus
 
@@ -27,14 +28,15 @@ from met_api.services.feedback_service import FeedbackService
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
+
 API = Namespace('feedbacks', description='Endpoints for Feedbacks Management')
 
+# For operations that don't require an ID
 
-@cors_preflight('GET, POST, OPTIONS, DELETE, PATCH',)
-@API.route('/')
-class Feedback(Resource):
-    """Resource for managing feedbacks."""
 
+@cors_preflight('GET, POST, OPTIONS')
+@API.route('/', methods=['GET', 'POST'])
+class FeedbackList(Resource):
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.requires_auth
@@ -75,6 +77,10 @@ class Feedback(Resource):
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
+
+@cors_preflight('DELETE, PATCH, OPTIONS')
+@API.route('/<int:feedback_id>', methods=['DELETE', 'PATCH'])
+class FeedbackById(Resource):
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.requires_auth

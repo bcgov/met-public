@@ -18,7 +18,7 @@ Test-Suite to ensure that the /Feedbacks endpoint is working as expected.
 """
 import json
 
-from met_api.constants.feedback import FeedbackSourceType
+from met_api.constants.feedback import FeedbackSourceType, FeedbackStatusType
 from met_api.utils.enums import ContentType
 
 from tests.utilities.factory_scenarios import TestJwtClaims
@@ -46,6 +46,7 @@ def test_feedback(client, jwt, session):  # pylint:disable=unused-argument
     assert result.get('id') is not None
     assert result.get('rating') == feedback.rating
     assert result.get('comment_type') == feedback.comment_type
+    assert result.get('status') == feedback.status
     assert result.get('comment') == feedback.comment
     assert result.get('source') == FeedbackSourceType.Internal
 
@@ -74,3 +75,56 @@ def test_invalid_feedback(client, jwt, session):  # pylint:disable=unused-argume
                      headers=headers, content_type=ContentType.JSON.value)
     print(rv.json.get('message'))
     assert rating_error_msg in rv.json.get('message')
+
+
+def test_patch_feedback(client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that feedback can be updated via PATCH."""
+    # Setup: Create a new feedback first
+    claims = TestJwtClaims.public_user_role
+    feedback = factory_feedback_model()
+    feedback_creation = {
+        'status': feedback.status,
+        'rating': feedback.rating,
+        'comment_type': feedback.comment_type,
+        'comment': feedback.comment
+    }
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.post('/api/feedbacks/', data=json.dumps(feedback_creation),
+                     headers=headers, content_type=ContentType.JSON.value)
+    feedback_id = rv.json.get('id')
+
+    # Now, update this feedback using PATCH
+    updated_comment = "Updated comment for testing"
+    update_data = {
+        'status': FeedbackStatusType,
+    }
+    rv = client.patch(f'/api/feedbacks/{feedback_id}', data=json.dumps(update_data),
+                      headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+    assert rv.json.get('comment') == updated_comment
+
+
+def test_delete_feedback(client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that feedback can be deleted."""
+    # Setup: Create a new feedback first
+    claims = TestJwtClaims.public_user_role
+    feedback = factory_feedback_model()
+    feedback_creation = {
+        'status': feedback.status,
+        'rating': feedback.rating,
+        'comment_type': feedback.comment_type,
+        'comment': feedback.comment
+    }
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.post('/api/feedbacks/', data=json.dumps(feedback_creation),
+                     headers=headers, content_type=ContentType.JSON.value)
+    feedback_id = rv.json.get('id')
+
+    # Now, delete this feedback
+    rv = client.delete(f'/api/feedbacks/{feedback_id}', headers=headers)
+    assert rv.status_code == 200
+    assert rv.json == 'Feedback successfully removed'
+
+    # Try fetching the deleted feedback (should return 404 NOT FOUND)
+    rv = client.get(f'/api/feedbacks/{feedback_id}', headers=headers)
+    assert rv.status_code == 404
