@@ -35,7 +35,7 @@ export const createFeedback = async (feedback: PostFeedbackRequest): Promise<Fee
 };
 
 export const updateFeedback = async (feedback_id: number, feedback: UpdateFeedbackRequest): Promise<Feedback> => {
-    const url = `${Endpoints.Feedback.UPDATE}${feedback_id}`;
+    const url = `${Endpoints.Feedback.UPDATE}/${feedback_id}`;
     const response = await http.PatchRequest<Feedback>(url, feedback);
     if (response.data) {
         return response.data;
@@ -44,7 +44,7 @@ export const updateFeedback = async (feedback_id: number, feedback: UpdateFeedba
 };
 
 export const deleteFeedback = async (feedback_id: number): Promise<void> => {
-    const url = `${Endpoints.Feedback.DELETE}${feedback_id}`;
+    const url = `${Endpoints.Feedback.DELETE}/${feedback_id}`;
     const response = await http.DeleteRequest(url);
     if (response.status !== 200) {
         return Promise.reject('Failed to delete feedback');

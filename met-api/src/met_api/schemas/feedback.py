@@ -2,7 +2,8 @@
 
 from marshmallow import EXCLUDE, Schema, fields
 from marshmallow_enum import EnumField
-from met_api.constants.feedback import CommentType, FeedbackSourceType, RatingType, FeedbackStatusType
+
+from met_api.constants.feedback import CommentType, FeedbackSourceType, FeedbackStatusType, RatingType
 
 
 class FeedbackSchema(Schema):
