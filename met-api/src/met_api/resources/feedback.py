@@ -80,7 +80,7 @@ class FeedbackList(Resource):
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
-@cors_preflight('DELETE, PATCH, OPTIONS')
+@cors_preflight('DELETE, PATCH')
 @API.route('/<int:feedback_id>', methods=['DELETE', 'PATCH'])
 class FeedbackById(Resource):
     """Feedback Id Resource."""

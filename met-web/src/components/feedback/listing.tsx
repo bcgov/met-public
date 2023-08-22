@@ -15,6 +15,7 @@ import { updateURLWithPagination } from 'components/common/Table/utils';
 import { ActionsDropDown } from './actionDropdown';
 import { useAppSelector } from 'hooks';
 import { USER_ROLES } from 'services/userService/constants';
+import { When } from 'react-if';
 const FeedbackListing = () => {
     const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
     const { roles } = useAppSelector((state) => state.user);
@@ -141,7 +142,7 @@ const FeedbackListing = () => {
                     justifyContent="flex-end"
                     sx={{ p: 2 }}
                 >
-                    {authorized ? (
+                    <When condition={authorized}>
                         <PrimaryButton
                             onClick={() =>
                                 setStatusFilter(
@@ -153,9 +154,7 @@ const FeedbackListing = () => {
                         >
                             {statusFilter == FeedbackStatusEnum.NotReviewed ? 'View Archive' : 'View Feedback'}
                         </PrimaryButton>
-                    ) : (
-                        <></>
-                    )}
+                    </When>
                 </Stack>
             </Grid>
             <Grid item xs={12} lg={10}>
