@@ -40,9 +40,9 @@ export const ActionsDropDown = ({ feedback, reload }: { feedback: Feedback; relo
                         { text: 'You will be permanently deleting this feedback.' },
                         { text: 'Please click the Cancel or Confirm button to continue.', bold: true },
                     ],
-                    handleConfirm: () => {
+                    handleConfirm: async () => {
                         try {
-                            deleteFeedback(feedback.id);
+                            await deleteFeedback(feedback.id);
                             dispatch(openNotification({ severity: 'success', text: 'Feedback has been deleted.' }));
                             reload();
                         } catch (error) {

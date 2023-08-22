@@ -43,6 +43,10 @@ const FeedbackListing = () => {
         updateURLWithPagination(paginationOptions);
     }, [paginationOptions]);
 
+    useEffect(() => {
+        loadFeedbacks();
+    }, [authorized]);
+
     const loadFeedbacks = async () => {
         try {
             setTableLoading(true);
@@ -117,7 +121,7 @@ const FeedbackListing = () => {
             label: 'Actions',
             allowSort: false,
             renderCell: (row: Feedback) => {
-                return <ActionsDropDown reload={loadFeedbacks} feedback={row} />;
+                return <ActionsDropDown reload={() => loadFeedbacks()} feedback={row} />;
             },
             customStyle: {
                 minWidth: '200px',
