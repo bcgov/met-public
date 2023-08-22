@@ -19,7 +19,7 @@ export const AssignedEngagementsListing = () => {
             label: 'Engagement',
             allowSort: true,
             renderCell: (row: EngagementTeamMember) => (
-                <MuiLink component={Link} to={`/engagements/${Number(row.id)}/view`}>
+                <MuiLink component={Link} to={`/engagements/${Number(row.engagement_id)}/view`}>
                     {row.engagement?.name}
                 </MuiLink>
             ),
