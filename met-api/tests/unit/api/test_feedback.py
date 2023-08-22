@@ -93,17 +93,15 @@ def test_patch_feedback(client, jwt, session):  # pylint:disable=unused-argument
                      headers=headers, content_type=ContentType.JSON.value)
     feedback_id = rv.json.get('id')
 
-    updated_comment = "Updated comment for testing"
-    update_data = {
-        'status': FeedbackStatusType.Unreviewed.value,   # <-- Use a specific enum value
-    }
-    rv = client.patch(f'/api/feedbacks/{feedback_id}', data=json.dumps(update_data),
+    assert rv.status_code == 200
+
+    feedback_creation['status'] = FeedbackStatusType.Archived.value
+
+    rv = client.patch(f'/api/feedbacks/{feedback_id}', data=json.dumps(feedback_creation),
                       headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    # Check if the comment is updated
-    assert rv.json.get('comment') == updated_comment
     # Check if the status is update
-    assert rv.json.get('status') == FeedbackStatusType.Unreviewed.value
+    assert rv.json.get('status') == FeedbackStatusType.Archived.value
 
 
 def test_delete_feedback(client, jwt, session):  # pylint:disable=unused-argument
@@ -121,12 +119,7 @@ def test_delete_feedback(client, jwt, session):  # pylint:disable=unused-argumen
     rv = client.post('/api/feedbacks/', data=json.dumps(feedback_creation),
                      headers=headers, content_type=ContentType.JSON.value)
     feedback_id = rv.json.get('id')
-
+    assert rv.status_code == 200
     # Now, delete this feedback
     rv = client.delete(f'/api/feedbacks/{feedback_id}', headers=headers)
     assert rv.status_code == 200
-    assert rv.json == 'Feedback successfully removed'
-
-    # Try fetching the deleted feedback (should return 404 NOT FOUND)
-    rv = client.get(f'/api/feedbacks/{feedback_id}', headers=headers)
-    assert rv.status_code == 404

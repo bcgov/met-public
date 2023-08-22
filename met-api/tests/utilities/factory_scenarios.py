@@ -234,7 +234,6 @@ class TestFeedbackInfo(dict, Enum):
     """Test scenarios of feedback."""
 
     feedback1 = {
-        'id': 1,
         'status': FeedbackStatusType.Unreviewed,
         'comment': 'A feedback comment',
         'rating': RatingType.Satisfied,
