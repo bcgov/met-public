@@ -25,7 +25,7 @@ from flask import current_app
 from met_api.models import Tenant as TenantModel
 from met_api.utils.enums import ContentType, KeycloakGroupName, UserStatus
 from tests.utilities.factory_scenarios import TestJwtClaims, TestUserInfo
-from tests.utilities.factory_utils import factory_auth_header, factory_staff_user_model
+from tests.utilities.factory_utils import factory_auth_header, factory_staff_user_model, set_global_tenant
 
 KEYCLOAK_SERVICE_MODULE = 'met_api.services.keycloak.KeycloakService'
 
@@ -61,6 +61,7 @@ def test_create_staff_user(client, jwt, session):
 
 def test_get_staff_users(client, jwt, session):
     """Assert that a user can be POSTed."""
+    set_global_tenant()
     staff_1 = dict(TestUserInfo.user_staff_1)
     staff_2 = dict(TestUserInfo.user_staff_1)
     factory_staff_user_model(user_info=staff_1)

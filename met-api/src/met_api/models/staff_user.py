@@ -38,6 +38,7 @@ class StaffUser(BaseModel):
     def get_all_paginated(cls, pagination_options: PaginationOptions, search_text=''):
         """Fetch list of users by access type."""
         query = cls.query
+        query = cls._add_tenant_filter(query)
         if pagination_options.sort_key:
             sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == 'asc' \
                 else desc(text(pagination_options.sort_key))
