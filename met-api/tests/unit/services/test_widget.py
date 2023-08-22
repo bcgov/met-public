@@ -21,25 +21,24 @@ from faker import Faker
 from met_api.constants.widget import WidgetType
 from met_api.schemas.widget_item import WidgetItemSchema
 from met_api.services.widget_service import WidgetService
-from tests.utilities.factory_scenarios import TestUserInfo, TestWidgetInfo, TestWidgetItemInfo
-from tests.utilities.factory_utils import factory_engagement_model, factory_widget_item_model, factory_widget_model
-
+from tests.utilities.factory_scenarios import TestUserInfo, TestWidgetInfo, TestWidgetItemInfo, TestJwtClaims
+from tests.utilities.factory_utils import factory_engagement_model, factory_widget_item_model, factory_widget_model, \
+    patch_token_info
 
 fake = Faker()
 date_format = '%Y-%m-%d'
 
 
-def test_create_widget(session):  # pylint:disable=unused-argument
+def test_create_widget(session, monkeypatch):  # pylint:disable=unused-argument
     """Assert that a widget can be created."""
     engagement = factory_engagement_model()
-    user_id = TestUserInfo.user['id']
 
     widget_to_create = {
         'engagement_id': engagement.id,
         'widget_type_id': WidgetType.WHO_IS_LISTENING.value
     }
-
-    widget_record = WidgetService().create_widget(widget_to_create, engagement.id, user_id)
+    patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
+    widget_record = WidgetService().create_widget(widget_to_create, engagement.id)
 
     # Assert that was created
     assert widget_record.get('engagement_id') == widget_to_create.get('engagement_id')

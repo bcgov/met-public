@@ -1,11 +1,14 @@
 """Service for widget management."""
 from http import HTTPStatus
 
+from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.widget import Widget as WidgetModel
 from met_api.models.widget_item import WidgetItem
 from met_api.schemas.widget import WidgetSchema
 from met_api.schemas.widget_item import WidgetItemSchema
+from met_api.services import authorization
+from met_api.utils.roles import Role
 
 
 class WidgetService:
@@ -28,10 +31,14 @@ class WidgetService:
         return widget_items
 
     @staticmethod
-    def create_widget(widget_data, engagement_id, user_id):
+    def create_widget(widget_data, engagement_id):
         """Create widget item."""
-        widget_data['created_by'] = user_id
-        widget_data['updated_by'] = user_id
+        one_of_roles = (
+            MembershipType.TEAM_MEMBER.name,
+            Role.EDIT_ENGAGEMENT.value
+        )
+        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
+
         if widget_data.get('engagement_id', None) != int(engagement_id):
             raise ValueError('widget data has engagement id for a different engagement')
 
@@ -56,6 +63,12 @@ class WidgetService:
         """Sort widgets."""
         WidgetService._validate_widget_ids(engagement_id, widgets)
 
+        one_of_roles = (
+            MembershipType.TEAM_MEMBER.name,
+            Role.EDIT_ENGAGEMENT.value
+        )
+        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
+
         widget_sort_mappings = [{
             'id': widget.get('id'),
             'sort_index': index + 1,
@@ -71,6 +84,12 @@ class WidgetService:
         WidgetService._verify_widget(widget_id)
 
         widget_data['updated_by'] = user_id
+
+        one_of_roles = (
+            MembershipType.TEAM_MEMBER.name,
+            Role.EDIT_ENGAGEMENT.value
+        )
+        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
 
         updated_widget = WidgetModel.update_widget(engagement_id, widget_id, widget_data)
         return WidgetSchema().dump(updated_widget)
@@ -151,7 +170,14 @@ class WidgetService:
 
     def save_widget_items_bulk(self, widget_items: list, widget_id, user_id):
         """Save widget items."""
-        self.get_widget_by_id(widget_id)
+        widget: WidgetModel = self.get_widget_by_id(widget_id)
+
+        one_of_roles = (
+            MembershipType.TEAM_MEMBER.name,
+            Role.EDIT_ENGAGEMENT.value
+        )
+
+        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=widget.engagement_id)
 
         widget_items_db = WidgetItem.get_widget_items_by_widget_id(widget_id)
 
@@ -163,6 +189,13 @@ class WidgetService:
     @staticmethod
     def delete_widget(engagement_id, widget_id):
         """Remove widget from engagement."""
+        one_of_roles = (
+            MembershipType.TEAM_MEMBER.name,
+            Role.EDIT_ENGAGEMENT.value
+        )
+
+        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
+
         widgets = WidgetModel.remove_widget(engagement_id, widget_id)
         if not widgets:
             raise ValueError('Widget to remove was not found')

@@ -56,14 +56,13 @@ class Widget(Resource):
     def post(engagement_id):
         """Add new widget for an engagement."""
         try:
-            user_id = TokenInfo.get_id()
             request_json = request.get_json()
             valid_format, errors = schema_utils.validate(request_json, 'widget')
             if not valid_format:
                 return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
 
             widget = WidgetSchema().load(request_json)
-            created_widget = WidgetService().create_widget(widget, engagement_id, user_id)
+            created_widget = WidgetService().create_widget(widget, engagement_id)
             return created_widget, HTTPStatus.OK
         except (KeyError, ValueError) as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
