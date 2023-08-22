@@ -12,7 +12,7 @@ import { formatDate } from 'components/common/dateHelper';
 import { customRatings } from 'components/feedback/FeedbackModal/constants';
 import { useLocation } from 'react-router-dom';
 import { updateURLWithPagination } from 'components/common/Table/utils';
-import { ActionsDropDown } from './ActionDropdown';
+import { ActionsDropDown } from './actionDropdown';
 import { useAppSelector } from 'hooks';
 import { USER_ROLES } from 'services/userService/constants';
 const FeedbackListing = () => {
