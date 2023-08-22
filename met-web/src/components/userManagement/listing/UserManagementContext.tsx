@@ -82,7 +82,7 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
     useEffect(() => {
         updateURLWithPagination(paginationOptions);
         loadUserListing();
-    }, [paginationOptions]);
+    }, [paginationOptions, searchText]);
 
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
