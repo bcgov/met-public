@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import UserService from 'services/userService';
-import { useMediaQuery, Theme } from '@mui/material';
 import { HeaderTitle } from 'components/common';
 import EnvironmentBanner from './EnvironmentBanner';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
