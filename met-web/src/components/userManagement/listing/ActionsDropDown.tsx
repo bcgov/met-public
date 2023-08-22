@@ -27,6 +27,13 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
         return false;
     };
 
+    const isViewer = (): boolean => {
+        if (selectedUser?.main_group == USER_GROUP.VIEWER.label) {
+            return true;
+        }
+        return false;
+    };
+
     const ITEMS: ActionDropDownItem[] = useMemo(
         () => [
             {
@@ -38,7 +45,7 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
                         setassignRoleModalOpen(true);
                     }
                 },
-                condition: hasNoRole(),
+                condition: hasNoRole() && isAdmin(),
             },
             {
                 value: 2,
@@ -49,7 +56,7 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
                         setAddUserModalOpen(true);
                     }
                 },
-                condition: !hasNoRole() && !isAdmin(),
+                condition: !hasNoRole() && !isAdmin() && !isViewer(),
             },
         ],
         [selectedUser.id],

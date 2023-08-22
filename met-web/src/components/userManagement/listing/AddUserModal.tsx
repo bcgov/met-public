@@ -69,6 +69,7 @@ export const AddUserModal = () => {
             setEngagementsLoading(true);
             const response = await getEngagements({
                 search_text: searchText,
+                has_team_access: true,
             });
             const filteredEngagements = response.items.filter(
                 (engagement) => !assignedEngagements.includes(engagement.id),
