@@ -93,15 +93,17 @@ def test_patch_feedback(client, jwt, session):  # pylint:disable=unused-argument
                      headers=headers, content_type=ContentType.JSON.value)
     feedback_id = rv.json.get('id')
 
-    # Now, update this feedback using PATCH
     updated_comment = "Updated comment for testing"
     update_data = {
-        'status': FeedbackStatusType,
+        'status': FeedbackStatusType.Unreviewed.value,   # <-- Use a specific enum value
     }
     rv = client.patch(f'/api/feedbacks/{feedback_id}', data=json.dumps(update_data),
                       headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
+    # Check if the comment is updated
     assert rv.json.get('comment') == updated_comment
+    # Check if the status is update
+    assert rv.json.get('status') == FeedbackStatusType.Unreviewed.value
 
 
 def test_delete_feedback(client, jwt, session):  # pylint:disable=unused-argument
