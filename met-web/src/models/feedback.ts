@@ -4,6 +4,12 @@ export interface Feedback {
     comment: string;
     comment_type: CommentTypeEnum;
     source: SourceTypeEnum;
+    status: FeedbackStatusEnum;
+}
+
+export enum FeedbackStatusEnum {
+    NotReviewed = 0,
+    Archived = 1,
 }
 
 export enum RatingTypeEnum {
@@ -29,5 +35,6 @@ export const createDefaultFeedback = (): Feedback => {
         comment_type: CommentTypeEnum.None,
         created_date: '',
         source: SourceTypeEnum.Public,
+        status: FeedbackStatusEnum.NotReviewed,
     };
 };

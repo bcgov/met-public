@@ -17,7 +17,7 @@ Test suite to ensure that the Feedback model routines are working as expected.
 """
 
 from faker import Faker
-from met_api.constants.feedback import FeedbackSourceType
+from met_api.constants.feedback import FeedbackSourceType, FeedbackStatusType
 
 from met_api.models import Feedback as FeedbackModel
 from met_api.models.pagination_options import PaginationOptions
@@ -31,6 +31,7 @@ def test_feedback(session):
     feedback = factory_feedback_model()
     assert feedback.id is not None
     feedback_existing = FeedbackModel.find_by_id(feedback.id)
+    assert feedback.status == FeedbackStatusType.Unreviewed
     assert feedback.comment == feedback_existing.comment
     assert feedback.source == FeedbackSourceType.Public
 
