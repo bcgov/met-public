@@ -4,16 +4,15 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import UserService from 'services/userService';
-import { useMediaQuery, Theme } from '@mui/material';
-import { MetHeader1, MetHeader2 } from 'components/common';
+import { HeaderTitle } from 'components/common';
 import EnvironmentBanner from './EnvironmentBanner';
-import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoLight.svg';
-import { Unless, When } from 'react-if';
+import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
+import { When } from 'react-if';
 import { useAppSelector, useAppTranslation } from 'hooks';
 import { useNavigate } from 'react-router-dom';
+import { Palette } from 'styles/Theme';
 
 const PublicHeader = () => {
-    const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const [imageError, setImageError] = useState(false);
     const navigate = useNavigate();
@@ -22,7 +21,13 @@ const PublicHeader = () => {
     const logoUrl = translate('common.logoUrl');
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
+            <AppBar
+                position="static"
+                sx={{
+                    backgroundColor: Palette.internalHeader.backgroundColor,
+                    color: Palette.internalHeader.color,
+                }}
+            >
                 <Toolbar>
                     <When condition={logoUrl && !imageError}>
                         <Box
@@ -58,12 +63,7 @@ const PublicHeader = () => {
                             alt="British Columbia Logo"
                         />
                     </When>
-                    <When condition={isMediumScreen}>
-                        <MetHeader1 sx={{ flexGrow: 1 }}>{translate('header.title')}</MetHeader1>
-                    </When>
-                    <Unless condition={isMediumScreen}>
-                        <MetHeader2 sx={{ flexGrow: 1 }}>{translate('header.title')}</MetHeader2>
-                    </Unless>
+                    <HeaderTitle sx={{ flexGrow: 1 }}>{translate('header.title')}</HeaderTitle>
                     <When condition={isLoggedIn}>
                         <Button color="inherit" onClick={() => UserService.doLogout(() => navigate('/'))}>
                             Logout

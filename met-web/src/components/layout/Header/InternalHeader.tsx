@@ -9,7 +9,7 @@ import SideNav from '../SideNav/SideNav';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Palette } from 'styles/Theme';
 import EnvironmentBanner from './EnvironmentBanner';
-import { MetHeader1, MetHeader2 } from 'components/common';
+import { HeaderTitle } from 'components/common';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
 import { When } from 'react-if';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -29,10 +29,10 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
         <>
             <AppBar
                 position="fixed"
-                color="default"
                 sx={{
                     zIndex: (theme: Theme) => (isMediumScreen ? theme.zIndex.drawer + 1 : theme.zIndex.drawer),
-                    color: Palette.text.primary,
+                    backgroundColor: Palette.internalHeader.backgroundColor,
+                    color: Palette.internalHeader.color,
                 }}
                 data-testid="appbar-header"
             >
@@ -85,13 +85,15 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                         />
                     </When>
                     {isMediumScreen ? (
-                        <MetHeader1 sx={{ flexGrow: 1 }}>{translate('header.title')}</MetHeader1>
+                        <HeaderTitle sx={{ flexGrow: 1 }}>{translate('header.title')}</HeaderTitle>
                     ) : (
-                        <MetHeader2 sx={{ flexGrow: 1 }}>{translate('header.title')}</MetHeader2>
+                        <HeaderTitle sx={{ flexGrow: 1 }}>{translate('header.smallTitle')}</HeaderTitle>
                     )}
                     <Button
                         data-testid="button-header"
-                        color="inherit"
+                        sx={{
+                            color: Palette.internalHeader.color,
+                        }}
                         onClick={() => UserService.doLogout(() => navigate('/'))}
                     >
                         Logout
