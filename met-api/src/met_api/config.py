@@ -70,6 +70,29 @@ def get_s3_config(key: str):
     return config_value
 
 
+def get_gc_notify_config(key: str):
+    """Return the gc notify configuration object based on the tenant short name.
+
+    :raise: KeyError: if an unknown configuration is requested
+    """
+    tenant_short_name = g.get('tenant_name', None)
+    if not tenant_short_name:
+        return _Config.GC_NOTIFY_CONFIG['DEFAULT'][key]
+
+    tenant_short_name = tenant_short_name.upper()
+
+    if tenant_short_name in _Config.GC_NOTIFY_CONFIG:
+        return _Config.GC_NOTIFY_CONFIG[tenant_short_name][key]
+
+    config_key = f'{tenant_short_name}_{key}'
+    config_value = os.getenv(config_key)
+
+    if not config_value:
+        return _Config.GC_NOTIFY_CONFIG['DEFAULT'][key]
+
+    return config_value
+
+
 class _Config():  # pylint: disable=too-few-public-methods
     """Base class configuration that should set reasonable defaults for all the other configurations."""
 
@@ -98,13 +121,6 @@ class _Config():  # pylint: disable=too-few-public-methods
     JWT_OIDC_AUDIENCE = os.getenv('JWT_OIDC_AUDIENCE', 'account')
     JWT_OIDC_CACHING_ENABLED = os.getenv('JWT_OIDC_CACHING_ENABLED', 'True')
     JWT_OIDC_JWKS_CACHE_TIMEOUT = 300
-
-    S3_BUCKET = os.getenv('S3_BUCKET')
-    S3_ACCESS_KEY_ID = os.getenv('S3_ACCESS_KEY_ID')
-    S3_SECRET_ACCESS_KEY = os.getenv('S3_SECRET_ACCESS_KEY')
-    S3_HOST = os.getenv('S3_HOST')
-    S3_REGION = os.getenv('S3_REGION')
-    S3_SERVICE = os.getenv('S3_SERVICE')
 
     S3_CONFIG = {
         'DEFAULT': {
@@ -157,6 +173,21 @@ class _Config():  # pylint: disable=too-few-public-methods
     ACCESS_REQUEST_EMAIL_TEMPLATE_ID = os.getenv('ACCESS_REQUEST_EMAIL_TEMPLATE_ID')
     ACCESS_REQUEST_EMAIL_SUBJECT = os.getenv('ACCESS_REQUEST_EMAIL_SUBJECT', 'MET - New User Access Request')
     ACCESS_REQUEST_EMAIL_ADDRESS = os.getenv('ACCESS_REQUEST_EMAIL_ADDRESS')
+
+    GC_NOTIFY_CONFIG = {
+        'DEFAULT': {
+            'VERIFICATION_EMAIL_TEMPLATE_ID': os.getenv('VERIFICATION_EMAIL_TEMPLATE_ID'),
+            'VERIFICATION_EMAIL_SUBJECT': os.getenv('VERIFICATION_EMAIL_SUBJECT', '{engagement_name} - Survey link'),
+            'SUBSCRIBE_EMAIL_TEMPLATE_ID': os.getenv('SUBSCRIBE_EMAIL_TEMPLATE_ID'),
+            'SUBSCRIBE_EMAIL_SUBJECT': os.getenv('SUBSCRIBE_EMAIL_SUBJECT', 'Confirm your Subscription to {engagement_name}'),
+            'REJECTED_EMAIL_TEMPLATE_ID': os.getenv('REJECTED_EMAIL_TEMPLATE_ID'),
+            'REJECTED_EMAIL_SUBJECT': os.getenv('REJECTED_EMAIL_SUBJECT', '{engagement_name} - About your Comments'),
+            'EMAIL_ENVIRONMENT': os.getenv('EMAIL_ENVIRONMENT', ''),
+            'ACCESS_REQUEST_EMAIL_TEMPLATE_ID': os.getenv('ACCESS_REQUEST_EMAIL_TEMPLATE_ID'),
+            'ACCESS_REQUEST_EMAIL_SUBJECT': os.getenv('ACCESS_REQUEST_EMAIL_SUBJECT', 'MET - New User Access Request'),
+            'ACCESS_REQUEST_EMAIL_ADDRESS': os.getenv('ACCESS_REQUEST_EMAIL_ADDRESS')            
+        }
+    }
 
     NOTIFICATIONS_EMAIL_ENDPOINT = os.getenv('NOTIFICATIONS_EMAIL_ENDPOINT')
     # CDOGS
