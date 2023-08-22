@@ -11,7 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""API endpoints for managing an feedback resource."""
+
+"""API endpoints for managing a feedback resource."""
 
 from http import HTTPStatus
 
@@ -21,22 +22,22 @@ from flask_restx import Namespace, Resource
 
 from met_api.auth import auth
 from met_api.auth import jwt as _jwt
-from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas import utils as schema_utils
+from met_api.models.pagination_options import PaginationOptions
 from met_api.services.feedback_service import FeedbackService
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
 API = Namespace('feedbacks', description='Endpoints for Feedbacks Management')
-"""Custom exception messages
-"""
+
+# For operations that don't require an ID
 
 
 @cors_preflight('GET, POST, OPTIONS')
-@API.route('/')
-class Feedback(Resource):
-    """Resource for managing feedbacks."""
+@API.route('/', methods=['GET', 'POST'])
+class FeedbackList(Resource):
+    """Feedback List Resource."""
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
@@ -52,7 +53,8 @@ class Feedback(Resource):
                 sort_key=args.get('sort_key', 'name', str),
                 sort_order=args.get('sort_order', 'asc', str),
             )
-            feedback_records = FeedbackService().get_feedback_paginated(pagination_options, search_text)
+            feedback_records = FeedbackService().get_feedback_paginated(
+                pagination_options, search_text)
 
             return feedback_records, HTTPStatus.OK
         except ValueError as err:
@@ -66,7 +68,8 @@ class Feedback(Resource):
         try:
             user_id = TokenInfo.get_id()
             request_json = request.get_json()
-            valid_format, errors = schema_utils.validate(request_json, 'feedback')
+            valid_format, errors = schema_utils.validate(
+                request_json, 'feedback')
             if not valid_format:
                 return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
             result = FeedbackService().create_feedback(request_json, user_id)
@@ -75,3 +78,36 @@ class Feedback(Resource):
             return 'feedback was not found', HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@cors_preflight('DELETE, PATCH, OPTIONS')
+@API.route('/<int:feedback_id>', methods=['DELETE', 'PATCH'])
+class FeedbackById(Resource):
+    """Feedback Id Resource."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.requires_auth
+    def delete(feedback_id):
+        """Remove Feedback for an engagement."""
+        try:
+            result = FeedbackService().delete_feedback(feedback_id)
+            if result:
+                return 'Feedback successfully removed', HTTPStatus.OK
+            return 'Feedback not found', HTTPStatus.NOT_FOUND
+        except KeyError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.requires_auth
+    def patch(feedback_id):
+        """Update feedback by ID."""
+        feedback_data = request.get_json()
+        updated_feedback = FeedbackService.update_feedback(
+            feedback_id, feedback_data)
+        if updated_feedback:
+            return updated_feedback, HTTPStatus.OK
+        return {'message': 'Feedback not found'}, HTTPStatus.NOT_FOUND
