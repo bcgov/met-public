@@ -20,7 +20,7 @@ class Groups(Enum):
     """Enumeration representing user groups."""
 
     EAO_IT_ADMIN = 'Superuser'
-    EAO_TEAM_MEMBER = 'Member'
+    EAO_TEAM_MEMBER = 'Team Member'
     EAO_REVIEWER = 'Reviewer'
     EAO_IT_VIEWER = 'Viewer'
 

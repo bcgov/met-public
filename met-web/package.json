@@ -74,8 +74,8 @@
         "build-wc": "react-app-rewired build --wc-build",
         "test": "jest",
         "eject": "react-scripts eject",
-        "lint": "eslint '*/**/*.{ts,tsx}'",
-        "lintfix": "eslint '*/**/*.{ts,tsx}' --fix"
+        "lint": "eslint \"src/**/*.{ts,tsx}\"",
+        "lintfix": "eslint \"src/**/*.{ts,tsx}\" --fix"
     },
     "eslintConfig": {
         "extends": [

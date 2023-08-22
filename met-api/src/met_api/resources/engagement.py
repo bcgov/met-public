@@ -29,7 +29,6 @@ from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
-
 API = Namespace('engagements', description='Endpoints for Engagements Management')
 """Custom exception messages
 """
@@ -96,18 +95,25 @@ class Engagements(Resource):
                 'application_number': args.get('application_number', None, type=str),
                 'client_name': args.get('client_name', None, type=str),
                 'exclude_internal': exclude_internal,
+                # the membership changing pages sometimes needs only engagement where user can add a member.
+                # pass this has_team_access to restrict searches only within engagements he has access on.
+                'has_team_access': args.get(
+                    'has_team_access',
+                    default=False,
+                    type=lambda v: v.lower() == 'true'
+                ),
             }
 
-            engagement_records = EngagementService()\
+            engagement_records = EngagementService() \
                 .get_engagements_paginated(
-                    external_user_id,
-                    pagination_options,
-                    search_options,
-                    include_banner_url=args.get(
-                        'include_banner_url',
-                        default=False,
-                        type=lambda v: v.lower() == 'true'
-                    ),
+                external_user_id,
+                pagination_options,
+                search_options,
+                include_banner_url=args.get(
+                    'include_banner_url',
+                    default=False,
+                    type=lambda v: v.lower() == 'true'
+                ),
             )
 
             return engagement_records, HTTPStatus.OK

@@ -30,4 +30,5 @@ export const USER_ROLES = {
     VIEW_SURVEYS: 'view_surveys',
     VIEW_FEEDBACKS: 'view_feedbacks',
     SHOW_ALL_COMMENT_STATUS: 'show_all_comment_status',
+    TOGGLE_USER_STATUS: 'toggle_user_status',
 };

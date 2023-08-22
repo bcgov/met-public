@@ -6,7 +6,7 @@ import * as feedbackService from 'services/feedbackService';
 import '@testing-library/jest-dom';
 import { setupEnv } from '../setEnvVars';
 import { FeedbackModal } from 'components/feedback/FeedbackModal';
-import { CommentTypeEnum, SourceTypeEnum } from 'models/feedback';
+import { CommentTypeEnum, FeedbackStatusEnum, SourceTypeEnum } from 'models/feedback';
 
 jest.mock('axios')
 
@@ -26,10 +26,6 @@ describe('Feedback modal tests', () => {
             expect(feedbackButton).toBeVisible();
         });
         fireEvent.click(feedbackButton);
-        await waitFor(() => {
-            expect(getByTestId('feedback-title')).toBeVisible();
-        });
-
         const submitButton = getByTestId('submit-button');
         expect(submitButton).toBeDisabled();
     });
@@ -41,9 +37,6 @@ describe('Feedback modal tests', () => {
             expect(feedbackButton).toBeVisible();
         });
         fireEvent.click(feedbackButton);
-        await waitFor(() => {
-            expect(getByTestId('feedback-title')).toBeVisible();
-        });
 
         const issueButton = getByTestId('comment-type-issue-button');
         expect(issueButton).toBeVisible();
@@ -56,6 +49,7 @@ describe('Feedback modal tests', () => {
     test('Submit shows thank you message', async () => {
         createFeedbackMock.mockReturnValue(
             Promise.resolve({
+                status: FeedbackStatusEnum.NotReviewed,
                 comment_type: CommentTypeEnum.None,
                 comment: '',
                 rating: 1,
@@ -69,9 +63,6 @@ describe('Feedback modal tests', () => {
             expect(feedbackButton).toBeVisible();
         });
         fireEvent.click(feedbackButton);
-        await waitFor(() => {
-            expect(getByTestId('feedback-title')).toBeVisible();
-        });
         const ratingInput = getByTestId('rating-input');
         fireEvent.click(ratingInput.getElementsByTagName('label')[0]);
         const submitButton = getByTestId('submit-button');

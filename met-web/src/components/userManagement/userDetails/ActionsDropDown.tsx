@@ -3,9 +3,9 @@ import { CircularProgress, MenuItem, Select } from '@mui/material';
 import { Palette } from 'styles/Theme';
 import { ENGAGEMENT_MEMBERSHIP_STATUS, EngagementTeamMember } from 'models/engagementTeamMember';
 import { reinstateMembership, revokeMembership } from 'services/membershipService';
-import { EngagementTabsContext } from '../EngagementTabsContext';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { UserDetailsContext } from './UserDetailsContext';
 
 interface ActionDropDownItem {
     value: number;
@@ -15,21 +15,21 @@ interface ActionDropDownItem {
 }
 export const ActionsDropDown = ({ membership }: { membership: EngagementTeamMember }) => {
     const [loading, setLoading] = React.useState(false);
-    const { loadTeamMembers } = React.useContext(EngagementTabsContext);
+    const { getUserMemberships } = React.useContext(UserDetailsContext);
     const dispatch = useAppDispatch();
 
     const handleRevoke = async () => {
         try {
             setLoading(true);
             await revokeMembership(membership.engagement_id, membership.user_id);
-            loadTeamMembers();
-            setLoading(false);
+            getUserMemberships();
             dispatch(
                 openNotification({
                     text: `You have successfully revoked ${membership.user.first_name} ${membership.user.last_name} from ${membership.engagement?.name}`,
                     severity: 'success',
                 }),
             );
+            setLoading(false);
         } catch (error) {
             setLoading(false);
             dispatch(openNotification({ text: 'Failed to revoke membership', severity: 'error' }));
@@ -40,14 +40,14 @@ export const ActionsDropDown = ({ membership }: { membership: EngagementTeamMemb
         try {
             setLoading(true);
             await reinstateMembership(membership.engagement_id, membership.user_id);
-            loadTeamMembers();
-            setLoading(false);
+            getUserMemberships();
             dispatch(
                 openNotification({
                     text: `You have successfully reinstated ${membership.user.first_name} ${membership.user.last_name} on ${membership.engagement?.name}`,
                     severity: 'success',
                 }),
             );
+            setLoading(false);
         } catch (error) {
             setLoading(false);
             dispatch(openNotification({ text: 'Failed to reinstate membership', severity: 'error' }));

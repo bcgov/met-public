@@ -1,7 +1,19 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { MetBody, MetHeader2, MetLabel, MetPaper, MetParagraph, SecondaryButton } from 'components/common';
 import { ActionContext } from '../../ActionContext';
-import { Grid, Divider, Link, Typography, Box, RadioGroup, Radio, FormControlLabel, Skeleton } from '@mui/material';
+import {
+    Grid,
+    Divider,
+    Link,
+    Typography,
+    Box,
+    RadioGroup,
+    Radio,
+    FormControlLabel,
+    Skeleton,
+    useMediaQuery,
+    Theme,
+} from '@mui/material';
 import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import EmailModal from 'components/common/Modals/EmailModal';
@@ -19,6 +31,7 @@ import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor
 
 const SubscribeWidget = ({ widget }: { widget: Widget }) => {
     const dispatch = useAppDispatch();
+    const isSmallScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const { savedEngagement, engagementMetadata, widgets } = useContext(ActionContext);
     const defaultType = engagementMetadata.project_id ? SubscriptionType.PROJECT : SubscriptionType.ENGAGEMENT;
     const [email, setEmail] = useState('');
@@ -174,7 +187,9 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
                 ]}
                 signupoptions={
                     <Grid item xs={12}>
-                        <MetLabel>Please choose your preferred email update option:</MetLabel>
+                        <MetLabel sx={{ mb: isSmallScreen ? 1 : 0 }}>
+                            Please choose your preferred email update option:
+                        </MetLabel>
                         <RadioGroup
                             defaultValue={defaultType}
                             onChange={(e) => handleSubscriptionChange(e.target.value)}
@@ -187,7 +202,7 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
                                 }
                                 control={<Radio />}
                                 label={
-                                    <MetParagraph>
+                                    <MetParagraph mb={isSmallScreen ? 1 : 0}>
                                         I want to receive updates for {''}
                                         {engagementMetadata.project_id
                                             ? engagementMetadata.project_metadata.project_name

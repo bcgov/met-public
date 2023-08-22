@@ -17,7 +17,7 @@ export const CommentTypeButton = styled(Button)(() => ({
     padding: 3,
     marginRight: 1,
     marginLeft: 1,
-    width: 105,
+    width: 135,
     height: '100%',
     ':focus': {
         borderColor: BaseTheme.palette.primary.dark,

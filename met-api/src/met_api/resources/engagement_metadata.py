@@ -24,7 +24,6 @@ from met_api.auth import auth
 from met_api.auth import jwt as _jwt
 from met_api.schemas.engagement_metadata import EngagementMetadataSchema
 from met_api.services.engagement_metadata_service import EngagementMetadataService
-from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
@@ -60,7 +59,7 @@ class EngagementsMetadata(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.CREATE_ENGAGEMENT.value])
+    @_jwt.requires_auth
     def post():
         """Create a new engagement metadata."""
         try:

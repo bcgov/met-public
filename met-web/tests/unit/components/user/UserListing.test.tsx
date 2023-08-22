@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { render, waitFor, screen, fireEvent } from '@testing-library/react';
+import { render, waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { setupEnv } from '../setEnvVars';
 import * as reactRedux from 'react-redux';
@@ -20,7 +20,7 @@ const mockUser1: User = {
     last_name: 'Mock last name',
     updated_date: Date(),
     created_date: Date(),
-    status: 'Active',
+    status_id: 1,
     roles: [],
 };
 
@@ -47,6 +47,13 @@ jest.mock('react-redux', () => ({
             assignedEngagements: [draftEngagement.id],
         };
     }),
+}));
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useLocation: jest.fn(() => ({
+        search: '',
+    })),
 }));
 
 describe('User Management tests', () => {

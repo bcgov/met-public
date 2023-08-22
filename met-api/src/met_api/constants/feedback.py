@@ -35,6 +35,13 @@ class CommentType(IntEnum):
     Else = 3
 
 
+class FeedbackStatusType(IntEnum):
+    """Status types enum."""
+
+    Unreviewed = 0
+    Archived = 1
+
+
 class FeedbackSourceType(IntEnum):
     """Source types enum."""
 

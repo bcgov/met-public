@@ -204,3 +204,24 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         query_user_url = f'{base_url}/auth/admin/realms/{realm}/users?username={username}'
         response = requests.get(query_user_url, headers=headers, timeout=timeout)
         return response.json()[0]
+
+    @staticmethod
+    def toggle_user_enabled_status(user_id, enabled):
+        """Toggle the enabled status of a user in Keycloak."""
+        base_url = current_app.config.get('KEYCLOAK_BASE_URL')
+        realm = current_app.config.get('KEYCLOAK_REALMNAME')
+        timeout = current_app.config.get('CONNECT_TIMEOUT', 60)
+        admin_token = KeycloakService._get_admin_token()
+        headers = {
+            'Content-Type': ContentType.JSON.value,
+            'Authorization': f'Bearer {admin_token}'
+        }
+
+        user_data = {
+            'enabled': enabled  # Set the user's enabled status based on 'enable' parameter
+        }
+
+        # Update the user's enabled status
+        update_user_url = f'{base_url}/auth/admin/realms/{realm}/users/{user_id}'
+        response = requests.put(update_user_url, json=user_data, headers=headers, timeout=timeout)
+        response.raise_for_status()

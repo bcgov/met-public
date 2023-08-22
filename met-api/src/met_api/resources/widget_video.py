@@ -23,7 +23,6 @@ from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas import utils as schema_utils
 from met_api.schemas.widget_video import WidgetVideoSchema
 from met_api.services.widget_video_service import WidgetVideoService
-from met_api.utils.roles import Role
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
@@ -48,7 +47,7 @@ class Videos(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
+    @_jwt.requires_auth
     def post(widget_id):
         """Create video widget."""
         try:
@@ -66,7 +65,7 @@ class Video(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
+    @_jwt.requires_auth
     def patch(widget_id, video_widget_id):
         """Update video widget."""
         request_json = request.get_json()

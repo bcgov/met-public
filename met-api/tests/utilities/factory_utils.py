@@ -154,13 +154,15 @@ def factory_tenant_model(tenant_info: dict = TestTenantInfo.tenant1):
 def factory_staff_user_model(external_id=None, user_info: dict = TestUserInfo.user_staff_1):
     """Produce a staff user model."""
     # Generate a external id if not passed
-    external_id = fake.random_number(digits=5) if external_id is None else external_id
+    external_id = fake.random_number(
+        digits=5) if external_id is None else external_id
     user = StaffUserModel(
         first_name=user_info['first_name'],
         last_name=user_info['last_name'],
         middle_name=user_info['middle_name'],
         email_address=user_info['email_address'],
         external_id=str(external_id),
+        status_id=user_info['status_id'],
     )
     user.save()
     return user
@@ -169,7 +171,8 @@ def factory_staff_user_model(external_id=None, user_info: dict = TestUserInfo.us
 def factory_participant_model(participant: dict = TestParticipantInfo.participant1):
     """Produce a participant model."""
     participant = ParticipantModel(
-        email_address=ParticipantModel.encode_email(participant['email_address']),
+        email_address=ParticipantModel.encode_email(
+            participant['email_address']),
     )
     participant.save()
     return participant
@@ -192,6 +195,7 @@ def factory_membership_model(user_id, engagement_id, member_type='TEAM_MEMBER', 
 def factory_feedback_model(feedback_info: dict = TestFeedbackInfo.feedback1, status=None):
     """Produce a feedback model."""
     feedback = FeedbackModel(
+        status=feedback_info.get('status'),
         comment=fake.text(),
         rating=feedback_info.get('rating'),
         comment_type=feedback_info.get('comment_type'),
@@ -291,7 +295,8 @@ def patch_token_info(claims, monkeypatch):
         """Return token info."""
         return claims
 
-    monkeypatch.setattr('met_api.utils.user_context._get_token_info', token_info)
+    monkeypatch.setattr(
+        'met_api.utils.user_context._get_token_info', token_info)
 
 
 def factory_engagement_slug_model(eng_slug_info: dict = TestEngagementSlugInfo.slug1):

@@ -42,6 +42,13 @@ jest.mock('components/common', () => ({
     },
 }));
 
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useLocation: jest.fn(() => ({
+        search: '',
+    })),
+}));
+
 describe('Feedback Listing tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());

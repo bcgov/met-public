@@ -16,6 +16,12 @@ class EngagementMetadataService:
     @staticmethod
     def get_metadata(engagement_id) -> EngagementMetadataSchema:
         """Get Engagement metadata by the id."""
+        one_of_roles = (
+            MembershipType.TEAM_MEMBER.name,
+            Role.VIEW_ALL_ENGAGEMENTS.value
+        )
+        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
+
         metadata_model: EngagementMetadataModel = EngagementMetadataModel.find_by_id(engagement_id)
         metadata = EngagementMetadataSchema().dump(metadata_model)
         return metadata
@@ -23,6 +29,13 @@ class EngagementMetadataService:
     @staticmethod
     def create_metadata(request_json: dict):
         """Create engagement metadata."""
+        if engagement_id := request_json.get('engagement_id', None):
+            one_of_roles = (
+                MembershipType.TEAM_MEMBER.name,
+                Role.CREATE_ENGAGEMENT.value
+            )
+            authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
+
         metadata_model = EngagementMetadataService._create_metadata_model(request_json)
         metadata_model.commit()
         return metadata_model.find_by_id(metadata_model.engagement_id)

@@ -3,7 +3,8 @@
         "logoUrl": ""
     },
     "header": {
-        "title": "Modern Engagement"
+        "title": "Modern Engagement",
+        "smallTitle": "MET"
     },
     "landing": {
         "banner": {

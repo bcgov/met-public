@@ -23,12 +23,11 @@ from faker import Faker
 
 from met_api.config import get_named_config
 from met_api.constants.comment_status import Status as CommentStatus
-from met_api.constants.engagement_status import SubmissionStatus
 from met_api.constants.engagement_status import Status as EngagementStatus
-
-from met_api.constants.feedback import CommentType, FeedbackSourceType, RatingType
+from met_api.constants.engagement_status import SubmissionStatus
+from met_api.constants.feedback import CommentType, FeedbackSourceType, FeedbackStatusType, RatingType
 from met_api.constants.widget import WidgetType
-from met_api.utils.enums import LoginSource
+from met_api.utils.enums import LoginSource, UserStatus
 
 
 fake = Faker()
@@ -42,6 +41,7 @@ class TestUserInfo(dict, Enum):
     user = {
         'id': 123,
         'first_name': 'System',
+        'status_id': UserStatus.ACTIVE.value,
     }
 
     user_staff_1 = {
@@ -49,6 +49,7 @@ class TestUserInfo(dict, Enum):
         'middle_name': fake.name(),
         'last_name': fake.name(),
         'email_address': fake.email(),
+        'status_id': UserStatus.ACTIVE.value,
     }
 
 
@@ -233,6 +234,7 @@ class TestFeedbackInfo(dict, Enum):
     """Test scenarios of feedback."""
 
     feedback1 = {
+        'status': FeedbackStatusType.Unreviewed,
         'comment': 'A feedback comment',
         'rating': RatingType.Satisfied,
         'comment_type': CommentType.Idea,
@@ -298,6 +300,7 @@ class TestJwtClaims(dict, Enum):
                 'review_comments',
                 'review_all_comments',
                 'view_all_engagements',
+                'toggle_user_status',
             ]
         }
     }
@@ -315,7 +318,6 @@ class TestJwtClaims(dict, Enum):
                 'staff',
                 'view_engagement',
                 'view_users',
-                'view_private_engagements',
                 'clone_survey'
             ]
         }
