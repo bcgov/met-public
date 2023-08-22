@@ -8,5 +8,5 @@ class MembershipEngagementSchema(MembershipSchema):
     """Membership schema with engagement details."""
 
     engagement = fields.Nested(
-        "EngagementSchema", only=["id", "name"]
+        'EngagementSchema', only=['id', 'name']
     )
