@@ -1,9 +1,12 @@
 """Service for Widget Map management."""
 from http import HTTPStatus
 
+from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.widget_map import WidgetMap as WidgetMapModel
+from met_api.services import authorization
 from met_api.services.shapefile_service import ShapefileService
+from met_api.utils.roles import Role
 
 
 class WidgetMapService:
@@ -20,6 +23,9 @@ class WidgetMapService:
         """Create map for the widget."""
         geojson = None
         map_data = dict(map_details)
+        eng_id = map_data.get('engagement_id')
+        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name,
+                                               Role.EDIT_ENGAGEMENT.value), engagement_id=eng_id)
         if shape_file:
             geojson = ShapefileService().convert_to_geojson(shape_file)
             map_data['geojson'] = geojson
@@ -36,6 +42,10 @@ class WidgetMapService:
             raise BusinessException(
                 error='Invalid widgets and map',
                 status_code=HTTPStatus.BAD_REQUEST)
+        eng_id = widget_map.engagement_id
+        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name,
+                                               Role.EDIT_ENGAGEMENT.value), engagement_id=eng_id)
+
         return WidgetMapModel.update_map(widget_id, request_json)
 
     @staticmethod

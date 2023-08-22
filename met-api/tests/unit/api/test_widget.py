@@ -32,7 +32,7 @@ def test_create_widget(client, jwt, session, widget_info):  # pylint:disable=unu
     """Assert that a widget can be POSTed."""
     engagement = factory_engagement_model()
     widget_info['engagement_id'] = engagement.id
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
     rv = client.post('/api/widgets/engagement/' + str(engagement.id), data=json.dumps(widget_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -48,14 +48,14 @@ def test_create_widget_sort(client, jwt, session):  # pylint:disable=unused-argu
     engagement = factory_engagement_model()
     widget_info_1 = TestWidgetInfo.widget1
     widget_info_1['engagement_id'] = engagement.id
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
     rv = client.post(f'/api/widgets/engagement/{engagement.id}', data=json.dumps(widget_info_1),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
 
     widget_info_2 = TestWidgetInfo.widget2
     widget_info_2['engagement_id'] = engagement.id
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
     rv = client.post(f'/api/widgets/engagement/{engagement.id}', data=json.dumps(widget_info_2),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -101,7 +101,7 @@ def test_create_widget_sort_invalid(client, jwt, session):  # pylint:disable=unu
     engagement = factory_engagement_model()
     widget_info_1 = TestWidgetInfo.widget1
     widget_info_1['engagement_id'] = engagement.id
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
     rv = client.post(f'/api/widgets/engagement/{engagement.id}', data=json.dumps(widget_info_1),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -132,7 +132,7 @@ def test_create_widget_items(client, jwt, session, widget_item_info):  # pylint:
     TestWidgetInfo.widget1['engagement_id'] = engagement.id
     widget = factory_widget_model(TestWidgetInfo.widget1)
 
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
 
     data = {
         'widget_data_id': widget_item_info.get('widget_data_id'),

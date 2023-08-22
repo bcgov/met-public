@@ -21,10 +21,9 @@ from flask_restx import Namespace, Resource
 
 from met_api.auth import jwt as _jwt
 from met_api.exceptions.business_exception import BusinessException
-from met_api.schemas.memberships import MembershipSchema
 from met_api.schemas.membership_engagement import MembershipEngagementSchema
+from met_api.schemas.memberships import MembershipSchema
 from met_api.services.membership_service import MembershipService
-from met_api.utils.roles import Role
 from met_api.utils.util import allowedorigins, cors_preflight
 
 API = Namespace('engagements', description='Endpoints for Engagements Management')
@@ -39,11 +38,11 @@ class EngagementMembership(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.VIEW_MEMBERS.value])
+    @_jwt.requires_auth
     def get(engagement_id):
         """Get memberships."""
-        # TODO validate against a schema.
         try:
+
             members = MembershipService.get_memberships(engagement_id)
             return jsonify(MembershipSchema().dump(members, many=True)), HTTPStatus.OK
         except BusinessException as err:
@@ -109,7 +108,7 @@ class RevokeMembership(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.EDIT_MEMBERS.value])
+    @_jwt.requires_auth
     def patch(engagement_id, user_id):
         """Update membership status."""
         try:
