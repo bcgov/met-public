@@ -37,6 +37,7 @@ API = Namespace('feedbacks', description='Endpoints for Feedbacks Management')
 @cors_preflight('GET, POST, OPTIONS')
 @API.route('/', methods=['GET', 'POST'])
 class FeedbackList(Resource):
+    """Feedback List Resource."""
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.requires_auth
@@ -81,6 +82,7 @@ class FeedbackList(Resource):
 @cors_preflight('DELETE, PATCH, OPTIONS')
 @API.route('/<int:feedback_id>', methods=['DELETE', 'PATCH'])
 class FeedbackById(Resource):
+    """Feedback Id Resource."""
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.requires_auth

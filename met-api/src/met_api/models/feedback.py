@@ -56,6 +56,7 @@ class Feedback(BaseModel):
     def create_feedback(feedback):
         """Create new feedback entity."""
         new_feedback = Feedback(
+            status=feedback.get('status', None),
             comment=feedback.get('comment', None),
             created_date=datetime.utcnow(),
             rating=feedback.get('rating'),
