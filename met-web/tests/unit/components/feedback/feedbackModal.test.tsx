@@ -47,6 +47,7 @@ describe('Feedback modal tests', () => {
     test('Submit shows thank you message', async () => {
         createFeedbackMock.mockReturnValue(
             Promise.resolve({
+                id: 1,
                 status: FeedbackStatusEnum.NotReviewed,
                 comment_type: CommentTypeEnum.None,
                 comment: '',
