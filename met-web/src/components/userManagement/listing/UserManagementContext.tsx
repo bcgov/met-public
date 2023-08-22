@@ -20,6 +20,7 @@ export interface UserManagementContextProps {
     user: User;
     setUser: React.Dispatch<React.SetStateAction<User>>;
     loadUserListing: () => void;
+    setSearchText: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export type EngagementParams = {
@@ -52,6 +53,9 @@ export const UserManagementContext = createContext<UserManagementContextProps>({
     loadUserListing: () => {
         throw new Error('Load user listing is not implemented');
     },
+    setSearchText: () => {
+        throw new Error('Not implemented');
+    },
 });
 
 export const UserManagementContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -66,7 +70,7 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
     const [usersLoading, setUsersLoading] = useState(true);
     const [addUserModalOpen, setAddUserModalOpen] = useState(false);
     const [assignRoleModalOpen, setassignRoleModalOpen] = useState(false);
-
+    const [searchText, setSearchText] = useState('');
     const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<User>>({
         page: Number(pageFromURL) || 1,
         size: Number(sizeFromURL) || 10,
@@ -78,7 +82,7 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
     useEffect(() => {
         updateURLWithPagination(paginationOptions);
         loadUserListing();
-    }, [paginationOptions]);
+    }, [paginationOptions, searchText]);
 
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
@@ -91,6 +95,7 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
                 sort_key: nested_sort_key || sort_key,
                 sort_order,
                 include_groups: true,
+                search_text: searchText,
             });
             setUsers(response.items);
             setPageInfo({
@@ -123,6 +128,7 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
                 user,
                 setUser,
                 loadUserListing,
+                setSearchText,
             }}
         >
             {children}

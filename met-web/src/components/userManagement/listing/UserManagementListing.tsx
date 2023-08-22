@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
@@ -14,8 +14,14 @@ import { UserManagementContext } from './UserManagementContext';
 import { ActionsDropDown } from './ActionsDropDown';
 
 const UserManagementListing = () => {
-    const { pageInfo, paginationOptions, setPaginationOptions, users, usersLoading } =
+    const { pageInfo, paginationOptions, setPaginationOptions, users, usersLoading, setSearchText } =
         useContext(UserManagementContext);
+
+    const [searchBarText, setSearchBarText] = useState('');
+
+    const handleSearchClick = () => {
+        setSearchText(searchBarText);
+    };
 
     const headCells: HeadCell<User>[] = [
         {
@@ -89,10 +95,12 @@ const UserManagementListing = () => {
                             variant="outlined"
                             label="Search Users by name"
                             fullWidth
-                            name="searchText"
+                            name="searchBarText"
+                            value={searchBarText}
+                            onChange={(e) => setSearchBarText(e.target.value)}
                             size="small"
                         />
-                        <PrimaryButton>
+                        <PrimaryButton onClick={handleSearchClick}>
                             <SearchIcon />
                         </PrimaryButton>
                     </Stack>
