@@ -21,9 +21,10 @@ from faker import Faker
 from met_api.constants.widget import WidgetType
 from met_api.schemas.widget_item import WidgetItemSchema
 from met_api.services.widget_service import WidgetService
-from tests.utilities.factory_scenarios import TestUserInfo, TestWidgetInfo, TestWidgetItemInfo, TestJwtClaims
-from tests.utilities.factory_utils import factory_engagement_model, factory_widget_item_model, factory_widget_model, \
-    patch_token_info
+from tests.utilities.factory_scenarios import TestJwtClaims, TestUserInfo, TestWidgetInfo, TestWidgetItemInfo
+from tests.utilities.factory_utils import (
+    factory_engagement_model, factory_widget_item_model, factory_widget_model, patch_token_info)
+
 
 fake = Faker()
 date_format = '%Y-%m-%d'

@@ -6,7 +6,6 @@ from met_api.models.engagement_settings import EngagementSettingsModel
 from met_api.schemas.engagement_settings import EngagementSettingsSchema
 from met_api.services import authorization
 from met_api.utils.roles import Role
-from met_api.utils.token_info import TokenInfo
 
 
 class EngagementSettingsService:
@@ -16,10 +15,6 @@ class EngagementSettingsService:
     def get(engagement_id) -> EngagementSettingsSchema:
         """Get Engagement settings by the id."""
         engagement_model: EngagementModel = EngagementModel.find_by_id(engagement_id)
-        if TokenInfo.get_id() is None \
-                and engagement_model.status_id not in (Status.Published.value, Status.Closed.value):
-            # Non authenticated users only have access to published and closed engagements
-            return None
         if engagement_model.status_id in (Status.Draft.value, Status.Scheduled.value):
             one_of_roles = (
                 MembershipType.TEAM_MEMBER.name,

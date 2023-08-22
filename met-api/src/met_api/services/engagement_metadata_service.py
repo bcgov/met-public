@@ -1,14 +1,13 @@
 """Service for engagement management."""
 from datetime import datetime
 
-from met_api.constants.engagement_status import Status, SubmissionStatus
+from met_api.constants.engagement_status import SubmissionStatus
 from met_api.constants.membership_type import MembershipType
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_metadata import EngagementMetadataModel
 from met_api.schemas.engagement_metadata import EngagementMetadataSchema
 from met_api.services import authorization
 from met_api.utils.roles import Role
-from met_api.utils.token_info import TokenInfo
 
 
 class EngagementMetadataService:
@@ -17,20 +16,11 @@ class EngagementMetadataService:
     @staticmethod
     def get_metadata(engagement_id) -> EngagementMetadataSchema:
         """Get Engagement metadata by the id."""
-        engagement_model: EngagementModel = EngagementModel.find_by_id(engagement_id)
-
-        if engagement_model:
-            if TokenInfo.get_id() is None \
-                    and engagement_model.status_id not in (Status.Published.value, Status.Closed.value):
-                # Non authenticated users only have access to published and closed engagements
-                return None
-            if engagement_model.status_id in (Status.Draft.value, Status.Scheduled.value):
-                one_of_roles = (
-                    MembershipType.TEAM_MEMBER.name,
-                    MembershipType.REVIEWER.name,
-                    Role.VIEW_ALL_ENGAGEMENTS.value
-                )
-                authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
+        one_of_roles = (
+            MembershipType.TEAM_MEMBER.name,
+            Role.VIEW_ALL_ENGAGEMENTS.value
+        )
+        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
 
         metadata_model: EngagementMetadataModel = EngagementMetadataModel.find_by_id(engagement_id)
         metadata = EngagementMetadataSchema().dump(metadata_model)
