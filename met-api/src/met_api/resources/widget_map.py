@@ -48,7 +48,7 @@ class Map(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
+    @_jwt.requires_auth
     def post(widget_id):
         """Create map widget."""
         try:

@@ -1,5 +1,8 @@
 """Service for Widget Video management."""
+from met_api.constants.membership_type import MembershipType
 from met_api.models.widget_video import WidgetVideo as WidgetVideoModel
+from met_api.services import authorization
+from met_api.utils.roles import Role
 
 
 class WidgetVideoService:
@@ -15,6 +18,10 @@ class WidgetVideoService:
     def create_video(widget_id, video_details: dict):
         """Create video for the widget."""
         video_data = dict(video_details)
+        eng_id = video_data.get('engagement_id')
+        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name,
+                                               Role.EDIT_ENGAGEMENT.value), engagement_id=eng_id)
+
         widget_video = WidgetVideoService._create_video_model(widget_id, video_data)
         widget_video.commit()
         return widget_video
@@ -23,6 +30,9 @@ class WidgetVideoService:
     def update_video(widget_id, video_widget_id, video_data):
         """Update video widget."""
         widget_video: WidgetVideoModel = WidgetVideoModel.find_by_id(video_widget_id)
+        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name,
+                                               Role.EDIT_ENGAGEMENT.value), engagement_id=widget_video.engagement_id)
+
         if not widget_video:
             raise KeyError('Video widget not found')
 
