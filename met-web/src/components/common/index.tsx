@@ -255,6 +255,12 @@ export const MetDescription = styled(Typography)(() => ({
     color: '#707070',
 }));
 
+export const HeaderTitle = styled(Typography)(() => ({
+    fontSize: '32px',
+    fontWeight: 'bold',
+    fontFamily: MET_Header_Font_Family,
+}));
+
 export const MetSmallText = ({ bold, children, sx, ...rest }: HeaderProps) => {
     return (
         <Typography
@@ -323,7 +329,7 @@ export const MetHeader1 = ({ bold, children, sx, ...rest }: HeaderProps) => {
                 fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
                 fontFamily: MET_Header_Font_Family,
             }}
-            variant="h2"
+            variant="h1"
             {...rest}
         >
             {children}
