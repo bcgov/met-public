@@ -12,9 +12,12 @@ import { formatDate } from 'components/common/dateHelper';
 import { customRatings } from 'components/feedback/FeedbackModal/constants';
 import { useLocation } from 'react-router-dom';
 import { updateURLWithPagination } from 'components/common/Table/utils';
-import { ActionsDropDown } from './actionDropdown';
+import { ActionsDropDown } from './ActionDropdown';
+import { useAppSelector } from 'hooks';
+import { USER_ROLES } from 'services/userService/constants';
 const FeedbackListing = () => {
     const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
+    const { roles } = useAppSelector((state) => state.user);
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const pageFromURL = searchParams.get('page');
@@ -29,6 +32,7 @@ const FeedbackListing = () => {
     const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
     const [tableLoading, setTableLoading] = useState(true);
     const [statusFilter, setStatusFilter] = useState(FeedbackStatusEnum.NotReviewed);
+    const authorized = roles.includes(USER_ROLES.CREATE_ADMIN_USER);
     const dispatch = useAppDispatch();
 
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
@@ -137,17 +141,21 @@ const FeedbackListing = () => {
                     justifyContent="flex-end"
                     sx={{ p: 2 }}
                 >
-                    <PrimaryButton
-                        onClick={() =>
-                            setStatusFilter(
-                                statusFilter == FeedbackStatusEnum.NotReviewed
-                                    ? FeedbackStatusEnum.Archived
-                                    : FeedbackStatusEnum.NotReviewed,
-                            )
-                        }
-                    >
-                        {statusFilter == FeedbackStatusEnum.NotReviewed ? 'View Archive' : 'View Feedback'}
-                    </PrimaryButton>
+                    {authorized ? (
+                        <PrimaryButton
+                            onClick={() =>
+                                setStatusFilter(
+                                    statusFilter == FeedbackStatusEnum.NotReviewed
+                                        ? FeedbackStatusEnum.Archived
+                                        : FeedbackStatusEnum.NotReviewed,
+                                )
+                            }
+                        >
+                            {statusFilter == FeedbackStatusEnum.NotReviewed ? 'View Archive' : 'View Feedback'}
+                        </PrimaryButton>
+                    ) : (
+                        <></>
+                    )}
                 </Stack>
             </Grid>
             <Grid item xs={12} lg={10}>

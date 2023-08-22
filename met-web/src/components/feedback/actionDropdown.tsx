@@ -1,8 +1,7 @@
 import React, { useMemo } from 'react';
-import { USER_ROLES } from 'services/userService/constants';
 import { MenuItem, Select } from '@mui/material';
 import { Feedback, FeedbackStatusEnum } from 'models/feedback';
-import { useAppDispatch, useAppSelector } from 'hooks';
+import { useAppDispatch } from 'hooks';
 import { Palette } from 'styles/Theme';
 import { updateFeedback, deleteFeedback } from 'services/feedbackService';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -15,16 +14,9 @@ interface ActionDropDownItem {
     condition?: boolean;
 }
 export const ActionsDropDown = ({ feedback, reload }: { feedback: Feedback; reload: () => void }) => {
-    const { roles } = useAppSelector((state) => state.user);
     const dispatch = useAppDispatch();
     const isArchived = feedback.status == FeedbackStatusEnum.Archived;
     const canEditFeedback = (): boolean => {
-        const authorized = roles.includes(USER_ROLES.APP_ADMIN);
-
-        if (!authorized) {
-            return false;
-        }
-
         return true;
     };
 
@@ -72,9 +64,8 @@ export const ActionsDropDown = ({ feedback, reload }: { feedback: Feedback; relo
         () => [
             {
                 value: 1,
-                label: isArchived ? 'Resolved' : 'Mark As Resolved',
+                label: 'Mark As Resolved',
                 action: () => {
-                    //Archive said feedback
                     archiveFeedback();
                 },
                 condition: canEditFeedback() && !isArchived,
@@ -83,7 +74,6 @@ export const ActionsDropDown = ({ feedback, reload }: { feedback: Feedback; relo
                 value: 2,
                 label: 'Delete Feedback',
                 action: () => {
-                    //Delete function for feedback
                     removeFeedback();
                 },
                 condition: canEditFeedback(),
