@@ -16,6 +16,7 @@ from met_api.schemas.email_verification import EmailVerificationSchema
 from met_api.services.participant_service import ParticipantService
 from met_api.utils import notification
 from met_api.utils.template import Template
+from met_api.config import get_gc_notify_config
 
 
 class EmailVerificationService:
@@ -133,10 +134,9 @@ class EmailVerificationService:
         engagement: EngagementModel = EngagementModel.find_by_id(
             survey.engagement_id)
         engagement_name = engagement.name
-        template_id = current_app.config.get(
-            'SUBSCRIBE_EMAIL_TEMPLATE_ID', None)
+        template_id = get_gc_notify_config('SUBSCRIBE_EMAIL_TEMPLATE_ID')
         template = Template.get_template('subscribe_email.html')
-        subject_template = current_app.config.get('SUBSCRIBE_EMAIL_SUBJECT')
+        subject_template = get_gc_notify_config('SUBSCRIBE_EMAIL_SUBJECT')
         confirm_path = current_app.config.get('SUBSCRIBE_PATH'). \
             format(engagement_id=engagement.id, token=token)
         unsubscribe_path = current_app.config.get('UNSUBSCRIBE_PATH'). \
@@ -145,8 +145,7 @@ class EmailVerificationService:
             engagement.tenant_id, confirm_path)
         unsubscribe_url = notification.get_tenant_site_url(
             engagement.tenant_id, unsubscribe_path)
-        email_environment = current_app.config.get(
-            'EMAIL_ENVIRONMENT', '')
+        email_environment = get_gc_notify_config('EMAIL_ENVIRONMENT')
         tenant_name = EmailVerificationService._get_tenant_name(
             engagement.tenant_id)
         args = {
@@ -172,12 +171,10 @@ class EmailVerificationService:
         engagement: EngagementModel = EngagementModel.find_by_id(
             survey.engagement_id)
         engagement_name = engagement.name
-        template_id = current_app.config.get(
-            'VERIFICATION_EMAIL_TEMPLATE_ID', None)
-        email_environment = current_app.config.get(
-            'EMAIL_ENVIRONMENT', '')
+        template_id = get_gc_notify_config('VERIFICATION_EMAIL_TEMPLATE_ID')
+        email_environment = get_gc_notify_config('EMAIL_ENVIRONMENT')
         template = Template.get_template('email_verification.html')
-        subject_template = current_app.config.get('VERIFICATION_EMAIL_SUBJECT')
+        subject_template = get_gc_notify_config('VERIFICATION_EMAIL_SUBJECT')
         survey_path = current_app.config.get('SURVEY_PATH'). \
             format(survey_id=survey.id, token=token)
         engagement_path = EmailVerificationService._get_engagement_path(
