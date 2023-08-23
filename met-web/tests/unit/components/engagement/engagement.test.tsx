@@ -111,6 +111,8 @@ jest.mock('components/permissionsGate', () => ({
     },
 }));
 
+jest.mock('axios')
+
 describe('Engagement View page tests', () => {
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());

@@ -7,10 +7,14 @@ import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as widgetService from 'services/widgetService';
+import * as engagementMetadataService from 'services/engagementMetadataService';
+import * as membershipService from 'services/membershipService';
+import * as engagementSettingService from 'services/engagementSettingService';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { Widget, WidgetItem, WidgetType } from 'models/widget';
-import { draftEngagement } from '../factory';
+import { draftEngagement, engagementMetadata } from '../factory';
 import { USER_ROLES } from 'services/userService/constants';
+import { EngagementSettings, createDefaultEngagementSettings } from 'models/engagement';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
@@ -18,6 +22,8 @@ const survey: Survey = {
     name: 'Survey 1',
     engagement_id: 1,
 };
+
+jest.mock('axios')
 
 const surveys = [survey];
 
@@ -35,6 +41,10 @@ const phasesWidget: Widget = {
     engagement_id: 1,
     items: [],
 };
+
+const mockEngagementSettings: EngagementSettings = {
+    ...createDefaultEngagementSettings()
+}
 
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
@@ -79,6 +89,12 @@ describe('Phases widget tests', () => {
         .spyOn(engagementService, 'getEngagement')
         .mockReturnValue(Promise.resolve(draftEngagement));
     const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([phasesWidget]));
+    jest.spyOn(engagementMetadataService, 'getEngagementMetadata')
+        .mockReturnValue(Promise.resolve(engagementMetadata));
+    jest.spyOn(membershipService, 'getTeamMembers')
+        .mockReturnValue(Promise.resolve([]));
+    jest.spyOn(engagementSettingService, 'getEngagementSettings')
+        .mockReturnValue(Promise.resolve(mockEngagementSettings));
 
     beforeEach(() => {
         setupEnv();
