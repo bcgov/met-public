@@ -32,13 +32,13 @@ const mockMembership: EngagementTeamMember = {
     id: 1,
     engagement_id: draftEngagement.id,
     user: {
-        ...mockUser1
+        ...mockUser1,
     },
     user_id: mockUser1.id,
     engagement: {
-        ...draftEngagement
-    }
-}
+        ...draftEngagement,
+    },
+};
 
 jest.mock('@mui/material', () => ({
     ...jest.requireActual('@mui/material'),
@@ -71,13 +71,11 @@ jest.mock('react-router-dom', () => ({
 
 describe('User Details tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
-    const mockOpenNotificationModal = jest.spyOn(notificationModalSlice, 'openNotificationModal').mockImplementation(jest.fn());
-    jest.spyOn(userService, 'getUser').mockReturnValue(
-        Promise.resolve(mockUser1),
-    );
-    jest.spyOn(membershipService, 'getMembershipsByUser').mockReturnValue(
-        Promise.resolve([mockMembership]),
-    );
+    const mockOpenNotificationModal = jest
+        .spyOn(notificationModalSlice, 'openNotificationModal')
+        .mockImplementation(jest.fn());
+    jest.spyOn(userService, 'getUser').mockReturnValue(Promise.resolve(mockUser1));
+    jest.spyOn(membershipService, 'getMembershipsByUser').mockReturnValue(Promise.resolve([mockMembership]));
 
     beforeEach(() => {
         setupEnv();
@@ -89,24 +87,22 @@ describe('User Details tests', () => {
         await waitFor(() => {
             expect(screen.getByText(draftEngagement.name)).toBeVisible();
             expect(screen.getByText(mockUser1.first_name)).toBeVisible();
-            expect(screen.getByTestId('user-status-toggle').children[0]).toBeChecked();
+            expect(screen.getByTestId('user-status-toggle')).toBeChecked();
         });
-
     });
 
     test('Confirmation model appears when toggling status', async () => {
         render(<UserProfile />);
 
         await waitFor(() => {
-            expect(screen.getByTestId('user-status-toggle').children[0]).toBeChecked();
+            expect(screen.getByTestId('user-status-toggle')).toBeChecked();
         });
 
-        const toggle = screen.getByTestId('user-status-toggle').children[0];
-        fireEvent.click(toggle);
+        const button = screen.getByTestId('user-status-toggle');
+        fireEvent.click(button);
 
         await waitFor(() => {
             expect(mockOpenNotificationModal).toHaveBeenCalled();
         });
-
     });
 });
