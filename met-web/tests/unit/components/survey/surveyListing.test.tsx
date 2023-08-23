@@ -74,6 +74,8 @@ const mockSurveyTwo = {
     },
 };
 
+jest.mock('axios')
+
 jest.mock('@mui/material', () => ({
     ...jest.requireActual('@mui/material'),
     Link: ({ children }: { children: ReactNode }) => {

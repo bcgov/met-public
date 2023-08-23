@@ -24,6 +24,7 @@ from met_api.utils.roles import Role
 from met_api.utils.template import Template
 from met_api.utils.token_info import TokenInfo
 from met_api.models import Tenant as TenantModel
+from met_api.config import get_gc_notify_config
 
 
 class EngagementService:
@@ -100,6 +101,7 @@ class EngagementService:
             if has_edit_role:
                 return EngagementScopeOptions(restricted=False)
 
+            # check if user
             return EngagementScopeOptions(
                 include_assigned=True
             )
@@ -286,8 +288,7 @@ class EngagementService:
         engagement_url = notification.get_tenant_site_url(engagement.tenant_id, dashboard_path)
         subject = current_app.config.get('ENGAGEMENT_CLOSEOUT_EMAIL_SUBJECT'). \
             format(engagement_name=engagement.name)
-        email_environment = current_app.config.get(
-            'EMAIL_ENVIRONMENT', '')
+        email_environment = get_gc_notify_config('EMAIL_ENVIRONMENT')
         tenant_name = EngagementService._get_tenant_name(
             engagement.tenant_id)
         args = {

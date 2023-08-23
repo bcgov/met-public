@@ -137,14 +137,19 @@ class MembershipService:
     def get_memberships(engagement_id):
         """Get memberships by engagement id."""
         # get user to be added from request json
+        one_of_roles = (
+            MembershipType.TEAM_MEMBER.name,
+            Role.VIEW_MEMBERS.value
+        )
+        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
 
         memberships = MembershipModel.find_by_engagement(engagement_id)
         return memberships
 
     @staticmethod
     def get_assigned_engagements(
-        user_id,
-        include_revoked=False,
+            user_id,
+            include_revoked=False,
     ):
         """Get memberships by user id."""
         status = MembershipStatus.ACTIVE.value if not include_revoked else None

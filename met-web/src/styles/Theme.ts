@@ -23,6 +23,14 @@ export const Palette = {
     info: {
         main: '#707070',
     },
+    internalHeader: {
+        backgroundColor: '#FFFFFF',
+        color: '#292929',
+    },
+    publicHeader: {
+        backgroundColor: '#FFFFFF',
+        color: '#292929',
+    },
     dashboard: {
         upcoming: {
             bg: '#FCB92F26',

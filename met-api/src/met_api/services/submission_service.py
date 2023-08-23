@@ -29,6 +29,7 @@ from met_api.services.survey_service import SurveyService
 from met_api.utils import notification
 from met_api.utils.roles import Role
 from met_api.utils.template import Template
+from met_api.config import get_gc_notify_config
 
 
 class SubmissionService:
@@ -309,9 +310,7 @@ class SubmissionService:
         """Send an verification email.Throws error if fails."""
         participant_id = submission.participant_id
         participant = ParticipantModel.find_by_id(participant_id)
-
-        template_id = current_app.config.get(
-            'REJECTED_EMAIL_TEMPLATE_ID', None)
+        template_id = get_gc_notify_config('REJECTED_EMAIL_TEMPLATE_ID')
         subject, body, args = SubmissionService._render_email_template(
             staff_review_details, submission, review_note, token)
         try:
@@ -344,10 +343,9 @@ class SubmissionService:
                    submission_id=submission.id, token=token)
         submission_url = notification.get_tenant_site_url(
             engagement.tenant_id, submission_path)
-        subject = current_app.config.get('REJECTED_EMAIL_SUBJECT'). \
+        subject = get_gc_notify_config('REJECTED_EMAIL_SUBJECT'). \
             format(engagement_name=engagement_name)
-        email_environment = current_app.config.get(
-            'EMAIL_ENVIRONMENT', '')
+        email_environment = get_gc_notify_config('EMAIL_ENVIRONMENT')
         args = {
             'engagement_name': engagement_name,
             'survey_name': survey_name,

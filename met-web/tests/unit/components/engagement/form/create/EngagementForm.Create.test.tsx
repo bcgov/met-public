@@ -22,6 +22,8 @@ jest.mock('react-redux', () => ({
     }),
 }));
 
+jest.mock('axios')
+
 jest.mock('components/common/Dragdrop', () => ({
     ...jest.requireActual('components/common/Dragdrop'),
     MetDroppable: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,

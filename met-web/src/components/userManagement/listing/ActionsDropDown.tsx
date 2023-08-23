@@ -3,6 +3,8 @@ import { MenuItem, Select } from '@mui/material';
 import { User, USER_GROUP } from 'models/user';
 import { Palette } from 'styles/Theme';
 import { UserManagementContext } from './UserManagementContext';
+import { useAppSelector } from 'hooks';
+import { USER_ROLES } from 'services/userService/constants';
 
 interface ActionDropDownItem {
     value: number;
@@ -12,6 +14,7 @@ interface ActionDropDownItem {
 }
 export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
     const { setAddUserModalOpen, setassignRoleModalOpen, setUser } = useContext(UserManagementContext);
+    const { roles } = useAppSelector((state) => state.user);
 
     const hasNoRole = (): boolean => {
         if (selectedUser.main_group) {
@@ -45,7 +48,7 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
                         setassignRoleModalOpen(true);
                     }
                 },
-                condition: hasNoRole() && isAdmin(),
+                condition: hasNoRole() && roles.includes(USER_ROLES.EDIT_MEMBERS),
             },
             {
                 value: 2,
