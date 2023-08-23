@@ -15,7 +15,9 @@
     "comment": {
         "admin": {
             "review": {
-                "ifThreatContact": "If there is a threat/menace in the comments, check the box below. No email will be sent. Contact Joan Doe at",
+                "threatTextOne": "Select this option if there is a threat/menace in the comment(s). No email will be sent. Contact",
+                "threatContact": "Jon Doe",
+                "threatTextTwo": "at",
                 "threatContactEmail": "email@gov.bc.ca"
             }
         }

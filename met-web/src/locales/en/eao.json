@@ -15,7 +15,10 @@
     "comment": {
         "admin": {
             "review": {
-                "ifThreatContact": "If there is a threat/menace in the comments, check the box below. No email will be sent. Contact Sarah Plank at sarah.plank@gov.bc.ca"
+                "threatTextOne": "Select this option if there is a threat/menace in the comment(s). No email will be sent. Contact",
+                "threatContact": "Sarah Plank",
+                "threatTextTwo": "at",
+                "threatContactEmail": "sarah.plank@gov.bc.ca"
             }
         }
     }
