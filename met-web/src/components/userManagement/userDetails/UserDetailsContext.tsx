@@ -1,11 +1,11 @@
-import React, { createContext, useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useAppDispatch } from 'hooks';
-import { openNotification } from 'services/notificationService/notificationSlice';
-import { User, createDefaultUser } from 'models/user';
-import { getUser } from 'services/userService/api';
-import { getMembershipsByUser } from 'services/membershipService';
-import { EngagementTeamMember } from 'models/engagementTeamMember';
+import React, {createContext, useState, useEffect} from 'react';
+import {useNavigate, useParams} from 'react-router-dom';
+import {useAppDispatch} from 'hooks';
+import {openNotification} from 'services/notificationService/notificationSlice';
+import {User, createDefaultUser} from 'models/user';
+import {getUser} from 'services/userService/api';
+import {getMembershipsByUser} from 'services/membershipService';
+import {EngagementTeamMember} from 'models/engagementTeamMember';
 
 export interface UserViewContext {
     savedUser: User | undefined;
@@ -43,8 +43,8 @@ export const UserDetailsContext = createContext<UserViewContext>({
     isMembershipLoading: true,
 });
 
-export const UserDetailsContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
-    const { userId } = useParams<UserParams>();
+export const UserDetailsContextProvider = ({children}: {children: JSX.Element | JSX.Element[];}) => {
+    const {userId} = useParams<UserParams>();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [savedUser, setSavedUser] = useState<User | undefined>(createDefaultUser);
@@ -75,7 +75,7 @@ export const UserDetailsContextProvider = ({ children }: { children: JSX.Element
     };
 
     const getUserDetails = async () => {
-        const fetchedUser = await getUser({ user_id: Number(userId), include_groups: true });
+        const fetchedUser = await getUser({user_id: Number(userId), include_groups: true});
         setSavedUser(fetchedUser);
         setUserLoading(false);
     };

@@ -1,22 +1,24 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { FormControlLabel, Switch, CircularProgress } from '@mui/material';
-import { MetLabel } from 'components/common';
+import { SecondaryButton } from 'components/common';
 import { useAppSelector, useAppDispatch } from 'hooks';
 import { UserDetailsContext } from './UserDetailsContext';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { toggleUserStatus } from 'services/userService/api';
 import { USER_ROLES } from 'services/userService/constants';
+import { USER_GROUP } from 'models/user';
 
-const UserStatusToggle = () => {
+const UserStatusButton = () => {
     const { roles } = useAppSelector((state) => state.user);
     const { savedUser } = useContext(UserDetailsContext);
     const [userStatus, setUserStatus] = useState(false);
     const [togglingUserStatus, setTogglingUserStatus] = useState(false);
     const dispatch = useAppDispatch();
 
+    const isActive = savedUser?.status_id === 1;
+
     useEffect(() => {
-        setUserStatus(savedUser?.status_id === 1);
+        setUserStatus(isActive);
     }, [savedUser]);
 
     const handleUpdateActiveStatus = async (active: boolean) => {
@@ -63,7 +65,7 @@ const UserStatusToggle = () => {
             openNotificationModal({
                 open: true,
                 data: {
-                    header: `Deactivate User`,
+                    header: `Deactivate ${savedUser?.first_name} ${savedUser?.last_name}`,
                     subText: [
                         {
                             text: `You are attempting to deactivate ${savedUser?.first_name} ${savedUser?.last_name}`,
@@ -86,7 +88,7 @@ const UserStatusToggle = () => {
             openNotificationModal({
                 open: true,
                 data: {
-                    header: `Activate User`,
+                    header: `Activate ${savedUser?.first_name} ${savedUser?.last_name}`,
                     subText: [
                         {
                             text: `You are attempting to activate ${savedUser?.first_name} ${savedUser?.last_name}`,
@@ -105,18 +107,15 @@ const UserStatusToggle = () => {
     };
 
     return (
-        <FormControlLabel
-            control={
-                <Switch
-                    data-testid="user-status-toggle"
-                    disabled={togglingUserStatus}
-                    checked={userStatus}
-                    onChange={(e) => handleToggleUserStatus(e.target.checked)}
-                />
-            }
-            label={togglingUserStatus ? <CircularProgress size={20} color="info" /> : <MetLabel>Active</MetLabel>}
-        />
+        <SecondaryButton
+            data-testid="user-status-toggle"
+            loading={togglingUserStatus}
+            onClick={() => handleToggleUserStatus(!userStatus)}
+            disabled={savedUser?.main_group === USER_GROUP.ADMIN.label}
+        >
+            {userStatus ? 'Deactivate User' : 'Activate User'}
+        </SecondaryButton>
     );
 };
 
-export default UserStatusToggle;
+export default UserStatusButton;
