@@ -86,6 +86,7 @@ describe('User Details tests', () => {
 
         await waitFor(() => {
             expect(screen.getByText(draftEngagement.name)).toBeVisible();
+            expect(screen.getByText(`${mockUser1.last_name}, ${mockUser1.first_name}`)).toBeVisible();
             expect(screen.getByText(mockUser1.email_address)).toBeVisible();
             expect(screen.getByText('Deactivate User')).toBeVisible();
         });
