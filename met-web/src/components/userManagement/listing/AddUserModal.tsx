@@ -25,7 +25,6 @@ type AddUserForm = yup.TypeOf<typeof schema>;
 
 export const AddUserModal = () => {
     const dispatch = useAppDispatch();
-    /*const { assignedEngagements } = useAppSelector((state) => state.user);*/
     const { addUserModalOpen, setAddUserModalOpen, user, loadUserListing } = useContext(UserManagementContext);
     const [isAddingToEngagement, setIsAddingToEngagement] = useState(false);
     const [engagements, setEngagements] = useState<Engagement[]>([]);
@@ -71,11 +70,6 @@ export const AddUserModal = () => {
                 search_text: searchText,
                 has_team_access: true,
             });
-            /* Need to fix this part to exclude engagements to which the selected user has already been assigned
-            /* const filteredEngagements = response.items.filter(
-                (engagement) => !assignedEngagements.includes(engagement.id),
-            );
-            */
             setEngagements(response.items);
             setEngagementsLoading(false);
         } catch (error) {
