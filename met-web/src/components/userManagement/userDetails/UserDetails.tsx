@@ -38,9 +38,7 @@ export const UserDetails = () => {
                             <UserDetail
                                 label="Name"
                                 value={
-                                    <MetParagraph>
-                                        {savedUser?.first_name} {savedUser?.last_name}
-                                    </MetParagraph>
+                                    <MetParagraph>{`${savedUser?.last_name}, ${savedUser?.first_name}`}</MetParagraph>
                                 }
                             />
                         </Grid>

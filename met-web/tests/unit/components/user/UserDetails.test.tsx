@@ -86,8 +86,8 @@ describe('User Details tests', () => {
 
         await waitFor(() => {
             expect(screen.getByText(draftEngagement.name)).toBeVisible();
-            expect(screen.getByText(mockUser1.first_name)).toBeVisible();
-            expect(screen.getByTestId('user-status-toggle')).toBeChecked();
+            expect(screen.getByText(mockUser1.email_address)).toBeVisible();
+            expect(screen.getByText('Deactivate User')).toBeVisible();
         });
     });
 
@@ -95,7 +95,7 @@ describe('User Details tests', () => {
         render(<UserProfile />);
 
         await waitFor(() => {
-            expect(screen.getByTestId('user-status-toggle')).toBeChecked();
+            expect(screen.getByText('Deactivate User')).toBeVisible();
         });
 
         const button = screen.getByTestId('user-status-toggle');
