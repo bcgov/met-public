@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
-import { MetPageGridContainer } from 'components/common';
-import { CommentTypeEnum, Feedback, SourceTypeEnum } from 'models/feedback';
-import { useAppDispatch } from 'hooks';
+import { MetPageGridContainer, PrimaryButton } from 'components/common';
+import { CommentTypeEnum, Feedback, FeedbackStatusEnum, SourceTypeEnum } from 'models/feedback';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import Stack from '@mui/material/Stack';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -12,9 +12,12 @@ import { formatDate } from 'components/common/dateHelper';
 import { customRatings } from 'components/feedback/FeedbackModal/constants';
 import { useLocation } from 'react-router-dom';
 import { updateURLWithPagination } from 'components/common/Table/utils';
-
+import { ActionsDropDown } from './actionDropdown';
+import { USER_ROLES } from 'services/userService/constants';
+import { When } from 'react-if';
 const FeedbackListing = () => {
     const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
+    const { roles } = useAppSelector((state) => state.user);
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const pageFromURL = searchParams.get('page');
@@ -28,6 +31,8 @@ const FeedbackListing = () => {
     });
     const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
     const [tableLoading, setTableLoading] = useState(true);
+    const [statusFilter, setStatusFilter] = useState(FeedbackStatusEnum.NotReviewed);
+    const authorized = roles.includes(USER_ROLES.CREATE_ADMIN_USER);
     const dispatch = useAppDispatch();
 
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
@@ -36,6 +41,10 @@ const FeedbackListing = () => {
         loadFeedbacks();
         updateURLWithPagination(paginationOptions);
     }, [paginationOptions]);
+
+    useEffect(() => {
+        loadFeedbacks();
+    }, [authorized]);
 
     const loadFeedbacks = async () => {
         try {
@@ -104,6 +113,19 @@ const FeedbackListing = () => {
             allowSort: true,
             renderCell: (row: Feedback) => row.comment,
         },
+        {
+            key: 'id',
+            numeric: true,
+            disablePadding: false,
+            label: 'Actions',
+            allowSort: false,
+            renderCell: (row: Feedback) => {
+                return <ActionsDropDown reload={() => loadFeedbacks()} feedback={row} />;
+            },
+            customStyle: {
+                minWidth: '200px',
+            },
+        },
     ];
 
     return (
@@ -122,12 +144,26 @@ const FeedbackListing = () => {
                     width="100%"
                     justifyContent="flex-end"
                     sx={{ p: 2 }}
-                ></Stack>
+                >
+                    <When condition={authorized}>
+                        <PrimaryButton
+                            onClick={() =>
+                                setStatusFilter(
+                                    statusFilter == FeedbackStatusEnum.NotReviewed
+                                        ? FeedbackStatusEnum.Archived
+                                        : FeedbackStatusEnum.NotReviewed,
+                                )
+                            }
+                        >
+                            {statusFilter == FeedbackStatusEnum.NotReviewed ? 'View Archive' : 'View Feedback'}
+                        </PrimaryButton>
+                    </When>
+                </Stack>
             </Grid>
             <Grid item xs={12} lg={10}>
                 <MetTable
                     headCells={headCells}
-                    rows={feedbacks}
+                    rows={feedbacks.filter((feedback) => feedback.status == statusFilter)}
                     handleChangePagination={(paginationOptions: PaginationOptions<Feedback>) =>
                         setPaginationOptions(paginationOptions)
                     }

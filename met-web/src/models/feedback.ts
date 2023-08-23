@@ -1,4 +1,5 @@
 export interface Feedback {
+    id: number;
     created_date: string;
     rating: number;
     comment: string;
@@ -30,6 +31,7 @@ export enum SourceTypeEnum {
 
 export const createDefaultFeedback = (): Feedback => {
     return {
+        id: 1,
         rating: 0,
         comment: '',
         comment_type: CommentTypeEnum.None,

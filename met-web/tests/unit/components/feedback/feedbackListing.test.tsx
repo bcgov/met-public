@@ -7,6 +7,7 @@ import * as feedbackService from 'services/feedbackService/index';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
 import { createDefaultFeedback, CommentTypeEnum, SourceTypeEnum } from 'models/feedback';
 import FeedbackListing from 'components/feedback/listing';
+import { USER_ROLES } from 'services/userService/constants';
 
 const mockFeedbackOne = {
     ...createDefaultFeedback(),
@@ -49,6 +50,15 @@ jest.mock('react-router-dom', () => ({
     })),
 }));
 
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useSelector: jest.fn(() => {
+        return {
+            roles: [USER_ROLES.CREATE_ENGAGEMENT],
+        };
+    }),
+}));
+
 describe('Feedback Listing tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
@@ -77,6 +87,7 @@ describe('Feedback Listing tests', () => {
     });
 
     test('Feedback table is empty', async () => {
+        jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
         render(<FeedbackListing />);
         const feedbackListing = screen.getByTestId('listing-table');
 
