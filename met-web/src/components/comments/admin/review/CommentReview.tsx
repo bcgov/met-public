@@ -266,9 +266,9 @@ const CommentReview = () => {
                             <MetHeader3>Comment(s)</MetHeader3>
                         </Grid>
                     </Grid>
-                    {submission.comments?.map((comment, index) => {
+                    {submission.comments?.map((comment) => {
                         return (
-                            <Grid key={index} item xs={12}>
+                            <Grid key={comment.id} item xs={12}>
                                 <Divider />
                                 <Grid xs={12} item paddingTop={2}>
                                     <MetLabel>{comment.label ?? 'Label not available.'}</MetLabel>
@@ -355,7 +355,9 @@ const CommentReview = () => {
                                         }
                                     />
                                     <MetSmallText bold color="#d32f2f" marginLeft={'3em'} mt={'-1em'}>
-                                        {translate('comment.admin.review.ifThreatContact')}{' '}
+                                        {translate('comment.admin.review.threatTextOne')}{' '}
+                                        {translate('comment.admin.review.threatContact')}{' '}
+                                        {translate('comment.admin.review.threatTextTwo')}{' '}
                                         <Link href={`mailto:${threatEmailContact}`}>{threatEmailContact}</Link>
                                     </MetSmallText>
                                     <FormControlLabel
