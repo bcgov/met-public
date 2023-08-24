@@ -84,7 +84,6 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                 '&:hover': {
                     backgroundColor: '#F2F2F2',
                     cursor: 'pointer',
-                    opacity: 0.5,
                 },
             }}
             onClick={() => {
