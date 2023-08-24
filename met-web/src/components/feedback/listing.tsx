@@ -55,7 +55,7 @@ const FeedbackListing = () => {
                 sort_key: nested_sort_key || sort_key,
                 sort_order,
             });
-            setFeedbacks(response.items);
+            setFeedbacks(response.items.filter((feedback) => feedback.status == statusFilter));
             setPageInfo({
                 total: response.total,
             });
@@ -147,13 +147,20 @@ const FeedbackListing = () => {
                 >
                     <When condition={authorized}>
                         <PrimaryButton
-                            onClick={() =>
+                            onClick={() => {
+                                setPaginationOptions({
+                                    page: 1,
+                                    size: 10,
+                                    sort_key: 'rating',
+                                    nested_sort_key: null,
+                                    sort_order: 'asc',
+                                });
                                 setStatusFilter(
                                     statusFilter == FeedbackStatusEnum.NotReviewed
                                         ? FeedbackStatusEnum.Archived
                                         : FeedbackStatusEnum.NotReviewed,
-                                )
-                            }
+                                );
+                            }}
                         >
                             {statusFilter == FeedbackStatusEnum.NotReviewed ? 'View Archive' : 'View Feedback'}
                         </PrimaryButton>
@@ -163,7 +170,7 @@ const FeedbackListing = () => {
             <Grid item xs={12} lg={10}>
                 <MetTable
                     headCells={headCells}
-                    rows={feedbacks.filter((feedback) => feedback.status == statusFilter)}
+                    rows={feedbacks}
                     handleChangePagination={(paginationOptions: PaginationOptions<Feedback>) =>
                         setPaginationOptions(paginationOptions)
                     }
