@@ -28,6 +28,7 @@ def upgrade():
 
     op.add_column('feedback', sa.Column('status', sa.Enum(
         'Unreviewed', 'Archived', name='feedbackstatustype'), nullable=True))
+    op.execute('UPDATE "feedback" SET status = \'Unreviewed\'')
     # ### end Alembic commands ###
 
 
