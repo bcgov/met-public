@@ -54,3 +54,4 @@ class Role(Enum):
     VIEW_FEEDBACKS = 'view_feedbacks'
     VIEW_ALL_ENGAGEMENTS = 'view_all_engagements'  # Allows user access to all engagements including draft
     SHOW_ALL_COMMENT_STATUS = 'show_all_comment_status'  # Allows user to see all comment status
+    EXPORT_TO_CSV = 'export_to_csv'  # Allows users to export comments to csv

@@ -301,6 +301,7 @@ class TestJwtClaims(dict, Enum):
                 'review_all_comments',
                 'view_all_engagements',
                 'toggle_user_status',
+                'export_to_csv',
             ]
         }
     }

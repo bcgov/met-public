@@ -13,6 +13,7 @@ from met_api.models.staff_user import StaffUser as StaffUserModel
 from met_api.schemas.comment import CommentSchema
 from met_api.schemas.submission import SubmissionSchema
 from met_api.schemas.survey import SurveySchema
+from met_api.services import authorization
 from met_api.services.document_generation_service import DocumentGenerationService
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
@@ -157,6 +158,12 @@ class CommentService:
     @classmethod
     def export_comments_to_spread_sheet(cls, survey_id):
         """Export comments to spread sheet."""
+        engagement = SurveyModel.find_by_id(survey_id)
+        one_of_roles = (
+            MembershipType.TEAM_MEMBER.name,
+            Role.EXPORT_TO_CSV.value
+        )
+        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement.engagement_id)
         comments = Comment.get_comments_by_survey_id(survey_id)
         formatted_comments = [
             {

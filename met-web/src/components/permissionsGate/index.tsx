@@ -28,7 +28,7 @@ export function PermissionsGate({
     errorProps,
     scopes = [],
 }: PermissionsGateProps): React.ReactElement<any, any> {
-    const permissions = useAppSelector((state) => state.user.roles);
+    const { roles: permissions } = useAppSelector((state) => state.user);
 
     const permissionGranted = hasPermission({ permissions, scopes });
 
