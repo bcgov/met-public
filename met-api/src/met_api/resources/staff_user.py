@@ -25,6 +25,7 @@ from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.engagement import EngagementSchema
 from met_api.schemas.staff_user import StaffUserSchema
 from met_api.services.membership_service import MembershipService
+from met_api.services.staff_user_membership_service import StaffUserMembershipService
 from met_api.services.staff_user_service import StaffUserService
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
@@ -130,6 +131,22 @@ class UserGroup(Resource):
         try:
             args = request.args
             user_schema = StaffUserService().add_user_to_group(user_id, args.get('group'))
+            return user_schema, HTTPStatus.OK
+        except KeyError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except BusinessException as err:
+            return {'message': err.error}, err.status_code
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.has_one_of_roles([Role.UPDATE_USER_GROUP.value])
+    def put(user_id):
+        """Update user group."""
+        try:
+            args = request.args
+            user_schema = StaffUserMembershipService().reassign_user(user_id, args.get('group'))
             return user_schema, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

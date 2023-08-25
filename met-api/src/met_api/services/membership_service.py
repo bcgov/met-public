@@ -153,7 +153,7 @@ class MembershipService:
     ):
         """Get memberships by user id."""
         status = MembershipStatus.ACTIVE.value if not include_revoked else None
-        return MembershipModel.find_by_user_id(
+        return MembershipModel.find_by_external_user_id(
             user_id,
             status=status,
         )
@@ -225,3 +225,13 @@ class MembershipService:
             new_membership_details
         )
         return new_membership
+    
+    @staticmethod
+    def reassign_memberships(user_id: int, membership_type: int):
+        """Update memberships type."""
+        
+        MembershipModel.revoke_memberships_bulk(user_id)
+        if membership_type in [MembershipType.TEAM_MEMBER.value, MembershipType.REVIEWER.value]:
+            new_memberships = MembershipModel.reinstate_memberships_bulk(user_id, membership_type)
+        
+        return new_memberships

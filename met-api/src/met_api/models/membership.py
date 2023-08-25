@@ -50,12 +50,12 @@ class Membership(BaseModel):
         return memberships
 
     @classmethod
-    def find_by_user_id(
+    def find_by_external_user_id(
         cls,
         user_external_id,
         status=None,
     ) -> List[Membership]:
-        """Get memberships by user id."""
+        """Get memberships by external user id."""
         query = db.session.query(Membership) \
             .join(StaffUser, StaffUser.id == Membership.user_id) \
             .filter(
@@ -70,6 +70,22 @@ class Membership(BaseModel):
 
         if status:
             query = query.filter(Membership.status == status)
+
+        memberships = query.all()
+        return memberships
+
+    @classmethod
+    def find_by_user_id(
+        cls,
+        user_id,
+    ) -> List[Membership]:
+        """Get memberships by user id."""
+        query = db.session.query(Membership) \
+            .filter(
+                and_(
+                    Membership.user_id == user_id,
+                    Membership.is_latest.is_(True)
+                ))
 
         memberships = query.all()
         return memberships
@@ -116,12 +132,12 @@ class Membership(BaseModel):
         return new_membership
 
     @classmethod
-    def revoked_memberships_bulk(cls, engagement_ids: list, user_id: int):
+    def revoke_memberships_bulk(cls, user_id: int):
         """Create in bulk revoked versions of memberships."""
         # Get all latest memberships by engagement ids
         current_memberships = db.session.query(Membership) \
             .filter(and_(
-                Membership.engagement_id.in_(engagement_ids),
+                Membership.user_id == user_id,
                 Membership.is_latest.is_(True)
             )) \
             .all()
@@ -150,12 +166,12 @@ class Membership(BaseModel):
         return new_memberships
 
     @classmethod
-    def create_reinstated_memberships_versions_bulk(cls, engagement_ids: list, user_id: int, membership_type: int = None):
+    def reinstate_memberships_bulk(cls, user_id: int, membership_type: int = None):
         """Create reinstated memberships versions in bulk."""
         # Get all latest memberships by engagement ids
         current_memberships = db.session.query(Membership) \
             .filter(and_(
-                Membership.engagement_id.in_(engagement_ids),
+                Membership.user_id == user_id,
                 Membership.is_latest.is_(True)
             )) \
             .all()
@@ -179,3 +195,4 @@ class Membership(BaseModel):
         # Bulk insert new versions
         db.session.bulk_save_objects(new_memberships)
         db.session.commit()
+        return new_memberships

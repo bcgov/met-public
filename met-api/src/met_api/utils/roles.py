@@ -27,6 +27,7 @@ class Role(Enum):
     VIEW_USERS = 'view_users'
     TOGGLE_USER_STATUS = 'toggle_user_status'
     CREATE_ADMIN_USER = 'create_admin_user'
+    UPDATE_USER_GROUP = 'update_user_group'
     CREATE_TEAM = 'create_team'
     CREATE_ENGAGEMENT = 'create_engagement'
     VIEW_SURVEYS = 'view_surveys'
