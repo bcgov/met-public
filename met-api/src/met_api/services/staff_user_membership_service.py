@@ -24,9 +24,9 @@ class StaffUserMembershipService:
     @staticmethod
     def _get_membership_type_from_group_name(group_name):
         """Get membership type from group name."""
-        if group_name == KeycloakGroups.EAO_TEAM_MEMBER.value:
+        if group_name == KeycloakGroups.EAO_TEAM_MEMBER.name:
             return MembershipType.TEAM_MEMBER
-        if group_name == KeycloakGroups.EAO_REVIEWER.value:
+        if group_name == KeycloakGroups.EAO_REVIEWER.name:
             return MembershipType.REVIEWER
         return None
 
@@ -46,9 +46,9 @@ class StaffUserMembershipService:
                 error='Invalid User.',
                 status_code=HTTPStatus.BAD_REQUEST)
 
-        if group_name not in Groups:
+        if group_name not in Groups.__members__:
             raise BusinessException(
-                error='Invalid group name.',
+                error='Invalid Group.',
                 status_code=HTTPStatus.BAD_REQUEST)
 
         if main_group == group_name:
@@ -56,7 +56,11 @@ class StaffUserMembershipService:
                 error='User is already a member of this group.',
                 status_code=HTTPStatus.BAD_REQUEST)
 
-        StaffUserService.remove_user_from_group(external_id, main_group)
+        StaffUserService.remove_user_from_group(external_id, Groups.get_name_by_value(main_group))
         StaffUserService.add_user_to_group(external_id, group_name)
         membership_type = StaffUserMembershipService._get_membership_type_from_group_name(group_name)
+        print('membership_type >>>>>>', membership_type)
         MembershipService.reassign_memberships(user_id, membership_type)
+        
+        new_user = StaffUserService.get_user_by_id(user_id, include_groups=True)
+        return StaffUserSchema().dump(new_user)

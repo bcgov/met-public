@@ -13,7 +13,8 @@ interface ActionDropDownItem {
     condition?: boolean;
 }
 export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
-    const { setAddUserModalOpen, setassignRoleModalOpen, setUser } = useContext(UserManagementContext);
+    const { setAddUserModalOpen, setassignRoleModalOpen, setUser, setReassignRoleModalOpen } =
+        useContext(UserManagementContext);
     const { roles } = useAppSelector((state) => state.user);
 
     const hasNoRole = (): boolean => {
@@ -60,6 +61,17 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
                     }
                 },
                 condition: !hasNoRole() && !isAdmin() && !isViewer(),
+            },
+            {
+                value: 3,
+                label: 'ReassignRole',
+                action: () => {
+                    {
+                        setUser(selectedUser);
+                        setReassignRoleModalOpen(true);
+                    }
+                },
+                condition: !hasNoRole() && roles.includes(USER_ROLES.UPDATE_USER_GROUP),
             },
         ],
         [selectedUser.id],

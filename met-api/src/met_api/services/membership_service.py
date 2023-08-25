@@ -231,6 +231,7 @@ class MembershipService:
         """Update memberships type."""
         
         MembershipModel.revoke_memberships_bulk(user_id)
+        new_memberships = []
         if membership_type in [MembershipType.TEAM_MEMBER.value, MembershipType.REVIEWER.value]:
             new_memberships = MembershipModel.reinstate_memberships_bulk(user_id, membership_type)
         

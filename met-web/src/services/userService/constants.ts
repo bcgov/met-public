@@ -5,6 +5,7 @@ export const USER_ROLES = {
     VIEW_TENANT: 'view_tenant',
     VIEW_USERS: 'view_users',
     CREATE_ADMIN_USER: 'create_admin_user',
+    UPDATE_USER_GROUP: 'update_user_group',
     CREATE_TEAM: 'create_team',
     CREATE_ENGAGEMENT: 'create_engagement',
     CREATE_SURVEY: 'create_survey',

@@ -23,7 +23,8 @@ const schema = yup
 type AssignRoleForm = yup.TypeOf<typeof schema>;
 
 export const ReassignRoleModal = () => {
-    const { assignRoleModalOpen, setassignRoleModalOpen, user, loadUserListing } = useContext(UserManagementContext);
+    const { reassignRoleModalOpen, setReassignRoleModalOpen, user, loadUserListing } =
+        useContext(UserManagementContext);
     const [isSaving, setIsSaving] = useState(false);
     const dispatch = useAppDispatch();
 
@@ -34,7 +35,7 @@ export const ReassignRoleModal = () => {
     const { reset, handleSubmit } = methods;
 
     const handleClose = () => {
-        setassignRoleModalOpen(false);
+        setReassignRoleModalOpen(false);
         reset({});
     };
 
@@ -59,7 +60,7 @@ export const ReassignRoleModal = () => {
     };
 
     return (
-        <Modal open={assignRoleModalOpen} onClose={handleClose} keepMounted={false}>
+        <Modal open={reassignRoleModalOpen} onClose={handleClose} keepMounted={false}>
             <Paper sx={{ ...modalStyle }}>
                 <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit)}>

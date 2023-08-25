@@ -3,6 +3,7 @@ import { AddUserModal } from './AddUserModal';
 import { AssignRoleModal } from './AssignRoleModal';
 import { UserManagementContextProvider } from './UserManagementContext';
 import UserManagementListing from './UserManagementListing';
+import { ReassignRoleModal } from './ReassignRoleModal';
 
 export const UserManagement = () => {
     return (
@@ -10,6 +11,7 @@ export const UserManagement = () => {
             <UserManagementListing />
             <AddUserModal />
             <AssignRoleModal />
+            <ReassignRoleModal />
         </UserManagementContextProvider>
     );
 };

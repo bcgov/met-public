@@ -151,7 +151,7 @@ class Membership(BaseModel):
             new_membership = Membership(
                 engagement_id=current_membership.engagement_id,
                 user_id=user_id,
-                status=MembershipStatus.ACTIVE.value,
+                status=MembershipStatus.REVOKED.value,
                 type=current_membership.type,
                 revoked_date=datetime.utcnow(),
                 is_latest=True,

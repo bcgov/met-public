@@ -173,6 +173,8 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         admin_token = KeycloakService._get_admin_token()
         # Get the '$group_name' group
         group_id = KeycloakService._get_group_id(admin_token, group_name)
+        print(group_name)
+        print(group_id)
 
         # Remove user from the keycloak group '$group_name'
         headers = {
