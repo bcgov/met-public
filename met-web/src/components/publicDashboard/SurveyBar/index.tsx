@@ -19,9 +19,10 @@ interface SurveyQuestionProps {
     engagement: Engagement;
     engagementIsLoading: boolean;
     readComments?: () => void;
+    dashboardType: string;
 }
 
-export const SurveyBar = ({ readComments, engagement, engagementIsLoading }: SurveyQuestionProps) => {
+export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashboardType }: SurveyQuestionProps) => {
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const [data, setData] = useState<SurveyResultData>(createSurveyResultData());
     const [selectedData, setSelectedData] = useState(defaultData[0]);
@@ -37,7 +38,7 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading }: Sur
         setIsLoading(true);
         setIsError(false);
         try {
-            const response = await getSurveyResultData(Number(engagement.id));
+            const response = await getSurveyResultData(Number(engagement.id), dashboardType);
             setData(response);
             setSelectedData(response?.data[0]);
             setIsLoading(false);

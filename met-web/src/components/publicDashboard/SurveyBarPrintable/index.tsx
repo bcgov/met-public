@@ -13,9 +13,10 @@ const HEIGHT = 400;
 interface SurveyQuestionProps {
     engagement: Engagement;
     engagementIsLoading: boolean;
+    dashboardType: string;
 }
 
-export const SurveyBarPrintable = ({ engagement, engagementIsLoading }: SurveyQuestionProps) => {
+export const SurveyBarPrintable = ({ engagement, engagementIsLoading, dashboardType }: SurveyQuestionProps) => {
     const [data, setData] = useState<SurveyResultData>(createSurveyResultData());
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
@@ -23,7 +24,7 @@ export const SurveyBarPrintable = ({ engagement, engagementIsLoading }: SurveyQu
     const fetchData = async () => {
         setIsLoading(true);
         try {
-            const response = await getSurveyResultData(Number(engagement.id));
+            const response = await getSurveyResultData(Number(engagement.id), dashboardType);
             setData(response);
             setIsLoading(false);
             setIsError(false);

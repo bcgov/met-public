@@ -25,7 +25,7 @@ const Dashboard = () => {
     const { slug } = useParams();
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const navigate = useNavigate();
-    const { engagement, isEngagementLoading } = useContext(DashboardContext);
+    const { engagement, isEngagementLoading, dashboardType } = useContext(DashboardContext);
     const [isPrinting, setIsPrinting] = React.useState(false);
     const [projectMapData, setProjectMapData] = React.useState<Map | null>(null);
     const [pdfExportProgress, setPdfExportProgress] = React.useState(0);
@@ -198,12 +198,14 @@ const Dashboard = () => {
                                             <SurveyBarPrintable
                                                 engagement={engagement}
                                                 engagementIsLoading={isEngagementLoading}
+                                                dashboardType={dashboardType}
                                             />
                                         </Box>
                                         <SurveyBar
                                             readComments={handleReadComments}
                                             engagement={engagement}
                                             engagementIsLoading={isEngagementLoading}
+                                            dashboardType={dashboardType}
                                         />
                                     </Grid>
                                     <When condition={isPrinting}>

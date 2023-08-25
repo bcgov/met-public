@@ -112,7 +112,11 @@ const EngagementsAccordion = ({
                                     <SubmissionTrend engagement={engagement} engagementIsLoading={false} />
                                 </Grid>
                                 <Grid item xs={12} mt={2}>
-                                    <SurveyBar engagement={engagement} engagementIsLoading={false} />
+                                    <SurveyBar
+                                        engagement={engagement}
+                                        engagementIsLoading={false}
+                                        dashboardType={'public'}
+                                    />
                                 </Grid>
                             </When>
                         </AccordionDetails>

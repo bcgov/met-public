@@ -21,6 +21,8 @@ from flask_restx import Namespace, Resource
 
 from analytics_api.auth import auth
 from analytics_api.services.survey_result import SurveyResultService
+from analytics_api.utils.roles import Role
+from analytics_api.utils.user_context import UserContext, user_context
 from analytics_api.utils.util import allowedorigins, cors_preflight
 
 
@@ -30,17 +32,24 @@ API = Namespace('surveyresult', description='Endpoints for Survey result Managem
 
 
 @cors_preflight('GET,OPTIONS')
-@API.route('/<engagement_id>')
+@API.route('/<engagement_id>/<dashboard_type>')
 class SurveyResult(Resource):
     """Resource for managing a survey result for single engagement."""
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @auth.optional
-    def get(engagement_id):
+    @user_context
+    def get(engagement_id, dashboard_type, **kwargs):
         """Fetch survey result for a single engagement id."""
+        user_from_context: UserContext = kwargs['user_context']
+        token_roles = set(user_from_context.roles)
+        can_view_all_survey_results = False
+        if dashboard_type == 'Internal':
+            can_view_all_survey_results = Role.VIEW_ALL_SURVEY_RESULTS.value in token_roles
         try:
-            survey_result_record = SurveyResultService().get_survey_result(engagement_id)
+            survey_result_record = SurveyResultService().get_survey_result(
+                engagement_id, can_view_all_survey_results)
 
             if survey_result_record:
                 return jsonify(data=survey_result_record), HTTPStatus.OK

@@ -19,7 +19,8 @@ class RequestTypeOption(BaseModel, RequestMixin):  # pylint: disable=too-few-pub
     @classmethod
     def get_survey_result(
         cls,
-        engagement_id
+        engagement_id,
+        can_view_all_survey_results
     ):
         """Get the analytics survey id for an engagement id."""
         analytics_survey_id = (db.session.query(SurveyModel.id)
@@ -28,15 +29,26 @@ class RequestTypeOption(BaseModel, RequestMixin):  # pylint: disable=too-few-pub
                                .subquery())
 
         # Get all the survey questions specific to a survey id which are in active status.
-        survey_question = (db.session.query(RequestTypeOption.position.label('position'),
-                                            RequestTypeOption.label.label('label'),
-                                            RequestTypeOption.request_id)
-                           .filter(and_(RequestTypeOption.survey_id.in_(analytics_survey_id),
-                                        RequestTypeOption.is_active == true(),
-                                        or_(RequestTypeOption.display == true(),
-                                            RequestTypeOption.display.is_(None))))
-                           .order_by(RequestTypeOption.position)
-                           .subquery())
+        # for users with role to view all surveys fetch all survey questions
+        # for all other users exclude questions excluded on report settings
+        if can_view_all_survey_results:
+            survey_question = (db.session.query(RequestTypeOption.position.label('position'),
+                                                RequestTypeOption.label.label('label'),
+                                                RequestTypeOption.request_id)
+                               .filter(and_(RequestTypeOption.survey_id.in_(analytics_survey_id),
+                                            RequestTypeOption.is_active == true()))
+                               .order_by(RequestTypeOption.position)
+                               .subquery())
+        else:
+            survey_question = (db.session.query(RequestTypeOption.position.label('position'),
+                                                RequestTypeOption.label.label('label'),
+                                                RequestTypeOption.request_id)
+                               .filter(and_(RequestTypeOption.survey_id.in_(analytics_survey_id),
+                                            RequestTypeOption.is_active == true(),
+                                            or_(RequestTypeOption.display == true(),
+                                                RequestTypeOption.display.is_(None))))
+                               .order_by(RequestTypeOption.position)
+                               .subquery())
 
         # Get all the survey responses with the counts for each response specific to a survey id which
         # are in active status.
