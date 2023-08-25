@@ -43,8 +43,16 @@ def mock_add_user_to_group(mocker, mock_group_names):
         f'{KEYCLOAK_SERVICE_MODULE}.get_user_groups',
         return_value=[{'name': group_name} for group_name in mock_group_names]
     )
+    mock_get_user_groups_keycloak = mocker.patch(
+        f'{KEYCLOAK_SERVICE_MODULE}.get_user_groups',
+        return_value=[{'name': group_name} for group_name in mock_group_names]
+    )
 
-    return mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak
+    mock_add_attribute_to_user = mocker.patch(
+        f'{KEYCLOAK_SERVICE_MODULE}.add_attribute_to_user',
+        return_value=mock_response
+    )
+    return mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak, mock_add_attribute_to_user
 
 
 def test_create_staff_user(client, jwt, session):
@@ -79,7 +87,7 @@ def test_add_user_to_admin_group(mocker, client, jwt, session):
     """Assert that a user can be added to the admin group."""
     user = factory_staff_user_model()
 
-    mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak = mock_add_user_to_group(
+    mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak,mock_add_attribute_to_user  = mock_add_user_to_group(
         mocker,
         [KeycloakGroupName.EAO_IT_VIEWER.value]
     )
@@ -94,13 +102,14 @@ def test_add_user_to_admin_group(mocker, client, jwt, session):
     assert rv.status_code == HTTPStatus.OK
     mock_add_user_to_group_keycloak.assert_called()
     mock_get_user_groups_keycloak.assert_called()
+    mock_add_attribute_to_user.assert_called()
 
 
 def test_add_user_to_reviewer_group(mocker, client, jwt, session):
     """Assert that a user can be added to the reviewer group."""
     user = factory_staff_user_model()
 
-    mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak = mock_add_user_to_group(
+    mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak,mock_add_attribute_to_user = mock_add_user_to_group(
         mocker,
         [KeycloakGroupName.EAO_IT_VIEWER.value]
     )
@@ -121,7 +130,7 @@ def test_add_user_to_team_member_group(mocker, client, jwt, session):
     """Assert that a user can be added to the team member group."""
     user = factory_staff_user_model()
 
-    mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak = mock_add_user_to_group(
+    mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak, mock_add_attribute_to_user = mock_add_user_to_group(
         mocker,
         [KeycloakGroupName.EAO_IT_VIEWER.value]
     )
