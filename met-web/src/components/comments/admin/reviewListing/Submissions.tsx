@@ -158,7 +158,16 @@ const Submissions = () => {
                             Read All Comments
                         </PrimaryButton>
                         <PermissionsGate scopes={[USER_ROLES.EXPORT_TO_CSV]} errorProps={{ disabled: true }}>
-                            <SecondaryButton onClick={handleExportComments} loading={isExporting}>
+                            <SecondaryButton
+                                onClick={handleExportComments}
+                                loading={isExporting}
+                                sx={{
+                                    '&.Mui-disabled': {
+                                        background: '#e0e0e0',
+                                        color: '#a6a6a6',
+                                    },
+                                }}
+                            >
                                 Export to CSV
                             </SecondaryButton>
                         </PermissionsGate>
