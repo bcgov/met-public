@@ -26,6 +26,7 @@ from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services.engagement_service import EngagementService
 from met_api.utils.roles import Role
+from met_api.utils.tenant_validator import require_role
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
@@ -122,7 +123,7 @@ class Engagements(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.CREATE_ENGAGEMENT.value])
+    @require_role([Role.CREATE_ENGAGEMENT.value])
     def post():
         """Create a new engagement."""
         try:

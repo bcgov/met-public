@@ -142,6 +142,11 @@ class Engagement(BaseModel):
         return engagement
 
     @classmethod
+    def find_tenant_id_by_id(cls, engagement_id):
+        """Return the tenant id for the engagement."""
+        return db.session.query(cls.tenant_id).filter_by(id=engagement_id).scalar()
+
+    @classmethod
     def close_engagements_due(cls) -> List[Engagement]:
         """Update engagement to closed."""
         now = local_datetime()

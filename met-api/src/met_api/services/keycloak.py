@@ -163,6 +163,26 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         response.raise_for_status()
 
     @staticmethod
+    def add_attribute_to_user(user_id: str, attribute_value: str, attribute_id: str = 'tenant_id'):
+        """Add attribute to a keyclaok user.Default is set as tenant Id."""
+        config = current_app.config
+        base_url = config.get('KEYCLOAK_BASE_URL')
+        realm = config.get('KEYCLOAK_REALMNAME')
+        admin_token = KeycloakService._get_admin_token()
+
+        tenant_attributes = {
+            attribute_id: attribute_value
+        }
+
+        user_url = f'{base_url}/auth/admin/realms/{realm}/users/{user_id}'
+        headers = {'Authorization': f'Bearer {admin_token}'}
+        response = requests.get(user_url, headers=headers)
+        user_data = response.json()
+        user_data.setdefault('attributes', {}).update(tenant_attributes)
+        requests.put(user_url, json=user_data, headers=headers)
+        response.raise_for_status()
+
+    @staticmethod
     def add_user(user: dict):
         """Add user to Keycloak.Mainly used for Tests;Dont use it for actual user creation in application."""
         config = current_app.config
