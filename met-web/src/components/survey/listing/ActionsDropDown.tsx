@@ -88,7 +88,7 @@ export const ActionsDropDown = ({ survey }: { survey: Survey }) => {
                 value: 3,
                 label: 'View Report - Internal',
                 action: () => {
-                    navigate(`/engagements/${engagementId}/dashboard${'Internal'}`);
+                    navigate(`/engagements/${engagementId}/dashboard/${'Internal'}`);
                 },
                 condition: canViewInternalReport(),
             },
