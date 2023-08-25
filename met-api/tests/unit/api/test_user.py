@@ -87,7 +87,7 @@ def test_add_user_to_admin_group(mocker, client, jwt, session):
     """Assert that a user can be added to the admin group."""
     user = factory_staff_user_model()
 
-    mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak,mock_add_attribute_to_user  = mock_add_user_to_group(
+    mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak, mock_add_attribute_to_user = mock_add_user_to_group(
         mocker,
         [KeycloakGroupName.EAO_IT_VIEWER.value]
     )
@@ -109,7 +109,7 @@ def test_add_user_to_reviewer_group(mocker, client, jwt, session):
     """Assert that a user can be added to the reviewer group."""
     user = factory_staff_user_model()
 
-    mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak,mock_add_attribute_to_user = mock_add_user_to_group(
+    mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak, mock_add_attribute_to_user = mock_add_user_to_group(
         mocker,
         [KeycloakGroupName.EAO_IT_VIEWER.value]
     )
