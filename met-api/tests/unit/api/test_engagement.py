@@ -72,14 +72,25 @@ def test_tenant_id_in_create_engagements(client, jwt, session):  # pylint:disabl
     # Set the tenant ID header for future requests
     headers[TENANT_ID_HEADER] = tenant2_short_name
 
-    # Create an engagement for the tenant
+    # Create an engagement for the tenant without setting users tenant
     engagement_data = TestEngagementInfo.engagement2
     response = client.post('/api/engagements/',
                            data=json.dumps(engagement_data),
                            headers=headers,
                            content_type=ContentType.JSON.value)
 
-    # Verify that the engagement was created successfully
+    # 403 since engagement tenant id is different from users tenant id
+    assert response.status_code == 403
+
+    # set users tenant id to be same as engagment tenant id
+    claims = copy.deepcopy(TestJwtClaims.staff_admin_role.value)
+    claims['tenant_id'] = tenant_2.id
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    headers[TENANT_ID_HEADER] = tenant2_short_name
+    response = client.post('/api/engagements/',
+                           data=json.dumps(engagement_data),
+                           headers=headers,
+                           content_type=ContentType.JSON.value)
     assert response.status_code == 200
     assert response.json['tenant_id'] == str(tenant_2.id)
 
