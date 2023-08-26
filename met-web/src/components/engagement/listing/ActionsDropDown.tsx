@@ -91,7 +91,7 @@ export const ActionsDropDown = ({ engagement }: { engagement: Engagement }) => {
                 value: 3,
                 label: 'View Report - Public',
                 action: () => {
-                    navigate(`/engagements/${engagement.id}/dashboard/${'Public'}`);
+                    navigate(`/engagements/${engagement.id}/dashboard/public`);
                 },
                 condition:
                     submissionHasBeenOpened &&
@@ -101,7 +101,7 @@ export const ActionsDropDown = ({ engagement }: { engagement: Engagement }) => {
                 value: 4,
                 label: 'View Report - Internal',
                 action: () => {
-                    navigate(`/engagements/${engagement.id}/dashboard/${'Internal'}`);
+                    navigate(`/engagements/${engagement.id}/dashboard/internal`);
                 },
                 condition:
                     submissionHasBeenOpened &&
