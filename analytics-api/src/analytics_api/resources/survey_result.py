@@ -23,7 +23,7 @@ from analytics_api.auth import auth
 from analytics_api.services.survey_result import SurveyResultService
 from analytics_api.utils.roles import Role
 from analytics_api.utils.user_context import UserContext, user_context
-from analytics_api.utils.util import allowedorigins, cors_preflight, DashboardType
+from analytics_api.utils.util import DashboardType, allowedorigins, cors_preflight
 
 
 API = Namespace('surveyresult', description='Endpoints for Survey result Management')
