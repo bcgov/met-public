@@ -24,7 +24,7 @@ from analytics_api.utils.roles import Role
 from analytics_api.services.survey_result import SurveyResultService
 from analytics_api.utils.roles import Role
 from analytics_api.utils.user_context import UserContext, user_context
-from analytics_api.utils.util import allowedorigins, cors_preflight
+from analytics_api.utils.util import allowedorigins, cors_preflight, DashboardType
 
 
 API = Namespace('surveyresult', description='Endpoints for Survey result Management')
@@ -45,7 +45,7 @@ class SurveyResultInternal(Resource):
         user_from_context: UserContext = kwargs['user_context']
         token_roles = set(user_from_context.roles)
         can_view_all_survey_results = False
-        if dashboard_type == 'Internal':
+        if dashboard_type == DashboardType.INTERNAL.value:
             can_view_all_survey_results = Role.VIEW_ALL_SURVEY_RESULTS.value in token_roles
         try:
             survey_result_record = SurveyResultService().get_survey_result(engagement_id,
