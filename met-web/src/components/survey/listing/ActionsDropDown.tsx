@@ -80,7 +80,7 @@ export const ActionsDropDown = ({ survey }: { survey: Survey }) => {
                 value: 2,
                 label: 'View Report - Public',
                 action: () => {
-                    navigate(`/engagements/${engagementId}/dashboard/${'Public'}`);
+                    navigate(`/engagements/${engagementId}/dashboard/public`);
                 },
                 condition: canViewReport(),
             },
@@ -88,7 +88,7 @@ export const ActionsDropDown = ({ survey }: { survey: Survey }) => {
                 value: 3,
                 label: 'View Report - Internal',
                 action: () => {
-                    navigate(`/engagements/${engagementId}/dashboard/${'Internal'}`);
+                    navigate(`/engagements/${engagementId}/dashboard/internal`);
                 },
                 condition: canViewInternalReport(),
             },
