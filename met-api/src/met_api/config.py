@@ -197,6 +197,9 @@ class _Config():  # pylint: disable=too-few-public-methods
     # Slug generation
     SLUG_MAX_CHARACTERS = int(os.getenv('SLUG_MAX_CHARACTERS', '100'))
 
+    # EAO is a single Tenant Environment where EAO is the only env and should be set to True
+    # This flag decides if additonal tenant based checks has to be carried or not
+    IS_SINGLE_TENANT_ENVIRONMENT = os.getenv('IS_SINGLE_TENANT_ENVIRONMENT', 'False')
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
     """Dev Config."""
