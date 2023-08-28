@@ -150,20 +150,21 @@ In the keycloak app:
 ## Deployment Configuration
 
 In each environment namespace (dev, test, prod) use the following:
+The IMAGE_TAG values of the following commands should also be changed to reflect the environment they will be installed to
 
 Deploy the web application:
 ```
 oc process -f ./web.dc.yml \
-  -p ENV=test \
-  -p IMAGE_TAG=test \
+  -p ENV= <dev/test/prod> \
+  -p IMAGE_TAG=<dev/test/prod> \
   | oc create -f -
 ```
 
 Deploy the api application:
 ```
 oc process -f ./api.dc.yml \
-  -p ENV=test \
-  -p IMAGE_TAG=test \
+  -p ENV=<dev/test/prod> \
+  -p IMAGE_TAG=<dev/test/prod> \
   -p KC_DOMAIN=met-oidc-test.apps.gold.devops.gov.bc.ca \
   -p S3_BUCKET=met-test \
   -p SITE_URL=https://met-web-test.apps.gold.devops.gov.bc.ca \
@@ -176,8 +177,8 @@ oc process -f ./api.dc.yml \
 Deploy the notify api application:
 ```
 oc process -f ./notify-api.dc.yml \
-  -p ENV=test \
-  -p IMAGE_TAG=test \
+  -p ENV=<dev/test/prod> \
+  -p IMAGE_TAG=<dev/test/prod> \
   -p KC_DOMAIN=met-oidc-test.apps.gold.devops.gov.bc.ca \
   -p GC_NOTIFY_API_KEY=<GC_NOTIFY_API_KEY> \
   | oc create -f -
@@ -187,8 +188,8 @@ oc process -f ./notify-api.dc.yml \
 Deploy the cron job application:
 ```
 oc process -f ./cron.dc.yml \
-  -p ENV=test \
-  -p IMAGE_TAG=test \
+  -p ENV=<dev/test/prod> \
+  -p IMAGE_TAG=<dev/test/prod> \
   -p KC_DOMAIN=met-oidc-test.apps.gold.devops.gov.bc.ca \
   -p SITE_URL=https://met-web-test.apps.gold.devops.gov.bc.ca \
   -p MET_ADMIN_CLIENT_SECRET=<SERVICE_ACCOUNT_SECRET> \
@@ -200,8 +201,8 @@ oc process -f ./cron.dc.yml \
 Deploy the analytics api 
 ```
 oc process -f ./analytics-api.dc.yml \
- -p ENV=dev \
- -p IMAGE_TAG=latest
+ -p ENV=<dev/test/prod> \
+ -p IMAGE_TAG=<dev/test/prod>
  | oc create -f -
 ```
 
