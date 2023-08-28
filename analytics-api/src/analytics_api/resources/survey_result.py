@@ -41,7 +41,8 @@ class SurveyResultInternal(Resource):
     def get(engagement_id):
         """Fetch survey result for a single engagement id."""
         try:
-            survey_result_record = SurveyResultService().get_survey_result_internal(engagement_id)
+            survey_result_record = SurveyResultService().get_survey_result(engagement_id,
+                                                                           can_view_all_survey_results=True)
 
             if survey_result_record:
                 return jsonify(data=survey_result_record), HTTPStatus.OK
@@ -63,7 +64,8 @@ class SurveyResultExternal(Resource):
     def get(engagement_id):
         """Fetch survey result for a single engagement id."""
         try:
-            survey_result_record = SurveyResultService().get_survey_result_public(engagement_id)
+            survey_result_record = SurveyResultService().get_survey_result(engagement_id,
+                                                                           can_view_all_survey_results=False)
 
             if survey_result_record:
                 return jsonify(data=survey_result_record), HTTPStatus.OK
