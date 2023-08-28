@@ -133,7 +133,7 @@ In each environment namespace (dev, test, prod) use the following:
 
 Deploy the web application:
 ```
-oc process -f ./keycloak.dc.yml -p ENV=test | oc create -f -
+oc process -f ./keycloak.dc.yml -p ENV=<dev/test/prod> | oc create -f -
 ```
 
 The create the initial credentials use port forwarding to access the url as localhost:8080
@@ -149,13 +149,13 @@ In the keycloak app:
 
 ## Deployment Configuration
 
-In each environment namespace (dev, test, prod) use the following:
-The IMAGE_TAG values of the following commands should also be changed to reflect the environment they will be installed to
+In each environment namespace (dev, test, prod) use the following
+IMAGE_TAG values of the following commands should also be changed to reflect the environment they will be installed to
 
 Deploy the web application:
 ```
 oc process -f ./web.dc.yml \
-  -p ENV= <dev/test/prod> \
+  -p ENV=<dev/test/prod> \
   -p IMAGE_TAG=<dev/test/prod> \
   | oc create -f -
 ```
