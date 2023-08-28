@@ -83,6 +83,7 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
                 onClick={() => {
                     fetchData();
                 }}
+                noData={noDataError}
             />
         );
     }
