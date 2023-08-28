@@ -4,6 +4,7 @@ This module is to handle authorization related queries.
 """
 from http import HTTPStatus
 
+from flask import current_app
 from flask_restx import abort
 
 from met_api.constants.membership_type import MembershipType
@@ -44,6 +45,10 @@ def _validate_tenant(eng_id, tenant_id):
         return
     engagement_tenant_id = EngagementModel.find_tenant_id_by_id(eng_id)
     if engagement_tenant_id and tenant_id != engagement_tenant_id:
+        current_app.logger.debug(f'Aborting . Tenant Id on Engagement and user context Mismatch'
+                                 f'engagement_tenant_id:{engagement_tenant_id} '
+                                 f'tenant_id: {tenant_id}')
+
         abort(HTTPStatus.FORBIDDEN)
 
 
@@ -65,6 +70,9 @@ def _has_team_membership(kwargs, user_from_context, team_permitted_roles) -> boo
 
     # check tenant matching
     if membership.tenant_id and membership.tenant_id != user_from_context.tenant_id:
+        current_app.logger.debug(f'Aborting . Tenant Id on membership and user context Mismatch'
+                                 f'membership.tenant_id:{membership.tenant_id} '
+                                 f'user_from_context.tenant_id: {user_from_context.tenant_id}')
         abort(HTTPStatus.FORBIDDEN)
 
     return membership.type.name in team_permitted_roles
