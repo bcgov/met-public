@@ -50,6 +50,7 @@ class TestUserInfo(dict, Enum):
         'last_name': fake.name(),
         'email_address': fake.email(),
         'status_id': UserStatus.ACTIVE.value,
+        'tenant_id': '1'
     }
 
 
@@ -264,6 +265,7 @@ class TestJwtClaims(dict, Enum):
         'family_name': fake.last_name(),
         'preferred_username': fake.user_name(),
         'email': fake.email(),
+        'tenant_id': 1,
         'realm_access': {
             'roles': [
                 'public_user'
@@ -278,6 +280,7 @@ class TestJwtClaims(dict, Enum):
         'preferred_username': f'{fake.user_name()}@idir',
         'given_name': fake.first_name(),
         'family_name': fake.last_name(),
+        'tenant_id': 1,
         'email': 'staff@gov.bc.ca',
         'identity_provider': LoginSource.IDIR.value,
         'realm_access': {
@@ -301,6 +304,7 @@ class TestJwtClaims(dict, Enum):
                 'review_all_comments',
                 'view_all_engagements',
                 'toggle_user_status',
+                'export_to_csv',
             ]
         }
     }
@@ -313,6 +317,7 @@ class TestJwtClaims(dict, Enum):
         'family_name': fake.last_name(),
         'email': 'staff@gov.bc.ca',
         'identity_provider': LoginSource.IDIR.value,
+        'tenant_id': 1,
         'realm_access': {
             'roles': [
                 'staff',
@@ -332,6 +337,7 @@ class TestJwtClaims(dict, Enum):
         'family_name': fake.last_name(),
         'email': 'staff@gov.bc.ca',
         'identity_provider': LoginSource.IDIR.value,
+        'tenant_id': 1,
         'realm_access': {
             'roles': [
                 'staff',

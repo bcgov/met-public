@@ -2,7 +2,7 @@
 from http import HTTPStatus
 from typing import List
 
-from flask import current_app
+from flask import current_app, g
 
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.pagination_options import PaginationOptions
@@ -161,6 +161,7 @@ class StaffUserService:
         cls.validate_user(db_user)
 
         KEYCLOAK_SERVICE.add_user_to_group(user_id=external_id, group_name=group_name)
+        KEYCLOAK_SERVICE.add_attribute_to_user(user_id=external_id, attribute_value=g.tenant_id)
 
         return StaffUserSchema().dump(db_user)
 

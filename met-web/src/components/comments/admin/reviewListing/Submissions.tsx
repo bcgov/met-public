@@ -19,6 +19,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useAppSelector } from 'hooks';
 import { USER_ROLES } from 'services/userService/constants';
 import { USER_GROUP } from 'models/user';
+import { PermissionsGate } from 'components/permissionsGate';
 
 const Submissions = () => {
     const {
@@ -156,9 +157,20 @@ const Submissions = () => {
                         <PrimaryButton component={Link} to={`/surveys/${survey.id}/comments/all`}>
                             Read All Comments
                         </PrimaryButton>
-                        <SecondaryButton onClick={handleExportComments} loading={isExporting}>
-                            Export to CSV
-                        </SecondaryButton>
+                        <PermissionsGate scopes={[USER_ROLES.EXPORT_TO_CSV]} errorProps={{ disabled: true }}>
+                            <SecondaryButton
+                                onClick={handleExportComments}
+                                loading={isExporting}
+                                sx={{
+                                    '&.Mui-disabled': {
+                                        background: '#e0e0e0',
+                                        color: '#a6a6a6',
+                                    },
+                                }}
+                            >
+                                Export to CSV
+                            </SecondaryButton>
+                        </PermissionsGate>
                     </Stack>
                 </Stack>
             </Grid>
