@@ -225,14 +225,13 @@ class MembershipService:
             new_membership_details
         )
         return new_membership
-    
+
     @staticmethod
     def reassign_memberships(user_id: int, membership_type: int):
         """Update memberships type."""
-        
         MembershipModel.revoke_memberships_bulk(user_id)
         new_memberships = []
         if membership_type in [MembershipType.TEAM_MEMBER.value, MembershipType.REVIEWER.value]:
             new_memberships = MembershipModel.reinstate_memberships_bulk(user_id, membership_type)
-        
+
         return new_memberships

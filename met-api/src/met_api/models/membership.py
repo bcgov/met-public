@@ -143,11 +143,14 @@ class Membership(BaseModel):
             )) \
             .all()
 
+        if not current_memberships:
+            return []
+
         # Create new versions with the desired changes
         new_memberships = []
         for current_membership in current_memberships:
             current_membership.is_latest = False
-            db.session.add(current_membership)            
+            db.session.add(current_membership)
 
             new_membership = Membership(
                 engagement_id=current_membership.engagement_id,
@@ -176,6 +179,9 @@ class Membership(BaseModel):
                 Membership.is_latest.is_(True)
             )) \
             .all()
+
+        if not current_memberships:
+            return []
 
         # Create new versions with the desired changes
         new_memberships = []

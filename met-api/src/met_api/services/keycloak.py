@@ -161,7 +161,7 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         response = requests.put(add_to_group_url, headers=headers,
                                 timeout=timeout)
         response.raise_for_status()
-    
+
     @staticmethod
     def remove_user_from_group(user_id: str, group_name: str):
         """Remove user from the keycloak group."""
@@ -173,8 +173,6 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         admin_token = KeycloakService._get_admin_token()
         # Get the '$group_name' group
         group_id = KeycloakService._get_group_id(admin_token, group_name)
-        print(group_name)
-        print(group_id)
 
         # Remove user from the keycloak group '$group_name'
         headers = {
@@ -182,8 +180,7 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
             'Authorization': f'Bearer {admin_token}'
         }
         remove_from_group_url = f'{base_url}/auth/admin/realms/{realm}/users/{user_id}/groups/{group_id}'
-        response = requests.delete(remove_from_group_url, headers=headers,
-                                timeout=timeout)
+        response = requests.delete(remove_from_group_url, headers=headers, timeout=timeout)
         response.raise_for_status()
 
     @staticmethod

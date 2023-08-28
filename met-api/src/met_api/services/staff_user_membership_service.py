@@ -1,25 +1,17 @@
 """Service for membership."""
-from datetime import datetime
 from http import HTTPStatus
 
 from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
-from met_api.models import StaffUser as StaffUserModel
-from met_api.models.engagement import Engagement as EngagementModel
-from met_api.models.membership import Membership as MembershipModel
 from met_api.schemas.staff_user import StaffUserSchema
-from met_api.services import authorization
-from met_api.services.staff_user_service import KEYCLOAK_SERVICE, StaffUserService
+from met_api.services.staff_user_service import StaffUserService
 from met_api.services.membership_service import MembershipService
 from met_api.utils.constants import Groups
-from met_api.utils.enums import KeycloakGroups, MembershipStatus
-from met_api.utils.roles import Role
-from met_api.utils.token_info import TokenInfo
+from met_api.utils.enums import KeycloakGroups
 
 
 class StaffUserMembershipService:
     """Staff User Membership management service."""
-
 
     @staticmethod
     def _get_membership_type_from_group_name(group_name):
@@ -32,6 +24,7 @@ class StaffUserMembershipService:
 
     @classmethod
     def reassign_user(cls, user_id, group_name):
+        """Add user to a new group and reassign memberships."""
         user = StaffUserService.get_user_by_id(user_id, include_groups=True)
         if not user:
             raise BusinessException(
@@ -59,8 +52,7 @@ class StaffUserMembershipService:
         StaffUserService.remove_user_from_group(external_id, Groups.get_name_by_value(main_group))
         StaffUserService.add_user_to_group(external_id, group_name)
         membership_type = StaffUserMembershipService._get_membership_type_from_group_name(group_name)
-        print('membership_type >>>>>>', membership_type)
         MembershipService.reassign_memberships(user_id, membership_type)
-        
+
         new_user = StaffUserService.get_user_by_id(user_id, include_groups=True)
         return StaffUserSchema().dump(new_user)
