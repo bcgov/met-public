@@ -19,7 +19,8 @@ from flask import jsonify
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
-from analytics_api.auth import auth
+from analytics_api.auth import jwt as _jwt
+from analytics_api.utils.roles import Role
 from analytics_api.services.survey_result import SurveyResultService
 from analytics_api.utils.util import allowedorigins, cors_preflight
 
@@ -36,7 +37,7 @@ class SurveyResultInternal(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.optional
+    @_jwt.has_one_of_roles([Role.VIEW_ALL_SURVEY_RESULTS.value])
     def get(engagement_id):
         """Fetch survey result for a single engagement id."""
         try:
@@ -59,7 +60,6 @@ class SurveyResultExternal(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.optional
     def get(engagement_id):
         """Fetch survey result for a single engagement id."""
         try:
