@@ -8,6 +8,7 @@ import { Engagement } from 'models/engagement';
 import { RadialBarChart, PolarAngleAxis, RadialBar } from 'recharts';
 import { MetLabel, MetPaper } from 'components/common';
 import { ErrorBox } from '../ErrorBox';
+import axios, { AxiosError } from 'axios';
 
 interface SurveysCompletedProps {
     engagement: Engagement;
@@ -22,6 +23,13 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
 
     const circleSize = isTablet ? 100 : 250;
 
+    const [noDataError, setNoDataError] = useState(false);
+    const setErrors = (error: AxiosError) => {
+        if (error.response?.status == 404) {
+            setNoDataError(true);
+        }
+    };
+
     const fetchData = async () => {
         setIsLoading(true);
         setIsError(false);
@@ -34,6 +42,10 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
             setIsLoading(false);
         } catch (error) {
             setIsError(true);
+            if (axios.isAxiosError(error)) {
+                setErrors(error);
+            }
+            setIsLoading(false);
         }
     };
 
@@ -50,6 +62,7 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
                 onClick={() => {
                     fetchData();
                 }}
+                noData={noDataError}
             />
         );
     }

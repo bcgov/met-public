@@ -12,6 +12,7 @@ import { SurveyResultData, createSurveyResultData, defaultData } from '../../../
 import { ErrorBox } from '../ErrorBox';
 import { If, Then, Else, When } from 'react-if';
 import { dashboardCustomStyles } from '../SubmissionTrend/SubmissionTrend';
+import axios, { AxiosError } from 'axios';
 
 const HEIGHT = 400;
 
@@ -34,6 +35,13 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
         setChartType(chartByValue);
     };
 
+    const [noDataError, setNoDataError] = useState(false);
+    const setErrors = (error: AxiosError) => {
+        if (error.response?.status == 404) {
+            setNoDataError(true);
+        }
+    };
+
     const fetchData = async () => {
         setIsLoading(true);
         setIsError(false);
@@ -44,6 +52,10 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
             setIsLoading(false);
         } catch (error) {
             setIsError(true);
+            if (axios.isAxiosError(error)) {
+                setErrors(error);
+            }
+            setIsLoading(false);
         }
     };
 
@@ -60,6 +72,7 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
                 onClick={() => {
                     fetchData();
                 }}
+                noData={noDataError}
             />
         );
     }

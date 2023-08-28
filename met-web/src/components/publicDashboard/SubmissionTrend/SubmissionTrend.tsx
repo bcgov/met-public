@@ -16,6 +16,7 @@ import { Dayjs } from 'dayjs';
 import { Then, If, Else, Unless } from 'react-if';
 import { formatToUTC } from 'components/common/dateHelper';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import axios, { AxiosError } from 'axios';
 
 interface SubmissionTrendProps {
     engagement: Engagement;
@@ -50,6 +51,13 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
         width: isExtraSmall ? '40%' : 'auto',
     };
 
+    const [noDataError, setNoDataError] = useState(false);
+    const setErrors = (error: AxiosError) => {
+        if (error.response?.status == 404) {
+            setNoDataError(true);
+        }
+    };
+
     const fetchData = async () => {
         setIsLoading(true);
         try {
@@ -73,6 +81,10 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
         } catch (error) {
             console.log(error);
             setIsError(true);
+            if (axios.isAxiosError(error)) {
+                setErrors(error);
+            }
+            setIsLoading(false);
         }
     };
 
@@ -117,7 +129,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     }
 
     if (isError) {
-        return <ErrorBox sx={{ height: HEIGHT }} onClick={fetchData} />;
+        return <ErrorBox sx={{ height: HEIGHT }} onClick={fetchData} noData={noDataError} />;
     }
 
     return (

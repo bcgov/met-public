@@ -8,6 +8,7 @@ import { Engagement } from 'models/engagement';
 import { RadialBarChart, PolarAngleAxis, RadialBar } from 'recharts';
 import { MetLabel, MetPaper } from 'components/common';
 import { ErrorBox } from '../ErrorBox';
+import axios, { AxiosError } from 'axios';
 
 interface SurveyEmailsSentProps {
     engagement: Engagement;
@@ -21,6 +22,13 @@ const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentP
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const circleSize = isTablet ? 100 : 250;
 
+    const [noDataError, setNoDataError] = useState(false);
+    const setErrors = (error: AxiosError) => {
+        if (error.response?.status == 404) {
+            setNoDataError(true);
+        }
+    };
+
     const fetchData = async () => {
         setIsLoading(true);
         setIsError(false);
@@ -33,6 +41,10 @@ const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentP
             setIsLoading(false);
         } catch (error) {
             setIsError(true);
+            if (axios.isAxiosError(error)) {
+                setErrors(error);
+            }
+            setIsLoading(false);
         }
     };
 
@@ -49,6 +61,7 @@ const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentP
                 onClick={() => {
                     fetchData();
                 }}
+                noData={noDataError}
             />
         );
     }

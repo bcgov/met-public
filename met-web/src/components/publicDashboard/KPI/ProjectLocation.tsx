@@ -8,6 +8,7 @@ import { MetLabel, MetPaper } from 'components/common';
 import { ErrorBox } from '../ErrorBox';
 import MetMap from 'components/map';
 import { geoJSONDecode } from 'components/engagement/form/EngagementWidgets/Map/utils';
+import axios, { AxiosError } from 'axios';
 
 interface SurveysCompletedProps {
     engagement: Engagement;
@@ -22,6 +23,13 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const circleSize = isTablet ? 100 : 250;
 
+    const [noDataError, setNoDataError] = useState(false);
+    const setErrors = (error: AxiosError) => {
+        if (error.response?.status == 404) {
+            setNoDataError(true);
+        }
+    };
+
     const fetchData = async () => {
         setIsError(false);
         setIsLoading(true);
@@ -32,6 +40,10 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
             setIsLoading(false);
         } catch (error) {
             setIsError(true);
+            if (axios.isAxiosError(error)) {
+                setErrors(error);
+            }
+            setIsLoading(false);
         }
     };
 
@@ -48,6 +60,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
                 onClick={() => {
                     fetchData();
                 }}
+                noData={noDataError}
             />
         );
     }
