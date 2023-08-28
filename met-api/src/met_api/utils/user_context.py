@@ -18,6 +18,7 @@ from typing import Dict
 
 from flask import g, request
 
+from met_api.utils.constants import TENANT_ID_JWT_CLAIM
 from met_api.utils.roles import Role
 
 
@@ -36,7 +37,7 @@ class UserContext:  # pylint: disable=too-many-instance-attributes
         self._user_name: str = token_info.get('username', token_info.get('preferred_username', None))
         self._first_name: str = token_info.get('firstname', None)
         self._last_name: str = token_info.get('lastname', None)
-        self._tenant_id: str = token_info.get('tenant_id', None)
+        self._tenant_id: str = token_info.get(TENANT_ID_JWT_CLAIM, None)
         self._bearer_token: str = _get_token()
         self._roles: list = token_info.get('realm_access', None).get('roles', []) if 'realm_access' in token_info \
             else []

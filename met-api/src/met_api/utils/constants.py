@@ -36,3 +36,5 @@ class Groups(Enum):
 TENANT_ID_HEADER = 'tenant-id'
 
 GROUP_NAME_MAPPING = {group.name: group.value for group in Groups}
+
+TENANT_ID_JWT_CLAIM = 'tenant_id'

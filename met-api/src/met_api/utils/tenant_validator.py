@@ -20,9 +20,10 @@ from functools import wraps
 from http import HTTPStatus
 from typing import Dict
 
-from flask import abort, g
+from flask import abort, current_app, g
 
 from met_api.auth import jwt as _jwt
+from met_api.utils.constants import TENANT_ID_JWT_CLAIM
 
 
 def require_role(role):
@@ -34,8 +35,10 @@ def require_role(role):
         def wrapper(*args, **kwargs):
             # Get the tenant information from the JWT payload or any global context
             token_info: Dict = _get_token_info() or {}
-            tenant_id = token_info.get('tenant_id', None)
-            if str(g.tenant_id) == str(tenant_id):
+            tenant_id = token_info.get(TENANT_ID_JWT_CLAIM, None)
+            current_app.logger.debug(f'Tenant Id From JWT Claim {tenant_id}')
+            current_app.logger.debug(f'Tenant Id From g {g.tenant_id}')
+            if g.tenant_id and str(g.tenant_id) == str(tenant_id):
                 return func(*args, **kwargs)
             else:
                 abort(HTTPStatus.FORBIDDEN,
