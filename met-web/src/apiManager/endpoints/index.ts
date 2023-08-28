@@ -144,7 +144,7 @@ const Endpoints = {
         GET: `${AppConfig.analyticsApiUrl}/engagements/map/engagement_id`,
     },
     AnalyticsSurveyResult: {
-        GET: `${AppConfig.analyticsApiUrl}/surveyresult/engagement_id`,
+        GET: `${AppConfig.analyticsApiUrl}/surveyresult/engagement_id/dashboard_type`,
     },
 };
 

@@ -9,8 +9,8 @@ class SurveyResultService:  # pylint: disable=too-few-public-methods
     otherdateformat = '%Y-%m-%d'
 
     @staticmethod
-    def get_survey_result(engagement_id) -> SurveyResultSchema:
+    def get_survey_result(engagement_id, can_view_all_survey_results) -> SurveyResultSchema:
         """Get Survey result by the engagement id."""
-        survey_result = RequestTypeOptionModel.get_survey_result(engagement_id)
+        survey_result = RequestTypeOptionModel.get_survey_result(engagement_id, can_view_all_survey_results)
         survey_result_schema = SurveyResultSchema(many=True)
         return survey_result_schema.dump(survey_result)

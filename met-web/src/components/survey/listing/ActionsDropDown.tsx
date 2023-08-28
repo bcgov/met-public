@@ -49,6 +49,14 @@ export const ActionsDropDown = ({ survey }: { survey: Survey }) => {
         );
     };
 
+    const canViewInternalReport = (): boolean => {
+        return (
+            submissionHasBeenOpened &&
+            roles.includes(USER_ROLES.VIEW_ALL_SURVEY_RESULTS) &&
+            (roles.includes(USER_ROLES.ACCESS_DASHBOARD) || assignedEngagements.includes(engagementId))
+        );
+    };
+
     const canViewAllComments = (): boolean => {
         return (
             submissionHasBeenOpened &&
@@ -70,14 +78,22 @@ export const ActionsDropDown = ({ survey }: { survey: Survey }) => {
             },
             {
                 value: 2,
-                label: 'View Report',
+                label: 'View Report - Public',
                 action: () => {
-                    navigate(`/engagements/${engagementId}/dashboard`);
+                    navigate(`/engagements/${engagementId}/dashboard/public`);
                 },
                 condition: canViewReport(),
             },
             {
                 value: 3,
+                label: 'View Report - Internal',
+                action: () => {
+                    navigate(`/engagements/${engagementId}/dashboard/internal`);
+                },
+                condition: canViewInternalReport(),
+            },
+            {
+                value: 4,
                 label: 'View All Comments',
                 action: () => {
                     navigate(`/surveys/${survey.id}/comments`);
@@ -85,7 +101,7 @@ export const ActionsDropDown = ({ survey }: { survey: Survey }) => {
                 condition: canViewAllComments(),
             },
             {
-                value: 4,
+                value: 5,
                 label: 'Edit Settings',
                 action: () => {
                     navigate(`/surveys/${survey.id}/report`);

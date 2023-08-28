@@ -7,15 +7,18 @@ import { getEngagement } from 'services/engagementService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getErrorMessage } from 'utils';
 import { getEngagementIdBySlug } from 'services/engagementSlugService';
+import { DashboardType } from 'constants/dashboardType';
 
 export interface DashboardContextState {
     engagement: Engagement;
     isEngagementLoading: boolean;
+    dashboardType: string;
 }
 
 export const DashboardContext = createContext<DashboardContextState>({
     engagement: createDefaultEngagement(),
     isEngagementLoading: true,
+    dashboardType: DashboardType.PUBLIC,
 });
 
 interface DashboardContextProviderProps {
@@ -25,10 +28,11 @@ interface DashboardContextProviderProps {
 type EngagementParams = {
     engagementId?: string;
     slug?: string;
+    dashboardType?: string;
 };
 
 export const DashboardContextProvider = ({ children }: DashboardContextProviderProps) => {
-    const { engagementId: engagementIdParam, slug } = useParams<EngagementParams>();
+    const { engagementId: engagementIdParam, slug, dashboardType: dashboardTypeParam } = useParams<EngagementParams>();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const roles = useAppSelector((state) => state.user.roles);
@@ -39,6 +43,8 @@ export const DashboardContextProvider = ({ children }: DashboardContextProviderP
 
     const [engagement, setEngagement] = useState<Engagement>(createDefaultEngagement());
     const [isEngagementLoading, setEngagementLoading] = useState(true);
+
+    const dashboardType = dashboardTypeParam ? dashboardTypeParam : DashboardType.PUBLIC;
 
     const validateEngagement = (engagementToValidate: Engagement) => {
         // submission status e.g. of pending or draft will have id less than of Open
@@ -105,6 +111,7 @@ export const DashboardContextProvider = ({ children }: DashboardContextProviderP
             value={{
                 engagement,
                 isEngagementLoading,
+                dashboardType,
             }}
         >
             {children}

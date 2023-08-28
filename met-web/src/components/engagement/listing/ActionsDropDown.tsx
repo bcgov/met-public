@@ -89,9 +89,9 @@ export const ActionsDropDown = ({ engagement }: { engagement: Engagement }) => {
             },
             {
                 value: 3,
-                label: 'View Report',
+                label: 'View Report - Public',
                 action: () => {
-                    navigate(`/engagements/${engagement.id}/dashboard`);
+                    navigate(`/engagements/${engagement.id}/dashboard/public`);
                 },
                 condition:
                     submissionHasBeenOpened &&
@@ -99,6 +99,17 @@ export const ActionsDropDown = ({ engagement }: { engagement: Engagement }) => {
             },
             {
                 value: 4,
+                label: 'View Report - Internal',
+                action: () => {
+                    navigate(`/engagements/${engagement.id}/dashboard/internal`);
+                },
+                condition:
+                    submissionHasBeenOpened &&
+                    roles.includes(USER_ROLES.VIEW_ALL_SURVEY_RESULTS) &&
+                    (roles.includes(USER_ROLES.ACCESS_DASHBOARD) || assignedEngagements.includes(engagement.id)),
+            },
+            {
+                value: 5,
                 label: 'View All Comments',
                 action: () => {
                     navigate(`/surveys/${engagement.surveys[0].id}/comments`);

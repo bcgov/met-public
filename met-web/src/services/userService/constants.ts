@@ -32,4 +32,5 @@ export const USER_ROLES = {
     SHOW_ALL_COMMENT_STATUS: 'show_all_comment_status',
     TOGGLE_USER_STATUS: 'toggle_user_status',
     EXPORT_TO_CSV: 'export_to_csv',
+    VIEW_ALL_SURVEY_RESULTS: 'view_all_survey_results',
 };

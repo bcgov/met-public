@@ -9,6 +9,7 @@ import SurveysCompleted from '../publicDashboard/KPI/SurveysCompleted';
 import ProjectLocation from '../publicDashboard/KPI/ProjectLocation';
 import SubmissionTrend from '../publicDashboard/SubmissionTrend/SubmissionTrend';
 import SurveyBar from '../publicDashboard/SurveyBar';
+import { DashboardType } from 'constants/dashboardType';
 
 const EngagementsAccordion = ({
     engagements,
@@ -112,7 +113,11 @@ const EngagementsAccordion = ({
                                     <SubmissionTrend engagement={engagement} engagementIsLoading={false} />
                                 </Grid>
                                 <Grid item xs={12} mt={2}>
-                                    <SurveyBar engagement={engagement} engagementIsLoading={false} />
+                                    <SurveyBar
+                                        engagement={engagement}
+                                        engagementIsLoading={false}
+                                        dashboardType={DashboardType.PUBLIC}
+                                    />
                                 </Grid>
                             </When>
                         </AccordionDetails>
