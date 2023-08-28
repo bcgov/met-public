@@ -138,7 +138,8 @@ class Membership(BaseModel):
         current_memberships = db.session.query(Membership) \
             .filter(and_(
                 Membership.user_id == user_id,
-                Membership.is_latest.is_(True)
+                Membership.is_latest.is_(True),
+                Membership.status == MembershipStatus.ACTIVE.value
             )) \
             .all()
 

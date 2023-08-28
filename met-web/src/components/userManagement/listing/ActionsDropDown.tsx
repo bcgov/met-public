@@ -1,4 +1,4 @@
-import React, { useMemo, useContext } from 'react';
+import React, { useMemo, useContext, useEffect } from 'react';
 import { MenuItem, Select } from '@mui/material';
 import { User, USER_GROUP } from 'models/user';
 import { Palette } from 'styles/Theme';
@@ -74,7 +74,7 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
                 condition: !hasNoRole() && roles.includes(USER_ROLES.UPDATE_USER_GROUP),
             },
         ],
-        [selectedUser.id],
+        [selectedUser.id, selectedUser.main_group],
     );
 
     return (

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import { FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, Stack } from '@mui/material';
 import { MetDescription, MetHeader3, PrimaryButton, SecondaryButton, modalStyle } from 'components/common';
@@ -90,28 +90,28 @@ export const ReassignRoleModal = () => {
                                         What role would you like to reassign to this user?
                                     </FormLabel>
                                     <ControlledRadioGroup name="group">
-                                        <Unless condition={user.main_group == USER_GROUP.VIEWER.value}>
+                                        <Unless condition={user.main_group === USER_GROUP.VIEWER.label}>
                                             <FormControlLabel
                                                 value={USER_GROUP.VIEWER.value}
                                                 control={<Radio />}
                                                 label={'Viewer'}
                                             />
                                         </Unless>
-                                        <Unless condition={user.main_group == USER_GROUP.VIEWER.value}>
+                                        <Unless condition={user.main_group === USER_GROUP.REVIEWER.label}>
                                             <FormControlLabel
                                                 value={USER_GROUP.REVIEWER.value}
                                                 control={<Radio />}
                                                 label={'Reviewer'}
                                             />
                                         </Unless>
-                                        <Unless condition={user.main_group == USER_GROUP.TEAM_MEMBER.value}>
+                                        <Unless condition={user.main_group === USER_GROUP.TEAM_MEMBER.label}>
                                             <FormControlLabel
                                                 value={USER_GROUP.TEAM_MEMBER.value}
                                                 control={<Radio />}
                                                 label={'Team Member'}
                                             />
                                         </Unless>
-                                        <Unless condition={user.main_group == USER_GROUP.ADMIN.value}>
+                                        <Unless condition={user.main_group === USER_GROUP.ADMIN.label}>
                                             <FormControlLabel
                                                 value={USER_GROUP.ADMIN.value}
                                                 control={<Radio />}
