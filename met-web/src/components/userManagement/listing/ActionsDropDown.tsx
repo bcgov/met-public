@@ -1,4 +1,4 @@
-import React, { useMemo, useContext, useEffect } from 'react';
+import React, { useMemo, useContext } from 'react';
 import { MenuItem, Select } from '@mui/material';
 import { User, USER_GROUP } from 'models/user';
 import { Palette } from 'styles/Theme';
@@ -44,10 +44,8 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
                 value: 1,
                 label: 'Assign Role',
                 action: () => {
-                    {
-                        setUser(selectedUser);
-                        setassignRoleModalOpen(true);
-                    }
+                    setUser(selectedUser);
+                    setassignRoleModalOpen(true);
                 },
                 condition: hasNoRole() && roles.includes(USER_ROLES.EDIT_MEMBERS),
             },
@@ -55,10 +53,8 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
                 value: 2,
                 label: 'Assign to an Engagement',
                 action: () => {
-                    {
-                        setUser(selectedUser);
-                        setAddUserModalOpen(true);
-                    }
+                    setUser(selectedUser);
+                    setAddUserModalOpen(true);
                 },
                 condition: !hasNoRole() && !isAdmin() && !isViewer(),
             },
@@ -66,10 +62,8 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
                 value: 3,
                 label: 'ReassignRole',
                 action: () => {
-                    {
-                        setUser(selectedUser);
-                        setReassignRoleModalOpen(true);
-                    }
+                    setUser(selectedUser);
+                    setReassignRoleModalOpen(true);
                 },
                 condition: !hasNoRole() && roles.includes(USER_ROLES.UPDATE_USER_GROUP),
             },
