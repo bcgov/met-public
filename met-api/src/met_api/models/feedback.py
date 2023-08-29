@@ -19,7 +19,8 @@ class Feedback(BaseModel):
 
     __tablename__ = 'feedback'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    status = db.Column(db.Enum(FeedbackStatusType), nullable=True)
+    status = db.Column(db.Enum(FeedbackStatusType),
+                       nullable=False, default=FeedbackStatusType.Unreviewed)
     rating = db.Column(db.Enum(RatingType), nullable=True)
     comment_type = db.Column(db.Enum(CommentType), nullable=True)
     comment = db.Column(db.Text, nullable=True)
