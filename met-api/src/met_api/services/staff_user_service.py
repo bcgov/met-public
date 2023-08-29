@@ -165,6 +165,18 @@ class StaffUserService:
 
         return StaffUserSchema().dump(db_user)
 
+    @classmethod
+    def remove_user_from_group(cls, external_id: str, group_name: str):
+        """Create or update a user."""
+        db_user = StaffUserModel.get_user_by_external_id(external_id)
+
+        if db_user is None:
+            raise KeyError('User not found')
+
+        KEYCLOAK_SERVICE.remove_user_from_group(user_id=external_id, group_name=group_name)
+
+        return StaffUserSchema().dump(db_user)
+
     @staticmethod
     def validate_user(db_user: StaffUserModel):
         """Validate user."""

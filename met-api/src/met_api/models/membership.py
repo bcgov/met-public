@@ -4,15 +4,17 @@ Manages the membership between a user and engagement/survey
 """
 from __future__ import annotations
 
+from datetime import datetime
 from typing import List
 
 from sqlalchemy import ForeignKey, and_, or_
 
 from met_api.constants.membership_type import MembershipType
+from met_api.utils.enums import MembershipStatus
 
 from .base_model import BaseModel
-from .staff_user import StaffUser
 from .db import db
+from .staff_user import StaffUser
 
 
 class Membership(BaseModel):
@@ -48,12 +50,12 @@ class Membership(BaseModel):
         return memberships
 
     @classmethod
-    def find_by_user_id(
+    def find_by_external_user_id(
         cls,
         user_external_id,
         status=None,
     ) -> List[Membership]:
-        """Get memberships by user id."""
+        """Get memberships by external user id."""
         query = db.session.query(Membership) \
             .join(StaffUser, StaffUser.id == Membership.user_id) \
             .filter(
@@ -68,6 +70,22 @@ class Membership(BaseModel):
 
         if status:
             query = query.filter(Membership.status == status)
+
+        memberships = query.all()
+        return memberships
+
+    @classmethod
+    def find_by_user_id(
+        cls,
+        user_id,
+    ) -> List[Membership]:
+        """Get memberships by user id."""
+        query = db.session.query(Membership) \
+            .filter(
+                and_(
+                    Membership.user_id == user_id,
+                    Membership.is_latest.is_(True)
+                ))
 
         memberships = query.all()
         return memberships
@@ -112,3 +130,76 @@ class Membership(BaseModel):
         )
         new_membership.save()
         return new_membership
+
+    @classmethod
+    def revoke_memberships_bulk(cls, user_id: int):
+        """Create in bulk revoked versions of memberships."""
+        # Get all latest memberships by engagement ids
+        current_memberships = db.session.query(Membership) \
+            .filter(and_(
+                Membership.user_id == user_id,
+                Membership.is_latest.is_(True),
+                Membership.status == MembershipStatus.ACTIVE.value
+            )) \
+            .all()
+
+        if not current_memberships:
+            return []
+
+        # Create new versions with the desired changes
+        new_memberships = []
+        for current_membership in current_memberships:
+            current_membership.is_latest = False
+            db.session.add(current_membership)
+
+            new_membership = Membership(
+                engagement_id=current_membership.engagement_id,
+                user_id=user_id,
+                status=MembershipStatus.REVOKED.value,
+                type=current_membership.type,
+                revoked_date=datetime.utcnow(),
+                is_latest=True,
+                version=current_membership.version + 1
+            )
+            new_memberships.append(new_membership)
+
+        # Bulk insert new versions
+        db.session.bulk_save_objects(new_memberships)
+        db.session.commit()
+
+        return new_memberships
+
+    @classmethod
+    def reinstate_memberships_bulk(cls, user_id: int, membership_type: int = None):
+        """Create reinstated memberships versions in bulk."""
+        # Get all latest memberships by engagement ids
+        current_memberships = db.session.query(Membership) \
+            .filter(and_(
+                Membership.user_id == user_id,
+                Membership.is_latest.is_(True)
+            )) \
+            .all()
+
+        if not current_memberships:
+            return []
+
+        # Create new versions with the desired changes
+        new_memberships = []
+        for current_membership in current_memberships:
+            current_membership.is_latest = False
+            db.session.add(current_membership)
+            new_membership = Membership(
+                engagement_id=current_membership.engagement_id,
+                user_id=user_id,
+                status=MembershipStatus.ACTIVE.value,
+                type=membership_type if membership_type else current_membership.type,
+                revoked_date=datetime.utcnow(),
+                is_latest=True,
+                version=current_membership.version + 1
+            )
+            new_memberships.append(new_membership)
+
+        # Bulk insert new versions
+        db.session.bulk_save_objects(new_memberships)
+        db.session.commit()
+        return new_memberships

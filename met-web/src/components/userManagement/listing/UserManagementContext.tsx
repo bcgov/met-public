@@ -21,6 +21,8 @@ export interface UserManagementContextProps {
     setUser: React.Dispatch<React.SetStateAction<User>>;
     loadUserListing: () => void;
     setSearchText: React.Dispatch<React.SetStateAction<string>>;
+    reassignRoleModalOpen: boolean;
+    setReassignRoleModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export type EngagementParams = {
@@ -36,25 +38,29 @@ export const UserManagementContext = createContext<UserManagementContextProps>({
         size: 0,
     },
     setPaginationOptions: () => {
-        throw new Error('Not implemented');
+        return;
     },
     addUserModalOpen: false,
     setAddUserModalOpen: () => {
-        throw new Error('Not implemented');
+        return;
     },
     assignRoleModalOpen: false,
     setassignRoleModalOpen: () => {
-        throw new Error('Not implemented');
+        return;
     },
     user: createDefaultUser,
     setUser: () => {
-        throw new Error('Not implemented');
+        return;
     },
     loadUserListing: () => {
-        throw new Error('Load user listing is not implemented');
+        return;
     },
     setSearchText: () => {
-        throw new Error('Not implemented');
+        return;
+    },
+    reassignRoleModalOpen: false,
+    setReassignRoleModalOpen: () => {
+        return;
     },
 });
 
@@ -70,6 +76,7 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
     const [usersLoading, setUsersLoading] = useState(true);
     const [addUserModalOpen, setAddUserModalOpen] = useState(false);
     const [assignRoleModalOpen, setassignRoleModalOpen] = useState(false);
+    const [reassignRoleModalOpen, setReassignRoleModalOpen] = useState(false);
     const [searchText, setSearchText] = useState('');
     const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<User>>({
         page: Number(pageFromURL) || 1,
@@ -129,6 +136,8 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
                 setUser,
                 loadUserListing,
                 setSearchText,
+                reassignRoleModalOpen,
+                setReassignRoleModalOpen,
             }}
         >
             {children}

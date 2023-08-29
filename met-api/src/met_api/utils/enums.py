@@ -68,6 +68,13 @@ class KeycloakGroupName(Enum):
     EAO_REVIEWER = 'EAO_REVIEWER'
 
 
+class MembershipType(IntEnum):
+    """Enum of Membership Type."""
+
+    TEAM_MEMBER = 1
+    REVIEWER = 2
+
+
 class SourceType(Enum):
     """Notification source types."""
 
