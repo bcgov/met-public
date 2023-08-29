@@ -116,8 +116,9 @@ class Membership(BaseModel):
                          )
                     ) \
             .first()
-        latest_membership.is_latest = False
-        latest_membership.save()
+        if latest_membership:            
+            latest_membership.is_latest = False
+            latest_membership.save()
 
         new_membership: Membership = Membership(
             engagement_id=engagement_id,
@@ -126,7 +127,7 @@ class Membership(BaseModel):
             type=new_membership.get('type'),
             revoked_date=new_membership.get('revoked_date', None),
             is_latest=True,
-            version=latest_membership.version + 1
+            version=latest_membership.version + 1 if latest_membership else 1
         )
         new_membership.save()
         return new_membership

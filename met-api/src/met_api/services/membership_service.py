@@ -41,8 +41,7 @@ class MembershipService:
         MembershipService._validate_create_membership(engagement_id, user_details)
         group_name, membership_type = MembershipService._get_membership_details(user_details)
         MembershipService._add_user_group(user_details, group_name)
-        membership = MembershipService._create_membership_model(engagement_id, user_details, membership_type)
-        membership.commit()
+        membership = MembershipService._create_membership_model(engagement_id, user.id, membership_type)
         return membership
 
     @staticmethod
@@ -116,22 +115,24 @@ class MembershipService:
         )
 
     @staticmethod
-    def _create_membership_model(engagement_id, user_details, membership_type=MembershipType.TEAM_MEMBER):
+    def _create_membership_model(engagement_id, user_id, membership_type=MembershipType.TEAM_MEMBER):
         if membership_type not in MembershipType.__members__.values():
             raise BusinessException(
                 error='Invalid Membership type.',
                 status_code=HTTPStatus.BAD_REQUEST
             )
 
-        membership: MembershipModel = MembershipModel(
-            engagement_id=engagement_id,
-            user_id=user_details.get('id'),
-            status=MembershipStatus.ACTIVE.value,
-            type=membership_type
-        )
-        membership.add_to_session()
+        new_membership_details = {
+            'status': MembershipStatus.ACTIVE.value,
+            'type': membership_type,
+        }
 
-        return membership
+        new_membership = MembershipModel.create_new_version(
+            engagement_id,
+            user_id,
+            new_membership_details
+        )
+        return new_membership
 
     @staticmethod
     def get_memberships(engagement_id):
