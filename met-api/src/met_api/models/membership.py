@@ -116,7 +116,7 @@ class Membership(BaseModel):
                          )
                     ) \
             .first()
-        if latest_membership:            
+        if latest_membership:
             latest_membership.is_latest = False
             latest_membership.save()
 
