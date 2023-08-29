@@ -24,6 +24,7 @@ from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas.widget_map import WidgetMapSchema
 from met_api.services.widget_map_service import WidgetMapService
 from met_api.utils.roles import Role
+from met_api.utils.tenant_validator import require_role
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
@@ -63,7 +64,7 @@ class Map(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
+    @require_role([Role.EDIT_ENGAGEMENT.value])
     def patch(widget_id):
         """Update map widget."""
         request_json = request.get_json()

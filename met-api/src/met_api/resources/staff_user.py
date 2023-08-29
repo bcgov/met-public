@@ -27,6 +27,7 @@ from met_api.schemas.staff_user import StaffUserSchema
 from met_api.services.membership_service import MembershipService
 from met_api.services.staff_user_service import StaffUserService
 from met_api.utils.roles import Role
+from met_api.utils.tenant_validator import require_role
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
@@ -57,7 +58,7 @@ class StaffUsers(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.VIEW_USERS.value])
+    @require_role([Role.VIEW_USERS.value])
     def get():
         """Return a set of users(staff only)."""
         args = request.args
@@ -82,7 +83,7 @@ class StaffUser(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.VIEW_USERS.value])
+    @require_role([Role.VIEW_USERS.value])
     def get(user_id):
         """Return a set of users(staff only)."""
         args = request.args
@@ -100,7 +101,7 @@ class StaffUserStatus(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.TOGGLE_USER_STATUS.value])
+    @require_role([Role.TOGGLE_USER_STATUS.value])
     def patch(user_id):
         """Return a set of users(staff only)."""
         try:
@@ -124,7 +125,7 @@ class UserGroup(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.CREATE_ADMIN_USER.value])
+    @require_role([Role.CREATE_ADMIN_USER.value])
     def post(user_id):
         """Add user to group."""
         try:
@@ -146,7 +147,7 @@ class EngagementMemberships(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.VIEW_USERS.value])
+    @require_role([Role.VIEW_USERS.value])
     def get(user_id):
         """Get engagement details by user id."""
         try:

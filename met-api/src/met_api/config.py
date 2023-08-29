@@ -201,6 +201,7 @@ class _Config():  # pylint: disable=too-few-public-methods
     # This flag decides if additonal tenant based checks has to be carried or not
     IS_SINGLE_TENANT_ENVIRONMENT = os.getenv('IS_SINGLE_TENANT_ENVIRONMENT', 'False')
 
+
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
     """Dev Config."""
 

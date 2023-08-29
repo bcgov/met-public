@@ -19,10 +19,10 @@ from flask import jsonify, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
-from met_api.auth import jwt as _jwt
 from met_api.schemas.document import Document
 from met_api.services.object_storage_service import ObjectStorageService
 from met_api.utils.roles import Role
+from met_api.utils.tenant_validator import require_role
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
@@ -37,7 +37,7 @@ class DocumentStorage(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
+    @require_role([Role.EDIT_ENGAGEMENT.value])
     def post():
         """Retrieve authentication properties for document storage."""
         try:

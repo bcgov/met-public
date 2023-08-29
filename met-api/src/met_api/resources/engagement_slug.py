@@ -19,9 +19,9 @@ from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
-from met_api.auth import jwt as _jwt
 from met_api.services.engagement_slug_service import EngagementSlugService
 from met_api.utils.roles import Role
+from met_api.utils.tenant_validator import require_role
 from met_api.utils.util import allowedorigins, cors_preflight
 
 API = Namespace('engagementslugs', description='Endpoints for Engagement Slug Management')
@@ -46,7 +46,7 @@ class Slug(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
+    @require_role([Role.EDIT_ENGAGEMENT.value])
     def patch(slug):
         """Update an existing engagement slug."""
         try:

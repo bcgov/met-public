@@ -141,7 +141,7 @@ class Engagements(Resource):
     @staticmethod
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.EDIT_ENGAGEMENT.value])
+    @require_role([Role.EDIT_ENGAGEMENT.value])
     def put():
         """Update saved engagement."""
         try:
