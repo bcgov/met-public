@@ -144,23 +144,16 @@ class _Config():  # pylint: disable=too-few-public-methods
     KEYCLOAK_ADMIN_SECRET = os.getenv('MET_ADMIN_CLIENT_SECRET')
 
     # front end urls
-    SUBMISSION_PATH = os.getenv(
-        'SUBMISSION_PATH', '/engagements/{engagement_id}/edit/{token}')
-    SURVEY_PATH = os.getenv(
-        'SURVEY_PATH', '/surveys/submit/{survey_id}/{token}')
-    SUBSCRIBE_PATH = os.getenv(
-        'SUBSCRIBE_PATH', '/engagements/{engagement_id}/subscribe/{token}')
-    UNSUBSCRIBE_PATH = os.getenv(
-        'UNSUBSCRIBE_PATH', '/engagements/{engagement_id}/unsubscribe/{participant_id}')
-    ENGAGEMENT_PATH = os.getenv(
-        'ENGAGEMENT_PATH', '/engagements/{engagement_id}/view')
+    SUBMISSION_PATH = os.getenv('SUBMISSION_PATH', '/engagements/{engagement_id}/edit/{token}')
+    SURVEY_PATH = os.getenv('SURVEY_PATH', '/surveys/submit/{survey_id}/{token}')
+    SUBSCRIBE_PATH = os.getenv('SUBSCRIBE_PATH', '/engagements/{engagement_id}/subscribe/{token}')
+    UNSUBSCRIBE_PATH = os.getenv('UNSUBSCRIBE_PATH', '/engagements/{engagement_id}/unsubscribe/{participant_id}')
+    ENGAGEMENT_PATH = os.getenv('ENGAGEMENT_PATH', '/engagements/{engagement_id}/view')
     ENGAGEMENT_PATH_SLUG = os.getenv('ENGAGEMENT_PATH_SLUG', '/{slug}')
     # engagement dashboard path is used to pass the survey result to the public user.
     # The link is changed such that public user can access the comments page from the email and not the dashboard.
-    ENGAGEMENT_DASHBOARD_PATH = os.getenv(
-        'ENGAGEMENT_DASHBOARD_PATH', '/engagements/{engagement_id}/comments')
-    ENGAGEMENT_DASHBOARD_PATH_SLUG = os.getenv(
-        'ENGAGEMENT_DASHBOARD_PATH_SLUG', '/{slug}/comments')
+    ENGAGEMENT_DASHBOARD_PATH = os.getenv('ENGAGEMENT_DASHBOARD_PATH', '/engagements/{engagement_id}/comments')
+    ENGAGEMENT_DASHBOARD_PATH_SLUG = os.getenv('ENGAGEMENT_DASHBOARD_PATH_SLUG', '/{slug}/comments')
     USER_MANAGEMENT_PATH = os.getenv('USER_MANAGEMENT_PATH', '/usermanagement')
     SITE_URL = os.getenv('SITE_URL')
 
@@ -192,15 +185,12 @@ class _Config():  # pylint: disable=too-few-public-methods
 
     # just a temporary writable location to unzip the files.
     # This gets cleared after every shapefile conversion.
-    SHAPEFILE_UPLOAD_FOLDER = os.getenv(
-        'SHAPEFILE_UPLOAD_FOLDER', '/tmp/uploads')
+    SHAPEFILE_UPLOAD_FOLDER = os.getenv('SHAPEFILE_UPLOAD_FOLDER', '/tmp/uploads')
 
     # default tenant configs ; Set to EAO for now.Overwrite using openshift variables
     DEFAULT_TENANT_SHORT_NAME = os.getenv('DEFAULT_TENANT_SHORT_NAME', 'EAO')
-    DEFAULT_TENANT_NAME = os.getenv(
-        'DEFAULT_TENANT_NAME', 'Environment Assessment Office')
-    DEFAULT_TENANT_DESCRIPTION = os.getenv(
-        'DEFAULT_TENANT_DESCRIPTION', 'Environment Assessment Office')
+    DEFAULT_TENANT_NAME = os.getenv('DEFAULT_TENANT_NAME', 'Environment Assessment Office')
+    DEFAULT_TENANT_DESCRIPTION = os.getenv('DEFAULT_TENANT_DESCRIPTION', 'Environment Assessment Office')
 
     EMAIL_SECRET_KEY = os.getenv('EMAIL_SECRET_KEY', 'secret')
 
@@ -292,12 +282,9 @@ class TestConfig(_Config):  # pylint: disable=too-few-public-methods
     4H8UZcVFN95vEKxJiLRjAmj6g273pu9kK4ymXNEjWWJn
     -----END RSA PRIVATE KEY-----"""
 
-    KEYCLOAK_ADMIN_USERNAME = os.getenv(
-        'KEYCLOAK_TEST_ADMIN_CLIENTID', 'met-admin')
-    KEYCLOAK_ADMIN_SECRET = os.getenv(
-        'KEYCLOAK_TEST_ADMIN_SECRET', '2222222222')
-    KEYCLOAK_BASE_URL = os.getenv(
-        'KEYCLOAK_TEST_BASE_URL', 'http://localhost:8088')
+    KEYCLOAK_ADMIN_USERNAME = os.getenv('KEYCLOAK_TEST_ADMIN_CLIENTID', 'met-admin')
+    KEYCLOAK_ADMIN_SECRET = os.getenv('KEYCLOAK_TEST_ADMIN_SECRET', '2222222222')
+    KEYCLOAK_BASE_URL = os.getenv('KEYCLOAK_TEST_BASE_URL', 'http://localhost:8088')
     KEYCLOAK_REALMNAME = os.getenv('KEYCLOAK_TEST_REALMNAME', 'demo')
 
     JWT_OIDC_AUDIENCE = os.getenv('JWT_OIDC_TEST_AUDIENCE')
