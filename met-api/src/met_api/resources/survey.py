@@ -27,6 +27,7 @@ from met_api.models.survey_search_options import SurveySearchOptions
 from met_api.schemas.survey import SurveySchema
 from met_api.services.survey_service import SurveyService
 from met_api.utils.roles import Role
+from met_api.utils.tenant_validator import require_role
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
@@ -107,7 +108,7 @@ class Surveys(Resource):
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
-    @_jwt.has_one_of_roles([Role.CREATE_SURVEY.value])
+    @require_role([Role.CREATE_SURVEY.value])
     @cross_origin(origins=allowedorigins())
     def post():
         """Create a new survey."""
@@ -195,7 +196,7 @@ class SurveysClone(Resource):
     """Resource for managing surveys."""
 
     @staticmethod
-    @_jwt.has_one_of_roles([Role.CLONE_SURVEY.value])
+    @require_role([Role.CLONE_SURVEY.value])
     @cross_origin(origins=allowedorigins())
     def post(survey_id):
         """Clone a new survey."""

@@ -199,7 +199,8 @@ class _Config():  # pylint: disable=too-few-public-methods
 
     # EAO is a single Tenant Environment where EAO is the only env and should be set to True
     # This flag decides if additonal tenant based checks has to be carried or not
-    IS_SINGLE_TENANT_ENVIRONMENT = os.getenv('IS_SINGLE_TENANT_ENVIRONMENT', 'False')
+    IS_SINGLE_TENANT_ENVIRONMENT = os.getenv('IS_SINGLE_TENANT_ENVIRONMENT', 'False').lower() == 'true'
+
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
     """Dev Config."""

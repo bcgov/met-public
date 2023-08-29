@@ -19,13 +19,15 @@ from met_api.utils.user_context import UserContext, user_context
 @user_context
 def check_auth(**kwargs):
     """Check if user is authorized to perform action on the service."""
+    skip_tenant_check = current_app.config.get('IS_SINGLE_TENANT_ENVIRONMENT')
     user_from_context: UserContext = kwargs['user_context']
     token_roles = set(user_from_context.roles)
     permitted_roles = set(kwargs.get('one_of_roles', []))
     has_valid_roles = token_roles & permitted_roles
     if has_valid_roles:
-        user_tenant_id = user_from_context.tenant_id
-        _validate_tenant(kwargs.get('engagement_id'), user_tenant_id)
+        if not skip_tenant_check:
+            user_tenant_id = user_from_context.tenant_id
+            _validate_tenant(kwargs.get('engagement_id'), user_tenant_id)
         return
 
     team_permitted_roles = {MembershipType.TEAM_MEMBER.name, MembershipType.REVIEWER.name} & permitted_roles
@@ -68,11 +70,13 @@ def _has_team_membership(kwargs, user_from_context, team_permitted_roles) -> boo
     if not membership:
         return False
 
-    # check tenant matching
-    if membership.tenant_id and str(membership.tenant_id) != str(user_from_context.tenant_id):
-        current_app.logger.debug(f'Aborting . Tenant Id on membership and user context Mismatch'
-                                 f'membership.tenant_id:{membership.tenant_id} '
-                                 f'user_from_context.tenant_id: {user_from_context.tenant_id}')
-        abort(HTTPStatus.FORBIDDEN)
+    skip_tenant_check = current_app.config.get('IS_SINGLE_TENANT_ENVIRONMENT')
+    if not skip_tenant_check:
+        # check tenant matching
+        if membership.tenant_id and str(membership.tenant_id) != str(user_from_context.tenant_id):
+            current_app.logger.debug(f'Aborting . Tenant Id on membership and user context Mismatch'
+                                     f'membership.tenant_id:{membership.tenant_id} '
+                                     f'user_from_context.tenant_id: {user_from_context.tenant_id}')
+            abort(HTTPStatus.FORBIDDEN)
 
     return membership.type.name in team_permitted_roles
