@@ -67,7 +67,7 @@ def test_reassign_user_reviewer_team_member(mocker, client, jwt, session):
     user = factory_staff_user_model()
     eng = factory_engagement_model()
     current_membership = factory_membership_model(user_id=user.id, engagement_id=eng.id)
-    assert current_membership.status == MembershipStatus.ACTIVE.value    
+    assert current_membership.status == MembershipStatus.ACTIVE.value
     mock_response = MagicMock()
     mock_response.status_code = HTTPStatus.NO_CONTENT
 
