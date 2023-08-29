@@ -1,26 +1,15 @@
 """Service for membership."""
 from http import HTTPStatus
 
-from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas.staff_user import StaffUserSchema
-from met_api.services.staff_user_service import StaffUserService
 from met_api.services.membership_service import MembershipService
+from met_api.services.staff_user_service import StaffUserService
 from met_api.utils.constants import Groups
-from met_api.utils.enums import KeycloakGroups
 
 
 class StaffUserMembershipService:
     """Staff User Membership management service."""
-
-    @staticmethod
-    def _get_membership_type_from_group_name(group_name):
-        """Get membership type from group name."""
-        if group_name == KeycloakGroups.EAO_TEAM_MEMBER.name:
-            return MembershipType.TEAM_MEMBER
-        if group_name == KeycloakGroups.EAO_REVIEWER.name:
-            return MembershipType.REVIEWER
-        return None
 
     @classmethod
     def reassign_user(cls, user_id, group_name):
@@ -51,8 +40,6 @@ class StaffUserMembershipService:
 
         StaffUserService.remove_user_from_group(external_id, Groups.get_name_by_value(main_group))
         StaffUserService.add_user_to_group(external_id, group_name)
-        membership_type = StaffUserMembershipService._get_membership_type_from_group_name(group_name)
-        MembershipService.reassign_memberships(user_id, membership_type)
-
+        MembershipService.revoke_memberships_bulk(user_id)
         new_user = StaffUserService.get_user_by_id(user_id, include_groups=True)
         return StaffUserSchema().dump(new_user)

@@ -305,6 +305,7 @@ class TestJwtClaims(dict, Enum):
                 'view_all_engagements',
                 'toggle_user_status',
                 'export_to_csv',
+                'update_user_group'
             ]
         }
     }

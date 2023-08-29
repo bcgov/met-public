@@ -119,7 +119,7 @@ class StaffUserStatus(Resource):
             return str(err), HTTPStatus.BAD_REQUEST
 
 
-@cors_preflight('POST')
+@cors_preflight('POST, PUT')
 @API.route('/<user_id>/groups')
 class UserGroup(Resource):
     """Add user to group."""

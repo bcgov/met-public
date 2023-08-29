@@ -1,6 +1,5 @@
 """Service for user management."""
 from http import HTTPStatus
-from typing import List
 
 from flask import current_app, g
 
@@ -103,7 +102,7 @@ class StaffUserService:
     @staticmethod
     def attach_groups(user_collection):
         """Attach keycloak groups to user object."""
-        group_user_details: List = KEYCLOAK_SERVICE.get_users_groups(
+        group_user_details = KEYCLOAK_SERVICE.get_users_groups(
             [user.get('external_id') for user in user_collection])
 
         for user in user_collection:

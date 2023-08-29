@@ -60,7 +60,7 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
             },
             {
                 value: 3,
-                label: 'ReassignRole',
+                label: 'Reassign Role',
                 action: () => {
                     setUser(selectedUser);
                     setReassignRoleModalOpen(true);
