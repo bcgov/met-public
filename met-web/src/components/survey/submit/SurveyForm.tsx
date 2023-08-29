@@ -53,7 +53,7 @@ export const SurveyForm = ({ handleClose }: SurveyFormProps) => {
                             onClick={() => handleSubmit(submissionData)}
                             loading={isSubmitting}
                         >
-                            Submit Survey
+                            Submit
                         </PrimaryButton>
                     </Stack>
                 </Grid>
