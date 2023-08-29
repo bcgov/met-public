@@ -168,38 +168,3 @@ class Membership(BaseModel):
         db.session.commit()
 
         return new_memberships
-
-    @classmethod
-    def reinstate_memberships_bulk(cls, user_id: int, membership_type: int = None):
-        """Create reinstated memberships versions in bulk."""
-        # Get all latest memberships by engagement ids
-        current_memberships = db.session.query(Membership) \
-            .filter(and_(
-                Membership.user_id == user_id,
-                Membership.is_latest.is_(True)
-            )) \
-            .all()
-
-        if not current_memberships:
-            return []
-
-        # Create new versions with the desired changes
-        new_memberships = []
-        for current_membership in current_memberships:
-            current_membership.is_latest = False
-            db.session.add(current_membership)
-            new_membership = Membership(
-                engagement_id=current_membership.engagement_id,
-                user_id=user_id,
-                status=MembershipStatus.ACTIVE.value,
-                type=membership_type if membership_type else current_membership.type,
-                revoked_date=datetime.utcnow(),
-                is_latest=True,
-                version=current_membership.version + 1
-            )
-            new_memberships.append(new_membership)
-
-        # Bulk insert new versions
-        db.session.bulk_save_objects(new_memberships)
-        db.session.commit()
-        return new_memberships
