@@ -191,7 +191,6 @@ class _Config():  # pylint: disable=too-few-public-methods
             'REJECTED_EMAIL_SUBJECT': os.getenv('REJECTED_EMAIL_SUBJECT', '{engagement_name} - About your Comments'),
             'ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID': os.getenv('EAO_ENGAGEMENT_CLOSEOUT'),
             'ENGAGEMENT_CLOSEOUT_EMAIL_SUBJECT': os.getenv('ENGAGEMENT_CLOSEOUT_EMAIL_SUBJECT', 'The public commenting period for engagement name is now closed.'),
-            'VERIFICATION_EMAIL_SUBJECT': os.getenv('VERIFICATION_EMAIL_SUBJECT', '{engagement_name} - Survey link'),
             'EMAIL_ENVIRONMENT': os.getenv('EMAIL_ENVIRONMENT', ''),
             'SUBMISSION_REPORT_ID': os.getenv('EAO_SUBMISSION_REPORT'),
             'SUBMISSION_REPORT_SUBJECT': os.getenv('SUBMISSION_REPORT_SUBJECT', 'Your feedback was successfully submitted.'),
