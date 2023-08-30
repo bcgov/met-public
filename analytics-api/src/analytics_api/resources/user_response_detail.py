@@ -51,7 +51,7 @@ class UserResponseDetailByMonth(Resource):
             if user_response_record:
                 return user_response_record, HTTPStatus.OK
 
-            return 'User Response was not found', HTTPStatus.INTERNAL_SERVER_ERROR
+            return 'User Response was not found', HTTPStatus.NOT_FOUND
         except KeyError:
             return 'User Response was not found', HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
@@ -80,7 +80,7 @@ class UserResponseDetailByWeek(Resource):
             if user_response_record:
                 return user_response_record, HTTPStatus.OK
 
-            return 'User Response was not found', HTTPStatus.INTERNAL_SERVER_ERROR
+            return 'User Response was not found', HTTPStatus.NOT_FOUND
         except KeyError:
             return 'User Response was not found', HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
