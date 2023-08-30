@@ -134,7 +134,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     }
 
     if (isError) {
-        return <ErrorBox sx={{ height: HEIGHT }} onClick={fetchData} noData={noDataError} />;
+        return <ErrorBox sx={{ height: HEIGHT }} onClick={fetchData} />;
     }
 
     return (
