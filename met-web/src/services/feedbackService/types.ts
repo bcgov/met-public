@@ -6,6 +6,7 @@ export interface GetFeedbackRequest {
     sort_key?: string;
     sort_order?: 'asc' | 'desc';
     search_text?: string;
+    status?: FeedbackStatusEnum;
 }
 
 export interface PostFeedbackRequest {

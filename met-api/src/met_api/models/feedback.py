@@ -29,9 +29,15 @@ class Feedback(BaseModel):
         db.Integer, db.ForeignKey('tenant.id'), nullable=True)
 
     @classmethod
-    def get_all_paginated(cls, pagination_options: PaginationOptions, search_text=''):
+    def get_all_paginated(cls,
+                          pagination_options: PaginationOptions, search_text='',
+                          status=FeedbackStatusType,
+                          ):
         """Get feedback paginated."""
         query = db.session.query(Feedback)
+
+        if status:
+            query = cls._filter_by_status(query, status)
 
         if search_text:
             # Remove all non-digit characters from search text
@@ -91,3 +97,8 @@ class Feedback(BaseModel):
 
         db.session.commit()
         return feedback
+
+    @staticmethod
+    def _filter_by_status(query, status):
+        query = query.filter(Feedback.status.ilike('%' + status + '%'))
+        return query
