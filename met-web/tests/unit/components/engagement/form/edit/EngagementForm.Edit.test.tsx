@@ -3,15 +3,8 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import EngagementForm from '../../../../../../src/components/engagement/form';
 import { setupEnv } from '../../../setEnvVars';
-import * as reactRouter from 'react-router';
-import * as engagementService from 'services/engagementService';
-import * as engagementMetadataService from 'services/engagementMetadataService';
-import * as engagementSlugService from 'services/engagementSlugService';
-import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
-import * as widgetService from 'services/widgetService';
 import { createDefaultSurvey, Survey } from 'models/survey';
-import { WidgetType } from 'models/widget';
-import { draftEngagement, engagementMetadata, engagementSlugData } from '../../../factory';
+import { draftEngagement, engagementSlugData } from '../../../factory';
 import { setupCommonMocks } from './jestTestUtils';
 
 const survey: Survey = {
@@ -23,50 +16,21 @@ const survey: Survey = {
 
 const surveys = [survey];
 
+let useParamsMock: jest.SpyInstance;
+let getEngagementMock: jest.SpyInstance;
+let openNotificationModalMock: jest.SpyInstance;
+let getEngagementSlugMock: jest.SpyInstance;
+
 describe('Engagement form page tests', () => {
     beforeAll(() => {
-        setupCommonMocks();
+        const mocks = setupCommonMocks();
+        useParamsMock = mocks.useParamsMock;
+        getEngagementMock = mocks.getEngagementMock;
+        getEngagementSlugMock = mocks.getSlugByEngagementIdMock;
     });
-    const openNotificationModalMock = jest
-        .spyOn(notificationModalSlice, 'openNotificationModal')
-        .mockImplementation(jest.fn());
-    const useParamsMock = jest.spyOn(reactRouter, 'useParams');
-    const getEngagementMetadataMock = jest
-        .spyOn(engagementMetadataService, 'getEngagementMetadata')
-        .mockReturnValue(Promise.resolve(engagementMetadata));
-    const getEngagementSlugMock = jest
-        .spyOn(engagementSlugService, 'getSlugByEngagementId')
-        .mockReturnValue(Promise.resolve(engagementSlugData));
-    const getEngagementMock = jest
-        .spyOn(engagementService, 'getEngagement')
-        .mockReturnValue(Promise.resolve(draftEngagement));
-    const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([]));
 
     beforeEach(() => {
         setupEnv();
-    });
-
-    test('Cannot add more than one survey', async () => {
-        useParamsMock.mockReturnValue({ engagementId: '1' });
-        getEngagementMock.mockReturnValueOnce(
-            Promise.resolve({
-                ...draftEngagement,
-                surveys: surveys,
-            }),
-        );
-        getEngagementMetadataMock.mockReturnValueOnce(
-            Promise.resolve({
-                ...engagementMetadata,
-            }),
-        );
-        const { container } = render(<EngagementForm />);
-
-        await waitFor(() => {
-            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-        });
-
-        expect(screen.getByText('Add Survey')).toBeDisabled();
     });
 
     test('Can move to settings tab', async () => {
@@ -152,51 +116,6 @@ describe('Engagement form page tests', () => {
 
         await waitFor(() => {
             expect(openNotificationModalMock).toHaveBeenCalledOnce();
-        });
-    });
-
-    test('Widget block appears', async () => {
-        useParamsMock.mockReturnValue({ engagementId: '1' });
-        getEngagementMock.mockReturnValueOnce(
-            Promise.resolve({
-                ...draftEngagement,
-                surveys: surveys,
-            }),
-        );
-        const { container } = render(<EngagementForm />);
-
-        await waitFor(() => {
-            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-        });
-
-        expect(screen.getByText('Add Widget')).toBeVisible();
-        expect(getWidgetsMock).toHaveBeenCalled();
-    });
-
-    test('Widget drawer appears', async () => {
-        useParamsMock.mockReturnValue({ engagementId: '1' });
-        getEngagementMock.mockReturnValueOnce(
-            Promise.resolve({
-                ...draftEngagement,
-                surveys: surveys,
-            }),
-        );
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
-        const { container } = render(<EngagementForm />);
-
-        await waitFor(() => {
-            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-        });
-
-        const addWidgetButton = screen.getByText('Add Widget');
-        fireEvent.click(addWidgetButton);
-
-        await waitFor(() => {
-            expect(screen.getByText('Select Widget')).toBeVisible();
-            expect(screen.getByTestId(`widget-drawer-option/${WidgetType.WhoIsListening}`));
-            expect(screen.getByTestId(`widget-drawer-option/${WidgetType.Phases}`));
         });
     });
 

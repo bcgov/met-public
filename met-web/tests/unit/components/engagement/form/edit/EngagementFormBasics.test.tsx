@@ -1,14 +1,35 @@
-
-import { render, waitFor, screen, fireEvent, within } from '@testing-library/react';
+import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
-import EngagementForm from '../../../../../../src/components/engagement/form';
 import assert from 'assert';
+import EngagementForm from '../../../../../../src/components/engagement/form';
+import { setupCommonMocks } from './jestTestUtils';
+import { Survey } from 'models/survey';
+import { createDefaultSurvey } from 'models/survey';
 
-// Import other necessary libraries and mock setups
+let useParamsMock: jest.SpyInstance;
+let getEngagementMock: jest.SpyInstance;
+let getEngagementMetadataMock: jest.SpyInstance;
+let patchEngagementMock: jest.SpyInstance;
+let openNotificationModalMock: jest.SpyInstance;
+
+const survey: Survey = {
+    ...createDefaultSurvey(),
+    id: 1,
+    name: 'Survey 1',
+    engagement_id: 1,
+};
 
 describe('Engagement form basic tests', () => {
-    // Your setup code here
+    // Here we set up the common mocks before all tests
+    beforeAll(() => {
+        const commonMocks = setupCommonMocks();
+        useParamsMock = commonMocks.useParamsMock;
+        getEngagementMock = commonMocks.getEngagementMock;
+        getEngagementMetadataMock = commonMocks.getEngagementMetadataMock;
+        patchEngagementMock = commonMocks.patchEngagementMock;
+        openNotificationModalMock = commonMocks.openNotificationModalMock;
+    });
 
     test('Engagement form with saved engagement should display saved info', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
@@ -62,5 +83,4 @@ describe('Engagement form basic tests', () => {
 
         expect(openNotificationModalMock).toHaveBeenCalledOnce();
     });
-
 });
