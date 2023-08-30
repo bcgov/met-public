@@ -25,8 +25,10 @@ from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.engagement import EngagementSchema
 from met_api.schemas.staff_user import StaffUserSchema
 from met_api.services.membership_service import MembershipService
+from met_api.services.staff_user_membership_service import StaffUserMembershipService
 from met_api.services.staff_user_service import StaffUserService
 from met_api.utils.roles import Role
+from met_api.utils.tenant_validator import require_role
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
@@ -57,7 +59,7 @@ class StaffUsers(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.VIEW_USERS.value])
+    @require_role([Role.VIEW_USERS.value])
     def get():
         """Return a set of users(staff only)."""
         args = request.args
@@ -82,7 +84,7 @@ class StaffUser(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.VIEW_USERS.value])
+    @require_role([Role.VIEW_USERS.value])
     def get(user_id):
         """Return a set of users(staff only)."""
         args = request.args
@@ -100,7 +102,7 @@ class StaffUserStatus(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.TOGGLE_USER_STATUS.value])
+    @require_role([Role.TOGGLE_USER_STATUS.value])
     def patch(user_id):
         """Return a set of users(staff only)."""
         try:
@@ -117,19 +119,35 @@ class StaffUserStatus(Resource):
             return str(err), HTTPStatus.BAD_REQUEST
 
 
-@cors_preflight('POST')
+@cors_preflight('POST, PUT')
 @API.route('/<user_id>/groups')
 class UserGroup(Resource):
     """Add user to group."""
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.CREATE_ADMIN_USER.value])
+    @require_role([Role.CREATE_ADMIN_USER.value])
     def post(user_id):
         """Add user to group."""
         try:
             args = request.args
             user_schema = StaffUserService().add_user_to_group(user_id, args.get('group'))
+            return user_schema, HTTPStatus.OK
+        except KeyError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except BusinessException as err:
+            return {'message': err.error}, err.status_code
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.has_one_of_roles([Role.UPDATE_USER_GROUP.value])
+    def put(user_id):
+        """Update user group."""
+        try:
+            args = request.args
+            user_schema = StaffUserMembershipService().reassign_user(user_id, args.get('group'))
             return user_schema, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
@@ -146,7 +164,7 @@ class EngagementMemberships(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.VIEW_USERS.value])
+    @require_role([Role.VIEW_USERS.value])
     def get(user_id):
         """Get engagement details by user id."""
         try:

@@ -70,7 +70,7 @@ def test_create_survey_with_tenant(client, jwt, session):  # pylint:disable=unus
 
     # Create a tenant
     tenant_data = TestTenantInfo.tenant2
-    factory_tenant_model(tenant_data)
+    tenant_model = factory_tenant_model(tenant_data)
     tenant2_short_name = tenant_data['short_name']
     tenant_2 = TenantModel.find_by_short_name(tenant2_short_name)
     # Verify that the tenant was created successfully
@@ -79,11 +79,27 @@ def test_create_survey_with_tenant(client, jwt, session):  # pylint:disable=unus
     # Set the tenant ID header for future requests
     headers[TENANT_ID_HEADER] = tenant2_short_name
 
+    # Assert same staff admin can't create survey in a different tenant since he is a part of initial tenant.
+    rv = client.post(surveys_url, data=json.dumps({
+        'name': TestSurveyInfo.survey2.get('name'),
+        'display': TestSurveyInfo.survey2.get('form_json').get('display'),
+    }), headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 403
+
+    # emulate Tenant 2 staff admin by setting tenant id
+    claims = copy.deepcopy(TestJwtClaims.staff_admin_role.value)
+    claims['tenant_id'] = str(tenant_model.id)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    headers[TENANT_ID_HEADER] = tenant2_short_name
+
+    # Create a survey within the new tenant
     rv = client.post(surveys_url, data=json.dumps({
         'name': TestSurveyInfo.survey2.get('name'),
         'display': TestSurveyInfo.survey2.get('form_json').get('display'),
     }), headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
+
+    # Verify that the new survey belongs to the correct tenant
     survey_tenant_id = rv.json.get('tenant_id')
     assert survey_tenant_id == str(tenant_2.id)
 

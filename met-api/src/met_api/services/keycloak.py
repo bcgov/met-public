@@ -183,6 +183,27 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         response.raise_for_status()
 
     @staticmethod
+    def remove_user_from_group(user_id: str, group_name: str):
+        """Remove user from the keycloak group."""
+        config = current_app.config
+        base_url = config.get('KEYCLOAK_BASE_URL')
+        realm = config.get('KEYCLOAK_REALMNAME')
+        timeout = config.get('CONNECT_TIMEOUT', 60)
+        # Create an admin token
+        admin_token = KeycloakService._get_admin_token()
+        # Get the '$group_name' group
+        group_id = KeycloakService._get_group_id(admin_token, group_name)
+
+        # Remove user from the keycloak group '$group_name'
+        headers = {
+            'Content-Type': ContentType.JSON.value,
+            'Authorization': f'Bearer {admin_token}'
+        }
+        remove_from_group_url = f'{base_url}/auth/admin/realms/{realm}/users/{user_id}/groups/{group_id}'
+        response = requests.delete(remove_from_group_url, headers=headers, timeout=timeout)
+        response.raise_for_status()
+
+    @staticmethod
     def add_user(user: dict):
         """Add user to Keycloak.Mainly used for Tests;Dont use it for actual user creation in application."""
         config = current_app.config

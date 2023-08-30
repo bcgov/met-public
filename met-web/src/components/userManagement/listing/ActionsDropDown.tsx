@@ -13,7 +13,8 @@ interface ActionDropDownItem {
     condition?: boolean;
 }
 export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
-    const { setAddUserModalOpen, setassignRoleModalOpen, setUser } = useContext(UserManagementContext);
+    const { setAddUserModalOpen, setassignRoleModalOpen, setUser, setReassignRoleModalOpen } =
+        useContext(UserManagementContext);
     const { roles } = useAppSelector((state) => state.user);
 
     const hasNoRole = (): boolean => {
@@ -43,10 +44,8 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
                 value: 1,
                 label: 'Assign Role',
                 action: () => {
-                    {
-                        setUser(selectedUser);
-                        setassignRoleModalOpen(true);
-                    }
+                    setUser(selectedUser);
+                    setassignRoleModalOpen(true);
                 },
                 condition: hasNoRole() && roles.includes(USER_ROLES.EDIT_MEMBERS),
             },
@@ -54,15 +53,22 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
                 value: 2,
                 label: 'Assign to an Engagement',
                 action: () => {
-                    {
-                        setUser(selectedUser);
-                        setAddUserModalOpen(true);
-                    }
+                    setUser(selectedUser);
+                    setAddUserModalOpen(true);
                 },
                 condition: !hasNoRole() && !isAdmin() && !isViewer(),
             },
+            {
+                value: 3,
+                label: 'Reassign Role',
+                action: () => {
+                    setUser(selectedUser);
+                    setReassignRoleModalOpen(true);
+                },
+                condition: !hasNoRole() && roles.includes(USER_ROLES.UPDATE_USER_GROUP),
+            },
         ],
-        [selectedUser.id],
+        [selectedUser.id, selectedUser.main_group],
     );
 
     return (

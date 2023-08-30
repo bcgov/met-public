@@ -70,7 +70,6 @@ class WidgetSubscribeItems(Resource):
     def post(widget_id, subscribe_id):
         """Add new subscribe to the widgets."""
         request_json = request.get_json()
-        print(request_json)
         try:
             subscribe = WidgetSubscribeService().create_subscribe_items(
                 widget_id, subscribe_id, request_json)

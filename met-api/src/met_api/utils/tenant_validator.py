@@ -33,6 +33,9 @@ def require_role(role):
         @wraps(func)
         @_jwt.has_one_of_roles(role)
         def wrapper(*args, **kwargs):
+            # single tenanted env doesn't need tenant id checks..so pass
+            if current_app.config.get('IS_SINGLE_TENANT_ENVIRONMENT'):
+                return func(*args, **kwargs)
             # Get the tenant information from the JWT payload or any global context
             token_info: Dict = _get_token_info() or {}
             tenant_id = token_info.get(TENANT_ID_JWT_CLAIM, None)

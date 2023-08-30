@@ -48,6 +48,16 @@ export const addUserToGroup = async ({ user_id, group }: AddUserToGroupProps): P
     return responseData.data;
 };
 
+interface ChangeUserGroupProps {
+    user_id: number;
+    group: string;
+}
+export const changeUserGroup = async ({ user_id, group }: ChangeUserGroupProps): Promise<User> => {
+    const url = replaceUrl(Endpoints.User.CHANGE_GROUP, 'user_id', String(user_id));
+    const responseData = await http.PutRequest<User>(url, {}, { group });
+    return responseData.data;
+};
+
 interface GetUserEngagementsParams {
     user_id?: string;
 }

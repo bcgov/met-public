@@ -11,7 +11,7 @@ export const USER_GROUP: { [x: string]: { value: UserGroup; label: string } } = 
     },
     TEAM_MEMBER: {
         value: 'EAO_TEAM_MEMBER',
-        label: 'Member',
+        label: 'Team Member',
     },
     REVIEWER: {
         value: 'EAO_REVIEWER',

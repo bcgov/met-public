@@ -1,6 +1,5 @@
 """Service for user management."""
 from http import HTTPStatus
-from typing import List
 
 from flask import current_app, g
 
@@ -103,7 +102,7 @@ class StaffUserService:
     @staticmethod
     def attach_groups(user_collection):
         """Attach keycloak groups to user object."""
-        group_user_details: List = KEYCLOAK_SERVICE.get_users_groups(
+        group_user_details = KEYCLOAK_SERVICE.get_users_groups(
             [user.get('external_id') for user in user_collection])
 
         for user in user_collection:
@@ -162,6 +161,18 @@ class StaffUserService:
 
         KEYCLOAK_SERVICE.add_user_to_group(user_id=external_id, group_name=group_name)
         KEYCLOAK_SERVICE.add_attribute_to_user(user_id=external_id, attribute_value=g.tenant_id)
+
+        return StaffUserSchema().dump(db_user)
+
+    @classmethod
+    def remove_user_from_group(cls, external_id: str, group_name: str):
+        """Create or update a user."""
+        db_user = StaffUserModel.get_user_by_external_id(external_id)
+
+        if db_user is None:
+            raise KeyError('User not found')
+
+        KEYCLOAK_SERVICE.remove_user_from_group(user_id=external_id, group_name=group_name)
 
         return StaffUserSchema().dump(db_user)
 
