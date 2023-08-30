@@ -11,7 +11,7 @@ from met_api.schemas.staff_user import StaffUserSchema
 from met_api.services import authorization
 from met_api.services.staff_user_service import KEYCLOAK_SERVICE, StaffUserService
 from met_api.utils.constants import Groups
-from met_api.utils.enums import KeycloakGroups, MembershipStatus
+from met_api.utils.enums import KeycloakGroups, MembershipStatus, UserStatus
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
 
@@ -53,6 +53,8 @@ class MembershipService:
                 error='You cannot add yourself to an engagement.',
                 status_code=HTTPStatus.FORBIDDEN.value)
 
+        user_id = user_details.get('id')
+
         groups = user_details.get('groups')
         if KeycloakGroups.EAO_IT_ADMIN.value in groups:
             raise BusinessException(
@@ -61,7 +63,7 @@ class MembershipService:
 
         existing_membership = MembershipModel.find_by_engagement_and_user_id(
             engagement_id,
-            user_details.get('id'),
+            user_id,
             status=MembershipStatus.ACTIVE.value
         )
 

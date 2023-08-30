@@ -31,6 +31,7 @@ import { Engagement } from 'models/engagement';
 import axios, { AxiosError } from 'axios';
 import { Palette } from 'styles/Theme';
 import ControlledRadioGroup from 'components/common/ControlledInputComponents/ControlledRadioGroup';
+import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
 
 export const AddToEngagementModal = () => {
     const { savedUser, addUserModalOpen, setAddUserModalOpen, getUserMemberships, getUserDetails } =
@@ -157,7 +158,7 @@ export const AddToEngagementModal = () => {
     };
 
     const setErrors = (error: AxiosError) => {
-        if (error.response?.status !== 409) {
+        if (error.response?.status !== HTTP_STATUS_CODES.CONFLICT) {
             return;
         }
         setBackendError(error.response?.data.message || '');

@@ -73,6 +73,7 @@ class StaffUsers(Resource):
             pagination_options=pagination_options,
             search_text=args.get('search_text', '', str),
             include_groups=args.get('include_groups', default=False, type=lambda v: v.lower() == 'true'),
+            include_inactive=args.get('include_inactive', default=False, type=lambda v: v.lower() == 'true')
         )
         return jsonify(users), HTTPStatus.OK
 
@@ -86,11 +87,12 @@ class StaffUser(Resource):
     @cross_origin(origins=allowedorigins())
     @require_role([Role.VIEW_USERS.value])
     def get(user_id):
-        """Return a set of users(staff only)."""
+        """Fetch a user by id."""
         args = request.args
         user = StaffUserService.get_user_by_id(
             user_id,
             include_groups=args.get('include_groups', default=False, type=lambda v: v.lower() == 'true'),
+            include_inactive=True,
         )
         return user, HTTPStatus.OK
 
@@ -110,7 +112,7 @@ class StaffUserStatus(Resource):
             if data.get('active', None) is None:
                 return {'message': 'active field is required'}, HTTPStatus.BAD_REQUEST
 
-            user = StaffUserService.toggle_user_active_status(
+            user = StaffUserMembershipService().toggle_user_active_status(
                 user_id,
                 active=data.get('active'),
             )

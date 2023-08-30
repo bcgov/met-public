@@ -2,10 +2,12 @@
 from http import HTTPStatus
 
 from met_api.exceptions.business_exception import BusinessException
+from met_api.models.staff_user import StaffUser as StaffUserModel
 from met_api.schemas.staff_user import StaffUserSchema
 from met_api.services.membership_service import MembershipService
-from met_api.services.staff_user_service import StaffUserService
+from met_api.services.staff_user_service import KEYCLOAK_SERVICE, StaffUserService
 from met_api.utils.constants import Groups
+from met_api.utils.enums import UserStatus
 
 
 class StaffUserMembershipService:
@@ -43,3 +45,18 @@ class StaffUserMembershipService:
         MembershipService.revoke_memberships_bulk(user_id)
         new_user = StaffUserService.get_user_by_id(user_id, include_groups=True)
         return StaffUserSchema().dump(new_user)
+
+    @staticmethod
+    def toggle_user_active_status(user_external_id: str, active: bool):
+        """Toggle user active status."""
+        user = StaffUserModel.get_user_by_external_id(user_external_id, include_inactive=True)
+        if user is None:
+            raise KeyError('User not found')
+
+        if not active:            
+            MembershipService.revoke_memberships_bulk(user.id)
+
+        KEYCLOAK_SERVICE.toggle_user_enabled_status(user_id=user_external_id, enabled=active)
+        user.status_id = UserStatus.ACTIVE.value if active else UserStatus.INACTIVE.value
+        user.save()
+        return StaffUserSchema().dump(user)

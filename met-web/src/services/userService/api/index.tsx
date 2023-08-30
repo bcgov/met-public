@@ -13,6 +13,7 @@ interface GetUserListParams {
     search_text?: string;
     // If yes, user groups will be fetched as well from keycloak
     include_groups?: boolean;
+    include_inactive?: boolean;
 }
 export const getUserList = async (params: GetUserListParams = {}): Promise<Page<User>> => {
     const responseData = await http.GetRequest<Page<User>>(Endpoints.User.GET_LIST, params);

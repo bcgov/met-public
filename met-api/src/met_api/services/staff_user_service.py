@@ -22,20 +22,20 @@ class StaffUserService:
     """User management service."""
 
     @classmethod
-    def get_user_by_id(cls, _user_id, include_groups=False):
+    def get_user_by_id(cls, _user_id, include_groups=False, include_inactive=False):
         """Get user by id."""
         user_schema = StaffUserSchema()
-        db_user = StaffUserModel.find_by_id(_user_id)
+        db_user = StaffUserModel.get_by_id(_user_id, include_inactive)
         user = user_schema.dump(db_user)
         if include_groups:
             cls.attach_groups([user])
         return user
 
     @classmethod
-    def get_user_by_external_id(cls, _external_id):
+    def get_user_by_external_id(cls, _external_id, include_inactive=False):
         """Get user by external id."""
         user_schema = StaffUserSchema()
-        db_user = StaffUserModel.get_user_by_external_id(_external_id)
+        db_user = StaffUserModel.get_user_by_external_id(_external_id, include_inactive)
         return user_schema.dump(db_user)
 
     def create_or_update_user(self, user: dict):
@@ -127,10 +127,11 @@ class StaffUserService:
         cls,
         pagination_options: PaginationOptions = None,
         search_text='',
-        include_groups=False
+        include_groups=False,
+        include_inactive=False
     ):
         """Return a list of users."""
-        users, total = StaffUserModel.get_all_paginated(pagination_options, search_text)
+        users, total = StaffUserModel.get_all_paginated(pagination_options, search_text, include_inactive)
         user_collection = StaffUserSchema(many=True).dump(users)
         if include_groups:
             cls.attach_groups(user_collection)
@@ -188,15 +189,3 @@ class StaffUserService:
             raise BusinessException(
                 error='This user is already a Superuser.',
                 status_code=HTTPStatus.CONFLICT.value)
-
-    @staticmethod
-    def toggle_user_active_status(user_external_id: str, active: bool):
-        """Toggle user active status."""
-        db_user = StaffUserModel.get_user_by_external_id(user_external_id)
-        if db_user is None:
-            raise KeyError('User not found')
-
-        KEYCLOAK_SERVICE.toggle_user_enabled_status(user_id=user_external_id, enabled=active)
-        db_user.status_id = UserStatus.ACTIVE.value if active else UserStatus.INACTIVE.value
-        db_user.save()
-        return StaffUserSchema().dump(db_user)
