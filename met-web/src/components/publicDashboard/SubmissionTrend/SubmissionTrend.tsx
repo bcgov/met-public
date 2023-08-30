@@ -18,6 +18,7 @@ import { Then, If, Else, Unless } from 'react-if';
 import { formatToUTC } from 'components/common/dateHelper';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import axios, { AxiosError } from 'axios';
+import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
 
 interface SubmissionTrendProps {
     engagement: Engagement;
@@ -53,7 +54,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     };
 
     const setErrors = (error: AxiosError) => {
-        if (error.response?.status !== 404) {
+        if (error.response?.status !== HTTP_STATUS_CODES.NOT_FOUND) {
             setIsError(true);
         }
     };
@@ -76,13 +77,14 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                 );
                 setData(response);
             }
-            setIsLoading(false);
             setIsError(false);
         } catch (error) {
-            console.log(error);
             if (axios.isAxiosError(error)) {
                 setErrors(error);
+            } else {
+                setIsError(true);
             }
+        } finally {
             setIsLoading(false);
         }
     };

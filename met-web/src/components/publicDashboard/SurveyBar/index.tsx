@@ -14,6 +14,7 @@ import { NoData } from '../NoData';
 import { If, Then, Else, When } from 'react-if';
 import { dashboardCustomStyles } from '../SubmissionTrend/SubmissionTrend';
 import axios, { AxiosError } from 'axios';
+import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
 
 const HEIGHT = 400;
 
@@ -37,7 +38,7 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
     };
 
     const setErrors = (error: AxiosError) => {
-        if (error.response?.status !== 404) {
+        if (error.response?.status !== HTTP_STATUS_CODES.NOT_FOUND) {
             setIsError(true);
         }
     };
@@ -49,11 +50,13 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
             const response = await getSurveyResultData(Number(engagement.id), dashboardType);
             setData(response);
             setSelectedData(response?.data[0]);
-            setIsLoading(false);
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 setErrors(error);
+            } else {
+                setIsError(true);
             }
+        } finally {
             setIsLoading(false);
         }
     };

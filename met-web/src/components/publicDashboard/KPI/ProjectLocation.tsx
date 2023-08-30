@@ -10,6 +10,7 @@ import { NoData } from '../NoData';
 import MetMap from 'components/map';
 import { geoJSONDecode } from 'components/engagement/form/EngagementWidgets/Map/utils';
 import axios, { AxiosError } from 'axios';
+import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
 
 interface SurveysCompletedProps {
     engagement: Engagement;
@@ -25,7 +26,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
     const circleSize = isTablet ? 100 : 250;
 
     const setErrors = (error: AxiosError) => {
-        if (error.response?.status !== 404) {
+        if (error.response?.status !== HTTP_STATUS_CODES.NOT_FOUND) {
             setIsError(true);
         }
     };
@@ -37,11 +38,13 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
             const response = await getMapData(Number(engagement.id));
             setData(response);
             handleProjectMapData(response);
-            setIsLoading(false);
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 setErrors(error);
+            } else {
+                setIsError(true);
             }
+        } finally {
             setIsLoading(false);
         }
     };
@@ -52,7 +55,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
         }
     }, [engagement.id]);
 
-    if (isLoading || engagementIsLoading || !data) {
+    if (isLoading || engagementIsLoading) {
         return (
             <>
                 <MetLabel mb={2}>Project Location</MetLabel>

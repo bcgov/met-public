@@ -10,6 +10,7 @@ import { MetLabel, MetPaper } from 'components/common';
 import { ErrorBox } from '../ErrorBox';
 import { NoData } from '../NoData';
 import axios, { AxiosError } from 'axios';
+import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
 
 interface SurveyEmailsSentProps {
     engagement: Engagement;
@@ -24,7 +25,7 @@ const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentP
     const circleSize = isTablet ? 100 : 250;
 
     const setErrors = (error: AxiosError) => {
-        if (error.response?.status !== 404) {
+        if (error.response?.status !== HTTP_STATUS_CODES.NOT_FOUND) {
             setIsError(true);
         }
     };
@@ -38,11 +39,13 @@ const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentP
                 count_for: 'email_verification',
             });
             setData(response);
-            setIsLoading(false);
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 setErrors(error);
+            } else {
+                setIsError(true);
             }
+        } finally {
             setIsLoading(false);
         }
     };
@@ -79,7 +82,7 @@ const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentP
         );
     }
 
-    if (!data && !engagementIsLoading) {
+    if (!data) {
         return <NoData sx={{ height: '100%' }} />;
     }
 
