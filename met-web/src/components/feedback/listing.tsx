@@ -55,9 +55,10 @@ const FeedbackListing = () => {
                 sort_key: nested_sort_key || sort_key,
                 sort_order,
             });
-            setFeedbacks(response.items.filter((feedback) => feedback.status == statusFilter));
+            const filteredFeedbacks = response.items.filter((feedback) => feedback.status == statusFilter);
+            setFeedbacks(filteredFeedbacks);
             setPageInfo({
-                total: response.total,
+                total: filteredFeedbacks.length,
             });
             setTableLoading(false);
         } catch (error) {
