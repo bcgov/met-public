@@ -1,7 +1,6 @@
+import React from 'react';
 import { USER_ROLES } from 'services/userService/constants';
 import '@testing-library/jest-dom';
-import { Box } from '@mui/material';
-import * as jestMock from 'jest-mock';
 import { draftEngagement, engagementMetadata, engagementSlugData } from '../../../factory';
 import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
@@ -9,17 +8,7 @@ import * as engagementService from 'services/engagementService';
 import * as engagementMetadataService from 'services/engagementMetadataService';
 import * as engagementSlugService from 'services/engagementSlugService';
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
-
-interface CommonMocks {
-    useDispatchMock: jestMock.SpyInstance;
-    useNavigateMock: jestMock.SpyInstance;
-    getEngagementMetadataMock: jestMock.SpyInstance;
-    getSlugByEngagementIdMock: jestMock.SpyInstance;
-    getEngagementMock: jestMock.SpyInstance;
-    patchEngagementMock: jestMock.SpyInstance;
-    openNotificationModalMock: jestMock.SpyInstance;
-    useParamsMock: jestMock.SpyInstance;
-}
+import { Box } from '@mui/material';
 
 export const setupCommonMocks = () => {
     jest.mock('axios');
