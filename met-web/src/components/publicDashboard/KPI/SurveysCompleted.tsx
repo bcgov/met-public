@@ -25,7 +25,7 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
     const circleSize = isTablet ? 100 : 250;
 
     const setErrors = (error: AxiosError) => {
-        if (error.response?.status == 404) {
+        if (error.response?.status !== 404) {
             setIsError(true);
         }
     };

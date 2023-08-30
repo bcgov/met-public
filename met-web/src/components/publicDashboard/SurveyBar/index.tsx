@@ -37,7 +37,7 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
     };
 
     const setErrors = (error: AxiosError) => {
-        if (error.response?.status == 404) {
+        if (error.response?.status !== 404) {
             setIsError(true);
         }
     };

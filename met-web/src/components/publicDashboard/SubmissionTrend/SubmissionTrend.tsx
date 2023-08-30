@@ -53,7 +53,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     };
 
     const setErrors = (error: AxiosError) => {
-        if (error.response?.status == 404) {
+        if (error.response?.status !== 404) {
             setIsError(true);
         }
     };
