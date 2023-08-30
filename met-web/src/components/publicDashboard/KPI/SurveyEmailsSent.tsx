@@ -3,11 +3,12 @@ import Stack from '@mui/material/Stack';
 import { Box, Grid, CircularProgress, useMediaQuery, Theme } from '@mui/material';
 import { DASHBOARD } from '../constants';
 import { getAggregatorData } from 'services/analytics/aggregatorService';
-import { AggregatorData, createAggregatorData } from '../../../models/analytics/aggregator';
+import { AggregatorData } from '../../../models/analytics/aggregator';
 import { Engagement } from 'models/engagement';
 import { RadialBarChart, PolarAngleAxis, RadialBar } from 'recharts';
 import { MetLabel, MetPaper } from 'components/common';
 import { ErrorBox } from '../ErrorBox';
+import { NoData } from '../NoData';
 import axios, { AxiosError } from 'axios';
 
 interface SurveyEmailsSentProps {
@@ -16,16 +17,15 @@ interface SurveyEmailsSentProps {
 }
 
 const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentProps) => {
-    const [data, setData] = useState<AggregatorData>(createAggregatorData());
+    const [data, setData] = useState<AggregatorData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const circleSize = isTablet ? 100 : 250;
 
-    const [noDataError, setNoDataError] = useState(false);
     const setErrors = (error: AxiosError) => {
-        if (error.response?.status == 404) {
-            setNoDataError(true);
+        if (error.response?.status !== 404) {
+            setIsError(true);
         }
     };
 
@@ -40,7 +40,6 @@ const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentP
             setData(response);
             setIsLoading(false);
         } catch (error) {
-            setIsError(true);
             if (axios.isAxiosError(error)) {
                 setErrors(error);
             }
@@ -53,18 +52,6 @@ const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentP
             fetchData();
         }
     }, [engagement.id]);
-
-    if (isError) {
-        return (
-            <ErrorBox
-                sx={{ height: '100%', minHeight: '213px' }}
-                onClick={() => {
-                    fetchData();
-                }}
-                noData={noDataError}
-            />
-        );
-    }
 
     if (isLoading || engagementIsLoading) {
         return (
@@ -89,6 +76,21 @@ const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentP
                     </Box>
                 </MetPaper>
             </>
+        );
+    }
+
+    if (!data && !engagementIsLoading) {
+        return <NoData sx={{ height: '100%' }} />;
+    }
+
+    if (isError) {
+        return (
+            <ErrorBox
+                sx={{ height: '100%', minHeight: '213px' }}
+                onClick={() => {
+                    fetchData();
+                }}
+            />
         );
     }
 
@@ -124,7 +126,7 @@ const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentP
                             dominantBaseline="middle"
                             className="progress-label"
                         >
-                            {data.value}
+                            {data?.value}
                         </text>
                     </RadialBarChart>
                 </Stack>

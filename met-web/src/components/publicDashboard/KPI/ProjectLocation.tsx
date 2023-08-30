@@ -6,6 +6,7 @@ import { Map } from '../../../models/analytics/map';
 import { Engagement } from 'models/engagement';
 import { MetLabel, MetPaper } from 'components/common';
 import { ErrorBox } from '../ErrorBox';
+import { NoData } from '../NoData';
 import MetMap from 'components/map';
 import { geoJSONDecode } from 'components/engagement/form/EngagementWidgets/Map/utils';
 import axios, { AxiosError } from 'axios';
@@ -23,10 +24,9 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const circleSize = isTablet ? 100 : 250;
 
-    const [noDataError, setNoDataError] = useState(false);
     const setErrors = (error: AxiosError) => {
         if (error.response?.status == 404) {
-            setNoDataError(true);
+            setIsError(true);
         }
     };
 
@@ -39,7 +39,6 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
             handleProjectMapData(response);
             setIsLoading(false);
         } catch (error) {
-            setIsError(true);
             if (axios.isAxiosError(error)) {
                 setErrors(error);
             }
@@ -52,18 +51,6 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
             fetchData();
         }
     }, [engagement.id]);
-
-    if (isError) {
-        return (
-            <ErrorBox
-                sx={{ height: '100%', minHeight: '213px' }}
-                onClick={() => {
-                    fetchData();
-                }}
-                noData={noDataError}
-            />
-        );
-    }
 
     if (isLoading || engagementIsLoading || !data) {
         return (
@@ -84,6 +71,21 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
                     </Stack>
                 </MetPaper>
             </>
+        );
+    }
+
+    if (!data) {
+        return <NoData sx={{ height: '100%' }} />;
+    }
+
+    if (isError) {
+        return (
+            <ErrorBox
+                sx={{ height: '100%', minHeight: '213px' }}
+                onClick={() => {
+                    fetchData();
+                }}
+            />
         );
     }
 

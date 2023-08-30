@@ -8,8 +8,9 @@ import { BarBlock } from './BarBlock';
 import { TreemapBlock } from './TreemapBlock';
 import { getSurveyResultData } from 'services/analytics/surveyResult';
 import { Engagement } from 'models/engagement';
-import { SurveyResultData, createSurveyResultData, defaultData } from '../../../models/analytics/surveyResult';
+import { SurveyResultData, defaultData } from '../../../models/analytics/surveyResult';
 import { ErrorBox } from '../ErrorBox';
+import { NoData } from '../NoData';
 import { If, Then, Else, When } from 'react-if';
 import { dashboardCustomStyles } from '../SubmissionTrend/SubmissionTrend';
 import axios, { AxiosError } from 'axios';
@@ -25,7 +26,7 @@ interface SurveyQuestionProps {
 
 export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashboardType }: SurveyQuestionProps) => {
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
-    const [data, setData] = useState<SurveyResultData>(createSurveyResultData());
+    const [data, setData] = useState<SurveyResultData | null>(null);
     const [selectedData, setSelectedData] = useState(defaultData[0]);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
@@ -35,10 +36,9 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
         setChartType(chartByValue);
     };
 
-    const [noDataError, setNoDataError] = useState(false);
     const setErrors = (error: AxiosError) => {
         if (error.response?.status == 404) {
-            setNoDataError(true);
+            setIsError(true);
         }
     };
 
@@ -51,7 +51,6 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
             setSelectedData(response?.data[0]);
             setIsLoading(false);
         } catch (error) {
-            setIsError(true);
             if (axios.isAxiosError(error)) {
                 setErrors(error);
             }
@@ -65,6 +64,14 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
         }
     }, [engagement.id]);
 
+    if (isLoading || engagementIsLoading) {
+        return <Skeleton variant="rectangular" width={'100%'} height={HEIGHT} />;
+    }
+
+    if (!data) {
+        return <NoData sx={{ height: HEIGHT }} />;
+    }
+
     if (isError) {
         return (
             <ErrorBox
@@ -72,13 +79,8 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
                 onClick={() => {
                     fetchData();
                 }}
-                noData={noDataError}
             />
         );
-    }
-
-    if (isLoading || engagementIsLoading) {
-        return <Skeleton variant="rectangular" width={'100%'} height={HEIGHT} />;
     }
 
     return (

@@ -4,11 +4,12 @@ import { Stack, useMediaQuery, Theme, Grid, ToggleButtonGroup, CircularProgress,
 import { MetPaper, MetLabel, SecondaryButton, MetToggleButton } from 'components/common';
 import { DASHBOARD } from '../constants';
 import { ErrorBox } from '../ErrorBox';
+import { NoData } from '../NoData';
 import {
     getUserResponseDetailByMonth,
     getUserResponseDetailByWeek,
 } from 'services/analytics/userResponseDetailService';
-import { createDefaultByMonthData } from '../../../models/analytics/userResponseDetail';
+import { UserResponseDetailByMonth } from '../../../models/analytics/userResponseDetail';
 import { Engagement } from 'models/engagement';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
@@ -39,7 +40,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     const isExtraSmall = useMediaQuery('(max-width:299px)');
     const isBetweenMdAndLg = useMediaQuery((theme: Theme) => theme.breakpoints.between('lg', 'xl'));
     const HEIGHT = isTablet ? 200 : 250;
-    const [data, setData] = useState(createDefaultByMonthData());
+    const [data, setData] = useState<UserResponseDetailByMonth | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
     const [chartBy, setChartBy] = React.useState('monthly');
@@ -51,10 +52,9 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
         width: isExtraSmall ? '40%' : 'auto',
     };
 
-    const [noDataError, setNoDataError] = useState(false);
     const setErrors = (error: AxiosError) => {
         if (error.response?.status == 404) {
-            setNoDataError(true);
+            setIsError(true);
         }
     };
 
@@ -80,7 +80,6 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
             setIsError(false);
         } catch (error) {
             console.log(error);
-            setIsError(true);
             if (axios.isAxiosError(error)) {
                 setErrors(error);
             }
@@ -106,7 +105,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
         setChartBy(chartByValue);
     };
 
-    if (engagementIsLoading) {
+    if (isLoading || engagementIsLoading) {
         return (
             <>
                 <MetLabel mb={0.5}>Live Activity - Engagement</MetLabel>
@@ -128,8 +127,12 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
         );
     }
 
+    if (!data) {
+        return <NoData sx={{ height: HEIGHT }} />;
+    }
+
     if (isError) {
-        return <ErrorBox sx={{ height: HEIGHT }} onClick={fetchData} noData={noDataError} />;
+        return <ErrorBox sx={{ height: HEIGHT }} onClick={fetchData} />;
     }
 
     return (
