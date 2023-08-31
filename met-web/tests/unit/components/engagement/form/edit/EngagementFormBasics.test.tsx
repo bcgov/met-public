@@ -34,57 +34,58 @@ describe('Engagement form basic tests', () => {
                 createObjectURL: jest.fn(),
             },
         });
+    });
 
-        test('Engagement form with saved engagement should display saved info', async () => {
-            useParamsMock.mockReturnValue({ engagementId: '1' });
-            const { container } = render(<EngagementForm />);
+    test('Engagement form with saved engagement should display saved info', async () => {
+        useParamsMock.mockReturnValue({ engagementId: '1' });
+        const { container } = render(<EngagementForm />);
 
-            await waitFor(() => {
-                expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-                expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-            });
-
-            expect(getEngagementMock).toHaveBeenCalledOnce();
-            expect(getEngagementMetadataMock).toHaveBeenCalledOnce();
-            expect(screen.getByTestId('update-engagement-button')).toBeVisible();
-            expect(screen.getByDisplayValue('2022-09-01')).toBeInTheDocument();
-            expect(screen.getByDisplayValue('2022-09-30')).toBeInTheDocument();
-            expect(screen.getByText('Survey 1')).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
 
-        test('Save engagement button should trigger patch call', async () => {
-            useParamsMock.mockReturnValue({ engagementId: '1' });
-            const { container } = render(<EngagementForm />);
+        expect(getEngagementMock).toHaveBeenCalledOnce();
+        expect(getEngagementMetadataMock).toHaveBeenCalledOnce();
+        expect(screen.getByTestId('update-engagement-button')).toBeVisible();
+        expect(screen.getByDisplayValue('2022-09-01')).toBeInTheDocument();
+        expect(screen.getByDisplayValue('2022-09-30')).toBeInTheDocument();
+        expect(screen.getByText('Survey 1')).toBeInTheDocument();
+    });
 
-            await waitFor(() => {
-                expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-                expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-            });
-            const updateButton = screen.getByTestId('update-engagement-button');
+    test('Save engagement button should trigger patch call', async () => {
+        useParamsMock.mockReturnValue({ engagementId: '1' });
+        const { container } = render(<EngagementForm />);
 
-            const nameInput = container.querySelector('input[name="name"]');
-            assert(nameInput, 'Unable to find engagement name input');
-            fireEvent.change(nameInput, { target: { value: 'Survey 1 Updated' } });
-            fireEvent.click(updateButton);
-
-            await waitFor(() => {
-                expect(patchEngagementMock).toHaveBeenCalledOnce();
-            });
+        await waitFor(() => {
+            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
+        const updateButton = screen.getByTestId('update-engagement-button');
 
-        test('Modal with warning appears when removing survey', async () => {
-            useParamsMock.mockReturnValue({ engagementId: '1' });
-            const { container } = render(<EngagementForm />);
+        const nameInput = container.querySelector('input[name="name"]');
+        assert(nameInput, 'Unable to find engagement name input');
+        fireEvent.change(nameInput, { target: { value: 'Survey 1 Updated' } });
+        fireEvent.click(updateButton);
 
-            await waitFor(() => {
-                expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-                expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-            });
-
-            const removeSurveyButton = screen.getByTestId(`survey-widget/remove-${survey.id}`);
-
-            fireEvent.click(removeSurveyButton);
-
-            expect(openNotificationModalMock).toHaveBeenCalledOnce();
+        await waitFor(() => {
+            expect(patchEngagementMock).toHaveBeenCalledOnce();
         });
     });
+
+    test('Modal with warning appears when removing survey', async () => {
+        useParamsMock.mockReturnValue({ engagementId: '1' });
+        const { container } = render(<EngagementForm />);
+
+        await waitFor(() => {
+            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
+        });
+
+        const removeSurveyButton = screen.getByTestId(`survey-widget/remove-${survey.id}`);
+
+        fireEvent.click(removeSurveyButton);
+
+        expect(openNotificationModalMock).toHaveBeenCalledOnce();
+    });
+});
