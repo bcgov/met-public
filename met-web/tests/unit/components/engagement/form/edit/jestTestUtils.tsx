@@ -13,8 +13,6 @@ import { Box } from '@mui/material';
 export const setupCommonMocks = () => {
     jest.mock('axios');
 
-    jest.mock('maplibre-gl');
-
     jest.mock('react-redux', () => ({
         ...jest.requireActual('react-redux'),
         useSelector: jest.fn(() => {

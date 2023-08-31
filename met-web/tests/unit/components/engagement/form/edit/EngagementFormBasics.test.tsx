@@ -4,8 +4,7 @@ import '@testing-library/jest-dom';
 import assert from 'assert';
 import EngagementForm from '../../../../../../src/components/engagement/form';
 import { setupCommonMocks } from './jestTestUtils';
-import { Survey } from 'models/survey';
-import { createDefaultSurvey } from 'models/survey';
+import { createDefaultSurvey, Survey } from 'models/survey';
 
 let useParamsMock: jest.SpyInstance;
 let getEngagementMock: jest.SpyInstance;
@@ -29,6 +28,8 @@ describe('Engagement form basic tests', () => {
         getEngagementMetadataMock = commonMocks.getEngagementMetadataMock;
         patchEngagementMock = commonMocks.patchEngagementMock;
         openNotificationModalMock = commonMocks.openNotificationModalMock;
+        jest.mock('maplibre-gl');
+        jest.mock('react-map-gl');
         Object.defineProperty(window, 'URL', {
             value: {
                 createObjectURL: jest.fn(),

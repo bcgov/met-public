@@ -1,21 +1,21 @@
 import React from 'react';
 import { render, waitFor, screen } from '@testing-library/react';
 import { setupCommonMocks } from './jestTestUtils';
-import * as widgetService from 'services/widgetService';
-import EngagementForm from 'components/engagement/form/EngagementFormTabs/EngagementForm'; // Update this import path
-import { draftEngagement, engagementMetadata, surveys } from '../../../factory'; // Update these import paths
+import EngagementForm from 'components/engagement/form/EngagementFormTabs/EngagementForm';
+import { draftEngagement, engagementMetadata, surveys } from '../../../factory';
 
 describe('Engagement form widget tests', () => {
     let useParamsMock: jest.SpyInstance;
     let getEngagementMock: jest.SpyInstance;
     let getEngagementMetadataMock: jest.SpyInstance;
-    let getWidgetsMock: jest.SpyInstance;
 
     beforeAll(() => {
         const mocks = setupCommonMocks();
         useParamsMock = mocks.useParamsMock;
         getEngagementMock = mocks.getEngagementMock;
         getEngagementMetadataMock = mocks.getEngagementMetadataMock;
+        jest.mock('maplibre-gl');
+        jest.mock('react-map-gl');
         Object.defineProperty(window, 'URL', {
             value: {
                 createObjectURL: jest.fn(),
@@ -23,9 +23,6 @@ describe('Engagement form widget tests', () => {
         });
     });
 
-    beforeEach(() => {
-        getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([]));
-    });
     test('Cannot add more than one survey', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(

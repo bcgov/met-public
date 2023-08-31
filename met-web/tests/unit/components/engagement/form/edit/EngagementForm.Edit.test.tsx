@@ -27,6 +27,8 @@ describe('Engagement form page tests', () => {
         useParamsMock = mocks.useParamsMock;
         getEngagementMock = mocks.getEngagementMock;
         getEngagementSlugMock = mocks.getSlugByEngagementIdMock;
+        jest.mock('maplibre-gl');
+        jest.mock('react-map-gl');
         Object.defineProperty(window, 'URL', {
             value: {
                 createObjectURL: jest.fn(),
