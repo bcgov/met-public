@@ -18,7 +18,7 @@ defaults:
     working-directory: ./openshift
 
 env:
-  TAG_NAME: "test"
+  TAG_NAME: "${{ github.event.inputs.environment || 'test' }}" # If the environment type is manually selected, use the input value; otherwise, use 'test' as default
   PROJECT_TYPE: "${{ github.event.inputs.project_type || 'GDX' }}" # If the project type is manually selected, use the input value; otherwise, use 'GDX' as default
 
  # Set OpenShift related variables based on PROJECT_TYPE
