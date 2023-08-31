@@ -10,7 +10,7 @@ from met_api.schemas.staff_user import StaffUserSchema
 from met_api.services.keycloak import KeycloakService
 from met_api.utils import notification
 from met_api.utils.constants import GROUP_NAME_MAPPING, Groups
-from met_api.utils.enums import KeycloakGroupName, UserStatus
+from met_api.utils.enums import KeycloakGroupName
 from met_api.utils.template import Template
 from met_api.config import get_gc_notify_config
 

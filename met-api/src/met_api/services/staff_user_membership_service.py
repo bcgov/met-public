@@ -53,7 +53,7 @@ class StaffUserMembershipService:
         if user is None:
             raise KeyError('User not found')
 
-        if not active:            
+        if not active:
             MembershipService.revoke_memberships_bulk(user.id)
 
         KEYCLOAK_SERVICE.toggle_user_enabled_status(user_id=user_external_id, enabled=active)

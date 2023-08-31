@@ -11,7 +11,7 @@ from met_api.schemas.staff_user import StaffUserSchema
 from met_api.services import authorization
 from met_api.services.staff_user_service import KEYCLOAK_SERVICE, StaffUserService
 from met_api.utils.constants import Groups
-from met_api.utils.enums import KeycloakGroups, MembershipStatus, UserStatus
+from met_api.utils.enums import KeycloakGroups, MembershipStatus
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
 

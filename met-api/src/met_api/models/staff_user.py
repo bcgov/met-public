@@ -3,7 +3,6 @@
 Manages the staff user
 """
 from __future__ import annotations
-from operator import and_
 
 from typing import Optional
 
@@ -63,11 +62,11 @@ class StaffUser(BaseModel):
         return page.items, page.total
 
     @classmethod
-    def get_by_id(cls, id, include_inactive=False) -> Optional[StaffUser]:
+    def get_by_id(cls, _id, include_inactive=False) -> Optional[StaffUser]:
         """Get a user by id."""
         query = db.session.query(StaffUser) \
-            .filter(StaffUser.id == id)
-        
+            .filter(StaffUser.id == _id)
+
         if not include_inactive:
             query = query.filter(StaffUser.status_id == UserStatus.ACTIVE.value)
         return query.first()
