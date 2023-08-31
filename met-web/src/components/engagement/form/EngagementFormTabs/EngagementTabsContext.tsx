@@ -197,7 +197,9 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
     };
 
     useEffect(() => {
-        loadTeamMembers();
+        if (savedEngagement.id) {
+            loadTeamMembers();
+        }
     }, []);
 
     const [settings, setSettings] = useState<EngagementSettings>(createDefaultEngagementSettings());
