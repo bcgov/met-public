@@ -54,7 +54,9 @@ class FeedbackList(Resource):
                 sort_key=args.get('sort_key', 'name', str),
                 sort_order=args.get('sort_order', 'asc', str),
             )
-            status = args.get('status', FeedbackStatusType.Unreviewed, int)
+            status_int = args.get(
+                'status', FeedbackStatusType.Unreviewed.value, int)
+            status = FeedbackStatusType(status_int)
             feedback_records = FeedbackService().get_feedback_paginated(
                 pagination_options, search_text, status,)
 

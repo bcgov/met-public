@@ -30,14 +30,14 @@ class Feedback(BaseModel):
 
     @classmethod
     def get_all_paginated(cls,
-                          pagination_options: PaginationOptions, search_text='',
-                          status=FeedbackStatusType.Unreviewed,
+                          pagination_options: PaginationOptions,
+                          status: FeedbackStatusType,
+                          search_text='',
                           ):
         """Get feedback paginated."""
         query = db.session.query(Feedback)
-
-        if status:
-            query = query.filter_by(status=status)
+        print(status)
+        query = query.filter_by(status=status)
 
         if search_text:
             # Remove all non-digit characters from search text
