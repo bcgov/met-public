@@ -51,5 +51,5 @@ def test_get_feedbacks_paginated(session):
     status = FeedbackStatusType.Unreviewed
 
     # verify name search
-    result, count = FeedbackModel.get_all_paginated(pagination_options, status)
+    _, count = FeedbackModel.get_all_paginated(pagination_options, status)
     assert count == 11
