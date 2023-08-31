@@ -36,8 +36,7 @@ class Feedback(BaseModel):
         """Get feedback paginated."""
         query = db.session.query(Feedback)
 
-        if status:
-            query = cls._filter_by_status(query, status)
+        query = cls._filter_by_status(query, status)
 
         if search_text:
             # Remove all non-digit characters from search text
@@ -100,5 +99,11 @@ class Feedback(BaseModel):
 
     @staticmethod
     def _filter_by_status(query, status):
-        query = query.filter(Feedback.status.ilike('%' + status + '%'))
+        print(status)
+        if (status == FeedbackStatusType.Unreviewed):
+            query = query.filter(
+                status == FeedbackStatusType.Unreviewed)
+        if (status == FeedbackStatusType.Archived):
+            query = query.filter(
+                status == FeedbackStatusType.Archived)
         return query
