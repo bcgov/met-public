@@ -52,8 +52,7 @@ export const Subscription = () => {
                     is_subscribed: 'false',
                 });
                 setSubscriptionText(
-                    'We are sorry to see you go. <br /><br />We wanted to confirm that you have been successfully unsubscribed from all of our emails. <br />You will no longer receive any communications from us. <br /><br />Thank you.'
-                );
+                    'We are sorry to see you go. <br /><br />We wanted to confirm that you have been successfully unsubscribed from all of our emails. <br />You will no longer receive any communications from us. <br /><br />Thank you.',
             }
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error Subscribing to Engagement' }));
