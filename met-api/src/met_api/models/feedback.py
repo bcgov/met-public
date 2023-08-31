@@ -31,7 +31,7 @@ class Feedback(BaseModel):
     @classmethod
     def get_all_paginated(cls,
                           pagination_options: PaginationOptions, search_text='',
-                          status=FeedbackStatusType,
+                          status=FeedbackStatusType.Unreviewed,
                           ):
         """Get feedback paginated."""
         query = db.session.query(Feedback)
