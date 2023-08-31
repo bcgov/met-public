@@ -16,7 +16,6 @@ import { Box } from '@mui/material';
 import { draftEngagement, engagementMetadata, engagementSetting, engagementSlugData } from '../../../factory';
 import { USER_ROLES } from 'services/userService/constants';
 import assert from 'assert';
-import { EngagementSettings } from 'models/engagement';
 
 const engagementId = 1;
 const survey: Survey = {
