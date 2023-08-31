@@ -6,8 +6,11 @@ import { Map } from '../../../models/analytics/map';
 import { Engagement } from 'models/engagement';
 import { MetLabel, MetPaper } from 'components/common';
 import { ErrorBox } from '../ErrorBox';
+import { NoData } from '../NoData';
 import MetMap from 'components/map';
 import { geoJSONDecode } from 'components/engagement/form/EngagementWidgets/Map/utils';
+import axios, { AxiosError } from 'axios';
+import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
 
 interface SurveysCompletedProps {
     engagement: Engagement;
@@ -22,6 +25,12 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const circleSize = isTablet ? 100 : 250;
 
+    const setErrors = (error: AxiosError) => {
+        if (error.response?.status !== HTTP_STATUS_CODES.NOT_FOUND) {
+            setIsError(true);
+        }
+    };
+
     const fetchData = async () => {
         setIsError(false);
         setIsLoading(true);
@@ -29,9 +38,14 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
             const response = await getMapData(Number(engagement.id));
             setData(response);
             handleProjectMapData(response);
-            setIsLoading(false);
         } catch (error) {
-            setIsError(true);
+            if (axios.isAxiosError(error)) {
+                setErrors(error);
+            } else {
+                setIsError(true);
+            }
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -41,18 +55,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
         }
     }, [engagement.id]);
 
-    if (isError) {
-        return (
-            <ErrorBox
-                sx={{ height: '100%', minHeight: '213px' }}
-                onClick={() => {
-                    fetchData();
-                }}
-            />
-        );
-    }
-
-    if (isLoading || engagementIsLoading || !data) {
+    if (isLoading || engagementIsLoading) {
         return (
             <>
                 <MetLabel mb={2}>Project Location</MetLabel>
@@ -71,6 +74,21 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
                     </Stack>
                 </MetPaper>
             </>
+        );
+    }
+
+    if (!data) {
+        return <NoData sx={{ height: '100%' }} />;
+    }
+
+    if (isError) {
+        return (
+            <ErrorBox
+                sx={{ height: '100%', minHeight: '213px' }}
+                onClick={() => {
+                    fetchData();
+                }}
+            />
         );
     }
 

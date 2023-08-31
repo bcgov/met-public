@@ -60,7 +60,9 @@ export const DashboardContextProvider = ({ children }: DashboardContextProviderP
         /* check to ensure that users without the role access_dashboard can access the dashboard only after 
         the engagement is closed*/
         if (!isClosed && canAccessDashboard) {
-            throw new Error('Engagement is not yet closed');
+            throw new Error(
+                'The report will only be available to view after the engagement period is over and the engagement is closed.',
+            );
         }
     };
 

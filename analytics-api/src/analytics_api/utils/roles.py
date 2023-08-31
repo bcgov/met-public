@@ -18,41 +18,4 @@ from enum import Enum
 class Role(Enum):
     """User Role."""
 
-    PUBLIC_USER = 'public_user'
-    ANONYMOUS_USER = 'anonymous_user'
-
-    # STAFF Based roles
-    CREATE_TENANT = 'create_tenant'
-    VIEW_TENANT = 'view_tenant'
-    VIEW_USERS = 'view_users'
-    TOGGLE_USER_STATUS = 'toggle_user_status'
-    CREATE_ADMIN_USER = 'create_admin_user'
-    CREATE_TEAM = 'create_team'
-    CREATE_ENGAGEMENT = 'create_engagement'
-    VIEW_SURVEYS = 'view_surveys'
-    CREATE_SURVEY = 'create_survey'
-    EDIT_SURVEY = 'edit_survey'
-    CLONE_SURVEY = 'clone_survey'
-    PUBLISH_ENGAGEMENT = 'publish_engagement'
-    VIEW_ENGAGEMENT = 'view_engagement'
-    VIEW_ASSIGNED_ENGAGEMENTS = 'view_assigned_engagements'
-    VIEW_PRIVATE_ENGAGEMENTS = 'view_private_engagements'
-    EDIT_ENGAGEMENT = 'edit_engagement'
-    REVIEW_COMMENTS = 'review_comments'
-    REVIEW_ALL_COMMENTS = 'review_all_comments'
-    ACCESS_DASHBOARD = 'access_dashboard'
-    VIEW_MEMBERS = 'view_members'
-    EDIT_MEMBERS = 'edit_members'
-    VIEW_ALL_SURVEYS = 'view_all_surveys'  # Super user can view all kind of surveys including hidden
-    EDIT_ALL_SURVEYS = 'edit_all_surveys'
-    EDIT_DRAFT_ENGAGEMENT = 'edit_draft_engagement'
-    EDIT_SCHEDULED_ENGAGEMENT = 'edit_scheduled_engagement'
-    EDIT_UPCOMING_ENGAGEMENT = 'edit_upcoming_engagement'
-    EDIT_OPEN_ENGAGEMENT = 'edit_open_engagement'
-    EDIT_CLOSED_ENGAGEMENT = 'edit_closed_engagement'
-    VIEW_APPROVED_COMMENTS = 'view_approved_comments'  # used just in the front end to show the comment page
-    VIEW_FEEDBACKS = 'view_feedbacks'
-    VIEW_ALL_ENGAGEMENTS = 'view_all_engagements'  # Allows user access to all engagements including draft
-    SHOW_ALL_COMMENT_STATUS = 'show_all_comment_status'  # Allows user to see all comment status
-    EXPORT_TO_CSV = 'export_to_csv'  # Allows users to export comments to csv
     VIEW_ALL_SURVEY_RESULTS = 'view_all_survey_results'  # Allows users to view results to all questions

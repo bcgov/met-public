@@ -3,11 +3,14 @@ import Stack from '@mui/material/Stack';
 import { Box, Grid, CircularProgress, useMediaQuery, Theme } from '@mui/material';
 import { DASHBOARD } from '../constants';
 import { getAggregatorData } from 'services/analytics/aggregatorService';
-import { AggregatorData, createAggregatorData } from '../../../models/analytics/aggregator';
+import { AggregatorData } from '../../../models/analytics/aggregator';
 import { Engagement } from 'models/engagement';
 import { RadialBarChart, PolarAngleAxis, RadialBar } from 'recharts';
 import { MetLabel, MetPaper } from 'components/common';
 import { ErrorBox } from '../ErrorBox';
+import { NoData } from '../NoData';
+import axios, { AxiosError } from 'axios';
+import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
 
 interface SurveysCompletedProps {
     engagement: Engagement;
@@ -15,12 +18,18 @@ interface SurveysCompletedProps {
 }
 
 const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedProps) => {
-    const [data, setData] = useState<AggregatorData>(createAggregatorData());
+    const [data, setData] = useState<AggregatorData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
     const circleSize = isTablet ? 100 : 250;
+
+    const setErrors = (error: AxiosError) => {
+        if (error.response?.status !== HTTP_STATUS_CODES.NOT_FOUND) {
+            setIsError(true);
+        }
+    };
 
     const fetchData = async () => {
         setIsLoading(true);
@@ -31,9 +40,14 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
                 count_for: 'survey_completed',
             });
             setData(response);
-            setIsLoading(false);
         } catch (error) {
-            setIsError(true);
+            if (axios.isAxiosError(error)) {
+                setErrors(error);
+            } else {
+                setIsError(true);
+            }
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -42,17 +56,6 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
             fetchData();
         }
     }, [engagement.id]);
-
-    if (isError) {
-        return (
-            <ErrorBox
-                sx={{ height: '100%', minHeight: '213px' }}
-                onClick={() => {
-                    fetchData();
-                }}
-            />
-        );
-    }
 
     if (isLoading || engagementIsLoading) {
         return (
@@ -77,6 +80,21 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
                     </Box>
                 </MetPaper>
             </>
+        );
+    }
+
+    if (!data) {
+        return <NoData sx={{ height: '100%' }} />;
+    }
+
+    if (isError) {
+        return (
+            <ErrorBox
+                sx={{ height: '100%', minHeight: '213px' }}
+                onClick={() => {
+                    fetchData();
+                }}
+            />
         );
     }
 
@@ -112,7 +130,7 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
                             dominantBaseline="middle"
                             className="progress-label"
                         >
-                            {data.value}
+                            {data?.value}
                         </text>
                     </RadialBarChart>
                 </Stack>
