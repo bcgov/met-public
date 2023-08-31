@@ -5,7 +5,7 @@ import { setupEnv } from '../setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as feedbackService from 'services/feedbackService/index';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
-import { createDefaultFeedback, CommentTypeEnum, SourceTypeEnum } from 'models/feedback';
+import { createDefaultFeedback, CommentTypeEnum, SourceTypeEnum, FeedbackStatusType } from 'models/feedback';
 import FeedbackListing from 'components/feedback/listing';
 import { USER_ROLES } from 'services/userService/constants';
 
@@ -123,6 +123,7 @@ describe('Feedback Listing tests', () => {
                 size: 10,
                 sort_key: 'rating',
                 sort_order: 'asc',
+                status: FeedbackStatusType.Unreviewed,
             });
         });
     });
@@ -150,6 +151,7 @@ describe('Feedback Listing tests', () => {
                 size: 10,
                 sort_key: 'rating',
                 sort_order: 'asc',
+                status: FeedbackStatusType.Unreviewed,
             });
         });
     });
