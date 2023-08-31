@@ -50,5 +50,5 @@ def test_get_feedbacks_paginated(session):
     )
 
     # verify name search
-    result, count = FeedbackModel.get_all_paginated(pagination_options)
+    _, count = FeedbackModel.get_all_paginated(pagination_options)
     assert count == 11
