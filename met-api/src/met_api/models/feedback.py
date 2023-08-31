@@ -99,7 +99,6 @@ class Feedback(BaseModel):
 
     @staticmethod
     def _filter_by_status(query, status):
-        print(status)
         if (status == FeedbackStatusType.Unreviewed):
             query = query.filter(
                 status == FeedbackStatusType.Unreviewed)
