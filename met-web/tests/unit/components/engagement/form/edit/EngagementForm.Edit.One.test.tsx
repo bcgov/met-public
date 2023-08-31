@@ -13,7 +13,7 @@ import * as notificationModalSlice from 'services/notificationModalService/notif
 import * as widgetService from 'services/widgetService';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { Box } from '@mui/material';
-import { draftEngagement, engagementMetadata, engagementSlugData } from '../../../factory';
+import { draftEngagement, engagementMetadata, engagementSetting, engagementSlugData } from '../../../factory';
 import { USER_ROLES } from 'services/userService/constants';
 import assert from 'assert';
 import { EngagementSettings } from 'models/engagement';
@@ -27,11 +27,6 @@ const survey: Survey = {
 };
 
 const surveys = [survey];
-
-const mockEngagementSettings: EngagementSettings = {
-    engagement_id: engagementId,
-    send_report: false,
-};
 
 jest.mock('axios');
 
@@ -89,9 +84,7 @@ describe('Engagement form page tests', () => {
     const getEngagementMetadataMock = jest
         .spyOn(engagementMetadataService, 'getEngagementMetadata')
         .mockReturnValue(Promise.resolve(engagementMetadata));
-    jest.spyOn(engagementSettingService, 'getEngagementSettings').mockReturnValue(
-        Promise.resolve(mockEngagementSettings),
-    );
+    jest.spyOn(engagementSettingService, 'getEngagementSettings').mockReturnValue(Promise.resolve(engagementSetting));
     jest.spyOn(engagementMetadataService, 'patchEngagementMetadata').mockReturnValue(
         Promise.resolve(engagementMetadata),
     );
