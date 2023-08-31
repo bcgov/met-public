@@ -26,10 +26,10 @@ export const setupCommonMocks = () => {
     jest.mock('components/common/Dragdrop', () => ({
         ...jest.requireActual('components/common/Dragdrop'),
         MetDroppable: ({ children }: { children: React.ReactNode }) => {
-            <Box>{children}</Box>;
+            return <Box>{children}</Box>;
         },
         MetDraggable: ({ children }: { children: React.ReactNode }) => {
-            <Box>{children}</Box>;
+            return <Box>{children}</Box>;
         },
     }));
 
