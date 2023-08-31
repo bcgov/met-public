@@ -48,7 +48,8 @@ def test_get_feedbacks_paginated(session):
         sort_key='comment',
         sort_order=''
     )
+    status = FeedbackStatusType.Unreviewed
 
     # verify name search
-    result, count = FeedbackModel.get_all_paginated(pagination_options)
+    result, count = FeedbackModel.get_all_paginated(pagination_options, status)
     assert count == 11
