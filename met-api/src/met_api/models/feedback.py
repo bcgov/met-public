@@ -37,8 +37,7 @@ class Feedback(BaseModel):
         """Get feedback paginated."""
         query = db.session.query(Feedback)
 
-        if status:
-            query = query.filter_by(status=status)
+        query = query.filter_by(status=status)
 
         if search_text:
             # Remove all non-digit characters from search text
