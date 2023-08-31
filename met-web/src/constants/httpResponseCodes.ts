@@ -1,3 +1,6 @@
 export const HTTP_STATUS_CODES = {
     NOT_FOUND: 404,
+    FORBIDDEN: 403,
+    BAD_REQUEST: 400,
+    CONFLICT: 409,
 };

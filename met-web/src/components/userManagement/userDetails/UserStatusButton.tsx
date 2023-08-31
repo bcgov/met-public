@@ -10,7 +10,7 @@ import { USER_GROUP } from 'models/user';
 
 const UserStatusButton = () => {
     const { roles } = useAppSelector((state) => state.user);
-    const { savedUser } = useContext(UserDetailsContext);
+    const { savedUser, getUserDetails } = useContext(UserDetailsContext);
     const [userStatus, setUserStatus] = useState(false);
     const [togglingUserStatus, setTogglingUserStatus] = useState(false);
     const dispatch = useAppDispatch();
@@ -30,6 +30,7 @@ const UserStatusButton = () => {
             setUserStatus(active);
             setTogglingUserStatus(true);
             await toggleUserStatus(savedUser.external_id, active);
+            getUserDetails();
             dispatch(
                 openNotification({
                     severity: 'success',
