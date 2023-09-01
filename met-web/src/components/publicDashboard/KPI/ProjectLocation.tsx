@@ -78,7 +78,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
     }
 
     if (!data) {
-        return <NoData sx={{ height: '100%' }} />;
+        return <></>;
     }
 
     if (isError) {
