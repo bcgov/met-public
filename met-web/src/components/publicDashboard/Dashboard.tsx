@@ -8,7 +8,6 @@ import {
     MetDescription,
     PrimaryButton,
     SecondaryButton,
-    MetLabel,
 } from 'components/common';
 import { ReportBanner } from './ReportBanner';
 import SurveysCompleted from './KPI/SurveysCompleted';
@@ -31,7 +30,7 @@ const Dashboard = () => {
     const [projectMapData, setProjectMapData] = React.useState<Map | null>(null);
     const [pdfExportProgress, setPdfExportProgress] = React.useState(0);
     const basePath = slug ? `/${slug}` : `/engagements/${engagement?.id}`;
-    const mapExists = projectMapData && projectMapData.latitude && projectMapData.longitude;
+    const mapExists = projectMapData?.latitude && projectMapData?.longitude;
 
     const handleProjectMapData = (data: Map) => {
         setProjectMapData(data);

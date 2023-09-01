@@ -6,7 +6,6 @@ import { Map } from '../../../models/analytics/map';
 import { Engagement } from 'models/engagement';
 import { MetLabel, MetPaper } from 'components/common';
 import { ErrorBox } from '../ErrorBox';
-import { NoData } from '../NoData';
 import MetMap from 'components/map';
 import { geoJSONDecode } from 'components/engagement/form/EngagementWidgets/Map/utils';
 import axios, { AxiosError } from 'axios';
