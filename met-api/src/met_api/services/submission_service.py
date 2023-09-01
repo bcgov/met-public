@@ -11,11 +11,13 @@ from met_api.constants.membership_type import MembershipType
 from met_api.constants.staff_note_type import StaffNoteType
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models import Engagement as EngagementModel
+from met_api.models import EngagementSettingsModel
 from met_api.models import Survey as SurveyModel
 from met_api.models import Tenant as TenantModel
 from met_api.models.comment import Comment
 from met_api.models.comment_status import CommentStatus
 from met_api.models.db import session_scope
+from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.participant import Participant as ParticipantModel
 from met_api.models.staff_note import StaffNote
@@ -24,6 +26,7 @@ from met_api.schemas.submission import PublicSubmissionSchema, SubmissionSchema
 from met_api.services import authorization
 from met_api.services.comment_service import CommentService
 from met_api.services.email_verification_service import EmailVerificationService
+from met_api.services.engagement_service import EngagementService
 from met_api.services.staff_user_service import StaffUserService
 from met_api.services.survey_service import SurveyService
 from met_api.utils import notification
@@ -91,6 +94,11 @@ class SubmissionService:
             comments = CommentService.extract_comments_from_survey(
                 submission, survey)
             CommentService().create_comments(comments, session)
+
+            engagement_settings: EngagementSettingsModel =\
+                EngagementSettingsModel.find_by_id(survey.get('engagement_id'))
+            if engagement_settings.send_report:
+                SubmissionService._send_submission_response_email(participant_id, submission['engagement_id'])
         return submission_result
 
     @classmethod
@@ -371,3 +379,59 @@ class SubmissionService:
             email_environment=args.get('email_environment'),
         )
         return subject, body, args
+
+    
+    @staticmethod
+    def _send_submission_response_email(participant_id, engagement_id) -> None:
+        """Send response to survey submission."""
+        participant = ParticipantModel.find_by_id(participant_id)
+        template_id = get_gc_notify_config('SUBMISSION_RESPONSE_EMAIL_TEMPLATE_ID')
+        subject, body, args = SubmissionService._render_submission_response_email_template(engagement_id)
+        try:
+            notification.send_email(subject=subject,
+                                    email=ParticipantModel.decode_email(
+                                        participant.email_address),
+                                    html_body=body,
+                                    args=args,
+                                    template_id=template_id)
+        except Exception as exc:  # noqa: B902
+            current_app.logger.error(
+                '<Notification for submission response failed', exc)
+            raise BusinessException(
+                error='Error sending submission response notification email.',
+                status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
+
+    @staticmethod
+    def _render_submission_response_email_template(engagement_id):
+        engagement: EngagementModel = EngagementModel.find_by_id(engagement_id)
+        template = Template.get_template('submission_response.html')
+        subject = get_gc_notify_config('SUBMISSION_RESPONSE_EMAIL_SUBJECT')
+        dashboard_path = EngagementService._get_dashboard_path(engagement)
+        engagement_url = notification.get_tenant_site_url(engagement.tenant_id, dashboard_path)
+        email_environment = get_gc_notify_config('EMAIL_ENVIRONMENT')
+        tenant_name = SubmissionService._get_tenant_name(
+            engagement.tenant_id)
+        args = {
+            'engagement_url': engagement_url,
+            'engagement_time': get_gc_notify_config('ENGAGEMENT_END_TIME'),
+            'engagement_end_date': datetime.strftime(engagement.end_date, EmailVerificationService.full_date_format),
+            'tenant_name': tenant_name,
+            'email_environment': email_environment,
+        }
+        body = template.render(
+            engagement_url=args.get('engagement_url'),
+            engagement_time=args.get('engagement_time'),
+            engagement_end_date=args.get('engagement_end_date'),
+            tenant_name=args.get('tenant_name'),
+            email_environment=args.get('email_environment'),
+        )
+        return subject, body, args
+
+    @staticmethod
+    def _get_dashboard_path(engagement: EngagementModel):
+        engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement.id)
+        if engagement_slug:
+            return current_app.config.get('ENGAGEMENT_DASHBOARD_PATH_SLUG'). \
+                format(slug=engagement_slug.slug)
+        return current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
+            format(engagement_id=engagement.id)
