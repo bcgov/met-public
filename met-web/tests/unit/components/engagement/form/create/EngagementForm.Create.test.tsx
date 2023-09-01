@@ -6,10 +6,11 @@ import { setupEnv } from '../../../setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
-import * as engagementMetadataService from 'services/engagementMetadataService';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
+import * as engagementMetadataService from 'services/engagementMetadataService';
+import * as engagementSettingService from 'services/engagementSettingService';
 import { Box } from '@mui/material';
-import { draftEngagement, engagementMetadata } from '../../../factory';
+import { draftEngagement, engagementMetadata, engagementSetting } from '../../../factory';
 import { USER_ROLES } from 'services/userService/constants';
 
 jest.mock('react-redux', () => ({
@@ -22,7 +23,7 @@ jest.mock('react-redux', () => ({
     }),
 }));
 
-jest.mock('axios')
+jest.mock('axios');
 
 jest.mock('components/common/Dragdrop', () => ({
     ...jest.requireActual('components/common/Dragdrop'),
@@ -75,6 +76,7 @@ describe('Engagement form page tests', () => {
     const postEngagementMock = jest
         .spyOn(engagementService, 'postEngagement')
         .mockReturnValue(Promise.resolve(draftEngagement));
+    jest.spyOn(engagementSettingService, 'getEngagementSettings').mockReturnValue(Promise.resolve(engagementSetting));
 
     beforeEach(() => {
         setupEnv();
