@@ -103,6 +103,7 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
                 sort_order,
                 include_groups: true,
                 search_text: searchText,
+                include_inactive: true,
             });
             setUsers(response.items);
             setPageInfo({
