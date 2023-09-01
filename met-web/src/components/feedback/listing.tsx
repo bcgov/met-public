@@ -54,11 +54,11 @@ const FeedbackListing = () => {
                 size,
                 sort_key: nested_sort_key || sort_key,
                 sort_order,
+                status: statusFilter,
             });
-            const filteredFeedbacks = response.items.filter((feedback) => feedback.status == statusFilter);
-            setFeedbacks(filteredFeedbacks);
+            setFeedbacks(response.items);
             setPageInfo({
-                total: filteredFeedbacks.length,
+                total: response.total,
             });
             setTableLoading(false);
         } catch (error) {

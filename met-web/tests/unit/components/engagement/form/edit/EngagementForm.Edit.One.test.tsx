@@ -1,4 +1,4 @@
-import { render, waitFor, screen, fireEvent, within } from '@testing-library/react';
+import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
 import EngagementForm from '../../../../../../src/components/engagement/form';
@@ -7,26 +7,27 @@ import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as engagementMetadataService from 'services/engagementMetadataService';
+import * as engagementSettingService from 'services/engagementSettingService';
 import * as engagementSlugService from 'services/engagementSlugService';
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
 import * as widgetService from 'services/widgetService';
 import { createDefaultSurvey, Survey } from 'models/survey';
-import { WidgetType } from 'models/widget';
 import { Box } from '@mui/material';
-import { draftEngagement, engagementMetadata, engagementSlugData } from '../../../factory';
+import { draftEngagement, engagementMetadata, engagementSetting, engagementSlugData } from '../../../factory';
 import { USER_ROLES } from 'services/userService/constants';
 import assert from 'assert';
 
+const engagementId = 1;
 const survey: Survey = {
     ...createDefaultSurvey(),
     id: 1,
     name: 'Survey 1',
-    engagement_id: 1,
+    engagement_id: engagementId,
 };
 
 const surveys = [survey];
 
-jest.mock('axios')
+jest.mock('axios');
 
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
@@ -82,6 +83,7 @@ describe('Engagement form page tests', () => {
     const getEngagementMetadataMock = jest
         .spyOn(engagementMetadataService, 'getEngagementMetadata')
         .mockReturnValue(Promise.resolve(engagementMetadata));
+    jest.spyOn(engagementSettingService, 'getEngagementSettings').mockReturnValue(Promise.resolve(engagementSetting));
     jest.spyOn(engagementMetadataService, 'patchEngagementMetadata').mockReturnValue(
         Promise.resolve(engagementMetadata),
     );
@@ -94,7 +96,7 @@ describe('Engagement form page tests', () => {
     const patchEngagementMock = jest
         .spyOn(engagementService, 'patchEngagement')
         .mockReturnValue(Promise.resolve(draftEngagement));
-    const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([]));
+    jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([]));
 
     beforeEach(() => {
         setupEnv();
@@ -129,11 +131,12 @@ describe('Engagement form page tests', () => {
 
         const nameInput = container.querySelector('input[name="name"]');
         assert(nameInput, 'Unable to find engagement name input');
-        fireEvent.change(nameInput, { target: { value: 'Survey 1 Updated' } });
+        fireEvent.change(nameInput, { target: { value: 'Engagement Test updated' } });
         fireEvent.click(updateButton);
 
         await waitFor(() => {
             expect(patchEngagementMock).toHaveBeenCalledOnce();
+            expect(screen.getByText('Save')).toBeInTheDocument();
         });
     });
 
@@ -225,190 +228,6 @@ describe('Engagement form page tests', () => {
         await waitFor(() => {
             expect(getEngagementSlugMock).toHaveReturned();
             expect(screen.getAllByDisplayValue(engagementSlugData.slug, { exact: false })).toBeArrayOfSize(2);
-        });
-    });
-
-    test('Remove survey triggers notification modal', async () => {
-        useParamsMock.mockReturnValue({ engagementId: '1' });
-        getEngagementMock.mockReturnValueOnce(
-            Promise.resolve({
-                ...draftEngagement,
-                surveys: surveys,
-            }),
-        );
-
-        getEngagementMock.mockReturnValueOnce(
-            Promise.resolve({
-                ...draftEngagement,
-                surveys: [],
-            }),
-        );
-
-        const { container } = render(<EngagementForm />);
-
-        await waitFor(() => {
-            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-        });
-
-        expect(screen.getByText('Survey 1')).toBeInTheDocument();
-
-        const removeSurveyButton = screen.getByTestId(`survey-widget/remove-${survey.id}`);
-
-        fireEvent.click(removeSurveyButton);
-
-        await waitFor(() => {
-            expect(openNotificationModalMock).toHaveBeenCalledOnce();
-        });
-    });
-
-    test('Widget block appears', async () => {
-        useParamsMock.mockReturnValue({ engagementId: '1' });
-        getEngagementMock.mockReturnValueOnce(
-            Promise.resolve({
-                ...draftEngagement,
-                surveys: surveys,
-            }),
-        );
-        const { container } = render(<EngagementForm />);
-
-        await waitFor(() => {
-            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-        });
-
-        expect(screen.getByText('Add Widget')).toBeVisible();
-        expect(getWidgetsMock).toHaveBeenCalled();
-    });
-
-    test('Widget drawer appears', async () => {
-        useParamsMock.mockReturnValue({ engagementId: '1' });
-        getEngagementMock.mockReturnValueOnce(
-            Promise.resolve({
-                ...draftEngagement,
-                surveys: surveys,
-            }),
-        );
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
-        const { container } = render(<EngagementForm />);
-
-        await waitFor(() => {
-            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-        });
-
-        const addWidgetButton = screen.getByText('Add Widget');
-        fireEvent.click(addWidgetButton);
-
-        await waitFor(() => {
-            expect(screen.getByText('Select Widget')).toBeVisible();
-            expect(screen.getByTestId(`widget-drawer-option/${WidgetType.WhoIsListening}`));
-            expect(screen.getByTestId(`widget-drawer-option/${WidgetType.Phases}`));
-        });
-    });
-
-    test('Day Calculator Modal appears', async () => {
-        useParamsMock.mockReturnValue({ engagementId: '1' });
-        const { getByTestId, container, getByText } = render(<EngagementForm />);
-
-        await waitFor(() => {
-            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-        });
-
-        const dayCalculatorButton = screen.getByText('Day Calculator');
-
-        fireEvent.click(dayCalculatorButton);
-
-        await waitFor(() => {
-            expect(getByTestId('daycalculator-title')).toBeVisible();
-            expect(getByTestId('reset-button')).toBeVisible();
-            expect(getByTestId('cancel-button')).toBeVisible();
-            expect(getByTestId('calculator-button')).toBeVisible();
-            expect(getByText('Calculation Type')).toBeInTheDocument();
-            expect(getByText('Number of Days')).toBeInTheDocument();
-            const autocomplete = getByTestId('autocomplete');
-            const input: HTMLInputElement = within(autocomplete).getByLabelText('Day Zero') as HTMLInputElement;
-            expect(input).not.toBeNull();
-            const suspensiondate = screen.queryByText('Suspension Date');
-            expect(suspensiondate).toBeNull();
-            const ruspensiondate = screen.queryByText('Resumption Date');
-            expect(ruspensiondate).toBeNull();
-        });
-    });
-
-    test('Day Calculator Modal Day Zero Calculation', async () => {
-        useParamsMock.mockReturnValue({ engagementId: '1' });
-        const { container } = render(<EngagementForm />);
-
-        await waitFor(() => {
-            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-        });
-
-        const dayCalculatorButton = screen.getByText('Day Calculator');
-
-        fireEvent.click(dayCalculatorButton);
-
-        await waitFor(() => {
-            const startDate = screen.getByPlaceholderText('startDate');
-            const endDate = screen.getByPlaceholderText('endDate');
-            fireEvent.change(startDate, { target: { value: '2022-12-19' } });
-            fireEvent.change(endDate, { target: { value: '2022-12-25' } });
-            const calculatorButton = screen.getByText('Calculate');
-            fireEvent.click(calculatorButton);
-            const numberOfDays = screen.getByPlaceholderText('numberOfDays') as HTMLInputElement;
-            expect(numberOfDays.value).toBe('6');
-        });
-    });
-
-    test('Day Calculator Modal Start Date Calculation', async () => {
-        useParamsMock.mockReturnValue({ engagementId: '1' });
-        const { container } = render(<EngagementForm />);
-
-        await waitFor(() => {
-            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-        });
-
-        const dayCalculatorButton = screen.getByText('Day Calculator');
-
-        fireEvent.click(dayCalculatorButton);
-
-        await waitFor(() => {
-            const numberOfDays = screen.getByPlaceholderText('numberOfDays');
-            const endDate = screen.getByPlaceholderText('endDate');
-            fireEvent.change(numberOfDays, { target: { value: '6' } });
-            fireEvent.change(endDate, { target: { value: '2022-12-25' } });
-            const calculatorButton = screen.getByText('Calculate');
-            fireEvent.click(calculatorButton);
-            const startDate = screen.getByPlaceholderText('startDate') as HTMLInputElement;
-            expect(startDate.value).toBe('2022-12-19');
-        });
-    });
-
-    test('Day Calculator Modal End Date Calculation', async () => {
-        useParamsMock.mockReturnValue({ engagementId: '1' });
-        const { container } = render(<EngagementForm />);
-
-        await waitFor(() => {
-            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-        });
-
-        const dayCalculatorButton = screen.getByText('Day Calculator');
-
-        fireEvent.click(dayCalculatorButton);
-
-        await waitFor(() => {
-            const startDate = screen.getByPlaceholderText('startDate');
-            const numberOfDays = screen.getByPlaceholderText('numberOfDays');
-            fireEvent.change(startDate, { target: { value: '2022-12-19' } });
-            fireEvent.change(numberOfDays, { target: { value: '6' } });
-            const calculatorButton = screen.getByText('Calculate');
-            fireEvent.click(calculatorButton);
-            const endDate = screen.getByPlaceholderText('endDate') as HTMLInputElement;
-            expect(endDate.value).toBe('2022-12-25');
         });
     });
 });

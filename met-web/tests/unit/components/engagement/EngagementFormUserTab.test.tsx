@@ -6,10 +6,12 @@ import { setupEnv } from '../setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
+import * as engagementMetadataService from 'services/engagementMetadataService';
+import * as engagementSettingService from 'services/engagementSettingService';
 import * as teamMemberService from 'services/membershipService';
 import * as widgetService from 'services/widgetService';
 import { Box } from '@mui/material';
-import { draftEngagement } from '../factory';
+import { draftEngagement, engagementMetadata, engagementSetting } from '../factory';
 import { createDefaultUser, USER_GROUP } from 'models/user';
 import { EngagementTeamMember, initialDefaultTeamMember } from 'models/engagementTeamMember';
 import { USER_ROLES } from 'services/userService/constants';
@@ -26,7 +28,7 @@ const mockTeamMember1: EngagementTeamMember = {
     },
 };
 
-jest.mock('axios')
+jest.mock('axios');
 
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
@@ -78,6 +80,8 @@ describe('Engagement form page tests', () => {
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     jest.spyOn(engagementService, 'getEngagement').mockReturnValue(Promise.resolve(draftEngagement));
     jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([]));
+    jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(Promise.resolve(engagementMetadata));
+    jest.spyOn(engagementSettingService, 'getEngagementSettings').mockReturnValue(Promise.resolve(engagementSetting));
 
     beforeEach(() => {
         setupEnv();

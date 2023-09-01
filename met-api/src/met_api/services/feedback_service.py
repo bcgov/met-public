@@ -1,6 +1,6 @@
 
 """Service for feedback management."""
-from met_api.constants.feedback import FeedbackSourceType
+from met_api.constants.feedback import FeedbackSourceType, FeedbackStatusType
 from met_api.models.feedback import Feedback
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.feedback import FeedbackSchema
@@ -17,12 +17,16 @@ class FeedbackService:
         return feedback_schema.dump(feedback)
 
     @classmethod
-    def get_feedback_paginated(cls, pagination_options: PaginationOptions, search_text=''):
+    def get_feedback_paginated(cls, pagination_options: PaginationOptions,
+                               status: FeedbackStatusType,
+                               search_text='',
+                               ):
         """Get feedbacks paginated."""
         feedback_schema = FeedbackSchema(many=True)
         items, total = Feedback.get_all_paginated(
             pagination_options,
             search_text,
+            status,
         )
         return {
             'items': feedback_schema.dump(items),
