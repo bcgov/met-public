@@ -3,8 +3,10 @@ import { createDefaultSurvey, Survey } from 'models/survey';
 import {
     createDefaultEngagement,
     createDefaultEngagementMetadata,
+    createDefaultEngagementSettings,
     Engagement,
     EngagementMetadata,
+    EngagementSettings,
 } from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { WidgetType, Widget, WidgetItem } from 'models/widget';
@@ -165,6 +167,11 @@ const engagementMetadata: EngagementMetadata = {
     engagement_id: 1,
 };
 
+const engagementSetting: EngagementSettings = {
+    ...createDefaultEngagementSettings(),
+    engagement_id: 1,
+};
+
 const engagementSlugData = {
     slug: 'test-engagement-slug',
 };
@@ -183,4 +190,5 @@ export {
     eventWidget,
     engagementMetadata,
     engagementSlugData,
+    engagementSetting,
 };

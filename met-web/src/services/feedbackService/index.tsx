@@ -10,6 +10,7 @@ export const getFeedbacksPage = async ({
     sort_key,
     sort_order,
     search_text,
+    status,
 }: GetFeedbackRequest): Promise<Page<Feedback>> => {
     const url = Endpoints.Feedback.GET_LIST;
     const response = await http.GetRequest<Page<Feedback>>(url, {
@@ -18,6 +19,7 @@ export const getFeedbacksPage = async ({
         sort_key,
         sort_order,
         search_text,
+        status,
     });
     if (response.data) {
         return response.data;
