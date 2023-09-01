@@ -169,7 +169,7 @@ class Membership(BaseModel):
         db.session.commit()
 
         return new_memberships
-    
+
     @classmethod
     def deactivate_memberships_bulk(cls, user_id: int):
         """Create in bulk deactivated versions of memberships."""
