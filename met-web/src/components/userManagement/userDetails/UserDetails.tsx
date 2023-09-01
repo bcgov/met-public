@@ -62,9 +62,18 @@ export const UserDetails = () => {
 
                     <Grid container>
                         <Grid item xs={12}>
+                            <UserDetail label="Role" value={<MetParagraph>{savedUser?.main_group}</MetParagraph>} />
+                        </Grid>
+                        <Grid item xs={12}>
                             <UserDetail
-                                label="Current Role"
-                                value={<MetParagraph>{savedUser?.main_group}</MetParagraph>}
+                                label="Status"
+                                value={
+                                    <MetParagraph>
+                                        {savedUser?.status_id === USER_STATUS.ACTIVE.value
+                                            ? USER_STATUS.ACTIVE.label
+                                            : USER_STATUS.INACTIVE.label}
+                                    </MetParagraph>
+                                }
                             />
                         </Grid>
                     </Grid>

@@ -112,7 +112,7 @@ class StaffUserStatus(Resource):
             if data.get('active', None) is None:
                 return {'message': 'active field is required'}, HTTPStatus.BAD_REQUEST
 
-            user = StaffUserMembershipService().toggle_user_active_status(
+            user = StaffUserMembershipService().reactivate_deactivate_user(
                 user_id,
                 active=data.get('active'),
             )

@@ -47,14 +47,14 @@ class StaffUserMembershipService:
         return StaffUserSchema().dump(new_user)
 
     @staticmethod
-    def toggle_user_active_status(user_external_id: str, active: bool):
+    def reactivate_deactivate_user(user_external_id: str, active: bool):
         """Toggle user active status."""
         user = StaffUserModel.get_user_by_external_id(user_external_id, include_inactive=True)
         if user is None:
             raise KeyError('User not found')
 
         if not active:
-            MembershipService.revoke_memberships_bulk(user.id)
+            MembershipService.deactivate_memberships_bulk(user.id)
 
         KEYCLOAK_SERVICE.toggle_user_enabled_status(user_id=user_external_id, enabled=active)
         user.status_id = UserStatus.ACTIVE.value if active else UserStatus.INACTIVE.value
