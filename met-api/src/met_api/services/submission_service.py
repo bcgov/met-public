@@ -26,7 +26,6 @@ from met_api.schemas.submission import PublicSubmissionSchema, SubmissionSchema
 from met_api.services import authorization
 from met_api.services.comment_service import CommentService
 from met_api.services.email_verification_service import EmailVerificationService
-from met_api.services.engagement_service import EngagementService
 from met_api.services.staff_user_service import StaffUserService
 from met_api.services.survey_service import SurveyService
 from met_api.utils import notification
