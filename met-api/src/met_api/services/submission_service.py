@@ -26,7 +26,6 @@ from met_api.schemas.submission import PublicSubmissionSchema, SubmissionSchema
 from met_api.services import authorization
 from met_api.services.comment_service import CommentService
 from met_api.services.email_verification_service import EmailVerificationService
-from met_api.services.engagement_service import EngagementService
 from met_api.services.staff_user_service import StaffUserService
 from met_api.services.survey_service import SurveyService
 from met_api.utils import notification
@@ -380,7 +379,6 @@ class SubmissionService:
         )
         return subject, body, args
 
-    
     @staticmethod
     def _send_submission_response_email(participant_id, engagement_id) -> None:
         """Send response to survey submission."""
@@ -406,7 +404,7 @@ class SubmissionService:
         engagement: EngagementModel = EngagementModel.find_by_id(engagement_id)
         template = Template.get_template('submission_response.html')
         subject = get_gc_notify_config('SUBMISSION_RESPONSE_EMAIL_SUBJECT')
-        dashboard_path = EngagementService._get_dashboard_path(engagement)
+        dashboard_path = SubmissionService._get_dashboard_path(engagement)
         engagement_url = notification.get_tenant_site_url(engagement.tenant_id, dashboard_path)
         email_environment = get_gc_notify_config('EMAIL_ENVIRONMENT')
         tenant_name = SubmissionService._get_tenant_name(
