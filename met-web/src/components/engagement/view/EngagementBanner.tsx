@@ -27,7 +27,7 @@ export const EngagementBanner = ({ startSurvey }: EngagementBannerProps) => {
                 <When condition={surveyId && isOpen}>
                     <Grid item container direction={{ xs: 'column', sm: 'row' }} xs={12} justifyContent="flex-end">
                         <PrimaryButton data-testid="EngagementBanner/share-your-thoughts-button" onClick={startSurvey}>
-                            Share your thoughts
+                            Share Your Thoughts
                         </PrimaryButton>
                     </Grid>
                 </When>

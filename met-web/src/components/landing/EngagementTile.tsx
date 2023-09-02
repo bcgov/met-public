@@ -127,10 +127,12 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                                 window.open(engagementUrl, '_blank');
                             }}
                         >
-                            Share your thoughts
+                            Share Your Thoughts
                         </PrimaryButton>
                     </Then>
-                    <Else>
+                </If>
+                <If condition={status_id === SubmissionStatus.Closed || status_id === SubmissionStatus.Upcoming}>
+                    <Then>
                         <SecondaryButton
                             fullWidth
                             onClick={(event: React.MouseEvent) => {
@@ -140,7 +142,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                         >
                             View Engagement
                         </SecondaryButton>
-                    </Else>
+                    </Then>
                 </If>
             </CardActions>
         </Card>
