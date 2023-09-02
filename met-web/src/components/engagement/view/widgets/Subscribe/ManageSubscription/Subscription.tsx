@@ -19,7 +19,7 @@ export type SubscriptionParams = {
 
 export const Subscription = () => {
     const { engagementId, subscriptionStatus, scriptionKey } = useParams<SubscriptionParams>();
-    const [subscriptionText, setSubscriptionText] = useState('');
+    const [subscriptionText, setSubscriptionText] = useState(['']);
 
     const dispatch = useAppDispatch();
 
@@ -43,7 +43,7 @@ export const Subscription = () => {
                     participant_id: JSON.parse(subscribed).participant_id,
                     is_subscribed: 'true',
                 });
-                setSubscriptionText('You have successfully confirmed your subscription. Thank you.');
+                setSubscriptionText(['You have successfully confirmed your subscription. Thank you.']);
             }
             if (subscriptionStatus == SubscriptionType.UNSUBSCRIBE) {
                 const participant_id = scriptionKey;
@@ -51,9 +51,15 @@ export const Subscription = () => {
                     participant_id: parseInt(participant_id ?? ''),
                     is_subscribed: 'false',
                 });
-                setSubscriptionText(
-                    'We are sorry to see you go. <br /><br />We wanted to confirm that you have been successfully unsubscribed from all of our emails. <br />You will no longer receive any communications from us. <br /><br />Thank you.',
-                );
+                setSubscriptionText([
+                    'We are sorry to see you go.',
+                    '',
+                    'We wanted to confirm that you have been successfully unsubscribed from all of our emails.',
+                    '',
+                    'You will no longer receive any communications from us.',
+                    '',
+                    'Thank you.',
+                ]);
             }
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error Subscribing to Engagement' }));
@@ -121,7 +127,12 @@ export const Subscription = () => {
             >
                 <CheckCircleRoundedIcon style={{ color: '#2e8540', fontSize: 50 }} />
                 <MetHeader4 bold m={{ lg: '.5em 0 0 .5em', md: '3em', sm: '1em' }}>
-                    {subscriptionText}
+                    {subscriptionText.map((text) => (
+                        <>
+                            {text}
+                            <br />
+                        </>
+                    ))}
                 </MetHeader4>
             </Grid>
         </Grid>
