@@ -1,6 +1,6 @@
 import React, { useMemo, useContext } from 'react';
 import { MenuItem, Select } from '@mui/material';
-import { User, USER_GROUP } from 'models/user';
+import { User, USER_GROUP, USER_STATUS } from 'models/user';
 import { Palette } from 'styles/Theme';
 import { UserManagementContext } from './UserManagementContext';
 import { useAppSelector } from 'hooks';
@@ -47,7 +47,10 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
                     setUser(selectedUser);
                     setassignRoleModalOpen(true);
                 },
-                condition: hasNoRole() && roles.includes(USER_ROLES.EDIT_MEMBERS),
+                condition:
+                    hasNoRole() &&
+                    roles.includes(USER_ROLES.EDIT_MEMBERS) &&
+                    selectedUser.status_id == USER_STATUS.ACTIVE.value,
             },
             {
                 value: 2,
@@ -56,7 +59,8 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
                     setUser(selectedUser);
                     setAddUserModalOpen(true);
                 },
-                condition: !hasNoRole() && !isAdmin() && !isViewer(),
+                condition:
+                    !hasNoRole() && !isAdmin() && !isViewer() && selectedUser.status_id == USER_STATUS.ACTIVE.value,
             },
             {
                 value: 3,
@@ -65,7 +69,10 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
                     setUser(selectedUser);
                     setReassignRoleModalOpen(true);
                 },
-                condition: !hasNoRole() && roles.includes(USER_ROLES.UPDATE_USER_GROUP),
+                condition:
+                    !hasNoRole() &&
+                    roles.includes(USER_ROLES.UPDATE_USER_GROUP) &&
+                    selectedUser.status_id == USER_STATUS.ACTIVE.value,
             },
         ],
         [selectedUser.id, selectedUser.main_group],

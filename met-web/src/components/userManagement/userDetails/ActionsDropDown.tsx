@@ -6,6 +6,7 @@ import { reinstateMembership, revokeMembership } from 'services/membershipServic
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { UserDetailsContext } from './UserDetailsContext';
+import { USER_STATUS } from 'models/user';
 
 interface ActionDropDownItem {
     value: number;
@@ -15,7 +16,7 @@ interface ActionDropDownItem {
 }
 export const ActionsDropDown = ({ membership }: { membership: EngagementTeamMember }) => {
     const [loading, setLoading] = React.useState(false);
-    const { getUserMemberships } = React.useContext(UserDetailsContext);
+    const { getUserMemberships, savedUser } = React.useContext(UserDetailsContext);
     const dispatch = useAppDispatch();
 
     const handleRevoke = async () => {
@@ -59,13 +60,17 @@ export const ActionsDropDown = ({ membership }: { membership: EngagementTeamMemb
                 value: 1,
                 label: 'Revoke',
                 action: () => handleRevoke(),
-                condition: membership.status !== ENGAGEMENT_MEMBERSHIP_STATUS.Revoked,
+                condition:
+                    membership.status !== ENGAGEMENT_MEMBERSHIP_STATUS.Revoked &&
+                    savedUser?.status_id === USER_STATUS.ACTIVE.value,
             },
             {
                 value: 2,
                 label: 'Reinstate',
                 action: () => handleReinstate(),
-                condition: membership.status !== ENGAGEMENT_MEMBERSHIP_STATUS.Active,
+                condition:
+                    membership.status !== ENGAGEMENT_MEMBERSHIP_STATUS.Active &&
+                    savedUser?.status_id === USER_STATUS.ACTIVE.value,
             },
         ],
         [membership.id, membership.status],

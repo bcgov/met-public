@@ -30,6 +30,7 @@ const Dashboard = () => {
     const [projectMapData, setProjectMapData] = React.useState<Map | null>(null);
     const [pdfExportProgress, setPdfExportProgress] = React.useState(0);
     const basePath = slug ? `/${slug}` : `/engagements/${engagement?.id}`;
+    const mapExists = projectMapData?.latitude && projectMapData?.longitude;
 
     const handleProjectMapData = (data: Map) => {
         setProjectMapData(data);
@@ -167,25 +168,27 @@ const Dashboard = () => {
                                                 </Grid>
                                             </Grid>
                                         </When>
-                                        <Grid id={'kpi-emails-sent'} item sm={4}>
+                                        <Grid id={'kpi-emails-sent'} item sm={!mapExists ? 6 : 4}>
                                             <SurveyEmailsSent
                                                 engagement={engagement}
                                                 engagementIsLoading={isEngagementLoading}
                                             />
                                         </Grid>
-                                        <Grid id={'kpi-surveys-completed'} item sm={4}>
+                                        <Grid id={'kpi-surveys-completed'} item sm={!mapExists ? 6 : 4}>
                                             <SurveysCompleted
                                                 engagement={engagement}
                                                 engagementIsLoading={isEngagementLoading}
                                             />
                                         </Grid>
-                                        <Grid item sm={8} md={4} sx={{ width: isTablet ? '90%' : '100%' }}>
-                                            <ProjectLocation
-                                                engagement={engagement}
-                                                engagementIsLoading={isEngagementLoading}
-                                                handleProjectMapData={handleProjectMapData}
-                                            />
-                                        </Grid>
+                                        <When condition={mapExists}>
+                                            <Grid item sm={8} md={4} sx={{ width: isTablet ? '90%' : '100%' }}>
+                                                <ProjectLocation
+                                                    engagement={engagement}
+                                                    engagementIsLoading={isEngagementLoading}
+                                                    handleProjectMapData={handleProjectMapData}
+                                                />
+                                            </Grid>
+                                        </When>
                                     </Grid>
                                     <Grid id={'submissiontrend'} item xs={12}>
                                         <SubmissionTrend

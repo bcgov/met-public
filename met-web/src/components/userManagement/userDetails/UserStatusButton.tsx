@@ -10,7 +10,7 @@ import { USER_GROUP } from 'models/user';
 
 const UserStatusButton = () => {
     const { roles } = useAppSelector((state) => state.user);
-    const { savedUser } = useContext(UserDetailsContext);
+    const { savedUser, getUserDetails } = useContext(UserDetailsContext);
     const [userStatus, setUserStatus] = useState(false);
     const [togglingUserStatus, setTogglingUserStatus] = useState(false);
     const dispatch = useAppDispatch();
@@ -30,6 +30,7 @@ const UserStatusButton = () => {
             setUserStatus(active);
             setTogglingUserStatus(true);
             await toggleUserStatus(savedUser.external_id, active);
+            getUserDetails();
             dispatch(
                 openNotification({
                     severity: 'success',
@@ -68,10 +69,10 @@ const UserStatusButton = () => {
                     header: `Deactivate ${savedUser?.first_name} ${savedUser?.last_name}`,
                     subText: [
                         {
-                            text: `You are attempting to deactivate ${savedUser?.first_name} ${savedUser?.last_name}`,
+                            text: `You will be deactivating this user from the system. This user will lose all access to the system.`,
                         },
                         {
-                            text: 'Are you sure?',
+                            text: 'Do you want to deactivate this user?',
                         },
                     ],
                     handleConfirm: () => {
@@ -88,13 +89,17 @@ const UserStatusButton = () => {
             openNotificationModal({
                 open: true,
                 data: {
-                    header: `Activate ${savedUser?.first_name} ${savedUser?.last_name}`,
+                    header: `Reactivate ${savedUser?.first_name} ${savedUser?.last_name}`,
                     subText: [
                         {
-                            text: `You are attempting to activate ${savedUser?.first_name} ${savedUser?.last_name}`,
+                            text:
+                                'You will be Reactivating this user from the system. ' +
+                                'This user will regain access to the system. Once reactivated, ' +
+                                'the user will be reassgiend to their role and you will have to add them' +
+                                'back to engagements if Team Member/Reviewer.',
                         },
                         {
-                            text: 'Are you sure?',
+                            text: 'Do you want to Reactivate this user?',
                         },
                     ],
                     handleConfirm: () => {
@@ -113,7 +118,7 @@ const UserStatusButton = () => {
             onClick={() => handleToggleUserStatus(!userStatus)}
             disabled={savedUser?.main_group === USER_GROUP.ADMIN.label}
         >
-            {userStatus ? 'Deactivate User' : 'Activate User'}
+            {userStatus ? 'Deactivate User' : 'Rectivate User'}
         </SecondaryButton>
     );
 };

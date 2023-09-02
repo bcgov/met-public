@@ -6,7 +6,7 @@ import { formatDate } from 'components/common/dateHelper';
 import AssignedEngagementsListing from './AssignedEngagementsListing';
 import UserStatusButton from './UserStatusButton';
 import UserDetailsSkeleton from './UserDetailsSkeleton';
-import { USER_GROUP } from 'models/user';
+import { USER_GROUP, USER_STATUS } from 'models/user';
 
 export const UserDetail = ({ label, value }: { label: string; value: JSX.Element }) => {
     return (
@@ -62,9 +62,18 @@ export const UserDetails = () => {
 
                     <Grid container>
                         <Grid item xs={12}>
+                            <UserDetail label="Role" value={<MetParagraph>{savedUser?.main_group}</MetParagraph>} />
+                        </Grid>
+                        <Grid item xs={12}>
                             <UserDetail
-                                label="Current Role"
-                                value={<MetParagraph>{savedUser?.main_group}</MetParagraph>}
+                                label="Status"
+                                value={
+                                    <MetParagraph>
+                                        {savedUser?.status_id === USER_STATUS.ACTIVE.value
+                                            ? USER_STATUS.ACTIVE.label
+                                            : USER_STATUS.INACTIVE.label}
+                                    </MetParagraph>
+                                }
                             />
                         </Grid>
                     </Grid>
@@ -80,7 +89,10 @@ export const UserDetails = () => {
                 <Grid container justifyContent={'flex-end'} alignItems={'flex-end'} item xs={6}>
                     <PrimaryButton
                         onClick={() => setAddUserModalOpen(true)}
-                        disabled={savedUser?.main_group === USER_GROUP.VIEWER.label}
+                        disabled={
+                            savedUser?.main_group === USER_GROUP.VIEWER.label ||
+                            savedUser?.status_id === USER_STATUS.INACTIVE.value
+                        }
                     >
                         + Add to an Engagement
                     </PrimaryButton>

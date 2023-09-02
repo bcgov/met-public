@@ -11,6 +11,8 @@ from sqlalchemy.orm import column_property
 from sqlalchemy.sql import text
 from sqlalchemy.sql.operators import ilike_op
 
+from met_api.utils.enums import UserStatus
+
 from .base_model import BaseModel
 from .db import db
 from .pagination_options import PaginationOptions
@@ -35,7 +37,7 @@ class StaffUser(BaseModel):
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
 
     @classmethod
-    def get_all_paginated(cls, pagination_options: PaginationOptions, search_text=''):
+    def get_all_paginated(cls, pagination_options: PaginationOptions, search_text='', include_inactive=False):
         """Fetch list of users by access type."""
         query = cls.query
         query = cls._add_tenant_filter(query)
@@ -48,6 +50,9 @@ class StaffUser(BaseModel):
         if search_text:
             query = query.filter(ilike_op(StaffUser.full_name, '%' + search_text + '%'))
 
+        if not include_inactive:
+            query = query.filter(StaffUser.status_id == UserStatus.ACTIVE.value)
+
         no_pagination_options = not pagination_options.page or not pagination_options.size
         if no_pagination_options:
             items = query.all()
@@ -57,9 +62,25 @@ class StaffUser(BaseModel):
         return page.items, page.total
 
     @classmethod
-    def get_user_by_external_id(cls, _external_id) -> StaffUser:
+    def get_by_id(cls, _id, include_inactive=False) -> Optional[StaffUser]:
+        """Get a user by id."""
+        query = db.session.query(StaffUser) \
+            .filter(StaffUser.id == _id)
+
+        if not include_inactive:
+            query = query.filter(StaffUser.status_id == UserStatus.ACTIVE.value)
+        return query.first()
+
+    @classmethod
+    def get_user_by_external_id(cls, _external_id, include_inactive=False) -> Optional[StaffUser]:
         """Get a user with the provided external id."""
-        return cls.query.filter(func.lower(StaffUser.external_id) == func.lower(_external_id)).first()
+        query = db.session.query(StaffUser) \
+            .filter(func.lower(StaffUser.external_id) == func.lower(_external_id))
+
+        if not include_inactive:
+            query = query.filter(StaffUser.status_id == UserStatus.ACTIVE.value)
+
+        return query.first()
 
     @classmethod
     def create_user(cls, user) -> StaffUser:

@@ -53,6 +53,8 @@ class MembershipService:
                 error='You cannot add yourself to an engagement.',
                 status_code=HTTPStatus.FORBIDDEN.value)
 
+        user_id = user_details.get('id')
+
         groups = user_details.get('groups')
         if KeycloakGroups.EAO_IT_ADMIN.value in groups:
             raise BusinessException(
@@ -61,7 +63,7 @@ class MembershipService:
 
         existing_membership = MembershipModel.find_by_engagement_and_user_id(
             engagement_id,
-            user_details.get('id'),
+            user_id,
             status=MembershipStatus.ACTIVE.value
         )
 
@@ -231,4 +233,10 @@ class MembershipService:
     def revoke_memberships_bulk(user_id: int):
         """Revoke memberships in bulk."""
         revoked_memberships = MembershipModel.revoke_memberships_bulk(user_id)
+        return revoked_memberships
+
+    @staticmethod
+    def deactivate_memberships_bulk(user_id: int):
+        """Revoke memberships in bulk."""
+        revoked_memberships = MembershipModel.deactivate_memberships_bulk(user_id)
         return revoked_memberships
