@@ -30,7 +30,10 @@ export const ActionContext = createContext<EngagementContext>({
     handleUpdateEngagementRequest: (_engagement: EngagementFormUpdate): Promise<Engagement> => {
         return Promise.reject();
     },
-    handleCreateEngagementMetadataRequest: (_engagement: EngagementMetadata): Promise<EngagementMetadata> => {
+    handleCreateEngagementMetadataRequest: (
+        _engagement: EngagementMetadata,
+        _initial?: boolean,
+    ): Promise<EngagementMetadata> => {
         return Promise.reject();
     },
     handleUpdateEngagementMetadataRequest: (_engagement: EngagementMetadata): Promise<EngagementMetadata> => {
@@ -156,11 +159,14 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     const handleCreateEngagementMetadataRequest = async (
         engagement: EngagementMetadata,
+        initial?: boolean,
     ): Promise<EngagementMetadata> => {
         setSaving(true);
         try {
             const result = await postEngagementMetadata(engagement);
-            dispatch(openNotification({ severity: 'success', text: 'Engagement Metadata Created Successfully' }));
+            if (!initial) {
+                dispatch(openNotification({ severity: 'success', text: 'Engagement Metadata Created Successfully' }));
+            }
             setSaving(false);
             return Promise.resolve(result);
         } catch (error) {
