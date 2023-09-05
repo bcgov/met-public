@@ -35,7 +35,6 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
         setIsLoading(true);
         try {
             const response = await getMapData(Number(engagement.id));
-            console.log(response);
             setData(response);
             handleProjectMapData(response);
         } catch (error) {
