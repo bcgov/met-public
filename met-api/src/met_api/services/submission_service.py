@@ -97,8 +97,9 @@ class SubmissionService:
 
             engagement_settings: EngagementSettingsModel =\
                 EngagementSettingsModel.find_by_id(engagement_id)
-            if engagement_settings.send_report:
-                SubmissionService._send_submission_response_email(participant_id, engagement_id)
+            if engagement_settings:
+                if engagement_settings.send_report:
+                    SubmissionService._send_submission_response_email(participant_id, engagement_id)
         return submission_result
 
     @classmethod
