@@ -26,7 +26,7 @@ const EngagementsAccordion = ({
     const [openedEngagements, setOpenedEngagements] = useState<number[]>([]);
     const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('xs'));
     const [projectMapData, setProjectMapData] = React.useState<Map | null>(null);
-    const mapExists = projectMapData?.latitude && projectMapData?.longitude;
+    const mapExists = projectMapData ? projectMapData.latitude && projectMapData.longitude : true;
 
     if (engagements.length == 0) {
         return (
