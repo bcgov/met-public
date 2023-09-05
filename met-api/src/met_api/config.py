@@ -171,7 +171,8 @@ class _Config():  # pylint: disable=too-few-public-methods
             'SUBMISSION_RESPONSE_EMAIL_TEMPLATE_ID': os.getenv('SUBMISSION_RESPONSE_EMAIL_TEMPLATE_ID'),
             'SUBMISSION_RESPONSE_EMAIL_SUBJECT': os.getenv('SUBMISSION_RESPONSE_EMAIL_SUBJECT',
                                                            'Your feedback was successfully submitted'),
-            'ENGAGEMENT_END_TIME': os.getenv('ENGAGEMENT_END_TIME', ''),
+            # End time should match to the time met close-out CRON job runs
+            'ENGAGEMENT_END_TIME': os.getenv('ENGAGEMENT_END_TIME', '8 AM'),
             'EMAIL_ENVIRONMENT': os.getenv('EMAIL_ENVIRONMENT', ''),
             'ACCESS_REQUEST_EMAIL_TEMPLATE_ID': os.getenv('ACCESS_REQUEST_EMAIL_TEMPLATE_ID'),
             'ACCESS_REQUEST_EMAIL_SUBJECT': os.getenv('ACCESS_REQUEST_EMAIL_SUBJECT', 'MET - New User Access Request'),

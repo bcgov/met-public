@@ -78,6 +78,7 @@ class SubmissionService:
         cls._validate_fields(submission)
         survey_id = submission.get('survey_id')
         survey = SurveyService.get(survey_id)
+        engagement_id = survey.get('engagement_id')
 
         # Creates a scoped session that will be committed when diposed or rolledback if a exception occurs
         with session_scope() as session:
@@ -86,7 +87,7 @@ class SubmissionService:
             participant_id = email_verification.get('participant_id')
             submission['participant_id'] = participant_id
             submission['created_by'] = participant_id
-            submission['engagement_id'] = survey.get('engagement_id')
+            submission['engagement_id'] = engagement_id
 
             submission_result = SubmissionModel.create(submission, session)
             submission['id'] = submission_result.id
@@ -95,9 +96,9 @@ class SubmissionService:
             CommentService().create_comments(comments, session)
 
             engagement_settings: EngagementSettingsModel =\
-                EngagementSettingsModel.find_by_id(survey.get('engagement_id'))
+                EngagementSettingsModel.find_by_id(engagement_id)
             if engagement_settings.send_report:
-                SubmissionService._send_submission_response_email(participant_id, submission['engagement_id'])
+                SubmissionService._send_submission_response_email(participant_id, engagement_id)
         return submission_result
 
     @classmethod
