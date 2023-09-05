@@ -9,6 +9,12 @@ export const getWidgets = async (engagement_id: number): Promise<Widget[]> => {
     return responseData.data ?? [];
 };
 
+export const getWidget = async (widget_id: number): Promise<Widget> => {
+    const url = replaceUrl(Endpoints.Widgets.GET, 'widget_id', String(widget_id));
+    const responseData = await http.GetRequest<Widget>(url);
+    return responseData.data;
+};
+
 interface PostWidget {
     widget_type_id: number;
     engagement_id: number;

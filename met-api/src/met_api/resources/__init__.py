@@ -48,6 +48,7 @@ from .engagement_slug import API as ENGAGEMENT_SLUG_API
 from .report_setting import API as REPORT_SETTING_API
 from .widget_video import API as WIDGET_VIDEO_API
 from .engagement_settings import API as ENGAGEMENT_SETTINGS_API
+from .cac_form import API as CAC_FORM_API
 
 __all__ = ('API_BLUEPRINT',)
 
@@ -87,3 +88,4 @@ API.add_namespace(ENGAGEMENT_SLUG_API, path='/slugs')
 API.add_namespace(REPORT_SETTING_API, path='/surveys/<int:survey_id>/reportsettings')
 API.add_namespace(WIDGET_VIDEO_API, path='/widgets/<int:widget_id>/videos')
 API.add_namespace(ENGAGEMENT_SETTINGS_API)
+API.add_namespace(CAC_FORM_API, path='/engagements/<int:engagement_id>/cacform')

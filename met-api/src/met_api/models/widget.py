@@ -39,6 +39,13 @@ class Widget(BaseModel):  # pylint: disable=too-few-public-methods
             .first()
 
     @classmethod
+    def get_widget_by_id_and_engagement_id(cls, widget_id, engagement_id):
+        """Get widget by id and engagement id."""
+        return db.session.query(Widget)\
+            .filter_by(id=widget_id, engagement_id=engagement_id)\
+            .first()
+
+    @classmethod
     def get_widgets_by_engagement_id(cls, engagement_id):
         """Get widgets by engagement_id."""
         return db.session.query(Widget)\

@@ -88,7 +88,7 @@ class EngagementWidgetSort(Resource):
             return {'message': err.error}, err.status_code
 
 
-@cors_preflight('DELETE, PATCH')
+@cors_preflight('GET, DELETE, PATCH')
 @API.route('/<widget_id>/engagements/<engagement_id>')
 class EngagementWidget(Resource):
     """Resource for managing widgets with engagements."""
@@ -100,6 +100,19 @@ class EngagementWidget(Resource):
         """Remove widget for an engagement."""
         try:
             WidgetService().delete_widget(engagement_id, widget_id)
+            return 'Widget successfully removed', HTTPStatus.OK
+        except KeyError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.requires_auth
+    def get(engagement_id, widget_id):
+        """Get widget engagement."""
+        try:
+            WidgetService().get_widget(widget_id, engagement_id)
             return 'Widget successfully removed', HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

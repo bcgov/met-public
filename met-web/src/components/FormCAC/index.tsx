@@ -1,11 +1,11 @@
 import React from 'react';
 import { FormContextProvider } from './FormContext';
-import { FormTabs } from './FormTabs';
+import { Form } from './Form';
 
 export const FormCAC = () => {
     return (
         <FormContextProvider>
-            <FormTabs />
+            <Form />
         </FormContextProvider>
     );
 };
