@@ -21,7 +21,7 @@ defaults:
 
 env:
   APP_NAME: "analytics-api"
-  TAG_NAME: "dev"
+  TAG_NAME: "${{github.event.inputs.environment || 'dev' }}" # If the environment type is manually selected, use the input value; otherwise, use 'dev' as default
 
 jobs:
   analytics-api-cd:
