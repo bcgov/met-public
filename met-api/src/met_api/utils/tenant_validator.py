@@ -24,9 +24,10 @@ from flask import abort, current_app, g
 
 from met_api.auth import jwt as _jwt
 from met_api.utils.constants import TENANT_ID_JWT_CLAIM
+from met_api.utils.roles import Role
 
 
-def require_role(role):
+def require_role(role, skip_tenant_check_for_admin=False):
     """Validate a token for roles and against tenant as well."""
 
     def decorator(func):
@@ -36,8 +37,13 @@ def require_role(role):
             # single tenanted env doesn't need tenant id checks..so pass
             if current_app.config.get('IS_SINGLE_TENANT_ENVIRONMENT'):
                 return func(*args, **kwargs)
+
             # Get the tenant information from the JWT payload or any global context
             token_info: Dict = _get_token_info() or {}
+
+            if skip_tenant_check_for_admin and is_met_global_admin(token_info):
+                return func(*args, **kwargs)
+
             tenant_id = token_info.get(TENANT_ID_JWT_CLAIM, None)
             current_app.logger.debug(f'Tenant Id From JWT Claim {tenant_id}')
             current_app.logger.debug(f'Tenant Id From g {g.tenant_id}')
@@ -54,3 +60,11 @@ def require_role(role):
 
 def _get_token_info() -> Dict:
     return g.jwt_oidc_token_info if g and 'jwt_oidc_token_info' in g else {}
+
+
+def is_met_global_admin(token_info) -> bool:
+    """Return True if the user is MET Admin ie who can manage all tenants."""
+    roles: list = token_info.get('realm_access', None).get('roles', []) if 'realm_access' in token_info \
+        else []
+
+    return Role.CREATE_TENANT.value in roles

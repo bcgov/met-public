@@ -128,7 +128,7 @@ class UserGroup(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @require_role([Role.CREATE_ADMIN_USER.value])
+    @require_role([Role.CREATE_ADMIN_USER.value], skip_tenant_check_for_admin=True)
     def post(user_id):
         """Add user to group."""
         try:

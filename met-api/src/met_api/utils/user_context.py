@@ -87,6 +87,10 @@ class UserContext:  # pylint: disable=too-many-instance-attributes
         """Return True if the user is staff user."""
         return Role.CREATE_ENGAGEMENT.value in self._roles if self._roles else False
 
+    def is_met_global_admin(self) -> bool:
+        """Return True if the user is MET Admin ie who can manage all tenants."""
+        return Role.CREATE_TENANT.value in self._roles if self._roles else False
+
     def is_system(self) -> bool:
         """Return True if the user is system user.Helps to idenitfy connections from EPIC."""
         return Role.SYSTEM.value in self._roles if self._roles else False
