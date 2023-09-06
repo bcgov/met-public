@@ -160,7 +160,7 @@ def test_invalid_submission(client, jwt, session):  # pylint:disable=unused-argu
     """Assert that an engagement can be POSTed."""
     claims = TestJwtClaims.public_user_role
 
-    survey, eng = factory_survey_and_eng_model()
+    survey, _ = factory_survey_and_eng_model()
     email_verification = factory_email_verification(survey.id)
     to_dict = {
         'blah': str(survey.id),
