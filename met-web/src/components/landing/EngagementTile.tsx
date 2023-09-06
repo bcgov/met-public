@@ -7,7 +7,7 @@ import { Engagement } from 'models/engagement';
 import { Box, Stack } from '@mui/material';
 import { MetBody, MetHeader4, MetLabel, MetParagraph, PrimaryButton, SecondaryButton } from 'components/common';
 import { getEngagement } from 'services/engagementService';
-import { Else, If, Then, When } from 'react-if';
+import { If, Then, When } from 'react-if';
 import dayjs from 'dayjs';
 import { EngagementStatusChip } from 'components/engagement/status';
 import { SubmissionStatus } from 'constants/engagementStatus';
@@ -127,10 +127,12 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                                 window.open(engagementUrl, '_blank');
                             }}
                         >
-                            Share your thoughts
+                            Share Your Thoughts
                         </PrimaryButton>
                     </Then>
-                    <Else>
+                </If>
+                <If condition={status_id === SubmissionStatus.Closed || status_id === SubmissionStatus.Upcoming}>
+                    <Then>
                         <SecondaryButton
                             fullWidth
                             onClick={(event: React.MouseEvent) => {
@@ -140,7 +142,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                         >
                             View Engagement
                         </SecondaryButton>
-                    </Else>
+                    </Then>
                 </If>
             </CardActions>
         </Card>

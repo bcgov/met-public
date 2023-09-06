@@ -64,7 +64,7 @@ export const ActionsDropDown = ({ feedback, reload }: { feedback: Feedback; relo
         () => [
             {
                 value: 1,
-                label: 'Mark As Resolved',
+                label: 'Archive',
                 action: () => {
                     archiveFeedback();
                 },

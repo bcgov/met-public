@@ -25,8 +25,8 @@ from met_api.services.email_verification_service import EmailVerificationService
 from met_api.services.submission_service import SubmissionService
 
 from tests.utilities.factory_utils import (
-    factory_comment_model, factory_email_verification, factory_participant_model, factory_staff_user_model,
-    factory_submission_model, factory_survey_and_eng_model)
+    factory_comment_model, factory_email_verification, factory_engagement_setting_model, factory_participant_model,
+    factory_staff_user_model, factory_submission_model, factory_survey_and_eng_model)
 
 
 def test_create_submission(session):  # pylint:disable=unused-argument
@@ -34,7 +34,7 @@ def test_create_submission(session):  # pylint:disable=unused-argument
     survey, eng = factory_survey_and_eng_model()
     email_verification = factory_email_verification(survey.id)
     participant = factory_participant_model()
-
+    factory_engagement_setting_model(eng.id)
     submission_request: SubmissionSchema = {
         'submission_json': '{ "test_question": "test answer"}',
         'survey_id': survey.id,
@@ -90,7 +90,7 @@ def test_auto_approval_of_submissions_without_comment(session):  # pylint:disabl
     survey, eng = factory_survey_and_eng_model()
     email_verification = factory_email_verification(survey.id)
     participant = factory_participant_model()
-
+    factory_engagement_setting_model(eng.id)
     submission_request: SubmissionSchema = {
         'submission_json': {'simplepostalcode': 'abc', 'simpletextarea': '', 'simpletextarea1': ''},
         'survey_id': survey.id,
@@ -108,7 +108,7 @@ def test_submissions_with_comment_are_not_auto_approved(session):  # pylint:disa
     survey, eng = factory_survey_and_eng_model()
     email_verification = factory_email_verification(survey.id)
     participant = factory_participant_model()
-
+    factory_engagement_setting_model(eng.id)
     submission_request: SubmissionSchema = {
         'submission_json': {'simplepostalcode': 'abc', 'simpletextarea': 'Test Comment',
                             'simpletextarea1': 'Test Comment 2'},
@@ -127,7 +127,7 @@ def test_check_if_submission_can_handle_multiple_comments(session):
     survey, eng = factory_survey_and_eng_model()
     email_verification = factory_email_verification(survey.id)
     participant = factory_participant_model()
-
+    factory_engagement_setting_model(eng.id)
     # Create a sample submission with a comment in a text field that starts with 'simpletextarea'
     submission_request: SubmissionSchema = {
         'submission_json': {'simplepostalcode': 'abc', 'simpletextfield': 'This is some text',

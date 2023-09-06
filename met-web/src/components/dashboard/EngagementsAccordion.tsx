@@ -10,6 +10,7 @@ import ProjectLocation from '../publicDashboard/KPI/ProjectLocation';
 import SubmissionTrend from '../publicDashboard/SubmissionTrend/SubmissionTrend';
 import SurveyBar from '../publicDashboard/SurveyBar';
 import { DashboardType } from 'constants/dashboardType';
+import { Map } from 'models/analytics/map';
 
 const EngagementsAccordion = ({
     engagements,
@@ -24,6 +25,8 @@ const EngagementsAccordion = ({
 }) => {
     const [openedEngagements, setOpenedEngagements] = useState<number[]>([]);
     const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('xs'));
+    const [projectMapData, setProjectMapData] = React.useState<Map | null>(null);
+    const mapExists = projectMapData?.latitude && projectMapData?.longitude;
 
     if (engagements.length == 0) {
         return (
@@ -39,8 +42,8 @@ const EngagementsAccordion = ({
         }
     };
 
-    const handleProjectMapData = () => {
-        return null;
+    const handleProjectMapData = (data: Map) => {
+        setProjectMapData(data);
     };
 
     return (
@@ -95,19 +98,21 @@ const EngagementsAccordion = ({
                                     spacing={3}
                                     data-testid={`dashboard-frame-${engagement.id}`}
                                 >
-                                    <Grid item xs={12} sm={4}>
+                                    <Grid item xs={12} sm={!mapExists ? 6 : 4}>
                                         <SurveyEmailsSent engagement={engagement} engagementIsLoading={false} />
                                     </Grid>
-                                    <Grid item xs={12} sm={4}>
+                                    <Grid item xs={12} sm={!mapExists ? 6 : 4}>
                                         <SurveysCompleted engagement={engagement} engagementIsLoading={false} />
                                     </Grid>
-                                    <Grid item xs={12} sm={4}>
-                                        <ProjectLocation
-                                            engagement={engagement}
-                                            engagementIsLoading={false}
-                                            handleProjectMapData={handleProjectMapData}
-                                        />
-                                    </Grid>
+                                    <When condition={mapExists}>
+                                        <Grid item xs={12} sm={4}>
+                                            <ProjectLocation
+                                                engagement={engagement}
+                                                engagementIsLoading={false}
+                                                handleProjectMapData={handleProjectMapData}
+                                            />
+                                        </Grid>
+                                    </When>
                                 </Grid>
                                 <Grid item xs={12} mt={2}>
                                     <SubmissionTrend engagement={engagement} engagementIsLoading={false} />

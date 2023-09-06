@@ -234,3 +234,9 @@ class MembershipService:
         """Revoke memberships in bulk."""
         revoked_memberships = MembershipModel.revoke_memberships_bulk(user_id)
         return revoked_memberships
+
+    @staticmethod
+    def deactivate_memberships_bulk(user_id: int):
+        """Revoke memberships in bulk."""
+        revoked_memberships = MembershipModel.deactivate_memberships_bulk(user_id)
+        return revoked_memberships

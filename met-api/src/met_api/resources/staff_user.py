@@ -59,7 +59,7 @@ class StaffUsers(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @require_role([Role.VIEW_USERS.value])
+    @require_role([Role.VIEW_USERS.value], skip_tenant_check_for_admin=True)
     def get():
         """Return a set of users(staff only)."""
         args = request.args
@@ -85,7 +85,7 @@ class StaffUser(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @require_role([Role.VIEW_USERS.value])
+    @require_role([Role.VIEW_USERS.value], skip_tenant_check_for_admin=True)
     def get(user_id):
         """Fetch a user by id."""
         args = request.args
@@ -112,7 +112,7 @@ class StaffUserStatus(Resource):
             if data.get('active', None) is None:
                 return {'message': 'active field is required'}, HTTPStatus.BAD_REQUEST
 
-            user = StaffUserMembershipService().toggle_user_active_status(
+            user = StaffUserMembershipService().reactivate_deactivate_user(
                 user_id,
                 active=data.get('active'),
             )
@@ -128,7 +128,7 @@ class UserGroup(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @require_role([Role.CREATE_ADMIN_USER.value])
+    @require_role([Role.CREATE_ADMIN_USER.value], skip_tenant_check_for_admin=True)
     def post(user_id):
         """Add user to group."""
         try:

@@ -22,6 +22,7 @@ from .email_verification import EmailVerification
 from .engagement import Engagement
 from .engagement_status import EngagementStatus
 from .engagement_status_block import EngagementStatusBlock
+from .engagement_settings import EngagementSettingsModel
 from .event_item import EventItem
 from .subscribe_item import SubscribeItem
 from .feedback import Feedback

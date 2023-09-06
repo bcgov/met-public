@@ -106,12 +106,13 @@ export const generateDashboardPdf = async (
     }
     handlePdfExportProgress(40);
 
-    const mapImageDataURL = await getMapImageDataUrl(projectMapData);
-
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Project Location\n\n', padding + 55, top + 80);
-    addImageToPdf(doc, mapImageDataURL, padding + 55, top + 85, 75, 75);
+    if (projectMapData?.latitude && projectMapData?.longitude) {
+        const mapImageDataURL = await getMapImageDataUrl(projectMapData);
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Project Location\n\n', padding + 55, top + 80);
+        addImageToPdf(doc, mapImageDataURL, padding + 55, top + 85, 75, 75);
+    }
     doc.addPage();
     handlePdfExportProgress(60);
 
