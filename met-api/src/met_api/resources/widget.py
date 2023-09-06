@@ -108,7 +108,6 @@ class EngagementWidget(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.requires_auth
     def get(engagement_id, widget_id):
         """Get widget engagement."""
         try:

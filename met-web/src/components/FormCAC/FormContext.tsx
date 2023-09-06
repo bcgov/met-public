@@ -87,7 +87,7 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
         }
         try {
             setLoading(true);
-            return getWidget(Number(widgetId));
+            return getWidget(Number(engagementId), Number(widgetId));
         } catch (err) {
             dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to load the widget' }));
         }
