@@ -112,7 +112,7 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
 
     const loadData = async () => {
         const engagement = await loadEngagement();
-        setEngagement(engagement || null);
+        setEngagement(engagement ?? null);
         const subscribeWidget = await loadWidget();
         verifyData(engagement, subscribeWidget);
         loadEngagementSlug();
