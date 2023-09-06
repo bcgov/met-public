@@ -111,8 +111,8 @@ class EngagementWidget(Resource):
     def get(engagement_id, widget_id):
         """Get widget engagement."""
         try:
-            WidgetService().get_widget(widget_id, engagement_id)
-            return 'Widget successfully removed', HTTPStatus.OK
+            widget = WidgetService().get_widget(widget_id, engagement_id)
+            return widget, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:

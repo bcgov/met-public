@@ -9,6 +9,8 @@ import { useDispatch } from 'react-redux';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getWidget } from 'services/widgetService';
 import { submitCACForm } from 'services/FormCAC';
+import { getSubscriptionsForms } from 'services/subscriptionService';
+import { SUBSCRIBE_TYPE, SubscribeForm } from 'models/subscription';
 
 export interface CACFormSubmssion {
     understand: boolean;
@@ -87,21 +89,21 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
         }
         try {
             setLoading(true);
-            return getWidget(Number(engagementId), Number(widgetId));
+            const subscriptionForms = await getSubscriptionsForms(Number(widgetId));
+
+            //TODO: Change type check to Form type
+            return subscriptionForms.find((form) => form.type === SUBSCRIBE_TYPE.EMAIL_LIST);
         } catch (err) {
             dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to load the widget' }));
         }
     };
 
-    const verifyData = (engagement?: Engagement, widget?: Widget) => {
-        if (!engagement || !widget) {
+    const verifyData = (engagement?: Engagement, subscribeWidget?: SubscribeForm) => {
+        if (!engagement || !subscribeWidget) {
             dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to load the form' }));
             navigate('/');
         } else if (engagement.engagement_status.id === EngagementStatus.Draft) {
             dispatch(openNotification({ severity: 'error', text: 'Cannot submit this form at this time' }));
-            navigate('/');
-        } else if (widget.widget_type_id !== WidgetType.CACForm) {
-            dispatch(openNotification({ severity: 'error', text: 'Cannot submit this form for this engagement' }));
             navigate('/');
         }
         setLoading(false);
@@ -109,8 +111,8 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
 
     const loadData = async () => {
         const engagement = await loadEngagement();
-        const widget = await loadWidget();
-        verifyData(engagement, widget);
+        const subscribeWidget = await loadWidget();
+        verifyData(engagement, subscribeWidget);
     };
 
     useEffect(() => {

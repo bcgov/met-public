@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { SubscribeContext } from './SubscribeContext';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
-import { Subscribe_TYPE, SubscribeForm } from 'models/subscription';
+import { SUBSCRIBE_TYPE, SubscribeForm } from 'models/subscription';
 import RichTextEditor from 'components/common/RichTextEditor';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor/utils';
@@ -93,19 +93,19 @@ const EmailListDrawer = () => {
         if (widget) {
             const createdWidgetForm = await postSubscribeForm(widget.id, {
                 widget_id: widget.id,
-                type: Subscribe_TYPE.EMAIL_LIST,
+                type: SUBSCRIBE_TYPE.EMAIL_LIST,
                 items: [
                     {
                         description: richEmailListDescription,
                         call_to_action_type: call_to_action_type,
                         call_to_action_text: call_to_action_text,
-                        form_type: Subscribe_TYPE.EMAIL_LIST,
+                        form_type: SUBSCRIBE_TYPE.EMAIL_LIST,
                     },
                 ],
             });
 
             setSubscribe((prevWidgetForms: SubscribeForm[]) => {
-                const filteredForms = prevWidgetForms.filter((form) => form.type !== Subscribe_TYPE.EMAIL_LIST);
+                const filteredForms = prevWidgetForms.filter((form) => form.type !== SUBSCRIBE_TYPE.EMAIL_LIST);
                 return [...filteredForms, createdWidgetForm];
             });
         }
@@ -127,7 +127,7 @@ const EmailListDrawer = () => {
             setIsCreating(true);
             await saveForm(data);
             setIsCreating(false);
-            handleSubscribeDrawerOpen(Subscribe_TYPE.EMAIL_LIST, false);
+            handleSubscribeDrawerOpen(SUBSCRIBE_TYPE.EMAIL_LIST, false);
         } catch (error) {
             dispatch(
                 openNotification({
@@ -148,7 +148,7 @@ const EmailListDrawer = () => {
             anchor="right"
             open={emailListTabOpen}
             onClose={() => {
-                handleSubscribeDrawerOpen(Subscribe_TYPE.EMAIL_LIST, false);
+                handleSubscribeDrawerOpen(SUBSCRIBE_TYPE.EMAIL_LIST, false);
             }}
         >
             <Box sx={{ width: '40vw', paddingTop: '7em' }} role="presentation">
@@ -239,7 +239,7 @@ const EmailListDrawer = () => {
                                 </Grid>
                                 <Grid item>
                                     <SecondaryButton
-                                        onClick={() => handleSubscribeDrawerOpen(Subscribe_TYPE.EMAIL_LIST, false)}
+                                        onClick={() => handleSubscribeDrawerOpen(SUBSCRIBE_TYPE.EMAIL_LIST, false)}
                                     >
                                         Cancel
                                     </SecondaryButton>

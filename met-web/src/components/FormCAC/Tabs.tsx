@@ -5,6 +5,7 @@ import { FormContext } from './FormContext';
 import { FirstTab } from './FirstTab';
 import { TAB_ONE, TAB_TWO } from './constants';
 import { Grid, Skeleton, Step, StepLabel, Stepper } from '@mui/material';
+import { SecondTab } from './SecondTab';
 
 export const Tabs = () => {
     const { tabValue, loading } = useContext(FormContext);
@@ -29,7 +30,9 @@ export const Tabs = () => {
                     <TabPanel value={String(TAB_ONE)}>
                         <FirstTab />
                     </TabPanel>
-                    <TabPanel value={String(TAB_TWO)}>Item Two</TabPanel>
+                    <TabPanel value={String(TAB_TWO)}>
+                        <SecondTab />
+                    </TabPanel>
                 </Grid>
             </Grid>
         </TabContext>

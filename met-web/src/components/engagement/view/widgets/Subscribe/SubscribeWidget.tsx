@@ -25,7 +25,7 @@ import { Widget } from 'models/widget';
 import { getSubscriptionsForms } from 'services/subscriptionService';
 import { WidgetType } from 'models/widget';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { Subscribe_TYPE, SubscribeForm, CallToActionType } from 'models/subscription';
+import { SUBSCRIBE_TYPE, SubscribeForm, CallToActionType } from 'models/subscription';
 import { When } from 'react-if';
 import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor/utils';
 
@@ -227,7 +227,7 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
             />
             {subscribeItems?.map((item) => {
                 return (
-                    <When condition={item.type == Subscribe_TYPE.EMAIL_LIST}>
+                    <When condition={item.type == SUBSCRIBE_TYPE.EMAIL_LIST}>
                         <Grid spacing={2} container xs={12}>
                             <Grid item xs={12}>
                                 <MetHeader2 bold>{widget.title}</MetHeader2>
