@@ -26,7 +26,7 @@ export enum WidgetType {
 export const WidgetTitles: { [key in WidgetType]: string } = {
     [WidgetType.WhoIsListening]: 'Who Is Listening',
     [WidgetType.Document]: 'Documents',
-    [WidgetType.Phases]: 'Environmental Assesment Process',
+    [WidgetType.Phases]: 'Environmental Assessment Process',
     [WidgetType.Subscribe]: 'Sign Up for Updates',
     [WidgetType.Events]: 'Events',
     [WidgetType.Map]: 'Map',
