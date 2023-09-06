@@ -125,7 +125,7 @@ export const Subscription = () => {
                 rowSpacing={2}
             >
                 <CheckCircleRoundedIcon style={{ color: '#2e8540', fontSize: 50 }} />
-                <MetLabel bold m={{ lg: '.5em 0 0 .5em', md: '3em', sm: '1em' }}>
+                <MetLabel sx={{ fontWeight: 'bold' }} m={{ lg: '.5em 0 0 .5em', md: '3em', sm: '1em' }}>
                     {subscriptionText.map((text) => (
                         <>
                             {text}
