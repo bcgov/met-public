@@ -1,9 +1,8 @@
 import React, { useContext } from 'react';
-import { MetHeader3 } from 'components/common';
-import { Widget } from 'models/widget';
+import { MetHeader3, PrimaryButton } from 'components/common';
+import { Widget, WidgetTitles } from 'models/widget';
 import { CircularProgress, IconButton, Stack, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import CheckIcon from '@mui/icons-material/Check';
 import { Else, If, Then } from 'react-if';
 import { useUpdateWidgetMutation } from 'apiManager/apiSlices/widgets';
 import { useAppDispatch } from 'hooks';
@@ -24,12 +23,13 @@ export const WidgetTitle = ({ widget }: { widget: Widget }) => {
             return;
         }
         try {
+            if (title === '') setTitle(WidgetTitles[widget.widget_type_id]);
             setIsSaving(true);
             const response = await updateWidget({
                 id: widget.id,
                 engagementId: widget.engagement_id,
                 data: {
-                    title,
+                    title: title !== '' ? title : WidgetTitles[widget.widget_type_id],
                 },
             }).unwrap();
             setWidgets((prevWidgets) => {
@@ -49,10 +49,6 @@ export const WidgetTitle = ({ widget }: { widget: Widget }) => {
     };
 
     const handleTitleChange = (text: string) => {
-        if (!text) {
-            return;
-        }
-
         setTitle(text);
     };
 
@@ -78,13 +74,13 @@ export const WidgetTitle = ({ widget }: { widget: Widget }) => {
                             <CircularProgress size={20} color="info" />
                         </Then>
                         <Else>
-                            <IconButton
+                            <PrimaryButton
                                 onClick={() => {
                                     saveTitle();
                                 }}
                             >
-                                <CheckIcon color="info" />
-                            </IconButton>
+                                Save
+                            </PrimaryButton>
                         </Else>
                     </If>
                 </Stack>
