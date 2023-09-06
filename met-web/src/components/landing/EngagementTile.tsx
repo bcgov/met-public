@@ -75,7 +75,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
         return <MetLabel>error Loading</MetLabel>;
     }
 
-    const { name, end_date, start_date, description, status_id, banner_url, submission_status } = loadedEngagement;
+    const { name, end_date, start_date, description, banner_url, submission_status } = loadedEngagement;
     const EngagementDate = `${dayjs(start_date).format(dateFormat)} to ${dayjs(end_date).format(dateFormat)}`;
     return (
         <Card
