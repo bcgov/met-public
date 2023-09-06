@@ -25,6 +25,7 @@ from met_api.models import Tenant
 from met_api.models.comment import Comment as CommentModel
 from met_api.models.email_verification import EmailVerification as EmailVerificationModel
 from met_api.models.engagement import Engagement as EngagementModel
+from met_api.models.engagement_settings import EngagementSettingsModel
 from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
 from met_api.models.feedback import Feedback as FeedbackModel
 from met_api.models.membership import Membership as MembershipModel
@@ -319,6 +320,16 @@ def factory_survey_report_setting_model(report_setting_info: dict = TestReportSe
         question_type=report_setting_info.get('question_type'),
         question=report_setting_info.get('question'),
         display=report_setting_info.get('display'),
+    )
+    setting.save()
+    return setting
+
+
+def factory_engagement_setting_model(engagement_id):
+    """Produce a engagement setting model."""
+    setting = EngagementSettingsModel(
+        engagement_id=engagement_id,
+        send_report=False,
     )
     setting.save()
     return setting

@@ -93,9 +93,9 @@ const UserStatusButton = () => {
                     subText: [
                         {
                             text:
-                                'You will be Reactivating this user from the system. ' +
+                                'You will be Reactivating this user in the system. ' +
                                 'This user will regain access to the system. Once reactivated, ' +
-                                'the user will be reassgiend to their role and you will have to add them' +
+                                'the user will be reassigned to their role and you will have to add them ' +
                                 'back to engagements if Team Member/Reviewer.',
                         },
                         {
@@ -118,7 +118,7 @@ const UserStatusButton = () => {
             onClick={() => handleToggleUserStatus(!userStatus)}
             disabled={savedUser?.main_group === USER_GROUP.ADMIN.label}
         >
-            {userStatus ? 'Deactivate User' : 'Rectivate User'}
+            {userStatus ? 'Deactivate User' : 'Reactivate User'}
         </SecondaryButton>
     );
 };
