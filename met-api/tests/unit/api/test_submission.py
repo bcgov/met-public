@@ -25,8 +25,9 @@ from met_api.constants.membership_type import MembershipType
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestSubmissionInfo
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_comment_model, factory_email_verification, factory_membership_model,
-    factory_participant_model, factory_staff_user_model, factory_submission_model, factory_survey_and_eng_model)
+    factory_auth_header, factory_comment_model, factory_email_verification, factory_engagement_setting_model,
+    factory_membership_model, factory_participant_model, factory_staff_user_model, factory_submission_model,
+    factory_survey_and_eng_model)
 
 
 DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
@@ -36,7 +37,8 @@ def test_valid_submission(client, jwt, session):  # pylint:disable=unused-argume
     """Assert that an engagement can be POSTed."""
     claims = TestJwtClaims.public_user_role
 
-    survey, _ = factory_survey_and_eng_model()
+    survey, eng = factory_survey_and_eng_model()
+    factory_engagement_setting_model(eng.id)
     email_verification = factory_email_verification(survey.id)
     to_dict = {
         'survey_id': survey.id,

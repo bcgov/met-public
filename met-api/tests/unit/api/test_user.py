@@ -17,6 +17,7 @@ Tests to verify the Engagement API end-point.
 
 Test-Suite to ensure that the /user endpoint is working as expected.
 """
+import copy
 from http import HTTPStatus
 from unittest.mock import MagicMock
 
@@ -143,6 +144,44 @@ def test_add_user_to_team_member_group(mocker, client, jwt, session):
         content_type=ContentType.JSON.value
     )
     assert rv.status_code == HTTPStatus.OK
+    mock_add_user_to_group_keycloak.assert_called()
+    mock_get_user_groups_keycloak.assert_called()
+
+
+def test_add_user_to_team_member_group_across_tenants(mocker, client, jwt, session):
+    """Assert that a user can be added to the team member group."""
+    set_global_tenant(tenant_id=1)
+    user = factory_staff_user_model()
+
+    mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak, mock_add_attribute_to_user = mock_add_user_to_group(
+        mocker,
+        [KeycloakGroupName.EAO_IT_VIEWER.value]
+    )
+
+    claims = copy.deepcopy(TestJwtClaims.staff_admin_role.value)
+    # sets a different tenant id in the request
+    claims['tenant_id'] = 2
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.post(
+        f'/api/user/{user.external_id}/groups?group=TeamMember',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    # assert staff admin cant do cross tenant operation
+    assert rv.status_code == HTTPStatus.FORBIDDEN
+
+    claims = copy.deepcopy(TestJwtClaims.met_admin_role.value)
+    # sets a different tenant id in the request
+    claims['tenant_id'] = 2
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.post(
+        f'/api/user/{user.external_id}/groups?group=TeamMember',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    # assert MET admin can do cross tenant operation
+    assert rv.status_code == HTTPStatus.OK
+
     mock_add_user_to_group_keycloak.assert_called()
     mock_get_user_groups_keycloak.assert_called()
 
