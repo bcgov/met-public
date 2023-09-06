@@ -31,7 +31,7 @@ from tests.utilities.factory_utils import (
 
 def test_create_submission(session):  # pylint:disable=unused-argument
     """Assert that a submission can be Created."""
-    survey, _ = factory_survey_and_eng_model()
+    survey, eng = factory_survey_and_eng_model()
     email_verification = factory_email_verification(survey.id)
     participant = factory_participant_model()
     factory_engagement_setting_model(eng.id)
@@ -92,7 +92,7 @@ def test_review_comment(client, jwt, session, monkeypatch):  # pylint:disable=un
 
 def test_auto_approval_of_submissions_without_comment(session):  # pylint:disable=unused-argument
     """Assert that a submission without comment is auto approved."""
-    survey, _ = factory_survey_and_eng_model()
+    survey, eng = factory_survey_and_eng_model()
     email_verification = factory_email_verification(survey.id)
     participant = factory_participant_model()
     factory_engagement_setting_model(eng.id)
@@ -111,7 +111,7 @@ def test_auto_approval_of_submissions_without_comment(session):  # pylint:disabl
 
 def test_submissions_with_comment_are_not_auto_approved(session):  # pylint:disable=unused-argument
     """Assert that a submission with comment is not auto approved."""
-    survey, _ = factory_survey_and_eng_model()
+    survey, eng = factory_survey_and_eng_model()
     email_verification = factory_email_verification(survey.id)
     participant = factory_participant_model()
     factory_engagement_setting_model(eng.id)
@@ -131,7 +131,7 @@ def test_submissions_with_comment_are_not_auto_approved(session):  # pylint:disa
 
 def test_check_if_submission_can_handle_multiple_comments(session):
     """Assert that submissions can handle multiple comments."""
-    survey, _ = factory_survey_and_eng_model()
+    survey, eng = factory_survey_and_eng_model()
     email_verification = factory_email_verification(survey.id)
     participant = factory_participant_model()
     factory_engagement_setting_model(eng.id)
