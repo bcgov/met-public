@@ -1,7 +1,7 @@
 """ create cac form table
 
 Revision ID: 155c64768a99
-Revises: 1c5883959156
+Revises: 9714d7f8d7cc
 Create Date: 2023-09-05 16:23:11.567528
 
 """
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '155c64768a99'
-down_revision = '1c5883959156'
+down_revision = '9714d7f8d7cc'
 branch_labels = None
 depends_on = None
 
