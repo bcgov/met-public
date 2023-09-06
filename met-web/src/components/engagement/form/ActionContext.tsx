@@ -36,7 +36,10 @@ export const ActionContext = createContext<EngagementContext>({
     ): Promise<EngagementMetadata> => {
         return Promise.reject();
     },
-    handleUpdateEngagementMetadataRequest: (_engagement: EngagementMetadata): Promise<EngagementMetadata> => {
+    handleUpdateEngagementMetadataRequest: (
+        _engagement: EngagementMetadata,
+        _initial?: boolean,
+    ): Promise<EngagementMetadata> => {
         return Promise.reject();
     },
     isSaving: false,
@@ -253,6 +256,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     const handleUpdateEngagementMetadataRequest = async (
         engagement: EngagementFormUpdate,
+        initial?: boolean,
     ): Promise<EngagementMetadata> => {
         try {
             if (!savedEngagement.id) {
@@ -278,7 +282,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 engagement_id: Number(engagementId),
             });
             setEngagementMetadata(updatedEngagementMetadata);
-            dispatch(openNotification({ severity: 'success', text: 'Engagement metadata saved successfully' }));
+            if (!initial) {
+                dispatch(openNotification({ severity: 'success', text: 'Engagement metadata saved successfully' }));
+            }
             return Promise.resolve(updatedEngagementMetadata);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error saving engagement metadata' }));

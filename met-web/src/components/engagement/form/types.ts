@@ -8,7 +8,10 @@ export interface EngagementContext {
         _engagement: EngagementMetadata,
         _initial?: boolean,
     ) => Promise<EngagementMetadata>;
-    handleUpdateEngagementMetadataRequest: (_engagement: EngagementMetadata) => Promise<EngagementMetadata>;
+    handleUpdateEngagementMetadataRequest: (
+        _engagement: EngagementMetadata,
+        _initial?: boolean,
+    ) => Promise<EngagementMetadata>;
     isSaving: boolean;
     savedEngagement: Engagement;
     engagementMetadata: EngagementMetadata;
