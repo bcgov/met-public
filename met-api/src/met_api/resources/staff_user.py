@@ -59,7 +59,7 @@ class StaffUsers(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @require_role([Role.VIEW_USERS.value])
+    @require_role([Role.VIEW_USERS.value], skip_tenant_check_for_admin=True)
     def get():
         """Return a set of users(staff only)."""
         args = request.args
@@ -85,7 +85,7 @@ class StaffUser(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @require_role([Role.VIEW_USERS.value])
+    @require_role([Role.VIEW_USERS.value], skip_tenant_check_for_admin=True)
     def get(user_id):
         """Fetch a user by id."""
         args = request.args
