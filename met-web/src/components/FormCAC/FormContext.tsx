@@ -93,8 +93,7 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
             setLoading(true);
             const subscriptionForms = await getSubscriptionsForms(Number(widgetId));
 
-            //TODO: Change type check to Form type
-            return subscriptionForms.find((form) => form.type === SUBSCRIBE_TYPE.EMAIL_LIST);
+            return subscriptionForms.find((form) => form.type === SUBSCRIBE_TYPE.FORM);
         } catch (err) {
             dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to load the widget' }));
         }
@@ -148,7 +147,6 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
                     open: true,
                     data: {
                         header: 'Thank you',
-                        // TODO: Change text to display engagement name
                         subText: [
                             {
                                 text:

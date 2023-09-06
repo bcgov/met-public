@@ -31,7 +31,7 @@ class Subscription(BaseModel):  # pylint: disable=too-few-public-methods
         """Get a subscription."""
         db_subscription = db.session.query(Subscription)
         return db_subscription
-    
+
     @classmethod
     def get_by_engagement_id(cls, engagement_id) -> Subscription:
         """Get a subscription."""

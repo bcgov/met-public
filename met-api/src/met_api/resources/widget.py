@@ -108,18 +108,6 @@ class EngagementWidget(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    def get(engagement_id, widget_id):
-        """Get widget engagement."""
-        try:
-            widget = WidgetService().get_widget(widget_id, engagement_id)
-            return widget, HTTPStatus.OK
-        except KeyError as err:
-            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-        except ValueError as err:
-            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-
-    @staticmethod
-    @cross_origin(origins=allowedorigins())
     @_jwt.requires_auth
     def patch(engagement_id, widget_id):
         """Update widget."""

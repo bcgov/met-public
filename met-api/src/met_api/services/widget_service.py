@@ -200,22 +200,3 @@ class WidgetService:
         if not widgets:
             raise ValueError('Widget to remove was not found')
         return widgets
-
-    @staticmethod
-    def get_widget(widget_id, engagement_id):
-        """Remove widget from engagement."""
-        widget = WidgetModel.get_widget_by_id_and_engagement_id(widget_id, engagement_id)
-        if not widget:
-            raise ValueError('The widget was not found')
-        return {
-            'id': widget.id,
-            'title': widget.title,
-            'widget_type_id': widget.widget_type_id,
-            'sort_index': widget.sort_index,
-            'engagement_id': widget.engagement_id,
-            'items': [ {
-                'id': item.id,
-                'widget_data_id': item.widget_data_id,
-                
-                } for item in widget.items]
-        }
