@@ -111,7 +111,7 @@ def test_auto_approval_of_submissions_without_comment(session):  # pylint:disabl
 
 def test_submissions_with_comment_are_not_auto_approved(session):  # pylint:disable=unused-argument
     """Assert that a submission with comment is not auto approved."""
-    survey, eng = factory_survey_and_eng_model()
+    survey, _ = factory_survey_and_eng_model()
     email_verification = factory_email_verification(survey.id)
     participant = factory_participant_model()
 
