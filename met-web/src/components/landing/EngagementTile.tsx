@@ -118,7 +118,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                 </Stack>
             </CardContent>
             <CardActions>
-                <If condition={status_id === SubmissionStatus.Open}>
+                <If condition={submission_status === SubmissionStatus.Open}>
                     <Then>
                         <PrimaryButton
                             fullWidth
@@ -131,7 +131,11 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                         </PrimaryButton>
                     </Then>
                 </If>
-                <If condition={status_id === SubmissionStatus.Closed || status_id === SubmissionStatus.Upcoming}>
+                <If
+                    condition={
+                        submission_status === SubmissionStatus.Closed || submission_status === SubmissionStatus.Upcoming
+                    }
+                >
                     <Then>
                         <SecondaryButton
                             fullWidth
