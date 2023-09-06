@@ -1,41 +1,53 @@
-import React, { useContext, useState } from 'react';
-import { Checkbox, FormControlLabel, FormGroup, Grid, Link } from '@mui/material';
+import React, { useContext } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import { Checkbox, FormControlLabel, FormGroup, FormHelperText, Grid, Link } from '@mui/material';
 import { MetLabel, MetParagraph, PrimaryButton } from 'components/common';
-import { useAppDispatch, useAppTranslation } from 'hooks';
+import { useAppTranslation } from 'hooks';
 import { FormContext } from './FormContext';
 import { TAB_TWO } from './constants';
-import { openNotification } from 'services/notificationService/notificationSlice';
+import { When } from 'react-if';
 
-export const FirstTab = () => {
+// Define the Yup schema for validation
+const schema = yup.object({
+    understand: yup.boolean().oneOf([true], 'You must acknowledge this.'),
+    termsOfReference: yup.boolean().oneOf([true], 'You must acknowledge this.'),
+});
+
+interface FormData {
+    understand: boolean;
+    termsOfReference: boolean;
+}
+
+export const FirstTab: React.FC = () => {
     const { t: translate } = useAppTranslation();
     const { setTabValue, setFormSubmission } = useContext(FormContext);
-    const dispatch = useAppDispatch();
 
-    const [informationForm, setInformationForm] = useState({
-        understand: false,
-        termsOfReference: false,
+    // Initialize form state and validation using react-hook-form
+    const {
+        handleSubmit,
+        control,
+        formState: { errors },
+        trigger,
+    } = useForm<FormData>({
+        resolver: yupResolver(schema),
+        defaultValues: {
+            understand: false,
+            termsOfReference: false,
+        },
     });
 
-    const handleNextClick = () => {
-        if (Object.values(informationForm).some((value) => !value)) {
-            dispatch(
-                openNotification({
-                    text: 'Cannot proceed without checking all the boxes.',
-                    severity: 'error',
-                }),
-            );
-            return;
-        }
-        setFormSubmission((prev) => ({ ...prev, ...informationForm }));
+    // Function to handle form submission
+    const handleNextClick = async (data: FormData) => {
+        trigger();
+
+        setFormSubmission((prev) => ({ ...prev, ...data }));
         setTabValue(TAB_TWO);
     };
 
-    const handleCheckBoxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, checked } = event.target;
-        setInformationForm({ ...informationForm, [name]: checked });
-    };
-
     const contactEmail = translate('cacForm.contactEmail');
+
     return (
         <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -58,7 +70,6 @@ export const FirstTab = () => {
 
             <Grid item xs={12}>
                 <MetLabel>What can I expect as a Community Advisory Committee Member?</MetLabel>
-                {/* TODO: Get this from the eao.json */}
                 <MetParagraph>
                     The Environmental Assessment Office will provide subscribed Community Advisory Committee members
                     information on the environmental assessment process and the proposed project, including
@@ -86,22 +97,33 @@ export const FirstTab = () => {
                 <FormGroup>
                     <FormControlLabel
                         control={
-                            <Checkbox
+                            <Controller
                                 name="understand"
-                                checked={informationForm.understand}
-                                onChange={handleCheckBoxChange}
+                                control={control}
+                                render={({ field }) => <Checkbox {...field} />}
                             />
                         }
                         label={
                             <MetLabel>By checking this box, I acknowledge that I understand the above text.</MetLabel>
                         }
                     />
+                    <When condition={Boolean(errors.understand)}>
+                        <FormHelperText
+                            sx={{
+                                marginLeft: '2.5em',
+                                marginTop: '-1em',
+                            }}
+                            error
+                        >
+                            {String(errors.understand?.message)}
+                        </FormHelperText>
+                    </When>
                     <FormControlLabel
                         control={
-                            <Checkbox
+                            <Controller
                                 name="termsOfReference"
-                                checked={informationForm.termsOfReference}
-                                onChange={handleCheckBoxChange}
+                                control={control}
+                                render={({ field }) => <Checkbox {...field} />}
                             />
                         }
                         label={
@@ -113,11 +135,22 @@ export const FirstTab = () => {
                             </MetLabel>
                         }
                     />
+                    <When condition={Boolean(errors.termsOfReference)}>
+                        <FormHelperText
+                            sx={{
+                                marginLeft: '2.5em',
+                                marginTop: '-1em',
+                            }}
+                            error
+                        >
+                            {String(errors.termsOfReference?.message)}
+                        </FormHelperText>
+                    </When>
                 </FormGroup>
             </Grid>
 
             <Grid item xs={12}>
-                <PrimaryButton onClick={handleNextClick}>Next</PrimaryButton>
+                <PrimaryButton onClick={handleSubmit(handleNextClick)}>Next</PrimaryButton>
             </Grid>
         </Grid>
     );

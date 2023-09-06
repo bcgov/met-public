@@ -22,7 +22,6 @@ export const submitCACForm = async ({ engagement_id, widget_id, form_data }: Sub
             widget_id: String(widget_id),
         },
     });
-    // await http.PostRequest<SubmitCACForm>(url, form_data);
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await http.PostRequest<SubmitCACForm>(url, form_data);
     return Promise.resolve();
 };

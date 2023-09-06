@@ -35,7 +35,6 @@ class Videos(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.requires_auth
     def post(engagement_id, widget_id):
         """Create cac form submission."""
         try:

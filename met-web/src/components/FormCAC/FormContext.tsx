@@ -1,16 +1,16 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { TAB_ONE } from './constants';
-import { Widget, WidgetType } from 'models/widget';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Engagement } from 'models/engagement';
 import { getEngagement } from 'services/engagementService';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { useDispatch } from 'react-redux';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { getWidget } from 'services/widgetService';
 import { submitCACForm } from 'services/FormCAC';
 import { getSubscriptionsForms } from 'services/subscriptionService';
 import { SUBSCRIBE_TYPE, SubscribeForm } from 'models/subscription';
+import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+import { getSlugByEngagementId } from 'services/engagementSlugService';
 
 export interface CACFormSubmssion {
     understand: boolean;
@@ -66,6 +66,8 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
     });
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
+    const [engagement, setEngagement] = useState<Engagement | null>(null);
+    const [engagementSlug, setEngagementSlug] = useState<string>('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -98,11 +100,11 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
         }
     };
 
-    const verifyData = (engagement?: Engagement, subscribeWidget?: SubscribeForm) => {
-        if (!engagement || !subscribeWidget) {
+    const verifyData = (_engagement?: Engagement, subscribeWidget?: SubscribeForm) => {
+        if (!_engagement || !subscribeWidget) {
             dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to load the form' }));
             navigate('/');
-        } else if (engagement.engagement_status.id === EngagementStatus.Draft) {
+        } else if (_engagement.engagement_status.id === EngagementStatus.Draft) {
             dispatch(openNotification({ severity: 'error', text: 'Cannot submit this form at this time' }));
             navigate('/');
         }
@@ -111,19 +113,27 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
 
     const loadData = async () => {
         const engagement = await loadEngagement();
+        setEngagement(engagement || null);
         const subscribeWidget = await loadWidget();
         verifyData(engagement, subscribeWidget);
+        loadEngagementSlug();
     };
 
     useEffect(() => {
         loadData();
     }, [widgetId, engagementId]);
 
+    const loadEngagementSlug = async () => {
+        if (!engagementId) return;
+        const engagementSlug = await getSlugByEngagementId(Number(engagementId));
+        setEngagementSlug(engagementSlug.slug);
+    };
+
     const submitForm = async () => {
         try {
             await submitCACForm({
-                engagement_id: Number(widgetId),
-                widget_id: Number(engagementId),
+                engagement_id: Number(engagementId),
+                widget_id: Number(widgetId),
                 form_data: {
                     understand: formSubmission.understand,
                     terms_of_reference: formSubmission.termsOfReference,
@@ -133,8 +143,25 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
                     email: formSubmission.email,
                 },
             });
-            dispatch(openNotification({ severity: 'success', text: 'The form has been submitted successfully' }));
-            navigate('/');
+            dispatch(
+                openNotificationModal({
+                    open: true,
+                    data: {
+                        header: 'Thank you',
+                        // TODO: Change text to display engagement name
+                        subText: [
+                            {
+                                text:
+                                    `We have received your request to join the Community Advisory Committee for ` +
+                                    `${engagement?.name}. You will receive a confirmation email at the address provider, ` +
+                                    `and will be notified of future updates to the Community Advisory Committee.`,
+                            },
+                        ],
+                    },
+                    type: 'update',
+                }),
+            );
+            navigate(`/${engagementSlug}`, { replace: true });
         } catch (err) {
             setSubmitting(false);
             console.log(err);

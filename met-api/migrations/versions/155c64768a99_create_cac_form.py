@@ -21,7 +21,6 @@ def upgrade():
     sa.Column('created_date', sa.DateTime(), nullable=False),
     sa.Column('updated_date', sa.DateTime(), nullable=True),
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('widget_id', sa.Integer(), nullable=False),
     sa.Column('engagement_id', sa.Integer(), nullable=False),
     sa.Column('tenant_id', sa.Integer(), nullable=True),
     sa.Column('understand', sa.Boolean(), nullable=False),
@@ -34,7 +33,6 @@ def upgrade():
     sa.Column('updated_by', sa.String(length=50), nullable=True),
     sa.ForeignKeyConstraint(['engagement_id'], ['engagement.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['tenant_id'], ['tenant.id'], ),
-    sa.ForeignKeyConstraint(['widget_id'], ['widget.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###

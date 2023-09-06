@@ -15,7 +15,6 @@ class CACForm(BaseModel):  # pylint: disable=too-few-public-methods, too-many-in
 
     __tablename__ = 'cac_form'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    widget_id = db.Column(db.Integer, ForeignKey('widget.id', ondelete='CASCADE'), nullable=False)
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), nullable=False)
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
     understand = db.Column(db.Boolean, nullable=False)
