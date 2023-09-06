@@ -20,9 +20,9 @@ class ReportSetting(BaseModel):  # pylint: disable=too-few-public-methods
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     survey_id = db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), nullable=False)
     question_id = db.Column(db.String(250))
-    question_key = db.Column(db.String(100))
-    question_type = db.Column(db.String(100))
-    question = db.Column(db.String(200))
+    question_key = db.Column(db.String(250))
+    question_type = db.Column(db.String(250))
+    question = db.Column(db.String(250))
     display = db.Column(db.Boolean, default=True,
                         comment='Flag to identify if the question needs to be diplayed on the dashboard.')
 
