@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Constants for subscription."""
-from enum import IntEnum
+from enum import Enum, IntEnum
 
 
 class SubscriptionType(IntEnum):
@@ -28,3 +28,11 @@ class SubscriptionType(IntEnum):
     ENGAGEMENT = 1
     PROJECT = 2
     TENANT = 3
+
+
+class SubscriptionTypes(Enum):
+    """Enum of Subscription Type."""
+
+    ENGAGEMENT = 'ENGAGEMENT'
+    PROJECT = 'PROJECT'
+    TENANT = 'TENANT'

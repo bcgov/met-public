@@ -1,12 +1,15 @@
-<h1>Thank you for subscribing to our feedback tool.</h1>
+<h1>A new engagement is now open {% if is_having_project %} for {% endif %} {% if is_not_having_project %} on {% endif %} {{ project_name }}.</h1>
 <br />
-<p>This is to update you that a new engagement, {{ engagement_name }}, has been published.</p>
+<p>To learn more and provide your feedback during this public comment period, please click the link below:</p>
 <br />
-<p>Please visit the<p>
-<a href='{{ link }}'>link</a>
-<p>to learn more and provide your feedback.<p>
+<p><a href="{{ survey_url }}">Provide Your Feedback</a></p>
+<br />
+<p>The public comment period ends on {{ end_date }}.</p>
 <br />
 <p>Thank you,</p>
 <br />
-<p>The Team at the Environmental Assessment Office</p>
+<p>The {{ tenant_name }} Team</p>
+<br />
+<p>If you would no longer like to receive updates from us, you may <a href='{{ unsubscribe_url }}'>unsubscribe</a>.</p>
+<br />
 <p>{{email_environment}}</p>

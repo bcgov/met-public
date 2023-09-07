@@ -17,7 +17,7 @@ import {
 import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import EmailModal from 'components/common/Modals/EmailModal';
-import { createEmailVerification } from 'services/emailVerificationService';
+import { createSubscribeEmailVerification } from 'services/emailVerificationService';
 import { createSubscription } from 'services/subscriptionService';
 import { EmailVerificationType } from 'models/emailVerification';
 import { SubscriptionType } from 'constants/subscriptionType';
@@ -28,6 +28,8 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { Subscribe_TYPE, SubscribeForm, CallToActionType } from 'models/subscription';
 import { When } from 'react-if';
 import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor/utils';
+import { TenantState } from 'reduxSlices/tenantSlice';
+import { useAppSelector } from 'hooks';
 
 const SubscribeWidget = ({ widget }: { widget: Widget }) => {
     const dispatch = useAppDispatch();
@@ -37,19 +39,23 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
     const [email, setEmail] = useState('');
     const [open, setOpen] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
-    const [subscriptionType, setSubscriptionType] = useState('');
+    const [subscriptionType, setSubscriptionType] = useState<string>(defaultType);
     const subscribeWidget = widgets.find((widget) => widget.widget_type_id === WidgetType.Subscribe);
     const [subscribeItems, setSubscribeItems] = useState<SubscribeForm[]>([]);
     const [isLoadingSubscribeItems, setIsLoadingSubscribeItems] = useState(true);
+    const tenant: TenantState = useAppSelector((state) => state.tenant);
 
     const sendEmail = async () => {
         try {
             setIsSaving(true);
-            const email_verification = await createEmailVerification({
-                email_address: email,
-                survey_id: savedEngagement.surveys[0].id,
-                type: EmailVerificationType.Subscribe,
-            });
+            const email_verification = await createSubscribeEmailVerification(
+                {
+                    email_address: email,
+                    survey_id: savedEngagement.surveys[0].id,
+                    type: EmailVerificationType.Subscribe,
+                },
+                subscriptionType ? subscriptionType : defaultType,
+            );
 
             await createSubscription({
                 engagement_id: savedEngagement.id,
@@ -216,8 +222,7 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
                                 control={<Radio />}
                                 label={
                                     <MetParagraph>
-                                        I want to receive updates for all the projects at the Environmental Assessment
-                                        Office
+                                        I want to receive updates for all the projects at the {tenant.name}
                                     </MetParagraph>
                                 }
                             />

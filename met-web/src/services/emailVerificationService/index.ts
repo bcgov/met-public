@@ -40,3 +40,20 @@ export const createEmailVerification = async (request: CreateEmailVerification):
         return Promise.reject(err);
     }
 };
+
+export const createSubscribeEmailVerification = async (
+    request: CreateEmailVerification,
+    subscription_type: string,
+): Promise<EmailVerification> => {
+    try {
+        const url = replaceUrl(
+            Endpoints.EmailVerification.CREATE_SUBSCRIBE,
+            'subscription_type',
+            String(subscription_type),
+        );
+        const response = await http.PostRequest<EmailVerification>(url, request);
+        return response.data;
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};

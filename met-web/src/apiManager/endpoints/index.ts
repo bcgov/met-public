@@ -84,6 +84,7 @@ const Endpoints = {
         GET: `${AppConfig.apiUrl}/email_verification/verification_token`,
         UPDATE: `${AppConfig.apiUrl}/email_verification/verification_token`,
         CREATE: `${AppConfig.apiUrl}/email_verification/`,
+        CREATE_SUBSCRIBE: `${AppConfig.apiUrl}/email_verification/subscription_type/subscribe`,
     },
     Widgets: {
         GET_LIST: `${AppConfig.apiUrl}/widgets/engagement/engagement_id`,

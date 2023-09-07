@@ -1,9 +1,10 @@
-<h1>Thank you for subscribing to {{ engagement_name }}.</h1>
-<p>Please click the link below to confirm your subscription.</p>
+<h1>Thank you for signing up to receive updates {% if is_subscribing_to_tenant %} on {% endif %} {% if is_subscribing_to_project %} for {% endif %} {{ project_name }}.</h1>
+<br />
+<p>To receive updates, you must confirm your subscription by clicking the link below:</p>
 <br />
 <a href='{{ confirm_url }}'>Confirm Subscription</a>
 <br />
-<p>Once you confirm your email we will send you updates about related engagements.<p>
+<p>If you have received this in error you may ignore this email.<p>
 <br />
 <p>Thank you,</p>
 <br />

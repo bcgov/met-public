@@ -132,12 +132,18 @@ class _Config():  # pylint: disable=too-few-public-methods
     # needed for publish emails for met api
     ENGAGEMENT_VIEW_PATH = os.getenv('ENGAGEMENT_VIEW_PATH', '/engagements/{engagement_id}/view')
     ENGAGEMENT_VIEW_PATH_SLUG = os.getenv('ENGAGEMENT_VIEW_PATH_SLUG', '/{slug}')
+    UNSUBSCRIBE_PATH = os.getenv('UNSUBSCRIBE_PATH', '/engagements/{engagement_id}/unsubscribe/{participant_id}')
 
     # The GC notify email variables
     # Publish Email Service
     EMAIL_SECRET_KEY = os.getenv('EMAIL_SECRET_KEY', 'secret')
     PUBLISH_ENGAGEMENT_EMAIL_TEMPLATE_ID = os.getenv('PUBLISH_ENGAGEMENT_EMAIL_TEMPLATE_ID')
-    PUBLISH_ENGAGEMENT_EMAIL_SUBJECT = os.getenv('PUBLISH_ENGAGEMENT_EMAIL_SUBJECT', 'New {engagement_name} published')
+    PUBLISH_ENGAGEMENT_EMAIL_SUBJECT = os.getenv('PUBLISH_ENGAGEMENT_EMAIL_SUBJECT', 'Share your feedback')
+
+    # Closing Soon Email Service
+    ENGAGEMENT_CLOSING_SOON_EMAIL_TEMPLATE_ID = os.getenv('ENGAGEMENT_CLOSING_SOON_EMAIL_TEMPLATE_ID')
+    ENGAGEMENT_CLOSING_SOON_EMAIL_SUBJECT = os.getenv('ENGAGEMENT_CLOSING_SOON_EMAIL_SUBJECT',
+                                                      'Public comment period closes in 2 days')
 
     # Email Service
     ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID = os.getenv('ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID')
