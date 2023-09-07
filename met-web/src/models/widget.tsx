@@ -21,4 +21,5 @@ export enum WidgetType {
     Events = 5,
     Map = 6,
     Video = 7,
+    CACForm = 8,
 }

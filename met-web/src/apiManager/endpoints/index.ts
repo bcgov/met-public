@@ -86,6 +86,7 @@ const Endpoints = {
         CREATE: `${AppConfig.apiUrl}/email_verification/`,
     },
     Widgets: {
+        GET: `${AppConfig.apiUrl}/widgets/widget_id/engagements/engagement_id`,
         GET_LIST: `${AppConfig.apiUrl}/widgets/engagement/engagement_id`,
         CREATE: `${AppConfig.apiUrl}/widgets/engagement/engagement_id`,
         DELETE: `${AppConfig.apiUrl}/widgets/widget_id/engagements/engagement_id`,
@@ -146,6 +147,9 @@ const Endpoints = {
     },
     AnalyticsSurveyResult: {
         GET: `${AppConfig.analyticsApiUrl}/surveyresult/engagement_id/dashboard_type`,
+    },
+    CACForm: {
+        CREATE: `${AppConfig.apiUrl}/engagements/engagement_id/cacform/widget_id`,
     },
 };
 
