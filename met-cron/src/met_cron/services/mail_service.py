@@ -36,8 +36,11 @@ class EmailService:  # pylint: disable=too-few-public-methods
                         if email_address not in email_list:
                             email_list.append(email_address)
                             body, args = EmailService._render_email_template(engagement, participant, template)
-                            EmailService._send_email_notification(subject, email_address, body,
-                                                                  args, template_id)
+                            EmailService._send_email_notification(subject,
+                                                                  email_address,
+                                                                  body,
+                                                                  args,
+                                                                  template_id)
                 except Exception as exc:  # noqa: B902
                     current_app.logger.error('<Extracting email address for subscribers failed', exc)
                     raise BusinessException(

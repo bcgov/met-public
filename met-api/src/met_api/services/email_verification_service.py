@@ -108,8 +108,11 @@ class EmailVerificationService:
             raise ValueError('Engagement not found')
 
         subject, body, args, template_id = EmailVerificationService._render_email_template(
-            survey, email_verification.get('verification_token'),
-            email_verification.get('type'), subscription_type)
+            survey,
+            email_verification.get('verification_token'),
+            email_verification.get('type'),
+            subscription_type
+        )
         try:
             # user hasn't been created yet.so create token using SA.
             notification.send_email(
@@ -122,7 +125,9 @@ class EmailVerificationService:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
 
     @staticmethod
-    def _render_email_template(survey: SurveyModel, token, email_type: EmailVerificationType,
+    def _render_email_template(survey: SurveyModel,
+                               token,
+                               email_type: EmailVerificationType,
                                subscription_type):
         if email_type == EmailVerificationType.Subscribe:
             return EmailVerificationService._render_subscribe_email_template(survey, token, subscription_type)
