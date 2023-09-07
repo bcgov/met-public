@@ -100,23 +100,15 @@ const SubscribeInfoBlock = () => {
     return (
         <DragDropContext onDragEnd={moveSubscribeForm}>
             <MetDroppable droppableId="droppable">
-                <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" spacing={2}>
+                <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
                     {subscribeOptions.map((subscribeForm: SubscribeForm, index: number) => {
                         return (
                             <Grid item xs={12} key={`Grid-${subscribeForm.widget_id}`}>
-                                <MetDraggable draggableId={String(subscribeForm.widget_id)} index={index}>
-                                    <When condition={subscribeForm.type === SUBSCRIBE_TYPE.EMAIL_LIST}>
-                                        <SubscribeInfoPaper
-                                            removeSubscribeForm={handleRemoveSubscribeForm}
-                                            subscribeForm={subscribeForm}
-                                        />
-                                    </When>
-                                    <When condition={subscribeForm.type === SUBSCRIBE_TYPE.SIGN_UP}>
-                                        <SubscribeInfoPaper
-                                            removeSubscribeForm={handleRemoveSubscribeForm}
-                                            subscribeForm={subscribeForm}
-                                        />
-                                    </When>
+                                <MetDraggable draggableId={String(subscribeForm.id)} index={index}>
+                                    <SubscribeInfoPaper
+                                        removeSubscribeForm={handleRemoveSubscribeForm}
+                                        subscribeForm={subscribeForm}
+                                    />
                                 </MetDraggable>
                             </Grid>
                         );
