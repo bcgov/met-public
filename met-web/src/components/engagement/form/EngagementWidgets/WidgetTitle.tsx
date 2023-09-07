@@ -28,7 +28,7 @@ export const WidgetTitle = ({ widget }: { widget: Widget }) => {
                 id: widget.id,
                 engagementId: widget.engagement_id,
                 data: {
-                    title: title !== '' ? title : WidgetTitles[widget.widget_type_id],
+                    title,
                 },
             }).unwrap();
             setWidgets((prevWidgets) => {
