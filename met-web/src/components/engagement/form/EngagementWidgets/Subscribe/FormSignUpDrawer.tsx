@@ -18,7 +18,7 @@ import { When } from 'react-if';
 import { useDispatch } from 'react-redux';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor/utils';
-import { RichTextToolbarConfig } from './constants';
+import { CALL_TO_ACTION_TYPE, RichTextToolbarConfig } from './constants';
 
 const schema = yup
     .object({
@@ -50,11 +50,6 @@ const FormSignUpDrawer = () => {
     } = useContext(SubscribeContext);
     const [isCreating, setIsCreating] = useState(false);
     const [initialRawEditorState, setInitialRawEditorState] = useState('');
-
-    const CALL_TO_ACTION_TYPE = {
-        LINK: 'link',
-        BUTTON: 'button',
-    };
 
     const methods = useForm<FormSignUp>({
         resolver: yupResolver(schema),

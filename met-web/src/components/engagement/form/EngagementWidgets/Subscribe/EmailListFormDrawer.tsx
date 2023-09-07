@@ -3,32 +3,40 @@ import { useAppDispatch } from 'hooks';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
-import { Grid, FormGroup, FormControlLabel, Radio } from '@mui/material';
+import { Grid, FormControlLabel, Radio, FormControl, FormLabel, FormHelperText } from '@mui/material';
 import { MetHeader3, MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
-import { useForm, FormProvider, SubmitHandler, Controller, ControllerRenderProps } from 'react-hook-form';
+import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { SubscribeContext } from './SubscribeContext';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
-import { SUBSCRIBE_TYPE, SubscribeForm } from 'models/subscription';
+import { SUBSCRIBE_TYPE } from 'models/subscription';
 import RichTextEditor from 'components/common/RichTextEditor';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor/utils';
 import { patchSubscribeForm, postSubscribeForm, PatchSubscribeProps } from 'services/subscriptionService';
-import { RichTextToolbarConfig } from './constants';
+import { CALL_TO_ACTION_TYPE, RichTextToolbarConfig } from './constants';
+import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor/utils';
+import ControlledRadioGroup from 'components/common/ControlledInputComponents/ControlledRadioGroup';
+import { When } from 'react-if';
+import { Palette } from 'styles/Theme';
 
 const schema = yup
     .object({
-        call_to_action_type: yup.string(),
-        call_to_action_text: yup
+        description: yup
             .string()
-            .max(25, 'Call to action cannot exceed 25 characters')
-            .required('Call to action is required'),
+            .required('This field is required')
+            .max(500, 'Description cannot exceed 500 characters'),
+        richDescription: yup.string().required('This field is required'),
+        callToActionType: yup.string().required('This field is required'),
+        callToActionText: yup
+            .string()
+            .required('This field is required')
+            .max(25, 'call to action cannot exceed 25 characters'),
     })
     .required();
 
 type EmailList = yup.TypeOf<typeof schema> & {
-    call_to_action_type: 'link' | 'button';
+    callToActionType: 'link' | 'button';
 };
 
 const EmailListDrawer = () => {
@@ -36,13 +44,11 @@ const EmailListDrawer = () => {
         widget,
         handleSubscribeDrawerOpen,
         emailListTabOpen,
-        richEmailListDescription,
-        setRichEmailListDescription,
-        setSubscribeOptions,
         subscribeOptionToEdit,
         loadSubscribeOptions,
         setSubscribeOptionToEdit,
     } = useContext(SubscribeContext);
+
     const [isCreating, setIsCreating] = useState(false);
     const [initialRichDescription, setInitialRichDescription] = useState('');
     const subscribeItem = subscribeOptionToEdit ? subscribeOptionToEdit.subscribe_items[0] : null;
@@ -52,65 +58,69 @@ const EmailListDrawer = () => {
     });
 
     useEffect(() => {
-        methods.setValue('call_to_action_type', 'link');
-        methods.setValue('call_to_action_text', 'Click here to sign up');
-        setInitialRichDescription(richEmailListDescription);
-    }, []);
-
-    useEffect(() => {
-        methods.setValue('call_to_action_type', subscribeItem ? subscribeItem.call_to_action_type : 'link');
-        methods.setValue(
-            'call_to_action_text',
-            subscribeItem ? subscribeItem.call_to_action_text : 'Click here to sign up',
-        );
-        setInitialRichDescription(subscribeItem ? subscribeItem.description : richEmailListDescription);
-        setRichEmailListDescription(subscribeItem ? subscribeItem.description : '');
+        if (subscribeOptionToEdit) {
+            const subscribeItem = subscribeOptionToEdit.subscribe_items[0];
+            setValue('description', getTextFromDraftJsContentState(subscribeItem.description));
+            setValue('richDescription', subscribeItem.description);
+            setValue('callToActionType', subscribeItem.call_to_action_type);
+            setValue('callToActionText', subscribeItem.call_to_action_text);
+            setInitialRichDescription(subscribeItem.description);
+        } else {
+            if (!subscribeOptionToEdit) {
+                setValue('callToActionType', 'link');
+                setValue('callToActionText', 'Click here to sign up');
+                setInitialRichDescription('');
+            }
+        }
     }, [subscribeOptionToEdit]);
 
-    const { handleSubmit } = methods;
+    const {
+        handleSubmit,
+        control,
+        setValue,
+        formState: { errors },
+    } = methods;
 
     const updateEmailListForm = async (data: EmailList) => {
-        const validatedData = await schema.validate(data);
-        const { call_to_action_type, call_to_action_text } = validatedData;
-        if (subscribeOptionToEdit && subscribeItem && widget) {
-            const subscribeUpdatesToPatch = {
-                description: richEmailListDescription,
-                call_to_action_type: call_to_action_type,
-                call_to_action_text: call_to_action_text,
-            } as PatchSubscribeProps;
-
-            await patchSubscribeForm(widget.id, subscribeOptionToEdit.id, subscribeItem.id, {
-                ...subscribeUpdatesToPatch,
-            });
-
-            loadSubscribeOptions();
-
-            dispatch(openNotification({ severity: 'success', text: 'EmailListForm was successfully updated' }));
+        if (!subscribeOptionToEdit || !subscribeItem || !widget) {
+            return;
         }
+        const validatedData = await schema.validate(data);
+        const { callToActionType, callToActionText, richDescription } = validatedData;
+        const subscribeUpdatesToPatch = {
+            description: richDescription,
+            call_to_action_type: callToActionType,
+            call_to_action_text: callToActionText,
+        } as PatchSubscribeProps;
+
+        await patchSubscribeForm(widget.id, subscribeOptionToEdit.id, subscribeItem.id, {
+            ...subscribeUpdatesToPatch,
+        });
+
+        loadSubscribeOptions();
+
+        dispatch(openNotification({ severity: 'success', text: 'EmailListForm was successfully updated' }));
     };
 
     const createEmailListForm = async (data: EmailList) => {
-        const validatedData = await schema.validate(data);
-        const { call_to_action_type, call_to_action_text } = validatedData;
-        if (widget) {
-            const createdWidgetForm = await postSubscribeForm(widget.id, {
-                widget_id: widget.id,
-                type: SUBSCRIBE_TYPE.EMAIL_LIST,
-                items: [
-                    {
-                        description: richEmailListDescription,
-                        call_to_action_type: call_to_action_type,
-                        call_to_action_text: call_to_action_text,
-                        form_type: SUBSCRIBE_TYPE.EMAIL_LIST,
-                    },
-                ],
-            });
-
-            setSubscribeOptions((prevWidgetForms: SubscribeForm[]) => {
-                const filteredForms = prevWidgetForms.filter((form) => form.type !== SUBSCRIBE_TYPE.EMAIL_LIST);
-                return [...filteredForms, createdWidgetForm];
-            });
+        if (!widget) {
+            return;
         }
+        const validatedData = await schema.validate(data);
+        const { callToActionType, callToActionText, richDescription } = validatedData;
+        await postSubscribeForm(widget.id, {
+            widget_id: widget.id,
+            type: SUBSCRIBE_TYPE.EMAIL_LIST,
+            items: [
+                {
+                    description: richDescription,
+                    call_to_action_type: callToActionType,
+                    call_to_action_text: callToActionText,
+                    form_type: SUBSCRIBE_TYPE.EMAIL_LIST,
+                },
+            ],
+        });
+        loadSubscribeOptions();
         dispatch(openNotification({ severity: 'success', text: 'Email list form was successfully created' }));
     };
 
@@ -141,10 +151,6 @@ const EmailListDrawer = () => {
         }
     };
 
-    const handleRichDescriptionChange = (newState: string) => {
-        setRichEmailListDescription(newState);
-    };
-
     const handleClose = () => {
         handleSubscribeDrawerOpen(SUBSCRIBE_TYPE.EMAIL_LIST, false);
         setSubscribeOptionToEdit(null);
@@ -169,55 +175,52 @@ const EmailListDrawer = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <MetLabel sx={{ marginBottom: '2px' }}>Description</MetLabel>
-                                <RichTextEditor
-                                    handleEditorStateChange={handleRichDescriptionChange}
-                                    initialRawEditorState={initialRichDescription || ''}
-                                    error={getTextFromDraftJsContentState(richEmailListDescription).length > 550}
-                                    helperText={'Maximum 550 Characters.'}
-                                    toolbar={RichTextToolbarConfig}
+                                <Controller
+                                    name="richDescription"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <RichTextEditor
+                                            handleEditorStateChange={(editorState: string) =>
+                                                field.onChange(editorState)
+                                            }
+                                            setRawText={(rawText: string) => setValue('description', rawText)}
+                                            error={Boolean(errors.description)}
+                                            helperText={String(errors.description?.message)}
+                                            initialRawEditorState={initialRichDescription}
+                                            toolbar={RichTextToolbarConfig}
+                                        />
+                                    )}
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Call-to-action type</MetLabel>
-                                <FormGroup>
-                                    <Controller
-                                        control={methods.control}
-                                        name="call_to_action_type"
-                                        render={({
-                                            field,
-                                        }: {
-                                            field: ControllerRenderProps<EmailList, 'call_to_action_type'>;
-                                        }) => (
-                                            <FormControlLabel
-                                                control={<Radio />}
-                                                label="Link"
-                                                checked={field.value === 'link'}
-                                                onChange={() => field.onChange('link')}
-                                            />
-                                        )}
-                                    />
-                                    <Controller
-                                        control={methods.control}
-                                        name="call_to_action_type"
-                                        render={({
-                                            field,
-                                        }: {
-                                            field: ControllerRenderProps<EmailList, 'call_to_action_type'>;
-                                        }) => (
-                                            <FormControlLabel
-                                                control={<Radio />}
-                                                label="Button"
-                                                checked={field.value === 'button'}
-                                                onChange={() => field.onChange('button')}
-                                            />
-                                        )}
-                                    />
-                                </FormGroup>
+                                <FormControl error={Boolean(errors.callToActionType)}>
+                                    <FormLabel
+                                        id="controlled-radio-buttons-group"
+                                        sx={{ fontWeight: 'bold', color: Palette.text.primary, paddingBottom: 1 }}
+                                    >
+                                        Call-to-action Type
+                                    </FormLabel>
+                                    <ControlledRadioGroup name="callToActionType">
+                                        <FormControlLabel
+                                            value={CALL_TO_ACTION_TYPE.LINK}
+                                            control={<Radio />}
+                                            label={'Link'}
+                                        />
+                                        <FormControlLabel
+                                            value={CALL_TO_ACTION_TYPE.BUTTON}
+                                            control={<Radio />}
+                                            label={'Button'}
+                                        />
+                                    </ControlledRadioGroup>
+                                    <When condition={Boolean(errors.callToActionType)}>
+                                        <FormHelperText>{String(errors.callToActionType?.message)}</FormHelperText>
+                                    </When>
+                                </FormControl>
                             </Grid>
                             <Grid item xs={12}>
                                 <MetLabel sx={{ marginBottom: '2px' }}>Call-to-action</MetLabel>
                                 <ControlledTextField
-                                    name="call_to_action_text"
+                                    name="callToActionText"
                                     variant="outlined"
                                     label=""
                                     InputLabelProps={{
