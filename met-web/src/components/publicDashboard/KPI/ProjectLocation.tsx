@@ -14,10 +14,16 @@ import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
 interface SurveysCompletedProps {
     engagement: Engagement;
     engagementIsLoading: boolean;
+    updateLoading: (loading: boolean) => void;
     handleProjectMapData: (data: Map) => void;
 }
 
-const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData }: SurveysCompletedProps) => {
+const ProjectLocation = ({
+    engagement,
+    engagementIsLoading,
+    updateLoading,
+    handleProjectMapData,
+}: SurveysCompletedProps) => {
     const [data, setData] = useState<Map | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
@@ -33,6 +39,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
     const fetchData = async () => {
         setIsError(false);
         setIsLoading(true);
+        updateLoading(true);
         try {
             const response = await getMapData(Number(engagement.id));
             setData(response);
@@ -45,6 +52,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
             }
         } finally {
             setIsLoading(false);
+            updateLoading(false);
         }
     };
 

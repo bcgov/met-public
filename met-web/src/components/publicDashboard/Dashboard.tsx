@@ -30,7 +30,8 @@ const Dashboard = () => {
     const [projectMapData, setProjectMapData] = React.useState<Map | null>(null);
     const [pdfExportProgress, setPdfExportProgress] = React.useState(0);
     const basePath = slug ? `/${slug}` : `/engagements/${engagement?.id}`;
-    const mapExists = (projectMapData?.latitude && projectMapData?.longitude) ?? true;
+    const [loading, setLoading] = React.useState(true);
+    const mapExists = projectMapData?.latitude && projectMapData?.longitude;
 
     const handleProjectMapData = (data: Map) => {
         setProjectMapData(data);
@@ -180,11 +181,12 @@ const Dashboard = () => {
                                                 engagementIsLoading={isEngagementLoading}
                                             />
                                         </Grid>
-                                        <When condition={mapExists}>
+                                        <When condition={loading || mapExists}>
                                             <Grid item sm={8} md={4} sx={{ width: isTablet ? '90%' : '100%' }}>
                                                 <ProjectLocation
                                                     engagement={engagement}
                                                     engagementIsLoading={isEngagementLoading}
+                                                    updateLoading={setLoading}
                                                     handleProjectMapData={handleProjectMapData}
                                                 />
                                             </Grid>

@@ -26,7 +26,8 @@ const EngagementsAccordion = ({
     const [openedEngagements, setOpenedEngagements] = useState<number[]>([]);
     const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('xs'));
     const [projectMapData, setProjectMapData] = React.useState<Map | null>(null);
-    const mapExists = (projectMapData?.latitude && projectMapData?.longitude) ?? true;
+    const [loading, setLoading] = React.useState(true);
+    const mapExists = projectMapData?.latitude && projectMapData?.longitude;
 
     if (engagements.length == 0) {
         return (
@@ -104,11 +105,12 @@ const EngagementsAccordion = ({
                                     <Grid item xs={12} sm={!mapExists ? 6 : 4}>
                                         <SurveysCompleted engagement={engagement} engagementIsLoading={false} />
                                     </Grid>
-                                    <When condition={mapExists}>
+                                    <When condition={loading || mapExists}>
                                         <Grid item xs={12} sm={4}>
                                             <ProjectLocation
                                                 engagement={engagement}
                                                 engagementIsLoading={false}
+                                                updateLoading={setLoading}
                                                 handleProjectMapData={handleProjectMapData}
                                             />
                                         </Grid>
