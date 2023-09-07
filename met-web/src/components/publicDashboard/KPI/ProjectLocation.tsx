@@ -14,16 +14,10 @@ import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
 interface SurveysCompletedProps {
     engagement: Engagement;
     engagementIsLoading: boolean;
-    updateLoading: (loading: boolean) => void;
     handleProjectMapData: (data: Map) => void;
 }
 
-const ProjectLocation = ({
-    engagement,
-    engagementIsLoading,
-    updateLoading,
-    handleProjectMapData,
-}: SurveysCompletedProps) => {
+const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData }: SurveysCompletedProps) => {
     const [data, setData] = useState<Map | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
@@ -39,7 +33,6 @@ const ProjectLocation = ({
     const fetchData = async () => {
         setIsError(false);
         setIsLoading(true);
-        updateLoading(true);
         try {
             const response = await getMapData(Number(engagement.id));
             setData(response);
@@ -52,7 +45,6 @@ const ProjectLocation = ({
             }
         } finally {
             setIsLoading(false);
-            updateLoading(false);
         }
     };
 
@@ -101,22 +93,24 @@ const ProjectLocation = ({
 
     return (
         <>
-            <MetLabel mb={{ md: 0.5, lg: 2 }}>Project Location</MetLabel>
-            <MetPaper sx={{ textAlign: 'center' }}>
-                <Box
-                    sx={{
-                        width: '100%',
-                        height: '280px',
-                    }}
-                >
-                    <MetMap
-                        geojson={geoJSONDecode(data.geojson)}
-                        latitude={data.latitude}
-                        longitude={data.longitude}
-                        markerLabel={data.marker_label}
-                    />
-                </Box>
-            </MetPaper>
+            <Grid item sm={8} md={4} sx={{ width: isTablet ? '90%' : '100%' }}>
+                <MetLabel mb={{ md: 0.5, lg: 2 }}>Project Location</MetLabel>
+                <MetPaper sx={{ textAlign: 'center' }}>
+                    <Box
+                        sx={{
+                            width: '100%',
+                            height: '280px',
+                        }}
+                    >
+                        <MetMap
+                            geojson={geoJSONDecode(data.geojson)}
+                            latitude={data.latitude}
+                            longitude={data.longitude}
+                            markerLabel={data.marker_label}
+                        />
+                    </Box>
+                </MetPaper>
+            </Grid>
         </>
     );
 };
