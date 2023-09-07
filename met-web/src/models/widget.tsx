@@ -22,13 +22,3 @@ export enum WidgetType {
     Map = 6,
     Video = 7,
 }
-
-export const WidgetTitles: { [key in WidgetType]: string } = {
-    [WidgetType.WhoIsListening]: 'Who Is Listening',
-    [WidgetType.Document]: 'Documents',
-    [WidgetType.Phases]: 'Environmental Assessment Process',
-    [WidgetType.Subscribe]: 'Sign Up for Updates',
-    [WidgetType.Events]: 'Events',
-    [WidgetType.Map]: 'Map',
-    [WidgetType.Video]: 'Video',
-};

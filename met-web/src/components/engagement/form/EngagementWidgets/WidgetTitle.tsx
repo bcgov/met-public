@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { MetHeader3, PrimaryButton } from 'components/common';
-import { Widget, WidgetTitles } from 'models/widget';
+import { Widget } from 'models/widget';
 import { CircularProgress, IconButton, Stack, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { Else, If, Then } from 'react-if';
@@ -23,7 +23,6 @@ export const WidgetTitle = ({ widget }: { widget: Widget }) => {
             return;
         }
         try {
-            if (title === '') setTitle(WidgetTitles[widget.widget_type_id]);
             setIsSaving(true);
             const response = await updateWidget({
                 id: widget.id,
