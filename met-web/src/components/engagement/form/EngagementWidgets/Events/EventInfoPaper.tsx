@@ -82,7 +82,7 @@ const EventInfoPaper = ({ event, removeEvent, ...rest }: EventInfoPaperProps) =>
                             {`${formatDate(eventItem.start_date, 'h:mm a')} to ${formatDate(
                                 eventItem.end_date,
                                 'h:mm a',
-                            )} PST`}
+                            )} PT`}
                         </MetParagraph>
                     </Grid>
                 </Grid>
