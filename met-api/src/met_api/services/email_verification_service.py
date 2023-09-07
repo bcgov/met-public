@@ -141,8 +141,8 @@ class EmailVerificationService:
             engagement.tenant_id)
         project_name = EmailVerificationService._get_project_name(
             subscription_type, tenant_name, engagement)
-        is_subscribing_to_tenant = True if subscription_type == SubscriptionTypes.TENANT.value else False
-        is_subscribing_to_project = True if subscription_type != SubscriptionTypes.TENANT.value else False
+        is_subscribing_to_tenant = subscription_type == SubscriptionTypes.TENANT.value
+        is_subscribing_to_project = subscription_type != SubscriptionTypes.TENANT.value
         template_id = get_gc_notify_config('SUBSCRIBE_EMAIL_TEMPLATE_ID')
         template = Template.get_template('subscribe_email.html')
         confirm_path = current_app.config.get('SUBSCRIBE_PATH'). \
