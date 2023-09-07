@@ -14,8 +14,14 @@ import { SubscribeContext } from './SubscribeContext';
 import { SUBSCRIBE_TYPE, SubscribeForm } from 'models/subscription';
 
 const SubscribeInfoBlock = () => {
-    const { subscribeOptions, setSubscribeOptions, isLoadingSubscribe, updateWidgetSubscribeSorting, widget } =
-        useContext(SubscribeContext);
+    const {
+        subscribeOptions,
+        setSubscribeOptions,
+        isLoadingSubscribe,
+        updateWidgetSubscribeSorting,
+        widget,
+        loadSubscribeOptions,
+    } = useContext(SubscribeContext);
     const dispatch = useAppDispatch();
     const debounceUpdateWidgetSubscribeSorting = useRef(
         debounce((widgetSubscribeToSort: SubscribeForm[]) => {
@@ -72,8 +78,8 @@ const SubscribeInfoBlock = () => {
         try {
             if (widget) {
                 await deleteSubscribeForm(widget.id, subscribeFormId);
-                const newSubscribe = subscribeOptions.filter((subscribeForm) => subscribeForm.id !== subscribeFormId);
-                setSubscribeOptions([...newSubscribe]);
+                subscribeOptions.filter((subscribeForm) => subscribeForm.id !== subscribeFormId);
+                loadSubscribeOptions();
                 dispatch(
                     openNotification({
                         severity: 'success',

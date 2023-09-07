@@ -15,6 +15,7 @@ import RichTextEditor from 'components/common/RichTextEditor';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor/utils';
 import { patchSubscribeForm, postSubscribeForm, PatchSubscribeProps } from 'services/subscriptionService';
+import { RichTextToolbarConfig } from './constants';
 
 const schema = yup
     .object({
@@ -173,6 +174,7 @@ const EmailListDrawer = () => {
                                     initialRawEditorState={initialRichDescription || ''}
                                     error={getTextFromDraftJsContentState(richEmailListDescription).length > 550}
                                     helperText={'Maximum 550 Characters.'}
+                                    toolbar={RichTextToolbarConfig}
                                 />
                             </Grid>
                             <Grid item xs={12}>

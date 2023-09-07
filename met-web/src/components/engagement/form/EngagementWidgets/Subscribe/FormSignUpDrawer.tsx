@@ -18,6 +18,7 @@ import { When } from 'react-if';
 import { useDispatch } from 'react-redux';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor/utils';
+import { RichTextToolbarConfig } from './constants';
 
 const schema = yup
     .object({
@@ -50,8 +51,19 @@ const FormSignUpDrawer = () => {
     const [isCreating, setIsCreating] = useState(false);
     const [initialRawEditorState, setInitialRawEditorState] = useState('');
 
+    const CALL_TO_ACTION_TYPE = {
+        LINK: 'link',
+        BUTTON: 'button',
+    };
+
     const methods = useForm<FormSignUp>({
         resolver: yupResolver(schema),
+        defaultValues: {
+            description: '',
+            richDescription: '',
+            callToActionType: CALL_TO_ACTION_TYPE.LINK,
+            callToActionText: 'Click here to sign up',
+        },
     });
 
     const dispatch = useDispatch();
@@ -72,6 +84,12 @@ const FormSignUpDrawer = () => {
             setValue('callToActionType', subscribeItem.call_to_action_type);
             setValue('callToActionText', subscribeItem.call_to_action_text);
             setInitialRawEditorState(subscribeItem.description);
+        } else {
+            if (!subscribeOptionToEdit) {
+                setValue('callToActionType', 'link');
+                setValue('callToActionText', 'Click here to sign up');
+                setInitialRawEditorState('');
+            }
         }
     }, [subscribeOptionToEdit]);
 
@@ -167,6 +185,7 @@ const FormSignUpDrawer = () => {
                                         error={Boolean(errors.description)}
                                         helperText={String(errors.description?.message)}
                                         initialRawEditorState={initialRawEditorState}
+                                        toolbar={RichTextToolbarConfig}
                                     />
                                 )}
                             />
@@ -181,8 +200,16 @@ const FormSignUpDrawer = () => {
                                     Call-to-action Type
                                 </FormLabel>
                                 <ControlledRadioGroup name="callToActionType">
-                                    <FormControlLabel value="link" control={<Radio />} label={'Link'} />
-                                    <FormControlLabel value="button" control={<Radio />} label={'Button'} />
+                                    <FormControlLabel
+                                        value={CALL_TO_ACTION_TYPE.LINK}
+                                        control={<Radio />}
+                                        label={'Link'}
+                                    />
+                                    <FormControlLabel
+                                        value={CALL_TO_ACTION_TYPE.BUTTON}
+                                        control={<Radio />}
+                                        label={'Button'}
+                                    />
                                 </ControlledRadioGroup>
                                 <When condition={Boolean(errors.callToActionType)}>
                                     <FormHelperText>{String(errors.callToActionType?.message)}</FormHelperText>

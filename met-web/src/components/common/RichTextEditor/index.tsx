@@ -18,6 +18,24 @@ const RichTextEditor = ({
     initialHTMLText = '',
     error = false,
     helperText = '',
+    toolbar = {
+        options: [
+            'inline',
+            'blockType',
+            'fontSize',
+            'list',
+            'colorPicker',
+            'link',
+            'embedded',
+            'emoji',
+            'image',
+            'history',
+        ],
+        inline: {
+            options: ['bold', 'italic', 'underline', 'superscript', 'subscript'],
+        },
+        list: { options: ['unordered', 'ordered'] },
+    },
 }) => {
     const getStateFromInitialValue = () => {
         if (initialRawEditorState) {
@@ -59,24 +77,7 @@ const RichTextEditor = ({
                             padding: '1em',
                             resize: 'vertical',
                         }}
-                        toolbar={{
-                            options: [
-                                'inline',
-                                'blockType',
-                                'fontSize',
-                                'list',
-                                'colorPicker',
-                                'link',
-                                'embedded',
-                                'emoji',
-                                'image',
-                                'history',
-                            ],
-                            inline: {
-                                options: ['bold', 'italic', 'underline', 'superscript', 'subscript'],
-                            },
-                            list: { options: ['unordered', 'ordered'] },
-                        }}
+                        toolbar={toolbar}
                     />
                 </form>
             </MetPaper>

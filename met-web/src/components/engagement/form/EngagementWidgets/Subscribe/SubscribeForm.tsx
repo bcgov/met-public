@@ -10,8 +10,14 @@ import SubscribeInfoBlock from './SubscribeInfoBlock';
 
 const Form = () => {
     const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
-    const { handleSubscribeDrawerOpen, subscribeOptions, widget } = useContext(SubscribeContext);
+    const { handleSubscribeDrawerOpen, subscribeOptions, widget, setSubscribeOptionToEdit } =
+        useContext(SubscribeContext);
     const subscribeFormExists = subscribeOptions.length > 0;
+
+    const emailListOption = subscribeOptions.find(
+        (subscribeOption) => subscribeOption.type === SUBSCRIBE_TYPE.EMAIL_LIST,
+    );
+    const signUpOption = subscribeOptions.find((subscribeOption) => subscribeOption.type === SUBSCRIBE_TYPE.SIGN_UP);
 
     if (!widget) {
         return null;
@@ -40,12 +46,22 @@ const Form = () => {
                 </Grid>
             </When>
             <Grid item>
-                <WidgetButton onClick={() => handleSubscribeDrawerOpen(SUBSCRIBE_TYPE.EMAIL_LIST, true)}>
+                <WidgetButton
+                    onClick={() => {
+                        handleSubscribeDrawerOpen(SUBSCRIBE_TYPE.EMAIL_LIST, true);
+                        setSubscribeOptionToEdit(emailListOption || null);
+                    }}
+                >
                     Email List
                 </WidgetButton>
             </Grid>
             <Grid item>
-                <WidgetButton onClick={() => handleSubscribeDrawerOpen(SUBSCRIBE_TYPE.SIGN_UP, true)}>
+                <WidgetButton
+                    onClick={() => {
+                        handleSubscribeDrawerOpen(SUBSCRIBE_TYPE.SIGN_UP, true);
+                        setSubscribeOptionToEdit(signUpOption || null);
+                    }}
+                >
                     Form Sign-up
                 </WidgetButton>
             </Grid>
