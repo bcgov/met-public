@@ -10,8 +10,8 @@ import SubscribeInfoBlock from './SubscribeInfoBlock';
 
 const Form = () => {
     const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
-    const { handleSubscribeDrawerOpen, subscribe, widget } = useContext(SubscribeContext);
-    const subscribeFormExists = subscribe.length > 0;
+    const { handleSubscribeDrawerOpen, subscribeOptions, widget } = useContext(SubscribeContext);
+    const subscribeFormExists = subscribeOptions.length > 0;
 
     if (!widget) {
         return null;
@@ -45,7 +45,7 @@ const Form = () => {
                 </WidgetButton>
             </Grid>
             <Grid item>
-                <WidgetButton onClick={() => handleSubscribeDrawerOpen(SUBSCRIBE_TYPE.FORM, true)}>
+                <WidgetButton onClick={() => handleSubscribeDrawerOpen(SUBSCRIBE_TYPE.SIGN_UP, true)}>
                     Form Sign-up
                 </WidgetButton>
             </Grid>

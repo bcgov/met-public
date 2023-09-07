@@ -14,7 +14,7 @@ import { SubscribeContext } from './SubscribeContext';
 import { SUBSCRIBE_TYPE, SubscribeForm } from 'models/subscription';
 
 const SubscribeInfoBlock = () => {
-    const { subscribe, setSubscribe, isLoadingSubscribe, updateWidgetSubscribeSorting, widget } =
+    const { subscribeOptions, setSubscribeOptions, isLoadingSubscribe, updateWidgetSubscribeSorting, widget } =
         useContext(SubscribeContext);
     const dispatch = useAppDispatch();
     const debounceUpdateWidgetSubscribeSorting = useRef(
@@ -28,9 +28,9 @@ const SubscribeInfoBlock = () => {
             return;
         }
 
-        const items = reorder(subscribe, result.source.index, result.destination.index);
+        const items: SubscribeForm[] = reorder(subscribeOptions, result.source.index, result.destination.index);
 
-        setSubscribe(items);
+        setSubscribeOptions(items);
 
         debounceUpdateWidgetSubscribeSorting(items);
     };
@@ -53,10 +53,10 @@ const SubscribeInfoBlock = () => {
                     header: 'Remove Subscribe Form',
                     subText: [
                         {
-                            text: 'You will be removing this subscribe form from the engagement.',
+                            text: 'You will be removing this subscribeOptions form from the engagement.',
                         },
                         {
-                            text: 'Do you want to remove this subscribe form?',
+                            text: 'Do you want to remove this subscribeOptions form?',
                         },
                     ],
                     handleConfirm: () => {
@@ -72,17 +72,20 @@ const SubscribeInfoBlock = () => {
         try {
             if (widget) {
                 await deleteSubscribeForm(widget.id, subscribeFormId);
-                const newSubscribe = subscribe.filter((subscribeForm) => subscribeForm.id !== subscribeFormId);
-                setSubscribe([...newSubscribe]);
+                const newSubscribe = subscribeOptions.filter((subscribeForm) => subscribeForm.id !== subscribeFormId);
+                setSubscribeOptions([...newSubscribe]);
                 dispatch(
-                    openNotification({ severity: 'success', text: 'The subscribe form was removed successfully' }),
+                    openNotification({
+                        severity: 'success',
+                        text: 'The subscribeOptions form was removed successfully',
+                    }),
                 );
             }
         } catch (error) {
             dispatch(
                 openNotification({
                     severity: 'error',
-                    text: 'An error occurred while trying to remove subscribe form',
+                    text: 'An error occurred while trying to remove subscribeOptions form',
                 }),
             );
         }
@@ -92,7 +95,7 @@ const SubscribeInfoBlock = () => {
         <DragDropContext onDragEnd={moveSubscribeForm}>
             <MetDroppable droppableId="droppable">
                 <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" spacing={2}>
-                    {subscribe.map((subscribeForm: SubscribeForm, index) => {
+                    {subscribeOptions.map((subscribeForm: SubscribeForm, index: number) => {
                         return (
                             <Grid item xs={12} key={`Grid-${subscribeForm.widget_id}`}>
                                 <MetDraggable draggableId={String(subscribeForm.widget_id)} index={index}>
@@ -102,7 +105,7 @@ const SubscribeInfoBlock = () => {
                                             subscribeForm={subscribeForm}
                                         />
                                     </When>
-                                    <When condition={subscribeForm.type === SUBSCRIBE_TYPE.FORM}>
+                                    <When condition={subscribeForm.type === SUBSCRIBE_TYPE.SIGN_UP}>
                                         <SubscribeInfoPaper
                                             removeSubscribeForm={handleRemoveSubscribeForm}
                                             subscribeForm={subscribeForm}

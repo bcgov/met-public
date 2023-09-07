@@ -93,7 +93,7 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
             setLoading(true);
             const subscriptionForms = await getSubscriptionsForms(Number(widgetId));
 
-            return subscriptionForms.find((form) => form.type === SUBSCRIBE_TYPE.FORM);
+            return subscriptionForms.find((form) => form.type === SUBSCRIBE_TYPE.SIGN_UP);
         } catch (err) {
             dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to load the widget' }));
         }

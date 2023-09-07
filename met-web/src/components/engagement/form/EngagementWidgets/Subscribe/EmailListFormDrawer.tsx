@@ -37,13 +37,14 @@ const EmailListDrawer = () => {
         emailListTabOpen,
         richEmailListDescription,
         setRichEmailListDescription,
-        setSubscribe,
-        subscribeToEdit,
-        loadSubscribe,
+        setSubscribeOptions,
+        subscribeOptionToEdit,
+        loadSubscribeOptions,
+        setSubscribeOptionToEdit,
     } = useContext(SubscribeContext);
     const [isCreating, setIsCreating] = useState(false);
     const [initialRichDescription, setInitialRichDescription] = useState('');
-    const subscribeItem = subscribeToEdit ? subscribeToEdit.subscribe_items[0] : null;
+    const subscribeItem = subscribeOptionToEdit ? subscribeOptionToEdit.subscribe_items[0] : null;
     const dispatch = useAppDispatch();
     const methods = useForm<EmailList>({
         resolver: yupResolver(schema),
@@ -63,25 +64,25 @@ const EmailListDrawer = () => {
         );
         setInitialRichDescription(subscribeItem ? subscribeItem.description : richEmailListDescription);
         setRichEmailListDescription(subscribeItem ? subscribeItem.description : '');
-    }, [subscribeToEdit]);
+    }, [subscribeOptionToEdit]);
 
     const { handleSubmit } = methods;
 
     const updateEmailListForm = async (data: EmailList) => {
         const validatedData = await schema.validate(data);
         const { call_to_action_type, call_to_action_text } = validatedData;
-        if (subscribeToEdit && subscribeItem && widget) {
+        if (subscribeOptionToEdit && subscribeItem && widget) {
             const subscribeUpdatesToPatch = {
                 description: richEmailListDescription,
                 call_to_action_type: call_to_action_type,
                 call_to_action_text: call_to_action_text,
             } as PatchSubscribeProps;
 
-            await patchSubscribeForm(widget.id, subscribeToEdit.id, subscribeItem.id, {
+            await patchSubscribeForm(widget.id, subscribeOptionToEdit.id, subscribeItem.id, {
                 ...subscribeUpdatesToPatch,
             });
 
-            loadSubscribe();
+            loadSubscribeOptions();
 
             dispatch(openNotification({ severity: 'success', text: 'EmailListForm was successfully updated' }));
         }
@@ -104,7 +105,7 @@ const EmailListDrawer = () => {
                 ],
             });
 
-            setSubscribe((prevWidgetForms: SubscribeForm[]) => {
+            setSubscribeOptions((prevWidgetForms: SubscribeForm[]) => {
                 const filteredForms = prevWidgetForms.filter((form) => form.type !== SUBSCRIBE_TYPE.EMAIL_LIST);
                 return [...filteredForms, createdWidgetForm];
             });
@@ -113,7 +114,7 @@ const EmailListDrawer = () => {
     };
 
     const saveForm = async (data: EmailList) => {
-        if (subscribeToEdit) {
+        if (subscribeOptionToEdit) {
             return updateEmailListForm(data);
         }
         return createEmailListForm(data);
@@ -143,14 +144,13 @@ const EmailListDrawer = () => {
         setRichEmailListDescription(newState);
     };
 
+    const handleClose = () => {
+        handleSubscribeDrawerOpen(SUBSCRIBE_TYPE.EMAIL_LIST, false);
+        setSubscribeOptionToEdit(null);
+    };
+
     return (
-        <Drawer
-            anchor="right"
-            open={emailListTabOpen}
-            onClose={() => {
-                handleSubscribeDrawerOpen(SUBSCRIBE_TYPE.EMAIL_LIST, false);
-            }}
-        >
+        <Drawer anchor="right" open={emailListTabOpen} onClose={handleClose}>
             <Box sx={{ width: '40vw', paddingTop: '7em' }} role="presentation">
                 <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit)}>
@@ -238,11 +238,7 @@ const EmailListDrawer = () => {
                                     <PrimaryButton type="submit" loading={isCreating}>{`Save & Close`}</PrimaryButton>
                                 </Grid>
                                 <Grid item>
-                                    <SecondaryButton
-                                        onClick={() => handleSubscribeDrawerOpen(SUBSCRIBE_TYPE.EMAIL_LIST, false)}
-                                    >
-                                        Cancel
-                                    </SecondaryButton>
+                                    <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
                                 </Grid>
                             </Grid>
                         </Grid>
