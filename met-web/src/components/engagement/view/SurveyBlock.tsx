@@ -59,7 +59,6 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
                                 disabled={!surveyId}
                                 onClick={() => {
                                     navigate(`/engagements/${savedEngagement.id}/dashboard/1`);
-                                    window.scrollTo(0, 0);
                                 }}
                             >
                                 View Feedback
