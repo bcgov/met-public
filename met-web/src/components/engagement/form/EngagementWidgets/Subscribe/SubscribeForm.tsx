@@ -3,7 +3,7 @@ import { Grid, Divider } from '@mui/material';
 import { PrimaryButton, WidgetButton, MetParagraph } from 'components/common';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { SubscribeContext } from './SubscribeContext';
-import { Subscribe_TYPE } from 'models/subscription';
+import { SUBSCRIBE_TYPE } from 'models/subscription';
 import { WidgetTitle } from '../WidgetTitle';
 import { When } from 'react-if';
 import SubscribeInfoBlock from './SubscribeInfoBlock';
@@ -40,12 +40,12 @@ const Form = () => {
                 </Grid>
             </When>
             <Grid item>
-                <WidgetButton onClick={() => handleSubscribeDrawerOpen(Subscribe_TYPE.EMAIL_LIST, true)}>
+                <WidgetButton onClick={() => handleSubscribeDrawerOpen(SUBSCRIBE_TYPE.EMAIL_LIST, true)}>
                     Email List
                 </WidgetButton>
             </Grid>
             <Grid item>
-                <WidgetButton onClick={() => handleSubscribeDrawerOpen(Subscribe_TYPE.FORM, true)}>
+                <WidgetButton onClick={() => handleSubscribeDrawerOpen(SUBSCRIBE_TYPE.FORM, true)}>
                     Form Sign-up
                 </WidgetButton>
             </Grid>

@@ -11,7 +11,7 @@ import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { SubscribeContext } from './SubscribeContext';
-import { Subscribe_TYPE, SubscribeForm } from 'models/subscription';
+import { SUBSCRIBE_TYPE, SubscribeForm } from 'models/subscription';
 
 const SubscribeInfoBlock = () => {
     const { subscribe, setSubscribe, isLoadingSubscribe, updateWidgetSubscribeSorting, widget } =
@@ -96,13 +96,13 @@ const SubscribeInfoBlock = () => {
                         return (
                             <Grid item xs={12} key={`Grid-${subscribeForm.widget_id}`}>
                                 <MetDraggable draggableId={String(subscribeForm.widget_id)} index={index}>
-                                    <When condition={subscribeForm.type === Subscribe_TYPE.EMAIL_LIST}>
+                                    <When condition={subscribeForm.type === SUBSCRIBE_TYPE.EMAIL_LIST}>
                                         <SubscribeInfoPaper
                                             removeSubscribeForm={handleRemoveSubscribeForm}
                                             subscribeForm={subscribeForm}
                                         />
                                     </When>
-                                    <When condition={subscribeForm.type === Subscribe_TYPE.FORM}>
+                                    <When condition={subscribeForm.type === SUBSCRIBE_TYPE.FORM}>
                                         <SubscribeInfoPaper
                                             removeSubscribeForm={handleRemoveSubscribeForm}
                                             subscribeForm={subscribeForm}

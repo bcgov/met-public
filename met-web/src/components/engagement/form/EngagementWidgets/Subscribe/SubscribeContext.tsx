@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useAppDispatch } from 'hooks';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { Widget, WidgetType } from 'models/widget';
-import { Subscribe_TYPE, SubscribeTypeLabel, SubscribeForm } from 'models/subscription';
+import { SUBSCRIBE_TYPE, SubscribeTypeLabel, SubscribeForm } from 'models/subscription';
 import { getSubscriptionsForms, sortWidgetSubscribeForms } from 'services/subscriptionService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
@@ -99,9 +99,9 @@ export const SubscribeProvider = ({ children }: { children: JSX.Element | JSX.El
     };
 
     const handleSubscribeDrawerOpen = (type: SubscribeTypeLabel, open: boolean) => {
-        if (type == Subscribe_TYPE.EMAIL_LIST) {
+        if (type == SUBSCRIBE_TYPE.EMAIL_LIST) {
             setEmailListTabOpen(open);
-        } else if (type == Subscribe_TYPE.FORM) {
+        } else if (type == SUBSCRIBE_TYPE.FORM) {
             setFormSignUpTabOpen(open);
         }
         if (open == false) {
