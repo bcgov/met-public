@@ -66,11 +66,9 @@ const EmailListDrawer = () => {
             setValue('callToActionText', subscribeItem.call_to_action_text);
             setInitialRichDescription(subscribeItem.description);
         } else {
-            if (!subscribeOptionToEdit) {
                 setValue('callToActionType', 'link');
                 setValue('callToActionText', 'Click here to sign up');
                 setInitialRichDescription('');
-            }
         }
     }, [subscribeOptionToEdit]);
 

@@ -9,7 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { SubscribeContext } from './SubscribeContext';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
-import { SUBSCRIBE_TYPE, SubscribeForm } from 'models/subscription';
+import { SUBSCRIBE_TYPE } from 'models/subscription';
 import RichTextEditor from 'components/common/RichTextEditor';
 import ControlledRadioGroup from 'components/common/ControlledInputComponents/ControlledRadioGroup';
 import { Palette } from 'styles/Theme';
@@ -80,11 +80,9 @@ const FormSignUpDrawer = () => {
             setValue('callToActionText', subscribeItem.call_to_action_text);
             setInitialRawEditorState(subscribeItem.description);
         } else {
-            if (!subscribeOptionToEdit) {
-                setValue('callToActionType', 'link');
-                setValue('callToActionText', 'Click here to sign up');
-                setInitialRawEditorState('');
-            }
+            setValue('callToActionType', 'link');
+            setValue('callToActionText', 'Click here to sign up');
+            setInitialRawEditorState('');
         }
     }, [subscribeOptionToEdit]);
 

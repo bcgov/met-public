@@ -4,14 +4,13 @@ import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { MetDraggable, MetDroppable } from 'components/common/Dragdrop';
 import { reorder } from 'utils';
 import SubscribeInfoPaper from './SubscribeInfoPaper';
-import { When } from 'react-if';
 import { debounce } from 'lodash';
 import { deleteSubscribeForm } from 'services/subscriptionService';
 import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { SubscribeContext } from './SubscribeContext';
-import { SUBSCRIBE_TYPE, SubscribeForm } from 'models/subscription';
+import { SubscribeForm } from 'models/subscription';
 
 const SubscribeInfoBlock = () => {
     const {
@@ -59,10 +58,10 @@ const SubscribeInfoBlock = () => {
                     header: 'Remove Subscribe Form',
                     subText: [
                         {
-                            text: 'You will be removing this subscribeOptions form from the engagement.',
+                            text: 'You will be removing this subscribe form from the engagement.',
                         },
                         {
-                            text: 'Do you want to remove this subscribeOptions form?',
+                            text: 'Do you want to remove this subscribe form?',
                         },
                     ],
                     handleConfirm: () => {
@@ -78,12 +77,11 @@ const SubscribeInfoBlock = () => {
         try {
             if (widget) {
                 await deleteSubscribeForm(widget.id, subscribeFormId);
-                subscribeOptions.filter((subscribeForm) => subscribeForm.id !== subscribeFormId);
                 loadSubscribeOptions();
                 dispatch(
                     openNotification({
                         severity: 'success',
-                        text: 'The subscribeOptions form was removed successfully',
+                        text: 'The subscribe form was removed successfully',
                     }),
                 );
             }
