@@ -106,7 +106,7 @@ describe('Engagement form page tests', () => {
 
     test('Engagement form with saved engagement should display saved info', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
-        const { container } = render(<EngagementForm />);
+        render(<EngagementForm />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
