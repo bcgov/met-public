@@ -93,7 +93,7 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
             setLoading(true);
             const subscriptionForms = await getSubscriptionsForms(Number(widgetId));
 
-            return subscriptionForms.find((form) => form.type === SUBSCRIBE_TYPE.SIGN_UP);
+            return subscriptionForms.find((form) => form.type === SUBSCRIBE_TYPE.FORM);
         } catch (err) {
             dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to load the widget' }));
         }
@@ -151,7 +151,7 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
                             {
                                 text:
                                     `We have received your request to join the Community Advisory Committee for ` +
-                                    `${engagement?.name}. You will receive a confirmation email at the address provider, ` +
+                                    `${engagement?.name}. You will receive a confirmation email at the address provided, ` +
                                     `and will be notified of future updates to the Community Advisory Committee.`,
                             },
                         ],

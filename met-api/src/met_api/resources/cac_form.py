@@ -29,7 +29,7 @@ API = Namespace('cac_form_submissions', description='Endpoints for CAC Form Subm
 
 @cors_preflight('POST, OPTIONS')
 @API.route('/<int:widget_id>')
-class Videos(Resource):
+class CACForm(Resource):
     """Resource for managing cac form submissions."""
 
     @staticmethod
