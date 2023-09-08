@@ -10,7 +10,6 @@ import { SubscribeContext } from './SubscribeContext';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { styled } from '@mui/system';
-import './RichEditorStyles.css';
 
 const EditorGrid = styled(Grid)`
     padding-top: 0px !important;
@@ -69,13 +68,11 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
                                 marginTop: -1,
                             }}
                         >
-                            <div className="subscribeOptions-editor-wrapper">
-                                <Editor
-                                    editorState={getEditorStateFromRaw(subscribeItem.description)}
-                                    readOnly={true}
-                                    toolbarHidden
-                                />
-                            </div>
+                            <Editor
+                                editorState={getEditorStateFromRaw(subscribeItem.rich_description || '')}
+                                readOnly={true}
+                                toolbarHidden
+                            />
                         </EditorGrid>
                     </When>
 

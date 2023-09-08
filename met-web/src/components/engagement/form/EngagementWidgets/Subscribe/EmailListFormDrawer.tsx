@@ -15,7 +15,6 @@ import RichTextEditor from 'components/common/RichTextEditor';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { patchSubscribeForm, postSubscribeForm, PatchSubscribeProps } from 'services/subscriptionService';
 import { CALL_TO_ACTION_TYPE, RichTextToolbarConfig } from './constants';
-import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor/utils';
 import ControlledRadioGroup from 'components/common/ControlledInputComponents/ControlledRadioGroup';
 import { When } from 'react-if';
 import { Palette } from 'styles/Theme';
@@ -60,23 +59,28 @@ const EmailListDrawer = () => {
     useEffect(() => {
         if (subscribeOptionToEdit) {
             const subscribeItem = subscribeOptionToEdit.subscribe_items[0];
-            setValue('description', getTextFromDraftJsContentState(subscribeItem.description));
-            setValue('richDescription', subscribeItem.description);
+            setValue('description', subscribeItem.description);
+            setValue('richDescription', subscribeItem.rich_description);
             setValue('callToActionType', subscribeItem.call_to_action_type);
             setValue('callToActionText', subscribeItem.call_to_action_text);
-            setInitialRichDescription(subscribeItem.description);
-        } else {
-                setValue('callToActionType', 'link');
-                setValue('callToActionText', 'Click here to sign up');
-                setInitialRichDescription('');
+            setInitialRichDescription(subscribeItem.rich_description || '');
         }
     }, [subscribeOptionToEdit]);
+
+    useEffect(() => {
+        if (!subscribeOptionToEdit) {
+            setValue('callToActionType', 'link');
+            setValue('callToActionText', 'Click here to sign up');
+            setInitialRichDescription('');
+        }
+    }, []);
 
     const {
         handleSubmit,
         control,
         setValue,
         formState: { errors },
+        reset,
     } = methods;
 
     const updateEmailListForm = async (data: EmailList) => {
@@ -84,9 +88,10 @@ const EmailListDrawer = () => {
             return;
         }
         const validatedData = await schema.validate(data);
-        const { callToActionType, callToActionText, richDescription } = validatedData;
+        const { callToActionType, callToActionText, description, richDescription } = validatedData;
         const subscribeUpdatesToPatch = {
-            description: richDescription,
+            description: description,
+            rich_description: richDescription,
             call_to_action_type: callToActionType,
             call_to_action_text: callToActionText,
         } as PatchSubscribeProps;
@@ -105,13 +110,14 @@ const EmailListDrawer = () => {
             return;
         }
         const validatedData = await schema.validate(data);
-        const { callToActionType, callToActionText, richDescription } = validatedData;
+        const { callToActionType, callToActionText, description, richDescription } = validatedData;
         await postSubscribeForm(widget.id, {
             widget_id: widget.id,
             type: SUBSCRIBE_TYPE.EMAIL_LIST,
             items: [
                 {
-                    description: richDescription,
+                    description: description,
+                    rich_description: richDescription,
                     call_to_action_type: callToActionType,
                     call_to_action_text: callToActionText,
                     form_type: SUBSCRIBE_TYPE.EMAIL_LIST,
@@ -152,6 +158,7 @@ const EmailListDrawer = () => {
     const handleClose = () => {
         handleSubscribeDrawerOpen(SUBSCRIBE_TYPE.EMAIL_LIST, false);
         setSubscribeOptionToEdit(null);
+        reset({});
     };
 
     return (

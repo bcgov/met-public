@@ -58,6 +58,7 @@ interface PostSubscribeProps {
     type: SubscribeTypeLabel;
     items: {
         description?: string;
+        rich_description?: string;
         call_to_action_type?: string;
         call_to_action_text?: string;
         form_type: SubscribeTypeLabel;
@@ -79,6 +80,7 @@ export const postSubscribeForm = async (widget_id: number, data: PostSubscribePr
 
 export interface PatchSubscribeProps {
     description?: string;
+    rich_description?: string;
     call_to_action_type?: string;
     call_to_action_text?: string;
 }

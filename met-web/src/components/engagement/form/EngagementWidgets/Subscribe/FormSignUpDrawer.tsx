@@ -17,7 +17,6 @@ import { patchSubscribeForm, postSubscribeForm } from 'services/subscriptionServ
 import { When } from 'react-if';
 import { useDispatch } from 'react-redux';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor/utils';
 import { CALL_TO_ACTION_TYPE, RichTextToolbarConfig } from './constants';
 
 const schema = yup
@@ -72,13 +71,14 @@ const FormSignUpDrawer = () => {
     } = methods;
 
     useEffect(() => {
+        console.log('subscribeOptionToEdit', subscribeOptionToEdit);
         if (subscribeOptionToEdit) {
             const subscribeItem = subscribeOptionToEdit.subscribe_items[0];
-            setValue('description', getTextFromDraftJsContentState(subscribeItem.description));
-            setValue('richDescription', subscribeItem.description);
+            setValue('description', subscribeItem.description);
+            setValue('richDescription', subscribeItem.rich_description);
             setValue('callToActionType', subscribeItem.call_to_action_type);
             setValue('callToActionText', subscribeItem.call_to_action_text);
-            setInitialRawEditorState(subscribeItem.description);
+            setInitialRawEditorState(subscribeItem.rich_description || '');
         } else {
             setValue('callToActionType', 'link');
             setValue('callToActionText', 'Click here to sign up');
@@ -86,8 +86,20 @@ const FormSignUpDrawer = () => {
         }
     }, [subscribeOptionToEdit]);
 
+    useEffect(() => {
+        if (!subscribeOptionToEdit) {
+            setValue('callToActionType', 'link');
+            setValue('callToActionText', 'Click here to sign up');
+            setInitialRawEditorState('');
+        }
+    }, []);
+
+    useEffect(() => {
+        console.log('initialRichDescription', initialRawEditorState);
+    }, [initialRawEditorState]);
+
     const createSubscribeForm = async (data: FormSignUp) => {
-        const { richDescription, callToActionText, callToActionType } = await schema.validate(data);
+        const { description, richDescription, callToActionText, callToActionType } = await schema.validate(data);
         if (!widget) {
             return;
         }
@@ -96,7 +108,8 @@ const FormSignUpDrawer = () => {
             type: SUBSCRIBE_TYPE.SIGN_UP,
             items: [
                 {
-                    description: richDescription,
+                    description: description,
+                    rich_description: richDescription,
                     call_to_action_type: callToActionType,
                     call_to_action_text: callToActionText,
                     form_type: SUBSCRIBE_TYPE.SIGN_UP,
@@ -108,14 +121,15 @@ const FormSignUpDrawer = () => {
     };
 
     const updateSubscribeForm = async (data: FormSignUp) => {
-        const { richDescription, callToActionText, callToActionType } = await schema.validate(data);
+        const { description, richDescription, callToActionText, callToActionType } = await schema.validate(data);
         if (!widget || !subscribeOptionToEdit) {
             return;
         }
 
         const subscribeOptionItem = subscribeOptionToEdit.subscribe_items[0];
         await patchSubscribeForm(widget.id, subscribeOptionToEdit.id, subscribeOptionItem.id, {
-            description: richDescription,
+            description: description,
+            rich_description: richDescription,
             call_to_action_type: callToActionType,
             call_to_action_text: callToActionText,
         });
@@ -151,7 +165,7 @@ const FormSignUpDrawer = () => {
     };
 
     return (
-        <Drawer anchor="right" open={formSignUpTabOpen} onClose={handleClose}>
+        <Drawer anchor="right" open={formSignUpTabOpen} onClose={handleClose} keepMounted={false}>
             <Box sx={{ width: '40vw', paddingTop: '7em' }} role="presentation">
                 <FormProvider {...methods}>
                     <Grid

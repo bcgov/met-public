@@ -47,6 +47,10 @@ const RichTextEditor = ({
             const contentState = getEditorStateFromHtml(initialHTMLText);
             setEditorState(contentState);
         }
+
+        if (!initialRawEditorState && !initialHTMLText) {
+            setEditorState(getEditorStateFromRaw(''));
+        }
     };
 
     const [editorState, setEditorState] = React.useState(getEditorStateFromRaw(initialRawEditorState));
