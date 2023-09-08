@@ -85,3 +85,24 @@ class EmailVerifications(Resource):
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@cors_preflight('POST, OPTIONS')
+@API.route('/<string:subscription_type>/subscribe')
+class SubscribeEmailVerifications(Resource):
+    """Resource for managing email verifications."""
+
+    @staticmethod
+    # @TRACER.trace()
+    @cross_origin(origins=allowedorigins())
+    def post(subscription_type):
+        """Create a new email verification."""
+        try:
+            requestjson = request.get_json()
+            email_verification = EmailVerificationSchema().load(requestjson)
+            created_email_verification = EmailVerificationService().create(email_verification, subscription_type)
+            return created_email_verification, HTTPStatus.OK
+        except KeyError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
