@@ -10,7 +10,6 @@ import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromHtml, getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { Case, Switch } from 'react-if';
 import { useNavigate } from 'react-router-dom';
-import { DashboardType } from 'constants/dashboardType';
 
 const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
     const { savedEngagement, isEngagementLoading, mockStatus } = useContext(ActionContext);
