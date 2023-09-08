@@ -9,6 +9,7 @@ import * as engagementService from 'services/engagementService';
 import * as engagementMetadataService from 'services/engagementMetadataService';
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
 import * as widgetService from 'services/widgetService';
+import * as teamMemberService from 'services/membershipService';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { WidgetType } from 'models/widget';
 import { Box } from '@mui/material';
@@ -81,6 +82,7 @@ describe('Engagement form page tests', () => {
         Promise.resolve(engagementMetadata),
     );
     jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(Promise.resolve(engagementMetadata));
+    jest.spyOn(teamMemberService, 'getTeamMembers').mockReturnValue(Promise.resolve([]));
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
         .mockReturnValue(Promise.resolve(draftEngagement));
