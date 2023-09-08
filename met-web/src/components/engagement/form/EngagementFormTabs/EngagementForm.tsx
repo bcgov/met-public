@@ -19,7 +19,6 @@ const EngagementForm = () => {
         handleCreateEngagementRequest,
         handleUpdateEngagementRequest,
         handleCreateEngagementMetadataRequest,
-        handleUpdateEngagementMetadataRequest,
         isSaving,
         savedEngagement,
         engagementId,
@@ -169,11 +168,6 @@ const EngagementForm = () => {
             rich_description: richDescription,
             rich_content: richContent,
             status_block: surveyBlockList,
-        });
-
-        await handleUpdateEngagementMetadataRequest({
-            ...engagementFormData,
-            engagement_id: Number(engagementId),
         });
 
         navigate(`/engagements/${engagement.id}/form`);
