@@ -9,11 +9,6 @@ import { SUBSCRIBE_TYPE, SubscribeForm } from 'models/subscription';
 import { SubscribeContext } from './SubscribeContext';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
-import { styled } from '@mui/system';
-
-const EditorGrid = styled(Grid)`
-    padding-top: 0px !important;
-`;
 
 export interface SubscribeInfoPaperProps {
     subscribeForm: SubscribeForm;
@@ -59,7 +54,7 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
                         <Grid item xs={isMediumScreen ? 4 : 3}>
                             <MetParagraph>Description:</MetParagraph>
                         </Grid>
-                        <EditorGrid
+                        <Grid
                             item
                             xs={isMediumScreen ? 8 : 9}
                             sx={{
@@ -67,13 +62,14 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
                                 height: 'auto',
                                 marginTop: -1,
                             }}
+                            style={{ paddingTop: 0 }}
                         >
                             <Editor
                                 editorState={getEditorStateFromRaw(subscribeItem.rich_description || '')}
                                 readOnly={true}
                                 toolbarHidden
                             />
-                        </EditorGrid>
+                        </Grid>
                     </When>
 
                     <Grid item xs={3}>
