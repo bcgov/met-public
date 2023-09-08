@@ -93,22 +93,24 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
 
     return (
         <>
-            <MetLabel mb={{ md: 0.5, lg: 2 }}>Project Location</MetLabel>
-            <MetPaper sx={{ textAlign: 'center' }}>
-                <Box
-                    sx={{
-                        width: '100%',
-                        height: '280px',
-                    }}
-                >
-                    <MetMap
-                        geojson={geoJSONDecode(data.geojson)}
-                        latitude={data.latitude}
-                        longitude={data.longitude}
-                        markerLabel={data.marker_label}
-                    />
-                </Box>
-            </MetPaper>
+            <Grid item sm={8} md={4} sx={{ width: isTablet ? '90%' : '100%' }}>
+                <MetLabel mb={{ md: 0.5, lg: 2 }}>Project Location</MetLabel>
+                <MetPaper sx={{ textAlign: 'center' }}>
+                    <Box
+                        sx={{
+                            width: '100%',
+                            height: '280px',
+                        }}
+                    >
+                        <MetMap
+                            geojson={geoJSONDecode(data.geojson)}
+                            latitude={data.latitude}
+                            longitude={data.longitude}
+                            markerLabel={data.marker_label}
+                        />
+                    </Box>
+                </MetPaper>
+            </Grid>
         </>
     );
 };

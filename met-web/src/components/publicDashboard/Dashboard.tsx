@@ -180,15 +180,11 @@ const Dashboard = () => {
                                                 engagementIsLoading={isEngagementLoading}
                                             />
                                         </Grid>
-                                        <When condition={mapExists}>
-                                            <Grid item sm={8} md={4} sx={{ width: isTablet ? '90%' : '100%' }}>
-                                                <ProjectLocation
-                                                    engagement={engagement}
-                                                    engagementIsLoading={isEngagementLoading}
-                                                    handleProjectMapData={handleProjectMapData}
-                                                />
-                                            </Grid>
-                                        </When>
+                                        <ProjectLocation
+                                            engagement={engagement}
+                                            engagementIsLoading={isEngagementLoading}
+                                            handleProjectMapData={handleProjectMapData}
+                                        />
                                     </Grid>
                                     <Grid id={'submissiontrend'} item xs={12}>
                                         <SubmissionTrend
