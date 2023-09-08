@@ -21,7 +21,6 @@ const EngagementForm = () => {
         handleCreateEngagementMetadataRequest,
         isSaving,
         savedEngagement,
-        engagementId,
         handleAddBannerImage,
     } = useContext(ActionContext);
 
