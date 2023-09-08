@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Grid } from '@mui/material';
-import { MetHeader1, MetParagraph, MetHeader4 } from 'components/common';
+import { MetHeader1, MetParagraph, MetLabel } from 'components/common';
 import { Banner } from 'components/banner/Banner';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
 import { useAppDispatch, useAppSelector } from 'hooks';
@@ -55,7 +55,6 @@ export const Subscription = () => {
                     'We are sorry to see you go.',
                     '',
                     'We wanted to confirm that you have been successfully unsubscribed from all of our emails.',
-                    '',
                     'You will no longer receive any communications from us.',
                     '',
                     'Thank you.',
@@ -126,14 +125,14 @@ export const Subscription = () => {
                 rowSpacing={2}
             >
                 <CheckCircleRoundedIcon style={{ color: '#2e8540', fontSize: 50 }} />
-                <MetHeader4 bold m={{ lg: '.5em 0 0 .5em', md: '3em', sm: '1em' }}>
+                <MetLabel m={{ lg: '.5em 0 0 .5em', md: '3em', sm: '1em' }}>
                     {subscriptionText.map((text) => (
                         <>
                             {text}
                             <br />
                         </>
                     ))}
-                </MetHeader4>
+                </MetLabel>
             </Grid>
         </Grid>
     );

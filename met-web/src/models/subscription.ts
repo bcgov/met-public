@@ -22,7 +22,7 @@ export interface Unsubscribe {
     is_subscribed: string;
 }
 
-export const Subscribe_TYPE: { [x: string]: SubscribeTypeLabel } = {
+export const SUBSCRIBE_TYPE: { [x in SubscribeTypeLabel]: SubscribeTypeLabel } = {
     EMAIL_LIST: 'EMAIL_LIST',
     FORM: 'FORM',
 };
