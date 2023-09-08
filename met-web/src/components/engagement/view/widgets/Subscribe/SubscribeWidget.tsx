@@ -239,7 +239,9 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
                                 <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
                             </Grid>
                             <Grid item xs={12}>
-                                <MetBody>{getTextFromDraftJsContentState(item.subscribe_items[0].rich_description)}</MetBody>
+                                <MetBody>
+                                    {getTextFromDraftJsContentState(item.subscribe_items[0].rich_description)}
+                                </MetBody>
                             </Grid>
                             <Grid container item xs={12} justifyContent={'flex-end'}>
                                 <When
