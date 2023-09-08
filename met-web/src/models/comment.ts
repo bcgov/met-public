@@ -22,6 +22,6 @@ export const createDefaultComment = (): Comment => {
         label: '',
         status_id: 1,
         reviewed_by: '',
-        is_displayed: true
+        is_displayed: true,
     };
 };
