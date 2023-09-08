@@ -26,6 +26,7 @@ import {
     MetHeader3,
     MetHeader4,
     MetSmallText,
+    MetTooltip,
 } from 'components/common';
 import { CommentStatus } from 'constants/commentStatus';
 import { StaffNoteType } from 'constants/staffNoteType';
@@ -39,6 +40,8 @@ import { RejectEmailTemplate } from './emailPreview/EmailTemplates';
 import EmailPreview from './emailPreview/EmailPreview';
 import { Survey, createDefaultSurvey } from 'models/survey';
 import { getSurvey } from 'services/surveyService';
+import CommentIcon from '@mui/icons-material/Comment';
+import CommentsDisabledIcon from '@mui/icons-material/CommentsDisabled';
 
 const CommentReview = () => {
     const [submission, setSubmission] = useState<SurveySubmission>(createDefaultSubmission());
@@ -270,11 +273,47 @@ const CommentReview = () => {
                         return (
                             <Grid key={comment.id} item xs={12}>
                                 <Divider />
-                                <Grid xs={12} item paddingTop={2}>
-                                    <MetLabel>{comment.label ?? 'Label not available.'}</MetLabel>
-                                </Grid>
-                                <Grid xs={12} item>
-                                    <MetParagraph>{comment.text}</MetParagraph>
+                                <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
+                                    <Grid item xs={1} paddingTop={3}>
+                                        <If condition={comment.is_displayed}>
+                                            <Then>
+                                                <Grid xs={12} item>
+                                                    <MetTooltip
+                                                        disableInteractive
+                                                        title={'Displayed to the public'}
+                                                        placement="top"
+                                                        arrow
+                                                    >
+                                                        <span>
+                                                            <CommentIcon color="info" />
+                                                        </span>
+                                                    </MetTooltip>
+                                                </Grid>
+                                            </Then>
+                                            <Else>
+                                                <Grid xs={12} item>
+                                                    <MetTooltip
+                                                        disableInteractive
+                                                        title={'Not displayed to the public'}
+                                                        placement="top"
+                                                        arrow
+                                                    >
+                                                        <span>
+                                                            <CommentsDisabledIcon color="info" />
+                                                        </span>
+                                                    </MetTooltip>
+                                                </Grid>
+                                            </Else>
+                                        </If>
+                                    </Grid>
+                                    <Grid item xs={11}>
+                                        <Grid xs={12} item paddingTop={2}>
+                                            <MetLabel>{comment.label ?? 'Label not available.'}</MetLabel>
+                                        </Grid>
+                                        <Grid xs={12} item>
+                                            <MetParagraph>{comment.text}</MetParagraph>
+                                        </Grid>
+                                    </Grid>
                                 </Grid>
                             </Grid>
                         );

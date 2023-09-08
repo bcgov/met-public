@@ -8,6 +8,7 @@ export interface Comment {
     label: string;
     status_id: number;
     reviewed_by: string;
+    is_displayed: boolean;
 }
 
 export const createDefaultComment = (): Comment => {
@@ -21,5 +22,6 @@ export const createDefaultComment = (): Comment => {
         label: '',
         status_id: 1,
         reviewed_by: '',
+        is_displayed: true,
     };
 };
