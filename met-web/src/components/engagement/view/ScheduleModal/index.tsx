@@ -123,7 +123,7 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
                                 />
                             </Grid>
                             <Grid data-testid={'time-picker'} item xs={6}>
-                                <MetLabel>Time (PST)</MetLabel>
+                                <MetLabel>Time (PT)</MetLabel>
                                 <TimePicker
                                     value={scheduledDate}
                                     onChange={handleChange}

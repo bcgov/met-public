@@ -58,6 +58,7 @@ def register_shellcontext(app):
 
 
 def run(job_name):
+    from tasks.closing_soon_mailer import EngagementClosingSoonMailer
     from tasks.met_closeout import MetEngagementCloseout
     from tasks.met_publish import MetEngagementPublish
     from tasks.met_purge import MetPurge
@@ -83,6 +84,9 @@ def run(job_name):
     elif job_name == 'PUBLISH_EMAIL':
         SubscriptionMailer.do_email()
         application.logger.info('<<<< Completed MET PUBLISH_EMAIL >>>>')
+    elif job_name == 'CLOSING_SOON_EMAIL':
+        EngagementClosingSoonMailer.do_email()
+        application.logger.info('<<<< Completed MET CLOSING_SOON_EMAIL >>>>')
     else:
         application.logger.debug('No valid args passed.Exiting job without running any ***************')
 
