@@ -49,7 +49,7 @@ class EmailVerificationService:
         """Create an email verification."""
         cls.validate_fields(email_verification)
         email_address: str = email_verification.get('email_address')
-        survey = SurveyModel.get_open(email_verification.get('survey_id'))
+        survey = SurveyModel.find_by_id(email_verification.get('survey_id'))
         engagement: EngagementModel = EngagementModel.find_by_id(
             survey.engagement_id)
         if engagement.is_internal and not email_address.endswith(INTERNAL_EMAIL_DOMAIN):
@@ -100,7 +100,7 @@ class EmailVerificationService:
         """Send an verification email.Throws error if fails."""
         survey_id = email_verification.get('survey_id')
         email_to = email_verification.get('email_address')
-        survey: SurveyModel = SurveyModel.get_open(survey_id)
+        survey: SurveyModel = SurveyModel.find_by_id(survey_id)
 
         if not survey:
             raise ValueError('Survey not found')

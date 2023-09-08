@@ -8,7 +8,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import ForeignKey, and_, asc, desc, or_
+from sqlalchemy import ForeignKey, and_, asc, desc, func, or_
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.sql import text
 
@@ -43,11 +43,11 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
     @classmethod
     def get_open(cls, survey_id) -> Survey:
         """Get an open survey."""
-        now = datetime.now()
+        now = datetime.now().date()  # Get the current date without the timestamp
         survey: Survey = db.session.query(Survey).filter_by(id=survey_id) \
             .join(Engagement) \
             .filter_by(status_id=Status.Published.value) \
-            .filter(and_(Engagement.start_date <= now, Engagement.end_date >= now)) \
+            .filter(and_(func.date(Engagement.start_date) <= now, func.date(Engagement.end_date) >= now)) \
             .join(EngagementStatus) \
             .first()
         return survey
