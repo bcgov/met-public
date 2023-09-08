@@ -1,20 +1,14 @@
 import React, { useContext } from 'react';
-import { MetParagraph, MetWidgetPaper } from 'components/common';
+import { MetLabel, MetParagraph, MetWidgetPaper } from 'components/common';
 import { Grid, IconButton, useMediaQuery } from '@mui/material';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
-import { When } from 'react-if';
-import { SubscribeForm } from 'models/subscription';
+import { Case, Switch, When } from 'react-if';
+import { SUBSCRIBE_TYPE, SubscribeForm } from 'models/subscription';
 import { SubscribeContext } from './SubscribeContext';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
-import { styled } from '@mui/system';
-import './RichEditorStyles.css';
-
-const EditorGrid = styled(Grid)`
-    padding-top: 0px !important;
-`;
 
 export interface SubscribeInfoPaperProps {
     subscribeForm: SubscribeForm;
@@ -23,7 +17,7 @@ export interface SubscribeInfoPaperProps {
 
 const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: SubscribeInfoPaperProps) => {
     const subscribeItem = subscribeForm.subscribe_items[0];
-    const { setSubscribeToEdit, handleSubscribeDrawerOpen } = useContext(SubscribeContext);
+    const { setSubscribeOptionToEdit, handleSubscribeDrawerOpen } = useContext(SubscribeContext);
     const isMediumScreen = useMediaQuery('(max-width:1100px)');
     function capitalizeFirstLetter(str: string) {
         return str.charAt(0).toUpperCase() + str.slice(1);
@@ -47,13 +41,20 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
                     spacing={1}
                 >
                     <Grid item xs={12}>
-                        <MetParagraph fontWeight={'bold'}>Email List</MetParagraph>
+                        <Switch>
+                            <Case condition={subscribeForm.type === SUBSCRIBE_TYPE.EMAIL_LIST}>
+                                <MetLabel>Email List</MetLabel>
+                            </Case>
+                            <Case condition={subscribeForm.type === SUBSCRIBE_TYPE.SIGN_UP}>
+                                <MetLabel>Form Sign-up</MetLabel>
+                            </Case>
+                        </Switch>
                     </Grid>
-                    <When condition={!!subscribeItem.description}>
+                    <When condition={Boolean(subscribeItem.description)}>
                         <Grid item xs={isMediumScreen ? 4 : 3}>
                             <MetParagraph>Description:</MetParagraph>
                         </Grid>
-                        <EditorGrid
+                        <Grid
                             item
                             xs={isMediumScreen ? 8 : 9}
                             sx={{
@@ -61,15 +62,14 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
                                 height: 'auto',
                                 marginTop: -1,
                             }}
+                            style={{ paddingTop: 0 }}
                         >
-                            <div className="subscribe-editor-wrapper">
-                                <Editor
-                                    editorState={getEditorStateFromRaw(subscribeItem.description)}
-                                    readOnly={true}
-                                    toolbarHidden
-                                />
-                            </div>
-                        </EditorGrid>
+                            <Editor
+                                editorState={getEditorStateFromRaw(subscribeItem.rich_description || '')}
+                                readOnly={true}
+                                toolbarHidden
+                            />
+                        </Grid>
                     </When>
 
                     <Grid item xs={3}>
@@ -86,7 +86,7 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
                         <IconButton sx={{ padding: 1, margin: 0 }} color="inherit" aria-label="edit-icon">
                             <EditIcon
                                 onClick={() => {
-                                    setSubscribeToEdit(subscribeForm);
+                                    setSubscribeOptionToEdit(subscribeForm);
                                     handleSubscribeDrawerOpen(subscribeForm.type, true);
                                 }}
                             />

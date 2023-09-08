@@ -99,6 +99,7 @@ class WidgetSubscribeService:
         """Get subscribe item data from json."""
         subscribe_item = SubscribeItemsModel()
         subscribe_item.description = subscribe.get('description')
+        subscribe_item.rich_description = subscribe.get('rich_description')
         subscribe_item.call_to_action_text = subscribe.get(
             'call_to_action_text')
         subscribe_item.call_to_action_type = subscribe.get(

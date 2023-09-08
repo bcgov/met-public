@@ -12,18 +12,14 @@ export interface SubscribeContextProps {
     formSignUpTabOpen: boolean;
     setFormSignUpTabOpen: React.Dispatch<React.SetStateAction<boolean>>;
     widget: Widget | null;
-    loadSubscribe: () => void;
+    loadSubscribeOptions: () => void;
     isLoadingSubscribe: boolean;
-    subscribe: SubscribeForm[];
-    subscribeToEdit: SubscribeForm | null;
-    setSubscribe: React.Dispatch<React.SetStateAction<SubscribeForm[]>>;
-    setSubscribeToEdit: React.Dispatch<React.SetStateAction<SubscribeForm | null>>;
+    subscribeOptions: SubscribeForm[];
+    subscribeOptionToEdit: SubscribeForm | null;
+    setSubscribeOptions: React.Dispatch<React.SetStateAction<SubscribeForm[]>>;
+    setSubscribeOptionToEdit: React.Dispatch<React.SetStateAction<SubscribeForm | null>>;
     handleSubscribeDrawerOpen: (_Subscribe: SubscribeTypeLabel, _open: boolean) => void;
     updateWidgetSubscribeSorting: (widget_Subscribe: SubscribeForm[]) => void;
-    richEmailListDescription: string;
-    setRichEmailListDescription: React.Dispatch<React.SetStateAction<string>>;
-    richFormSignUpDescription: string;
-    setRichFormSignUpDescription: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export type EngagementParams = {
@@ -40,27 +36,23 @@ export const SubscribeContext = createContext<SubscribeContextProps>({
         throw new Error('setFormSignUpTabOpen not implemented');
     },
     widget: null,
-    loadSubscribe: () => {
-        throw new Error('loadSubscribe not implemented');
+    loadSubscribeOptions: () => {
+        throw new Error('loadSubscribeOptions not implemented');
     },
     isLoadingSubscribe: false,
-    setSubscribe: (updatedSubscribe: React.SetStateAction<SubscribeForm[]>) => [],
-    setSubscribeToEdit: (updatedSubscribe: React.SetStateAction<SubscribeForm | null>) => [],
-    subscribe: [],
-    subscribeToEdit: null,
+    setSubscribeOptions: () => {
+        return;
+    },
+    setSubscribeOptionToEdit: () => {
+        return;
+    },
+    subscribeOptions: [],
+    subscribeOptionToEdit: null,
     handleSubscribeDrawerOpen: (_Subscribe: SubscribeTypeLabel, _open: boolean) => {
         /* empty default method  */
     },
     updateWidgetSubscribeSorting: (widget_Subscribe: SubscribeForm[]) => {
         /* empty default method  */
-    },
-    richEmailListDescription: '',
-    setRichEmailListDescription: () => {
-        throw new Error('setrichEmailListDescription is unimplemented');
-    },
-    richFormSignUpDescription: '',
-    setRichFormSignUpDescription: () => {
-        throw new Error('setrichEmailListDescription is unimplemented');
     },
 });
 
@@ -68,22 +60,20 @@ export const SubscribeProvider = ({ children }: { children: JSX.Element | JSX.El
     const dispatch = useAppDispatch();
     const { widgets } = useContext(WidgetDrawerContext);
     const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Subscribe) || null;
-    const [subscribeToEdit, setSubscribeToEdit] = useState<SubscribeForm | null>(null);
+    const [subscribeOptionToEdit, setSubscribeOptionToEdit] = useState<SubscribeForm | null>(null);
     const [emailListTabOpen, setEmailListTabOpen] = useState(false);
     const [formSignUpTabOpen, setFormSignUpTabOpen] = useState(false);
     const [isLoadingSubscribe, setIsLoadingSubscribe] = useState(true);
-    const [subscribe, setSubscribe] = useState<SubscribeForm[]>([]);
-    const [richEmailListDescription, setRichEmailListDescription] = useState('');
-    const [richFormSignUpDescription, setRichFormSignUpDescription] = useState('');
+    const [subscribeOptions, setSubscribeOptions] = useState<SubscribeForm[]>([]);
 
-    const loadSubscribe = async () => {
+    const loadSubscribeOptions = async () => {
         if (!widget) {
             return;
         }
         try {
             setIsLoadingSubscribe(true);
             const loadedSubscribe = await getSubscriptionsForms(widget.id);
-            setSubscribe(loadedSubscribe);
+            setSubscribeOptions(loadedSubscribe);
             setIsLoadingSubscribe(false);
         } catch (error) {
             dispatch(
@@ -92,25 +82,16 @@ export const SubscribeProvider = ({ children }: { children: JSX.Element | JSX.El
         }
     };
 
-    const resetFormData = () => {
-        setSubscribeToEdit(null);
-        setRichEmailListDescription('');
-        setRichFormSignUpDescription('');
-    };
-
     const handleSubscribeDrawerOpen = (type: SubscribeTypeLabel, open: boolean) => {
         if (type == SUBSCRIBE_TYPE.EMAIL_LIST) {
             setEmailListTabOpen(open);
-        } else if (type == SUBSCRIBE_TYPE.FORM) {
+        } else if (type == SUBSCRIBE_TYPE.SIGN_UP) {
             setFormSignUpTabOpen(open);
-        }
-        if (open == false) {
-            resetFormData();
         }
     };
 
     useEffect(() => {
-        loadSubscribe();
+        loadSubscribeOptions();
     }, [widget]);
 
     const updateWidgetSubscribeSorting = async (resortedWidgetSubscribe: SubscribeForm[]) => {
@@ -131,19 +112,15 @@ export const SubscribeProvider = ({ children }: { children: JSX.Element | JSX.El
                 setFormSignUpTabOpen,
                 emailListTabOpen,
                 setEmailListTabOpen,
-                subscribeToEdit,
+                subscribeOptionToEdit,
                 handleSubscribeDrawerOpen,
                 widget,
-                loadSubscribe,
+                loadSubscribeOptions,
                 isLoadingSubscribe,
-                setSubscribe,
-                setSubscribeToEdit,
-                subscribe,
+                setSubscribeOptions,
+                setSubscribeOptionToEdit,
+                subscribeOptions,
                 updateWidgetSubscribeSorting,
-                richEmailListDescription,
-                richFormSignUpDescription,
-                setRichFormSignUpDescription,
-                setRichEmailListDescription,
             }}
         >
             {children}
