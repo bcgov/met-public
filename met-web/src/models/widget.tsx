@@ -7,7 +7,7 @@ export interface WidgetItem {
 
 export interface Widget {
     id: number;
-    widget_type_id: number;
+    widget_type_id: WidgetType;
     engagement_id: number;
     items: WidgetItem[];
     title: string;
