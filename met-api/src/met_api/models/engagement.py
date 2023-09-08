@@ -169,7 +169,7 @@ class Engagement(BaseModel):
         return records
 
     @classmethod
-    def publish_scheduled_engagements_due(cls) -> List[EngagementSchema]:
+    def publish_scheduled_engagements_due(cls) -> List[Engagement]:
         """Update scheduled engagements to published."""
         datetime_due = datetime.now()
         print('Publish due date ------------------------', datetime_due)
