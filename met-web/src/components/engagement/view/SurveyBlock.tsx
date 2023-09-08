@@ -10,6 +10,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromHtml, getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { Case, Switch } from 'react-if';
 import { useNavigate } from 'react-router-dom';
+import { DashboardType } from 'constants/dashboardType';
 
 const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
     const { savedEngagement, isEngagementLoading, mockStatus } = useContext(ActionContext);
@@ -58,7 +59,7 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
                                 data-testid="SurveyBlock/view-feedback-button"
                                 disabled={!surveyId}
                                 onClick={() => {
-                                    navigate(`/engagements/${savedEngagement.id}/dashboard/1`);
+                                    navigate(`/engagements/${savedEngagement.id}/dashboard/public`);
                                 }}
                             >
                                 View Feedback
