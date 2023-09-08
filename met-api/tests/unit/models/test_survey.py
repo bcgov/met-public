@@ -15,13 +15,16 @@
 
 Test suite to ensure that the Survey model routines are working as expected.
 """
+from datetime import datetime, timedelta
+
 from faker import Faker
+from freezegun import freeze_time
 
 from met_api.constants.engagement_status import Status
 from met_api.models import Survey as SurveyModel
 from met_api.models import db
+from tests.utilities.factory_scenarios import TestEngagementInfo
 from tests.utilities.factory_utils import factory_engagement_model, factory_survey_model
-
 
 fake = Faker()
 
@@ -46,3 +49,37 @@ def test_get_open_survey(session):
     db.session.commit()
     survey_new_1 = SurveyModel.get_open(survey.id)
     assert survey_new_1 is not None
+
+
+def test_get_open_survey_time_based(session):
+    """Assert that an open survey can be retrieved."""
+    now = datetime.now()
+    eng_info: dict = TestEngagementInfo.engagement1
+    eng_info['start_date'] = now - timedelta(days=1, hours=1)
+    eng_info['end_date'] = now  # ends today
+    eng_info['status'] = Status.Published.value
+
+    engagement = factory_engagement_model(eng_info)
+    survey = factory_survey_model()
+    survey.engagement_id = engagement.id
+
+    # Commit the survey and engagement to the session
+    db.session.add(engagement)
+    db.session.add(survey)
+    db.session.commit()
+
+    # Call the get_open method and assert that the survey is retrieved.
+    survey_new = SurveyModel.get_open(survey.id)
+    assert survey_new is not None, 'survey fetchable on the day of closure'
+
+    # Move time forward by 1 day
+    day_after_time_delay = now + timedelta(days=1)
+    with freeze_time(day_after_time_delay):
+        survey_new = SurveyModel.get_open(survey.id)
+        assert survey_new is None, 'survey is not fetchable after one day of closure.'
+
+    # Move time backward by 1 day
+    day_before_time_delay = now - timedelta(days=1)
+    with freeze_time(day_before_time_delay):
+        survey_new = SurveyModel.get_open(survey.id)
+        assert survey_new is not None, 'survey fetchable since one day before closure.'
