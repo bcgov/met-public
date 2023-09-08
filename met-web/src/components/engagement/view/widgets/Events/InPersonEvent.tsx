@@ -49,7 +49,7 @@ const InPersonEvent = ({ eventItem }: EventProps) => {
                         {`${formatDate(eventItem.start_date, 'h:mm a')} to ${formatDate(
                             eventItem.end_date,
                             'h:mm a',
-                        )} PST`}
+                        )} PT`}
                     </MetBody>
                 </Grid>
             </Grid>
