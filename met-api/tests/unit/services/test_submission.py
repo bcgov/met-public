@@ -41,8 +41,10 @@ def test_create_submission(session):  # pylint:disable=unused-argument
         'participant_id': participant.id,
         'verification_token': email_verification.verification_token,
     }
-    submission = SubmissionService().create(email_verification.verification_token, submission_request)
-    actual_email_verification = EmailVerificationService().get(email_verification.verification_token)
+    submission = SubmissionService().create(
+        email_verification.verification_token, submission_request)
+    actual_email_verification = EmailVerificationService().get(
+        email_verification.verification_token)
 
     assert submission is not None
     assert actual_email_verification['is_active'] is False
@@ -66,7 +68,8 @@ def test_create_submission_rollback(session):  # pylint:disable=unused-argument
             SubmissionService().create(email_verification.verification_token, submission_request)
         except ValueError:
             mock.assert_called()
-        actual_email_verification = EmailVerificationService().get(email_verification.verification_token)
+        actual_email_verification = EmailVerificationService().get(
+            email_verification.verification_token)
         assert actual_email_verification['is_active'] is True
 
 
@@ -76,12 +79,14 @@ def test_review_comment(client, jwt, session, monkeypatch):  # pylint:disable=un
         admin_user = factory_staff_user_model(3)
         participant = factory_participant_model()
         survey, eng = factory_survey_and_eng_model()
-        submission = factory_submission_model(survey.id, eng.id, participant.id)
+        submission = factory_submission_model(
+            survey.id, eng.id, participant.id)
         factory_comment_model(survey.id, submission.id)
         reasons = {
             'status_id': 2,
         }
-        submission_record = SubmissionService().review_comment(submission.id, reasons, admin_user.external_id)
+        submission_record = SubmissionService().review_comment(
+            submission.id, reasons, admin_user.external_id)
         assert submission_record.get('comment_status_id') == 2
 
 
@@ -97,7 +102,8 @@ def test_auto_approval_of_submissions_without_comment(session):  # pylint:disabl
         'participant_id': participant.id,
         'verification_token': email_verification.verification_token,
     }
-    submission = SubmissionService().create(email_verification.verification_token, submission_request)
+    submission = SubmissionService().create(
+        email_verification.verification_token, submission_request)
 
     assert submission is not None
     assert submission.comment_status_id == Status.Approved.value
@@ -116,7 +122,8 @@ def test_submissions_with_comment_are_not_auto_approved(session):  # pylint:disa
         'participant_id': participant.id,
         'verification_token': email_verification.verification_token,
     }
-    submission = SubmissionService().create(email_verification.verification_token, submission_request)
+    submission = SubmissionService().create(
+        email_verification.verification_token, submission_request)
 
     assert submission is not None
     assert submission.comment_status_id == Status.Pending.value
@@ -138,7 +145,8 @@ def test_check_if_submission_can_handle_multiple_comments(session):
         'verification_token': email_verification.verification_token,
     }
 
-    submission = SubmissionService().create(email_verification.verification_token, submission_request)
+    submission = SubmissionService().create(
+        email_verification.verification_token, submission_request)
     submission_json = submission.submission_json
 
     # Assert that the function returns True since there is a comment in a text field that starts with 'simpletextfield2'

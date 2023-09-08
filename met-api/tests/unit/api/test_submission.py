@@ -61,7 +61,8 @@ def test_get_submission_by_id(client, jwt, session, submission_info):  # pylint:
     submission = factory_submission_model(
         survey.id, eng.id, participant.id, submission_info)
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.get(f'/api/submissions/{submission.id}', headers=headers, content_type=ContentType.JSON.value)
+    rv = client.get(f'/api/submissions/{submission.id}',
+                    headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json.get('submission_json', None) is None
 
@@ -77,7 +78,8 @@ def test_get_submission_page(client, jwt, session, submission_info):  # pylint:d
         survey.id, eng.id, participant.id, submission_info)
     factory_comment_model(survey.id, submission.id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.get(f'/api/submissions/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
+    rv = client.get(f'/api/submissions/survey/{survey.id}',
+                    headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json.get('items', [])[0].get('submission_json', None) is None
 
@@ -92,16 +94,20 @@ def test_get_comment_filtering(client, jwt, session):  # pylint:disable=unused-a
     factory_comment_model(survey.id, submission.id)
     claims = TestJwtClaims.public_user_role
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.get(f'/api/submissions/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
+    rv = client.get(f'/api/submissions/survey/{survey.id}',
+                    headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert len(rv.json.get('items')) == 0, 'Public user cant see unapproved comments'
+    assert len(rv.json.get('items')
+               ) == 0, 'Public user cant see unapproved comments'
 
     claims = TestJwtClaims.staff_admin_role
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.get(f'/api/submissions/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
+    rv = client.get(f'/api/submissions/survey/{survey.id}',
+                    headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json.get('items', [])[0].get('submission_json', None) is None
-    assert len(rv.json.get('items')) == 1, 'Admin user can see unapproved comments'
+    assert len(rv.json.get('items')
+               ) == 1, 'Admin user can see unapproved comments'
 
     # add new approved comment
     claims = TestJwtClaims.public_user_role
@@ -109,42 +115,52 @@ def test_get_comment_filtering(client, jwt, session):  # pylint:disable=unused-a
         survey.id, eng.id, participant.id, TestSubmissionInfo.approved_submission)
     factory_comment_model(survey.id, submission_approved.id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.get(f'/api/submissions/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
+    rv = client.get(f'/api/submissions/survey/{survey.id}',
+                    headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert len(rv.json.get('items')) == 1, 'Public user can see approved comments'
+    assert len(rv.json.get('items')
+               ) == 1, 'Public user can see approved comments'
 
     claims = TestJwtClaims.staff_admin_role
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.get(f'/api/submissions/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
+    rv = client.get(f'/api/submissions/survey/{survey.id}',
+                    headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert len(rv.json.get('items')) == 2, 'Admin user can see unapproved and unapproved comments'
+    assert len(rv.json.get('items')
+               ) == 2, 'Admin user can see unapproved and unapproved comments'
 
     # create membership for the reviewer user and see
     user = factory_staff_user_model()
-    factory_membership_model(user_id=user.id, engagement_id=eng.id, member_type=MembershipType.REVIEWER.name)
+    factory_membership_model(
+        user_id=user.id, engagement_id=eng.id, member_type=MembershipType.REVIEWER.name)
     claims = copy.deepcopy(TestJwtClaims.reviewer_role.value)
     claims['sub'] = str(user.external_id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.get(f'/api/submissions/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
+    rv = client.get(f'/api/submissions/survey/{survey.id}',
+                    headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert len(rv.json.get('items')) == 1, 'Reviewer with reviewer team membership can see only approved comments'
+    assert len(rv.json.get(
+        'items')) == 1, 'Reviewer with reviewer team membership can see only approved comments'
 
     # create membership for the team member and see
     user = factory_staff_user_model()
-    factory_membership_model(user_id=user.id, engagement_id=eng.id, member_type=MembershipType.TEAM_MEMBER.name)
+    factory_membership_model(
+        user_id=user.id, engagement_id=eng.id, member_type=MembershipType.TEAM_MEMBER.name)
     claims = copy.deepcopy(TestJwtClaims.team_member_role.value)
     claims['sub'] = str(user.external_id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.get(f'/api/submissions/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
+    rv = client.get(f'/api/submissions/survey/{survey.id}',
+                    headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert len(rv.json.get('items')) == 2, 'Team Member with team membership can see unapproved and unapproved comments'
+    assert len(rv.json.get(
+        'items')) == 2, 'Team Member with team membership can see unapproved and unapproved comments'
 
 
 def test_invalid_submission(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that an engagement can be POSTed."""
     claims = TestJwtClaims.public_user_role
 
-    survey, eng = factory_survey_and_eng_model()
+    survey, _ = factory_survey_and_eng_model()
     email_verification = factory_email_verification(survey.id)
     to_dict = {
         'blah': str(survey.id),
@@ -203,7 +219,11 @@ def test_advanced_search_submission(client, jwt, session, submission_info):  # p
     assert len(rv.json.get('items', [])) == 1
 
     fetched_submission = rv.json.get('items')[0]
-    assert fetched_submission.get('comment_status_id') == submission_approved.comment_status_id
-    assert fetched_submission.get('reviewed_by') == submission_approved.reviewed_by
-    assert fetched_submission.get('created_date') == submission_approved.created_date.strftime(DATE_FORMAT)
-    assert fetched_submission.get('review_date') == submission_approved.review_date.strftime(DATE_FORMAT)
+    assert fetched_submission.get(
+        'comment_status_id') == submission_approved.comment_status_id
+    assert fetched_submission.get(
+        'reviewed_by') == submission_approved.reviewed_by
+    assert fetched_submission.get(
+        'created_date') == submission_approved.created_date.strftime(DATE_FORMAT)
+    assert fetched_submission.get(
+        'review_date') == submission_approved.review_date.strftime(DATE_FORMAT)
