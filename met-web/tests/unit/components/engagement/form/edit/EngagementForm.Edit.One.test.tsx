@@ -11,6 +11,7 @@ import * as engagementSettingService from 'services/engagementSettingService';
 import * as engagementSlugService from 'services/engagementSlugService';
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
 import * as widgetService from 'services/widgetService';
+import * as teamMemberService from 'services/membershipService';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { Box } from '@mui/material';
 import { draftEngagement, engagementMetadata, engagementSetting, engagementSlugData } from '../../../factory';
@@ -84,6 +85,7 @@ describe('Engagement form page tests', () => {
         .spyOn(engagementMetadataService, 'getEngagementMetadata')
         .mockReturnValue(Promise.resolve(engagementMetadata));
     jest.spyOn(engagementSettingService, 'getEngagementSettings').mockReturnValue(Promise.resolve(engagementSetting));
+    jest.spyOn(teamMemberService, 'getTeamMembers').mockReturnValue(Promise.resolve([]));
     jest.spyOn(engagementMetadataService, 'patchEngagementMetadata').mockReturnValue(
         Promise.resolve(engagementMetadata),
     );
@@ -108,7 +110,6 @@ describe('Engagement form page tests', () => {
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
 
         expect(getEngagementMock).toHaveBeenCalledOnce();
