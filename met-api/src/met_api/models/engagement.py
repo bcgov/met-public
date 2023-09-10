@@ -5,7 +5,7 @@ Manages the engagement
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import List, Optional
 
 from sqlalchemy import and_, asc, desc, or_
