@@ -314,19 +314,3 @@ class Engagement(BaseModel):
                 )) \
             .all()
         return engagements
-
-    @classmethod
-    def get_engagements_closing_soon(cls) -> List[Engagement]:
-        """Get engagements that are closing within two days."""
-        now = local_datetime()
-        two_days_from_now = now + timedelta(days=2)
-        # Strip the time off the datetime object
-        date_due = datetime(two_days_from_now.year, two_days_from_now.month, two_days_from_now.day)
-        engagements = db.session.query(Engagement) \
-            .filter(
-                and_(
-                    Engagement.status_id == Status.Published.value,
-                    Engagement.end_date == date_due
-                )) \
-            .all()
-        return engagements
