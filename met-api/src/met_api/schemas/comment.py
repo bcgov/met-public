@@ -22,6 +22,7 @@ class CommentSchema(Schema):
     status_id = fields.Int(data_key='status_id')
     survey_id = fields.Int(data_key='survey_id')
     submission_id = fields.Int(data_key='submission_id')
+    is_displayed = fields.Bool(data_key='is_displayed')
     status_id = fields.Method('get_comment_status_id')
     reviewed_by = fields.Method('get_comment_reviewed_by')
     label = fields.Method('get_comment_label')

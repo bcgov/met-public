@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
 import { Link, useLocation, useParams } from 'react-router-dom';
-import { MetPageGridContainer, PrimaryButton, MetParagraph, MetLabel } from 'components/common';
+import { MetPageGridContainer, PrimaryButton, MetParagraph, MetLabel, MetTooltip } from 'components/common';
 import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { Link as MuiLink, Grid, Stack, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -9,13 +9,15 @@ import { useAppDispatch, useAppSelector } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { CommentStatusChip } from '../../status';
 import { CommentStatus } from 'constants/commentStatus';
-import { When } from 'react-if';
+import { If, Then, Else, When } from 'react-if';
 import { getSubmissionPage } from 'services/submissionService';
 import { SurveySubmission } from 'models/surveySubmission';
 import { formatDate } from 'components/common/dateHelper';
 import { USER_ROLES } from 'services/userService/constants';
 import { USER_GROUP } from 'models/user';
 import { updateURLWithPagination } from 'components/common/Table/utils';
+import CommentIcon from '@mui/icons-material/Comment';
+import CommentsDisabledIcon from '@mui/icons-material/CommentsDisabled';
 
 const CommentTextListing = () => {
     const { roles, userDetail, assignedEngagements } = useAppSelector((state) => state.user);
@@ -122,9 +124,43 @@ const CommentTextListing = () => {
                     {row.comments?.map((comment, index) => {
                         return (
                             <Grid key={index} item xs={12}>
-                                <Grid xs={12} item>
-                                    <MetLabel>{comment.label ?? 'Label not available.'} </MetLabel>
-                                    <MetParagraph>{' ' + comment.text}</MetParagraph>
+                                <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
+                                    <Grid item xs={1} paddingTop={1}>
+                                        <If condition={comment.is_displayed}>
+                                            <Then>
+                                                <Grid xs={12} item>
+                                                    <MetTooltip
+                                                        disableInteractive
+                                                        title={'Displayed to the public'}
+                                                        placement="top"
+                                                        arrow
+                                                    >
+                                                        <span>
+                                                            <CommentIcon color="info" />
+                                                        </span>
+                                                    </MetTooltip>
+                                                </Grid>
+                                            </Then>
+                                            <Else>
+                                                <Grid xs={12} item>
+                                                    <MetTooltip
+                                                        disableInteractive
+                                                        title={'Not displayed to the public'}
+                                                        placement="top"
+                                                        arrow
+                                                    >
+                                                        <span>
+                                                            <CommentsDisabledIcon color="info" />
+                                                        </span>
+                                                    </MetTooltip>
+                                                </Grid>
+                                            </Else>
+                                        </If>
+                                    </Grid>
+                                    <Grid item xs={11}>
+                                        <MetLabel>{comment.label ?? 'Label not available.'} </MetLabel>
+                                        <MetParagraph>{' ' + comment.text}</MetParagraph>
+                                    </Grid>
                                 </Grid>
                             </Grid>
                         );

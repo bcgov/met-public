@@ -160,7 +160,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         setSaving(true);
         try {
             const result = await postEngagementMetadata(engagement);
-            dispatch(openNotification({ severity: 'success', text: 'Engagement Metadata Created Successfully' }));
             setSaving(false);
             return Promise.resolve(result);
         } catch (error) {
@@ -272,7 +271,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 engagement_id: Number(engagementId),
             });
             setEngagementMetadata(updatedEngagementMetadata);
-            dispatch(openNotification({ severity: 'success', text: 'Engagement metadata saved successfully' }));
             return Promise.resolve(updatedEngagementMetadata);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error saving engagement metadata' }));

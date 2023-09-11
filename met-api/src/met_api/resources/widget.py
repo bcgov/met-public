@@ -88,7 +88,7 @@ class EngagementWidgetSort(Resource):
             return {'message': err.error}, err.status_code
 
 
-@cors_preflight('DELETE, PATCH')
+@cors_preflight('GET, DELETE, PATCH')
 @API.route('/<widget_id>/engagements/<engagement_id>')
 class EngagementWidget(Resource):
     """Resource for managing widgets with engagements."""

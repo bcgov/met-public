@@ -8,12 +8,15 @@ from operator import or_
 
 from sqlalchemy import and_, asc, desc
 from sqlalchemy.sql import text
+from sqlalchemy.sql.expression import true
 from sqlalchemy.sql.schema import ForeignKey
+from sqlalchemy.ext.hybrid import hybrid_property
 
 from met_api.constants.comment_status import Status as CommentStatus
 from met_api.constants.engagement_status import Status as EngagementStatus
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement import Engagement
+from met_api.models.report_setting import ReportSetting
 from met_api.models.submission import Submission
 from met_api.models.survey import Survey
 from met_api.schemas.comment import CommentSchema
@@ -35,6 +38,21 @@ class Comment(BaseModel):
     submission_id = db.Column(db.Integer, ForeignKey('submission.id', ondelete='SET NULL'), nullable=True)
     component_id = db.Column(db.String(10))
 
+    @hybrid_property
+    def is_displayed(self):
+        """Get report settings."""
+        return self._display()
+
+    def _display(self):
+        """Return report settings for single/multi line comment type questions."""
+        report_setting = db.session.query(ReportSetting).filter(
+            ReportSetting.question_key == self.component_id,
+            ReportSetting.survey_id == self.survey_id).one_or_none()
+        if report_setting:
+            return f'{report_setting.display}'
+
+        return None
+
     @classmethod
     def get_by_submission(cls, submission_id):
         """Get comments by submission id."""
@@ -48,7 +66,9 @@ class Comment(BaseModel):
         """Get comments paginated."""
         query = db.session.query(Comment)\
             .join(Survey)\
-            .filter(Comment.survey_id == survey_id)\
+            .join(ReportSetting, and_(Comment.survey_id == ReportSetting.survey_id,
+                                      Comment.component_id == ReportSetting.question_key))\
+            .filter(and_(Comment.survey_id == survey_id, ReportSetting.display == true()))
 
         if search_text:
             query = query.filter(Comment.text.ilike('%' + search_text + '%'))
@@ -76,12 +96,15 @@ class Comment(BaseModel):
             .join(CommentStatusModel, Submission.comment_status_id == CommentStatusModel.id)\
             .join(Survey, Survey.id == Submission.survey_id)\
             .join(Engagement, Engagement.id == Survey.engagement_id)\
+            .join(ReportSetting, and_(Comment.survey_id == ReportSetting.survey_id,
+                                      Comment.component_id == ReportSetting.question_key))\
             .filter(
                 and_(
                     Comment.survey_id == survey_id,
                     CommentStatusModel.id == CommentStatus.Approved.value,
-                    Engagement.status_id == EngagementStatus.Closed.value
-                ))\
+                    Engagement.status_id == EngagementStatus.Closed.value,
+                    ReportSetting.display == true()
+                ))
 
         query = query.order_by(Comment.id.desc())
 

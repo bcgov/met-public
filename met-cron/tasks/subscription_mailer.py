@@ -14,7 +14,7 @@
 """MET Subscription Emailer."""
 from datetime import datetime
 
-from met_cron.services.mail_service import EmailService
+from met_cron.services.publish_mail_service import PublishEmailService
 
 
 class SubscriptionMailer:  # pylint:disable=too-few-public-methods
@@ -25,4 +25,4 @@ class SubscriptionMailer:  # pylint:disable=too-few-public-methods
         """Email subscribed users."""
         print('Starting SubscriptionMailer ------------------------', datetime.now())
 
-        EmailService.do_mail()
+        PublishEmailService.do_mail()

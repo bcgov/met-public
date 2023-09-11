@@ -58,7 +58,7 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
                                 data-testid="SurveyBlock/view-feedback-button"
                                 disabled={!surveyId}
                                 onClick={() => {
-                                    navigate(`/engagements/${savedEngagement.id}/dashboard`);
+                                    navigate(`/engagements/${savedEngagement.id}/dashboard/public`);
                                 }}
                             >
                                 View Feedback

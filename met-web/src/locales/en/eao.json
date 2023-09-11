@@ -21,5 +21,9 @@
                 "threatContactEmail": "sarah.plank@gov.bc.ca"
             }
         }
+    },
+    "cacForm": {
+        "contactTitle": "the Director of Digital Services",
+        "contactEmail": "Sid.Tobias@gov.bc.ca"
     }
 }

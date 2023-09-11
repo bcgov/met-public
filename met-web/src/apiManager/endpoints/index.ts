@@ -84,8 +84,10 @@ const Endpoints = {
         GET: `${AppConfig.apiUrl}/email_verification/verification_token`,
         UPDATE: `${AppConfig.apiUrl}/email_verification/verification_token`,
         CREATE: `${AppConfig.apiUrl}/email_verification/`,
+        CREATE_SUBSCRIBE: `${AppConfig.apiUrl}/email_verification/subscription_type/subscribe`,
     },
     Widgets: {
+        GET: `${AppConfig.apiUrl}/widgets/widget_id/engagements/engagement_id`,
         GET_LIST: `${AppConfig.apiUrl}/widgets/engagement/engagement_id`,
         CREATE: `${AppConfig.apiUrl}/widgets/engagement/engagement_id`,
         DELETE: `${AppConfig.apiUrl}/widgets/widget_id/engagements/engagement_id`,
@@ -146,6 +148,9 @@ const Endpoints = {
     },
     AnalyticsSurveyResult: {
         GET: `${AppConfig.analyticsApiUrl}/surveyresult/engagement_id/dashboard_type`,
+    },
+    CACForm: {
+        CREATE: `${AppConfig.apiUrl}/engagements/engagement_id/cacform/widget_id`,
     },
 };
 
