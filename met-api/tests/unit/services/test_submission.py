@@ -52,7 +52,7 @@ def test_create_submission(session):  # pylint:disable=unused-argument
 
 def test_create_submission_rollback(session):  # pylint:disable=unused-argument
     """Assert that a submission failure will rollback changes to email verification."""
-    survey, eng = factory_survey_and_eng_model()
+    survey, _ = factory_survey_and_eng_model()
     email_verification = factory_email_verification(survey.id)
     participant = factory_participant_model()
 

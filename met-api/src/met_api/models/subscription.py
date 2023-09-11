@@ -33,6 +33,15 @@ class Subscription(BaseModel):  # pylint: disable=too-few-public-methods
         return db_subscription
 
     @classmethod
+    def get_by_engagement_id(cls, engagement_id) -> Subscription:
+        """Get a subscription."""
+        db_subscription = db.session.query(Subscription)\
+            .filter_by(engagement_id=engagement_id)\
+            .order_by(Subscription.created_date.desc())\
+            .first()
+        return db_subscription
+
+    @classmethod
     def get_by_participant_id(cls, participant_id) -> Subscription:
         """Get a subscription."""
         db_subscription = db.session.query(Subscription)\

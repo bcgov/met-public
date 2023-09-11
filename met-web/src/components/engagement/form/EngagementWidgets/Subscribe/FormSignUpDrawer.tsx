@@ -9,7 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { SubscribeContext } from './SubscribeContext';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
-import { Subscribe_TYPE } from 'models/subscription';
+import { SUBSCRIBE_TYPE } from 'models/subscription';
 import RichTextEditor from 'components/common/RichTextEditor';
 
 const schema = yup
@@ -59,7 +59,7 @@ const FormSignUpDrawer = () => {
             anchor="right"
             open={formSignUpTabOpen}
             onClose={() => {
-                handleSubscribeDrawerOpen(Subscribe_TYPE.FORM, false);
+                handleSubscribeDrawerOpen(SUBSCRIBE_TYPE.FORM, false);
             }}
         >
             <Box sx={{ width: '40vw', paddingTop: '7em' }} role="presentation">
@@ -151,7 +151,7 @@ const FormSignUpDrawer = () => {
                                 </Grid>
                                 <Grid item>
                                     <SecondaryButton
-                                        onClick={() => handleSubscribeDrawerOpen(Subscribe_TYPE.EMAIL_LIST, false)}
+                                        onClick={() => handleSubscribeDrawerOpen(SUBSCRIBE_TYPE.EMAIL_LIST, false)}
                                     >
                                         Cancel
                                     </SecondaryButton>

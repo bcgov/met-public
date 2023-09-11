@@ -5,7 +5,7 @@ Manages the engagement
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Optional
 
 from sqlalchemy import and_, asc, desc, or_
@@ -311,6 +311,22 @@ class Engagement(BaseModel):
                     MembershipModel.user_id == user_id,
                     MembershipModel.is_latest.is_(True),
                     MembershipModel.status == MembershipStatus.ACTIVE.value
+                )) \
+            .all()
+        return engagements
+
+    @classmethod
+    def get_engagements_closing_soon(cls) -> List[Engagement]:
+        """Get engagements that are closing within two days."""
+        now = local_datetime()
+        two_days_from_now = now + timedelta(days=2)
+        # Strip the time off the datetime object
+        date_due = datetime(two_days_from_now.year, two_days_from_now.month, two_days_from_now.day)
+        engagements = db.session.query(Engagement) \
+            .filter(
+                and_(
+                    Engagement.status_id == Status.Published.value,
+                    Engagement.end_date == date_due
                 )) \
             .all()
         return engagements

@@ -104,15 +104,11 @@ const EngagementsAccordion = ({
                                     <Grid item xs={12} sm={!mapExists ? 6 : 4}>
                                         <SurveysCompleted engagement={engagement} engagementIsLoading={false} />
                                     </Grid>
-                                    <When condition={mapExists}>
-                                        <Grid item xs={12} sm={4}>
-                                            <ProjectLocation
-                                                engagement={engagement}
-                                                engagementIsLoading={false}
-                                                handleProjectMapData={handleProjectMapData}
-                                            />
-                                        </Grid>
-                                    </When>
+                                    <ProjectLocation
+                                        engagement={engagement}
+                                        engagementIsLoading={false}
+                                        handleProjectMapData={handleProjectMapData}
+                                    />
                                 </Grid>
                                 <Grid item xs={12} mt={2}>
                                     <SubmissionTrend engagement={engagement} engagementIsLoading={false} />
