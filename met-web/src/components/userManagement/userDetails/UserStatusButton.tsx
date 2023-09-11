@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { SecondaryButton } from 'components/common';
+import { PrimaryButton, SecondaryButton } from 'components/common';
 import { useAppSelector, useAppDispatch } from 'hooks';
 import { UserDetailsContext } from './UserDetailsContext';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
@@ -16,6 +16,8 @@ const UserStatusButton = () => {
     const dispatch = useAppDispatch();
 
     const isActive = savedUser?.status_id === 1;
+
+    const disabled = savedUser?.main_group === USER_GROUP.ADMIN.label;
 
     useEffect(() => {
         setUserStatus(isActive);
@@ -111,12 +113,15 @@ const UserStatusButton = () => {
         );
     };
 
-    return (
+    return disabled ? (
+        <PrimaryButton data-testid="user-status-toggle" disabled>
+            {userStatus ? 'Deactivate User' : 'Reactivate User'}
+        </PrimaryButton>
+    ) : (
         <SecondaryButton
             data-testid="user-status-toggle"
             loading={togglingUserStatus}
             onClick={() => handleToggleUserStatus(!userStatus)}
-            disabled={savedUser?.main_group === USER_GROUP.ADMIN.label}
         >
             {userStatus ? 'Deactivate User' : 'Reactivate User'}
         </SecondaryButton>
