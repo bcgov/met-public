@@ -6,6 +6,10 @@ const ScrollToTop = () => {
 
     useEffect(() => {
         window.scrollTo(0, 0); // Scroll to the top of the page on route change
+        const formioModal = document.querySelector('.formio-dialog');
+        if (formioModal) {
+            formioModal.remove();
+        }
     }, [pathname]);
 
     return null;
