@@ -77,11 +77,13 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
         }
         try {
             setLoading(true);
-            return getEngagement(Number(engagementId));
+            const engagement = await getEngagement(Number(engagementId));
+            return engagement;
         } catch (err) {
             dispatch(
                 openNotification({ severity: 'error', text: 'An error occured while trying to load the engagement' }),
             );
+            navigate('/');
         }
     };
 
@@ -96,6 +98,7 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
             return subscriptionForms.find((form) => form.type === SUBSCRIBE_TYPE.SIGN_UP);
         } catch (err) {
             dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to load the widget' }));
+            navigate('/');
         }
     };
 
