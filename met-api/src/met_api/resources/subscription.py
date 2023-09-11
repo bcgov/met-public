@@ -19,7 +19,6 @@ from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
-from met_api.schemas.subscription import SubscriptionSchema
 from met_api.services.subscription_service import SubscriptionService
 from met_api.utils.util import allowedorigins, cors_preflight
 
@@ -63,8 +62,7 @@ class Subscriptions(Resource):
         """Create a new subscription."""
         try:
             request_json = request.get_json()
-            subscription = SubscriptionSchema().load(request_json)
-            SubscriptionService().create_subscription(subscription)
+            SubscriptionService().create_subscription(request_json)
             return {}, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
@@ -77,8 +75,7 @@ class Subscriptions(Resource):
         """Update a existing subscription partially."""
         try:
             request_json = request.get_json()
-            subscription = SubscriptionSchema().load(request_json, partial=True)
-            SubscriptionService().update_subscription_for_participant(subscription)
+            SubscriptionService().update_subscription_for_participant(request_json)
             return {}, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
@@ -98,8 +95,7 @@ class ManageSubscriptions(Resource):
         """Create or update a subscription."""
         try:
             request_json = request.get_json()
-            subscription = SubscriptionSchema().load(request_json)
-            SubscriptionService().create_or_update_subscription(subscription)
+            SubscriptionService().create_or_update_subscription(request_json)
             return {}, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
@@ -112,8 +108,7 @@ class ManageSubscriptions(Resource):
         """Update a existing subscription partially."""
         try:
             request_json = request.get_json()
-            subscription = SubscriptionSchema().load(request_json, partial=True)
-            SubscriptionService().update_subscription_for_participant_eng(subscription)
+            SubscriptionService().update_subscription_for_participant_eng(request_json)
             return {}, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

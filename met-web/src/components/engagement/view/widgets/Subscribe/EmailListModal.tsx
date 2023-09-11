@@ -36,7 +36,7 @@ const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
             await createSubscription({
                 engagement_id: savedEngagement.id,
                 email_address: email_verification.email_address,
-                is_subscribed: 'false',
+                is_subscribed: false,
                 participant_id: email_verification.participant_id,
                 project_id: engagementMetadata.project_id,
                 type: subscriptionType || defaultType,

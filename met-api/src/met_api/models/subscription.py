@@ -6,8 +6,6 @@ from __future__ import annotations
 from datetime import datetime
 from sqlalchemy import ForeignKey
 
-from met_api.schemas.subscription import SubscriptionSchema
-
 from met_api.constants.subscription_type import SubscriptionType
 
 from .base_model import BaseModel
@@ -60,12 +58,12 @@ class Subscription(BaseModel):  # pylint: disable=too-few-public-methods
         return db_subscription
 
     @classmethod
-    def create(cls, subscription: SubscriptionSchema, session=None) -> Subscription:
+    def create(cls, subscription: dict, session=None) -> Subscription:
         """Create a subscription."""
         new_subscription = Subscription(
             engagement_id=subscription.get('engagement_id', None),
             participant_id=subscription.get('participant_id', None),
-            is_subscribed=subscription.get('is_subscribed', None),
+            is_subscribed=subscription.get('is_subscribed', False),
             project_id=subscription.get('project_id', None),
             type=subscription.get('type', None),
             created_date=datetime.utcnow(),
@@ -79,10 +77,10 @@ class Subscription(BaseModel):  # pylint: disable=too-few-public-methods
         return new_subscription
 
     @classmethod
-    def update_subscription_for_participant(cls, subscription: SubscriptionSchema, session=None) -> Subscription:
+    def update_subscription_for_participant(cls, subscription: dict, session=None) -> Subscription:
         """Update subscription for a participant."""
         update_fields = dict(
-            is_subscribed=subscription.get('is_subscribed', None),
+            is_subscribed=subscription.get('is_subscribed', False),
             updated_date=datetime.utcnow(),
             updated_by=subscription.get('updated_by', None),
         )
@@ -97,10 +95,10 @@ class Subscription(BaseModel):  # pylint: disable=too-few-public-methods
         return query.first()
 
     @classmethod
-    def update_subscription_for_participant_eng(cls, subscription: SubscriptionSchema, session=None) -> Subscription:
+    def update_subscription_for_participant_eng(cls, subscription: dict, session=None) -> Subscription:
         """Update subscription for a participant and engagement."""
         update_fields = dict(
-            is_subscribed=subscription.get('is_subscribed', None),
+            is_subscribed=subscription.get('is_subscribed', False),
             updated_date=datetime.utcnow(),
             updated_by=subscription.get('updated_by', None),
         )

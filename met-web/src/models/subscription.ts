@@ -5,7 +5,7 @@ export type CallToActionTypes = 'link' | 'button';
 export interface Subscription {
     engagement_id: number;
     email_address: string;
-    is_subscribed: string;
+    is_subscribed: boolean;
     participant_id: number;
     project_id: string;
     type: string;
@@ -14,12 +14,12 @@ export interface Subscription {
 export interface Subscribe {
     engagement_id: number;
     participant_id: number;
-    is_subscribed: string;
+    is_subscribed: boolean;
 }
 
 export interface Unsubscribe {
     participant_id: number;
-    is_subscribed: string;
+    is_subscribed: boolean;
 }
 
 export const SUBSCRIBE_TYPE: { [x in SubscribeTypeLabel]: SubscribeTypeLabel } = {

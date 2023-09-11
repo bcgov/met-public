@@ -41,7 +41,7 @@ export const Subscription = () => {
                 await confirmSubscription({
                     engagement_id: parseInt(engagementId ?? ''),
                     participant_id: JSON.parse(subscribed).participant_id,
-                    is_subscribed: 'true',
+                    is_subscribed: true,
                 });
                 setSubscriptionText(['You have successfully confirmed your subscription. Thank you.']);
             }
@@ -49,7 +49,7 @@ export const Subscription = () => {
                 const participant_id = scriptionKey;
                 await unSubscribe({
                     participant_id: parseInt(participant_id ?? ''),
-                    is_subscribed: 'false',
+                    is_subscribed: false,
                 });
                 setSubscriptionText([
                     'We are sorry to see you go.',
