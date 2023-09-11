@@ -30,7 +30,7 @@ const Dashboard = () => {
     const [projectMapData, setProjectMapData] = React.useState<Map | null>(null);
     const [pdfExportProgress, setPdfExportProgress] = React.useState(0);
     const basePath = slug ? `/${slug}` : `/engagements/${engagement?.id}`;
-    const mapExists = projectMapData?.latitude && projectMapData?.longitude;
+    const mapExists = projectMapData?.latitude !== null && projectMapData?.longitude !== null;
 
     const handleProjectMapData = (data: Map) => {
         setProjectMapData(data);
