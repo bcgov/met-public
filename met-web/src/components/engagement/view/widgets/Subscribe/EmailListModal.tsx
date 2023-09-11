@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { MetLabel, MetParagraph } from 'components/common';
 import { ActionContext } from '../../ActionContext';
 import { Grid, Link, Typography, Box, RadioGroup, Radio, FormControlLabel, useMediaQuery, Theme } from '@mui/material';
-import { useAppDispatch } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import EmailModal from 'components/common/Modals/EmailModal';
 import { createSubscribeEmailVerification } from 'services/emailVerificationService';
@@ -10,7 +10,6 @@ import { createSubscription } from 'services/subscriptionService';
 import { EmailVerificationType } from 'models/emailVerification';
 import { SubscriptionType } from 'constants/subscriptionType';
 import { TenantState } from 'reduxSlices/tenantSlice';
-import { useAppSelector } from 'hooks';
 
 const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) => {
     const dispatch = useAppDispatch();
@@ -31,7 +30,7 @@ const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
                     survey_id: savedEngagement.surveys[0].id,
                     type: EmailVerificationType.Subscribe,
                 },
-                subscriptionType ? subscriptionType : defaultType,
+                subscriptionType || defaultType,
             );
 
             await createSubscription({
@@ -40,7 +39,7 @@ const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
                 is_subscribed: 'false',
                 participant_id: email_verification.participant_id,
                 project_id: engagementMetadata.project_id,
-                type: subscriptionType ? subscriptionType : defaultType,
+                type: subscriptionType || defaultType,
             });
 
             window.snowplow('trackSelfDescribingEvent', {
