@@ -186,7 +186,7 @@ class EmailVerificationService:
         subject_template = get_gc_notify_config('VERIFICATION_EMAIL_SUBJECT')
         survey_path = current_app.config.get('SURVEY_PATH'). \
             format(survey_id=survey.id, token=token)
-        engagement_path = EmailVerificationService._get_engagement_path(
+        engagement_path = EmailVerificationService.get_engagement_path(
             engagement)
         site_url = notification.get_tenant_site_url(engagement.tenant_id)
         tenant_name = EmailVerificationService._get_tenant_name(
@@ -211,7 +211,8 @@ class EmailVerificationService:
         return subject, body, args, template_id
 
     @staticmethod
-    def _get_engagement_path(engagement: EngagementModel):
+    def get_engagement_path(engagement: EngagementModel):
+        """Get an engagement path."""
         engagement_slug = EngagementSlugModel.find_by_engagement_id(
             engagement.id)
         if engagement_slug:
