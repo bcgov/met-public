@@ -16,7 +16,7 @@ class CACFormService:
         if widget.engagement_id != engagement_id:
             raise ValueError('Form belongs to another engagement')
 
-        widget_subscribe = WidgetSubscribeModel.get_all_by_type(SubscribeTypes.EMAIL_LIST.name, widget_id)
+        widget_subscribe = WidgetSubscribeModel.get_all_by_type(SubscribeTypes.SIGN_UP.name, widget_id)
 
         if not widget_subscribe:
             raise ValueError('Form not found for this engagement')
