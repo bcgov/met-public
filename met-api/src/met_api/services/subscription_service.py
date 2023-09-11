@@ -21,25 +21,26 @@ class SubscriptionService:
     def create_subscription(cls, subscription_data) -> SubscriptionSchema:
         """Create a subscription."""
         subscription_data['created_by'] = subscription_data.get('participant_id')
-        return SubscriptionModel.create(subscription_data)
+        create_subscription = SubscriptionModel.create(subscription_data)
+        return SubscriptionSchema().dump(create_subscription)
 
     @classmethod
     def update_subscription_for_participant(cls, subscription_data) -> SubscriptionSchema:
         """Update subscription for a participant."""
         subscription_data['updated_by'] = subscription_data.get('participant_id')
-        updated_subscription = SubscriptionModel.update_subscription_for_participant(subscription_data)
-        if not updated_subscription:
+        update_subscription = SubscriptionModel.update_subscription_for_participant(subscription_data)
+        if not update_subscription:
             raise ValueError('Subscription to update was not found')
-        return SubscriptionModel.update_subscription_for_participant(subscription_data)
+        return SubscriptionSchema().dump(update_subscription)
 
     @classmethod
     def update_subscription_for_participant_eng(cls, subscription_data) -> SubscriptionSchema:
         """Update subscription for a participant."""
         subscription_data['updated_by'] = subscription_data.get('participant_id')
-        updated_subscription = SubscriptionModel.update_subscription_for_participant_eng(subscription_data)
-        if not updated_subscription:
+        update_subscription = SubscriptionModel.update_subscription_for_participant_eng(subscription_data)
+        if not update_subscription:
             raise ValueError('Subscription to update was not found')
-        return SubscriptionModel.update_subscription_for_participant_eng(subscription_data)
+        return SubscriptionSchema().dump(update_subscription)
 
     @classmethod
     def create_or_update_subscription(cls, subscription: dict):
@@ -56,7 +57,7 @@ class SubscriptionService:
         return cls.update_subscription_for_participant_eng(subscription)
 
     @staticmethod
-    def validate_fields(data: SubscriptionSchema):
+    def validate_fields(data: dict):
         """Validate all fields."""
         empty_fields = [not data.get(field, None) for field in [
             'engagement_id',
