@@ -87,7 +87,7 @@ export const generateDashboardPdf = async (
     },
 ) => {
     const doc = new jsPDF('p', 'mm');
-
+    const mapExists = projectMapData?.latitude !== null && projectMapData?.longitude !== null;
     const padding = 10;
     const marginTop = 20;
     let top = marginTop;
@@ -106,7 +106,7 @@ export const generateDashboardPdf = async (
     }
     handlePdfExportProgress(40);
 
-    if (projectMapData?.latitude && projectMapData?.longitude) {
+    if (mapExists) {
         const mapImageDataURL = await getMapImageDataUrl(projectMapData);
         doc.setFontSize(9);
         doc.setFont('helvetica', 'bold');
