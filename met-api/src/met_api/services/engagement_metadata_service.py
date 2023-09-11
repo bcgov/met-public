@@ -7,6 +7,7 @@ from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_metadata import EngagementMetadataModel
 from met_api.schemas.engagement_metadata import EngagementMetadataSchema
 from met_api.services import authorization
+from met_api.utils import eao_util
 from met_api.utils.roles import Role
 
 
@@ -40,7 +41,10 @@ class EngagementMetadataService:
 
         metadata_model = EngagementMetadataService._create_metadata_model(request_json)
         metadata_model.commit()
-        return metadata_model.find_by_id(metadata_model.engagement_id)
+        updated_metadata: EngagementMetadataModel = metadata_model.find_by_id(metadata_model.engagement_id)
+        # publish changes to EPIC
+        eao_util.publish_to_epic(updated_metadata.project_id, updated_metadata.engagement_id)
+        return updated_metadata
 
     @staticmethod
     def _create_metadata_model(metadata: dict) -> EngagementMetadataModel:
@@ -75,6 +79,9 @@ class EngagementMetadataService:
             updated_metadata = EngagementMetadataModel.update(data)
         else:
             updated_metadata = EngagementMetadataService._create_metadata_model(data)
+
+        # publish changes to EPIC
+        eao_util.publish_to_epic(updated_metadata.project_id, updated_metadata.engagement_id)
 
         return updated_metadata
 
