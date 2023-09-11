@@ -21,7 +21,7 @@ class SubscriptionService:
     def create_subscription(cls, subscription_data) -> SubscriptionSchema:
         """Create a subscription."""
         subscription_data['created_by'] = subscription_data.get('participant_id')
-        create_subscription =  SubscriptionModel.create(subscription_data)
+        create_subscription = SubscriptionModel.create(subscription_data)
         return SubscriptionSchema().dump(create_subscription)
 
     @classmethod
