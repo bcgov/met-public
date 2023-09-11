@@ -1,3 +1,4 @@
+from datetime import datetime
 from http import HTTPStatus
 from typing import List
 
@@ -8,6 +9,7 @@ from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_metadata import EngagementMetadataModel
 from met_api.models.participant import Participant as ParticipantModel
 from met_api.models.subscription import Subscription as SubscriptionModel
+from met_api.services.email_verification_service import EmailVerificationService
 from met_api.utils import notification
 from met_cron.utils.subscription_checker import CheckSubscription
 
@@ -63,10 +65,10 @@ class EmailService:  # pylint: disable=too-few-public-methods
         args = {
             'project_name': project_name if project_name else tenant_name,
             'survey_url': f'{site_url}{view_path}',
-            'end_date': engagement.end_date,
+            'end_date': datetime.strftime(engagement.end_date, EmailVerificationService.full_date_format),
             'tenant_name': tenant_name,
             'email_environment': email_environment,
-            'unsubscribe_url': unsubscribe_url,
+            'unsubscribe_url': f'{site_url}{unsubscribe_url}',
             'is_having_project': is_having_project,
             'is_not_having_project': is_not_having_project,
         }
