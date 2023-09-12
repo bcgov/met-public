@@ -94,6 +94,7 @@ export const WidgetTitle = ({ widget }: { widget: Widget }) => {
                 >
                     <MetHeader3>{widget.title}</MetHeader3>
                     <IconButton
+                        sx={{ paddingY: 0 }}
                         onClick={() => {
                             setEditing(true);
                         }}

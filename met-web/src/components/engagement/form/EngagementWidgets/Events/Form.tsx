@@ -18,7 +18,7 @@ const Form = () => {
         <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
             <Grid item xs={12}>
                 <WidgetTitle widget={widget} />
-                <Divider sx={{ marginTop: '1em' }} />
+                <Divider sx={{ marginTop: '0.5em' }} />
             </Grid>
             <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'}>
                 <Grid item>
