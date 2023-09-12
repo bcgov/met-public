@@ -46,8 +46,8 @@ const VirtualSessionFormDrawer = () => {
     } = useContext(EventsContext);
     const [isCreating, setIsCreating] = useState(false);
     const eventItemToEdit = eventToEdit ? eventToEdit.event_items[0] : null;
-    const startDate = dayjs(eventItemToEdit ? eventItemToEdit?.start_date : '').tz('America/Vancouver');
-    const endDate = dayjs(eventItemToEdit ? eventItemToEdit?.end_date : '').tz('America/Vancouver');
+    const startDate = dayjs(eventItemToEdit ? eventItemToEdit?.start_date : '').tz('US/Pacific');
+    const endDate = dayjs(eventItemToEdit ? eventItemToEdit?.end_date : '').tz('US/Pacific');
     const methods = useForm<VirtualSessionForm>({
         resolver: yupResolver(schema),
     });
