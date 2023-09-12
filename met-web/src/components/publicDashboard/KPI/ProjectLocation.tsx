@@ -57,21 +57,23 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
     if (isLoading || engagementIsLoading) {
         return (
             <>
-                <MetLabel mb={2}>Project Location</MetLabel>
-                <MetPaper sx={{ p: 2, textAlign: 'center' }}>
-                    <Stack alignItems="center" gap={1}>
-                        <Grid
-                            container
-                            alignItems="center"
-                            justifyContent="center"
-                            direction="row"
-                            width={'100%'}
-                            height={circleSize}
-                        >
-                            <CircularProgress color="inherit" />
-                        </Grid>
-                    </Stack>
-                </MetPaper>
+                <Grid item sm={8} md={4} sx={{ width: isTablet ? '90%' : '100%' }}>
+                    <MetLabel mb={2}>Project Location</MetLabel>
+                    <MetPaper sx={{ p: 2, textAlign: 'center' }}>
+                        <Stack alignItems="center" gap={1}>
+                            <Grid
+                                container
+                                alignItems="center"
+                                justifyContent="center"
+                                direction="row"
+                                width={'100%'}
+                                height={circleSize}
+                            >
+                                <CircularProgress color="inherit" />
+                            </Grid>
+                        </Stack>
+                    </MetPaper>
+                </Grid>
             </>
         );
     }

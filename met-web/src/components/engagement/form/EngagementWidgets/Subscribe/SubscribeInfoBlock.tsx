@@ -4,18 +4,23 @@ import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { MetDraggable, MetDroppable } from 'components/common/Dragdrop';
 import { reorder } from 'utils';
 import SubscribeInfoPaper from './SubscribeInfoPaper';
-import { When } from 'react-if';
 import { debounce } from 'lodash';
 import { deleteSubscribeForm } from 'services/subscriptionService';
 import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { SubscribeContext } from './SubscribeContext';
-import { SUBSCRIBE_TYPE, SubscribeForm } from 'models/subscription';
+import { SubscribeForm } from 'models/subscription';
 
 const SubscribeInfoBlock = () => {
-    const { subscribe, setSubscribe, isLoadingSubscribe, updateWidgetSubscribeSorting, widget } =
-        useContext(SubscribeContext);
+    const {
+        subscribeOptions,
+        setSubscribeOptions,
+        isLoadingSubscribe,
+        updateWidgetSubscribeSorting,
+        widget,
+        loadSubscribeOptions,
+    } = useContext(SubscribeContext);
     const dispatch = useAppDispatch();
     const debounceUpdateWidgetSubscribeSorting = useRef(
         debounce((widgetSubscribeToSort: SubscribeForm[]) => {
@@ -28,9 +33,9 @@ const SubscribeInfoBlock = () => {
             return;
         }
 
-        const items = reorder(subscribe, result.source.index, result.destination.index);
+        const items: SubscribeForm[] = reorder(subscribeOptions, result.source.index, result.destination.index);
 
-        setSubscribe(items);
+        setSubscribeOptions(items);
 
         debounceUpdateWidgetSubscribeSorting(items);
     };
@@ -72,17 +77,19 @@ const SubscribeInfoBlock = () => {
         try {
             if (widget) {
                 await deleteSubscribeForm(widget.id, subscribeFormId);
-                const newSubscribe = subscribe.filter((subscribeForm) => subscribeForm.id !== subscribeFormId);
-                setSubscribe([...newSubscribe]);
+                loadSubscribeOptions();
                 dispatch(
-                    openNotification({ severity: 'success', text: 'The subscribe form was removed successfully' }),
+                    openNotification({
+                        severity: 'success',
+                        text: 'The subscribe form was removed successfully',
+                    }),
                 );
             }
         } catch (error) {
             dispatch(
                 openNotification({
                     severity: 'error',
-                    text: 'An error occurred while trying to remove subscribe form',
+                    text: 'An error occurred while trying to remove subscribeOptions form',
                 }),
             );
         }
@@ -91,23 +98,15 @@ const SubscribeInfoBlock = () => {
     return (
         <DragDropContext onDragEnd={moveSubscribeForm}>
             <MetDroppable droppableId="droppable">
-                <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" spacing={2}>
-                    {subscribe.map((subscribeForm: SubscribeForm, index) => {
+                <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
+                    {subscribeOptions.map((subscribeForm: SubscribeForm, index: number) => {
                         return (
                             <Grid item xs={12} key={`Grid-${subscribeForm.widget_id}`}>
-                                <MetDraggable draggableId={String(subscribeForm.widget_id)} index={index}>
-                                    <When condition={subscribeForm.type === SUBSCRIBE_TYPE.EMAIL_LIST}>
-                                        <SubscribeInfoPaper
-                                            removeSubscribeForm={handleRemoveSubscribeForm}
-                                            subscribeForm={subscribeForm}
-                                        />
-                                    </When>
-                                    <When condition={subscribeForm.type === SUBSCRIBE_TYPE.FORM}>
-                                        <SubscribeInfoPaper
-                                            removeSubscribeForm={handleRemoveSubscribeForm}
-                                            subscribeForm={subscribeForm}
-                                        />
-                                    </When>
+                                <MetDraggable draggableId={String(subscribeForm.id)} index={index}>
+                                    <SubscribeInfoPaper
+                                        removeSubscribeForm={handleRemoveSubscribeForm}
+                                        subscribeForm={subscribeForm}
+                                    />
                                 </MetDraggable>
                             </Grid>
                         );

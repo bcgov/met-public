@@ -23,6 +23,13 @@ class ContentType(Enum):
     PDF = 'application/pdf'
 
 
+class AuthHeaderType(Enum):
+    """Authorization header types."""
+
+    BASIC = 'Basic {}'
+    BEARER = 'Bearer {}'
+
+
 class WidgetDocumentType(Enum):
     """Document Types."""
 

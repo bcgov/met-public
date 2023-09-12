@@ -1,6 +1,13 @@
+from datetime import timedelta
+
 from flask import current_app
+from sqlalchemy import and_, func
+from typing import List
+from met_api.constants.engagement_status import Status
 from met_api.models.engagement import Engagement as EngagementModel
+from met_api.utils.datetime import local_datetime
 from met_api.utils.template import Template
+from met_cron.models.db import db
 from met_cron.services.mail_service import EmailService
 
 
@@ -15,7 +22,8 @@ class ClosingSoonEmailService:  # pylint: disable=too-few-public-methods
             2. Process each mail and send it to subscribed users
 
         """
-        engagements_closing_soon = EngagementModel.get_engagements_closing_soon()
+        offset_days: int = int(current_app.config.get('OFFSET_DAYS'))
+        engagements_closing_soon = ClosingSoonEmailService.get_engagements_closing_soon(offset_days)
         template_id = current_app.config.get('ENGAGEMENT_CLOSING_SOON_EMAIL_TEMPLATE_ID', None)
         subject = current_app.config.get('ENGAGEMENT_CLOSING_SOON_EMAIL_SUBJECT')
         template = Template.get_template('engagement_closing_soon.html')
@@ -24,3 +32,17 @@ class ClosingSoonEmailService:  # pylint: disable=too-few-public-methods
 
             EmailService._send_email_notification_for_subscription(engagement.id, template_id,
                                                                        subject, template)
+
+    @staticmethod
+    def get_engagements_closing_soon(offset_days: int) -> List[EngagementModel]:
+        """Get engagements that are closing within two days."""
+        now = local_datetime()
+        days_from_now = now + timedelta(days=offset_days)
+        engagements = db.session.query(EngagementModel) \
+            .filter(
+                and_(
+                    EngagementModel.status_id == Status.Published.value,
+                    func.date(EngagementModel.end_date) == func.date(days_from_now)
+                )) \
+            .all()
+        return engagements

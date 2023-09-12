@@ -16,7 +16,7 @@
 
 A simple decorator to check the subscription for a user.
 """
-from met_api.constants.subscription_type import SubscriptionTypes
+from met_api.constants.subscription_type import SubscriptionType
 from met_api.models.engagement_metadata import EngagementMetadataModel
 
 class CheckSubscription:
@@ -31,13 +31,13 @@ class CheckSubscription:
             3. If user is subscribed to a engagement, send notifications related to the engagement
 
         """
-        if subscriber.type == SubscriptionTypes.TENANT:
+        if subscriber.type == SubscriptionType.TENANT.value:
             return True
-        elif subscriber.type == SubscriptionTypes.PROJECT:
+        elif subscriber.type == SubscriptionType.PROJECT.value:
             engagement_metadata: EngagementMetadataModel = EngagementMetadataModel.find_by_id(engagement_id)
             if subscriber.project_id == engagement_metadata.project_id:
                 return True
-        elif subscriber.type == SubscriptionTypes.ENGAGEMENT:
+        elif subscriber.type == SubscriptionType.ENGAGEMENT.value:
             if subscriber.engagement_id == engagement_id:
                 return True
         else:

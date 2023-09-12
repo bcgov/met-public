@@ -161,6 +161,8 @@ class _Config():  # pylint: disable=too-few-public-methods
     # config for email queue
     MAIL_BATCH_SIZE = os.getenv('MAIL_BATCH_SIZE', 10)
 
+    # config for offset days to send reminder emails
+    OFFSET_DAYS = os.getenv('OFFSET_DAYS', 2)
 
 class MigrationConfig():  # pylint: disable=too-few-public-methods
     """Base class configuration that should set reasonable defaults for all the other configurations."""

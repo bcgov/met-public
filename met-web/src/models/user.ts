@@ -43,7 +43,7 @@ export const USER_STATUS: { [x: string]: { value: number; label: string } } = {
     },
     INACTIVE: {
         value: 2,
-        label: 'Inactive',
+        label: 'Deactivated',
     },
 };
 

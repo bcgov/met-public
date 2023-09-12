@@ -1,11 +1,11 @@
-export type SubscribeTypeLabel = 'EMAIL_LIST' | 'FORM';
+export type SubscribeTypeLabel = 'EMAIL_LIST' | 'SIGN_UP';
 
 export type CallToActionTypes = 'link' | 'button';
 
 export interface Subscription {
     engagement_id: number;
     email_address: string;
-    is_subscribed: string;
+    is_subscribed: boolean;
     participant_id: number;
     project_id: string;
     type: string;
@@ -14,17 +14,17 @@ export interface Subscription {
 export interface Subscribe {
     engagement_id: number;
     participant_id: number;
-    is_subscribed: string;
+    is_subscribed: boolean;
 }
 
 export interface Unsubscribe {
     participant_id: number;
-    is_subscribed: string;
+    is_subscribed: boolean;
 }
 
 export const SUBSCRIBE_TYPE: { [x in SubscribeTypeLabel]: SubscribeTypeLabel } = {
     EMAIL_LIST: 'EMAIL_LIST',
-    FORM: 'FORM',
+    SIGN_UP: 'SIGN_UP',
 };
 
 export const CallToActionType: { [x: string]: CallToActionTypes } = {
@@ -47,6 +47,7 @@ export interface SubscribeFormItem {
     id: number;
     title?: string;
     description: string;
+    rich_description: string;
     call_to_action_type: 'link' | 'button';
     call_to_action_text: string;
     form_type: SubscribeTypeLabel;

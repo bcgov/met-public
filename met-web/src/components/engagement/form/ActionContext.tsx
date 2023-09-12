@@ -184,7 +184,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 banner_filename: uploadedBannerImageFileName,
             });
 
-            dispatch(openNotification({ severity: 'success', text: 'Engagement Created Successfully' }));
+            dispatch(openNotification({ severity: 'success', text: 'Engagement has been created' }));
             setSaving(false);
             return Promise.resolve(result);
         } catch (error) {
@@ -233,7 +233,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 }),
             });
             setEngagement(updatedEngagement);
-            dispatch(openNotification({ severity: 'success', text: 'Engagement Updated Successfully' }));
+            dispatch(openNotification({ severity: 'success', text: 'Engagement has been saved' }));
             setSaving(false);
             return Promise.resolve(updatedEngagement);
         } catch (error) {

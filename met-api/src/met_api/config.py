@@ -204,6 +204,15 @@ class _Config():  # pylint: disable=too-few-public-methods
     # This flag decides if additonal tenant based checks has to be carried or not
     IS_SINGLE_TENANT_ENVIRONMENT = os.getenv('IS_SINGLE_TENANT_ENVIRONMENT', 'False').lower() == 'true'
 
+    # EAO EPIC configs
+    IS_EAO_ENVIRONMENT = os.getenv('IS_EAO_ENVIRONMENT', 'False').lower() == 'true'
+
+    EPIC_KEYCLOAK_SERVICE_ACCOUNT_ID = os.getenv('EPIC_KEYCLOAK_SERVICE_ACCOUNT_ID')
+    EPIC_KEYCLOAK_SERVICE_ACCOUNT_SECRET = os.getenv('EPIC_KEYCLOAK_SERVICE_ACCOUNT_SECRET')
+    EPIC_JWT_OIDC_ISSUER = os.getenv('EPIC_JWT_OIDC_ISSUER')
+    EPIC_URL = os.getenv('EPIC_URL')
+    EPIC_MILESTONE = os.getenv('EPIC_MILESTONE')
+
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
     """Dev Config."""
