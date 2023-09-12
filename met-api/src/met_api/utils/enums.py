@@ -49,6 +49,7 @@ class GeneratedDocumentTypes(IntEnum):
     """Document Types."""
 
     COMMENT_SHEET = 1
+    CAC_FORM_SHEET = 2
 
 
 class LoginSource(Enum):

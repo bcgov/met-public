@@ -69,3 +69,56 @@ class DocumentGenerationService:  # pylint:disable=too-few-public-methods
             data=data,
             options=options
         )
+
+    def generate_document(self, data, options=None):
+        """Generate comment sheet."""
+        if not options:
+            raise ValueError('Options not provided')
+
+        document_type = options.get('document_type')
+        if not document_type:
+            raise ValueError('Document type not provided')
+
+        document_template: GeneratedDocumentTemplate = GeneratedDocumentTemplate() \
+            .get_template_by_type(type_id=document_type)
+        if document_template is None:
+            raise ValueError('Template not saved in DB')
+
+        template_cached = False
+        if document_template.hash_code:
+            current_app.logger.info('Checking if template %s is cached', document_template.hash_code)
+            template_cached = self.cdgos_api_service.check_template_cached(document_template.hash_code)
+
+        if document_template.hash_code is None or not template_cached:
+            current_app.logger.info('Uploading new template')
+
+            template_name = options.get('template_name')
+            file_dir = os.path.dirname(os.path.realpath('__file__'))
+            document_template_path = os.path.join(
+                file_dir,
+                'src/met_api/generated_documents_carbone_templates/',
+                template_name
+            )
+
+            if not os.path.exists(document_template_path):
+                raise ValueError('Template file does not exist')
+
+            new_hash_code = self.cdgos_api_service.upload_template(template_file_path=document_template_path)
+            if not new_hash_code:
+                raise ValueError('Unable to obtain valid hashcode')
+            document_template.hash_code = new_hash_code
+            document_template.save()
+
+        generator_options = {
+                'cachereport': False,
+                'convertTo': options.get('convert_to', 'csv') if options else 'csv',
+                'overwrite': True,
+                'reportName': options.get('report_name', 'report') if options else 'report'
+        }
+
+        current_app.logger.info('Generating document')
+        return self.cdgos_api_service.generate_document(
+            template_hash_code=document_template.hash_code,
+            data=data,
+            options=generator_options
+        )

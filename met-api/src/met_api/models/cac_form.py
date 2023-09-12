@@ -23,3 +23,8 @@ class CACForm(BaseModel):  # pylint: disable=too-few-public-methods, too-many-in
     last_name = db.Column(db.String(50), nullable=False)
     city = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), nullable=False)
+
+    @classmethod
+    def get_all_by_engagement_id(cls, engagement_id):
+        """Get cac form by engagement id."""
+        return db.session.query(CACForm).filter(CACForm.engagement_id == engagement_id).all()

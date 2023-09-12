@@ -14,12 +14,14 @@
 """API endpoints for managing a cac form submission resource."""
 from http import HTTPStatus
 
-from flask import request
+from flask import Response, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
 from met_api.exceptions.business_exception import BusinessException
 from met_api.services.cac_form_service import CACFormService
+from met_api.utils.roles import Role
+from met_api.utils.tenant_validator import require_role
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
@@ -46,3 +48,32 @@ class CACForm(Resource):
             return str(err), HTTPStatus.BAD_REQUEST
         except KeyError as err:
             return str(err), HTTPStatus.BAD_REQUEST
+
+
+@cors_preflight('GET, OPTIONS')
+@API.route('/sheet')
+class GeneratedCommentsSheet(Resource):
+    """Resource for exorting cac form submissions."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @require_role([Role.EXPORT_CAC_FORM_TO_SHEET.value, Role.EXPORT_ALL_CAC_FORM_TO_SHEET.value])
+    def get(engagement_id):
+        """Export comments."""
+        try:
+
+            response = CACFormService().export_cac_form_submissions_to_spread_sheet(engagement_id)
+            response_headers = dict(response.headers)
+            headers = {
+                'content-type': response_headers.get('content-type'),
+                'content-disposition': response_headers.get('content-disposition'),
+            }
+            return Response(
+                response=response.content,
+                status=response.status_code,
+                headers=headers
+            )
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except KeyError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

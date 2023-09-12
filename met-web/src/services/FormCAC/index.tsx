@@ -1,6 +1,6 @@
 import http from 'apiManager/httpRequestHandler';
 import Endpoints from 'apiManager/endpoints';
-import { replaceAllInURL } from 'helper';
+import { replaceAllInURL, replaceUrl } from 'helper';
 
 interface SubmitCACForm {
     engagement_id: number;
@@ -24,4 +24,15 @@ export const submitCACForm = async ({ engagement_id, widget_id, form_data }: Sub
     });
     await http.PostRequest<SubmitCACForm>(url, form_data);
     return Promise.resolve();
+};
+
+interface GenerateFormsSheetParams {
+    engagement_id: number;
+}
+export const getFormsSheet = async ({ engagement_id }: GenerateFormsSheetParams) => {
+    const url = replaceUrl(Endpoints.CACForm.GET_SHEET, 'engagement_id', String(engagement_id));
+    const headers = {
+        'Content-type': 'text/csv; charset=utf-8',
+    };
+    return http.GetRequest<Blob>(url, {}, headers);
 };
