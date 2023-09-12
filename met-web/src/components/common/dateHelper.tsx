@@ -10,7 +10,7 @@ const formatToUTCTimeZone = (date: string, fmt: string) => dayjs(date).utc().for
 
 export const formatDate = (date: Dayjs | string, formatString = 'YYYY-MM-DD') => {
     if (date) {
-        return formatToPacificTimeZone(date.toString(), formatString, 'America/Los_Angeles');
+        return formatToPacificTimeZone(date.toString(), formatString, 'US/Pacific');
     } else {
         return '';
     }
