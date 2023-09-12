@@ -41,7 +41,7 @@ const UserManagementListing = () => {
             numeric: false,
             disablePadding: true,
             label: 'Role',
-            allowSort: true,
+            allowSort: false,
             renderCell: (row: User) => {
                 return row.main_group;
             },
