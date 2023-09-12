@@ -86,10 +86,18 @@ const WhoIsListeningForm = () => {
 
     return (
         <>
-            <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
+            <Grid
+                sx={{ border: '2px solid red', pt: 0 }}
+                item
+                xs={12}
+                container
+                alignItems="flex-start"
+                justifyContent={'flex-start'}
+                spacing={3}
+            >
                 <Grid item xs={12}>
                     <WidgetTitle widget={widget} />
-                    <Divider sx={{ marginTop: '1em' }} />
+                    <Divider sx={{ marginTop: '0.5em' }} />
                 </Grid>
                 <Grid item xs={12} container direction="row" justifyContent={'flex-start'} spacing={1}>
                     <Grid item xs={12}>

@@ -60,8 +60,10 @@ export const WidgetTitle = ({ widget }: { widget: Widget }) => {
                     alignItems={'flex-start'}
                     justifyContent={'space-between'}
                     width={'100%'}
+                    sx={{ border: '2px solid green' }}
                 >
                     <TextField
+                        sx={{ border: '2px solid yellow' }}
                         name="title"
                         value={title}
                         onChange={(e) => handleTitleChange(e.target.value)}
@@ -91,9 +93,11 @@ export const WidgetTitle = ({ widget }: { widget: Widget }) => {
                     alignItems={'flex-start'}
                     justifyContent={'space-between'}
                     width={'100%'}
+                    sx={{ border: '2px solid blue' }}
                 >
                     <MetHeader3>{widget.title}</MetHeader3>
                     <IconButton
+                        sx={{ border: '2px solid red', paddingY: 0 }}
                         onClick={() => {
                             setEditing(true);
                         }}
