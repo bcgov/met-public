@@ -93,7 +93,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
         );
     }
 
-    if (data) {
+    if (mapExists && data) {
         return (
             <>
                 <Grid item sm={8} md={4} sx={{ width: isTablet ? '90%' : '100%' }}>
