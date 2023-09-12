@@ -16,7 +16,7 @@ const DocumentForm = () => {
     }
 
     return (
-        <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3} sx={{ pt: 0 }}>
+        <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
             <Grid item xs={12}>
                 <WidgetTitle widget={widget} />
                 <Divider sx={{ marginTop: '0.5em' }} />
