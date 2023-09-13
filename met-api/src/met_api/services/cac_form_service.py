@@ -78,7 +78,7 @@ class CACFormService:
 
         document_options = {
             'document_type': GeneratedDocumentTypes.CAC_FORM_SHEET.value,
-            'template_name': 'cac_form_submissions.xlsx',
+            'template_name': 'cac_forms_sheet.xlsx',
             'convert_to': 'csv',
             'report_name': 'cac_form_submissions'
         }
