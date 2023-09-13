@@ -20,7 +20,6 @@ from flask import current_app
 
 from met_api.models.generated_document_template import GeneratedDocumentTemplate
 from met_api.services.cdogs_api_service import CdogsApiService
-from met_api.utils.enums import GeneratedDocumentTypes
 
 
 class DocumentGenerationService:  # pylint:disable=too-few-public-methods
