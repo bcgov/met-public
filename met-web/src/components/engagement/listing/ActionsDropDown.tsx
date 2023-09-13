@@ -33,9 +33,6 @@ export const ActionsDropDown = ({ engagement }: { engagement: Engagement }) => {
         engagement.submission_status === SubmissionStatus.Upcoming;
     const isScheduled = engagement.engagement_status.id === EngagementStatus.Scheduled;
 
-    useEffect(() => {
-        console.log(roles);
-    }, [roles]);
     const canEditEngagement = (): boolean => {
         const authorized = roles.includes(USER_ROLES.EDIT_ENGAGEMENT) || assignedEngagements.includes(engagement.id);
 

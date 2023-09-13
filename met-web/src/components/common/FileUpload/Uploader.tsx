@@ -10,7 +10,6 @@ interface UploaderProps {
     acceptedFormat?: Accept;
 }
 const Uploader = ({ margin = 2, height = '10em', helpText, acceptedFormat }: UploaderProps) => {
-    console.log(acceptedFormat);
     const { handleAddFile } = useContext(FileUploadContext);
 
     return (
