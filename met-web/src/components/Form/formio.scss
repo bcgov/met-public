@@ -644,3 +644,7 @@ div[disabled] {
     overflow-y: auto !important;
     max-height: 200px !important;
 }
+
+.choices__list--dropdown .choices__list {
+    overflow: visible;
+}
