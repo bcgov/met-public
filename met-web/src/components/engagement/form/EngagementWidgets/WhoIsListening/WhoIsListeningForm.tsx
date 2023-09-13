@@ -85,65 +85,61 @@ const WhoIsListeningForm = () => {
     };
 
     return (
-        <>
-            <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
+        <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
+            <Grid item xs={12}>
+                <WidgetTitle widget={widget} />
+                <Divider sx={{ marginTop: '0.5em' }} />
+            </Grid>
+            <Grid item xs={12} container direction="row" justifyContent={'flex-start'} spacing={1}>
                 <Grid item xs={12}>
-                    <WidgetTitle widget={widget} />
-                    <Divider sx={{ marginTop: '1em' }} />
+                    <MetLabel>Select Existing Contact</MetLabel>
+                    <Autocomplete
+                        id="contact-selector"
+                        options={contacts}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label=" "
+                                InputLabelProps={{
+                                    shrink: false,
+                                }}
+                            />
+                        )}
+                        getOptionLabel={(contact: Contact) => `${contact.name} - ${contact.title}`}
+                        onChange={(_e: React.SyntheticEvent<Element, Event>, contact: Contact | null) =>
+                            setSelectedContact(contact)
+                        }
+                        getOptionDisabled={(option) => addedContacts.map((contact) => contact.id).includes(option.id)}
+                        disabled={loadingContacts}
+                    />
                 </Grid>
-                <Grid item xs={12} container direction="row" justifyContent={'flex-start'} spacing={1}>
-                    <Grid item xs={12}>
-                        <MetLabel>Select Existing Contact</MetLabel>
-                        <Autocomplete
-                            id="contact-selector"
-                            options={contacts}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label=" "
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                />
-                            )}
-                            getOptionLabel={(contact: Contact) => `${contact.name} - ${contact.title}`}
-                            onChange={(_e: React.SyntheticEvent<Element, Event>, contact: Contact | null) =>
-                                setSelectedContact(contact)
-                            }
-                            getOptionDisabled={(option) =>
-                                addedContacts.map((contact) => contact.id).includes(option.id)
-                            }
-                            disabled={loadingContacts}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <PrimaryButton onClick={() => addContact()} fullWidth>
-                            Add This Contact
-                        </PrimaryButton>
-                    </Grid>
-                    <Grid item>
-                        <SecondaryButton fullWidth onClick={() => handleAddContactDrawerOpen(true)}>
-                            Create New Contact
-                        </SecondaryButton>
-                    </Grid>
+                <Grid item>
+                    <PrimaryButton onClick={() => addContact()} fullWidth>
+                        Add This Contact
+                    </PrimaryButton>
                 </Grid>
-                <Grid item xs={12}>
-                    <ContactBlock />
-                </Grid>
-                <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'} marginTop="8em">
-                    <Grid item>
-                        <PrimaryButton
-                            disabled={addedContacts.length === 0}
-                            loading={savingWidgetItems}
-                            onClick={() => saveWidgetItems()}
-                        >{`Save & Close`}</PrimaryButton>
-                    </Grid>
-                    <Grid item>
-                        <SecondaryButton onClick={() => handleWidgetDrawerOpen(false)}>{`Cancel`}</SecondaryButton>
-                    </Grid>
+                <Grid item>
+                    <SecondaryButton fullWidth onClick={() => handleAddContactDrawerOpen(true)}>
+                        Create New Contact
+                    </SecondaryButton>
                 </Grid>
             </Grid>
-        </>
+            <Grid item xs={12}>
+                <ContactBlock />
+            </Grid>
+            <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'} marginTop="8em">
+                <Grid item>
+                    <PrimaryButton
+                        disabled={addedContacts.length === 0}
+                        loading={savingWidgetItems}
+                        onClick={() => saveWidgetItems()}
+                    >{`Save & Close`}</PrimaryButton>
+                </Grid>
+                <Grid item>
+                    <SecondaryButton onClick={() => handleWidgetDrawerOpen(false)}>{`Cancel`}</SecondaryButton>
+                </Grid>
+            </Grid>
+        </Grid>
     );
 };
 

@@ -16,7 +16,6 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { Dayjs } from 'dayjs';
 import { Then, If, Else, Unless } from 'react-if';
 import { formatToUTC } from 'components/common/dateHelper';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import axios, { AxiosError } from 'axios';
 import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
 
@@ -185,19 +184,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                         onChange={(newDate: Dayjs | null) => setFromDate(newDate)}
                                         label="mm/dd/yyyy"
                                         inputFormat="MM/DD/YYYY"
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                InputProps={{
-                                                    ...params.InputProps,
-                                                    endAdornment: isExtraSmall ? (
-                                                        <></>
-                                                    ) : (
-                                                        <CalendarTodayIcon sx={{ fontSize: 20 }} />
-                                                    ),
-                                                }}
-                                            />
-                                        )}
+                                        renderInput={(params) => (isExtraSmall ? <></> : <TextField {...params} />)}
                                     />
                                 </Stack>
                             </Grid>
@@ -215,19 +202,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                         onChange={(newDate: Dayjs | null) => setToDate(newDate)}
                                         label="mm/dd/yyyy"
                                         inputFormat="MM/DD/YYYY"
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                InputProps={{
-                                                    ...params.InputProps,
-                                                    endAdornment: isExtraSmall ? (
-                                                        <></>
-                                                    ) : (
-                                                        <CalendarTodayIcon sx={{ fontSize: 20 }} />
-                                                    ),
-                                                }}
-                                            />
-                                        )}
+                                        renderInput={(params) => (isExtraSmall ? <></> : <TextField {...params} />)}
                                     />
                                 </Stack>
                             </Grid>

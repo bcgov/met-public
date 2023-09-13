@@ -19,7 +19,7 @@ const WidgetDrawer = () => {
                 onExited: () => handleWidgetDrawerTabValueChange(WidgetTabValues.WIDGET_OPTIONS),
             }}
         >
-            <Box sx={{ width: '50vw', paddingTop: '7em' }} role="presentation">
+            <Box sx={{ width: '50vw', paddingTop: '5.5em' }} role="presentation">
                 <Grid
                     container
                     direction="row"
