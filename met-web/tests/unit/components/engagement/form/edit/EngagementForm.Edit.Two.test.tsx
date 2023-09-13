@@ -108,7 +108,7 @@ describe('Engagement form page tests', () => {
             }),
         );
 
-        const { container } = render(<EngagementForm />);
+        render(<EngagementForm />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
