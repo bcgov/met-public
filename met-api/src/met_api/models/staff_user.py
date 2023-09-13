@@ -33,7 +33,7 @@ class StaffUser(BaseModel):
     email_address = Column(db.String(100), nullable=True)
     contact_number = Column(db.String(50), nullable=True)
     external_id = Column(db.String(50), nullable=False, unique=True)
-    status_id = db.Column(db.Integer, ForeignKey('user_status.id'), nullable=False, server_default='1')
+    status_id = db.Column(db.Integer, ForeignKey('user_status.id'), nullable=False, default=1)
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
 
     @classmethod
