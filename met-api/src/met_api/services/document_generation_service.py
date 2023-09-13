@@ -30,46 +30,6 @@ class DocumentGenerationService:  # pylint:disable=too-few-public-methods
         """Initiate the class."""
         self.cdgos_api_service = CdogsApiService()
 
-    def generate_comment_sheet(self, data):
-        """Generate comment sheet."""
-        comment_sheet_template: GeneratedDocumentTemplate = GeneratedDocumentTemplate() \
-            .get_template_by_type(type_id=GeneratedDocumentTypes.COMMENT_SHEET)
-        if comment_sheet_template is None:
-            raise ValueError('Template not saved in DB')
-
-        template_cached = False
-        if comment_sheet_template.hash_code:
-            current_app.logger.info('Checking if template %s is cached', comment_sheet_template.hash_code)
-            template_cached = self.cdgos_api_service.check_template_cached(comment_sheet_template.hash_code)
-
-        if comment_sheet_template.hash_code is None or not template_cached:
-            current_app.logger.info('Uploading new template')
-
-            file_dir = os.path.dirname(os.path.realpath('__file__'))
-            comment_sheet_template_path = os.path.join(
-                file_dir,
-                'src/met_api/generated_documents_carbone_templates/staff_comments_sheet.xlsx'
-            )
-            new_hash_code = self.cdgos_api_service.upload_template(template_file_path=comment_sheet_template_path)
-            if not new_hash_code:
-                raise ValueError('Unable to obtain valid hashcode')
-            comment_sheet_template.hash_code = new_hash_code
-            comment_sheet_template.save()
-
-        options = {
-                'cachereport': False,
-                'convertTo': 'csv',
-                'overwrite': True,
-                'reportName': 'comments_sheet'
-        }
-
-        current_app.logger.info('Generating comment_sheet')
-        return self.cdgos_api_service.generate_document(
-            template_hash_code=comment_sheet_template.hash_code,
-            data=data,
-            options=options
-        )
-
     def generate_document(self, data, options=None):
         """Generate comment sheet."""
         if not options:
