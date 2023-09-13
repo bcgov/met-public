@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { USER_ROLES } from 'services/userService/constants';
 import { CircularProgress, MenuItem, Select } from '@mui/material';
 import { Engagement } from 'models/engagement';
