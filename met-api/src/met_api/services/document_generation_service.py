@@ -30,7 +30,7 @@ class DocumentGenerationService:  # pylint:disable=too-few-public-methods
         """Initiate the class."""
         self.cdgos_api_service = CdogsApiService()
 
-    def generate_document(self, data, options=None):
+    def generate_document(self, data, options):
         """Generate comment sheet."""
         if not options:
             raise ValueError('Options not provided')
@@ -71,9 +71,9 @@ class DocumentGenerationService:  # pylint:disable=too-few-public-methods
 
         generator_options = {
                 'cachereport': False,
-                'convertTo': options.get('convert_to', 'csv') if options else 'csv',
+                'convertTo': options.get('convert_to', 'csv'),
                 'overwrite': True,
-                'reportName': options.get('report_name', 'report') if options else 'report'
+                'reportName': options.get('report_name', 'report')
         }
 
         current_app.logger.info('Generating document')
