@@ -20,7 +20,7 @@ import pytz
 def local_datetime():
     """Get the local (Pacific Timezone) datetime."""
     utcmoment = datetime.utcnow().replace(tzinfo=pytz.utc)
-    now = utcmoment.astimezone(pytz.timezone('America/Vancouver'))
+    now = utcmoment.astimezone(pytz.timezone('US/Pacific'))
     return now
 
 
