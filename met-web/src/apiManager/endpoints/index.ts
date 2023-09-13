@@ -151,6 +151,7 @@ const Endpoints = {
     },
     CACForm: {
         CREATE: `${AppConfig.apiUrl}/engagements/engagement_id/cacform/widget_id`,
+        GET_SHEET: `${AppConfig.apiUrl}/engagements/engagement_id/cacform/sheet`,
     },
 };
 

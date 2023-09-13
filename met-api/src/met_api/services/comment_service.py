@@ -17,7 +17,7 @@ from met_api.services import authorization
 from met_api.services.document_generation_service import DocumentGenerationService
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
-from met_api.utils.enums import MembershipStatus
+from met_api.utils.enums import GeneratedDocumentTypes, MembershipStatus
 
 
 class CommentService:
@@ -179,4 +179,11 @@ class CommentService:
         data = {
             'comments': formatted_comments
         }
-        return DocumentGenerationService().generate_comment_sheet(data=data)
+        document_options = {
+            'document_type': GeneratedDocumentTypes.COMMENT_SHEET.value,
+            'template_name': 'staff_comments_sheet.xlsx',
+            'convert_to': 'csv',
+            'report_name': 'comments_sheet'
+        }
+
+        return DocumentGenerationService().generate_document(data=data, options=document_options)

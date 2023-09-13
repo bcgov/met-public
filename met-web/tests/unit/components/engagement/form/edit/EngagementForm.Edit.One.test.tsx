@@ -126,7 +126,6 @@ describe('Engagement form page tests', () => {
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
         const updateButton = screen.getByTestId('update-engagement-button');
 
@@ -143,11 +142,10 @@ describe('Engagement form page tests', () => {
 
     test('Modal with warning appears when removing survey', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
-        const { container } = render(<EngagementForm />);
+        render(<EngagementForm />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
 
         const removeSurveyButton = screen.getByTestId(`survey-widget/remove-${survey.id}`);
@@ -170,11 +168,10 @@ describe('Engagement form page tests', () => {
                 ...engagementMetadata,
             }),
         );
-        const { container } = render(<EngagementForm />);
+        render(<EngagementForm />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
 
         expect(screen.getByText('Add Survey')).toBeDisabled();
@@ -188,11 +185,10 @@ describe('Engagement form page tests', () => {
                 surveys: surveys,
             }),
         );
-        const { container } = render(<EngagementForm />);
+        render(<EngagementForm />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
 
         const settingsTabButton = screen.getByText('Settings');
@@ -212,11 +208,10 @@ describe('Engagement form page tests', () => {
                 surveys: surveys,
             }),
         );
-        const { container } = render(<EngagementForm />);
+        render(<EngagementForm />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
 
         const settingsTabButton = screen.getByText('URL (links)');

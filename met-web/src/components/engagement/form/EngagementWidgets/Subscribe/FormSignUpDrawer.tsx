@@ -71,7 +71,6 @@ const FormSignUpDrawer = () => {
     } = methods;
 
     useEffect(() => {
-        console.log('subscribeOptionToEdit', subscribeOptionToEdit);
         if (subscribeOptionToEdit) {
             const subscribeItem = subscribeOptionToEdit.subscribe_items[0];
             setValue('description', subscribeItem.description);
@@ -93,10 +92,6 @@ const FormSignUpDrawer = () => {
             setInitialRawEditorState('');
         }
     }, []);
-
-    useEffect(() => {
-        console.log('initialRichDescription', initialRawEditorState);
-    }, [initialRawEditorState]);
 
     const createSubscribeForm = async (data: FormSignUp) => {
         const { description, richDescription, callToActionText, callToActionType } = await schema.validate(data);

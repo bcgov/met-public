@@ -34,4 +34,6 @@ export const USER_ROLES = {
     TOGGLE_USER_STATUS: 'toggle_user_status',
     EXPORT_TO_CSV: 'export_to_csv',
     VIEW_ALL_SURVEY_RESULTS: 'view_all_survey_results',
+    EXPORT_CAC_FORM_TO_SHEET: 'export_cac_form_to_sheet',
+    EXPORT_ALL_CAC_FORM_TO_SHEET: 'export_all_cac_form_to_sheet',
 };
