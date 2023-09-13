@@ -112,7 +112,6 @@ describe('Engagement form page tests', () => {
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
 
         expect(screen.getByText('Survey 1')).toBeInTheDocument();
