@@ -4,7 +4,7 @@ name: MET WEB DEV CD
 on:
   push:
     branches:
-      - main
+      - vanity
     paths:
       - "met-web/**"
   workflow_dispatch:
