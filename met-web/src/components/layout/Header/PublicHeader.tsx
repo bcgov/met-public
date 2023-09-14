@@ -45,6 +45,10 @@ const PublicHeader = () => {
                                     objectFit: 'cover',
                                     height: '5em',
                                     width: '100%',
+                                    cursor: 'pointer',
+                                }}
+                                onClick={() => {
+                                    navigate('/');
                                 }}
                                 onError={(_e) => {
                                     setImageError(true);
@@ -59,11 +63,22 @@ const PublicHeader = () => {
                                 height: '5em',
                                 width: { xs: '7em', md: '15em' },
                                 marginRight: { xs: '1em', md: '3em' },
+                                cursor: 'pointer',
+                            }}
+                            onClick={() => {
+                                navigate('/');
                             }}
                             alt="British Columbia Logo"
                         />
                     </When>
-                    <HeaderTitle sx={{ flexGrow: 1 }}>{translate('header.title')}</HeaderTitle>
+                    <HeaderTitle
+                        sx={{ flexGrow: 1, cursor: 'pointer' }}
+                        onClick={() => {
+                            navigate('/');
+                        }}
+                    >
+                        {translate('header.title')}
+                    </HeaderTitle>
                     <When condition={isLoggedIn}>
                         <Button color="inherit" onClick={() => UserService.doLogout(() => navigate('/'))}>
                             Logout
