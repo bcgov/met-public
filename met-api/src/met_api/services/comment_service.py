@@ -1,11 +1,14 @@
 """Service for comment management."""
+from http import HTTPStatus
 import itertools
-from datetime import datetime
 
+from met_api.exceptions.business_exception import BusinessException
 from met_api.constants.comment_status import Status
 from met_api.constants.membership_type import MembershipType
+from met_api.constants.export_comments import RejectionReason
 from met_api.models import Survey as SurveyModel
 from met_api.models.comment import Comment
+from met_api.models.engagement_metadata import EngagementMetadataModel
 from met_api.models.membership import Membership as MembershipModel
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.submission import Submission as SubmissionModel
@@ -158,26 +161,29 @@ class CommentService:
     @classmethod
     def export_comments_to_spread_sheet(cls, survey_id):
         """Export comments to spread sheet."""
-        engagement = SurveyModel.find_by_id(survey_id)
-        one_of_roles = (
-            MembershipType.TEAM_MEMBER.name,
-            Role.EXPORT_TO_CSV.value
-        )
-        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement.engagement_id)
-        comments = Comment.get_comments_by_survey_id(survey_id)
-        formatted_comments = [
-            {
-                'commentNumber': comment.id,
-                'dateSubmitted': str(comment.submission_date),
-                'author': '',
-                'commentText': comment.text,
-                'reviewer': comment.reviewed_by,
-                'exportDate': str(datetime.utcnow())
-            }
-            for comment in comments]
+        try:
+            engagement = SurveyModel.find_by_id(survey_id)
+            one_of_roles = (
+                MembershipType.TEAM_MEMBER.name,
+                Role.EXPORT_TO_CSV.value
+            )
+            authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement.engagement_id)
+            comments = Comment.get_comments_by_survey_id(survey_id)
+            metadata_model = EngagementMetadataModel.find_by_id(engagement.engagement_id)
+            project_name = metadata_model.project_metadata.get('project_name') if metadata_model else None
+        except BusinessException as err:
+            return str(err), err.status_code
+        except ValueError as err:
+            return str(err), HTTPStatus.BAD_REQUEST
+        except KeyError as err:
+            return str(err), HTTPStatus.BAD_REQUEST
 
-        data = {
-            'comments': formatted_comments
+        titles = cls.get_titles(comments)
+        data_rows = cls.get_data_rows(titles, comments, project_name)
+
+        formatted_comments = {
+            'titles': titles,
+            'comments': data_rows
         }
         document_options = {
             'document_type': GeneratedDocumentTypes.COMMENT_SHEET.value,
@@ -185,5 +191,60 @@ class CommentService:
             'convert_to': 'csv',
             'report_name': 'comments_sheet'
         }
+        return DocumentGenerationService().generate_document(data=formatted_comments, options=document_options)
 
-        return DocumentGenerationService().generate_document(data=data, options=document_options)
+    @classmethod
+    def get_titles(cls, comments):
+        """Get the titles to be displayed on the sheet."""
+        # Title could be dynamic based on the number of comment type questions on the survey
+        return [{'label': label.get('label', None)} for label in comments[0].get('comments')]
+
+    @classmethod
+    def get_data_rows(cls, titles, comments, project_name):
+        """Get the content to be exported on to the sheet."""
+        data_rows = []
+
+        for comment in comments:
+            comment_text = cls.get_comment_text(titles, comment)
+
+            rejection_note = cls.get_rejection_note(comment)
+
+            data_rows.append({
+                'commentNumber': comment.get('id'),
+                'dateSubmitted': str(comment.get('created_date')),
+                'commentText': comment_text,
+                'status': Status(comment.get('comment_status_id')).name,
+                'datePublished': str(comment.get('review_date')),
+                'rejectionNote': rejection_note,
+                'reviewer': comment.get('reviewed_by'),
+                'projectName': project_name
+            })
+
+        return data_rows
+
+    @classmethod
+    def get_comment_text(cls, titles, comment):
+        """Get the comments to be exported to the sheet."""
+        comments = [{'text': text.get('text', None)} for text in comment.get('comments')]
+        # Making sure that the number of comments matches the number of questions on the comment to keep
+        # the layout intact. In case user has not responded to a question the column value should be
+        # blank.
+        comments.extend([{'text': ''}] * (len(titles) - len(comments)))
+
+        return comments
+
+    @classmethod
+    def get_rejection_note(cls, comment):
+        """Get the rejection note."""
+        rejection_note = []
+
+        if comment.get('has_personal_info'):
+            rejection_note.append(RejectionReason.has_personal_info.value)
+        if comment.get('has_profanity'):
+            rejection_note.append(RejectionReason.has_profanity.value)
+        if comment.get('has_threat'):
+            rejection_note.append(RejectionReason.has_threat.value)
+        if comment.get('rejected_reason_other'):
+            rejection_note.append(comment.get('rejected_reason_other'))
+
+        return ', '.join(rejection_note)
