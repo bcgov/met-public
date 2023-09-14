@@ -20,7 +20,6 @@ from met_api.models.report_setting import ReportSetting
 from met_api.models.submission import Submission
 from met_api.models.survey import Survey
 from met_api.schemas.comment import CommentSchema
-from met_api.schemas.submission import SubmissionSchema
 
 from .base_model import BaseModel
 from .comment_status import CommentStatus as CommentStatusModel
@@ -220,12 +219,16 @@ class Comment(BaseModel):
     @classmethod
     def get_comments_by_survey_id(cls, survey_id):
         """Get comments paginated."""
-        null_value = None
-        query = db.session.query(Submission)\
-            .join(Comment, Submission.id == Comment.submission_id)\
-            .filter(and_(Submission.survey_id == survey_id,
-                         or_(Submission.reviewed_by != 'System', Submission.reviewed_by == null_value)))
+        query = db.session.query(
+            Comment.id,
+            Comment.submission_date,
+            Comment.text,
+            Submission.reviewed_by
+        )\
+            .join(Submission, Submission.id == Comment.submission_id) \
+            .add_entity(Submission)\
+            .filter(Comment.survey_id == survey_id)
 
-        query = query.order_by(Submission.id.asc())
-        items = query.all()
-        return SubmissionSchema(many=True, exclude=['submission_json']).dump(items)
+        query = query.order_by(Comment.id.asc())
+
+        return query.all()
