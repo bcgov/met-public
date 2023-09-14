@@ -116,7 +116,7 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                         sx={{
                             color: Palette.internalHeader.color,
                         }}
-                        onClick={() => UserService.doLogout(() => navigate('/'))}
+                        onClick={() => UserService.doLogout()}
                     >
                         Logout
                     </Button>

@@ -87,12 +87,7 @@ const userLogout = () => {
 
 const doLogin = () => KeycloakData.login({ redirectUri: getBaseUrl() });
 
-const doLogout = async (navigateCallback?: () => void) => {
-    if (navigateCallback) {
-        navigateCallback();
-    }
-    await KeycloakData.logout();
-};
+const doLogout = async () => KeycloakData.logout({ redirectUri: getBaseUrl() });
 const getToken = () => KeycloakData.token;
 
 const isLoggedIn = () => !!KeycloakData.token;
