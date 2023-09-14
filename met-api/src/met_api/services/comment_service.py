@@ -1,8 +1,6 @@
 """Service for comment management."""
-from http import HTTPStatus
 import itertools
 
-from met_api.exceptions.business_exception import BusinessException
 from met_api.constants.comment_status import Status
 from met_api.constants.membership_type import MembershipType
 from met_api.constants.export_comments import RejectionReason
