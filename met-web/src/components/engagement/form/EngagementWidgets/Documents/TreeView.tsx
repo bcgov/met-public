@@ -18,8 +18,8 @@ export default function DocumentTree({ documentItem }: DocumentTreeProps) {
         <TreeView
             aria-label="documentTree"
             defaultExpanded={['3']}
-            defaultCollapseIcon={<ArrowDropDownIcon />}
-            defaultExpandIcon={<ArrowRightIcon />}
+            defaultCollapseIcon={<ArrowDropDownIcon sx={{ height: '35px', width: '35px' }} />}
+            defaultExpandIcon={<ArrowRightIcon sx={{ height: '35px', width: '35px' }} />}
             defaultEndIcon={<div style={{ width: 24 }} />}
             sx={{ flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
         >
