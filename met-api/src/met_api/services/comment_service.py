@@ -1,8 +1,6 @@
 """Service for comment management."""
-from http import HTTPStatus
 import itertools
 
-from met_api.exceptions.business_exception import BusinessException
 from met_api.constants.comment_status import Status
 from met_api.constants.membership_type import MembershipType
 from met_api.constants.export_comments import RejectionReason
@@ -161,22 +159,15 @@ class CommentService:
     @classmethod
     def export_comments_to_spread_sheet(cls, survey_id):
         """Export comments to spread sheet."""
-        try:
-            engagement = SurveyModel.find_by_id(survey_id)
-            one_of_roles = (
-                MembershipType.TEAM_MEMBER.name,
-                Role.EXPORT_TO_CSV.value
-            )
-            authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement.engagement_id)
-            comments = Comment.get_comments_by_survey_id(survey_id)
-            metadata_model = EngagementMetadataModel.find_by_id(engagement.engagement_id)
-            project_name = metadata_model.project_metadata.get('project_name') if metadata_model else None
-        except BusinessException as err:
-            return str(err), err.status_code
-        except ValueError as err:
-            return str(err), HTTPStatus.BAD_REQUEST
-        except KeyError as err:
-            return str(err), HTTPStatus.BAD_REQUEST
+        engagement = SurveyModel.find_by_id(survey_id)
+        one_of_roles = (
+            MembershipType.TEAM_MEMBER.name,
+            Role.EXPORT_TO_CSV.value
+        )
+        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement.engagement_id)
+        comments = Comment.get_comments_by_survey_id(survey_id)
+        metadata_model = EngagementMetadataModel.find_by_id(engagement.engagement_id)
+        project_name = metadata_model.project_metadata.get('project_name') if metadata_model else None
 
         titles = cls.get_titles(comments)
         data_rows = cls.get_data_rows(titles, comments, project_name)

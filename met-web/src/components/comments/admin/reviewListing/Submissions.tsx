@@ -49,7 +49,7 @@ const Submissions = () => {
     const handleExportComments = async () => {
         setIsExporting(true);
         const response = await getCommentsSheet({ survey_id: survey.id });
-        downloadFile(response, `${survey.engagement?.name || ''} - ${formatToUTC(Date())}.csv`);
+        downloadFile(response, `INTERNAL ONLY - ${survey.engagement?.name || ''} - ${formatToUTC(Date())}.csv`);
         setIsExporting(false);
     };
 
