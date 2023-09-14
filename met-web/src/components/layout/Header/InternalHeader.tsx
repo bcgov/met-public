@@ -66,6 +66,10 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                                     objectFit: 'cover',
                                     height: '5em',
                                     width: '100%',
+                                    cursor: 'pointer',
+                                }}
+                                onClick={() => {
+                                    navigate('/');
                                 }}
                                 onError={(_e) => {
                                     setImageError(true);
@@ -77,17 +81,35 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                         <Box
                             component={BCLogo}
                             sx={{
+                                cursor: 'pointer',
                                 height: '5em',
                                 width: { xs: '7em', md: '15em' },
                                 marginRight: { xs: '1em', md: '3em' },
+                            }}
+                            onClick={() => {
+                                navigate('/');
                             }}
                             alt="British Columbia Logo"
                         />
                     </When>
                     {isMediumScreen ? (
-                        <HeaderTitle sx={{ flexGrow: 1 }}>{translate('header.title')}</HeaderTitle>
+                        <HeaderTitle
+                            onClick={() => {
+                                navigate('/');
+                            }}
+                            sx={{ flexGrow: 1, cursor: 'pointer' }}
+                        >
+                            {translate('header.title')}
+                        </HeaderTitle>
                     ) : (
-                        <HeaderTitle sx={{ flexGrow: 1 }}>{translate('header.smallTitle')}</HeaderTitle>
+                        <HeaderTitle
+                            onClick={() => {
+                                navigate('/');
+                            }}
+                            sx={{ flexGrow: 1, cursor: 'pointer' }}
+                        >
+                            {translate('header.smallTitle')}
+                        </HeaderTitle>
                     )}
                     <Button
                         data-testid="button-header"
