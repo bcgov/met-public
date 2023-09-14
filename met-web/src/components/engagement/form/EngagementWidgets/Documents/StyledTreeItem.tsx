@@ -58,7 +58,15 @@ export function StyledTreeItem(props: StyledTreeItemProps & DocumentTreeItemProp
     return (
         <StyledTreeItemRoot
             label={
-                <Box sx={{ display: 'flex', alignItems: 'center', p: 0.5, pr: 0 }}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        p: 0.5,
+                        pr: 0,
+                        pl: 0,
+                    }}
+                >
                     <If condition={labelUrl}>
                         <Then>
                             <Box
