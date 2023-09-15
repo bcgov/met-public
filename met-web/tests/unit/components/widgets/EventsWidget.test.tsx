@@ -21,10 +21,10 @@ jest.mock('components/map', () => () => {
 });
 
 const mockEngagementSettings: EngagementSettings = {
-    ...createDefaultEngagementSettings()
-}
+    ...createDefaultEngagementSettings(),
+};
 
-jest.mock('axios')
+jest.mock('axios');
 
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
@@ -34,6 +34,15 @@ jest.mock('react-redux', () => ({
             assignedEngagements: [draftEngagement.id],
         };
     }),
+}));
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useLocation: jest.fn(() => ({ search: '' })),
+    useParams: jest.fn(() => {
+        return { projectId: '' };
+    }),
+    useNavigate: () => jest.fn(),
 }));
 
 jest.mock('@reduxjs/toolkit/query/react', () => ({
@@ -79,18 +88,16 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
 
 describe('Event Widget tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
-    jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
         .mockReturnValue(Promise.resolve(draftEngagement));
     const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([eventWidget]));
-    jest.spyOn(engagementMetadataService, 'getEngagementMetadata')
-        .mockReturnValue(Promise.resolve(engagementMetadata));
-    jest.spyOn(membershipService, 'getTeamMembers')
-        .mockReturnValue(Promise.resolve([]));
-    jest.spyOn(engagementSettingService, 'getEngagementSettings')
-        .mockReturnValue(Promise.resolve(mockEngagementSettings));
+    jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(Promise.resolve(engagementMetadata));
+    jest.spyOn(membershipService, 'getTeamMembers').mockReturnValue(Promise.resolve([]));
+    jest.spyOn(engagementSettingService, 'getEngagementSettings').mockReturnValue(
+        Promise.resolve(mockEngagementSettings),
+    );
 
     beforeEach(() => {
         setupEnv();

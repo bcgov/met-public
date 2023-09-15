@@ -67,6 +67,15 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
 
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useLocation: jest.fn(() => ({ search: '' })),
+    useParams: jest.fn(() => {
+        return { projectId: '' };
+    }),
+    useNavigate: () => jest.fn(),
+}));
+
 // Mocking window.location.pathname in Jest
 Object.defineProperty(window, 'location', {
     value: {
@@ -76,7 +85,6 @@ Object.defineProperty(window, 'location', {
 
 describe('Engagement form page tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
-    jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
     const openNotificationModalMock = jest
         .spyOn(notificationModalSlice, 'openNotificationModal')
         .mockImplementation(jest.fn());

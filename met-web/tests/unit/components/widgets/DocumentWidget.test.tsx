@@ -12,7 +12,12 @@ import * as notificationSlice from 'services/notificationService/notificationSli
 import * as engagementMetadataService from 'services/engagementMetadataService';
 import * as membershipService from 'services/membershipService';
 import * as engagementSettingService from 'services/engagementSettingService';
-import { createDefaultEngagement, createDefaultEngagementSettings, Engagement, EngagementSettings } from 'models/engagement';
+import {
+    createDefaultEngagement,
+    createDefaultEngagementSettings,
+    Engagement,
+    EngagementSettings,
+} from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { Widget, WidgetType } from 'models/widget';
 import { DocumentItem } from 'models/document';
@@ -39,9 +44,8 @@ const engagement: Engagement = {
 };
 
 const mockEngagementSettings: EngagementSettings = {
-    ...createDefaultEngagementSettings()
-}
-
+    ...createDefaultEngagementSettings(),
+};
 
 const mockFile: DocumentItem = {
     id: 1,
@@ -65,7 +69,16 @@ const documentWidget: Widget = {
     items: [],
 };
 
-jest.mock('axios')
+jest.mock('axios');
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useLocation: jest.fn(() => ({ search: '' })),
+    useParams: jest.fn(() => {
+        return { projectId: '' };
+    }),
+    useNavigate: () => jest.fn(),
+}));
 
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
@@ -97,16 +110,14 @@ jest.mock('components/map', () => () => {
 
 describe('Document widget in engagement page tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
-    jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
     jest.spyOn(engagementService, 'getEngagement').mockReturnValue(Promise.resolve(engagement));
     jest.spyOn(documentService, 'fetchDocuments').mockReturnValue(Promise.resolve([mockFolder]));
-    jest.spyOn(engagementMetadataService, 'getEngagementMetadata')
-        .mockReturnValue(Promise.resolve(engagementMetadata));
-    jest.spyOn(membershipService, 'getTeamMembers')
-        .mockReturnValue(Promise.resolve([]));
-    jest.spyOn(engagementSettingService, 'getEngagementSettings')
-        .mockReturnValue(Promise.resolve(mockEngagementSettings));
+    jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(Promise.resolve(engagementMetadata));
+    jest.spyOn(membershipService, 'getTeamMembers').mockReturnValue(Promise.resolve([]));
+    jest.spyOn(engagementSettingService, 'getEngagementSettings').mockReturnValue(
+        Promise.resolve(mockEngagementSettings),
+    );
     const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([]));
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
 

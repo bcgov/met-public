@@ -43,7 +43,7 @@ jest.mock('@mui/material', () => ({
     },
 }));
 
-jest.mock('axios')
+jest.mock('axios');
 
 jest.mock('components/common', () => ({
     ...jest.requireActual('components/common'),
