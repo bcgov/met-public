@@ -28,7 +28,7 @@ export const PublicUrls = () => {
 
     const newEngagement = !savedEngagement.id || isNaN(Number(savedEngagement.id));
     const baseUrl = getBaseUrl();
-    const calculatedWidth = `${baseUrl.length * 9}px`;
+    const calculatedWidth = baseUrl ? `${baseUrl.length * 9}px` : '200px';
     const engagementUrl = !savedSlug ? 'Link will appear when the engagement is saved' : `${baseUrl}/${savedSlug}`;
     const dashboardUrl = !savedSlug ? 'Link will appear when the engagement is saved' : `${engagementUrl}/dashboard`;
 
