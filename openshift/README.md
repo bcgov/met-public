@@ -125,7 +125,7 @@ To restore the backup follow these steps:
     psql -h localhost -d app -U postgres -p 5432 -a -q -f <path-to-file>
     ```
     
-    Note: Should the restore faile due to a role not being found, the following command can be ran to alter the role 
+    **Note:** Should the restore faile due to a role not being found, the following command can be ran to alter the role 
     ``` 
       alter role <role_name> WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOREPLICATION
 	      PASSWORD <role_password>;
