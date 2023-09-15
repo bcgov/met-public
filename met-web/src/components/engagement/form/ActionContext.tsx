@@ -5,7 +5,7 @@ import {
     getEngagementMetadata,
     patchEngagementMetadata,
 } from '../../../services/engagementMetadataService';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams } from './types';
 import {
     createDefaultEngagement,
@@ -55,6 +55,10 @@ export const ActionContext = createContext<EngagementContext>({
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const { engagementId } = useParams<EngagementParams>();
+    // get projectId from query params
+    const { search } = useLocation();
+    const searchParams = new URLSearchParams(search);
+    const projectId = searchParams.get('projectId');
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
@@ -65,7 +69,10 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [loadingAuthorization, setLoadingAuthorization] = useState(true);
 
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
-    const [engagementMetadata, setEngagementMetadata] = useState<EngagementMetadata>(createDefaultEngagementMetadata());
+    const [engagementMetadata, setEngagementMetadata] = useState<EngagementMetadata>({
+        ...createDefaultEngagementMetadata(),
+        project_id: projectId ?? '',
+    });
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
     const isCreate = window.location.pathname.includes(CREATE);
@@ -105,8 +112,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
 
         try {
-            const engagement = await getEngagementMetadata(Number(engagementId));
-            setEngagementMetadata(engagement);
+            const engagementMetaData = await getEngagementMetadata(Number(engagementId));
+            setEngagementMetadata(engagementMetaData);
         } catch (err) {
             console.log(err);
             dispatch(openNotification({ severity: 'error', text: 'Error Fetching Engagement Metadata' }));

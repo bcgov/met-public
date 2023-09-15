@@ -80,7 +80,7 @@ const PublicHeader = () => {
                         {translate('header.title')}
                     </HeaderTitle>
                     <When condition={isLoggedIn}>
-                        <Button color="inherit" onClick={() => UserService.doLogout(() => navigate('/'))}>
+                        <Button color="inherit" onClick={() => UserService.doLogout()}>
                             Logout
                         </Button>
                     </When>

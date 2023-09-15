@@ -26,6 +26,10 @@ declare global {
 
             // Constants
             REACT_APP_ENGAGEMENT_PROJECT_TYPES: string;
+
+            //tenant
+            REACT_APP_IS_SINGLE_TENANT_ENVIRONMENT: string;
+            REACT_APP_DEFAULT_TENANT: string;
         };
     }
 }
@@ -74,6 +78,10 @@ const ENGAGEMENT_PROJECT_TYPES: string[] = getEnv(
         'Water Management',
 ).split(',');
 
+// tenant conifg
+const IS_SINGLE_TENANT_ENVIRONMENT = getEnv('REACT_APP_IS_SINGLE_TENANT_ENVIRONMENT', 'true') === 'true';
+const DEFAULT_TENANT = getEnv('REACT_APP_DEFAULT_TENANT');
+
 export const AppConfig = {
     apiUrl: API_URL,
     analyticsApiUrl: REACT_APP_ANALYTICS_API_URL,
@@ -98,5 +106,9 @@ export const AppConfig = {
     },
     constants: {
         engagementProjectTypes: ENGAGEMENT_PROJECT_TYPES,
+    },
+    tenant: {
+        isSingleTenantEnvironment: IS_SINGLE_TENANT_ENVIRONMENT,
+        defaultTenant: DEFAULT_TENANT,
     },
 };
