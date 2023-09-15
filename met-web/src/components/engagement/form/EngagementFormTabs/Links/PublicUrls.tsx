@@ -146,14 +146,6 @@ export const PublicUrls = () => {
                                         sx={{
                                             height: '100%',
                                             maxHeight: '100%',
-                                            '.MuiInputAdornment-root': {
-                                                '&:hover': {
-                                                    borderColor: 'transparent', // Remove hover effects
-                                                },
-                                                '&.Mui-focused': {
-                                                    borderColor: 'transparent', // Remove focus effects
-                                                },
-                                            },
                                         }}
                                     >
                                         <TextField
@@ -168,22 +160,10 @@ export const PublicUrls = () => {
                                                 width: 'auto',
                                                 '.MuiInputBase-input': {
                                                     marginRight: 0,
-                                                    '&:hover': {
-                                                        borderColor: 'transparent', // Remove hover effects
-                                                    },
-                                                    '&.Mui-focused': {
-                                                        borderColor: 'transparent', // Remove focus effects
-                                                    },
                                                 },
                                                 '.MuiInputBase-root': {
                                                     padding: 0,
                                                     minWidth: calculatedWidth,
-                                                    '&:hover': {
-                                                        borderColor: 'transparent', // Remove hover effects
-                                                    },
-                                                    '&.Mui-focused': {
-                                                        borderColor: 'transparent', // Remove focus effects
-                                                    },
                                                 },
                                             }}
                                             label=" "
