@@ -94,10 +94,16 @@ const App = () => {
 
     const getTranslationFile = async () => {
         try {
-            const translationFile = await import(`./locales/${language}/${tenant.id}.json`);
+            const translationFile = await import(`./locales/${language}/${basename}.json`);
+            if (translationFile && translationFile.header && translationFile.header.title) {
+                document.title = translationFile.header.title;
+            }
             return translationFile;
         } catch (error) {
             const defaultTranslationFile = await import(`./locales/${language}/default.json`);
+            if (defaultTranslationFile && defaultTranslationFile.header && defaultTranslationFile.header.title) {
+                document.title = defaultTranslationFile.header.title;
+            }
             return defaultTranslationFile;
         }
     };
