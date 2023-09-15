@@ -140,8 +140,19 @@ export const PublicUrls = () => {
                             }}
                             InputProps={{
                                 startAdornment: (
-                                    <InputAdornment position="start" sx={{ height: '100%', maxHeight: '100%' }}>
-                                        <SecondaryButton variant="contained" disableElevation disabled>
+                                    <InputAdornment
+                                        position="start"
+                                        sx={{
+                                            height: '100%',
+                                            maxHeight: '100%',
+                                        }}
+                                    >
+                                        <SecondaryButton
+                                            variant="contained"
+                                            sx={{ fontWeight: 500 }}
+                                            disableElevation
+                                            disabled
+                                        >
                                             {baseUrl}/
                                         </SecondaryButton>
                                     </InputAdornment>
