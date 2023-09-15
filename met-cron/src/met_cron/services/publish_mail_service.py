@@ -20,7 +20,7 @@ class PublishEmailService:  # pylint: disable=too-few-public-methods
 
         """
         email_batch_size: int = int(current_app.config.get('MAIL_BATCH_SIZE'))
-        mails = EmailQueueModel.get_unprocessed_mails(email_batch_size)
+        mails = EmailQueueModel.get_unprocessed_mails_for_open_engagements(email_batch_size)
         mail: EmailQueueModel
         template_id = current_app.config.get('PUBLISH_ENGAGEMENT_EMAIL_TEMPLATE_ID', None)
         subject = current_app.config.get('PUBLISH_ENGAGEMENT_EMAIL_SUBJECT')
@@ -31,9 +31,8 @@ class PublishEmailService:  # pylint: disable=too-few-public-methods
             mail.updated_date = datetime.utcnow()
             mail.commit()
 
-            if mail.entity_type == SourceType.ENGAGEMENT.value and mail.action == SourceAction.PUBLISHED.value:
-                EmailService._send_email_notification_for_subscription(mail.entity_id, template_id,
-                                                                       subject, template)
-                mail.notification_status = NotificationStatus.SENT.value
-                mail.updated_date = datetime.utcnow()
-                mail.commit()
+            EmailService._send_email_notification_for_subscription(mail.entity_id, template_id,
+                                                                    subject, template)
+            mail.notification_status = NotificationStatus.SENT.value
+            mail.updated_date = datetime.utcnow()
+            mail.commit()
