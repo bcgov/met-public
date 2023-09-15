@@ -10,7 +10,7 @@ from sqlalchemy import and_, func
 
 from met_api.constants.notification_status import NotificationStatus
 from met_api.models.engagement import Engagement
-from met_api.utils.enums import SourceType, SourceAction
+from met_api.utils.enums import SourceAction, SourceType
 from .base_model import BaseModel
 from .db import db
 
@@ -36,7 +36,7 @@ class EmailQueue(BaseModel):  # pylint: disable=too-few-public-methods
             .filter(and_(EmailQueue.notification_status.is_(None),
                          EmailQueue.entity_type == SourceType.ENGAGEMENT.value,
                          EmailQueue.action == SourceAction.PUBLISHED.value),
-                         func.date(Engagement.start_date) == now)
+                    func.date(Engagement.start_date) == now)
         if max_size != 0:
             query = query.limit(max_size)
         return query.all()
