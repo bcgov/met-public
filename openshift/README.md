@@ -130,7 +130,7 @@ To restore the backup follow these steps:
       alter role <role_name> WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOREPLICATION
 	      PASSWORD <role_password>;
     ```
-    Once the role is altered the restore can be ran again.
+    Once the role is altered the restore script can be ran again.
 
 ## Keycloak Configuration
 
