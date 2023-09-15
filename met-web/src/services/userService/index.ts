@@ -15,6 +15,7 @@ import http from 'apiManager/httpRequestHandler';
 import { User } from 'models/user';
 import { getMembershipsByUser } from 'services/membershipService';
 import { USER_ROLES } from 'services/userService/constants';
+import { getBaseUrl } from 'helper';
 
 const KeycloakData = _kc;
 /**
@@ -84,14 +85,9 @@ const userLogout = () => {
     doLogout();
 };
 
-const doLogin = KeycloakData.login;
+const doLogin = () => KeycloakData.login({ redirectUri: getBaseUrl() });
 
-const doLogout = async (navigateCallback?: () => void) => {
-    if (navigateCallback) {
-        navigateCallback();
-    }
-    await KeycloakData.logout();
-};
+const doLogout = async () => KeycloakData.logout({ redirectUri: getBaseUrl() });
 const getToken = () => KeycloakData.token;
 
 const isLoggedIn = () => !!KeycloakData.token;
