@@ -160,6 +160,10 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
     const [richContent, setRichContent] = useState(savedEngagement?.rich_content || '');
     const [engagementFormError, setEngagementFormError] = useState<EngagementFormError>(initialFormError);
 
+    useEffect(() => {
+        console.log('engagementFormData', engagementFormData.project_id);
+    }, [engagementFormData]);
+
     // Survey block
     const [surveyBlockText, setSurveyBlockText] = useState<{ [key in SubmissionStatusTypes]: string }>({
         Upcoming:

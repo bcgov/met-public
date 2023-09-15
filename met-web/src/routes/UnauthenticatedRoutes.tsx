@@ -10,6 +10,7 @@ import Landing from 'components/landing';
 import ManageSubscription from '../components/engagement/view/widgets/Subscribe/ManageSubscription';
 import { FormCAC } from 'components/FormCAC';
 import ScrollToTop from 'components/scrollToTop';
+import { RedirectLogin } from './RedirectLogin';
 const UnauthenticatedRoutes = () => {
     return (
         <>
@@ -30,6 +31,7 @@ const UnauthenticatedRoutes = () => {
                 <Route path="/:slug/edit/:token" element={<EditSurvey />} />
                 <Route path="/surveys/submit/:surveyId/:token" element={<SurveySubmit />} />
                 <Route path="/engagements/:engagementId/cacform/:widgetId" element={<FormCAC />} />
+                <Route path="/engagements/create/form" element={<RedirectLogin />} />
                 <Route path="*" element={<NotFound />} />
                 <Route path="/not-found" element={<NotFound />} />
             </Routes>
