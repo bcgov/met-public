@@ -3,7 +3,6 @@ from datetime import datetime
 from flask import current_app
 from met_api.constants.notification_status import NotificationStatus
 from met_api.models.email_queue import EmailQueue as EmailQueueModel
-from met_api.utils.enums import SourceType, SourceAction
 from met_api.utils.template import Template
 from met_cron.services.mail_service import EmailService
 
