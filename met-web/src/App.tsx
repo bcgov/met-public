@@ -59,7 +59,7 @@ const App = () => {
 
         try {
             const tenant = await getTenant(basename);
-
+            document.title = tenant.name;
             sessionStorage.setItem('tenantId', basename);
             dispatch(
                 saveTenant({
