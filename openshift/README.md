@@ -125,12 +125,25 @@ To restore the backup follow these steps:
     psql -h localhost -d app -U postgres -p 5432 -a -q -f <path-to-file>
     ```
     
-    **Note:** Should the restore fail due to a role not being found, the following psql command can be ran from within the database pod to alter that role 
+    **Note:** Should the restore fail due to roles not being found, the following psql commands can be ran from within the database pod to alter the roles
     ``` 
-      alter role <role_name> WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOREPLICATION
-	      PASSWORD <role_password>;
+      alter role met WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOREPLICATION
+	      PASSWORD 'met';
+
+      alter role analytics WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOREPLICATION
+	      PASSWORD 'analytics';
+
+      alter role keycloak WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOREPLICATION
+	      PASSWORD 'keycloak';
+      
+      alter role redash WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOREPLICATION
+	      PASSWORD 'redash';
+      
+      alter role dagster WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOREPLICATION
+	      PASSWORD 'dagster';
+
     ```
-    Once the role is altered the restore script can be ran again.
+    Once the roles are altered the restore script can be ran again.
 
 ## Keycloak Configuration
 
