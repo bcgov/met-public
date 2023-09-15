@@ -6,7 +6,6 @@ const BannerWithoutImage = ({ children }: BannerProps) => {
     return (
         <Box
             sx={{
-                // backgroundColor: isDraft ? '#707070' : '#F2F2F2',
                 backgroundColor: '#F2F2F2',
                 width: '100%',
                 position: 'relative',
