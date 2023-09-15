@@ -85,7 +85,7 @@ const userLogout = () => {
     doLogout();
 };
 
-const doLogin = () => KeycloakData.login({ redirectUri: getBaseUrl() });
+const doLogin = (redirectUri?: string) => KeycloakData.login({ redirectUri: redirectUri ?? getBaseUrl() });
 
 const doLogout = async () => KeycloakData.logout({ redirectUri: getBaseUrl() });
 const getToken = () => KeycloakData.token;
