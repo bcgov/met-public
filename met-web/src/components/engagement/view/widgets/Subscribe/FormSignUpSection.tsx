@@ -6,12 +6,12 @@ import { When } from 'react-if';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { Editor } from 'react-draft-wysiwyg';
 import { Widget } from 'models/widget';
-import { useAppSelector } from 'hooks';
+import { getBaseUrl } from 'helper';
 
 const FormSignUpSection = ({ subscribeOption, widget }: { subscribeOption: SubscribeForm; widget: Widget }) => {
-    const tenant = useAppSelector((state) => state.tenant);
     const handleNavigate = () => {
-        window.open(`/${tenant.basename}/engagements/${widget.engagement_id}/cacform/${widget.id}`, '_blank');
+        const baseUrl = getBaseUrl();
+        window.open(`${baseUrl}/engagements/${widget.engagement_id}/cacform/${widget.id}`, '_blank');
     };
     return (
         <Grid spacing={2} container item xs={12}>
