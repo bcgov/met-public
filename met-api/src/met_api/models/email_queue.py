@@ -5,9 +5,8 @@ Manages the Email queue
 from __future__ import annotations
 
 from datetime import datetime
-from sqlalchemy import and_, func
-
 from typing import List
+from sqlalchemy import and_, func
 
 from met_api.constants.notification_status import NotificationStatus
 from met_api.models.engagement import Engagement
