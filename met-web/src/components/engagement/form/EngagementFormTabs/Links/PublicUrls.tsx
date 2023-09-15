@@ -28,7 +28,7 @@ export const PublicUrls = () => {
 
     const newEngagement = !savedEngagement.id || isNaN(Number(savedEngagement.id));
     const baseUrl = getBaseUrl();
-
+    const calculatedWidth = `${baseUrl.length * 9}px`;
     const engagementUrl = !savedSlug ? 'Link will appear when the engagement is saved' : `${baseUrl}/${savedSlug}`;
     const dashboardUrl = !savedSlug ? 'Link will appear when the engagement is saved' : `${engagementUrl}/dashboard`;
 
@@ -142,19 +142,52 @@ export const PublicUrls = () => {
                                 startAdornment: (
                                     <InputAdornment
                                         position="start"
+                                        disablePointerEvents
                                         sx={{
                                             height: '100%',
                                             maxHeight: '100%',
+                                            '.MuiInputAdornment-root': {
+                                                '&:hover': {
+                                                    borderColor: 'transparent', // Remove hover effects
+                                                },
+                                                '&.Mui-focused': {
+                                                    borderColor: 'transparent', // Remove focus effects
+                                                },
+                                            },
                                         }}
                                     >
-                                        <SecondaryButton
-                                            variant="contained"
-                                            sx={{ fontWeight: 500 }}
-                                            disableElevation
+                                        <TextField
+                                            InputLabelProps={{
+                                                shrink: false,
+                                            }}
+                                            variant={'outlined'}
+                                            value={baseUrl}
+                                            fullWidth
                                             disabled
-                                        >
-                                            {baseUrl}/
-                                        </SecondaryButton>
+                                            sx={{
+                                                width: 'auto',
+                                                '.MuiInputBase-input': {
+                                                    marginRight: 0,
+                                                    '&:hover': {
+                                                        borderColor: 'transparent', // Remove hover effects
+                                                    },
+                                                    '&.Mui-focused': {
+                                                        borderColor: 'transparent', // Remove focus effects
+                                                    },
+                                                },
+                                                '.MuiInputBase-root': {
+                                                    padding: 0,
+                                                    minWidth: calculatedWidth,
+                                                    '&:hover': {
+                                                        borderColor: 'transparent', // Remove hover effects
+                                                    },
+                                                    '&.Mui-focused': {
+                                                        borderColor: 'transparent', // Remove focus effects
+                                                    },
+                                                },
+                                            }}
+                                            label=" "
+                                        />
                                     </InputAdornment>
                                 ),
                                 endAdornment: (
