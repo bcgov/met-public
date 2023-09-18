@@ -1,6 +1,9 @@
 import { AxiosResponse } from 'axios';
 
 export function hasKey<O>(obj: O, key: PropertyKey): key is keyof O {
+    if (typeof obj !== 'object' || !obj) {
+        return false;
+    }
     return key in obj;
 }
 
