@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './App.scss';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import UserService from './services/userService';
-import { useAppSelector, useAppDispatch } from './hooks';
+import { useAppSelector, useAppDispatch, useAppTranslation } from './hooks';
 import { MidScreenLoader, MobileToolbar } from './components/common';
 import { Box, Container, useMediaQuery, Theme, Toolbar } from '@mui/material';
 import InternalHeader from './components/layout/Header/InternalHeader';
@@ -35,7 +35,7 @@ const App = () => {
     const language = 'en'; // Default language is English, change as needed
     const basename = pathSegments[1].toLowerCase();
     const [pageTitle, setPageTitle] = useState('');
-
+    const { t: translate } = useAppTranslation();
     const tenant: TenantState = useAppSelector((state) => state.tenant);
 
     useEffect(() => {
@@ -61,6 +61,8 @@ const App = () => {
             sessionStorage.setItem('tenantId', _basename);
             // To be used for routing
             sessionStorage.setItem('basename', appBaseName);
+            const title = translate('header.title');
+            setPageTitle(title);
 
             dispatch(
                 saveTenant({
@@ -97,13 +99,9 @@ const App = () => {
     const getTranslationFile = async () => {
         try {
             const translationFile = await import(`./locales/${language}/${tenant.id}.json`);
-            const title = translationFile?.header?.title || document.title;
-            setPageTitle(title);
             return translationFile;
         } catch (error) {
             const defaultTranslationFile = await import(`./locales/${language}/default.json`);
-            const title = defaultTranslationFile?.header?.title || document.title;
-            setPageTitle(title);
             return defaultTranslationFile;
         }
     };
