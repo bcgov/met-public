@@ -3,12 +3,14 @@ export enum EngagementStatus {
     Published = 2,
     Closed = 3,
     Scheduled = 4,
+    Unpublished = 5,
 }
 
 export enum SubmissionStatus {
     Upcoming = 1,
     Open = 2,
     Closed = 3,
+    Unpublished = 4,
 }
 
 export enum EngagementDisplayStatus {

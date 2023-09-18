@@ -19,7 +19,6 @@ interface ScheduleModalProps {
 }
 
 const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) => {
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const [scheduledDate, setScheduledDate] = useState<Dayjs | null>(dayjs(Date.now()));
     const { savedEngagement, scheduleEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
@@ -132,50 +131,33 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
                             </Grid>
                         </LocalizationProvider>
                     </Grid>
+
                     <Grid
                         item
                         container
-                        direction={{ xs: 'column', sm: 'row' }}
                         xs={12}
+                        direction="row"
                         justifyContent="flex-end"
                         spacing={1}
                         sx={{ mt: '1em' }}
                     >
                         <Stack
-                            direction={{ xs: 'column', sm: 'row' }}
+                            direction={{ md: 'column-reverse', lg: 'row' }}
                             spacing={1}
                             width="100%"
                             justifyContent="flex-end"
                         >
-                            {isSmallScreen ? (
-                                <>
-                                    <PrimaryButton
-                                        data-testid={'schedule-button'}
-                                        onClick={handleSchedule}
-                                        type="submit"
-                                        variant={'contained'}
-                                    >
-                                        Submit
-                                    </PrimaryButton>
-                                    <SecondaryButton data-testid={'cancel-button'} onClick={() => updateModal(false)}>
-                                        Cancel
-                                    </SecondaryButton>
-                                </>
-                            ) : (
-                                <>
-                                    <SecondaryButton data-testid={'cancel-button'} onClick={() => updateModal(false)}>
-                                        Cancel
-                                    </SecondaryButton>
-                                    <PrimaryButton
-                                        data-testid={'schedule-button'}
-                                        onClick={handleSchedule}
-                                        type="submit"
-                                        variant={'contained'}
-                                    >
-                                        Submit
-                                    </PrimaryButton>
-                                </>
-                            )}
+                            <SecondaryButton data-testid={'cancel-button'} onClick={() => updateModal(false)}>
+                                Cancel
+                            </SecondaryButton>
+                            <PrimaryButton
+                                data-testid={'schedule-button'}
+                                onClick={handleSchedule}
+                                type="submit"
+                                variant={'contained'}
+                            >
+                                Submit
+                            </PrimaryButton>
                         </Stack>
                     </Grid>
                 </Grid>
