@@ -62,8 +62,8 @@ class SurveyComments(Resource):
 
 
 @cors_preflight('GET, OPTIONS')
-@API.route('/survey/<survey_id>/sheet')
-class GeneratedCommentsSheet(Resource):
+@API.route('/survey/<survey_id>/sheet/staff')
+class GeneratedStaffCommentsSheet(Resource):
     """Resource for managing multiple comments."""
 
     @staticmethod
@@ -73,7 +73,34 @@ class GeneratedCommentsSheet(Resource):
         """Export comments."""
         try:
 
-            response = CommentService().export_comments_to_spread_sheet(survey_id)
+            response = CommentService().export_comments_to_spread_sheet_staff(survey_id)
+            response_headers = dict(response.headers)
+            headers = {
+                'content-type': response_headers.get('content-type'),
+                'content-disposition': response_headers.get('content-disposition'),
+            }
+            return Response(
+                response=response.content,
+                status=response.status_code,
+                headers=headers
+            )
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@cors_preflight('GET, OPTIONS')
+@API.route('/survey/<survey_id>/sheet/proponent')
+class GeneratedProponentCommentsSheet(Resource):
+    """Resource for managing multiple comments."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.requires_auth
+    def get(survey_id):
+        """Export comments."""
+        try:
+
+            response = CommentService().export_comments_to_spread_sheet_proponent(survey_id)
             response_headers = dict(response.headers)
             headers = {
                 'content-type': response_headers.get('content-type'),
