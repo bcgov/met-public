@@ -18,7 +18,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Palette } from 'styles/Theme';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { MET_Header_Font_Family, MET_Header_Font_Weight } from '../../styles/constants';
+import { MET_Header_Font_Family, MET_Font_Weight, MET_Header_Font_Weight } from '../../styles/constants';
 import { When } from 'react-if';
 import ReactPlayer from 'react-player';
 
@@ -325,8 +325,9 @@ export const MetHeader1 = ({ bold, children, sx, ...rest }: HeaderProps) => {
         <Typography
             sx={{
                 ...sx,
-                fontSize: '2.3rem',
-                fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
+                fontSize: '1.5rem',
+                lineHeight: 1.25,
+                fontWeight: MET_Header_Font_Weight,
                 fontFamily: MET_Header_Font_Family,
             }}
             variant="h1"
@@ -342,7 +343,7 @@ export const MetHeader2 = ({ bold, children, sx, ...rest }: HeaderProps) => {
             sx={{
                 ...sx,
                 fontSize: '1.9rem',
-                fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
+                fontWeight: MET_Header_Font_Weight,
                 fontFamily: MET_Header_Font_Family,
             }}
             variant="h2"
@@ -358,7 +359,7 @@ export const MetHeader3 = ({ bold, children, sx, ...rest }: HeaderProps) => {
             sx={{
                 ...sx,
                 fontSize: '1.5rem',
-                fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
+                fontWeight: MET_Header_Font_Weight,
                 fontFamily: MET_Header_Font_Family,
             }}
             variant="h3"
@@ -375,7 +376,7 @@ export const MetHeader4 = ({ bold, color, children, sx, ...rest }: HeaderProps) 
             sx={{
                 ...sx,
                 fontSize: '1.3rem',
-                fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
+                fontWeight: MET_Header_Font_Weight,
                 fontFamily: MET_Header_Font_Family,
             }}
             variant="h4"
@@ -393,7 +394,7 @@ export const MetBody = ({ bold, children, sx, ...rest }: HeaderProps) => {
                 ...sx,
                 fontSize: '16px',
                 fontFamily: MET_Header_Font_Family,
-                fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
+                fontWeight: bold ? 'bold' : MET_Font_Weight,
             }}
             {...rest}
         >
