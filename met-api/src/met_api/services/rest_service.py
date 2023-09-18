@@ -13,12 +13,13 @@
 # limitations under the License.
 """Service to invoke Rest services."""
 import json
+from typing import Iterable
 
 import requests
-from flask import current_app
+from flask import current_app, request
+from requests.exceptions import ConnectTimeout, HTTPError
 # pylint:disable=ungrouped-imports
 from requests.exceptions import ConnectionError as ReqConnectionError
-from requests.exceptions import ConnectTimeout, HTTPError
 
 from met_api.utils.enums import AuthHeaderType, ContentType
 
@@ -27,16 +28,27 @@ class RestService:
     """Service to invoke Rest services which uses OAuth 2.0 implementation."""
 
     @staticmethod
-    def post(endpoint, token=None,  # pylint: disable=too-many-arguments
-             auth_header_type: AuthHeaderType = AuthHeaderType.BEARER,
-             content_type: ContentType = ContentType.JSON, data=None, raise_for_status: bool = True):
-        """POST service."""
-        current_app.logger.debug('<post')
+    def _invoke(rest_method, endpoint, token=None,  # pylint: disable=too-many-arguments
+                auth_header_type: AuthHeaderType = AuthHeaderType.BEARER,
+                content_type: ContentType = ContentType.JSON, data=None, raise_for_status: bool = True,
+                additional_headers: dict = None, generate_token: bool = True):
+        """Invoke different method depending on the input."""
+        # just to avoid the duplicate code for PUT and POSt
+        current_app.logger.debug(f'<_invoke-{rest_method}')
 
         headers = {
-            'Authorization': auth_header_type.value.format(token),
             'Content-Type': content_type.value
         }
+
+        if not token and generate_token:
+            token = _get_token()
+
+        if token:
+            headers.update({'Authorization': auth_header_type.value.format(token)})
+
+        if additional_headers:
+            headers.update(additional_headers)
+
         if content_type == ContentType.JSON:
             data = json.dumps(data)
 
@@ -44,8 +56,9 @@ class RestService:
         current_app.logger.debug(f'headers : {headers}')
         response = None
         try:
-            response = requests.post(endpoint, data=data, headers=headers,
-                                     timeout=current_app.config.get('CONNECT_TIMEOUT'))
+            invoke_rest_method = getattr(requests, rest_method)
+            response = invoke_rest_method(endpoint, data=data, headers=headers,
+                                          timeout=current_app.config.get('CONNECT_TIMEOUT', 60))
             if raise_for_status:
                 response.raise_for_status()
         except (ReqConnectionError, ConnectTimeout) as exc:
@@ -53,15 +66,42 @@ class RestService:
             current_app.logger.error(exc)
             raise Exception(exc) from exc
         except HTTPError as exc:
-            current_app.logger.error(f'HTTPError on POST with status code {response.status_code if response else ""}')
+            current_app.logger.error(f"HTTPError on POST with status code {response.status_code if response else ''}")
             if response and response.status_code >= 500:
                 raise Exception(exc) from exc
             raise exc
         finally:
-            current_app.logger.info(f'response : {response.text if response else ""}')
+            RestService.__log_response(response)
 
         current_app.logger.debug('>post')
         return response
+
+    @staticmethod
+    def __log_response(response):
+        if response is not None:
+            current_app.logger.info(f'Response Headers {response.headers}')
+            if response.headers and isinstance(response.headers, Iterable) and \
+                    'Content-Type' in response.headers and \
+                    response.headers['Content-Type'] == ContentType.JSON.value:
+                current_app.logger.info(f"response : {response.text if response else ''}")
+
+    @staticmethod
+    def post(endpoint, token=None,  # pylint: disable=too-many-arguments
+             auth_header_type: AuthHeaderType = AuthHeaderType.BEARER,
+             content_type: ContentType = ContentType.JSON, data=None, raise_for_status: bool = True,
+             additional_headers: dict = None, generate_token: bool = True):
+        """POST service."""
+        current_app.logger.debug('<post')
+        return RestService._invoke('post', endpoint, token, auth_header_type, content_type, data, raise_for_status,
+                                   additional_headers, generate_token)
+
+    @staticmethod
+    def put(endpoint, token=None,  # pylint: disable=too-many-arguments
+            auth_header_type: AuthHeaderType = AuthHeaderType.BEARER,
+            content_type: ContentType = ContentType.JSON, data=None, raise_for_status: bool = True):
+        """POST service."""
+        current_app.logger.debug('<post')
+        return RestService._invoke('put', endpoint, token, auth_header_type, content_type, data, raise_for_status)
 
     @staticmethod
     def get_service_account_token(kc_service_id: str = None, kc_secret: str = None, issuer_url: str = None) -> str:
@@ -78,3 +118,8 @@ class RestService:
             'Content-Type': ContentType.FORM_URL_ENCODED.value}, data='grant_type=client_credentials')
         auth_response.raise_for_status()
         return auth_response.json().get('access_token')
+
+
+def _get_token() -> str:
+    token: str = request.headers['Authorization'] if request and 'Authorization' in request.headers else None
+    return token.replace('Bearer ', '') if token else None
