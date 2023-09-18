@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.scss';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import UserService from './services/userService';
@@ -22,6 +22,7 @@ import { ZIndex } from 'styles/Theme';
 import { TenantState, loadingTenant, saveTenant } from 'reduxSlices/tenantSlice';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import i18n from './i18n';
+import DocumentTitle from 'DocumentTitle';
 
 const App = () => {
     const drawerWidth = 280;
@@ -33,6 +34,7 @@ const App = () => {
     const pathSegments = window.location.pathname.split('/');
     const language = 'en'; // Default language is English, change as needed
     const basename = pathSegments[1].toLowerCase();
+    const [pageTitle, setPageTitle] = useState('');
 
     const tenant: TenantState = useAppSelector((state) => state.tenant);
 
@@ -94,12 +96,14 @@ const App = () => {
 
     const getTranslationFile = async () => {
         try {
-            const translationFile = await import(`./locales/${language}/${basename}.json`);
-            document.title = translationFile?.header?.title || document.title;
+            const translationFile = await import(`./locales/${language}/${tenant.id}.json`);
+            const title = translationFile?.header?.title || document.title;
+            setPageTitle(title);
             return translationFile;
         } catch (error) {
             const defaultTranslationFile = await import(`./locales/${language}/default.json`);
-            document.title = defaultTranslationFile?.header?.title || document.title;
+            const title = defaultTranslationFile?.header?.title || document.title;
+            setPageTitle(title);
             return defaultTranslationFile;
         }
     };
@@ -137,6 +141,7 @@ const App = () => {
     if (!tenant.isLoaded && !tenant.loading) {
         return (
             <Router>
+                <DocumentTitle pageTitle={pageTitle} />
                 <Routes>
                     <Route path="*" element={<NotFound />} />
                 </Routes>
@@ -147,6 +152,7 @@ const App = () => {
     if (!isLoggedIn) {
         return (
             <Router basename={tenant.basename}>
+                <DocumentTitle pageTitle={pageTitle} />
                 <PageViewTracker />
                 <Notification />
                 <NotificationModal />
@@ -161,6 +167,7 @@ const App = () => {
     if (roles.length === 0) {
         return (
             <Router basename={tenant.basename}>
+                <DocumentTitle pageTitle={pageTitle} />
                 <PublicHeader />
                 <Container>
                     <NoAccess />
@@ -174,6 +181,7 @@ const App = () => {
     if (!isMediumScreen) {
         return (
             <Router basename={tenant.basename}>
+                <DocumentTitle pageTitle={pageTitle} />
                 <InternalHeader />
                 <Container>
                     <MobileToolbar />
@@ -187,6 +195,7 @@ const App = () => {
 
     return (
         <Router basename={tenant.basename}>
+            <DocumentTitle pageTitle={pageTitle} />
             <Box sx={{ display: 'flex' }}>
                 <InternalHeader drawerWidth={drawerWidth} />
                 <Notification />

@@ -8,6 +8,7 @@ import { BaseTheme } from 'styles/Theme';
 import { Formio } from '@formio/react';
 import MetFormioComponents from 'met-formio';
 import '@bcgov/bc-sans/css/BCSans.css';
+import { HelmetProvider } from 'react-helmet-async';
 
 Formio.use(MetFormioComponents);
 Formio.Utils.Evaluator.noeval = false;
@@ -16,13 +17,15 @@ Formio.Utils.Evaluator.noeval = false;
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
     // <React.StrictMode>
-    <Provider store={store}>
-        <ThemeProvider theme={BaseTheme}>
-            <StyledEngineProvider injectFirst>
-                <App />
-            </StyledEngineProvider>
-        </ThemeProvider>
-    </Provider>,
+    <HelmetProvider>
+        <Provider store={store}>
+            <ThemeProvider theme={BaseTheme}>
+                <StyledEngineProvider injectFirst>
+                    <App />
+                </StyledEngineProvider>
+            </ThemeProvider>
+        </Provider>
+    </HelmetProvider>,
     // </React.StrictMode>
 );
 
