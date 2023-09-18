@@ -23,7 +23,7 @@ const survey: Survey = {
     engagement_id: 1,
 };
 
-jest.mock('axios')
+jest.mock('axios');
 
 const surveys = [survey];
 
@@ -43,8 +43,17 @@ const phasesWidget: Widget = {
 };
 
 const mockEngagementSettings: EngagementSettings = {
-    ...createDefaultEngagementSettings()
-}
+    ...createDefaultEngagementSettings(),
+};
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useLocation: jest.fn(() => ({ search: '' })),
+    useParams: jest.fn(() => {
+        return { projectId: '' };
+    }),
+    useNavigate: () => jest.fn(),
+}));
 
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
@@ -83,18 +92,16 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
 
 describe('Phases widget tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
-    jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
         .mockReturnValue(Promise.resolve(draftEngagement));
     const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([phasesWidget]));
-    jest.spyOn(engagementMetadataService, 'getEngagementMetadata')
-        .mockReturnValue(Promise.resolve(engagementMetadata));
-    jest.spyOn(membershipService, 'getTeamMembers')
-        .mockReturnValue(Promise.resolve([]));
-    jest.spyOn(engagementSettingService, 'getEngagementSettings')
-        .mockReturnValue(Promise.resolve(mockEngagementSettings));
+    jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(Promise.resolve(engagementMetadata));
+    jest.spyOn(membershipService, 'getTeamMembers').mockReturnValue(Promise.resolve([]));
+    jest.spyOn(engagementSettingService, 'getEngagementSettings').mockReturnValue(
+        Promise.resolve(mockEngagementSettings),
+    );
 
     beforeEach(() => {
         setupEnv();

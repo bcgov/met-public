@@ -16,7 +16,6 @@ import { FeedbackModal } from 'components/feedback/FeedbackModal';
 import { AppConfig } from 'config';
 import NoAccess from 'routes/NoAccess';
 import { getTenant } from 'services/tenantService';
-import { DEFAULT_TENANT } from './constants';
 import NotFound from 'routes/NotFound';
 import Footer from 'components/layout/Footer';
 import { ZIndex } from 'styles/Theme';
@@ -43,28 +42,30 @@ const App = () => {
 
     useEffect(() => {
         sessionStorage.setItem('apiurl', String(AppConfig.apiUrl));
-        fetchTenant();
+        loadTenant();
     }, [basename, AppConfig.apiUrl]);
 
-    const redirectToDefaultTenant = () => {
-        if (!window.location.toString().includes(DEFAULT_TENANT)) {
-            window.location.replace(`/${DEFAULT_TENANT}/`);
-        }
-    };
-
-    const fetchTenant = async () => {
-        if (!basename) {
-            return redirectToDefaultTenant();
+    const fetchTenant = async (_basename: string) => {
+        if (!_basename) {
+            dispatch(loadingTenant(false));
+            return;
         }
 
         try {
-            const tenant = await getTenant(basename);
-            sessionStorage.setItem('tenantId', basename);
+            const tenant = await getTenant(_basename);
+
+            const appBaseName = !AppConfig.tenant.isSingleTenantEnvironment ? _basename : '';
+            // To be used for API Requests and lanugage translation
+            sessionStorage.setItem('tenantId', _basename);
+            // To be used for routing
+            sessionStorage.setItem('basename', appBaseName);
+
             dispatch(
                 saveTenant({
+                    id: _basename,
                     name: tenant.name,
                     logoUrl: tenant.logo_url ?? '',
-                    basename: basename,
+                    basename: appBaseName,
                 }),
             );
         } catch {
@@ -73,9 +74,27 @@ const App = () => {
         }
     };
 
+    const loadTenant = () => {
+        if (AppConfig.tenant.isSingleTenantEnvironment) {
+            fetchTenant(AppConfig.tenant.defaultTenant);
+            return;
+        }
+
+        if (basename) {
+            fetchTenant(basename);
+            return;
+        }
+
+        if (!basename && AppConfig.tenant.defaultTenant) {
+            window.location.replace(`/${AppConfig.tenant.defaultTenant}`);
+        }
+
+        dispatch(loadingTenant(false));
+    };
+
     const getTranslationFile = async () => {
         try {
-            const translationFile = await import(`./locales/${language}/${basename}.json`);
+            const translationFile = await import(`./locales/${language}/${tenant.id}.json`);
             return translationFile;
         } catch (error) {
             const defaultTranslationFile = await import(`./locales/${language}/default.json`);
@@ -84,7 +103,7 @@ const App = () => {
     };
 
     const loadTranslation = async () => {
-        if (!tenant.basename) {
+        if (!tenant.id) {
             return;
         }
 
@@ -92,7 +111,7 @@ const App = () => {
 
         try {
             const translationFile = await getTranslationFile();
-            i18n.addResourceBundle(language, basename, translationFile);
+            i18n.addResourceBundle(language, tenant.id, translationFile);
             dispatch(loadingTenant(false));
         } catch (error) {
             dispatch(loadingTenant(false));
@@ -107,7 +126,7 @@ const App = () => {
 
     useEffect(() => {
         loadTranslation();
-    }, [tenant.basename]);
+    }, [tenant.id]);
 
     if (authenticationLoading || tenant.loading) {
         return <MidScreenLoader />;
@@ -125,7 +144,7 @@ const App = () => {
 
     if (!isLoggedIn) {
         return (
-            <Router basename={basename}>
+            <Router basename={tenant.basename}>
                 <PageViewTracker />
                 <Notification />
                 <NotificationModal />
@@ -139,7 +158,7 @@ const App = () => {
 
     if (roles.length === 0) {
         return (
-            <Router basename={basename}>
+            <Router basename={tenant.basename}>
                 <PublicHeader />
                 <Container>
                     <NoAccess />
@@ -152,7 +171,7 @@ const App = () => {
 
     if (!isMediumScreen) {
         return (
-            <Router basename={basename}>
+            <Router basename={tenant.basename}>
                 <InternalHeader />
                 <Container>
                     <MobileToolbar />
@@ -165,7 +184,7 @@ const App = () => {
     }
 
     return (
-        <Router basename={basename}>
+        <Router basename={tenant.basename}>
             <Box sx={{ display: 'flex' }}>
                 <InternalHeader drawerWidth={drawerWidth} />
                 <Notification />

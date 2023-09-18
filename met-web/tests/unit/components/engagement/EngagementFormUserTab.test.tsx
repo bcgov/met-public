@@ -73,9 +73,17 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
 
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useLocation: jest.fn(() => ({ search: '' })),
+    useParams: jest.fn(() => {
+        return { projectId: '' };
+    }),
+    useNavigate: () => jest.fn(),
+}));
+
 describe('Engagement form page tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
-    jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
     jest.spyOn(teamMemberService, 'getTeamMembers').mockReturnValue(Promise.resolve([mockTeamMember1]));
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     jest.spyOn(engagementService, 'getEngagement').mockReturnValue(Promise.resolve(draftEngagement));

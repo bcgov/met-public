@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 export interface TenantState {
+    id: string;
     name: string;
     logoUrl: string;
     basename: string;
@@ -8,6 +9,7 @@ export interface TenantState {
     isLoaded: boolean;
 }
 const initialState: TenantState = {
+    id: '',
     name: '',
     logoUrl: '',
     basename: '',
@@ -23,6 +25,7 @@ export const userSlice = createSlice({
             state.loading = action.payload;
         },
         saveTenant: (state, action) => {
+            state.id = action.payload.id;
             state.name = action.payload.name;
             state.logoUrl = action.payload.logoUrl || '';
             state.basename = action.payload.basename;

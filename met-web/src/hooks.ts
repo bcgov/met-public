@@ -8,13 +8,13 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export const useAppTranslation = () => {
     const translate = useTranslation();
-    const basename = sessionStorage.getItem('tenantId');
+    const tenantId = sessionStorage.getItem('tenantId');
 
     const { t } = translate;
 
     const tDynamic = (key: string) => {
-        // Create a dynamic translation key using the basename
-        const dynamicKey = `${basename}:${key}`;
+        // Create a dynamic translation key using the tenantId
+        const dynamicKey = `${tenantId}:${key}`;
         return t(dynamicKey);
     };
 

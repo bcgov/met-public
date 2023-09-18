@@ -54,23 +54,21 @@ class EmailService:  # pylint: disable=too-few-public-methods
         site_url = notification.get_tenant_site_url(engagement.tenant_id)
         tenant_name = EmailService._get_tenant_name(engagement.tenant_id)
         metadata_model: EngagementMetadataModel = EngagementMetadataModel.find_by_id(engagement.id)
-        project_name = metadata_model.project_metadata.get('project_name', None)
-        is_having_project = True if project_name else False
-        is_not_having_project = True if not project_name else False
+        project_name = None
+        if metadata_model and 'project_name' in metadata_model.project_metadata:
+            project_name = metadata_model.project_metadata.get('project_name')
         view_path = current_app.config.get('ENGAGEMENT_VIEW_PATH'). \
             format(engagement_id=engagement.id)
         unsubscribe_url = current_app.config.get('UNSUBSCRIBE_PATH'). \
             format(engagement_id=engagement.id, participant_id=participant.id)
         email_environment = current_app.config.get('EMAIL_ENVIRONMENT', '')
         args = {
-            'project_name': project_name if project_name else tenant_name,
+            'project_name': project_name if project_name else engagement.name,
             'survey_url': f'{site_url}{view_path}',
             'end_date': datetime.strftime(engagement.end_date, EmailVerificationService.full_date_format),
             'tenant_name': tenant_name,
             'email_environment': email_environment,
             'unsubscribe_url': f'{site_url}{unsubscribe_url}',
-            'is_having_project': is_having_project,
-            'is_not_having_project': is_not_having_project,
         }
         body = template.render(
             project_name=args.get('project_name'),
@@ -79,8 +77,6 @@ class EmailService:  # pylint: disable=too-few-public-methods
             tenant_name=args.get('tenant_name'),
             email_environment=args.get('email_environment'),
             unsubscribe_url=args.get('unsubscribe_url'),
-            is_having_project=args.get('is_having_project'),
-            is_not_having_project=args.get('is_not_having_project'),
         )
         return body, args
 

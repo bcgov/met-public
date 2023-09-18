@@ -67,6 +67,7 @@ const LandingComponent = () => {
                             sx={{
                                 backgroundColor: 'rgba(242, 242, 242, 0.95)',
                                 padding: '1em',
+                                pt: 0,
                                 margin: '1em',
                                 maxWidth: '90%',
                             }}

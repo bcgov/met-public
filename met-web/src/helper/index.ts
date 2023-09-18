@@ -16,9 +16,9 @@ export const replaceAllInURL = ({ URL, params }: { URL: string; params: Params }
 };
 
 export const getBaseUrl = () => {
-    const tenantId = sessionStorage.getItem('tenantId');
+    const basename = sessionStorage.getItem('basename');
     const domain = AppConfig.publicUrl ? AppConfig.publicUrl : window.location.origin;
-    const baseUrl = `${domain}/${tenantId}`;
+    const baseUrl = basename ? `${domain}/${basename}` : domain;
     return baseUrl;
 };
 

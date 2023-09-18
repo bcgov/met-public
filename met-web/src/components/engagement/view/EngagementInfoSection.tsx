@@ -37,6 +37,7 @@ const EngagementInfoSection = ({ savedEngagement, children }: EngagementInfoSect
                 position: 'absolute',
                 top: '0px',
                 left: '0px',
+                pt: 0,
             }}
         >
             <Grid
@@ -51,6 +52,7 @@ const EngagementInfoSection = ({ savedEngagement, children }: EngagementInfoSect
                     backgroundColor: 'rgba(242, 242, 242, 0.95)',
                     padding: '1em',
                     margin: '1em',
+                    paddingTop: 0,
                 }}
                 m={{ lg: '3em 5em 0 3em', md: '3em', sm: '1em' }}
                 spacing={1}

@@ -4,9 +4,13 @@ Manages the Email queue
 """
 from __future__ import annotations
 
+from datetime import datetime
 from typing import List
+from sqlalchemy import and_, func
 
 from met_api.constants.notification_status import NotificationStatus
+from met_api.models.engagement import Engagement
+from met_api.utils.enums import SourceAction, SourceType
 from .base_model import BaseModel
 from .db import db
 
@@ -24,9 +28,15 @@ class EmailQueue(BaseModel):  # pylint: disable=too-few-public-methods
     notification_status = db.Column(db.Enum(NotificationStatus), nullable=True)
 
     @staticmethod
-    def get_unprocessed_mails(max_size: int) -> List[EmailQueue]:
+    def get_unprocessed_mails_for_open_engagements(max_size: int) -> List[EmailQueue]:
         """Return a list of unprocessed emails."""
-        query = EmailQueue.query.filter(EmailQueue.notification_status.is_(None))
+        now = datetime.now().date()
+        query = db.session.query(EmailQueue)\
+            .join(Engagement, Engagement.id == EmailQueue.entity_id)\
+            .filter(and_(EmailQueue.notification_status.is_(None),
+                         EmailQueue.entity_type == SourceType.ENGAGEMENT.value,
+                         EmailQueue.action == SourceAction.PUBLISHED.value),
+                    func.date(Engagement.start_date) == now)
         if max_size != 0:
             query = query.limit(max_size)
         return query.all()
