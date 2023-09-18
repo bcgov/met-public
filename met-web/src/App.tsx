@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import './App.scss';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import UserService from './services/userService';
-import { useAppSelector, useAppDispatch, useAppTranslation } from './hooks';
+import { useAppSelector, useAppDispatch } from './hooks';
 import { MidScreenLoader, MobileToolbar } from './components/common';
 import { Box, Container, useMediaQuery, Theme, Toolbar } from '@mui/material';
 import InternalHeader from './components/layout/Header/InternalHeader';
@@ -34,8 +34,6 @@ const App = () => {
     const pathSegments = window.location.pathname.split('/');
     const language = 'en'; // Default language is English, change as needed
     const basename = pathSegments[1].toLowerCase();
-    const [pageTitle, setPageTitle] = useState('');
-    const { t: translate } = useAppTranslation();
     const tenant: TenantState = useAppSelector((state) => state.tenant);
 
     useEffect(() => {
@@ -61,8 +59,6 @@ const App = () => {
             sessionStorage.setItem('tenantId', _basename);
             // To be used for routing
             sessionStorage.setItem('basename', appBaseName);
-            const title = translate('header.title');
-            setPageTitle(title);
 
             dispatch(
                 saveTenant({
@@ -139,7 +135,7 @@ const App = () => {
     if (!tenant.isLoaded && !tenant.loading) {
         return (
             <Router>
-                <DocumentTitle pageTitle={pageTitle} />
+                <DocumentTitle />
                 <Routes>
                     <Route path="*" element={<NotFound />} />
                 </Routes>
@@ -150,7 +146,7 @@ const App = () => {
     if (!isLoggedIn) {
         return (
             <Router basename={tenant.basename}>
-                <DocumentTitle pageTitle={pageTitle} />
+                <DocumentTitle />
                 <PageViewTracker />
                 <Notification />
                 <NotificationModal />
@@ -165,7 +161,7 @@ const App = () => {
     if (roles.length === 0) {
         return (
             <Router basename={tenant.basename}>
-                <DocumentTitle pageTitle={pageTitle} />
+                <DocumentTitle />
                 <PublicHeader />
                 <Container>
                     <NoAccess />
@@ -179,7 +175,7 @@ const App = () => {
     if (!isMediumScreen) {
         return (
             <Router basename={tenant.basename}>
-                <DocumentTitle pageTitle={pageTitle} />
+                <DocumentTitle />
                 <InternalHeader />
                 <Container>
                     <MobileToolbar />
@@ -193,7 +189,7 @@ const App = () => {
 
     return (
         <Router basename={tenant.basename}>
-            <DocumentTitle pageTitle={pageTitle} />
+            <DocumentTitle />
             <Box sx={{ display: 'flex' }}>
                 <InternalHeader drawerWidth={drawerWidth} />
                 <Notification />

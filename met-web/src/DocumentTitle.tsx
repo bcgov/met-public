@@ -1,10 +1,11 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-
-const DocumentTitle = ({ pageTitle }: { pageTitle: string }) => {
+import { useAppTranslation } from 'hooks';
+const DocumentTitle = () => {
+    const { t: translate } = useAppTranslation();
     return (
         <Helmet>
-            <title>{pageTitle}</title>
+            <title>{translate('header.title')}</title>
         </Helmet>
     );
 };
