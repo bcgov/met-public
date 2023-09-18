@@ -21,6 +21,12 @@ class EngagementMetadataModel(BaseModel):
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), primary_key=True)
     project_id = db.Column(db.String(50), unique=False, nullable=True)
     project_metadata = db.Column(postgresql.JSONB(astext_type=db.Text()), unique=False, nullable=True)
+    project_tracking_id = db.Column(db.String(100), unique=False, nullable=True)
+
+    @classmethod
+    def find_by_engagement_id(cls, engagement_id):
+        """Return engagement slug by engagement id."""
+        return cls.query.filter_by(engagement_id=engagement_id).first()
 
     @classmethod
     def update(cls, engagement_metadata_data: dict) -> Optional[EngagementMetadataModel]:
