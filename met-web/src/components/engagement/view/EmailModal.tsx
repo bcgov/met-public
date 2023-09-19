@@ -76,7 +76,7 @@ const EmailModal = ({ defaultPanel, open, handleClose }: EmailModalProps) => {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
-            <Box sx={{ overflowY: 'scroll' }}>
+            <Box>
                 <TabContext value={formIndex}>
                     <TabPanel value="email">
                         <EmailPanel
