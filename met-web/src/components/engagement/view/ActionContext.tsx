@@ -23,6 +23,11 @@ interface EngagementSchedule {
     scheduled_date: string;
 }
 
+interface UnpublishEngagementParams {
+    id: number;
+    status_id: number;
+}
+
 export interface EngagementViewContext {
     savedEngagement: Engagement;
     engagementMetadata: EngagementMetadata;
@@ -30,6 +35,7 @@ export interface EngagementViewContext {
     isWidgetsLoading: boolean;
     isEngagementMetadataLoading: boolean;
     scheduleEngagement: (_engagement: EngagementSchedule) => Promise<Engagement>;
+    unpublishEngagement: ({ id, status_id }: UnpublishEngagementParams) => Promise<void>;
     widgets: Widget[];
     mockStatus: SubmissionStatus;
     updateMockStatus: (status: SubmissionStatus) => void;
@@ -43,7 +49,10 @@ export type EngagementParams = {
 
 export const ActionContext = createContext<EngagementViewContext>({
     scheduleEngagement: (_engagement: EngagementSchedule): Promise<Engagement> => {
-        return Promise.reject();
+        return Promise.reject(Error('not implemented'));
+    },
+    unpublishEngagement: (_unpublishEngagementData: UnpublishEngagementParams): Promise<void> => {
+        return Promise.reject(Error('not implemented'));
     },
     savedEngagement: createDefaultEngagement(),
     engagementMetadata: createDefaultEngagementMetadata(),
@@ -118,6 +127,22 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
             return Promise.resolve(updateResult);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error Updating Engagement' }));
+            return Promise.reject(error);
+        }
+    };
+
+    const unpublishEngagement = async ({ id, status_id }: UnpublishEngagementParams): Promise<void> => {
+        try {
+            await patchEngagement({
+                id,
+                status_id,
+            });
+            setEngagementLoading(true);
+            fetchEngagement();
+            dispatch(openNotification({ severity: 'success', text: 'Engagement unpublished successfully' }));
+            return Promise.resolve();
+        } catch (error) {
+            dispatch(openNotification({ severity: 'error', text: 'Error unpublishing engagement' }));
             return Promise.reject(error);
         }
     };
@@ -223,6 +248,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 isEngagementMetadataLoading,
                 updateMockStatus,
                 mockStatus,
+                unpublishEngagement,
             }}
         >
             {children}

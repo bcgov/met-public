@@ -8,6 +8,8 @@ import { ActionContext } from './ActionContext';
 import { Engagement } from 'models/engagement';
 import { useAppSelector } from 'hooks';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
+import { When } from 'react-if';
+import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
 
 interface EngagementInfoSectionProps {
     savedEngagement: Engagement;
@@ -70,6 +72,9 @@ const EngagementInfoSection = ({ savedEngagement, children }: EngagementInfoSect
                     <Stack direction="row" spacing={1}>
                         <MetLabel>Status:</MetLabel>
                         <EngagementStatusChip submissionStatus={statusName} />
+                        <When condition={savedEngagement.status_id === EngagementStatus.Unpublished}>
+                            <EngagementStatusChip submissionStatus={SubmissionStatus.Unpublished} />
+                        </When>
                     </Stack>
                 </Grid>
                 {children}
