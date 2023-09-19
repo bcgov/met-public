@@ -1,16 +1,5 @@
 import React, { FormEvent, useState } from 'react';
-import {
-    Grid,
-    Checkbox,
-    TextField,
-    FormControl,
-    FormControlLabel,
-    FormHelperText,
-    Stack,
-    useMediaQuery,
-    Theme,
-    Link,
-} from '@mui/material';
+import { Grid, Checkbox, TextField, FormControl, FormControlLabel, FormHelperText, Stack, Link } from '@mui/material';
 import { EmailPanelProps } from './types';
 import {
     MetLabel,
@@ -31,7 +20,6 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
         terms: false,
         email: false,
     });
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
     const validateForm = () => {
         const errors = {
@@ -61,7 +49,7 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
             <Grid
                 container
                 direction="row"
-                sx={{ ...modalStyle, overflowY: isSmallScreen ? 'scroll' : 'none' }}
+                sx={{ ...modalStyle }}
                 alignItems="flex-start"
                 justifyContent="flex-start"
                 rowSpacing={2}
