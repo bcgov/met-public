@@ -61,7 +61,7 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
             <Grid
                 container
                 direction="row"
-                sx={{ ...modalStyle, overflowY: isSmallScreen ? 'scroll' : 'none' }}
+                sx={{ ...modalStyle }}
                 alignItems="flex-start"
                 justifyContent="flex-start"
                 rowSpacing={2}
