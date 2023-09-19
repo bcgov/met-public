@@ -346,11 +346,11 @@ const CommentTextListing = () => {
                         open={Boolean(anchorEl)}
                         onClose={handleExportToCSVClose}
                     >
-                        <MenuItem onClick={handleExportStaffComments} style={customStyle}>
-                            Detailed CSV
-                        </MenuItem>
                         <MenuItem onClick={handleExportProponentComments} style={customStyle}>
-                            Proponent CSV
+                            Public/Proponent
+                        </MenuItem>
+                        <MenuItem onClick={handleExportStaffComments} style={customStyle}>
+                            Internal Only/Detailed
                         </MenuItem>
                     </Menu>
                 </Stack>

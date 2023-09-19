@@ -114,7 +114,7 @@ describe('Comment listing tests', () => {
         fireEvent.click(exportButton);
 
         // Check if the dropdown content is visible
-        const dropdownContent = screen.getByText('Detailed CSV');
+        const dropdownContent = screen.getByText('Internal Only/Detailed');
         await waitFor(() => {
             expect(dropdownContent).toBeInTheDocument();
         });
