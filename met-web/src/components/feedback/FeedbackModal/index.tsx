@@ -11,7 +11,6 @@ import {
     SvgIcon,
 } from '@mui/material';
 import * as React from 'react';
-import ModeCommentIcon from '@mui/icons-material/ModeComment';
 import CloseIcon from '@mui/icons-material/Close';
 import { ReactComponent as CheckIcon } from 'assets/images/check.svg';
 import { useState } from 'react';
@@ -24,7 +23,9 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { useAppDispatch } from 'hooks';
 import { customRatings, commentTypes } from './constants';
 import { ZIndex } from 'styles/Theme';
-
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
+import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 export const FeedbackModal = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
@@ -89,13 +90,17 @@ export const FeedbackModal = () => {
                 sx={{
                     borderRadius: '20px 20px 0px 0px',
                     position: 'fixed',
-                    bottom: (theme: Theme) => theme.spacing(10),
-                    right: (theme: Theme) => theme.spacing(-7),
+                    bottom: (theme: Theme) => theme.spacing(40),
+                    right: (theme: Theme) => theme.spacing(0),
                     transform: 'rotate(-90deg)',
                     zIndex: ZIndex.footer + 1,
+                    transformOrigin: 'bottom right',
                 }}
             >
-                <ModeCommentIcon fontSize="small" sx={{ marginRight: 1 }} /> Feedback
+                <SentimentVeryDissatisfiedIcon fontSize="small" sx={{ marginRight: 1, transform: 'rotate(90deg)' }} />
+                <SentimentSatisfiedIcon fontSize="small" sx={{ marginRight: 1, transform: 'rotate(90deg)' }} />
+                <SentimentSatisfiedAltIcon fontSize="small" sx={{ marginRight: 1, transform: 'rotate(90deg)' }} />
+                Website Feedback
             </PrimaryButton>
             <Modal aria-labelledby="modal-title" open={isOpen} onClose={() => handleClose()}>
                 <Grid

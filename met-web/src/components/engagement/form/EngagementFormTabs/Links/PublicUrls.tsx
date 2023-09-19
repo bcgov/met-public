@@ -28,7 +28,7 @@ export const PublicUrls = () => {
 
     const newEngagement = !savedEngagement.id || isNaN(Number(savedEngagement.id));
     const baseUrl = getBaseUrl();
-
+    const calculatedWidth = baseUrl ? `${baseUrl.length * 9}px` : '200px';
     const engagementUrl = !savedSlug ? 'Link will appear when the engagement is saved' : `${baseUrl}/${savedSlug}`;
     const dashboardUrl = !savedSlug ? 'Link will appear when the engagement is saved' : `${engagementUrl}/dashboard`;
 
@@ -140,10 +140,34 @@ export const PublicUrls = () => {
                             }}
                             InputProps={{
                                 startAdornment: (
-                                    <InputAdornment position="start" sx={{ height: '100%', maxHeight: '100%' }}>
-                                        <SecondaryButton variant="contained" disableElevation disabled>
-                                            {baseUrl}/
-                                        </SecondaryButton>
+                                    <InputAdornment
+                                        position="start"
+                                        disablePointerEvents
+                                        sx={{
+                                            height: '100%',
+                                            maxHeight: '100%',
+                                        }}
+                                    >
+                                        <TextField
+                                            InputLabelProps={{
+                                                shrink: false,
+                                            }}
+                                            variant={'outlined'}
+                                            value={baseUrl}
+                                            fullWidth
+                                            disabled
+                                            sx={{
+                                                width: 'auto',
+                                                '.MuiInputBase-input': {
+                                                    marginRight: 0,
+                                                },
+                                                '.MuiInputBase-root': {
+                                                    padding: 0,
+                                                    minWidth: calculatedWidth,
+                                                },
+                                            }}
+                                            label=" "
+                                        />
                                     </InputAdornment>
                                 ),
                                 endAdornment: (

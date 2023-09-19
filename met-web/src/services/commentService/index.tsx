@@ -34,8 +34,16 @@ export const getCommentsPage = async ({
 interface GenerateCommentsSheetParams {
     survey_id: number;
 }
-export const getCommentsSheet = async ({ survey_id }: GenerateCommentsSheetParams) => {
-    const url = replaceUrl(Endpoints.Comment.GET_SPREAD_SHEET, 'survey_id', String(survey_id));
+export const getStaffCommentSheet = async ({ survey_id }: GenerateCommentsSheetParams) => {
+    const url = replaceUrl(Endpoints.Comment.GET_STAFF_SPREAD_SHEET, 'survey_id', String(survey_id));
+    const headers = {
+        'Content-type': 'text/csv; charset=utf-8',
+    };
+    return http.GetRequest<Blob>(url, {}, headers);
+};
+
+export const getProponentCommentSheet = async ({ survey_id }: GenerateCommentsSheetParams) => {
+    const url = replaceUrl(Endpoints.Comment.GET_PROPONENT_SPREAD_SHEET, 'survey_id', String(survey_id));
     const headers = {
         'Content-type': 'text/csv; charset=utf-8',
     };

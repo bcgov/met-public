@@ -207,7 +207,8 @@ def test_get_comments_spreadsheet(mocker, client, jwt, session):  # pylint:disab
     submission = factory_submission_model(survey.id, eng.id, participant.id)
     factory_comment_model(survey.id, submission.id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.get(f'/api/comments/survey/{survey.id}/sheet', headers=headers, content_type=ContentType.JSON.value)
+    rv = client.get(f'/api/comments/survey/{survey.id}/sheet/staff',
+                    headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     mock_post_generate_document.assert_called()
     mock_get_access_token.assert_called()

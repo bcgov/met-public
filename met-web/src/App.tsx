@@ -22,6 +22,7 @@ import { ZIndex } from 'styles/Theme';
 import { TenantState, loadingTenant, saveTenant } from 'reduxSlices/tenantSlice';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import i18n from './i18n';
+import DocumentTitle from 'DocumentTitle';
 
 const App = () => {
     const drawerWidth = 280;
@@ -33,7 +34,6 @@ const App = () => {
     const pathSegments = window.location.pathname.split('/');
     const language = 'en'; // Default language is English, change as needed
     const basename = pathSegments[1].toLowerCase();
-
     const tenant: TenantState = useAppSelector((state) => state.tenant);
 
     useEffect(() => {
@@ -55,7 +55,7 @@ const App = () => {
             const tenant = await getTenant(_basename);
 
             const appBaseName = !AppConfig.tenant.isSingleTenantEnvironment ? _basename : '';
-            // To be used for API Requests and lanugage translation
+            // To be used for API Requests and language translation
             sessionStorage.setItem('tenantId', _basename);
             // To be used for routing
             sessionStorage.setItem('basename', appBaseName);
@@ -135,6 +135,7 @@ const App = () => {
     if (!tenant.isLoaded && !tenant.loading) {
         return (
             <Router>
+                <DocumentTitle />
                 <Routes>
                     <Route path="*" element={<NotFound />} />
                 </Routes>
@@ -145,6 +146,7 @@ const App = () => {
     if (!isLoggedIn) {
         return (
             <Router basename={tenant.basename}>
+                <DocumentTitle />
                 <PageViewTracker />
                 <Notification />
                 <NotificationModal />
@@ -159,6 +161,7 @@ const App = () => {
     if (roles.length === 0) {
         return (
             <Router basename={tenant.basename}>
+                <DocumentTitle />
                 <PublicHeader />
                 <Container>
                     <NoAccess />
@@ -172,6 +175,7 @@ const App = () => {
     if (!isMediumScreen) {
         return (
             <Router basename={tenant.basename}>
+                <DocumentTitle />
                 <InternalHeader />
                 <Container>
                     <MobileToolbar />
@@ -185,6 +189,7 @@ const App = () => {
 
     return (
         <Router basename={tenant.basename}>
+            <DocumentTitle />
             <Box sx={{ display: 'flex' }}>
                 <InternalHeader drawerWidth={drawerWidth} />
                 <Notification />

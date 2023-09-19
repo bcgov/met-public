@@ -72,7 +72,8 @@ const Endpoints = {
     },
     Comment: {
         GET_LIST: `${AppConfig.apiUrl}/comments/survey/survey_id`,
-        GET_SPREAD_SHEET: `${AppConfig.apiUrl}/comments/survey/survey_id/sheet`,
+        GET_STAFF_SPREAD_SHEET: `${AppConfig.apiUrl}/comments/survey/survey_id/sheet/staff`,
+        GET_PROPONENT_SPREAD_SHEET: `${AppConfig.apiUrl}/comments/survey/survey_id/sheet/proponent`,
     },
     Feedback: {
         GET_LIST: `${AppConfig.apiUrl}/feedbacks/`,

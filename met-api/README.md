@@ -23,6 +23,7 @@ The development scripts for this application allow customization via an environm
 ### Development
 
 The following commands support various development scenarios and needs.
+Before running the following commands run `. venv/bin/activate` to enter into the virtual env.
 
 
 > `make run`
