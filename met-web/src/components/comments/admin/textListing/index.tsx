@@ -73,12 +73,14 @@ const CommentTextListing = () => {
         const response = await getStaffCommentSheet({ survey_id: survey.id });
         downloadFile(response, `INTERNAL ONLY - ${survey.engagement?.name || ''} - ${formatToUTC(Date())}.csv`);
         setIsExporting(false);
+        handleExportToCSVClose(); // Close the menu after export
     };
     const handleExportProponentComments = async () => {
         setIsExporting(true);
         const response = await getProponentCommentSheet({ survey_id: survey.id });
         downloadFile(response, `PUBLIC - ${survey.engagement?.name || ''} - ${formatToUTC(Date())}.csv`);
         setIsExporting(false);
+        handleExportToCSVClose(); // Close the menu after export
     };
     const handleExportToCSVOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);

@@ -188,7 +188,12 @@ class CommentService:
     def get_titles(cls, comments):
         """Get the titles to be displayed on the sheet."""
         # Title could be dynamic based on the number of comment type questions on the survey
-        return [{'label': label.get('label', None)} for label in comments[0].get('comments')]
+        unique_labels = set()
+        for submission in comments:
+            for comment in submission.get('comments', []):
+                unique_labels.add(comment.get('label'))
+
+        return [{'label': label} for label in unique_labels if label is not None]
 
     @classmethod
     def get_data_rows(cls, titles, comments, project_name):
@@ -216,11 +221,17 @@ class CommentService:
     @classmethod
     def get_comment_text(cls, titles, comment):
         """Get the comments to be exported to the sheet."""
-        comments = [{'text': text.get('text', None)} for text in comment.get('comments')]
         # Making sure that the number of comments matches the number of questions on the comment to keep
         # the layout intact. In case user has not responded to a question the column value should be
         # blank.
-        comments.extend([{'text': ''}] * (len(titles) - len(comments)))
+        comment_dict = {item['label']: {'text': ''} for item in titles}
+
+        for item in comment['comments']:
+            label = item['label']
+            if label in comment_dict:
+                comment_dict[label]['text'] = item['text']
+
+        comments = [comment_dict[item['label']] for item in titles]
 
         return comments
 
@@ -280,9 +291,9 @@ class CommentService:
                 new_group = {'submission_id': submission_id, 'commentText': [{'text': text, 'label': label}]}
                 grouped_comments.append(new_group)
 
-                # Add unique labels to titles list in order of appearance
-                if label not in [title['label'] for title in titles]:
-                    titles.append({'label': label})
+            # Add unique labels to titles list in order of appearance
+            if label not in [title['label'] for title in titles]:
+                titles.append({'label': label})
 
         # Sort commentText within each group based on the order of titles
         for group in grouped_comments:
