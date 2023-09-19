@@ -1,16 +1,5 @@
 import React, { FormEvent, useState } from 'react';
-import {
-    Grid,
-    Checkbox,
-    TextField,
-    FormControl,
-    FormControlLabel,
-    FormHelperText,
-    Stack,
-    useMediaQuery,
-    Theme,
-    Link,
-} from '@mui/material';
+import { Grid, Checkbox, TextField, FormControl, FormControlLabel, FormHelperText, Stack, Link } from '@mui/material';
 import { EmailPanelProps } from './types';
 import {
     MetLabel,
