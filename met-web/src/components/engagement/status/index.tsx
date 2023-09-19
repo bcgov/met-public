@@ -40,6 +40,19 @@ const Upcoming = ({ active, clickable }: ChipParams) => {
     );
 };
 
+const Unpublished = ({ active, clickable }: ChipParams) => {
+    return (
+        <Chip
+            label="Unpublished"
+            sx={[
+                { ...Chip_Font_Weight },
+                active && { backgroundColor: '#212121', color: 'white' },
+                clickable && { cursor: 'pointer' },
+            ]}
+        />
+    );
+};
+
 export const EngagementStatusChip = ({
     submissionStatus,
     active = true,
@@ -59,6 +72,9 @@ export const EngagementStatusChip = ({
         case SubmissionStatus.Closed:
             // Engagement is published but it's past the submission date.
             return <Closed active={active} clickable={clickable} />;
+        case SubmissionStatus.Unpublished:
+            // Engagement is taken down.
+            return <Unpublished active={active} clickable={clickable} />;
         default:
             return null;
     }
