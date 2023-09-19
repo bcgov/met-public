@@ -119,6 +119,27 @@ class RestService:
         auth_response.raise_for_status()
         return auth_response.json().get('access_token')
 
+    @staticmethod
+    def get_access_token_with_password(username, password, client_id, issuer_url):
+        """Generate an access token with password grant."""
+        token_url = issuer_url + '/protocol/openid-connect/token'
+
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        }
+
+        data = {
+            'username': username,
+            'password': password,
+            'grant_type': 'password',
+            'client_id': client_id
+        }
+
+        auth_response = requests.post(token_url, headers=headers, data=data)
+        auth_response.raise_for_status()
+
+        return auth_response.json().get('access_token')
+
 
 def _get_token() -> str:
     token: str = request.headers['Authorization'] if request and 'Authorization' in request.headers else None

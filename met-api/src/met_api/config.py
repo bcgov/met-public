@@ -212,6 +212,7 @@ class _Config():  # pylint: disable=too-few-public-methods
     EPIC_JWT_OIDC_ISSUER = os.getenv('EPIC_JWT_OIDC_ISSUER')
     EPIC_URL = os.getenv('EPIC_URL')
     EPIC_MILESTONE = os.getenv('EPIC_MILESTONE')
+    EPIC_KC_CLIENT_ID = os.getenv('EPIC_KC_CLIENT_ID')
 
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
