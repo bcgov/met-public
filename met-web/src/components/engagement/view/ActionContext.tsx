@@ -49,10 +49,10 @@ export type EngagementParams = {
 
 export const ActionContext = createContext<EngagementViewContext>({
     scheduleEngagement: (_engagement: EngagementSchedule): Promise<Engagement> => {
-        return Promise.reject();
+        return Promise.reject(Error('not implemented'));
     },
     unpublishEngagement: (_unpublishEngagementData: UnpublishEngagementParams): Promise<void> => {
-        return Promise.reject();
+        return Promise.reject(Error('not implemented'));
     },
     savedEngagement: createDefaultEngagement(),
     engagementMetadata: createDefaultEngagementMetadata(),
