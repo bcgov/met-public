@@ -36,6 +36,18 @@ const initKeycloak = async (dispatch: Dispatch<AnyAction>) => {
         }
 
         dispatch(userToken(KeycloakData.token));
+
+        // Check if tokens are defined before storing them in session storage
+        if (KeycloakData.token) {
+            sessionStorage.setItem('accessToken', KeycloakData.token);
+        }
+        if (KeycloakData.idToken) {
+            sessionStorage.setItem('idToken', KeycloakData.idToken);
+        }
+        if (KeycloakData.refreshToken) {
+            sessionStorage.setItem('refreshToken', KeycloakData.refreshToken);
+        }
+
         const userDetail: UserDetail = await KeycloakData.loadUserInfo();
         const updateUserResponse = await updateUser();
         if (updateUserResponse.data) {
@@ -69,25 +81,31 @@ const refreshToken = (dispatch: Dispatch<Action>) => {
                 }
             } catch (error) {
                 console.log(error);
-                userLogout();
+                doLogout();
             }
         }
     }, 60000);
 };
 
-/**
- * Logout function
- */
-const userLogout = () => {
-    localStorage.clear();
-    sessionStorage.clear();
-    clearInterval(refreshInterval);
-    doLogout();
-};
-
 const doLogin = (redirectUri?: string) => KeycloakData.login({ redirectUri: redirectUri ?? getBaseUrl() });
 
-const doLogout = async () => KeycloakData.logout({ redirectUri: getBaseUrl() });
+const doLogout = async () => {
+    // Remove tokens from session storage
+    sessionStorage.removeItem('accessToken');
+    const idToken = sessionStorage.getItem('idToken'); // Get the stored ID token
+    sessionStorage.removeItem('idToken');
+    sessionStorage.removeItem('refreshToken');
+    clearInterval(refreshInterval);
+
+    // Check if the ID token is available and pass it as id_token_hint
+    const logoutOptions = {
+        redirectUri: getBaseUrl(),
+        id_token_hint: idToken,
+    };
+
+    await KeycloakData.logout(logoutOptions);
+};
+
 const getToken = () => KeycloakData.token;
 
 const isLoggedIn = () => !!KeycloakData.token;
