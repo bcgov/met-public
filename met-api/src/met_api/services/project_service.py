@@ -1,6 +1,7 @@
 """Service for project management."""
 import logging
 from http import HTTPStatus
+
 from flask import current_app
 
 from met_api.models.engagement import Engagement as EngagementModel
@@ -31,8 +32,11 @@ class ProjectService:
 
             if engagement_metadata and engagement_metadata.project_tracking_id:
                 update_url = f'{current_app.config.get("EPIC_URL")}/{engagement_metadata.project_tracking_id}'
-                RestService.put(endpoint=update_url, token=eao_service_account_token, data=epic_comment_period_payload,
-                                raise_for_status=False)
+                api_response = RestService.put(endpoint=update_url, token=eao_service_account_token,
+                                               data=epic_comment_period_payload,
+                                               raise_for_status=False)
+                # no handling of return so far since epic doesnt return anything
+
             else:
                 create_url = f'{current_app.config.get("EPIC_URL")}'
                 api_response = RestService.post(endpoint=create_url, token=eao_service_account_token,
@@ -40,11 +44,11 @@ class ProjectService:
                 response_data = api_response.json()
 
                 if api_response.status_code == HTTPStatus.OK:
-                    tracking_number = response_data.get('accountNumber')
+                    tracking_number = response_data.get('id')
                     engagement_metadata.project_tracking_id = tracking_number
                     engagement_metadata.commit()
 
-        except Exception as e: # NOQA # pylint:disable=broad-except
+        except Exception as e:  # NOQA # pylint:disable=broad-except
             logger.error('Error in update_project_info: %s', str(e))
 
     @staticmethod
@@ -56,11 +60,13 @@ class ProjectService:
     @staticmethod
     def _construct_epic_payload(engagement, project_id):
         site_url = notification.get_tenant_site_url(engagement.tenant_id)
+        start_date_utc = engagement.start_date.isoformat()
+        end_date_utc = engagement.end_date.isoformat()
         epic_comment_period_payload = {
-            'isMet': True,
-            'metURL': f'{site_url}{EmailVerificationService.get_engagement_path(engagement)}',
-            'dateCompleted': engagement.end_date,
-            'dateStarted': engagement.start_date,
+            'isMet': 'true',
+            'metURL': f'{site_url}{EmailVerificationService.get_engagement_path(engagement, is_public_url=False)}',
+            'dateCompleted': end_date_utc,
+            'dateStarted': start_date_utc,
             'instructions': '',
             'commentTip': '',
             'milestone': current_app.config.get('EPIC_MILESTONE'),
@@ -75,4 +81,5 @@ class ProjectService:
         kc_service_id = current_app.config.get('EPIC_KEYCLOAK_SERVICE_ACCOUNT_ID')
         kc_secret = current_app.config.get('EPIC_KEYCLOAK_SERVICE_ACCOUNT_SECRET')
         issuer_url = current_app.config.get('EPIC_JWT_OIDC_ISSUER')
-        return RestService.get_service_account_token(kc_service_id, kc_secret, issuer_url)
+        client_id = current_app.config.get('EPIC_KC_CLIENT_ID')
+        return RestService.get_access_token_with_password(kc_service_id, kc_secret, client_id, issuer_url)
