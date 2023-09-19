@@ -54,9 +54,6 @@ export const ActionContext = createContext<EngagementViewContext>({
     unpublishEngagement: (_unpublishEngagementData: UnpublishEngagementParams): Promise<void> => {
         return Promise.reject(Error('not implemented'));
     },
-    unpublishEngagement: (_unpublishEngagementData: UnpublishEngagementParams): Promise<void> => {
-        return Promise.reject();
-    },
     savedEngagement: createDefaultEngagement(),
     engagementMetadata: createDefaultEngagementMetadata(),
     isEngagementLoading: true,
