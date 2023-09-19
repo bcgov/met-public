@@ -271,6 +271,29 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                     </MetParagraph>
                                 }
                             />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        size="small"
+                                        id={EngagementDisplayStatus.Unpublished.toString()}
+                                        data-testid={EngagementDisplayStatus.Unpublished.toString()}
+                                        name={EngagementDisplayStatus[EngagementDisplayStatus.Unpublished]}
+                                        onChange={handleStatusFilterChange}
+                                        value={EngagementDisplayStatus[EngagementDisplayStatus.Unpublished]}
+                                        checked={
+                                            statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Unpublished]]
+                                        }
+                                        sx={{
+                                            height: 25,
+                                        }}
+                                    />
+                                }
+                                label={
+                                    <MetParagraph>
+                                        {EngagementDisplayStatus[EngagementDisplayStatus.Unpublished]}
+                                    </MetParagraph>
+                                }
+                            />
                         </FormGroup>
                     </Grid>
                 </Grid>
