@@ -51,8 +51,7 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
     # All configuration are in config file
     app.config.from_object(get_named_config(run_mode))
 
-    allowed_origins = os.getenv('CORS_ORIGIN', '')
-    CORS(app, origins=allowed_origins, supports_credentials=True)
+    CORS(app, origins=allowedorigins(), supports_credentials=True)
 
     # Register blueprints
     app.register_blueprint(API_BLUEPRINT)
