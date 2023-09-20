@@ -16,9 +16,9 @@ class RequestMixin:  # pylint: disable=too-few-public-methods
         """Survey id column."""
         return db.Column(db.Integer, ForeignKey('survey.id', ondelete='CASCADE'), nullable=False)
 
-    key = db.Column(db.String(250), nullable=False)
+    key = db.Column(db.Text(), nullable=False)
     type = db.Column(db.String(100))
-    label = db.Column(db.String(200))
-    request_id = db.Column(db.String(250))
+    label = db.Column(db.Text())
+    request_id = db.Column(db.Text())
     position = db.Column(db.Integer)
     display = db.Column(db.Boolean)
