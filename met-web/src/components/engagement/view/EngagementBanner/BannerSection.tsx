@@ -21,7 +21,7 @@ export const BannerSection = ({
     isLoggedIn,
     mockStatus,
 }: EngagementBannerProps) => {
-    const surveyId = savedEngagement?.surveys[0]?.id || '';
+    const surveyId = savedEngagement?.surveys[0]?.id ?? '';
     const isPreview = isLoggedIn;
     const currentStatus = isPreview ? mockStatus : savedEngagement?.submission_status;
     const isOpen = currentStatus === SubmissionStatus.Open;
