@@ -15,6 +15,7 @@ from met_api.models import db, ma, migrate
 from met_api.models.tenant import Tenant as TenantModel
 from met_api.utils import constants
 from met_api.utils.cache import cache
+from met_api.utils.util import allowedorigins
 
 # Security Response headers
 csp = (
@@ -50,7 +51,7 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
     # All configuration are in config file
     app.config.from_object(get_named_config(run_mode))
 
-    # CORS(app, origins=os.getenv('SITE_URL'), supports_credentials=True)
+    CORS(app, origins=allowedorigins(), supports_credentials=True)
 
     # Register blueprints
     app.register_blueprint(API_BLUEPRINT)
