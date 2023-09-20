@@ -1,23 +1,32 @@
-import React, { useContext } from 'react';
-import { ActionContext } from './ActionContext';
+import React from 'react';
 import { Grid, Skeleton } from '@mui/material';
-import { Banner } from '../../banner/Banner';
+import { Banner } from '../../../banner/Banner';
 import { PrimaryButton } from 'components/common';
-import { EngagementBannerProps } from './types';
 import { SubmissionStatus } from 'constants/engagementStatus';
-import { useAppSelector } from 'hooks';
 import { When } from 'react-if';
-import EngagementInfoSection from './EngagementInfoSection';
+import EngagementInfoSection from '../EngagementInfoSection';
+import { Engagement } from 'models/engagement';
 
-export const EngagementBanner = ({ startSurvey }: EngagementBannerProps) => {
-    const { isEngagementLoading, savedEngagement, mockStatus } = useContext(ActionContext);
-    const surveyId = savedEngagement.surveys[0]?.id || '';
-    const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
+export interface EngagementBannerProps {
+    startSurvey: () => void;
+    isEngagementLoading: boolean;
+    savedEngagement: Engagement | null;
+    mockStatus?: SubmissionStatus;
+    isLoggedIn: boolean;
+}
+export const BannerSection = ({
+    startSurvey,
+    isEngagementLoading,
+    savedEngagement,
+    isLoggedIn,
+    mockStatus,
+}: EngagementBannerProps) => {
+    const surveyId = savedEngagement?.surveys[0]?.id || '';
     const isPreview = isLoggedIn;
-    const currentStatus = isPreview ? mockStatus : savedEngagement.submission_status;
+    const currentStatus = isPreview ? mockStatus : savedEngagement?.submission_status;
     const isOpen = currentStatus === SubmissionStatus.Open;
 
-    if (isEngagementLoading) {
+    if (isEngagementLoading || !savedEngagement) {
         return <Skeleton variant="rectangular" width="100%" height="35em" />;
     }
 

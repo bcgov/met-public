@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import { Grid, useMediaQuery, Theme } from '@mui/material';
-import { EngagementBanner } from './EngagementBanner';
 import { ActionContext } from './ActionContext';
 import { EngagementContent } from './EngagementContent';
 import SurveyBlock from './SurveyBlock';
@@ -13,6 +12,7 @@ import WidgetBlock from './widgets/WidgetBlock';
 import { Else, If, Then } from 'react-if';
 import { PhasesWidget } from './widgets/PhasesWidget';
 import { PhasesWidgetMobile } from './widgets/PhasesWidget/PhasesWidgetMobile/PhasesWidgetMobile';
+import { EngagementBanner } from './EngagementBanner';
 
 export const EngagementView = () => {
     const { state } = useLocation() as RouteState;
