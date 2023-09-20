@@ -211,13 +211,14 @@ class EmailVerificationService:
         return subject, body, args, template_id
 
     @staticmethod
-    def get_engagement_path(engagement: EngagementModel):
+    def get_engagement_path(engagement: EngagementModel, is_public_url=True):
         """Get an engagement path."""
-        engagement_slug = EngagementSlugModel.find_by_engagement_id(
-            engagement.id)
-        if engagement_slug:
-            return current_app.config.get('ENGAGEMENT_PATH_SLUG'). \
-                format(slug=engagement_slug.slug)
+        if is_public_url:
+            engagement_slug = EngagementSlugModel.find_by_engagement_id(
+                engagement.id)
+            if engagement_slug:
+                return current_app.config.get('ENGAGEMENT_PATH_SLUG'). \
+                    format(slug=engagement_slug.slug)
         return current_app.config.get('ENGAGEMENT_PATH'). \
             format(engagement_id=engagement.id)
 

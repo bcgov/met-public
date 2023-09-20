@@ -19,7 +19,7 @@ The development scripts for this application allow customization via an environm
 ### Development
 
 The following commands support various development scenarios and needs.
-
+Before running the following commands run `. venv/bin/activate` to enter into the virtual env.
 
 > `make run`
 >
@@ -36,3 +36,9 @@ The following commands support various development scenarios and needs.
 > `make lint`
 >
 > Lints the application code.
+
+
+To run met-cron functionality on your local machine execute the pyhton commands located in the run files of this directory.
+For example the `run_met_publish.sh` file contains the coammnd to publish a scheduled engagement 
+
+>`python3 invoke_jobs.py ENGAGEMENT_PUBLISH` 

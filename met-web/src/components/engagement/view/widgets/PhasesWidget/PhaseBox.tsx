@@ -105,7 +105,7 @@ export const PhaseBox = ({
                                             color="inherit"
                                             underline="always"
                                         >
-                                            Learn more
+                                            Learn More
                                         </Link>
                                     </Grid>
                                 </Grid>

@@ -10,6 +10,7 @@ import { createDefaultSurvey } from 'models/survey';
 import { createDefaultSubmission } from 'models/surveySubmission';
 import { createDefaultComment } from 'models/comment';
 import SubmissionListing from 'components/comments/admin/reviewListing';
+import CommentTextListing from 'components/comments/admin/textListing';
 import * as utils from 'utils';
 import { USER_ROLES } from 'services/userService/constants';
 
@@ -27,6 +28,7 @@ const mockComment1 = {
     text: 'Mock comment text',
     survey_id: mockSurveyOne.id,
     submission_id: 1,
+    reviewed_by: 'Mock Reviewer',
 };
 const mockSubmission1 = {
     ...createDefaultSubmission(),
@@ -84,7 +86,7 @@ describe('Comment listing tests', () => {
         }),
     );
     const mockGetCommentsSheet = jest
-        .spyOn(commentService, 'getCommentsSheet')
+        .spyOn(commentService, 'getStaffCommentSheet')
         .mockReturnValue(Promise.resolve({ data: new Blob(), status: 200, statusText: '', headers: {}, config: {} }));
     const mockDownloadFile = jest.spyOn(utils, 'downloadFile').mockImplementation(() => jest.fn());
 
@@ -102,16 +104,23 @@ describe('Comment listing tests', () => {
     });
 
     test('Export comments work', async () => {
-        render(<SubmissionListing />);
+        render(<CommentTextListing />);
 
         await waitFor(() => {
-            expect(screen.getByText(`${mockSurveyOne.name} Comments`)).toBeVisible();
-            expect(screen.getByText(mockSubmission1.reviewed_by)).toBeVisible();
+            expect(screen.getByText(mockComment1.text)).toBeVisible();
         });
 
         const exportButton = screen.getByText('Export to CSV');
         fireEvent.click(exportButton);
 
+        // Check if the dropdown content is visible
+        const dropdownContent = screen.getByText('Internal Only/Detailed');
+        await waitFor(() => {
+            expect(dropdownContent).toBeInTheDocument();
+        });
+
+        // Click on the dropdown value
+        fireEvent.click(dropdownContent);
         await waitFor(() => {
             expect(mockGetCommentsSheet).toHaveBeenCalledOnce();
             expect(mockDownloadFile).toHaveBeenCalledOnce();

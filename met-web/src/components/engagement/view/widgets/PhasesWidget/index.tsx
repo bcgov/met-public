@@ -60,7 +60,7 @@ export const PhasesWidget = () => {
                             Click ‘learn more’ on the sections below for more details about each phase in the
                             Environmental Assessment process. Click the speech bubble icon
                             {<ForumIcon fontSize="1.2em" sx={{ marginLeft: '0.5em' }} />} to learn more about each
-                            unique public comment period.
+                            unique public commenting period.
                         </MetBody>
                     </Grid>
                     <Grid item xs={12} sx={{ maxWidth: '99%' }}>

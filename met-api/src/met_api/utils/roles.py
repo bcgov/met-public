@@ -59,3 +59,4 @@ class Role(Enum):
     EXPORT_ALL_CAC_FORM_TO_SHEET = 'export_all_cac_form_to_sheet'  # Allows users to export CAC form to csv
     EXPORT_CAC_FORM_TO_SHEET = 'export_cac_form_to_sheet'  # Allows users to export CAC form to csv
     VIEW_ALL_SURVEY_RESULTS = 'view_all_survey_results'  # Allows users to view results to all questions
+    UNPUBLISH_ENGAGEMENT = 'unpublish_engagement'

@@ -4,22 +4,19 @@ import Grid from '@mui/material/Grid';
 import { Link, useLocation } from 'react-router-dom';
 import { MetPageGridContainer, PrimaryButton, MetHeader1, SecondaryButton } from 'components/common';
 import { HeadCell, PaginationOptions } from 'components/common/Table/types';
-import { formatDate, formatToUTC } from 'components/common/dateHelper';
+import { formatDate } from 'components/common/dateHelper';
 import { Collapse, Link as MuiLink } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
 import { SurveySubmission } from 'models/surveySubmission';
 import { COMMENTS_STATUS, CommentStatus } from 'constants/commentStatus';
-import { getCommentsSheet } from 'services/commentService';
-import { downloadFile } from 'utils';
 import { AdvancedSearch } from './AdvancedSearch';
 import { CommentListingContext } from './CommentListingContext';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useAppSelector } from 'hooks';
 import { USER_ROLES } from 'services/userService/constants';
 import { USER_GROUP } from 'models/user';
-import { PermissionsGate } from 'components/permissionsGate';
 
 const Submissions = () => {
     const {
@@ -36,7 +33,6 @@ const Submissions = () => {
     } = useContext(CommentListingContext);
     const { roles, userDetail, assignedEngagements } = useAppSelector((state) => state.user);
     const { state } = useLocation();
-    const [isExporting, setIsExporting] = useState(false);
     const [isAdvancedSearchOpen, setIsAdvancedSearchOpen] = useState(Boolean(state));
 
     const handleSearchBarClick = (filter: string) => {
@@ -44,13 +40,6 @@ const Submissions = () => {
             ...searchFilter,
             value: filter,
         });
-    };
-
-    const handleExportComments = async () => {
-        setIsExporting(true);
-        const response = await getCommentsSheet({ survey_id: survey.id });
-        downloadFile(response, `INTERNAL ONLY - ${survey.engagement?.name || ''} - ${formatToUTC(Date())}.csv`);
-        setIsExporting(false);
     };
 
     const headCells: HeadCell<SurveySubmission>[] = [
@@ -157,20 +146,6 @@ const Submissions = () => {
                         <PrimaryButton component={Link} to={`/surveys/${survey.id}/comments/all`}>
                             Read All Comments
                         </PrimaryButton>
-                        <PermissionsGate scopes={[USER_ROLES.EXPORT_TO_CSV]} errorProps={{ disabled: true }}>
-                            <SecondaryButton
-                                onClick={handleExportComments}
-                                loading={isExporting}
-                                sx={{
-                                    '&.Mui-disabled': {
-                                        background: '#e0e0e0',
-                                        color: '#a6a6a6',
-                                    },
-                                }}
-                            >
-                                Export to CSV
-                            </SecondaryButton>
-                        </PermissionsGate>
                     </Stack>
                 </Stack>
             </Grid>

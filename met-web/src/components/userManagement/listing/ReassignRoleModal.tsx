@@ -124,7 +124,7 @@ export const ReassignRoleModal = () => {
                             <Grid item xs={12}>
                                 <MetDescription>
                                     Reassigning a user role will change their role for all active engagements. Any
-                                    assigned engagements will be reassigned after changing this user's role.
+                                    assigned engagements will have to be reassigned after changing this user's role.
                                 </MetDescription>
                             </Grid>
                         </Grid>

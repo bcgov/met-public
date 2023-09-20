@@ -11,10 +11,15 @@ from met_api.services.rest_service import RestService
 
 def get_tenant_site_url(tenant_id, path=''):
     """Get the tenant specific site url (domain / tenant / path)."""
-    if tenant_id is None:
-        raise ValueError('Missing tenant id.')
-    tenant: Tenant = Tenant.find_by_id(tenant_id)
-    return current_app.config.get('SITE_URL', '') + f'/{tenant.short_name}' + path
+    is_single_tenant_environment = current_app.config.get('IS_SINGLE_TENANT_ENVIRONMENT', False)
+    site_url = current_app.config.get('SITE_URL', '')
+    if not is_single_tenant_environment:
+        if tenant_id is None:
+            raise ValueError('Missing tenant id.')
+        tenant: Tenant = Tenant.find_by_id(tenant_id)
+        return site_url + f'/{tenant.short_name}' + path
+    else:
+        return site_url + path
 
 
 def send_email(subject, email, html_body, args, template_id):

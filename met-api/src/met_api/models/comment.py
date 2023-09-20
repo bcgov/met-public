@@ -219,7 +219,7 @@ class Comment(BaseModel):
 
     @classmethod
     def get_comments_by_survey_id(cls, survey_id):
-        """Get comments paginated."""
+        """Get comments for staff."""
         null_value = None
         query = db.session.query(Submission)\
             .join(Comment, Submission.id == Comment.submission_id)\
@@ -229,3 +229,23 @@ class Comment(BaseModel):
         query = query.order_by(Submission.id.asc())
         items = query.all()
         return SubmissionSchema(many=True, exclude=['submission_json']).dump(items)
+
+    @classmethod
+    def get_public_viewable_comments_by_survey_id(cls, survey_id):
+        """Get comments that are viewable on the public report."""
+        query = db.session.query(Comment)\
+            .join(Submission, Submission.id == Comment.submission_id)\
+            .join(CommentStatusModel, Submission.comment_status_id == CommentStatusModel.id)\
+            .join(Survey, Survey.id == Submission.survey_id)\
+            .join(ReportSetting, and_(Comment.survey_id == ReportSetting.survey_id,
+                                      Comment.component_id == ReportSetting.question_key))\
+            .filter(
+                and_(
+                    Comment.survey_id == survey_id,
+                    CommentStatusModel.id == CommentStatus.Approved.value,
+                    ReportSetting.display == true(),
+                    Submission.reviewed_by != 'System'
+                ))
+        query = query.order_by(Comment.text.asc())
+        items = query.all()
+        return CommentSchema(many=True, only=['submission_id', 'label', 'text']).dump(items)

@@ -48,8 +48,9 @@ class MembershipStatus(Enum):
 class GeneratedDocumentTypes(IntEnum):
     """Document Types."""
 
-    COMMENT_SHEET = 1
+    COMMENT_SHEET_STAFF = 1
     CAC_FORM_SHEET = 2
+    COMMENT_SHEET_PROPONENT = 3
 
 
 class LoginSource(Enum):

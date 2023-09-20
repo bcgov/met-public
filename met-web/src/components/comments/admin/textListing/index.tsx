@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
 import { Link, useLocation, useParams } from 'react-router-dom';
-import { MetPageGridContainer, PrimaryButton, MetParagraph, MetLabel, MetTooltip } from 'components/common';
+import {
+    MetPageGridContainer,
+    PrimaryButton,
+    MetParagraph,
+    MetLabel,
+    MetTooltip,
+    SecondaryButton,
+} from 'components/common';
 import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
-import { Link as MuiLink, Grid, Stack, TextField } from '@mui/material';
+import { Link as MuiLink, Grid, Stack, TextField, Menu, MenuItem } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -12,12 +19,17 @@ import { CommentStatus } from 'constants/commentStatus';
 import { If, Then, Else, When } from 'react-if';
 import { getSubmissionPage } from 'services/submissionService';
 import { SurveySubmission } from 'models/surveySubmission';
-import { formatDate } from 'components/common/dateHelper';
+import { formatDate, formatToUTC } from 'components/common/dateHelper';
 import { USER_ROLES } from 'services/userService/constants';
 import { USER_GROUP } from 'models/user';
 import { updateURLWithPagination } from 'components/common/Table/utils';
 import CommentIcon from '@mui/icons-material/Comment';
 import CommentsDisabledIcon from '@mui/icons-material/CommentsDisabled';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { getStaffCommentSheet, getProponentCommentSheet } from 'services/commentService';
+import { downloadFile } from 'utils';
+import { getSurvey } from 'services/surveyService';
+import { Survey, createDefaultSurvey } from 'models/survey';
 
 const CommentTextListing = () => {
     const { roles, userDetail, assignedEngagements } = useAppSelector((state) => state.user);
@@ -52,6 +64,37 @@ const CommentTextListing = () => {
 
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [exportToCSVOpen, setExportToCSVOpen] = useState(false);
+    const [isExporting, setIsExporting] = useState(false);
+    const [survey, setSurvey] = useState<Survey>(createDefaultSurvey());
+    const handleExportStaffComments = async () => {
+        setIsExporting(true);
+        const response = await getStaffCommentSheet({ survey_id: survey.id });
+        downloadFile(response, `INTERNAL ONLY - ${survey.engagement?.name || ''} - ${formatToUTC(Date())}.csv`);
+        setIsExporting(false);
+        handleExportToCSVClose(); // Close the menu after export
+    };
+    const handleExportProponentComments = async () => {
+        setIsExporting(true);
+        const response = await getProponentCommentSheet({ survey_id: survey.id });
+        downloadFile(response, `PUBLIC - ${survey.engagement?.name || ''} - ${formatToUTC(Date())}.csv`);
+        setIsExporting(false);
+        handleExportToCSVClose(); // Close the menu after export
+    };
+    const handleExportToCSVOpen = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+        setExportToCSVOpen(!exportToCSVOpen);
+    };
+    const handleExportToCSVClose = () => {
+        setAnchorEl(null);
+        setExportToCSVOpen(false);
+    };
+    const customStyle = {
+        minWidth: '180px',
+        width: '100%',
+    };
+
     const [submissions, setSubmissions] = useState<SurveySubmission[]>([]);
     const loadSubmissions = async () => {
         try {
@@ -71,6 +114,8 @@ const CommentTextListing = () => {
             setPageInfo({
                 total: response.total,
             });
+            const survey = await getSurvey(Number(surveyId));
+            setSurvey(survey);
             setTableLoading(false);
         } catch (error) {
             console.log(error);
@@ -255,31 +300,63 @@ const CommentTextListing = () => {
             container
             rowSpacing={1}
         >
-            <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="95%" justifyContent="space-between">
-                <Grid item xs={12} lg={6}>
-                    <Stack direction="row" spacing={1}>
-                        <TextField
-                            id="comments"
-                            variant="outlined"
-                            label="Search Comments"
-                            value={searchText}
-                            onChange={(e) => setSearchText(e.target.value)}
-                            size="small"
-                        />
-                        <PrimaryButton
-                            data-testid="CommentListing/search-button"
-                            onClick={() => handleSearchBarClick(searchText)}
-                        >
-                            <SearchIcon />
-                        </PrimaryButton>
-                    </Stack>
-                </Grid>
-                <Grid item container lg={6} xs={12} alignItems={'flex-end'} justifyContent={'flex-end'}>
+            <Grid item xs={12} lg={7}>
+                <Stack direction="row" spacing={1} alignItems="flex-start" justifyContent="flex-start">
+                    <TextField
+                        id="comments"
+                        variant="outlined"
+                        label="Search Comments"
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        size="small"
+                    />
+                    <PrimaryButton
+                        data-testid="CommentListing/search-button"
+                        variant="contained"
+                        onClick={() => handleSearchBarClick(searchText)}
+                    >
+                        <SearchIcon />
+                    </PrimaryButton>
+                </Stack>
+            </Grid>
+            <Grid item xs={12} lg={5}>
+                <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
                     <PrimaryButton component={Link} to={`/surveys/${submissions[0]?.survey_id || 0}/comments`}>
                         Return to Comments List
                     </PrimaryButton>
-                </Grid>
-            </Stack>
+                    <SecondaryButton
+                        variant="contained"
+                        onClick={handleExportToCSVOpen}
+                        aria-controls="simple-menu"
+                        aria-haspopup="true"
+                        disabled={isExporting}
+                        startIcon={
+                            <ExpandMoreIcon
+                                style={{
+                                    transition: 'transform 0.3s',
+                                    transform: exportToCSVOpen ? 'rotate(180deg)' : 'none',
+                                }}
+                            />
+                        }
+                    >
+                        Export to CSV
+                    </SecondaryButton>
+                    <Menu
+                        id="simple-menu"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={handleExportToCSVClose}
+                    >
+                        <MenuItem onClick={handleExportProponentComments} style={customStyle}>
+                            Public/Proponent
+                        </MenuItem>
+                        <MenuItem onClick={handleExportStaffComments} style={customStyle}>
+                            Internal Only/Detailed
+                        </MenuItem>
+                    </Menu>
+                </Stack>
+            </Grid>
             <Grid item lg={12}>
                 <MetTable
                     hideHeader={true}

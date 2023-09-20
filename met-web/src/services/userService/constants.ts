@@ -10,6 +10,7 @@ export const USER_ROLES = {
     CREATE_ENGAGEMENT: 'create_engagement',
     CREATE_SURVEY: 'create_survey',
     PUBLISH_ENGAGEMENT: 'publish_engagement',
+    UNPUBLISH_ENGAGEMENT: 'unpublish_engagement',
     VIEW_ENGAGEMENT: 'view_engagement',
     VIEW_PRIVATE_ENGAGEMENTS: 'view_private_engagements',
     EDIT_ENGAGEMENT: 'edit_engagement',

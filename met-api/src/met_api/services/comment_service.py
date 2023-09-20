@@ -157,7 +157,7 @@ class CommentService:
         return comments
 
     @classmethod
-    def export_comments_to_spread_sheet(cls, survey_id):
+    def export_comments_to_spread_sheet_staff(cls, survey_id):
         """Export comments to spread sheet."""
         engagement = SurveyModel.find_by_id(survey_id)
         one_of_roles = (
@@ -177,7 +177,7 @@ class CommentService:
             'comments': data_rows
         }
         document_options = {
-            'document_type': GeneratedDocumentTypes.COMMENT_SHEET.value,
+            'document_type': GeneratedDocumentTypes.COMMENT_SHEET_STAFF.value,
             'template_name': 'staff_comments_sheet.xlsx',
             'convert_to': 'csv',
             'report_name': 'comments_sheet'
@@ -188,7 +188,12 @@ class CommentService:
     def get_titles(cls, comments):
         """Get the titles to be displayed on the sheet."""
         # Title could be dynamic based on the number of comment type questions on the survey
-        return [{'label': label.get('label', None)} for label in comments[0].get('comments')]
+        unique_labels = set()
+        for submission in comments:
+            for comment in submission.get('comments', []):
+                unique_labels.add(comment.get('label'))
+
+        return [{'label': label} for label in unique_labels if label is not None]
 
     @classmethod
     def get_data_rows(cls, titles, comments, project_name):
@@ -216,11 +221,17 @@ class CommentService:
     @classmethod
     def get_comment_text(cls, titles, comment):
         """Get the comments to be exported to the sheet."""
-        comments = [{'text': text.get('text', None)} for text in comment.get('comments')]
         # Making sure that the number of comments matches the number of questions on the comment to keep
         # the layout intact. In case user has not responded to a question the column value should be
         # blank.
-        comments.extend([{'text': ''}] * (len(titles) - len(comments)))
+        comment_dict = {item['label']: {'text': ''} for item in titles}
+
+        for item in comment['comments']:
+            label = item['label']
+            if label in comment_dict:
+                comment_dict[label]['text'] = item['text']
+
+        comments = [comment_dict[item['label']] for item in titles]
 
         return comments
 
@@ -239,3 +250,61 @@ class CommentService:
             rejection_note.append(comment.get('rejected_reason_other'))
 
         return ', '.join(rejection_note)
+
+    @classmethod
+    def export_comments_to_spread_sheet_proponent(cls, survey_id):
+        """Export comments to spread sheet."""
+        engagement = SurveyModel.find_by_id(survey_id)
+        one_of_roles = (
+            MembershipType.TEAM_MEMBER.name,
+            Role.EXPORT_TO_CSV.value
+        )
+        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement.engagement_id)
+        comments = Comment.get_public_viewable_comments_by_survey_id(survey_id)
+        formatted_comments = cls.format_comments(comments)
+        document_options = {
+            'document_type': GeneratedDocumentTypes.COMMENT_SHEET_PROPONENT.value,
+            'template_name': 'proponent_comments_sheet.xlsx',
+            'convert_to': 'csv',
+            'report_name': 'proponent_comments_sheet'
+        }
+        return DocumentGenerationService().generate_document(data=formatted_comments, options=document_options)
+
+    @classmethod
+    def format_comments(cls, comments):
+        """Group the comments together, arranging them in the same order as the titles."""
+        grouped_comments = []
+        titles = []
+        for comment in comments:
+            submission_id = comment['submission_id']
+            text = comment.get('text', '')  # Get the text, or an empty string if it's missing
+            label = comment['label']
+
+            # Check if a group with the same submission ID already exists
+            existing_group = next((group for group in grouped_comments
+                                   if group['submission_id'] == submission_id), None)
+
+            if existing_group:
+                # Add the new comment
+                existing_group['commentText'].append({'text': text, 'label': label})
+            else:
+                new_group = {'submission_id': submission_id, 'commentText': [{'text': text, 'label': label}]}
+                grouped_comments.append(new_group)
+
+            # Add unique labels to titles list in order of appearance
+            if label not in [title['label'] for title in titles]:
+                titles.append({'label': label})
+
+        # Sort commentText within each group based on the order of titles
+        for group in grouped_comments:
+            sorted_comment_text = []
+            for title in titles:
+                label = title['label']
+                matching_comments = [comment for comment in group['commentText'] if comment['label'] == label]
+                if not matching_comments:
+                    sorted_comment_text.append({'text': '', 'label': label})  # Add empty text for missing labels
+                else:
+                    sorted_comment_text.extend(matching_comments)
+            group['commentText'] = sorted_comment_text
+
+        return {'titles': titles, 'comments': grouped_comments}

@@ -22,6 +22,7 @@ class Status(IntEnum):
     Published = 2
     Closed = 3
     Scheduled = 4
+    Unpublished = 5
 
 
 class EngagementDisplayStatus(IntEnum):
