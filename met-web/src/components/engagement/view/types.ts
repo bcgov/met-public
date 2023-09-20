@@ -6,10 +6,6 @@ export interface BannerProps {
     children?: JSX.Element | JSX.Element[];
 }
 
-export interface EngagementBannerProps {
-    startSurvey: () => void;
-}
-
 export interface EmailModalProps {
     open: boolean;
     defaultPanel: string;
