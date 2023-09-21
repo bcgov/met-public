@@ -6,9 +6,9 @@ import { getEngagement } from 'services/engagementService';
 
 interface EngagementBannerProps {
     startSurvey: () => void;
-    engagementSlug: string;
+    engagementUrl: string;
 }
-export const EngagementBanner = ({ startSurvey, engagementSlug }: EngagementBannerProps) => {
+export const EngagementBanner = ({ startSurvey, engagementUrl }: EngagementBannerProps) => {
     const [isEngagementLoading, setIsEngagementLoading] = useState(true);
     const [savedEngagement, setSavedEngagement] = useState<Engagement | null>(null);
     const [engagementId, setEngagementId] = useState<number | null>(null);
@@ -16,6 +16,7 @@ export const EngagementBanner = ({ startSurvey, engagementSlug }: EngagementBann
 
     const loadEngagementSlug = async () => {
         try {
+            const engagementSlug = engagementUrl.substring(engagementUrl.lastIndexOf('/') + 1, engagementUrl.length);
             const response = await getEngagementIdBySlug(engagementSlug);
             setEngagementId(response.engagement_id);
         } catch (error) {
@@ -38,7 +39,7 @@ export const EngagementBanner = ({ startSurvey, engagementSlug }: EngagementBann
 
     useEffect(() => {
         loadEngagementSlug();
-    }, [engagementSlug]);
+    }, [engagementUrl]);
 
     useEffect(() => {
         if (engagementId) {
@@ -55,7 +56,7 @@ export const EngagementBanner = ({ startSurvey, engagementSlug }: EngagementBann
             startSurvey={startSurvey}
             isEngagementLoading={isEngagementLoading}
             savedEngagement={savedEngagement}
-            isLoggedIn={true}
+            isLoggedIn={false}
         />
     );
 };
