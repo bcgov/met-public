@@ -32,7 +32,7 @@ import { getSurvey } from 'services/surveyService';
 import { Survey, createDefaultSurvey } from 'models/survey';
 import { PermissionsGate } from 'components/permissionsGate';
 import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
 const CommentTextListing = () => {
     const { roles, userDetail, assignedEngagements } = useAppSelector((state) => state.user);
