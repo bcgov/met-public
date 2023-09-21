@@ -53,7 +53,7 @@ export default class EngagementBannerWC extends HTMLElement {
                         <ThemeProvider theme={shadowTheme}>
                             <EngagementBanner
                                 startSurvey={() => window.open(props['engagementurl'], '_blank')}
-                                engagementUrl={props['engagementurl']}
+                                engagementSlug={this._getSlugFromUrl(props['engagementurl'])}
                                 {...props}
                             />
                         </ThemeProvider>
@@ -97,6 +97,9 @@ export default class EngagementBannerWC extends HTMLElement {
             name: attrName,
             value: value,
         };
+    }
+    _getSlugFromUrl(url: string) {
+        return url.substring(url.lastIndexOf('/') + 1, url.length);
     }
 }
 
