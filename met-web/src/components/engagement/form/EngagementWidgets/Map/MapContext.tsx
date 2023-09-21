@@ -7,6 +7,8 @@ import { WidgetMap } from 'models/widgetMap';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { geoJSONDecode, calculateZoomLevel } from 'components/engagement/form/EngagementWidgets/Map/utils';
+import * as turf from '@turf/turf';
+import { GeoJSON } from 'geojson';
 
 export interface MapContextProps {
     widget: Widget | null;
@@ -22,6 +24,7 @@ export interface MapContextProps {
     setMapWidth: React.Dispatch<React.SetStateAction<number>>;
     mapHeight: number;
     setMapHeight: React.Dispatch<React.SetStateAction<number>>;
+    updateZoom: (geojson: turf.AllGeoJSON | GeoJSON | undefined | string) => void;
 }
 
 export type EngagementParams = {
@@ -34,6 +37,9 @@ export const MapContext = createContext<MapContextProps>({
     previewMap: null,
     isLoadingMap: true,
     zoomLevel: 12,
+    updateZoom: (geojson: turf.AllGeoJSON | GeoJSON | undefined | string) => {
+        throw new Error('updateZoom unimplemented');
+    },
     setZoomLevel: () => {
         throw new Error('setZoomLevel unimplemented');
     },
@@ -74,12 +80,20 @@ export const MapProvider = ({ children }: { children: JSX.Element | JSX.Element[
             setIsLoadingMap(true);
             const loadedMap = await fetchMaps(widget.id);
             setMapData(loadedMap[loadedMap.length - 1]);
-            const zoom = calculateZoomLevel(mapWidth, mapHeight, geoJSONDecode(mapData?.geojson));
-            setZoomLevel(zoom);
+            updateZoom(loadedMap[loadedMap.length - 1]?.geojson);
             setIsLoadingMap(false);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to load map data' }));
             setIsLoadingMap(false);
+        }
+    };
+
+    const updateZoom = (geojson: turf.AllGeoJSON | GeoJSON | undefined | string) => {
+        const decodedGeojson = typeof geojson === 'string' ? geoJSONDecode(geojson) : geojson;
+
+        if (decodedGeojson) {
+            const zoom = calculateZoomLevel(mapWidth, mapHeight, decodedGeojson as GeoJSON);
+            setZoomLevel(zoom);
         }
     };
 
@@ -103,6 +117,7 @@ export const MapProvider = ({ children }: { children: JSX.Element | JSX.Element[
                 mapWidth,
                 setMapHeight,
                 setMapWidth,
+                updateZoom,
             }}
         >
             {children}
