@@ -1,6 +1,7 @@
 from dagster import Out, Output, op
 from met_api.constants.engagement_status import Status as MetEngagementStatus
 from met_api.models.engagement import Engagement as MetEngagementModel
+from met_api.models.engagement_status import EngagementStatus as EngagementStatusModel
 from met_api.models.widget_map import WidgetMap as MetWidgetMap
 from analytics_api.models.engagement import Engagement as EtlEngagementModel
 from sqlalchemy import func
@@ -102,6 +103,9 @@ def load_engagement(context, new_engagements, updated_engagements, engagement_ne
                 geojson=map_widget.geojson
                 marker_label=map_widget.marker_label
 
+            engagement_status = met_session.query(EngagementStatusModel).filter(
+                EngagementStatusModel.id == engagement.status_id).first()
+
             engagement_model = EtlEngagementModel(name=engagement.name,
                                                   source_engagement_id=engagement.id,
                                                   start_date=engagement.start_date,
@@ -115,6 +119,7 @@ def load_engagement(context, new_engagements, updated_engagements, engagement_ne
                                                   longitude=longitude,
                                                   geojson=geojson,
                                                   marker_label=marker_label,
+                                                  status_name=engagement_status.status_name
                                                   )
             session.add(engagement_model)
             session.commit()

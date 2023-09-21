@@ -1,4 +1,4 @@
-# Copyright © 2019 Province of British Columbia
+# Copyright © 2021 Province of British Columbia
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
@@ -11,12 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Role definitions."""
+"""Constants of engagement status."""
 from enum import Enum
 
 
-class Role(Enum):
-    """User Role."""
+class Status(Enum):
+    """Enum of engagement status."""
 
-    VIEW_ALL_SURVEY_RESULTS = 'view_all_survey_results'  # Allows users to view results to all questions
-    ACCESS_DASHBOARD = 'access_dashboard'
+    Draft = 'Draft'
+    Published = 'Published'
+    Closed = 'Closed'
+    Scheduled = 'Scheduled'
+    Unpublished = 'Unpublished'
