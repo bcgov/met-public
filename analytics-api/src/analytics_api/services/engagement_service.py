@@ -2,6 +2,7 @@
 from analytics_api.models.engagement import Engagement as EngagementModel
 from analytics_api.schemas.engagement import EngagementSchema
 from analytics_api.schemas.map_data import MapDataSchema
+from analytics_api.utils import engagement_access_validator
 
 
 class EngagementService:  # pylint: disable=too-few-public-methods
@@ -12,13 +13,17 @@ class EngagementService:  # pylint: disable=too-few-public-methods
     @staticmethod
     def get_engagement(engagement_id) -> EngagementSchema:
         """Get Engagement by the id."""
-        engagement = EngagementModel.find_by_id(engagement_id)
-        engagement_schema = EngagementSchema()
-        return engagement_schema.dump(engagement)
+        if engagement_access_validator.check_engagement_access(engagement_id):
+            engagement = EngagementModel.find_by_id(engagement_id)
+            engagement_schema = EngagementSchema()
+            return engagement_schema.dump(engagement)
+        return {}
 
     @staticmethod
     def get_engagement_map_data(engagement_id) -> MapDataSchema:
         """Get Map data by the engagement id."""
-        map_data = EngagementModel.get_engagement_map_data(engagement_id)
-        map_data_schema = MapDataSchema()
-        return map_data_schema.dump(map_data)
+        if engagement_access_validator.check_engagement_access(engagement_id):
+            map_data = EngagementModel.get_engagement_map_data(engagement_id)
+            map_data_schema = MapDataSchema()
+            return map_data_schema.dump(map_data)
+        return {}

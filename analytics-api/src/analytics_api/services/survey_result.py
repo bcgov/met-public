@@ -1,6 +1,7 @@
 """Service for survey result management."""
 from analytics_api.models.request_type_option import RequestTypeOption as RequestTypeOptionModel
 from analytics_api.schemas.survey_result import SurveyResultSchema
+from analytics_api.utils import engagement_access_validator
 
 
 class SurveyResultService:  # pylint: disable=too-few-public-methods
@@ -11,6 +12,8 @@ class SurveyResultService:  # pylint: disable=too-few-public-methods
     @staticmethod
     def get_survey_result(engagement_id, can_view_all_survey_results) -> SurveyResultSchema:
         """Get Survey result by the engagement id."""
-        survey_result = RequestTypeOptionModel.get_survey_result(engagement_id, can_view_all_survey_results)
-        survey_result_schema = SurveyResultSchema(many=True)
-        return survey_result_schema.dump(survey_result)
+        if engagement_access_validator.check_engagement_access(engagement_id):
+            survey_result = RequestTypeOptionModel.get_survey_result(engagement_id, can_view_all_survey_results)
+            survey_result_schema = SurveyResultSchema(many=True)
+            return survey_result_schema.dump(survey_result)
+        return {}
