@@ -1,13 +1,12 @@
 import { Widget, WidgetType } from 'models/widget';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
-import { PreviewMap } from './types';
+import { PreviewMap, GeoJSONInput } from './types';
 import { fetchMaps } from 'services/widgetService/MapService';
 import { WidgetMap } from 'models/widgetMap';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { geoJSONDecode, calculateZoomLevel } from 'components/engagement/form/EngagementWidgets/Map/utils';
-import * as turf from '@turf/turf';
 import { GeoJSON } from 'geojson';
 
 export interface MapContextProps {
@@ -24,7 +23,7 @@ export interface MapContextProps {
     setMapWidth: React.Dispatch<React.SetStateAction<number>>;
     mapHeight: number;
     setMapHeight: React.Dispatch<React.SetStateAction<number>>;
-    updateZoom: (geojson: turf.AllGeoJSON | GeoJSON | undefined | string) => void;
+    updateZoom: (geojson: GeoJSONInput) => void;
 }
 
 export type EngagementParams = {
@@ -37,7 +36,7 @@ export const MapContext = createContext<MapContextProps>({
     previewMap: null,
     isLoadingMap: true,
     zoomLevel: 12,
-    updateZoom: (geojson: turf.AllGeoJSON | GeoJSON | undefined | string) => {
+    updateZoom: (geojson: GeoJSONInput) => {
         throw new Error('updateZoom unimplemented');
     },
     setZoomLevel: () => {
@@ -88,7 +87,7 @@ export const MapProvider = ({ children }: { children: JSX.Element | JSX.Element[
         }
     };
 
-    const updateZoom = (geojson: turf.AllGeoJSON | GeoJSON | undefined | string) => {
+    const updateZoom = (geojson: GeoJSONInput) => {
         const decodedGeojson = typeof geojson === 'string' ? geoJSONDecode(geojson) : geojson;
 
         if (decodedGeojson) {

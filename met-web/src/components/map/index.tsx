@@ -8,6 +8,7 @@ import { MetSmallText } from 'components/common';
 import { Stack } from '@mui/material';
 import { When } from 'react-if';
 import { AnyLayer } from 'mapbox-gl';
+import { Palette } from 'styles/Theme';
 interface MapProps {
     latitude: number;
     longitude: number;
@@ -20,7 +21,7 @@ const layerStyle: AnyLayer = {
     id: 'fill-layer',
     type: 'fill',
     paint: {
-        'fill-color': '#11508f',
+        'fill-color': `${Palette.primary.main}`,
         'fill-opacity': 0.5,
     },
     filter: ['all', ['==', ['geometry-type'], 'Polygon']],
@@ -37,7 +38,7 @@ const lineStyle: AnyLayer = {
     },
     paint: {
         'line-width': 1,
-        'line-color': '#003366',
+        'line-color': `${Palette.primary.main}`,
     },
 };
 export const MAP_STYLE =
