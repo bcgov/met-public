@@ -1,21 +1,16 @@
-import React, { useContext, useRef, useEffect } from 'react';
+import React, { useContext, useRef } from 'react';
 import Modal from '@mui/material/Modal';
 import { Box, Paper } from '@mui/material';
 import { modalStyle } from 'components/common';
 import { MapContext } from './MapContext';
 import MetMap from 'components/map';
+import { calculateZoomLevel } from 'components/engagement/form/EngagementWidgets/Map/utils';
 
 export const PreviewModal = () => {
-    const { previewMapOpen, setPreviewMapOpen, previewMap, zoomLevel, mapHeight, mapWidth, setMapWidth, setMapHeight } =
-        useContext(MapContext);
+    const { previewMapOpen, setPreviewMapOpen, previewMap } = useContext(MapContext);
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
-
-    useEffect(() => {
-        if (mapContainerRef.current) {
-            setMapWidth(mapContainerRef.current.clientWidth);
-            setMapHeight(mapContainerRef.current.clientHeight);
-        }
-    }, []);
+    const mapWidth = 500;
+    const mapHeight = 500;
 
     if (!previewMap) {
         return null;
@@ -33,8 +28,8 @@ export const PreviewModal = () => {
                 <Box
                     ref={mapContainerRef}
                     sx={{
-                        width: `${mapWidth}px`,
-                        height: `${mapHeight}px`,
+                        width: '500px',
+                        height: '500px',
                     }}
                 >
                     <MetMap
@@ -42,7 +37,7 @@ export const PreviewModal = () => {
                         longitude={previewMap.longitude}
                         latitude={previewMap.latitude}
                         markerLabel={previewMap.markerLabel}
-                        zoom={zoomLevel}
+                        zoom={calculateZoomLevel(mapWidth, mapHeight, previewMap.geojson)}
                     />
                 </Box>
             </Paper>

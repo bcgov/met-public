@@ -6,7 +6,6 @@ import { fetchMaps } from 'services/widgetService/MapService';
 import { WidgetMap } from 'models/widgetMap';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { geoJSONDecode, calculateZoomLevel } from 'components/engagement/form/EngagementWidgets/Map/utils';
 
 export interface MapContextProps {
     widget: Widget | null;
@@ -16,12 +15,6 @@ export interface MapContextProps {
     isLoadingMap: boolean;
     previewMapOpen: boolean;
     setPreviewMapOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    zoomLevel: number;
-    setZoomLevel: React.Dispatch<React.SetStateAction<number>>;
-    mapWidth: number;
-    setMapWidth: React.Dispatch<React.SetStateAction<number>>;
-    mapHeight: number;
-    setMapHeight: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export type EngagementParams = {
@@ -33,24 +26,12 @@ export const MapContext = createContext<MapContextProps>({
     mapData: null,
     previewMap: null,
     isLoadingMap: true,
-    zoomLevel: 12,
-    setZoomLevel: () => {
-        throw new Error('setZoomLevel unimplemented');
-    },
     setPreviewMap: () => {
         throw new Error('setPreviewMap unimplemented');
     },
     previewMapOpen: false,
     setPreviewMapOpen: () => {
         throw new Error('setPreviewMap unimplemented');
-    },
-    mapHeight: 500,
-    setMapHeight: () => {
-        throw new Error('setMapHeight unimplemented');
-    },
-    mapWidth: 500,
-    setMapWidth: () => {
-        throw new Error('setMapWidth unimplemented');
     },
 });
 
@@ -62,9 +43,6 @@ export const MapProvider = ({ children }: { children: JSX.Element | JSX.Element[
     const [previewMap, setPreviewMap] = useState<PreviewMap | null>(null);
     const [previewMapOpen, setPreviewMapOpen] = useState(false);
     const [isLoadingMap, setIsLoadingMap] = useState(true);
-    const [zoomLevel, setZoomLevel] = useState(12);
-    const [mapWidth, setMapWidth] = useState(500);
-    const [mapHeight, setMapHeight] = useState(500);
 
     const loadMap = async () => {
         if (!widget) {
@@ -74,8 +52,6 @@ export const MapProvider = ({ children }: { children: JSX.Element | JSX.Element[
             setIsLoadingMap(true);
             const loadedMap = await fetchMaps(widget.id);
             setMapData(loadedMap[loadedMap.length - 1]);
-            const zoom = calculateZoomLevel(mapWidth, mapHeight, geoJSONDecode(mapData?.geojson));
-            setZoomLevel(zoom);
             setIsLoadingMap(false);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to load map data' }));
@@ -89,21 +65,7 @@ export const MapProvider = ({ children }: { children: JSX.Element | JSX.Element[
 
     return (
         <MapContext.Provider
-            value={{
-                isLoadingMap,
-                widget,
-                mapData,
-                previewMap,
-                setPreviewMap,
-                previewMapOpen,
-                setPreviewMapOpen,
-                setZoomLevel,
-                zoomLevel,
-                mapHeight,
-                mapWidth,
-                setMapHeight,
-                setMapWidth,
-            }}
+            value={{ isLoadingMap, widget, mapData, previewMap, setPreviewMap, previewMapOpen, setPreviewMapOpen }}
         >
             {children}
         </MapContext.Provider>

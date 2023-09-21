@@ -262,9 +262,7 @@ const Form = () => {
                             </Grid>
                             <Grid item xs={12} container direction="row" justifyContent={'flex-end'}>
                                 <Grid item>
-                                    <SecondaryButton loading={isLoadingMap} onClick={handlePreviewMap}>
-                                        Preview Map
-                                    </SecondaryButton>
+                                    <SecondaryButton onClick={handlePreviewMap}>Preview Map</SecondaryButton>
                                 </Grid>
                             </Grid>
                             <Grid
