@@ -330,8 +330,11 @@ class TestJwtClaims(dict, Enum):
                 'review_all_comments',
                 'view_all_engagements',
                 'toggle_user_status',
-                'export_to_csv',
+                'export_all_to_csv',
                 'update_user_group',
+                'export_proponent_comment_sheet',
+                'export_internal_comment_sheet'
+                
             ]
         }
     }
@@ -350,7 +353,8 @@ class TestJwtClaims(dict, Enum):
                 'staff',
                 'view_engagement',
                 'view_users',
-                'clone_survey'
+                'clone_survey',
+                'export_proponent_comment_sheet'
             ]
         }
     }
