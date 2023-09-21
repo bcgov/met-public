@@ -334,7 +334,6 @@ class TestJwtClaims(dict, Enum):
                 'update_user_group',
                 'export_proponent_comment_sheet',
                 'export_internal_comment_sheet'
-                
             ]
         }
     }

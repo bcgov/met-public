@@ -70,7 +70,12 @@ jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
     useSelector: jest.fn(() => {
         return {
-            roles: [USER_ROLES.REVIEW_COMMENTS, USER_ROLES.EXPORT_TO_CSV],
+            roles: [
+                USER_ROLES.REVIEW_COMMENTS,
+                USER_ROLES.EXPORT_ALL_TO_CSV,
+                USER_ROLES.EXPORT_INTERNAL_COMMENT_SHEET,
+                USER_ROLES.EXPORT_PROPONENT_COMMENT_SHEET,
+            ],
             assignedEngagements: [mockSurveyOne.engagement_id],
         };
     }),
