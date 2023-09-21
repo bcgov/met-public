@@ -23,6 +23,8 @@ from met_api.auth import auth
 from met_api.auth import jwt as _jwt
 from met_api.models.pagination_options import PaginationOptions
 from met_api.services.comment_service import CommentService
+from met_api.utils.roles import Role
+from met_api.utils.tenant_validator import require_role
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
@@ -68,7 +70,7 @@ class GeneratedStaffCommentsSheet(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.requires_auth
+    @require_role([Role.EXPORT_INTERNAL_COMMENT_SHEET.value])
     def get(survey_id):
         """Export comments."""
         try:
@@ -95,7 +97,7 @@ class GeneratedProponentCommentsSheet(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.requires_auth
+    @require_role([Role.EXPORT_PROPONENT_COMMENT_SHEET.value])
     def get(survey_id):
         """Export comments."""
         try:
