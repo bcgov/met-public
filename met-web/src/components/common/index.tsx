@@ -118,15 +118,31 @@ export const WidgetButton = ({ children, ...rest }: { children: React.ReactNode;
     </StyledWidgetButton>
 );
 
-export const SecondaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
-    <StyledSecondaryButton
-        {...rest}
-        variant="outlined"
-        loadingIndicator={<CircularProgress color="primary" size={'1.8em'} />}
-    >
-        {children}
-    </StyledSecondaryButton>
-);
+export const SecondaryButton = ({
+    children,
+    disabled = false,
+    ...rest
+}: {
+    children: React.ReactNode;
+    [prop: string]: unknown;
+}) => {
+    if (disabled) {
+        return (
+            <PrimaryButton {...rest} disabled>
+                {children}
+            </PrimaryButton>
+        );
+    }
+    return (
+        <StyledSecondaryButton
+            {...rest}
+            variant="outlined"
+            loadingIndicator={<CircularProgress color="primary" size={'1.8em'} />}
+        >
+            {children}
+        </StyledSecondaryButton>
+    );
+};
 
 export const PrimaryButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
     <StyledPrimaryButton
