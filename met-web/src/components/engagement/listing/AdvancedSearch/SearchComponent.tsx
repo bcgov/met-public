@@ -29,16 +29,15 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
     const { engagementProjectTypes } = AppConfig.constants;
     const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
 
-    const intitialStatusList = {
-        [EngagementDisplayStatus[EngagementDisplayStatus.Draft]]: false,
-        [EngagementDisplayStatus[EngagementDisplayStatus.Scheduled]]: false,
-        [EngagementDisplayStatus[EngagementDisplayStatus.Upcoming]]: false,
-        [EngagementDisplayStatus[EngagementDisplayStatus.Open]]: false,
-        [EngagementDisplayStatus[EngagementDisplayStatus.Closed]]: false,
+    const initialStatusFilters = {
+        [EngagementDisplayStatus.Draft]: false,
+        [EngagementDisplayStatus.Scheduled]: false,
+        [EngagementDisplayStatus.Upcoming]: false,
+        [EngagementDisplayStatus.Open]: false,
+        [EngagementDisplayStatus.Closed]: false,
+        [EngagementDisplayStatus.Unpublished]: false,
     };
-    const [statusFilter, setStatusFilter] = useState(() => {
-        return intitialStatusList;
-    });
+    const [statusFilters, setStatusFilters] = useState(initialStatusFilters);
 
     const initialFilterParams = {
         status_list: [],
@@ -52,20 +51,11 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
         published_from_date: '',
         published_to_date: '',
     };
-
-    const [selectedStatusList, setSelectedStatusList] = useState<number[]>([]);
-
     const handleStatusFilterChange = (event: React.SyntheticEvent) => {
-        setStatusFilter({
-            ...statusFilter,
-            [(event.target as HTMLInputElement).value]: (event.target as HTMLInputElement).checked,
+        setStatusFilters({
+            ...statusFilters,
+            [(event.target as HTMLInputElement).name]: (event.target as HTMLInputElement).checked,
         });
-        const selectedStatusId = (event.target as HTMLInputElement).id;
-        setSelectedStatusList((currentParticipants: number[]) =>
-            currentParticipants.includes(parseInt(selectedStatusId))
-                ? currentParticipants.filter((f) => f !== parseInt(selectedStatusId))
-                : [...currentParticipants, parseInt(selectedStatusId)],
-        );
     };
 
     const [projectFilter, setProjectFilter] = useState({
@@ -123,6 +113,10 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
         const fClientName = clientName ? clientName : '';
         const fAppNumber = applicationNumber ? applicationNumber : '';
 
+        const selectedStatusList = Object.entries(statusFilters)
+            .filter(([, value]) => value)
+            .map(([key]) => Number(key));
+
         setFilterParams({
             status_list: selectedStatusList,
             created_from_date: fCreatedFromDate,
@@ -138,8 +132,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
     };
 
     const handleResetSearchFilters = () => {
-        setStatusFilter(intitialStatusList);
-        setSelectedStatusList([]);
+        setStatusFilters(initialStatusFilters);
 
         setProjectFilter({
             projectType: '',
@@ -177,9 +170,9 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                 <Checkbox
                                     id={EngagementDisplayStatus.Draft.toString()}
                                     data-testid={EngagementDisplayStatus.Draft.toString()}
-                                    name={EngagementDisplayStatus[EngagementDisplayStatus.Draft]}
+                                    name={EngagementDisplayStatus.Draft.toString()}
                                     onChange={handleStatusFilterChange}
-                                    checked={statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Draft]]}
+                                    checked={statusFilters[EngagementDisplayStatus.Draft]}
                                     sx={{
                                         height: 30,
                                     }}
@@ -194,9 +187,9 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                 <Checkbox
                                     id={EngagementDisplayStatus.Scheduled.toString()}
                                     data-testid={EngagementDisplayStatus.Scheduled.toString()}
-                                    name={EngagementDisplayStatus[EngagementDisplayStatus.Scheduled]}
+                                    name={EngagementDisplayStatus.Scheduled.toString()}
                                     onChange={handleStatusFilterChange}
-                                    checked={statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Scheduled]]}
+                                    checked={statusFilters[EngagementDisplayStatus.Scheduled]}
                                     sx={{
                                         height: 30,
                                     }}
@@ -213,9 +206,9 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                 <Checkbox
                                     id={EngagementDisplayStatus.Upcoming.toString()}
                                     data-testid={EngagementDisplayStatus.Upcoming.toString()}
-                                    name={EngagementDisplayStatus[EngagementDisplayStatus.Upcoming]}
+                                    name={EngagementDisplayStatus.Upcoming.toString()}
                                     onChange={handleStatusFilterChange}
-                                    checked={statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Upcoming]]}
+                                    checked={statusFilters[EngagementDisplayStatus.Upcoming]}
                                     sx={{
                                         height: 30,
                                     }}
@@ -230,9 +223,9 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                 <Checkbox
                                     id={EngagementDisplayStatus.Open.toString()}
                                     data-testid={EngagementDisplayStatus.Open.toString()}
-                                    name={EngagementDisplayStatus[EngagementDisplayStatus.Open]}
+                                    name={EngagementDisplayStatus.Open.toString()}
                                     onChange={handleStatusFilterChange}
-                                    checked={statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Open]]}
+                                    checked={statusFilters[EngagementDisplayStatus.Open]}
                                     sx={{
                                         height: 30,
                                     }}
@@ -245,9 +238,9 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                 <Checkbox
                                     id={EngagementDisplayStatus.Closed.toString()}
                                     data-testid={EngagementDisplayStatus.Closed.toString()}
-                                    name={EngagementDisplayStatus[EngagementDisplayStatus.Closed]}
+                                    name={EngagementDisplayStatus.Closed.toString()}
                                     onChange={handleStatusFilterChange}
-                                    checked={statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Closed]]}
+                                    checked={statusFilters[EngagementDisplayStatus.Closed]}
                                     sx={{
                                         height: 30,
                                     }}
@@ -262,9 +255,9 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                 <Checkbox
                                     id={EngagementDisplayStatus.Unpublished.toString()}
                                     data-testid={EngagementDisplayStatus.Unpublished.toString()}
-                                    name={EngagementDisplayStatus[EngagementDisplayStatus.Unpublished]}
+                                    name={EngagementDisplayStatus.Unpublished.toString()}
                                     onChange={handleStatusFilterChange}
-                                    checked={statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Unpublished]]}
+                                    checked={statusFilters[EngagementDisplayStatus.Unpublished]}
                                     sx={{
                                         height: 30,
                                     }}
