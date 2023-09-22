@@ -13,7 +13,6 @@ from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.ext.hybrid import hybrid_property
 
 from met_api.constants.comment_status import Status as CommentStatus
-from met_api.constants.engagement_status import Status as EngagementStatus
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement import Engagement
 from met_api.models.report_setting import ReportSetting
@@ -89,8 +88,8 @@ class Comment(BaseModel):
         return page.items, page.total
 
     @classmethod
-    def get_accepted_comments_by_survey_id_where_engagement_closed_paginated(
-            cls, survey_id, pagination_options: PaginationOptions):
+    def get_accepted_comments_by_survey_id_paginated(
+            cls, survey_id, pagination_options: PaginationOptions, search_text=''):
         """Get comments for closed engagements."""
         query = db.session.query(Comment)\
             .join(Submission, Submission.id == Comment.submission_id)\
@@ -103,9 +102,11 @@ class Comment(BaseModel):
                 and_(
                     Comment.survey_id == survey_id,
                     CommentStatusModel.id == CommentStatus.Approved.value,
-                    Engagement.status_id == EngagementStatus.Closed.value,
                     ReportSetting.display == true()
                 ))
+
+        if search_text:
+            query = query.filter(Comment.text.ilike('%' + search_text + '%'))
 
         query = query.order_by(Comment.id.desc())
 

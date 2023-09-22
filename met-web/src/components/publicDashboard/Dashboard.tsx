@@ -37,7 +37,7 @@ const Dashboard = () => {
     };
 
     const handleReadComments = () => {
-        navigate(`${basePath}/comments`);
+        navigate(`${basePath}/comments/${dashboardType}`);
     };
 
     const handlePdfExportProgress = (progress: number) => {

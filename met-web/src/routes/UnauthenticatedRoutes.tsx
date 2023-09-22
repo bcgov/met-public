@@ -25,8 +25,8 @@ const UnauthenticatedRoutes = () => {
                 <Route path="/:slug" element={<EngagementView />} />
                 <Route path="/engagements/:engagementId/dashboard/:dashboardType" element={<PublicDashboard />} />
                 <Route path="/:slug/dashboard/:dashboardType" element={<PublicDashboard />} />
-                <Route path="/engagements/:engagementId/comments" element={<EngagementComments />} />
-                <Route path="/:slug/comments" element={<EngagementComments />} />
+                <Route path="/engagements/:engagementId/comments/:dashboardType" element={<EngagementComments />} />
+                <Route path="/:slug/comments/:dashboardType" element={<EngagementComments />} />
                 <Route path="/engagements/:engagementId/edit/:token" element={<EditSurvey />} />
                 <Route path="/:slug/edit/:token" element={<EditSurvey />} />
                 <Route path="/surveys/submit/:surveyId/:token" element={<SurveySubmit />} />

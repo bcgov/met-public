@@ -127,8 +127,8 @@ class _Config():  # pylint: disable=too-few-public-methods
     # front end endpoints
     SITE_URL = os.getenv('SITE_URL')
     # needed for close out emails for met api
-    ENGAGEMENT_DASHBOARD_PATH = os.getenv('ENGAGEMENT_DASHBOARD_PATH', '/engagements/{engagement_id}/comments')
-    ENGAGEMENT_DASHBOARD_PATH_SLUG = os.getenv('ENGAGEMENT_DASHBOARD_PATH_SLUG', '/{slug}/comments')
+    ENGAGEMENT_DASHBOARD_PATH = os.getenv('ENGAGEMENT_DASHBOARD_PATH', '/engagements/{engagement_id}/comments/public')
+    ENGAGEMENT_DASHBOARD_PATH_SLUG = os.getenv('ENGAGEMENT_DASHBOARD_PATH_SLUG', '/{slug}/comments/public')
     # needed for publish emails for met api
     ENGAGEMENT_VIEW_PATH = os.getenv('ENGAGEMENT_VIEW_PATH', '/engagements/{engagement_id}/view')
     ENGAGEMENT_VIEW_PATH_SLUG = os.getenv('ENGAGEMENT_VIEW_PATH_SLUG', '/{slug}')
@@ -139,6 +139,10 @@ class _Config():  # pylint: disable=too-few-public-methods
     EMAIL_SECRET_KEY = os.getenv('EMAIL_SECRET_KEY', 'secret')
     PUBLISH_ENGAGEMENT_EMAIL_TEMPLATE_ID = os.getenv('PUBLISH_ENGAGEMENT_EMAIL_TEMPLATE_ID')
     PUBLISH_ENGAGEMENT_EMAIL_SUBJECT = os.getenv('PUBLISH_ENGAGEMENT_EMAIL_SUBJECT', 'Share your feedback')
+
+    # EAO is a single Tenant Environment where EAO is the only env and should be set to True
+    # This flag decides if additonal tenant based checks has to be carried or not
+    IS_SINGLE_TENANT_ENVIRONMENT = os.getenv('IS_SINGLE_TENANT_ENVIRONMENT', 'False').lower() == 'true'
 
     # Closing Soon Email Service
     ENGAGEMENT_CLOSING_SOON_EMAIL_TEMPLATE_ID = os.getenv('ENGAGEMENT_CLOSING_SOON_EMAIL_TEMPLATE_ID')
