@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import createCache from '@emotion/cache';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TileBlock from 'components/landing/TileBlock';
-import { store } from '../store';
+import { store } from '../../store';
 
 export default class EngagementTilesWC extends HTMLElement {
     connectedCallback() {

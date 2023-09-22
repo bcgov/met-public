@@ -26,7 +26,7 @@ defaults:
 
 env:
   APP_NAME: "dagster-etl"
-  DEPLOYMENT_NAME: "dagster-dagster-user-deployments-k8s-example-user-code-1"
+  DEPLOYMENT_NAME: "dagster-dagster-user-deployments-etl"
   TAG_NAME: "dev"
   
   PROJECT_TYPE: "${{ github.event.inputs.project_type || 'EAO' }}" # If the project type is manually selected, use the input value; otherwise, use 'EAO' as default
