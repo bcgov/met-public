@@ -13,6 +13,7 @@ from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.ext.hybrid import hybrid_property
 
 from met_api.constants.comment_status import Status as CommentStatus
+from met_api.constants.engagement_status import Status as EngagementStatus
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement import Engagement
 from met_api.models.report_setting import ReportSetting
@@ -102,6 +103,7 @@ class Comment(BaseModel):
                 and_(
                     Comment.survey_id == survey_id,
                     CommentStatusModel.id == CommentStatus.Approved.value,
+                    Engagement.status_id != EngagementStatus.Unpublished.value,
                     ReportSetting.display == true()
                 ))
 
