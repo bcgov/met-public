@@ -34,6 +34,7 @@ class EngagementDisplayStatus(IntEnum):
     Scheduled = 4
     Upcoming = 5
     Open = 6
+    Unpublished = 7
 
 
 class SubmissionStatus(IntEnum):
