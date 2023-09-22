@@ -55,7 +55,7 @@ export const EngagementBanner = ({ startSurvey, engagementSlug }: EngagementBann
             startSurvey={startSurvey}
             isEngagementLoading={isEngagementLoading}
             savedEngagement={savedEngagement}
-            isLoggedIn={true}
+            isLoggedIn={false}
         />
     );
 };
