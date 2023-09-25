@@ -29,11 +29,6 @@ const FormioListener = () => {
         if (formioModal) {
             formioModal.remove();
         }
-
-        const submitButton = document.querySelector('button.btn-wizard-nav-submit');
-        if (submitButton) {
-            submitButton.textContent = 'Submit';
-        }
     }, [pathname]);
 
     return null;
