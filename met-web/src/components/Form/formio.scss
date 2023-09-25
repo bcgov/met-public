@@ -648,3 +648,7 @@ div[disabled] {
 .choices__list--dropdown .choices__list {
     overflow: visible;
 }
+
+.formio-component-simplesurvey {
+    overflow-y: scroll;
+}
