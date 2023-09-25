@@ -160,11 +160,6 @@ class CommentService:
     def export_comments_to_spread_sheet_staff(cls, survey_id):
         """Export comments to spread sheet."""
         engagement = SurveyModel.find_by_id(survey_id)
-        one_of_roles = (
-            MembershipType.TEAM_MEMBER.name,
-            Role.EXPORT_TO_CSV.value
-        )
-        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement.engagement_id)
         comments = Comment.get_comments_by_survey_id(survey_id)
         metadata_model = EngagementMetadataModel.find_by_id(engagement.engagement_id)
         project_name = metadata_model.project_metadata.get('project_name') if metadata_model else None
@@ -257,7 +252,7 @@ class CommentService:
         engagement = SurveyModel.find_by_id(survey_id)
         one_of_roles = (
             MembershipType.TEAM_MEMBER.name,
-            Role.EXPORT_TO_CSV.value
+            Role.EXPORT_ALL_TO_CSV.value
         )
         authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement.engagement_id)
         comments = Comment.get_public_viewable_comments_by_survey_id(survey_id)

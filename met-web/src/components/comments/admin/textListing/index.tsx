@@ -30,6 +30,9 @@ import { getStaffCommentSheet, getProponentCommentSheet } from 'services/comment
 import { downloadFile } from 'utils';
 import { getSurvey } from 'services/surveyService';
 import { Survey, createDefaultSurvey } from 'models/survey';
+import { PermissionsGate } from 'components/permissionsGate';
+import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
+import axios from 'axios';
 
 const CommentTextListing = () => {
     const { roles, userDetail, assignedEngagements } = useAppSelector((state) => state.user);
@@ -68,28 +71,62 @@ const CommentTextListing = () => {
     const [exportToCSVOpen, setExportToCSVOpen] = useState(false);
     const [isExporting, setIsExporting] = useState(false);
     const [survey, setSurvey] = useState<Survey>(createDefaultSurvey());
+
     const handleExportStaffComments = async () => {
-        setIsExporting(true);
-        const response = await getStaffCommentSheet({ survey_id: survey.id });
-        downloadFile(response, `INTERNAL ONLY - ${survey.engagement?.name || ''} - ${formatToUTC(Date())}.csv`);
-        setIsExporting(false);
-        handleExportToCSVClose(); // Close the menu after export
+        try {
+            setIsExporting(true);
+            const response = await getStaffCommentSheet({ survey_id: survey.id });
+            downloadFile(response, `INTERNAL ONLY - ${survey.engagement?.name || ''} - ${formatToUTC(Date())}.csv`);
+            setIsExporting(false);
+            handleExportToCSVClose(); // Close the menu after export
+        } catch (error) {
+            setIsExporting(false);
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while exporting comments. Please try again later.',
+                }),
+            );
+        }
     };
+
     const handleExportProponentComments = async () => {
-        setIsExporting(true);
-        const response = await getProponentCommentSheet({ survey_id: survey.id });
-        downloadFile(response, `PUBLIC - ${survey.engagement?.name || ''} - ${formatToUTC(Date())}.csv`);
-        setIsExporting(false);
-        handleExportToCSVClose(); // Close the menu after export
+        try {
+            setIsExporting(true);
+            const response = await getProponentCommentSheet({ survey_id: survey.id });
+            downloadFile(response, `PUBLIC - ${survey.engagement?.name || ''} - ${formatToUTC(Date())}.csv`);
+            setIsExporting(false);
+            handleExportToCSVClose(); // Close the menu after export
+        } catch (error) {
+            setIsExporting(false);
+            if (axios.isAxiosError(error) && error.response?.status === HTTP_STATUS_CODES.FORBIDDEN) {
+                dispatch(
+                    openNotification({
+                        severity: 'error',
+                        text: 'You do not have permission to export this data.',
+                    }),
+                );
+            } else {
+                dispatch(
+                    openNotification({
+                        severity: 'error',
+                        text: 'Error occurred while exporting comments. Please try again later.',
+                    }),
+                );
+            }
+        }
     };
+
     const handleExportToCSVOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
         setExportToCSVOpen(!exportToCSVOpen);
     };
+
     const handleExportToCSVClose = () => {
         setAnchorEl(null);
         setExportToCSVOpen(false);
     };
+
     const customStyle = {
         minWidth: '180px',
         width: '100%',
@@ -324,23 +361,28 @@ const CommentTextListing = () => {
                     <PrimaryButton component={Link} to={`/surveys/${submissions[0]?.survey_id || 0}/comments`}>
                         Return to Comments List
                     </PrimaryButton>
-                    <SecondaryButton
-                        variant="contained"
-                        onClick={handleExportToCSVOpen}
-                        aria-controls="simple-menu"
-                        aria-haspopup="true"
-                        disabled={isExporting}
-                        startIcon={
-                            <ExpandMoreIcon
-                                style={{
-                                    transition: 'transform 0.3s',
-                                    transform: exportToCSVOpen ? 'rotate(180deg)' : 'none',
-                                }}
-                            />
-                        }
+                    <PermissionsGate
+                        scopes={[USER_ROLES.EXPORT_INTERNAL_COMMENT_SHEET, USER_ROLES.EXPORT_PROPONENT_COMMENT_SHEET]}
+                        errorProps={{ disabled: true }}
                     >
-                        Export to CSV
-                    </SecondaryButton>
+                        <SecondaryButton
+                            variant="contained"
+                            onClick={handleExportToCSVOpen}
+                            aria-controls="simple-menu"
+                            aria-haspopup="true"
+                            loading={isExporting}
+                            startIcon={
+                                <ExpandMoreIcon
+                                    style={{
+                                        transition: 'transform 0.3s',
+                                        transform: exportToCSVOpen ? 'rotate(180deg)' : 'none',
+                                    }}
+                                />
+                            }
+                        >
+                            Export to CSV
+                        </SecondaryButton>
+                    </PermissionsGate>
                     <Menu
                         id="simple-menu"
                         anchorEl={anchorEl}
@@ -351,9 +393,11 @@ const CommentTextListing = () => {
                         <MenuItem onClick={handleExportProponentComments} style={customStyle}>
                             Public/Proponent
                         </MenuItem>
-                        <MenuItem onClick={handleExportStaffComments} style={customStyle}>
-                            Internal Only/Detailed
-                        </MenuItem>
+                        <PermissionsGate scopes={[USER_ROLES.EXPORT_INTERNAL_COMMENT_SHEET]}>
+                            <MenuItem onClick={handleExportStaffComments} style={customStyle}>
+                                Internal Only/Detailed
+                            </MenuItem>
+                        </PermissionsGate>
                     </Menu>
                 </Stack>
             </Grid>
