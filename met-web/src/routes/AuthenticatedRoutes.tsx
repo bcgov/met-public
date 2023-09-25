@@ -23,13 +23,13 @@ import { USER_ROLES } from 'services/userService/constants';
 import UserProfile from 'components/userManagement/userDetails';
 import ScrollToTop from 'components/scrollToTop';
 import ReportSettings from 'components/survey/report';
-import FormioModalListener from 'components/FormioModalListener';
+import FormioListener from 'components/FormioListener';
 
 const AuthenticatedRoutes = () => {
     return (
         <>
             <ScrollToTop />
-            <FormioModalListener />
+            <FormioListener />
             <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/engagements" element={<EngagementListing />} />

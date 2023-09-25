@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-const FormioModalListener = () => {
+const FormioListener = () => {
     const { pathname } = useLocation();
 
     useEffect(() => {
@@ -39,4 +39,4 @@ const FormioModalListener = () => {
     return null;
 };
 
-export default FormioModalListener;
+export default FormioListener;
