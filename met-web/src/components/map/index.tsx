@@ -8,19 +8,20 @@ import { MetSmallText } from 'components/common';
 import { Stack } from '@mui/material';
 import { When } from 'react-if';
 import { AnyLayer } from 'mapbox-gl';
-
+import { Palette } from 'styles/Theme';
 interface MapProps {
     latitude: number;
     longitude: number;
     markerLabel?: string;
     geojson?: GeoJSON;
+    zoom: number;
 }
 
 const layerStyle: AnyLayer = {
     id: 'fill-layer',
     type: 'fill',
     paint: {
-        'fill-color': '#00ffff',
+        'fill-color': `${Palette.primary.main}`,
         'fill-opacity': 0.5,
     },
     filter: ['all', ['==', ['geometry-type'], 'Polygon']],
@@ -37,20 +38,20 @@ const lineStyle: AnyLayer = {
     },
     paint: {
         'line-width': 1,
-        'line-color': '#00ffff',
+        'line-color': `${Palette.primary.main}`,
     },
 };
 export const MAP_STYLE =
     'https://governmentofbc.maps.arcgis.com/sharing/rest/content/items/bbe05270d3a642f5b62203d6c454f457/resources/styles/root.json';
-export const INITIAL_ZOOM = 12;
-const MetMap = ({ geojson, latitude, longitude, markerLabel }: MapProps) => {
+
+const MetMap = ({ geojson, latitude, longitude, markerLabel, zoom }: MapProps) => {
     return (
         <ReactMapGL
             id="map-gl-container"
             initialViewState={{
                 longitude: longitude,
                 latitude: latitude,
-                zoom: INITIAL_ZOOM,
+                zoom: zoom,
             }}
             mapLib={maplibregl}
             mapStyle={MAP_STYLE}

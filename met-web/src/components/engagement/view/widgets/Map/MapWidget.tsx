@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { MetPaper, MetHeader2, MetLabel } from 'components/common';
 import { Grid, Skeleton, Divider, Box, IconButton, Link, useMediaQuery, Theme } from '@mui/material';
 import { Widget } from 'models/widget';
@@ -10,7 +10,7 @@ import { WidgetMap } from 'models/widgetMap';
 import OpenWithIcon from '@mui/icons-material/OpenWith';
 import { ExpandModal } from './ExpandModal';
 import { When } from 'react-if';
-import { geoJSONDecode } from 'components/engagement/form/EngagementWidgets/Map/utils';
+import { geoJSONDecode, calculateZoomLevel } from 'components/engagement/form/EngagementWidgets/Map/utils';
 
 interface MapWidgetProps {
     widget: Widget;
@@ -21,7 +21,11 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
     const [isLoading, setIsLoading] = useState(true);
     const [map, setMap] = useState<WidgetMap | null>(null);
     const [open, setOpen] = useState<boolean>(false);
+    const mapContainerRef = useRef<HTMLDivElement | null>(null);
     const isLargeScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
+    const [mapWidth, setMapWidth] = useState(250);
+    const [mapHeight, setMapHeight] = useState(250);
+
     const fetchMap = async () => {
         try {
             const map = await fetchMaps(widget.id);
@@ -41,6 +45,10 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
 
     useEffect(() => {
         fetchMap();
+        if (mapContainerRef.current) {
+            setMapWidth(mapContainerRef.current.clientWidth);
+            setMapHeight(mapContainerRef.current.clientHeight);
+        }
     }, [widget]);
 
     if (isLoading) {
@@ -84,6 +92,7 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
                     </Grid>
                     <Grid item xs={12}>
                         <Box
+                            ref={mapContainerRef}
                             sx={{
                                 width: '100%',
                                 height: '370px',
@@ -94,6 +103,7 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
                                 longitude={map.longitude}
                                 latitude={map.latitude}
                                 markerLabel={map.marker_label}
+                                zoom={calculateZoomLevel(mapWidth, mapHeight, geoJSONDecode(map.geojson))}
                             />
                         </Box>
                     </Grid>
