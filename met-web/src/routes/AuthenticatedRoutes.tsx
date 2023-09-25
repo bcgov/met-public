@@ -54,7 +54,7 @@ const AuthenticatedRoutes = () => {
                     <Route path="/engagements/:engagementId/form" element={<EngagementForm />} />
                 </Route>
                 <Route path="/engagements/:engagementId/view" element={<EngagementView />} />
-                <Route path="/engagements/:engagementId/comments" element={<EngagementComments />} />
+                <Route path="/engagements/:engagementId/comments/:dashboardType" element={<EngagementComments />} />
                 <Route path="/engagements/:engagementId/dashboard/:dashboardType" element={<PublicDashboard />} />
 
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_FEEDBACKS]} />}>
